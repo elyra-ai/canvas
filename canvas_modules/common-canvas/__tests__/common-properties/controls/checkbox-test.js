@@ -70,7 +70,7 @@ describe("checkbox control tests", () => {
 			/>
 		);
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxLabel']");
-		expect(checkboxWrapper.find("label > span").text()).to.equal(controlWithLabel.label.text);
+		expect(checkboxWrapper.find(".properties-checkbox-label").text()).to.equal(controlWithLabel.label.text);
 		expect(checkboxWrapper.find("div.properties-tooltips span").text()).to.equal(controlWithLabel.description.text);
 	});
 	it("checkbox updates correctly", () => {
