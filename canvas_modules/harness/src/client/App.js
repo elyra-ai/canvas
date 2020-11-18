@@ -1608,11 +1608,16 @@ class App extends React.Component {
 		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
 			emptyCanvasDiv = (
 				<div>
-					<img src={BlankCanvasImage} className="harness-empty-image" />
-					<span className="harness-empty-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
+					<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+					<span className="harness-empty-text">
+						<FormattedMessage
+							id={ "canvas.emptyText" }
+							values={{ br: <br /> }}
+						/>
+					</span>
 					<span className="harness-empty-link"
 						onClick={this.handleEmptyCanvasLinkClick}
-					>Click here to take a tour</span>
+					><FormattedMessage id={ "canvas.emptyLink"} /></span>
 				</div>);
 		}
 
