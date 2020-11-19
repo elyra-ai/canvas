@@ -2869,6 +2869,160 @@ _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 	}
 });
 
+_defineConstant("READONLYTABLE_PROPS_INFO", {
+	"title": "ReadonlyTable Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: readonlyTable",
+			"editable": false
+		},
+		"current_parameters": {
+			"readonlyStructurelistTableControl": [
+				[
+					1,
+					"Hello",
+					"World",
+					"string",
+					"Readonly phrase"
+				],
+				[
+					2,
+					"hi",
+					"world",
+					"boolean",
+					"some phrase"
+				]
+			]
+		},
+		"parameters": [
+			{
+				"id": "readonlyStructurelistTableControl",
+				"type": "array[readonlyStructurelistTableControl]",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "readonlyStructurelistTableControl",
+				"parameters": [
+					{
+						"id": "readonly_numbered_column_index",
+						"type": "integer"
+					},
+					{
+						"id": "name",
+						"type": "string",
+						"role": "new_column"
+					},
+					{
+						"id": "description",
+						"type": "string",
+						"role": "new_column"
+					},
+					{
+						"id": "data_type",
+						"enum": [
+							"string",
+							"number",
+							"boolean",
+							"time",
+							"date"
+						],
+						"default": ""
+					},
+					{
+						"id": "readonly",
+						"type": "string"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "readonly_param-control",
+			"parameter_info": [
+				{
+					"parameter_ref": "readonlyStructurelistTableControl",
+					"label": {
+						"default": "ReadonlyTable - structurelisteditor"
+					},
+					"description": {
+						"default": "This is an example of a structureListEditor that has control set to a readonlyTable control.",
+						"placement": "on_panel"
+					},
+					"control": "readonlyTable"
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "readonlyStructurelistTableControl",
+					"parameters": [
+						{
+							"parameter_ref": "readonly_numbered_column_index",
+							"label": {
+								"default": " "
+							},
+							"width": 5,
+							"generated_values": {
+								"operation": "index"
+							},
+							"control": "readonly",
+							"summary": true
+						},
+						{
+							"parameter_ref": "name",
+							"label": {
+								"default": "Name"
+							},
+							"width": 15,
+							"edit_style": "subpanel",
+							"summary": true
+						},
+						{
+							"parameter_ref": "description",
+							"label": {
+								"default": "Description"
+							},
+							"width": 15,
+							"edit_style": "subpanel"
+						},
+						{
+							"parameter_ref": "data_type",
+							"label": {
+								"default": "Type"
+							},
+							"width": 15,
+							"edit_style": "subpanel"
+						},
+						{
+							"parameter_ref": "readonly",
+							"label": {
+								"default": "ReadOnly"
+							},
+							"control": "readonly",
+							"width": 20
+						}
+					],
+					"row_selection": "single"
+				}
+			],
+			"group_info": [
+				{
+					"id": "readonly-group",
+					"label": {
+						"default": "Readonly Tab"
+					},
+					"type": "controls",
+					"parameter_refs": [
+						"readonlyStructurelistTableControl"
+					]
+				}
+			]
+		},
+		"resources": {
+			"readonlyStructurelistTableControl.edit.button.label": "Edit - custom label"
+		}
+	}
+});
 _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 	"title": "StructureTableToggle Title",
 	"parameterDef": {
