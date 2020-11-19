@@ -80,18 +80,9 @@ export default class CanavasStore {
 	}
 
 	getNotifications() {
-		const reduxNotifications = this.store.getState().notifications;
-		let notificationMessages = this.copyData(reduxNotifications);
-		// After copying array contents, ensure callback property is set
-		// from the Redux data because this will not be opied by the copyData
-		// method.
-		notificationMessages = notificationMessages.map((n, i) => {
-			if (reduxNotifications[i].callback) {
-				n.callback = reduxNotifications[i].callback;
-			}
-			return n;
-		});
-		return notificationMessages;
+		// Notification messages may contain JSX objects and a callback function
+		// so create copy using Object.assign instead of this.copyData method.
+		return this.store.getState().notifications.map((n, i) => Object.assign({}, n));
 	}
 
 	getSelectionInfo() {
