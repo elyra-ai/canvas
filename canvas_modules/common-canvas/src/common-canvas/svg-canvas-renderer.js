@@ -2699,7 +2699,8 @@ export default class SVGCanvasRenderer {
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
 						// Input ports
-						if (d.layout.inputPortDisplay && d.inputs && d.inputs.length > 0) {
+						// Empty inputs arrays are allowed because some apps support that when ports are deleted.
+						if (d.layout.inputPortDisplay && Array.isArray(d.inputs)) {
 							// This selector will select all input ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own input ports as well
@@ -2852,7 +2853,8 @@ export default class SVGCanvasRenderer {
 						}
 
 						// Output ports
-						if (d.layout.outputPortDisplay && d.outputs && d.outputs.length > 0) {
+						// Empty outputs arrays are allowed because some apps support that when ports are deleted.
+						if (d.layout.outputPortDisplay && Array.isArray(d.outputs)) {
 							// This selector will select all output ports which are for the currently
 							// active pipeline. It is necessary to select them by the active pipeline
 							// because an expanded super node will include its own output ports as well
