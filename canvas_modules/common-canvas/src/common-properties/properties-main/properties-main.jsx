@@ -53,7 +53,8 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setHandlers({
 			controllerHandler: props.callbacks.controllerHandler,
 			propertyListener: props.callbacks.propertyListener,
-			actionHandler: props.callbacks.actionHandler
+			actionHandler: props.callbacks.actionHandler,
+			buttonHandler: props.callbacks.buttonHandler
 		});
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
@@ -504,6 +505,7 @@ PropertiesMain.propTypes = {
 		applyPropertyChanges: PropTypes.func,
 		helpClickHandler: PropTypes.func,
 		setPropertiesHasMounted: PropTypes.func,
+		buttonHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

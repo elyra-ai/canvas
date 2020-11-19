@@ -14,29 +14,5 @@
  * limitations under the License.
  */
 
-import { IntlProvider } from "react-intl";
-import { mount, shallow } from "enzyme";
-
-const defaultLocale = "en-US";
-const locale = defaultLocale;
-
-export function mountWithIntl(node, inOptions) {
-	const options = Object.assign({
-		wrappingComponent: IntlProvider,
-		wrappingComponentProps: {
-			locale,
-			defaultLocale
-		}
-	}, inOptions);
-	return mount(node, options);
-}
-
-export function shallowWithIntl(node) {
-	return shallow(node, {
-		wrappingComponent: IntlProvider,
-		wrappingComponentProps: {
-			locale,
-			defaultLocale
-		},
-	});
-}
+import ReadonlyTable from "./readonlytable.jsx";
+export default ReadonlyTable;

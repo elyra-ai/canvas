@@ -39,7 +39,8 @@ export default class PropertiesController {
 		this.handlers = {
 			propertyListener: null,
 			controllerHandler: null,
-			actionHandler: null
+			actionHandler: null,
+			buttonHandler: null
 		};
 		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
@@ -148,7 +149,7 @@ export default class PropertiesController {
 	}
 
 	getResource(key, defaultValue) {
-		if (this.form.resources) {
+		if (this.form && this.form.resources) {
 			return this.form.resources[key] ? this.form.resources[key] : defaultValue;
 		}
 		return defaultValue;
