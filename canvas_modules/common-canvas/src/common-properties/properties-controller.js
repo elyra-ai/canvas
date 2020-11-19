@@ -149,7 +149,7 @@ export default class PropertiesController {
 	}
 
 	getResource(key, defaultValue) {
-		if (this.form.resources) {
+		if (this.form && this.form.resources) {
 			return this.form.resources[key] ? this.form.resources[key] : defaultValue;
 		}
 		return defaultValue;

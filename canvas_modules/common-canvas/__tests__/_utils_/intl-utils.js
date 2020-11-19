@@ -16,7 +16,6 @@
 
 import { IntlProvider } from "react-intl";
 import { mount, shallow } from "enzyme";
-import messages from "../test_resources/locales/en.json";
 
 const defaultLocale = "en-US";
 const locale = defaultLocale;
@@ -26,8 +25,7 @@ export function mountWithIntl(node, inOptions) {
 		wrappingComponent: IntlProvider,
 		wrappingComponentProps: {
 			locale,
-			defaultLocale,
-			messages: messages
+			defaultLocale
 		}
 	}, inOptions);
 	return mount(node, options);

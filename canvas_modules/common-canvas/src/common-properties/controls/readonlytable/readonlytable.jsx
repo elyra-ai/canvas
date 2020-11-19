@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
-import { formatMessageWithDifferentDefaultKey } from "./../../util/property-utils";
+import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
@@ -29,6 +29,7 @@ import * as ControlUtils from "./../../util/control-utils";
 class ReadonlyTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.editCallback = this.editCallback.bind(this);
 		this.buttonHandler = this.props.controller.getHandlers().buttonHandler;
 	}
@@ -43,8 +44,9 @@ class ReadonlyTableControl extends AbstractTable {
 	}
 
 	render() {
-		const overrideLabelKey = `${this.props.control.name}.readonlytable.edit.button.label`;
-		const buttonLabel = formatMessageWithDifferentDefaultKey(this.props.controller.getReactIntl(), overrideLabelKey, MESSAGE_KEYS.READONLYTABLE_EDIT_BUTTON_LABEL);
+		const overrideLabelKey = `${this.props.control.name}.edit.button.label`;
+		const defaultEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.READONLYTABLE_EDIT_BUTTON_LABEL);
+		const buttonLabel = this.props.controller.getResource(overrideLabelKey, defaultEditLabel);
 
 		const tableButtonConfig = this.buttonHandler ? {
 			editCallback: this.editCallback,

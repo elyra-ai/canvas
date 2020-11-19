@@ -746,6 +746,7 @@
     "new_datatype.timestamp.label": "TIMESTAMP",
     "new_datatype.binary.label": "BINARY",
     "new_datatype.boolean.label": "BOOLEAN",
-    "readonlyTableError-cell-new_date": "Date cannot be earlier than the 2000s"
+    "readonlyTableError-cell-new_date": "Date cannot be earlier than the 2000s",
+    "readonlyStructurelistTableControl.edit.button.label": "Edit test"
   }
 }

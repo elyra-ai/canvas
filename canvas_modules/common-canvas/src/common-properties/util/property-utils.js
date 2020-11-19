@@ -59,16 +59,6 @@ function formatMessage(intl, key, substituteObj) {
 	return formattedMessage;
 }
 
-function formatMessageWithDifferentDefaultKey(intl, key, defaultKey, substituteObj) {
-	let formattedMessage;
-	if (typeof intl !== "undefined" && intl !== null) {
-		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessages[defaultKey] }, substituteObj);
-	} else {
-		formattedMessage = defaultMessages[key];
-	}
-	return formattedMessage;
-}
-
 function generateId() {
 	return "properties-" + uuid4();
 }
@@ -538,7 +528,6 @@ function _findCorrespondingValue(input, values) {
 export {
 	toType,
 	formatMessage,
-	formatMessageWithDifferentDefaultKey,
 	evaluateText,
 	getTableFieldIndex,
 	convertInputDataModel,
