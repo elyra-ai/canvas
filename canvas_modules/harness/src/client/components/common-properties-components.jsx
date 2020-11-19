@@ -65,6 +65,7 @@ import {
 	SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO,
 	TOGGLETEXT_PROPS_INFO,
 	TOGGLETEXTICONS_PROPS_INFO,
+	READONLYTABLE_PROPS_INFO,
 	STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO,
 	STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO,
 	STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO,
@@ -93,6 +94,12 @@ class CommonPropertiesComponents extends React.Component {
 		};
 
 		this.propertiesConfig = { containerType: "Custom" };
+		this.buttonHandler = () => {
+			// empty callback handler
+		};
+		this.callbacks = {
+			buttonHandler: this.buttonHandler
+		};
 
 		this.jsonReplacer = this.jsonReplacer.bind(this);
 		this.onMenuDropdownSelect = this.onMenuDropdownSelect.bind(this);
@@ -366,6 +373,7 @@ class CommonPropertiesComponents extends React.Component {
 					"Complex",
 					"--structuretable",
 					"--structurelisteditor",
+					"--readonlytable",
 					"--edit-style",
 					"--moveable_rows",
 					"--row_selection",
@@ -1441,6 +1449,35 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(STRUCTURELISTEDITOR_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--readonlytable" className="harness-section-subtitle">readonlyTable</h3>
+					<p>A <span className="harness-highlight">readonlyTable</span> control for displaying structures with read only values.
+						This complex structure has the same definition as a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--structuretable">
+						structuretable</a> or a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--structurelisteditor">
+						structurelisteditor</a> control. To define a complex structure as readonly, set the <span className="harness-highlight">control</span> to
+						&nbsp;<span className="harness-highlight">readonlyTable</span> in the <span className="harness-highlight">parameter_info</span>.
+					</p>
+					<p>An edit button will appear in the top right corner of this table if a <span className="harness-highlight">buttonHandler</span> is passed
+						into the <span className="harness-highlight">callbacks</span> props of CommonProperties. If no <span className="harness-highlight">buttonHandler</span> is
+						defined, the button will not be shown. This edit button label can also be customized in the <span className="harness-highlight">resources</span> section of
+						the parameter definition. The key for this label is <span className="harness-highlight">[parameter_id].edit.button.label</span>.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={READONLYTABLE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								callbacks={this.callbacks}
+							/>
+							{this.renderRightFlyoutButton(READONLYTABLE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(READONLYTABLE_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
 					</div>
