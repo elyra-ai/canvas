@@ -24,7 +24,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
-import { Add16, TrashCan16 } from "@carbon/icons-react";
+import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import { MESSAGE_KEYS, STATES,
@@ -55,6 +55,7 @@ export default class AbstractTable extends React.Component {
 		// used to determine if column controls can be inline or if field picker is used
 		this.allowColumnControls = false;
 
+		this.isReadonlyTable = this.isReadonlyTable.bind(this);
 		this.indexOfColumn = this.indexOfColumn.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
@@ -67,6 +68,7 @@ export default class AbstractTable extends React.Component {
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
+		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
@@ -217,6 +219,10 @@ export default class AbstractTable extends React.Component {
 		return (this.props.control.rowSelection === ROW_SELECTION.MULTIPLE && selectedRows.length > 1);
 	}
 
+	isReadonlyTable() {
+		return this.props.control.controlType === ControlType.READONLYTABLE;
+	}
+
 	indexOfColumn(controlId) {
 		return findIndex(this.props.control.subControls, function(columnControl) {
 			return columnControl.name === controlId;
@@ -321,7 +327,16 @@ export default class AbstractTable extends React.Component {
 			columnDefObj.icon = PropertyUtils.getDMFieldIcon(fields,
 				stringValue, columnDef.dmImage);
 		}
-		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
+		if (this.isReadonlyTable()) {
+			cellContent = (<div className="properties-table-cell-control">
+				<ReadonlyControl
+					control={this.props.controller.getControl(propertyId)}
+					propertyId={propertyId}
+					controller={this.props.controller}
+					tableControl
+				/>
+			</div>);
+		} else if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
 			if (selectSummaryRow) {
 				cellContent = <div />;
 			} else {
@@ -499,6 +514,32 @@ export default class AbstractTable extends React.Component {
 		);
 	}
 
+	makeEditButtonPanel(tableState, tableButtonConfig) {
+		let editButton = null;
+
+		if (tableButtonConfig && tableButtonConfig.editCallback) {
+			this.editOnClickCallback = tableButtonConfig.editCallback;
+			editButton = (<div className="properties-at-buttons-container">
+				<Button
+					className="properties-edit-button"
+					onClick={this.editOnClick.bind(this, this.props.propertyId)}
+					size="small"
+					kind="ghost"
+					renderIcon={Edit16}
+				>
+					{tableButtonConfig.label}
+				</Button>
+			</div>);
+		}
+
+		return editButton;
+	}
+
+	editOnClick(propertyId) {
+		if (this.editOnClickCallback) {
+			this.editOnClickCallback(propertyId);
+		}
+	}
 
 	checkedAllValue(colIndex, checked) {
 		const controlValue = this.props.value;
@@ -574,9 +615,12 @@ export default class AbstractTable extends React.Component {
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
 
-		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
+		let topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
 			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
 			: <div />;
+		if (this.isReadonlyTable()) {
+			topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
+		}
 
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
@@ -676,7 +720,7 @@ export default class AbstractTable extends React.Component {
 						}
 					}
 				}
-				if (this.props.control.childItem && !selectSummaryRow) {
+				if (this.props.control.childItem && !selectSummaryRow && !this.isReadonlyTable()) {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
 				}

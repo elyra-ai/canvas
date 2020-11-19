@@ -90,6 +90,7 @@ const ControlType = {
 	STRUCTURELISTEDITOR: "structurelisteditor",
 	TOGGLETEXT: "toggletext",
 	READONLY: "readonly",
+	READONLYTABLE: "readonlyTable",
 	SPINNER: "spinner",
 	CODE: "code",
 	HIDDEN: "hidden"

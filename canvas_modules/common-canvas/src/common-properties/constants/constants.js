@@ -93,7 +93,8 @@ _defineConstant("MESSAGE_KEYS", {
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
-	PROPERTIES_LABEL: "properties.label"
+	PROPERTIES_LABEL: "properties.label",
+	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
