@@ -281,11 +281,10 @@ class ExpressionControl extends React.Component {
 				{validateIcon}
 			</div>)
 			: null;
-
 		const mirrorOptions = {
 			mode: this.props.control.language,
 			placeholder: this.props.control.additionalText,
-			theme: theme + " default",
+			theme: theme + " custom",
 			readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true

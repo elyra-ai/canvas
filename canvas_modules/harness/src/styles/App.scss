@@ -58,12 +58,14 @@ $harness-navbar-icon-width: 48px;
 	display: block;
 	width: 174px;
 	height: 121px;
+	opacity: 0.5;
+	fill: $text-02;
 }
 
 .harness-empty-link {
 	display: block;
-	color: $text-01;
-	opacity: 0.2;
+	color: $text-02;
+	opacity: 0.5;
 	font-size: 20px;
 	text-align: center;
 	text-decoration: underline;
@@ -73,8 +75,8 @@ $harness-navbar-icon-width: 48px;
 
 .harness-empty-text {
 	display: block;
-	color: $text-01;
-	opacity: 0.2;
+	color: $text-02;
+	opacity: 0.5;
 	font-size: 20px;
 	text-align: center;
 }
