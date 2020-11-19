@@ -16,6 +16,7 @@
 
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
+import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import SetObjectsStyleAction from "../../src/command-actions/setObjectsStyleAction.js";
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
@@ -42,15 +43,18 @@ describe("SetObjectsStyleAction handles calls correctly", () => {
 		};
 		data.pipelineObjectIds[originalPipelineId] = [nodes[0].id];
 		const setObjectsStyle = new SetObjectsStyleAction(data, objectModel);
-
 		setObjectsStyle.do();
-		expect(canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId)).to.equal(dummyStyle);
+
+		const savedStyle = canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId);
+		expect(isEqual(savedStyle, dummyStyle)).to.be.true;
 
 		setObjectsStyle.undo();
 		// undo should now set style to null, instead of an undefined property of the node
-		expect(canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId)).to.equal(null);
+		const savedStyle2 = canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId);
+		expect(savedStyle2).to.equal(null);
 
 		setObjectsStyle.redo();
-		expect(canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId)).to.equal(dummyStyle);
+		const savedStyle3 = canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId);
+		expect(isEqual(savedStyle3, dummyStyle)).to.be.true;
 	});
 });

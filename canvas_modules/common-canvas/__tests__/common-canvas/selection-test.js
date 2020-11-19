@@ -17,7 +17,7 @@
 /* eslint no-console: "off" */
 
 import { expect } from "chai";
-import difference from "lodash/difference";
+import differenceWith from "lodash/differenceWith";
 import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
@@ -57,13 +57,13 @@ describe("Selection notification tests", () => {
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
 			const selectedApiPipeline = objectModel.getAPIPipeline(data.selectedPipelineId);
-			expect(isEmpty(difference(data.selection, ["comment1", "node3"]))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, objectModel.getSelectedNodes()))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, objectModel.getSelectedComments()))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, [selectedApiPipeline.getNode("node3")]))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, [selectedApiPipeline.getComment("comment1")]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, ["comment1", "node3"]))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, objectModel.getSelectedNodes()))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, objectModel.getSelectedComments()))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, [selectedApiPipeline.getNode("node3")]))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, [selectedApiPipeline.getComment("comment1")]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, []))).to.be.true;
 		});
 		canvasController.setSelections(["comment1", "node3"]);
 
@@ -134,13 +134,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, ["node1", "node4", "node2"]))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, canvasController.getSelectedNodes()))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, [canvasController.getNode("node2", "123"), canvasController.getNode("node4", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, ["node1", "node4", "node2"]))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, canvasController.getSelectedNodes()))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, [canvasController.getNode("node2", "123"), canvasController.getNode("node4", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, []))).to.be.true;
 		});
 
 		objectModel.selectSubGraph("node4", "123");
@@ -153,7 +153,7 @@ describe("Selection notification tests", () => {
 		// console.log("expectedSelections = " + JSON.stringify(expectedSelections));
 		// console.log("actualSelections   = " + JSON.stringify(actualSelections));
 
-		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
+		expect(isEmpty(diffIds(expectedSelections, actualSelections))).to.be.true;
 		objectModel.setSelectionChangeHandler(null);
 	});
 
@@ -183,13 +183,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, canvasController.getSelectedComments()))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, ["comment1"]))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, canvasController.getSelectedComments()))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, []))).to.be.true;
 		});
 
 		objectModel.toggleSelection("node3", true, "123");
@@ -232,13 +232,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, ["comment1"]))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, []))).to.be.true;
 		});
 		canvasController.setSelections(["comment1"]);
 
@@ -278,13 +278,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, [canvasController.getNode("node3", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
 		});
 		canvasController.setSelections([]);
 
@@ -329,13 +329,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, [node3]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, ["comment1"]))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, [canvasController.getComment("comment1", "123")]))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, [node3]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, []))).to.be.true;
 		});
 
 		canvasController.deleteObject("node3", "123");
@@ -382,13 +382,13 @@ describe("Selection notification tests", () => {
 		let changeHandlerCalled = false;
 		objectModel.setSelectionChangeHandler((data) => {
 			changeHandlerCalled = true;
-			expect(isEmpty(difference(data.selection, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
-			expect(isEmpty(difference(data.addedComments, []))).to.be.true;
-			expect(isEmpty(difference(data.deselectedNodes, [node3]))).to.be.true;
-			expect(isEmpty(difference(data.deselectedComments, [comment1]))).to.be.true;
+			expect(isEmpty(diffIds(data.selection, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.selectedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedNodes, []))).to.be.true;
+			expect(isEmpty(diffIds(data.addedComments, []))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedNodes, [node3]))).to.be.true;
+			expect(isEmpty(diffIds(data.deselectedComments, [comment1]))).to.be.true;
 		});
 		canvasController.deleteSelectedObjects();
 
@@ -548,3 +548,9 @@ describe("test areSelectedNodesContiguous() api", () => {
 		expect(canvasController.areSelectedNodesContiguous()).to.be.false;
 	});
 });
+
+// Returns true if the two arrays passed in are the same based on the id
+// property of the elements in each array.
+function diffIds(a, b) {
+	return differenceWith(a, b, (a1, b1) => a1.id === b1.id);
+}

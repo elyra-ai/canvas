@@ -23,8 +23,9 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
+import CanvasStore from "./redux/canvas-store.js";
 
-import difference from "lodash/difference";
+import differenceWith from "lodash/differenceWith";
 import isEmpty from "lodash/isEmpty";
 import has from "lodash/has";
 import union from "lodash/union";
@@ -32,7 +33,7 @@ import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
 import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
-import { createCCStore } from "./redux/store.js";
+
 
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
@@ -43,7 +44,7 @@ export default class ObjectModel {
 	constructor() {
 		// Create a store defaulting to an empty canvas.
 		const emptyCanvasInfo = this.getEmptyCanvasInfo();
-		this.store = createCCStore(emptyCanvasInfo);
+		this.store = new CanvasStore(emptyCanvasInfo);
 
 		// TODO - Remove this global variable when WML Canvas supports pipelineFlow
 		this.oldCanvas = null;
@@ -135,7 +136,7 @@ export default class ObjectModel {
 	}
 
 	getPaletteData() {
-		return this.store.getState().palette;
+		return this.store.getPaletteData();
 	}
 
 	setCategoryLoadingText(categoryId, loadingText) {
@@ -820,7 +821,7 @@ export default class ObjectModel {
 	}
 
 	getCanvasInfo() {
-		return this.store.getState().canvasinfo;
+		return this.store.getCanvasInfo();
 	}
 
 	setSubdueStyle(newStyle) {
@@ -870,7 +871,7 @@ export default class ObjectModel {
 	}
 
 	getBreadcrumbs() {
-		return this.store.getState().breadcrumbs;
+		return this.store.getBreadcrumbs();
 	}
 
 	getCurrentBreadcrumb() {
@@ -921,15 +922,15 @@ export default class ObjectModel {
 	}
 
 	getLayoutInfo() {
-		return this.store.getState().layoutinfo;
+		return this.store.getLayoutInfo();
 	}
 
 	getNodeLayout() {
-		return this.store.getState().layoutinfo.nodeLayout;
+		return this.store.getNodeLayout();
 	}
 
 	getCanvasLayout() {
-		return this.store.getState().layoutinfo.canvasLayout;
+		return this.store.getCanvasLayout();
 	}
 
 
@@ -954,7 +955,7 @@ export default class ObjectModel {
 	}
 
 	getNotificationMessages(messageType) {
-		const notificationMessages = this.store.getState().notifications;
+		const notificationMessages = this.store.getNotifications();
 		if (messageType) {
 			return notificationMessages.filter((message) => {
 				return message.type === messageType;
@@ -1031,7 +1032,7 @@ export default class ObjectModel {
 	}
 
 	getSelectionInfo() {
-		return this.store.getState().selectioninfo;
+		return this.store.getSelectionInfo();
 	}
 
 	getSelectedPipeline() {
@@ -1238,12 +1239,12 @@ export default class ObjectModel {
 				selectedLinks: selectedLinks,
 				selectedNodes: selectedNodes,
 				selectedComments: selectedComments,
-				addedLinks: difference(selectedLinks, previousSelection.links),
-				addedNodes: difference(selectedNodes, previousSelection.nodes),
-				addedComments: difference(selectedComments, previousSelection.comments),
-				deselectedLinks: difference(previousSelection.links, selectedLinks),
-				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
-				deselectedComments: difference(previousSelection.comments, selectedComments),
+				addedLinks: differenceWith(selectedLinks, previousSelection.links, (s, p) => s.id === p.id),
+				addedNodes: differenceWith(selectedNodes, previousSelection.nodes, (s, p) => s.id === p.id),
+				addedComments: differenceWith(selectedComments, previousSelection.comments, (s, p) => s.id === p.id),
+				deselectedLinks: differenceWith(previousSelection.links, selectedLinks, (s, p) => s.id === p.id),
+				deselectedNodes: differenceWith(previousSelection.nodes, selectedNodes, (s, p) => s.id === p.id),
+				deselectedComments: differenceWith(previousSelection.comments, selectedComments, (s, p) => s.id === p.id),
 				previousPipelineId: previousSelection.pipelineId,
 				selectedPipelineId: this.getSelectedPipelineId()
 			};

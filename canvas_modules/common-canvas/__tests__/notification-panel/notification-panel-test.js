@@ -224,8 +224,13 @@ describe("canvas controller APIs for notification panel work correctly", () => {
 		expect(canvasController.getNotificationMessages()).to.eql([]);
 
 		canvasController.setNotificationMessages(notificationMessages);
+
+		// Note: These JSON strings don't indclude the 'callback' property from each message object.
+		// console.log(JSON.stringify(canvasController.getNotificationMessages(), null, 2));
+		// console.log(JSON.stringify(notificationMessages, null, 2));
+
 		// all these messages already have keys, so no new keys should be generated for them
-		expect(canvasController.getNotificationMessages()).to.eql(notificationMessages);
+		expect(areMessagesEqual(canvasController.getNotificationMessages(), notificationMessages)).to.be.true;
 	});
 
 	it("get messages correctly in canvasController", () => {
@@ -615,3 +620,29 @@ describe("notification center buttons work properly", () => {
 
 	});
 });
+
+function areMessagesEqual(messages1, messages2) {
+	if (messages1.length !== messages2.length) {
+		return false;
+	}
+	for (let i = 0; i < messages1.length; i++) {
+		const msg1 = messages1[i];
+		const msg2 = messages2[i];
+		if (!areMessageFieldsEqual(msg1, msg2, "id") ||
+				!areMessageFieldsEqual(msg1, msg2, "title") ||
+				!areMessageFieldsEqual(msg1, msg2, "type") ||
+				!areMessageFieldsEqual(msg1, msg2, "content") ||
+				!areMessageFieldsEqual(msg1, msg2, "timestamp") ||
+				!areMessageFieldsEqual(msg1, msg2, "callback")) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function areMessageFieldsEqual(msg1, msg2, field) {
+	if ((msg1[field] && !msg2[field]) || (!msg1[field] && msg2[field]) || (msg1[field] && msg2[field] && msg1[field] !== msg2[field])) {
+		return false;
+	}
+	return true;
+}
