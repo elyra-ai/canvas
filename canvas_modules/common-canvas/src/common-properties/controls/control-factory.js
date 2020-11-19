@@ -41,6 +41,7 @@ import SelectColumnsControl from "./selectcolumns";
 import StructureEditorControl from "./structureeditor";
 import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
+import ReadonlyTableControl from "./readonlytable";
 
 import ControlItem from "./../components/control-item";
 
@@ -180,6 +181,15 @@ export default class ControlFactory {
 		case (ControlType.STRUCTURELISTEDITOR):
 			if (!tableInfo) {
 				return (<StructurelisteditorControl
+					{...props}
+					buildUIItem={this.genUIItem}
+					rightFlyout={this.rightFlyout}
+				/>);
+			}
+			return (<ReadonlyControl {...props} />);
+		case (ControlType.READONLYTABLE):
+			if (!tableInfo) {
+				return (<ReadonlyTableControl
 					{...props}
 					buildUIItem={this.genUIItem}
 					rightFlyout={this.rightFlyout}

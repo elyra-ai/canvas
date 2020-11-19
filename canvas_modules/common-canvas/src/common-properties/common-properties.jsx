@@ -246,6 +246,7 @@ CommonProperties.propTypes = {
 		closePropertiesDialog: PropTypes.func,
 		applyPropertyChanges: PropTypes.func,
 		helpClickHandler: PropTypes.func,
+		buttonHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
