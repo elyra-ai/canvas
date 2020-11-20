@@ -59,12 +59,9 @@ export default class SVGCanvasD3 {
 		// Initialize dimension and layout variables
 		this.initializeLayoutInfo(config);
 
-		// Make a copy of canvasInfo because we will need to update it (when moving
-		// nodes and comments and when sizing comments in real time) without updating the
-		// canvasInfo in the objectModel. The objectModel canvasInfo is only updated
-		// when the operation is complete. We get the info from the canvas controller
-		// because it may have been changed by the initializeLayoutInfo() above.
-		this.canvasInfo = this.cloneCanvasInfo(this.canvasController.getCanvasInfo());
+		// We get the info from the canvas controller because it may have been
+		// changed by the initializeLayoutInfo() above.
+		this.canvasInfo = this.canvasController.getCanvasInfo();
 
 		// Create a renderer object for the primary pipeline
 		this.renderer = new SVGCanvasRenderer(
@@ -112,11 +109,8 @@ export default class SVGCanvasD3 {
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
-			// The canvasInfo does not need to be cloned here because the two
-			// calls below will cause the objectModel to be updated which will
-			// cause this method to be called again and the else clasue of this if
-			// will be executed which will clone the canvasInfo.
 			this.canvasInfo = canvasInfo;
+
 			// Save the config
 			this.config = this.cloneConfig(config);
 
@@ -133,7 +127,7 @@ export default class SVGCanvasD3 {
 		} else {
 			this.logger.logStartTimer("Set Canvas Info");
 
-			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
+			this.canvasInfo = canvasInfo;
 
 			if (this.renderer) {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
@@ -221,17 +215,6 @@ export default class SVGCanvasD3 {
 			}
 		});
 		return state;
-	}
-
-	// Copies canvasInfo because we will need to update it (when moving
-	// nodes and comments and when sizing comments in real time) without updating
-	// the canvasInfo in the ObjectModel. The objectModel canvasInfo is only
-	// updated when the real-time operation is complete.
-	cloneCanvasInfo(canvasInfo) {
-		this.logger.logStartTimer("Cloning canvasInfo");
-		const cloneCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
-		this.logger.logEndTimer("Cloning canvasInfo");
-		return cloneCanvasInfo;
 	}
 
 	initializeCanvasDiv(canvasDivSelector) {

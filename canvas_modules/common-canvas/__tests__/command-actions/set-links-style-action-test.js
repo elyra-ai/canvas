@@ -16,6 +16,7 @@
 
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
+import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import SetLinksStyleAction from "../../src/command-actions/setLinksStyleAction.js";
 import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
@@ -44,12 +45,15 @@ describe("SetLinksStyleAction handles calls correctly", () => {
 		const setLinksStyleAction1 = new SetLinksStyleAction(data, objectModel);
 
 		setLinksStyleAction1.do();
-		expect(canvasController.getLinkStyle(links[0].id, false, originalPipelineId)).to.equal(dummyStyle);
+		let actualStyle = canvasController.getLinkStyle(links[0].id, false, originalPipelineId);
+		expect(isEqual(actualStyle, dummyStyle)).to.be.true;
 
 		setLinksStyleAction1.undo();
-		expect(canvasController.getLinkStyle(links[0].id, false, originalPipelineId)).to.equal(null);
+		actualStyle = canvasController.getLinkStyle(links[0].id, false, originalPipelineId);
+		expect(actualStyle).to.equal(null);
 
 		setLinksStyleAction1.redo();
-		expect(canvasController.getLinkStyle(links[0].id, false, originalPipelineId)).to.equal(dummyStyle);
+		actualStyle = canvasController.getLinkStyle(links[0].id, false, originalPipelineId);
+		expect(isEqual(actualStyle, dummyStyle)).to.be.true;
 	});
 });

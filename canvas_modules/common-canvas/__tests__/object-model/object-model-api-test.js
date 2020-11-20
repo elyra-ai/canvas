@@ -340,14 +340,18 @@ describe("ObjectModel API handle model OK", () => {
 		];
 
 		const pipelineID = "153651d6-9b88-423c-b01b-861f12d01489";
-		objectModel.setPipelineFlow(startPipelineFlow);
+		canvasController.setPipelineFlow(startPipelineFlow);
 
 		// In preparation, add a link ID to an arbitarary link in the flow
-		const apiPipeline = objectModel.getAPIPipeline(pipelineID);
-		const links = apiPipeline.getLinks();
-		links[0].id = "test-link-0";
-		links[1].id = "test-link-1";
-		links[2].id = "test-link-2";
+		// const apiPipeline = objectModel.getAPIPipeline(pipelineID);
+		// const links = apiPipeline.getLinks();
+		const newLinks = [
+			{ "id": "test-link-0" },
+			{ "id": "test-link-1" },
+			{ "id": "test-link-2" }
+		];
+
+		canvasController.addLinks(newLinks, pipelineID);
 
 		const array = [
 			{ pipelineId: pipelineID, linkId: "test-link-0", decorations: decorationSpec },
@@ -355,6 +359,7 @@ describe("ObjectModel API handle model OK", () => {
 			{ pipelineId: pipelineID, linkId: "test-link-2", decorations: decorationSpec }
 		];
 		canvasController.setLinksMultiDecorations(array);
+
 
 		const dec1 = canvasController.getLinkDecorations("test-link-0", pipelineID);
 		expect(isEqual(dec1, decorationSpec)).to.be.true;
@@ -1185,15 +1190,11 @@ describe("ObjectModel API handle model OK", () => {
 			[{ "id": "dec1", "position": "source", "class_name": "dec-class", "hotspot": true, "image": "dec-image" },
 				{ "id": "dec2", "position": "middle", "class_name": "dec-class2", "image": "dec-image2" }
 			];
-		objectModel.setPipelineFlow(startPipelineFlow);
+		canvasController.setPipelineFlow(startPipelineFlow);
+		const links = canvasController.getLinks();
+		const linkId = links[0].id;
 
-		// In preparation, add a link ID to an arbitarary link in the flow
-		const linkId = "test-link";
-		const apiPipeline = objectModel.getAPIPipeline("153651d6-9b88-423c-b01b-861f12d01489");
-		const links = apiPipeline.getLinks();
-		links[0].id = linkId;
-
-		apiPipeline.setLinkDecorations(linkId, expectedDecorations);
+		canvasController.setLinkDecorations(linkId, expectedDecorations, "153651d6-9b88-423c-b01b-861f12d01489");
 
 		// Make sure decorations are returned by the API
 		let actualDecorations = canvasController.getLinkDecorations(linkId);
@@ -1204,40 +1205,25 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedDecorations, actualDecorations)).to.be.true;
 
 		// Make sure the decorations was saved in the pipeline flow
-		let pFlow = objectModel.getPipelineFlow();
-		const decFound = getDecoration(pFlow);
+		const decFound = linkFromFlow(linkId);
 		expect(isEqual(expectedDecorations, decFound)).to.be.true;
 
 		// Make sure, when null decorations are set, that null is returned by the API.
-		objectModel.getAPIPipeline().setLinkDecorations(linkId, null);
-		actualDecorations = objectModel.getAPIPipeline().getLinkDecorations(linkId);
+		canvasController.setLinkDecorations(linkId, null, "153651d6-9b88-423c-b01b-861f12d01489");
+		actualDecorations = canvasController.getLinkDecorations(linkId, "153651d6-9b88-423c-b01b-861f12d01489");
 		expect(isEqual(null, actualDecorations)).to.be.true;
 
 		// Make sure, when null decorations are set, that nothing is returned in the pipeline flow
-		pFlow = objectModel.getPipelineFlow();
-		const decFound2 = getDecoration(pFlow);
-		expect(decFound2 === null).to.be.true;
+		const decFound2 = linkFromFlow(linkId);
+		/* eslint no-undefined: "off" */
+		expect(decFound2 === undefined).to.be.true;
 	}
 
-	// Common-canvas does not output the linkId to the pipelineFlow document
-	// so we just look for a decoration in the pipeline flow (since there will be
-	// only one) for testing.
-	function getDecoration(pFlow) {
-		let decFound = null;
-		pFlow.pipelines[0].nodes.forEach((nd) => {
-			if (nd.inputs) {
-				nd.inputs.forEach((inp) => {
-					if (inp.links) {
-						inp.links.forEach((lnk) => {
-							if (lnk.app_data.ui_data.decorations) {
-								decFound = lnk.app_data.ui_data.decorations;
-							}
-						});
-					}
-				});
-			}
-		});
-		return decFound;
+	function linkFromFlow(linkId) {
+		const pFlow = canvasController.getPipelineFlow();
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(pFlow);
+		return canvasController2.getLinkDecorations(linkId, "153651d6-9b88-423c-b01b-861f12d01489");
 	}
 
 	function shouldSetNodeCommentStyle(temporary) {
