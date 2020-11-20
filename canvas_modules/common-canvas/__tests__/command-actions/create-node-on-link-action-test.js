@@ -58,31 +58,43 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 
 		createNodeLink.do();
 
-		// check getData() function
 		const getData = createNodeLink.getData();
 		const newLinkIds = difference(canvasController.getLinks(), startingLinks).map((newLink) => newLink.id);
-		// ensure the newly created links are correctly set on the new node
-		expect(difference([getData.newFirstLink.id, getData.newSecondLink.id], newLinkIds)).to.have.length(0);
 
-		let dummyNode = difference(canvasController.getNodes(), startingNodes)[0];
+		// Get the node that was added to teh canvas
+		const addedNode = nodeDifference(startingNodes)[0];
+
+		// Check two new links were added with corrct IDs
+		expect(difference([getData.newFirstLink.id, getData.newSecondLink.id], newLinkIds)).to.have.length(0);
 		expect(canvasController.getLinks()).to.have.length(10);
 		expect(canvasController.getNodes()).to.have.length(6);
+		// Check old link was removed
 		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, trgNode.id, trgNode.inputs[0].id)).to.be.undefined;
-		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, dummyNode.id, dummyNode.inputs[0].id)).to.exist;
+		// Check new links were added
+		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, addedNode.id, addedNode.inputs[0].id)).to.exist;
+		expect(canvasController.getNodeDataLinkFromInfo(addedNode.id, addedNode.outputs[0].id, trgNode.id, trgNode.inputs[0].id)).to.exist;
+
 
 		createNodeLink.undo();
 		expect(canvasController.getLinks()).to.have.length(9);
-		dummyNode = difference(canvasController.getNodes(), startingNodes)[0];
-		expect(dummyNode).to.be.undefined;
+		const addedNode2 = nodeDifference(startingNodes)[0];
+		expect(addedNode2).to.be.undefined;
+		// Check the old link was restored
 		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, trgNode.id, trgNode.inputs[0].id)).to.exist;
+
 
 		createNodeLink.redo();
 		expect(canvasController.getLinks()).to.have.length(10);
 		expect(canvasController.getNodes()).to.have.length(6);
-		dummyNode = difference(canvasController.getNodes(), startingNodes)[0];
-		expect(dummyNode).to.be.not.undefined;
+		const addedNode3 = nodeDifference(startingNodes)[0];
+		expect(addedNode3).to.be.not.undefined;
+		// Check the new links were restored
 		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, trgNode.id, trgNode.inputs[0].id)).to.be.undefined;
-		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, dummyNode.id, dummyNode.inputs[0].id)).to.exist;
+		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, addedNode.id, addedNode.inputs[0].id)).to.exist;
 	});
+
+	function nodeDifference(diffNodes) {
+		return canvasController.getNodes().filter((n) => diffNodes.findIndex((sn) => sn.id === n.id) === -1);
+	}
 
 });
