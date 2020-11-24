@@ -377,10 +377,6 @@ const haloDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
-		// Specifies a distance the ghost node will be drawn within its SVG area to
-		// allow for extra objects to be drawn outside the ghost node's rectangle.
-		ghostOffset: 300,
-
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -752,10 +748,6 @@ const portsHorizontalDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
-		// Specifies a distance the ghost node will be drawn within its SVG area to
-		// allow for extra objects to be drawn outside the ghost node's rectangle.
-		ghostOffset: 300,
-
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -1126,10 +1118,6 @@ const portsVerticalDefaultLayout = {
 		// Adds additional area around the ghost areaa dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
-
-		// Specifies a distance the ghost node will be drawn within its SVG area to
-		// allow for extra objects to be drawn outside the ghost node's rectangle.
-		ghostOffset: 300,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
