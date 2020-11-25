@@ -1648,12 +1648,14 @@ export default class CanvasController {
 		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
-	createEditMenu(source) {
+	createEditMenu(source, includePaste) {
 		const editSubMenu = [
 			{ action: "cut", label: this.getLabel("edit.cutSelection"), enable: source.selectedObjectIds.length > 0 },
-			{ action: "copy", label: this.getLabel("edit.copySelection"), enable: source.selectedObjectIds.length > 0 },
-			{ action: "paste", label: this.getLabel("edit.pasteSelection"), enable: !this.isClipboardEmpty() }
+			{ action: "copy", label: this.getLabel("edit.copySelection"), enable: source.selectedObjectIds.length > 0 }
 		];
+		if (includePaste) {
+			editSubMenu.push({ action: "paste", label: this.getLabel("edit.pasteSelection"), enable: !this.isClipboardEmpty() });
+		}
 		return editSubMenu;
 	}
 
@@ -1695,7 +1697,7 @@ export default class CanvasController {
 				source.type === "comment" ||
 				(source.type === "link" && this.areDetachableLinksSupported()) ||
 				source.type === "canvas") {
-			const editSubMenu = this.createEditMenu(source);
+			const editSubMenu = this.createEditMenu(source, source.type === "canvas");
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node.editMenu") });
 			menuDefinition = menuDefinition.concat({ divider: true });
 		}
