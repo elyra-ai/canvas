@@ -27,7 +27,8 @@ import dataRecordMetadataV2Schema from "@elyra/pipeline-schemas/common-pipeline/
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
 
 import pipelineFlowV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json";
-import pipelineFlowUIV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json";
+// import pipelineFlowUIV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json";
+import pipelineFlowUIV3Schema from "./pipeline-flow-ui-v3-schema.json";
 import pipelineConnectionV3Schema from "@elyra/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v3-schema.json";
 import dataRecordMetadataV3Schema from "@elyra/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema.json";
 import paletteV3Schema from "@elyra/pipeline-schemas/common-canvas/palette/palette-v3-schema.json";
