@@ -56,7 +56,11 @@ export default class PipelineInHandler {
 		};
 
 		if (has(pipeline, "app_data.ui_data.zoom")) {
-			canvas.zoom = pipeline.app_data.ui_data.zoom;
+			if (typeof pipeline.app_data.ui_data.zoom === "number") {
+				canvas.zoom = { x: 0, y: 0, k: pipeline.app_data.ui_data.zoom / 100 };
+			} else {
+				canvas.zoom = pipeline.app_data.ui_data.zoom;
+			}
 		}
 
 		// Remove comments from app_data.ui_data as it's now stored in canvas obj.
