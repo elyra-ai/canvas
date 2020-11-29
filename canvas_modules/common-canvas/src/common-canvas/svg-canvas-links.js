@@ -96,11 +96,9 @@ export default class SvgCanvasLinks {
 		} else if (this.canvasLayout.connectionType === "ports" &&
 				line.type === NODE_LINK) {
 
-			if (this.canvasLayout.linkType === LINK_TYPE_CURVE) {
-				return this.getCurvePath(line, minInitialLine);
-
-			} else	if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
-				return this.getElbowPath(line, minInitialLine);
+			if (this.canvasLayout.linkType === LINK_TYPE_CURVE ||
+					this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
+				return this.getPortLinkPath(line, minInitialLine);
 			}
 
 		} else if (line.type === ASSOCIATION_LINK &&
@@ -300,14 +298,15 @@ export default class SvgCanvasLinks {
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
 
-	// Returns the path info, for the object passed in, which describes a
-	// curved connector line. The pathInfo contains:
-	// path - an SVG path string describing the elbow line
+	// Returns the path info, for the object passed in, which describes either a
+	// curved or elbow connector line. This method handles the Top->Bottom and
+	// Bottom->Top configurations by treating them as Left->Right and rotating
+	// the lines to fit the configuration.
+	// The pathInfo contains:
+	// path - an SVG path string describing the curved line
 	// centerPoint - the center point of the line used for decoration placement
-	getCurvePath(data, minInitialLine) {
+	getPortLinkPath(data, minInitialLine, type) {
 		let newData = data;
-
-		// When dragging out a new link we will not have src nor trg nodes
 		let topSrc;
 		let topTrg;
 		let bottomSrc;
@@ -333,6 +332,8 @@ export default class SvgCanvasLinks {
 				topTrg = data.trg.y_pos;
 				bottomTrg = data.trg.y_pos + data.trg.height;
 			}
+		// When dragging out a new link we will not have src nor trg nodes so we
+		// make a best guess at the node dimensions.
 		} else {
 			if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 				topSrc = -data.x1;
@@ -361,7 +362,9 @@ export default class SvgCanvasLinks {
 			newData = this.rotateData90Degrees(newData, CLOCKWISE);
 		}
 
-		const pathInfo = this.getCurvePathInfo(newData, minInitialLine, topSrc, topTrg, bottomSrc, bottomTrg);
+		const pathInfo = this.canvasLayout.linkType === LINK_TYPE_ELBOW
+			? this.getElbowPathInfo(newData, minInitialLine, topSrc, topTrg, bottomSrc, bottomTrg)
+			: this.getCurvePathInfo(newData, minInitialLine, topSrc, topTrg, bottomSrc, bottomTrg);
 
 		// For TB and BT link directions rotate the path elements from Left-Right
 		// back to the appropriate orientation.
@@ -412,29 +415,16 @@ export default class SvgCanvasLinks {
 			centerPoint.y = corner1Y + ((corner2Y - corner1Y) / 2);
 
 		} else {
-			let yDiff = data.y2 - data.y1;
+			const yDiff = data.y2 - data.y1;
 
-			let midY = 0;
-			if (topTrg >= bottomSrc + this.canvasLayout.wrapAroundNodePadding) {
-				midY = bottomSrc + ((topTrg - bottomSrc) / 2);
-			} else if (bottomTrg <= topSrc - this.canvasLayout.wrapAroundNodePadding) {
-				midY = bottomTrg + ((topSrc - bottomTrg) / 2);
-				yDiff = -yDiff;
-			} else {
-				if (data.y1 > data.y2) {
-					midY = Math.min(topSrc, topTrg) - this.canvasLayout.wrapAroundSpacing;
-					yDiff = -yDiff;
-				} else {
-					midY = Math.max(bottomSrc, bottomTrg) + this.canvasLayout.wrapAroundSpacing;
-				}
-			}
+			const midY = this.calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg);
 
 			// Calculate an offset for the start points of the straight line. This
 			// will be relative to the start and end point of the curve. This needs
 			// to be based on the X gap between the source and target nodes but also
 			// dependent on the Y gap between those nodes because, as the Y gap
 			// increases, we want the straight line to decrease in size.
-			const offsetForStraightLine = Math.min((yDiff / 2), -(xDiff - minInitialLine / 2));
+			const offsetForStraightLine = Math.min((Math.abs(yDiff) / 2), -(xDiff - minInitialLine / 2));
 
 			// Calculate an offset for the first and last corners. This allows the
 			// curve to 'grow' slowly out from a straight line to a point where the
@@ -492,38 +482,131 @@ export default class SvgCanvasLinks {
 		return { elements, centerPoint };
 	}
 
-	// Returns the path info, for the object passed in, which describes an
-	// elbow connector line. The pathInfo contains:
-	// path - an SVG path string describing the elbow line
-	// centerPoint - the center point of the line used for decoration placement
-	getElbowPath(data, minInitialLine) {
-		let newData = data;
+	// Returns a pathInfo object describing an elbow connection line based on the
+	// data object and minInitialLine passed in. The output object contains the
+	// following fields:
+	// elements - an array of path elements describing the line
+	// centerPoint - an object with x, y coordinates for the center of the line
+	//               used for decoration placement.
+	getElbowPathInfo(data, minInitialLine, topSrc, topTrg, bottomSrc, bottomTrg) {
+		// The minimum size of the line entering the target port. When
+		// dynamically drawing a new connection we will not have a target node
+		// so use a fixed value for this.
+		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
 
-		// For TB and BT link directions rotate the start and end coords into
-		// the Left-Right orientation.
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			newData = this.rotateData90Degrees(newData, ANTI_CLOCKWISE);
+		// Initalize centerPoint which can be used by the link decorations
+		const centerPoint = { x: 0, y: 0 };
 
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			newData = this.rotateData90Degrees(newData, CLOCKWISE);
+		const corner1X = data.x1 + minInitialLine;
+		const corner1Y = data.y1;
+		let corner2X = corner1X;
+		const corner2Y = data.y2;
+
+		const xDiff = data.x2 - data.x1;
+		const yDiff = data.y2 - data.y1;
+
+		let elbowYOffset;
+
+		// This is a special case where the source and target handles are very
+		// close together.
+		if (xDiff > 0 &&
+				yDiff < (4 * this.canvasLayout.elbowSize) &&
+				yDiff > -(4 * this.canvasLayout.elbowSize)) {
+			if (xDiff < (minInitialLine + minFinalLine)) {
+				elbowYOffset = yDiff / 4;
+			} else {
+				elbowYOffset = yDiff / 2;
+			}
+
+		} else {
+			if (yDiff >= 0) {
+				elbowYOffset = this.canvasLayout.elbowSize;
+			} else {
+				elbowYOffset = -this.canvasLayout.elbowSize;
+			}
 		}
 
-		const pathInfo = this.getElbowPathInfo(newData, minInitialLine);
+		let elbowXOffset = this.canvasLayout.elbowSize;
+		let extraSegments = false;	// Indicates need for extra elbows and lines
 
-		// For TB and BT link directions rotate the path elements from Left-Right
-		// back to the appropriate orientation.
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, CLOCKWISE);
-			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, CLOCKWISE);
-
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			pathInfo.elements = this.rotateElements90Degrees(pathInfo.elements, ANTI_CLOCKWISE);
-			pathInfo.centerPoint = this.rotatePoint90Degrees(pathInfo.centerPoint.x, pathInfo.centerPoint.y, ANTI_CLOCKWISE);
+		if (xDiff < (minInitialLine + minFinalLine)) {
+			extraSegments = true;
+			corner2X = data.x2 - minFinalLine;
+			elbowXOffset = Math.min(this.canvasLayout.elbowSize, -((xDiff - (minInitialLine + minFinalLine)) / 2));
 		}
 
-		pathInfo.path = this.createPath(pathInfo.elements);
+		const elements = [];
+		elements.push(
+			{ p: "M", x: data.x1, y: data.y1 },
+			{ p: "L", x: (corner1X - this.canvasLayout.elbowSize), y: corner1Y },
+			{ p: "Q", x: corner1X, y: corner1Y, x2: corner1X, y2: (corner1Y + elbowYOffset) }
+		);
 
-		return pathInfo;
+		if (extraSegments === false) {
+			elements.push({ p: "L", x: corner2X, y: (corner2Y - elbowYOffset) });
+
+			centerPoint.x = corner2X;
+			centerPoint.y = corner2Y;
+
+		} else {
+			const midY = (xDiff < 0)
+				? this.calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg)
+				: corner2Y - (corner2Y - corner1Y) / 2;
+
+			let corner2Ya;
+			let corner2Yb;
+
+			if ((midY < topTrg && midY < topSrc) ||
+					(midY > bottomTrg && midY > bottomSrc)) {
+				corner2Ya = midY - elbowYOffset;
+				corner2Yb = corner2Y + elbowYOffset;
+			} else {
+				corner2Ya = midY + elbowYOffset;
+				corner2Yb = corner2Y - elbowYOffset;
+			}
+
+			elements.push(
+				{ p: "L", x: corner1X, y: (midY - elbowYOffset) },
+				{ p: "Q", x: corner1X, y: midY, x2: (corner1X - elbowXOffset), y2: midY },
+				{ p: "L", x: (corner2X + elbowXOffset), y: midY },
+				{ p: "Q", x: corner2X, y: midY, x2: corner2X, y2: corner2Ya },
+				{ p: "L", x: corner2X, y: corner2Yb }
+			);
+
+			centerPoint.x = corner1X;
+			centerPoint.y = midY;
+		}
+
+		elements.push(
+			{ p: "Q", x: corner2X, y: corner2Y, x2: (corner2X + this.canvasLayout.elbowSize), y2: corner2Y },
+			{ p: "L", x: data.x2, y: data.y2 }
+		);
+
+		return { elements, centerPoint };
+	}
+
+	// Returns a Y coordinate for the horizontal line that joins the source and
+	// target nodes (to be connected either with a curve or elbow line style)
+	// the target node is the left of the source node. This is either the center
+	// point between the source and target nodes if there is room to draw the line
+	// between them or it is the coordinate of a wrap-around line to be drawn
+	// around the outside of the source and target nodes.
+	calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg) {
+		let midY;
+
+		if (topTrg >= bottomSrc + this.canvasLayout.wrapAroundNodePadding) {
+			midY = bottomSrc + ((topTrg - bottomSrc) / 2);
+		} else if (bottomTrg <= topSrc - this.canvasLayout.wrapAroundNodePadding) {
+			midY = bottomTrg + ((topSrc - bottomTrg) / 2);
+		} else {
+			if (data.y1 > data.y2) {
+				midY = Math.min(topSrc, topTrg) - this.canvasLayout.wrapAroundSpacing;
+			} else {
+				midY = Math.max(bottomSrc, bottomTrg) + this.canvasLayout.wrapAroundSpacing;
+			}
+		}
+
+		return midY;
 	}
 
 	// Returns a new data object based on the data object passed in with its
@@ -587,91 +670,6 @@ export default class SvgCanvasLinks {
 			}
 		});
 		return path;
-	}
-
-	// Returns a pathInfo object describing an elbow conneciton line based on the
-	// data object and minInitialLine passed in. The output object contains the
-	// following fields:
-	// elements - an array of path elements describing the line
-	// centerPoint - an object with x, y coordinate for the center of the line
-	// centerPoint is used for decoration placement.
-	getElbowPathInfo(data, minInitialLine) {
-		// Record centerPoint which can be used by the link decorations
-		const centerPoint = { x: 0, y: 0 };
-
-		const corner1X = data.x1 + minInitialLine;
-		const corner1Y = data.y1;
-		let corner2X = corner1X;
-		const corner2Y = data.y2;
-
-		const xDiff = data.x2 - data.x1;
-		const yDiff = data.y2 - data.y1;
-		let elbowYOffset = yDiff / 2;
-
-		if (yDiff > (2 * this.canvasLayout.elbowSize)) {
-			elbowYOffset = this.canvasLayout.elbowSize;
-
-		} else if (yDiff < -(2 * this.canvasLayout.elbowSize)) {
-			elbowYOffset = -this.canvasLayout.elbowSize;
-		}
-
-		// The minimum size of the line entering the target port. When
-		// dynamically drawing a new connection we will not have a target node
-		// so use a fixed value for this.
-		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
-
-		// This is a special case where the source and target handles are very
-		// close together.
-		if (xDiff < (minInitialLine + minFinalLine) &&
-				(yDiff < (4 * this.canvasLayout.elbowSize) &&
-					yDiff > -(4 * this.canvasLayout.elbowSize))) {
-			elbowYOffset = yDiff / 4;
-		}
-
-		let elbowXOffset = this.canvasLayout.elbowSize;
-		let extraSegments = false;	// Indicates need for extra elbows and lines
-
-		if (xDiff < (minInitialLine + minFinalLine)) {
-			extraSegments = true;
-			corner2X = data.x2 - minFinalLine;
-			elbowXOffset = Math.min(this.canvasLayout.elbowSize, -((xDiff - (minInitialLine + minFinalLine)) / 2));
-		}
-
-		const elements = [];
-		elements.push(
-			{ p: "M", x: data.x1, y: data.y1 },
-			{ p: "L", x: (corner1X - this.canvasLayout.elbowSize), y: corner1Y },
-			{ p: "Q", x: corner1X, y: corner1Y, x2: corner1X, y2: (corner1Y + elbowYOffset) }
-		);
-
-
-		if (extraSegments === false) {
-			elements.push({ p: "L", x: corner2X, y: (corner2Y - elbowYOffset) });
-
-			centerPoint.x = corner2X;
-			centerPoint.y = corner2Y;
-
-		} else {
-			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
-
-			elements.push(
-				{ p: "L", x: corner1X, y: (centerLineY - elbowYOffset) },
-				{ p: "Q", x: corner1X, y: centerLineY, x2: (corner1X - elbowXOffset), y2: centerLineY },
-				{ p: "L", x: (corner2X + elbowXOffset), y: centerLineY },
-				{ p: "Q", x: corner2X, y: centerLineY, x2: corner2X, y2: (centerLineY + elbowYOffset) },
-				{ p: "L", x: corner2X, y: (corner2Y - elbowYOffset) }
-			);
-
-			centerPoint.x = corner1X;
-			centerPoint.y = centerLineY;
-		}
-
-		elements.push(
-			{ p: "Q", x: corner2X, y: corner2Y, x2: (corner2X + this.canvasLayout.elbowSize), y2: corner2Y },
-			{ p: "L", x: data.x2, y: data.y2 }
-		);
-
-		return { elements, centerPoint };
 	}
 
 	// Returns an object containing the path string, center position and angle
