@@ -299,13 +299,17 @@ export default class SvgCanvasLinks {
 	}
 
 	// Returns the path info, for the object passed in, which describes either a
-	// curved or elbow connector line. This method handles the Top->Bottom and
-	// Bottom->Top configurations by treating them as Left->Right and rotating
-	// the lines to fit the configuration.
-	// The pathInfo contains:
-	// path - an SVG path string describing the curved line
+	// curved or elbow connector line. This method can be called either for
+	// drawing a connection line between nodes or for a new link line being
+	// drawn out from a source node towards a target node. This method handles
+	// the Top->Bottom and Bottom->Top configurations by rotating the input
+	// variables to make them look like a Left->Right configuration and then,
+	// after calculating the link line path, rotating the path back to fit the
+	// Top->Bottom or Bottom->Top configuration.
+	// The pathInfo returned contains:
+	// path - an SVG path string describing the curved/elbow line
 	// centerPoint - the center point of the line used for decoration placement
-	getPortLinkPath(data, minInitialLine, type) {
+	getPortLinkPath(data, minInitialLine) {
 		let newData = data;
 		let topSrc;
 		let topTrg;
@@ -355,6 +359,7 @@ export default class SvgCanvasLinks {
 			}
 		}
 
+		// Rotate the input data for TB and BT link configurations to be Left->Right
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			newData = this.rotateData90Degrees(newData, ANTI_CLOCKWISE);
 
@@ -586,11 +591,11 @@ export default class SvgCanvasLinks {
 	}
 
 	// Returns a Y coordinate for the horizontal line that joins the source and
-	// target nodes (to be connected either with a curve or elbow line style)
-	// the target node is the left of the source node. This is either the center
-	// point between the source and target nodes if there is room to draw the line
-	// between them or it is the coordinate of a wrap-around line to be drawn
-	// around the outside of the source and target nodes.
+	// target nodes (to be connected either with a curve or elbow line style) when
+	// the target node is to the left of the source node. This is either the
+	// center point between the source and target nodes, if there is room to draw
+	// the line between them, or it is the coordinate of a wrap-around line to be
+	// drawn around the outside of the source and target nodes.
 	calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg) {
 		let midY;
 
