@@ -817,7 +817,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-ghost-svg")
 			.remove();
 
-		// Cretae a new SVG area for the ghost area.
+		// Create a new SVG area for the ghost area.
 		const ghostAreaSVG = ghostDivSel
 			.append("svg")
 			.attr("width", ghostAreaMaxWidth * this.zoomTransform.k)
