@@ -1061,6 +1061,27 @@ describe("Properties Controller handlers", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);
 		expect(propertyListener).to.have.property("callCount", 2);
 	});
+	it("should fire event on updatePropertyValue returning object values", () => {
+		const form = Form.makeForm(structureListEditorParamDef);
+		controller.setForm(form);
+		const internalValue = [[
+			2,
+			"test",
+			"World",
+			"string",
+			"Readonly phrase"
+		]];
+		const returnValue = [{
+			"readonly_numbered_column_index": 2,
+			"name": "test",
+			"description": "World",
+			"data_type": "string",
+			"readonly": "Readonly phrase"
+		}];
+		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue);
+		expect(propertyListener).to.have.property("callCount", 4);
+		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
+	});
 });
 
 describe("Properties Controller controls", () => {
