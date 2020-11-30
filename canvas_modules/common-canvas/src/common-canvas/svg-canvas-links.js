@@ -660,8 +660,9 @@ export default class SvgCanvasLinks {
 
 	// Returns an SVG path string from the array of path elements passed in.
 	createPath(elements) {
+		const count = elements.length - 1;
 		let path = "";
-		elements.forEach((el) => {
+		elements.forEach((el, i) => {
 			if (el.p === "M") {
 				path += "M " + el.x + " " + el.y;
 			} else if (el.p === "L") {
@@ -672,6 +673,9 @@ export default class SvgCanvasLinks {
 				path += "Q " + el.x + " " + el.y + " " + el.x2 + " " + el.y2;
 			} else if (el.p === "C") {
 				path += "C " + el.x + " " + el.y + " " + el.x2 + " " + el.y2 + " " + el.x3 + " " + el.y3;
+			}
+			if (i < count) {
+				path += " ";
 			}
 		});
 		return path;
