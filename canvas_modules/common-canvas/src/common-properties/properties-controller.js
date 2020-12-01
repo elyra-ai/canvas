@@ -948,7 +948,7 @@ export default class PropertiesController {
 			this.handlers.propertyListener(
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
-					property: inPropertyId,
+					property: propertyId,
 					value: convertedValue
 				}
 			);
