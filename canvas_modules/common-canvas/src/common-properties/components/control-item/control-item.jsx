@@ -96,7 +96,26 @@ class ControlItem extends React.Component {
 
 		const action = this.actionFactory.generateAction(0, this.props.control.action);
 
-		const className = classNames("properties-control-item", { "hide": hidden });
+		const className = classNames("properties-control-item", { "hide": hidden }, { "parent-component": true });
+		// Updated className when <ControlItem /> is called from every control
+		const classNameForControlLabel = classNames("properties-control-item", { "hide": hidden }, { "child-component": true });
+
+		/*
+		* <ControlItem /> should be called from every control.
+		* Adding this temporary condition so that we can change one control at a time.
+		* After all controls are updated, remove if condition and delete return statement after if condition
+		*/
+		if (this.props.control.controlType === "checkboxset") {
+			return (
+				<div data-id={"properties-ci-" + this.props.control.name}
+					className={classNameForControlLabel} disabled={disabled}
+				>
+					{label}
+					{description}
+					{action}
+				</div>
+			);
+		}
 		return (
 			<div data-id={"properties-ci-" + this.props.control.name}
 				className={className} disabled={disabled}

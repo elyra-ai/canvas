@@ -193,7 +193,7 @@ describe("readonlytable control conditions", () => {
 	it("a hidden `readonlyTable` control should not be shown", () => {
 		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
 		const table = tables.find("div[data-id='properties-ci-readonlyTableHidden']");
-		expect(table.prop("className")).to.equal("properties-control-item hide");
+		expect(table.prop("className")).to.equal("properties-control-item hide parent-component");
 		expect(table.find("div[data-id='properties-readonlyTableHidden']")).not.to.be.undefined;
 	});
 

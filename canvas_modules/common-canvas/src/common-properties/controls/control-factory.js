@@ -68,6 +68,15 @@ export default class ControlFactory {
 	*/
 	createControlItem(control, propertyId, tableInfo) {
 		const controlObj = this.createControl(control, propertyId, tableInfo);
+
+		/*
+		* <ControlItem /> should be called from every control.
+		* Adding this temporary condition so that we can change one control at a time.
+		* After all controls are updated, remove if condition and delete return statement after if condition
+		*/
+		if (control.controlType === "checkboxset") {
+			return controlObj;
+		}
 		return (
 			<ControlItem
 				key={"ctrl-item-" + control.name}

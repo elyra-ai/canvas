@@ -15,7 +15,12 @@
  */
 
 .properties-control-item {
-	padding: $spacing-04 0;
+	&.parent-component { // When control-item displays other controls
+		padding: $spacing-04 0;
+	}
+	&.child-component { // When other controls display control-item for a11y
+		padding-top: $spacing-04;
+	}
 	&.hide {
 		display: none;
 	}
