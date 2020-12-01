@@ -120,15 +120,15 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 		// Verify link paths
 		cy.verifyLinkPath(
 			"Select3", "outPort6", "Neural Net", "inPort2",
-			"M 108 443.5L 144 443.5Q 154 443.5 154 433.5L 154 407Q 154 397 164 397L 319 397"
+			"M 108 443.5 L 144 443.5 Q 154 443.5 154 433.5 L 154 407 Q 154 397 164 397 L 319 397"
 		);
 		cy.verifyLinkPath(
 			"Select3", "outPort7", "Neural Net", "inPort2",
-			"M 108 463.5L 136 463.5Q 146 463.5 146 453.5L 146 407Q 146 397 156 397L 319 397"
+			"M 108 463.5 L 136 463.5 Q 146 463.5 146 453.5 L 146 407 Q 146 397 156 397 L 319 397"
 		);
 		cy.verifyLinkPath(
 			"Select3", "outPort8", "Neural Net", "inPort1",
-			"M 108 483.5L 128 483.5Q 138 483.5 138 473.5L 138 387Q 138 377 148 377L 319 377"
+			"M 108 483.5 L 128 483.5 Q 138 483.5 138 473.5 L 138 387 Q 138 377 148 377 L 319 377"
 		);
 
 		// Move node on canvas and verify updated link paths
@@ -136,18 +136,36 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.verifyLinkPath(
 			"Select3", "outPort6", "Neural Net", "inPort2",
-			"M 108 443.5L 128 443.5Q 138 443.5 138 453.5L 138 500.25Q 138 510.25 " +
-			"128 510.25L 30 510.25Q 20 510.25 20 520.25L 20 567Q 20 577 30 577L 50 577"
+			"M 108 443.5 L 128 443.5 Q 138 443.5 138 453.5 L 138 500.25 Q 138 510.25 " +
+			"128 510.25 L 30 510.25 Q 20 510.25 20 521.5 L 20 567 Q 20 577 30 577 L 50 577"
 		);
 		cy.verifyLinkPath(
 			"Select3", "outPort7", "Neural Net", "inPort2",
-			"M 108 463.5L 136 463.5Q 146 463.5 146 473.5L 146 510.25Q 146 520.25 " +
-			"136 520.25L 30 520.25Q 20 520.25 20 530.25L 20 567Q 20 577 30 577L 50 577"
+			"M 108 463.5 L 136 463.5 Q 146 463.5 146 473.5 L 146 500.25 Q 146 511.5 " +
+			"136 511.5 L 30 511.5 Q 20 511.5 20 521.25 L 20 567 Q 20 577 30 577 L 50 577"
 		);
 		cy.verifyLinkPath(
 			"Select3", "outPort8", "Neural Net", "inPort1",
-			"M 108 483.5L 144 483.5Q 154 483.5 154 493.5L 154 510.25Q 154 520.25 " +
-			"144 520.25L 30 520.25Q 20 520.25 20 530.25L 20 547Q 20 557 30 557L 50 557"
+			"M 108 483.5 L 144 483.5 Q 154 483.5 154 493.5 L 154 500.25 Q 154 511.5 " +
+			"144 511.5 L 30 511.5 Q 20 511.5 20 521.25 L 20 547 Q 20 557 30 557 L 50 557"
+		);
+
+		cy.moveNodeToPosition("Select3", 150, 400);
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyLinkPath(
+			"Select3", "outPort6", "Neural Net", "inPort2",
+			"M 220 509.5 L 240 509.5 Q 250 509.5 250 519.5 L 250 614.5 Q 250 624.5 " +
+			"240 624.5 L 30 624.5 Q 20 624.5 20 614.5 L 20 587 Q 20 577 30 577 L 50 577"
+		);
+		cy.verifyLinkPath(
+			"Select3", "outPort7", "Neural Net", "inPort2",
+			"M 220 529.5 L 248 529.5 Q 258 529.5 258 539.5 L 258 614.5 Q 258 624.5 " +
+			"248 624.5 L 30 624.5 Q 20 624.5 20 614.5 L 20 587 Q 20 577 30 577 L 50 577"
+		);
+		cy.verifyLinkPath(
+			"Select3", "outPort8", "Neural Net", "inPort1",
+			"M 220 549.5 L 256 549.5 Q 266 549.5 266 559.5 L 266 614.5 Q 266 624.5 " +
+			"256 624.5 L 30 624.5 Q 20 624.5 20 614.5 L 20 567 Q 20 557 30 557 L 50 557"
 		);
 	});
 });

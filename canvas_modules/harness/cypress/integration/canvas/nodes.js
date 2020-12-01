@@ -157,7 +157,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it.only("Test double-clicking a node moves node to center of canvas", function() {
+	it("Test double-clicking a node moves node to center of canvas", function() {
 		// Check the node's initial position.
 		cy.verifyZoomTransform(0, 0, 1);
 

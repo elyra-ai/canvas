@@ -944,11 +944,12 @@ export default class PropertiesController {
 		}
 
 		if (this.handlers.propertyListener) {
+			const convertedValue = this._convertObjectStructure(propertyId, value);
 			this.handlers.propertyListener(
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
-					property: inPropertyId,
-					value: value
+					property: propertyId,
+					value: convertedValue
 				}
 			);
 		}

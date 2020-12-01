@@ -383,7 +383,11 @@
       ],
       "app_data": {
         "ui_data": {
-          "zoom": 100,
+          "zoom": {
+            "x": 0,
+            "y": 0,
+            "k": 1
+          },
           "comments": [
             {
               "id": "id42ESQA3VPXB",
