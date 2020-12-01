@@ -177,7 +177,7 @@ describe("control-item renders correctly", () => {
 			/>
 		);
 		const controlItem = wrapper.find("div.properties-control-item");
-		expect(controlItem.prop("disabled")).to.equal(true);
+		expect(controlItem.prop("disabled")).to.equal(false);
 	});
 
 });
