@@ -413,7 +413,19 @@ Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trg
 					cy.wrap(links).should("have.length", 1);
 
 					cy.getLinkLineUsingLinkId(links[0].id, "line")
-						.then((link) => expect(link[0].getAttribute("d")).to.equal(path));
+						.then((link) => {
+							const actualElements = link[0].getAttribute("d").split(" ");
+							const expectedElements = path.split(" ");
+							for (let i = 0; i < actualElements.length; i++) {
+								const actualNumber = parseFloat(actualElements[i]);
+								const expectedNumber = parseFloat(expectedElements[i]);
+								if (isNaN(actualNumber)) {
+									expect(actualElements[i]).to.equal(expectedElements[i]);
+								} else {
+									compareCloseTo(actualNumber, expectedNumber);
+								}
+							}
+						});
 				});
 		});
 });
@@ -1097,5 +1109,9 @@ Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 
 // Compares two value to see if they are within the compareRange value or not.
 Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
-	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
+	compareCloseTo(value, compareValue);
 });
+
+function compareCloseTo(value, compareValue) {
+	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
+}
