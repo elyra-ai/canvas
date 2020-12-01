@@ -32,4 +32,5 @@ jobs:
         node-version: 12.x
     - run: npm install -g grunt-cli
     - run: ./canvas_modules/common-canvas/build.sh
-    - run: ./scripts/publish_modules.sh
+    - run: ./canvas_modules/harness/build.sh
+    - run: ./canvas_modules/harness/functional_test.sh
