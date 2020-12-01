@@ -47,45 +47,44 @@ setup_git_branch()
 		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 		git fetch
 }
+
 # Update package.json version on release and master if they are the same major and minor versions
-if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
-	# In Travis the build uses a branch.  Switch to release to update package.json
-	setup_git_branch
-	checkout_branch ${RELEASE}
+# In Travis the build uses a branch.  Switch to release to update package.json
+setup_git_branch
+checkout_branch ${RELEASE}
 
-	echo "Update patch version of common-canvas"
-	cd ./canvas_modules/common-canvas
+echo "Update patch version of common-canvas"
+cd ./canvas_modules/common-canvas
+npm version patch
+RELEASE_BUILD=`node -p "require('./package.json').version"`
+echo "Release build $RELEASE_BUILD"
+# Need to skip release build otherwise builds will be into a loop
+commit_changes ${RELEASE} "Update common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
+# Tag release build
+cd ./scripts
+./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
+cd $WORKING_DIR
+
+checkout_branch ${MASTER}
+cd ./canvas_modules/common-canvas
+MASTER_BUILD=`node -p "require('./package.json').version"`
+echo "Current master build $MASTER_BUILD"
+RELEASE_NUM=$(echo $RELEASE_BUILD | cut -d'.' -f1-2)
+MASTER_NUM=$(echo $MASTER_BUILD | cut -d'.' -f1-2)
+
+echo "Release major.minor build ${RELEASE_NUM}. Master major.minor build ${MASTER_NUM}"
+if [[ ${RELEASE_NUM} == ${MASTER_NUM} ]]; then
 	npm version patch
-	RELEASE_BUILD=`node -p "require('./package.json').version"`
-	echo "Release build $RELEASE_BUILD"
-  # Need to skip release build otherwise builds will be into a loop
-	commit_changes ${RELEASE} "Update common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
-	# Tag release build
-	cd ./scripts
-	./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
-	cd $WORKING_DIR
-
-	checkout_branch ${MASTER}
-	cd ./canvas_modules/common-canvas
 	MASTER_BUILD=`node -p "require('./package.json').version"`
-	echo "Current master build $MASTER_BUILD"
-	RELEASE_NUM=$(echo $RELEASE_BUILD | cut -d'.' -f1-2)
-	MASTER_NUM=$(echo $MASTER_BUILD | cut -d'.' -f1-2)
-
-	echo "Release major.minor build ${RELEASE_NUM}. Master major.minor build ${MASTER_NUM}"
-	if [[ ${RELEASE_NUM} == ${MASTER_NUM} ]]; then
-		npm version patch
-		MASTER_BUILD=`node -p "require('./package.json').version"`
-		echo "Updated master build $MASTER_BUILD"
-		# Need to run build so master can be at the same code base as release
-		commit_changes ${MASTER} "Update common-canvas to version ${MASTER_BUILD}"
-	fi
-	cd $WORKING_DIR
-	checkout_branch ${RELEASE}
-
-	echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
-	cd ./canvas_modules/common-canvas
-	echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-	npm publish
-	cd $WORKING_DIR
+	echo "Updated master build $MASTER_BUILD"
+	# Need to run build so master can be at the same code base as release
+	commit_changes ${MASTER} "Update common-canvas to version ${MASTER_BUILD}"
 fi
+cd $WORKING_DIR
+checkout_branch ${RELEASE}
+
+echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
+cd ./canvas_modules/common-canvas
+echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
+npm publish
+cd $WORKING_DIR
