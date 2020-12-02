@@ -38,7 +38,7 @@ commit_changes()
 	git status
 	git commit -m "$2"
 	echo "Push changes to $1"
-	git push https://$GIT_TOKEN@github.com/${GITHUB_REPOSITORY}/canvas $1
+	git push https://$GIT_TOKEN@github.com/${GITHUB_REPOSITORY} $1
 }
 
 setup_git_branch()
