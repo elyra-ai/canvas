@@ -14,13 +14,11 @@
 # limitations under the License.
 #
 name: Elyra Canvas publish
-
 on:
-  push:
-    branches: [ release ]
-
+  release:
+    types: [created]
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -31,3 +29,6 @@ jobs:
     - run: npm install -g grunt-cli
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./scripts/publish_modules.sh
+      env:
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

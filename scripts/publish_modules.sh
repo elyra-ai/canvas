@@ -19,9 +19,7 @@
 set -e
 
 WORKING_DIR="$PWD"
-RELEASE="release"
 MASTER="master"
-SKIP_CI="[skip ci]"
 
 checkout_branch()
 {
@@ -34,11 +32,13 @@ checkout_branch()
 commit_changes()
 {
 	cd $WORKING_DIR
+	git config --global user.email "elyra-canvas@users.noreply.github.com"
+	git config --global user.name "Automated build"
 	git add ./canvas_modules/common-canvas/package.json
 	git status
 	git commit -m "$2"
 	echo "Push changes to $1"
-	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas $1
+	git push https://$GIT_TOKEN@github.com/${GITHUB_REPOSITORY} $1
 }
 
 setup_git_branch()
@@ -48,43 +48,15 @@ setup_git_branch()
 		git fetch
 }
 
-# Update package.json version on release and master if they are the same major and minor versions
-# In Travis the build uses a branch.  Switch to release to update package.json
 setup_git_branch
-checkout_branch ${RELEASE}
+checkout_branch ${MASTER}
 
-echo "Update patch version of common-canvas"
 cd ./canvas_modules/common-canvas
 npm version patch
-RELEASE_BUILD=`node -p "require('./package.json').version"`
-echo "Release build $RELEASE_BUILD"
-# Need to skip release build otherwise builds will be into a loop
-commit_changes ${RELEASE} "Update common-canvas to version ${RELEASE_BUILD} ${SKIP_CI}"
-# Tag release build
-cd ./scripts
-./tagBuild.sh "${RELEASE}_${RELEASE_BUILD}"
-cd $WORKING_DIR
+NPM_VERSION=`node -p "require('./package.json').version"`
+echo "Updated master build $NPM_VERSION"
+commit_changes ${MASTER} "Update common-canvas to version ${NPM_VERSION} [skip ci]"
 
-checkout_branch ${MASTER}
-cd ./canvas_modules/common-canvas
-MASTER_BUILD=`node -p "require('./package.json').version"`
-echo "Current master build $MASTER_BUILD"
-RELEASE_NUM=$(echo $RELEASE_BUILD | cut -d'.' -f1-2)
-MASTER_NUM=$(echo $MASTER_BUILD | cut -d'.' -f1-2)
-
-echo "Release major.minor build ${RELEASE_NUM}. Master major.minor build ${MASTER_NUM}"
-if [[ ${RELEASE_NUM} == ${MASTER_NUM} ]]; then
-	npm version patch
-	MASTER_BUILD=`node -p "require('./package.json').version"`
-	echo "Updated master build $MASTER_BUILD"
-	# Need to run build so master can be at the same code base as release
-	commit_changes ${MASTER} "Update common-canvas to version ${MASTER_BUILD}"
-fi
-cd $WORKING_DIR
-checkout_branch ${RELEASE}
-
-echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
-cd ./canvas_modules/common-canvas
+echo "Publishing common-canvas $NPM_VERSION to Artifactory NPM"
 echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
 npm publish
-cd $WORKING_DIR
