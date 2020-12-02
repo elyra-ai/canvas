@@ -40,6 +40,7 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/master'
     steps:
+      - uses: actions/checkout@v2
       - name: Tag master build
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
