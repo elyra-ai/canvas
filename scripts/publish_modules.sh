@@ -59,4 +59,4 @@ commit_changes ${MASTER} "Update common-canvas to version ${NPM_VERSION} [skip c
 
 echo "Publishing common-canvas $NPM_VERSION to Artifactory NPM"
 echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-# npm publish
+npm publish
