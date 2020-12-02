@@ -18,8 +18,43 @@
 
 set -e
 
+WORKING_DIR="$PWD"
+MASTER="master"
+
+checkout_branch()
+{
+	echo "Checkout $1"
+	git checkout $1
+	git fetch origin
+	git pull
+}
+
+commit_changes()
+{
+	cd $WORKING_DIR
+	git add ./canvas_modules/common-canvas/package.json
+	git status
+	git commit -m "$2"
+	echo "Push changes to $1"
+	git push https://$GIT_TOKEN@github.com/${GITHUB_REPOSITORY}/canvas $1
+}
+
+setup_git_branch()
+{
+		# needed since travis only clones a single branch
+		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+		git fetch
+}
+
+setup_git_branch
+checkout_branch ${MASTER}
+
 cd ./canvas_modules/common-canvas
-RELEASE_BUILD=`node -p "require('./package.json').version"`
-echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
+npm version patch
+NPM_VERSION=`node -p "require('./package.json').version"`
+echo "Updated master build $NPM_VERSION"
+commit_changes ${MASTER} "Update common-canvas to version ${NPM_VERSION} [skip ci]"
+
+echo "Publishing common-canvas $NPM_VERSION to Artifactory NPM"
 echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-npm publish
+# npm publish
