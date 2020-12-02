@@ -30,4 +30,5 @@ jobs:
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./scripts/publish_modules.sh
       env:
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

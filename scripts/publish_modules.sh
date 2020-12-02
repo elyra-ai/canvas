@@ -32,6 +32,8 @@ checkout_branch()
 commit_changes()
 {
 	cd $WORKING_DIR
+	git config --global user.email "elyra-canvas@users.noreply.github.com"
+	git config --global user.name "Automated build"
 	git add ./canvas_modules/common-canvas/package.json
 	git status
 	git commit -m "$2"
