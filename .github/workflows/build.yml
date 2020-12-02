@@ -34,3 +34,13 @@ jobs:
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./canvas_modules/harness/build.sh
     - run: ./canvas_modules/harness/functional_test.sh
+
+  tag:
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Tag master build
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: ./scripts/tagBuild.sh master-last_success
