@@ -774,9 +774,14 @@ export default class SVGCanvasRenderer {
 	// preferable to placing it in the page 'body', would not work.
 	initializeGhostDiv() {
 		if (this.getGhostDivSel().empty()) {
+
+			const parentClass = this.config && this.config.enableParentClass
+				? " " + this.config.enableParentClass
+				: "";
+
 			d3.selectAll("body")
 				.append("div")
-				.attr("class", "d3-ghost-div");
+				.attr("class", "d3-ghost-div" + parentClass);
 		}
 	}
 
@@ -797,26 +802,30 @@ export default class SVGCanvasRenderer {
 		node.layout = this.canvasController.getObjectModel().getNodeLayout();
 		node.width = ghost.width;
 		node.height = ghost.height;
+
 		const nodeImage = this.getNodeImage(node);
 		const nodeImageType = this.getNodeImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();
-		// Use an offset that will position the ghost in the middle of the ghost SVG
-		// area so any object drawn outside the ghost rectangle (eg a wide node
-		// label) are drawn fully and not truncated.
-		const ghostOffset = this.canvasLayout.ghostOffset;
+
+		// Calculate the ghost area width which is the maximum of either the node
+		// label or the default node width.
+		const nodeLayout = this.objectModel.getNodeLayout();
+		const ghostAreaMaxWidth = Math.max(nodeLayout.labelMaxWidth, node.width);
 
 		// First remove any old SVG object from the div
 		ghostDivSel
 			.selectAll(".d3-ghost-svg")
 			.remove();
 
-		const ghostGrp = ghostDivSel
+		// Create a new SVG area for the ghost area.
+		const ghostAreaSVG = ghostDivSel
 			.append("svg")
-			.attr("width", ghostOffset * 2)
-			.attr("height", ghostOffset * 2)
-			.attr("class", "d3-ghost-svg")
-			.append("g")
-			.attr("transform", `translate(${ghostOffset}, ${ghostOffset}) scale(${this.zoomTransform.k})`);
+			.attr("width", ghostAreaMaxWidth * this.zoomTransform.k)
+			.attr("height", node.height * this.zoomTransform.k)
+			.attr("class", "d3-ghost-svg");
+
+		const ghostGrp = ghostAreaSVG
+			.append("g");
 
 		ghostGrp
 			.append("rect")
@@ -845,11 +854,32 @@ export default class SVGCanvasRenderer {
 			})
 			.attr("class", this.getLabelClass(node));
 
+		// At the time of writing Firefox takes the ghost image from only those
+		// objects that are visible (ignoring any invisible objects like the div
+		// and SVG area) consequently we position the node and label so the label
+		// (if bigger than the node width) is position up against the left edge
+		// of the invisible div and SVG area. If the label is shorter than the node
+		// width, the node is positioned up against the left edge of the SVG. We do
+		// this my translating the group object in the x dirction.
+		const labelObj = ghostDivSel.selectAll("text");
+		const labelLength = labelObj.node().getComputedTextLength();
+		const xOffset = Math.max(0, (labelLength - ghost.width) / 2) * this.zoomTransform.k;
+
+		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
+
+		// Calculate the zoom amount if the browser itself is zoomed.
+		// At the time of writing this value is not returned correctly by Safari.
+		const browserZoom = window.devicePixelRatio / 2;
+
+		// Calculate the center of the node area for positioning the mouse pointer
+		// on the image when it is being dragged.
+		const centerX = (xOffset + ((ghost.width / 2) * this.zoomTransform.k)) * browserZoom;
+		const centerY = ((ghost.height / 2) * this.zoomTransform.k) * browserZoom;
 
 		return {
 			element: ghostDivSel.node(),
-			centerX: ((ghost.width * this.zoomTransform.k) / 2) + ghostOffset,
-			centerY: ((ghost.height * this.zoomTransform.k) / 2) + ghostOffset
+			centerX: centerX,
+			centerY: centerY
 		};
 	}
 

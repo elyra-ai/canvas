@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # Copyright 2017-2020 Elyra Authors
 #
@@ -15,11 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+name: Elyra Canvas publish
 
-set -e
+on:
+  push:
+    branches: [ release ]
 
-if [[ ( "$TRAVIS_BRANCH" = "master" ) ]]; then
-	echo "Setting COVERAGE=true"
-	# Disabled until we upgrade to babel 7.  istanbul has issues when compiling with the current version of babel
-	# export COVERAGE=true
-fi
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - run: npm install -g grunt-cli
+    - run: ./canvas_modules/common-canvas/build.sh
+    - run: ./scripts/publish_modules.sh
