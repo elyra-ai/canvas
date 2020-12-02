@@ -19,7 +19,6 @@
 set -e
 
 cd ./canvas_modules/common-canvas
-npm version patch
 RELEASE_BUILD=`node -p "require('./package.json').version"`
 echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
 echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
