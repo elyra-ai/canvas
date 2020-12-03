@@ -11,7 +11,7 @@ import noevent, {nopropagation} from "./noevent.js";
 // Ignore right-click, since that should open the context menu.
 // except for pinch-to-zoom, which is sent as a wheel+ctrlKey event
 function defaultFilter(event) {
-  return (!event.ctrlKey || event.type === "wheel") && !event.button;
+  return (!event.ctrlKey || event.type === 'wheel') && !event.button;
 }
 
 function defaultExtent() {
@@ -67,9 +67,15 @@ export default function() {
       touchDelay = 500,
       wheelDelay = 150,
       clickDistance2 = 0,
+      tapDistance = 10,
+      // Elyra Extension - the trackpad variable is used to determine if
+      // trackpad behavior is required. That is, when the user does two finger
+      // scroll it pans the canvas up, down, left and right,
       trackpad = false,
-      preventBackGesture = false,
-      tapDistance = 10;
+      // Elyra Extension - the preventBackGesture variable is used to determine
+      // if the default behavior in browsers, which is that a two finger swipe
+      // right is a 'back page' gesture, is to be prevented or not.
+      preventBackGesture = false;
 
   function zoom(selection) {
     selection
@@ -77,7 +83,10 @@ export default function() {
         .on("wheel.zoom", wheeled)
         .on("mousedown.zoom", mousedowned)
         .on("dblclick.zoom", dblclicked)
-        // Declare three gesture events for Safari support
+        // Elyra Extension - These three gesture* event handlers are added for
+        // Safari support. By default, Safari interprets the finger spread
+        // gesture as zooming the entire page. These handlers allow the behavior
+        // to be overriden.
         .on("gesturestart", gesturestart)
         .on("gesturechange", gesturechange)
         .on("gestureend", gestureend)
@@ -238,7 +247,8 @@ export default function() {
   };
 
   function wheeled(event, ...args) {
-    // Prevent swipe right on Chrome from issuing a Back to the browser.
+    // Elyra Extension - Doing the noevent calls here prevents the swipe right
+    // gesture causing a Back page action in the browser.
     if (preventBackGesture) {
       noevent(event);
     }
@@ -263,6 +273,8 @@ export default function() {
 
     // Otherwise, capture the mouse point and location at the start.
     else {
+      // Elyra Extension - Calculate wheel translation start amounts. See
+      // comments below for more details.
       if (trackpad && !event.ctrlKey && !event.safariPinchZoom) {
         g.wheelTransX = -t.x;
         g.wheelTransY = -t.y;
@@ -275,12 +287,13 @@ export default function() {
     noevent(event);
     g.wheel = setTimeout(wheelidled, wheelDelay);
 
-    // On Chrome and Firefox, the wheel event will be called for
-    // pinch/spread gesture with ctrlKey set to true (even when the
+    // Elyra Extension - On Chrome and Firefox, the wheel event will be called
+    // for the pinch/spread gesture with ctrlKey set to true (even when the
     // ctrl key is not pressed). See this stack overflow issue for details:
     // https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
     // On Chrome, Firefox and Safari, the wheel event will be called
-    // for two finger scroll.
+    // for two finger scroll. This code interprets the two finger scroll gesture
+    // as a pan movement (horizontal and/or vertical).
     if (trackpad && !event.ctrlKey && !event.safariPinchZoom) {
       g.wheelTransX += event.deltaX;
       g.wheelTransY += event.deltaY;
@@ -297,8 +310,8 @@ export default function() {
     }
   }
 
-  // On Safari, gesturestart, gesturechange, and gestureend will be
-  // called for the pinch/spread gesture. This code not only implements
+  // Elyra Extension - On Safari, gesturestart, gesturechange, and gestureend
+  // will be called for the pinch/spread gesture. This code not only implements
   // zoom on pinch/spread but also stops the whole browser page being
   // zoomed which is the default behavior for that gesture on Safari.
   // https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
@@ -323,7 +336,7 @@ export default function() {
     noevent(event);
   }
 
-  // End of added gesture functions for Safari.
+  // Elyra Extension - End of added gesture functions for Safari.
 
   function mousedowned(event, ...args) {
     if (touchending || !filter.apply(this, arguments)) return;
@@ -480,12 +493,12 @@ export default function() {
     return arguments.length ? (constrain = _, zoom) : constrain;
   };
 
-  // Function added for trackpad support
+  // Elyra Extension - Function added for trackpad support
   zoom.trackpad = function(_) {
     return arguments.length ? (trackpad = _, zoom) : trackpad;
   };
 
-  // Function added for 'prevent back' support
+  // Elyra Extension - Function added for 'prevent page back' support
   zoom.preventBackGesture = function(_) {
     return arguments.length ? (preventBackGesture = _, zoom) : preventBackGesture;
   };
