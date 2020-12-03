@@ -18,10 +18,8 @@
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
 
-// Import just the D3 modules that are needed. Doing this means that the
-// d3Event object needs to be explicitly imported.
+// Import just the D3 modules that are needed.
 var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
-import { event as d3Event } from "d3-selection";
 import get from "lodash/get";
 import set from "lodash/set";
 import has from "lodash/has";
@@ -182,12 +180,12 @@ export default class SVGCanvasRenderer {
 		this.zoom =
 			d3.zoom()
 				.trackpad(this.config.enableInteractionType === INTERACTION_TRACKPAD)
-				.wheelDelta(() => -d3Event.deltaY * (this.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
+				.preventBackGesture(true)
+				.wheelDelta((d3Event) => -d3Event.deltaY * (this.config.enableInteractionType === INTERACTION_TRACKPAD ? 0.02 : 0.002))
 				.scaleExtent([this.minScaleExtent, this.maxScaleExtent])
 				.on("start", this.zoomStart.bind(this))
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
-
 
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
@@ -707,28 +705,15 @@ export default class SVGCanvasRenderer {
 	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
 	// displaying a sub-flow it is based on the SVG in the supernode.
-	getTransformedMousePos() {
-		return this.transformPos(this.getMousePos(this.canvasSVG));
+	getTransformedMousePos(d3Event) {
+		return this.transformPos(this.getMousePos(d3Event, this.canvasSVG));
 	}
 
-	// Returns the current mouse position. Note: Using d3.mouse is better than
-	// calling d3Event.offsetX and d3Event.offsetX because in Firefox d3.mouse
-	// provides an offset within the SVG area whereas in Firefox the d3Event
-	// offset variables provide an offset from within the object the mouse is over.
-	// Note: added checks for event to prevent error in FF when building in production:
-	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
-	// Note: d3Event.scale added to the if below because that property will exist
-	// on Safari when processing a 'gesturechange' event.
-	// Note 2: Add window.Cypress to if below because the other conditions are not
-	// met when running inside Cypress.
-	getMousePos(svg) {
-		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent) || (d3Event && d3Event.scale) || window.Cypress) {
-			// Get mouse position relative to the top level SVG in the Div because,
-			// when we're rendering a sub-flow this.canvasSVG will be the SVG in the supernode.
-			const mousePos = d3.mouse(svg.node());
-			return { x: mousePos[0], y: mousePos[1] };
-		}
-		return { x: 0, y: 0 };
+	// Returns the current mouse position based on the D3 SVG selection object
+	// passed in.
+	getMousePos(d3Event, svgSel) {
+		const mousePos = d3.pointer(d3Event, svgSel.node());
+		return { x: mousePos[0], y: mousePos[1] };
 	}
 
 	// Convert coordinates from the page (based on the page top left corner) to
@@ -976,9 +961,9 @@ export default class SVGCanvasRenderer {
 	// passed in and keeps track of the currently highlighted node. This is
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
-	setNewLinkOverNode() {
-		const nodeNearMouse = this.getNodeAtMousePos(this.canvasLayout.nodeProximity);
-		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(nodeNearMouse)) {
+	setNewLinkOverNode(d3Event) {
+		const nodeNearMouse = this.getNodeAtMousePos(d3Event, this.canvasLayout.nodeProximity);
+		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
 				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
@@ -997,7 +982,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	isConnectionAllowedToNearbyNode(nodeNearMouse) {
+	isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse) {
 		if (this.drawingNewLinkData) {
 			if (this.drawingNewLinkData.action === NODE_LINK) {
 				const srcNode = this.drawingNewLinkData.srcNode;
@@ -1011,7 +996,7 @@ export default class SVGCanvasRenderer {
 				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
 			}
 		} else if (this.draggingLinkData) {
-			const newLink = this.getNewLinkOnDrag(this.canvasLayout.nodeProximity);
+			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
 			if (newLink) {
 				return true;
 			}
@@ -1252,14 +1237,14 @@ export default class SVGCanvasRenderer {
 			.attr("height", dims.height)
 			.attr("x", dims.x)
 			.attr("y", dims.y)
-			.on("mouseenter", (d) => {
+			.on("mouseenter", (d3Event, d) => {
 				// If we are a sub-flow (i.e we have a parent renderer) set the max
 				// zoom extent with a factor calculated from our zoom amount.
 				if (this.parentRenderer && this.config.enableZoomIntoSubFlows) {
 					this.parentRenderer.setMaxZoomExtent(1 / this.zoomTransform.k);
 				}
 			})
-			.on("mouseleave", (d) => {
+			.on("mouseleave", (d3Event, d) => {
 				// If we are a sub-flow (i.e we have a parent renderer) set the max
 				// zoom extent with a factor of 1.
 				if (this.parentRenderer && this.config.enableZoomIntoSubFlows) {
@@ -1324,18 +1309,18 @@ export default class SVGCanvasRenderer {
 		// These behaviors will be applied to SVG areas at the top level and
 		// SVG areas displaying an in-place subflow
 		this.canvasSVG
-			.on("mousemove.zoom", () => {
+			.on("mousemove.zoom", (d3Event) => {
 				// this.logger.log("Zoom - mousemove - drawingNewLink = " + this.drawingNewLinkData ? "yes" : "no");
 				if (this.drawingNewLinkData) {
-					this.drawNewLink();
+					this.drawNewLink(d3Event);
 				}
 				if (this.draggingLinkData) {
-					this.dragLinkHandle();
+					this.dragLinkHandle(d3Event);
 				}
 			})
 			// Don't use mousedown.zoom here as it will replace the zoom start behavior
 			// and prevent panning of canvas background.
-			.on("mousedown", () => {
+			.on("mousedown", (d3Event) => {
 				this.logger.log("Canvas - mousedown");
 				// When displaying inplace subflow and a context menu is requested
 				// suppress the mouse down which would go to the containing supernode.
@@ -1345,16 +1330,16 @@ export default class SVGCanvasRenderer {
 					d3Event.stopPropagation();
 				}
 			})
-			.on("mouseup.zoom", () => {
+			.on("mouseup.zoom", (d3Event) => {
 				this.logger.log("Canvas - mouseup-zoom");
 				if (this.drawingNewLinkData) {
-					this.completeNewLink();
+					this.completeNewLink(d3Event);
 				}
 				if (this.draggingLinkData) {
-					this.completeDraggedLink();
+					this.completeDraggedLink(d3Event);
 				}
 			})
-			.on("click.zoom", () => {
+			.on("click.zoom", (d3Event) => {
 				this.logger.log("Canvas - click-zoom");
 				this.selecting = true;
 				// Only clear selections if clicked on the canvas of the current active pipeline.
@@ -1378,9 +1363,9 @@ export default class SVGCanvasRenderer {
 					objectType: "canvas",
 					selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 			})
-			.on("contextmenu.zoom", (d) => {
+			.on("contextmenu.zoom", (d3Event, d) => {
 				this.logger.log("Zoom - context menu");
-				this.openContextMenu("canvas");
+				this.openContextMenu(d3Event, "canvas");
 			});
 	}
 
@@ -1435,15 +1420,15 @@ export default class SVGCanvasRenderer {
 		const g = canvasSVG
 			.append("g")
 			.attr("transform", "translate(15, 15)")
-			.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+			.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "yes");
 			})
-			.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+			.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "no");
 			})
-			.on("click", () => {
+			.on("click", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				this.canvasController.displayPreviousPipeline();
 			});
@@ -1756,7 +1741,7 @@ export default class SVGCanvasRenderer {
 		return viewportDimensions;
 	}
 
-	zoomStart() {
+	zoomStart(d3Event) {
 		this.logger.log("zoomStart - " + JSON.stringify(d3Event.transform));
 
 		// Ensure any open tip is closed before starting a zoom operation.
@@ -1794,7 +1779,7 @@ export default class SVGCanvasRenderer {
 		if (this.regionSelect) {
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
-			const transPos = this.getTransformedMousePos();
+			const transPos = this.getTransformedMousePos(d3Event);
 			this.region = {
 				startX: transPos.x,
 				startY: transPos.y,
@@ -1820,25 +1805,25 @@ export default class SVGCanvasRenderer {
 			this.activePipeline.links, this.canvasLayout.commentHighlightGap);
 	}
 
-	zoomAction() {
+	zoomAction(d3Event) {
 		this.logger.log("zoomAction - " + JSON.stringify(d3Event.transform));
 
 		// If the scale amount is the same we are not zooming, so we must be panning.
 		if (d3Event.transform.k === this.zoomStartPoint.k) {
 			if (this.regionSelect) {
 				this.addTempCursorOverlay("crosshair");
-				this.drawRegionSelector();
+				this.drawRegionSelector(d3Event);
 
 			} else {
 				this.addTempCursorOverlay("grabbing");
-				this.zoomCanvasBackground();
+				this.zoomCanvasBackground(d3Event);
 			}
 		} else {
-			this.zoomCanvasBackground();
+			this.zoomCanvasBackground(d3Event);
 		}
 	}
 
-	zoomEnd() {
+	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
 		if (this.drawingNewLinkData) {
@@ -1899,11 +1884,11 @@ export default class SVGCanvasRenderer {
 		this.removeTempCursorOverlay();
 	}
 
-	zoomCanvasBackground() {
+	zoomCanvasBackground(d3Event) {
 		this.regionSelect = false;
 
 		if (this.isDisplayingPrimaryFlowFullPage()) {
-			const incTransform = this.getTransformIncrement();
+			const incTransform = this.getTransformIncrement(d3Event);
 			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewPort(), this.zoomCanvasDimensions);
 		} else {
 			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
@@ -1939,12 +1924,12 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Returns a new zoom which is the result of incrmenting the current zoom
+	// Returns a new zoom which is the result of incrementing the current zoom
 	// by the amount since the previous d3Event transform amount.
 	// We calculate increments because d3Event.transform is not based on
 	// the constrained zoom position (which is very annoying) so we keep track
 	// of the current constraind zoom amount in this.zoomTransform.
-	getTransformIncrement() {
+	getTransformIncrement(d3Event) {
 		const xInc = d3Event.transform.x - this.previousD3Event.x;
 		const yInc = d3Event.transform.y - this.previousD3Event.y;
 
@@ -2028,8 +2013,8 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	drawRegionSelector() {
-		const transPos = this.getTransformedMousePos();
+	drawRegionSelector(d3Event) {
+		const transPos = this.getTransformedMousePos(d3Event);
 		this.region.width = transPos.x - this.region.startX;
 		this.region.height = transPos.y - this.region.startY;
 
@@ -2095,7 +2080,7 @@ export default class SVGCanvasRenderer {
 		return selectedObjects;
 	}
 
-	dragStart(d) {
+	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
 		if (this.commentSizing) {
 			this.resizeObj = this.getComment(this.commentSizingId);
@@ -2126,7 +2111,7 @@ export default class SVGCanvasRenderer {
 			// If we are dragging an 'attachable' node, set it to be translucent so
 			// that, when it is dragged over link lines, the highlightd lines can be seen OK.
 			if (this.isExistingNodeAttachableToDetachedLinks()) {
-				const mousePos = this.getTransformedMousePos();
+				const mousePos = this.getTransformedMousePos(d3Event);
 				this.dragPointerOffsetInNode = {
 					x: mousePos.x - this.dragObjects[0].x_pos,
 					y: mousePos.y - this.dragObjects[0].y_pos
@@ -2138,12 +2123,12 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("dragStart", true);
 	}
 
-	dragMove() {
+	dragMove(d3Event) {
 		this.logger.logStartTimer("dragMove");
 		if (this.commentSizing) {
-			this.resizeComment();
+			this.resizeComment(d3Event);
 		} else if (this.nodeSizing) {
-			this.resizeNode();
+			this.resizeNode(d3Event);
 		} else {
 			this.dragOffsetX += d3Event.dx;
 			this.dragOffsetY += d3Event.dy;
@@ -2195,7 +2180,7 @@ export default class SVGCanvasRenderer {
 			}
 
 			if (this.isExistingNodeAttachableToDetachedLinks()) {
-				const mousePos = this.getTransformedMousePos();
+				const mousePos = this.getTransformedMousePos(d3Event);
 				const node = this.dragObjects[0];
 				const ghostArea = {
 					x1: mousePos.x - this.dragPointerOffsetInNode.x,
@@ -2211,7 +2196,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("dragMove", true);
 	}
 
-	dragEnd(d) {
+	dragEnd(d3Event, d) {
 		this.logger.logStartTimer("dragEnd");
 
 		this.removeTempCursorOverlay();
@@ -2247,7 +2232,7 @@ export default class SVGCanvasRenderer {
 			if (this.dragOffsetX === 0 &&
 					this.dragOffsetY === 0 &&
 					this.config.enableDragWithoutSelect) {
-				this.selectObjectSourceEvent(d);
+				this.selectObjectSourceEvent(d3Event, d);
 
 			} else {
 				if (this.dragRunningX !== 0 ||
@@ -2297,12 +2282,12 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("dragEnd", true);
 	}
 
-	dragStartLinkHandle(d, index, linkHandles) {
+	dragStartLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartLinkHandle");
 
 		this.draggingLinkHandle = true;
 
-		const handleSelection = d3.select(linkHandles[index]);
+		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
 		const link = this.getLink(d.id);
 		const oldLink = cloneDeep(link);
 
@@ -2322,19 +2307,19 @@ export default class SVGCanvasRenderer {
 			this.draggingLinkData.endBeingDragged = "start";
 		}
 
-		this.dragLinkHandle();
+		this.dragLinkHandle(d3Event);
 		this.logger.logEndTimer("dragStartLinkHandle", true);
 	}
 
-	dragMoveLinkHandle() {
+	dragMoveLinkHandle(d3Event) {
 		this.logger.logStartTimer("dragMoveLinkHandle");
-		this.dragLinkHandle();
+		this.dragLinkHandle(d3Event);
 		this.logger.logEndTimer("dragMoveLinkHandle", true);
 	}
 
-	dragEndLinkHandle() {
+	dragEndLinkHandle(d3Event) {
 		this.logger.logStartTimer("dragEndLinkHandle");
-		this.completeDraggedLink();
+		this.completeDraggedLink(d3Event);
 		this.draggingLinkHandle = false;
 		this.logger.logEndTimer("dragEndLinkHandle", true);
 	}
@@ -2434,7 +2419,7 @@ export default class SVGCanvasRenderer {
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM node group object
+				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM node group object
 					const nodeGrp = d3.select(this);
 					that.raiseNodeToTop(nodeGrp);
 					that.setNodeStyles(d, "hover", nodeGrp);
@@ -2450,7 +2435,7 @@ export default class SVGCanvasRenderer {
 						});
 					}
 				})
-				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
 					const nodeGrp = d3.select(this);
 					that.setNodeStyles(d, "default", nodeGrp);
 					nodeGrp.select(that.getSelectorForId("node_body", d.id)).attr("hover", "no");
@@ -2458,33 +2443,33 @@ export default class SVGCanvasRenderer {
 					that.canvasController.closeTip();
 				})
 				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Node Group - mouse down");
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d);
+						this.selectObjectD3Event(d3Event, d);
 					}
 					this.logger.log("Node Group - finished mouse down");
 				})
-				.on("mousemove", (d) => {
+				.on("mousemove", (d3Event, d) => {
 					// this.logger.log("Node Group - mouse move");
 					// Don't stop propogation. Mouse move messages must be allowed to
 					// propagate to canvas zoom operation.
 				})
-				.on("mouseup", (d) => {
+				.on("mouseup", (d3Event, d) => {
 					d3Event.stopPropagation();
 					this.logger.log("Node Group - mouse up");
 					if (this.drawingNewLinkData) {
-						this.completeNewLink();
+						this.completeNewLink(d3Event);
 					}
 					if (this.draggingLinkData) {
-						this.completeDraggedLink(d);
+						this.completeDraggedLink(d3Event, d);
 					}
 				})
-				.on("click", (d) => {
+				.on("click", (d3Event, d) => {
 					this.logger.log("Node Group - click");
 					d3Event.stopPropagation();
 				})
-				.on("dblclick", (d) => {
+				.on("dblclick", (d3Event, d) => {
 					this.logger.log("Node Group - double click");
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					var selObjIds = this.objectModel.getSelectedObjectIds();
@@ -2496,16 +2481,16 @@ export default class SVGCanvasRenderer {
 						pipelineId: this.activePipeline.id
 					});
 				})
-				.on("contextmenu", (d) => {
+				.on("contextmenu", (d3Event, d) => {
 					this.logger.log("Node Group - context menu");
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					if (!CanvasUtils.isSuperBindingNode(d)) {
 						// With enableDragWithoutSelect set to true, the object for which the
 						// context menu is being requested needs to be implicitely selected.
 						if (this.config.enableDragWithoutSelect) {
-							this.selectObjectD3Event(d);
+							this.selectObjectD3Event(d3Event, d);
 						}
-						that.openContextMenu("node", d);
+						that.openContextMenu(d3Event, "node", d);
 					}
 				})
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
@@ -2515,7 +2500,7 @@ export default class SVGCanvasRenderer {
 				.append("path")
 				.attr("data-id", (d) => this.getId("node_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					if (this.isExpandedSupernode(d)) {
 						this.nodeSizing = true;
 						this.nodeSizingInitialSize = { width: d.width, height: d.height };
@@ -2530,12 +2515,12 @@ export default class SVGCanvasRenderer {
 				// A mouseenter is triggered when the sizing operation stops and the
 				// pointer leaves the temporary overlay (which is removed) and enters
 				// the node outline.
-				.on("mousemove mouseenter", function(d) {
+				.on("mousemove mouseenter", function(d3Event, d) {
 					if (that.isExpandedSupernode(d) &&
 							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
-						if (!that.isPointerCloseToBodyEdge(d)) {
-							that.nodeSizingDirection = that.getSizingDirection(d, d.layout.nodeCornerResizeArea);
+						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
+							that.nodeSizingDirection = that.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
 							that.nodeSizingCursor = that.getCursorBasedOnDirection(that.nodeSizingDirection);
 							cursorType = that.nodeSizingCursor;
 						}
@@ -2590,7 +2575,7 @@ export default class SVGCanvasRenderer {
 				.append("text")
 				.attr("data-id", (d) => this.getId("node_label", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
 					if (that.config.enableDisplayFullLabelOnHover &&
 							this.textContent.endsWith("...")) {
@@ -2599,7 +2584,7 @@ export default class SVGCanvasRenderer {
 							.text(d.label);
 					}
 				})
-				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+				.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
 					const abbrLabel = labelObj.attr("abbr-label");
 					if (abbrLabel && abbrLabel !== "") {
@@ -2623,16 +2608,16 @@ export default class SVGCanvasRenderer {
 					.attr("cx", (d) => d.layout.haloCenterX)
 					.attr("cy", (d) => d.layout.haloCenterY)
 					.attr("r", (d) => d.layout.haloRadius)
-					.on("mousedown", (d) => {
+					.on("mousedown", (d3Event, d) => {
 						this.logger.log("Halo - mouse down");
 						d3Event.stopPropagation();
 						this.drawingNewLinkData = {
 							srcObjId: d.id,
 							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-							startPos: this.getTransformedMousePos(),
+							startPos: this.getTransformedMousePos(d3Event),
 							linkArray: []
 						};
-						this.drawNewLink();
+						this.drawNewLink(d3Event);
 					});
 			}
 
@@ -2750,7 +2735,7 @@ export default class SVGCanvasRenderer {
 								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
-								.on("mousedown", (port) => {
+								.on("mousedown", (d3Event, port) => {
 									if (this.config.enableAssocLinkCreation) {
 										// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 										if (d3Event.button === 0) {
@@ -2773,11 +2758,11 @@ export default class SVGCanvasRenderer {
 												guideImage: d.layout.inputPortGuideImage,
 												linkArray: []
 											};
-											this.drawNewLink();
+											this.drawNewLink(d3Event);
 										}
 									}
 								})
-								.on("mouseenter", function(port) {
+								.on("mouseenter", function(d3Event, port) {
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 									if (that.canOpenTip(TIP_TYPE_PORT)) {
 										that.canvasController.closeTip();
@@ -2791,19 +2776,19 @@ export default class SVGCanvasRenderer {
 										});
 									}
 								})
-								.on("mouseleave", (port) => {
+								.on("mouseleave", () => {
 									this.canvasController.closeTip();
 								})
-								.on("contextmenu", (port) => {
+								.on("contextmenu", (d3Event, port) => {
 									this.logger.log("Input Port Circle - context menu");
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObjectD3Event(d);
+										this.selectObjectD3Event(d3Event, d);
 									}
 
-									this.openContextMenu("input_port", d, port);
+									this.openContextMenu(d3Event, "input_port", d, port);
 								})
 								.merge(inputPortSelection)
 								.each(function(port) {
@@ -2848,7 +2833,7 @@ export default class SVGCanvasRenderer {
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
-									.on("mouseenter", function(port) {
+									.on("mouseenter", function(d3Event, port) {
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 										if (that.canOpenTip(TIP_TYPE_PORT)) {
 											that.canvasController.openTip({
@@ -2861,18 +2846,18 @@ export default class SVGCanvasRenderer {
 											});
 										}
 									})
-									.on("mouseleave", (port) => {
+									.on("mouseleave", () => {
 										this.canvasController.closeTip();
 									})
-									.on("contextmenu", (port) => {
+									.on("contextmenu", (d3Event, port) => {
 										this.logger.log("Input Port Arrow - context menu");
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 										// With enableDragWithoutSelect set to true, the object for which the
 										// context menu is being requested needs to be implicitely selected.
 										if (this.config.enableDragWithoutSelect) {
-											this.selectObjectD3Event(d);
+											this.selectObjectD3Event(d3Event, d);
 										}
-										this.openContextMenu("input_port", d, port);
+										this.openContextMenu(d3Event, "input_port", d, port);
 									})
 									.merge(inputPortArrowSelection)
 									.attr("d", (port) => this.getPortArrowPath(port))
@@ -2900,7 +2885,7 @@ export default class SVGCanvasRenderer {
 								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
 								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
-								.on("mousedown", (port) => {
+								.on("mousedown", (d3Event, port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
@@ -2922,10 +2907,10 @@ export default class SVGCanvasRenderer {
 											guideImage: d.layout.outputPortGuideImage,
 											linkArray: []
 										};
-										this.drawNewLink();
+										this.drawNewLink(d3Event);
 									}
 								})
-								.on("mouseenter", function(port) {
+								.on("mouseenter", function(d3Event, port) {
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
 									if (that.canOpenTip(TIP_TYPE_PORT)) {
 										that.canvasController.closeTip();
@@ -2939,18 +2924,18 @@ export default class SVGCanvasRenderer {
 										});
 									}
 								})
-								.on("mouseleave", (port) => {
+								.on("mouseleave", () => {
 									this.canvasController.closeTip();
 								})
-								.on("contextmenu", (port) => {
+								.on("contextmenu", (d3Event, port) => {
 									this.logger.log("Output Port Circle - context menu");
 									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 									// With enableDragWithoutSelect set to true, the object for which the
 									// context menu is being requested needs to be implicitely selected.
 									if (this.config.enableDragWithoutSelect) {
-										this.selectObjectD3Event(d);
+										this.selectObjectD3Event(d3Event, d);
 									}
-									this.openContextMenu("output_port", d, port);
+									this.openContextMenu(d3Event, "output_port", d, port);
 								})
 								.merge(outputPortSelection)
 								.each(function(port) {
@@ -2993,8 +2978,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Adds the object passed in to the set of selected objects using
-	// the regular D3Event object.
-	selectObjectD3Event(d) {
+	// the d3Event object passed in.
+	selectObjectD3Event(d3Event, d) {
 		this.selectObject(
 			d,
 			d3Event.type,
@@ -3003,8 +2988,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Adds the object passed in to the set of selected objects using
-	// the D3Event object's sourceEvent object.
-	selectObjectSourceEvent(d) {
+	// the d3Event object's sourceEvent object.
+	selectObjectSourceEvent(d3Event, d) {
 		this.selectObject(
 			d,
 			d3Event.type,
@@ -3081,7 +3066,7 @@ export default class SVGCanvasRenderer {
 				(enter) => this.createNewDecorations(enter, objType, decGrpClassName)
 			)
 			.attr("transform", (dec) => `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`)
-			.on("mousedown", (dec) => (dec.hotspot ? that.callDecoratorCallback(d, dec) : null))
+			.on("mousedown", (d3Event, dec) => (dec.hotspot ? that.callDecoratorCallback(d3Event, d, dec) : null))
 			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
 	}
 
@@ -3422,12 +3407,12 @@ export default class SVGCanvasRenderer {
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-ellipsis-group")
 				.attr("transform", (nd) => `translate(${this.getEllipsisPosX(nd)}, ${this.getEllipsisPosY(nd)})`)
-				.on("mousedown", (nd) => {
+				.on("mousedown", () => {
 					this.ellipsisClicked = true;
 				})
-				.on("click", () => {
+				.on("click", (d3Event) => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.openContextMenu("node", d);
+					this.openContextMenu(d3Event, "node", d);
 				});
 
 			ellipsisGrp
@@ -3456,14 +3441,14 @@ export default class SVGCanvasRenderer {
 					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("transform", (nd) => `translate(${this.getExpansionIconPosX(nd)}, ${this.canvasLayout.supernodeExpansionIconPosY})`)
 					.attr("class", "d3-node-super-expand-icon-group")
-					.on("click", () => {
+					.on("click", (d3Event) => {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						this.displaySupernodeFullPage(d);
 					})
-					.on("mouseenter", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+					.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
 						d3.select(this).attr("data-pointer-hover", "yes");
 					})
-					.on("mouseleave", function(nd) { // Use function keyword so 'this' pointer references the DOM text object
+					.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
 						d3.select(this).attr("data-pointer-hover", "no");
 					});
 
@@ -3766,15 +3751,15 @@ export default class SVGCanvasRenderer {
 		return data.type === SUPER_NODE;
 	}
 
-	openContextMenu(type, d, port) {
+	openContextMenu(d3Event, type, d, port) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
-			cmPos: this.getMousePos(this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area.
-			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos()),
+			cmPos: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
+			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			port: port,
 			zoom: this.zoomTransform.k });
@@ -3932,15 +3917,15 @@ export default class SVGCanvasRenderer {
 		return "";
 	}
 
-	callDecoratorCallback(node, dec) {
+	callDecoratorCallback(d3Event, node, dec) {
 		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
 			this.canvasController.decorationActionHandler(node, dec.id, this.activePipeline.id);
 		}
 	}
 
-	drawNewLink() {
-		const transPos = this.getTransformedMousePos();
+	drawNewLink(d3Event) {
+		const transPos = this.getTransformedMousePos(d3Event);
 
 		if (this.canvasLayout.connectionType === "halo") {
 			this.drawNewLinkForHalo(transPos);
@@ -3953,7 +3938,7 @@ export default class SVGCanvasRenderer {
 			// Switch on an attribute to indicate a new link is being dragged
 			// towards and over a target node.
 			if (this.config.enableHightlightNodeOnNewLinkDrag) {
-				this.setNewLinkOverNode();
+				this.setNewLinkOverNode(d3Event);
 			}
 		}
 	}
@@ -4038,9 +4023,9 @@ export default class SVGCanvasRenderer {
 			.append(this.drawingNewLinkData.guideObject)
 			.attr("class", "d3-new-connection-guide")
 			.attr("linkType", linkType)
-			.on("mouseup", () => {
+			.on("mouseup", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.completeNewLink();
+				this.completeNewLink(d3Event);
 			})
 			.merge(connectionGuideSel)
 			.each(function(d) {
@@ -4100,9 +4085,9 @@ export default class SVGCanvasRenderer {
 			.append("circle")
 			.attr("class", "d3-new-connection-guide")
 			.attr("linkType", linkType)
-			.on("mouseup", () => {
+			.on("mouseup", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.completeNewLink();
+				this.completeNewLink(d3Event);
 			})
 			.merge(connectionGuideSel)
 			.attr("cx", (d) => d.x2)
@@ -4118,9 +4103,9 @@ export default class SVGCanvasRenderer {
 				.append("path")
 				.attr("class", "d3-new-connection-arrow")
 				.attr("linkType", linkType)
-				.on("mouseup", () => {
+				.on("mouseup", (d3Event) => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.completeNewLink();
+					this.completeNewLink(d3Event);
 				})
 				.merge(connectionArrowHeadSel)
 				.attr("d", (d) => this.getArrowHead(d));
@@ -4128,15 +4113,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Handles the completion of a new link being drawn from a source node.
-	completeNewLink() {
-		var trgNode = this.getNodeAtMousePos();
+	completeNewLink(d3Event) {
+		var trgNode = this.getNodeAtMousePos(d3Event);
 		if (trgNode !== null) {
-			this.completeNewLinkOnNode(trgNode);
+			this.completeNewLinkOnNode(d3Event, trgNode);
 		} else {
 			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
 					this.drawingNewLinkData.action === NODE_LINK &&
 					!this.config.enableAssocLinkCreation) {
-				this.completeNewDetachedLink();
+				this.completeNewDetachedLink(d3Event);
 			} else {
 				this.stopDrawingNewLink();
 			}
@@ -4144,7 +4129,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Handles the completion of a new link when the end is dropped on a node.
-	completeNewLinkOnNode(trgNode) {
+	completeNewLinkOnNode(d3Event, trgNode) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
@@ -4158,7 +4143,7 @@ export default class SVGCanvasRenderer {
 			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getNodePortAtMousePos(INPUT_TYPE);
+				const trgPortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE);
 
 				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
 					this.canvasController.editActionHandler({
@@ -4190,7 +4175,7 @@ export default class SVGCanvasRenderer {
 	// Handles the completion of a new link when the end is dropped away from
 	// a node (when enableLinkSelection is set to LINK_SELECTION_DETACHABLE)
 	// which creates a  new detached link.
-	completeNewDetachedLink() {
+	completeNewDetachedLink(d3Event) {
 		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
 
@@ -4199,7 +4184,7 @@ export default class SVGCanvasRenderer {
 			this.setNewLinkOverNodeCancel();
 		}
 
-		const endPoint = this.getTransformedMousePos();
+		const endPoint = this.getTransformedMousePos(d3Event);
 		this.canvasController.editActionHandler({
 			editType: "createDetachedLink",
 			editSource: "canvas",
@@ -4314,8 +4299,8 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	dragLinkHandle() {
-		const transPos = this.getTransformedMousePos();
+	dragLinkHandle(d3Event) {
+		const transPos = this.getTransformedMousePos(d3Event);
 		const link = this.draggingLinkData.link;
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
@@ -4334,12 +4319,12 @@ export default class SVGCanvasRenderer {
 		// Switch on an attribute to indicate a new link is being dragged
 		// towards and over a target node.
 		if (this.config.enableHightlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNode();
+			this.setNewLinkOverNode(d3Event);
 		}
 	}
 
-	completeDraggedLink() {
-		const newLink = this.getNewLinkOnDrag();
+	completeDraggedLink(d3Event) {
+		const newLink = this.getNewLinkOnDrag(d3Event);
 
 		if (newLink) {
 			this.canvasController.editActionHandler({
@@ -4362,7 +4347,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(proximity) {
+	getNewLinkOnDrag(d3Event, proximity) {
 		const oldLink = this.draggingLinkData.oldLink;
 		const newLink = cloneDeep(oldLink);
 
@@ -4371,10 +4356,10 @@ export default class SVGCanvasRenderer {
 			delete newLink.srcNodePortId;
 			delete newLink.srcPos;
 
-			const srcNode = this.getNodeAtMousePos(proximity);
+			const srcNode = this.getNodeAtMousePos(d3Event, proximity);
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
-				newLink.srcNodePortId = this.getNodePortAtMousePos(OUTPUT_TYPE, proximity);
+				newLink.srcNodePortId = this.getNodePortAtMousePos(d3Event, OUTPUT_TYPE, proximity);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -4384,10 +4369,10 @@ export default class SVGCanvasRenderer {
 			delete newLink.trgNodePortId;
 			delete newLink.trgPos;
 
-			const trgNode = this.getNodeAtMousePos(proximity);
+			const trgNode = this.getNodeAtMousePos(d3Event, proximity);
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
-				newLink.trgNodePortId = this.getNodePortAtMousePos(INPUT_TYPE, proximity);
+				newLink.trgNodePortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE, proximity);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -4538,9 +4523,9 @@ export default class SVGCanvasRenderer {
 	// Returns the node that is at the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
-	getNodeAtMousePos(proximity) {
+	getNodeAtMousePos(d3Event, proximity) {
 		const that = this;
-		var pos = this.getTransformedMousePos();
+		var pos = this.getTransformedMousePos(d3Event);
 		var node = null;
 		const prox = proximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
@@ -4561,13 +4546,13 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	getNodePortAtMousePos(portType, nodeProximity, portProximity) {
+	getNodePortAtMousePos(d3Event, portType, nodeProximity, portProximity) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
 
-		const pos = this.getTransformedMousePos();
-		const node = this.getNodeAtMousePos(nodeProximity);
+		const pos = this.getTransformedMousePos(d3Event);
+		const node = this.getNodeAtMousePos(d3Event, nodeProximity);
 		const portProx = portProximity || 0;
 		let portId = null;
 		let defaultPortId = null;
@@ -4984,49 +4969,32 @@ export default class SVGCanvasRenderer {
 				.attr("class", "d3-comment-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setCommentStyles(d, "hover", d3.select(this));
 					if (that.canvasLayout.connectionType === "ports") {
-						d3.select(this)
-							.append("circle")
-							.attr("data-id", that.getId("comment_port", d.id))
-							.attr("data-pipeline-id", that.activePipeline.id)
-							.attr("cx", 0 - that.canvasLayout.commentHighlightGap)
-							.attr("cy", 0 - that.canvasLayout.commentHighlightGap)
-							.attr("r", that.canvasLayout.commentPortRadius)
-							.attr("class", "d3-comment-port-circle")
-							.on("mousedown", function(cd) {
-								CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-								that.drawingNewLinkData = {
-									srcObjId: d.id,
-									action: COMMENT_LINK,
-									startPos: { x: d.x_pos - that.canvasLayout.commentHighlightGap, y: d.y_pos - that.canvasLayout.commentHighlightGap },
-									linkArray: []
-								};
-								that.drawNewLink();
-							});
+						that.createCommentPort(d3.select(this), d);
 					}
 				})
-				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
 					that.setCommentStyles(d, "default", d3.select(this));
 					if (that.canvasLayout.connectionType === "ports") {
 						that.commentsGrp.selectAll(that.getSelectorForId("comment_port", d.id)).remove();
 					}
 				})
 				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Comment Group - mouse down");
 
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d);
+						this.selectObjectD3Event(d3Event, d);
 					}
 					this.logger.log("Comment Group - finished mouse down");
 				})
-				.on("click", (d) => {
+				.on("click", (d3Event, d) => {
 					this.logger.log("Comment Group - click");
 					d3Event.stopPropagation();
 				})
-				.on("dblclick", (d) => {
+				.on("dblclick", (d3Event, d) => {
 					that.logger.log("Comment Group - double click");
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
@@ -5039,14 +5007,14 @@ export default class SVGCanvasRenderer {
 						selectedObjectIds: that.objectModel.getSelectedObjectIds(),
 						pipelineId: that.activePipeline.id });
 				})
-				.on("contextmenu", (d) => {
+				.on("contextmenu", (d3Event, d) => {
 					this.logger.log("Comment Group - context menu");
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d);
+						this.selectObjectD3Event(d3Event, d);
 					}
-					this.openContextMenu("comment", d);
+					this.openContextMenu(d3Event, "comment", d);
 				})
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
@@ -5054,7 +5022,7 @@ export default class SVGCanvasRenderer {
 			newCommentGroups.append("rect")
 				.attr("data-id", (d) => this.getId("comment_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					this.commentSizing = true;
 					this.commentSizingId = d.id;
 					// Note - comment resizing and finalization of size is handled by drag functions.
@@ -5066,12 +5034,12 @@ export default class SVGCanvasRenderer {
 				// A mouseenter is triggered when the sizing operation stops and the
 				// pointer leaves the temporary overlay (which is removed) and enters
 				// the node outline.
-				.on("mousemove mouseenter", function(d) {
+				.on("mousemove mouseenter", function(d3Event, d) {
 					if (!that.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 					{
 						let cursorType = "pointer";
-						if (!that.isPointerCloseToBodyEdge(d)) {
-							that.commentSizingDirection = that.getSizingDirection(d, that.canvasLayout.commentCornerResizeArea);
+						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
+							that.commentSizingDirection = that.getSizingDirection(d3Event, d, that.canvasLayout.commentCornerResizeArea);
 							that.commentSizingCursor = that.getCursorBasedOnDirection(that.commentSizingDirection);
 							cursorType = that.commentSizingCursor;
 						}
@@ -5119,16 +5087,16 @@ export default class SVGCanvasRenderer {
 					.attr("data-id", (d) => that.getId("comment_halo", d.id))
 					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("class", "d3-comment-halo")
-					.on("mousedown", (d) => {
+					.on("mousedown", (d3Event, d) => {
 						this.logger.log("Comment Halo - mouse down");
 						d3Event.stopPropagation();
 						this.drawingNewLinkData = {
 							srcObjId: d.id,
 							action: COMMENT_LINK,
-							startPos: this.getTransformedMousePos(),
+							startPos: this.getTransformedMousePos(d3Event),
 							linkArray: []
 						};
-						this.drawNewLink();
+						this.drawNewLink(d3Event);
 					});
 			}
 
@@ -5207,6 +5175,34 @@ export default class SVGCanvasRenderer {
 			commentGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayComments " + this.getFlags());
+	}
+
+	// Creates a port object (a grey circle in the top left corner of the
+	// comment for creating links to nodes) for the comment asscoiated with
+	// the comment group object passed in.
+	createCommentPort(commentGrp, d) {
+		commentGrp
+			.append("circle")
+			.attr("data-id", this.getId("comment_port", d.id))
+			.attr("data-pipeline-id", this.activePipeline.id)
+			.attr("cx", 0 - this.canvasLayout.commentHighlightGap)
+			.attr("cy", 0 - this.canvasLayout.commentHighlightGap)
+			.attr("r", this.canvasLayout.commentPortRadius)
+			.attr("class", "d3-comment-port-circle")
+			.on("mousedown", (d3Event, cd) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
+				this.drawingNewLinkData = {
+					srcObjId: d.id,
+					action: COMMENT_LINK,
+					startPos: {
+						x: d.x_pos - this.canvasLayout.commentHighlightGap,
+						y: d.y_pos - this.canvasLayout.commentHighlightGap
+					},
+					linkArray: []
+				};
+				this.drawNewLink(d3Event);
+			});
+
 	}
 
 	setCommentStyles(d, type, comGrp) {
@@ -5341,7 +5337,7 @@ export default class SVGCanvasRenderer {
 				// and the auto size does not increase the height correctly.
 				setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 			})
-			.on("blur", function(cd) {
+			.on("blur", function() {
 				that.logger.log("Text area - blur");
 				var commentObj = that.getComment(datum.id);
 				commentObj.content = this.value;
@@ -5457,8 +5453,8 @@ export default class SVGCanvasRenderer {
 	// to the body instead of the highlight area. We use this method to detect
 	// this situation and use the result to decide whether to display the sizing
 	// cursor or not.
-	isPointerCloseToBodyEdge(d) {
-		const pos = this.getTransformedMousePos();
+	isPointerCloseToBodyEdge(d3Event, d) {
+		const pos = this.getTransformedMousePos(d3Event);
 		const rightEdge = d.x_pos + d.width;
 		const bottomEdge = d.y_pos + d.height;
 
@@ -5478,11 +5474,11 @@ export default class SVGCanvasRenderer {
 	// Returns the comment or supernode sizing direction (i.e. one of n, s, e, w, nw, ne,
 	// sw or se) based on the current mouse position and the position and
 	// dimensions of the comment or node outline.
-	getSizingDirection(d, cornerResizeArea) {
+	getSizingDirection(d3Event, d, cornerResizeArea) {
 		var xPart = "";
 		var yPart = "";
 
-		const transPos = this.getTransformedMousePos();
+		const transPos = this.getTransformedMousePos(d3Event);
 		if (transPos.x < d.x_pos + cornerResizeArea) {
 			xPart = "w";
 		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {
@@ -5529,11 +5525,11 @@ export default class SVGCanvasRenderer {
 	// array based on the position of the pointer during the resize action
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
-	resizeNode() {
+	resizeNode(d3Event) {
 		const oldSupernode = Object.assign({}, this.resizeObj);
 		const minSupernodeHeight = Math.max(this.resizeObj.inputPortsHeight, this.resizeObj.outputPortsHeight) +
 			this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
-		const delta = this.resizeObject(this.resizeObj, this.nodeSizingDirection,
+		const delta = this.resizeObject(d3Event, this.resizeObj, this.nodeSizingDirection,
 			this.canvasLayout.supernodeMinWidth,
 			Math.max(this.canvasLayout.supernodeMinHeight, minSupernodeHeight));
 
@@ -5564,15 +5560,15 @@ export default class SVGCanvasRenderer {
 	// array based on the position of the pointer during the resize action
 	// then redraws the comment and links (the link positions may move based
 	// on the comment size change).
-	resizeComment() {
-		this.resizeObject(this.resizeObj, this.commentSizingDirection, 20, 20);
+	resizeComment(d3Event) {
+		this.resizeObject(d3Event, this.resizeObj, this.commentSizingDirection, 20, 20);
 		this.displayComments();
 		this.displayLinks();
 	}
 
 	// Sets the size and position of the object in the canvasInfo
 	// array based on the position of the pointer during the resize action.
-	resizeObject(canvasObj, direction, minWidth, minHeight) {
+	resizeObject(d3Event, canvasObj, direction, minWidth, minHeight) {
 		let incrementX = 0;
 		let incrementY = 0;
 		let incrementWidth = 0;
@@ -5994,32 +5990,29 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
-			.on("mousedown", (d, index, links) => {
+			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d);
+					this.selectObjectD3Event(d3Event, d);
 				}
 				d3Event.stopPropagation();
 			})
 			.on("mouseup", () => {
 				this.logger.log("Link Group - mouse up");
 			})
-			.on("click", (d) => {
+			.on("click", (d3Event, d) => {
 				this.logger.log("Link Group - click");
 				d3Event.stopPropagation();
 			})
-			.on("contextmenu", (d) => {
+			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d);
+					this.selectObjectD3Event(d3Event, d);
 				}
-				this.openContextMenu("link", d);
+				this.openContextMenu(d3Event, "link", d);
 			})
-			.on("mouseenter", (link, index, elements) => {
-				// When using function keyword the 'this' pointer in this function
-				// isn't set to elements[index] as expected. Not sure why not. So we use
-				// an arrow function instead and a direct reference to elements[index].
-				const targetObj = elements[index];
+			.on("mouseenter", (d3Event, link) => {
+				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
@@ -6039,8 +6032,9 @@ export default class SVGCanvasRenderer {
 					});
 				}
 			})
-			.on("mouseleave", (link, index, elements) => {
-				const targetObj = elements[index];
+			.on("mouseleave", (d3Event, link) => {
+				const targetObj = d3Event.currentTarget;
+
 				if (!targetObj.getAttribute("data-selected")) {
 					this.lowerLinkToBottom(targetObj);
 				}
@@ -6074,10 +6068,10 @@ export default class SVGCanvasRenderer {
 				.append(this.canvasLayout.linkStartHandleObject)
 				.attr("class", (d) => "d3-link-line d3-link-handle-start")
 				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link start handle - mouse down");
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d);
+						this.selectObjectD3Event(d3Event, d);
 					}
 					this.logger.log("Link end handle - finished mouse down");
 				})
@@ -6088,10 +6082,10 @@ export default class SVGCanvasRenderer {
 				.append(this.canvasLayout.linkEndHandleObject)
 				.attr("class", (d) => "d3-link-line d3-link-handle-end")
 				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d) => {
+				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link end handle - mouse down");
 					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d);
+						this.selectObjectD3Event(d3Event, d);
 					}
 					this.logger.log("Link end handle - finished mouse down");
 				})

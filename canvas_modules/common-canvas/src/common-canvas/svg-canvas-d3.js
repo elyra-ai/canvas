@@ -17,10 +17,8 @@
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
 
-// Import just the D3 modules that are needed. Doing this means that the
-// d3Event object needs to be explicitly imported.
+// Import just the D3 modules that are needed.
 var d3 = Object.assign({}, require("d3-selection"));
-import { event as d3Event } from "d3-selection";
 import isMatch from "lodash/isMatch";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
 import CanvasUtils from "./common-canvas-utils.js";
@@ -221,7 +219,7 @@ export default class SVGCanvasD3 {
 		// Add a listener to canvas div to catch key presses. The containing
 		// canvas div must have tabindex set and the focus set on the div.
 		const canvasDiv = d3.select(canvasDivSelector)
-			.on("keydown", () => {
+			.on("keydown", (d3Event) => {
 				// Make sure no tip is displayed, because having one displayed
 				// will interfere with drawing of the canvas as the result of any
 				// keyboard action.
