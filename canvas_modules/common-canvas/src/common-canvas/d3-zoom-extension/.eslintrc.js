@@ -43,11 +43,11 @@ module.exports = {
 		"no-unused-expressions": "off",
 		"no-sequences": "off",
 		"no-return-assign": "off",
-		"max-len": "off",
 		"prefer-spread": "off",
 		"no-bitwise": "off",
 		"sort-imports": "off",
-		"no-undef": "off"
+		"no-undef": "off",
+		"arrow-parens": "off"
 	},
 	env: {
 		jest: true
