@@ -21,7 +21,7 @@ module.exports = {
 			"error",
 			{ "properties": "never" }
 		],
-		"max-len": [2, 180, 4],
+		"max-len": "off",
 		"id-length": ["error", { "min": 1 }],
 		"indent": "off",
 		"object-curly-spacing": "off",
