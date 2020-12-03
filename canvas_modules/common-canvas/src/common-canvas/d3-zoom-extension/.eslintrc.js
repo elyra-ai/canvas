@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// This file was added to d3-zoom-extension because the original d3-zoom code
+// does not comply with the Elyra canvas lint rules. Rather than changing all
+// the d3-zoom code to comply with those rules, this file overrules the Elyra
+// canvas lint rules so no lint errors occur for the d3-zoom code.
 module.exports = {
 	extends: "eslint-config-canvas",
 	rules: {
@@ -21,7 +26,7 @@ module.exports = {
 			"error",
 			{ "properties": "never" }
 		],
-		"max-len": [2, 180, 4],
+		"max-len": "off",
 		"id-length": ["error", { "min": 1 }],
 		"indent": "off",
 		"object-curly-spacing": "off",
@@ -43,11 +48,12 @@ module.exports = {
 		"no-unused-expressions": "off",
 		"no-sequences": "off",
 		"no-return-assign": "off",
-		"max-len": "off",
 		"prefer-spread": "off",
 		"no-bitwise": "off",
 		"sort-imports": "off",
-		"no-undef": "off"
+		"no-undef": "off",
+		"arrow-parens": "off",
+		"quotes": "off"
 	},
 	env: {
 		jest: true

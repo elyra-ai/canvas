@@ -838,8 +838,8 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {
 			const zoom = pipeline.zoom;
-			expect(Math.round(zoom.x)).to.equal(x);
-			expect(Math.round(zoom.y)).to.equal(y);
+			compareCloseTo(zoom.x, x);
+			compareCloseTo(zoom.y, y);
 			expect((Math.round(zoom.k * 100))).to.equal(k * 100);
 		});
 });

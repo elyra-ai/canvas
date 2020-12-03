@@ -1,7 +1,7 @@
 import {dispatch} from "d3-dispatch";
 import {dragDisable, dragEnable} from "d3-drag";
 import {interpolateZoom} from "d3-interpolate";
-import {event, customEvent, select, mouse, touch} from "d3-selection";
+import {select, pointer} from "d3-selection";
 import {interrupt} from "d3-transition";
 import constant from "./constant.js";
 import ZoomEvent from "./event.js";
@@ -9,8 +9,9 @@ import {Transform, identity} from "./transform.js";
 import noevent, {nopropagation} from "./noevent.js";
 
 // Ignore right-click, since that should open the context menu.
-function defaultFilter(trackpad) {
-  return (!event.ctrlKey && !event.button && !trackpad) || trackpad;
+// except for pinch-to-zoom, which is sent as a wheel+ctrlKey event
+function defaultFilter(event) {
+  return (!event.ctrlKey || event.type === 'wheel') && !event.button;
 }
 
 function defaultExtent() {
@@ -30,8 +31,8 @@ function defaultTransform() {
   return this.__zoom || identity;
 }
 
-function defaultWheelDelta() {
-  return -event.deltaY * (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002);
+function defaultWheelDelta(event) {
+  return -event.deltaY * (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002) * (event.ctrlKey ? 10 : 1);
 }
 
 function defaultTouchable() {
@@ -61,11 +62,20 @@ export default function() {
       interpolate = interpolateZoom,
       listeners = dispatch("start", "zoom", "end"),
       touchstarting,
+      touchfirst,
       touchending,
       touchDelay = 500,
-      trackpad = false,
       wheelDelay = 150,
-      clickDistance2 = 0;
+      clickDistance2 = 0,
+      tapDistance = 10,
+      // Elyra Extension - the trackpad variable is used to determine if
+      // trackpad behavior is required. That is, when the user does two finger
+      // scroll it pans the canvas up, down, left and right,
+      trackpad = false,
+      // Elyra Extension - the preventBackGesture variable is used to determine
+      // if the default behavior in browsers, which is that a two finger swipe
+      // right is a 'back page' gesture, is to be prevented or not.
+      preventBackGesture = false;
 
   function zoom(selection) {
     selection
@@ -73,6 +83,10 @@ export default function() {
         .on("wheel.zoom", wheeled)
         .on("mousedown.zoom", mousedowned)
         .on("dblclick.zoom", dblclicked)
+        // Elyra Extension - These three gesture* event handlers are added for
+        // Safari support. By default, Safari interprets the finger spread
+        // gesture as zooming the entire page. These handlers allow the behavior
+        // to be overriden.
         .on("gesturestart", gesturestart)
         .on("gesturechange", gesturechange)
         .on("gestureend", gestureend)
@@ -80,34 +94,34 @@ export default function() {
         .on("touchstart.zoom", touchstarted)
         .on("touchmove.zoom", touchmoved)
         .on("touchend.zoom touchcancel.zoom", touchended)
-        .style("touch-action", "none")
         .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
   }
 
-  zoom.transform = function(collection, transform, point) {
+  zoom.transform = function(collection, transform, point, event) {
     var selection = collection.selection ? collection.selection() : collection;
     selection.property("__zoom", defaultTransform);
     if (collection !== selection) {
-      schedule(collection, transform, point);
+      schedule(collection, transform, point, event);
     } else {
       selection.interrupt().each(function() {
         gesture(this, arguments)
-            .start()
-            .zoom(null, typeof transform === "function" ? transform.apply(this, arguments) : transform)
-            .end();
+          .event(event)
+          .start()
+          .zoom(null, typeof transform === "function" ? transform.apply(this, arguments) : transform)
+          .end();
       });
     }
   };
 
-  zoom.scaleBy = function(selection, k, p) {
+  zoom.scaleBy = function(selection, k, p, event) {
     zoom.scaleTo(selection, function() {
       var k0 = this.__zoom.k,
           k1 = typeof k === "function" ? k.apply(this, arguments) : k;
       return k0 * k1;
-    }, p);
+    }, p, event);
   };
 
-  zoom.scaleTo = function(selection, k, p) {
+  zoom.scaleTo = function(selection, k, p, event) {
     zoom.transform(selection, function() {
       var e = extent.apply(this, arguments),
           t0 = this.__zoom,
@@ -115,19 +129,19 @@ export default function() {
           p1 = t0.invert(p0),
           k1 = typeof k === "function" ? k.apply(this, arguments) : k;
       return constrain(translate(scale(t0, k1), p0, p1), e, translateExtent);
-    }, p);
+    }, p, event);
   };
 
-  zoom.translateBy = function(selection, x, y) {
+  zoom.translateBy = function(selection, x, y, event) {
     zoom.transform(selection, function() {
       return constrain(this.__zoom.translate(
         typeof x === "function" ? x.apply(this, arguments) : x,
         typeof y === "function" ? y.apply(this, arguments) : y
       ), extent.apply(this, arguments), translateExtent);
-    });
+    }, null, event);
   };
 
-  zoom.translateTo = function(selection, x, y, p) {
+  zoom.translateTo = function(selection, x, y, p, event) {
     zoom.transform(selection, function() {
       var e = extent.apply(this, arguments),
           t = this.__zoom,
@@ -136,7 +150,7 @@ export default function() {
         typeof x === "function" ? -x.apply(this, arguments) : -x,
         typeof y === "function" ? -y.apply(this, arguments) : -y
       ), e, translateExtent);
-    }, p);
+    }, p, event);
   };
 
   function scale(transform, k) {
@@ -153,14 +167,14 @@ export default function() {
     return [(+extent[0][0] + +extent[1][0]) / 2, (+extent[0][1] + +extent[1][1]) / 2];
   }
 
-  function schedule(transition, transform, point) {
+  function schedule(transition, transform, point, event) {
     transition
-        .on("start.zoom", function() { gesture(this, arguments).start(); })
-        .on("interrupt.zoom end.zoom", function() { gesture(this, arguments).end(); })
+        .on("start.zoom", function() { gesture(this, arguments).event(event).start(); })
+        .on("interrupt.zoom end.zoom", function() { gesture(this, arguments).event(event).end(); })
         .tween("zoom", function() {
           var that = this,
               args = arguments,
-              g = gesture(that, args),
+              g = gesture(that, args).event(event),
               e = extent.apply(that, args),
               p = point == null ? centroid(e) : typeof point === "function" ? point.apply(that, args) : point,
               w = Math.max(e[1][0] - e[0][0], e[1][1] - e[0][1]),
@@ -183,11 +197,16 @@ export default function() {
     this.that = that;
     this.args = args;
     this.active = 0;
+    this.sourceEvent = null;
     this.extent = extent.apply(that, args);
     this.taps = 0;
   }
 
   Gesture.prototype = {
+    event: function(event) {
+      if (event) this.sourceEvent = event;
+      return this;
+    },
     start: function() {
       if (++this.active === 1) {
         this.that.__zooming = this;
@@ -211,18 +230,34 @@ export default function() {
       return this;
     },
     emit: function(type) {
-      customEvent(new ZoomEvent(zoom, type, this.that.__zoom), listeners.apply, listeners, [type, this.that, this.args]);
+      var d = select(this.that).datum();
+      listeners.call(
+        type,
+        this.that,
+        new ZoomEvent(type, {
+          sourceEvent: this.sourceEvent,
+          target: zoom,
+          type,
+          transform: this.that.__zoom,
+          dispatch: listeners
+        }),
+        d
+      );
     }
   };
 
-  function wheeled() {
-    noevent(); // Moved noevent here to prevent swipe right on Chrome from issuing a Back to the browser.
+  function wheeled(event, ...args) {
+    // Elyra Extension - Doing the noevent calls here prevents the swipe right
+    // gesture causing a Back page action in the browser.
+    if (preventBackGesture) {
+      noevent(event);
+    }
 
-    if (!filter.apply(this, [trackpad])) return;
-    var g = gesture(this, arguments),
+    if (!filter.apply(this, arguments)) return;
+    var g = gesture(this, args).event(event),
         t = this.__zoom,
         k = Math.max(scaleExtent[0], Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta.apply(this, arguments)))),
-        p = mouse(this);
+        p = pointer(event);
 
     // If the mouse is in the same location as before, reuse it.
     // If there were recent wheel events, reset the wheel idle timeout.
@@ -238,6 +273,8 @@ export default function() {
 
     // Otherwise, capture the mouse point and location at the start.
     else {
+      // Elyra Extension - Calculate wheel translation start amounts. See
+      // comments below for more details.
       if (trackpad && !event.ctrlKey && !event.safariPinchZoom) {
         g.wheelTransX = -t.x;
         g.wheelTransY = -t.y;
@@ -247,14 +284,16 @@ export default function() {
       g.start();
     }
 
+    noevent(event);
     g.wheel = setTimeout(wheelidled, wheelDelay);
 
-    // On Chrome and Firefox, the wheel event will be called for
-    // pinch/spread gesture with ctrlKey set to true (even when the
+    // Elyra Extension - On Chrome and Firefox, the wheel event will be called
+    // for the pinch/spread gesture with ctrlKey set to true (even when the
     // ctrl key is not pressed). See this stack overflow issue for details:
     // https://stackoverflow.com/questions/52130484/how-to-catch-pinch-and-stretch-gesture-events-in-d3-zoom-d3v4-v5
     // On Chrome, Firefox and Safari, the wheel event will be called
-    // for two finger scroll.
+    // for two finger scroll. This code interprets the two finger scroll gesture
+    // as a pan movement (horizontal and/or vertical).
     if (trackpad && !event.ctrlKey && !event.safariPinchZoom) {
       g.wheelTransX += event.deltaX;
       g.wheelTransY += event.deltaY;
@@ -271,19 +310,18 @@ export default function() {
     }
   }
 
-
-  // On Safari, gesturestart, gesturechange, and gestureend will be
-  // called for the pinch/spread gesture. This code not only implements
+  // Elyra Extension - On Safari, gesturestart, gesturechange, and gestureend
+  // will be called for the pinch/spread gesture. This code not only implements
   // zoom on pinch/spread but also stops the whole browser page being
   // zoomed which is the default behavior for that gesture on Safari.
   // https://stackoverflow.com/questions/36458954/prevent-pinch-zoom-in-safari-for-osx
-  function gesturestart() {
-    noevent();
+  function gesturestart(event) {
+    noevent(event);
     this.scale = event.scale;
   }
 
-  function gesturechange() {
-    noevent();
+  function gesturechange(event) {
+    noevent(event);
 
     if (this.__zoom) {
       event.deltaY = (this.scale - event.scale) * 100;
@@ -291,67 +329,71 @@ export default function() {
     }
 
     event.safariPinchZoom = true;
-    wheeled.apply(this, arguments);
+    wheeled.apply(this, [event, ...arguments]);
   }
 
-  function gestureend() {
-    noevent();
+  function gestureend(event) {
+    noevent(event);
   }
 
-  function mousedowned() {
-    if (touchending || !filter.apply(this, [trackpad])) return;
-    var g = gesture(this, arguments, true),
+  // Elyra Extension - End of added gesture functions for Safari.
+
+  function mousedowned(event, ...args) {
+    if (touchending || !filter.apply(this, arguments)) return;
+    var g = gesture(this, args, true).event(event),
         v = select(event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true),
-        p = mouse(this),
+        p = pointer(event, currentTarget),
+        currentTarget = event.currentTarget,
         x0 = event.clientX,
         y0 = event.clientY;
 
     dragDisable(event.view);
-    nopropagation();
+    nopropagation(event);
     g.mouse = [p, this.__zoom.invert(p)];
     interrupt(this);
     g.start();
 
-    function mousemoved() {
-      noevent();
+    function mousemoved(event) {
+      noevent(event);
       if (!g.moved) {
         var dx = event.clientX - x0, dy = event.clientY - y0;
         g.moved = dx * dx + dy * dy > clickDistance2;
       }
-      g.zoom("mouse", constrain(translate(g.that.__zoom, g.mouse[0] = mouse(g.that), g.mouse[1]), g.extent, translateExtent));
+      g.event(event)
+       .zoom("mouse", constrain(translate(g.that.__zoom, g.mouse[0] = pointer(event, currentTarget), g.mouse[1]), g.extent, translateExtent));
     }
 
-    function mouseupped() {
+    function mouseupped(event) {
       v.on("mousemove.zoom mouseup.zoom", null);
       dragEnable(event.view, g.moved);
-      noevent();
-      g.end();
+      noevent(event);
+      g.event(event).end();
     }
   }
 
-  function dblclicked() {
-    if (!filter.apply(this, [trackpad])) return;
+  function dblclicked(event, ...args) {
+    if (!filter.apply(this, arguments)) return;
     var t0 = this.__zoom,
-        p0 = mouse(this),
+        p0 = pointer(event.changedTouches ? event.changedTouches[0] : event, this),
         p1 = t0.invert(p0),
         k1 = t0.k * (event.shiftKey ? 0.5 : 2),
-        t1 = constrain(translate(scale(t0, k1), p0, p1), extent.apply(this, arguments), translateExtent);
+        t1 = constrain(translate(scale(t0, k1), p0, p1), extent.apply(this, args), translateExtent);
 
-    noevent();
-    if (duration > 0) select(this).transition().duration(duration).call(schedule, t1, p0);
-    else select(this).call(zoom.transform, t1);
+    noevent(event);
+    if (duration > 0) select(this).transition().duration(duration).call(schedule, t1, p0, event);
+    else select(this).call(zoom.transform, t1, p0, event);
   }
 
-  function touchstarted() {
-    if (!filter.apply(this, [trackpad])) return;
+  function touchstarted(event, ...args) {
+    if (!filter.apply(this, arguments)) return;
     var touches = event.touches,
         n = touches.length,
-        g = gesture(this, arguments, event.changedTouches.length === n),
+        g = gesture(this, args, event.changedTouches.length === n).event(event),
         started, i, t, p;
 
-    nopropagation();
+    nopropagation(event);
     for (i = 0; i < n; ++i) {
-      t = touches[i], p = touch(this, touches, t.identifier);
+      t = touches[i], p = pointer(t, this);
       p = [p, this.__zoom.invert(p), t.identifier];
       if (!g.touch0) g.touch0 = p, started = true, g.taps = 1 + !!touchstarting;
       else if (!g.touch1 && g.touch0[2] !== p[2]) g.touch1 = p, g.taps = 0;
@@ -360,23 +402,21 @@ export default function() {
     if (touchstarting) touchstarting = clearTimeout(touchstarting);
 
     if (started) {
-      if (g.taps < 2) touchstarting = setTimeout(function() { touchstarting = null; }, touchDelay);
+      if (g.taps < 2) touchfirst = p[0], touchstarting = setTimeout(function() { touchstarting = null; }, touchDelay);
       interrupt(this);
       g.start();
     }
   }
 
-  function touchmoved() {
+  function touchmoved(event, ...args) {
     if (!this.__zooming) return;
-    var g = gesture(this, arguments),
+    var g = gesture(this, args).event(event),
         touches = event.changedTouches,
         n = touches.length, i, t, p, l;
 
-    noevent();
-    if (touchstarting) touchstarting = clearTimeout(touchstarting);
-    g.taps = 0;
+    noevent(event);
     for (i = 0; i < n; ++i) {
-      t = touches[i], p = touch(this, touches, t.identifier);
+      t = touches[i], p = pointer(t, this);
       if (g.touch0 && g.touch0[2] === t.identifier) g.touch0[0] = p;
       else if (g.touch1 && g.touch1[2] === t.identifier) g.touch1[0] = p;
     }
@@ -392,16 +432,17 @@ export default function() {
     }
     else if (g.touch0) p = g.touch0[0], l = g.touch0[1];
     else return;
+
     g.zoom("touch", constrain(translate(t, p, l), g.extent, translateExtent));
   }
 
-  function touchended() {
+  function touchended(event, ...args) {
     if (!this.__zooming) return;
-    var g = gesture(this, arguments),
+    var g = gesture(this, args).event(event),
         touches = event.changedTouches,
         n = touches.length, i, t;
 
-    nopropagation();
+    nopropagation(event);
     if (touchending) clearTimeout(touchending);
     touchending = setTimeout(function() { touchending = null; }, touchDelay);
     for (i = 0; i < n; ++i) {
@@ -415,8 +456,11 @@ export default function() {
       g.end();
       // If this was a dbltap, reroute to the (optional) dblclick.zoom handler.
       if (g.taps === 2) {
-        var p = select(this).on("dblclick.zoom");
-        if (p) p.apply(this, arguments);
+        t = pointer(t, this);
+        if (Math.hypot(touchfirst[0] - t[0], touchfirst[1] - t[1]) < tapDistance) {
+          var p = select(this).on("dblclick.zoom");
+          if (p) p.apply(this, arguments);
+        }
       }
     }
   }
@@ -449,8 +493,14 @@ export default function() {
     return arguments.length ? (constrain = _, zoom) : constrain;
   };
 
+  // Elyra Extension - Function added for trackpad support
   zoom.trackpad = function(_) {
     return arguments.length ? (trackpad = _, zoom) : trackpad;
+  };
+
+  // Elyra Extension - Function added for 'prevent page back' support
+  zoom.preventBackGesture = function(_) {
+    return arguments.length ? (preventBackGesture = _, zoom) : preventBackGesture;
   };
 
   zoom.duration = function(_) {
@@ -468,6 +518,10 @@ export default function() {
 
   zoom.clickDistance = function(_) {
     return arguments.length ? (clickDistance2 = (_ = +_) * _, zoom) : Math.sqrt(clickDistance2);
+  };
+
+  zoom.tapDistance = function(_) {
+    return arguments.length ? (tapDistance = +_, zoom) : tapDistance;
   };
 
   return zoom;
