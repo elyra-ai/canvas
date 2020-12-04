@@ -31,7 +31,7 @@ checkout_branch()
 
 commit_changes()
 {
-	cd $WORKING_DIR
+	pushd $WORKING_DIR
 	git config --global user.email "elyra-canvas@users.noreply.github.com"
 	git config --global user.name "Automated build"
 	git add ./canvas_modules/common-canvas/package.json
@@ -39,11 +39,11 @@ commit_changes()
 	git commit -m "$2"
 	echo "Push changes to $1"
 	git push
+	popd
 }
 
 setup_git_branch()
 {
-		# needed since travis only clones a single branch
 		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 		git fetch
 }
@@ -59,4 +59,4 @@ commit_changes ${MASTER} "Update common-canvas to version ${NPM_VERSION} [skip c
 
 echo "Publishing common-canvas $NPM_VERSION to Artifactory NPM"
 echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-# npm publish
+npm publish
