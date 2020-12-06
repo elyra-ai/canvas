@@ -88,7 +88,7 @@ export default class SidePanelForms extends React.Component {
 			canvasPalette2: "",
 			canvasFiles: [],
 			paletteFiles: [],
-			controlsDisabled: this.props.getStateValue("selectedNodeLayout") !== EXAMPLE_APP_NONE
+			controlsDisabled: this.props.getStateValue("selectedExampleApp") !== EXAMPLE_APP_NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -106,7 +106,7 @@ export default class SidePanelForms extends React.Component {
 
 		this.notificationConfigChange = this.notificationConfigChange.bind(this);
 		this.notificationConfigToggle = this.notificationConfigToggle.bind(this);
-		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
+		this.exampleAppOptionChange = this.exampleAppOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 	}
@@ -238,13 +238,13 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue(notificationConfig, config);
 	}
 
-	nodeLayoutOptionChange(value) {
+	exampleAppOptionChange(value) {
 		if (value !== EXAMPLE_APP_NONE) {
 			this.setState({ controlsDisabled: true });
 		} else {
 			this.setState({ controlsDisabled: false });
 		}
-		this.props.setStateValue("selectedNodeLayout", value);
+		this.props.setStateValue("selectedExampleApp", value);
 	}
 
 	tipConfigChange(checked, target) {
@@ -934,8 +934,8 @@ export default class SidePanelForms extends React.Component {
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
 					name="node_layout_radio"
-					onChange={this.nodeLayoutOptionChange}
-					defaultSelected={this.props.getStateValue("selectedNodeLayout")}
+					onChange={this.exampleAppOptionChange}
+					defaultSelected={this.props.getStateValue("selectedExampleApp")}
 				>
 					<RadioButton
 						value={EXAMPLE_APP_FLOWS}

@@ -377,6 +377,11 @@ const haloDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -748,6 +753,11 @@ const portsHorizontalDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -1118,6 +1128,11 @@ const portsVerticalDefaultLayout = {
 		// Adds additional area around the ghost areaa dragged from the palette
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
+
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
 
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,

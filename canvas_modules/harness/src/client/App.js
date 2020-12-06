@@ -168,7 +168,7 @@ class App extends React.Component {
 			selectedLinkSelection: LINK_SELECTION_NONE,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
-			selectedNodeLayout: EXAMPLE_APP_NONE,
+			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedTipConfig: {
 				"palette": true,
@@ -192,6 +192,8 @@ class App extends React.Component {
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
 			selectedBoundingRectangles: false,
+			selectedNodeLayout: null,
+			selectedCanvasLayout: null,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -1683,10 +1685,8 @@ class App extends React.Component {
 			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
-			enableNodeLayout: null,
-			// enableCanvasLayout: {
-			// 	dataLinkArrowHead: true
-			// }
+			enableNodeLayout: this.state.selectedNodeLayout,
+			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
 
 		const decorationActionHandler = this.decorationActionHandler;
@@ -1918,12 +1918,12 @@ class App extends React.Component {
 				canvasController={this.canvasController}
 			/>);
 
-		if (this.state.selectedNodeLayout === EXAMPLE_APP_NONE) {
+		if (this.state.selectedExampleApp === EXAMPLE_APP_NONE) {
 			this.canvasRef = null;
 		} else {
 			this.canvasRef = React.createRef();
 		}
-		if (this.state.selectedNodeLayout === EXAMPLE_APP_FLOWS) {
+		if (this.state.selectedExampleApp === EXAMPLE_APP_FLOWS) {
 			firstCanvas = (
 				<FlowsCanvas
 					ref={this.canvasRef}
@@ -1931,42 +1931,42 @@ class App extends React.Component {
 					canvasController={this.canvasController}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_TABLES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_TABLES) {
 			firstCanvas = (
 				<TablesCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_DETACHED) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_DETACHED) {
 			firstCanvas = (
 				<DetachedCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXPLAIN) {
 			firstCanvas = (
 				<ExplainCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN2) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXPLAIN2) {
 			firstCanvas = (
 				<Explain2Canvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_STREAMS) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STREAMS) {
 			firstCanvas = (
 				<StreamsCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_BLUE_ELLIPSES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_BLUE_ELLIPSES) {
 			firstCanvas = (
 				<BlueEllipsesCanvas
 					ref={this.canvasRef}
