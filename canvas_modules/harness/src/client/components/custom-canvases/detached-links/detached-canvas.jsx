@@ -68,6 +68,7 @@ export default class DetachedCanvas extends React.Component {
 				imagePosY: 4,
 				labelPosX: 36,
 				labelPosY: 70,
+				labelMaxWidth: 200,
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,

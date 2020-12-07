@@ -64,7 +64,7 @@ describe("Test of zoom operations", function() {
 });
 
 describe("Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "None" });
@@ -92,7 +92,7 @@ describe("Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'", 
 });
 
 describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage'", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "LocalStorage" });
@@ -120,7 +120,7 @@ describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage
 });
 
 describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set to 'Pipelineflow'", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "Pipelineflow" });
@@ -142,7 +142,7 @@ describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set
 });
 
 describe("Test to see if the canvas is panned into view when selectedPanIntoViewOnOpen is enabled", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPanIntoViewOnOpen": true });
@@ -154,5 +154,21 @@ describe("Test to see if the canvas is panned into view when selectedPanIntoView
 		cy.verifyZoomTransformDoesNotExist();
 
 		cy.verifyZoomTransform(-6, -6, 1);
+	});
+});
+
+describe("Test the canvas is panned on open with initialPanX and initialPanY are set in canvasLayout", function() {
+	beforeEach(() => {
+		cy.viewport(1330, 660);
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedCanvasLayout": { initialPanX: 100, initialPanY: 200 } });
+		cy.openCanvasDefinition("allTypesCanvas.json");
+	});
+
+	it("Test to see if the canvas is panned when first opened", function() {
+		// The allTypesCanvas should have been panned to the left and up.
+		cy.verifyZoomTransformDoesNotExist();
+
+		cy.verifyZoomTransform(100, 200, 1);
 	});
 });

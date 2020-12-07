@@ -1561,6 +1561,11 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
+		// If there's no saved zoom and we have some initial pan amounts provided use them.
+		if (!newZoom && this.canvasLayout.initialPanX && this.canvasLayout.initialPanY) {
+			newZoom = { x: this.canvasLayout.initialPanX, y: this.canvasLayout.initialPanY, k: 1 };
+		}
+
 		// If new zoom is different to the current zoom amount, apply it.
 		if (newZoom &&
 				(newZoom.k !== this.zoomTransform.k ||
@@ -1942,6 +1947,10 @@ export default class SVGCanvasRenderer {
 	// containing nodes and comments) is constrained such that it never totally
 	// disappears from the view port.
 	zoomConstrainRegular(transform, viewPort, canvasDimensions) {
+		if (!canvasDimensions) {
+			return this.zoomTransform;
+		}
+
 		const k = transform.k;
 		let x = transform.x;
 		let y = transform.y;
