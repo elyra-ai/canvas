@@ -15,7 +15,7 @@
  */
 
 describe("Test for toolbar Cut and Paste buttons", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -43,7 +43,7 @@ describe("Test for toolbar Cut and Paste buttons", function() {
 });
 
 describe("Test for toolbar Copy and Paste buttons", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -71,7 +71,7 @@ describe("Test for toolbar Copy and Paste buttons", function() {
 });
 
 describe("Test for toolbar Create and Delete button", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -106,7 +106,7 @@ describe("Test for toolbar Create and Delete button", function() {
 });
 
 describe("Test for toolbar resize", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1400, 800);
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
@@ -132,7 +132,7 @@ describe("Test for toolbar resize", function() {
 });
 
 describe("Test for toolbar add comment", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.viewport(1330, 660);
 		cy.visit("/");
 	});

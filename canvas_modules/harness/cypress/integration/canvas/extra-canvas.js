@@ -16,7 +16,7 @@
 import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of extra canvas node operation", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.inExtraCanvas();
@@ -53,7 +53,7 @@ describe("Test of extra canvas node operation", function() {
 });
 
 describe("Test of extra canvas property edit operation", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.openCanvasDefinition("commentColorCanvas.json");

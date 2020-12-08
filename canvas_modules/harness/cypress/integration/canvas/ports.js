@@ -15,7 +15,7 @@
  */
 
 describe("Test to check if a port to port link can be made with a new node", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -66,7 +66,7 @@ describe("Test to check if a port to port link can be made with a new node", fun
 });
 
 describe("Test multiple ports operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("multiPortsCanvas2.json");
@@ -178,7 +178,7 @@ describe("Test multiple ports operations", function() {
 });
 
 describe("Test for dynamically adding ports by updating pipeline flow through API", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas3.json");
 		cy.openCanvasAPI("Set PipelineFlow");
@@ -214,7 +214,7 @@ describe("Test for dynamically adding ports by updating pipeline flow through AP
 });
 
 describe("Test that context menu is displayed for ports", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});

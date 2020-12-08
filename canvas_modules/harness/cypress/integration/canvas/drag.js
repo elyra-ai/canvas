@@ -16,7 +16,7 @@
 
 describe("Test to see if regular selection and drag behavior works " +
 "(with dragWithoutSelect set to the default: false)", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
@@ -108,7 +108,7 @@ describe("Test to see if regular selection and drag behavior works " +
 });
 
 describe("Test to see if selection works with dragWithoutSelect set to true", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedDragWithoutSelect": true });
 		cy.openCanvasDefinition("allTypesCanvas.json");

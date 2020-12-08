@@ -15,7 +15,7 @@
  */
 
 describe("Test adding nodes into empty canvas", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -43,7 +43,7 @@ describe("Test adding nodes into empty canvas", function() {
 });
 
 describe("Test adding node type to palette Flyout Panel", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.clickToolbarPaletteOpen();
@@ -59,7 +59,7 @@ describe("Test adding node type to palette Flyout Panel", function() {
 });
 
 describe("Test adding node type to palette Modal Panel", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
 		cy.clickToolbarPaletteOpen();
@@ -75,7 +75,7 @@ describe("Test adding node type to palette Modal Panel", function() {
 });
 
 describe("Test adding node type to existing category to palette Flyout Panel", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -91,7 +91,7 @@ describe("Test adding node type to existing category to palette Flyout Panel", f
 });
 
 describe("Test adding node type to existing category to palette Modal Panel", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -107,7 +107,7 @@ describe("Test adding node type to existing category to palette Modal Panel", fu
 });
 
 describe("Test saving 3 nodes of different types to palette", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout", "selectedSaveToPalette": true });
 		cy.openCanvasPalette("sparkPalette.json");
@@ -140,7 +140,7 @@ describe("Test saving 3 nodes of different types to palette", function() {
 });
 
 describe("Test saving a supernode to palette", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout", "selectedSaveToPalette": true });
 		cy.openCanvasPalette("sparkPalette.json");
@@ -170,7 +170,7 @@ describe("Test saving a supernode to palette", function() {
 });
 
 describe("Test aspect ratio of images is preserved", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
 		cy.openCanvasPalette("animationsPalette.json");

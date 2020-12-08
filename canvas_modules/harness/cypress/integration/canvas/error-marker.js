@@ -15,7 +15,7 @@
  */
 
 describe("Test to check if error markers are being displayed OK", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical" });
 		cy.openCanvasDefinition("errorMarkerCanvas.json");

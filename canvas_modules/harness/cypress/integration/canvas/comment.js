@@ -35,7 +35,7 @@ describe("Test of canvas comments", function() {
 });
 
 describe("Test creating a comment in main flow with toolbar and context menu", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -90,7 +90,7 @@ describe("Test creating a comment in main flow with toolbar and context menu", f
 });
 
 describe("Test creating comment from toolbar and editing them within supernodes", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
