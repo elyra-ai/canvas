@@ -16,7 +16,7 @@
 import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of notification center message API", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 	});
 
@@ -61,7 +61,7 @@ describe("Test of notification center message API", function() {
 });
 
 describe("Test of notification center configuration", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 	});
 

@@ -16,7 +16,7 @@
 
 
 describe("Test for toolbar horizontal and vertical layout", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeLayoutCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
@@ -123,7 +123,7 @@ describe("Test for toolbar horizontal and vertical layout", function() {
 });
 
 describe("Test the horizontal layout of a multiport node with many descendants", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutMultiPortsCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
@@ -173,7 +173,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 });
 
 describe("Test the horizontal layout of a flow and a sub-flow using curve and elbow connections", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutSubFlowCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
