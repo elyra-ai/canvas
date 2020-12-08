@@ -134,18 +134,6 @@ class PropertiesMain extends React.Component {
 			this.propertiesController.setTitle(formData.label);
 		}
 
-		// convert currentParameters of type:object to array values
-		const controls = this.propertiesController.getControls();
-		Object.keys(controls).forEach((controlId) => {
-			if (PropertyUtils.isSubControlStructureObjectType(controls[controlId])) {
-				const propertyId = this.propertiesController.convertPropertyId(controlId);
-				const currentValues = this.propertiesController.getPropertyValue(propertyId);
-				const control = controls[controlId];
-				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
-				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
-			}
-		});
-
 		// set initial values for undo
 		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
 		this.uiParameterKeys = this._getUiOnlyKeys();
