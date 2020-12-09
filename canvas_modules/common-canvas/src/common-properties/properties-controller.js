@@ -1069,11 +1069,9 @@ export default class PropertiesController {
 			const controls = this.getControls();
 			Object.keys(inValues).forEach((propertyName) => {
 				if (PropertyUtils.isSubControlStructureObjectType(controls[propertyName])) {
-					// const propertyId = this.convertPropertyId(propertyName);
 					const currentValues = values[propertyName];
 					const control = controls[propertyName];
 					const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
-					// this.updatePropertyValue(propertyId, convertedValues, true);
 					inValues[propertyName] = convertedValues;
 				}
 			});
