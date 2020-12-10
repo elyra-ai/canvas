@@ -88,7 +88,7 @@ export default class ControlFactory {
 		}
 		// When control-item displays other controls, add padding on control-item
 		return (
-			<div key={"ctrl-" + control.name} className={classNames("ctrl-wrapper", { "hide": hidden })}>
+			<div key={"ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
 					controller={this.controller}
@@ -285,7 +285,7 @@ export default class ControlFactory {
 		// When other controls display control-item for a11y, add padding on controls
 		if (accessibleControls.includes(control.controlType)) {
 			return (
-				<div key={"ctrl-" + control.name} className={classNames("ctrl-wrapper", { "hide": hidden })}>
+				<div key={"ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
 					{createdControl}
 				</div>
 			);
