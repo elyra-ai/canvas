@@ -24,7 +24,6 @@ import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
-import ControlItem from "./../../components/control-item";
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {
@@ -98,13 +97,9 @@ class CheckboxsetControl extends React.Component {
 			/>);
 		}
 		return (
-			<fieldset className="bx--fieldset">
+			<fieldset>
 				<legend>
-					<ControlItem
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						control={this.props.control}
-					/>
+					{this.props.controlItem}
 				</legend>
 				<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
 					<div className="properties-checkboxset-container">
@@ -121,6 +116,7 @@ CheckboxsetControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

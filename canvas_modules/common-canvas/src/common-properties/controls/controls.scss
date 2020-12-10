@@ -28,3 +28,10 @@
 @import "./abstract-table";
 @import "./numberfield/numberfield";
 @import "./structureeditor/structureeditor";
+
+.ctrl-wrapper {
+	padding: $spacing-04 0; // Adds padding to the control
+	&.hide {
+		display: none;
+	}
+}

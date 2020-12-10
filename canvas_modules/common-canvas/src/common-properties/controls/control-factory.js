@@ -17,6 +17,8 @@
 import React from "react";
 
 import { Type, ControlType } from "./../constants/form-constants";
+import { STATES } from "./../constants/constants";
+import classNames from "classnames";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
 import { L10nProvider } from "./../util/L10nProvider";
@@ -45,6 +47,12 @@ import ReadonlyTableControl from "./readonlytable";
 
 import ControlItem from "./../components/control-item";
 
+/*
+* <ControlItem /> should be called from every control.
+* After all controls are updated, delete accessibleControls array.
+*/
+const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN];
+
 export default class ControlFactory {
 
 	constructor(controller) {
@@ -68,23 +76,28 @@ export default class ControlFactory {
 	*/
 	createControlItem(control, propertyId, tableInfo) {
 		const controlObj = this.createControl(control, propertyId, tableInfo);
+		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
 
 		/*
 		* <ControlItem /> should be called from every control.
 		* Adding this temporary condition so that we can change one control at a time.
 		* After all controls are updated, remove if condition and delete return statement after if condition
 		*/
-		if (control.controlType === "checkboxset") {
+		if (accessibleControls.includes(control.controlType)) {
 			return controlObj;
 		}
+		// When control-item displays other controls, add padding on control-item
 		return (
-			<ControlItem
-				key={"ctrl-item-" + control.name}
-				controller={this.controller}
-				propertyId={propertyId}
-				control={control}
-				controlObj={controlObj}
-			/>);
+			<div key={"ctrl-" + control.name} className={classNames("ctrl-wrapper", { "hide": hidden })}>
+				<ControlItem
+					key={"ctrl-item-" + control.name}
+					controller={this.controller}
+					propertyId={propertyId}
+					control={control}
+					controlObj={controlObj}
+					accessibleControls={accessibleControls}
+				/>
+			</div>);
 	}
 
 	// Creates all controls that can be standalone or in tables
@@ -94,133 +107,190 @@ export default class ControlFactory {
 		}
 		// setup common properties used by all controls
 		const controlKey = ControlUtils.getDataId(propertyId);
+		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
 		const props = {};
 		props.key = controlKey;
 		props.control = control;
 		props.controller = this.controller;
 		props.propertyId = propertyId;
+		props.controlItem = (
+			<ControlItem
+				key={"ctrl-item-" + control.name}
+				controller={this.controller}
+				propertyId={propertyId}
+				control={control}
+				accessibleControls={accessibleControls}
+			/>
+		);
 		if (tableInfo) {
 			props.tableControl = tableInfo.table;
 		}
+		let createdControl;
 		switch (control.controlType) {
 		case (ControlType.HIDDEN):
 			return null;
 		case (ControlType.TEXTFIELD):
-			return (<TextfieldControl {...props} />);
+			createdControl = (<TextfieldControl {...props} />);
+			break;
 		case (ControlType.READONLY):
-			return (<ReadonlyControl {...props} />);
+			createdControl = (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.TIMESTAMPFIELD):
-			return (<ReadonlyControl {...props} />);
+			createdControl = (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.TEXTAREA):
-			return (<TextareaControl {...props} />);
+			createdControl = (<TextareaControl {...props} />);
+			break;
 		case (ControlType.LIST):
-			return (<ListControl {...props} />);
+			createdControl = (<ListControl {...props} />);
+			break;
 		case (ControlType.EXPRESSION):
-			return (<ExpressionControl
+			createdControl = (<ExpressionControl
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
 		case (ControlType.CODE):
-			return (<ExpressionControl
+			createdControl = (<ExpressionControl
 				{...props}
 				builder={false}
 				validateLink={false}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
 		case (ControlType.TOGGLETEXT):
-			return (<ToggletextControl
+			createdControl = (<ToggletextControl
 				{...props}
 			/>);
+			break;
 		case (ControlType.PASSWORDFIELD):
-			return (<PasswordControl {...props} />);
+			createdControl = (<PasswordControl {...props} />);
+			break;
 		case (ControlType.NUMBERFIELD):
 		case (ControlType.SPINNER):
-			return (<NumberfieldControl {...props} />);
+			createdControl = (<NumberfieldControl {...props} />);
+			break;
 		case (ControlType.DATEFIELD):
-			return (<DatefieldControl {...props} />);
+			createdControl = (<DatefieldControl {...props} />);
+			break;
 		case (ControlType.TIMEFIELD):
-			return (<TimefieldControl {...props} />);
+			createdControl = (<TimefieldControl {...props} />);
+			break;
 		case (ControlType.CHECKBOX):
-			return (<CheckboxControl {...props} />);
+			createdControl = (<CheckboxControl {...props} />);
+			break;
 		case (ControlType.CHECKBOXSET):
 			if (!tableInfo) {
-				return (<CheckboxsetControl {...props} />);
+				createdControl = (<CheckboxsetControl {...props} />);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.RADIOSET):
-			return (<RadiosetControl {...props} />);
+			createdControl = (<RadiosetControl {...props} />);
+			break;
 		case (ControlType.ONEOFSELECT):
 		case (ControlType.SELECTSCHEMA):
-			return (<Dropdown
+			createdControl = (<Dropdown
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
 		case (ControlType.SELECTCOLUMN):
 			if (!tableInfo || (tableInfo && tableInfo.allowColumnControls)) {
-				return (<Dropdown
+				createdControl = (<Dropdown
 					{...props}
 					rightFlyout={this.rightFlyout}
 				/>);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.SOMEOFSELECT):
 			if (!tableInfo) {
-				return (<SomeofselectControl {...props} />);
+				createdControl = (<SomeofselectControl {...props} />);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.SELECTCOLUMNS):
 			if (!tableInfo) {
-				return (<SelectColumnsControl
+				createdControl = (<SelectColumnsControl
 					{...props}
 					openFieldPicker={this.openFieldPicker}
 					rightFlyout={this.rightFlyout}
 				/>);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.STRUCTURETABLE):
 			if (!tableInfo) {
-				return (<StructureTableControl
+				createdControl = (<StructureTableControl
 					{...props}
 					buildUIItem={this.genUIItem}
 					openFieldPicker={this.openFieldPicker}
 					rightFlyout={this.rightFlyout}
 				/>);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.STRUCTURELISTEDITOR):
 			if (!tableInfo) {
-				return (<StructurelisteditorControl
+				createdControl = (<StructurelisteditorControl
 					{...props}
 					buildUIItem={this.genUIItem}
 					rightFlyout={this.rightFlyout}
 				/>);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.READONLYTABLE):
 			if (!tableInfo) {
-				return (<ReadonlyTableControl
+				createdControl = (<ReadonlyTableControl
 					{...props}
 					buildUIItem={this.genUIItem}
 					rightFlyout={this.rightFlyout}
 				/>);
+			} else {
+				createdControl = (<ReadonlyControl {...props} />);
 			}
-			return (<ReadonlyControl {...props} />);
+			break;
 		case (ControlType.CUSTOM):
-			return (
+			createdControl = (
 				<div className="properties-custom-ctrl" key={controlKey}>
 					{this.controller.getCustomControl(propertyId, control, tableInfo)}
 				</div>
 			);
+			break;
 		case (ControlType.STRUCTUREEDITOR):
-			return (<StructureEditorControl
+			createdControl = (<StructureEditorControl
 				{...props}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
 		default:
-			return (<ReadonlyControl {...props} />);
+			createdControl = (<ReadonlyControl {...props} />);
 		}
+
+		/*
+		* <ControlItem /> should be called from every control.
+		* Adding this temporary condition so that we can change one control at a time.
+		* After all controls are updated, remove if condition and delete return statement after if condition
+		*/
+		// When other controls display control-item for a11y, add padding on controls
+		if (accessibleControls.includes(control.controlType)) {
+			return (
+				<div key={"ctrl-" + control.name} className={classNames("ctrl-wrapper", { "hide": hidden })}>
+					{createdControl}
+				</div>
+			);
+		}
+		return createdControl;
 	}
 
 	/**
