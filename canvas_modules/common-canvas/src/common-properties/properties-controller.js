@@ -1062,7 +1062,22 @@ export default class PropertiesController {
 	}
 
 	setPropertyValues(values) {
-		this.propertiesStore.setPropertyValues(values);
+		const inValues = cloneDeep(values);
+
+		// convert currentParameters of type:object to array values
+		if (values) {
+			const controls = this.getControls();
+			Object.keys(inValues).forEach((propertyName) => {
+				if (PropertyUtils.isSubControlStructureObjectType(controls[propertyName])) {
+					const currentValues = values[propertyName];
+					const control = controls[propertyName];
+					const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
+					inValues[propertyName] = convertedValues;
+				}
+			});
+		}
+
+		this.propertiesStore.setPropertyValues(inValues);
 
 		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
