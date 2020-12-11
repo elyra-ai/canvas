@@ -45,7 +45,6 @@ import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import LocalStorage from "./local-storage.js";
 import has from "lodash/has";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
@@ -299,31 +298,6 @@ export default class CanvasController {
 	// layoutDirection - can be "horizontal" or "vertical"
 	autoLayout(layoutDirection, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).autoLayout(layoutDirection);
-	}
-
-	// Changes the zoom amounts for the pipeline. Zoom is an object with three
-	// fields:
-	// k: is the scale amount which is a number greater than 0 where 1 is the
-	//    default scale size.
-	// x: Is the horizontal translate amount which is a number indicating the
-	//    pixel amount to move. Negative left and positive right
-	// y: Is the vertical translate amount which is a number indicating the
-	//    pixel amount to move. Negative up and positive down.
-	zoomPipeline(zoom, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).zoomPipeline(zoom);
-	}
-
-	// Returns the current zoom object for the currently displayed canvas.
-	getZoom() {
-		return this.commonCanvas.getZoom();
-	}
-
-	// Clears any saved zoom values stored in local storage. This means
-	// newly opened flows will appear with the default zoom. This method
-	// is only applicable when the enableSaveZoom config parameter is
-	// set to "localstorage".
-	clearSavedZoomValues() {
-		LocalStorage.delete("canvasSavedZoomValues");
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1357,6 +1331,11 @@ export default class CanvasController {
 		}
 	}
 
+	// Returns the current zoom object for the currently displayed canvas.
+	getZoom() {
+		return this.commonCanvas.getZoom();
+	}
+
 	// Returns a zoom object required to pan the objects (nodes and/or comments)
 	// identified by the objectIds array to 'reveal' the objects in the viewport.
 	// The zoom object returned can be provided to the CanvasController.zoomTo()
@@ -1386,6 +1365,14 @@ export default class CanvasController {
 			return this.commonCanvas.getZoomToReveal(objectIds, xPos, yPos);
 		}
 		return null;
+	}
+
+	// Clears any saved zoom values stored in local storage. This means
+	// newly opened flows will appear with the default zoom. This method
+	// is only applicable when the enableSaveZoom config parameter is
+	// set to "localstorage".
+	clearSavedZoomValues() {
+		this.objectModel.clearSavedZoomValues();
 	}
 
 	getGhostNode(nodeTemplate) {
@@ -2082,8 +2069,8 @@ export default class CanvasController {
 			}
 
 			// Commands which are not added to the command stack.
-			case "zoomPipeline": {
-				this.zoomPipeline(data.zoom, data.pipelineId);
+			case "setPipelineZoom": {
+				this.objectModel.getAPIPipeline(data.pipelineId).setPipelineZoom(data.zoom);
 				break;
 			}
 			case "highlightBranch":
