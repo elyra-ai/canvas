@@ -19,6 +19,7 @@ import ControlItem from "../../../src/common-properties/components/control-item"
 import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import { mountWithIntl } from "../../_utils_/intl-utils";
+import { ControlType } from "../../../src/common-properties/constants/form-constants";
 
 const controller = new Controller();
 const controlObj = <div className="dummy_control">"Dummy control"</div>;
@@ -37,6 +38,8 @@ const propertyId = {
 	name: "test-control"
 };
 
+const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN];
+
 describe("control-item renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -48,6 +51,7 @@ describe("control-item renders correctly", () => {
 				controller={controller}
 				controlObj={controlObj}
 				state={"enabled"}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		expect(wrapper.prop("controller")).to.equal(controller);
@@ -75,6 +79,7 @@ describe("control-item renders correctly", () => {
 				propertyId={propertyId}
 				controller={controller}
 				controlObj={controlObj}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		expect(wrapper.find("label.properties-control-label").text()).to.equal(controlOnPanel.label.text);
@@ -90,6 +95,7 @@ describe("control-item renders correctly", () => {
 				controller={controller}
 				controlObj={controlObj}
 				state={"enabled"}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		// should not have a required indicator
@@ -119,6 +125,7 @@ describe("control-item renders correctly", () => {
 				propertyId={propertyId}
 				controller={controller}
 				controlObj={controlObj}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		expect(wrapper.find("div.properties-label-container")).to.have.length(0);
@@ -139,6 +146,7 @@ describe("control-item renders correctly", () => {
 				propertyId={propertyId}
 				controller={controller}
 				controlObj={controlObj}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		expect(wrapper.find("span.properties-required-indicator")).to.have.length(1);
@@ -156,6 +164,7 @@ describe("control-item renders correctly", () => {
 				propertyId={propertyIdHidden}
 				controller={controller}
 				controlObj={controlObj}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		const controlItem = wrapper.find("div.properties-control-item.hide");
@@ -174,6 +183,7 @@ describe("control-item renders correctly", () => {
 				propertyId={propertyIdDisabled}
 				controller={controller}
 				controlObj={controlObj}
+				accessibleControls={accessibleControls}
 			/>
 		);
 		const controlItem = wrapper.find("div.properties-control-item");
