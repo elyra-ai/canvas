@@ -43,8 +43,8 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
-	zoomPipeline(zoom, translate) {
-		this.store.dispatch({ type: "ZOOM_PIPELINE", data: { zoom: zoom }, pipelineId: this.pipelineId });
+	setPipelineZoom(zoom, translate) {
+		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}
 
 	// ---------------------------------------------------------------------------
