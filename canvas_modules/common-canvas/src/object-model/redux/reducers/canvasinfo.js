@@ -42,7 +42,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "ZOOM_PIPELINE": {
+	case "SET_PIPELINE_ZOOM": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipeline.id === action.pipelineId) {
 				return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
