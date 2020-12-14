@@ -22,16 +22,24 @@ import Icon from "./../../../icons/icon.jsx";
 import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
+import classNames from "classnames";
+
 
 class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			focused: false
+		};
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.id = PropertyUtils.generateId();
 		this.textInputRef = React.createRef();
 		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
 			MESSAGE_KEYS.TITLE_EDITOR_LABEL);
+		this.textInputOnFocus = this.textInputOnFocus.bind(this);
+		this.textInputOnBlur = this.textInputOnBlur.bind(this);
+
 	}
 
 	_handleKeyPress(e) {
@@ -52,9 +60,16 @@ class TitleEditor extends Component {
 				this.props.controller.getAppData());
 		}
 	}
+	textInputOnFocus() {
+		this.setState({ focused: true });
+	}
+
+	textInputOnBlur() {
+		this.setState({ focused: false });
+	}
 
 	render() {
-		const propertiesTitleEdit = this.props.labelEditable === false ? <div />
+		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
 			: (<Button kind="ghost" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
 				<Icon type={CARBON_ICONS.EDIT} />
 			</Button>);
@@ -65,8 +80,34 @@ class TitleEditor extends Component {
 			</Button>)
 			: null;
 
+		let subtitle = null;
+		if (this.props.uihints && (this.props.uihints.label || this.props.uihints.icon)) {
+			let label = null;
+			if (this.props.uihints.label) {
+				if (typeof this.props.uihints.label === "string") {
+					label = this.props.uihints.label;
+				} else if (this.props.uihints.label.default) {
+					label = this.props.uihints.label.default;
+				}
+			}
+			const icon = this.props.uihints.icon && typeof this.props.uihints.icon === "string"
+				? <img className="properties-title-subtitle-icon" src={this.props.uihints.icon} />
+				: null;
+
+			subtitle = (<div className="properties-title-subtitle">
+				{icon}
+				<div className="properties-title-subtitle-label">
+					{label}
+				</div>
+			</div>);
+		}
+
+
 		return (
-			<div className="properties-title-editor">
+			<div className={classNames("properties-title-editor",
+				{ "properties-title-with-subtitle": this.props.uihints && (this.props.uihints.label || this.props.uihints.icon) })}
+			>
+				{subtitle}
 				<div className="properties-title-editor-input">
 					<TextInput
 						id={this.id}
@@ -77,6 +118,9 @@ class TitleEditor extends Component {
 						readOnly={this.props.labelEditable === false}
 						labelText={this.labelText}
 						hideLabel
+						onFocus={this.textInputOnFocus}
+						onBlur={this.textInputOnBlur}
+						{... this.state.focused && { className: "properties-title-editor-focused" }}
 					/>
 					{propertiesTitleEdit}
 				</div>
@@ -91,6 +135,7 @@ TitleEditor.propTypes = {
 	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
+	uihints: PropTypes.object,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

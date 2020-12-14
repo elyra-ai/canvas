@@ -15,19 +15,40 @@
  */
 
 .properties-title-editor {
-	height: 41px;
-	display: flex;
+	display: block;
 	align-items: center;
-	border-bottom: 1px solid $ui-03;
+	padding-top: $spacing-06;
+	padding-bottom: $spacing-06;
+	height: 88px;
+	&.properties-title-with-subtitle {
+		height: 120px; // include subtitle with icon height
+	}
 }
 
+.properties-title-subtitle {
+	padding-left: $spacing-05;
+	padding-right: $spacing-05;
+	margin-bottom: $spacing-03;
+	height: $spacing-06;
+	display: flex;
+	align-items: center;
+	.properties-title-subtitle-icon {
+		height: $spacing-06;
+		width: $spacing-06;
+		margin-right: $spacing-03;
+	}
+	.properties-title-subtitle-label {
+		@include carbon--type-style("label-01");
+	}
+}
 .properties-title-editor-input {
-	height: 100%;
+	height: $spacing-08;
 	width: calc(100% - 2px); // subtract 2px for input active right border
 	top: 1px; // align input with bottom border
 	position: relative;
 	display: flex;
 	align-items: center;
+
 
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
@@ -35,15 +56,18 @@
 		width: 100%;
 
 		input { //override styling from carbon
-			@include carbon--type-style("productive-heading-03");
+			@include carbon--type-style("productive-heading-02");
 			color: $text-01;
-
 			min-width: unset;
 			background: unset;
-			padding-right: 40px; // avoid edit icon
+			text-overflow: ellipsis;
+			border-bottom: unset;
 			&[readonly] {
 				box-shadow: unset;
 				cursor: default;
+			}
+			&:not(.properties-title-editor-focused) {
+				padding-right: $spacing-08; // avoid edit icon
 			}
 		}
 	}

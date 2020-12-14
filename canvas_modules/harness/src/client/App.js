@@ -1316,7 +1316,8 @@ class App extends React.Component {
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
-			expressionInfo: expressionInfo
+			expressionInfo: expressionInfo,
+			uihints: properties.uihints
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
