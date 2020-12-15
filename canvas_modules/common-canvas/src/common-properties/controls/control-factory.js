@@ -51,7 +51,7 @@ import ControlItem from "./../components/control-item";
 * <ControlItem /> should be called from every control.
 * After all controls are updated, delete accessibleControls array.
 */
-const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN];
+const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN, ControlType.DATEFIELD];
 
 export default class ControlFactory {
 
@@ -284,6 +284,10 @@ export default class ControlFactory {
 		*/
 		// When other controls display control-item for a11y, add padding on controls
 		if (accessibleControls.includes(control.controlType)) {
+			if (tableInfo) {
+				// Don't add padding when controls are displayed in a table
+				return createdControl;
+			}
 			return (
 				<div key={"ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
 					{createdControl}
