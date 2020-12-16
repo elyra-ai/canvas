@@ -83,17 +83,17 @@ class TitleEditor extends Component {
 			: null;
 
 		let subtitle = null;
-		if (this.props.subtitle && this.props.uihints && (this.props.uihints.label || this.props.uihints.icon)) {
+		if (this.props.subtitle && this.props.uiHints && (this.props.uiHints.label || this.props.uiHints.icon)) {
 			let label = null;
-			if (this.props.uihints.label) {
-				if (typeof this.props.uihints.label === "string") {
-					label = this.props.uihints.label;
-				} else if (this.props.uihints.label.default) {
-					label = this.props.uihints.label.default;
+			if (this.props.uiHints.label) {
+				if (typeof this.props.uiHints.label === "string") {
+					label = this.props.uiHints.label;
+				} else if (this.props.uiHints.label.default) {
+					label = this.props.uiHints.label.default;
 				}
 			}
-			const icon = this.props.uihints.icon && typeof this.props.uihints.icon === "string"
-				? <Isvg className="properties-title-subtitle-icon" src={this.props.uihints.icon} />
+			const icon = this.props.uiHints.icon && typeof this.props.uiHints.icon === "string"
+				? <Isvg className="properties-title-subtitle-icon" src={this.props.uiHints.icon} />
 				: null;
 
 			subtitle = (<div className="properties-title-subtitle">
@@ -104,10 +104,9 @@ class TitleEditor extends Component {
 			</div>);
 		}
 
-
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-subtitle": this.props.uihints && (this.props.uihints.label || this.props.uihints.icon) })}
+				{ "properties-title-with-subtitle": this.props.subtitle && this.props.uiHints && (this.props.uiHints.label || this.props.uiHints.icon) })}
 			>
 				{subtitle}
 				<div className="properties-title-editor-input">
@@ -137,7 +136,7 @@ TitleEditor.propTypes = {
 	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
-	uihints: PropTypes.object,
+	uiHints: PropTypes.object,
 	subtitle: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux

@@ -34,6 +34,13 @@ controller.setAppData(appData);
 
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
+const uiHints = {
+	icon: "images/nodes/derive.svg",
+	id: "default",
+	label: {
+		default: "test label"
+	}
+};
 
 describe("title-editor renders correctly", () => {
 
@@ -45,12 +52,17 @@ describe("title-editor renders correctly", () => {
 				helpClickHandler={helpClickHandler}
 				labelEditable
 				help={help}
+				uiHints={uiHints}
+				subtitle
 			/>
 		);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("helpClickHandler")).to.equal(helpClickHandler);
 		expect(wrapper.prop("labelEditable")).to.equal(true);
 		expect(wrapper.prop("help")).to.eql(help);
+		expect(wrapper.prop("uiHints")).to.eql(uiHints);
+		expect(wrapper.prop("subtitle")).to.eql(true);
+
 	});
 	it("test help button callback", (done) => {
 		function callback(componentId, inData, inAppData) {
@@ -135,5 +147,51 @@ describe("title-editor renders correctly", () => {
 		);
 		const input = wrapper.find("input");
 		expect(input.prop("readOnly")).to.equal(true);
+	});
+	it("subtitle should render if enabled and passed in", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				uiHints={uiHints}
+				subtitle
+			/>
+		);
+		expect(wrapper.find(".properties-title-subtitle")).to.have.length(1);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(1);
+		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(1);
+		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(1);
+	});
+	it("subtitle should not render if disabled", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				uiHints={uiHints}
+			/>
+		);
+		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
+		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
+		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(0);
+	});
+	it("subtitle should not render if enabled but no uiHints are passed in", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				subtitle
+			/>
+		);
+		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
+		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
+		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(0);
 	});
 });
