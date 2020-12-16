@@ -17,18 +17,18 @@
 .properties-title-editor {
 	display: block;
 	align-items: center;
-	padding-top: $spacing-06;
+	padding-top: $spacing-05;
 	padding-bottom: $spacing-06;
-	height: 88px;
+	height: 80px;
 	&.properties-title-with-subtitle {
-		height: 120px; // include subtitle with icon height
+		height: 112px; // include subtitle with icon height
 	}
 }
 
 .properties-title-subtitle {
 	padding-left: $spacing-05;
 	padding-right: $spacing-05;
-	margin-bottom: $spacing-03;
+	margin-bottom: $spacing-02;
 	height: $spacing-06;
 	display: flex;
 	align-items: center;

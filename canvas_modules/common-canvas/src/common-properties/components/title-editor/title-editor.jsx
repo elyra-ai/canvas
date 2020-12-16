@@ -84,24 +84,20 @@ class TitleEditor extends Component {
 
 		let subtitle = null;
 		if (this.props.subtitle && this.props.uiHints && (this.props.uiHints.label || this.props.uiHints.icon)) {
-			let label = null;
-			if (this.props.uiHints.label) {
-				if (typeof this.props.uiHints.label === "string") {
-					label = this.props.uiHints.label;
-				} else if (this.props.uiHints.label.default) {
-					label = this.props.uiHints.label.default;
-				}
-			}
+			const label = this.props.uiHints.label
+				? (<div className="properties-title-subtitle-label">
+					{this.props.uiHints.label}
+				</div>)
+				: null;
 			const icon = this.props.uiHints.icon && typeof this.props.uiHints.icon === "string"
 				? <Isvg className="properties-title-subtitle-icon" src={this.props.uiHints.icon} />
 				: null;
-
-			subtitle = (<div className="properties-title-subtitle">
-				{icon}
-				<div className="properties-title-subtitle-label">
+			if (label || icon) {
+				subtitle = (<div className="properties-title-subtitle">
+					{icon}
 					{label}
-				</div>
-			</div>);
+				</div>);
+			}
 		}
 
 		return (

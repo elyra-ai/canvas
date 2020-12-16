@@ -6,7 +6,11 @@
     "id": "default",
     "icon": "images/nodes/derive.svg",
     "label": {
-      "default": "Empty parameter definition"
+      "default": "Empty parameter definition",
+      "resource_key": "emptyDefinition.uihints.label"
     }
+  },
+  "resources": {
+    "emptyDefinition.uihints.label": "Empty Definition Label"
   }
 }
