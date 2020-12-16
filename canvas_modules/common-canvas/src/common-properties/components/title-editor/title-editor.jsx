@@ -19,6 +19,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
+import Isvg from "react-inlinesvg";
+
 import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
@@ -91,7 +93,7 @@ class TitleEditor extends Component {
 				}
 			}
 			const icon = this.props.uihints.icon && typeof this.props.uihints.icon === "string"
-				? <img className="properties-title-subtitle-icon" src={this.props.uihints.icon} />
+				? <Isvg className="properties-title-subtitle-icon" src={this.props.uihints.icon} />
 				: null;
 
 			subtitle = (<div className="properties-title-subtitle">
