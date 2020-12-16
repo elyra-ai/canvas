@@ -205,6 +205,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			expressionValidate: true,
+			subtitle: false,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -274,6 +275,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useSubtitle = this.useSubtitle.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1029,6 +1031,11 @@ class App extends React.Component {
 	usePropertiesContainerType(type) {
 		this.setState({ propertiesContainerType: type });
 		this.log("set properties container", type);
+	}
+
+	useSubtitle(enabled) {
+		this.setState({ subtitle: enabled });
+		this.log("show subtitle", enabled);
 	}
 
 	// common-canvas
@@ -1834,7 +1841,8 @@ class App extends React.Component {
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur
+			applyOnBlur: this.state.applyOnBlur,
+			subtitle: this.state.subtitle
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2044,6 +2052,8 @@ class App extends React.Component {
 			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
+			subtitle: this.state.subtitle,
+			useSubtitle: this.useSubtitle,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

@@ -51,6 +51,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useSubtitle = this.useSubtitle.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
@@ -155,6 +156,9 @@ export default class SidePanelModal extends React.Component {
 
 	useExpressionValidate(checked) {
 		this.props.propertiesConfig.useExpressionValidate(checked);
+	}
+	useSubtitle(checked) {
+		this.props.propertiesConfig.useSubtitle(checked);
 	}
 
 	dropdownOptions() {
@@ -300,6 +304,17 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const subtitle = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-show-subtitle">
+				<Toggle
+					id="harness-sidepanel-show-subtitle-toggle"
+					labelText="Show panel subtitle (icon and label)"
+					toggled={ this.props.propertiesConfig.subtitle }
+					onToggle={ this.useSubtitle }
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -316,6 +331,8 @@ export default class SidePanelModal extends React.Component {
 				{expressionValidate}
 				{divider}
 				{addtlCmpts}
+				{divider}
+				{subtitle}
 			</div>
 		);
 	}
@@ -343,6 +360,8 @@ SidePanelModal.propTypes = {
 		selectedPropertiesDropdownFile: PropTypes.string,
 		selectedPropertiesFileCategory: PropTypes.string,
 		fileChooserVisible: PropTypes.bool,
-		setPropertiesDropdownSelect: PropTypes.func
+		setPropertiesDropdownSelect: PropTypes.func,
+		subtitle: PropTypes.bool,
+		useSubtitle: PropTypes.func
 	})
 };

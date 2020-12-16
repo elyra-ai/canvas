@@ -387,6 +387,7 @@ class PropertiesMain extends React.Component {
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
 					uihints={this.props.propertiesInfo.uihints}
+					subtitle={this.props.propertiesConfig.subtitle}
 				/>);
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
@@ -481,6 +482,7 @@ PropertiesMain.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		subtitle: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string

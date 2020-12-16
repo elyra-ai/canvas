@@ -81,7 +81,7 @@ class TitleEditor extends Component {
 			: null;
 
 		let subtitle = null;
-		if (this.props.uihints && (this.props.uihints.label || this.props.uihints.icon)) {
+		if (this.props.subtitle && this.props.uihints && (this.props.uihints.label || this.props.uihints.icon)) {
 			let label = null;
 			if (this.props.uihints.label) {
 				if (typeof this.props.uihints.label === "string") {
@@ -136,6 +136,7 @@ TitleEditor.propTypes = {
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
 	uihints: PropTypes.object,
+	subtitle: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };
