@@ -34,13 +34,7 @@ controller.setAppData(appData);
 
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
-const uiHints = {
-	icon: "images/nodes/derive.svg",
-	id: "default",
-	label: {
-		default: "test label"
-	}
-};
+
 
 describe("title-editor renders correctly", () => {
 
@@ -52,7 +46,8 @@ describe("title-editor renders correctly", () => {
 				helpClickHandler={helpClickHandler}
 				labelEditable
 				help={help}
-				uiHints={uiHints}
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
 				subtitle
 			/>
 		);
@@ -60,7 +55,8 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.prop("helpClickHandler")).to.equal(helpClickHandler);
 		expect(wrapper.prop("labelEditable")).to.equal(true);
 		expect(wrapper.prop("help")).to.eql(help);
-		expect(wrapper.prop("uiHints")).to.eql(uiHints);
+		expect(wrapper.prop("icon")).to.eql("images/nodes/derive.svg");
+		expect(wrapper.prop("heading")).to.eql("heading");
 		expect(wrapper.prop("subtitle")).to.eql(true);
 
 	});
@@ -155,14 +151,15 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
-				uiHints={uiHints}
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
 				subtitle
 			/>
 		);
 		expect(wrapper.find(".properties-title-subtitle")).to.have.length(1);
 		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(1);
 		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(1);
-		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(1);
+		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(1);
 	});
 	it("subtitle should not render if disabled", () => {
 		const wrapper = mountWithIntl(
@@ -171,13 +168,14 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
-				uiHints={uiHints}
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
 			/>
 		);
 		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
 		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
 		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
-		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(0);
 	});
 	it("subtitle should not render if enabled but no uiHints are passed in", () => {
 		const wrapper = mountWithIntl(
@@ -192,6 +190,6 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
 		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
 		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
-		expect(wrapper.find(".properties-title-subtitle-icon")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(0);
 	});
 });
