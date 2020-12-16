@@ -97,12 +97,17 @@ class CheckboxsetControl extends React.Component {
 			/>);
 		}
 		return (
-			<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
-				<div className="properties-checkboxset-container">
-					{checkboxes}
+			<fieldset>
+				<legend>
+					{this.props.controlItem}
+				</legend>
+				<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
+					<div className="properties-checkboxset-container">
+						{checkboxes}
+					</div>
+					<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 				</div>
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
-			</div>
+			</fieldset>
 		);
 	}
 }
@@ -111,6 +116,7 @@ CheckboxsetControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

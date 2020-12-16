@@ -1317,6 +1317,11 @@ export default class ObjectModel {
 		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
+	// Clears any saved zom values in Local Storage
+	clearSavedZoomValues() {
+		LocalStorage.delete("canvasSavedZoomValues");
+	}
+
 	// ---------------------------------------------------------------------------
 	// Add decorations in batch
 	// ---------------------------------------------------------------------------

@@ -92,7 +92,6 @@ class CommonCanvas extends React.Component {
 		this.afterUpdateCallbacks = [];
 
 		this.unsubscribe = this.objectModel.subscribe(() => {
-			this.logger.log("Allow Force Update = " + this.allowForceUpdate);
 			if (this.allowForceUpdate) {
 				this.logger.log("Force Update");
 				this.forceUpdate(this.afterUpdate);
@@ -179,6 +178,7 @@ class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
+		this.logger.log("initializeController");
 		// Updating canvas config causes the layout info to be updated in redux
 		// which, in turn, causes forceUpdate to be called. So we prevent force
 		// update running here because we are rendering common canvas anyway.
