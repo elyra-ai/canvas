@@ -18,17 +18,17 @@
 	display: block;
 	align-items: center;
 	padding-top: $spacing-05;
-	padding-bottom: $spacing-06;
-	height: 80px;
+	padding-bottom: $spacing-05;
+	height: 72px;
+	border-bottom: 1px $ui-03 solid;
 	&.properties-title-with-subtitle {
-		height: 112px; // include subtitle with icon height
+		height: 96px; // include subtitle with icon height
 	}
 }
 
 .properties-title-subtitle {
 	padding-left: $spacing-05;
 	padding-right: $spacing-05;
-	margin-bottom: $spacing-02;
 	height: $spacing-06;
 	display: flex;
 	align-items: center;
