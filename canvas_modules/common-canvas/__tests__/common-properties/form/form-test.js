@@ -34,7 +34,6 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(formResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm));
 		// console.info("\n\n");
-
 		// Work around since comparing the objects directly doesn't work.
 		expect(isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
@@ -89,7 +88,9 @@ describe("Correct form should be created", () => {
 		};
 		let help;
 		let pixelWidth; // Pass in an undefined pixelWidth to simulate it missing from ParamDefs.
-		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data);
+		let conditions;
+		let resources;
+		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data, conditions, resources, "./test.svg");
 
 		const paramSpec = {
 			"current_parameters": {
@@ -147,7 +148,7 @@ describe("Correct form should be created", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
-	it("should create a form with editStyle set to subpanel and checkbox panel", () => {
+	it.only("should create a form with editStyle set to subpanel and checkbox panel", () => {
 		const generatedForm = Form.makeForm(editStyleResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(editStyleResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
