@@ -386,7 +386,8 @@ class PropertiesMain extends React.Component {
 					help={formData.help}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
-					uiHints={formData.uiHints}
+					icon={formData.icon}
+					heading={formData.heading}
 					subtitle={this.props.propertiesConfig.subtitle}
 				/>);
 				buttonsContainer = (<PropertiesButtons

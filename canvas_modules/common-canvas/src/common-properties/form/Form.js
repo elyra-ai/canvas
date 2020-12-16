@@ -23,7 +23,7 @@ import { translateMessages } from "./Conditions";
 import { Size } from "../constants/form-constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, uiHints) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
@@ -35,7 +35,8 @@ export default class Form {
 		this.data = data;
 		this.conditions = conditions;
 		this.resources = resources;
-		this.uiHints = uiHints;
+		this.icon = icon;
+		this.heading = heading;
 	}
 
 	/**
@@ -48,7 +49,6 @@ export default class Form {
 			propertyOf(paramDef)("uihints"));
 		const resources = propertyOf(paramDef)("resources");
 		const conditions = propertyOf(paramDef)("conditions");
-		const uiHints = propertyOf(paramDef)("uihints");
 		if (propDef) {
 			const l10nProvider = new L10nProvider(resources);
 			const tabs = [];
@@ -56,10 +56,6 @@ export default class Form {
 				for (const group of propDef.groupMetadata.groups) {
 					tabs.push(makePrimaryTab(propDef, group, l10nProvider, conditions));
 				}
-			}
-
-			if (uiHints && uiHints.label) {
-				uiHints.label = l10nProvider.l10nResource(uiHints.label);
 			}
 
 			const data = {
@@ -79,7 +75,8 @@ export default class Form {
 				data,
 				translateMessages(conditions, l10nProvider),
 				resources,
-				uiHints
+				propDef.icon,
+				l10nProvider.l10nResource(propDef.heading)
 			);
 		}
 		return null;

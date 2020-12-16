@@ -83,14 +83,14 @@ class TitleEditor extends Component {
 			: null;
 
 		let subtitle = null;
-		if (this.props.subtitle && this.props.uiHints && (this.props.uiHints.label || this.props.uiHints.icon)) {
-			const label = this.props.uiHints.label
+		if (this.props.subtitle && (this.props.heading || this.props.icon)) {
+			const label = this.props.heading
 				? (<div className="properties-title-subtitle-label">
-					{this.props.uiHints.label}
+					{this.props.heading}
 				</div>)
 				: null;
-			const icon = this.props.uiHints.icon && typeof this.props.uiHints.icon === "string"
-				? <Isvg className="properties-title-subtitle-icon" src={this.props.uiHints.icon} />
+			const icon = this.props.icon && typeof this.props.icon === "string"
+				? <Isvg className="properties-title-subtitle-icon" src={this.props.icon} />
 				: null;
 			if (label || icon) {
 				subtitle = (<div className="properties-title-subtitle">
@@ -102,7 +102,7 @@ class TitleEditor extends Component {
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-subtitle": this.props.subtitle && this.props.uiHints && (this.props.uiHints.label || this.props.uiHints.icon) })}
+				{ "properties-title-with-subtitle": this.props.subtitle && (this.props.heading || this.props.icon) })}
 			>
 				{subtitle}
 				<div className="properties-title-editor-input">
@@ -132,7 +132,8 @@ TitleEditor.propTypes = {
 	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
-	uiHints: PropTypes.object,
+	icon: PropTypes.string,
+	heading: PropTypes.string,
 	subtitle: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
