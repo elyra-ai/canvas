@@ -35,6 +35,7 @@ controller.setAppData(appData);
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
 
+
 describe("title-editor renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -45,12 +46,19 @@ describe("title-editor renders correctly", () => {
 				helpClickHandler={helpClickHandler}
 				labelEditable
 				help={help}
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
+				showHeading
 			/>
 		);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("helpClickHandler")).to.equal(helpClickHandler);
 		expect(wrapper.prop("labelEditable")).to.equal(true);
 		expect(wrapper.prop("help")).to.eql(help);
+		expect(wrapper.prop("icon")).to.eql("images/nodes/derive.svg");
+		expect(wrapper.prop("heading")).to.eql("heading");
+		expect(wrapper.prop("showHeading")).to.eql(true);
+
 	});
 	it("test help button callback", (done) => {
 		function callback(componentId, inData, inAppData) {
@@ -135,5 +143,53 @@ describe("title-editor renders correctly", () => {
 		);
 		const input = wrapper.find("input");
 		expect(input.prop("readOnly")).to.equal(true);
+	});
+	it("heading should render if enabled and passed in", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
+				showHeading
+			/>
+		);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(1);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(1);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(1);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(1);
+	});
+	it("heading should not render if disabled", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				icon={"images/nodes/derive.svg"}
+				heading={"heading"}
+			/>
+		);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
+	});
+	it("heading should not render if enabled but no uiHints are passed in", () => {
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				helpClickHandler={helpClickHandler}
+				labelEditable
+				showHeading
+			/>
+		);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
 	});
 });

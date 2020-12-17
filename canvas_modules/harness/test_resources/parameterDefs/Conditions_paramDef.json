@@ -595,7 +595,7 @@
   ],
   "uihints": {
     "id": "Conditions.test",
-    "icon": "images/modelbuildspark.svg",
+    "icon": "images/nodes/model.svg",
     "label": {
       "default": "Conditions Test"
     },

@@ -398,6 +398,8 @@
       "SortEntry.sort_order.label": "Order",
       "SortEntry.sort_order.Ascending.label": "Ascending",
       "SortEntry.sort_order.Descending.label": "Descending"
-    }
+    },
+    "icon": "images/sort.svg",
+    "heading": "Sort"
   }
 }
