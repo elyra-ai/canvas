@@ -48,7 +48,7 @@ describe("title-editor renders correctly", () => {
 				help={help}
 				icon={"images/nodes/derive.svg"}
 				heading={"heading"}
-				subtitle
+				showHeading
 			/>
 		);
 		expect(wrapper.prop("controller")).to.equal(controller);
@@ -57,7 +57,7 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.prop("help")).to.eql(help);
 		expect(wrapper.prop("icon")).to.eql("images/nodes/derive.svg");
 		expect(wrapper.prop("heading")).to.eql("heading");
-		expect(wrapper.prop("subtitle")).to.eql(true);
+		expect(wrapper.prop("showHeading")).to.eql(true);
 
 	});
 	it("test help button callback", (done) => {
@@ -144,7 +144,7 @@ describe("title-editor renders correctly", () => {
 		const input = wrapper.find("input");
 		expect(input.prop("readOnly")).to.equal(true);
 	});
-	it("subtitle should render if enabled and passed in", () => {
+	it("heading should render if enabled and passed in", () => {
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
@@ -153,15 +153,15 @@ describe("title-editor renders correctly", () => {
 				labelEditable
 				icon={"images/nodes/derive.svg"}
 				heading={"heading"}
-				subtitle
+				showHeading
 			/>
 		);
-		expect(wrapper.find(".properties-title-subtitle")).to.have.length(1);
-		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(1);
-		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(1);
-		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(1);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(1);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(1);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(1);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(1);
 	});
-	it("subtitle should not render if disabled", () => {
+	it("heading should not render if disabled", () => {
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
@@ -172,24 +172,24 @@ describe("title-editor renders correctly", () => {
 				heading={"heading"}
 			/>
 		);
-		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
-		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
-		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
-		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
 	});
-	it("subtitle should not render if enabled but no uiHints are passed in", () => {
+	it("heading should not render if enabled but no uiHints are passed in", () => {
 		const wrapper = mountWithIntl(
 			<TitleEditor
 				store={controller.getStore()}
 				controller={controller}
 				helpClickHandler={helpClickHandler}
 				labelEditable
-				subtitle
+				showHeading
 			/>
 		);
-		expect(wrapper.find(".properties-title-subtitle")).to.have.length(0);
-		expect(wrapper.find(".properties-title-editor.properties-title-with-subtitle")).to.have.length(0);
-		expect(wrapper.find(".properties-title-subtitle-label")).to.have.length(0);
-		expect(wrapper.find("InlineSVG.properties-title-subtitle-icon")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(0);
+		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
+		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
 	});
 });
