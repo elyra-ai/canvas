@@ -823,6 +823,9 @@
     "oneofselect_filtered.yellow.label": "Yellow",
     "oneofselect_filtered.green.label": "Green",
     "oneofselect_filtered.purple.label": "Purple",
-    "oneofselect_filtered.blue.label": "Blue"
+    "oneofselect_filtered.blue.label": "Blue",
+    "animal.cat.label": "Cat",
+    "animal.dog.label": "Dog",
+    "animal.pig.label": "Pig"
   }
 }

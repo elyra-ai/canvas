@@ -189,7 +189,7 @@ class DropDown extends React.Component {
 		let dropdownComponent = null;
 		if (this.props.tableControl) {
 			const options = [];
-			const selection = dropDown.selectedOption && dropDown.selectedOption.label ? dropDown.selectedOption.label : "";
+			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
 			if (!dropDown.selectedOption) {
 				// need to add null option when no value set.  Shouldn't be an option for the user to select otherwise
 				options.push(<SelectItem text={this.emptyLabel} key={this.id} value="" />);
