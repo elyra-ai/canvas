@@ -51,7 +51,7 @@ import ControlItem from "./../components/control-item";
 * <ControlItem /> should be called from every control.
 * After all controls are updated, delete accessibleControls array.
 */
-const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN, ControlType.DATEFIELD];
+const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN, ControlType.DATEFIELD, ControlType.NUMBERFIELD, ControlType.SPINNER];
 
 export default class ControlFactory {
 
@@ -88,7 +88,7 @@ export default class ControlFactory {
 		}
 		// When control-item displays other controls, add padding on control-item
 		return (
-			<div key={"ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
+			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
 					controller={this.controller}
@@ -289,7 +289,7 @@ export default class ControlFactory {
 				return createdControl;
 			}
 			return (
-				<div key={"ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
+				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
 					{createdControl}
 				</div>
 			);
