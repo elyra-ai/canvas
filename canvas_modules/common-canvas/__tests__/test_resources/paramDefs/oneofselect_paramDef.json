@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "oneofselect": "blue",
+    "oneofselect_custom_value": "custom",
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_placeholder": "",
@@ -16,6 +17,8 @@
     "oneofselect_disabled": null,
     "filter": false,
     "oneofselect_filtered": "purple",
+    "filter_custom": false,
+    "oneofselect_filtered_custom": "custom",
     "filter_default": false,
     "oneofselect_filtered_default": "purple",
     "oneofselect_table_error": [
@@ -30,6 +33,18 @@
   "parameters": [
     {
       "id": "oneofselect",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value",
       "enum": [
         "red",
         "orange",
@@ -188,6 +203,22 @@
       "required": true
     },
     {
+      "id": "filter_custom",
+      "type": "boolean"
+    },
+    {
+      "id": "oneofselect_filtered_custom",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
       "id": "filter_default",
       "type": "boolean"
     },
@@ -275,6 +306,16 @@
         "description": {
           "default": "oneofselect with parameter value set to 'blue'"
         }
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value",
+        "label": {
+          "default": "oneofselect custom value allowed"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true
       },
       {
         "parameter_ref": "oneofselect_null",
@@ -396,6 +437,22 @@
         }
       },
       {
+        "parameter_ref": "filter_custom",
+        "label": {
+          "default": "Filter 'oneofselect Filtered custom value'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered_custom",
+        "label": {
+          "default": "oneofselect Filtered custom value"
+        },
+        "resource_key": "oneofselect_filtered_custom",
+        "description": {
+          "default": "oneofselect filtered to have values 'red', 'blue', and 'green'"
+        }
+      },
+      {
         "parameter_ref": "filter_default",
         "label": {
           "default": "Filter 'oneofselect Filtered Default'"
@@ -438,7 +495,8 @@
               "default": "Pet"
             },
             "width": 10,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "custom_value_allowed": true
           },
           {
             "parameter_ref": "fruit",
@@ -485,6 +543,7 @@
         "type": "controls",
         "parameter_refs": [
           "oneofselect",
+          "oneofselect_custom_value",
           "oneofselect_null",
           "oneofselect_empty_string",
           "oneofselect_undefined",
@@ -517,6 +576,8 @@
         "parameter_refs": [
           "filter",
           "oneofselect_filtered",
+          "filter_custom",
+          "oneofselect_filtered_custom",
           "filter_default",
           "oneofselect_filtered_default"
         ]
@@ -625,6 +686,24 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered_custom",
+          "values": [
+            "orange",
+            "yellow"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_custom",
             "op": "equals",
             "value": true
           }

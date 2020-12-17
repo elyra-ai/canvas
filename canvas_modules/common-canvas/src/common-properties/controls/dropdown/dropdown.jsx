@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { SelectItem, Select, Dropdown } from "carbon-components-react";
+import { SelectItem, Select, Dropdown, ComboBox } from "carbon-components-react";
 import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
@@ -37,6 +37,8 @@ class DropDown extends React.Component {
 		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleComboOnChange = this.handleComboOnChange.bind(this);
+		this.handleOnInputChange = this.handleOnInputChange.bind(this);
 		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
@@ -60,6 +62,15 @@ class DropDown extends React.Component {
 			return option.value === value;
 		});
 		selectedOption = typeof selectedOption === "undefined" ? null : selectedOption;
+
+		// user defined value
+		if (selectedOption === null && this.props.control.customValueAllowed) {
+			selectedOption = {
+				value: value,
+				label: value
+			};
+		}
+
 		return selectedOption;
 	}
 
@@ -129,6 +140,8 @@ class DropDown extends React.Component {
 			// set to default value if default value is in filtered enum list
 			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
+			} else if (this.props.control.customValueAllowed && this.props.value) {
+				defaultValue = this.props.value;
 			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
 		}
@@ -142,6 +155,22 @@ class DropDown extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
+	handleComboOnChange(evt) {
+		let value = evt.selectedItem && evt.selectedItem.value ? evt.selectedItem.value : "";
+		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
+			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+	}
+
+	// evt is null when onBlur, empty string when clicking the 'x' to clear input
+	handleOnInputChange(evt) {
+		if (evt !== null) {
+			const value = evt;
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		}
+	}
+
 	render() {
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
@@ -152,10 +181,15 @@ class DropDown extends React.Component {
 			dropDown = this.genSelectOptions(this.props.value);
 		}
 
+		const listBoxMenuIconTranslationIds = {
+			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
+			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+		};
+
 		let dropdownComponent = null;
 		if (this.props.tableControl) {
 			const options = [];
-			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
+			const selection = dropDown.selectedOption && dropDown.selectedOption.label ? dropDown.selectedOption.label : "";
 			if (!dropDown.selectedOption) {
 				// need to add null option when no value set.  Shouldn't be an option for the user to select otherwise
 				options.push(<SelectItem text={this.emptyLabel} key={this.id} value="" />);
@@ -174,11 +208,19 @@ class DropDown extends React.Component {
 			>
 				{ options }
 			</Select>);
+		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
+			dropdownComponent = (<ComboBox
+				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
+				disabled={this.props.state === STATES.DISABLED}
+				placeholder={dropDown.selectedOption.label}
+				selectedItem={dropDown.selectedOption.label}
+				items={dropDown.options}
+				onChange={this.handleComboOnChange}
+				onInputChange={this.handleOnInputChange}
+				light
+				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+			/>);
 		} else {
-			const listBoxMenuIconTranslationIds = {
-				"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
-				"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
-			};
 			dropdownComponent = (<Dropdown
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 				disabled={this.props.state === STATES.DISABLED}
