@@ -51,7 +51,14 @@ import ControlItem from "./../components/control-item";
 * <ControlItem /> should be called from every control.
 * After all controls are updated, delete accessibleControls array.
 */
-const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN, ControlType.DATEFIELD, ControlType.NUMBERFIELD, ControlType.SPINNER];
+const accessibleControls = [
+	ControlType.CHECKBOXSET,
+	ControlType.HIDDEN,
+	ControlType.DATEFIELD,
+	ControlType.NUMBERFIELD,
+	ControlType.SPINNER,
+	ControlType.PASSWORDFIELD
+];
 
 export default class ControlFactory {
 
