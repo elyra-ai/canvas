@@ -50,7 +50,7 @@
 	align-items: center;
 
 	&.properties-title-editor-with-help {
-		width: calc(100% - 42px); // subtract another 40px for help button
+		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
 	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
@@ -77,25 +77,22 @@
 	// Edit button should be inside the title input box
 	.properties-title-editor-btn {
 		position: absolute;
-		right: 2px;
-		fill: $icon-02;
-		padding: 7px;
-		min-height: 16px;
-		&:hover {
-			background-color: $ui-03;
-		}
-		&:active {
-			background-color: $ui-03;
-		}
+		right: $spacing-01;
 	}
 }
 
-.properties-title-editor-btn.help {
-	min-height: $spacing-08;
+.properties-title-editor-btn.help, .properties-title-editor-btn.edit {
+	fill: $icon-02;
+	padding: calc(#{$spacing-03} - 1px);
+	min-height: $spacing-05;
 	&:hover {
 		background-color: $ui-03;
 	}
 	&:active {
 		background-color: $ui-03;
+	}
+	&.help {
+		margin-top: $spacing-02;
+		margin-bottom: $spacing-02;
 	}
 }
