@@ -75,7 +75,10 @@
   ],
   "uihints": {
     "id": "filter",
-    "icon": "images/filter.svg",
+    "icon": "images/common_node_icons/operations/operation_filter.svg",
+    "label": {
+      "default": "Filter Test"
+    },
     "editor_size": "medium",
     "complex_type_info": [
       {
