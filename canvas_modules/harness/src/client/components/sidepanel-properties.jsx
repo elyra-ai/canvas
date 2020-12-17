@@ -51,7 +51,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
-		this.useSubtitle = this.useSubtitle.bind(this);
+		this.useHeading = this.useHeading.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
@@ -157,8 +157,8 @@ export default class SidePanelModal extends React.Component {
 	useExpressionValidate(checked) {
 		this.props.propertiesConfig.useExpressionValidate(checked);
 	}
-	useSubtitle(checked) {
-		this.props.propertiesConfig.useSubtitle(checked);
+	useHeading(checked) {
+		this.props.propertiesConfig.useHeading(checked);
 	}
 
 	dropdownOptions() {
@@ -304,13 +304,13 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
-		const subtitle = (
-			<div className="harness-sidepanel-children" id="sidepanel-properties-show-subtitle">
+		const useHeading = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-show-heading">
 				<Toggle
-					id="harness-sidepanel-show-subtitle-toggle"
-					labelText="Show panel subtitle (icon and label)"
-					toggled={ this.props.propertiesConfig.subtitle }
-					onToggle={ this.useSubtitle }
+					id="harness-sidepanel-show-heading-toggle"
+					labelText="Show panel heading (icon and label)"
+					toggled={ this.props.propertiesConfig.heading }
+					onToggle={ this.useHeading }
 				/>
 			</div>
 		);
@@ -332,7 +332,7 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{addtlCmpts}
 				{divider}
-				{subtitle}
+				{useHeading}
 			</div>
 		);
 	}
@@ -361,7 +361,7 @@ SidePanelModal.propTypes = {
 		selectedPropertiesFileCategory: PropTypes.string,
 		fileChooserVisible: PropTypes.bool,
 		setPropertiesDropdownSelect: PropTypes.func,
-		subtitle: PropTypes.bool,
-		useSubtitle: PropTypes.func
+		heading: PropTypes.bool,
+		useHeading: PropTypes.func
 	})
 };

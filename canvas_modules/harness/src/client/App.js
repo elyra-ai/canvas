@@ -205,7 +205,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			expressionValidate: true,
-			subtitle: false,
+			heading: false,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -275,7 +275,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
-		this.useSubtitle = this.useSubtitle.bind(this);
+		this.useHeading = this.useHeading.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1033,9 +1033,9 @@ class App extends React.Component {
 		this.log("set properties container", type);
 	}
 
-	useSubtitle(enabled) {
-		this.setState({ subtitle: enabled });
-		this.log("show subtitle", enabled);
+	useHeading(enabled) {
+		this.setState({ heading: enabled });
+		this.log("show heading", enabled);
 	}
 
 	// common-canvas
@@ -1323,8 +1323,7 @@ class App extends React.Component {
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
-			expressionInfo: expressionInfo,
-			uihints: properties.uihints
+			expressionInfo: expressionInfo
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1842,7 +1841,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
-			subtitle: this.state.subtitle
+			heading: this.state.heading
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2052,8 +2051,8 @@ class App extends React.Component {
 			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
-			subtitle: this.state.subtitle,
-			useSubtitle: this.useSubtitle,
+			heading: this.state.heading,
+			useHeading: this.useHeading,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

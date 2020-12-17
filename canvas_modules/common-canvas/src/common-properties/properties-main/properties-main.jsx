@@ -379,6 +379,7 @@ class PropertiesMain extends React.Component {
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
 			let resizeBtn = null;
+			let hasHeading = false;
 
 			if (this.props.propertiesConfig.rightFlyout) {
 				propertiesTitle = (<TitleEditor
@@ -388,8 +389,11 @@ class PropertiesMain extends React.Component {
 					helpClickHandler={this.props.callbacks.helpClickHandler}
 					icon={formData.icon}
 					heading={formData.heading}
-					subtitle={this.props.propertiesConfig.subtitle}
+					showHeading={this.props.propertiesConfig.heading}
 				/>);
+
+				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
+
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -429,7 +433,7 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesEditor>);
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
-				propertiesDialog = (<div className="properties-custom-container">
+				propertiesDialog = (<div className={classNames("properties-custom-container", { "properties-custom-container-with-heading": hasHeading })}>
 					{editorForm}
 				</div>);
 			} else { // Modal
@@ -483,7 +487,7 @@ PropertiesMain.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
-		subtitle: PropTypes.bool,
+		heading: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string

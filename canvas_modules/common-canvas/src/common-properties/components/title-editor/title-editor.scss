@@ -21,23 +21,23 @@
 	padding-bottom: $spacing-05;
 	height: 72px;
 	border-bottom: 1px $ui-03 solid;
-	&.properties-title-with-subtitle {
-		height: 96px; // include subtitle with icon height
+	&.properties-title-with-heading {
+		height: 96px; // include heading with icon height
 	}
 }
 
-.properties-title-subtitle {
+.properties-title-heading {
 	padding-left: $spacing-05;
 	padding-right: $spacing-05;
 	height: $spacing-06;
 	display: flex;
 	align-items: center;
-	.properties-title-subtitle-icon {
+	.properties-title-heading-icon {
 		height: $spacing-06;
 		width: $spacing-06;
 		margin-right: $spacing-03;
 	}
-	.properties-title-subtitle-label {
+	.properties-title-heading-label {
 		@include carbon--type-style("label-01");
 	}
 }

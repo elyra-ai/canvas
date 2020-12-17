@@ -82,18 +82,18 @@ class TitleEditor extends Component {
 			</Button>)
 			: null;
 
-		let subtitle = null;
-		if (this.props.subtitle && (this.props.heading || this.props.icon)) {
+		let heading = null;
+		if (this.props.showHeading && (this.props.heading || this.props.icon)) {
 			const label = this.props.heading
-				? (<div className="properties-title-subtitle-label">
+				? (<div className="properties-title-heading-label">
 					{this.props.heading}
 				</div>)
 				: null;
 			const icon = this.props.icon && typeof this.props.icon === "string"
-				? <Isvg className="properties-title-subtitle-icon" src={this.props.icon} />
+				? <Isvg className="properties-title-heading-icon" src={this.props.icon} />
 				: null;
 			if (label || icon) {
-				subtitle = (<div className="properties-title-subtitle">
+				heading = (<div className="properties-title-heading">
 					{icon}
 					{label}
 				</div>);
@@ -102,9 +102,9 @@ class TitleEditor extends Component {
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-subtitle": this.props.subtitle && (this.props.heading || this.props.icon) })}
+				{ "properties-title-with-heading": this.props.showHeading && (this.props.heading || this.props.icon) })}
 			>
-				{subtitle}
+				{heading}
 				<div className="properties-title-editor-input">
 					<TextInput
 						id={this.id}
@@ -134,7 +134,7 @@ TitleEditor.propTypes = {
 	help: PropTypes.object,
 	icon: PropTypes.string,
 	heading: PropTypes.string,
-	subtitle: PropTypes.bool,
+	showHeading: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };
