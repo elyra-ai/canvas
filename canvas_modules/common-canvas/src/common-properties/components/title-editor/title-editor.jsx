@@ -19,19 +19,29 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
+import Isvg from "react-inlinesvg";
+
 import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
+import classNames from "classnames";
+
 
 class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			focused: false
+		};
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.id = PropertyUtils.generateId();
 		this.textInputRef = React.createRef();
 		this.labelText = PropertyUtils.formatMessage(props.controller.getReactIntl(),
 			MESSAGE_KEYS.TITLE_EDITOR_LABEL);
+		this.textInputOnFocus = this.textInputOnFocus.bind(this);
+		this.textInputOnBlur = this.textInputOnBlur.bind(this);
+
 	}
 
 	_handleKeyPress(e) {
@@ -52,22 +62,50 @@ class TitleEditor extends Component {
 				this.props.controller.getAppData());
 		}
 	}
+	textInputOnFocus() {
+		this.setState({ focused: true });
+	}
+
+	textInputOnBlur() {
+		this.setState({ focused: false });
+	}
 
 	render() {
-		const propertiesTitleEdit = this.props.labelEditable === false ? <div />
+		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
 			: (<Button kind="ghost" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
 				<Icon type={CARBON_ICONS.EDIT} />
 			</Button>);
 
 		const helpButton = this.props.help
-			? (<Button kind="ghost" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
+			? (<Button kind="ghost" className="properties-title-editor-btn help" data-id="help" onClick={this.helpClickHandler}>
 				<Icon type={CARBON_ICONS.INFORMATION} />
 			</Button>)
 			: null;
 
+		let heading = null;
+		if (this.props.showHeading && (this.props.heading || this.props.icon)) {
+			const label = this.props.heading
+				? (<div className="properties-title-heading-label">
+					{this.props.heading}
+				</div>)
+				: null;
+			const icon = this.props.icon && typeof this.props.icon === "string"
+				? <Isvg className="properties-title-heading-icon" src={this.props.icon} />
+				: null;
+			if (label || icon) {
+				heading = (<div className="properties-title-heading">
+					{icon}
+					{label}
+				</div>);
+			}
+		}
+
 		return (
-			<div className="properties-title-editor">
-				<div className="properties-title-editor-input">
+			<div className={classNames("properties-title-editor",
+				{ "properties-title-with-heading": this.props.showHeading && (this.props.heading || this.props.icon) })}
+			>
+				{heading}
+				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help })}>
 					<TextInput
 						id={this.id}
 						ref={this.textInputRef}
@@ -77,6 +115,9 @@ class TitleEditor extends Component {
 						readOnly={this.props.labelEditable === false}
 						labelText={this.labelText}
 						hideLabel
+						onFocus={this.textInputOnFocus}
+						onBlur={this.textInputOnBlur}
+						{... this.state.focused && { className: "properties-title-editor-focused" }}
 					/>
 					{propertiesTitleEdit}
 				</div>
@@ -91,6 +132,9 @@ TitleEditor.propTypes = {
 	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,
+	icon: PropTypes.string,
+	heading: PropTypes.string,
+	showHeading: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

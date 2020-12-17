@@ -309,6 +309,8 @@
       "selected_fields.label": "Columns",
       "selected_fields.desc": "Select columns to include or exclude",
       "cols_not_empty": "The 'Column Name' field cannot be empty"
-    }
+    },
+    "icon": "images/transformationspark.svg",
+    "heading": "Distinct"
   }
 }
