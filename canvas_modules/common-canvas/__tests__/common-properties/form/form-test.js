@@ -148,7 +148,7 @@ describe("Correct form should be created", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
-	it.only("should create a form with editStyle set to subpanel and checkbox panel", () => {
+	it("should create a form with editStyle set to subpanel and checkbox panel", () => {
 		const generatedForm = Form.makeForm(editStyleResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(editStyleResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
