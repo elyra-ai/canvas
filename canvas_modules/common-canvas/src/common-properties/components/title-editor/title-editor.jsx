@@ -77,7 +77,7 @@ class TitleEditor extends Component {
 			</Button>);
 
 		const helpButton = this.props.help
-			? (<Button kind="ghost" className="properties-title-editor-btn" data-id="help" onClick={this.helpClickHandler}>
+			? (<Button kind="ghost" className="properties-title-editor-btn help" data-id="help" onClick={this.helpClickHandler}>
 				<Icon type={CARBON_ICONS.INFORMATION} />
 			</Button>)
 			: null;
@@ -105,7 +105,7 @@ class TitleEditor extends Component {
 				{ "properties-title-with-heading": this.props.showHeading && (this.props.heading || this.props.icon) })}
 			>
 				{heading}
-				<div className="properties-title-editor-input">
+				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help })}>
 					<TextInput
 						id={this.id}
 						ref={this.textInputRef}

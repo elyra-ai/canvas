@@ -46,10 +46,12 @@
 	width: calc(100% - 2px); // subtract 2px for input active right border
 	top: 1px; // align input with bottom border
 	position: relative;
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 
-
+	&.properties-title-editor-with-help {
+		width: calc(100% - 42px); // subtract another 40px for help button
+	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
 		position: absolute;
@@ -79,12 +81,21 @@
 		fill: $icon-02;
 		padding: 7px;
 		min-height: 16px;
-
 		&:hover {
 			background-color: $ui-03;
 		}
 		&:active {
 			background-color: $ui-03;
 		}
+	}
+}
+
+.properties-title-editor-btn.help {
+	min-height: $spacing-08;
+	&:hover {
+		background-color: $ui-03;
+	}
+	&:active {
+		background-color: $ui-03;
 	}
 }
