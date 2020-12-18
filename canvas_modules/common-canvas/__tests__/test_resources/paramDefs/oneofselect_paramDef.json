@@ -450,7 +450,8 @@
         "resource_key": "oneofselect_filtered_custom",
         "description": {
           "default": "oneofselect filtered to have values 'red', 'blue', and 'green'"
-        }
+        },
+        "custom_value_allowed": true
       },
       {
         "parameter_ref": "filter_default",
