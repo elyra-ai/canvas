@@ -830,7 +830,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		const addressInput = subPanelTable.find("div[data-id='properties-ci-userAddress']");
 		addressInput.find("input").simulate("change", { target: { value: "new address for row 2" } });
 
-		const zipInput = subPanelTable.find("div[data-id='properties-ci-userZip']");
+		const zipInput = subPanelTable.find("div[data-id='properties-ctrl-userZip']");
 		zipInput.find("input").simulate("change", { target: { value: 12345 } });
 
 		const annotationInput = subPanelTable.find("div[data-id='properties-ci-annotation']");

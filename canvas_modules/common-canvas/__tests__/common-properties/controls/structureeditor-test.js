@@ -387,7 +387,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		const addressInput = structure.find("div[data-id='properties-ci-userAddress']").find("input");
 		addressInput.simulate("change", { target: { value: "some new address" } });
 
-		const zipInput = structure.find("div[data-id='properties-ci-userZip']").find("input");
+		const zipInput = structure.find("div[data-id='properties-ctrl-userZip']").find("input");
 		zipInput.simulate("change", { target: { value: 99999 } });
 
 		// Verify modified values
@@ -447,7 +447,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(editButton).to.have.length(1);
 		editButton.simulate("click");
 
-		const zipInput = wrapper.find("div[data-id='properties-ci-userZipTable']").find("input");
+		const zipInput = wrapper.find("div[data-id='properties-ctrl-userZipTable']").find("input");
 		zipInput.simulate("change", { target: { value: 99999 } });
 		const annotationInput = wrapper.find("div[data-id='properties-ci-annotationTable']").find("textarea");
 		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });

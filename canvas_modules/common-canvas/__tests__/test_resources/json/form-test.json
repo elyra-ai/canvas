@@ -430,6 +430,8 @@
       "enum_param.key.Include.label": "Include: resource",
       "column-settings.label": "Field Settings label: resource",
       "str_param.place_holder_text": "Place holder text: resource"
-    }
+    },
+    "icon": "./test.svg",
+    "heading": "TestOp label: resource"
   }
 }
