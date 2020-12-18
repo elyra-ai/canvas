@@ -692,7 +692,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		editButton.at(1).simulate("click");
 
 		// Modify value of the nested structure
-		const nameInput = wrapper.find("div[data-id='properties-ci-nested_name']");
+		const nameInput = wrapper.find("div[data-id='properties-ctrl-nested_name']");
 		nameInput.find("input").simulate("change", { target: { value: "world" } });
 
 		// Verify modified values for second row
@@ -827,13 +827,13 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		const subPanelTable = wrapper.find("div[data-id='properties-ci-userInfo']");
 		expect(subPanelTable).to.have.length(1);
 
-		const addressInput = subPanelTable.find("div[data-id='properties-ci-userAddress']");
+		const addressInput = subPanelTable.find("div[data-id='properties-ctrl-userAddress']");
 		addressInput.find("input").simulate("change", { target: { value: "new address for row 2" } });
 
 		const zipInput = subPanelTable.find("div[data-id='properties-ctrl-userZip']");
 		zipInput.find("input").simulate("change", { target: { value: 12345 } });
 
-		const annotationInput = subPanelTable.find("div[data-id='properties-ci-annotation']");
+		const annotationInput = subPanelTable.find("div[data-id='properties-ctrl-annotation']");
 		annotationInput.find("textarea").simulate("change", { target: { value: "fake address" } });
 
 		// Verify new row added

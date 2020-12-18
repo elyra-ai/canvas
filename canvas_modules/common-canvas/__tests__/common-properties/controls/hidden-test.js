@@ -39,8 +39,8 @@ describe("hidden control works correctly", () => {
 		expect(hiddenControl).not.to.be.undefined;
 		// should still set/get value correctly
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.equal("hidden");
-		// expect 1 control item for the textfield control and table in paramDef
-		expect(wrapper.find("div.properties-control-item")).to.have.length(2);
+		// expect control item for the textfield control, table in paramDef, and textfield control in table
+		expect(wrapper.find("div.properties-control-item")).to.have.length(3);
 	});
 
 	it("validate hidden table control isn't shown", () => {
