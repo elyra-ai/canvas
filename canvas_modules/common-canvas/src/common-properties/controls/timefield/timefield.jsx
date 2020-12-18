@@ -78,8 +78,8 @@ class TimefieldControl extends React.Component {
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={displayValue}
-					labelText={this.props.control.label ? this.props.control.label.text : ""}
-					hideLabel
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
 					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -92,6 +92,7 @@ TimefieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
