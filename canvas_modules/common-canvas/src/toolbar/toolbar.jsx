@@ -41,6 +41,11 @@ class Toolbar extends React.Component {
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 	}
 
+	componentDidUpdate() {
+		this.setLeftBarItemsTabIndex();
+		this.setRightBarItemsTabIndex();
+	}
+
 	// When the toolbar is initially opened the tabindex for each element may not
 	// be set correctly because of the time it takes to initially render the DOM.
 	// Typically, this means the tabindex is not set correctly on whichever
@@ -98,8 +103,10 @@ class Toolbar extends React.Component {
 			if (itemRect.top === topRow) {
 				lastTopRowElement = i;
 				this.setToolbarItemButtonTabIndex(items[i], 0);
+				this.setToolbarItemButtonVisible(items[i], true);
 			} else {
 				this.setToolbarItemButtonTabIndex(items[i], -1);
+				this.setToolbarItemButtonVisible(items[i], false);
 			}
 		}
 
@@ -124,8 +131,10 @@ class Toolbar extends React.Component {
 
 			if (itemRect.top === topRow) {
 				this.setToolbarItemButtonTabIndex(items[i], 0);
+				this.setToolbarItemButtonVisible(items[i], true);
 			} else {
 				this.setToolbarItemButtonTabIndex(items[i], -1);
+				this.setToolbarItemButtonVisible(items[i], false);
 			}
 		}
 	}
@@ -162,6 +171,14 @@ class Toolbar extends React.Component {
 		const button = item.querySelector("button");
 		if (button) {
 			button.setAttribute("tabindex", tabIndex);
+		}
+	}
+
+	setToolbarItemButtonVisible(item, visible) {
+		if (visible) {
+			item.classList.remove("toolbar-item-button-invisible");
+		} else {
+			item.classList.add("toolbar-item-button-invisible");
 		}
 	}
 

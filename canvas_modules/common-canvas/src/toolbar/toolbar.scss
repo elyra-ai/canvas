@@ -54,6 +54,10 @@ $toolbar-divider-width: 1px;
 	overflow: hidden;
 }
 
+.toolbar-item-button-invisible {
+	opacity: 0;
+}
+
 .toolbar-item {
 	background-color: $ui-01;
 	display: inline-block;

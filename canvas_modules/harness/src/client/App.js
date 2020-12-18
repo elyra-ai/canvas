@@ -69,7 +69,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
 
-import { InlineLoading, Checkbox, Button } from "carbon-components-react";
+import { InlineLoading, Checkbox, Dropdown, Button } from "carbon-components-react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -1801,6 +1801,7 @@ class App extends React.Component {
 			// This example shows how custom JSX can be provided to the toolbar in the
 			// jsx field to replace the content specified in the other fields. The JSX
 			// added can be customized using the host applications own CSS.
+			const items = [{ id: "1", label: "First" }, { id: "2", label: "Second" }];
 			toolbarConfig = {
 				leftBar: [
 					{ action: "undo", label: "Undo", enable: true },
@@ -1811,6 +1812,13 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "custom-checkbox",
 						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ divider: true },
+					{ action: "custom-dropdown",
+						jsx: (<div style={{ width: "200px", height: "40px" }}>
+							<div style={{ width: "200px", position: "fixed", zIndex: 100 }}>
+								<Dropdown id={"drpdwn1"} items={items} label="Dropdown Label" inline />
+							</div>
+						</div>) },
 					{ divider: true },
 					{ action: "custom-button",
 						tooltip: "A custom button of type primary!",
