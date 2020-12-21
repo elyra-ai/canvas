@@ -84,6 +84,7 @@ export default class ControlFactory {
 	createControlItem(control, propertyId, tableInfo) {
 		const controlObj = this.createControl(control, propertyId, tableInfo);
 		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		const className = control.className ? control.className : "";
 
 		/*
 		* <ControlItem /> should be called from every control.
@@ -95,7 +96,9 @@ export default class ControlFactory {
 		}
 		// When control-item displays other controls, add padding on control-item
 		return (
-			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
+			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
+				className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+			>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
 					controller={this.controller}
@@ -295,8 +298,11 @@ export default class ControlFactory {
 				// Don't add padding when controls are displayed in a table
 				return createdControl;
 			}
+			const className = control.className ? control.className : "";
 			return (
-				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name} className={classNames("properties-ctrl-wrapper", { "hide": hidden })}>
+				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
+					className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+				>
 					{createdControl}
 				</div>
 			);

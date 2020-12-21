@@ -68,30 +68,39 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, controls, label) {
+	constructor(id, panelType, className, controls, label) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = controls;
 		if (label) {
 			this.label = label;
 		}
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
 class ActionPanel {
-	constructor(id, panelType, actions) {
+	constructor(id, panelType, className, actions) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = actions;
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
 class CustomControlPanel {
-	constructor(id, panelType, parameters, data) {
+	constructor(id, panelType, className, parameters, data) {
 		this.id = id;
 		this.panelType = panelType;
 		this.parameters = parameters;
 		this.data = data;
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
@@ -107,13 +116,17 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
+	const groupClassName = group.className;
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName)); // TODO: this needs to be control classname
 	case GroupType.COLUMN_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName)); // TODO: this needs to be control classname
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
+		const panel = new ControlPanel(groupName, PanelType.GENERAL,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName);
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -133,7 +146,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
 		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
-		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn);
+		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn, groupClassName);
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
@@ -143,7 +156,8 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
+		// TODO
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, panSubItems));
 	}
 	case GroupType.COLUMN_PANEL: {
 		const panSubItems = [];
@@ -153,10 +167,11 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, panSubItems));
+		// TODO
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data, groupClassName));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -167,15 +182,17 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
+		// TODO
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
-		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, _makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, groupClassName,
+			_makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
 		const groupDesc = l10nProvider.l10nResource(group.description);
-		return UIItem.makeTextPanel(groupName, new Label(groupLabel), new Description(groupDesc));
+		return UIItem.makeTextPanel(groupName, new Label(groupLabel), new Description(groupDesc), groupClassName);
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -186,7 +203,8 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, panSubItems, groupLabel));
+		// TODO
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, panSubItems, groupLabel));
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
@@ -553,6 +571,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
 	settings.customValueAllowed = parameter.customValueAllowed;
+	settings.className = parameter.className;
 
 	if (isSubControl) {
 		settings.visible = parameter.visible;
@@ -596,7 +615,9 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 			structureDef.actionMetadata,
 			structureDef,
 			structureMetadata,
-			l10nProvider)
+			l10nProvider),
+		null,
+		"!!!editstyle-sub-panel-class" // TODO
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);

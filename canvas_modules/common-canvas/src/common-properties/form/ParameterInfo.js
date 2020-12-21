@@ -154,6 +154,9 @@ export class ParameterDef {
 		if (toType(settings.customValueAllowed) === "boolean") {
 			this.customValueAllowed = settings.customValueAllowed;
 		}
+		if (settings.className) {
+			this.className = settings.className;
+		}
 	}
 
 	isList() {
@@ -346,7 +349,8 @@ export class ParameterDef {
 				"displayChars": propertyOf(uihint)("display_chars"),
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
-				"customValueAllowed": propertyOf(uihint)("custom_value_allowed")
+				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
+				"className": propertyOf(uihint)("class_name")
 			});
 		}
 		return null;

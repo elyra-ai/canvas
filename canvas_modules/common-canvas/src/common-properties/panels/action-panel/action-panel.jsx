@@ -23,8 +23,9 @@ import { STATES } from "./../../constants/constants";
 
 class ActionPanel extends Component {
 	render() {
+		const className = this.props.panel.className ? this.props.panel.className : "";
 		return (
-			<div className={classNames("properties-action-panel", { "hide": this.props.panelState === STATES.HIDDEN })}
+			<div className={classNames("properties-action-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
 				data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 				disabled={this.props.panelState === STATES.DISABLED}
 			>

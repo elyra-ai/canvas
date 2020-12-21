@@ -322,7 +322,8 @@
                                       "role": "new_column"
                                     }
                                   }
-                                ]
+                                ],
+                                "className": "!!!editstyle-sub-panel-class"
                               },
                               "text": "...",
                               "secondaryText": "RenameFieldEntry"
