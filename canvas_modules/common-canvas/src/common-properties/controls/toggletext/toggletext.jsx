@@ -50,7 +50,7 @@ class ToggletextControl extends React.Component {
 		}
 		let icon = null;
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img className="icon" src={this.iconsMap[this.props.value]} />;
+			icon = <img className="icon" src={this.iconsMap[this.props.value]} alt={`${this.props.value} Icon`} />;
 		}
 		let button = null;
 		if (typeof rendered !== "undefined") {
@@ -65,7 +65,13 @@ class ToggletextControl extends React.Component {
 		const className = classNames("properties-toggletext", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		return (
-			<div className={className} disabled={this.props.state === STATES.DISABLED} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+			<div
+				aria-label={(this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : ""}
+				className={className}
+				disabled={this.props.state === STATES.DISABLED}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{button}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -77,6 +83,7 @@ ToggletextControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux
