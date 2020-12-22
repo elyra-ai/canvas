@@ -403,3 +403,24 @@ describe("column selection panel visible and enabled conditions work correctly",
 		expect(hiddenItems.at(1).hasClass("hide")).to.be.true;
 	});
 });
+
+describe("column selection panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("column selection panel should have custom classname defined", () => {
+		// Total of 3 classnames defined in column selection panels, but 1 is not in the DOM because of summary
+		expect(wrapper.find("[className$='-columnselection-class']")).to.have.length(2);
+	});
+
+	it("should be able to select dom object from custom classname", () => {
+		expect(wrapper.find(".column-selection-panel-group-columnselection-class")).to.have.length(1);
+	});
+});

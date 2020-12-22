@@ -39,10 +39,11 @@ export class UIItem {
 		});
 	}
 
-	static makeSubTabs(tabs) {
+	static makeSubTabs(tabs, className) {
 		return new UIItem({
 			itemType: ItemType.SUB_TABS,
-			tabs: tabs
+			tabs: tabs,
+			className: className
 		});
 	}
 

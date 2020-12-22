@@ -72,3 +72,23 @@ describe("column panel visible and enabled conditions work correctly", () => {
 		expect(columnPanel.hasClass("hide")).to.equal(true);
 	});
 });
+
+describe("column panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("column panel should have custom classname defined", () => {
+		expect(wrapper.find("[className$='-columnpanel-class']")).to.have.length(1);
+	});
+
+	it("should be able to select dom object from custom classname", () => {
+		expect(wrapper.find(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
+	});
+});

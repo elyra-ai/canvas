@@ -274,3 +274,23 @@ describe("summary panel visible and enabled conditions work correctly", () => {
 		expect(secondSummary.find("div.properties-summary-values")).to.have.length(0);
 	});
 });
+
+describe("summary panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("summary panel should have custom classname defined", () => {
+		expect(wrapper.find("[className$='-summarypanel-class']")).to.have.length(2);
+	});
+
+	it("should be able to select dom object from custom classname", () => {
+		expect(wrapper.find(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.length(1);
+	});
+});

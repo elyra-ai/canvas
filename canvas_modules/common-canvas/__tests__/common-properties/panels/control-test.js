@@ -69,3 +69,24 @@ describe("control panel visible and enabled conditions work correctly", () => {
 		expect(controlPanel.hasClass("hide")).to.equal(true);
 	});
 });
+
+describe("control panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("control panels should have custom classname defined", () => {
+		// Total of 27 classnames defined in text panels, but 1 is not in the DOM because of summary
+		expect(wrapper.find("[className$='-group-controls-class']")).to.have.length(26);
+	});
+
+	it("should be able to select dom object from custom classname", () => {
+		expect(wrapper.find(".panel-selector1-group-controls-class")).to.have.length(1);
+	});
+});

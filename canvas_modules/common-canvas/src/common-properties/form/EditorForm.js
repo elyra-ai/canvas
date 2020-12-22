@@ -29,10 +29,13 @@ import { Action } from "./ActionInfo";
  * form which themselves contain the controls and other UI artifacts.
  */
 export class EditorTab {
-	constructor(label, cname, uiItem) {
+	constructor(label, cname, uiItem, className) {
 		this.text = label;
 		this.group = cname;
 		this.content = uiItem;
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
@@ -138,10 +141,10 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				const subGroupName = subGroup.name;
 				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
 				groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
-				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
+				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem, subGroup.className));
 			});
 		}
-		return UIItem.makeSubTabs(subTabItems);
+		return UIItem.makeSubTabs(subTabItems, groupClassName);
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.

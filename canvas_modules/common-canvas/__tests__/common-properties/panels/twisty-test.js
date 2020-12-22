@@ -153,3 +153,24 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(twistyPanel.hasClass("hide")).to.equal(true);
 	});
 });
+
+describe("twisty panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("text panel should have custom classname defined", () => {
+		expect(wrapper.find("[className$='-twistypanel-class']")).to.have.length(2);
+	});
+
+	it("should be able to select dom object from custom classname", () => {
+		const twistyPanelcategory = wrapper.find("div.properties-category-container").at(4); // TWISTY PANEL category
+		expect(twistyPanelcategory.find(".twisty-panel1-group-twistypanel-class")).to.have.length(1);
+	});
+});

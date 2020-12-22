@@ -46,11 +46,13 @@ class Subtabs extends React.Component {
 				if (this.state.activeTabId === tab.group && panelState !== STATES.DISABLED) {
 					activeTab = tabIdx;
 				}
+				const className = tab.className ? tab.className : "";
+
 				subTabs.push(
 					<Tab
 						key={"subtabs.tab." + i}
 						disabled={panelState === STATES.DISABLED}
-						className="properties-subtab"
+						className={classNames("properties-subtab", className)}
 						tabIndex={tabIdx}
 						label={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
