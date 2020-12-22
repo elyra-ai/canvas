@@ -611,13 +611,13 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 	const panel = new ControlPanel(
 		structureDef.name,
 		PanelType.GENERAL,
+		"properties-editstyle-sub-panel",
 		_makeControls(structureDef.parameterMetadata,
 			structureDef.actionMetadata,
 			structureDef,
 			structureMetadata,
 			l10nProvider),
-		null,
-		"!!!editstyle-sub-panel-class" // TODO
+		null
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);

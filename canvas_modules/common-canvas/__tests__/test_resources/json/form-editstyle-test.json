@@ -323,7 +323,7 @@
                                     }
                                   }
                                 ],
-                                "className": "!!!editstyle-sub-panel-class"
+                                "className": "properties-editstyle-sub-panel"
                               },
                               "text": "...",
                               "secondaryText": "RenameFieldEntry"
