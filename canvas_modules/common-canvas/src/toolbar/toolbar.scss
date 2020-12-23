@@ -111,11 +111,6 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 
-	// Override 'position: relative' for overflow button since relative positioning
-	// causes the overflow button to appear above the div containing some JSX items.
-	& button {
-		position: static;
-	}
 
 	& button {
 		padding: 0;
@@ -123,6 +118,10 @@ $toolbar-divider-width: 1px;
 		min-height: 30px;
 		background-color: $ui-01;
 		border-right: $toolbar-divider-width solid $ui-03;
+
+		// Override 'position: relative' for overflow button since relative positioning
+		// causes the overflow button to appear above the div containing some JSX items.
+		position: static;
 	}
 
 	& button:hover {
