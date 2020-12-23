@@ -55,6 +55,7 @@ import {
 	RADIOSET_HORIZONTAL_PROPS_INFO,
 	RADIOSET_VERTICAL_PROPS_INFO,
 	ONEOFSELECT_PROPS_INFO,
+	ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO,
 	FORCED_RADIOSET_PROPS_INFO,
 	SOMEOFSELECT_PROPS_INFO,
 	FORCED_CHECKBOX_SET_PROPS_INFO,
@@ -1148,6 +1149,25 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(ONEOFSELECT_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+					<p>When <span className="harness-highlight">custom_value_allowed</span> is specified in the uihints,
+						a dropdown with the option for users to enter a custom value is rendered. This option is not available
+						for dropdown controls within tables.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO.parameterDef, "custom",
+									["uihints", "parameter_info", "parameter_ref", "label", "description", "default", "custom_value_allowed"])}
 							</pre>
 						</div>
 					</div>

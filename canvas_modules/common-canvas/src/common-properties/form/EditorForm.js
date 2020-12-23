@@ -552,6 +552,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.layout = layout;
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
+	settings.customValueAllowed = parameter.customValueAllowed;
 
 	if (isSubControl) {
 		settings.visible = parameter.visible;

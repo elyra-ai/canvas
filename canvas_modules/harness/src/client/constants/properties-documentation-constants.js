@@ -2330,6 +2330,61 @@ _defineConstant("ONEOFSELECT_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO", {
+	"title": "One of Select Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: oneofselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"oneofselectList": "custom"
+		},
+		"parameters": [
+			{
+				"id": "oneofselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": "yellow"
+			}
+		],
+		"uihints": {
+			"id": "oneofselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "oneofselectList",
+					"label": {
+						"default": "One of Select Control Name"
+					},
+					"description": {
+						"default": "oneofselect test"
+					},
+					"custom_value_allowed": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "Oneofselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"oneofselectList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
+	}
+});
 _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 	"title": "One of Select Title",
 	"parameterDef": {
