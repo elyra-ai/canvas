@@ -1808,21 +1808,21 @@ class App extends React.Component {
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "custom-loading",
-						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+						jsx: (<div style={{ padding: "4px 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
 					{ divider: true },
 					{ action: "custom-checkbox",
-						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+						jsx: (<div style={{ padding: "5px 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
 					{ divider: true },
 					{ action: "custom-dropdown",
-						jsx: (<div style={{ width: "200px", height: "40px" }}>
-							<div style={{ width: "200px", position: "fixed", zIndex: 100 }}>
-								<Dropdown id={"drpdwn1"} items={items} label="Dropdown Label" inline />
+						jsx: (
+							<div style={{ width: "196px", height: "100%" }}>
+								<Dropdown style={{ width: "196px", position: "absolute" }} id={"drpdwn1"} items={items} label="Dropdown Label" />
 							</div>
-						</div>) },
+						) },
 					{ divider: true },
 					{ action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+						jsx: (<Button id={"btn1"} size="field" kind="primary">Custom button </Button>) },
 					{ divider: true }
 				]
 			};

@@ -87,7 +87,7 @@ class Toolbar extends React.Component {
 	// of the toolbar.
 	setLeftBarItemsTabIndex() {
 		const bar = this.getBar("left");
-		if (!bar) {
+		if (!bar || !bar.querySelectorAll) {
 			return;
 		}
 
@@ -147,7 +147,7 @@ class Toolbar extends React.Component {
 
 	getRightBarItems() {
 		const bar = this.getBar("right");
-		if (!bar) {
+		if (!bar || !bar.querySelectorAll) {
 			return [];
 		}
 		return bar.querySelectorAll("[data-toolbar-item=true]") || [];
@@ -174,6 +174,12 @@ class Toolbar extends React.Component {
 		}
 	}
 
+	// Applies the invisble style to toolbar items that are *not* on the first
+	// row of the left or right side toolbar. This is actually only really
+	// necessary when the host app is displaying a dropdown control because that
+	// is displayed using a <div> with 'position: absolute' and absolutely
+	// positioned divs are not hidden by the 'overflow: hidden' style on the
+	// toolbar. However, applying it to all items not on the top row is OK.
 	setToolbarItemButtonVisible(item, visible) {
 		if (visible) {
 			item.classList.remove("toolbar-item-button-invisible");
