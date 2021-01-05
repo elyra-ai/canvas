@@ -190,7 +190,8 @@
         },
         "description": {
           "default": "someofselect with parameter value set to 'blue'"
-        }
+        },
+        "class_name": "someofselect-control-class"
       },
       {
         "parameter_ref": "someofselect_null",

@@ -123,13 +123,13 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName)); // TODO: this needs to be control classname
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName)); // TODO: this needs to be control classname
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), null, groupClassName);
+		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -174,7 +174,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data, groupClassName));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, groupClassName, group.parameterNames(), group.data));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -619,8 +619,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 			structureDef.actionMetadata,
 			structureDef,
 			structureMetadata,
-			l10nProvider),
-		null
+			l10nProvider)
 	);
 	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 	return UIItem.makeAdditionalLink("...", groupLabel, panel);

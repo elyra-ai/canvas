@@ -20,6 +20,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import toggletextParamDef from "../../test_resources/paramDefs/toggletext_paramDef.json";
 
 const controller = new Controller();
 
@@ -177,4 +178,23 @@ describe("Toggletext renders correctly", () => {
 		expect(messageWrapper).to.have.length(1);
 	});
 
+});
+
+describe("toggletext classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(toggletextParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("toggletext should have custom classname defined", () => {
+		expect(wrapper.find(".toggletext-control-class")).to.have.length(1);
+	});
+
+	it("toggletext should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "toggletext-table-summary");
+		expect(wrapper.find(".table-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-toggletext-control-class")).to.have.length(1);
+	});
 });

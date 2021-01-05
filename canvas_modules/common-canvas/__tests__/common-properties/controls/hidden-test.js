@@ -61,3 +61,20 @@ describe("hidden control works correctly", () => {
 	});
 
 });
+
+describe("hidden classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(hiddenParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("hidden should have custom classname defined", () => {
+		expect(wrapper.find(".hidden-control-class")).to.have.length(1);
+	});
+
+	it("hidden should not have custom classname defined in table cells", () => {
+		// hidden controls are not rendered in table, classname should not be found
+		expect(wrapper.find(".table-hidden-control-class")).to.have.length(0);
+	});
+});

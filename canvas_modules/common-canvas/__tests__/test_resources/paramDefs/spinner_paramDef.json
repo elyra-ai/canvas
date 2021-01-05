@@ -85,7 +85,8 @@
         "description": {
           "default": "spinner without increment set.  Should default to increment=1"
         },
-        "control" : "spinner"
+        "control" : "spinner",
+        "class_name": "spinner-control-class"
       },
       {
         "parameter_ref": "spinner_int",

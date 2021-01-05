@@ -651,6 +651,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		expect(rows.at(0).text()).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
 	});
 });
+
 describe("expression builder correctly runs Recently Used dropdown options", () => {
 	it("expression builder correctly adds and reorders fields to Recently Used", () => {
 		reset();
@@ -783,5 +784,25 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(funcRows).to.have.length(2);
 		expect(funcRows.at(0).text()).to.equal("to_integer(Item)Integer");
 		expect(funcRows.at(1).text()).to.equal("count_equal(Item, List)Integer");
+	});
+});
+
+describe("expression builder classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("expression should have custom classname defined", () => {
+		expect(wrapper.find(".expression-control-class")).to.have.length(1);
+	});
+
+	it("expression should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "expressionCellTable-summary-panel");
+		// const tableControlDiv = wrapper.find("div[data-id='properties-Expression Control Cell']");
+		expect(wrapper.find(".expression-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-expression-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-expression-control-class")).to.have.length(1);
 	});
 });

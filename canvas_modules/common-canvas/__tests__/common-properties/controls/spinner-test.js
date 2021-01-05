@@ -260,3 +260,15 @@ describe("spinnerControl paramDef render correctly", () => {
 		expect(labels.at(10).text()).to.equal("Spinner Hidden");
 	});
 });
+
+describe("spinner classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(spinnerParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("spinner should have custom classname defined", () => {
+		expect(wrapper.find(".spinner-control-class")).to.have.length(1);
+	});
+});

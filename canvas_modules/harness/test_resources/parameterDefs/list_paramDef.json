@@ -157,7 +157,8 @@
           "default": "list with a string array value"
         },
         "control": "list",
-        "moveable_rows": true
+        "moveable_rows": true,
+        "class_name": "string-list-control-class"
       },
       {
         "parameter_ref": "list_integer",
@@ -296,7 +297,8 @@
             "edit_style": "on_panel",
             "control": "list",
             "moveable_rows": true,
-            "summary": true
+            "summary": true,
+            "class_name": "table-on-panel-list-control-class"
           }
         ]
       },
@@ -346,7 +348,8 @@
             "edit_style": "subpanel",
             "control": "list",
             "moveable_rows": true,
-            "summary": true
+            "summary": true,
+            "class_name": "table-subpanel-list-control-class"
           }
         ]
       }

@@ -530,3 +530,22 @@ describe("selectcolumn works correctly with multi input schemas", () => {
 		expect(options).to.have.deep.members(expectedOptions);
 	});
 });
+
+describe("selectcolumn classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("selectcolumn should have custom classname defined", () => {
+		expect(wrapper.find(".selectcolumn-control-class")).to.have.length(1);
+	});
+
+	it("selectcolumn should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "selectcolumn_table-error-panel");
+		expect(wrapper.find(".table-selectcolumn-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-selectcolumn-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-selectcolumn-control-class")).to.have.length(1);
+	});
+});

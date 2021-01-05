@@ -181,7 +181,8 @@
         },
         "description": {
           "default": "selectcolumn with parameter value set to 'age'"
-        }
+        },
+        "class_name": "selectcolumn-control-class"
       },
       {
         "parameter_ref": "field_null",
@@ -373,7 +374,8 @@
               "default": "inline"
             },
             "width": 10,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "class_name": "table-selectcolumn-control-class"
           },
           {
             "parameter_ref": "field_col2",
@@ -384,7 +386,8 @@
               "default": "on-panel"
             },
             "width": 10,
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-selectcolumn-control-class"
           },
           {
             "parameter_ref": "field_col3",
@@ -395,7 +398,8 @@
               "default": "subpanel"
             },
             "width": 10,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-selectcolumn-control-class"
           }
         ]
       }

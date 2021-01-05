@@ -853,3 +853,27 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 	});
 });
+
+describe("structurelisteditor classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structurelisteditor should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(wrapper.find(".structurelisteditor-control-class")).to.have.length(1);
+	});
+
+	it("structurelisteditor should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		const parent = wrapper.find(".nested-parent-structurelisteditor-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-child-cell-structurelisteditor-control-class")).to.have.length(1);
+		// click on subpanel edit for first row
+		const editButton = parent.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		expect(wrapper.find(".double-nested-subpanel-structurelisteditor-control-class")).to.have.length(1);
+	});
+});

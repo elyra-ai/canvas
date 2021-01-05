@@ -101,7 +101,8 @@
           "default": "Custom Toggle"
         },
         "control": "custom",
-        "custom_control_id": "harness-custom-toggle-control"
+        "custom_control_id": "harness-custom-toggle-control",
+        "class_name": "custom-control-class"
       },
       {
         "parameter_ref": "colors",
@@ -157,7 +158,8 @@
             "edit_style": "inline",
             "data": {
               "type": "toggle"
-            }
+            },
+            "class_name": "table-custom-control-class"
           },
           {
             "parameter_ref": "sub-structuretable",
@@ -170,7 +172,8 @@
             "edit_style": "on_panel",
             "data": {
               "type": "table"
-            }
+            },
+            "class_name": "table-on-panel-custom-control-class"
           }
         ]
       },

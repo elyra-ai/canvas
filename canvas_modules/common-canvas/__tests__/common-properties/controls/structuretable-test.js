@@ -1505,3 +1505,29 @@ describe("structuretable control with nested structure tables", () => {
 	});
 
 });
+
+describe("structuretable classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structuretable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		expect(wrapper.find(".structuretable-control-class")).to.have.length(1);
+	});
+
+	it("structuretable should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		const parent = wrapper.find(".nested-parent-structuretable-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-child-cell-structuretable-control-class")).to.have.length(1);
+		// click on subpanel edit for first row
+		const editButton = parent.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		// This class name exists in the parent table cell and in the subpanel as table
+		expect(wrapper.find(".double-nested-subpanel-structuretable-control-class")).to.have.length(2);
+		expect(wrapper.find(".double-nested-subpanel-cell-structuretable-control-class")).to.have.length(1);
+	});
+});
