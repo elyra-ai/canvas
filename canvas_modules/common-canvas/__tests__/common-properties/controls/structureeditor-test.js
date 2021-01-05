@@ -384,7 +384,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		let expected = structureeditorParamDef.current_parameters.nestedStructureeditor;
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
-		const addressInput = structure.find("div[data-id='properties-ci-userAddress']").find("input");
+		const addressInput = structure.find("div[data-id='properties-ctrl-userAddress']").find("input");
 		addressInput.simulate("change", { target: { value: "some new address" } });
 
 		const zipInput = structure.find("div[data-id='properties-ctrl-userZip']").find("input");
@@ -449,7 +449,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		const zipInput = wrapper.find("div[data-id='properties-ctrl-userZipTable']").find("input");
 		zipInput.simulate("change", { target: { value: 99999 } });
-		const annotationInput = wrapper.find("div[data-id='properties-ci-annotationTable']").find("textarea");
+		const annotationInput = wrapper.find("div[data-id='properties-ctrl-annotationTable']").find("textarea");
 		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });
 
 		// Verify modified values
