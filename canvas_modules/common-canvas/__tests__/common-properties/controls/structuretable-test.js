@@ -1124,7 +1124,7 @@ describe("structuretable control with nested structure tables", () => {
 		editButton.at(1).simulate("click");
 
 		// Modify value of the nested structure
-		const nameInput = wrapper.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1194,7 +1194,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1261,7 +1261,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1365,7 +1365,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "hello" } });
 
 		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
@@ -1481,10 +1481,10 @@ describe("structuretable control with nested structure tables", () => {
 		table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
 		const onPanelTable = table.find("div[data-id='properties-ci-userHealthTable']");
 
-		const nameInput = onPanelTable.find("div[data-id='properties-ci-userName']");
+		const nameInput = onPanelTable.find("div[data-id='properties-ctrl-userName']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
-		const annotationInput = onPanelTable.find("div[data-id='properties-ci-annotation']");
+		const annotationInput = onPanelTable.find("div[data-id='properties-ctrl-annotation']");
 		annotationInput.find("textarea").simulate("change", { target: { value: "some annotation" } });
 
 		// Verify new row modified

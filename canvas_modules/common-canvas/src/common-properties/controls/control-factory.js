@@ -57,7 +57,11 @@ const accessibleControls = [
 	ControlType.DATEFIELD,
 	ControlType.NUMBERFIELD,
 	ControlType.SPINNER,
-	ControlType.PASSWORDFIELD
+	ControlType.PASSWORDFIELD,
+	ControlType.TEXTAREA,
+	ControlType.TEXTFIELD,
+	ControlType.TIMEFIELD,
+	ControlType.TOGGLETEXT
 ];
 
 export default class ControlFactory {

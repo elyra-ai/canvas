@@ -20,12 +20,14 @@ import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { formatMessage } from "./../../util/property-utils";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 
 class ToggletextControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.valuesMap = {};
 		this.iconsMap = {};
 		for (let i = 0; i < props.control.values.length; ++i) {
@@ -50,7 +52,11 @@ class ToggletextControl extends React.Component {
 		}
 		let icon = null;
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img className="icon" src={this.iconsMap[this.props.value]} />;
+			icon = (<img
+				className="icon"
+				src={this.iconsMap[this.props.value]}
+				alt={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}
+			/>);
 		}
 		let button = null;
 		if (typeof rendered !== "undefined") {
@@ -65,7 +71,13 @@ class ToggletextControl extends React.Component {
 		const className = classNames("properties-toggletext", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		return (
-			<div className={className} disabled={this.props.state === STATES.DISABLED} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+			<div
+				aria-label={(this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : ""}
+				className={className}
+				disabled={this.props.state === STATES.DISABLED}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{button}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -77,6 +89,7 @@ ToggletextControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux

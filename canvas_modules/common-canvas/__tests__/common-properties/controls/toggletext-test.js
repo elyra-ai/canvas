@@ -26,6 +26,9 @@ const controller = new Controller();
 
 const control = {
 	"name": "toggle",
+	"label": {
+		"text": "Toggletext"
+	},
 	"values": [
 		"Ascending",
 		"Descending"
@@ -41,6 +44,9 @@ const control = {
 };
 const controlNoIcons = {
 	"name": "toggle",
+	"label": {
+		"text": "Toggletext without icons"
+	},
 	"values": [
 		"Ascending",
 		"Descending"
