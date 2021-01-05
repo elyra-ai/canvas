@@ -23,7 +23,6 @@ import { setControls } from "../../_utils_/property-utils";
 import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
-import tableUtils from "./../../_utils_/table-utils";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 
 import listParamDef from "../../test_resources/paramDefs/list_paramDef.json";
