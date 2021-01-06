@@ -15,7 +15,8 @@
       null
     ],
     "list_string_error": [
-      "not empty"
+      "not empty",
+      " "
     ],
     "list_double_warning": [
       1.1
@@ -33,7 +34,7 @@
           "Ascending",
           []
         ],
-				[
+        [
           "Na",
           6,
           "Ascending",
@@ -433,6 +434,24 @@
           "condition": {
             "parameter_ref": "list_string_error",
             "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List must have at least two non-empty elements"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "customNonEmptyListLessThan",
+            "value": 2
           }
         }
       }
