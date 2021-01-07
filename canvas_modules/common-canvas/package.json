@@ -42,7 +42,6 @@
     "react-resize-detector": "5.2.0",
     "react-virtualized": "9.22.2",
     "redux": "4.0.5",
-    "sass": "1.32.2",
     "seedrandom": "3.0.5",
     "uuid": "8.3.0"
   },
@@ -90,6 +89,7 @@
     "react-redux": "7.2.1",
     "react-test-renderer": "16.13.1",
     "reactable": "1.1.0",
+    "sass": "1.32.2",
     "sass-lint": "1.13.1",
     "sass-loader": "10.0.2",
     "sinon": "9.0.3",
