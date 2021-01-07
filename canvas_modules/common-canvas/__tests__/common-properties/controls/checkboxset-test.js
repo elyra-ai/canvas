@@ -15,6 +15,7 @@
  */
 
 import React from "react";
+import { Provider } from "react-redux";
 import { expect } from "chai";
 import Controller from "./../../../src/common-properties/properties-controller";
 import Checkboxset from "./../../../src/common-properties/controls/checkboxset";
@@ -72,28 +73,30 @@ describe("checkboxset control tests", () => {
 	});
 	it("checkboxset props should have been defined", () => {
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-				tableControl
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					tableControl
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("tableControl")).to.equal(true);
+		expect(wrapper.children().prop("control")).to.equal(control);
+		expect(wrapper.children().prop("controller")).to.equal(controller);
+		expect(wrapper.children().prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.children().prop("tableControl")).to.equal(true);
 	});
 	it("checkboxset labels are displayed", () => {
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
@@ -105,12 +108,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset number labels are displayed", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={controlNumber}
-				controller={controller}
-				propertyId={propertyIdNumber}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={controlNumber}
+					controller={controller}
+					propertyId={propertyIdNumber}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-number']");
 		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
@@ -121,12 +125,13 @@ describe("checkboxset control tests", () => {
 	});
 	it("checkboxset handles updates values correctly", () => {
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -159,12 +164,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset handles number updates values correctly", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={controlNumber}
-				controller={controller}
-				propertyId={propertyIdNumber}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={controlNumber}
+					controller={controller}
+					propertyId={propertyIdNumber}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-number']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -188,12 +194,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset handles invalid values correctly", () => {
 		const propertyIdInvalid = { name: "test-checkboxset-invalid" };
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={controlInvalid}
-				controller={controller}
-				propertyId={propertyIdInvalid}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={controlInvalid}
+					controller={controller}
+					propertyId={propertyIdInvalid}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-invalid']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -210,12 +217,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset handles null correctly", () => {
 		const propertyIdNull = { name: "test-checkboxset-null" };
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={controlNull}
-				controller={controller}
-				propertyId={propertyIdNull}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={controlNull}
+					controller={controller}
+					propertyId={propertyIdNull}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-null']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -232,12 +240,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset handles undefined correctly", () => {
 		const propertyIdUndefined = { name: "test-checkboxset-undefined" };
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={controlUndefined}
-				controller={controller}
-				propertyId={propertyIdUndefined}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={controlUndefined}
+					controller={controller}
+					propertyId={propertyIdUndefined}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-undefined']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -254,12 +263,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset renders when disabled", () => {
 		controller.updateControlState(propertyId, "disabled");
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		const checkboxes = checkboxsetWrapper.find("input");
@@ -271,12 +281,13 @@ describe("checkboxset control tests", () => {
 	it("checkboxset renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		expect(checkboxWrapper.hasClass("hide")).to.equal(true);
@@ -288,12 +299,13 @@ describe("checkboxset control tests", () => {
 			text: "bad checkbox value"
 		});
 		const wrapper = mount(
-			<Checkboxset
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
 		);
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
 		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");

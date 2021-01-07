@@ -451,6 +451,8 @@
       "increment": "Increment",
       "decrement": "Decrement",
       "dm-update": "Update Datamodel"
-    }
+    },
+    "icon": "images/actions.svg",
+    "heading": "Action Test"
   }
 }

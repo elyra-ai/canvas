@@ -470,6 +470,7 @@
       "RenameFieldEntry.new_name": "Output name",
       "RenameFieldEntry.new_label": "New Label",
       "output_name_not_empty": "The 'Output Name' field cannot be empty"
-    }
+    },
+    "icon": "./rename.svg"
   }
 }

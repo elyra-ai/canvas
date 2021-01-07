@@ -205,6 +205,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			expressionValidate: true,
+			heading: false,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -274,6 +275,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useHeading = this.useHeading.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1029,6 +1031,11 @@ class App extends React.Component {
 	usePropertiesContainerType(type) {
 		this.setState({ propertiesContainerType: type });
 		this.log("set properties container", type);
+	}
+
+	useHeading(enabled) {
+		this.setState({ heading: enabled });
+		this.log("show heading", enabled);
 	}
 
 	// common-canvas
@@ -1833,7 +1840,8 @@ class App extends React.Component {
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur
+			applyOnBlur: this.state.applyOnBlur,
+			heading: this.state.heading
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2043,6 +2051,8 @@ class App extends React.Component {
 			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
+			heading: this.state.heading,
+			useHeading: this.useHeading,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

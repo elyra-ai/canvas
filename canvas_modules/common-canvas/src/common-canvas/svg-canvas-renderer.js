@@ -1871,7 +1871,7 @@ export default class SVGCanvasRenderer {
 
 			if (this.config.enableSaveZoom === "Pipelineflow") {
 				const data = {
-					editType: "zoomPipeline",
+					editType: "setPipelineZoom",
 					editSource: "canvas",
 					zoom: this.zoomTransform,
 					pipelineId: this.activePipeline.id

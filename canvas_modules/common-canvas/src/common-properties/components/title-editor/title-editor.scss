@@ -15,35 +15,61 @@
  */
 
 .properties-title-editor {
-	height: 41px;
-	display: flex;
+	display: block;
 	align-items: center;
-	border-bottom: 1px solid $ui-03;
+	padding-top: $spacing-05;
+	padding-bottom: $spacing-05;
+	height: 72px;
+	border-bottom: 1px $ui-03 solid;
+	&.properties-title-with-heading {
+		height: 96px; // include heading with icon height
+	}
 }
 
+.properties-title-heading {
+	padding-left: $spacing-05;
+	padding-right: $spacing-05;
+	height: $spacing-06;
+	display: flex;
+	align-items: center;
+	.properties-title-heading-icon {
+		height: $spacing-06;
+		width: $spacing-06;
+		margin-right: $spacing-03;
+	}
+	.properties-title-heading-label {
+		@include carbon--type-style("label-01");
+	}
+}
 .properties-title-editor-input {
-	height: 100%;
+	height: $spacing-08;
 	width: calc(100% - 2px); // subtract 2px for input active right border
 	top: 1px; // align input with bottom border
 	position: relative;
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 
+	&.properties-title-editor-with-help {
+		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
+	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
 		position: absolute;
 		width: 100%;
 
 		input { //override styling from carbon
-			@include carbon--type-style("productive-heading-03");
+			@include carbon--type-style("productive-heading-02");
 			color: $text-01;
-
 			min-width: unset;
 			background: unset;
-			padding-right: 40px; // avoid edit icon
+			text-overflow: ellipsis;
+			border-bottom: unset;
 			&[readonly] {
 				box-shadow: unset;
 				cursor: default;
+			}
+			&:not(.properties-title-editor-focused) {
+				padding-right: $spacing-08; // avoid edit icon
 			}
 		}
 	}
@@ -51,16 +77,22 @@
 	// Edit button should be inside the title input box
 	.properties-title-editor-btn {
 		position: absolute;
-		right: 2px;
-		fill: $icon-02;
-		padding: 7px;
-		min-height: 16px;
+		right: $spacing-01;
+	}
+}
 
-		&:hover {
-			background-color: $ui-03;
-		}
-		&:active {
-			background-color: $ui-03;
-		}
+.properties-title-editor-btn.help, .properties-title-editor-btn.edit {
+	fill: $icon-02;
+	padding: calc(#{$spacing-03} - 1px);
+	min-height: $spacing-05;
+	&:hover {
+		background-color: $ui-03;
+	}
+	&:active {
+		background-color: $ui-03;
+	}
+	&.help {
+		margin-top: $spacing-02;
+		margin-bottom: $spacing-02;
 	}
 }

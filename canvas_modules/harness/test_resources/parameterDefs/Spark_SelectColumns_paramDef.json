@@ -25,7 +25,10 @@
   ],
   "uihints": {
     "id": "org.ibm.spark.ibm.transformers.selectcolumns",
-    "icon": "./select.svg",
+    "icon": "images/common_node_icons/operations/operation_select.svg",
+    "label": {
+      "default": "Spark Select Columns Test"
+    },
     "ui_parameters": [
       {
         "id": "uiOnlyField1",
