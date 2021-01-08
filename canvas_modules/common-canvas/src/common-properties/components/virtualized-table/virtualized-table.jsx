@@ -121,18 +121,18 @@ class VirtualizedTable extends React.Component {
 
 	// Responsible for rendering the table header row given an array of columns.
 	headerRowRenderer(scrollKey, { className, columns, style }) {
-		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div className="properties-vt-header-checkbox">
+		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div role="columnheader" className="properties-vt-header-checkbox">
 			<Checkbox
 				id={`properties-vt-hd-cb-${scrollKey}`}
 				onChange={this.selectAll}
 				checked={this.props.checkedAll}
-				labelText=""
+				labelText="Select all rows"
 				hideLabel
 			/>
 		</div>)
 			: "";
 
-		return (<div className={className} role="properties-header-row" style={style}>
+		return (<div className={className} data-role="properties-header-row" role="row" style={style}>
 			{checkbox}
 			{columns}
 		</div>);
@@ -210,13 +210,14 @@ class VirtualizedTable extends React.Component {
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"
+					role="row"
 					onMouseEnter={this.overSelectOption}
 					onMouseLeave={this.overSelectOption}
 				>
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
 						key={`properties-vt-row-cb-${scrollKey}-${index}`}
-						labelText=""
+						labelText={`Select row ${index + 1}`}
 						hideLabel
 						checked={rowSelected}
 						disabled={rowDisabled}
@@ -234,7 +235,8 @@ class VirtualizedTable extends React.Component {
 				<div
 					className={className}
 					key={key}
-					role="properties-loading-row"
+					data-role="properties-loading-row"
+					role="row"
 					style={style}
 				>
 					<Loading className="properties-vt-small-loading" small withOverlay={false} />
@@ -252,7 +254,8 @@ class VirtualizedTable extends React.Component {
 					{ "properties-vt-row-selected": selectedRow },
 					{ "properties-vt-row-disabled": rowDisabled }
 				)}
-				role="properties-data-row"
+				data-role="properties-data-row"
+				role="row"
 				style={newStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
 			>

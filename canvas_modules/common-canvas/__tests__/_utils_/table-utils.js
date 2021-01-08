@@ -87,11 +87,11 @@ function verifyFieldPickerRow(row, field, schema) {
 }
 
 function getTableHeaderRows(wrapper) {
-	return wrapper.find("div[role='properties-header-row']");
+	return wrapper.find("div[data-role='properties-header-row']");
 }
 
 function getTableRows(wrapper) {
-	return wrapper.find("div[role='properties-data-row']");
+	return wrapper.find("div[data-role='properties-data-row']");
 }
 
 /*

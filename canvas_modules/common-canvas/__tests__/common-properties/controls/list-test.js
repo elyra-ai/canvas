@@ -343,7 +343,7 @@ describe("list renders correctly as a nested control", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expectedOriginal));
 
 		let onPanelList = summaryPanel.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(0);
 		selectCheckboxes(summaryPanel, [0]); // Select first row for onPanel edit
 
@@ -351,7 +351,7 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
 		onPanelList = table.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(1);
 
 		// select the add column button in nested list
@@ -368,7 +368,7 @@ describe("list renders correctly as a nested control", () => {
 		// edit nested list row index 0
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		const textinputs = onPanelList.find(".bx--text-input__field-wrapper");
 		expect(textinputs).to.have.length(2);
 		textinputs.at(0).find("input")
@@ -399,7 +399,7 @@ describe("list renders correctly as a nested control", () => {
 
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(0);
 		selectCheckboxes(summaryPanel, [1]); // Select second row for onPaneledit
 
@@ -407,7 +407,7 @@ describe("list renders correctly as a nested control", () => {
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		table = summaryPanel.find("div[data-id='properties-ci-complexListStructurelisteditor']");
 		onPanelList = table.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(1);
 
 		// select the add column button in nested list
@@ -418,7 +418,7 @@ describe("list renders correctly as a nested control", () => {
 		// edit nested list row index 0
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
 		onPanelList = summaryPanel.find(".properties-onpanel-container")
-			.find("div[data-id='properties-ci-complexListStructurelisteditor_list']");
+			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		const secondTextinputs = onPanelList.find(".bx--text-input__field-wrapper");
 		expect(secondTextinputs).to.have.length(1);
 		secondTextinputs.find("input").simulate("change", { target: { value: "new value list 10" } });
