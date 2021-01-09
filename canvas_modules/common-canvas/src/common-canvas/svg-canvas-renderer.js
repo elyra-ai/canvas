@@ -4516,7 +4516,7 @@ export default class SVGCanvasRenderer {
 		if (element && element.nodeName === "path") {
 			const datum = d3.select(element).datum();
 			if (datum) {
-				var foundLink = this.canvasController.getLink(datum.id, this.pipelineId);
+				var foundLink = this.getLink(datum.id, this.pipelineId);
 				if (foundLink && foundLink.type === NODE_LINK) {
 					return foundLink;
 				}
