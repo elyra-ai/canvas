@@ -89,7 +89,7 @@ class ListControl extends AbstractTable {
 				const controlPropType = this.props.controller.getControlPropType(propertyId);
 				const control = {};
 				// Assuming list control has only 2 columns
-				const listHeader = tableHeaders[0].label;
+				const listHeader = (typeof tableHeaders === "undefined" || tableHeaders.length === 0) ? "" : tableHeaders[0].label;
 				const cellContent = this.makeCell(control, propertyId, controlPropType, listHeader);
 				columns.push({
 					key: rowIndex + "-0-value",
@@ -144,6 +144,7 @@ class ListControl extends AbstractTable {
 				tableState={this.props.state}
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
+				control={this.props.control}
 				controller={this.props.controller}
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}

@@ -126,7 +126,7 @@ class VirtualizedTable extends React.Component {
 				id={`properties-vt-hd-cb-${scrollKey}`}
 				onChange={this.selectAll}
 				checked={this.props.checkedAll}
-				labelText="Select all rows"
+				labelText=""
 				hideLabel
 			/>
 		</div>)
@@ -217,7 +217,7 @@ class VirtualizedTable extends React.Component {
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
 						key={`properties-vt-row-cb-${scrollKey}-${index}`}
-						labelText={`Select row ${index + 1}`}
+						labelText=""
 						hideLabel
 						checked={rowSelected}
 						disabled={rowDisabled}
@@ -285,6 +285,7 @@ class VirtualizedTable extends React.Component {
 								height={height ? height : defaultTestHeight}
 
 								className="properties-autosized-vt"
+								aria-label={this.props.control ? this.props.control.label.text : ""}
 
 								disableHeader={this.props.disableHeader}
 								headerClassName="properties-autosized-vt-header"
@@ -334,6 +335,7 @@ VirtualizedTable.defaultProps = {
 };
 
 VirtualizedTable.propTypes = {
+	control: PropTypes.object,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,

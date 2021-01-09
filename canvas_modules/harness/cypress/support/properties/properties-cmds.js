@@ -189,7 +189,7 @@ Cypress.Commands.add("getSummaryFromName", (summaryName) => {
 Cypress.Commands.add("selectRowInTable", (rowNumber, propertyId) => {
 	//  Select the row 1 in the table "expressionCellTable"
 	cy.get(`div[data-id='properties-${propertyId}']`)
-		.find("div[role='properties-data-row']")
+		.find("div[data-role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.click();
 });
@@ -223,7 +223,7 @@ Cypress.Commands.add("selectFieldInFieldPickerPanel", (fieldName, dataType, pane
 	// Following logic works based on assumption  - fieldName in each row is unique
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
-		.find("div[role='properties-data-row']")
+		.find("div[data-role='properties-data-row']")
 		.each(($el, index) => {
 			if ($el[0].childNodes[1].textContent === fieldName) {
 				rowNumber = index;
