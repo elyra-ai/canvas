@@ -76,7 +76,6 @@ describe("action panel classNames applied correctly", () => {
 
 	it("nested action panel should have custom classname defined", () => {
 		const panelsWrapper = wrapper.find("div[data-id='properties-panels-in-panels']");
-		const nestedWrapper = panelsWrapper.find("div[data-id='properties-level3']");
 		expect(panelsWrapper.find(".disable-button-action-panel-group-actionpanel-class")).to.have.length(1);
 	});
 });
