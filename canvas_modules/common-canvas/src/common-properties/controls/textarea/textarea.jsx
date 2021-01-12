@@ -67,8 +67,8 @@ class TextareaControl extends React.Component {
 					disabled
 					placeholder={this.props.control.additionalText}
 					value={value}
-					labelText={this.props.control.label ? this.props.control.label.text : ""}
-					hideLabel
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
 					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
@@ -80,8 +80,8 @@ class TextareaControl extends React.Component {
 				placeholder={this.props.control.additionalText}
 				onChange={this.handleChange.bind(this)}
 				value={value}
-				labelText={this.props.control.label ? this.props.control.label.text : ""}
-				hideLabel
+				labelText={this.props.controlItem}
+				hideLabel={this.props.tableControl}
 				light
 			/>);
 		}
@@ -124,6 +124,7 @@ TextareaControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.oneOfType([
