@@ -69,9 +69,9 @@ function fieldPicker(fieldpickerWrapper, fieldsToSelect, expectedFields) {
 			if (currField === fieldName && currSchema === schemaName) {
 				const checkbox = rows.at(i).find(".properties-vt-row-checkbox");
 				expect(checkbox).to.have.length(1);
-				checkbox.simulate("mouseEnter");
+				checkbox.simulate("focus");
 				checkbox.simulate("mouseDown");
-				checkbox.simulate("mouseLeave");
+				checkbox.simulate("blur");
 				break;
 			}
 		}
@@ -135,9 +135,9 @@ function clickHeaderColumnSort(wrapper, col) {
 function selectCheckboxes(wrapper, rows) {
 	const checkboxes = getTableRows(wrapper).find(".properties-vt-row-checkbox");
 	for (const row of rows) {
-		checkboxes.at(row).simulate("mouseEnter");
+		checkboxes.at(row).simulate("focus");
 		checkboxes.at(row).simulate("mouseDown");
-		checkboxes.at(row).simulate("mouseLeave");
+		checkboxes.at(row).simulate("blur");
 	}
 }
 
