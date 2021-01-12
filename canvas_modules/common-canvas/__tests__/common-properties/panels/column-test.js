@@ -85,10 +85,7 @@ describe("column panel classNames applied correctly", () => {
 	});
 
 	it("column panel should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-columnpanel-class']")).to.have.length(1);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
-		expect(wrapper.find(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
+		const columnPanelWrapper = wrapper.find("div[data-id='properties-column-panels']");
+		expect(columnPanelWrapper.find(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
 	});
 });

@@ -176,10 +176,7 @@ describe("text panel classNames applied correctly", () => {
 	});
 
 	it("selector panel should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-panelselector-class']")).to.have.length(2);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
-		expect(wrapper.find(".panel-selector-fields1-group-panelselector-class")).to.have.length(1);
+		const panelSelectorWrapper = wrapper.find("div[data-id='properties-panel-selector2']");
+		expect(panelSelectorWrapper.find(".panel-selector2-group-panelselector-class")).to.have.length(1);
 	});
 });

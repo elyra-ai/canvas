@@ -65,10 +65,11 @@ describe("group panel classNames applied correctly", () => {
 	});
 
 	it("group panels should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-group-panels-class']")).to.have.length(13);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
-		expect(wrapper.find(".panel-selectors-group-panels-class")).to.have.length(1);
+		// top level group panels
+		expect(wrapper.find(".text-panels-group-panels-class")).to.have.length(1);
+		// double nested panels
+		expect(wrapper.find(".level1-group-panels-class")).to.have.length(1);
+		// deeply nested group panels
+		expect(wrapper.find(".level3-group-panels-class")).to.have.length(1);
 	});
 });

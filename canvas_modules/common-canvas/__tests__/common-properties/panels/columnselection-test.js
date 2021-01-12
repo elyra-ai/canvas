@@ -416,11 +416,13 @@ describe("column selection panel classNames applied correctly", () => {
 	});
 
 	it("column selection panel should have custom classname defined", () => {
-		// Total of 3 classnames defined in column selection panels, but 1 is not in the DOM because of summary
-		expect(wrapper.find("[className$='-columnselection-class']")).to.have.length(2);
+		const columnSelectionWrapper = wrapper.find("div[data-id='properties-column-selections']");
+		expect(columnSelectionWrapper.find(".selectcolumn-values-group-columnselection-class")).to.have.length(1);
+		expect(columnSelectionWrapper.find(".column-selection-panel-group-columnselection-class")).to.have.length(1);
 	});
 
-	it("should be able to select dom object from custom classname", () => {
+	it("column selection panel in a structuretable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretable-summary-panel1");
 		expect(wrapper.find(".column-selection-panel-group-columnselection-class")).to.have.length(1);
 	});
 });

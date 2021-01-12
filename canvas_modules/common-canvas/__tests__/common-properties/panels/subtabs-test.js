@@ -82,11 +82,15 @@ describe("subtabs classNames applied correctly", () => {
 	});
 
 	it("subtabs should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-subtab-control-class']")).to.have.length(6);
-		const subTabs = wrapper.find("div.properties-subtabs").at(0);
-		expect(subTabs.find("[className$='-subtab-control-class']")).to.have.length(3);
-		const subTabPanels = wrapper.find("div[role='tabpanel']");
-		expect(subTabPanels.find("[className$='-subtab-control-class']")).to.have.length(3);
+		const subTabs = wrapper.find("div.properties-sub-tab-container").at(0);
+		const subTabsList = subTabs.find("ul").find("li");
+		expect(subTabsList.find(".range-fields-subtab-control-class")).to.have.length(1);
+		expect(subTabsList.find(".table-subtab-control-class")).to.have.length(1);
+		expect(subTabsList.find(".fruit-subtab-control-class")).to.have.length(1);
+		const subTabPanels = subTabs.find("div[role='tabpanel']");
+		expect(subTabPanels.find(".range-fields-subtab-control-class")).to.have.length(1);
+		expect(subTabPanels.find(".table-subtab-control-class")).to.have.length(1);
+		expect(subTabPanels.find(".fruit-subtab-control-class")).to.have.length(1);
 	});
 
 	it("should be able to select dom object from custom classname", () => {

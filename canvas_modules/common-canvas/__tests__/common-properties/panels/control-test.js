@@ -82,11 +82,12 @@ describe("control panel classNames applied correctly", () => {
 	});
 
 	it("control panels should have custom classname defined", () => {
-		// Total of 27 classnames defined in text panels, but 1 is not in the DOM because of summary
-		expect(wrapper.find("[className$='-group-controls-class']")).to.have.length(26);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
-		expect(wrapper.find(".panel-selector1-group-controls-class")).to.have.length(1);
+		// nested panel: controls
+		expect(wrapper.find(".textpanels-group-controls-class")).to.have.length(1);
+		// deeply nested panel: controls
+		expect(wrapper.find(".disable-button-control-panel-group-controls-class")).to.have.length(1);
+		// nested panel without a type defined, will default to controls
+		propertyUtils.openSummaryPanel(wrapper, "structuretable-summary-panel2");
+		expect(wrapper.find(".structuretable-summary2-panel-category-group-controls-class")).to.have.length(1);
 	});
 });

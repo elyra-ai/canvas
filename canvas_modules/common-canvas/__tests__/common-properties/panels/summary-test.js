@@ -287,10 +287,7 @@ describe("summary panel classNames applied correctly", () => {
 	});
 
 	it("summary panel should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-summarypanel-class']")).to.have.length(2);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
-		expect(wrapper.find(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.length(1);
+		const summaryContainer = wrapper.find("div[data-id='properties-summary_panel_category']");
+		expect(summaryContainer.find(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.length(1);
 	});
 });

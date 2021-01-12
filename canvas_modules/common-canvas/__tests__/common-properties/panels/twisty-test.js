@@ -166,10 +166,6 @@ describe("twisty panel classNames applied correctly", () => {
 	});
 
 	it("text panel should have custom classname defined", () => {
-		expect(wrapper.find("[className$='-twistypanel-class']")).to.have.length(2);
-	});
-
-	it("should be able to select dom object from custom classname", () => {
 		const twistyPanelcategory = wrapper.find("div.properties-category-container").at(4); // TWISTY PANEL category
 		expect(twistyPanelcategory.find(".twisty-panel1-group-twistypanel-class")).to.have.length(1);
 	});
