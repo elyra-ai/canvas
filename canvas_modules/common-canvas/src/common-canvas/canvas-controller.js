@@ -577,12 +577,6 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}
 
-	// Sets the class name to newClassName of the object identified by objectId
-	// in the pipleine specified by pipeline ID.
-	setObjectsClassName(objectId, newClassName, pipelineId) {
-		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(objectId, newClassName);
-	}
-
 	// Sets the style of the objects specified by pipelineObjectIds to be
 	// the newStyle which will be either temporary or permanent.
 	// pipelineObjectIds: This identified the objects to be styles. It is a
@@ -695,6 +689,13 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	setNodeLabel(nodeId, newLabel, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeLabel(nodeId, newLabel);
+	}
+
+	// Sets the class name to newClassName of the nodes identified by nodeIds
+	// array in the pipleine specified by pipeline ID. The class name will be
+	// applied to the node body path.
+	setNodesClassName(nodeIds, newClassName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(nodeIds, newClassName);
 	}
 
 	// Sets the decorations on a node. The decorations array passed in
@@ -818,7 +819,13 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeDecorations(nodeId);
 	}
 
-	// Gets the style spcification (see Wiki) for a node
+	// Gets the class name associated with the node specified by nodeId in the
+	// pipeline specified by pipelineId.
+	getNodeClassName(nodeId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getNodeClassName(nodeId);
+	}
+
+	// Gets the style specification (see Wiki) for a node
 	// nodeId - The ID of the node
 	// temporary - A boolean to indicate if the styles are serialized when
 	//             getPipelineFlow() method is called or not.
@@ -893,6 +900,13 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setCommentProperties(commentId, commentProperties);
 	}
 
+	// Sets the class name to newClassName of the comments identified by commentIds
+	// array in the pipleine specified by pipeline ID. The class name will be
+	// applied to the comment body path.
+	setCommentsClassName(commentIds, newClassName, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setObjectsClassName(commentIds, newClassName);
+	}
+
 	// Deletes a comment
 	// comId - The ID of the comment
 	// pipelineId - The ID of the pipeline
@@ -910,6 +924,12 @@ export default class CanvasController {
 	// @Deprecated
 	removeCustomAttrFromComments(comIds, attrName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).removeCustomAttrFromComments(comIds, attrName);
+	}
+
+	// Gets the class name associated with the comment specified by commentId in the
+	// pipeline specified by pipelineId.
+	getCommentClassName(commentId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getCommentClassName(commentId);
 	}
 
 	// Gets the style spcification (see Wiki) for a comment
@@ -1060,6 +1080,12 @@ export default class CanvasController {
 	//             getPipelineFlow() method is called or not.
 	setLinksMultiStyle(pipelineObjStyles, temporary) {
 		this.objectModel.setLinksMultiStyle(pipelineObjStyles, temporary);
+	}
+
+	// Gets the class name associated with the link specified by linkId in the
+	// pipeline specified by pipelineId.
+	getLinkClassName(linkId, pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).getLinkClassName(linkId);
 	}
 
 	// Returns the style specification for a link.

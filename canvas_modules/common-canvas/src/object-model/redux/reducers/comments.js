@@ -121,7 +121,7 @@ export default (state = [], action) => {
 			const idx = action.data.objIds.indexOf(comment.id);
 			if (idx > -1) {
 				const newComment = Object.assign({}, comment);
-				newComment.style =
+				newComment.class_name =
 					Array.isArray(action.data.newClassName) ? (action.data.newClassName[idx] || null) : action.data.newClassName;
 				return newComment;
 			}

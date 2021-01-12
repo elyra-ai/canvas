@@ -5998,7 +5998,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
+			.attr("class", (d) => "d3-link-group")
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6121,6 +6121,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
+			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6131,6 +6132,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
+			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
