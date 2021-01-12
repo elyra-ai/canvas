@@ -42,6 +42,12 @@ class DiagramCanvas extends React.Component {
 		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
 
+		// Used to track the drag position of a node from the palette. The dragOver
+		// event is continually fired, even when the mouse pointer is not moving,
+		// so this lets us eliminate unnecessary events being passed to the renderer.
+		this.dragX = null;
+		this.dragY = null;
+
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
@@ -204,12 +210,16 @@ class DiagramCanvas extends React.Component {
 
 	dragOver(event) {
 		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
-		if (nodeTemplate) {
+		if (nodeTemplate && (this.dragX !== event.clientX || this.dragY !== event.clientY)) {
+			this.dragX = event.clientX;
+			this.dragY = event.clientY;
 			this.canvasD3Layout.paletteNodeDraggedOver(nodeTemplate, event.clientX, event.clientY);
 		}
 	}
 
 	dragEnter(event) {
+		this.dragX = null;
+		this.dragY = null;
 		if (this.isDataTypeBeingDraggedFile(event)) {
 			if (this.first) {
 				this.second = true;
