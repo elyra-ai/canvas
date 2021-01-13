@@ -314,7 +314,13 @@ class EditorForm extends React.Component {
 		case ("panel"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
-			return (<Subtabs key={"subtabs." + key} tabs={uiItem.tabs} controller={this.props.controller} rightFlyout={this.props.rightFlyout} genUIItem={this.genUIItem} />);
+			return (<Subtabs key={"subtabs." + key}
+				tabs={uiItem.tabs}
+				className={uiItem.className}
+				controller={this.props.controller}
+				rightFlyout={this.props.rightFlyout}
+				genUIItem={this.genUIItem}
+			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		case ("panelSelector"):

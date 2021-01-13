@@ -271,6 +271,7 @@
           "default": "Tab Test"
         },
         "type": "panels",
+        "class_name": "maintab-panel-class",
         "group_info": [
           {
             "id": "conditions",

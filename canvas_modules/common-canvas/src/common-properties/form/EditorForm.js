@@ -29,13 +29,10 @@ import { Action } from "./ActionInfo";
  * form which themselves contain the controls and other UI artifacts.
  */
 export class EditorTab {
-	constructor(label, cname, uiItem, className) {
+	constructor(label, cname, uiItem) {
 		this.text = label;
 		this.group = cname;
 		this.content = uiItem;
-		if (className) {
-			this.className = className;
-		}
 	}
 }
 
@@ -141,7 +138,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				const subGroupName = subGroup.name;
 				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
 				groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
-				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem, subGroup.className));
+				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			});
 		}
 		return UIItem.makeSubTabs(subTabItems, groupClassName);
@@ -159,7 +156,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		// TODO
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, panSubItems));
 	}
 	case GroupType.COLUMN_PANEL: {
@@ -170,7 +166,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		// TODO
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
@@ -185,7 +180,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		// TODO
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
@@ -206,7 +200,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		// TODO
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, panSubItems, groupLabel));
 	}
 	default:

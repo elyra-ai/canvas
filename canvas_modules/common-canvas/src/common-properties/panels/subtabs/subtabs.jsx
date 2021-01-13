@@ -37,6 +37,7 @@ class Subtabs extends React.Component {
 		const subTabs = [];
 		let activeTab = 0;
 		let tabIdx = 0;
+		const className = this.props.className ? this.props.className : "";
 		for (let i = 0; i < this.props.tabs.length; i++) {
 			const tab = this.props.tabs[i];
 			// TODO this might not work once we don't rerender on each change
@@ -46,13 +47,12 @@ class Subtabs extends React.Component {
 				if (this.state.activeTabId === tab.group && panelState !== STATES.DISABLED) {
 					activeTab = tabIdx;
 				}
-				const className = tab.className ? tab.className : "";
 
 				subTabs.push(
 					<Tab
 						key={"subtabs.tab." + i}
 						disabled={panelState === STATES.DISABLED}
-						className={classNames("properties-subtab", className)}
+						className="properties-subtab"
 						tabIndex={tabIdx}
 						label={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
@@ -65,7 +65,7 @@ class Subtabs extends React.Component {
 			}
 		}
 		return (
-			<div className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout })}>
+			<div className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout }, className)}>
 				<Tabs className="properties-subtabs" selected={activeTab}>
 					{subTabs}
 				</Tabs>
@@ -78,7 +78,8 @@ Subtabs.propTypes = {
 	tabs: PropTypes.array.isRequired,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
-	genUIItem: PropTypes.func.isRequired
+	genUIItem: PropTypes.func.isRequired,
+	className: PropTypes.string
 };
 
 export default Subtabs;
