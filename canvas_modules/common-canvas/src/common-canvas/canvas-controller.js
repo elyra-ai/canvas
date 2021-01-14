@@ -1039,10 +1039,9 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).createCommentLinks(data);
 	}
 
-	// Sets the class name on links
-	// linkIds - An array of links
-	// newClassName - The class name
-	// pipelineId - The ID of the pipeline
+	// Sets the class name to newClassName of the links identified by linkIds
+	// array in the pipleine specified by pipeline ID. The class name will be
+	// applied to the link line path.
 	setLinksClassName(linkIds, newClassName, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).setLinksClassName(linkIds, newClassName);
 	}
