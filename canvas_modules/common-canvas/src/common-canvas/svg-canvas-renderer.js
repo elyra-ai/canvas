@@ -2546,6 +2546,7 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
+				.attr("class", (cd) => this.getNodeBodyClass(cd))
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
@@ -6250,24 +6251,31 @@ export default class SVGCanvasRenderer {
 	}
 
 	getCommentRectClass(d) {
+		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-comment" &&
+				d.class_name !== "d3-comment-rect") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return "d3-comment-rect";
+		return "d3-comment-rect" + customClass;
 	}
 
 	getNodeBodyClass(d) {
+		let customClass = "";
 		// If the node has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-node" && d.class_name !== "d3-node-body") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-node" &&
+				d.class_name !== "d3-node-body" &&
+				d.class_name !== "d3-node-body-outline") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name.
-		return "d3-node-body-outline";
+		return "d3-node-body-outline" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below

@@ -117,7 +117,7 @@
                       "style": {
                         "line": {
                           "default": "stroke: hotpink;",
-                          "hover": "stroke: magenta;"
+                          "hover": "stroke: purple; stroke-width: 4"
                         }
                       }
                     }
@@ -441,7 +441,7 @@
               "width": 270,
               "height": 184,
               "class_name": "canvas-comment",
-              "content": "These nodes should have a dark sea green fill and forest green outline and dark cyan text. \n\nOn hover, they should have deep sky blue fill and a dodger blue outline with a royal blue selection highlight.\n\nThe line to the Binding node is orange/red and is 3px width and on hover becomes blue/violet.\n\nThe line between the binding node and execution node is hot pink and on hover become magenta.",
+              "content": "These nodes should have a dark sea green fill and forest green outline and dark cyan text. \n\nOn hover, they should have deep sky blue fill and a dodger blue outline with a royal blue selection highlight.\n\nThe line to the Binding node is orange/red and is 3px width and on hover becomes blue/violet.\n\nThe line between the binding node and execution node is hot pink and on hover become purple.",
               "associated_id_refs": [
                 {
                   "node_ref": "id8I6RH2V91XW",
