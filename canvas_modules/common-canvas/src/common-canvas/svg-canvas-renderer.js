@@ -5998,7 +5998,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => "d3-link-group")
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6054,12 +6054,12 @@ export default class SVGCanvasRenderer {
 		// Add selection area for link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+			.attr("class", (d) => this.getLinkSelectionAreaClass(d));
 
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkLineClass(d));
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -6067,7 +6067,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkArrowHeadClass(d));
 
 		// Add link line handles at start and end of line
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -6121,7 +6121,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d))
+			.attr("class", (d) => this.getLinkLineClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6132,7 +6132,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d))
+			.attr("class", (d) => this.getLinkArrowHeadClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
@@ -6199,57 +6199,54 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLinkSelectionAreaClass(d) {
+		let typeClass = "";
 		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
+			typeClass = "d3-association-link-selection-area";
 		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
+			typeClass = "d3-comment-link-selection-area";
+		} else {
+			typeClass = "d3-data-link-selection-area";
 		}
-		return "d3-data-link-selection-area";
+
+		return "d3-link-selection-area " + typeClass;
 	}
 
-	getLinkClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return this.getAssociationLinkClass(d);
-		} else if (d.type === COMMENT_LINK) {
-			return this.getCommentLinkClass(d);
-		}
-		return this.getDataLinkClass(d);
+	getLinkGroupClass(d) {
+		return "d3-link-group " + this.getLinkTypeClass(d);
 	}
 
-	getDataLinkClass(d) {
-		// If the data has a classname that isn't the historical default use it!
-		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
+	getLinkLineClass(d) {
+		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	getLinkArrowHeadClass(d) {
+		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	getLinkCustomClass(d) {
+		if (d.class_name &&
+				d.class_name !== "canvas-data-link" &&
+				d.class_name !== "canvas-object-link" &&
+				d.class_name !== "canvas-comment-link" &&
+				d.class_name !== "d3-data-link" &&
+				d.class_name !== "d3-association-link" &&
+				d.class_name !== "d3-object-link" &&
+				d.class_name !== "d3-comment-link") {
 			return d.class_name;
 		}
-		// If the class name provided IS the historical default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
+		return "";
+	}
+
+	getLinkTypeClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+				return "d3-association-link";
+			}
+			return "d3-object-link";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link";
+		}
 		return "d3-data-link";
-	}
-
-	getAssociationLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-object-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return "d3-association-link";
-		}
-		return "d3-object-link";
-	}
-
-	getCommentLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-link";
 	}
 
 	getCommentRectClass(d) {

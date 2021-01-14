@@ -332,13 +332,13 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 		let commentLinks = 0;
 		let associationLinks = 0;
 		if ($body.find(".d3-link-group .d3-data-link").length) {
-			dataLinks = $body.find(".d3-link-group .d3-data-link").length;
+			dataLinks = $body.find(".d3-link-group .d3-data-link.d3-link-line").length;
 		}
 		if ($body.find(".d3-link-group .d3-comment-link").length) {
-			commentLinks = $body.find(".d3-link-group .d3-comment-link").length;
+			commentLinks = $body.find(".d3-link-group .d3-comment-link.d3-link-line").length;
 		}
 		if ($body.find(".d3-link-group .d3-object-link").length) {
-			associationLinks = $body.find(".d3-link-group .d3-object-link").length;
+			associationLinks = $body.find(".d3-link-group .d3-object-link.d3-link-line").length;
 		}
 		expect(dataLinks + commentLinks + associationLinks).equal(noOfLinks);
 	});
