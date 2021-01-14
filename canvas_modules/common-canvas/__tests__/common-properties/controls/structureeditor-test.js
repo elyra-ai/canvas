@@ -527,3 +527,22 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 	});
 });
+
+describe("structureeditor classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structureeditor should have custom classname defined", () => {
+		expect(wrapper.find(".structureeditor-control-class")).to.have.length(1);
+	});
+
+	it("structureeditor should have custom classname defined in table cells", () => {
+		const parent = wrapper.find(".nested-structureeditor-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-structureeditor-cell-control-class")).to.have.length(1);
+		expect(parent.find(".double-nested-structureeditor-cell-control-class")).to.have.length(1);
+	});
+});

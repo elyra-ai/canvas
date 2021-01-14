@@ -19,6 +19,7 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import Checkbox from "./../../../src/common-properties/controls/checkbox";
 import { mount } from "enzyme";
 import propertyUtils from "../../_utils_/property-utils";
+import checkboxParamDef from "../../test_resources/paramDefs/checkbox_paramDef.json";
 
 const controller = new Controller();
 
@@ -197,5 +198,27 @@ describe("checkbox control tests", () => {
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkbox']");
 		const messageWrapper = checkboxWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+});
+
+describe("checkbox classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(checkboxParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("checkbox should have custom classname defined", () => {
+		expect(wrapper.find(".checkbox-control-class")).to.have.length(1);
+	});
+
+	it("checkbox should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "checkbox-table-summary");
+		const tableControlDiv = wrapper.find("div[data-id='properties-checkbox-table-summary-ctrls']");
+		// There are 2 rows shown across 2 tables
+		expect(tableControlDiv.find(".table-checkbox-control-class")).to.have.length(2);
+		// From the 2 rows shown, each row has a checkbox on-panel and in subpanel
+		expect(tableControlDiv.find(".table-on-panel-checkbox-control-class")).to.have.length(2);
+		expect(tableControlDiv.find(".table-subpanel-checkbox-control-class")).to.have.length(2);
 	});
 });

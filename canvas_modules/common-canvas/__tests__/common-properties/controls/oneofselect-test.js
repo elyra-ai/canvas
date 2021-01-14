@@ -432,3 +432,22 @@ describe("oneofselect with custom value allowed works correctly", () => {
 		expect(dropdownList).to.be.length(2);
 	});
 });
+
+describe("oneofselect classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("oneofselect should have custom classname defined", () => {
+		expect(wrapper.find(".oneofselect-control-class")).to.have.length(1);
+	});
+
+	it("oneofselect should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		expect(wrapper.find(".table-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-oneofselect-control-class")).to.have.length(1);
+	});
+});

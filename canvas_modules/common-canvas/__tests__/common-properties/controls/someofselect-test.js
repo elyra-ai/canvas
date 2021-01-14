@@ -279,3 +279,15 @@ describe("someofselect filtered enum works correctly", () => {
 	});
 
 });
+
+describe("someofselect classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("someofselect should have custom classname defined", () => {
+		expect(wrapper.find(".someofselect-control-class")).to.have.length(1);
+	});
+});

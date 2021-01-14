@@ -72,3 +72,20 @@ describe("column panel visible and enabled conditions work correctly", () => {
 		expect(columnPanel.hasClass("hide")).to.equal(true);
 	});
 });
+
+describe("column panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("column panel should have custom classname defined", () => {
+		const columnPanelWrapper = wrapper.find("div[data-id='properties-column-panels']");
+		expect(columnPanelWrapper.find(".column-panels-cond-group-columnpanel-class")).to.have.length(1);
+	});
+});

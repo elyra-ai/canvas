@@ -403,3 +403,26 @@ describe("column selection panel visible and enabled conditions work correctly",
 		expect(hiddenItems.at(1).hasClass("hide")).to.be.true;
 	});
 });
+
+describe("column selection panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("column selection panel should have custom classname defined", () => {
+		const columnSelectionWrapper = wrapper.find("div[data-id='properties-column-selections']");
+		expect(columnSelectionWrapper.find(".selectcolumn-values-group-columnselection-class")).to.have.length(1);
+		expect(columnSelectionWrapper.find(".column-selection-panel-group-columnselection-class")).to.have.length(1);
+	});
+
+	it("column selection panel in a structuretable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretable-summary-panel1");
+		expect(wrapper.find(".column-selection-panel-group-columnselection-class")).to.have.length(1);
+	});
+});

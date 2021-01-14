@@ -273,7 +273,8 @@
           "default": "RadioSet with enum string type"
         },
         "control": "radioset",
-        "resource_key": "withradioString"
+        "resource_key": "withradioString",
+        "class_name": "radioset-control-class"
       },
       {
         "parameter_ref": "radioBooleanWithEnum",
@@ -515,7 +516,8 @@
             },
             "width": 10,
             "edit_style": "inline",
-            "control": "radioset"
+            "control": "radioset",
+            "class_name": "table-radioset-control-class"
           },
           {
             "parameter_ref": "radioset_col2",
@@ -527,7 +529,8 @@
             },
             "width": 10,
             "edit_style": "on_panel",
-            "control": "radioset"
+            "control": "radioset",
+            "class_name": "table-on-panel-radioset-control-class"
           },
           {
             "parameter_ref": "radioset_col2_checkbox",
@@ -551,7 +554,8 @@
             },
             "width": 10,
             "edit_style": "subpanel",
-            "control": "radioset"
+            "control": "radioset",
+            "class_name": "table-subpanel-radioset-control-class"
           }
         ]
       }

@@ -252,3 +252,22 @@ describe("error messages renders correctly for timefield controls", () => {
 		expect(timeWrapper.find("input").prop("disabled")).to.equal(false);
 	});
 });
+
+describe("timefield classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(TIMEFIELD_PARAM_DEF);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("timefield should have custom classname defined", () => {
+		expect(wrapper.find(".timefield-control-class")).to.have.length(1);
+	});
+
+	it("timefield should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "timefield-table-summary");
+		expect(wrapper.find(".table-timefield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-timefield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-timefield-control-class")).to.have.length(1);
+	});
+});

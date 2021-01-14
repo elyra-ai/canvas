@@ -302,7 +302,8 @@ class SummaryPanel extends React.Component {
 				{this.props.children}
 			</div>
 		</WideFlyout>) : <div />;
-		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN });
+		const panelClassName = this.props.panel.className ? this.props.panel.className : "";
+		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN }, panelClassName);
 		return (
 			<div className={className} disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}>
 				{flyout}

@@ -105,7 +105,8 @@
         "description": {
           "default": "selectschema with parameter value set to 'Drugs_0'"
         },
-        "control": "selectschema"
+        "control": "selectschema",
+        "class_name": "selectschema-control-class"
       },
       {
         "parameter_ref": "selectschema_null",
@@ -234,7 +235,8 @@
             },
             "control": "selectschema",
             "width": 10,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "class_name": "table-selectschema-control-class"
           },
           {
             "parameter_ref": "schema_col2",
@@ -246,7 +248,8 @@
             },
             "control": "selectschema",
             "width": 10,
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-selectschema-control-class"
           },
           {
             "parameter_ref": "schema_col3",
@@ -258,7 +261,8 @@
             },
             "control": "selectschema",
             "width": 10,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-selectschema-control-class"
           }
         ]
       }

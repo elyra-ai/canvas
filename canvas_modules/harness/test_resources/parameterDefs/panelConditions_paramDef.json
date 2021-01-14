@@ -954,15 +954,17 @@
     ],
     "group_info": [
       {
-        "id": "panels",
+        "id": "text-panels",
         "label": {
           "default": "Text Panels"
         },
         "type": "panels",
+        "class_name": "text-panels-group-panels-class",
         "group_info": [
           {
             "id": "textpanels",
             "type": "controls",
+            "class_name": "textpanels-group-controls-class",
             "parameter_refs": [
               "disableTextPanel"
             ],
@@ -970,6 +972,7 @@
               {
                 "id": "orange-panel",
                 "type": "textPanel",
+                "class_name": "orange-panel-group-textpanel-class",
                 "label": {
                   "default": "Oranges"
                 },
@@ -1045,11 +1048,13 @@
                   "default": "Colors"
                 },
                 "type": "panelSelector",
+                "class_name": "panel-selector-fields1-group-panelselector-class",
                 "depends_on_ref": "fruit-color1",
                 "group_info": [
                   {
                     "id": "red1",
                     "type": "textPanel",
+                    "class_name": "panel-selector-fields1-red1-group-textpanel-class",
                     "description": {
                       "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
                     }
@@ -1153,6 +1158,7 @@
                   "default": "Values"
                 },
                 "type": "columnSelection",
+                "class_name": "selectcolumn-values-group-columnselection-class",
                 "parameter_refs": [
                   "field1_panel",
                   "field2_panel"
@@ -1176,6 +1182,7 @@
                   "default": "Column Selection"
                 },
                 "type": "columnSelection",
+                "class_name": "column-selection-panel-group-columnselection-class",
                 "parameter_refs": [
                   "selectcolumn",
                   "selectcolumns"
@@ -1218,10 +1225,12 @@
               "default": "Configure Fields"
             },
             "type": "summaryPanel",
+            "class_name": "structuretable-summary-panel1-category-group-summarypanel-class",
             "group_info": [
               {
                 "id": "structuretable_summary1_panel",
                 "type": "columnSelection",
+                "class_name": "structuretable-summary1-panel-category-group-columnselection-class",
                 "parameter_refs": [
                   "structuretable_summary1",
                   "structuretable_summary2"
@@ -1251,6 +1260,7 @@
             "group_info": [
               {
                 "id": "structuretable_summary3_panel",
+                "class_name": "structuretable-summary2-panel-category-group-controls-class",
                 "parameter_refs": [
                   "structuretable_summary3"
                 ]
@@ -1276,6 +1286,7 @@
               {
                 "id": "twisty-panel1",
                 "type": "twistyPanel",
+                "class_name": "twisty-panel1-group-twistypanel-class",
                 "label": {
                   "default": "Twisty Panel1"
                 },
@@ -1337,6 +1348,7 @@
           {
             "id": "level1",
             "type": "panels",
+            "class_name": "level1-group-panels-class",
             "group_info": [
               {
                 "id": "level2buttons",
@@ -1367,11 +1379,13 @@
                         "group_info": [
                           {
                             "id": "Level3",
-                            "type": "textPanel"
+                            "type": "textPanel",
+                            "class_name": "level3-group-textpanel-class"
                           },
                           {
                             "id": "level3",
                             "type": "panels",
+                            "class_name": "level3-group-panels-class",
                             "group_info": [
                               {
                                 "id": "level3control",
@@ -1383,6 +1397,7 @@
                               {
                                 "id": "disable_button-action-panel",
                                 "type": "actionPanel",
+                                "class_name": "disable-button-action-panel-group-actionpanel-class",
                                 "action_refs": [
                                   "button_cond_disable"
                                 ]
@@ -1390,6 +1405,7 @@
                               {
                                 "id": "disable_button-control-panel",
                                 "type": "controls",
+                                "class_name": "disable-button-control-panel-group-controls-class",
                                 "parameter_refs": [
                                   "disable_button_text"
                                 ]
@@ -1496,6 +1512,7 @@
           {
             "id": "action-buttons-panel",
             "type": "actionPanel",
+            "class_name": "action-buttons-panel-group-actionpanel-class",
             "action_refs": [
               "increment",
               "decrement"
@@ -1528,6 +1545,7 @@
           {
             "id": "column-panels-cond",
             "type": "columnPanel",
+            "class_name": "column-panels-cond-group-columnpanel-class",
             "group_info": [
               {
                 "id": "panel1-values",

@@ -21,6 +21,7 @@ import DatefieldControl from "../../../src/common-properties/controls/datefield"
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
+import datefieldParamDef from "../../test_resources/paramDefs/datefield_paramDef.json";
 
 const DATEFIELD_PARAM_DEF = require("../../test_resources/paramDefs/datefield_paramDef.json");
 
@@ -287,5 +288,24 @@ describe("error messages renders correctly for datefield controls", () => {
 		// applied to the date field (which makes it show as enabled).
 		dateWrapper = wrapper.find("div[data-id='properties-disabled_date']");
 		expect(dateWrapper.find("input").prop("disabled")).to.equal(false);
+	});
+});
+
+describe("datefield classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(datefieldParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("datefield should have custom classname defined", () => {
+		expect(wrapper.find(".datefield-control-class")).to.have.length(1);
+	});
+
+	it("datefield should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "datefield-table-summary");
+		expect(wrapper.find(".table-datefield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-datefield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-datefield-control-class")).to.have.length(1);
 	});
 });
