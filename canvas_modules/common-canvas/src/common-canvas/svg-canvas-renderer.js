@@ -6075,7 +6075,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkStartHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-start")
+				.attr("class", (d) => "d3-link-handle-start")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link start handle - mouse down");
@@ -6089,7 +6089,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkEndHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-end")
+				.attr("class", (d) => "d3-link-handle-end")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link end handle - mouse down");
@@ -6146,6 +6146,7 @@ export default class SVGCanvasRenderer {
 				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-start")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkStartHandleObject === "image") {
@@ -6166,6 +6167,7 @@ export default class SVGCanvasRenderer {
 
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-end")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkEndHandleObject === "image") {
@@ -6196,15 +6198,13 @@ export default class SVGCanvasRenderer {
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
-	getDataLinkClass(d) {
-		// If the data has a classname that isn't the historical default use it!
-		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
-			return d.class_name;
+	getLinkSelectionAreaClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			return "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link-selection-area";
 		}
-		// If the class name provided IS the historical default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-data-link";
+		return "d3-data-link-selection-area";
 	}
 
 	getLinkClass(d) {
@@ -6216,13 +6216,15 @@ export default class SVGCanvasRenderer {
 		return this.getDataLinkClass(d);
 	}
 
-	getLinkSelectionAreaClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
-		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
+	getDataLinkClass(d) {
+		// If the data has a classname that isn't the historical default use it!
+		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
+			return d.class_name;
 		}
-		return "d3-data-link-selection-area";
+		// If the class name provided IS the historical default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return "d3-data-link";
 	}
 
 	getAssociationLinkClass(d) {
@@ -6301,7 +6303,7 @@ export default class SVGCanvasRenderer {
 	// handles may be in the same positions as port circles on the nodes.
 	raiseSelectedLinksToTop() {
 		this.nodesLinksGrp
-			.selectAll(".d3-data-link[data-selected]")
+			.selectAll(".d3-link-group[data-selected]")
 			.raise();
 	}
 

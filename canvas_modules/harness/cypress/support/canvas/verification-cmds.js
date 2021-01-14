@@ -283,18 +283,18 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group.d3-data-link").length) {
+		if ($body.find(".d3-link-group .d3-data-link.d3-link-line").length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-data-link")
+					cy.get(".d3-link-group .d3-data-link.d3-link-line")
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-data-link").should("have.length", noOfLinks);
+					cy.get(".d3-link-group .d3-data-link.d3-link-line").should("have.length", noOfLinks);
 				}
 			});
 		} else {
@@ -331,14 +331,14 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 		let dataLinks = 0;
 		let commentLinks = 0;
 		let associationLinks = 0;
-		if ($body.find(".d3-link-group.d3-data-link").length) {
-			dataLinks = $body.find(".d3-link-group.d3-data-link").length;
+		if ($body.find(".d3-link-group .d3-data-link").length) {
+			dataLinks = $body.find(".d3-link-group .d3-data-link").length;
 		}
-		if ($body.find(".d3-link-group.d3-comment-link").length) {
-			commentLinks = $body.find(".d3-link-group.d3-comment-link").length;
+		if ($body.find(".d3-link-group .d3-comment-link").length) {
+			commentLinks = $body.find(".d3-link-group .d3-comment-link").length;
 		}
-		if ($body.find(".d3-link-group.d3-object-link").length) {
-			associationLinks = $body.find(".d3-link-group.d3-object-link").length;
+		if ($body.find(".d3-link-group .d3-object-link").length) {
+			associationLinks = $body.find(".d3-link-group .d3-object-link").length;
 		}
 		expect(dataLinks + commentLinks + associationLinks).equal(noOfLinks);
 	});
@@ -351,18 +351,18 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 
 Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group.d3-comment-link").length) {
+		if ($body.find(".d3-link-group .d3-comment-link").length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-comment-link")
+					cy.get(".d3-link-group .d3-comment-link")
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfCommentLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-comment-link").should("have.length", noOfCommentLinks);
+					cy.get(".d3-link-group .d3-comment-link").should("have.length", noOfCommentLinks);
 				}
 			});
 		} else {
@@ -383,14 +383,14 @@ Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) =>
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-object-link")
+					cy.get(".d3-link-group .d3-object-link")
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfAssociationLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-object-link").should("have.length", noOfAssociationLinks);
+					cy.get(".d3-link-group .d3-object-link").should("have.length", noOfAssociationLinks);
 				}
 			});
 		} else {

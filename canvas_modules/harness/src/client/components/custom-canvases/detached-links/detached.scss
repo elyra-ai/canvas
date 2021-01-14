@@ -19,7 +19,6 @@
 .detached-links {
 
 	.d3-node-group {
-		.d3-node-body-outline-austin,
 		.d3-node-body-outline {
 			fill: transparent;
 			stroke: transparent;
@@ -148,7 +147,7 @@
 		}
 	}
 
-	.d3-data-link {
+	.d3-link-group {
 		fill: none;
 		stroke: $ui-04;
 		stroke-width: 1;
@@ -164,22 +163,6 @@
 			}
 		}
 	}
-
-	/* For association link */
-	.d3-object-link {
-		stroke: $ui-04;
-		stroke-width: 2;
-		fill: none;
-		stroke-dasharray: 5.5;
-	}
-
-	.d3-comment-link {
-		stroke: $ui-04;
-		stroke-width: 1;
-		fill: none;
-		stroke-dasharray: 10.5;
-	}
-
 
 	g .d3-comment-link:hover,
 	g .d3-data-link:hover,
