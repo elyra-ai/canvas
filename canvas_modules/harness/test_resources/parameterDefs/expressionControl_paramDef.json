@@ -126,7 +126,8 @@
         },
         "text_before": {
           "default": "Press ctrl-space to autocomplete, enter a '?' for validate to fail."
-        }
+        },
+        "class_name": "expression-control-class"
       },
       {
         "parameter_ref": "defaultExpr",
@@ -247,7 +248,8 @@
             },
             "width": 15,
             "edit_style": "inline",
-            "summary": true
+            "summary": true,
+            "class_name": "table-expression-control-class"
           },
           {
             "parameter_ref": "condition",
@@ -262,7 +264,8 @@
             "edit_style": "subpanel",
             "place_holder_text": {
               "default": "Enter condition expression"
-            }
+            },
+            "class_name": "table-subpanel-expression-control-class"
           },
           {
             "parameter_ref": "condition2",
@@ -277,7 +280,8 @@
             "edit_style": "on_panel",
             "place_holder_text": {
               "default": "Enter condition expression"
-            }
+            },
+            "class_name": "table-on-panel-expression-control-class"
           }
         ]
       }

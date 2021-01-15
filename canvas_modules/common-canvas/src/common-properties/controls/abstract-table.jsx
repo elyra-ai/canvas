@@ -24,6 +24,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
+import classNames from "classnames";
 import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
@@ -317,10 +318,10 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const tableInfo = { table: true, allowColumnControls: this.allowColumnControls };
-		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		let cellContent;
 		const columnDefObj = Object.assign({}, columnDef); // clone columnDef
+		const cellClassName = columnDefObj.className ? columnDefObj.className : "";
 		if (columnDef.dmImage) {
 			const fields = this.props.controller.getDatasetMetadataFields();
 			const stringValue = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), columnDef, true);
@@ -328,7 +329,7 @@ export default class AbstractTable extends React.Component {
 				stringValue, columnDef.dmImage);
 		}
 		if (this.isReadonlyTable()) {
-			cellContent = (<div className="properties-table-cell-control">
+			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 				<ReadonlyControl
 					control={this.props.controller.getControl(propertyId)}
 					propertyId={propertyId}
@@ -340,7 +341,7 @@ export default class AbstractTable extends React.Component {
 			if (selectSummaryRow) {
 				cellContent = <div />;
 			} else {
-				cellContent = (<div className="properties-table-cell-control">
+				cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 					<ReadonlyControl
 						control={this.props.controller.getControl(propertyId)}
 						propertyId={propertyId}
@@ -355,7 +356,7 @@ export default class AbstractTable extends React.Component {
 			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
-			cellContent = (<div className="properties-table-cell-control">
+			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
 			</div>);
 

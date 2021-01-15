@@ -227,7 +227,8 @@
         "description": {
           "default": "checkboxset with integers for values"
         },
-        "control": "checkboxset"
+        "control": "checkboxset",
+        "class_name": "checkboxset-control-class"
       },
       {
         "parameter_ref": "checkboxset_null",
@@ -363,7 +364,8 @@
             "description": {
               "default": "checkboxset in sub panel"
             },
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-checkboxset-control-class"
           },
           {
             "parameter_ref": "number",
@@ -374,7 +376,8 @@
               "default": "checkboxset on panel"
             },
             "edit_style": "on_panel",
-            "control": "checkboxset"
+            "control": "checkboxset",
+            "class_name": "table-on-panel-checkboxset-control-class"
           }
         ]
       }

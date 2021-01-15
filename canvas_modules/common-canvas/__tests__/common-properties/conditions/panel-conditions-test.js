@@ -972,31 +972,6 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("visible");
 		expect(controller.getPanelState({ name: "level3control" })).to.equal("visible");
 	});
-	it("action panels should be hidden", () => {
-		const category = wrapper.find("div[data-id='properties-action-panels']");
-		const hiddenCheckbox = category.find("div[data-id='properties-actionHide'] input");
-		expect(hiddenCheckbox.props().checked).to.equal(false);
-		expect(wrapper.find("div.properties-action-panel .hide")).to.have.length(0);
-		// hide action panel
-		hiddenCheckbox.getDOMNode().checked = true;
-		hiddenCheckbox.simulate("change");
-		// action panel should be hidden "hidden"
-		expect(controller.getPanelState({ name: "action-buttons-panel" })).to.equal("hidden");
-		expect(wrapper.find("div.properties-action-panel.hide")).to.have.length(1);
-	});
-	it("action panels should be disabled", () => {
-		const category = wrapper.find("div[data-id='properties-action-panels']");
-		const disableCheckbox = category.find("div[data-id='properties-actionDisable'] input");
-		expect(disableCheckbox.props().checked).to.equal(false);
-		expect(wrapper.find("div[data-id='properties-action-buttons-panel']").prop("disabled")).to.equal(false);
-		// hide action panel
-		disableCheckbox.getDOMNode().checked = true;
-		disableCheckbox.simulate("change");
-
-		// action panel should be hidden "hidden"
-		expect(controller.getPanelState({ name: "action-buttons-panel" })).to.equal("disabled");
-		expect(wrapper.find("div[data-id='properties-action-buttons-panel']").prop("disabled")).to.equal(true);
-	});
 });
 describe("complex nested panels visible and enabled conditions work correctly", () => {
 	let wrapper;

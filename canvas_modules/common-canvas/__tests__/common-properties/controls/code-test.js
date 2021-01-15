@@ -39,3 +39,15 @@ describe("code control tests", () => {
 		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(0); // no validation links should be shown for code controls
 	});
 });
+
+describe("code classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(CodeParamdef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("code should have custom classname defined", () => {
+		expect(wrapper.find(".code-control-class")).to.have.length(1);
+	});
+});

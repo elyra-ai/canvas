@@ -21,6 +21,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import textareaParamDef from "../../test_resources/paramDefs/textarea_paramDef.json";
 
 const controller = new Controller();
 
@@ -297,5 +298,27 @@ describe("textarea control renders correctly", () => {
 		const validationMsg = textWrapper.find("div.properties-validation-message");
 		expect(validationMsg).to.have.length(1);
 		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
+	});
+});
+
+describe("textarea classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textareaParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("textarea should have custom classname defined", () => {
+		expect(wrapper.find(".string-textarea-control-class")).to.have.length(1);
+	});
+
+	it("textarea should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "textarea-table-panels");
+		const tableControlDiv = wrapper.find("div[data-id='properties-textarea-table-summary-ctrls']");
+		// There are 4 rows shown across 2 tables
+		expect(tableControlDiv.find(".table-textarea-control-class")).to.have.length(4);
+		// From the 4 rows shown, each row has a textarea on-panel and in subpanel
+		expect(tableControlDiv.find(".table-on-panel-textarea-control-class")).to.have.length(4);
+		expect(tableControlDiv.find(".table-subpanel-textarea-control-class")).to.have.length(4);
 	});
 });

@@ -496,3 +496,22 @@ describe("list renders correctly as a nested control", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 });
+
+describe("list classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(listParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("list should have custom classname defined", () => {
+		expect(wrapper.find(".string-list-control-class")).to.have.length(1);
+	});
+
+	it("list should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
+		// Verify the list in subpanel and onpanel
+		expect(wrapper.find(".table-on-panel-list-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-list-control-class")).to.have.length(2);
+	});
+});

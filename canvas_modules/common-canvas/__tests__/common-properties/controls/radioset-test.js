@@ -393,3 +393,22 @@ describe("radioset works in table correctly", () => {
 		expect(subpanelRadioset.find("div.error")).to.have.length(1);
 	});
 });
+
+describe("radioset classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(radioParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("radioset should have custom classname defined", () => {
+		expect(wrapper.find(".radioset-control-class")).to.have.length(1);
+	});
+
+	it("radioset should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "radioset_table-error-panel");
+		expect(wrapper.find(".table-radioset-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-radioset-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-radioset-control-class")).to.have.length(1);
+	});
+});

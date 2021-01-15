@@ -21,6 +21,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 
+import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_paramDef.json";
 
 const controller = new Controller();
 
@@ -173,5 +174,25 @@ describe("Passwordfield renders correctly", () => {
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
 		const messageWrapper = passwordWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+});
+
+describe("passwordfield classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(passwordfieldParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("passwordfield should have custom classname defined", () => {
+		expect(wrapper.find(".passwordfield-control-class")).to.have.length(1);
+	});
+
+	it("passwordfield should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "passwordfield-table-summary");
+		const tableControlDiv = wrapper.find("div[data-id='properties-passwordfield-table-summary-ctrls']");
+		expect(tableControlDiv.find(".table-passwordfield-control-class")).to.have.length(3);
+		expect(tableControlDiv.find(".table-on-panel-passwordfield-control-class")).to.have.length(3);
+		expect(tableControlDiv.find(".table-subpanel-passwordfield-control-class")).to.have.length(3);
 	});
 });

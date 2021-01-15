@@ -154,7 +154,8 @@
         },
         "description": {
           "default": "numberfield with parameter value set to '10'"
-        }
+        },
+        "class_name": "numberfield-control-class"
       },
       {
         "parameter_ref": "number_dbl",
@@ -341,7 +342,8 @@
             "width": 10,
             "label": {
               "default": "Standard"
-            }
+            },
+            "class_name": "table-numberfield-control-class"
           },
           {
             "parameter_ref": "numberfield2",
@@ -359,7 +361,8 @@
             "description": {
               "default": "numberfield with `edit_style=on_panel`"
             },
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-numberfield-control-class"
           },
           {
             "parameter_ref": "numberfield_sub_panel",
@@ -370,7 +373,8 @@
             "description": {
               "default": "numberfield with `edit_style=sub_panel`"
             },
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-numberfield-control-class"
           }
         ]
       }

@@ -19,6 +19,8 @@ import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import propertyUtils from "../../_utils_/property-utils";
+import readonlyParamDef from "../../test_resources/paramDefs/readonly_paramDef.json";
 
 const controller = new Controller();
 
@@ -164,5 +166,25 @@ describe("textfield-control renders correctly", () => {
 		const readonlyWrapper = wrapper.find("div[data-id='properties-test-readonly']");
 		const messageWrapper = readonlyWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
+	});
+});
+
+describe("readonly classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(readonlyParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("readonly should have custom classname defined", () => {
+		expect(wrapper.find(".readonly-control-class")).to.have.length(1);
+	});
+
+	it("readonly should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "readonly-table-summary");
+		const tableControlDiv = wrapper.find("div[data-id='properties-readonly-table-summary-ctrls']");
+		expect(tableControlDiv.find(".table-readonly-control-class")).to.have.length(1);
+		expect(tableControlDiv.find(".table-on-panel-readonly-control-class")).to.have.length(1);
+		expect(tableControlDiv.find(".table-subpanel-readonly-control-class")).to.have.length(1);
 	});
 });

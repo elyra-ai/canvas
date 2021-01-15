@@ -160,7 +160,8 @@
         "description": {
           "default": "readonly field with parameter value set to '10'"
         },
-        "control": "readonly"
+        "control": "readonly",
+        "class_name": "readonly-control-class"
       },
       {
         "parameter_ref": "readonly_text",
@@ -271,7 +272,8 @@
             "label": {
               "default": "Standard"
             },
-            "control": "readonly"
+            "control": "readonly",
+            "class_name": "table-readonly-control-class"
           },
           {
             "parameter_ref": "readonly2",
@@ -291,7 +293,8 @@
               "default": "readonly with `edit_style=on_panel`"
             },
             "edit_style": "on_panel",
-            "control": "readonly"
+            "control": "readonly",
+            "class_name": "table-on-panel-readonly-control-class"
           },
           {
             "parameter_ref": "readonly_sub_panel",
@@ -303,7 +306,8 @@
               "default": "readonly with `edit_style=sub_panel`"
             },
             "edit_style": "subpanel",
-            "control": "readonly"
+            "control": "readonly",
+            "class_name": "table-subpanel-readonly-control-class"
           }
         ]
       },
