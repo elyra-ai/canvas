@@ -55,6 +55,7 @@
     },
     {
       "id": "fruit",
+      "type": "string",
       "enum": [
         "apple",
         "orange",
@@ -84,6 +85,7 @@
     },
     {
       "id": "fruit2",
+      "type": "string",
       "enum": [
         "apple",
         "orange",
@@ -113,6 +115,7 @@
     },
     {
       "id": "fruit_summary",
+      "type": "string",
       "enum": [
         "apple",
         "orange",
