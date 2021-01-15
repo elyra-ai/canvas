@@ -18,6 +18,10 @@
 import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
+const dataLinkSelector = ".d3-link-group .d3-data-link.d3-link-line";
+const commentLinkSelector = ".d3-link-group .d3-comment-link.d3-link-line";
+const assocLinkSelector = ".d3-link-group .d3-object-link.d3-link-line";
+
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
 	cy.getNodeWithLabel(nodeLabel)
@@ -283,18 +287,18 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group.d3-data-link").length) {
+		if ($body.find(dataLinkSelector).length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-data-link")
+					cy.get(dataLinkSelector)
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-data-link").should("have.length", noOfLinks);
+					cy.get(dataLinkSelector).should("have.length", noOfLinks);
 				}
 			});
 		} else {
@@ -330,17 +334,17 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
 		let dataLinks = 0;
 		let commentLinks = 0;
-		let associationLinks = 0;
-		if ($body.find(".d3-link-group.d3-data-link").length) {
-			dataLinks = $body.find(".d3-link-group.d3-data-link").length;
+		let objectLinks = 0;
+		if ($body.find(".d3-link-group .d3-data-link").length) {
+			dataLinks = $body.find(dataLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group.d3-comment-link").length) {
-			commentLinks = $body.find(".d3-link-group.d3-comment-link").length;
+		if ($body.find(".d3-link-group .d3-comment-link").length) {
+			commentLinks = $body.find(commentLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group.d3-object-link").length) {
-			associationLinks = $body.find(".d3-link-group.d3-object-link").length;
+		if ($body.find(".d3-link-group .d3-object-link").length) {
+			objectLinks = $body.find(assocLinkSelector).length;
 		}
-		expect(dataLinks + commentLinks + associationLinks).equal(noOfLinks);
+		expect(dataLinks + commentLinks + objectLinks).equal(noOfLinks);
 	});
 
 	// verify the number of links in the internal object model
@@ -351,18 +355,18 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 
 Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group.d3-comment-link").length) {
+		if ($body.find(commentLinkSelector).length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-comment-link")
+					cy.get(commentLinkSelector)
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfCommentLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-comment-link").should("have.length", noOfCommentLinks);
+					cy.get(commentLinkSelector).should("have.length", noOfCommentLinks);
 				}
 			});
 		} else {
@@ -379,18 +383,18 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 
 Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group.d3-object-link").length) {
+		if ($body.find(assocLinkSelector).length) {
 			cy.document().then((doc) => {
 				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
 					// Connection Type - Halo
-					cy.get(".d3-link-group.d3-object-link")
+					cy.get(assocLinkSelector)
 						.its("length")
 						.then((canvasLinks) => {
 							expect(canvasLinks).to.equal(noOfAssociationLinks);
 						});
 				} else {
 					// Connection Type - Ports
-					cy.get(".d3-link-group.d3-object-link").should("have.length", noOfAssociationLinks);
+					cy.get(assocLinkSelector).should("have.length", noOfAssociationLinks);
 				}
 			});
 		} else {

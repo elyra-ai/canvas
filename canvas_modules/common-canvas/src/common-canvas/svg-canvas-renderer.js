@@ -2546,6 +2546,7 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
+				.attr("class", (cd) => this.getNodeBodyClass(cd))
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
@@ -5998,7 +5999,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6054,12 +6055,12 @@ export default class SVGCanvasRenderer {
 		// Add selection area for link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+			.attr("class", (d) => this.getLinkSelectionAreaClass(d));
 
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkLineClass(d));
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -6067,7 +6068,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkArrowHeadClass(d));
 
 		// Add link line handles at start and end of line
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -6075,7 +6076,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkStartHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-start")
+				.attr("class", (d) => "d3-link-handle-start")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link start handle - mouse down");
@@ -6089,7 +6090,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkEndHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-end")
+				.attr("class", (d) => "d3-link-handle-end")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link end handle - mouse down");
@@ -6121,6 +6122,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
+			.attr("class", (d) => this.getLinkLineClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6131,6 +6133,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
+			.attr("class", (d) => this.getLinkArrowHeadClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
@@ -6144,6 +6147,7 @@ export default class SVGCanvasRenderer {
 				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-start")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkStartHandleObject === "image") {
@@ -6164,6 +6168,7 @@ export default class SVGCanvasRenderer {
 
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-end")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkEndHandleObject === "image") {
@@ -6187,6 +6192,7 @@ export default class SVGCanvasRenderer {
 		this.setDisplayOrder(joinedLinkGrps);
 	}
 
+	// Sets the custom inline styles on the link object passed in.
 	setLinkLineStyles(linkObj, link, type) {
 		const style = this.getObjectStyle(link, "line", type);
 		const linkSel = d3.select(linkObj);
@@ -6194,79 +6200,93 @@ export default class SVGCanvasRenderer {
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
-	getDataLinkClass(d) {
-		// If the data has a classname that isn't the historical default use it!
-		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
+	// Returns the class string to be appled to the link selection area.
+	getLinkSelectionAreaClass(d) {
+		let typeClass = "";
+		if (d.type === ASSOCIATION_LINK) {
+			typeClass = "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			typeClass = "d3-comment-link-selection-area";
+		} else {
+			typeClass = "d3-data-link-selection-area";
+		}
+
+		return "d3-link-selection-area " + typeClass;
+	}
+
+	// Returns the class string to be appled to the link group object.
+	getLinkGroupClass(d) {
+		return "d3-link-group " + this.getLinkTypeClass(d);
+	}
+
+	// Returns the class string to be appled to the link line path object.
+	getLinkLineClass(d) {
+		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the class string to be appled to the link arrow head path object.
+	getLinkArrowHeadClass(d) {
+		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the custom class string for the link object passed in.
+	getLinkCustomClass(d) {
+		// If the link has a classname, that isn't the current or historic default,
+		// use it!
+		if (d.class_name &&
+				d.class_name !== "canvas-data-link" &&
+				d.class_name !== "canvas-object-link" &&
+				d.class_name !== "canvas-comment-link" &&
+				d.class_name !== "d3-data-link" &&
+				d.class_name !== "d3-association-link" &&
+				d.class_name !== "d3-object-link" &&
+				d.class_name !== "d3-comment-link") {
 			return d.class_name;
 		}
-		// If the class name provided IS the historical default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
+		return "";
+	}
+
+	// Returns the class string for the type of link object passed in.
+	getLinkTypeClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+				return "d3-association-link";
+			}
+			return "d3-object-link";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link";
+		}
 		return "d3-data-link";
 	}
 
-	getLinkClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return this.getAssociationLinkClass(d);
-		} else if (d.type === COMMENT_LINK) {
-			return this.getCommentLinkClass(d);
-		}
-		return this.getDataLinkClass(d);
-	}
-
-	getLinkSelectionAreaClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
-		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
-		}
-		return "d3-data-link-selection-area";
-	}
-
-	getAssociationLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-object-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return "d3-association-link";
-		}
-		return "d3-object-link";
-	}
-
-	getCommentLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-link";
-	}
-
+	// Returns the class string to be appled to the comment rectangle object.
 	getCommentRectClass(d) {
+		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-comment" &&
+				d.class_name !== "d3-comment-rect") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return "d3-comment-rect";
+		return "d3-comment-rect" + customClass;
 	}
 
+	// Returns the class string to be appled to the node body object.
 	getNodeBodyClass(d) {
+		let customClass = "";
 		// If the node has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-node" && d.class_name !== "d3-node-body") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-node" &&
+				d.class_name !== "d3-node-body" &&
+				d.class_name !== "d3-node-body-outline") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name.
-		return "d3-node-body-outline";
+		return "d3-node-body-outline" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
@@ -6299,7 +6319,7 @@ export default class SVGCanvasRenderer {
 	// handles may be in the same positions as port circles on the nodes.
 	raiseSelectedLinksToTop() {
 		this.nodesLinksGrp
-			.selectAll(".d3-data-link[data-selected]")
+			.selectAll(".d3-link-group[data-selected]")
 			.raise();
 	}
 

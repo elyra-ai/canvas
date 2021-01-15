@@ -133,7 +133,7 @@ export default (state = [], action) => {
 			const idx = action.data.linkIds.indexOf(link.id);
 			if (idx > -1) {
 				const newLink = Object.assign({}, link);
-				newLink.style =
+				newLink.class_name =
 					Array.isArray(action.data.newClassName) ? action.data.newClassName[idx] : action.data.newClassName;
 				return newLink;
 			}
