@@ -1005,7 +1005,6 @@
         {
           "id": "annotation",
           "type": "array[string]",
-          "role": "text",
           "default": []
         }
       ]

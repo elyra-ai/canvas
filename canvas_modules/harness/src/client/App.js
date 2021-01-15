@@ -66,6 +66,7 @@ import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
+import { validateParameterDefAgainstSchema } from "./schema-validator/properties-schema-validator.js";
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
@@ -207,6 +208,7 @@ class App extends React.Component {
 			expressionBuilder: true,
 			expressionValidate: true,
 			heading: false,
+			propertiesSchemaValidation: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -312,6 +314,7 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
+		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -674,6 +677,9 @@ class App extends React.Component {
 
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
+		if (this.state.propertiesSchemaValidation) {
+			validateParameterDefAgainstSchema(propertiesJson);
+		}
 		this.openPropertiesEditorDialog();
 		this.log("Properties set");
 	}
@@ -1349,6 +1355,10 @@ class App extends React.Component {
 		if (this.propertiesController2) {
 			this.propertiesController2.validatePropertiesValues();
 		}
+	}
+
+	enablePropertiesSchemaValidation() {
+		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -2062,7 +2072,9 @@ class App extends React.Component {
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
-			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect
+			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
+			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
+			propertiesSchemaValidation: this.state.propertiesSchemaValidation
 		};
 
 		const sidePanelAPIConfig = {

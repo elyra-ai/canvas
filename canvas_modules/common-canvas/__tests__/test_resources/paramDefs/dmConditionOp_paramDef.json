@@ -59,6 +59,7 @@
 
 	],
 	"uihints": {
+		"id": "dm-conditions",
 		"parameter_info": [{
 				"parameter_ref": "dmTypeEqualList",
 				"label": {

@@ -1684,24 +1684,6 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "numberfieldSeed",
-          "message": {
-            "resource_key": "numberfield_seed_not_valid"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "numberfieldSeed",
-            "op": "notEquals",
-            "value": null
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "error",
           "focus_parameter_ref": "columnSelectInputFieldList",
           "message": {
             "resource_key": "column_select_input_field_list_not_empty"
