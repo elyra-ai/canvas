@@ -66,7 +66,6 @@ import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
-import { validateParameterDefAgainstSchema } from "./schema-validator/properties-schema-validator.js";
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
@@ -677,9 +676,6 @@ class App extends React.Component {
 
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
-		if (this.state.propertiesSchemaValidation) {
-			validateParameterDefAgainstSchema(propertiesJson);
-		}
 		this.openPropertiesEditorDialog();
 		this.log("Properties set");
 	}
@@ -1857,7 +1853,8 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
-			heading: this.state.heading
+			heading: this.state.heading,
+			schemaValidation: this.state.propertiesSchemaValidation
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,

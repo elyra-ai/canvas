@@ -23,34 +23,42 @@
   "parameters": [
     {
       "id": "selectschema",
+      "type": "string",
       "required": true
     },
     {
       "id": "selectschema_default",
+      "type": "string",
       "default": "1",
       "required": true
     },
     {
       "id": "selectschema_undefined",
+      "type": "string",
       "required": true
     },
     {
       "id": "selectschema_null",
+      "type": "string",
       "required": true
     },
     {
       "id": "selectschema_empty_string",
+      "type": "string",
       "required": true
     },
     {
-      "id": "selectschema_placeholder"
+      "id": "selectschema_placeholder",
+      "type": "string"
     },
     {
       "id": "selectschema_error",
+      "type": "string",
       "required": true
     },
     {
       "id": "selectschema_warning",
+      "type": "string",
       "required": true
     },
     {
@@ -59,6 +67,7 @@
     },
     {
       "id": "selectschema_hidden",
+      "type": "string",
       "required": true
     },
     {
@@ -67,6 +76,7 @@
     },
     {
       "id": "selectschema_disabled",
+      "type": "string",
       "required": true
     },
     {
@@ -79,13 +89,16 @@
       "id": "selectschema_table",
       "parameters": [
         {
-          "id": "schema_col1"
+          "id": "schema_col1",
+          "type": "string"
         },
         {
-          "id": "schema_col2"
+          "id": "schema_col2",
+          "type": "string"
         },
         {
-          "id": "schema_col3"
+          "id": "schema_col3",
+          "type": "string"
         }
       ]
     }
@@ -389,7 +402,7 @@
         }
       }
     },
-		{
+    {
       "validation": {
         "id": "tableerrortest1",
         "fail_message": {
