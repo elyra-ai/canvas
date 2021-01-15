@@ -6192,6 +6192,7 @@ export default class SVGCanvasRenderer {
 		this.setDisplayOrder(joinedLinkGrps);
 	}
 
+	// Sets the custom inline styles on the link object passed in.
 	setLinkLineStyles(linkObj, link, type) {
 		const style = this.getObjectStyle(link, "line", type);
 		const linkSel = d3.select(linkObj);
@@ -6199,6 +6200,7 @@ export default class SVGCanvasRenderer {
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
+	// Returns the class string to be appled to the link selection area.
 	getLinkSelectionAreaClass(d) {
 		let typeClass = "";
 		if (d.type === ASSOCIATION_LINK) {
@@ -6212,19 +6214,25 @@ export default class SVGCanvasRenderer {
 		return "d3-link-selection-area " + typeClass;
 	}
 
+	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
 		return "d3-link-group " + this.getLinkTypeClass(d);
 	}
 
+	// Returns the class string to be appled to the link line path object.
 	getLinkLineClass(d) {
 		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
 	}
 
+	// Returns the class string to be appled to the link arrow head path object.
 	getLinkArrowHeadClass(d) {
 		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
 	}
 
+	// Returns the custom class string for the link object passed in.
 	getLinkCustomClass(d) {
+		// If the link has a classname, that isn't the current or historic default,
+		// use it!
 		if (d.class_name &&
 				d.class_name !== "canvas-data-link" &&
 				d.class_name !== "canvas-object-link" &&
@@ -6238,6 +6246,7 @@ export default class SVGCanvasRenderer {
 		return "";
 	}
 
+	// Returns the class string for the type of link object passed in.
 	getLinkTypeClass(d) {
 		if (d.type === ASSOCIATION_LINK) {
 			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
@@ -6250,6 +6259,7 @@ export default class SVGCanvasRenderer {
 		return "d3-data-link";
 	}
 
+	// Returns the class string to be appled to the comment rectangle object.
 	getCommentRectClass(d) {
 		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
@@ -6264,6 +6274,7 @@ export default class SVGCanvasRenderer {
 		return "d3-comment-rect" + customClass;
 	}
 
+	// Returns the class string to be appled to the node body object.
 	getNodeBodyClass(d) {
 		let customClass = "";
 		// If the node has a classname that isn't the default use it!
