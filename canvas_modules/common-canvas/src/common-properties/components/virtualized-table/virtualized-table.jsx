@@ -47,6 +47,8 @@ class VirtualizedTable extends React.Component {
 		this.virtualizedTableRef = React.createRef();
 
 		this.isOverSelectOption = false;
+		this.mouseEventCalled = false;
+		this.keyBoardEventCalled = false;
 		this.cellRenderer = this.cellRenderer.bind(this);
 		this.selectAll = this.selectAll.bind(this);
 		this.headerRowRenderer = this.headerRowRenderer.bind(this);
@@ -191,8 +193,21 @@ class VirtualizedTable extends React.Component {
 		</div>);
 	}
 
-	overSelectOption() {
-		this.isOverSelectOption = !this.isOverSelectOption;
+	overSelectOption(evt) {
+		// Differentiate between mouse and keyboard events
+		if (evt.type === "mouseenter" && this.keyBoardEventCalled === false) {
+			this.mouseEventCalled = true;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "mouseleave" && this.mouseEventCalled === true) {
+			this.mouseEventCalled = false;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "focus" && this.mouseEventCalled === false) {
+			this.keyBoardEventCalled = true;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "blur" && this.keyBoardEventCalled === true) {
+			this.keyBoardEventCalled = false;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		}
 	}
 
 	// Responsible for rendering a table row given an array of columns.
@@ -211,8 +226,10 @@ class VirtualizedTable extends React.Component {
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"
 					role="row"
-					onFocus={this.overSelectOption}
-					onBlur={this.overSelectOption}
+					onMouseEnter={(evt) => this.overSelectOption(evt)}
+					onMouseLeave={(evt) => this.overSelectOption(evt)}
+					onFocus={(evt) => this.overSelectOption(evt)}
+					onBlur={(evt) => this.overSelectOption(evt)}
 				>
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
