@@ -20,7 +20,7 @@ import { mountWithIntl, shallowWithIntl } from "../../_utils_/intl-utils";
 import { Provider } from "react-redux";
 import { expect } from "chai";
 import { setControls } from "../../_utils_/property-utils";
-import { getTableRows, selectCheckboxes } from "./../../_utils_/table-utils";
+import { getTableRows, selectCheckboxes, selectCheckboxesUsingKeyboard, validateSelectedRowNum } from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
@@ -208,6 +208,28 @@ describe("list renders correctly for array[string]", () => {
 		const validationMsg = listWrapper.find("div.properties-validation-message.inTable");
 		expect(validationMsg).to.have.length(1);
 		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
+	});
+
+	it("should select rows in `list` control table using keyboard", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<List
+					store={controller.getStore()}
+					control={controlString}
+					controller={controller}
+					propertyId={listStringPopertyId}
+				/>
+			</Provider>
+		);
+
+		// select the first row in the table
+		selectCheckboxesUsingKeyboard(wrapper, [0]);
+
+		// Verify row is selected
+		const rows = getTableRows(wrapper);
+		expect(rows).to.have.length(2);
+		const rowsSelected = validateSelectedRowNum(rows);
+		expect(rowsSelected).to.have.length(1);
 	});
 });
 
