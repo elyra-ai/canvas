@@ -195,16 +195,16 @@ class VirtualizedTable extends React.Component {
 
 	overSelectOption(evt) {
 		// Differentiate between mouse and keyboard events
-		if (evt.type === "mouseenter" && this.keyBoardEventCalled === false) {
+		if (evt.type === "mouseenter" && !this.keyBoardEventCalled) {
 			this.mouseEventCalled = true;
 			this.isOverSelectOption = !this.isOverSelectOption;
-		} else if (evt.type === "mouseleave" && this.mouseEventCalled === true) {
+		} else if (evt.type === "mouseleave" && this.mouseEventCalled) {
 			this.mouseEventCalled = false;
 			this.isOverSelectOption = !this.isOverSelectOption;
-		} else if (evt.type === "focus" && this.mouseEventCalled === false) {
+		} else if (evt.type === "focus" && !this.mouseEventCalled) {
 			this.keyBoardEventCalled = true;
 			this.isOverSelectOption = !this.isOverSelectOption;
-		} else if (evt.type === "blur" && this.keyBoardEventCalled === true) {
+		} else if (evt.type === "blur" && this.keyBoardEventCalled) {
 			this.keyBoardEventCalled = false;
 			this.isOverSelectOption = !this.isOverSelectOption;
 		}
