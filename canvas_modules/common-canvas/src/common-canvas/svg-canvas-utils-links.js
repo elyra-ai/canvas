@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ const ANTI_CLOCKWISE = true;
 const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
 
 export default class SvgCanvasLinks {
-	constructor(canvasLayout, config) {
+	constructor(config, canvasLayout) {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
 	}
