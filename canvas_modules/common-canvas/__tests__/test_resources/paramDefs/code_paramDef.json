@@ -38,7 +38,8 @@
         "text_before": {
           "default": "Press ctrl-space to autocomplete"
         },
-        "control": "code"
+        "control": "code",
+        "class_name": "code-control-class"
       },
       {
         "parameter_ref": "code_rows",

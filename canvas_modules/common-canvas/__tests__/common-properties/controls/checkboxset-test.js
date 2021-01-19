@@ -422,3 +422,21 @@ describe("checkboxset enum_filter works correctly", () => {
 	});
 
 });
+
+describe("checkboxset classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(checkboxSetParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("checkboxset should have custom classname defined", () => {
+		expect(wrapper.find(".checkboxset-control-class")).to.have.length(1);
+	});
+
+	it("checkboxset should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "checkboxset-table-summary");
+		expect(wrapper.find(".table-on-panel-checkboxset-control-class")).to.have.length(2);
+		expect(wrapper.find(".table-subpanel-checkboxset-control-class")).to.have.length(2);
+	});
+});

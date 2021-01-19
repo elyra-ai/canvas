@@ -68,7 +68,8 @@
         },
         "text_after": {
           "default": "Control below should be hidden"
-        }
+        },
+        "class_name": "hidden-control-class"
       },
       {
         "parameter_ref": "hidden",
@@ -97,7 +98,8 @@
         "parameters": [
           {
             "parameter_ref": "hidden",
-            "control": "hidden"
+            "control": "hidden",
+            "class_name": "table-hidden-control-class"
           },
           {
             "parameter_ref": "textfield",

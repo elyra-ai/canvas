@@ -287,5 +287,74 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedPortStr, actualPortStr)).to.be.true;
 	});
 
+	it("should update node class name using: setNodesClassName", () => {
+		deepFreeze(allTypesCanvas);
+		const canvasController = new CanvasController();
+		const nodeId = "id8I6RH2V91XW";
+		const testClassName = "my-node-class";
 
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setNodesClassName([nodeId], testClassName);
+
+		const newPF = canvasController.getPipelineFlow();
+
+		// Create a new controller so there is no cross-contamination
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(newPF);
+
+		const actualClassName = canvasController2.getNodeClassName(nodeId);
+
+		// console.log(actualClassName);
+		// console.log(testClassName);
+
+		expect(isEqual(actualClassName, testClassName)).to.be.true;
+	});
+
+	it("should update comment class name using: setCommentsClassName", () => {
+		deepFreeze(allTypesCanvas);
+		const canvasController = new CanvasController();
+		const commentId = "id42ESQA3VPXB";
+		const testClassName = "my-comment-class";
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setCommentsClassName([commentId], testClassName);
+
+		const newPF = canvasController.getPipelineFlow();
+
+		// Create a new controller so there is no cross-contamination
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(newPF);
+
+		const actualClassName = canvasController2.getCommentClassName(commentId);
+
+		// console.log(actualClassName);
+		// console.log(testClassName);
+
+		expect(isEqual(actualClassName, testClassName)).to.be.true;
+	});
+
+	it("should update link class name using: setLinksClassName", () => {
+		deepFreeze(allTypesCanvas);
+		const canvasController = new CanvasController();
+		const linkIds = ["ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb", "a81684aa-9b09-4620-aa59-54035a5de913"];
+		const testClassName = "my-link-class";
+
+		canvasController.setPipelineFlow(allTypesCanvas);
+		canvasController.setLinksClassName(linkIds, testClassName);
+
+		const newPF = canvasController.getPipelineFlow();
+
+		// Create a new controller so there is no cross-contamination
+		const canvasController2 = new CanvasController();
+		canvasController2.setPipelineFlow(newPF);
+
+		const actualClassName0 = canvasController2.getLinkClassName(linkIds[0]);
+		const actualClassName1 = canvasController2.getLinkClassName(linkIds[1]);
+
+		// console.log(actualClassName);
+		// console.log(testClassName);
+
+		expect(isEqual(actualClassName0, testClassName)).to.be.true;
+		expect(isEqual(actualClassName1, testClassName)).to.be.true;
+	});
 });

@@ -233,3 +233,22 @@ describe("numberfield control works correctly", () => {
 		expect(oldValue).not.equal(newValue);
 	});
 });
+
+describe("numberfield classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("numberfield should have custom classname defined", () => {
+		expect(wrapper.find(".numberfield-control-class")).to.have.length(1);
+	});
+
+	it("numberfield should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "numberfield-table-summary");
+		expect(wrapper.find(".table-numberfield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-numberfield-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-numberfield-control-class")).to.have.length(1);
+	});
+});

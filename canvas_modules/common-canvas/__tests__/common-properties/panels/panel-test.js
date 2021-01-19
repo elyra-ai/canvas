@@ -21,6 +21,7 @@ import { expect } from "chai";
 import propertyUtils from "./../../_utils_/property-utils";
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import customPanelParamDef from "./../../test_resources/paramDefs/CustomPanel_paramDef.json";
+import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 import AddtlCmptsTest from "./../../_utils_/custom-components/AddtlCmptsTest.jsx";
 
 
@@ -49,5 +50,26 @@ describe("additional components are rendered correctly", () => {
 		const togglePanelContent = togglePanelContainer.find(".properties-category-content");
 		expect(togglePanelContent.children()).to.have.length(2); // Default Component & Additional Component
 
+	});
+});
+
+describe("group panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("group panels should have custom classname defined", () => {
+		// top level group panels
+		expect(wrapper.find(".text-panels-group-panels-class")).to.have.length(1);
+		// double nested panels
+		expect(wrapper.find(".level1-group-panels-class")).to.have.length(1);
+		// deeply nested group panels
+		expect(wrapper.find(".level3-group-panels-class")).to.have.length(1);
 	});
 });

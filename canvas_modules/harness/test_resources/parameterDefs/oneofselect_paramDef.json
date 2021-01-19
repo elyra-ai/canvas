@@ -305,7 +305,8 @@
         },
         "description": {
           "default": "oneofselect with parameter value set to 'blue'"
-        }
+        },
+        "class_name": "oneofselect-control-class"
       },
       {
         "parameter_ref": "oneofselect_custom_value",
@@ -497,7 +498,8 @@
             },
             "width": 10,
             "edit_style": "inline",
-            "custom_value_allowed": true
+            "custom_value_allowed": true,
+            "class_name": "table-oneofselect-control-class"
           },
           {
             "parameter_ref": "fruit",
@@ -508,7 +510,8 @@
               "default": "Fruit"
             },
             "width": 10,
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-oneofselect-control-class"
           },
           {
             "parameter_ref": "color",
@@ -519,7 +522,8 @@
               "default": "color subpanel"
             },
             "width": 10,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-oneofselect-control-class"
           },
           {
             "parameter_ref": "cyclist",

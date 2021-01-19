@@ -15,8 +15,6 @@
  */
 
 .properties-dropdown {
-	padding: 5px 0;
-
 	.bx--list-box--expanded .bx--list-box__menu {
 		margin-bottom: 1px; // Show dropdown menu border above Save/Cancel buttons
 	}
@@ -37,7 +35,6 @@
 }
 .properties-table-cell-control {
 	>.properties-dropdown {
-		padding: 0; // override for when in a table cell
 		width: 100%;
 		.bx--select.bx--select--inline {
 			width: 100%;

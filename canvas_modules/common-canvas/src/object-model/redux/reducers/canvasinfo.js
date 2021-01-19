@@ -108,6 +108,7 @@ export default (state = {}, action) => {
 	case "SET_LINK_PROPERTIES":
 	case "SET_LINK_SRC_INFO":
 	case "SET_LINK_TRG_INFO":
+	case "SET_LINKS_CLASS_NAME":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
 	case "UPDATE_LINK":

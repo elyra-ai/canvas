@@ -32,13 +32,14 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, SUPER_NODE, USE_DEFAULT_ICON }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import SvgCanvasLinks from "./svg-canvas-links.js";
+import SvgCanvasLinks from "./svg-canvas-utils-links.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 
 const showLinksTime = false;
 
@@ -74,7 +75,8 @@ export default class SVGCanvasRenderer {
 		// Initialize zoom variables
 		this.initializeZoomVariables();
 
-		this.linkUtils = new SvgCanvasLinks(this.canvasLayout, this.config);
+		this.nodeUtils = new SvgCanvasNodes(this.config);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -291,7 +293,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getSupernodes(pipeline) {
-		return pipeline.nodes.filter((node) => this.isSupernode(node));
+		return pipeline.nodes.filter((node) => this.nodeUtils.isSupernode(node));
 	}
 
 	getZoomTransform() {
@@ -2505,12 +2507,12 @@ export default class SVGCanvasRenderer {
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node sizing area.
-			newNodeGroups.filter((d) => this.isSupernode(d))
+			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
 				.append("path")
 				.attr("data-id", (d) => this.getId("node_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d3Event, d) => {
-					if (this.isExpandedSupernode(d)) {
+					if (this.nodeUtils.isExpandedSupernode(d)) {
 						this.nodeSizing = true;
 						this.nodeSizingInitialSize = { width: d.width, height: d.height };
 						this.nodeSizingId = d.id;
@@ -2525,7 +2527,7 @@ export default class SVGCanvasRenderer {
 				// pointer leaves the temporary overlay (which is removed) and enters
 				// the node outline.
 				.on("mousemove mouseenter", function(d3Event, d) {
-					if (that.isExpandedSupernode(d) &&
+					if (that.nodeUtils.isExpandedSupernode(d) &&
 							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
 						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -2546,6 +2548,7 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
+				.attr("class", (cd) => this.getNodeBodyClass(cd))
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
@@ -2602,7 +2605,7 @@ export default class SVGCanvasRenderer {
 				});
 
 			// Create Supernode renderers for any super nodes. Display/hide will be handled in 'new and existing'.
-			newNodeGroups.filter((d) => this.isSupernode(d))
+			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
 				.each(function(d) {
 					that.createSupernodeRenderer(d, d3.select(this));
 				});
@@ -2703,10 +2706,10 @@ export default class SVGCanvasRenderer {
 						.attr("class", (nd) => this.getLabelClass(nd));
 
 					// Supernode sub-flow display
-					if (this.isSupernode(d)) {
+					if (this.nodeUtils.isSupernode(d)) {
 						const ren = this.getRendererForSupernode(d);
 						if (ren) {
-							if (this.isExpanded(d)) {
+							if (this.nodeUtils.isExpanded(d)) {
 								ren.displayCanvas();
 							} else {
 								ren.hideCanvas(d);
@@ -3257,7 +3260,7 @@ export default class SVGCanvasRenderer {
 		if (!d.image) {
 			return null;
 		} else if (d.image === USE_DEFAULT_ICON) {
-			if (this.isSupernode(d)) {
+			if (this.nodeUtils.isSupernode(d)) {
 				return SUPERNODE_ICON;
 			}
 		}
@@ -3271,21 +3274,21 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeImageWidth(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImageWidth;
 		}
 		return d.layout.imageWidth;
 	}
 
 	getNodeImageHeight(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImageHeight;
 		}
 		return d.layout.imageHeight;
 	}
 
 	getNodeImagePosX(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImagePosX;
 		}
 		return d.layout.imagePosX;
@@ -3336,14 +3339,14 @@ export default class SVGCanvasRenderer {
 
 	doesExpandedSupernodeHaveStyledNodes(d) {
 		let expandedSupernodeHaveStyledNodes = false;
-		if (this.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
+		if (this.nodeUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
 			const subflow = this.getPipeline(d.subflow_ref.pipeline_id_ref);
 			const nodeGrp = subflow.nodes;
 			nodeGrp.forEach((node) => {
 				if (node.style || node.style_temp) {
 					expandedSupernodeHaveStyledNodes = true;
 					return;
-				} else if (!expandedSupernodeHaveStyledNodes && this.isExpandedSupernode(node)) {
+				} else if (!expandedSupernodeHaveStyledNodes && this.nodeUtils.isExpandedSupernode(node)) {
 					expandedSupernodeHaveStyledNodes = this.doesExpandedSupernodeHaveStyledNodes(node);
 				}
 			});
@@ -3443,7 +3446,7 @@ export default class SVGCanvasRenderer {
 
 
 			// Add Supernode expansion icon and background for expanded supernodes
-			if (this.isExpandedSupernode(d)) {
+			if (this.nodeUtils.isExpandedSupernode(d)) {
 				const expGrp = nodeGrp
 					.append("g")
 					.attr("data-id", this.getId("node_exp_group", d.id))
@@ -3598,7 +3601,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeImagePosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeImagePosY;
 		}
 		if (data.layout.labelAndIconVerticalJustification === "center") {
@@ -3615,7 +3618,7 @@ export default class SVGCanvasRenderer {
 
 	getNodeLabelText(data, textObj) {
 		let labelMaxWidth = data.layout.labelMaxWidth;
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			labelMaxWidth = data.width - this.canvasLayout.supernodeLabelPosX -
 				(4 * this.canvasLayout.supernodeIconSeparation) -
 				this.canvasLayout.supernodeExpansionIconWidth -
@@ -3631,7 +3634,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelPosX(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeLabelPosX;
 		}
 		return data.layout.labelPosX;
@@ -3650,7 +3653,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeLabelPosY;
 		} else if (data.layout.labelAndIconVerticalJustification === "center") {
 			if (data.layout.nodeFormatType === "horizontal") {
@@ -3666,7 +3669,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelClass(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return "d3-supernode-label " + this.getMessageLabelClass(data.messages);
 		}
 		const justificationClass = data.layout.nodeFormatType === "vertical" ? " d3-node-label-middle" : "";
@@ -3681,7 +3684,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getErrorPosX(data, nodeGrp) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			const nodeText = nodeGrp.select(this.getSelectorForId("node_label", data.id)).node();
 			return this.canvasLayout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.canvasLayout.supernodeIconSeparation;
 		}
@@ -3689,7 +3692,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getErrorPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return (this.canvasLayout.supernodeTopAreaHeight / 2) - (data.layout.errorHeight / 2);
 		} else
 		if (data.layout.labelAndIconVerticalJustification === "center") {
@@ -3705,21 +3708,21 @@ export default class SVGCanvasRenderer {
 	}
 
 	getEllipsisWidth(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeEllipsisWidth;
 		}
 		return d.layout.ellipsisWidth;
 	}
 
 	getEllipsisHeight(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeEllipsisHeight;
 		}
 		return d.layout.ellipsisHeight;
 	}
 
 	getEllipsisPosX(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return data.width - (2 * this.canvasLayout.supernodeIconSeparation) -
 				this.canvasLayout.supernodeExpansionIconWidth -
 				this.canvasLayout.supernodeEllipsisWidth;
@@ -3729,7 +3732,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getEllipsisPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeEllipsisPosY;
 		}
 
@@ -3746,18 +3749,6 @@ export default class SVGCanvasRenderer {
 
 	getExpansionIconPosX(data) {
 		return data.width - this.canvasLayout.supernodeIconSeparation - this.canvasLayout.supernodeExpansionIconWidth;
-	}
-
-	isExpandedSupernode(data) {
-		return this.isSupernode(data) && this.isExpanded(data);
-	}
-
-	isExpanded(data) {
-		return data.is_expanded === true;
-	}
-
-	isSupernode(data) {
-		return data.type === SUPER_NODE;
 	}
 
 	openContextMenu(d3Event, type, d, port) {
@@ -4840,7 +4831,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let xPosition = 0;
 
-				if (this.isExpandedSupernode(data)) {
+				if (this.nodeUtils.isExpandedSupernode(data)) {
 					const widthSvgArea = data.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
 					const remainingSpace = widthSvgArea - portsWidth;
 					xPosition = (2 * this.canvasLayout.supernodeSVGAreaPadding) + (remainingSpace / 2);
@@ -4879,7 +4870,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let yPosition = 0;
 
-				if (this.isExpandedSupernode(data)) {
+				if (this.nodeUtils.isExpandedSupernode(data)) {
 					const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 					const remainingSpace = heightSvgArea - portsHeight;
 					yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
@@ -5998,7 +5989,7 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => "d3-link-group " + this.getLinkClass(d))
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6054,12 +6045,12 @@ export default class SVGCanvasRenderer {
 		// Add selection area for link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-selection-area " + this.getLinkSelectionAreaClass(d));
+			.attr("class", (d) => this.getLinkSelectionAreaClass(d));
 
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => "d3-link-line " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkLineClass(d));
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -6067,7 +6058,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => "d3-link-line-arrow-head " + this.getLinkClass(d));
+			.attr("class", (d) => this.getLinkArrowHeadClass(d));
 
 		// Add link line handles at start and end of line
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -6075,7 +6066,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkStartHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-start")
+				.attr("class", (d) => "d3-link-handle-start")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link start handle - mouse down");
@@ -6089,7 +6080,7 @@ export default class SVGCanvasRenderer {
 			newLinkGrps
 				.filter((d) => d.type === NODE_LINK)
 				.append(this.canvasLayout.linkEndHandleObject)
-				.attr("class", (d) => "d3-link-line d3-link-handle-end")
+				.attr("class", (d) => "d3-link-handle-end")
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d3Event, d) => {
 					this.logger.log("Link end handle - mouse down");
@@ -6121,6 +6112,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
+			.attr("class", (d) => this.getLinkLineClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6131,6 +6123,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
+			.attr("class", (d) => this.getLinkArrowHeadClass(d))
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
@@ -6144,6 +6137,7 @@ export default class SVGCanvasRenderer {
 				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-start")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkStartHandleObject === "image") {
@@ -6164,6 +6158,7 @@ export default class SVGCanvasRenderer {
 
 			joinedLinkGrps
 				.selectAll(".d3-link-handle-end")
+				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 				.each((datum, index, linkHandles) => {
 					const obj = d3.select(linkHandles[index]);
 					if (this.canvasLayout.linkEndHandleObject === "image") {
@@ -6187,6 +6182,7 @@ export default class SVGCanvasRenderer {
 		this.setDisplayOrder(joinedLinkGrps);
 	}
 
+	// Sets the custom inline styles on the link object passed in.
 	setLinkLineStyles(linkObj, link, type) {
 		const style = this.getObjectStyle(link, "line", type);
 		const linkSel = d3.select(linkObj);
@@ -6194,79 +6190,93 @@ export default class SVGCanvasRenderer {
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);
 	}
 
-	getDataLinkClass(d) {
-		// If the data has a classname that isn't the historical default use it!
-		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
+	// Returns the class string to be appled to the link selection area.
+	getLinkSelectionAreaClass(d) {
+		let typeClass = "";
+		if (d.type === ASSOCIATION_LINK) {
+			typeClass = "d3-association-link-selection-area";
+		} else if (d.type === COMMENT_LINK) {
+			typeClass = "d3-comment-link-selection-area";
+		} else {
+			typeClass = "d3-data-link-selection-area";
+		}
+
+		return "d3-link-selection-area " + typeClass;
+	}
+
+	// Returns the class string to be appled to the link group object.
+	getLinkGroupClass(d) {
+		return "d3-link-group " + this.getLinkTypeClass(d);
+	}
+
+	// Returns the class string to be appled to the link line path object.
+	getLinkLineClass(d) {
+		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the class string to be appled to the link arrow head path object.
+	getLinkArrowHeadClass(d) {
+		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the custom class string for the link object passed in.
+	getLinkCustomClass(d) {
+		// If the link has a classname, that isn't the current or historic default,
+		// use it!
+		if (d.class_name &&
+				d.class_name !== "canvas-data-link" &&
+				d.class_name !== "canvas-object-link" &&
+				d.class_name !== "canvas-comment-link" &&
+				d.class_name !== "d3-data-link" &&
+				d.class_name !== "d3-association-link" &&
+				d.class_name !== "d3-object-link" &&
+				d.class_name !== "d3-comment-link") {
 			return d.class_name;
 		}
-		// If the class name provided IS the historical default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
+		return "";
+	}
+
+	// Returns the class string for the type of link object passed in.
+	getLinkTypeClass(d) {
+		if (d.type === ASSOCIATION_LINK) {
+			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
+				return "d3-association-link";
+			}
+			return "d3-object-link";
+		} else if (d.type === COMMENT_LINK) {
+			return "d3-comment-link";
+		}
 		return "d3-data-link";
 	}
 
-	getLinkClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return this.getAssociationLinkClass(d);
-		} else if (d.type === COMMENT_LINK) {
-			return this.getCommentLinkClass(d);
-		}
-		return this.getDataLinkClass(d);
-	}
-
-	getLinkSelectionAreaClass(d) {
-		if (d.type === ASSOCIATION_LINK) {
-			return "d3-association-link-selection-area";
-		} else if (d.type === COMMENT_LINK) {
-			return "d3-comment-link-selection-area";
-		}
-		return "d3-data-link-selection-area";
-	}
-
-	getAssociationLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-object-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return "d3-association-link";
-		}
-		return "d3-object-link";
-	}
-
-	getCommentLinkClass(d) {
-		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment-link") {
-			return d.class_name;
-		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-link";
-	}
-
+	// Returns the class string to be appled to the comment rectangle object.
 	getCommentRectClass(d) {
+		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-comment") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-comment" &&
+				d.class_name !== "d3-comment-rect") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return "d3-comment-rect";
+		return "d3-comment-rect" + customClass;
 	}
 
+	// Returns the class string to be appled to the node body object.
 	getNodeBodyClass(d) {
+		let customClass = "";
 		// If the node has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-node" && d.class_name !== "d3-node-body") {
-			return d.class_name;
+		if (d.class_name &&
+				d.class_name !== "canvas-node" &&
+				d.class_name !== "d3-node-body" &&
+				d.class_name !== "d3-node-body-outline") {
+			customClass = " " + d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name.
-		return "d3-node-body-outline";
+		return "d3-node-body-outline" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
@@ -6299,7 +6309,7 @@ export default class SVGCanvasRenderer {
 	// handles may be in the same positions as port circles on the nodes.
 	raiseSelectedLinksToTop() {
 		this.nodesLinksGrp
-			.selectAll(".d3-data-link[data-selected]")
+			.selectAll(".d3-link-group[data-selected]")
 			.raise();
 	}
 

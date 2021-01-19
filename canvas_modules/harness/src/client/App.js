@@ -1584,6 +1584,11 @@ class App extends React.Component {
 			breadcrumbsDef={this.state.breadcrumbsDef}
 			currentPipelineId={currentPipelineId}
 		/>);
+		const consoleLabel = "console";
+		const downloadLabel = "download";
+		const apiLabel = "API";
+		const commonPropertiesModalLabel = "Common Properties Modal";
+		const commonCanvasLabel = "Common Canvas";
 
 		const navBar = (<header aria-label="Common Canvas Header" role="banner">
 			<div className="harness-app-navbar">
@@ -1592,31 +1597,31 @@ class App extends React.Component {
 						<span className="harness-title">Common Canvas</span>
 						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
 					</li>
-					<li className="harness-navbar-li harness-nav-divider" data-tip="console">
-						<a onClick={this.openConsole.bind(this) }>
+					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
+						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
 							<Isvg src={listview32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip="download">
-						<a onClick={this.download.bind(this) }>
+					<li className="harness-navbar-li" data-tip={downloadLabel}>
+						<a onClick={this.download.bind(this) } aria-label={downloadLabel}>
 							<Isvg src={download32} />
 						</a>
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
-						<a onClick={this.sidePanelAPI.bind(this) }>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
+						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
 							<Isvg src={api32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
-						<a onClick={this.sidePanelModal.bind(this) }>
+					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
+						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
 							<Isvg src={template32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
-						<a onClick={this.sidePanelCanvas.bind(this) }>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
+						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
 							<Isvg src={justify32} />
 						</a>
 					</li>

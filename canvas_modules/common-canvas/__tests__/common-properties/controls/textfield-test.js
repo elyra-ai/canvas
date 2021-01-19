@@ -22,6 +22,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import { Provider } from "react-redux";
 import propertyUtils from "../../_utils_/property-utils";
+import textfieldParamDef from "../../test_resources/paramDefs/textfield_paramDef.json";
 
 
 const controller = new Controller();
@@ -307,5 +308,28 @@ describe("textfield list works correctly", () => {
 		const input = textWrapper.find("input");
 		input.simulate("change", { target: { value: "" } });
 		expect(controller.getPropertyValue(propertyId)).to.eql([]);
+	});
+});
+
+
+describe("textfield classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("textfield should have custom classname defined", () => {
+		expect(wrapper.find(".string-textfield-control-class")).to.have.length(1);
+	});
+
+	it("textfield should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "textfield-table-panels");
+		const tableControlDiv = wrapper.find("div[data-id='properties-textfield-table-summary-ctrls']");
+		// There are 4 rows shown across 2 tables
+		expect(tableControlDiv.find(".table-textfield-control-class")).to.have.length(4);
+		// From the 4 rows shown, each row has a textfield on-panel and in subpanel
+		expect(tableControlDiv.find(".table-on-panel-textfield-control-class")).to.have.length(4);
+		expect(tableControlDiv.find(".table-subpanel-textfield-control-class")).to.have.length(4);
 	});
 });

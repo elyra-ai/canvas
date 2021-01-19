@@ -212,8 +212,8 @@ class EditorForm extends React.Component {
 		return index;
 	}
 
-	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
-		const subPanels = this.generateAdditionalPanels(tabs, key, propertyId, indexof, false);
+	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId, className) {
+		const subPanels = this.generateAdditionalPanels(tabs, key, propertyId, indexof, false, className);
 		return (
 			<SelectorPanel
 				key={"selectorPanel" + key}
@@ -224,7 +224,7 @@ class EditorForm extends React.Component {
 		);
 	}
 
-	generateAdditionalPanels(tabs, key, propertyId, indexof, indent) {
+	generateAdditionalPanels(tabs, key, propertyId, indexof, indent, groupClassName) {
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
@@ -236,7 +236,7 @@ class EditorForm extends React.Component {
 				className += " properties-control-panel";
 			}
 			subPanels[tab.group] = (
-				<div className={className} key={tab.group + key}>
+				<div className={classNames(className, groupClassName)} key={tab.group + key}>
 					{this.genUIItem(i, tab.content, propertyId, indexof)}
 				</div>
 			);
@@ -314,11 +314,17 @@ class EditorForm extends React.Component {
 		case ("panel"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
-			return (<Subtabs key={"subtabs." + key} tabs={uiItem.tabs} controller={this.props.controller} rightFlyout={this.props.rightFlyout} genUIItem={this.genUIItem} />);
+			return (<Subtabs key={"subtabs." + key}
+				tabs={uiItem.tabs}
+				className={uiItem.className}
+				controller={this.props.controller}
+				rightFlyout={this.props.rightFlyout}
+				genUIItem={this.genUIItem}
+			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		case ("panelSelector"):
-			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof, uiItem.id);
+			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof, uiItem.id, uiItem.className);
 		case ("checkboxSelector"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("customPanel"):

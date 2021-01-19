@@ -197,6 +197,18 @@ export default (state = [], action) => {
 			return node;
 		});
 
+	case "SET_OBJECTS_CLASS_NAME":
+		return state.map((node) => {
+			const idx = action.data.objIds.indexOf(node.id);
+			if (idx > -1) {
+				const newNode = Object.assign({}, node);
+				newNode.class_name =
+					Array.isArray(action.data.newClassName) ? (action.data.newClassName[idx] || null) : action.data.newClassName;
+				return newNode;
+			}
+			return node;
+		});
+
 	case "SET_OBJECTS_STYLE":
 		return state.map((node) => {
 			if (action.data.objIds.indexOf(node.id) > -1) {

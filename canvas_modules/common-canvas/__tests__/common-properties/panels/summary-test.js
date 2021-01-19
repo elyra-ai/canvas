@@ -274,3 +274,20 @@ describe("summary panel visible and enabled conditions work correctly", () => {
 		expect(secondSummary.find("div.properties-summary-values")).to.have.length(0);
 	});
 });
+
+describe("summary panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("summary panel should have custom classname defined", () => {
+		const summaryContainer = wrapper.find("div[data-id='properties-summary_panel_category']");
+		expect(summaryContainer.find(".structuretable-summary-panel1-category-group-summarypanel-class")).to.have.length(1);
+	});
+});

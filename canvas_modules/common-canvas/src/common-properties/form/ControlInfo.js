@@ -164,5 +164,8 @@ export class Control {
 		if (settings.customValueAllowed) {
 			this.customValueAllowed = settings.customValueAllowed;
 		}
+		if (settings.className) {
+			this.className = settings.className;
+		}
 	}
 }

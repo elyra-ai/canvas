@@ -29,6 +29,7 @@ export class UIItem {
 		this.secondaryText = propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
 		this.dependsOn = propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
 		this.action = propertyOf(elements)("action"); // when ACTION
+		this.className = propertyOf(elements)("className");
 	}
 
 	static makePrimaryTabs(tabs) {
@@ -38,19 +39,21 @@ export class UIItem {
 		});
 	}
 
-	static makeSubTabs(tabs) {
+	static makeSubTabs(tabs, className) {
 		return new UIItem({
 			itemType: ItemType.SUB_TABS,
-			tabs: tabs
+			tabs: tabs,
+			className: className
 		});
 	}
 
-	static makePanelSelector(groupName, tabs, dependsOn) {
+	static makePanelSelector(groupName, tabs, dependsOn, className) {
 		return new UIItem({
 			id: groupName,
 			itemType: ItemType.PANEL_SELECTOR,
 			tabs: tabs,
-			dependsOn: dependsOn
+			dependsOn: dependsOn,
+			className: className
 		});
 	}
 
@@ -98,21 +101,23 @@ export class UIItem {
 		});
 	}
 
-	static makeTextPanel(groupName, label, description) {
+	static makeTextPanel(groupName, label, description, className) {
 		return new UIItem({
 			itemType: ItemType.TEXT_PANEL,
 			panel: {
 				id: groupName,
 				label: label,
-				description: description
+				description: description,
+				className: className
 			}
 		});
 	}
 
-	static makeCustomPanel(panel) {
+	static makeCustomPanel(panel, className) {
 		return new UIItem({
 			itemType: ItemType.CUSTOM_PANEL,
-			panel: panel
+			panel: panel,
+			className: className
 		});
 	}
 }

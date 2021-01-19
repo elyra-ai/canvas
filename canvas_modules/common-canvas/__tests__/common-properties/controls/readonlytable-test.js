@@ -203,3 +203,22 @@ describe("readonlytable control conditions", () => {
 		expect(table.prop("disabled")).to.equal(true);
 	});
 });
+
+describe("readonlyTable classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("readonlyTable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.find(".readonlytable-control-class")).to.have.length(1);
+	});
+
+	it("readonlyTable should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.find(".nested-parent-readonlytable-control-class")).to.have.length(1);
+		expect(wrapper.find(".nested-subpanel-readonlytable-control-class")).to.have.length(3);
+	});
+});

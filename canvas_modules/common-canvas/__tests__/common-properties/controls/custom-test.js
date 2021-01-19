@@ -102,3 +102,20 @@ describe("custom control renders correctly", () => {
 		expect(dropdownList).to.be.length(3); // should have 2 items. Custom toggle control updates the values
 	});
 });
+
+describe("custom control classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(customControlParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("custom control should have custom classname defined", () => {
+		expect(wrapper.find(".custom-control-class")).to.have.length(1);
+	});
+
+	it("custom control should have custom classname defined in table cells", () => {
+		expect(wrapper.find(".table-custom-control-class")).to.have.length(2);
+		expect(wrapper.find(".table-on-panel-custom-control-class")).to.have.length(2);
+	});
+});
