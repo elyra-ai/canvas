@@ -32,13 +32,14 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, SUPER_NODE, USE_DEFAULT_ICON }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import SvgCanvasLinks from "./svg-canvas-links.js";
+import SvgCanvasLinks from "./svg-canvas-utils-links.js";
+import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 
 const showLinksTime = false;
 
@@ -74,7 +75,8 @@ export default class SVGCanvasRenderer {
 		// Initialize zoom variables
 		this.initializeZoomVariables();
 
-		this.linkUtils = new SvgCanvasLinks(this.canvasLayout, this.config);
+		this.nodeUtils = new SvgCanvasNodes(this.config);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -291,7 +293,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getSupernodes(pipeline) {
-		return pipeline.nodes.filter((node) => this.isSupernode(node));
+		return pipeline.nodes.filter((node) => this.nodeUtils.isSupernode(node));
 	}
 
 	getZoomTransform() {
@@ -2505,12 +2507,12 @@ export default class SVGCanvasRenderer {
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node sizing area.
-			newNodeGroups.filter((d) => this.isSupernode(d))
+			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
 				.append("path")
 				.attr("data-id", (d) => this.getId("node_sizing", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mousedown", (d3Event, d) => {
-					if (this.isExpandedSupernode(d)) {
+					if (this.nodeUtils.isExpandedSupernode(d)) {
 						this.nodeSizing = true;
 						this.nodeSizingInitialSize = { width: d.width, height: d.height };
 						this.nodeSizingId = d.id;
@@ -2525,7 +2527,7 @@ export default class SVGCanvasRenderer {
 				// pointer leaves the temporary overlay (which is removed) and enters
 				// the node outline.
 				.on("mousemove mouseenter", function(d3Event, d) {
-					if (that.isExpandedSupernode(d) &&
+					if (that.nodeUtils.isExpandedSupernode(d) &&
 							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 						let cursorType = "pointer";
 						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -2603,7 +2605,7 @@ export default class SVGCanvasRenderer {
 				});
 
 			// Create Supernode renderers for any super nodes. Display/hide will be handled in 'new and existing'.
-			newNodeGroups.filter((d) => this.isSupernode(d))
+			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
 				.each(function(d) {
 					that.createSupernodeRenderer(d, d3.select(this));
 				});
@@ -2704,10 +2706,10 @@ export default class SVGCanvasRenderer {
 						.attr("class", (nd) => this.getLabelClass(nd));
 
 					// Supernode sub-flow display
-					if (this.isSupernode(d)) {
+					if (this.nodeUtils.isSupernode(d)) {
 						const ren = this.getRendererForSupernode(d);
 						if (ren) {
-							if (this.isExpanded(d)) {
+							if (this.nodeUtils.isExpanded(d)) {
 								ren.displayCanvas();
 							} else {
 								ren.hideCanvas(d);
@@ -3258,7 +3260,7 @@ export default class SVGCanvasRenderer {
 		if (!d.image) {
 			return null;
 		} else if (d.image === USE_DEFAULT_ICON) {
-			if (this.isSupernode(d)) {
+			if (this.nodeUtils.isSupernode(d)) {
 				return SUPERNODE_ICON;
 			}
 		}
@@ -3272,21 +3274,21 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeImageWidth(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImageWidth;
 		}
 		return d.layout.imageWidth;
 	}
 
 	getNodeImageHeight(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImageHeight;
 		}
 		return d.layout.imageHeight;
 	}
 
 	getNodeImagePosX(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeImagePosX;
 		}
 		return d.layout.imagePosX;
@@ -3337,14 +3339,14 @@ export default class SVGCanvasRenderer {
 
 	doesExpandedSupernodeHaveStyledNodes(d) {
 		let expandedSupernodeHaveStyledNodes = false;
-		if (this.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
+		if (this.nodeUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
 			const subflow = this.getPipeline(d.subflow_ref.pipeline_id_ref);
 			const nodeGrp = subflow.nodes;
 			nodeGrp.forEach((node) => {
 				if (node.style || node.style_temp) {
 					expandedSupernodeHaveStyledNodes = true;
 					return;
-				} else if (!expandedSupernodeHaveStyledNodes && this.isExpandedSupernode(node)) {
+				} else if (!expandedSupernodeHaveStyledNodes && this.nodeUtils.isExpandedSupernode(node)) {
 					expandedSupernodeHaveStyledNodes = this.doesExpandedSupernodeHaveStyledNodes(node);
 				}
 			});
@@ -3444,7 +3446,7 @@ export default class SVGCanvasRenderer {
 
 
 			// Add Supernode expansion icon and background for expanded supernodes
-			if (this.isExpandedSupernode(d)) {
+			if (this.nodeUtils.isExpandedSupernode(d)) {
 				const expGrp = nodeGrp
 					.append("g")
 					.attr("data-id", this.getId("node_exp_group", d.id))
@@ -3599,7 +3601,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeImagePosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeImagePosY;
 		}
 		if (data.layout.labelAndIconVerticalJustification === "center") {
@@ -3616,7 +3618,7 @@ export default class SVGCanvasRenderer {
 
 	getNodeLabelText(data, textObj) {
 		let labelMaxWidth = data.layout.labelMaxWidth;
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			labelMaxWidth = data.width - this.canvasLayout.supernodeLabelPosX -
 				(4 * this.canvasLayout.supernodeIconSeparation) -
 				this.canvasLayout.supernodeExpansionIconWidth -
@@ -3632,7 +3634,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelPosX(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeLabelPosX;
 		}
 		return data.layout.labelPosX;
@@ -3651,7 +3653,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeLabelPosY;
 		} else if (data.layout.labelAndIconVerticalJustification === "center") {
 			if (data.layout.nodeFormatType === "horizontal") {
@@ -3667,7 +3669,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getLabelClass(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return "d3-supernode-label " + this.getMessageLabelClass(data.messages);
 		}
 		const justificationClass = data.layout.nodeFormatType === "vertical" ? " d3-node-label-middle" : "";
@@ -3682,7 +3684,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getErrorPosX(data, nodeGrp) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			const nodeText = nodeGrp.select(this.getSelectorForId("node_label", data.id)).node();
 			return this.canvasLayout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.canvasLayout.supernodeIconSeparation;
 		}
@@ -3690,7 +3692,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getErrorPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return (this.canvasLayout.supernodeTopAreaHeight / 2) - (data.layout.errorHeight / 2);
 		} else
 		if (data.layout.labelAndIconVerticalJustification === "center") {
@@ -3706,21 +3708,21 @@ export default class SVGCanvasRenderer {
 	}
 
 	getEllipsisWidth(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeEllipsisWidth;
 		}
 		return d.layout.ellipsisWidth;
 	}
 
 	getEllipsisHeight(d) {
-		if (this.isExpandedSupernode(d)) {
+		if (this.nodeUtils.isExpandedSupernode(d)) {
 			return this.canvasLayout.supernodeEllipsisHeight;
 		}
 		return d.layout.ellipsisHeight;
 	}
 
 	getEllipsisPosX(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return data.width - (2 * this.canvasLayout.supernodeIconSeparation) -
 				this.canvasLayout.supernodeExpansionIconWidth -
 				this.canvasLayout.supernodeEllipsisWidth;
@@ -3730,7 +3732,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getEllipsisPosY(data) {
-		if (this.isExpandedSupernode(data)) {
+		if (this.nodeUtils.isExpandedSupernode(data)) {
 			return this.canvasLayout.supernodeEllipsisPosY;
 		}
 
@@ -3747,18 +3749,6 @@ export default class SVGCanvasRenderer {
 
 	getExpansionIconPosX(data) {
 		return data.width - this.canvasLayout.supernodeIconSeparation - this.canvasLayout.supernodeExpansionIconWidth;
-	}
-
-	isExpandedSupernode(data) {
-		return this.isSupernode(data) && this.isExpanded(data);
-	}
-
-	isExpanded(data) {
-		return data.is_expanded === true;
-	}
-
-	isSupernode(data) {
-		return data.type === SUPER_NODE;
 	}
 
 	openContextMenu(d3Event, type, d, port) {
@@ -4841,7 +4831,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let xPosition = 0;
 
-				if (this.isExpandedSupernode(data)) {
+				if (this.nodeUtils.isExpandedSupernode(data)) {
 					const widthSvgArea = data.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
 					const remainingSpace = widthSvgArea - portsWidth;
 					xPosition = (2 * this.canvasLayout.supernodeSVGAreaPadding) + (remainingSpace / 2);
@@ -4880,7 +4870,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let yPosition = 0;
 
-				if (this.isExpandedSupernode(data)) {
+				if (this.nodeUtils.isExpandedSupernode(data)) {
 					const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 					const remainingSpace = heightSvgArea - portsHeight;
 					yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
