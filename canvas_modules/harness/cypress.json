@@ -4,6 +4,7 @@
 	"viewportHeight": 800,
 	"video": false,
 	"env": {
-		"compareRange": 2
+		"compareRange": 2,
+		"url": "http://localhost:3001"
 	}
 }
