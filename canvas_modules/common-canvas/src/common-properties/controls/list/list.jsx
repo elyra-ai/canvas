@@ -159,19 +159,17 @@ class ListControl extends AbstractTable {
 		</div>);
 
 		return (
-			<div>
+			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
-				<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
-					<MoveableTableRows
-						tableContainer={tableContainer}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-					/>
-				</div>
+				<MoveableTableRows
+					tableContainer={tableContainer}
+					control={this.props.control}
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					setScrollToRow={this.setScrollToRow}
+					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					disabled={this.props.state === STATES.DISABLED}
+				/>
 			</div>
 		);
 	}
