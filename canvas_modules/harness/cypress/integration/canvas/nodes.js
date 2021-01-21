@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test adding nodes from palette", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -110,7 +110,7 @@ describe("Test adding nodes from palette", function() {
 
 describe("Test selecting nodes open properties", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -152,7 +152,7 @@ describe("Test selecting nodes open properties", function() {
 
 describe("Test opening properties moves node to center with enablePositionNodeOnRightFlyoutOpen", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedPositionNodeOnRightFlyoutOpen": true });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
@@ -192,7 +192,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 
 describe("Test changing node properties is reflected in canvas", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -233,7 +233,7 @@ describe("Test changing node properties is reflected in canvas", function() {
 
 describe("Test changing node image is reflected in canvas", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -254,7 +254,7 @@ describe("Test changing node image is reflected in canvas", function() {
 
 describe("Test from loaded file", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("modelerCanvas.json");
 	});
@@ -269,7 +269,7 @@ describe("Test from loaded file", function() {
 
 describe("Test from loaded file in legacy format", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("x-modelerCanvas.json");
 	});

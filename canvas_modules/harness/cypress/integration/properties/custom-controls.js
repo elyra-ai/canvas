@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of custom panels", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openPropertyDefinition("CustomPanel_paramDef.json");
 	});
 

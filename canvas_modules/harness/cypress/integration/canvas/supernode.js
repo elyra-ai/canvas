@@ -16,7 +16,7 @@
 
 describe("Test the supernode expanded structure", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
@@ -47,7 +47,7 @@ describe("Test the supernode expanded structure", function() {
 
 describe("Test supernode expanded to correct size", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
@@ -112,7 +112,7 @@ describe("Test supernode expanded to correct size", function() {
 
 describe("Test create supernode within a supernode with a new node from palette", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -206,7 +206,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 
 describe("Test cut and copy supernode from first canvas to second canvas", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -260,7 +260,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 
 describe("Test create a supernode with link that does not have port info", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -304,7 +304,7 @@ describe("Test create a supernode with link that does not have port info", funct
 
 describe("Test selecting the canvas background of expanded supernodes", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeNestedCanvas.json");
 	});
 
@@ -331,7 +331,7 @@ describe("Test selecting the canvas background of expanded supernodes", function
 
 describe("Test context menu for supernode canvas background doesn't deselect nodes or comments", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
@@ -357,7 +357,7 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 
 describe("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
@@ -373,7 +373,7 @@ describe("Test Select All in context menu for supernode canvas only selects non-
 
 describe("Test all the nodes are correctly positioned", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodePortPosCanvas.json");
 	});
 

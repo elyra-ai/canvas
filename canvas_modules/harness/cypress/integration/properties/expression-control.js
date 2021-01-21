@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of expression editor control", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openPropertyDefinition("CLEM_FilterRows_paramDef.json");
 	});
 
@@ -66,7 +66,7 @@ describe("Test of expression editor control", function() {
 
 describe("Test of expression editor control in a structure cell", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openPropertyDefinition("summaryPanel_paramDef.json");
 	});
 
@@ -96,7 +96,7 @@ describe("Test of expression editor control in a structure cell", function() {
 
 describe("Test of expression builder", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openPropertyDefinition("expressionControl_paramDef.json");
 	});
 
@@ -128,7 +128,7 @@ describe("Test of expression builder", function() {
 
 describe("Test of Python and R expression controls", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openPropertyDefinition("Python_ExpressionControl_paramDef.json");
 	});
 

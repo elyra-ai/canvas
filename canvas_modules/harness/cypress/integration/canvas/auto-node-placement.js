@@ -17,7 +17,7 @@
 
 describe("Test auto layout variations", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -168,7 +168,7 @@ describe("Test auto layout variations", function() {
 
 describe("Test that auto-nodes are added to an in-place expanded supernode", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("supernodeCanvas.json");
 		cy.openCanvasPalette("modelerPalette.json");
 	});

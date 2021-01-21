@@ -16,7 +16,7 @@
 
 describe("Test for toolbar Cut and Paste buttons", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -44,7 +44,7 @@ describe("Test for toolbar Cut and Paste buttons", function() {
 
 describe("Test for toolbar Copy and Paste buttons", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -72,7 +72,7 @@ describe("Test for toolbar Copy and Paste buttons", function() {
 
 describe("Test for toolbar Create and Delete button", function() {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -108,7 +108,7 @@ describe("Test for toolbar Create and Delete button", function() {
 describe("Test for toolbar resize", function() {
 	beforeEach(() => {
 		cy.viewport(1400, 800);
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -134,7 +134,7 @@ describe("Test for toolbar resize", function() {
 describe("Test for toolbar add comment", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 	});
 
 	it("Add comments using toolbar in regular canvas and extra canvas, verify comment transform, " +

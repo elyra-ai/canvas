@@ -16,7 +16,7 @@
 
 describe("Test of subpanel editing in a structuretable", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
@@ -39,7 +39,7 @@ describe("Test of subpanel editing in a structuretable", function() {
 
 describe("Test the feature to have tables use the available vertical space", function() {
 	before(() => {
-		cy.visit("/");
+		cy.visit(Cypress.env("url"));
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
