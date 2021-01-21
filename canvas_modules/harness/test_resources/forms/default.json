@@ -84,7 +84,7 @@
       {
         "parameter_ref": "useSamplingSize",
         "label": {
-          "sample-size.label": "Use maximum sample size"
+          "default": "Use maximum sample size"
         }
       },
       {

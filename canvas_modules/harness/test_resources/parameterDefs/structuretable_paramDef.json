@@ -1005,7 +1005,6 @@
         {
           "id": "annotation",
           "type": "array[string]",
-          "role": "text",
           "default": []
         }
       ]
@@ -1150,52 +1149,6 @@
           "placement": "on_panel"
         },
         "rows": -1
-      },
-      {
-        "id": "ST_mse_table",
-        "key_definition": {
-          "id": "field",
-          "type": "string",
-          "role": "column"
-        },
-        "parameters": [
-          {
-            "id": "override",
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "id": "dummy_entry_sport_name",
-            "enum": [
-              "Football",
-              "Soccer"
-            ],
-            "default": "Soccer"
-          },
-          {
-            "id": "dummy_entry_invisble",
-            "type": "string",
-            "default": "Don't show"
-          },
-          {
-            "id": "checkit",
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "id": "sometext",
-            "type": "string",
-            "default": "Type something here..."
-          },
-          {
-            "id": "anArray",
-            "type": "array[string]",
-            "default": [
-              "One",
-              "Two"
-            ]
-          }
-        ]
       },
       {
         "parameter_ref": "structuretableObjectType",

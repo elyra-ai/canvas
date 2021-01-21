@@ -263,6 +263,16 @@ export default class SidePanelModal extends React.Component {
 				</Button>
 			</div>);
 
+		const validateSchemaEnabled = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="enable-schema-validation"
+					labelText="Enable parameterDef schema validation"
+					onToggle={this.props.propertiesConfig.enablePropertiesSchemaValidation}
+					toggled={this.props.propertiesConfig.propertiesSchemaValidation}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -324,6 +334,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{containerType}
 				{divider}
+				{validateSchemaEnabled}
+				{divider}
 				{applyOnBlur}
 				{divider}
 				{expressionBuilder}
@@ -362,6 +374,8 @@ SidePanelModal.propTypes = {
 		fileChooserVisible: PropTypes.bool,
 		setPropertiesDropdownSelect: PropTypes.func,
 		heading: PropTypes.bool,
-		useHeading: PropTypes.func
+		useHeading: PropTypes.func,
+		enablePropertiesSchemaValidation: PropTypes.func,
+		propertiesSchemaValidation: PropTypes.bool
 	})
 };
