@@ -33,6 +33,7 @@ export default (state = [], action) => {
 			srcNodeId: action.data.srcNodeId,
 			trgNodeId: action.data.trgNodeId,
 			type: action.data.type,
+			decorations: action.data.decorations,
 			style: action.data.style,
 			style_temp: action.data.style_temp
 		};
