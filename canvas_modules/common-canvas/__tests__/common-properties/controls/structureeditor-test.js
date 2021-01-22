@@ -416,7 +416,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are three rows
 		structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
-		const tableRows = structure.find("div[role='properties-data-row']");
+		const tableRows = structure.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(3);
 		const thirdRow = tableRows.at(2);
 
@@ -485,7 +485,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are two rows
 		structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
-		const tableRows = structure.find("div[role='properties-data-row']");
+		const tableRows = structure.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const secondRow = tableRows.at(1);
 

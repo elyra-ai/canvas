@@ -993,7 +993,7 @@ describe("structuretable columns sort correctly", () => {
 	});
 	it("should sort column alphabetically ascending and descending", () => {
 		// click on the column header to trigger the onClick sort
-		const sortableCol = tableHeader.find("div[role='columnheader']").at(0);
+		const sortableCol = tableHeader.find("div[role='columnheader']").at(1);
 		sortableCol.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
@@ -1472,7 +1472,7 @@ describe("structuretable control with nested structure tables", () => {
 		// select the second row for onPanel editing
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
-		const tableRows = table.find("div[role='properties-data-row']");
+		const tableRows = table.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		// const secondRow = tableRows.at(1);
 		tableUtils.selectCheckboxes(table, [1]); // Select second row for onPanel edit

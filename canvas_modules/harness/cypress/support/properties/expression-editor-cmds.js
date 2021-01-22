@@ -67,7 +67,7 @@ Cypress.Commands.add("clickExpressionBuilderButton", (propertyId) => {
 
 Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyId) => {
 	cy.get(`.properties-${propertyId}-table-container`)
-		.find("div[role='properties-data-row']")
+		.find("div[data-role='properties-data-row']")
 		.find(".properties-expr-table-cell")
 		.then((tableCells) => {
 			const cell = getCellMatch(tableCells, fieldName);
