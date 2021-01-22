@@ -354,22 +354,6 @@
         ]
       },
       {
-        "id": "sLE_DefaultSortOrder",
-        "parameter_info": [
-          {
-            "parameter_ref": "sLE_DefaultSortOrder",
-            "label": {
-              "default": "Default sort order"
-            },
-            "description": {
-              "default": "default sort order"
-            },
-            "control": "radioset",
-            "orientation": "horizontal"
-          }
-        ]
-      },
-      {
         "complex_type_ref": "columnStructureTableDefault",
         "moveable_rows": true,
         "key_definition": {
@@ -394,22 +378,6 @@
               "/images/down-triangle.svg"
             ],
             "summary": true
-          }
-        ]
-      },
-      {
-        "id": "CST_DefaultSortOrder",
-        "parameter_info": [
-          {
-            "parameter_ref": "CST_DefaultSortOrder",
-            "label": {
-              "default": "Default sort order"
-            },
-            "description": {
-              "default": "default sort order"
-            },
-            "control": "radioset",
-            "orientation": "horizontal"
           }
         ]
       },

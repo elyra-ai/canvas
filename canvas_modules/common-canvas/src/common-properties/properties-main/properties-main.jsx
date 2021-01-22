@@ -26,6 +26,7 @@ import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
+import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
@@ -121,6 +122,9 @@ class PropertiesMain extends React.Component {
 		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
 			formData = propertiesInfo.formData;
 		} else if (propertiesInfo.parameterDef) {
+			if (this.props.propertiesConfig.schemaValidation) {
+				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
+			}
 			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
@@ -491,7 +495,8 @@ PropertiesMain.propTypes = {
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
-		})
+		}),
+		schemaValidation: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

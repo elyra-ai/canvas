@@ -207,6 +207,7 @@ class App extends React.Component {
 			expressionBuilder: true,
 			expressionValidate: true,
 			heading: false,
+			propertiesSchemaValidation: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -312,6 +313,7 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
+		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -1351,6 +1353,10 @@ class App extends React.Component {
 		}
 	}
 
+	enablePropertiesSchemaValidation() {
+		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
+	}
+
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -1855,7 +1861,8 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
-			heading: this.state.heading
+			heading: this.state.heading,
+			schemaValidation: this.state.propertiesSchemaValidation
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2070,7 +2077,9 @@ class App extends React.Component {
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
-			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect
+			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
+			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
+			propertiesSchemaValidation: this.state.propertiesSchemaValidation
 		};
 
 		const sidePanelAPIConfig = {
