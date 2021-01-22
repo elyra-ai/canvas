@@ -45,8 +45,7 @@
   },
   "parameters": [
     {
-      "id": "string",
-      "type": "string"
+      "id": "string"
     },
     {
       "id": "string_charLimit",
