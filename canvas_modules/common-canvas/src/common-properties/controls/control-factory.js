@@ -38,6 +38,7 @@ import CheckboxControl from "./checkbox";
 import CheckboxsetControl from "./checkboxset";
 import RadiosetControl from "./radioset";
 import Dropdown from "./dropdown";
+import MultiSelectControl from "./multiselect";
 import SomeofselectControl from "./someofselect";
 import SelectColumnsControl from "./selectcolumns";
 import StructureEditorControl from "./structureeditor";
@@ -209,6 +210,9 @@ export default class ControlFactory {
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
+			break;
+		case (ControlType.MULTISELECT):
+			createdControl = (<MultiSelectControl {...props} />);
 			break;
 		case (ControlType.SELECTCOLUMN):
 			if (!tableInfo || (tableInfo && tableInfo.allowColumnControls)) {

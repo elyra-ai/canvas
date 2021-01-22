@@ -95,7 +95,9 @@ _defineConstant("MESSAGE_KEYS", {
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
-	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description"
+	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
+	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
+	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

@@ -1,0 +1,594 @@
+{
+  "titleDefinition": {
+    "title": "MultiSelect"
+  },
+  "current_parameters": {
+    "multiselect_empty": [],
+    "multiselect": ["blue"],
+    "multiselect_multiple_selected": ["orange", "yellow"],
+    "multiselect_filterable": [],
+    "multiselect_filterable_single": ["green"],
+    "multiselect_filterable_multiple_selected": ["orange", "yellow"],
+    "multiselect_custom_labels": [],
+    "multiselect_error": [],
+    "multiselect_warning": [],
+    "hide": true,
+    "multiselect_hidden": [],
+    "disabled": true,
+    "multiselect_disabled": [],
+    "filter": false,
+    "multiselect_filtered": [],
+    "multiselect_table": [
+      [
+        ["cat"],
+        ["pear"],
+        ["blue"]
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "multiselect_empty",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
+    },
+    {
+      "id": "multiselect",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_multiple_selected",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_filterable",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_filterable_single",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_filterable_multiple_selected",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_custom_labels",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_error",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_warning",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "multiselect_hidden",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "disabled",
+      "type": "boolean"
+    },
+    {
+      "id": "multiselect_disabled",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "multiselect_filtered",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "multiselect_table",
+      "type": "array[multiselect_table_struct]",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "multiselect_table_struct",
+      "parameters": [
+        {
+          "id": "animal",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse",
+            "all of the above animals"
+          ],
+          "default": ["horse"]
+        },
+        {
+          "id": "fruit",
+          "enum": [
+            "apple",
+            "orange",
+            "pear",
+            "strawberry"
+          ]
+        },
+        {
+          "id": "color",
+          "enum": [
+            "red",
+            "green",
+            "blue",
+            "purple",
+            "orange",
+            "brown"
+          ],
+          "default": ["red"]
+        }
+      ]
+    }
+],
+  "uihints": {
+    "id": "multiselect",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "MultiSelect"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "multiselect_empty",
+        "label": {
+          "default": "multiselect"
+        },
+        "description": {
+          "default": "multiselect no options selected"
+        },
+        "class_name": "multiselect-control-class",
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect",
+        "label": {
+          "default": "multiselect one option selected"
+        },
+        "description": {
+          "default": "multiselect with parameter value set to 'blue'"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_multiple_selected",
+        "label": {
+          "default": "multiselect multiple options selected"
+        },
+        "description": {
+          "default": "multiselect with multiple options selected"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_filterable",
+        "label": {
+          "default": "multiselect filterable no options selected"
+        },
+        "description": {
+          "default": "multiselect dropdown with filter enabled"
+        },
+        "control": "multiselect",
+        "filterable": true
+      },
+      {
+        "parameter_ref": "multiselect_filterable_single",
+        "label": {
+          "default": "multiselect filterable one option selected"
+        },
+        "description": {
+          "default": "multiselect dropdown with filter enabled and one option selected"
+        },
+        "control": "multiselect",
+        "filterable": true
+      },
+      {
+        "parameter_ref": "multiselect_filterable_multiple_selected",
+        "label": {
+          "default": "multiselect filterable multiple options selected"
+        },
+        "description": {
+          "default": "multiselect dropdown with filter enabled and multiple options selected"
+        },
+        "control": "multiselect",
+        "filterable": true
+      },
+      {
+        "parameter_ref": "multiselect_custom_labels",
+        "label": {
+          "default": "multiselect custom labels"
+        },
+        "description": {
+          "default": "multiselect dropdown with custom labels set in resources"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_error",
+        "label": {
+          "default": "multiselect error"
+        },
+        "description": {
+          "default": "multiselect dropdown with error when set to 'red'"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_warning",
+        "label": {
+          "default": "multiselect warning"
+        },
+        "description": {
+          "default": "multiselect dropdown with warning when set to 'yellow'"
+        },
+        "control": "multiselect",
+        "filterable": true
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "hide 'multiselect hidden'"
+        }
+      },
+      {
+        "parameter_ref": "multiselect_hidden",
+        "label": {
+          "default": "multiselect hidden"
+        },
+        "description": {
+          "default": "multiselect dropdown hidden"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "disabled",
+        "label": {
+          "default": "disable 'multiselect disabled'"
+        }
+      },
+      {
+        "parameter_ref": "multiselect_disabled",
+        "label": {
+          "default": "multiselect disabled"
+        },
+        "description": {
+          "default": "multiselect dropdown disabled"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter 'multiselect filtered'"
+        }
+      },
+      {
+        "parameter_ref": "multiselect_filtered",
+        "label": {
+          "default": "multiselect filtered"
+        },
+        "description": {
+          "default": "multiselect dropdown to have values 'red', 'blue', and 'green'"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "multiselect_table",
+        "label": {
+          "default": "multiselect table"
+        },
+        "description": {
+          "default": "multiselect dropdown in a table"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "multiselect_table_struct",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "animal",
+            "label": {
+              "default": "Pet inline"
+            },
+            "description": {
+              "default": "Pet"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "control": "multiselect",
+            "class_name": "table-multiselect-control-class"
+          },
+          {
+            "parameter_ref": "fruit",
+            "label": {
+              "default": "Fruit on-panel"
+            },
+            "description": {
+              "default": "Fruit"
+            },
+            "width": 10,
+            "edit_style": "on_panel",
+            "control": "multiselect",
+            "class_name": "table-on-panel-multiselect-control-class"
+          },
+          {
+            "parameter_ref": "color",
+            "label": {
+              "default": "color"
+            },
+            "description": {
+              "default": "color subpanel"
+            },
+            "width": 10,
+            "edit_style": "subpanel",
+            "control": "multiselect",
+            "class_name": "table-subpanel-multiselect-control-class"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "multiselect-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "multiselect_empty",
+          "multiselect",
+          "multiselect_multiple_selected",
+          "multiselect_filterable",
+          "multiselect_filterable_single",
+          "multiselect_filterable_multiple_selected",
+          "multiselect_custom_labels"
+        ]
+      },
+      {
+        "id": "multiselect-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "multiselect_error",
+          "multiselect_warning",
+          "hide",
+          "multiselect_hidden",
+          "disabled",
+          "multiselect_disabled"
+        ]
+      },
+      {
+        "id": "multiselect-filters",
+        "label": {
+          "default": "Filters"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "filter",
+          "multiselect_filtered"
+        ]
+      },
+      {
+        "id": "multiselect-tables",
+        "label": {
+          "default": "Table"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "multiselect-table-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "multiselect in a table"
+            },
+            "group_info": [
+              {
+                "id": "multiselect-table-controls",
+                "parameter_refs": [
+                  "multiselect_table"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "multiselect_error",
+          "message": {
+            "default": "Don't select 'red'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "multiselect_error",
+            "op": "notContains",
+            "value": "red"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "multiselect_warning",
+          "message": {
+            "default": "Shouldn't be empty, cannot equal []"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "multiselect_warning",
+            "op": "notEquals",
+            "value": []
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "multiselect_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "multiselect_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disabled",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "multiselect_filtered",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    }
+  ],
+  "resources": {
+    "multiselect_custom_labels.multiselect.dropdown.empty.label": "nothing selected yet",
+    "multiselect_custom_labels.multiselect.dropdown.options.selected.label": "options are selected"
+  }
+}

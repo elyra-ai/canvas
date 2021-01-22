@@ -81,6 +81,7 @@ const ControlType = {
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",
 	ONEOFSELECT: "oneofselect",
+	MULTISELECT: "multiselect",
 	SOMEOFSELECT: "someofselect",
 	SELECTCOLUMN: "selectcolumn",
 	SELECTCOLUMNS: "selectcolumns",

@@ -74,5 +74,6 @@
   "truncate.long.string.error": "[Esperanto~These values exceed the display limit of {truncate_limit} characters and can't be edited.~~~~~~~~~~~~eo]",
   "properties.label": "[Esperanto~Properties~~~~~~eo]",
   "readonlytable.edit.button.label": "[Esperanto~Edit~eo]",
-  "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]"
+  "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]",
+  "multiselect.dropdown.label": "[Esperanto~Options are selected~~~~~~eo]"
 }
