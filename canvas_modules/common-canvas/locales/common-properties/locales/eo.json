@@ -75,5 +75,6 @@
   "properties.label": "[Esperanto~Properties~~~~~~eo]",
   "readonlytable.edit.button.label": "[Esperanto~Edit~eo]",
   "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]",
-  "multiselect.dropdown.label": "[Esperanto~Options are selected~~~~~~eo]"
+  "multiselect.dropdown.empty.label": "[Esperanto~None selected~~~~~~eo]",
+  "multiselect.dropdown.options.selected.label": "[Esperanto~are selected~~~~~~eo]"
 }
