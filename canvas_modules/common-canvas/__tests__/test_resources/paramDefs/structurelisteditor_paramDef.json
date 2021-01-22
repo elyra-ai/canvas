@@ -358,9 +358,6 @@
         {
           "id": "checkbox",
           "type": "boolean",
-          "enum": [
-            "Single Checkbox Label"
-          ],
           "default": true
         }
       ]
@@ -654,7 +651,6 @@
         {
           "id": "annotation",
           "type": "array[string]",
-          "role": "text",
           "default": []
         }
       ]
