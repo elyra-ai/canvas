@@ -16,7 +16,7 @@
 
 describe("Test to check if tips show up for the palette, nodes, ports and links", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
@@ -62,7 +62,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 describe("Test to check if tips don't show up for the palette, nodes, ports and links " +
 "after disabling tips", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({
 			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false, "links": false }
 		});
@@ -91,7 +91,7 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 
 describe("Test changing node name to update node tip", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
 
@@ -108,7 +108,7 @@ describe("Test changing node name to update node tip", function() {
 
 describe("Test changing input port name to update port tip", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
 
@@ -126,7 +126,7 @@ describe("Test changing input port name to update port tip", function() {
 
 describe("Test changing output port name to update port tip", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
 
@@ -144,7 +144,7 @@ describe("Test changing output port name to update port tip", function() {
 
 describe("Test tip location adjusted based on boundaries of canvas", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allNodes.json");
 	});
 
@@ -156,7 +156,7 @@ describe("Test tip location adjusted based on boundaries of canvas", function() 
 
 describe("Test tip location adjusted based on boundaries of browser", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openPropertyDefinition("CLEM_FilterRows_paramDef.json");
 	});
 
@@ -173,7 +173,7 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 
 describe("Test if tips show up for the summary table values", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
@@ -190,7 +190,7 @@ describe("Test if tips show up for the summary table values", function() {
 
 describe("Test if tips show up for summary validation icon when there is an error or warning", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
@@ -219,7 +219,7 @@ describe("Test if tips show up for summary validation icon when there is an erro
 
 describe("Test to check if tips show up for a supernode and nodes inside the supernode", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});

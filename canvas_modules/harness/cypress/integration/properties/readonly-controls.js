@@ -16,7 +16,7 @@
 
 describe("Test of text styling and word wrapping", function() {
 	before(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openPropertyDefinition("readonly_paramDef.json");
 	});
 
@@ -29,7 +29,7 @@ describe("Test of text styling and word wrapping", function() {
 
 describe("Test of ellipsis activation for a long readonly text", function() {
 	before(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openPropertyDefinition("structuretable_paramDef.json");
 	});
 

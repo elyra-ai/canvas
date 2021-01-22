@@ -17,7 +17,7 @@
 describe("Test of zoom operations", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -66,7 +66,7 @@ describe("Test of zoom operations", function() {
 describe("Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "None" });
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -94,7 +94,7 @@ describe("Test to see if zoom is NOT preserved with 'Save Zoom' set to 'None'", 
 describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage'", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "LocalStorage" });
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -122,7 +122,7 @@ describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage
 describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set to 'Pipelineflow'", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedSaveZoom": "Pipelineflow" });
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
@@ -144,7 +144,7 @@ describe("Test to see if zoom IS saved in the pipeline flow with 'Save Zoom' set
 describe("Test to see if the canvas is panned into view when selectedPanIntoViewOnOpen is enabled", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedPanIntoViewOnOpen": true });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
@@ -160,7 +160,7 @@ describe("Test to see if the canvas is panned into view when selectedPanIntoView
 describe("Test the canvas is panned on open with initialPanX and initialPanY are set in canvasLayout", function() {
 	beforeEach(() => {
 		cy.viewport(1330, 660);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedCanvasLayout": { initialPanX: 100, initialPanY: 200 } });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});

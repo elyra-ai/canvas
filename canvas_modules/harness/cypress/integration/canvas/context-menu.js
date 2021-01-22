@@ -17,7 +17,7 @@
 describe("Test of context menu", function() {
 	beforeEach(() => {
 		cy.viewport(1400, 650);
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});

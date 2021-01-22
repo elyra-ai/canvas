@@ -16,7 +16,7 @@
 
 describe("Test drag and drop of external object to canvas", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 

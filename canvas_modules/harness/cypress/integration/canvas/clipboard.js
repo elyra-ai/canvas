@@ -17,7 +17,7 @@
 
 describe("Test clipboard with no link selection enabled", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -231,7 +231,7 @@ describe("Test clipboard with no link selection enabled", function() {
 
 describe("Test clipboard with detachable links enabled", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedLinkSelection": "Detachable" });
 		cy.openCanvasDefinition("detachedLinksCanvas.json");
 	});

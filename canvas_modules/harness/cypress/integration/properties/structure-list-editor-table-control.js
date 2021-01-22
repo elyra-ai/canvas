@@ -16,7 +16,7 @@
 
 describe("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
 	before(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
@@ -50,7 +50,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 
 describe("Test the feature to have tables use the available vertical space", function() {
 	before(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.get("#harness-action-bar-sidepanel-modal").click();
 		cy.selectPropertiesContainerType("Flyout");
 		cy.get("#harness-action-bar-sidepanel-modal").click();

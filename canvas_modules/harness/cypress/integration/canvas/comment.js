@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of canvas comments", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -36,7 +36,7 @@ describe("Test of canvas comments", function() {
 
 describe("Test creating a comment in main flow with toolbar and context menu", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -91,7 +91,7 @@ describe("Test creating a comment in main flow with toolbar and context menu", f
 
 describe("Test creating comment from toolbar and editing them within supernodes", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 

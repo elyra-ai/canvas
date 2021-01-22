@@ -17,7 +17,7 @@
 
 describe("Test node link disconnection", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -38,7 +38,7 @@ describe("Test node link disconnection", function() {
 
 describe("Test comment link disconnection", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -60,7 +60,7 @@ describe("Test comment link disconnection", function() {
 
 describe("Test node link creation", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -78,7 +78,7 @@ describe("Test node link creation", function() {
 
 describe("Test node and comment combination link disconnection", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
@@ -107,7 +107,7 @@ describe("Test node and comment combination link disconnection", function() {
 
 describe("Test elbow connections from multi-port source node do not overlap", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedLinkType": "Elbow" });
 		cy.openCanvasDefinition("multiPortsCanvas2.json");
 	});
@@ -172,7 +172,7 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 
 describe("Test enableLinkSelection = 'LinkOnly' configuration option", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({ "selectedLinkSelection": "LinkOnly" });
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
@@ -277,7 +277,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 
 describe("Test enableLinkSelection = 'Handles' configuration option", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({
 			"selectedLinkSelection": "Handles",
 			"selectedLinkType": "Curve" });
@@ -435,7 +435,7 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 
 describe("Test selectedLinkSelection = 'Detachable' configuration option", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.setCanvasConfig({
 			"selectedLinkSelection": "Detachable",
 			"selectedLinkType": "Straight" });

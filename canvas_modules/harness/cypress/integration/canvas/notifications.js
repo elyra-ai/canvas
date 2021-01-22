@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test of notification center message API", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 	});
 
 	it("Test notification message callback, custom content, dismiss, and clear all", function() {
@@ -62,7 +62,7 @@ describe("Test of notification center message API", function() {
 
 describe("Test of notification center configuration", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 	});
 
 	it("Test proper rendering of notification center components", function() {

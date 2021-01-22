@@ -16,7 +16,7 @@
 
 describe("Test dragged node snaps to grid", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -55,7 +55,7 @@ describe("Test dragged node snaps to grid", function() {
 
 describe("Test dragged comment snaps to grid", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
@@ -94,7 +94,7 @@ describe("Test dragged comment snaps to grid", function() {
 
 describe("Test resized comment snaps to grid", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 

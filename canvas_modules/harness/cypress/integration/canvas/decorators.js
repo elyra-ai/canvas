@@ -17,7 +17,7 @@ import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test adding a decorator to a node", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
 		cy.openCanvasAPI("Set Node Decorations");
 	});
@@ -113,7 +113,7 @@ describe("Test adding a decorator to a node", function() {
 
 describe("Test adding a decorator to a link", function() {
 	beforeEach(() => {
-		cy.visit(Cypress.env("url"));
+		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
 		cy.openCanvasAPI("Set Link Decorations");
 	});
