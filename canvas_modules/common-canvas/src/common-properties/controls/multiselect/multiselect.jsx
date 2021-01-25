@@ -18,7 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { MultiSelect } from "carbon-components-react";
-import { isEqual } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -31,22 +30,17 @@ class MultiSelectControl extends React.Component {
 		super(props);
 		this.getSelectedOption = this.getSelectedOption.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
-		this.handleFeedback = this.handleFeedback.bind(this);
-	}
-
-	componentDidUpdate(prevProps) {
-		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
-		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
-			this.updateValueFromFilterEnum();
-		}
+		this.handleOnChange = this.handleOnChange.bind(this);
 	}
 
 	getSelectedOption(options, selectedValues) {
 		const values = PropertyUtils.stringifyFieldValue(selectedValues, this.props.control);
 		const selectedOptions = [];
-		values.forEach((value) => selectedOptions.push(options.find(function(option) {
-			return option.value === value;
-		})));
+		if (values) {
+			values.forEach((value) => selectedOptions.push(options.find(function(option) {
+				return option.value === value;
+			})));
+		}
 		return selectedOptions;
 	}
 
@@ -65,7 +59,7 @@ class MultiSelectControl extends React.Component {
 		};
 	}
 
-	handleFeedback(evt) {
+	handleOnChange(evt) {
 		const controlValues = [];
 		for (let i = 0; i < evt.selectedItems.length; i++) {
 			controlValues.push(evt.selectedItems[i].value);
@@ -78,7 +72,9 @@ class MultiSelectControl extends React.Component {
 
 		const listBoxMenuIconTranslationIds = {
 			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
-			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU)
+			"open.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_OPENMENU),
+			"clear.all": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLEARALL),
+			"clear.selection": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLEARSELECTION)
 		};
 
 		const overrideEmptyLabelKey = `${this.props.control.name}.multiselect.dropdown.empty.label`;
@@ -89,8 +85,6 @@ class MultiSelectControl extends React.Component {
 		let label = "";
 		if (multiSelectDropdown.selectedOptions.length === 0) { // Display message for no options selected
 			label = this.props.controller.getResource(overrideEmptyLabelKey, defaultEmptyLabel);
-		} else if (multiSelectDropdown.selectedOptions.length === 1) { // If only one option is selected, display that value in the placeholder.
-			label = multiSelectDropdown.selectedOptions[0].label;
 		} else { // Display message for multiple options selected
 			label = this.props.controller.getResource(overrideOptionsSelectedLabelKey, defaultOptionsSelectedLabel);
 		}
@@ -103,7 +97,7 @@ class MultiSelectControl extends React.Component {
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				items={multiSelectDropdown.options}
 				initialSelectedItems={multiSelectDropdown.selectedOptions}
-				onChange={this.handleFeedback}
+				onChange={this.handleOnChange}
 				placeholder={label}
 				light
 			/>);
@@ -114,7 +108,7 @@ class MultiSelectControl extends React.Component {
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				items={multiSelectDropdown.options}
 				initialSelectedItems={multiSelectDropdown.selectedOptions}
-				onChange={this.handleFeedback}
+				onChange={this.handleOnChange}
 				label={label}
 				light
 			/>);
