@@ -135,7 +135,10 @@ TextfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	controlItem: PropTypes.element,
+	controlItem: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.element
+	]), // list control passes string
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.oneOfType([

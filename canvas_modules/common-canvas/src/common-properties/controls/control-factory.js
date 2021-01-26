@@ -62,7 +62,8 @@ const accessibleControls = [
 	ControlType.TEXTAREA,
 	ControlType.TEXTFIELD,
 	ControlType.TIMEFIELD,
-	ControlType.TOGGLETEXT
+	ControlType.TOGGLETEXT,
+	ControlType.LIST
 ];
 
 export default class ControlFactory {

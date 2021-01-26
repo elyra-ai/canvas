@@ -34,7 +34,7 @@ function validateAgainstSchema(data, schema, type, validator) {
 	const valResult = validator.validate(data, schema, { "nestedErrors": true });
 
 	if (valResult && valResult.errors && valResult.errors.length > 0) {
-		throw valResult;
+		console.error(valResult);
 	}
 }
 

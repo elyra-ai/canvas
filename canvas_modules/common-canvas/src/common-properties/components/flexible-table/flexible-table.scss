@@ -78,7 +78,7 @@ $row-left-padding: 4px;
 		height: 100%;
 	}
 
-	div[role="properties-header-row"] {
+	div[data-role="properties-header-row"] {
 		width: inherit;
 		background-color: $ui-03;
 		display: inline-flex;

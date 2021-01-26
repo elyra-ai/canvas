@@ -15,18 +15,14 @@ export default class DetachedCanvas extends React.Component {
 		this.canvasController.setPipelineFlowPalette(DetachedPalette);
 
 		this.getConfig = this.getConfig.bind(this);
+		this.editActionHandler = this.editActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 
 		// Add decorations to the links
 		const pId = this.canvasController.getPrimaryPipelineId();
 		const pipelineLinkDecorations =
 			this.canvasController.getLinks().map((link) => {
-				const decs = [
-					{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-					{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-					{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", temporary: true },
-					{ id: "dec-4", position: "middle", label: link.id, y_pos: 5, temporary: true }
-				];
+				const decs = this.getDecorationsArray(link.id);
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
@@ -99,11 +95,29 @@ export default class DetachedCanvas extends React.Component {
 		return config;
 	}
 
+	getDecorationsArray(linkLabel) {
+		const decs = [
+			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", temporary: true },
+			{ id: "dec-4", position: "middle", label: linkLabel, y_pos: 5, temporary: true }
+		];
+		return decs;
+	}
+
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
 			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
 		});
+	}
+
+	editActionHandler(data, command) {
+		if (data.editType === "linkNodes") {
+			const linkLabel = "link-" + data.linkIds[0].substring(0, 2);
+			const decs = this.getDecorationsArray(linkLabel);
+			this.canvasController.setLinkDecorations(data.linkIds[0], decs);
+		}
 	}
 
 	render() {
@@ -112,6 +126,7 @@ export default class DetachedCanvas extends React.Component {
 			<CommonCanvas
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
+				editActionHandler={this.editActionHandler}
 				config={config}
 			/>
 		);

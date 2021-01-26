@@ -811,7 +811,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		table = summaryPanel.find("div[data-id='properties-ft-nestedStructureeditorTable']");
-		const tableRows = table.find("div[role='properties-data-row']");
+		const tableRows = table.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const secondRow = tableRows.at(1);
 
