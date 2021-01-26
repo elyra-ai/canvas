@@ -300,7 +300,8 @@
           "default": "multiselect error"
         },
         "description": {
-          "default": "multiselect dropdown with error when set to 'red'"
+          "default": "multiselect dropdown with error when set to 'red'",
+          "placement": "on_panel"
         },
         "control": "multiselect"
       },
@@ -310,7 +311,8 @@
           "default": "multiselect warning"
         },
         "description": {
-          "default": "multiselect dropdown with warning when set to 'yellow'"
+          "default": "Shouldn't be empty, cannot equal []",
+          "placement": "on_panel"
         },
         "control": "multiselect",
         "filterable": true
