@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
 import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
-import { GroupType, PanelType, Type, ControlType, ParamRole } from "../constants/form-constants";
-import { ORIENTATIONS } from "../constants/form-constants.js";
+import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from "../constants/form-constants";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";

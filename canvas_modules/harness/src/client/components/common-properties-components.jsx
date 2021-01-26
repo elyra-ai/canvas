@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ import {
 	ONEOFSELECT_PROPS_INFO,
 	ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO,
 	FORCED_RADIOSET_PROPS_INFO,
+	MULTISELECT_PROPS_INFO,
+	MULTISELECT_FILTERABLE_PROPS_INFO,
 	SOMEOFSELECT_PROPS_INFO,
 	FORCED_CHECKBOX_SET_PROPS_INFO,
 	SELECTSCHEMA_PROPS_INFO,
@@ -251,7 +253,7 @@ class CommonPropertiesComponents extends React.Component {
 				"id", "type", "role", "enum", "required", "default",
 				"uihints",
 				"parameter_info",
-				"parameter_ref", "control", "label", "moveable_rows", "rows",
+				"parameter_ref", "control", "label", "moveable_rows", "rows", "filterable",
 				"description",
 				"language",
 				"orientation"
@@ -366,6 +368,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--checkboxset",
 					"--radioset",
 					"--oneofselect",
+					"--multiselect",
 					"--someofselect",
 					"--selectschema",
 					"--selectcolumn",
@@ -1194,6 +1197,49 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
+
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--multiselect" className="harness-section-subtitle">multiselect</h3>
+					<p>A multi-selection dropdown control is rendered when the <span className="harness-highlight">control</span> is
+						set to <span className="harness-highlight">multiselect</span> in the <span className="harness-highlight">uihints</span> section
+						of the <span className="harness-highlight">parameter_info</span>.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={MULTISELECT_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(MULTISELECT_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(MULTISELECT_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+					<p>If <span className="harness-highlight">filterable</span> is set to true, this dropdown selection can be filtered.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={MULTISELECT_FILTERABLE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+							{this.renderRightFlyoutButton(MULTISELECT_FILTERABLE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(MULTISELECT_FILTERABLE_PROPS_INFO.parameterDef, "custom",
+									["uihints",
+										"id", "parameter_info",
+										"parameter_info", "label", "description", "default", "control", "filterable"
+									])}
+							</pre>
+						</div>
+					</div>
+				</div>
+
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--someofselect" className="harness-section-subtitle">someofselect</h3>
 					<p>A multi-selection control is rendered for a parameter with an <span className="harness-highlight">enum</span> list

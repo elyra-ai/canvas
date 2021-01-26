@@ -262,7 +262,7 @@ CommonProperties.defaultProps = {
 		applyOnBlur: false,
 		enableResize: true,
 		conditionReturnValueHandling: CONDITION_RETURN_VALUE_HANDLING.VALUE,
-		schemaValidation: true
+		schemaValidation: false
 	},
 	callbacks: {
 	},
