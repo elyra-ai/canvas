@@ -1160,18 +1160,35 @@ class App extends React.Component {
 		} else if (data.editType === "createTestHarnessNode") {
 			const nodeTemplate = canvasController.getPaletteNode(data.op);
 			if (nodeTemplate) {
-				data.editType = "createNode";
-				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
-				canvasController.editActionHandler(data);
+				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				const action = {
+					editType: "createNode",
+					nodeTemplate: convertedTemplate,
+					pipelineId: data.pipelineId,
+					offsetX: data.offsetX,
+					offsetY: data.offsetY
+				};
+
+				canvasController.editActionHandler(action);
+			} else {
+				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
 
 		} else if (data.editType === "createFromExternalObject") {
 			const nodeTemplate = canvasController.getPaletteNode("variablefile");
 			if (nodeTemplate) {
-				data.editType = "createNode";
-				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
-				data.nodeTemplate.label = data.dataTransfer.files[0].name;
-				canvasController.editActionHandler(data);
+				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				convertedTemplate.label = data.dataTransfer.files[0].name;
+				const action = {
+					editType: "createNode",
+					nodeTemplate: convertedTemplate,
+					pipelineId: data.pipelineId,
+					offsetX: data.offsetX,
+					offsetY: data.offsetY
+				};
+				canvasController.editActionHandler(action);
+			} else {
+				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
 
 		} else if (data.editType === "editNode") {
