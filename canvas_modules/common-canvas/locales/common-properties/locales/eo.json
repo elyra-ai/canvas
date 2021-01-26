@@ -71,8 +71,12 @@
   "list.table.label": "[Esperanto~Values~~~~eo]",
   "dropdown.tooltip.openMenu": "[Esperanto~Open menu~~~~eo]",
   "dropdown.tooltip.closeMenu": "[Esperanto~Close menu~~~~~~eo]",
+  "dropdown.tooltip.clear.all": "[Esperanto~Clear all~~~~~~eo]",
+  "dropdown.tooltip.clear.selection": "[Esperanto~Clear selection~~~~~~eo]",
   "truncate.long.string.error": "[Esperanto~These values exceed the display limit of {truncate_limit} characters and can't be edited.~~~~~~~~~~~~eo]",
   "properties.label": "[Esperanto~Properties~~~~~~eo]",
   "readonlytable.edit.button.label": "[Esperanto~Edit~eo]",
-  "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]"
+  "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]",
+  "multiselect.dropdown.empty.label": "[Esperanto~None selected~~~~~~eo]",
+  "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~~~~~eo]"
 }

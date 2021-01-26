@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,10 +92,14 @@ _defineConstant("MESSAGE_KEYS", {
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
+	DROPDOWN_TOOLTIP_CLEARALL: "dropdown.tooltip.clear.all",
+	DROPDOWN_TOOLTIP_CLEARSELECTION: "dropdown.tooltip.clear.selection",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
-	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description"
+	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
+	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
+	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

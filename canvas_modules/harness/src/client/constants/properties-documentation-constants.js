@@ -2441,6 +2441,107 @@ _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("MULTISELECT_PROPS_INFO", {
+	"title": "Multiselect Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: multiselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"multiselectList": ["blue"]
+		},
+		"parameters": [
+			{
+				"id": "multiselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": ["yellow"]
+			}
+		],
+		"uihints": {
+			"id": "multiselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "multiselectList",
+					"label": {
+						"default": "Multiselect Control Name"
+					},
+					"description": {
+						"default": "multiselect test"
+					},
+					"control": "multiselect"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Multiselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"multiselectList"
+					]
+				}
+			]
+		}
+	}
+});
+_defineConstant("MULTISELECT_FILTERABLE_PROPS_INFO", {
+	"title": "Multiselect Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: multiselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"multiselectList": []
+		},
+		"parameters": [
+			{
+				"id": "multiselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": ["yellow"]
+			}
+		],
+		"uihints": {
+			"id": "multiselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "multiselectList",
+					"label": {
+						"default": "Multiselect Control Name"
+					},
+					"description": {
+						"default": "multiselect test"
+					},
+					"control": "multiselect",
+					"filterable": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "Multiselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"multiselectList"
+					]
+				}
+			]
+		}
+	}
+});
 _defineConstant("SOMEOFSELECT_PROPS_INFO", {
 	"title": "Some of Select Title",
 	"parameterDef": {

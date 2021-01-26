@@ -1434,6 +1434,75 @@ _defineConstant("ONEOFSELECT_ERROR_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("MULTISELECT_ERROR_PROPS_INFO", {
+	"title": "Multiselect Title",
+	"parameterDef": {
+		"current_parameters": {
+			"multiselectList": []
+		},
+		"parameters": [
+			{
+				"id": "multiselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				]
+			}
+		],
+		"uihints": {
+			"id": "multiselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "multiselectList",
+					"label": {
+						"default": "Multiselect Control Name"
+					},
+					"description": {
+						"default": "Select multiple options from the 'multiselect' dropdown, besides 'red'"
+					},
+					"control": "multiselect"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Multiselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"multiselectList"
+					]
+				}
+			]
+		},
+		"conditions": [
+			{
+				"validation": {
+					"fail_message": {
+						"type": "error",
+						"message": {
+							"default": "an option must be selected.",
+							"resource_key": "multiselectList_invalid"
+						},
+						"focus_parameter_ref": "multiselectList"
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "multiselectList",
+							"op": "notContains",
+							"value": "red"
+						}
+					}
+				}
+			}
+		],
+		"resources": {
+			"multiselectList_invalid": "The option red should not be selected."
+		}
+	}
+});
 _defineConstant("SOMEOFSELECT_ERROR_PROPS_INFO", {
 	"title": "Some of Select Title",
 	"parameterDef": {

@@ -70,8 +70,12 @@
   "list.table.label": "Values",
   "dropdown.tooltip.openMenu": "Open menu",
   "dropdown.tooltip.closeMenu": "Close menu",
+  "dropdown.tooltip.clear.all": "Clear all",
+  "dropdown.tooltip.clear.selection": "Clear selection",
   "truncate.long.string.error": "These values exceed the display limit of {truncate_limit} characters and can't be edited.",
   "properties.label": "Properties",
   "readonlytable.edit.button.label": "Edit",
-  "toggletext.icon.description": "{toggletext_label} Icon"
+  "toggletext.icon.description": "{toggletext_label} Icon",
+  "multiselect.dropdown.empty.label": "None selected",
+  "multiselect.dropdown.options.selected.label": "options selected"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ const ControlType = {
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",
 	ONEOFSELECT: "oneofselect",
+	MULTISELECT: "multiselect",
 	SOMEOFSELECT: "someofselect",
 	SELECTCOLUMN: "selectcolumn",
 	SELECTCOLUMNS: "selectcolumns",
