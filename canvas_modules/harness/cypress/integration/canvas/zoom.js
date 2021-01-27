@@ -150,9 +150,7 @@ describe("Test to see if the canvas is panned into view when selectedPanIntoView
 	});
 
 	it("Test to see if the canvas is panned into view when selectedPanIntoViewOnOpen is enabled", function() {
-		// The allTypesCanvas should have been panned to the left and up.
-		cy.verifyZoomTransformDoesNotExist();
-
+		// The allTypesCanvas should have been panned up and to the left.
 		cy.verifyZoomTransform(-6, -6, 1);
 	});
 });
@@ -165,10 +163,8 @@ describe("Test the canvas is panned on open with initialPanX and initialPanY are
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test to see if the canvas is panned when first opened", function() {
-		// The allTypesCanvas should have been panned to the left and up.
-		cy.verifyZoomTransformDoesNotExist();
-
+	it.only("Test to see if the canvas is panned when first opened", function() {
+		// The allTypesCanvas should have been panned to down and to the right.
 		cy.verifyZoomTransform(100, 200, 1);
 	});
 });

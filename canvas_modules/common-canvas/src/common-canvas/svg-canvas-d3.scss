@@ -39,7 +39,7 @@ $node-decoration-outline: $ui-05;
 $node-halo-color: $inverse-link;
 
 $node-super-expand-icon-color: $brand-01;
-$node-super-expand-icon-background-hover-color: $active-01;
+$node-super-expand-icon-background-hover-color: $ui-03;
 
 $node-ellipsis-color: $brand-01;
 $node-ellipsis-background-hover-color: $ui-03;
@@ -105,6 +105,10 @@ $new-halo-link-color: $ui-05;
 	outline: none;
 }
 
+.d3-foreign-object {
+	pointer-events: none; /* Allow contents of foreign object to handle events */
+}
+
 /* Pull-out region rectangle used for object selection */
 
 .d3-region-selector {
@@ -155,8 +159,9 @@ $new-halo-link-color: $ui-05;
 
 .d3-ghost-div {
 	position: absolute;
-	top: -5000px;
-	left: 5000px;
+	left: 0;
+	top: 0;
+	z-index: -10000; // Make sure ghost image is below the SVG area so it is hidden.
 }
 
 .d3-ghost-node {
@@ -209,26 +214,43 @@ $new-halo-link-color: $ui-05;
 /* Used for debugging node image position. */
 .d3-node-image-outline {
 	stroke: $node-body-stroke;
-	stroke-width: 2;
+	stroke-width: 1;
 	fill: $node-body-fill;
 }
 
 .d3-node-label {
 	font-size: 12px;
 	font-weight: 500;
-	fill: $node-label-color;
+	color: $node-label-color;
+	height: 100%;
+	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
 }
 
+.d3-node-label-single-line {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.d3-node-label-multi-line {
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: break-word;
+	overflow: hidden;
+}
+
 .d3-node-label-middle {
-	text-anchor: middle;
+	text-align: center;
 }
 
 .d3-supernode-label {
 	font-size: 13px;
-	fill: $node-label-color;
+	font-weight: 500;
+	color: $node-label-color;
+	height: 100%;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
@@ -249,19 +271,17 @@ $new-halo-link-color: $ui-05;
 /* Node styles - Error indication */
 
 .d3-node-error-label {
-	fill: $node-error-color;
+	color: $node-error-color;
 }
 
 .d3-node-warning-label {
-	fill: $node-warning-color;
+	color: $node-warning-color;
 }
 
 /* Used for debugging label position */
 
-.d3-label-outline {
-	fill: $node-body-fill;
-	stroke: $node-body-stroke;
-	stroke-width: 1;
+.d3-node-label-outline {
+	border: solid 1px;
 }
 
 /* Node decorations styles */
@@ -277,12 +297,18 @@ $new-halo-link-color: $ui-05;
 .d3-node-dec-label,
 .d3-link-dec-label {
 	font-size: 13px;
-	fill: $node-label-color;
+	color: $node-label-color;
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	letter-spacing: 0.15px;
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: break-word;
+	width: 100%;
+	height: 100%;
+	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
-	stroke-width: 1;
-	stroke-dasharray: 0; // Override the dasharray from the link line
 }
 
 .d3-node-dec-path,
@@ -521,40 +547,37 @@ $new-halo-link-color: $ui-05;
 	pointer-events: none;
 }
 
-.d3-comment-text {
-	fill: $comment-text-color;  /* Must be the same as color in .d3-comment-display */
-}
-
-/* Style for comment text when displayed as SVG text */
-.d3-comment-text-tspan {
+@mixin d3-comment-common {
+	color: $comment-text-color;
 	font-size: $comment-text-font-size;
 	font-weight: $comment-text-font-weight;
 	font-family: $comment-text-font-family;
-	position: absolute;
-	pointer-events: none;   /* This prevents strange problems with div focus that occur when the text is clicked. */
+	border: 0;
+	resize: none;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	overflow: hidden;
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	letter-spacing: 0.15px; /* Keeps letter spacing the same as before changing comments to use foreignObject */
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: break-word;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
 }
 
+.d3-comment-text {
+	@include d3-comment-common;
+	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
+}
+
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
-	color: $comment-text-color;
-	font-size: $comment-text-font-size;
-	font-weight: $comment-text-font-weight;
-	font-family: $comment-text-font-family;
+	@include d3-comment-common;
 	position: absolute;
-	border: 0;
-	resize: none;
-	padding-left: 10px;  /* This needs to be the same as the commentWidthPadding in layout-dimensions.js */
-	padding-right: 10px; /* This needs to be the same as the commentWidthPadding  in layout-dimensions.js */
-	padding-top: 8px;    /* This needs to be the same as the commentHeightPadding in layout-dimensions.js */
-	padding-bottom: 8px; /* This needs to be the same as the commentHeightPadding  in layout-dimensions.js */
-	overflow: hidden;
-	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
-	white-space: pre-line;
-	word-wrap: normal;
-	word-break: break-word;
 	background-color: transparent;
 }
 

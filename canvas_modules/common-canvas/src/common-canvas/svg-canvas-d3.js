@@ -217,7 +217,7 @@ export default class SVGCanvasD3 {
 
 				// Only catch key pressses when NOT editing because, while editing,
 				// the text area needs to receive key presses for undo, redo, delete etc.
-				if (!this.renderer.isEditingComment()) {
+				if (!this.renderer.isEditingText()) {
 					if ((d3Event.keyCode === BACKSPACE_KEY || d3Event.keyCode === DELETE_KEY) && actions.delete) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 						this.canvasController.keyboardActionHandler("deleteSelectedObjects");

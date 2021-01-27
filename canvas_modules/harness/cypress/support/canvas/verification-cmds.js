@@ -260,8 +260,8 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".node-image").length) {
-			cy.get("#canvas-div-0").find(".node-image")
+		if ($body.find(".d3-node-image").length) {
+			cy.get("#canvas-div-0").find(".d3-node-image")
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
@@ -276,7 +276,7 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 });
 
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
-	cy.get("#canvas-div-1").find(".node-image")
+	cy.get("#canvas-div-1").find(".d3-node-image")
 		.should("have.length", noOfNodes);
 
 	// verify the number of nodes in the internal object model

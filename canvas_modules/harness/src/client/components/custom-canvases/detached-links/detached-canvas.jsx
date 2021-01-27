@@ -63,8 +63,10 @@ export default class DetachedCanvas extends React.Component {
 				imagePosX: 12,
 				imagePosY: 4,
 				labelPosX: 36,
-				labelPosY: 70,
-				labelMaxWidth: 200,
+				labelPosY: 60,
+				labelWidth: 50,
+				labelHeight: 25,
+				labelSingleLine: false,
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,
@@ -101,7 +103,7 @@ export default class DetachedCanvas extends React.Component {
 			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
 			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, y_pos: 5, temporary: true }
+			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -122,7 +124,7 @@ export default class DetachedCanvas extends React.Component {
 	}
 
 	createDecorations(linkId) {
-		const linkLabel = "link-" + linkId.substring(0, 2);
+		const linkLabel = "link " + linkId.substring(0, 2);
 		const decs = this.getDecorationsArray(linkLabel);
 		this.canvasController.setLinkDecorations(linkId, decs);
 	}

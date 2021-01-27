@@ -105,14 +105,12 @@
 	// Link Styles
 	// ----------------------------------------------------
 	.d3-link-group {
-		fill: none;
-		stroke: $ui-04;
-		stroke-width: 1;
 
 		.d3-link-dec-group {
 			// Style the link label
 			.d3-link-dec-label {
-				text-anchor: middle;
+				color: $ui-04;
+				font-weight: 700;
 			}
 
 			// Style the background rectangle under the link label

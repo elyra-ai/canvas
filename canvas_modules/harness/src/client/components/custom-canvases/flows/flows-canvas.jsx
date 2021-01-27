@@ -55,7 +55,7 @@ export default class FlowsCanvas extends React.Component {
 				imagePosX: 12,
 				imagePosY: 4,
 				labelPosX: 36,
-				labelPosY: 70,
+				labelPosY: 60,
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,
