@@ -184,7 +184,7 @@ Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "text") + "'] > div";
 			cy.getCanvasTranslateCoords()
 				.then((transform) => {
 					cy.window().then((win) => {
