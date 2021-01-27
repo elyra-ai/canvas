@@ -202,7 +202,7 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// Click the comment at topLeft corner to display the guide
 	// srcSelector is the selector of guide
 	cy.getCommentWithText(commentText).then((comment) => {
-		const sel = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+		const sel = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "text") + "'] > div";
 		cy.get(sel).click();
 
 		cy.document().then((doc) => {
