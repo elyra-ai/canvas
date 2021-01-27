@@ -21,7 +21,7 @@ export default class ExplainCanvas extends React.Component {
 				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "node_center",
 				labelPosX: 60,
-				labelPosY: 28,
+				labelPosY: 17,
 				labelMaxWidth: 200,
 				ellipsisDisplay: true,
 				ellipsisPosX: 100,
@@ -81,7 +81,7 @@ export default class ExplainCanvas extends React.Component {
 
 		const nodeFormat = {
 			defaultNodeWidth: width, // Override default width with calculated width
-			labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
+			labelPosX: (width / 2), // Specify center of label as center of node Note: text-align is set to center in the CSS for this label
 			labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
 			ellipsisPosX: width - 25, // Always position 25px in from the right side
 			bodyPath: bodyPath,

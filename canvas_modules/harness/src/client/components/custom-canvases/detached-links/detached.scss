@@ -148,13 +148,11 @@
 	}
 
 	.d3-link-group {
-		fill: none;
-		stroke: $ui-04;
-		stroke-width: 1;
 
 		.d3-link-dec-group {
 			.d3-link-dec-label {
-				text-anchor: middle;
+				color: $ui-04;
+				font-weight: 700;
 			}
 
 			.d3-link-dec-path {

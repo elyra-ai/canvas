@@ -58,8 +58,10 @@
                       "id": "assocDec4",
                       "label": "5",
                       "position": "middle",
+                      "width": 10,
+                      "height": 15,
                       "x_pos": -6,
-                      "y_pos": 5
+                      "y_pos": -5
                     }
                   ]
                 }

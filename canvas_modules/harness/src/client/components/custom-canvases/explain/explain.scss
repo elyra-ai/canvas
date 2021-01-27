@@ -21,19 +21,18 @@
 		stroke: #828281;
 		fill: #FFFAC2;
 		stroke-width: 2;
-		text-anchor: middle;
 	}
 
 	.d3-node-label {
 		font-size: 13px;
 		font-weight: 600;
-		text-anchor: middle;
+		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 
 	.small_text {
 		font-size: 11px;
-		text-anchor: middle;
+		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 

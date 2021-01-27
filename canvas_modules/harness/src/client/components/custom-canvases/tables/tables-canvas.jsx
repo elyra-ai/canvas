@@ -32,7 +32,7 @@ export default class TablesCanvas extends React.Component {
 				labelAndIconVerticalJustification: "none",
 				imageDisplay: false,
 				labelPosX: 25,
-				labelPosY: 20,
+				labelPosY: 10,
 				// portPosY: 25,
 				inputPortLeftPosY: 25,
 				outputPortRightPosY: 25,
@@ -69,7 +69,7 @@ export default class TablesCanvas extends React.Component {
 				defaultNodeHeight: 80,
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
-				labelPosY: 45,
+				labelPosY: 35,
 				inputPortLeftPosY: 48,
 				outputPortRightPosY: 48,
 				// portPosY: 48,
@@ -124,7 +124,7 @@ export default class TablesCanvas extends React.Component {
 				{
 					"id": "assocDec2",
 					"x_pos": 0,
-					"y_pos": 4,
+					"y_pos": -5,
 					"label": "0 Keys",
 					"class_name": "tables-join-keys-decoration-text-unselected",
 					"hotspot": true
