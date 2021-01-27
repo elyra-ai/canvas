@@ -107,7 +107,9 @@ _defineConstant("MESSAGE_KEYS", {
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
-	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label"
+	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
+	VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL: "virtualizedTable.header.checkbox.label",
+	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

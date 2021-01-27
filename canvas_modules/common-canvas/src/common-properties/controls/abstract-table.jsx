@@ -73,6 +73,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
+		this.getCheckboxLabels = this.getCheckboxLabels.bind(this);
 
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
@@ -214,6 +215,33 @@ export default class AbstractTable extends React.Component {
 			}
 			this.selectedSummaryRowValue = cloneDeep(value);
 		}
+	}
+
+	/**
+	* Returns array of visible values in second column
+	*/
+	getCheckboxLabels() {
+		const controlValue = this.props.value ? this.props.value : [];
+		const labels = [];
+		for (let i = 0; i < controlValue.length; i++) {
+			const row = controlValue[i];
+			if (Array.isArray(row) && row.length > 0) {
+				if (Array.isArray(row[0])) {
+					// Array of array
+					labels.push(row[0][0]);
+				} else if (row[0] && typeof row[0] === "object") {
+					// Array of objects for multiple input schemas
+					labels.push(row[0].field_name);
+				} else {
+					labels.push(row[0]);
+				}
+			} else if (typeof row === "object") {
+				labels.push(row.field_name);
+			} else {
+				labels.push("");
+			}
+		}
+		return labels;
 	}
 
 	isSelectSummaryEdit(selectedRows) {
@@ -632,6 +660,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
+		const rowCheckboxLabels = this.getCheckboxLabels();
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 
 		const table =	(
@@ -655,6 +684,7 @@ export default class AbstractTable extends React.Component {
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
+				rowCheckboxLabels={rowCheckboxLabels}
 			/>);
 		return (
 			<div>

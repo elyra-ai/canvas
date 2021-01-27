@@ -35,6 +35,7 @@ class SelectColumns extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
+		this.getCheckboxLabels = this.getCheckboxLabels.bind(this);
 	}
 
 	makeRows(controlValue, tableState) {
@@ -105,6 +106,28 @@ class SelectColumns extends AbstractTable {
 		return headers;
 	}
 
+	/**
+	* Returns array of visible values in second column
+	*/
+	getCheckboxLabels() {
+		const controlValue = this.props.value ? this.props.value : [];
+		const labels = [];
+		for (let i = 0; i < controlValue.length; i++) {
+			const row = controlValue[i];
+			if (Array.isArray(row) && row.length > 0) {
+				// Always use 1st value in row for labeling
+				labels.push(row[0]);
+			} else if (typeof row === "string" || typeof row === "number") {
+				labels.push(row);
+			} else if (typeof row === "object") {
+				labels.push(row.field_name);
+			} else {
+				labels.push("");
+			}
+		}
+		return labels;
+	}
+
 	render() {
 		const headers = this.makeHeader();
 
@@ -114,6 +137,7 @@ class SelectColumns extends AbstractTable {
 
 		const rows = this.makeRows(this.props.value, this.props.state);
 		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
+		const rowCheckboxLabels = this.getCheckboxLabels();
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
@@ -135,6 +159,7 @@ class SelectColumns extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
+				rowCheckboxLabels={rowCheckboxLabels}
 			/>);
 
 		var content = (

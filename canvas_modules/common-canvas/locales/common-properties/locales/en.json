@@ -85,5 +85,7 @@
   "readonlytable.edit.button.label": "Edit",
   "toggletext.icon.description": "{toggletext_label} Icon",
   "multiselect.dropdown.empty.label": "None selected",
-  "multiselect.dropdown.options.selected.label": "options selected"
+  "multiselect.dropdown.options.selected.label": "options selected",
+  "virtualizedTable.header.checkbox.label": "Select all {header_checkbox_label}",
+  "virtualizedTable.row.checkbox.label": "Select row {row_index}, {row_checkbox_label}"
 }

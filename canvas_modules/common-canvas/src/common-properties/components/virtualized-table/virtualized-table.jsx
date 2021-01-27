@@ -20,7 +20,8 @@ import { Column, Table } from "react-virtualized/dist/commonjs/Table";
 import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
+import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants";
+import { formatMessage } from "./../../util/property-utils";
 
 import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -40,6 +41,7 @@ class VirtualizedTable extends React.Component {
 
 	constructor(props, context) {
 		super(props, context);
+		this.reactIntl = this.props.controller.getReactIntl();
 
 		this.state = {
 			rowCount: this.props.rowCount
@@ -123,12 +125,19 @@ class VirtualizedTable extends React.Component {
 
 	// Responsible for rendering the table header row given an array of columns.
 	headerRowRenderer(scrollKey, { className, columns, style }) {
+		// Using second column header for checkbox label
+		const headerCheckboxLabel = (typeof this.props.columns === "undefined" || this.props.columns.length === 0) ? "" : this.props.columns[0].headerLabel;
+		const translatedHeaderCheckboxLabel = formatMessage(
+			this.reactIntl,
+			MESSAGE_KEYS.VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL,
+			{ header_checkbox_label: headerCheckboxLabel }
+		);
 		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div role="columnheader" className="properties-vt-header-checkbox">
 			<Checkbox
 				id={`properties-vt-hd-cb-${scrollKey}`}
 				onChange={this.selectAll}
 				checked={this.props.checkedAll}
-				labelText=""
+				labelText={translatedHeaderCheckboxLabel}
 				hideLabel
 			/>
 		</div>)
@@ -211,10 +220,16 @@ class VirtualizedTable extends React.Component {
 	}
 
 	// Responsible for rendering a table row given an array of columns.
-	rowRenderer(scrollKey, { className, columns, index, key, rowData, style }) {
+	rowRenderer(scrollKey, rowCheckboxLabels, { className, columns, index, key, rowData, style }) {
 		let selectOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
+		const rowCheckboxLabel = (rowCheckboxLabels && rowCheckboxLabels[index]) ? rowCheckboxLabels[index] : "null";
+		const translatedRowCheckboxLabel = formatMessage(
+			this.reactIntl,
+			MESSAGE_KEYS.VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL,
+			{ row_index: index + 1, row_checkbox_label: rowCheckboxLabel }
+		);
 
 		if (typeof this.props.rowHeight === "function" && this.props.rowHeight({ index }) === 0) {
 			return null;
@@ -234,7 +249,7 @@ class VirtualizedTable extends React.Component {
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
 						key={`properties-vt-row-cb-${scrollKey}-${index}`}
-						labelText=""
+						labelText={translatedRowCheckboxLabel}
 						hideLabel
 						checked={rowSelected}
 						disabled={rowDisabled}
@@ -320,7 +335,7 @@ class VirtualizedTable extends React.Component {
 
 								rowCount={this.state.rowCount}
 								rowGetter={this.props.rowGetter}
-								rowRenderer={this.rowRenderer.bind(this, this.props.scrollKey)}
+								rowRenderer={this.rowRenderer.bind(this, this.props.scrollKey, this.props.rowCheckboxLabels)}
 
 								scrollToIndex={this.props.scrollToIndex}
 								scrollToAlignment={this.props.scrollToAlignment}
@@ -382,7 +397,9 @@ VirtualizedTable.propTypes = {
 	sortDirection: PropTypes.string,
 	onHeaderClick: PropTypes.func,
 	scrollKey: PropTypes.string,
-	tableState: PropTypes.string
+	tableState: PropTypes.string,
+	rowCheckboxLabels: PropTypes.array,
+	controller: PropTypes.object.isRequired
 };
 
 export default VirtualizedTable;
