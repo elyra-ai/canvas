@@ -159,8 +159,9 @@ $new-halo-link-color: $ui-05;
 
 .d3-ghost-div {
 	position: absolute;
-	top: -5000px;
-	left: 5000px;
+	left: 0;
+	top: 0;
+	z-index: -10000; // Make sure ghost image is below the SVG area so it is hidden.
 }
 
 .d3-ghost-node {

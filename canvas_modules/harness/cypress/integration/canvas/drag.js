@@ -114,7 +114,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test dragging single and multiple selected nodes, " +
+	it.skip("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
 		cy.getNodeWithLabel("Execution node").click();

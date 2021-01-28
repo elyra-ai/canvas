@@ -189,6 +189,8 @@ export default class SVGCanvasRenderer {
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
 
+		this.initializeGhostDiv();
+
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
@@ -196,7 +198,6 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group"); // Group to position nodes and links over comments
 		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group"); // Group to optionally add bounding rectangles over all objects
 
-		this.initializeGhostDiv();
 
 		this.resetCanvasSVGBehaviors();
 
@@ -750,32 +751,30 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
-	// Creates the div which contains the ghost node rectangle for drag and
-	// drop actions from the palette. The way setDragImage is handled is
+	// Creates the div which contains the ghost node for drag and
+	// drop actions from the palette. The way setDragImage is handled in
 	// browsers for HTML drag and drop is very odd since the image has to be
-	// 'visible'. Placing the div in the body element of the page with position
-	// as absolute & -5000px (above) the div was the only way I could get the
-	// ghost image to work without resorting to the approach described here:
+	// 'visible' but not necssarily on display! I know, it confusing. Checkout
+	// this link for an explanation:
 	// https://www.kryogenix.org/code/browser/custom-drag-image.html
-	// Even placing the div in one of the common-canvas divs, which would be
-	// preferable to placing it in the page 'body', would not work.
+	// Consequently, we place the ghost div, using CSS, within the canvas div
+	// with an absolute position and with a z-index to make it 'appear'
+	// underneath the svg area.
 	initializeGhostDiv() {
-		if (this.getGhostDivSel().empty()) {
-			d3.selectAll("body")
+		if (this.isDisplayingFullPage() &&
+				this.getGhostDivSel().empty()) {
+			this.canvasDiv
 				.append("div")
-				.attr("class", this.getGhostDivClass());
+				.attr("class", "d3-ghost-div");
 		}
 	}
 
-	getGhostDivClass() {
-		return this.config && this.config.enableParentClass
-			? "d3-ghost-div " + this.config.enableParentClass
-			: "d3-ghost-div";
-	}
-
-	// Returns the ghost div selection.
+	// Returns the ghost div selection. We always reselect the ghost div when it
+	// is required because there is one ghost div for the whole common-canvas so
+	// if this renderer is for an in-place subflow we need to get the ghost image
+	// from the parent div.
 	getGhostDivSel() {
-		return d3.selectAll("body").selectAll(".d3-ghost-div");
+		return this.canvasDiv.selectAll(".d3-ghost-div");
 	}
 
 	// Returns a ghost data object for displaying a ghost image when dragging
@@ -800,11 +799,6 @@ export default class SVGCanvasRenderer {
 		const nodeLayout = this.objectModel.getNodeLayout();
 		const ghostAreaMaxWidth = Math.max(nodeLayout.labelMaxWidth, node.width);
 
-		// Ensure the ghost div has the correct parent class because this might
-		// be changed (by the test harness) after the div has been created.
-		this.getGhostDivSel()
-			.attr("class", this.getGhostDivClass());
-
 		// Remove any existing SVG object from the div
 		ghostDivSel
 			.selectAll(".d3-ghost-svg")
@@ -820,7 +814,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-ghost-svg");
 
 		const ghostGrp = ghostAreaSVG
-			.append("g");
+			.append("g")
+			.attr("class", "d3-node-group");
 
 		ghostGrp
 			.append("rect")
@@ -1917,7 +1912,7 @@ export default class SVGCanvasRenderer {
 
 		if (this.isDisplayingPrimaryFlowFullPage()) {
 			const incTransform = this.getTransformIncrement(d3Event);
-			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewPort(), this.zoomCanvasDimensions);
+			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewportDimensions(), this.zoomCanvasDimensions);
 		} else {
 			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
 		}
@@ -1937,7 +1932,7 @@ export default class SVGCanvasRenderer {
 		// or sub-pipeline) and there is a textarea (for comment entry) open,
 		// apply the zoom transform to it.
 		if (this.isDisplayingFullPage()) {
-			const ta = this.canvasDiv.select(".d3-comment-entry");
+			const ta = this.canvasDiv.select("textarea");
 			if (!ta.empty()) {
 				const pipelineId = ta.attr("data-pipeline-id");
 				const ren = this.getRendererForPipelineIdRecursively(pipelineId);
@@ -2002,20 +1997,6 @@ export default class SVGCanvasRenderer {
 		}
 
 		return d3.zoomIdentity.translate(x, y).scale(k);
-	}
-
-	// Returns the view port dimensions from the D3 zoom object. This is a bit
-	// weird in that you have to get the function from D3 and then call that
-	// function to get the data which is two arrays inside an array containing
-	// the points of the top left and bottom right corner of the view ports.
-	getViewPort() {
-		const extentFn = this.zoom.extent().bind(this.canvasSVG.node());
-		const extent = extentFn();
-
-		const width = extent[1][0] - extent[0][0];
-		const height = extent[1][1] - extent[0][1];
-
-		return { width, height };
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
@@ -5148,7 +5129,7 @@ export default class SVGCanvasRenderer {
 			var comment = this.getComment(datum.id);
 			comment.height = this.textAreaHeight;
 			datum.height = this.textAreaHeight;
-			this.canvasDiv.select(this.getSelectorForId("comment_text_area", datum.id))
+			this.canvasDiv.select("textarea")
 				.style("height", this.textAreaHeight + "px")
 				.style("transform", this.getTextAreaTransform(datum)); // Since the height has changed the translation needs to be reapplied.
 			this.displayComments();
@@ -5157,23 +5138,19 @@ export default class SVGCanvasRenderer {
 	}
 
 	saveTextChanges(textArea) {
-		if (this.editingText === true &&
-				this.editingTextChangesPending === true) {
-			this.editingTextChangesPending = false;
-			const commentDatum = d3.select(textArea).datum();
-			const data = {
-				editType: "editComment",
-				editSource: "canvas",
-				id: commentDatum.id,
-				content: textArea.value,
-				width: commentDatum.width,
-				height: commentDatum.height,
-				x_pos: commentDatum.x_pos,
-				y_pos: commentDatum.y_pos,
-				pipelineId: this.activePipeline.id
-			};
-			this.canvasController.editActionHandler(data);
-		}
+		const commentDatum = d3.select(textArea).datum();
+		const data = {
+			editType: "editComment",
+			editSource: "canvas",
+			id: commentDatum.id,
+			content: textArea.value,
+			width: commentDatum.width,
+			height: commentDatum.height,
+			x_pos: commentDatum.x_pos,
+			y_pos: commentDatum.y_pos,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
 	}
 
 	displayTextArea(d) {
@@ -5210,11 +5187,9 @@ export default class SVGCanvasRenderer {
 			})
 			.on("blur", function() {
 				that.logger.log("Text area - blur");
-				var commentObj = that.getComment(datum.id);
-				commentObj.content = this.value;
+				that.resetTextAreaFlags();
 				that.saveTextChanges(this);
 				that.closeTextArea();
-				that.displayComments();
 			});
 
 		// Note: Couldn't get focus to work through d3, so used dom instead. Also,
@@ -5267,13 +5242,18 @@ export default class SVGCanvasRenderer {
 		return transform;
 	}
 
-	// Closes the text area and switched off all flags connected with text editing.
-	closeTextArea() {
+	// Switched off all flags connected with text editing.
+	resetTextAreaFlags() {
 		this.editingText = false;
 		this.editingTextId = "";
 		this.editingTextChangesPending = false;
+	}
+
+	// Closes the text area
+	closeTextArea() {
 		this.canvasDiv.select("textarea").remove();
 	}
+
 
 	// Adds a rectangle over the top of the canvas which is used to display a
 	// temporary pointer cursor style (like the crosshair while doing a region
