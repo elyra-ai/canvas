@@ -801,4 +801,27 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		expect(selectRows.length).to.equal(0);
 	});
 
+	it("checkbox in selectcolumns table header should have label", () => {
+		const tableHeaderRows = tableUtils.getTableHeaderRows(fieldpicker);
+		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
+		const secondColumnLabel = tableHeaderRows
+			.find("div[role='columnheader']")
+			.at(1)
+			.text();
+		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
+	});
+
+	it("checkbox in selectcolumns table row should have label", () => {
+		const tableRows = tableUtils.getTableRows(fieldpicker);
+		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
+		const fieldNames = tableRows.find(".properties-fp-field");
+		expect(fieldNames).to.have.length(29);
+
+		fieldNames.forEach((row, index) => {
+			const rowCheckboxLabel = rowCheckboxes.at(index).text();
+			const rowLabel = row.text();
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${rowLabel}`);
+		});
+	});
+
 });

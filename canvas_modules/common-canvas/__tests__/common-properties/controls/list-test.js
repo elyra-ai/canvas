@@ -537,3 +537,34 @@ describe("list classnames appear correctly", () => {
 		expect(wrapper.find(".table-subpanel-list-control-class")).to.have.length(2);
 	});
 });
+
+describe("All checkboxes in list must have labels", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(listParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("checkbox in header should have label", () => {
+		const listOfStrings = wrapper.find("div[data-id='properties-ctrl-list_string']");
+		const headerCheckboxLabel = listOfStrings.find(".properties-vt-header-checkbox").text();
+		const secondColumnLabel = listOfStrings
+			.find("div[role='columnheader']")
+			.at(1)
+			.text();
+		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
+	});
+
+	it("checkbox in row should have label", () => {
+		const listOfStrings = wrapper.find("div[data-id='properties-ctrl-list_string']");
+		const rowCheckboxes = listOfStrings.find(".properties-vt-row-checkbox");
+		const textfields = listOfStrings.find("TextfieldControl");
+		expect(textfields).to.have.length(3);
+
+		textfields.forEach((textfield, index) => {
+			const rowCheckboxLabel = rowCheckboxes.at(index).text();
+			const textfieldLabel = textfield.prop("value");
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${textfieldLabel}`);
+		});
+	});
+});

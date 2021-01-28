@@ -481,3 +481,36 @@ describe("measurement & type icons should be rendered correctly in selectcolumns
 		expect(tableWrapper.find("div.properties-field-type-icon")).to.have.length(1);
 	});
 });
+
+describe("All checkboxes in selectcolumns must have labels", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("checkbox in header should have label", () => {
+		const fields1Panel = wrapper.find("div[data-id='properties-ctrl-fields1_panel']");
+		const tableHeaderRows = tableUtils.getTableHeaderRows(fields1Panel);
+		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
+		const secondColumnLabel = tableHeaderRows
+			.find("div[role='columnheader']")
+			.at(1)
+			.text();
+		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
+	});
+
+	it("checkbox in row should have label", () => {
+		const fields1Panel = wrapper.find("div[data-id='properties-ctrl-fields1_panel']");
+		const tableRows = tableUtils.getTableRows(fields1Panel);
+		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
+		const readOnlyFields = tableRows.find("ReadonlyControl");
+		expect(readOnlyFields).to.have.length(1);
+
+		readOnlyFields.forEach((readonlyField, index) => {
+			const rowCheckboxLabel = rowCheckboxes.at(index).text();
+			const readonlyFieldLabel = readonlyField.prop("value");
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${readonlyFieldLabel}`);
+		});
+	});
+});
