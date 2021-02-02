@@ -2428,7 +2428,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => that.getId("node_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-node-group")
+				.attr("class", (nd) => that.getNodeGroupClass(nd))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM node group object
 					const nodeGrp = d3.select(this);
@@ -2548,7 +2548,7 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
-				.attr("class", (cd) => this.getNodeBodyClass(cd))
+				.attr("class", "d3-node-body-outline")
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
@@ -2644,6 +2644,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
+						.attr("class", (nd) => that.getNodeGroupClass(nd))
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node sizing area
@@ -2721,7 +2722,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("d", (cd) => this.getNodeShapePath(cd))
-						.attr("class", (cd) => this.getNodeBodyClass(cd));
+						.attr("class", "d3-node-body-outline");
 
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
@@ -4966,7 +4967,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => this.getId("comment_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-comment-group")
+				.attr("class", (d) => this.getCommentGroupClass(d))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -5060,7 +5061,7 @@ export default class SVGCanvasRenderer {
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("class", (d) => this.getCommentRectClass(d))
+				.attr("class", "d3-comment-rect")
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -5110,6 +5111,7 @@ export default class SVGCanvasRenderer {
 
 					commentGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+						.attr("class", this.getCommentGroupClass(d))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Comment sizing area
@@ -5138,7 +5140,7 @@ export default class SVGCanvasRenderer {
 					commentGrp.select(this.getSelectorForId("comment_body", d.id))
 						.attr("height", d.height)
 						.attr("width", d.width)
-						.attr("class", (cd) => that.getCommentRectClass(cd))
+						.attr("class", "d3-comment-rect")
 						.datum(comment) // Set the __data__ to the updated data
 						.each(function(cd) {
 							if (cd.customAttrs) {
@@ -5942,6 +5944,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createNewLinks(enter)
 			)
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -5989,7 +5992,6 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6206,17 +6208,17 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
-		return "d3-link-group " + this.getLinkTypeClass(d);
+		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
 	}
 
 	// Returns the class string to be appled to the link line path object.
 	getLinkLineClass(d) {
-		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-line " + this.getLinkTypeClass(d);
 	}
 
 	// Returns the class string to be appled to the link arrow head path object.
 	getLinkArrowHeadClass(d) {
-		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d);
 	}
 
 	// Returns the custom class string for the link object passed in.
@@ -6249,8 +6251,8 @@ export default class SVGCanvasRenderer {
 		return "d3-data-link";
 	}
 
-	// Returns the class string to be appled to the comment rectangle object.
-	getCommentRectClass(d) {
+	// Returns the class string to be appled to the comment group object.
+	getCommentGroupClass(d) {
 		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -6258,14 +6260,13 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-comment-rect") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-rect" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-comment-group" + customClass;
 	}
 
-	// Returns the class string to be appled to the node body object.
-	getNodeBodyClass(d) {
+	// Returns the class string to be appled to the node group object.
+	getNodeGroupClass(d) {
 		let customClass = "";
 		// If the node has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -6274,9 +6275,9 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-node-body-outline") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name.
-		return "d3-node-body-outline" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-node-group" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
