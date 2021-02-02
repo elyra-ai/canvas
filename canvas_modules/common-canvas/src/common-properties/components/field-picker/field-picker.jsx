@@ -134,8 +134,8 @@ export default class FieldPicker extends React.Component {
 		const labels = [];
 		for (let i = 0; i < fields.length; i++) {
 			const field = fields[i];
-			if ("origName" in field) {
-				labels.push(field.origName);
+			if ("name" in field) {
+				labels.push(field.name);
 			} else {
 				labels.push("");
 			}

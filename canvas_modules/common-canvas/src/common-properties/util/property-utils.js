@@ -340,6 +340,36 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 }
 
 /**
+ * Returns an array of values in a column next to checkbox.
+ * This is used in abstract-table and selectcolumns controls.
+ *
+ * @param controlValue A field name, either plain or in schema.name format
+ * @param controller Properties controller
+ * @param propertyId The unique property identifier
+ * @param control The control definition for the parameter
+ * @return Array of checkbox labels in all rows
+ */
+function getRowCheckboxLabel(controlValue, controller, propertyId, control) {
+	const labels = [];
+	for (let i = 0; i < controlValue.length; i++) {
+		const secondColumnValue = controller.getPropertyValue({ name: propertyId.name, row: i, col: 0 });
+		if (typeof secondColumnValue === "undefined" || secondColumnValue === null || secondColumnValue === "") {
+			labels.push("");
+		} else if (typeof secondColumnValue === "object" && secondColumnValue.link_ref) {
+			labels.push(stringifyFieldValue(secondColumnValue, control));
+		} else if (Array.isArray(secondColumnValue)) {
+			// this is needed to comma separate an array of readonly strings.
+			labels.push(secondColumnValue.join(", "));
+		} else if (typeof secondColumnValue === "boolean") {
+			labels.push(secondColumnValue.toString());
+		} else {
+			labels.push(secondColumnValue);
+		}
+	}
+	return labels;
+}
+
+/**
  * Returns the string field name for both string and object based field values.
  * If the control's propType is structure, return the combined schema and field names.
  *
@@ -543,5 +573,6 @@ export {
 	fieldStringToValue,
 	generateId,
 	getDMDefault,
-	getDMFieldIcon
+	getDMFieldIcon,
+	getRowCheckboxLabel
 };
