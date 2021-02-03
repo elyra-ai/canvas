@@ -276,7 +276,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 		structureKeys.push(control.name);
 	});
 
-	if (isList) {
+	if (isList && currentValues && Array.isArray(currentValues)) {
 		const convertedValues = [];
 		currentValues.forEach((row, idx) => {
 			if (convert) { // this control needs to be converted, convert all values in this row and determine if there are nested structures to be converted
@@ -309,7 +309,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 
 	const converted = {};
 	structureKeys.forEach((key, index) => {
-		converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
+		converted[key] = currentValues && typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
 	});
 	return converted;
 }
@@ -345,14 +345,22 @@ function getFieldsFromControlValues(control, controlValues, fields) {
  *
  * @param controlValue A field name, either plain or in schema.name format
  * @param controller Properties controller
- * @param propertyId The unique property identifier
+ * @param inPropertyId The unique property identifier
  * @param control The control definition for the parameter
  * @return Array of checkbox labels in all rows
  */
-function getRowCheckboxLabel(controlValue, controller, propertyId, control) {
+function getRowCheckboxLabel(controlValue, controller, inPropertyId, control) {
 	const labels = [];
 	for (let i = 0; i < controlValue.length; i++) {
-		const secondColumnValue = controller.getPropertyValue({ name: propertyId.name, row: i, col: 0 });
+		let secondColumnValue;
+		if ("columnIndex" in control) {
+			// nested structures in structureeditor
+			let propertyId = controller.convertPropertyId(inPropertyId);
+			propertyId = controller.setChildPropertyId(propertyId, { row: i, col: 0 });
+			secondColumnValue = controller.getPropertyValue(propertyId);
+		} else {
+			secondColumnValue = controller.getPropertyValue({ name: inPropertyId.name, row: i, col: 0 });
+		}
 		if (typeof secondColumnValue === "undefined" || secondColumnValue === null || secondColumnValue === "") {
 			labels.push("");
 		} else if (typeof secondColumnValue === "object" && secondColumnValue.link_ref) {
