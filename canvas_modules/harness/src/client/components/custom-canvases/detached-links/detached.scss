@@ -157,9 +157,14 @@
 				text-anchor: middle;
 			}
 
-			.d3-link-dec-path {
+			.det-link-label-background {
 				fill: $ui-background;
 				stroke: $ui-background;
+			}
+
+			.det-link-dot {
+				fill: $inverse-link;
+				stroke: $inverse-link;
 			}
 		}
 	}
@@ -189,64 +194,4 @@
 		fill: transparent;
 		pointer-events: none;
 	}
-
-	/* Decoration Styles */
-
-	.node-cache-empty {
-		fill: $ui-01;
-	}
-
-	.node-cache-full {
-		fill: $ui-01;
-	}
-
-	.node-sql-pushback {
-		fill: $ui-01;
-	}
-
-	/* Override styles in common canvas to fade out nodes and comments
-		 when they are cut to the clipboard.*/
-	.node-image[data-is-cut] {
-		zoom: 1;
-		filter: "alpha(opacity=50)";
-		opacity: 0.5;
-	}
-
-	.canvas-comment[data-is-cut] {
-		zoom: 1;
-		filter: "alpha(opacity=50)";
-		opacity: 0.5;
-	}
-
-	.canvas-ui-empty-placeholder {
-		height: 150px;
-		width: 320px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-
-	.canvas-ui-empty-image-placeholder {
-		height: 150px;
-		width: 250px;
-		float: left;
-		margin-left: -48px;
-	}
-
-	.canvas-ui-empty-text-placeholder {
-		@include carbon--type-style("productive-heading-03");
-		color: $text-01;
-	}
-
-	.canvas-ui-empty-subtext-placeholder {
-		@include carbon--type-style("body-long-02");
-		color: $text-02;
-		margin-top: 8px;
-	}
-
-	.canvas-ui-empty-node-text {
-		@include carbon--type-style("productive-heading-02");
-		color: $text-02;
-	}
-
 }

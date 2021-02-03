@@ -97,9 +97,10 @@ export default class DetachedCanvas extends React.Component {
 
 	getDecorationsArray(linkLabel) {
 		const decs = [
+			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
 			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
 			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", temporary: true },
+			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
 			{ id: "dec-4", position: "middle", label: linkLabel, y_pos: 5, temporary: true }
 		];
 		return decs;
@@ -114,10 +115,16 @@ export default class DetachedCanvas extends React.Component {
 
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
-			const linkLabel = "link-" + data.linkIds[0].substring(0, 2);
-			const decs = this.getDecorationsArray(linkLabel);
-			this.canvasController.setLinkDecorations(data.linkIds[0], decs);
+			this.createDecorations(data.linkIds[0]);
+		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
+			this.createDecorations(command.data.linkIds[0]);
 		}
+	}
+
+	createDecorations(linkId) {
+		const linkLabel = "link-" + linkId.substring(0, 2);
+		const decs = this.getDecorationsArray(linkLabel);
+		this.canvasController.setLinkDecorations(linkId, decs);
 	}
 
 	render() {
