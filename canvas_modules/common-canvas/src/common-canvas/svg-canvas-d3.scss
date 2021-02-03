@@ -564,13 +564,13 @@ $new-halo-link-color: $ui-05;
 	pointer-events: none; // Allow events to go to selection area
 }
 
-.d3-comment-link {
+.d3-comment-link .d3-link-line {
 	stroke: $comment-link-color;
 	stroke-width: 1;
 	stroke-dasharray: 7.3;
 }
 
-.d3-comment-link-arrow-head {
+.d3-comment-link .d3-link-line-arrow-head {
 	stroke: $comment-link-color;
 	stroke-width: 2;
 	stroke-dasharray: 0;
@@ -578,7 +578,7 @@ $new-halo-link-color: $ui-05;
 
 /* 'object link' is the historical name for an association link */
 /* This styles is used for association links on a regular data flow canvas */
-.d3-object-link {
+.d3-object-link .d3-link-line {
 	stroke: $object-link-color;
 	stroke-width: 2;
 	stroke-dasharray: 5.5;
@@ -586,17 +586,17 @@ $new-halo-link-color: $ui-05;
 
 /* This style is used for association links which are displayed with the */
 /* enableAssocLinkType config variable set to ASSOC_RIGHT_SIDE_CURVE.  */
-.d3-association-link {
+.d3-association-link .d3-link-line {
 	stroke: $association-link-color;
 	stroke-width: 2;
 }
 
-.d3-data-link {
+.d3-data-link .d3-link-line {
 	stroke: $data-link-color;
 	stroke-width: 2;
 }
 
-.d3-data-link-arrow-head {
+.d3-data-link .d3-link-line-arrow-head {
 	stroke: $data-link-color;
 	stroke-width: 2;
 	stroke-dasharray: 0; // Ensure arrow head is always solid

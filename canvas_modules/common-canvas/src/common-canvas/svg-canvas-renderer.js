@@ -6052,7 +6052,7 @@ export default class SVGCanvasRenderer {
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => this.getLinkLineClass(d));
+			.attr("class", "d3-link-line");
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -6060,7 +6060,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => this.getLinkArrowHeadClass(d));
+			.attr("class", "d3-link-line-arrow-head");
 
 		// Add link line handles at start and end of line
 		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -6114,7 +6114,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => this.getLinkLineClass(d))
+			.attr("class", "d3-link-line")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6125,7 +6125,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => this.getLinkArrowHeadClass(d))
+			.attr("class", "d3-link-line-arrow-head")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
@@ -6209,16 +6209,6 @@ export default class SVGCanvasRenderer {
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
 		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
-	}
-
-	// Returns the class string to be appled to the link line path object.
-	getLinkLineClass(d) {
-		return "d3-link-line " + this.getLinkTypeClass(d);
-	}
-
-	// Returns the class string to be appled to the link arrow head path object.
-	getLinkArrowHeadClass(d) {
-		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d);
 	}
 
 	// Returns the custom class string for the link object passed in.
