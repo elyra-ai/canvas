@@ -234,6 +234,18 @@ $new-halo-link-color: $ui-05;
 	user-select: none;
 }
 
+/* Node highlight when end of new link line is over the node */
+.d3-node-group[data-new-link-over="yes"] {
+	.d3-node-selection-highlight {
+		stroke: $interactive-01;
+		stroke-dasharray: 4;
+		stroke-width: 1;
+		fill: $ui-01;
+		pointer-events: none;
+	}
+}
+
+
 /* Node styles - Error indication */
 
 .d3-node-error-label {
@@ -251,6 +263,8 @@ $new-halo-link-color: $ui-05;
 	stroke: $node-body-stroke;
 	stroke-width: 1;
 }
+
+/* Node decorations styles */
 
 .d3-node-dec-outline,
 .d3-link-dec-outline {
@@ -301,7 +315,7 @@ $new-halo-link-color: $ui-05;
 	stroke-width: 8;
 }
 
-/* Super node styles */
+/* Node ellipsis styles */
 
 .d3-node-ellipsis-group {
 	.d3-node-ellipsis-background {
@@ -322,6 +336,8 @@ $new-halo-link-color: $ui-05;
 		}
 	}
 }
+
+/* Super node styles */
 
 .d3-node-super-expand-icon-group {
 	.d3-node-super-expand-icon-background {
@@ -626,10 +642,10 @@ $new-halo-link-color: $ui-05;
 }
 
 // Used when an insertable node is dragged over a link line.
-.d3-link-group[data-drag-node-over] .d3-link-line.d3-data-link,
-.d3-link-group[data-drag-node-over] .d3-link-line-arrow-head,
-.d3-link-group[data-selected][data-drag-node-over] .d3-link-line.d3-data-link,
-.d3-link-group[data-selected][data-drag-node-over] .d3-link-line-arrow-head {
+.d3-link-group[data-drag-node-over].d3-data-link .d3-link-line,
+.d3-link-group[data-drag-node-over].d3-data-link .d3-link-line-arrow-head,
+.d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line,
+.d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line-arrow-head {
 	stroke: $link-hightlight-color;
 	stroke-width: 5;
 }
