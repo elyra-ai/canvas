@@ -234,6 +234,18 @@ $new-halo-link-color: $ui-05;
 	user-select: none;
 }
 
+/* Node highlight when end of new link line is over the node */
+.d3-node-group[data-new-link-over="yes"] {
+	.d3-node-selection-highlight {
+		stroke: $interactive-01;
+		stroke-dasharray: 4;
+		stroke-width: 1;
+		fill: $ui-01;
+		pointer-events: none;
+	}
+}
+
+
 /* Node styles - Error indication */
 
 .d3-node-error-label {
@@ -251,6 +263,8 @@ $new-halo-link-color: $ui-05;
 	stroke: $node-body-stroke;
 	stroke-width: 1;
 }
+
+/* Node decorations styles */
 
 .d3-node-dec-outline,
 .d3-link-dec-outline {
