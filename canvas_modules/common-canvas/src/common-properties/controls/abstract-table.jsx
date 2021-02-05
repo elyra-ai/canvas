@@ -402,7 +402,7 @@ export default class AbstractTable extends React.Component {
 				const columnDef = this.props.control.subControls[colIndex];
 				if (columnDef.name === this.filterFields[i]) {
 					const value = controlValue[rowIndex][colIndex];
-					if (value.toLowerCase().indexOf(this.state.filterText.toLowerCase()) > -1) {
+					if (typeof value === "string" && value.toLowerCase().indexOf(this.state.filterText.toLowerCase()) > -1) {
 						return true;
 					}
 					break;

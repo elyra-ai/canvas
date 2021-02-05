@@ -18,7 +18,12 @@
 
 .detached-links {
 
+	// ----------------------------------------------------
+	// Node Styles
+	// ----------------------------------------------------
 	.d3-node-group {
+
+		// Style the node body so it doesn't appear.
 		.d3-node-body-outline {
 			fill: transparent;
 			stroke: transparent;
@@ -26,16 +31,9 @@
 			&[hover="yes"] {
 				fill: transparent;
 			}
-
-			&.node-disabled {
-				fill: $disabled-02;
-			}
-
-			&.node-disabled:hover {
-				fill: $disabled-02;
-			}
 		}
 
+		// Style the node selection highlighting
 		.d3-node-selection-highlight[data-selected="yes"] {
 			stroke: $gray-50;
 			stroke-dasharray: 5, 5;
@@ -44,16 +42,7 @@
 			pointer-events: none;
 		}
 
-		&[data-new-link-over="yes"] {
-			.d3-node-selection-highlight {
-				stroke: $interactive-01;
-				stroke-dasharray: 4;
-				stroke-width: 1;
-				fill: $ui-01;
-				pointer-events: none;
-			}
-		}
-
+		// Style node input ports so they don't appear.
 		.d3-node-port-input {
 			stroke: transparent;
 			fill: transparent;
@@ -66,23 +55,14 @@
 			}
 		}
 
+		// Style node input port arrows so they don't appear.
 		.d3-node-port-input-arrow[connected="yes"] {
 			stroke: transparent;
 			fill: none;
 			stroke-width: 2;
 		}
 
-		.d3-node-port-input-drop-target {
-			stroke: $interactive-01;
-			fill: $interactive-01;
-			stroke-width: 0;
-		}
-
-		.d3-node-port-input-drop-target-expanded {
-			stroke-width: 4; // Increases port radius by 2px because the stroke spans either side of the circle boundary.
-			transition: stroke-width 0.1s cubic-bezier(0.4, 0.14, 0.3, 1);
-		}
-
+		// Style node output port image so it disappears when not hovering over the node.
 		.d3-node-port-output {
 			opacity: 0;
 			transform: translateX(-8px);
@@ -90,6 +70,7 @@
 			transition-delay: 0.125s;
 		}
 
+		// Style node ellipsis icon.
 		.d3-node-ellipsis-group {
 			.d3-node-ellipsis {
 				fill: $icon-01;
@@ -102,16 +83,6 @@
 			}
 		}
 
-		// Set the outline/background for decorations. This will only affect the
-		// zoom-in decorations on supernode since that is th eonly one with an
-		// outline.
-		.d3-node-dec-group {
-			.d3-node-dec-outline {
-				fill: transparent;
-				stroke-width: 0;
-			}
-		}
-
 		/* Hover over d3-node-group */
 		&:hover {
 			.d3-node-port-input {
@@ -120,59 +91,53 @@
 				stroke-width: 1;
 			}
 
+			// Style node output port image so it appears when hovering over the node.
 			.d3-node-port-output {
 				opacity: 1;
 				transform: translateX(0);
 				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 				transition-delay: 0.125s;
 			}
-
-			// Set the outline/background for decorations. This will only affect the
-			// zoom-in decorations on supernode since that is the only one with an
-			// outline.
-			.d3-node-dec-group {
-				.d3-node-dec-image[data-id*="supernode-zoom"] {
-					display: block;
-					fill: $icon-01;
-					stroke-width: 0;
-				}
-
-				&:hover {
-					.d3-node-dec-outline {
-						fill: $ui-03;
-						stroke-width: 0;
-					}
-				}
-			}
 		}
 	}
 
+	// ----------------------------------------------------
+	// Link Styles
+	// ----------------------------------------------------
 	.d3-link-group {
 
 		.d3-link-dec-group {
+			// Style the link label
 			.d3-link-dec-label {
 				color: $ui-04;
 				font-weight: 700;
 			}
 
-			.d3-link-dec-path {
+			// Style the background rectangle under the link label
+			.det-link-label-background {
 				fill: $ui-background;
 				stroke: $ui-background;
 			}
+
+			// Style the 'dot' decoration at the start of the link line
+			.det-link-dot {
+				fill: $inverse-link;
+				stroke: $inverse-link;
+			}
+		}
+
+		// Style the 'dot' decoration at the start of the link line on hover with draggd node.
+		&[data-drag-node-over].d3-data-link .det-link-dot,
+		&[data-drag-node-over].d3-data-link .det-link-label-background,
+		&[data-selected][data-drag-node-over].d3-data-link .det-link-dot,
+		&[data-selected][data-drag-node-over].d3-data-link .det-link-label-background {
+			fill: $support-04;
+			stroke: $support-04;
+			stroke-width: 2;
 		}
 	}
 
-	g .d3-comment-link:hover,
-	g .d3-data-link:hover,
-	g .d3-selectable-link:hover,
-	g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
-	g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-	g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-	g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
-		stroke: $interactive-01;
-		stroke-width: 2;
-	}
-
+	// Style new connection link line
 	.d3-new-connection-line[linkType="nodeLink"] {
 		stroke: $interactive-01;
 		stroke-width: 2;
@@ -180,6 +145,11 @@
 		fill: none;
 	}
 
+	// ----------------------------------------------------
+	// Comment Styles
+	// ----------------------------------------------------
+
+	// Style comment highlight to be like node selection highlight
 	.d3-comment-selection-highlight[data-selected="yes"] {
 		stroke: $gray-50;
 		stroke-dasharray: 5, 5;
@@ -187,64 +157,4 @@
 		fill: transparent;
 		pointer-events: none;
 	}
-
-	/* Decoration Styles */
-
-	.node-cache-empty {
-		fill: $ui-01;
-	}
-
-	.node-cache-full {
-		fill: $ui-01;
-	}
-
-	.node-sql-pushback {
-		fill: $ui-01;
-	}
-
-	/* Override styles in common canvas to fade out nodes and comments
-		 when they are cut to the clipboard.*/
-	.node-image[data-is-cut] {
-		zoom: 1;
-		filter: "alpha(opacity=50)";
-		opacity: 0.5;
-	}
-
-	.canvas-comment[data-is-cut] {
-		zoom: 1;
-		filter: "alpha(opacity=50)";
-		opacity: 0.5;
-	}
-
-	.canvas-ui-empty-placeholder {
-		height: 150px;
-		width: 320px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-
-	.canvas-ui-empty-image-placeholder {
-		height: 150px;
-		width: 250px;
-		float: left;
-		margin-left: -48px;
-	}
-
-	.canvas-ui-empty-text-placeholder {
-		@include carbon--type-style("productive-heading-03");
-		color: $text-01;
-	}
-
-	.canvas-ui-empty-subtext-placeholder {
-		@include carbon--type-style("body-long-02");
-		color: $text-02;
-		margin-top: 8px;
-	}
-
-	.canvas-ui-empty-node-text {
-		@include carbon--type-style("productive-heading-02");
-		color: $text-02;
-	}
-
 }

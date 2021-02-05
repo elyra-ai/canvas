@@ -2430,7 +2430,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => that.getId("node_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-node-group")
+				.attr("class", (nd) => that.getNodeGroupClass(nd))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM node group object
 					const nodeGrp = d3.select(this);
@@ -2550,7 +2550,7 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
-				.attr("class", (d) => this.getNodeBodyClass(d))
+				.attr("class", "d3-node-body-outline")
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
@@ -2638,6 +2638,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
+						.attr("class", (nd) => that.getNodeGroupClass(nd))
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node sizing area
@@ -2716,7 +2717,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("d", (cd) => this.getNodeShapePath(cd))
-						.attr("class", (cd) => this.getNodeBodyClass(cd));
+						.attr("class", "d3-node-body-outline");
 
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
@@ -4830,7 +4831,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => this.getId("comment_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-comment-group")
+				.attr("class", (d) => this.getCommentGroupClass(d))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -4924,7 +4925,7 @@ export default class SVGCanvasRenderer {
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("class", (d) => this.getCommentRectClass(d))
+				.attr("class", "d3-comment-rect")
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -4973,6 +4974,7 @@ export default class SVGCanvasRenderer {
 
 					commentGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+						.attr("class", this.getCommentGroupClass(d))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Comment sizing area
@@ -5001,7 +5003,7 @@ export default class SVGCanvasRenderer {
 					commentGrp.select(this.getSelectorForId("comment_body", d.id))
 						.attr("height", d.height)
 						.attr("width", d.width)
-						.attr("class", (cd) => that.getCommentRectClass(cd))
+						.attr("class", "d3-comment-rect")
 						.datum(comment) // Set the __data__ to the updated data
 						.each(function(cd) {
 							if (cd.customAttrs) {
@@ -5593,6 +5595,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createNewLinks(enter)
 			)
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -5640,7 +5643,6 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -5701,7 +5703,7 @@ export default class SVGCanvasRenderer {
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => this.getLinkLineClass(d));
+			.attr("class", "d3-link-line");
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -5709,38 +5711,26 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => this.getLinkArrowHeadClass(d));
+			.attr("class", "d3-link-line-arrow-head");
 
-		// Add link line handles at start and end of line
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			newLinkGrps
-				.filter((d) => d.type === NODE_LINK)
-				.append(this.canvasLayout.linkStartHandleObject)
-				.attr("class", (d) => "d3-link-handle-start")
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Link start handle - mouse down");
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
-					this.logger.log("Link end handle - finished mouse down");
-				})
-				.call(this.dragSelectionHandle);
+		// Add a group to store decorations. Adding this here ensures the decorations
+		// are always under the link handles whose group is added next.
+		newLinkGrps
+			.append("g")
+			.attr("class", "d3-link-decorations-group");
 
+		// Add a group to store link handles, if needed.
+		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			newLinkGrps
-				.filter((d) => d.type === NODE_LINK)
-				.append(this.canvasLayout.linkEndHandleObject)
-				.attr("class", (d) => "d3-link-handle-end")
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Link end handle - mouse down");
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
+				.append("g")
+				.attr("class", "d3-link-handles-group")
+				.each(function(d) {
+					if (d.type === NODE_LINK) {
+						// Since there are always just two handles we create the here.
+						that.createNewHandles(d3.select(this));
 					}
-					this.logger.log("Link end handle - finished mouse down");
-				})
-				.call(this.dragSelectionHandle);
+				});
 		}
 
 		return newLinkGrps;
@@ -5763,7 +5753,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => this.getLinkLineClass(d))
+			.attr("class", "d3-link-line")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -5774,63 +5764,104 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => this.getLinkArrowHeadClass(d))
+			.attr("class", "d3-link-line-arrow-head")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
 		joinedLinkGrps.each(function(d) {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+				that.displayDecorations(d, DEC_LINK, d3.select(this).selectAll(".d3-link-decorations-group"), d.decorations);
 			}
 		});
 
+		// Add link line handles at start and end of line, if required
 		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			joinedLinkGrps
-				.selectAll(".d3-link-handle-start")
-				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-				.each((datum, index, linkHandles) => {
-					const obj = d3.select(linkHandles[index]);
-					if (this.canvasLayout.linkStartHandleObject === "image") {
-						obj
-							.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
-							.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
-							.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
-							.attr("width", this.canvasLayout.linkStartHandleWidth)
-							.attr("height", this.canvasLayout.linkStartHandleHeight);
-
-					} else if (this.canvasLayout.linkStartHandleObject === "circle") {
-						obj
-							.attr("r", this.canvasLayout.linkStartHandleRadius)
-							.attr("cx", (d) => d.x1)
-							.attr("cy", (d) => d.y1);
-					}
-				});
-
-			joinedLinkGrps
-				.selectAll(".d3-link-handle-end")
-				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-				.each((datum, index, linkHandles) => {
-					const obj = d3.select(linkHandles[index]);
-					if (this.canvasLayout.linkEndHandleObject === "image") {
-						obj
-							.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
-							.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
-							.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
-							.attr("width", this.canvasLayout.linkEndHandleWidth)
-							.attr("height", this.canvasLayout.linkEndHandleHeight)
-							.attr("transform", (d) => this.getGuideImageTransform(d));
-
-					} else if (this.canvasLayout.linkEndHandleObject === "circle") {
-						obj
-							.attr("r", this.canvasLayout.linkEndHandleRadius)
-							.attr("cx", (d) => d.x2)
-							.attr("cy", (d) => d.y2);
-					}
-				});
+			joinedLinkGrps.each(function(d) {
+				if (d.type === NODE_LINK) {
+					// We only need to update handles since they were created in the create link step
+					that.updateHandles(d3.select(this).selectAll(".d3-link-handles-group"), lineArray);
+				}
+			});
 		}
 
 		this.setDisplayOrder(joinedLinkGrps);
+	}
+
+	// Creates a new start handle and a new end handle for the link groups
+	// passed in.
+	createNewHandles(handlesGrp) {
+		handlesGrp
+			.append(this.canvasLayout.linkStartHandleObject)
+			.attr("class", (d) => "d3-link-handle-start")
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link start handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			})
+			.call(this.dragSelectionHandle);
+
+		handlesGrp
+			.append(this.canvasLayout.linkEndHandleObject)
+			.attr("class", (d) => "d3-link-handle-end")
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link end handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			})
+			.call(this.dragSelectionHandle);
+	}
+
+	// Updates the start and end link handles for the handle groups passed in.
+	updateHandles(handlesGrp, lineArray) {
+		handlesGrp
+			.selectAll(".d3-link-handle-start")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.each((datum, index, linkHandles) => {
+				const obj = d3.select(linkHandles[index]);
+				if (this.canvasLayout.linkStartHandleObject === "image") {
+					obj
+						.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
+						.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
+						.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
+						.attr("width", this.canvasLayout.linkStartHandleWidth)
+						.attr("height", this.canvasLayout.linkStartHandleHeight);
+
+				} else if (this.canvasLayout.linkStartHandleObject === "circle") {
+					obj
+						.attr("r", this.canvasLayout.linkStartHandleRadius)
+						.attr("cx", (d) => d.x1)
+						.attr("cy", (d) => d.y1);
+				}
+			});
+
+		handlesGrp
+			.selectAll(".d3-link-handle-end")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.each((datum, index, linkHandles) => {
+				const obj = d3.select(linkHandles[index]);
+				if (this.canvasLayout.linkEndHandleObject === "image") {
+					obj
+						.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
+						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
+						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
+						.attr("width", this.canvasLayout.linkEndHandleWidth)
+						.attr("height", this.canvasLayout.linkEndHandleHeight)
+						.attr("transform", (d) => this.getGuideImageTransform(d));
+
+				} else if (this.canvasLayout.linkEndHandleObject === "circle") {
+					obj
+						.attr("r", this.canvasLayout.linkEndHandleRadius)
+						.attr("cx", (d) => d.x2)
+						.attr("cy", (d) => d.y2);
+				}
+			});
 	}
 
 	// Sets the custom inline styles on the link object passed in.
@@ -5857,17 +5888,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
-		return "d3-link-group " + this.getLinkTypeClass(d);
-	}
-
-	// Returns the class string to be appled to the link line path object.
-	getLinkLineClass(d) {
-		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
-	}
-
-	// Returns the class string to be appled to the link arrow head path object.
-	getLinkArrowHeadClass(d) {
-		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
 	}
 
 	// Returns the custom class string for the link object passed in.
@@ -5900,8 +5921,8 @@ export default class SVGCanvasRenderer {
 		return "d3-data-link";
 	}
 
-	// Returns the class string to be appled to the comment rectangle object.
-	getCommentRectClass(d) {
+	// Returns the class string to be appled to the comment group object.
+	getCommentGroupClass(d) {
 		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -5909,14 +5930,13 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-comment-rect") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-rect" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-comment-group" + customClass;
 	}
 
-	// Returns the class string to be appled to the node body object.
-	getNodeBodyClass(d) {
+	// Returns the class string to be appled to the node group object.
+	getNodeGroupClass(d) {
 		let customClass = "";
 		// If the node has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -5925,9 +5945,9 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-node-body-outline") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name.
-		return "d3-node-body-outline" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-node-group" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below

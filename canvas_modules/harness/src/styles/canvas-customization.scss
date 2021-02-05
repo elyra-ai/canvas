@@ -135,16 +135,6 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		stroke-width: 2;
 	}
 
-	.d3-node-group[data-new-link-over="yes"] {
-		.d3-node-selection-highlight {
-			stroke: $interactive-01;
-			stroke-dasharray: 4;
-			stroke-width: 1;
-			fill: $ui-01;
-			pointer-events: none;
-		}
-	}
-
 	.d3-node-port-input-arrow {
 		stroke: transparent;
 		fill: transparent;
@@ -203,7 +193,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	fill: #CFCEC0;
 }
 
-/*  Override styles for comments in linkColorCanvas.json */
+/*  Override styles for linkColorCanvas.json */
 
 .custom-canvas-comment {
 	cursor: "move";
@@ -215,20 +205,35 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	fill: #2BE2CA;
 }
 
+.custom-link-error .d3-link-line {
+	stroke: #FF4500;
+}
 
-/*  Override styles for comments in commentColorCanvas.json */
+.custom-link-warning .d3-link-line {
+	stroke: #FFFF00;
+}
 
-.canvas-comment-1 {
+.custom-link-okay .d3-link-line {
+	stroke: #008000;
+}
+
+.custom-link-blue .d3-link-line {
+	stroke: #0000FF;
+}
+
+/*  Override styles for comments in commentColorCanvas.json and commentUnderlap.json */
+
+.canvas-comment-1 .d3-comment-rect {
 	fill: #B98BA6;
 	stroke: #000000;
 }
 
-.canvas-comment-2 {
+.canvas-comment-2 .d3-comment-rect {
 	fill: #A6C8E4;
 	stroke: #000000;
 }
 
-.canvas-comment-3 {
+.canvas-comment-3 .d3-comment-rect {
 	fill: #A6C8E4;
 	stroke: #000000;
 }
@@ -304,28 +309,6 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 .node-image[data-attr1] {
 	opacity: 0.25;
-}
-
-/* These styles are used to override common-canvas styles with custom colors for customColorCanvas.json */
-
-.d3-data-link.error {
-	stroke: #FF4500;
-}
-
-.d3-data-link.warning {
-	stroke: #FFFF00;
-}
-
-.d3-data-link.okay {
-	stroke: #008000;
-}
-
-.d3-object-link.blue {
-	stroke: #0000FF;
-}
-
-.main-comment-box {
-	fill: #2BE2CA;
 }
 
 /* These styles are used by the custom JSX addd to the toolbar: TOOLBAR_TYPE_CUSTOM_ACTIONS */

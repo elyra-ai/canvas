@@ -18,9 +18,9 @@
 import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
-const dataLinkSelector = ".d3-link-group .d3-data-link.d3-link-line";
-const commentLinkSelector = ".d3-link-group .d3-comment-link.d3-link-line";
-const assocLinkSelector = ".d3-link-group .d3-object-link.d3-link-line";
+const dataLinkSelector = ".d3-link-group.d3-data-link .d3-link-line";
+const commentLinkSelector = ".d3-link-group.d3-comment-link .d3-link-line";
+const assocLinkSelector = ".d3-link-group.d3-object-link .d3-link-line";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
@@ -335,13 +335,13 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 		let dataLinks = 0;
 		let commentLinks = 0;
 		let objectLinks = 0;
-		if ($body.find(".d3-link-group .d3-data-link").length) {
+		if ($body.find(dataLinkSelector).length) {
 			dataLinks = $body.find(dataLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group .d3-comment-link").length) {
+		if ($body.find(commentLinkSelector).length) {
 			commentLinks = $body.find(commentLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group .d3-object-link").length) {
+		if ($body.find(assocLinkSelector).length) {
 			objectLinks = $body.find(assocLinkSelector).length;
 		}
 		expect(dataLinks + commentLinks + objectLinks).equal(noOfLinks);
