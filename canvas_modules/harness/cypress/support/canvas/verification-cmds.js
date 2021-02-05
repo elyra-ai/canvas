@@ -261,7 +261,9 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-node-image").length) {
-			cy.get("#canvas-div-0").find(".d3-node-image")
+			cy.get("#canvas-div-0")
+				.get(".svg-area")
+				.find(".d3-node-image")
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
