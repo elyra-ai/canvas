@@ -19,9 +19,11 @@
 	&.hide {
 		display: none;
 	}
-	button > img {
-		height: 16px;
-		padding: 0 $spacing-03 0 0;
+	.toggletext-icon {
+		position: absolute;
+		right: $spacing-05;
+		height: $spacing-05;
+		width: $spacing-05;
 	}
 	&.error {
 		button {
