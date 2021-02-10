@@ -200,7 +200,8 @@ export default class MoveableTableRows extends React.Component {
 			);
 		}
 
-		var content = (<table className="properties-mr-table-container">
+		// Added role presentation to fix a11y violation - no headers in the table
+		var content = (<table role="presentation" className="properties-mr-table-container">
 			<tbody>
 				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
 					<td>

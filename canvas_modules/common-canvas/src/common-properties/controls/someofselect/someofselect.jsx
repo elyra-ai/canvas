@@ -23,7 +23,7 @@ import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import { isEqual, intersection } from "lodash";
 
-import { TABLE_SCROLLBAR_WIDTH, STATES } from "../../constants/constants";
+import { STATES } from "../../constants/constants";
 
 class SomeofselectControl extends React.Component {
 	constructor(props) {
@@ -79,13 +79,6 @@ class SomeofselectControl extends React.Component {
 				content: this.props.controlOpts.valueLabels[i],
 			}
 			);
-			// add padding for scrollbar
-			columns.push({
-				key: i + "-1-scrollbar",
-				column: "scrollbar",
-				width: TABLE_SCROLLBAR_WIDTH,
-				content: <div />
-			});
 			tableOptions.options.push({ className: "table-row", columns: columns, disabled: this.props.state === STATES.DISABLED }); // add state in obj
 		}
 		return tableOptions;
@@ -104,11 +97,13 @@ class SomeofselectControl extends React.Component {
 				className={classNames("properties-someofselect ", { "hide": this.props.state === STATES.HIDDEN },
 					this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
+				{this.props.controlItem}
 				<FlexibleTable
 					columns={[{ "key": "someofselect", "label": "" }]}
 					rows={rows}
 					data={tableOptions.options}
 					scrollKey={this.props.control.name}
+					control={this.props.control}
 					controller={this.props.controller}
 					selectedRows={tableOptions.selected}
 					updateRowSelections={this.updateSelections}
@@ -126,6 +121,7 @@ SomeofselectControl.propTypes = {
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

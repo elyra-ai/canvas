@@ -24,7 +24,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
 
-import { TABLE_SCROLLBAR_WIDTH, STATES, MESSAGE_KEYS } from "./../../constants/constants";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ReadonlyControl from "./../readonly";
 
@@ -71,12 +71,6 @@ class SelectColumns extends AbstractTable {
 					column: "field",
 					content: cellContent
 				});
-				// add padding for scrollbar
-				columns.push({
-					column: "scrollbar",
-					width: TABLE_SCROLLBAR_WIDTH,
-					content: <div />
-				});
 				rows.push({
 					key: rowIndex,
 					onClickCallback: this.handleRowClick.bind(this, rowIndex, false),
@@ -108,7 +102,6 @@ class SelectColumns extends AbstractTable {
 			"label": PropertyUtils.formatMessage(this.reactIntl,
 				MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL),
 			"description": (null) });
-		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;
 	}
 
@@ -136,6 +129,7 @@ class SelectColumns extends AbstractTable {
 				tableState={this.props.state}
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
+				control={this.props.control}
 				controller={this.props.controller}
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
@@ -153,6 +147,7 @@ class SelectColumns extends AbstractTable {
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
+				{this.props.controlItem}
 				<MoveableTableRows
 					tableContainer={content}
 					control={this.props.control}
@@ -172,6 +167,7 @@ SelectColumns.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	openFieldPicker: PropTypes.func.isRequired,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux

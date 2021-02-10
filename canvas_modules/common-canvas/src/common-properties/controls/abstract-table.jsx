@@ -29,7 +29,7 @@ import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import { MESSAGE_KEYS, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
+	TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
 	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
@@ -455,6 +455,7 @@ export default class AbstractTable extends React.Component {
 					data={rows}
 					rows={0}
 					scrollKey={this.selectSummaryPropertyName}
+					control={this.props.control}
 					controller={this.props.controller}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
@@ -647,6 +648,7 @@ export default class AbstractTable extends React.Component {
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
+				control={this.props.control}
 				controller={this.props.controller}
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
@@ -694,8 +696,6 @@ export default class AbstractTable extends React.Component {
 			// set to specific size
 			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH });
 		}
-		// add extra column for overlay scrollbar
-		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;
 	}
 
@@ -725,13 +725,6 @@ export default class AbstractTable extends React.Component {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
 				}
-				// add padding for scrollbar
-				columns.push({
-					key: rowIndex + "-1-scrollbar",
-					column: "scrollbar",
-					width: TABLE_SCROLLBAR_WIDTH,
-					content: <div />
-				});
 				rows.push({
 					columns: columns
 				});

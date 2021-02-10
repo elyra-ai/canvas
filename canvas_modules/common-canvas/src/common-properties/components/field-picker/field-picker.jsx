@@ -424,6 +424,7 @@ export default class FieldPicker extends React.Component {
 		headers.push({ "key": "dataType", "label": dataTypeColumnLabel });
 
 		const tableData = this.getTableData();
+		const fieldPickerTitle = this.props.title ? { "label": { "text": this.props.title } } : null;
 
 		return (
 			<FlexibleTable className="properties-fp-table"
@@ -436,6 +437,7 @@ export default class FieldPicker extends React.Component {
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
 				rows={-1}
+				control={fieldPickerTitle}
 				controller={this.props.controller}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}

@@ -414,6 +414,8 @@ export default class FlexibleTable extends React.Component {
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
+			const searchBarLabel = formatMessage(this.props.controller.getReactIntl(),
+				MESSAGE_KEYS.TABLE_SEARCH_LABEL);
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
@@ -423,7 +425,7 @@ export default class FlexibleTable extends React.Component {
 						onChange={this.handleFilterChange}
 						disabled={disabled}
 						size="sm"
-						labelText={""}
+						labelText={searchBarLabel}
 					/>
 				</div>
 			);

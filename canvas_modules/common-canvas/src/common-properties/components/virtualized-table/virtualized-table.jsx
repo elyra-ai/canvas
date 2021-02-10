@@ -225,7 +225,7 @@ class VirtualizedTable extends React.Component {
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"
-					role="row"
+					role="gridcell"
 					onMouseEnter={(evt) => this.overSelectOption(evt)}
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
