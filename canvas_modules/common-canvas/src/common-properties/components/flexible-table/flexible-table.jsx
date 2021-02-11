@@ -450,7 +450,7 @@ export default class FlexibleTable extends React.Component {
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable
-									control={this.props.control}
+									tableLabel={this.props.tableLabel}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
 									rowCount={this.props.data.length}
@@ -501,7 +501,7 @@ FlexibleTable.propTypes = {
 	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
-	control: PropTypes.object,
+	tableLabel: PropTypes.string,
 	controller: PropTypes.object,
 	rows: PropTypes.number,
 	noAutoSize: PropTypes.bool,

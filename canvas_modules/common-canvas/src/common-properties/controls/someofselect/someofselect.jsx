@@ -103,7 +103,7 @@ class SomeofselectControl extends React.Component {
 					rows={rows}
 					data={tableOptions.options}
 					scrollKey={this.props.control.name}
-					control={this.props.control}
+					tableLabel={this.props.control.label ? this.props.control.label.text : ""}
 					controller={this.props.controller}
 					selectedRows={tableOptions.selected}
 					updateRowSelections={this.updateSelections}

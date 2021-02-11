@@ -144,7 +144,7 @@ class ListControl extends AbstractTable {
 				tableState={this.props.state}
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
-				control={this.props.control}
+				tableLabel={this.props.control.label ? this.props.control.label.text : ""}
 				controller={this.props.controller}
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
