@@ -19,12 +19,6 @@
 	&.hide {
 		display: none;
 	}
-	.toggletext-icon {
-		position: absolute;
-		right: $spacing-05;
-		height: $spacing-05;
-		width: $spacing-05;
-	}
 	&.error {
 		button {
 			border-bottom: 2px solid $support-01;
@@ -39,10 +33,7 @@
 
 // toggle control in table needs to fit within column
 .properties-table-cell-control {
-	button {
-		padding-left: $spacing-02;
-		width: calc(100% - #{$spacing-04});
-		display: flex;
-		justify-content: flex-start;
+	.properties-toggletext button {
+		padding: 0 $spacing-02;
 	}
 }

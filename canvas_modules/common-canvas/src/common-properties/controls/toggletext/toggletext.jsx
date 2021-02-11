@@ -52,10 +52,10 @@ class ToggletextControl extends React.Component {
 			const imgSource = this.iconsMap[this.props.value];
 			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
 				// svg image
-				icon = <Isvg className="toggletext-icon" src={imgSource} />;
+				icon = <Isvg className="bx--btn__icon" src={imgSource} />;
 			} else {
 				icon = (<img
-					className="toggletext-icon"
+					className="bx--btn__icon"
 					src={imgSource}
 					alt=""
 				/>);
@@ -70,10 +70,11 @@ class ToggletextControl extends React.Component {
 			rendered = this.props.value;
 		}
 		let button = null;
+		const buttonType = this.props.tableControl ? "ghost" : "tertiary";
 		if (typeof rendered !== "undefined") {
 			button = (
 				<Button
-					kind="tertiary"
+					kind={buttonType}
 					size="small"
 					onClick={this.onClick.bind(this)}
 					renderIcon={this.renderIcon.bind(this)}
