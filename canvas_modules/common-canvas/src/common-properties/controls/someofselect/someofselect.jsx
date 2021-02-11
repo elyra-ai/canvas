@@ -91,6 +91,7 @@ class SomeofselectControl extends React.Component {
 		}
 		const tableOptions = this.genSelectOptions(controlValue);
 		const rows = this.props.control.rows ? this.props.control.rows : 4;
+		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
@@ -103,7 +104,7 @@ class SomeofselectControl extends React.Component {
 					rows={rows}
 					data={tableOptions.options}
 					scrollKey={this.props.control.name}
-					tableLabel={this.props.control.label ? this.props.control.label.text : ""}
+					tableLabel={tableLabel}
 					controller={this.props.controller}
 					selectedRows={tableOptions.selected}
 					updateRowSelections={this.updateSelections}

@@ -445,6 +445,7 @@ export default class AbstractTable extends React.Component {
 			const showHeader = false;
 			const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
 			this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
+			const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 			return (<div className="properties-at-selectedEditRows" >
 				<div className="properties-selectedEditRows-title" >
 					<span >{title}</span>
@@ -455,7 +456,7 @@ export default class AbstractTable extends React.Component {
 					data={rows}
 					rows={0}
 					scrollKey={this.selectSummaryPropertyName}
-					tableLabel={this.props.control.label ? this.props.control.label.text : ""}
+					tableLabel={tableLabel}
 					controller={this.props.controller}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
@@ -631,6 +632,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
+		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 
 		const table =	(
 			<FlexibleTable
@@ -648,7 +650,7 @@ export default class AbstractTable extends React.Component {
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
-				tableLabel={this.props.control.label ? this.props.control.label.text : ""}
+				tableLabel={tableLabel}
 				controller={this.props.controller}
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
