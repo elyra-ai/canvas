@@ -96,11 +96,9 @@ describe("Toggletext renders correctly", () => {
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		const button = toggleWrapper.find("button");
 		expect(button).to.have.length(1);
-		const image = button.find("img");
+		const image = button.find("svg");
 		expect(image).to.have.length(1);
-		const text = button.find("span");
-		expect(text).to.have.length(1);
-		expect(text.text()).to.equal(control.valueLabels[0]);
+		expect(button.text()).to.equal(control.valueLabels[0]);
 	});
 
 	it("Toggletext should render without icons", () => {
@@ -115,11 +113,9 @@ describe("Toggletext renders correctly", () => {
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		const button = toggleWrapper.find("button");
 		expect(button).to.have.length(1);
-		const image = button.find("img");
+		const image = button.find("svg");
 		expect(image).to.have.length(0);
-		const text = button.find("span");
-		expect(text).to.have.length(1);
-		expect(text.text()).to.equal(controlNoIcons.valueLabels[0]);
+		expect(button.text()).to.equal(controlNoIcons.valueLabels[0]);
 	});
 
 	it("toggletext should set correct value", () => {

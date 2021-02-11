@@ -105,7 +105,7 @@ describe("add rows in tables with correct default values", () => {
 		let wideflyout = propertyUtils.openSummaryPanel(wrapper, "structureListEditorDefault-summary-panel");
 		let tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
-		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_0_2'] span").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_0_2'] button").text()).to.equal("Ascending");
 
 		// add a row
 		const addButton = wideflyout.find("button.properties-add-fields-button");
@@ -113,7 +113,7 @@ describe("add rows in tables with correct default values", () => {
 		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
 		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
-		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_1_2'] span").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_1_2'] button").text()).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "sLE_DefaultSortOrder" }, "Descending");
@@ -121,7 +121,7 @@ describe("add rows in tables with correct default values", () => {
 		wideflyout = wrapper.find("div[data-id='properties-structureListEditorDefault-summary-panel']");
 		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(3);
-		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_2_2'] span").text()).to.equal("Descending");
+		expect(wideflyout.find("div[data-id='properties-structureListEditorDefault_2_2'] button").text()).to.equal("Descending");
 	});
 
 	it("should render column structure table with new rows with correct default values", () => {
@@ -136,7 +136,7 @@ describe("add rows in tables with correct default values", () => {
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
 		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(1);
-		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_0_1'] span").text()).to.equal("Ascending");
+		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_0_1'] button").text()).to.equal("Ascending");
 
 		// change the parameter_ref control value and then add a new row.
 		renderedController.updatePropertyValue({ name: "CST_DefaultSortOrder" }, "Descending");
@@ -145,7 +145,7 @@ describe("add rows in tables with correct default values", () => {
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
 		tableRows = tableUtils.getTableRows(wideflyout);
 		expect(tableRows).to.have.length(2);
-		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_1_1'] span").text()).to.equal("Descending");
+		expect(wideflyout.find("div[data-id='properties-columnStructureTableDefault_1_1'] button").text()).to.equal("Descending");
 	});
 
 	it("should render column structure table where new rows have correct defaultRow", () => {
