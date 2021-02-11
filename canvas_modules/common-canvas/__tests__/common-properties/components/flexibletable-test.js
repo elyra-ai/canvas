@@ -245,4 +245,23 @@ describe("FlexibleTable renders correctly", () => {
 		expect(updateRowSelections).to.have.property("callCount", 1);
 	});
 
+	it("search bar in `FlexibleTable` should have label", () => {
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				sortable={sortFields}
+				filterable={filterFields}
+				columns={headers}
+				data={rows}
+				scrollToRow={scrollToRow}
+				alignTop={alignTop}
+				onFilter={onFilter}
+				onSort={onSort}
+				controller={controller}
+			/>
+		);
+
+		const searchBarLabel = wrapper.find("div.properties-ft-search-container").text();
+		expect(searchBarLabel).to.equal("Search text field");
+	});
+
 });

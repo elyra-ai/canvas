@@ -53,8 +53,8 @@ describe("hidden control works correctly", () => {
 		const hiddenPropertyId = { name: "hidden_table" };
 		// validate only 1 cell value is visible
 		expect(wrapper.find("div.properties-table-cell-control")).to.have.length(1);
-		// validate only 2 headers.  1 for textfield and other for scrollbar
-		expect(wrapper.find("div.properties-vt-column")).to.have.length(2);
+		// validate only 1 header for textfield
+		expect(wrapper.find("div.properties-vt-column")).to.have.length(1);
 		wrapper.find("button.properties-add-fields-button").simulate("click");
 		wrapper.find("div[data-id='properties-hidden_table_1_1'] input").simulate("change", { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.eql([["Hopper", "Turing"], [, "My new value"]]);

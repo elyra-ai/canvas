@@ -63,7 +63,9 @@ const accessibleControls = [
 	ControlType.TEXTFIELD,
 	ControlType.TIMEFIELD,
 	ControlType.TOGGLETEXT,
-	ControlType.LIST
+	ControlType.LIST,
+	ControlType.SOMEOFSELECT,
+	ControlType.SELECTCOLUMNS
 ];
 
 export default class ControlFactory {

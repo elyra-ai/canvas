@@ -414,6 +414,8 @@ export default class FlexibleTable extends React.Component {
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = formatMessage(this.props.controller.getReactIntl(),
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
+			const searchBarLabel = formatMessage(this.props.controller.getReactIntl(),
+				MESSAGE_KEYS.TABLE_SEARCH_LABEL);
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
@@ -423,7 +425,7 @@ export default class FlexibleTable extends React.Component {
 						onChange={this.handleFilterChange}
 						disabled={disabled}
 						size="sm"
-						labelText={""}
+						labelText={searchBarLabel}
 					/>
 				</div>
 			);
@@ -448,7 +450,7 @@ export default class FlexibleTable extends React.Component {
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable
-									control={this.props.control}
+									tableLabel={this.props.tableLabel}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
 									rowCount={this.props.data.length}
@@ -499,7 +501,7 @@ FlexibleTable.propTypes = {
 	selectedEditRow: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
-	control: PropTypes.object,
+	tableLabel: PropTypes.string,
 	controller: PropTypes.object,
 	rows: PropTypes.number,
 	noAutoSize: PropTypes.bool,

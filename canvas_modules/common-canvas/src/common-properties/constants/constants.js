@@ -53,6 +53,7 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
 	TABLE_SEARCH_HEADER: "table.search.header",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
+	TABLE_SEARCH_LABEL: "table.search.label",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
@@ -184,8 +185,6 @@ _defineConstant("ROW_HEIGHT", 42);
 _defineConstant("EXPRESSION_TABLE_ROWS", 7);
 
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
-
-_defineConstant("TABLE_SCROLLBAR_WIDTH", "15px");
 
 _defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
 	VALUE: "value",
