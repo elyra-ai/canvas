@@ -163,7 +163,7 @@ describe("Test the canvas is panned on open with initialPanX and initialPanY are
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it.only("Test to see if the canvas is panned when first opened", function() {
+	it("Test to see if the canvas is panned when first opened", function() {
 		// The allTypesCanvas should have been panned to down and to the right.
 		cy.verifyZoomTransform(100, 200, 1);
 	});
