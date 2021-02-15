@@ -344,4 +344,18 @@ describe("MoveableTableRows renders correctly", () => {
 		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(4);
 	});
 
+	it("Table should have presentation role", () => {
+		const wrapper = mountWithIntl(
+			<MoveableTableRows
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		expect(wrapper.find(".properties-mr-table-container").props()).to.have.property("role", "presentation");
+	});
+
 });

@@ -126,6 +126,19 @@
 			}
 		}
 
+		&.d3-data-link .det-tri {
+			fill: currentColor;
+			color: $support-01;
+		}
+
+		&:hover.d3-data-link .det-tri,
+		&[data-selected].d3-data-link .det-tri {
+			fill: currentColor;
+			color: $support-04;
+			stroke: $support-04;
+			stroke-width: 2;
+		}
+
 		// Style the 'dot' decoration at the start of the link line on hover with draggd node.
 		&[data-drag-node-over].d3-data-link .det-link-dot,
 		&[data-drag-node-over].d3-data-link .det-link-label-background,

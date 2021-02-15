@@ -23,6 +23,7 @@ import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
+import Isvg from "react-inlinesvg";
 
 class ToggletextControl extends React.Component {
 	constructor(props) {
@@ -45,25 +46,42 @@ class ToggletextControl extends React.Component {
 
 	}
 
+	renderIcon() {
+		let icon = null;
+		if (typeof this.iconsMap[this.props.value] !== "undefined") {
+			const imgSource = this.iconsMap[this.props.value];
+			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
+				// svg image
+				icon = <Isvg className="bx--btn__icon" src={imgSource} />;
+			} else {
+				icon = (<img
+					className="bx--btn__icon"
+					src={imgSource}
+					alt=""
+				/>);
+			}
+		}
+		return icon;
+	}
+
 	render() {
 		let rendered = this.valuesMap[this.props.value];
 		if (typeof rendered === "undefined") {
 			rendered = this.props.value;
 		}
-		let icon = null;
-		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = (<img
-				className="icon"
-				src={this.iconsMap[this.props.value]}
-				alt={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}
-			/>);
-		}
 		let button = null;
+		const buttonType = this.props.tableControl ? "ghost" : "tertiary";
 		if (typeof rendered !== "undefined") {
 			button = (
-				<Button kind="tertiary" size="small" onClick={this.onClick.bind(this)} disabled={this.props.state === STATES.DISABLED} >
-					{icon}
-					<span className="text">{rendered}</span>
+				<Button
+					kind={buttonType}
+					size="small"
+					onClick={this.onClick.bind(this)}
+					renderIcon={this.renderIcon.bind(this)}
+					iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}
+					disabled={this.props.state === STATES.DISABLED}
+				>
+					{rendered}
 				</Button>
 			);
 		}
