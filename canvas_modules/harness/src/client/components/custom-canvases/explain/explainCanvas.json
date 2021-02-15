@@ -21,16 +21,18 @@
               "description": "Scans the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(2)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -89,16 +91,18 @@
               "class_name": "light_purple",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(1)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -158,16 +162,18 @@
               "description": "Sorts the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(3)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -227,16 +233,18 @@
               "description": "Joins data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(4)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -296,16 +304,18 @@
               "description": "Joins data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(5)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -373,16 +383,18 @@
               "description": "Joins data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(6)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -450,16 +462,18 @@
               "description": "Scanns the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(7)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -518,16 +532,18 @@
               "description": "Fetches the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(15)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "38.22",
                   "class_name": "small_text"
@@ -586,16 +602,18 @@
               "description": "Fetches the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(18)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "-0.00",
                   "class_name": "small_text"
@@ -654,16 +672,18 @@
               "description": "Fetches the data",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(17)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "3.25",
                   "class_name": "small_text"
@@ -713,16 +733,18 @@
               "description": "Does some temporary stuff",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(8)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "13.55",
                   "class_name": "small_text"
@@ -782,16 +804,18 @@
               "description": "Green, Red, Blue and Yellow",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(9)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "-0.00",
                   "class_name": "small_text"
@@ -840,16 +864,18 @@
               "description": "SQL Table",
               "decorations": [
                 {
-                  "x_pos": 25,
-                  "y_pos": 28,
+                  "x_pos": 13,
+                  "y_pos": 19,
+                  "width": 24,
                   "id": "labelDecoration1",
                   "label": "(o4)",
                   "class_name": "small_text"
                 },
                 {
                   "position" : "bottomCenter",
-                  "x_pos": 0,
-                  "y_pos": -10,
+                  "x_pos": -25,
+                  "y_pos": -19,
+                  "width": 50,
                   "id": "labelDecoration2",
                   "label": "SYSIBM",
                   "class_name": "small_text"

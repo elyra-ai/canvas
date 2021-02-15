@@ -28,7 +28,6 @@ $dark-blue: lighten($focus, 10%);
 	.d3-node-label {
 		font-size: 13px;
 		font-weight: 600;
-		text-anchor: left;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 

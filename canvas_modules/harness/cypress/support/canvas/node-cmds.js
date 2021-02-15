@@ -307,7 +307,7 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 });
 
 Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
-	cy.get("#canvas-div-0").find(".node-image")
+	cy.get("#canvas-div-0").find(".d3-node-image")
 		.then((nodes) => {
 			cy.useCtrlOrCmdKey()
 				.then((selectedKey) => {
