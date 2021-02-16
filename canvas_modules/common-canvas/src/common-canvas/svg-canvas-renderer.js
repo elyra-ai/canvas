@@ -483,11 +483,6 @@ export default class SVGCanvasRenderer {
 		this.logger.log("displayBindingNodesToFitSVG - end");
 	}
 
-	getSupernodeSVGDimensionsFor(pipelineId) {
-		const datum = this.getSupernodeReferencing(pipelineId);
-		return this.getSupernodeSVGDimensions(datum);
-	}
-
 	getParentSupernodeSVGDimensions() {
 		const datum = this.getParentSupernodeDatum();
 		return this.getSupernodeSVGDimensions(datum);
