@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3002,7 +3002,9 @@ export default class SVGCanvasRenderer {
 
 		const editIconGrpSel = nodeGrpSel.append("g")
 			.attr("class", "d3-node-label-edit-icon-group")
-			.attr("transform", (nd) => this.nodeUtils.getNodeLabelEditIconTranslate(nd, spanObj, this.zoomTransform.k))
+			.attr("transform", (nd) =>
+				this.nodeUtils.getNodeLabelEditIconTranslate(nd, spanObj,
+					this.zoomTransform.k, this.config.enableDisplayFullLabelOnHover))
 			.on("mouseenter", function(d3Event, d) {
 				that.mouseOverLabelEditIcon = true;
 			})

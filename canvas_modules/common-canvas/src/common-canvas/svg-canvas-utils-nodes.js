@@ -82,20 +82,22 @@ export default class SvgCanvasNodes {
 		return node.layout.labelHeight;
 	}
 
-	getNodeLabelEditIconTranslate(node, spanObj, zoomScale) {
-		return `translate(${this.getNodeLabelEditIconPosX(node, spanObj, zoomScale)}, ${this.getNodeLabelEditIconPosY(node)})`;
+	getNodeLabelEditIconTranslate(node, spanObj, zoomScale, fullLabelOnHover) {
+		return `translate(${this.getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover)}, ${this.getNodeLabelEditIconPosY(node)})`;
 	}
 
-	getNodeLabelEditIconPosX(node, spanObj, zoomScale) {
+	getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover) {
+		const labelWidth = fullLabelOnHover ? this.getNodeLabelHoverWidth(node) : this.getNodeLabelWidth(node);
+		const posX = fullLabelOnHover ? this.getNodeLabelHoverPosX(node) : this.getNodeLabelPosX(node);
 		const spanWidth = spanObj.getBoundingClientRect().width;
-		if (node.layout.labelAlign === "center" &&
-				!this.isExpandedSupernode(node)) {
-			const halfLabelWidth = node.layout.labelWidth / 2;
-			const xCenterPosition = this.getNodeLabelPosX(node) + halfLabelWidth;
+
+		if (node.layout.labelAlign === "center" && !this.isExpandedSupernode(node)) {
+			const halfLabelWidth = labelWidth / 2;
+			const xCenterPosition = posX + halfLabelWidth;
 			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
 			return xCenterPosition + xOffsetFromCenter + 5;
 		}
-		const xOffsetFromStart = Math.min(this.getNodeLabelWidth(node), (spanWidth / zoomScale));
+		const xOffsetFromStart = Math.min(labelWidth, (spanWidth / zoomScale));
 		return this.getNodeLabelPosX(node) + xOffsetFromStart + 5;
 	}
 
