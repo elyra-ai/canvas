@@ -1184,53 +1184,6 @@ const portsVerticalDefaultLayout = {
 	}
 };
 
-const portsHorizontalMiddleCenterLayout = {
-	nodeLayout: {
-		// Image position
-		imagePosition: "middleCenter",
-		imagePosX: -74,
-		imagePosY: -13,
-
-		// Label position
-		labelPosition: "middleCenter",
-		labelPosX: -42,
-		labelPosY: -6,
-
-		// Error indicator dimensions
-		errorPosition: "middleCenter",
-		errorXPos: -56,
-		errorYPos: -14,
-
-		// Display of vertical ellipsis to show context menu
-		ellipsisPosition: "middleCenter",
-		ellipsisPosX: 65,
-		ellipsisPosY: -12,
-	}
-};
-
-const portsVerticalMiddleCenterLayout = {
-	nodeLayout: {
-		// Image position
-		imagePosition: "middleCenter",
-		imagePosX: -24,
-		imagePosY: -31,
-
-		// Label position
-		labelPosition: "middleCenter",
-		labelPosX: 0,
-		labelPosY: 20,
-
-		// Error indicator dimensions
-		errorPosition: "middleCenter",
-		errorXPos: 10,
-		errorYPos: -31,
-
-		// Display of vertical ellipsis to show context menu
-		ellipsisPosition: "middleCenter",
-		ellipsisPosX: 22,
-		ellipsisPosY: -34,
-	}
-};
 
 export default class LayoutDimensions {
 	static getLayout(config) {
@@ -1247,23 +1200,16 @@ export default class LayoutDimensions {
 
 	static getDefaultLayout(config) {
 		let defaultLayout;
-		let overrideLayout = {};
 		if (config && config.enableConnectionType === "Halo") {
 			defaultLayout = haloDefaultLayout;
 
 		} else if (config && config.enableNodeFormatType === "Vertical") {
 			defaultLayout = portsVerticalDefaultLayout;
-			if (config.enableNodeElementsPosition === "middleCenter") {
-				overrideLayout = portsVerticalMiddleCenterLayout;
-			}
 
 		} else {
 			defaultLayout = portsHorizontalDefaultLayout;
-			if (config && config.enableNodeElementsPosition === "middleCenter") {
-				overrideLayout = portsHorizontalMiddleCenterLayout;
-			}
 		}
-		return Object.assign({}, defaultLayout, overrideLayout);
+		return Object.assign({}, defaultLayout);
 	}
 
 	static overrideNodeLayout(layout, config) {

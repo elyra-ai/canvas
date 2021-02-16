@@ -5178,8 +5178,6 @@ export default class SVGCanvasRenderer {
 			yPos: 0,
 			width: d.width,
 			height: d.height,
-			xAdjustment: 0,
-			yAdjustment: 0,
 			className: "d3-comment-entry",
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeComment.bind(this),
@@ -5221,14 +5219,10 @@ export default class SVGCanvasRenderer {
 			id: node.id,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
-			xPos: this.nodeUtils.getNodeLabelPosX(node),
-			yPos: this.nodeUtils.getNodeLabelPosY(node),
-			width: this.nodeUtils.getNodeLabelWidth(node),
-			height: this.nodeUtils.getNodeLabelHeight(node),
-			xAdjustment:
-				node.layout.labelAlign === "center" && !this.nodeUtils.isExpandedSupernode(node)
-					? 0 : 6, // Position adjustment for border diff between text display div and text area
-			yAdjustment: 6, // Position adjustment for border diff between text display div and text area
+			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
+			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
+			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
+			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
 			className: this.getNodeLabelTextAreaClass(node),
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
@@ -5271,8 +5265,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-foreign-object")
 			.attr("width", data.width)
 			.attr("height", data.height)
-			.attr("x", data.xPos - data.xAdjustment)
-			.attr("y", data.yPos - data.yAdjustment);
+			.attr("x", data.xPos)
+			.attr("y", data.yPos);
 
 		const textArea = foreignObject
 			.append("xhtml:textarea")

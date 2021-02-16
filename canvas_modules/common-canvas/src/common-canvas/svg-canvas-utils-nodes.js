@@ -16,6 +16,9 @@
 
 import { SUPER_NODE } from "./constants/canvas-constants";
 
+// Diff between border for node label div (2px) and node label text area (6px)
+const TEXT_AREA_BORDER_ADJUSTMENT = 4;
+
 export default class SvgCanvasNodes {
 	constructor(config, canvasLayout) {
 		this.config = config;
@@ -112,6 +115,22 @@ export default class SvgCanvasNodes {
 			return node.layout.labelWidth + 500;
 		}
 		return node.layout.labelWidth + 40;
+	}
+
+	getNodeLabelTextAreaWidth(node) {
+		return this.getNodeLabelWidth(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
+	getNodeLabelTextAreaHeight(node) {
+		return this.getNodeLabelHeight(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
+	getNodeLabelTextAreaPosX(node) {
+		return this.getNodeLabelPosX(node) - TEXT_AREA_BORDER_ADJUSTMENT;
+	}
+
+	getNodeLabelTextAreaPosY(node) {
+		return this.getNodeLabelPosY(node) - TEXT_AREA_BORDER_ADJUSTMENT;
 	}
 
 	getNodeEllipsisTranslate(node) {
