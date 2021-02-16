@@ -130,7 +130,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 	});
 
 	it("Test the horizontal layout of multiport node transforms having Vertical node format", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Root", 50, 902.5);
@@ -151,7 +151,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 	});
 
 	it("Test the horizontal layout of multiport node transforms having Horizontal node format", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Horizontal" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Horizontal" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Root", 50, 710);
@@ -181,7 +181,7 @@ describe("Test the horizontal layout of a flow and a sub-flow using curve and el
 
 	it("Test the horizontal layout of flow and sub-flow node transforms " +
   "having Vertical node format and curve connections", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical", "selectedLinkType": "Curve" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical", "selectedLinkType": "Curve" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Select1", 50, 210);
@@ -200,7 +200,7 @@ describe("Test the horizontal layout of a flow and a sub-flow using curve and el
 
 	it("Test the horizontal layout of flow and sub-flow node transforms " +
   "having Horizontal node format and elbow connections", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Horizontal", "selectedLinkType": "Elbow" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Horizontal", "selectedLinkType": "Elbow" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Select1", 50, 193);

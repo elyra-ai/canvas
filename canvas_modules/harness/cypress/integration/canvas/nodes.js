@@ -37,6 +37,7 @@ describe("Test adding nodes from palette", function() {
 		cy.getNodeWithLabel("Derive").click();
 		cy.addCommentToPosition("This comment box should be linked to the derive node.", 300, 250);
 		cy.verifyCommentExists("This comment box should be linked to the derive node.");
+		cy.verifyEditActionInConsole("editComment", "content", "This comment box should be linked to the derive node.");
 
 		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
@@ -59,6 +60,7 @@ describe("Test adding nodes from palette", function() {
 		cy.getNodeWithLabel("Type").click();
 		cy.addCommentToPosition("This comment box should be linked to the type node.", 550, 350);
 		cy.verifyCommentExists("This comment box should be linked to the type node.");
+		cy.verifyEditActionInConsole("editComment", "content", "This comment box should be linked to the type node.");
 		cy.linkCommentToNode("This comment box should be linked to the type node.", "Neural Net");
 
 		// Add comment
@@ -68,6 +70,10 @@ describe("Test adding nodes from palette", function() {
 			750, 50
 		);
 		cy.verifyCommentExists(
+			"This is the functional test canvas that we build through automated test cases. " +
+			"This comment is meant to simulate a typical comment for annotating the entire canvas."
+		);
+		cy.verifyEditActionInConsole("editComment", "content",
 			"This is the functional test canvas that we build through automated test cases. " +
 			"This comment is meant to simulate a typical comment for annotating the entire canvas."
 		);

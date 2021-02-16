@@ -30,9 +30,9 @@ export default class BlueEllipsesCanvas extends React.Component {
 					imagePosX: 20,
 					imagePosY: 10,
 					labelPosX: 60,
-					labelPosY: 39,
+					labelPosY: 37,
 					labelWidth: 90,
-					labelHeight: 13, // Should match the font size specified in css
+					labelHeight: 17, // Should match the font size specified in css + padding
 					ellipsisDisplay: true,
 					ellipsisPosX: 100,
 					ellipsisPosY: 20,

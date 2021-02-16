@@ -43,15 +43,16 @@ const haloDefaultLayout = {
 		imagePosY: 0,
 
 		// Label dimensions
-		labelWidth: 53,
-		labelHeight: 15,
+		labelWidth: 57,
+		labelHeight: 19,
 
 		// Label position
 		labelPosition: "topLeft",
 		labelPosX: 30,
-		labelPosY: 53,
+		labelPosY: 51,
 
 		// Label appearance
+		labelEditable: false,
 		labelAlign: "center",
 		labelSingleLine: true,
 		labelOutline: false,
@@ -242,7 +243,7 @@ const haloDefaultLayout = {
 		// Layout values for supernode in-place containment area
 		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 6,
+		supernodeLabelPosY: 4,
 		supernodeLabelWidth: 50,
 		supernodeLabelHeight: 20,
 
@@ -432,16 +433,17 @@ const portsHorizontalDefaultLayout = {
 		imagePosY: 7,
 
 		// Label dimensions
-		labelWidth: 108,
-		labelHeight: 15,
+		labelWidth: 112,
+		labelHeight: 19,
 
 		// Label position
 		labelPosition: "topLeft",
-		labelPosX: 38,
-		labelPosY: 14,
+		labelPosX: 36,
+		labelPosY: 12,
 
 		// Label appearance
-		labelAlign: "right",
+		labelEditable: false,
+		labelAlign: "left",
 		labelSingleLine: true,
 		labelOutline: false,
 
@@ -631,7 +633,7 @@ const portsHorizontalDefaultLayout = {
 		// Layout values for supernode in-place containment area
 		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 6,
+		supernodeLabelPosY: 4,
 		supernodeLabelWidth: 50,
 		supernodeLabelHeight: 20,
 
@@ -821,15 +823,16 @@ const portsVerticalDefaultLayout = {
 		imagePosY: 6,
 
 		// Label dimensions
-		labelWidth: 68,
-		labelHeight: 15,
+		labelWidth: 72,
+		labelHeight: 19,
 
 		// Label position
 		labelPosition: "topLeft",
 		labelPosX: 35,
-		labelPosY: 57,
+		labelPosY: 55,
 
 		// Label appearance
+		labelEditable: false,
 		labelAlign: "center",
 		labelSingleLine: true,
 		labelOutline: false,
@@ -1020,7 +1023,7 @@ const portsVerticalDefaultLayout = {
 		// Layout values for supernode in-place containment area
 		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 6,
+		supernodeLabelPosY: 4,
 		supernodeLabelWidth: 50,
 		supernodeLabelHeight: 20,
 

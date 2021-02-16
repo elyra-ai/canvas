@@ -39,7 +39,7 @@ export default class Explain2Canvas extends React.Component {
 				inputPortDisplay: false,
 				outputPortDisplay: false,
 				labelPosX: LABEL_POSX,
-				labelPosY: 8,
+				labelPosY: 6,
 				labelWidth: LABEL_MAX_WIDTH,
 				ellipsisDisplay: true,
 				ellipsisWidth: 10,

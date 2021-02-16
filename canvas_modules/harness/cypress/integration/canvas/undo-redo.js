@@ -388,6 +388,8 @@ describe("Test for Multiple undo/redo operations", function() {
 		cy.clickNode("Filter");
 		cy.addCommentToPosition("Some text comment.", 30, 300);
 		cy.verifyCommentExists("Some text comment.");
+		cy.verifyEditActionInConsole("editComment", "content", "Some text comment.");
+
 		// Undo using toolbar
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();

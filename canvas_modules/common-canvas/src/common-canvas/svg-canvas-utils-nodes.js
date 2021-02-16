@@ -79,6 +79,27 @@ export default class SvgCanvasNodes {
 		return node.layout.labelHeight;
 	}
 
+	getNodeLabelEditIconTranslate(node, spanObj, zoomScale) {
+		return `translate(${this.getNodeLabelEditIconPosX(node, spanObj, zoomScale)}, ${this.getNodeLabelEditIconPosY(node)})`;
+	}
+
+	getNodeLabelEditIconPosX(node, spanObj, zoomScale) {
+		const spanWidth = spanObj.getBoundingClientRect().width;
+		if (node.layout.labelAlign === "center" &&
+				!this.isExpandedSupernode(node)) {
+			const halfLabelWidth = node.layout.labelWidth / 2;
+			const xCenterPosition = this.getNodeLabelPosX(node) + halfLabelWidth;
+			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
+			return xCenterPosition + xOffsetFromCenter + 5;
+		}
+		const xOffsetFromStart = Math.min(this.getNodeLabelWidth(node), (spanWidth / zoomScale));
+		return this.getNodeLabelPosX(node) + xOffsetFromStart + 5;
+	}
+
+	getNodeLabelEditIconPosY(node) {
+		return this.getNodeLabelPosY(node);
+	}
+
 	getNodeLabelHoverPosX(node) {
 		if (node.layout.labelAlign === "center") {
 			return this.getNodeLabelPosX(node) - 250;

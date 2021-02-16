@@ -35,6 +35,28 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 		})
 );
 
+Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > div")
+		.dblclick();
+});
+
+Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-label-edit-icon-group")
+		.dblclick();
+});
+
+Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
+});
+
+
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
 		.then((nodeId) => {
@@ -165,6 +187,13 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
 		.trigger("mouseenter");
 });
+
+Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-label")
+		.trigger("mouseenter");
+});
+
 
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)

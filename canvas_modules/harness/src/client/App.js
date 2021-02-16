@@ -159,7 +159,7 @@ class App extends React.Component {
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
-			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
@@ -1680,7 +1680,7 @@ class App extends React.Component {
 		}
 
 		let parentClass = "";
-		if (this.state.selectedNodeFormat === "Vertical") {
+		if (this.state.selectedNodeFormatType === "Vertical") {
 			parentClass = "classic-vertical";
 			if (this.state.selectedConnectionType === "Halo") {
 				parentClass = "classic-halo";
@@ -1693,7 +1693,7 @@ class App extends React.Component {
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
 			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormat,
+			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
@@ -1730,7 +1730,7 @@ class App extends React.Component {
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormat,
+			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: parentClass,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
