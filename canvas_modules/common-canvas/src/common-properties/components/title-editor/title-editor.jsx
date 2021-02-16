@@ -71,13 +71,16 @@ class TitleEditor extends Component {
 	}
 
 	render() {
+		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_EDITBUTTON_LABEL);
+		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
+
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
-			: (<Button kind="ghost" className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
+			: (<Button kind="ghost" aria-label={propertiesTitleEditButtonLabel} className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
 				<Icon type={CARBON_ICONS.EDIT} />
 			</Button>);
 
 		const helpButton = this.props.help
-			? (<Button kind="ghost" className="properties-title-editor-btn help" data-id="help" onClick={this.helpClickHandler}>
+			? (<Button kind="ghost" aria-label={helpButtonLabel} className="properties-title-editor-btn help" data-id="help" onClick={this.helpClickHandler}>
 				<Icon type={CARBON_ICONS.INFORMATION} />
 			</Button>)
 			: null;

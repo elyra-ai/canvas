@@ -66,6 +66,7 @@ class ReadonlyTableControl extends AbstractTable {
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-readonly-table-wrapper"
 			>
+				{this.props.controlItem}
 				<div className="properties-readonly-table">
 					<MoveableTableRows
 						tableContainer={content}
@@ -87,6 +88,7 @@ ReadonlyTableControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	rightFlyout: PropTypes.bool,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux

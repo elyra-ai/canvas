@@ -171,6 +171,15 @@ describe("readonlytable control renders correctly", () => {
 		const editButton = table.find("button.properties-edit-button");
 		expect(editButton.text()).to.equal("Edit test");
 	});
+
+	it("`readonlytable` control should have aria-label", () => {
+		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const table = tables
+			.find("div[data-id='properties-ft-readonlyStructurelistTableControl']")
+			.find(".properties-vt-autosizer")
+			.find(".ReactVirtualized__Table");
+		expect(table.props()).to.have.property("aria-label", "ReadonlyTable - structurelisteditor");
+	});
 });
 
 describe("readonlytable control conditions", () => {
