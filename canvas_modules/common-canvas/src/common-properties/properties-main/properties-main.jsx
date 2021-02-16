@@ -67,6 +67,7 @@ class PropertiesMain extends React.Component {
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.state = {
 			showPropertiesButtons: true,
+			persistEditorSize: true,
 			editorSize: this.propertiesController.getForm().editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
@@ -89,7 +90,7 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
-				const newEditorSize = this.propertiesController.getForm().editorSize;
+				const newEditorSize = this.state.persistEditorSize ? this.state.editorSize : this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
 					this.setState({ editorSize: newEditorSize });
 				}
