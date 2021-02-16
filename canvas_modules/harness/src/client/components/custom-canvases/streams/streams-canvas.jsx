@@ -36,7 +36,8 @@ export default class StreamsCanvas extends React.Component {
 			},
 			enableNodeLayout: {
 				minInitialLine: 75,
-				portArcSpacing: 15
+				portArcSpacing: 15,
+				labelEditable: true
 			}
 		});
 	}

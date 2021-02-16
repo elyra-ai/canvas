@@ -29,6 +29,7 @@ export default class BlueEllipsesCanvas extends React.Component {
 					imageHeight: 30,
 					imagePosX: 20,
 					imagePosY: 10,
+					labelEditable: true,
 					labelPosX: 60,
 					labelPosY: 37,
 					labelWidth: 90,
