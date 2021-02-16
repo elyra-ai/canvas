@@ -16,6 +16,9 @@
 
 import { SUPER_NODE } from "./constants/canvas-constants";
 
+// Diff between border for node label div (2px) and node label text area (6px)
+const TEXT_AREA_BORDER_ADJUSTMENT = 4;
+
 export default class SvgCanvasNodes {
 	constructor(config, canvasLayout) {
 		this.config = config;
@@ -79,6 +82,29 @@ export default class SvgCanvasNodes {
 		return node.layout.labelHeight;
 	}
 
+	getNodeLabelEditIconTranslate(node, spanObj, zoomScale, fullLabelOnHover) {
+		return `translate(${this.getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover)}, ${this.getNodeLabelEditIconPosY(node)})`;
+	}
+
+	getNodeLabelEditIconPosX(node, spanObj, zoomScale, fullLabelOnHover) {
+		const labelWidth = fullLabelOnHover ? this.getNodeLabelHoverWidth(node) : this.getNodeLabelWidth(node);
+		const posX = fullLabelOnHover ? this.getNodeLabelHoverPosX(node) : this.getNodeLabelPosX(node);
+		const spanWidth = spanObj.getBoundingClientRect().width;
+
+		if (node.layout.labelAlign === "center" && !this.isExpandedSupernode(node)) {
+			const halfLabelWidth = labelWidth / 2;
+			const xCenterPosition = posX + halfLabelWidth;
+			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
+			return xCenterPosition + xOffsetFromCenter + 5;
+		}
+		const xOffsetFromStart = Math.min(labelWidth, (spanWidth / zoomScale));
+		return this.getNodeLabelPosX(node) + xOffsetFromStart + 5;
+	}
+
+	getNodeLabelEditIconPosY(node) {
+		return this.getNodeLabelPosY(node);
+	}
+
 	getNodeLabelHoverPosX(node) {
 		if (node.layout.labelAlign === "center") {
 			return this.getNodeLabelPosX(node) - 250;
@@ -91,6 +117,22 @@ export default class SvgCanvasNodes {
 			return node.layout.labelWidth + 500;
 		}
 		return node.layout.labelWidth + 40;
+	}
+
+	getNodeLabelTextAreaWidth(node) {
+		return this.getNodeLabelWidth(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
+	getNodeLabelTextAreaHeight(node) {
+		return this.getNodeLabelHeight(node) + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
+	getNodeLabelTextAreaPosX(node) {
+		return this.getNodeLabelPosX(node) - TEXT_AREA_BORDER_ADJUSTMENT;
+	}
+
+	getNodeLabelTextAreaPosY(node) {
+		return this.getNodeLabelPosY(node) - TEXT_AREA_BORDER_ADJUSTMENT;
 	}
 
 	getNodeEllipsisTranslate(node) {

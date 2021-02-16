@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,10 +83,10 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-label {
 		font-size: 13px;
-		fill: $text-01;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
+	}
+
+	.d3-node-label-entry {
+		font-size: 13px;
 	}
 
 	.d3-node-port-output {

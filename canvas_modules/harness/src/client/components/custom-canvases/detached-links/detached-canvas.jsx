@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -48,11 +64,10 @@ export default class DetachedCanvas extends React.Component {
 				links: false
 			},
 			enableNodeLayout: {
-				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "image_center",
 				drawCommentLinkLineTo: "image_center",
 				defaultNodeWidth: 72,
-				defaultNodeHeight: 72,
+				defaultNodeHeight: 82,
 				selectionPath: "M 8 0 L 64 0 64 56 8 56 8 0",
 				ellipsisWidth: 12,
 				ellipsisHeight: 16,
@@ -63,10 +78,12 @@ export default class DetachedCanvas extends React.Component {
 				imagePosX: 12,
 				imagePosY: 4,
 				labelPosX: 36,
-				labelPosY: 60,
-				labelWidth: 50,
-				labelHeight: 25,
+				labelPosY: 56,
+				labelWidth: 200,
+				labelHeight: 29,
+				labelEditable: true,
 				labelSingleLine: false,
+				labelOutline: false,
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -31,9 +47,10 @@ export default class TablesCanvas extends React.Component {
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
 				labelAndIconVerticalJustification: "none",
 				imageDisplay: false,
-				labelPosX: 25,
-				labelPosY: 10,
-				// portPosY: 25,
+				labelEditable: true,
+				labelWidth: 150,
+				labelPosX: 23,
+				labelPosY: 8,
 				inputPortLeftPosY: 25,
 				outputPortRightPosY: 25,
 				portRadius: 8,
@@ -69,7 +86,7 @@ export default class TablesCanvas extends React.Component {
 				defaultNodeHeight: 80,
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
-				labelPosY: 35,
+				labelPosY: 33,
 				inputPortLeftPosY: 48,
 				outputPortRightPosY: 48,
 				// portPosY: 48,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,6 +203,16 @@ Cypress.Commands.add("verifyNodeExistsInExtraCanvas", (nodeName) => {
 	cy.inRegularCanvas();
 });
 
+Cypress.Commands.add("verifyNodeExists", (nodeLabel) => {
+	// Verify node is in the DOM
+	cy.getNodeWithLabel(nodeLabel)
+		.should("have.length", 1);
+
+	// Verify that the node is in the internal object model
+	cy.getNodeLabelCountFromObjectModel(nodeLabel)
+		.then((count) => expect(count).to.equal(1));
+});
+
 Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify comment is in the DOM
 	cy.getCommentWithText(commentText)
@@ -211,18 +221,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify that the comment is in the internal object model
 	cy.getCommentContentCountFromObjectModel(commentText)
 		.then((count) => expect(count).to.equal(1));
-
-	// verify that an event for a new comment is in the external object model event log
-	verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
-function verifyEditActionHandlerEditCommentEntryInConsole(commentText) {
+Cypress.Commands.add("verifyEditActionInConsole", (action, dataField, dataContent) => {
 	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
-		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
-		expect(lastEventLog.data.content).to.equal(commentText);
+		const actionText = "editActionHandler(): " + action;
+		const lastEventLog = testUtils.getLastLogOfType(doc, actionText);
+		expect(lastEventLog.event).to.equal(actionText);
+		expect(lastEventLog.data[dataField]).to.equal(dataContent);
 	});
-}
+});
 
 Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
 	// verify comment is in the DOM

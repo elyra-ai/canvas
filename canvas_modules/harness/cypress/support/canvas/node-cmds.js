@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,29 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 			return null;
 		})
 );
+
+Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > div")
+		.dblclick();
+});
+
+Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find(".d3-node-label-edit-icon-group")
+		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		.click();
+});
+
+Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
+});
+
 
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
@@ -165,6 +188,13 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
 		.trigger("mouseenter");
 });
+
+Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-node-label")
+		.trigger("mouseenter");
+});
+
 
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
