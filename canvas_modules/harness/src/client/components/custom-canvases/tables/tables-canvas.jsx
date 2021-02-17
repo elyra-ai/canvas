@@ -45,7 +45,6 @@ export default class TablesCanvas extends React.Component {
 				defaultNodeHeight: 50,
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
-				labelAndIconVerticalJustification: "none",
 				imageDisplay: false,
 				labelEditable: true,
 				labelWidth: 150,

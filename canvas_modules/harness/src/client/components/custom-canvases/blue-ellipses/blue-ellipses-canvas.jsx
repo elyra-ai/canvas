@@ -40,7 +40,6 @@ export default class BlueEllipsesCanvas extends React.Component {
 					selectionPath: "M -5 30 Q -5 -5 60 -5 Q 125 -5 125 30 Q 125 65 60 65 Q -5 65 -5 30 Z",
 					defaultNodeWidth: 120,
 					defaultNodeHeight: 60,
-					labelAndIconVerticalJustification: "none",
 					imageWidth: 30,
 					imageHeight: 30,
 					imagePosX: 20,
