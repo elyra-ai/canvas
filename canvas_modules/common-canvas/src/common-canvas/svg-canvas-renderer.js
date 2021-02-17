@@ -856,7 +856,7 @@ export default class SVGCanvasRenderer {
 		// of the invisible div and SVG area. If the label is shorter than the node
 		// width, the node is positioned up against the left edge of the SVG. We do
 		// this by translating the group object in the x direction.
-		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Inlcude border for label
+		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
 		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
 		const labelLength = Math.min(nodeLabelWidth, labelSpanWidth);
 

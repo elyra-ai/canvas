@@ -53,7 +53,23 @@ export default class StreamsCanvas extends React.Component {
 			enableNodeLayout: {
 				minInitialLine: 75,
 				portArcSpacing: 15,
-				labelEditable: true
+				labelEditable: true,
+
+				imagePosition: "middleCenter",
+				imagePosX: -74,
+				imagePosY: -13,
+
+				labelPosition: "middleCenter",
+				labelPosX: -42,
+				labelPosY: -8,
+
+				errorPosition: "middleCenter",
+				errorXPos: -56,
+				errorYPos: -14,
+
+				ellipsisPosition: "middleCenter",
+				ellipsisPosX: 65,
+				ellipsisPosY: -12,
 			}
 		});
 	}

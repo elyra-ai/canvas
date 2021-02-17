@@ -21,7 +21,7 @@ const haloDefaultLayout = {
 		defaultNodeWidth: 60,
 		defaultNodeHeight: 66,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -51,7 +51,7 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 51,
 
-		// Label appearance
+		// Label appearance - labelAlign can be "left" or "center"
 		labelEditable: false,
 		labelAlign: "center",
 		labelSingleLine: true,
@@ -109,8 +109,8 @@ const haloDefaultLayout = {
 		haloCenterY: 24,
 		haloRadius: 29,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "image_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -411,7 +411,7 @@ const portsHorizontalDefaultLayout = {
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "port-arcs",
 
 		// SVG path strings to define the shape of your node and its
@@ -441,7 +441,7 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 36,
 		labelPosY: 12,
 
-		// Label appearance
+		// Label appearance - labelAlign can be "left" or "center"
 		labelEditable: false,
 		labelAlign: "left",
 		labelSingleLine: true,
@@ -499,8 +499,8 @@ const portsHorizontalDefaultLayout = {
 		haloCenterY: null,
 		haloRadius: null,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -801,7 +801,7 @@ const portsVerticalDefaultLayout = {
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -831,7 +831,7 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 55,
 
-		// Label appearance
+		// Label appearance - labelAlign can be "left" or "center"
 		labelEditable: false,
 		labelAlign: "center",
 		labelSingleLine: true,
@@ -889,8 +889,8 @@ const portsVerticalDefaultLayout = {
 		haloCenterY: null,
 		haloRadius: null,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values

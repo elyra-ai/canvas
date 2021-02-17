@@ -34,7 +34,6 @@ export default class ExplainCanvas extends React.Component {
 			{
 				defaultNodeWidth: 120,
 				defaultNodeHeight: 60,
-				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "node_center",
 				labelPosX: 52,
 				labelPosY: 14,

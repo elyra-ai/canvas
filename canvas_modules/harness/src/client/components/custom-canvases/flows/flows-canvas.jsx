@@ -56,7 +56,6 @@ export default class FlowsCanvas extends React.Component {
 				links: false
 			},
 			enableNodeLayout: {
-				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "image_center",
 				drawCommentLinkLineTo: "image_center",
 				defaultNodeWidth: 72,

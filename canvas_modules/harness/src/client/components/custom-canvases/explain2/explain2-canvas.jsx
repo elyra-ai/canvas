@@ -51,7 +51,6 @@ export default class Explain2Canvas extends React.Component {
 				inputPortBottomPosY: 0,
 				outputPortTopPosX: DEFAULT_WIDTH / 2,
 				outputPortTopPosY: 0,
-				labelAndIconVerticalJustification: "none",
 				inputPortDisplay: false,
 				outputPortDisplay: false,
 				labelPosX: LABEL_POSX,
