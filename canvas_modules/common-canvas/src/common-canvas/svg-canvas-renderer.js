@@ -3818,9 +3818,6 @@ export default class SVGCanvasRenderer {
 
 	getDecoratorImage(dec) {
 		if (dec) {
-			if (dec.class_name === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
-				return "/images/decorators/zoom-in_32.svg";
-			}
 			return dec.image;
 		}
 		return "";
