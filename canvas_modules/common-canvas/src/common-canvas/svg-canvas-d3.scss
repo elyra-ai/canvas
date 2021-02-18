@@ -267,6 +267,13 @@ $new-halo-link-color: $ui-05;
 			fill: $node-label-edit-icon-hover-color;
 		}
 	}
+
+	& svg {
+		// These properties will pass the color to icon paths in an SVG icon provided
+		// the icon doesn't have any hard coded fill color set.
+		fill: currentColor;
+		color: $icon-01;
+	}
 }
 
 .d3-node-label-single-line {
@@ -356,9 +363,14 @@ $new-halo-link-color: $ui-05;
 	user-select: none;
 }
 
+.d3-node-dec-image,
 .d3-link-dec-image {
 	stroke-width: 1;
 	stroke-dasharray: 0; // Override the dasharray from the link line
+	// These properties will pass the color to icon paths in an SVG icon provided
+	// the icon doesn't have any hard coded fill color set.
+	fill: currentColor;
+	color: $icon-01;
 }
 
 
