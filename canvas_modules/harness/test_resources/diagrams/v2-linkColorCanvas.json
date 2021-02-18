@@ -94,7 +94,7 @@
                   "node_id_ref": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "d3-data-link okay"
+                      "class_name": "custom-link-okay"
                     }
                   }
                 }
@@ -146,7 +146,7 @@
                   "node_id_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "d3-object-link blue"
+                      "class_name": "custom-link-blue"
                     }
                   }
                 },
@@ -154,7 +154,7 @@
                   "node_id_ref": "1c278dfe-a598-430b-b4d9-869f5f7a7da2",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "d3-object-link blue"
+                      "class_name": "custom-link-blue"
                     }
                   }
                 }
@@ -270,7 +270,7 @@
                   "node_id_ref": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "d3-data-link warning"
+                      "class_name": "custom-link-warning"
                     }
                   }
                 }
@@ -350,7 +350,7 @@
                   "node_id_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "d3-data-link error"
+                      "class_name": "custom-link-error"
                     }
                   }
                 }

@@ -52,7 +52,6 @@ class App extends React.Component {
 				defaultNodeHeight: 50,
 				bodyPath: this.getPath(left, right, top, bot),
 				selectionPath: this.getPath(left, right, top, bot),
-				labelAndIconVerticalJustification: "none",
 				imageDisplay: false,
 				labelPosX: 25,
 				labelPosY: 20,

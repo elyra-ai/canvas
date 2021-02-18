@@ -352,6 +352,21 @@ describe("field-picker-control renders correctly", () => {
 		const selected = tableUtils.validateSelectedRowNum(rows);
 		expect(selected).to.have.length(filteredDataset.length);
 	});
+
+	it("`FieldPicker` table should have aria-label", () => {
+		const wrapper = mountWithIntl(
+			<FieldPicker
+				key="field-picker-control"
+				closeFieldPicker={closeFieldPicker}
+				currentFields={currentFields}
+				fields={filteredDataset}
+				controller={controller}
+				title="Field Picker Test"
+			/>
+		);
+		const fieldPickerTable = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
+		expect(fieldPickerTable.props()).to.have.property("aria-label", "Field Picker Test");
+	});
 });
 
 describe("field-picker-control with multi input schemas renders correctly", () => {

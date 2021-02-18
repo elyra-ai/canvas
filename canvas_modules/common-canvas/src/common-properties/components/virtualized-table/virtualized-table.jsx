@@ -225,7 +225,7 @@ class VirtualizedTable extends React.Component {
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"
-					role="row"
+					role="gridcell"
 					onMouseEnter={(evt) => this.overSelectOption(evt)}
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
@@ -307,7 +307,7 @@ class VirtualizedTable extends React.Component {
 								height={height ? height : defaultTestHeight}
 
 								className="properties-autosized-vt"
-								aria-label={this.props.control ? this.props.control.label.text : ""}
+								aria-label={this.props.tableLabel ? this.props.tableLabel : ""}
 
 								disableHeader={this.props.disableHeader}
 								headerClassName="properties-autosized-vt-header"
@@ -357,7 +357,7 @@ VirtualizedTable.defaultProps = {
 };
 
 VirtualizedTable.propTypes = {
-	control: PropTypes.object,
+	tableLabel: PropTypes.string,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,

@@ -15,7 +15,6 @@
  */
 
 import has from "lodash/has";
-import LayoutDimensions from "./layout-dimensions.js";
 import { BINDING, EXECUTION_NODE,
 	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
@@ -77,13 +76,12 @@ export default class CanvasInHandler {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
 			}
 			if (nodeType === SUPER_NODE) {
-				// Assume WML Canvas will always use vertical format.
-				const layout = LayoutDimensions.getLayout("ports-vertical");
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
 				newNode.open_with_tool = "canvas";
 				newNode.is_expanded = false;
-				newNode.expanded_width = layout.supernodeDefaultWidth;
-				newNode.expanded_height = layout.supernodeDefaultHeight;
+				// WML Canvas doesn't use common-canvas expanded supernodes so just set some dummy values.
+				newNode.expanded_width = 200;
+				newNode.expanded_height = 200;
 			}
 
 			if (nodeType === MODEL_NODE) {

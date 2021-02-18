@@ -859,9 +859,9 @@ export default class SidePanelForms extends React.Component {
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
-					name="selectedNodeFormat" // Set name to corresponding field name in App.js
+					name="selectedNodeFormatType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedNodeFormat")}
+					defaultSelected={this.props.getStateValue("selectedNodeFormatType")}
 				>
 					<RadioButton
 						value={VERTICAL_FORMAT}

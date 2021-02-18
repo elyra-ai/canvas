@@ -134,7 +134,8 @@ class StructureEditorControl extends React.Component {
 			}
 			rows.push(<tr key={1 + i}>{row}</tr>);
 		}
-		return (<table><tbody>{rows}</tbody></table>);
+		// Added role presentation to fix a11y violation - no headers in the table
+		return (<table role="presentation"><tbody>{rows}</tbody></table>);
 	}
 
 	render() {

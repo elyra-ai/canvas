@@ -175,7 +175,8 @@ class SummaryPanel extends React.Component {
 				}
 			}
 			if (summaryValues.length > 0) {
-				let summaryBody = (<table key={"summary-table-" + controlName} className="properties-summary-table">
+				// Added role presentation to fix a11y violation - no headers in the table
+				let summaryBody = (<table role="presentation" key={"summary-table-" + controlName} className="properties-summary-table">
 					<tbody key={"summary-body-" + controlName}>
 						{summaryValues}
 					</tbody>

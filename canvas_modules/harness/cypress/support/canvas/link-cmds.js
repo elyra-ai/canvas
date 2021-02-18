@@ -54,9 +54,9 @@ function getLinkSelector(linkId, element) {
 	} else if (element === "line") {
 		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
 	} else if (element === "startHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-start`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-start`;
 	} else if (element === "endHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-end`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-end`;
 	}
 	return selector;
 }

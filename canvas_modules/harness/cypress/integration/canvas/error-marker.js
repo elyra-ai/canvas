@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 describe("Test to check if error markers are being displayed OK", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical" });
 		cy.openCanvasDefinition("errorMarkerCanvas.json");
 	});
 
