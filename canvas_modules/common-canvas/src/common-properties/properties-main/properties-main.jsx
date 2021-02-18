@@ -48,8 +48,8 @@ class PropertiesMain extends React.Component {
 		super(props);
 		this.propertiesController = new PropertiesController();
 		// Persist editorSize when resize() is not called
-		if (this.propertiesController.currentEditorSize !== this.props.currentEditorSize) {
-			this.propertiesController.setCurrentEditorSize(this.props.currentEditorSize);
+		if (this.propertiesController.getInitialEditorSize() !== this.props.propertiesInfo.initialEditorSize) {
+			this.propertiesController.setInitialEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
@@ -71,10 +71,11 @@ class PropertiesMain extends React.Component {
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: this.props.currentEditorSize ? this.props.currentEditorSize : this.propertiesController.getForm().editorSize
+			editorSize: this.props.propertiesInfo.initialEditorSize ? this.props.propertiesInfo.initialEditorSize : this.propertiesController.getForm().editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
+		this.updateEditorSize = this.updateEditorSize.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this._getOverrideSize = this._getOverrideSize.bind(this);
 		this._getResizeButton = this._getResizeButton.bind(this);
@@ -348,30 +349,25 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	updateEditorSize(newEditorSize) {
+		this.setState({
+			editorSize: newEditorSize
+		});
+		this.propertiesController.setInitialEditorSize(newEditorSize);
+	}
+
 	resize() {
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.SMALL) {
-				this.setState({
-					editorSize: Size.MEDIUM
-				});
-				this.propertiesController.setCurrentEditorSize(Size.MEDIUM);
+				this.updateEditorSize(Size.MEDIUM);
 			} else {
-				this.setState({
-					editorSize: Size.SMALL
-				});
-				this.propertiesController.setCurrentEditorSize(Size.SMALL);
+				this.updateEditorSize(Size.SMALL);
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.MEDIUM) {
-				this.setState({
-					editorSize: Size.LARGE
-				});
-				this.propertiesController.setCurrentEditorSize(Size.LARGE);
+				this.updateEditorSize(Size.LARGE);
 			} else {
-				this.setState({
-					editorSize: Size.MEDIUM
-				});
-				this.propertiesController.setCurrentEditorSize(Size.MEDIUM);
+				this.updateEditorSize(Size.MEDIUM);
 			}
 		}
 	}
@@ -523,7 +519,6 @@ PropertiesMain.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
-	currentEditorSize: PropTypes.string,
 	intl: PropTypes.object.isRequired
 };
 

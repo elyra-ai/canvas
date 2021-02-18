@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 30] */
+/* eslint complexity: ["error", 28] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -1245,10 +1245,13 @@ class App extends React.Component {
 			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId, activePipelineId)) {
 				commonPropertiesRef.applyPropertiesEditing(false);
 			}
+			let initialEditorSize;
 			if (inExtraCanvas) {
 				this.currentEditorId2 = nodeId;
+				initialEditorSize = this.propertiesController2 ? this.propertiesController2.getInitialEditorSize() : null;
 			} else {
 				this.currentEditorId = nodeId;
+				initialEditorSize = this.propertiesController ? this.propertiesController.getInitialEditorSize() : null;
 			}
 			// currentEditorNodeId = nodeId; // set new node
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
@@ -1266,7 +1269,8 @@ class App extends React.Component {
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
-					expressionInfo: expressionInfo
+					expressionInfo: expressionInfo,
+					initialEditorSize: initialEditorSize
 				};
 
 				if (inExtraCanvas) {
@@ -1341,12 +1345,14 @@ class App extends React.Component {
 		if (expressionInfo !== null) {
 			expressionInfo.validateLink = this.state.expressionValidate;
 		}
+		const initialEditorSize = this.propertiesController ? this.propertiesController.getInitialEditorSize() : null;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
-			expressionInfo: expressionInfo
+			expressionInfo: expressionInfo,
+			initialEditorSize: initialEditorSize
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1907,7 +1913,6 @@ class App extends React.Component {
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
-				currentEditorSize={this.propertiesController ? this.propertiesController.currentEditorSize : null}
 			/>);
 
 		const commonProperties2 = (
@@ -1922,7 +1927,6 @@ class App extends React.Component {
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
-				currentEditorSize={this.propertiesController2 ? this.propertiesController2.currentEditorSize : null}
 			/>);
 
 		let commonPropertiesContainer = null;

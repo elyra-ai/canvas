@@ -96,8 +96,12 @@ export default class PropertiesController {
 		return this.commandStack;
 	}
 
-	setCurrentEditorSize(currentEditorSize) {
-		this.currentEditorSize = currentEditorSize;
+	setInitialEditorSize(initialEditorSize) {
+		this.initialEditorSize = initialEditorSize;
+	}
+
+	getInitialEditorSize() {
+		return this.initialEditorSize;
 	}
 
 	//
