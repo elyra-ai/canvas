@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 28] */
+/* eslint complexity: ["error", 30] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -1907,6 +1907,7 @@ class App extends React.Component {
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				currentEditorSize={this.propertiesController ? this.propertiesController.currentEditorSize : null}
 			/>);
 
 		const commonProperties2 = (
@@ -1921,6 +1922,7 @@ class App extends React.Component {
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				currentEditorSize={this.propertiesController2 ? this.propertiesController2.currentEditorSize : null}
 			/>);
 
 		let commonPropertiesContainer = null;

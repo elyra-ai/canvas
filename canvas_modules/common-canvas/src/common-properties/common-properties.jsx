@@ -73,6 +73,7 @@ class CommonProperties extends React.Component {
 				callbacks= {this.props.callbacks}
 				customControls={this.props.customControls}
 				customConditionOps={this.props.customConditionOps}
+				currentEditorSize={this.props.currentEditorSize}
 			/>);
 		return propertiesMain;
 	}
@@ -228,6 +229,7 @@ class CommonProperties extends React.Component {
 
 CommonProperties.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
+	currentEditorSize: PropTypes.string,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
 		rightFlyout: PropTypes.bool,

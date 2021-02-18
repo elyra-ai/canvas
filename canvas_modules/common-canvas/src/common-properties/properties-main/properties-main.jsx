@@ -47,6 +47,10 @@ class PropertiesMain extends React.Component {
 	constructor(props) {
 		super(props);
 		this.propertiesController = new PropertiesController();
+		// Persist editorSize when resize() is not called
+		if (this.propertiesController.currentEditorSize !== this.props.currentEditorSize) {
+			this.propertiesController.setCurrentEditorSize(this.props.currentEditorSize);
+		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
@@ -67,8 +71,7 @@ class PropertiesMain extends React.Component {
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		this.state = {
 			showPropertiesButtons: true,
-			persistEditorSize: true,
-			editorSize: this.propertiesController.getForm().editorSize
+			editorSize: this.props.currentEditorSize ? this.props.currentEditorSize : this.propertiesController.getForm().editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -90,7 +93,7 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				this.setForm(newProps.propertiesInfo);
-				const newEditorSize = this.state.persistEditorSize ? this.state.editorSize : this.propertiesController.getForm().editorSize;
+				const newEditorSize = this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
 					this.setState({ editorSize: newEditorSize });
 				}
@@ -351,20 +354,24 @@ class PropertiesMain extends React.Component {
 				this.setState({
 					editorSize: Size.MEDIUM
 				});
+				this.propertiesController.setCurrentEditorSize(Size.MEDIUM);
 			} else {
 				this.setState({
 					editorSize: Size.SMALL
 				});
+				this.propertiesController.setCurrentEditorSize(Size.SMALL);
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.MEDIUM) {
 				this.setState({
 					editorSize: Size.LARGE
 				});
+				this.propertiesController.setCurrentEditorSize(Size.LARGE);
 			} else {
 				this.setState({
 					editorSize: Size.MEDIUM
 				});
+				this.propertiesController.setCurrentEditorSize(Size.MEDIUM);
 			}
 		}
 	}
@@ -516,6 +523,7 @@ PropertiesMain.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
+	currentEditorSize: PropTypes.string,
 	intl: PropTypes.object.isRequired
 };
 
