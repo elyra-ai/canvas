@@ -270,7 +270,7 @@ $new-halo-link-color: $ui-05;
 
 	& svg {
 		// These properties will pass the color to icon paths in an SVG icon provided
-		// the icon doesn't hav any hard coded fill color set.
+		// the icon doesn't have any hard coded fill color set.
 		fill: currentColor;
 		color: $icon-01;
 	}
@@ -368,7 +368,7 @@ $new-halo-link-color: $ui-05;
 	stroke-width: 1;
 	stroke-dasharray: 0; // Override the dasharray from the link line
 	// These properties will pass the color to icon paths in an SVG icon provided
-	// the icon doesn't hav any hard coded fill color set.
+	// the icon doesn't have any hard coded fill color set.
 	fill: currentColor;
 	color: $icon-01;
 }
