@@ -48,7 +48,7 @@ class PropertiesMain extends React.Component {
 		super(props);
 		this.propertiesController = new PropertiesController();
 		// Persist editorSize when resize() is not called
-		if (this.propertiesController.getInitialEditorSize() !== this.props.propertiesInfo.initialEditorSize) {
+		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setInitialEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
 		this.propertiesController.setCustomControls(props.customControls);
