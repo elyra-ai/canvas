@@ -377,6 +377,46 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("div.properties-custom-container")).to.have.length(1);
 		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
 	});
+
+	it("should set editorSize to initialEditorSize instead of default editorSize", () => {
+		// Default editorSize is small & initialEditorSize is medium
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		newPropertiesInfo.initialEditorSize = "medium";
+
+		wrapper = mount(
+			<IntlProvider key="IntlProvider2" locale={ locale }>
+				<CommonProperties
+					propertiesInfo={newPropertiesInfo}
+					callbacks={callbacks}
+				/>
+			</IntlProvider>
+		);
+		// Right flyout panel should have editorSize medium
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+	});
+
+	it("should set initialEditorSize in controller on clicking resize button", () => {
+		// Default editorSize is small & initialEditorSize is undefined
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
+		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo);
+		wrapper = renderedObject.wrapper;
+
+		// Right flyout panel should have editorSize small
+		expect(wrapper.find("aside.properties-small")).to.have.length(1);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(0);
+
+		// Click on resize button
+		wrapper.find("button.properties-btn-resize").simulate("click");
+
+		//  controller should set initialEditorSize to medium
+		expect(renderedObject.controller.getInitialEditorSize()).to.equal("medium");
+		// Right flyout panel should have editorSize medium
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+	});
 });
 
 describe("Common properties modals return the correct Carbon modal size", () => {
