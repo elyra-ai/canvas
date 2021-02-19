@@ -102,7 +102,7 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelEditIconPosY(node) {
-		return this.getNodeLabelPosY(node);
+		return this.getNodeLabelPosY(node) - 4;
 	}
 
 	getNodeLabelHoverPosX(node) {
