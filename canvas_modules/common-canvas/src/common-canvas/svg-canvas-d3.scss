@@ -113,7 +113,18 @@ $new-halo-link-color: $ui-05;
 }
 
 .d3-foreign-object {
-	pointer-events: none; /* Allow contents of foreign object to handle events */
+	// Don't handle events - let objects inside foreign object handle them.
+	pointer-events: none;
+	// Allows the focus highlight to be visible on FF and Safari
+	overflow: visible;
+}
+
+// Declare our own focus highlighting for text entry.
+@mixin d3-text-entry-focus-mixin {
+	// Supress the default focus highlighting with non-carbon color and round corners.
+	outline: none;
+	// Add our own focus highlighting with our own color and square corners
+	box-shadow: 0 0 0 2px $interactive-01;
 }
 
 /* Pull-out region rectangle used for object selection */
@@ -239,9 +250,6 @@ $new-halo-link-color: $ui-05;
 	overflow: hidden;
 	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
 }
 
 /* Style for node label text display. */
@@ -255,6 +263,11 @@ $new-halo-link-color: $ui-05;
 	@include d3-node-label-mixin;
 	background-color: $field-01;
 	border-width: $node-label-entry-border;
+
+	&:focus {
+		@include d3-text-entry-focus-mixin;
+	}
+
 }
 
 .d3-node-label-edit-icon-group {
@@ -612,9 +625,6 @@ $new-halo-link-color: $ui-05;
 	white-space: pre-wrap;
 	word-wrap: normal;
 	word-break: break-word;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
 }
 
 .d3-comment-text {
@@ -627,6 +637,10 @@ $new-halo-link-color: $ui-05;
 	@include d3-comment-mixin;
 	background-color: $field-01;
 	border-width: $comment-text-entry-border;
+
+	&:focus {
+		@include d3-text-entry-focus-mixin;
+	}
 }
 
 /* Comment halo styles */

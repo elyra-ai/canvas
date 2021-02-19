@@ -3021,8 +3021,8 @@ export default class SVGCanvasRenderer {
 		editIconGrpSel
 			.append("rect")
 			.attr("class", "d3-node-label-edit-icon-background")
-			.attr("width", 16)
-			.attr("height", 16)
+			.attr("width", 24)
+			.attr("height", 24)
 			.attr("x", 0)
 			.attr("y", 0);
 
@@ -3032,8 +3032,8 @@ export default class SVGCanvasRenderer {
 			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
-			.attr("x", 0)
-			.attr("y", 0);
+			.attr("x", 4)
+			.attr("y", 4);
 	}
 
 	hideEditIcon(spanObj) {
@@ -4823,7 +4823,7 @@ export default class SVGCanvasRenderer {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
-		} else if (this.dragging && !this.commentSizing && !this.nodeSizing) {
+		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			commentGroupSel
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((d) => that.getComment(d.id)); // Set the __data__ to the updated data
@@ -5296,7 +5296,9 @@ export default class SVGCanvasRenderer {
 				const newText = this.value; // Save the text before closing the foreign object
 				that.closeTextArea(foreignObject);
 				if (data.text !== newText) {
+					that.isCommentBeingUpdated = true;
 					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight);
+					that.isCommentBeingUpdatd = false;
 				}
 			})
 			.on("focus", function(d3Event, d) {
