@@ -36,7 +36,6 @@
   "summary.longTable.placeholder": "[Esperanto~More than ten fields...~~~~eo]",
   "alerts.tab.title": "[Esperanto~Alerts~eo]",
   "title.editor.label": "[Esperanto~edit title~~~~~~eo]",
-  "title.editor.editButton.label": "[Esperanto~edit the node name~~~~eo]",
   "title.editor.helpButton.label": "[Esperanto~help~eo]",
   "table.summary.error": "[Esperanto~There are {errorMsgCount} error cells. ~~~~~~~~~eo]",
   "table.summary.warning": "[Esperanto~There are {warningMsgCount} warning cells. ~~~~~~~~~~~eo]",

@@ -59,7 +59,6 @@ _defineConstant("MESSAGE_KEYS", {
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
-	TITLE_EDITOR_EDITBUTTON_LABEL: "title.editor.editButton.label",
 	TITLE_EDITOR_HELPBUTTON_LABEL: "title.editor.helpButton.label",
 	TABLE_SUMMARY_ERROR: "table.summary.error",
 	TABLE_SUMMARY_WARNING: "table.summary.warning",

@@ -71,7 +71,7 @@ class TitleEditor extends Component {
 	}
 
 	render() {
-		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_EDITBUTTON_LABEL);
+		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />

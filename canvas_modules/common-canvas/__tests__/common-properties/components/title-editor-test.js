@@ -205,7 +205,7 @@ describe("title-editor renders correctly", () => {
 		);
 		// Edit title button
 		const editTitleButton = wrapper.find(".properties-title-editor-btn[data-id='edit']").hostNodes();
-		expect(editTitleButton.props()).to.have.property("aria-label", "edit the node name");
+		expect(editTitleButton.props()).to.have.property("aria-label", "edit title");
 
 		// Help button
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();

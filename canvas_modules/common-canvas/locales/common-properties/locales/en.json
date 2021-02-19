@@ -35,7 +35,6 @@
   "summary.longTable.placeholder": "More than ten fields...",
   "alerts.tab.title": "Alerts",
   "title.editor.label": "edit title",
-  "title.editor.editButton.label": "edit the node name",
   "title.editor.helpButton.label": "help",
   "table.summary.error": "There are {errorMsgCount} error cells. ",
   "table.summary.warning": "There are {warningMsgCount} warning cells. ",
