@@ -69,9 +69,10 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
+		const editorSize = this.getEditorSize();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: this.props.propertiesInfo.initialEditorSize ? this.props.propertiesInfo.initialEditorSize : this.propertiesController.getForm().editorSize
+			editorSize: editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -171,6 +172,20 @@ class PropertiesMain extends React.Component {
 			return this.props.propertiesConfig.buttonLabels.secondary;
 		}
 		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+	}
+
+	getEditorSize() {
+		// Determine whether to persist initialEditorSize or set the defaultEditorSize in certain cases
+		const defaultEditorSize = this.propertiesController.getForm().editorSize;
+		const initialEditorSize = this.props.propertiesInfo.initialEditorSize;
+		if (defaultEditorSize === Size.SMALL && initialEditorSize === Size.LARGE) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.MEDIUM && initialEditorSize === Size.SMALL) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.LARGE) {
+			return defaultEditorSize;
+		}
+		return (initialEditorSize ? initialEditorSize : defaultEditorSize);
 	}
 
 	_getOverrideSize() {

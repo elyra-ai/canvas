@@ -378,11 +378,49 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
 	});
 
-	it("should set editorSize to initialEditorSize instead of default editorSize", () => {
-		// Default editorSize is small & initialEditorSize is medium
+	it("should set editorSize to initialEditorSize when defaultEditorSize='small' and initialEditorSize='medium'", () => {
+		// defaultEditorSize is small & initialEditorSize is medium
 		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
 		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
 		newPropertiesInfo.initialEditorSize = "medium";
+
+		wrapper = mount(
+			<IntlProvider key="IntlProvider2" locale={ locale }>
+				<CommonProperties
+					propertiesInfo={newPropertiesInfo}
+					callbacks={callbacks}
+				/>
+			</IntlProvider>
+		);
+		// Right flyout panel should have editorSize medium
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
+	});
+
+	it("should set editorSize to defaultEditorSize when defaultEditorSize='large' and initialEditorSize='small'", () => {
+		// defaultEditorSize is large & initialEditorSize is small
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "large";
+		newPropertiesInfo.initialEditorSize = "small";
+
+		wrapper = mount(
+			<IntlProvider key="IntlProvider2" locale={ locale }>
+				<CommonProperties
+					propertiesInfo={newPropertiesInfo}
+					callbacks={callbacks}
+				/>
+			</IntlProvider>
+		);
+		// Right flyout panel should have editorSize large
+		expect(wrapper.find("aside.properties-small")).to.have.length(0);
+		expect(wrapper.find("aside.properties-large")).to.have.length(1);
+	});
+
+	it("should set editorSize to defaultEditorSize when defaultEditorSize='medium' and initialEditorSize='small'", () => {
+		// defaultEditorSize is medium & initialEditorSize is small
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		newPropertiesInfo.parameterDef.uihints.editor_size = "medium";
+		newPropertiesInfo.initialEditorSize = "small";
 
 		wrapper = mount(
 			<IntlProvider key="IntlProvider2" locale={ locale }>
