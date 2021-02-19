@@ -83,6 +83,7 @@ export default class SubPanelCell extends React.Component {
 							kind="secondary"
 							onClick={this.showSubPanel}
 							disabled={disabled}
+							aria-label={subPanelToolTip}
 						>
 							{innerObject}
 						</Button>

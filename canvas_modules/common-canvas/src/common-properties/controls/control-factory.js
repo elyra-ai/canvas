@@ -65,7 +65,10 @@ const accessibleControls = [
 	ControlType.TOGGLETEXT,
 	ControlType.LIST,
 	ControlType.SOMEOFSELECT,
-	ControlType.SELECTCOLUMNS
+	ControlType.SELECTCOLUMNS,
+	ControlType.READONLY,
+	ControlType.READONLYTABLE,
+	ControlType.TIMESTAMP
 ];
 
 export default class ControlFactory {
@@ -153,7 +156,7 @@ export default class ControlFactory {
 		case (ControlType.READONLY):
 			createdControl = (<ReadonlyControl {...props} />);
 			break;
-		case (ControlType.TIMESTAMPFIELD):
+		case (ControlType.TIMESTAMP):
 			createdControl = (<ReadonlyControl {...props} />);
 			break;
 		case (ControlType.TEXTAREA):

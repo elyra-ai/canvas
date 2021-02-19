@@ -407,8 +407,12 @@ class PropertiesMain extends React.Component {
 				/>);
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
+					// Resize button label can be "Expand" or "Contract"
+					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
+						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
+						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
 					resizeBtn = (
-						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} >
+						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
 							{resizeIcon}
 						</Button>
 					);
