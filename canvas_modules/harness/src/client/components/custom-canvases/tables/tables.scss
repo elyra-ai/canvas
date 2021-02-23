@@ -45,6 +45,8 @@
 		font-weight: 500;
 	}
 
+
+
 	/* Makes the port decorations (blue with the white cross) be hidden by default */
 	.d3-node-group {
 		.tables-node-port {
@@ -57,6 +59,7 @@
 		}
 
 		/* Makes the port decorations (blue with the white cross) images appear on hover */
+		&[data-new-link-over="yes"] .tables-node-port,
 		&:hover .tables-node-port {
 			opacity: 100;
 		}

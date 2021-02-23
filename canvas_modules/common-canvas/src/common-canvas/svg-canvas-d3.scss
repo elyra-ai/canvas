@@ -220,6 +220,7 @@ $new-halo-link-color: $ui-05;
 .d3-node-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
+	pointer-events: none;
 }
 
 .d3-node-selection-highlight[data-selected="yes"] {
