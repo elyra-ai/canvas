@@ -259,7 +259,9 @@ class ExpressionControl extends React.Component {
 				disabled={this.props.state === STATES.DISABLED}
 				onClick={this.showExpressionBuilder}
 				renderIcon={Calculator24}
-				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE)}
+				iconDescription={formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_ICON_DESCRIPTION)}
+				tooltipPosition="right"
+				hasIconOnly
 			/>)
 			: null;
 
@@ -328,6 +330,7 @@ class ExpressionControl extends React.Component {
 
 		return (
 			<div className="properties-expression-editor-wrapper" >
+				{this.props.controlItem}
 				{flyout}
 				<div className="properties-editor-container">
 					{header}
@@ -355,6 +358,7 @@ ExpressionControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	editorDidMount: PropTypes.func,
 	builder: PropTypes.bool,

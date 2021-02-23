@@ -155,6 +155,22 @@ describe("expression-control renders correctly", () => {
 		expect(input).to.have.length(1);
 	});
 
+	it("should render `launch expression builder` icon", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		const expressionBuilderIcon = wrapper.find("button.properties-expression-button");
+		expect(expressionBuilderIcon).to.have.length(1);
+		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
+	});
+
 });
 
 describe("expression-builder renders correctly", () => {
@@ -195,6 +211,47 @@ describe("expression-builder renders correctly", () => {
 		expect(wrapper.find("div.properties-functions-table-container")).to.have.length(0);
 		expect(wrapper.find("div.properties-help-table-container")).to.have.length(0);
 		expect(wrapper.find("div.properties-operator-container")).to.have.length(1);
+	});
+
+	it("Fields and Values tables should have aria-label", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// ensure fields table has aria-label
+		const fieldsTable = wrapper.find("div.properties-field-table-container").find(".ReactVirtualized__Table");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.props()).to.have.property("aria-label", "Fields table");
+
+		// ensure values table has aria-label
+		const valuesTable = wrapper.find("div.properties-value-table-container").find(".ReactVirtualized__Table");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.props()).to.have.property("aria-label", "Values table");
+	});
+
+	it("Functions table should have aria-label", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
+
+		// ensure functions table has aria-label
+		const functionsTable = wrapper.find("div.properties-functions-table-container").find(".ReactVirtualized__Table");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.props()).to.have.property("aria-label", "Functions table");
 	});
 
 });
