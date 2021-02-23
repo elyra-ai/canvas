@@ -63,7 +63,7 @@
               },
               "links": [
                 {
-                  "id": "link-1",
+                  "id": "Link One",
                   "node_id_ref": "f8ae4e15-86fd-4947-bbec-43c5aa2b8927",
                   "port_id_ref": "outPort"
                 }
@@ -112,7 +112,7 @@
               },
               "links": [
                 {
-                  "id": "link-2",
+                  "id": "Link Two",
                   "node_id_ref": "f7cc2320-0d0a-418d-b8bb-6488d5557a26",
                   "port_id_ref": "outPort"
                 }
@@ -161,7 +161,7 @@
               },
               "links": [
                 {
-                  "id": "link-3",
+                  "id": "Link Three",
                   "node_id_ref": "f1004052-23f7-4681-a599-8fdfdcc79427",
                   "port_id_ref": "outPort"
                 }
@@ -210,7 +210,7 @@
               },
               "links": [
                 {
-                  "id": "link-4",
+                  "id": "Link Four",
                   "node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
                   "port_id_ref": "outPort"
                 }
@@ -259,7 +259,7 @@
               },
               "links": [
                 {
-                  "id": "link-5",
+                  "id": "Link Five",
                   "node_id_ref": "f929659b-2c47-4ece-8dc2-14cdeaed96a9",
                   "port_id_ref": "outPort"
                 }
