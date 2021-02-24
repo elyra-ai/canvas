@@ -979,7 +979,7 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode(d3Event) {
-		const nodeNearMouse = this.getNodeAtMousePos(d3Event, this.canvasLayout.nodeProximity);
+		const nodeNearMouse = this.getNodeNearMousePos(d3Event, this.canvasLayout.nodeProximity);
 		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
@@ -1007,10 +1007,16 @@ export default class SVGCanvasRenderer {
 				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
 				const trgNodePortId = this.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
-			}
 
-			if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
+			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
+				const srcNode = this.drawingNewLinkData.srcNode;
+				const trgNode = nodeNearMouse;
+				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links);
+
+			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
+				const srcObjId = this.drawingNewLinkData.srcObjId;
+				const trgNodeId = nodeNearMouse.id;
+				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.activePipeline.links);
 			}
 		} else if (this.draggingLinkData) {
 			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
@@ -2748,7 +2754,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.inputPortObject)
 								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mousedown", (d3Event, port) => {
@@ -2845,7 +2851,7 @@ export default class SVGCanvasRenderer {
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
-									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
@@ -2900,7 +2906,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.outputPortObject)
 								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.on("mousedown", (d3Event, port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
@@ -4049,7 +4055,7 @@ export default class SVGCanvasRenderer {
 			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE);
+				const trgPortId = this.getInputNodePortIdAtMousePos(d3Event);
 
 				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
 					this.canvasController.editActionHandler({
@@ -4253,7 +4259,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, proximity) {
+	getNewLinkOnDrag(d3Event, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
 		const newLink = cloneDeep(oldLink);
 
@@ -4262,10 +4268,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.srcNodePortId;
 			delete newLink.srcPos;
 
-			const srcNode = this.getNodeAtMousePos(d3Event, proximity);
+			const srcNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
-				newLink.srcNodePortId = this.getNodePortAtMousePos(d3Event, OUTPUT_TYPE, proximity);
+				newLink.srcNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
+					: this.getOutputNodePortIdAtMousePos(d3Event);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -4275,10 +4286,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.trgNodePortId;
 			delete newLink.trgPos;
 
-			const trgNode = this.getNodeAtMousePos(d3Event, proximity);
+			const trgNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
-				newLink.trgNodePortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE, proximity);
+				newLink.trgNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
+					: this.getInputNodePortIdAtMousePos(d3Event);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -4426,14 +4442,98 @@ export default class SVGCanvasRenderer {
 		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	// Returns the node that is at the current mouse position. If nodeProximity
+	// Returns a node, if one can be found, at the position indicated by
+	// the clientX and clientY coordinates in the d3Event.
+	getNodeAtMousePos(d3Event) {
+		const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
+		return this.getNodeForElement(nodeGrpElement);
+	}
+
+	// Returns a node input port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getInputNodePortIdAtMousePos(d3Event) {
+		let portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input");
+		if (!portElement) {
+			portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input-arrow");
+		}
+		return this.getNodePortIdForElement(portElement);
+	}
+
+	// Returns a node output port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getOutputNodePortIdAtMousePos(d3Event) {
+		const portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-output");
+		return this.getNodePortIdForElement(portElement);
+	}
+
+
+	// Returns a DOM element which either has the classNames passed in or
+	// has an ancestor with the className passed in, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	// Note: It may not be the top-most element so we have to search through the
+	// elements array for it.
+	getElementWithClassAtMousePos(d3Event, className) {
+		const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
+		const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
+		const elements = document.elementsFromPoint(posX, posY);
+		let foundElement = null;
+		let count = 0;
+		while (!foundElement && count < elements.length) {
+			foundElement = this.getParentElementWithClass(elements[count], className);
+			count++;
+		}
+		return foundElement;
+	}
+
+	// Returns the element passed in, or an ancestor of the element, if either
+	// contains the classNames passed in. Otherwise it returns null if the
+	// className cannot be found. For example, if this element is a child of the
+	// node group object and "d3-node-group" is passed in, this function will
+	// find the group element.
+	getParentElementWithClass(element, className) {
+		let el = element;
+		let foundElement = null;
+
+		while (el) {
+			if (el.className && el.className.baseVal && el.className.baseVal.includes(className)) {
+				foundElement = el;
+				el = null;
+			} else {
+				el = el.parentNode;
+			}
+		}
+		return foundElement;
+	}
+
+	// Returns the node link object from the canvasInfo corresponding to the
+	// element passed in provided it is a 'path' DOM object. Returns null if
+	// a link cannot be found.
+	getNodeForElement(element) {
+		if (element && element.nodeName === "g") {
+			const datum = d3.select(element).datum();
+			if (datum) {
+				return this.getNode(datum.id);
+			}
+		}
+		return null;
+	}
+
+	// Returns the node port Id corresponding to the lement passed in.
+	getNodePortIdForElement(element) {
+		if (element) {
+			return d3.select(element).attr("data-port-id");
+		}
+		return null;
+	}
+
+	// Returns the node that is near the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
-	getNodeAtMousePos(d3Event, proximity) {
+	getNodeNearMousePos(d3Event, nodeProximity) {
 		const that = this;
 		var pos = this.getTransformedMousePos(d3Event);
 		var node = null;
-		const prox = proximity || 0;
+		const prox = nodeProximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
 		this.nodesLinksGrp.selectAll(selector)
 			.each(function(d) {
@@ -4452,14 +4552,12 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	getNodePortAtMousePos(d3Event, portType, nodeProximity, portProximity) {
+	getNodePortIdNearMousePos(d3Event, portType, node) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
 
 		const pos = this.getTransformedMousePos(d3Event);
-		const node = this.getNodeAtMousePos(d3Event, nodeProximity);
-		const portProx = portProximity || 0;
 		let portId = null;
 		let defaultPortId = null;
 
@@ -4489,19 +4587,19 @@ export default class SVGCanvasRenderer {
 						const yy = node.y_pos + Number(portObj.attr("y"));
 						const wd = Number(portObj.attr("width"));
 						const ht = Number(portObj.attr("height"));
-						if (pos.x >= xx - portProx &&
-								pos.x <= xx + nodeWidthOffset + wd + portProx &&
-								pos.y >= yy - portProx &&
-								pos.y <= yy + ht + portProx) {
+						if (pos.x >= xx &&
+								pos.x <= xx + nodeWidthOffset + wd &&
+								pos.y >= yy &&
+								pos.y <= yy + ht) {
 							portId = this.getAttribute("data-port-id");
 						}
 					} else { // Port must be a circle
 						const cx = node.x_pos + Number(portObj.attr("cx"));
 						const cy = node.y_pos + Number(portObj.attr("cy"));
-						if (pos.x >= cx - node.layout.portRadius - portProx && // Target port sticks out by its radius so need to allow for it.
-								pos.x <= cx + node.layout.portRadius + portProx &&
-								pos.y >= cy - node.layout.portRadius - portProx &&
-								pos.y <= cy + node.layout.portRadius + portProx) {
+						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+								pos.x <= cx + node.layout.portRadius &&
+								pos.y >= cy - node.layout.portRadius &&
+								pos.y <= cy + node.layout.portRadius) {
 							portId = this.getAttribute("data-port-id");
 						}
 					}

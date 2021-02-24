@@ -57,6 +57,7 @@
 		}
 
 		/* Makes the port decorations (blue with the white cross) images appear on hover */
+		&[data-new-link-over="yes"] .tables-node-port,
 		&:hover .tables-node-port {
 			opacity: 100;
 		}
