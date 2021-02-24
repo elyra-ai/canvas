@@ -21,7 +21,7 @@ import PropertiesMain from "./properties-main";
 import PropertiesModal from "./components/properties-modal";
 import ValidationMessage from "./components/validation-message";
 import { formatMessage } from "./util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING } from "./constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CONDITION_RETURN_EMPTY_HANDLING } from "./constants/constants";
 
 import { injectIntl } from "react-intl";
 
@@ -234,6 +234,7 @@ CommonProperties.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		conditionReturnEmptyHandling: PropTypes.string,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
@@ -262,6 +263,7 @@ CommonProperties.defaultProps = {
 		applyOnBlur: false,
 		enableResize: true,
 		conditionReturnValueHandling: CONDITION_RETURN_VALUE_HANDLING.VALUE,
+		conditionReturnEmptyHandling: CONDITION_RETURN_EMPTY_HANDLING.EMPTY_STRING,
 		schemaValidation: false
 	},
 	callbacks: {

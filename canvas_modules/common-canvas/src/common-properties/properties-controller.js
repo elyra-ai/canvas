@@ -970,7 +970,7 @@ export default class PropertiesController {
 		if (options && options.filterHiddenDisabled === true) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
-			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+			if (options.filterHiddenDisabled === true && (controlState === STATES.DISABLED || controlState === STATES.HIDDEN)) {
 				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
@@ -1025,6 +1025,7 @@ export default class PropertiesController {
 	* return the property values for all controls
 	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   filterEmpty: true - filter out values from controls that are empty
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
 	*/
 	getPropertyValues(options) {
@@ -1043,6 +1044,22 @@ export default class PropertiesController {
 				}
 			}
 			returnValues = filteredValues;
+		}
+
+		// remove all emptuy values
+		if (options && options.filterEmpty) {
+			const nonEmptyValues = {};
+
+			for (const propKey in returnValues) {
+				if (!has(returnValues, propKey)) {
+					continue;
+				}
+				// only set parameters that are nonempty
+				if (returnValues[propKey] !== "") {
+					nonEmptyValues[propKey] = returnValues[propKey];
+				}
+			}
+			returnValues = nonEmptyValues;
 		}
 
 		// convert currentParameters of structureType:object to object values

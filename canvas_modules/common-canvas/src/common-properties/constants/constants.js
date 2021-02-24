@@ -194,6 +194,11 @@ _defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
 	NULL: "null"
 });
 
+_defineConstant("CONDITION_RETURN_EMPTY_HANDLING", {
+	EMPTY_STRING: "empty",
+	NULL: "null"
+});
+
 _defineConstant("SORT_DIRECTION", {
 	ASC: "ASC",
 	DESC: "DESC"

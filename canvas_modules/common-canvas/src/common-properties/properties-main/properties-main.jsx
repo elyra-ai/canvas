@@ -24,7 +24,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CONDITION_RETURN_EMPTY_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
@@ -266,7 +266,8 @@ class PropertiesMain extends React.Component {
 	_setValueInforProperties(valueInfo, options) {
 		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties });
+		// const filterEmpty = this.props.propertiesConfig.conditionReturnEmptyHandling === CONDITION_RETURN_EMPTY_HANDLING.NULL;
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties, filterEmpty: true });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
@@ -495,6 +496,7 @@ PropertiesMain.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		conditionReturnEmptyHandling: PropTypes.string,
 		heading: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
