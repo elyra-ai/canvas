@@ -30,6 +30,7 @@ import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDe
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
+import selectColumnParamDef from "../test_resources/paramDefs/selectcolumn_paramDef.json";
 import { IntlProvider } from "react-intl";
 
 import { CARBON_MODAL_SIZE_XSMALL, CARBON_MODAL_SIZE_SMALL, CARBON_MODAL_SIZE_LARGE } from "./../../src/common-properties/constants/constants";
@@ -510,6 +511,45 @@ describe("CommonProperties validates on close in flyout", () => {
 			done();
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "null" },
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
+	it("Validate returned property values when conditionReturnEmptyHandling not set configuration", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.field_filter_measurement).to.equal("");
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(selectColumnParamDef, null,
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
+	it("Validate returned property values when conditionReturnEmptyHandling='empty'", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.field_filter_measurement).to.equal("");
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(selectColumnParamDef, { conditionReturnEmptyHandling: "empty" },
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("button[data-id='properties-apply-button']")
+			.at(0)
+			.simulate("click");
+	});
+
+	it("Validate returned property values when conditionReturnEmptyHandling='null'", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.field_filter_measurement).to.be.undefined;
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(selectColumnParamDef, { conditionReturnEmptyHandling: "null" },
 			{ applyPropertyChanges: myApplyPropertyChanges });
 		wrapper = renderedObject.wrapper;
 		wrapper.find("button[data-id='properties-apply-button']")

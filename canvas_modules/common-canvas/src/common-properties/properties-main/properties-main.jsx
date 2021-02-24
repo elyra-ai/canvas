@@ -266,8 +266,8 @@ class PropertiesMain extends React.Component {
 	_setValueInforProperties(valueInfo, options) {
 		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		// const filterEmpty = this.props.propertiesConfig.conditionReturnEmptyHandling === CONDITION_RETURN_EMPTY_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties, filterEmpty: true });
+		const filterEmpty = this.props.propertiesConfig.conditionReturnEmptyHandling === CONDITION_RETURN_EMPTY_HANDLING.NULL;
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties, filterEmpty: filterEmpty });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
