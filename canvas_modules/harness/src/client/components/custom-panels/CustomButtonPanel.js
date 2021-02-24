@@ -210,11 +210,11 @@ class CustomButtonPanel {
 					{cost}
 				</div>
 				<br />
-				<Button small onClick={this.addRowAction} {...addDisabled}>
+				<Button size="small" onClick={this.addRowAction} {...addDisabled}>
 					Add
 				</Button>
 				&nbsp; &nbsp;
-				<Button small onClick={this.removeRowsAction} {...removeDisabled}>
+				<Button size="small" onClick={this.removeRowsAction} {...removeDisabled}>
 					Remove Selected
 				</Button>
 			</div>

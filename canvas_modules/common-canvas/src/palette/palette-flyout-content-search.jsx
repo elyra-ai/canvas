@@ -42,7 +42,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 				<Search
 					key="palette-flyout-search"
 					className="palette-flyout-search"
-					placeHolderText={placeHolder}
+					placeholder={placeHolder}
 					onChange={this.props.handleFilterChange}
 					size="sm"
 					value={this.props.filterKeyword}
