@@ -455,18 +455,6 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("aside.properties-small")).to.have.length(0);
 		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
 	});
-
-	it("should set pixelWidth in controller when overrideSize is not null", () => {
-		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
-		newPropertiesInfo.parameterDef.uihints.editor_size = "small";
-		newPropertiesInfo.parameterDef.uihints.pixel_width = { min: 400, max: 800 };
-		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { enableResize: true });
-		wrapper = renderedObject.wrapper;
-
-		// Right flyout panel should have editorSize small and width = pixel_width.min
-		expect(wrapper.find("aside.properties-small").props().style.width).to.equal("400px");
-		expect(JSON.stringify(renderedObject.controller.getPixelWidth())).to.equal(JSON.stringify({ min: 400, max: 800 }));
-	});
 });
 
 describe("Common properties modals return the correct Carbon modal size", () => {

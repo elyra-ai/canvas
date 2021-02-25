@@ -51,10 +51,6 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
-		// Persist pixelWidth
-		if (this.props.propertiesInfo.initialPixelWidth) {
-			this.propertiesController.setPixelWidth(this.props.propertiesInfo.initialPixelWidth);
-		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
@@ -485,7 +481,6 @@ class PropertiesMain extends React.Component {
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
-				this.propertiesController.setPixelWidth(this.propertiesController.getForm().pixelWidth);
 				overrideStyle = { width: overrideSize + "px" };
 			}
 			return (

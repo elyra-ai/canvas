@@ -104,14 +104,6 @@ export default class PropertiesController {
 		return this.editorSize;
 	}
 
-	setPixelWidth(pixelWidth) {
-		this.pixelWidth = pixelWidth;
-	}
-
-	getPixelWidth() {
-		return this.pixelWidth;
-	}
-
 	//
 	// Form and parsing Methods
 	//
