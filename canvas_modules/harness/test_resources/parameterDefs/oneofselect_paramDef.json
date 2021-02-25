@@ -19,8 +19,11 @@
     "oneofselect_filtered": "purple",
     "filter_custom": false,
     "oneofselect_filtered_custom": "custom",
-    "filter_default": false,
     "oneofselect_filtered_default": "purple",
+    "filter_input": 0,
+    "oneofselect_filtered_1": "",
+    "oneofselect_filtered_2": "",
+    "oneofselect_filtered_3": "",
     "oneofselect_table_error": [
       [
         "cat",
@@ -219,10 +222,6 @@
       "required": true
     },
     {
-      "id": "filter_default",
-      "type": "boolean"
-    },
-    {
       "id": "oneofselect_filtered_default",
       "enum": [
         "red",
@@ -233,6 +232,46 @@
         "purple"
       ],
       "default": "blue"
+    },
+    {
+      "id": "filter_input",
+      "type": "integer"
+    },
+    {
+      "id": "oneofselect_filtered_1",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_filtered_2",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": "blue"
+    },
+    {
+      "id": "oneofselect_filtered_3",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": "yellow"
     },
     {
       "id": "oneofselect_table_error",
@@ -424,7 +463,7 @@
       {
         "parameter_ref": "filter",
         "label": {
-          "default": "Filter 'oneofselect Filtered'"
+          "default": "Filter 'oneofselect Filtered' and 'oneofselect_filtered_default'"
         }
       },
       {
@@ -455,12 +494,6 @@
         "custom_value_allowed": true
       },
       {
-        "parameter_ref": "filter_default",
-        "label": {
-          "default": "Filter 'oneofselect Filtered Default'"
-        }
-      },
-      {
         "parameter_ref": "oneofselect_filtered_default",
         "label": {
           "default": "oneofselect Filtered Default"
@@ -468,6 +501,42 @@
         "resource_key": "oneofselect_filtered_default",
         "description": {
           "default": "oneofselect filtered to have values 'red', 'blue', and 'green'.  Defaults to 'blue'"
+        }
+      },
+      {
+        "parameter_ref": "filter_input",
+        "label": {
+          "default": "Filter 'oneofselect_filtered_1', 'oneofselect_filtered_2', and 'oneofselect_filtered_3' based on user input of 1, 2, or 3"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered_1",
+        "label": {
+          "default": "oneofselect Filtered 1 value"
+        },
+        "resource_key": "oneofselect_filtered_1",
+        "description": {
+          "default": "oneofselect filtered to have values 'red'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered_2",
+        "label": {
+          "default": "oneofselect Filtered 2 values"
+        },
+        "resource_key": "oneofselect_filtered_2",
+        "description": {
+          "default": "oneofselect filtered to have values 'red' and 'blue'.  Defaults to 'blue'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered_3",
+        "label": {
+          "default": "oneofselect Filtered 3 values"
+        },
+        "resource_key": "oneofselect_filtered_3",
+        "description": {
+          "default": "oneofselect filtered to have values 'red', 'blue', and 'green'.  Defaults to 'yellow'"
         }
       },
       {
@@ -581,10 +650,13 @@
         "parameter_refs": [
           "filter",
           "oneofselect_filtered",
+          "oneofselect_filtered_default",
           "filter_custom",
           "oneofselect_filtered_custom",
-          "filter_default",
-          "oneofselect_filtered_default"
+          "filter_input",
+          "oneofselect_filtered_1",
+          "oneofselect_filtered_2",
+          "oneofselect_filtered_3"
         ]
       },
       {
@@ -747,7 +819,7 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "filter_default",
+            "parameter_ref": "filter",
             "op": "equals",
             "value": true
           }
@@ -807,6 +879,60 @@
             "parameter_ref": "oneofselect_table_error[2]",
             "op": "notEquals",
             "value": "purple"
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered_1",
+          "values": [
+            "red"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_input",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered_2",
+          "values": [
+            "red",
+            "blue"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_input",
+            "op": "equals",
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered_3",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_input",
+            "op": "equals",
+            "value": 3
           }
         }
       }
