@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test editing node labels - Vertical node", function() {
 	beforeEach(() => {
