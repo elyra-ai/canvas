@@ -24,6 +24,8 @@ import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
+import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
+import propertyUtils from "../../_utils_/property-utils";
 
 chai.use(chaiEnzyme()); // Note the invocation at the end
 
@@ -243,6 +245,28 @@ describe("FlexibleTable renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		tableUtils.clickTableRows(tableBody, [0]);
 		expect(updateRowSelections).to.have.property("callCount", 1);
+	});
+
+	it("search bar in `FlexibleTable` should have label", () => {
+		// We need getReactIntl() in the controller which will set the tableLabel in searchBarLabel
+		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				sortable={sortFields}
+				filterable={filterFields}
+				columns={headers}
+				data={rows}
+				scrollToRow={scrollToRow}
+				alignTop={alignTop}
+				onFilter={onFilter}
+				onSort={onSort}
+				controller={renderedObject.controller}
+				tableLabel="example"
+			/>
+		);
+
+		const searchBarLabel = wrapper.find("div.properties-ft-search-container").text();
+		expect(searchBarLabel).to.equal("Search in example table");
 	});
 
 });

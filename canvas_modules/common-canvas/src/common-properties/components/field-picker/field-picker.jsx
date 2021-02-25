@@ -436,6 +436,7 @@ export default class FieldPicker extends React.Component {
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
 				rows={-1}
+				tableLabel={this.props.title ? this.props.title : ""}
 				controller={this.props.controller}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}

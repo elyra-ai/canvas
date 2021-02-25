@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ describe("Test the supernode expanded structure", function() {
 
 		// Verify expanded supernode's image and label location
 		cy.verifyNodeElementLocation("Supernode", "image", 5, 4);
-		cy.verifyNodeElementLocation("Supernode", "label", 30, 18);
-		cy.verifyNodeElementWidth("Supernode", "label", "65px");
+		cy.verifyNodeElementLocation("Supernode", "label", 30, 4);
+		cy.verifyNodeElementWidth("Supernode", "label", "120px");
 
 		// Add a very long label to the supernode
 		cy.openCanvasAPI("Set Node Label");
@@ -38,9 +38,9 @@ describe("Test the supernode expanded structure", function() {
 		cy.submitAPI();
 
 		// Verify new label location and width
-		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 18);
+		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 4);
 		cy.verifyNodeElementWidth(
-			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "127px"
+			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "120px"
 		);
 	});
 });

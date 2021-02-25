@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -24,29 +40,38 @@ export default class TablesCanvas extends React.Component {
 			enableAssocLinkCreation: true,
 			enableAssocLinkType: "RightSideCurve",
 			enableParentClass: "tables-join",
+			enableHightlightNodeOnNewLinkDrag: true,
 			enableNodeLayout: {
 				defaultNodeWidth: 220,
 				defaultNodeHeight: 50,
+
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
-				labelAndIconVerticalJustification: "none",
+
 				imageDisplay: false,
-				labelPosX: 25,
-				labelPosY: 20,
-				// portPosY: 25,
-				inputPortLeftPosY: 25,
-				outputPortRightPosY: 25,
-				portRadius: 8,
+
+				labelEditable: true,
+				labelWidth: 150,
+				labelPosX: 23,
+				labelPosY: 8,
+
 				ellipsisPosX: 190,
 				ellipsisPosY: 16,
+
+				portRadius: 8,
+
 				inputPortObject: "image",
 				inputPortImage: "/images/custom-canvases/tables/tables-port-left.png",
 				inputPortWidth: 20,
 				inputPortHeight: 20,
+				inputPortLeftPosY: 25,
+				inputPortLeftPosX: 0,
+
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/tables/tables-port-right.png",
 				outputPortWidth: 20,
-				outputPortHeight: 20
+				outputPortHeight: 20,
+				outputPortRightPosY: 25,
 			}
 		});
 		this.layoutHandler = this.layoutHandler.bind(this);
@@ -69,7 +94,7 @@ export default class TablesCanvas extends React.Component {
 				defaultNodeHeight: 80,
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
-				labelPosY: 45,
+				labelPosY: 33,
 				inputPortLeftPosY: 48,
 				outputPortRightPosY: 48,
 				// portPosY: 48,
@@ -124,7 +149,7 @@ export default class TablesCanvas extends React.Component {
 				{
 					"id": "assocDec2",
 					"x_pos": 0,
-					"y_pos": 4,
+					"y_pos": -5,
 					"label": "0 Keys",
 					"class_name": "tables-join-keys-decoration-text-unselected",
 					"hotspot": true

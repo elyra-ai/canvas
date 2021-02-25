@@ -24,28 +24,25 @@
 	}
 
 	.tables-join-keys-decoration-text-selected {
-		stroke: #FFFFFF;
-		fill: #FFFFFF;
+		color: #FFFFFF;
 		font-size: 10px;
-		font-weight: 100;
+		font-weight: 500;
 		cursor: pointer;
 		pointer-events: none;
 	}
 
 	.tables-join-keys-decoration-text-unselected {
-		stroke: #000000;
-		fill: #000000;
+		color: #000000;
 		font-size: 10px;
-		font-weight: 100;
+		font-weight: 500;
 		cursor: pointer;
 		pointer-events: none;
 	}
 
 	.tables-col-label {
-		fill: #A5A5A7;
-		stroke: #A5A5A7;
-		font-size: 11px;
-		font-weight: 100;
+		color: #A5A5A7;
+		font-size: 12px;
+		font-weight: 500;
 	}
 
 	/* Makes the port decorations (blue with the white cross) be hidden by default */
@@ -60,6 +57,7 @@
 		}
 
 		/* Makes the port decorations (blue with the white cross) images appear on hover */
+		&[data-new-link-over="yes"] .tables-node-port,
 		&:hover .tables-node-port {
 			opacity: 100;
 		}

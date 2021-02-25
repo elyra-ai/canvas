@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -48,11 +64,10 @@ export default class DetachedCanvas extends React.Component {
 				links: false
 			},
 			enableNodeLayout: {
-				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "image_center",
 				drawCommentLinkLineTo: "image_center",
 				defaultNodeWidth: 72,
-				defaultNodeHeight: 72,
+				defaultNodeHeight: 82,
 				selectionPath: "M 8 0 L 64 0 64 56 8 56 8 0",
 				ellipsisWidth: 12,
 				ellipsisHeight: 16,
@@ -63,8 +78,12 @@ export default class DetachedCanvas extends React.Component {
 				imagePosX: 12,
 				imagePosY: 4,
 				labelPosX: 36,
-				labelPosY: 70,
-				labelMaxWidth: 200,
+				labelPosY: 56,
+				labelWidth: 200,
+				labelHeight: 29,
+				labelEditable: true,
+				labelSingleLine: false,
+				labelOutline: false,
 				portRadius: 10,
 				inputPortLeftPosX: 0,
 				inputPortLeftPosY: 28,
@@ -97,10 +116,11 @@ export default class DetachedCanvas extends React.Component {
 
 	getDecorationsArray(linkLabel) {
 		const decs = [
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, y_pos: 5, temporary: true }
+			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
+			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
+			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -114,10 +134,16 @@ export default class DetachedCanvas extends React.Component {
 
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
-			const linkLabel = "link-" + data.linkIds[0].substring(0, 2);
-			const decs = this.getDecorationsArray(linkLabel);
-			this.canvasController.setLinkDecorations(data.linkIds[0], decs);
+			this.createDecorations(data.linkIds[0]);
+		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
+			this.createDecorations(command.data.linkIds[0]);
 		}
+	}
+
+	createDecorations(linkId) {
+		const linkLabel = "link " + linkId.substring(0, 2);
+		const decs = this.getDecorationsArray(linkLabel);
+		this.canvasController.setLinkDecorations(linkId, decs);
 	}
 
 	render() {

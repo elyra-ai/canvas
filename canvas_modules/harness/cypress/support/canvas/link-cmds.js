@@ -54,9 +54,9 @@ function getLinkSelector(linkId, element) {
 	} else if (element === "line") {
 		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > path`;
 	} else if (element === "startHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-start`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-start`;
 	} else if (element === "endHandle") {
-		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > .d3-link-handle-end`;
+		selector = `div > svg > g > g > g[data-id^="link_grp_${inst}_${linkId}"] > g > .d3-link-handle-end`;
 	}
 	return selector;
 }
@@ -77,7 +77,47 @@ Cypress.Commands.add("moveLinkHandleToPos", (linkId, element, xPos, yPos) => {
 	});
 });
 
-Cypress.Commands.add("moveLinkHandleToPort", (linkId, element, nodeName, portId) => {
+Cypress.Commands.add("moveLinkHandleToNode", (
+	srcNodeName, srcPortId, trgNodeName, trgPortId, element, nodeName) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", 1);
+					// console.log(links[0]);
+					cy.clickLink(links[0].id);
+					cy.moveLinkHandleToNodeByLinkId(links[0].id, element, nodeName);
+				});
+		});
+});
+
+Cypress.Commands.add("moveLinkHandleToNodeByLinkId", (linkId, element, nodeName) => {
+	cy.window().then((win) => {
+		cy.getNodeSelector(nodeName)
+			.then((trgSelector) => {
+				cy.get(getLinkSelector(linkId, element))
+					.trigger("mousedown", { view: win });
+				cy.get(trgSelector)
+					.trigger("mousemove", { force: true, view: win })
+					.trigger("mouseup", { force: true, view: win });
+			});
+	});
+});
+
+Cypress.Commands.add("moveLinkHandleToPort", (
+	srcNodeName, srcPortId, trgNodeName, trgPortId, element, nodeName, portId) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", 1);
+					cy.clickLink(links[0].id);
+					cy.moveLinkHandleToPortByLinkId(links[0].id, element, nodeName, portId);
+				});
+		});
+});
+
+Cypress.Commands.add("moveLinkHandleToPortByLinkId", (linkId, element, nodeName, portId) => {
 	cy.window().then((win) => {
 		const portElement = element === "endHandle" ? "inp_port" : "out_port";
 		cy.getNodePortSelector(nodeName, portElement, portId)
@@ -90,7 +130,6 @@ Cypress.Commands.add("moveLinkHandleToPort", (linkId, element, nodeName, portId)
 			});
 	});
 });
-
 
 Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
 	// Link source node to target node
@@ -163,6 +202,15 @@ Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortI
 			cy.get(".d3-svg-canvas-div > .svg-area")
 				.trigger("mousemove", { force: true })
 				.trigger("mouseup", xPos, yPos, { force: true });
+		});
+});
+
+Cypress.Commands.add("getNodeSelector", (nodeName) => {
+	const inst = document.extraCanvas === true ? "1" : "0";
+	cy.getNodeIdForLabel(nodeName)
+		.then((nodeId) => {
+			const nodeSelector = `[data-id='node_grp_${inst}_${nodeId}']`;
+			return nodeSelector;
 		});
 });
 

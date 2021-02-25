@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
-const dataLinkSelector = ".d3-link-group .d3-data-link.d3-link-line";
-const commentLinkSelector = ".d3-link-group .d3-comment-link.d3-link-line";
-const assocLinkSelector = ".d3-link-group .d3-object-link.d3-link-line";
+const dataLinkSelector = ".d3-link-group.d3-data-link .d3-link-line";
+const commentLinkSelector = ".d3-link-group.d3-comment-link .d3-link-line";
+const assocLinkSelector = ".d3-link-group.d3-object-link .d3-link-line";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
@@ -203,6 +203,16 @@ Cypress.Commands.add("verifyNodeExistsInExtraCanvas", (nodeName) => {
 	cy.inRegularCanvas();
 });
 
+Cypress.Commands.add("verifyNodeExists", (nodeLabel) => {
+	// Verify node is in the DOM
+	cy.getNodeWithLabel(nodeLabel)
+		.should("have.length", 1);
+
+	// Verify that the node is in the internal object model
+	cy.getNodeLabelCountFromObjectModel(nodeLabel)
+		.then((count) => expect(count).to.equal(1));
+});
+
 Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify comment is in the DOM
 	cy.getCommentWithText(commentText)
@@ -211,18 +221,16 @@ Cypress.Commands.add("verifyCommentExists", (commentText) => {
 	// verify that the comment is in the internal object model
 	cy.getCommentContentCountFromObjectModel(commentText)
 		.then((count) => expect(count).to.equal(1));
-
-	// verify that an event for a new comment is in the external object model event log
-	verifyEditActionHandlerEditCommentEntryInConsole(commentText);
 });
 
-function verifyEditActionHandlerEditCommentEntryInConsole(commentText) {
+Cypress.Commands.add("verifyEditActionInConsole", (action, dataField, dataContent) => {
 	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastLogOfType(doc, "editActionHandler(): editComment");
-		expect(lastEventLog.event).to.equal("editActionHandler(): editComment");
-		expect(lastEventLog.data.content).to.equal(commentText);
+		const actionText = "editActionHandler(): " + action;
+		const lastEventLog = testUtils.getLastLogOfType(doc, actionText);
+		expect(lastEventLog.event).to.equal(actionText);
+		expect(lastEventLog.data[dataField]).to.equal(dataContent);
 	});
-}
+});
 
 Cypress.Commands.add("verifyEditedCommentExists", (commentText) => {
 	// verify comment is in the DOM
@@ -260,8 +268,10 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".node-image").length) {
-			cy.get("#canvas-div-0").find(".node-image")
+		if ($body.find(".d3-node-image").length) {
+			cy.get("#canvas-div-0")
+				.get(".svg-area")
+				.find(".d3-node-image")
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
@@ -276,7 +286,7 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 });
 
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
-	cy.get("#canvas-div-1").find(".node-image")
+	cy.get("#canvas-div-1").find(".d3-node-image")
 		.should("have.length", noOfNodes);
 
 	// verify the number of nodes in the internal object model
@@ -335,13 +345,13 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 		let dataLinks = 0;
 		let commentLinks = 0;
 		let objectLinks = 0;
-		if ($body.find(".d3-link-group .d3-data-link").length) {
+		if ($body.find(dataLinkSelector).length) {
 			dataLinks = $body.find(dataLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group .d3-comment-link").length) {
+		if ($body.find(commentLinkSelector).length) {
 			commentLinks = $body.find(commentLinkSelector).length;
 		}
-		if ($body.find(".d3-link-group .d3-object-link").length) {
+		if ($body.find(assocLinkSelector).length) {
 			objectLinks = $body.find(assocLinkSelector).length;
 		}
 		expect(dataLinks + commentLinks + objectLinks).equal(noOfLinks);

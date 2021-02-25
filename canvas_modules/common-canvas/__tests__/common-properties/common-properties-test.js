@@ -218,6 +218,17 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("button.properties-btn-resize")).to.have.length(1);
 	});
 
+	it("Resize button should have aria-label", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
+		wrapper = renderedObject.wrapper;
+		const resizeBtn = wrapper.find("button.properties-btn-resize");
+		expect(resizeBtn.props()).to.have.property("aria-label", "Expand");
+		resizeBtn.simulate("click");
+
+		const updatedResizeBtn = wrapper.find("button.properties-btn-resize");
+		expect(updatedResizeBtn.props()).to.have.property("aria-label", "Contract");
+	});
+
 	it("When enableResize=true resize button should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: true });
 		wrapper = renderedObject.wrapper;

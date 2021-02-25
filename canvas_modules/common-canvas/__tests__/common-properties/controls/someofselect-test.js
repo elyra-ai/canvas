@@ -206,6 +206,19 @@ describe("SomeOfSelectControl renders correctly", () => {
 		const messageWrapper = someofselectWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("SomeOfSelectControl should have aria-label", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const someofselectWrapper = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
+		expect(someofselectWrapper.props()).to.have.property("aria-label", control.label.text);
+	});
 });
 
 describe("someofselect works correctly in common-properties", () => {

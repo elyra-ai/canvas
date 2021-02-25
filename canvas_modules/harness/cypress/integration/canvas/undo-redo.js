@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -388,6 +388,8 @@ describe("Test for Multiple undo/redo operations", function() {
 		cy.clickNode("Filter");
 		cy.addCommentToPosition("Some text comment.", 30, 300);
 		cy.verifyCommentExists("Some text comment.");
+		cy.verifyEditActionInConsole("editComment", "content", "Some text comment.");
+
 		// Undo using toolbar
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();

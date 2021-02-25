@@ -21,7 +21,6 @@
 		stroke: transparent;
 		fill: $ui-01;
 		stroke-width: 2;
-		text-anchor: middle;
 	}
 
 	.d3-node-selection-highlight[data-selected="yes"] {
@@ -31,7 +30,6 @@
 	.d3-node-label {
 		font-size: 14px;
 		font-weight: 600;
-		text-anchor: start;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 
@@ -47,21 +45,21 @@
 	.dec-percentage-label {
 		font-size: 14px;
 		font-weight: 600;
-		text-anchor: end;
+		text-align: right;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 
 	.dec-index-label {
 		font-size: 14px;
 		font-weight: 600;
-		text-anchor: start;
+		text-align: left;
 	}
 
 	.dec-sql-cost-label {
 		font-size: 14px;
-		fill: $text-05;
+		color: $text-05;
 		font-weight: 600;
-		text-anchor: start;
+		text-align: left;
 	}
 
 	.dec-right-bar {

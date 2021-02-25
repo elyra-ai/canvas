@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON,
+	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
@@ -42,6 +42,11 @@ import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 
 const showLinksTime = false;
+
+const ESC_KEY = 27;
+const RETURN_KEY = 13;
+
+const SCROLL_PADDING = 12;
 
 const NINETY_DEGREES_IN_RADIANS = 90 * (Math.PI / 180);
 const INPUT_TYPE = "input_type";
@@ -75,8 +80,8 @@ export default class SVGCanvasRenderer {
 		// Initialize zoom variables
 		this.initializeZoomVariables();
 
-		this.nodeUtils = new SvgCanvasNodes(this.config);
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout);
+		this.nodeUtils = new SvgCanvasNodes(this.config, this.canvasLayout);
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils);
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -99,10 +104,9 @@ export default class SVGCanvasRenderer {
 		this.resizeObjWidth = 0;
 		this.resizeObjHeight = 0;
 
-		// Allows us to track the editing of comments
-		this.editingComment = false;
-		this.editingCommentId = "";
-		this.editingCommentChangesPending = false;
+		// Allows us to track the editing of text (either comments or node labels)
+		this.editingText = false;
+		this.editingTextId = "";
 
 		// Allows us to record the drag behavior or nodes and comments.
 		this.dragging = false;
@@ -189,6 +193,8 @@ export default class SVGCanvasRenderer {
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
 
+		this.initializeGhostDiv();
+
 		this.canvasSVG = this.createCanvasSVG();
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
@@ -196,7 +202,6 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp = this.createCanvasGroup(this.canvasGrp, "d3-nodes-links-group"); // Group to position nodes and links over comments
 		this.boundingRectsGrp = this.createBoundingRectanglesGrp(this.canvasGrp, "d3-bounding-rect-group"); // Group to optionally add bounding rectangles over all objects
 
-		this.initializeGhostDiv();
 
 		this.resetCanvasSVGBehaviors();
 
@@ -478,11 +483,6 @@ export default class SVGCanvasRenderer {
 		this.logger.log("displayBindingNodesToFitSVG - end");
 	}
 
-	getSupernodeSVGDimensionsFor(pipelineId) {
-		const datum = this.getSupernodeReferencing(pipelineId);
-		return this.getSupernodeSVGDimensions(datum);
-	}
-
 	getParentSupernodeSVGDimensions() {
 		const datum = this.getParentSupernodeDatum();
 		return this.getSupernodeSVGDimensions(datum);
@@ -636,14 +636,14 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	isEditingComment() {
-		if (this.editingComment) {
+	isEditingText() {
+		if (this.editingText) {
 			return true;
 		}
 		let state = false;
 		this.superRenderers.forEach((superRen) => {
 			if (!state) {
-				state = superRen.isEditingComment();
+				state = superRen.isEditingText();
 			}
 		});
 		return state;
@@ -750,38 +750,37 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
-	// Creates the div which contains the ghost node rectangle for drag and
-	// drop actions from the palette. The way setDragImage is handled is
+	// Creates the div which contains the ghost node for drag and
+	// drop actions from the palette. The way setDragImage is handled in
 	// browsers for HTML drag and drop is very odd since the image has to be
-	// 'visible'. Placing the div in the body element of the page with position
-	// as absolute & -5000px (above) the div was the only way I could get the
-	// ghost image to work without resorting to the approach described here:
+	// 'visible' but not necssarily on display! I know, it confusing. Checkout
+	// this link for an explanation:
 	// https://www.kryogenix.org/code/browser/custom-drag-image.html
-	// Even placing the div in one of the common-canvas divs, which would be
-	// preferable to placing it in the page 'body', would not work.
+	// Consequently, we place the ghost div, using CSS, within the canvas div
+	// with an absolute position and with a z-index to make it 'appear'
+	// underneath the svg area.
 	initializeGhostDiv() {
-		if (this.getGhostDivSel().empty()) {
-
-			const parentClass = this.config && this.config.enableParentClass
-				? " " + this.config.enableParentClass
-				: "";
-
-			d3.selectAll("body")
+		if (this.isDisplayingFullPage() &&
+				this.getGhostDivSel().empty()) {
+			this.canvasDiv
 				.append("div")
-				.attr("class", "d3-ghost-div" + parentClass);
+				.attr("class", "d3-ghost-div");
 		}
 	}
 
-	// Returns the ghost div selection.
+	// Returns the ghost div selection. We always reselect the ghost div when it
+	// is required because there is one ghost div for the whole common-canvas so
+	// if this renderer is for an in-place subflow we need to get the ghost image
+	// from the parent div.
 	getGhostDivSel() {
-		return d3.selectAll("body").selectAll(".d3-ghost-div");
+		return this.canvasDiv.selectAll(".d3-ghost-div");
 	}
 
 	// Returns a ghost data object for displaying a ghost image when dragging
 	// nodes from the palette. The object contains a DOM element to display
 	// plus its width and height. This needs to be called each time a new node
-	// is dragged from the palette in case the dimensions of the ghost node
-	// have changed becuase the canvas has been zoomed.
+	// is dragged from the palette, in case the dimensions of the ghost node
+	// have changed because the canvas has been zoomed.
 	getGhostNode(nodeTemplate) {
 		const that = this;
 		const ghost = this.getGhostDimensions();
@@ -791,15 +790,15 @@ export default class SVGCanvasRenderer {
 		node.height = ghost.height;
 
 		const nodeImage = this.getNodeImage(node);
-		const nodeImageType = this.getNodeImageType(nodeImage);
+		const nodeImageType = this.getImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();
 
 		// Calculate the ghost area width which is the maximum of either the node
 		// label or the default node width.
 		const nodeLayout = this.objectModel.getNodeLayout();
-		const ghostAreaMaxWidth = Math.max(nodeLayout.labelMaxWidth, node.width);
+		const ghostAreaWidth = Math.max(nodeLayout.labelWidth, node.width);
 
-		// First remove any old SVG object from the div
+		// Remove any existing SVG object from the div
 		ghostDivSel
 			.selectAll(".d3-ghost-svg")
 			.remove();
@@ -807,12 +806,15 @@ export default class SVGCanvasRenderer {
 		// Create a new SVG area for the ghost area.
 		const ghostAreaSVG = ghostDivSel
 			.append("svg")
-			.attr("width", ghostAreaMaxWidth * this.zoomTransform.k)
-			.attr("height", node.height * this.zoomTransform.k)
+			.attr("width", ghostAreaWidth * this.zoomTransform.k)
+			.attr("height", (50 + node.height) * this.zoomTransform.k) // Add some extra pixels, in case label is below label bottom
+			.attr("x", 0)
+			.attr("y", 0)
 			.attr("class", "d3-ghost-svg");
 
 		const ghostGrp = ghostAreaSVG
-			.append("g");
+			.append("g")
+			.attr("class", "d3-node-group");
 
 		ghostGrp
 			.append("rect")
@@ -824,35 +826,48 @@ export default class SVGCanvasRenderer {
 
 		ghostGrp
 			.append(nodeImageType)
-			.attr("class", "node-image")
-			.each(function() { that.setImageContent(this, node); })
-			.attr("x", this.getNodeImagePosX(node))
-			.attr("y", this.getNodeImagePosY(node))
-			.attr("width", this.getNodeImageWidth(node))
-			.attr("height", this.getNodeImageHeight(node));
+			.attr("class", "d3-node-image")
+			.each(function() { that.setNodeImageContent(this, node); })
+			.attr("x", this.nodeUtils.getNodeImagePosX(node))
+			.attr("y", this.nodeUtils.getNodeImagePosY(node))
+			.attr("width", this.nodeUtils.getNodeImageWidth(node))
+			.attr("height", this.nodeUtils.getNodeImageHeight(node));
 
-		ghostGrp
-			.append("text")
-			.attr("x", this.getLabelPosX(node))
-			.attr("y", this.getLabelPosY(node))
-			.text(function() {
-				var textObj = d3.select(this);
-				return that.getNodeLabelText(node, textObj);
-			})
-			.attr("class", this.getLabelClass(node));
+		const fObject = ghostGrp
+			.append("foreignObject")
+			.attr("x", this.nodeUtils.getNodeLabelPosX(node))
+			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
+			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
+			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
+			.attr("class", this.getNodeLabelForeignClass(node));
 
-		// At the time of writing Firefox takes the ghost image from only those
+		const fObjectDiv = fObject
+			.append("xhtml:div")
+			.attr("class", this.getNodeLabelClass(node));
+
+		const fObjectSpan = fObjectDiv
+			.append("xhtml:span")
+			.html(node.label);
+
+		// At the time of writing, Firefox takes the ghost image from only those
 		// objects that are visible (ignoring any invisible objects like the div
 		// and SVG area) consequently we position the node and label so the label
 		// (if bigger than the node width) is position up against the left edge
 		// of the invisible div and SVG area. If the label is shorter than the node
 		// width, the node is positioned up against the left edge of the SVG. We do
-		// this my translating the group object in the x dirction.
-		const labelObj = ghostDivSel.selectAll("text");
-		const labelLength = labelObj.node().getComputedTextLength();
+		// this by translating the group object in the x direction.
+		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
+		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
+		const labelLength = Math.min(nodeLabelWidth, labelSpanWidth);
+
 		const xOffset = Math.max(0, (labelLength - ghost.width) / 2) * this.zoomTransform.k;
+		const labelDiff = Math.max(0, (nodeLabelWidth - labelLength) / 2);
 
 		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
+		fObject
+			.attr("width", labelLength)
+			.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+		fObjectDiv.attr("width", labelLength);
 
 		// Calculate the zoom amount if the browser itself is zoomed.
 		// At the time of writing this value is not returned correctly by Safari.
@@ -964,7 +979,7 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode(d3Event) {
-		const nodeNearMouse = this.getNodeAtMousePos(d3Event, this.canvasLayout.nodeProximity);
+		const nodeNearMouse = this.getNodeNearMousePos(d3Event, this.canvasLayout.nodeProximity);
 		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
@@ -992,10 +1007,16 @@ export default class SVGCanvasRenderer {
 				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
 				const trgNodePortId = this.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
-			}
 
-			if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
+			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
+				const srcNode = this.drawingNewLinkData.srcNode;
+				const trgNode = nodeNearMouse;
+				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links);
+
+			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
+				const srcObjId = this.drawingNewLinkData.srcObjId;
+				const trgNodeId = nodeNearMouse.id;
+				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.activePipeline.links);
 			}
 		} else if (this.draggingLinkData) {
 			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
@@ -1896,7 +1917,7 @@ export default class SVGCanvasRenderer {
 
 		if (this.isDisplayingPrimaryFlowFullPage()) {
 			const incTransform = this.getTransformIncrement(d3Event);
-			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewPort(), this.zoomCanvasDimensions);
+			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewportDimensions(), this.zoomCanvasDimensions);
 		} else {
 			this.zoomTransform = d3.zoomIdentity.translate(d3Event.transform.x, d3Event.transform.y).scale(d3Event.transform.k);
 		}
@@ -1910,18 +1931,6 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableCanvasUnderlay !== "None" &&
 				this.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
-		}
-
-		// If this zoom is for a full page display (for either primary pipelines
-		// or sub-pipeline) and there is a textarea (for comment entry) open,
-		// apply the zoom transform to it.
-		if (this.isDisplayingFullPage()) {
-			const ta = this.canvasDiv.select(".d3-comment-entry");
-			if (!ta.empty()) {
-				const pipelineId = ta.attr("data-pipeline-id");
-				const ren = this.getRendererForPipelineIdRecursively(pipelineId);
-				ta.style("transform", ren.getTextAreaTransform(ta.datum()));
-			}
 		}
 
 		// The supernode will not have any calculated port positions when the
@@ -1981,20 +1990,6 @@ export default class SVGCanvasRenderer {
 		}
 
 		return d3.zoomIdentity.translate(x, y).scale(k);
-	}
-
-	// Returns the view port dimensions from the D3 zoom object. This is a bit
-	// weird in that you have to get the function from D3 and then call that
-	// function to get the data which is two arrays inside an array containing
-	// the points of the top left and bottom right corner of the view ports.
-	getViewPort() {
-		const extentFn = this.zoom.extent().bind(this.canvasSVG.node());
-		const extent = extentFn();
-
-		const width = extent[1][0] - extent[0][0];
-		const height = extent[1][1] - extent[0][1];
-
-		return { width, height };
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
@@ -2428,7 +2423,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => that.getId("node_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-node-group")
+				.attr("class", (nd) => that.getNodeGroupClass(nd))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM node group object
 					const nodeGrp = d3.select(this);
@@ -2548,59 +2543,71 @@ export default class SVGCanvasRenderer {
 			// Node body
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 				.append("path")
-				.attr("class", (cd) => this.getNodeBodyClass(cd))
+				.attr("class", "d3-node-body-outline")
 				.attr("data-id", (d) => this.getId("node_body", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id);
 
 			// Image outline - this code used for debugging purposes
 			// newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			//	.append("rect")
-			// 	.attr("width", (d) => d.layout.imageWidth)
-			// 	.attr("height", (d) => d.layout.imageHeight)
-			// 	.attr("x", (d) => d.layout.imagePosX)
-			// 	.attr("y", (d) => d.layout.imagePosY)
+			// 	.append("rect")
+			// 	.attr("x", (nd) => this.nodeUtils.getNodeImagePosX(nd))
+			// 	.attr("y", (nd) => this.nodeUtils.getNodeImagePosY(nd))
+			// 	.attr("width", (nd) => this.nodeUtils.getNodeImageWidth(nd))
+			// 	.attr("height", (nd) => this.nodeUtils.getNodeImageHeight(nd))
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
 				.each(function(nd) {
 					const nodeImage = that.getNodeImage(nd);
-					const nodeImageType = that.getNodeImageType(nodeImage);
+					const nodeImageType = that.getImageType(nodeImage);
 					d3.select(this)
 						.append(nodeImageType)
 						.attr("data-id", (d) => that.getId("node_image", d.id))
 						.attr("data-pipeline-id", that.activePipeline.id)
-						.attr("class", "node-image");
+						.attr("class", (d) => that.getNodeImageClass(d));
 				});
-
-			// Label outline - this code used for debugging purposes
-			// newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			// 	.append("rect")
-			// 	.attr("width", (d) => d.layout.labelMaxWidth)
-			// 	.attr("height", (d) => d.layout.labelHeight)
-			// 	.attr("x", (d) => this.getLabelOutlinePosX(d))
-			// 	.attr("y", (d) => this.getLabelOutlinePosY(d))
-			// 	.attr("class", "d3-label-outline");
 
 			// Node Label
 			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-				.append("text")
+				.append("foreignObject")
 				.attr("data-id", (d) => this.getId("node_label", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-					const labelObj = d3.select(this);
-					if (that.config.enableDisplayFullLabelOnHover &&
-							this.textContent.endsWith("...")) {
-						labelObj
-							.attr("abbr-label", this.textContent) // Do this before setting the new label
-							.text(d.label);
+					const labelSel = d3.select(this);
+					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
+						labelSel
+							.attr("x", that.nodeUtils.getNodeLabelHoverPosX(d))
+							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d));
 					}
 				})
-				.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
-					const labelObj = d3.select(this);
-					const abbrLabel = labelObj.attr("abbr-label");
-					if (abbrLabel && abbrLabel !== "") {
-						labelObj.text(abbrLabel).attr("abbr-label", "");
+				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
+					const labelSel = d3.select(this);
+					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
+						labelSel
+							.attr("x", that.nodeUtils.getNodeLabelPosX(d))
+							.attr("width", that.nodeUtils.getNodeLabelWidth(d));
+					}
+				})
+				.on("dblclick", (d3Event, d) => {
+					that.logger.log("Node Label - double click");
+					if (d.layout.labelEditable) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+						that.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+					}
+				})
+				.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+				.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
+					if (d.layout.labelEditable) {
+						clearTimeout(that.hideEditIconPending);
+						that.displayEditIcon(this, d);
+					}
+				})
+				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
+					if (d.layout.labelEditable) {
+						// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 500, this, d);
 					}
 				});
 
@@ -2644,6 +2651,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("style", that.getNodeGrpStyle(d))
+						.attr("class", (nd) => that.getNodeGroupClass(nd))
 						.datum(node); // Set the __data__ to the updated data
 
 					// Node sizing area
@@ -2661,10 +2669,10 @@ export default class SVGCanvasRenderer {
 
 					// Move the dynamic icons (if any exist)
 					nodeGrp.select(this.getSelectorForId("node_ellipsis_group", d.id))
-						.attr("transform", (nd) => `translate(${this.getEllipsisPosX(nd)}, ${this.getEllipsisPosY(nd)})`);
+						.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd));
 
 					nodeGrp.select(this.getSelectorForId("node_exp_group", d.id))
-						.attr("transform", (nd) => `translate(${this.getExpansionIconPosX(nd)}, ${this.canvasLayout.supernodeExpansionIconPosY})`);
+						.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd));
 
 					// Node styles
 					this.setNodeStyles(d, "default", nodeGrp);
@@ -2677,11 +2685,11 @@ export default class SVGCanvasRenderer {
 					// from the canvas) and when WML Canvas uses that clipboard support in place
 					// of its own.
 					nodeGrp.select(this.getSelectorForId("node_image", d.id))
-						.each(function() { that.setImageContent(this, d); })
-						.attr("x", (nd) => this.getNodeImagePosX(nd))
-						.attr("y", (nd) => this.getNodeImagePosY(nd))
-						.attr("width", (nd) => this.getNodeImageWidth(nd))
-						.attr("height", (nd) => this.getNodeImageHeight(nd))
+						.each(function() { that.setNodeImageContent(this, d); })
+						.attr("x", (nd) => this.nodeUtils.getNodeImagePosX(nd))
+						.attr("y", (nd) => this.nodeUtils.getNodeImagePosY(nd))
+						.attr("width", (nd) => this.nodeUtils.getNodeImageWidth(nd))
+						.attr("height", (nd) => this.nodeUtils.getNodeImageHeight(nd))
 						.datum(node) // Set the __data__ to the updated data
 						.each(function(nd) {
 							var imageObj = d3.select(this);
@@ -2697,13 +2705,15 @@ export default class SVGCanvasRenderer {
 					// Set y for node label in new and existing nodes
 					nodeGrp.select(this.getSelectorForId("node_label", d.id))
 						.datum(node) // Set the __data__ to the updated data
-						.attr("x", (nd) => this.getLabelPosX(nd))
-						.attr("y", (nd) => this.getLabelPosY(nd))
-						.text(function(nd) {
-							var textObj = d3.select(this);
-							return that.getNodeLabelText(nd, textObj);
-						})
-						.attr("class", (nd) => this.getLabelClass(nd));
+						.attr("x", (nd) => this.nodeUtils.getNodeLabelPosX(nd))
+						.attr("y", (nd) => this.nodeUtils.getNodeLabelPosY(nd))
+						.attr("width", (nd) => this.nodeUtils.getNodeLabelWidth(nd))
+						.attr("height", (nd) => this.nodeUtils.getNodeLabelHeight(nd))
+						.attr("class", this.getNodeLabelForeignClass(node))
+						.select("div")
+						.attr("class", (nd) => this.getNodeLabelClass(nd))
+						.select("span")
+						.html((nd) => nd.label);
 
 					// Supernode sub-flow display
 					if (this.nodeUtils.isSupernode(d)) {
@@ -2721,7 +2731,7 @@ export default class SVGCanvasRenderer {
 					nodeGrp.select(this.getSelectorForId("node_body", d.id))
 						.datum(node) // Set the __data__ to the updated data
 						.attr("d", (cd) => this.getNodeShapePath(cd))
-						.attr("class", (cd) => this.getNodeBodyClass(cd));
+						.attr("class", "d3-node-body-outline");
 
 					// Handle port related objects
 					if (this.canvasLayout.connectionType === "ports") {
@@ -2744,7 +2754,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.inputPortObject)
 								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mousedown", (d3Event, port) => {
@@ -2841,7 +2851,7 @@ export default class SVGCanvasRenderer {
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
-									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
@@ -2896,30 +2906,32 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.outputPortObject)
 								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.on("mousedown", (d3Event, port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
 										const srcNode = this.getNode(d.id);
-										this.drawingNewLinkData = {
-											srcObjId: d.id,
-											srcPortId: port.id,
-											action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-											srcNode: srcNode,
-											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-											portType: "output",
-											portObject: d.layout.outputPortObject,
-											portImage: d.layout.outputPortImage,
-											portWidth: d.layout.outputPortWidth,
-											portHeight: d.layout.outputPortHeight,
-											portRadius: this.getPortRadius(srcNode),
-											minInitialLine: srcNode.layout.minInitialLine,
-											guideObject: d.layout.outputPortGuideObject,
-											guideImage: d.layout.outputPortGuideImage,
-											linkArray: []
-										};
-										this.drawNewLink(d3Event);
+										if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
+											this.drawingNewLinkData = {
+												srcObjId: d.id,
+												srcPortId: port.id,
+												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+												srcNode: srcNode,
+												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+												portType: "output",
+												portObject: d.layout.outputPortObject,
+												portImage: d.layout.outputPortImage,
+												portWidth: d.layout.outputPortWidth,
+												portHeight: d.layout.outputPortHeight,
+												portRadius: this.getPortRadius(srcNode),
+												minInitialLine: srcNode.layout.minInitialLine,
+												guideObject: d.layout.outputPortGuideObject,
+												guideImage: d.layout.outputPortGuideImage,
+												linkArray: []
+											};
+											this.drawNewLink(d3Event);
+										}
 									}
 								})
 								.on("mouseenter", function(d3Event, port) {
@@ -2987,6 +2999,59 @@ export default class SVGCanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	displayEditIcon(spanObj, node) {
+		const that = this;
+		const labelObj = spanObj.parentElement;
+		const foreignObj = labelObj.parentElement;
+		const nodeObj = foreignObj.parentElement;
+		const nodeGrpSel = d3.select(nodeObj);
+
+		const editIconGrpSel = nodeGrpSel.append("g")
+			.attr("class", "d3-node-label-edit-icon-group")
+			.attr("transform", (nd) =>
+				this.nodeUtils.getNodeLabelEditIconTranslate(nd, spanObj,
+					this.zoomTransform.k, this.config.enableDisplayFullLabelOnHover))
+			.on("mouseenter", function(d3Event, d) {
+				that.mouseOverLabelEditIcon = true;
+			})
+			.on("mouseleave", function(d3Event, d) {
+				that.mouseOverLabelEditIcon = false;
+				that.hideEditIcon(this);
+			})
+			.on("click", function(d3Event, d) {
+				that.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+				that.mouseOverLabelEditIcon = false;
+				that.hideEditIcon(this);
+			});
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background")
+			.attr("width", 24)
+			.attr("height", 24)
+			.attr("x", 0)
+			.attr("y", 0);
+
+		editIconGrpSel
+			.append("svg")
+			.attr("class", "d3-node-edit-label-icon")
+			.html(EDIT_ICON)
+			.attr("width", 16)
+			.attr("height", 16)
+			.attr("x", 4)
+			.attr("y", 4);
+	}
+
+	hideEditIcon(spanObj) {
+		if (!this.mouseOverLabelEditIcon) {
+			const labelObj = spanObj.parentElement;
+			const foreignObj = labelObj.parentElement;
+			const nodeObj = foreignObj.parentElement;
+			const nodeGrpSel = d3.select(nodeObj);
+			nodeGrpSel.selectAll(".d3-node-label-edit-icon-group").remove();
+		}
 	}
 
 	// Adds the object passed in to the set of selected objects using
@@ -3096,7 +3161,7 @@ export default class SVGCanvasRenderer {
 		this.updateDecOutlines(dec, decSel, objType, d);
 		this.updateDecPaths(dec, decSel, objType);
 		this.updateDecImages(dec, decSel, objType, d);
-		this.updateDecLabels(dec, decSel, objType);
+		this.updateDecLabels(dec, decSel, objType, d);
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
@@ -3135,8 +3200,7 @@ export default class SVGCanvasRenderer {
 		let imageSel = decSel.select("g");
 
 		if (dec.image) {
-			const nodeImage = this.getNodeImage(dec);
-			const nodeImageType = this.getNodeImageType(nodeImage);
+			const nodeImageType = this.getImageType(dec.image);
 			imageSel = imageSel.empty() ? decSel.append("g").append(nodeImageType) : imageSel.select(nodeImageType);
 			imageSel
 				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
@@ -3144,22 +3208,31 @@ export default class SVGCanvasRenderer {
 				.attr("y", this.getDecoratorPadding(dec, d, objType))
 				.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
 				.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-				.each(() => this.setImageContent(imageSel.node(), dec));
+				.each(() => this.setImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
 		}
 	}
 
-	updateDecLabels(dec, decSel, objType) {
-		let labelSel = decSel.select("text");
+	updateDecLabels(dec, decSel, objType, d) {
+		let labelSel = decSel.select("foreignObject");
 
 		if (dec.label) {
-			labelSel = labelSel.empty() ? decSel.append("text") : labelSel;
+			if (labelSel.empty()) {
+				labelSel = decSel
+					.append("foreignObject")
+					.attr("class", "d3-foreign-object")
+					.attr("x", 0)
+					.attr("y", 0);
+				labelSel
+					.append("xhtml:div")
+					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`));
+			}
 			labelSel
-				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
-				.attr("x", 0)
-				.attr("y", 0)
-				.text(dec.label);
+				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
+				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
+				.select("div")
+				.html(dec.label);
 		} else {
 			labelSel.remove();
 		}
@@ -3181,10 +3254,10 @@ export default class SVGCanvasRenderer {
 			nodeGrp.selectAll(errorMarkerSelector)
 				.attr("class", () => "node-error-marker " + this.getErrorMarkerClass(d.messages))
 				.html(this.getErrorMarkerIcon(d))
-				.attr("width", d.layout.errorWidth)
-				.attr("height", d.layout.errorHeight)
-				.attr("x", this.getErrorPosX(d, nodeGrp))
-				.attr("y", this.getErrorPosY(d));
+				.attr("width", this.nodeUtils.getNodeErrorWidth(d))
+				.attr("height", this.nodeUtils.getNodeErrorHeight(d))
+				.attr("x", this.nodeUtils.getNodeErrorPosX(d))
+				.attr("y", this.nodeUtils.getNodeErrorPosY(d));
 
 		} else {
 			if (!errorMarkerSelection.empty()) {
@@ -3207,24 +3280,29 @@ export default class SVGCanvasRenderer {
 		return "d3-node-port-output";
 	}
 
-	// Sets the image content on the DOM imageElement from the image field of
-	// the object d (either a node or decoration) passed in. This means svg files
-	// will be loaded as inline SVG while other images files are loaded with href.
+	// Sets the image specified in the node passed in into the DOM image object
+	// passed in.
+	setNodeImageContent(imageObj, node) {
+		const nodeImage = this.getNodeImage(node);
+		const imageSel = d3.select(imageObj);
+		this.setImageContent(imageSel, nodeImage);
+	}
+
+	// Sets the image passed in into the D3 image selection passed in. This loads
+	// svg files as inline SVG while other images files are loaded with href.
 	// We will only set a new image if the image is new or has changed from what
 	// it was previously set to. This allows applications to set new images while
 	// the canvas is being displayed.
-	setImageContent(imageElement, d) {
-		const imageObj = d3.select(imageElement);
-		const nodeImage = this.getNodeImage(d);
-		const nodeImageType = this.getNodeImageType(nodeImage);
-		if (nodeImage !== imageObj.attr("data-image")) {
+	setImageContent(imageSel, image) {
+		const nodeImageType = this.getImageType(image);
+		if (image !== imageSel.attr("data-image")) {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
-			imageObj.attr("data-image", nodeImage);
+			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				this.addCopyOfImageToDefs(nodeImage);
-				this.updateUseObject(imageObj, nodeImage);
+				this.addCopyOfImageToDefs(image);
+				this.updateUseObject(imageSel, image);
 			} else {
-				imageObj.attr("xlink:href", nodeImage);
+				imageSel.attr("xlink:href", image);
 			}
 		}
 	}
@@ -3269,29 +3347,8 @@ export default class SVGCanvasRenderer {
 
 	// Returns the type of image passed in, either "svg" or "image". This will
 	// be used to append an svg or image element to the DOM.
-	getNodeImageType(nodeImage) {
+	getImageType(nodeImage) {
 		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
-	}
-
-	getNodeImageWidth(d) {
-		if (this.nodeUtils.isExpandedSupernode(d)) {
-			return this.canvasLayout.supernodeImageWidth;
-		}
-		return d.layout.imageWidth;
-	}
-
-	getNodeImageHeight(d) {
-		if (this.nodeUtils.isExpandedSupernode(d)) {
-			return this.canvasLayout.supernodeImageHeight;
-		}
-		return d.layout.imageHeight;
-	}
-
-	getNodeImagePosX(d) {
-		if (this.nodeUtils.isExpandedSupernode(d)) {
-			return this.canvasLayout.supernodeImagePosX;
-		}
-		return d.layout.imagePosX;
 	}
 
 	setNodeStyles(d, type, nodeGrp) {
@@ -3418,7 +3475,7 @@ export default class SVGCanvasRenderer {
 				.attr("data-id", this.getId("node_ellipsis_group", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-ellipsis-group")
-				.attr("transform", (nd) => `translate(${this.getEllipsisPosX(nd)}, ${this.getEllipsisPosY(nd)})`)
+				.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
 				.on("mousedown", () => {
 					this.ellipsisClicked = true;
 				})
@@ -3430,8 +3487,8 @@ export default class SVGCanvasRenderer {
 			ellipsisGrp
 				.append("rect")
 				.attr("class", "d3-node-ellipsis-background")
-				.attr("width", (nd) => this.getEllipsisWidth(nd))
-				.attr("height", (nd) => this.getEllipsisHeight(nd))
+				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisWidth(nd))
+				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisHeight(nd))
 				.attr("x", 0)
 				.attr("y", 0);
 
@@ -3439,8 +3496,8 @@ export default class SVGCanvasRenderer {
 				.append("svg")
 				.attr("class", "d3-node-ellipsis")
 				.html(NODE_MENU_ICON)
-				.attr("width", (nd) => this.getEllipsisWidth(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
-				.attr("height", (nd) => this.getEllipsisHeight(nd) - (2 * nd.layout.ellipsisHoverAreaPadding))
+				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisIconWidth(nd))
+				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisIconHeight(nd))
 				.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
 				.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
 
@@ -3451,7 +3508,7 @@ export default class SVGCanvasRenderer {
 					.append("g")
 					.attr("data-id", this.getId("node_exp_group", d.id))
 					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("transform", (nd) => `translate(${this.getExpansionIconPosX(nd)}, ${this.canvasLayout.supernodeExpansionIconPosY})`)
+					.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
 					.attr("class", "d3-node-super-expand-icon-group")
 					.on("click", (d3Event) => {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -3556,199 +3613,41 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	// Returns a renderer for the pipelineId passed in by first checking its own
-	// pipelineId and then searching this renderer's child supernode renderers
-	// and then searching down through those renderers. Returns null if no render
-	// can be found.
-	getRendererForPipelineIdRecursively(pipelineId) {
-		if (this.pipelineId === pipelineId) {
-			return this;
-		}
-		let ren = this.getRendererForPipelineId(pipelineId);
-
-		if (!ren) {
-			this.superRenderers.forEach((superRen) => {
-				if (!ren) {
-					ren = superRen.getRendererForPipelineIdRecursively(pipelineId);
-				}
-			});
-		}
-		return ren;
-	}
-
-	// Returns a renderer for the pipelineId passed in by searching this
-	// renderer's child supernode renderers. Returns null if no render can be found.
-	getRendererForPipelineId(pipelineId) {
-		const idx = this.indexOfRendererForPipelineId(pipelineId);
-		if (idx > -1) {
-			return this.superRenderers[idx];
-		}
-		return null;
-	}
-
 	indexOfRendererForSupernode(d) {
 		// We assume that there cannot be more than one renderer for the
 		// same sub-flow pipeline
 		return this.superRenderers.findIndex((sr) => sr.pipelineId === d.subflow_ref.pipeline_id_ref);
 	}
 
-	indexOfRendererForPipelineId(pipelineId) {
-		return this.superRenderers.findIndex((sr) => sr.pipelineId === pipelineId);
-	}
-
 	displaySupernodeFullPage(d) {
 		this.canvasController.displaySubPipeline({ pipelineId: d.subflow_ref.pipeline_id_ref, pipelineFlowId: this.pipelineFlowId });
 	}
 
-	getNodeImagePosY(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return this.canvasLayout.supernodeImagePosY;
+	getNodeImageClass(node) {
+		return "d3-node-image";
+	}
+
+	getNodeLabelForeignClass(node) {
+		const outlineClass = node.layout.labelOutline ? " d3-node-label-outline" : "";
+		return "d3-foreign-object" + outlineClass;
+	}
+
+	getNodeLabelClass(node) {
+		if (this.nodeUtils.isExpandedSupernode(node)) {
+			return "d3-node-label d3-node-label-single-line " + this.getMessageLabelClass(node.messages);
 		}
-		if (data.layout.labelAndIconVerticalJustification === "center") {
-			if (data.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (data.layout.imageHeight / 2);
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-node-label-single-line" : " d3-node-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-node-label-middle" : "";
+		return "d3-node-label " + this.getMessageLabelClass(node.messages) + lineTypeClass + justificationClass;
+	}
 
-			} else if (data.layout.nodeFormatType === "vertical") {
-				const imageLabelGap = this.getImageLabelVerticalGap(data);
-				return (data.height / 2) - ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
-			}
+	getNodeLabelTextAreaClass(node) {
+		if (this.nodeUtils.isExpandedSupernode(node)) {
+			return "d3-node-label-entry d3-node-label-single-line";
 		}
-		return data.layout.imagePosY;
-	}
-
-	getNodeLabelText(data, textObj) {
-		let labelMaxWidth = data.layout.labelMaxWidth;
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			labelMaxWidth = data.width - this.canvasLayout.supernodeLabelPosX -
-				(4 * this.canvasLayout.supernodeIconSeparation) -
-				this.canvasLayout.supernodeExpansionIconWidth -
-				this.canvasLayout.supernodeEllipsisWidth;
-
-			// Reduce the available space for the label by the error icon width.
-			if (this.getMessageLevel(data.messages) !== "") {
-				labelMaxWidth -= data.layout.errorWidth;
-			}
-		}
-		const className = this.getLabelClass(data);
-		return this.trimLabelToWidth(data.label, labelMaxWidth, className, textObj);
-	}
-
-	getLabelPosX(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return this.canvasLayout.supernodeLabelPosX;
-		}
-		return data.layout.labelPosX;
-	}
-
-	// Returns an X position for the outline of the label which is used for
-	// debugging.
-	getLabelOutlinePosX(data) {
-		return data.layout.nodeFormatType === "horizontal" ? this.getLabelPosX(data) : this.getLabelPosX(data) - (data.layout.labelMaxWidth / 2);
-	}
-
-	// Returns a Y position for the outline of the label which is used for
-	// debugging.
-	getLabelOutlinePosY(data) {
-		return this.getLabelPosY(data) - data.layout.labelHeight;
-	}
-
-	getLabelPosY(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return this.canvasLayout.supernodeLabelPosY;
-		} else if (data.layout.labelAndIconVerticalJustification === "center") {
-			if (data.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) + ((data.layout.labelHeight - data.layout.labelDescent) / 2);
-
-			} else if (data.layout.nodeFormatType === "vertical") {
-				const imageLabelGap = this.getImageLabelVerticalGap(data);
-				return (data.height / 2) + ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
-			}
-		}
-
-		return data.layout.labelPosY;
-	}
-
-	getLabelClass(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return "d3-supernode-label " + this.getMessageLabelClass(data.messages);
-		}
-		const justificationClass = data.layout.nodeFormatType === "vertical" ? " d3-node-label-middle" : "";
-		return "d3-node-label " + this.getMessageLabelClass(data.messages) + justificationClass;
-	}
-
-	// Returns the gap between the image and the label, when they are arranged
-	// vertically, based on the position of each of those elements as described
-	// by labelPosY and imagePosY.
-	getImageLabelVerticalGap(data) {
-		return data.layout.labelPosY - data.layout.labelHeight - (data.layout.imagePosY + data.layout.imageHeight);
-	}
-
-	getErrorPosX(data, nodeGrp) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			const nodeText = nodeGrp.select(this.getSelectorForId("node_label", data.id)).node();
-			return this.canvasLayout.supernodeLabelPosX + nodeText.getComputedTextLength() + this.canvasLayout.supernodeIconSeparation;
-		}
-		return data.layout.errorXPos;
-	}
-
-	getErrorPosY(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return (this.canvasLayout.supernodeTopAreaHeight / 2) - (data.layout.errorHeight / 2);
-		} else
-		if (data.layout.labelAndIconVerticalJustification === "center") {
-			if (data.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (data.layout.imageHeight / 2);
-
-			} else if (data.layout.nodeFormatType === "vertical") {
-				const imageLabelGap = this.getImageLabelVerticalGap(data);
-				return (data.height / 2) - ((data.layout.imageHeight + data.layout.labelHeight + imageLabelGap) / 2);
-			}
-		}
-		return data.layout.errorYPos;
-	}
-
-	getEllipsisWidth(d) {
-		if (this.nodeUtils.isExpandedSupernode(d)) {
-			return this.canvasLayout.supernodeEllipsisWidth;
-		}
-		return d.layout.ellipsisWidth;
-	}
-
-	getEllipsisHeight(d) {
-		if (this.nodeUtils.isExpandedSupernode(d)) {
-			return this.canvasLayout.supernodeEllipsisHeight;
-		}
-		return d.layout.ellipsisHeight;
-	}
-
-	getEllipsisPosX(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return data.width - (2 * this.canvasLayout.supernodeIconSeparation) -
-				this.canvasLayout.supernodeExpansionIconWidth -
-				this.canvasLayout.supernodeEllipsisWidth;
-		}
-
-		return data.layout.ellipsisPosX;
-	}
-
-	getEllipsisPosY(data) {
-		if (this.nodeUtils.isExpandedSupernode(data)) {
-			return this.canvasLayout.supernodeEllipsisPosY;
-		}
-
-		if (data.layout.labelAndIconVerticalJustification === "center") {
-			if (data.layout.nodeFormatType === "horizontal") {
-				return (data.height / 2) - (data.layout.ellipsisHeight / 2);
-
-			} else if (data.layout.nodeFormatType === "vertical") {
-				return this.getNodeImagePosY(data) - (data.layout.ellipsisPosY - data.layout.imagePosY);
-			}
-		}
-		return data.layout.ellipsisPosY;
-	}
-
-	getExpansionIconPosX(data) {
-		return data.width - this.canvasLayout.supernodeIconSeparation - this.canvasLayout.supernodeExpansionIconWidth;
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-node-label-single-line" : " d3-node-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-node-label-middle" : "";
+		return "d3-node-label-entry" + lineTypeClass + justificationClass;
 	}
 
 	openContextMenu(d3Event, type, d, port) {
@@ -3899,6 +3798,24 @@ export default class SVGCanvasRenderer {
 		return obj.layout.decoratorHeight;
 	}
 
+	getDecoratorLabelWidth(dec, obj, objType) {
+		if (typeof dec.width !== "undefined") {
+			return Number(dec.width);
+		} else if (objType === DEC_LINK) {
+			return this.canvasLayout.linkDecoratorLabelWidth;
+		}
+		return obj.layout.decoratorLabelWidth;
+	}
+
+	getDecoratorLabelHeight(dec, obj, objType) {
+		if (typeof dec.height !== "undefined") {
+			return Number(dec.height);
+		} else if (objType === DEC_LINK) {
+			return this.canvasLayout.linkDecoratorLabelHeight;
+		}
+		return obj.layout.decoratorLabelHeight;
+	}
+
 	getDecoratorClass(dec, inClassName) {
 		let className = inClassName;
 		if (dec && dec.class_name) {
@@ -3909,9 +3826,6 @@ export default class SVGCanvasRenderer {
 
 	getDecoratorImage(dec) {
 		if (dec) {
-			if (dec.class_name === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
-				return "/images/decorators/zoom-in_32.svg";
-			}
 			return dec.image;
 		}
 		return "";
@@ -4143,7 +4057,7 @@ export default class SVGCanvasRenderer {
 			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE);
+				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
 
 				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
 					this.canvasController.editActionHandler({
@@ -4347,7 +4261,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, proximity) {
+	getNewLinkOnDrag(d3Event, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
 		const newLink = cloneDeep(oldLink);
 
@@ -4356,10 +4270,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.srcNodePortId;
 			delete newLink.srcPos;
 
-			const srcNode = this.getNodeAtMousePos(d3Event, proximity);
+			const srcNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
-				newLink.srcNodePortId = this.getNodePortAtMousePos(d3Event, OUTPUT_TYPE, proximity);
+				newLink.srcNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
+					: this.getOutputNodePortId(d3Event, srcNode);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -4369,10 +4288,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.trgNodePortId;
 			delete newLink.trgPos;
 
-			const trgNode = this.getNodeAtMousePos(d3Event, proximity);
+			const trgNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
-				newLink.trgNodePortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE, proximity);
+				newLink.trgNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
+					: this.getInputNodePortId(d3Event, trgNode);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -4520,14 +4444,120 @@ export default class SVGCanvasRenderer {
 		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	// Returns the node that is at the current mouse position. If nodeProximity
+	// Returns a node, if one can be found, at the position indicated by
+	// the clientX and clientY coordinates in the d3Event.
+	getNodeAtMousePos(d3Event) {
+		const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
+		return this.getNodeForElement(nodeGrpElement);
+	}
+
+	// Returns an input node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getInputNodePortId(d3Event, trgNode) {
+		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
+		if (!inputPortId) {
+			inputPortId = this.getDefaultInputPortId(trgNode);
+		}
+		return inputPortId;
+	}
+
+	// Returns a node input port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getInputNodePortIdAtMousePos(d3Event) {
+		let portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input");
+		if (!portElement) {
+			portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input-arrow");
+		}
+		return this.getNodePortIdForElement(portElement);
+	}
+
+	// Returns an output node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getOutputNodePortId(d3Event, srcNode) {
+		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
+		if (!outputPortId) {
+			outputPortId = this.getDefaultOutputPortId(srcNode);
+		}
+		return outputPortId;
+	}
+
+	// Returns a node output port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getOutputNodePortIdAtMousePos(d3Event) {
+		const portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-output");
+		return this.getNodePortIdForElement(portElement);
+	}
+
+
+	// Returns a DOM element which either has the classNames passed in or
+	// has an ancestor with the className passed in, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	// Note: It may not be the top-most element so we have to search through the
+	// elements array for it.
+	getElementWithClassAtMousePos(d3Event, className) {
+		const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
+		const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
+		const elements = document.elementsFromPoint(posX, posY);
+		let foundElement = null;
+		let count = 0;
+		while (!foundElement && count < elements.length) {
+			foundElement = this.getParentElementWithClass(elements[count], className);
+			count++;
+		}
+		return foundElement;
+	}
+
+	// Returns the element passed in, or an ancestor of the element, if either
+	// contains the classNames passed in. Otherwise it returns null if the
+	// className cannot be found. For example, if this element is a child of the
+	// node group object and "d3-node-group" is passed in, this function will
+	// find the group element.
+	getParentElementWithClass(element, className) {
+		let el = element;
+		let foundElement = null;
+
+		while (el) {
+			if (el.className && el.className.baseVal && el.className.baseVal.includes(className)) {
+				foundElement = el;
+				el = null;
+			} else {
+				el = el.parentNode;
+			}
+		}
+		return foundElement;
+	}
+
+	// Returns the node link object from the canvasInfo corresponding to the
+	// element passed in provided it is a 'path' DOM object. Returns null if
+	// a link cannot be found.
+	getNodeForElement(element) {
+		if (element && element.nodeName === "g") {
+			const datum = d3.select(element).datum();
+			if (datum) {
+				return this.getNode(datum.id);
+			}
+		}
+		return null;
+	}
+
+	// Returns the node port Id corresponding to the lement passed in.
+	getNodePortIdForElement(element) {
+		if (element) {
+			return d3.select(element).attr("data-port-id");
+		}
+		return null;
+	}
+
+	// Returns the node that is near the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
-	getNodeAtMousePos(d3Event, proximity) {
+	getNodeNearMousePos(d3Event, nodeProximity) {
 		const that = this;
 		var pos = this.getTransformedMousePos(d3Event);
 		var node = null;
-		const prox = proximity || 0;
+		const prox = nodeProximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
 		this.nodesLinksGrp.selectAll(selector)
 			.each(function(d) {
@@ -4546,14 +4576,12 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	getNodePortAtMousePos(d3Event, portType, nodeProximity, portProximity) {
+	getNodePortIdNearMousePos(d3Event, portType, node) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
 
 		const pos = this.getTransformedMousePos(d3Event);
-		const node = this.getNodeAtMousePos(d3Event, nodeProximity);
-		const portProx = portProximity || 0;
 		let portId = null;
 		let defaultPortId = null;
 
@@ -4583,19 +4611,19 @@ export default class SVGCanvasRenderer {
 						const yy = node.y_pos + Number(portObj.attr("y"));
 						const wd = Number(portObj.attr("width"));
 						const ht = Number(portObj.attr("height"));
-						if (pos.x >= xx - portProx &&
-								pos.x <= xx + nodeWidthOffset + wd + portProx &&
-								pos.y >= yy - portProx &&
-								pos.y <= yy + ht + portProx) {
+						if (pos.x >= xx &&
+								pos.x <= xx + nodeWidthOffset + wd &&
+								pos.y >= yy &&
+								pos.y <= yy + ht) {
 							portId = this.getAttribute("data-port-id");
 						}
 					} else { // Port must be a circle
 						const cx = node.x_pos + Number(portObj.attr("cx"));
 						const cy = node.y_pos + Number(portObj.attr("cy"));
-						if (pos.x >= cx - node.layout.portRadius - portProx && // Target port sticks out by its radius so need to allow for it.
-								pos.x <= cx + node.layout.portRadius + portProx &&
-								pos.y >= cy - node.layout.portRadius - portProx &&
-								pos.y <= cy + node.layout.portRadius + portProx) {
+						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+								pos.x <= cx + node.layout.portRadius &&
+								pos.y >= cy - node.layout.portRadius &&
+								pos.y <= cy + node.layout.portRadius) {
 							portId = this.getAttribute("data-port-id");
 						}
 					}
@@ -4917,7 +4945,7 @@ export default class SVGCanvasRenderer {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
-		} else if (this.dragging && !this.commentSizing && !this.nodeSizing) {
+		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			commentGroupSel
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((d) => that.getComment(d.id)); // Set the __data__ to the updated data
@@ -4966,7 +4994,7 @@ export default class SVGCanvasRenderer {
 				.append("g")
 				.attr("data-id", (d) => this.getId("comment_grp", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-comment-group")
+				.attr("class", (d) => this.getCommentGroupClass(d))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -4998,7 +5026,7 @@ export default class SVGCanvasRenderer {
 					that.logger.log("Comment Group - double click");
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
-					that.displayTextArea(d);
+					that.displayCommentTextArea(d, d3Event.currentTarget);
 
 					that.canvasController.clickActionHandler({
 						clickType: "DOUBLE_CLICK",
@@ -5060,7 +5088,7 @@ export default class SVGCanvasRenderer {
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("class", (d) => this.getCommentRectClass(d))
+				.attr("class", "d3-comment-rect")
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -5071,15 +5099,14 @@ export default class SVGCanvasRenderer {
 				});
 
 			// Comment text
-			// The clip area for the text is set when the inline styles are set
-			// in the setCommentStyles method.
-			newCommentGroups.append("text")
+			newCommentGroups.append("foreignObject")
 				.attr("data-id", (d) => that.getId("comment_text", d.id))
 				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-comment-text")
-				.attr("xml:space", "preserve")
-				.attr("x", 0) // Text position is controlled by x and y
-				.attr("y", 0); // of the tspan objects inside this text object.
+				.attr("class", "d3-foreign-object")
+				.attr("x", 0)
+				.attr("y", 0)
+				.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+				.attr("class", "d3-comment-text");
 
 			// Halo
 			if (this.canvasLayout.connectionType === "halo") {
@@ -5110,6 +5137,7 @@ export default class SVGCanvasRenderer {
 
 					commentGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+						.attr("class", this.getCommentGroupClass(d))
 						.datum(comment); // Set the __data__ to the updated data
 
 					// Comment sizing area
@@ -5138,7 +5166,7 @@ export default class SVGCanvasRenderer {
 					commentGrp.select(this.getSelectorForId("comment_body", d.id))
 						.attr("height", d.height)
 						.attr("width", d.width)
-						.attr("class", (cd) => that.getCommentRectClass(cd))
+						.attr("class", "d3-comment-rect")
 						.datum(comment) // Set the __data__ to the updated data
 						.each(function(cd) {
 							if (cd.customAttrs) {
@@ -5152,11 +5180,10 @@ export default class SVGCanvasRenderer {
 					// Comment text
 					commentGrp.select(this.getSelectorForId("comment_text", d.id))
 						.datum(comment) // Set the __data__ to the updated data
-						.each(function(cd) {
-							var textObj = d3.select(this);
-							textObj.selectAll("tspan").remove();
-							that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.canvasLayout.commentWidthPadding));
-						});
+						.attr("width", (cd) => cd.width)
+						.attr("height", (cd) => cd.height)
+						.select("div")
+						.html((cd) => cd.content);
 
 					// Comment halo
 					// We need to dynamically set size of the halo here becasue the size
@@ -5223,15 +5250,16 @@ export default class SVGCanvasRenderer {
 
 	setCommentTextStyles(d, type, comGrp) {
 		let style = this.getObjectStyle(d, "text", type);
-		const clipRectStyle = this.getClipRectStyle(d);
-		style = style ? clipRectStyle + style : clipRectStyle;
-		// When editing a comment always override the text fill color with
+
+		// When editing a comment always override the text color with
 		// 'transparent' so the SVG text becomes invisible and the user only sees
 		// the text in the textarea which is open during editing.
-		if (d.id === this.editingCommentId && this.editingComment) {
-			style = style ? style + " fill: transparent" : "fill: transparent";
+		if (d.id === this.editingTextId && this.editingText) {
+			style = style ? style + " color: transparent" : "color: transparent";
 		}
-		comGrp.select(this.getSelectorForId("comment_text", d.id)).attr("style", style);
+		comGrp.select(this.getSelectorForId("comment_text", d.id))
+			.select("div")
+			.attr("style", style);
 	}
 
 	getObjectStyle(d, part, type) {
@@ -5257,146 +5285,163 @@ export default class SVGCanvasRenderer {
 		return get(d, `style.${part}.${type}`, null);
 	}
 
-	// Returns a clip-path string that can be set as an inline style for clipping
-	// comment text vertically when the bounding box is smaller than the space the
-	// full text occupies. We use polygon here because 'inset' which is supposed to
-	// provide a rectangle clipping area doesn't seem to work on the current browsers.
-	// Also, -webkit-clip-path has to be provided as well as clip-path because
-	// Safari doesn't recognize clip-path. FF and Chrome do.
-	getClipRectStyle(d) {
-		const x2 = d.width + 20;
-		const y2 = d.height - (2 * (this.canvasLayout.commentHeightPadding - 2));
-		const poly = `polygon(0px 0px, ${x2}px 0px, ${x2}px ${y2}px, 0px ${y2}px)`;
-		return `clip-path:${poly}; -webkit-clip-path:${poly}; `;
+	displayCommentTextArea(d, parentObj) {
+		this.displayTextArea({
+			id: d.id,
+			text: d.content,
+			singleLine: false,
+			xPos: 0,
+			yPos: 0,
+			width: d.width,
+			height: d.height,
+			className: "d3-comment-entry",
+			parentObj: parentObj,
+			autoSizeCallback: this.autoSizeComment.bind(this),
+			saveTextChangesCallback: this.saveCommentChanges.bind(this)
+		});
 	}
 
-	autoSizeTextArea(textArea, datum) {
-		this.logger.log("autoSizeTextArea - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
-		if (this.textAreaHeight < textArea.scrollHeight) {
-			this.textAreaHeight = textArea.scrollHeight;
-			var comment = this.getComment(datum.id);
-			comment.height = this.textAreaHeight;
-			datum.height = this.textAreaHeight;
-			this.canvasDiv.select(this.getSelectorForId("comment_text_area", datum.id))
-				.style("height", this.textAreaHeight + "px")
-				.style("transform", this.getTextAreaTransform(datum)); // Since the height has changed the translation needs to be reapplied.
+	autoSizeComment(textArea, foreignObject, id, autoSizeCallback) {
+		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
+
+		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
+		if (this.textAreaHeight < scrollHeight) {
+			this.textAreaHeight = scrollHeight;
+			foreignObject.style("height", this.textAreaHeight + "px");
+			this.getComment(id).height = this.textAreaHeight;
 			this.displayComments();
 			this.displayLinks();
 		}
 	}
 
-	saveCommentChanges(textArea) {
-		if (this.editingComment === true &&
-				this.editingCommentChangesPending === true) {
-			this.editingCommentChangesPending = false;
-			const commentDatum = d3.select(textArea).datum();
-			const data = {
-				editType: "editComment",
-				editSource: "canvas",
-				id: commentDatum.id,
-				content: textArea.value,
-				width: commentDatum.width,
-				height: commentDatum.height,
-				x_pos: commentDatum.x_pos,
-				y_pos: commentDatum.y_pos,
-				pipelineId: this.activePipeline.id
-			};
-			this.canvasController.editActionHandler(data);
-		}
+	saveCommentChanges(id, newText, newHeight) {
+		const comment = this.getComment(id);
+		const data = {
+			editType: "editComment",
+			editSource: "canvas",
+			id: comment.id,
+			content: newText,
+			width: comment.width,
+			height: newHeight,
+			x_pos: comment.x_pos,
+			y_pos: comment.y_pos,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
 	}
 
-	displayTextArea(d) {
+	displayNodeLabelTextArea(node, parentObj) {
+		this.displayTextArea({
+			id: node.id,
+			text: node.label,
+			singleLine: node.layout.labelSingleLine,
+			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
+			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
+			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
+			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
+			className: this.getNodeLabelTextAreaClass(node),
+			parentObj: parentObj,
+			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
+			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this)
+		});
+	}
+
+	autoSizeNodeLabel(textArea, foreignObject, id, autoSizeCallback) {
+		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
+
+		// Temporarily set the height to zero so the scrollHeight will get set to
+		// the full height of the text in the textarea. This allows us to close up
+		// the text area when the lines of text reduce.
+		foreignObject.style("height", 0);
+		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
+		this.textAreaHeight = scrollHeight;
+		foreignObject.style("height", this.textAreaHeight + "px");
+	}
+
+	saveNodeLabelChanges(id, newText, newHeight) {
+		const data = {
+			editType: "setNodeLabel",
+			editSource: "canvas",
+			nodeId: id,
+			label: newText,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
+	}
+
+	displayTextArea(data) {
 		const that = this;
-		const datum = d;
 
-		this.textAreaHeight = 0; // Save for comparison during auto-resize
-		this.editingComment = true;
-		this.editingCommentId = datum.id;
+		this.textAreaHeight = data.height; // Save for comparison during auto-resize
+		this.editingText = true;
+		this.editingTextId = data.id;
 
-		this.canvasDiv
-			.append("textarea")
-			.attr("data-id", this.getId("comment_text_area", datum.id))
-			.attr("data-pipeline-id", that.activePipeline.id)
-			.attr("class", "d3-comment-entry")
-			.text(datum.content)
-			.style("width", datum.width + "px")
-			.style("height", datum.height + "px")
-			.style("left", "0px") // Open text area at 0,0 and use
-			.style("top", "0px") //  transform to move into place
-			.style("transform", this.getTextAreaTransform(datum))
-			.datum(datum)
-			.on("keyup", function() {
-				that.editingCommentChangesPending = true;
-				that.autoSizeTextArea(this, datum);
+		const foreignObject = d3.select(data.parentObj)
+			.append("foreignObject")
+			.attr("class", "d3-foreign-object")
+			.attr("width", data.width)
+			.attr("height", data.height)
+			.attr("x", data.xPos)
+			.attr("y", data.yPos);
+
+		const textArea = foreignObject
+			.append("xhtml:textarea")
+			.attr("class", data.className)
+			.text(data.text)
+			.on("keydown", function(d3Event) {
+				// Don't accept return key press when text is all one one line.
+				if (data.singleLine && d3Event.keyCode === RETURN_KEY) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				}
+				if (d3Event.keyCode === ESC_KEY) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					that.textAreaEscKeyPressed = true;
+					that.closeTextArea(foreignObject);
+				}
+			})
+			.on("keyup", function(d3Event) {
+				data.autoSizeCallback(this, foreignObject, data.id, data.autoSizeCallback);
 			})
 			.on("paste", function() {
 				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
-				that.editingCommentChangesPending = true;
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
+				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data.id, data.autoSizeCallback);
 			})
-			.on("blur", function() {
+			.on("blur", function(d3Event, d) {
 				that.logger.log("Text area - blur");
-				var commentObj = that.getComment(datum.id);
-				commentObj.content = this.value;
-				that.saveCommentChanges(this);
-				that.closeCommentTextArea();
-				that.displayComments();
+				if (that.textAreaEscKeyPressed) {
+					that.textAreaEscKeyPressed = false;
+					return;
+				}
+				const newText = this.value; // Save the text before closing the foreign object
+				that.closeTextArea(foreignObject);
+				if (data.text !== newText) {
+					that.isCommentBeingUpdated = true;
+					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight);
+					that.isCommentBeingUpdatd = false;
+				}
+			})
+			.on("focus", function(d3Event, d) {
+				that.logger.log("Text area - focus");
+				data.autoSizeCallback(this, foreignObject, data.id, data.autoSizeCallback);
+			})
+			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
+				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
 			});
 
-		// Note: Couldn't get focus to work through d3, so used dom instead.
-		document.querySelector(this.getSelectorForId("comment_text_area", datum.id)).focus();
+		textArea.node().focus();
+
+		// Set the cusrsor to the end of the text.
+		textArea.node().setSelectionRange(data.text.length, data.text.length);
 	}
 
-	// Returns the transform amount for the text area control that positions the
-	// text area based on the current zoom (translate and scale) amount.
-	getTextAreaTransform(d) {
-		let transform = { x: 0, y: 0, k: 1 };
-
-		transform = {
-			x: this.zoomTransform.x + (d.x_pos * this.zoomTransform.k),
-			y: this.zoomTransform.y + (d.y_pos * this.zoomTransform.k),
-			k: this.zoomTransform.k
-		};
-
-		const parentRenderer = this.getParentRenderer();
-		if (parentRenderer) {
-			transform = parentRenderer.getSupernodeTransformAmount(this.activePipeline.id, transform);
-		}
-
-		// Adjust the position of the text area to be over the comment group object
-		transform.x -= (d.width - (d.width * transform.k)) / 2;
-		transform.y -= (d.height - (d.height * transform.k)) / 2;
-
-		return `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`;
-	}
-
-	// Returns a transform based on the transform passed in which includes the
-	// cumulative offset and scale amount for the pipeline identified by the
-	// pipeline Id passed in for the current renderer.
-	getSupernodeTransformAmount(pipelineId, transform) {
-		const dimensions = this.getSupernodeSVGDimensionsFor(pipelineId);
-
-		transform.k *= this.zoomTransform.k;
-		transform.x = this.zoomTransform.x + ((transform.x + dimensions.x_pos) * this.zoomTransform.k);
-		transform.y = this.zoomTransform.y + ((transform.y + dimensions.y_pos) * this.zoomTransform.k);
-
-		const parentRenderer = this.getParentRenderer();
-		if (parentRenderer) {
-			return parentRenderer.getSupernodeTransformAmount(this.activePipeline.id, transform);
-		}
-
-		return transform;
-	}
-
-	// Closes the text area and switched off all flags connected with text editing.
-	closeCommentTextArea() {
-		this.editingComment = false;
-		this.editingCommentId = "";
-		this.editingCommentChangesPending = false;
-		this.canvasDiv.select("textarea").remove();
+	// Closes the text area and resets the flags.
+	closeTextArea(foreignObject) {
+		foreignObject.remove();
+		this.editingText = false;
+		this.editingTextId = "";
 	}
 
 	// Adds a rectangle over the top of the canvas which is used to display a
@@ -5699,211 +5744,6 @@ export default class SVGCanvasRenderer {
 		this.commentSizing = false;
 	}
 
-	// Formats the text string passed in as a set of lines of text and displays
-	// those lines as tspans in the text object passed in.
-	displayWordWrappedText(textObj, text, width) {
-		// Create a dummy tspan for use in calculating display lengths for text.
-		// This will also be used by displayLinesAsTspan() to display the first line of text.
-		var tspan = this.createTspan(" ", 1, "d3-comment-text-tspan", textObj);
-		var lines = this.splitOnLineBreak(text);
-		lines = this.splitLinesOnWords(lines, width, tspan);
-
-		this.displayLinesAsTspan(lines, "d3-comment-text-tspan", textObj, tspan);
-	}
-
-	// Returns an array of lines which is the text passed in broken up by
-	// the occurrence of new line characters.
-	splitOnLineBreak(text) {
-		var newLines = [];
-		var line = "";
-		for (var i = 0; i < text.length; i++) {
-			if (text[i] === "\n") {
-				newLines.push(line);
-				line = "";
-			} else {
-				line += text[i];
-			}
-		}
-		newLines.push(line);
-		return newLines;
-	}
-
-	// Splits the lines passed in into more lines where the lines are
-	// controlled by word wrapping etc.
-	splitLinesOnWords(lines, width, tspan) {
-		let newLines = [];
-
-		lines.forEach((line) => {
-			if (line === "") {
-				newLines.push(" ");
-			} else {
-				newLines = newLines.concat(this.splitLineOnWords(line, width, tspan));
-			}
-		});
-
-		return newLines;
-	}
-
-	// Splits the single line passed in into more lines where the lines are
-	// controlled by word wrapping etc.
-	splitLineOnWords(line, width, tspan) {
-		var newLines = [];
-		var text = "";
-		var oldText = "";
-		var textLen = 0;
-		var wordLen = 0;
-		var words = this.splitIntoWords(line);
-
-		words.forEach((word, i) => {
-			oldText = text;
-			text += word;
-
-			textLen = this.getTextLen(text, tspan);
-
-			if (textLen >= width) {
-				// If this is a 'word' that is made up of one or more spaces just push
-				// it to the newLines array because it doesn't matter if the spaces run
-				// off the end of the line since that is the same as how the textarea behaves.
-				if (word.startsWith(" ")) {
-					newLines.push(text);
-					text = "";
-				// If the 'word' is made up of text ...
-				} else {
-					if (oldText !== " " && oldText !== "") {
-						newLines.push(oldText);
-					}
-					wordLen = this.getTextLen(word, tspan);
-					if (wordLen >= width) {
-						var split = this.splitWord(word, oldText, width, tspan);
-						newLines = newLines.concat(split.lines);
-						text = split.tailEnd;
-					} else {
-						text = word;
-					}
-				}
-			}
-		});
-
-		if (text !== "") {
-			newLines.push(text);
-		}
-
-		return newLines;
-	}
-
-	// Split the line passed in into words where a word is either a series of
-	// non-space characters or a series of space characters. Or character words
-	// can be split by hyphen as well.
-	splitIntoWords(line) {
-		var words = [];
-		var word = "";
-
-		for (var i = 0; i < line.length; i++) {
-			if (i > 0 &&
-					((line[i - 1] === " " && line[i] !== " ") ||
-						(line[i - 1] !== " " && line[i] === " ") ||
-						(line[i - 1] === "-" && line[i] !== "-"))) {
-				words.push(word);
-				word = "";
-			}
-			word += line[i];
-		}
-		words.push(word);
-
-		return words;
-	}
-
-	// Returns an array of text lines which is the single word passed in wrapped
-	// to the width passed in.
-	splitWord(word, oldText, width, tspan) {
-		var newLines = [];
-		var subWord = "";
-		var start = 0;
-		var end = 1;
-		var textLen = 0;
-		var extraText = "";
-		if (oldText === " ") { // If the oldText is a single space, we need to add that into the first
-			extraText = " "; // line we're processing -- because this is the textarea behavior.
-		}
-
-		while (end <= word.length) {
-			subWord = word.substring(start, end);
-
-			textLen = this.getTextLen(extraText + subWord, tspan);
-
-			if (textLen > width) {
-				if (start === end - 1) { // If a single character doesn't fit in the width adjust
-					end++; // end so the character is written into a line on its own.
-				}
-				newLines.push(extraText + word.substring(start, end - 1));
-				extraText = ""; // After first line has been pushed set extraSpace to "" so it's no longer used.
-				start = end - 1;
-				end = start + 1;
-			} else {
-				end++;
-			}
-		}
-		// Return the lines the word passed in was split into and the remaining
-		// part of the word passed in as the tailEnd.
-		return { lines: newLines, tailEnd: extraText + word.substring(start, end - 1) };
-	}
-
-	// Returns a label to be displayed for a node. The label is trimmed,
-	// if necessary, to fit the label width with a ... suffix added.
-	trimLabelToWidth(text, width, className, textObj) {
-		var tspan = this.createTspan(text, 1, className, textObj);
-		var textLen = tspan.node().getComputedTextLength();
-		let outText = text;
-
-		if (textLen > width) {
-			var oldTxt = "...";
-			for (var i = 0; i < text.length; i++) {
-				var txt = text.substring(0, i) + "...";
-				tspan.text(txt);
-				textLen = tspan.node().getComputedTextLength();
-				if (textLen > width) {
-					outText = oldTxt;
-					break;
-				} else {
-					oldTxt = txt;
-				}
-			}
-		}
-		return outText;
-	}
-
-	// Returns the length of the word passed in.
-	getTextLen(word, tspan) {
-		tspan.text(word);
-		return tspan.node().getComputedTextLength();
-	}
-
-	// Displays the array of lines of text passed in as tspans within the
-	// text object passed in. Uses the tspan passed in for the first line since
-	// that has already been created.
-	displayLinesAsTspan(lines, className, textObj, tspan) {
-		lines.forEach((line, i) => {
-			if (i === 0) {
-				tspan.text(line); // Use the existing tspan for the first line of text.
-			} else {
-				this.createTspan(line, i + 1, className, textObj);
-			}
-		});
-	}
-
-	// Returns a tspan containing the text passed in created in the text object
-	// passed in at the vertical position described by dy.
-	createTspan(text, dy, className, textObj) {
-		return textObj
-			.append("tspan")
-			.attr("class", className)
-			.attr("x", 0 + this.canvasLayout.commentWidthPadding)
-			.attr("y", 0 + this.canvasLayout.commentHeightPadding - 2) // Move text up a bit to match position in textarea
-			.attr("dy", dy + "em")
-			.attr("xml:space", "preserve") // Preserves the white
-			.text(text);
-	}
-
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
@@ -5942,6 +5782,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createNewLinks(enter)
 			)
+			.attr("class", (d) => this.getLinkGroupClass(d))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
@@ -5989,7 +5830,6 @@ export default class SVGCanvasRenderer {
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.attr("data-pipeline-id", this.activePipeline.id)
-			.attr("class", (d) => this.getLinkGroupClass(d))
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6050,7 +5890,7 @@ export default class SVGCanvasRenderer {
 		// Add displayed link line
 		newLinkGrps
 			.append("path")
-			.attr("class", (d) => this.getLinkLineClass(d));
+			.attr("class", "d3-link-line");
 
 		// Add displayed link line arrow heads
 		newLinkGrps
@@ -6058,38 +5898,26 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.append("path")
-			.attr("class", (d) => this.getLinkArrowHeadClass(d));
+			.attr("class", "d3-link-line-arrow-head");
 
-		// Add link line handles at start and end of line
-		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			newLinkGrps
-				.filter((d) => d.type === NODE_LINK)
-				.append(this.canvasLayout.linkStartHandleObject)
-				.attr("class", (d) => "d3-link-handle-start")
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Link start handle - mouse down");
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
-					this.logger.log("Link end handle - finished mouse down");
-				})
-				.call(this.dragSelectionHandle);
+		// Add a group to store decorations. Adding this here ensures the decorations
+		// are always under the link handles whose group is added next.
+		newLinkGrps
+			.append("g")
+			.attr("class", "d3-link-decorations-group");
 
+		// Add a group to store link handles, if needed.
+		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			newLinkGrps
-				.filter((d) => d.type === NODE_LINK)
-				.append(this.canvasLayout.linkEndHandleObject)
-				.attr("class", (d) => "d3-link-handle-end")
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Link end handle - mouse down");
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
+				.append("g")
+				.attr("class", "d3-link-handles-group")
+				.each(function(d) {
+					if (d.type === NODE_LINK) {
+						// Since there are always just two handles we create the here.
+						that.createNewHandles(d3.select(this));
 					}
-					this.logger.log("Link end handle - finished mouse down");
-				})
-				.call(this.dragSelectionHandle);
+				});
 		}
 
 		return newLinkGrps;
@@ -6112,7 +5940,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
-			.attr("class", (d) => this.getLinkLineClass(d))
+			.attr("class", "d3-link-line")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
@@ -6123,63 +5951,104 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", (d) => this.getLinkArrowHeadClass(d))
+			.attr("class", "d3-link-line-arrow-head")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
 		joinedLinkGrps.each(function(d) {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.displayDecorations(d, DEC_LINK, d3.select(this), d.decorations);
+				that.displayDecorations(d, DEC_LINK, d3.select(this).selectAll(".d3-link-decorations-group"), d.decorations);
 			}
 		});
 
+		// Add link line handles at start and end of line, if required
 		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
 				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			joinedLinkGrps
-				.selectAll(".d3-link-handle-start")
-				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-				.each((datum, index, linkHandles) => {
-					const obj = d3.select(linkHandles[index]);
-					if (this.canvasLayout.linkStartHandleObject === "image") {
-						obj
-							.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
-							.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
-							.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
-							.attr("width", this.canvasLayout.linkStartHandleWidth)
-							.attr("height", this.canvasLayout.linkStartHandleHeight);
-
-					} else if (this.canvasLayout.linkStartHandleObject === "circle") {
-						obj
-							.attr("r", this.canvasLayout.linkStartHandleRadius)
-							.attr("cx", (d) => d.x1)
-							.attr("cy", (d) => d.y1);
-					}
-				});
-
-			joinedLinkGrps
-				.selectAll(".d3-link-handle-end")
-				.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
-				.each((datum, index, linkHandles) => {
-					const obj = d3.select(linkHandles[index]);
-					if (this.canvasLayout.linkEndHandleObject === "image") {
-						obj
-							.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
-							.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
-							.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
-							.attr("width", this.canvasLayout.linkEndHandleWidth)
-							.attr("height", this.canvasLayout.linkEndHandleHeight)
-							.attr("transform", (d) => this.getGuideImageTransform(d));
-
-					} else if (this.canvasLayout.linkEndHandleObject === "circle") {
-						obj
-							.attr("r", this.canvasLayout.linkEndHandleRadius)
-							.attr("cx", (d) => d.x2)
-							.attr("cy", (d) => d.y2);
-					}
-				});
+			joinedLinkGrps.each(function(d) {
+				if (d.type === NODE_LINK) {
+					// We only need to update handles since they were created in the create link step
+					that.updateHandles(d3.select(this).selectAll(".d3-link-handles-group"), lineArray);
+				}
+			});
 		}
 
 		this.setDisplayOrder(joinedLinkGrps);
+	}
+
+	// Creates a new start handle and a new end handle for the link groups
+	// passed in.
+	createNewHandles(handlesGrp) {
+		handlesGrp
+			.append(this.canvasLayout.linkStartHandleObject)
+			.attr("class", (d) => "d3-link-handle-start")
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link start handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			})
+			.call(this.dragSelectionHandle);
+
+		handlesGrp
+			.append(this.canvasLayout.linkEndHandleObject)
+			.attr("class", (d) => "d3-link-handle-end")
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link end handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			})
+			.call(this.dragSelectionHandle);
+	}
+
+	// Updates the start and end link handles for the handle groups passed in.
+	updateHandles(handlesGrp, lineArray) {
+		handlesGrp
+			.selectAll(".d3-link-handle-start")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.each((datum, index, linkHandles) => {
+				const obj = d3.select(linkHandles[index]);
+				if (this.canvasLayout.linkStartHandleObject === "image") {
+					obj
+						.attr("xlink:href", this.canvasLayout.linkStartHandleImage)
+						.attr("x", (d) => d.x1 - (this.canvasLayout.linkStartHandleWidth / 2))
+						.attr("y", (d) => d.y1 - (this.canvasLayout.linkStartHandleHeight / 2))
+						.attr("width", this.canvasLayout.linkStartHandleWidth)
+						.attr("height", this.canvasLayout.linkStartHandleHeight);
+
+				} else if (this.canvasLayout.linkStartHandleObject === "circle") {
+					obj
+						.attr("r", this.canvasLayout.linkStartHandleRadius)
+						.attr("cx", (d) => d.x1)
+						.attr("cy", (d) => d.y1);
+				}
+			});
+
+		handlesGrp
+			.selectAll(".d3-link-handle-end")
+			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.each((datum, index, linkHandles) => {
+				const obj = d3.select(linkHandles[index]);
+				if (this.canvasLayout.linkEndHandleObject === "image") {
+					obj
+						.attr("xlink:href", this.canvasLayout.linkEndHandleImage)
+						.attr("x", (d) => d.x2 - (this.canvasLayout.linkEndHandleWidth / 2))
+						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
+						.attr("width", this.canvasLayout.linkEndHandleWidth)
+						.attr("height", this.canvasLayout.linkEndHandleHeight)
+						.attr("transform", (d) => this.getGuideImageTransform(d));
+
+				} else if (this.canvasLayout.linkEndHandleObject === "circle") {
+					obj
+						.attr("r", this.canvasLayout.linkEndHandleRadius)
+						.attr("cx", (d) => d.x2)
+						.attr("cy", (d) => d.y2);
+				}
+			});
 	}
 
 	// Sets the custom inline styles on the link object passed in.
@@ -6206,17 +6075,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
-		return "d3-link-group " + this.getLinkTypeClass(d);
-	}
-
-	// Returns the class string to be appled to the link line path object.
-	getLinkLineClass(d) {
-		return "d3-link-line " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
-	}
-
-	// Returns the class string to be appled to the link arrow head path object.
-	getLinkArrowHeadClass(d) {
-		return "d3-link-line-arrow-head " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
 	}
 
 	// Returns the custom class string for the link object passed in.
@@ -6249,8 +6108,8 @@ export default class SVGCanvasRenderer {
 		return "d3-data-link";
 	}
 
-	// Returns the class string to be appled to the comment rectangle object.
-	getCommentRectClass(d) {
+	// Returns the class string to be appled to the comment group object.
+	getCommentGroupClass(d) {
 		let customClass = "";
 		// If the comment has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -6258,14 +6117,13 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-comment-rect") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name from the layout preferences. This allows the layout
-		// preferences to override any default class name passed in.
-		return "d3-comment-rect" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-comment-group" + customClass;
 	}
 
-	// Returns the class string to be appled to the node body object.
-	getNodeBodyClass(d) {
+	// Returns the class string to be appled to the node group object.
+	getNodeGroupClass(d) {
 		let customClass = "";
 		// If the node has a classname that isn't the default use it!
 		if (d.class_name &&
@@ -6274,9 +6132,9 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-node-body-outline") {
 			customClass = " " + d.class_name;
 		}
-		// If the class name provided IS the default, or there is no classname, return
-		// the class name.
-		return "d3-node-body-outline" + customClass;
+		// If the class name provided IS the default, or there is no classname,
+		// return the class name.
+		return "d3-node-group" + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
