@@ -449,8 +449,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		// Click on resize button
 		wrapper.find("button.properties-btn-resize").simulate("click");
 
-		//  controller should set initialEditorSize to medium
-		expect(renderedObject.controller.getInitialEditorSize()).to.equal("medium");
+		//  controller should set editorSize to medium
+		expect(renderedObject.controller.getEditorSize()).to.equal("medium");
 		// Right flyout panel should have editorSize medium
 		expect(wrapper.find("aside.properties-small")).to.have.length(0);
 		expect(wrapper.find("aside.properties-medium")).to.have.length(1);

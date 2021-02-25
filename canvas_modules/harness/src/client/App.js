@@ -1248,10 +1248,10 @@ class App extends React.Component {
 			let initialEditorSize;
 			if (inExtraCanvas) {
 				this.currentEditorId2 = nodeId;
-				initialEditorSize = this.propertiesController2 ? this.propertiesController2.getInitialEditorSize() : null;
+				initialEditorSize = this.propertiesController2 ? this.propertiesController2.getEditorSize() : null;
 			} else {
 				this.currentEditorId = nodeId;
-				initialEditorSize = this.propertiesController ? this.propertiesController.getInitialEditorSize() : null;
+				initialEditorSize = this.propertiesController ? this.propertiesController.getEditorSize() : null;
 			}
 			// currentEditorNodeId = nodeId; // set new node
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
@@ -1345,7 +1345,7 @@ class App extends React.Component {
 		if (expressionInfo !== null) {
 			expressionInfo.validateLink = this.state.expressionValidate;
 		}
-		const initialEditorSize = this.propertiesController ? this.propertiesController.getInitialEditorSize() : null;
+		const initialEditorSize = this.propertiesController ? this.propertiesController.getEditorSize() : null;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,

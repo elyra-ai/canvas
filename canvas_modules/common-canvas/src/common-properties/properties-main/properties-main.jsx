@@ -49,7 +49,7 @@ class PropertiesMain extends React.Component {
 		this.propertiesController = new PropertiesController();
 		// Persist editorSize when resize() is not called
 		if (this.props.propertiesInfo.initialEditorSize) {
-			this.propertiesController.setInitialEditorSize(this.props.propertiesInfo.initialEditorSize);
+			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
@@ -368,7 +368,7 @@ class PropertiesMain extends React.Component {
 		this.setState({
 			editorSize: newEditorSize
 		});
-		this.propertiesController.setInitialEditorSize(newEditorSize);
+		this.propertiesController.setEditorSize(newEditorSize);
 	}
 
 	resize() {
