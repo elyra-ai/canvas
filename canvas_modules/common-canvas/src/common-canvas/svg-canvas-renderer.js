@@ -4455,11 +4455,11 @@ export default class SVGCanvasRenderer {
 	// position described by d3Event or, if the mouse is not over a port, the
 	// ID of the default port for the node provided.
 	getInputNodePortId(d3Event, trgNode) {
-		let trgPortId = this.getInputNodePortIdAtMousePos(d3Event);
-		if (!trgPortId) {
-			trgPortId = this.getDefaultInputPortId(trgNode);
+		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
+		if (!inputPortId) {
+			inputPortId = this.getDefaultInputPortId(trgNode);
 		}
-		return trgPortId;
+		return inputPortId;
 	}
 
 	// Returns a node input port ID, if one can be found, at the position
