@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+// Retrieve the dropdown items from a non-filterable dropdown control
 function getDropdownItems(wrapper, parameterId) {
 	let dropdownWrapper = wrapper.find(`div[data-id='properties-${parameterId}']`);
 	const dropdownButton = dropdownWrapper.find("button");
 	dropdownButton.simulate("click");
 	dropdownWrapper = wrapper.find(`div[data-id='properties-${parameterId}']`);
-	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item__option");
+	const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 	return dropdownList;
 }
 

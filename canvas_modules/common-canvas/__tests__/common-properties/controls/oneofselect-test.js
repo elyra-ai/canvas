@@ -343,7 +343,7 @@ describe("oneofselect filters work correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
 	});
 
-	it.only("Validate oneofselect can have multiple enum_filter conditions on the same parameter_ref", () => {
+	it("Validate oneofselect can have multiple enum_filter conditions on the same parameter_ref", () => {
 		const propertyIdInput = { name: "filter_input" };
 		const propertyId1 = { name: "oneofselect_filtered_1" };
 		const propertyId2 = { name: "oneofselect_filtered_2" };
@@ -353,63 +353,47 @@ describe("oneofselect filters work correctly", () => {
 		renderedController.updatePropertyValue(propertyIdInput, 1);
 		// // validate the correct number of options show up on open
 		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
-		let dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
-		expect(dropdownList).to.have.length(1);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.eql(["red"]);
 		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal("yellow");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
 
 		// Only 'propertyId2' should have 2 items displayed in the list
 		renderedController.updatePropertyValue(propertyIdInput, 2);
-		console.log("!!! " + renderedController.getPropertyValue(propertyIdInput));
-		wrapper.update();
 		// validate the correct number of options show up on open
 		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
-
-		let dropdownWrapper = wrapper.find(`div[data-id='properties-ctrl-${propertyId1.name}']`);
-		const dropdownButton = dropdownWrapper.find("button");
-		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find(`div[data-id='properties-ctrl-${propertyId1.name}']`);
-		console.log("!!! " + dropdownWrapper.debug());
-		dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item__option");
-
-		// dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
-		expect(dropdownList).to.have.length(2);
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.eql(["red", "blue"]);
 		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal("yellow");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
 
 		// Only 'propertyId3' should have 3 items displayed in the list
 		renderedController.updatePropertyValue(propertyIdInput, 3);
 		// validate the correct number of options show up on open
 		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
+		let dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
 		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
 		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
 		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal(null);
 		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
 		expect(dropdownList).to.have.length(3);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.eql(["red", "blue", "green"]);
 
 		// Setting input to a value other than 1, 2, or 3 will show all items in dropdown
 		renderedController.updatePropertyValue(propertyIdInput, 10);
 		// validate the correct number of options show up on open
 		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
 		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal(null);
-		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
-		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
 	});
 });
 
