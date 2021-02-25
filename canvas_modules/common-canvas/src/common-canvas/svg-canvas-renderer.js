@@ -2912,24 +2912,26 @@ export default class SVGCanvasRenderer {
 									if (d3Event.button === 0) {
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
 										const srcNode = this.getNode(d.id);
-										this.drawingNewLinkData = {
-											srcObjId: d.id,
-											srcPortId: port.id,
-											action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-											srcNode: srcNode,
-											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-											portType: "output",
-											portObject: d.layout.outputPortObject,
-											portImage: d.layout.outputPortImage,
-											portWidth: d.layout.outputPortWidth,
-											portHeight: d.layout.outputPortHeight,
-											portRadius: this.getPortRadius(srcNode),
-											minInitialLine: srcNode.layout.minInitialLine,
-											guideObject: d.layout.outputPortGuideObject,
-											guideImage: d.layout.outputPortGuideImage,
-											linkArray: []
-										};
-										this.drawNewLink(d3Event);
+										if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
+											this.drawingNewLinkData = {
+												srcObjId: d.id,
+												srcPortId: port.id,
+												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+												srcNode: srcNode,
+												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+												portType: "output",
+												portObject: d.layout.outputPortObject,
+												portImage: d.layout.outputPortImage,
+												portWidth: d.layout.outputPortWidth,
+												portHeight: d.layout.outputPortHeight,
+												portRadius: this.getPortRadius(srcNode),
+												minInitialLine: srcNode.layout.minInitialLine,
+												guideObject: d.layout.outputPortGuideObject,
+												guideImage: d.layout.outputPortGuideImage,
+												linkArray: []
+											};
+											this.drawNewLink(d3Event);
+										}
 									}
 								})
 								.on("mouseenter", function(d3Event, port) {
@@ -4055,7 +4057,7 @@ export default class SVGCanvasRenderer {
 			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getInputNodePortIdAtMousePos(d3Event);
+				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
 
 				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
 					this.canvasController.editActionHandler({
@@ -4276,7 +4278,7 @@ export default class SVGCanvasRenderer {
 				newLink.srcNodeId = srcNode.id;
 				newLink.srcNodePortId = nodeProximity
 					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
-					: this.getOutputNodePortIdAtMousePos(d3Event);
+					: this.getOutputNodePortId(d3Event, srcNode);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -4294,7 +4296,7 @@ export default class SVGCanvasRenderer {
 				newLink.trgNodeId = trgNode.id;
 				newLink.trgNodePortId = nodeProximity
 					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
-					: this.getInputNodePortIdAtMousePos(d3Event);
+					: this.getInputNodePortId(d3Event, trgNode);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -4449,6 +4451,17 @@ export default class SVGCanvasRenderer {
 		return this.getNodeForElement(nodeGrpElement);
 	}
 
+	// Returns an input node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getInputNodePortId(d3Event, trgNode) {
+		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
+		if (!inputPortId) {
+			inputPortId = this.getDefaultInputPortId(trgNode);
+		}
+		return inputPortId;
+	}
+
 	// Returns a node input port ID, if one can be found, at the position
 	// indicated by the clientX and clientY coordinates in the d3Event.
 	getInputNodePortIdAtMousePos(d3Event) {
@@ -4457,6 +4470,17 @@ export default class SVGCanvasRenderer {
 			portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input-arrow");
 		}
 		return this.getNodePortIdForElement(portElement);
+	}
+
+	// Returns an output node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getOutputNodePortId(d3Event, srcNode) {
+		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
+		if (!outputPortId) {
+			outputPortId = this.getDefaultOutputPortId(srcNode);
+		}
+		return outputPortId;
 	}
 
 	// Returns a node output port ID, if one can be found, at the position
