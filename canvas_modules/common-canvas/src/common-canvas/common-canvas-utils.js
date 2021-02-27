@@ -530,7 +530,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns the maximum cardinality, if one exists, for the port ID passed in
-	// from the array or ports provided.
+	// from the array of ports provided.
 	static getMaxCardinality(ports, portId) {
 		const port = this.getPort(ports, portId);
 		if (port &&
