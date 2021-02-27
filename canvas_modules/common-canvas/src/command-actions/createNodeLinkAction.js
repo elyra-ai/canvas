@@ -21,7 +21,6 @@ export default class CreateNodeLinkAction extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.linkNodeList = this.apiPipeline.createNodeLinks(data);
 	}
 
 	getData() {
@@ -31,6 +30,12 @@ export default class CreateNodeLinkAction extends Action {
 	}
 
 	do() {
+		if (this.data.replaceLink) {
+			this.apiPipeline.deleteLink(this.data.replaceLink);
+		}
+		// Create links here because in a replace-link scenario we need to delete
+		// the replaceLink before creating new links.
+		this.linkNodeList = this.apiPipeline.createNodeLinks(this.data);
 		this.apiPipeline.addLinks(this.linkNodeList);
 	}
 
@@ -38,10 +43,17 @@ export default class CreateNodeLinkAction extends Action {
 		this.linkNodeList.forEach((link) => {
 			this.apiPipeline.deleteLink(link);
 		});
+		if (this.data.replaceLink) {
+			this.apiPipeline.addLinks([this.data.replaceLink]);
+		}
+
 	}
 
 	redo() {
-		this.do();
+		if (this.data.replaceLink) {
+			this.apiPipeline.deleteLink(this.data.replaceLink);
+		}
+		this.apiPipeline.addLinks(this.linkNodeList);
 	}
 
 }

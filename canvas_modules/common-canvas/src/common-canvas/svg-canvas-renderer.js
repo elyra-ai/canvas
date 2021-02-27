@@ -4054,12 +4054,12 @@ export default class SVGCanvasRenderer {
 
 		if (trgNode !== null) {
 			const type = this.drawingNewLinkData.action;
-			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
+			if (type === NODE_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
 				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
 
-				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
+				if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
 					this.canvasController.editActionHandler({
 						editType: "linkNodes",
 						editSource: "canvas",
@@ -4068,7 +4068,38 @@ export default class SVGCanvasRenderer {
 						type: type,
 						linkType: "data", // Added for historical purposes - for WML Canvas support
 						pipelineId: this.pipelineId });
+
+				} else if (this.config.enableLinkReplaceOnDrop &&
+										CanvasUtils.isLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
+					const linksToTrgPort = CanvasUtils.getLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
+					// We only replace a link to a maxed out cardinality port if there
+					// is only one link. i.e. the input port cardinality is 0:1
+					if (linksToTrgPort.length === 1) {
+						this.canvasController.editActionHandler({
+							editType: "linkNodesAndReplace",
+							editSource: "canvas",
+							nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
+							targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+							type: type,
+							pipelineId: this.pipelineId,
+							replaceLink: linksToTrgPort[0]
+						});
+					}
 				}
+
+			} else if (type === ASSOCIATION_LINK) {
+				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
+
+				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links)) {
+					this.canvasController.editActionHandler({
+						editType: "linkNodes",
+						editSource: "canvas",
+						nodes: [{ "id": this.drawingNewLinkData.srcObjId }],
+						targetNodes: [{ "id": trgNode.id }],
+						type: type,
+						pipelineId: this.pipelineId });
+				}
+
 			} else {
 				if (CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, trgNode.id, this.activePipeline.links)) {
 					this.canvasController.editActionHandler({

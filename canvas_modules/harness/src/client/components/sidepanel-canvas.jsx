@@ -629,6 +629,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableLinkReplaceOnDrop = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLinkReplaceOnDrop" // Set ID to corresponding field in App.js state
+				labelText="Enable Link Replace On Drop"
+				toggled={this.props.getStateValue("selectedLinkReplaceOnDrop")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
@@ -1277,6 +1286,8 @@ export default class SidePanelForms extends React.Component {
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHightlightNodeOnNewLinkDrag}
+					{divider}
+					{enableLinkReplaceOnDrop}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}

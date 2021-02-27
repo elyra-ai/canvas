@@ -334,10 +334,45 @@ export default class CanvasUtils {
 		return node.outputs && node.outputs.length > 0;
 	}
 
+	// Returns true if an existing link to the target node and port can be
+	// replaced with a new link from the srcNode to the trgNode and trgPortId.
+
+	static isLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		if (this.getMaxCardinality(trgNode.inputs, trgNodePortId) !== 1) {
+			return false;
+		}
+
+		if (!this.isTrgCardinalityAtMax(trgNodePortId, trgNode, links)) {
+			return false;
+		}
+		return true;
+	}
+
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, given the current set of links
 	// passed in.
 	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		if (this.isCardinalityAtMax(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if a regular node-node data link can be created between the
+	// two node/port combinations provided, without checking on cardinalities of
+	// the source or target nodes.
+	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 
 		if (!srcNode || !trgNode) { // Source ot target are not valid.
 			return false;
@@ -355,12 +390,9 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		if (this.isCardinalityAtMax(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
-			return false;
-		}
-
 		return true;
 	}
+
 
 	// Returns true if an association link can be created between two nodes
 	// identified by the objects provided.
@@ -436,11 +468,10 @@ export default class CanvasUtils {
 		});
 
 		if (srcCount > 0) {
-			const srcPort = this.getPort(srcNode.outputs, srcPortId);
-			if (srcPort &&
-					srcPort.cardinality &&
-					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					srcCount >= Number(srcPort.cardinality.max)) {
+			const maxCard = this.getMaxCardinality(srcNode.outputs, srcPortId);
+			if (maxCard &&
+					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+					srcCount >= maxCard) {
 				return true;
 			}
 		}
@@ -466,11 +497,10 @@ export default class CanvasUtils {
 		});
 
 		if (trgCount > 0) {
-			const trgPort = this.getPort(trgNode.inputs, trgPortId);
-			if (trgPort &&
-					trgPort.cardinality &&
-					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					trgCount >= Number(trgPort.cardinality.max)) {
+			const maxCard = this.getMaxCardinality(trgNode.inputs, trgPortId);
+			if (maxCard &&
+					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+					trgCount >= maxCard) {
 				return true;
 			}
 		}
@@ -495,6 +525,17 @@ export default class CanvasUtils {
 
 		if (index > -1) {
 			return portArray[index];
+		}
+		return null;
+	}
+
+	// Returns the maximum cardinality, if one exists, for the port ID passed in
+	// from the array or ports provided.
+	static getMaxCardinality(ports, portId) {
+		const port = this.getPort(ports, portId);
+		if (port &&
+				port.cardinality) {
+			return Number(port.cardinality.max);
 		}
 		return null;
 	}
@@ -682,4 +723,9 @@ export default class CanvasUtils {
 		};
 	}
 
+	// Returns a subset of links from the links passed in which connect to
+	// the target node and port passed in.
+	static getLinksConnectedTo(trgPortId, trgNode, links) {
+		return links.filter((link) => link.trgNodeId === trgNode.id && link.trgNodePortId === trgPortId);
+	}
 }

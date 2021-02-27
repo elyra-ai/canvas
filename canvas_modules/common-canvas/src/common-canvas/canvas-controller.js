@@ -73,6 +73,7 @@ export default class CanvasController {
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
 			enableLinkSelection: LINK_SELECTION_NONE,
+			enableLinkReplaceOnDrop: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
@@ -1998,6 +1999,11 @@ export default class CanvasController {
 				command = new CreateNodeLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
+				break;
+			}
+			case "linkNodesAndReplace": {
+				command = new CreateNodeLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
 				break;
 			}
 			case "linkComment": {
