@@ -73,7 +73,7 @@ export default class CanvasController {
 			enableLinkDirection: "LeftRight",
 			enableParentClass: "",
 			enableLinkSelection: LINK_SELECTION_NONE,
-			enableLinkReplaceOnDrop: false,
+			enableLinkReplaceOnNewConnection: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,

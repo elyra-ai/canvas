@@ -4069,7 +4069,7 @@ export default class SVGCanvasRenderer {
 						linkType: "data", // Added for historical purposes - for WML Canvas support
 						pipelineId: this.pipelineId });
 
-				} else if (this.config.enableLinkReplaceOnDrop &&
+				} else if (this.config.enableLinkReplaceOnNewConnection &&
 										CanvasUtils.isLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
 					const linksToTrgPort = CanvasUtils.getLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
 					// We only replace a link to a maxed out cardinality port if there
