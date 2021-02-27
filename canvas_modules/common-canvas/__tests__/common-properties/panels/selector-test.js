@@ -17,6 +17,7 @@
 import propertyUtils from "./../../_utils_/property-utils";
 import { expect } from "chai";
 import PANEL_SELECTOR_PARAM_DEF from "./../../test_resources/paramDefs/panelSelector_paramDef.json";
+import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
 
 describe("'panel selector insert' renders correctly", () => {
 	let wrapper;
@@ -160,5 +161,22 @@ describe("'panel selector insert' renders correctly", () => {
 		expect(controller.getPanelState({ name: "blueberry-size-ctl" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "blueberry-size" })).to.equal("disabled");
 
+	});
+});
+
+describe("text panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("selector panel should have custom classname defined", () => {
+		const panelSelectorWrapper = wrapper.find("div[data-id='properties-panel-selector2']");
+		expect(panelSelectorWrapper.find(".panel-selector2-group-panelselector-class")).to.have.length(1);
 	});
 });

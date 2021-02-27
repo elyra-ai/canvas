@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@
 
 const haloDefaultLayout = {
 	nodeLayout: {
-		// Node format specifies whether the image and label are arranged side by side
-		// (horizontal) or with the image above the label (vertical).
-		nodeFormatType: "vertical",
-
 		// Default node sizes. The height might be overridden for nodes with more ports
 		// than will fit in the default size.
 		defaultNodeWidth: 60,
 		defaultNodeHeight: 66,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -42,26 +38,24 @@ const haloDefaultLayout = {
 		imageHeight: 48,
 
 		// Image position
+		imagePosition: "topLeft",
 		imagePosX: 6,
 		imagePosY: 0,
 
-		// Sets the justification of label and icon within the node height. This
-		// overrides any labelPosY value provided. Possible value are "center" or
-		// "none". Specify "none" to use the labelPosY and imagePosY values.
-		labelAndIconVerticalJustification: "none",
-
-		// Label dimensions used for automatically trimming the label to add ...
-		labelMaxWidth: 52,
-
-		// Label height used for automatically positioning the label
-		labelHeight: 13, // Should match the font size specified in common-canvas-d3.scss
-
-		// The underhang of letters below the baseline for the label font used
-		labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
+		// Label dimensions
+		labelWidth: 57,
+		labelHeight: 19,
 
 		// Label position
+		labelPosition: "topLeft",
 		labelPosX: 30,
-		labelPosY: 63,
+		labelPosY: 51,
+
+		// Label appearance - labelAlign can be "left" or "center"
+		labelEditable: false,
+		labelAlign: "center",
+		labelSingleLine: true,
+		labelOutline: false,
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -79,10 +73,14 @@ const haloDefaultLayout = {
 		decoratorCenterX: -8,
 		decoratorRightX: -22,
 
+		// Width, height and padding for image decorators
 		decoratorWidth: 16,
 		decoratorHeight: 16,
-
 		decoratorPadding: 2,
+
+		// Width and height for label decorators
+		decoratorLabelWidth: 80,
+		decoratorLabelHeight: 15,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: false,
@@ -95,6 +93,7 @@ const haloDefaultLayout = {
 		nodeSizingArea: 10,
 
 		// Error indicator dimensions
+		errorPosition: "topLeft",
 		errorXPos: 52,
 		errorYPos: 0,
 		errorWidth: 14,
@@ -110,8 +109,8 @@ const haloDefaultLayout = {
 		haloCenterY: 24,
 		haloRadius: 29,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "image_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -231,34 +230,44 @@ const haloDefaultLayout = {
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: false,
+		ellipsisPosition: "topLeft",
 		ellipsisWidth: 10,
 		ellipsisHeight: 22,
-		ellipsisPosX: 145,
-		ellipsisPosY: 9,
+		ellipsisPosX: 57,
+		ellipsisPosY: 4,
 		ellipsisHoverAreaPadding: 2
 	},
 
 	canvasLayout: {
-		// The amount of padding added around the canvas objects when doing a
-		// zoomToFit on the primary canvas. This may be overriden by common-canvas
-		// when displaying sub-flows.
-		zoomToFitPadding: 10,
-
-		// Supernode in-place containment area attributes
+		// ---------------------------------------------------------------------------
+		// Layout values for supernode in-place containment area
+		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 18,
+		supernodeLabelPosY: 4,
+		supernodeLabelWidth: 50,
+		supernodeLabelHeight: 20,
+
 		supernodeImageWidth: 18,
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
+
+		supernodeEllipsisPosX: -34,
 		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
+
+		supernodeExpansionIconPosX: -21,
 		supernodeExpansionIconPosY: 4,
 		supernodeExpansionIconHeight: 18,
 		supernodeExpansionIconWidth: 18,
 		supernodeExpansionIconHoverAreaPadding: 2,
-		supernodeIconSeparation: 3,
+
+		supernodeErrorPosX: -50,
+		supernodeErrorPosY: 5,
+		supernodeErrorWidth: 14,
+		supernodeErrorHeight: 14,
+
 		supernodeDefaultWidth: 200,
 		supernodeDefaultHeight: 200,
 		supernodeMinWidth: 100,
@@ -290,6 +299,10 @@ const haloDefaultLayout = {
 		linkDecoratorHeight: 20,
 		linkDecoratorWidth: 20,
 		linkDecoratorPadding: 2,
+
+		// Width and height for label decorators
+		linkDecoratorLabelWidth: 80,
+		linkDecoratorLabelHeight: 15,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -346,10 +359,6 @@ const haloDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
-		// The gap between the edge of the comment rectangle and the comment text.
-		commentWidthPadding: 10,
-		commentHeightPadding: 8,
-
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffset: 30,
 
@@ -362,6 +371,11 @@ const haloDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
+
 		// Snap to grid type.
 		snapToGridType: "None",
 
@@ -377,6 +391,11 @@ const haloDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -387,16 +406,12 @@ const haloDefaultLayout = {
 
 const portsHorizontalDefaultLayout = {
 	nodeLayout: {
-		// Node format specifies whether the image and label are arranged side by side
-		// (horizontal) or with the image above the label (vertical).
-		nodeFormatType: "horizontal",
-
 		// Default node sizes. The height might be overridden for nodes with more ports
 		// than will fit in the default size.
 		defaultNodeWidth: 160,
 		defaultNodeHeight: 40,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "port-arcs",
 
 		// SVG path strings to define the shape of your node and its
@@ -413,26 +428,24 @@ const portsHorizontalDefaultLayout = {
 		imageHeight: 26,
 
 		// Image position
+		imagePosition: "topLeft",
 		imagePosX: 6,
 		imagePosY: 7,
 
-		// Sets the justification of label and icon within the node height. This
-		// overrides any labelPosY value provided. Possible value are "center" or
-		// "none". Specify "none" to use the labelPosY value.
-		labelAndIconVerticalJustification: "center",
-
-		// Label dimensions used for automatically trimming the label to add ...
-		labelMaxWidth: 104,
-
-		// Label height used for automatically positioning the label
-		labelHeight: 12, // Should match the font size specified in common-canvas-d3.scss
-
-		// The underhang of letters below the baseline for the label font used
-		labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
+		// Label dimensions
+		labelWidth: 112,
+		labelHeight: 19,
 
 		// Label position
-		labelPosX: 38,
-		labelPosY: 24,
+		labelPosition: "topLeft",
+		labelPosX: 36,
+		labelPosY: 12,
+
+		// Label appearance - labelAlign can be "left" or "center"
+		labelEditable: false,
+		labelAlign: "left",
+		labelSingleLine: true,
+		labelOutline: false,
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -450,10 +463,14 @@ const portsHorizontalDefaultLayout = {
 		decoratorCenterX: -8,
 		decoratorRightX: -30,
 
+		// Width, height and padding for image decorators
 		decoratorWidth: 16,
 		decoratorHeight: 16,
-
 		decoratorPadding: 2,
+
+		// Width and height for label decorators
+		decoratorLabelWidth: 80,
+		decoratorLabelHeight: 15,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: true,
@@ -466,8 +483,9 @@ const portsHorizontalDefaultLayout = {
 		nodeSizingArea: 10,
 
 		// Error indicator dimensions
+		errorPosition: "topLeft",
 		errorXPos: 24,
-		errorYPos: 10,
+		errorYPos: 5,
 		errorWidth: 10.5,
 		errorHeight: 10.5,
 
@@ -481,8 +499,8 @@ const portsHorizontalDefaultLayout = {
 		haloCenterY: null,
 		haloRadius: null,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -602,6 +620,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
+		ellipsisPosition: "topLeft",
 		ellipsisWidth: 10,
 		ellipsisHeight: 22,
 		ellipsisPosX: 145,
@@ -610,26 +629,35 @@ const portsHorizontalDefaultLayout = {
 	},
 
 	canvasLayout: {
-		// The amount of padding added around the canvas objects when doing a
-		// zoomToFit on the primary canvas. This may be overriden by common-canvas
-		// when displaying sub-flows.
-		zoomToFitPadding: 10,
-
-		// Supernode in-place containment area attributes
+		// ---------------------------------------------------------------------------
+		// Layout values for supernode in-place containment area
+		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 18,
+		supernodeLabelPosY: 4,
+		supernodeLabelWidth: 50,
+		supernodeLabelHeight: 20,
+
 		supernodeImageWidth: 18,
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
+
+		supernodeEllipsisPosX: -34,
 		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
+
+		supernodeExpansionIconPosX: -21,
 		supernodeExpansionIconPosY: 4,
 		supernodeExpansionIconHeight: 18,
 		supernodeExpansionIconWidth: 18,
 		supernodeExpansionIconHoverAreaPadding: 2,
-		supernodeIconSeparation: 3,
+
+		supernodeErrorPosX: -50,
+		supernodeErrorPosY: 5,
+		supernodeErrorWidth: 14,
+		supernodeErrorHeight: 14,
+
 		supernodeDefaultWidth: 300,
 		supernodeDefaultHeight: 200,
 		supernodeMinWidth: 100,
@@ -661,6 +689,10 @@ const portsHorizontalDefaultLayout = {
 		linkDecoratorHeight: 20,
 		linkDecoratorWidth: 20,
 		linkDecoratorPadding: 2,
+
+		// Width and height for label decorators
+		linkDecoratorLabelWidth: 80,
+		linkDecoratorLabelHeight: 15,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -717,10 +749,6 @@ const portsHorizontalDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
-		// The gap between the edge of the comment rectangle and the comment text.
-		commentWidthPadding: 10,
-		commentHeightPadding: 8,
-
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffset: 30,
 
@@ -733,6 +761,11 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
+
 		// Snap to grid type.
 		snapToGridType: "None",
 
@@ -748,6 +781,11 @@ const portsHorizontalDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -758,16 +796,12 @@ const portsHorizontalDefaultLayout = {
 
 const portsVerticalDefaultLayout = {
 	nodeLayout: {
-		// Node format specifies whether the image and label are arranged side by side
-		// (horizontal) or with the image above the label (vertical).
-		nodeFormatType: "vertical",
-
 		// Default node sizes. The height might be overridden for nodes with more ports
 		// than will fit in the default size.
 		defaultNodeWidth: 70,
 		defaultNodeHeight: 75,
 
-		// Default node shape
+		// Default node shape. Can be "rectangle" or "port-arcs"
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -784,26 +818,24 @@ const portsVerticalDefaultLayout = {
 		imageHeight: 48,
 
 		// Image position
+		imagePosition: "topLeft",
 		imagePosX: 11,
-		imagePosY: 5,
+		imagePosY: 6,
 
-		// Sets the justification of label and icon within the node height. This
-		// overrides any labelPosY value provided. Possible value are "center" or
-		// "none". Specify "none" to use the labelPosY value.
-		labelAndIconVerticalJustification: "center",
-
-		// Label dimensions used for automatically trimming the label to add ...
-		labelMaxWidth: 64,
-
-		// Label height used for automatically positioning the label
-		labelHeight: 13, // Should match the font size specified in common-canvas-d3.scss
-
-		// The underhang of letters below the baseline for the label font used
-		labelDescent: 3, // Should match the font size specified in common-canvas-d3.scss
+		// Label dimensions
+		labelWidth: 72,
+		labelHeight: 19,
 
 		// Label position
+		labelPosition: "topLeft",
 		labelPosX: 35,
-		labelPosY: 67,
+		labelPosY: 55,
+
+		// Label appearance - labelAlign can be "left" or "center"
+		labelEditable: false,
+		labelAlign: "center",
+		labelSingleLine: true,
+		labelOutline: false,
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -821,10 +853,14 @@ const portsVerticalDefaultLayout = {
 		decoratorCenterX: -8,
 		decoratorRightX: -24,
 
+		// Width, height and padding for image decorators
 		decoratorWidth: 16,
 		decoratorHeight: 16,
-
 		decoratorPadding: 2,
+
+		// Width and height for label decorators
+		decoratorLabelWidth: 80,
+		decoratorLabelHeight: 15,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: false,
@@ -837,8 +873,9 @@ const portsVerticalDefaultLayout = {
 		nodeSizingArea: 10,
 
 		// Error indicator dimensions
+		errorPosition: "topLeft",
 		errorXPos: 45,
-		errorYPos: 0,
+		errorYPos: 5,
 		errorWidth: 14,
 		errorHeight: 14,
 
@@ -852,8 +889,8 @@ const portsVerticalDefaultLayout = {
 		haloCenterY: null,
 		haloRadius: null,
 
-		// What point to draw 'halo' style link lines from and to. Possible values
-		// are "image_center" or "node_center". This is used for node to node links.
+		// What point to draw the data links from and to when enableLinkType is set
+		// to "Straight". Possible values are "image_center" or "node_center".
 		drawNodeLinkLineFromTo: "node_center",
 
 		// What point to draw the comment to node link line to. Possible values
@@ -973,34 +1010,44 @@ const portsVerticalDefaultLayout = {
 
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
+		ellipsisPosition: "topLeft",
 		ellipsisWidth: 11,
 		ellipsisHeight: 21,
 		ellipsisPosX: 57,
-		ellipsisPosY: 8,
+		ellipsisPosY: 4,
 		ellipsisHoverAreaPadding: 2
 	},
 
 	canvasLayout: {
-		// The amount of padding added around the canvas objects when doing a
-		// zoomToFit on the primary canvas. This may be overriden by common-canvas
-		// when displaying sub-flows.
-		zoomToFitPadding: 10,
-
-		// Supernode in-place containment area attributes
+		// ---------------------------------------------------------------------------
+		// Layout values for supernode in-place containment area
+		// ---------------------------------------------------------------------------
 		supernodeLabelPosX: 30,
-		supernodeLabelPosY: 18,
+		supernodeLabelPosY: 4,
+		supernodeLabelWidth: 50,
+		supernodeLabelHeight: 20,
+
 		supernodeImageWidth: 18,
 		supernodeImageHeight: 18,
 		supernodeImagePosX: 5,
 		supernodeImagePosY: 4,
+
+		supernodeEllipsisPosX: -34,
 		supernodeEllipsisPosY: 2,
 		supernodeEllipsisWidth: 10,
 		supernodeEllipsisHeight: 20,
+
+		supernodeExpansionIconPosX: -21,
 		supernodeExpansionIconPosY: 4,
 		supernodeExpansionIconHeight: 18,
 		supernodeExpansionIconWidth: 18,
 		supernodeExpansionIconHoverAreaPadding: 2,
-		supernodeIconSeparation: 3,
+
+		supernodeErrorPosX: -50,
+		supernodeErrorPosY: 5,
+		supernodeErrorWidth: 14,
+		supernodeErrorHeight: 14,
+
 		supernodeDefaultWidth: 200,
 		supernodeDefaultHeight: 200,
 		supernodeMinWidth: 100,
@@ -1032,6 +1079,10 @@ const portsVerticalDefaultLayout = {
 		linkDecoratorHeight: 20,
 		linkDecoratorWidth: 20,
 		linkDecoratorPadding: 2,
+
+		// Width and height for label decorators
+		linkDecoratorLabelWidth: 80,
+		linkDecoratorLabelHeight: 15,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -1088,10 +1139,6 @@ const portsVerticalDefaultLayout = {
 		// The gap between a comment and its sizing area rectangle
 		commentSizingArea: 10,
 
-		// The gap between the edge of the comment rectangle and the comment text.
-		commentWidthPadding: 10,
-		commentHeightPadding: 8,
-
 		// Add comment toolbar action, default offset from viewport
 		addCommentOffset: 30,
 
@@ -1104,6 +1151,11 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// The amount of padding added around the canvas objects when doing a
+		// zoomToFit on the primary canvas. This may be overriden by common-canvas
+		// when displaying sub-flows.
+		zoomToFitPadding: 10,
+
 		// Snap to grid type.
 		snapToGridType: "None",
 
@@ -1119,6 +1171,11 @@ const portsVerticalDefaultLayout = {
 		// which can increase the possibility of detecting detached links.
 		ghostAreaPadding: 10,
 
+		// Offsets the canvas objects within the canvas viewport area when the
+		// canvas is first opened.
+		initialPanX: null,
+		initialPanY: null,
+
 		// Values for AutoLayout and AutoNode function
 		autoLayoutInitialMarginX: 50,
 		autoLayoutInitialMarginY: 50,
@@ -1129,18 +1186,8 @@ const portsVerticalDefaultLayout = {
 
 
 export default class LayoutDimensions {
-	static getLayoutForConfig(config) {
-		let type;
-		if (config && config.enableConnectionType === "Halo") {
-			type = "halo";
-
-		} else if (config && config.enableNodeFormatType === "Horizontal") {
-			type = "ports-horizontal";
-
-		} else { // Vertical
-			type = "ports-vertical";
-		}
-		let newLayout = this.getLayout(type);
+	static getLayout(config) {
+		let newLayout = this.getDefaultLayout(config);
 		if (config) {
 			newLayout = this.overrideNodeLayout(newLayout, config); // Do this first because snap-to-grid depends on this.
 			newLayout = this.overrideCanvasLayout(newLayout, config);
@@ -1151,12 +1198,14 @@ export default class LayoutDimensions {
 		return newLayout;
 	}
 
-	static getLayout(type) {
+	static getDefaultLayout(config) {
 		let defaultLayout;
-		if (type === "halo") {
+		if (config && config.enableConnectionType === "Halo") {
 			defaultLayout = haloDefaultLayout;
-		} else if (type === "ports-vertical") {
+
+		} else if (config && config.enableNodeFormatType === "Vertical") {
 			defaultLayout = portsVerticalDefaultLayout;
+
 		} else {
 			defaultLayout = portsHorizontalDefaultLayout;
 		}

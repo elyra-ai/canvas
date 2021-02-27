@@ -50,12 +50,7 @@ class CommonCanvas extends React.Component {
 			isNotificationOpen: false,
 			showContextMenu: false,
 			contextMenuDef: {},
-			notificationConfig: this.props.notificationConfig,
-			contextMenuConfig: this.props.contextMenuConfig,
-			keyboardConfig: this.props.keyboardConfig,
-			rightFlyoutContent: this.props.rightFlyoutContent,
 			tipDef: {},
-			rightFlyoutWidth: 0,
 			paletteWidth: PALETTE.OPEN_WIDTH
 		};
 
@@ -78,15 +73,16 @@ class CommonCanvas extends React.Component {
 		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
 
 		this.initializeController = this.initializeController.bind(this);
-
 		this.setPaletteWidth = this.setPaletteWidth.bind(this);
 
 		this.canvasController = this.props.canvasController;
 		this.canvasController.setIntl(props.intl);
-		this.initializeController(props);
-
 		this.canvasController.setCommonCanvas(this);
 
+		this.allowForceUpdate = true;
+		this.pendingTooltip = null;
+		this.tipOpening = false;
+		this.tipClosing = false;
 		this.itemsContainerDivId = "common-canvas-items-container-" + this.canvasController.getInstanceId();
 
 		this.objectModel = this.canvasController.getObjectModel();
@@ -96,35 +92,16 @@ class CommonCanvas extends React.Component {
 		this.afterUpdateCallbacks = [];
 
 		this.unsubscribe = this.objectModel.subscribe(() => {
-			this.logger.log("Force Update");
-			this.forceUpdate(this.afterUpdate);
+			if (this.allowForceUpdate) {
+				this.logger.log("Force Update");
+				this.forceUpdate(this.afterUpdate);
+			}
 		});
-
-		this.pendingTooltip = null;
-		this.tipOpening = false;
-		this.tipClosing = false;
 	}
 
 	componentDidMount() {
 		document.addEventListener("mousedown", this.canvasController.closeTip.bind(this.canvasController), true);
 		this.setPaletteWidth();
-	}
-
-	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
-		if (newProps.rightFlyoutContent !== this.state.rightFlyoutContent) {
-			this.setState({
-				rightFlyoutContent: newProps.rightFlyoutContent
-			});
-		}
-
-		if (newProps.notificationConfig) {
-			if ((this.state.notificationConfig.label !== newProps.notificationConfig.label) ||
-					(this.state.notificationConfig.enable !== newProps.notificationConfig.enable)) {
-				this.setState({ notificationConfig: newProps.notificationConfig });
-			}
-		}
-
-		this.initializeController(newProps);
 	}
 
 	componentDidUpdate() {
@@ -201,7 +178,14 @@ class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
+		this.logger.log("initializeController");
+		// Updating canvas config causes the layout info to be updated in redux
+		// which, in turn, causes forceUpdate to be called. So we prevent force
+		// update running here because we are rendering common canvas anyway.
+		this.allowForceUpdate = false;
 		this.canvasController.setCanvasConfig(props.config);
+		this.allowForceUpdate = true;
+
 		this.canvasController.setContextMenuConfig(props.contextMenuConfig);
 		this.canvasController.setKeyboardConfig(props.keyboardConfig);
 
@@ -227,7 +211,7 @@ class CommonCanvas extends React.Component {
 	}
 
 	openPalette() {
-		if (this.objectModel.getPaletteData()) {
+		if (this.canvasController.getPaletteData()) {
 			this.setState({ isPaletteOpen: true });
 		}
 		this.setPaletteWidth();
@@ -344,7 +328,10 @@ class CommonCanvas extends React.Component {
 		let rightSideItems = null;
 		let rightFlyout = (<div className="right-flyout-panel" />);
 		let tip = null;
-		const canvasInfo = this.objectModel.getCanvasInfo();
+
+		this.initializeController(this.props);
+
+		const canvasInfo = this.canvasController.getCanvasInfo();
 		const config = this.canvasController.getCanvasConfig();
 
 		if (canvasInfo !== null) {
@@ -373,23 +360,23 @@ class CommonCanvas extends React.Component {
 			// If there's no config we still want the palette
 			if (!config || config.enablePaletteLayout === "Flyout") {
 				palette = (<PaletteFlyout
-					paletteJSON={this.objectModel.getPaletteData()}
+					paletteJSON={this.canvasController.getPaletteData()}
 					showPalette={this.state.isPaletteOpen}
 					canvasController={this.canvasController}
 					paletteWidth={this.state.paletteWidth}
 				/>);
 			} else if (config.enablePaletteLayout === "Modal") {
 				palette = (<Palette
-					paletteJSON={this.objectModel.getPaletteData()}
+					paletteJSON={this.canvasController.getPaletteData()}
 					showPalette={this.state.isPaletteOpen}
 					parentDivId={this.itemsContainerDivId}
 					canvasController={this.canvasController}
 				/>);
 			}
 
-			if (this.state.notificationConfig) {
+			if (this.props.notificationConfig) {
 				notificationPanel = (<NotificationPanel
-					notificationConfig={this.state.notificationConfig}
+					notificationConfig={this.props.notificationConfig}
 					isNotificationOpen={this.state.isNotificationOpen}
 					messages={this.canvasController.getNotificationMessages()}
 					canvasController={this.canvasController}
@@ -403,21 +390,21 @@ class CommonCanvas extends React.Component {
 					isPaletteEnabled={!config || config.enablePaletteLayout !== "None"}
 					isPaletteOpen={this.state.isPaletteOpen}
 					isNotificationOpen={this.state.isNotificationOpen}
-					notificationConfig={this.state.notificationConfig}
+					notificationConfig={this.props.notificationConfig}
 					canvasController={this.canvasController}
 				/>);
 			}
 		}
 
-		if (typeof this.state.rightFlyoutContent !== "undefined" &&
-				this.state.rightFlyoutContent !== null &&
+		if (typeof this.props.rightFlyoutContent !== "undefined" &&
+				this.props.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
 			const rfClass = this.props.config.enableRightFlyoutUnderToolbar
 				? "right-flyout-panel under-toolbar"
 				: "right-flyout-panel";
 			rightFlyout = (
 				<div className={rfClass}>
-					{this.state.rightFlyoutContent}
+					{this.props.rightFlyoutContent}
 				</div>
 			);
 		}

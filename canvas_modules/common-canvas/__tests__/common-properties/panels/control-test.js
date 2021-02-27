@@ -69,3 +69,25 @@ describe("control panel visible and enabled conditions work correctly", () => {
 		expect(controlPanel.hasClass("hide")).to.equal(true);
 	});
 });
+
+describe("control panel classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("control panels should have custom classname defined", () => {
+		// nested panel: controls
+		expect(wrapper.find(".textpanels-group-controls-class")).to.have.length(1);
+		// deeply nested panel: controls
+		expect(wrapper.find(".disable-button-control-panel-group-controls-class")).to.have.length(1);
+		// nested panel without a type defined, will default to controls
+		propertyUtils.openSummaryPanel(wrapper, "structuretable-summary-panel2");
+		expect(wrapper.find(".structuretable-summary2-panel-category-group-controls-class")).to.have.length(1);
+	});
+});

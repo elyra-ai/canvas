@@ -87,11 +87,11 @@ function verifyFieldPickerRow(row, field, schema) {
 }
 
 function getTableHeaderRows(wrapper) {
-	return wrapper.find("div[role='properties-header-row']");
+	return wrapper.find("div[data-role='properties-header-row']");
 }
 
 function getTableRows(wrapper) {
-	return wrapper.find("div[role='properties-data-row']");
+	return wrapper.find("div[data-role='properties-data-row']");
 }
 
 /*
@@ -138,6 +138,16 @@ function selectCheckboxes(wrapper, rows) {
 		checkboxes.at(row).simulate("mouseEnter");
 		checkboxes.at(row).simulate("mouseDown");
 		checkboxes.at(row).simulate("mouseLeave");
+	}
+}
+
+// Select checkbox using space or enter keys
+function selectCheckboxesUsingKeyboard(wrapper, rows) {
+	const checkboxes = getTableRows(wrapper).find(".properties-vt-row-checkbox");
+	for (const row of rows) {
+		checkboxes.at(row).simulate("focus");
+		checkboxes.at(row).simulate("keyPress", { code: "Enter" });
+		checkboxes.at(row).simulate("blur");
 	}
 }
 
@@ -195,6 +205,7 @@ module.exports = {
 	clickHeaderColumnSort: clickHeaderColumnSort,
 	selectHeaderCheckbox: selectHeaderCheckbox,
 	selectCheckboxes: selectCheckboxes,
+	selectCheckboxesUsingKeyboard: selectCheckboxesUsingKeyboard,
 	selectHeaderColumnCheckbox: selectHeaderColumnCheckbox,
 	selectFieldPickerHeaderCheckbox: selectFieldPickerHeaderCheckbox,
 	validateSelectedRowNum: validateSelectedRowNum

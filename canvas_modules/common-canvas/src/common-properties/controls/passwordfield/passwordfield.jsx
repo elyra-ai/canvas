@@ -39,16 +39,15 @@ class PasswordControl extends React.Component {
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<TextInput
+				<TextInput.PasswordInput
 					autoComplete="off"
 					id={this.id}
 					disabled={this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
 					value={value}
-					labelText={this.props.control.label ? this.props.control.label.text : ""}
-					hideLabel
-					type="password"
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
 					light
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
@@ -60,6 +59,7 @@ PasswordControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux

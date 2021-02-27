@@ -169,7 +169,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 	// Verify "is_real" is a "keyword" in ExpressionEditor
 	const searchClass = ".cm-" + type;
 	const testWord = (type === "string") ? "\"" + word + "\"" : word;
-	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-editor")
 		.find(".CodeMirror-line")
 		.then((codeMirrorLine) => {
@@ -266,7 +266,7 @@ Cypress.Commands.add("verifyIconInSubPanel", (iconName) => {
 
 Cypress.Commands.add("verifyRowInSelectColumnsTable", (propertyId, fieldName, rowNumber) => {
 	cy.get(`div[data-id='properties-ft-${propertyId}']`)
-		.find("div[role='properties-data-row']")
+		.find("div[data-role='properties-data-row']")
 		.eq(rowNumber - 1)
 		.find(".properties-readonly")
 		.should("have.text", fieldName);
@@ -276,7 +276,7 @@ Cypress.Commands.add("verifyFieldIsSelectedInFieldPickerPanel", (fieldName, data
 	// Following logic works based on assumption  - fieldName in each row is unique
 	let rowNumber;
 	cy.getWideFlyoutPanel(panelName)
-		.find("div[role='properties-data-row']")
+		.find("div[data-role='properties-data-row']")
 		.each(($el, index) => {
 			if ($el[0].childNodes[1].textContent === fieldName) {
 				rowNumber = index;

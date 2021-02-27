@@ -76,7 +76,7 @@ $properties-vt-checkbox-width: 45px;
 	.properties-vt-double-click:first-of-type {
 		.properties-vt-row-class {
 			border-top: 1px solid transparent;
-			&.properties-vt-row-selected{
+			&.properties-vt-row-selected {
 				border-top: 1px solid $hover-selected-ui;
 			}
 		}
@@ -90,12 +90,19 @@ $properties-vt-checkbox-width: 45px;
 			background-color: $hover-row;
 		}
 
-		// Required for numberfields within react-virtualized table cell
 		.properties-table-cell-control {
+			// Required for numberfields within react-virtualized table cell
 			.properties-numberfield {
 				input {
 					margin-bottom: 5px;
 				}
+			}
+
+			// Required for textarea to be visible in a table cell
+			.properties-textarea textarea {
+				resize: none;
+				height: 42px;
+				min-width: 100%;
 			}
 		}
 
@@ -116,7 +123,7 @@ $properties-vt-checkbox-width: 45px;
 
 	.properties-vt-single-selection {
 		// Table header
-		div[role="properties-header-row"] {
+		div[data-role="properties-header-row"] {
 			padding-left: 9px;
 		}
 

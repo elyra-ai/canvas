@@ -180,7 +180,7 @@ describe("oneofselect renders correctly", () => {
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
 		expect(dropdownWrapper.hasClass("hide")).to.equal(true);
 	});
-	it("Validate someofselect filtered correctly", () => {
+	it("Validate oneofselect filtered correctly", () => {
 		controller.setControlStates({ "test-oneofselect": { "enumFilter": ["order", "gtt"] } });
 		const wrapper = mount(
 			<OneofselectControl
@@ -198,9 +198,6 @@ describe("oneofselect renders correctly", () => {
 		// select the first item
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(2);
-	});
-	it("dropdown renders correctly in a table", () => {
-		// TODO:  Need to add this test case
 	});
 	it("dropdown renders messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
@@ -221,7 +218,6 @@ describe("oneofselect renders correctly", () => {
 		expect(messageWrapper).to.have.length(1);
 	});
 });
-
 
 describe("oneofselect paramDef works correctly", () => {
 	let wrapper;
@@ -317,4 +313,141 @@ describe("oneofselect paramDef works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
 	});
 
+	it("dropdown renders correctly in a table", () => {
+		const propertyId = { name: "oneofselect_table_error", row: 0, col: 0 };
+		const panel = propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		const table = panel.find("div[data-id='properties-ft-oneofselect_table_error']");
+
+		// Combobox should not be rendered in a table even though 'custom_value_allowed' is set to true
+		const dropdownSelect = table.find(".properties-dropdown").find("select");
+		expect(dropdownSelect).to.have.length(1);
+		expect(table.find(".properties-dropdown").find("input")).to.have.length(0);
+
+		// verify able to select a new option
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("cat");
+		dropdownSelect.simulate("change", { target: { value: "horse" } });
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("horse");
+	});
+});
+
+describe("oneofselect with custom value allowed works correctly", () => {
+	const propertyName = "oneofselect-custom";
+	const propertyId = { name: propertyName };
+
+	const controller = new Controller();
+	const control = {
+		"name": propertyName,
+		"label": {
+			"text": "oneofselect"
+		},
+		"description": {
+			"text": "oneofselect description"
+		},
+		"customValueAllowed": true,
+		"valueDef": {
+			"propType": "string",
+			"isList": false,
+			"isMap": false
+		},
+		"values": [
+			"one",
+			"two",
+			"three",
+			"four",
+			"five",
+			"six"
+		],
+		"valueLabels": [
+			"One",
+			"Two",
+			"Three",
+			"Four",
+			"Five",
+			"Six"
+		]
+	};
+	propertyUtils.setControls(controller, [control]);
+	afterEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
+	it("should render a combobox dropdown", () => {
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		expect(wrapper.prop("control")).to.equal(control);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.find("input");
+		expect(dropdownInput).to.have.length(1);
+		expect(dropdownInput.text()).to.equal("");
+
+		// Verify dropdown items
+		const dropdownMenu = dropdownWrapper.find(".bx--list-box__menu-icon");
+		dropdownMenu.simulate("click");
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		expect(dropdownWrapper.find(".bx--list-box__menu-item")).to.have.length(6);
+	});
+
+	it("should display the custom value entered", () => {
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		expect(wrapper.prop("control")).to.equal(control);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		let dropdownInput = dropdownWrapper.find("input");
+
+		dropdownInput.simulate("change", { target: { value: "custom" } });
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		dropdownInput = dropdownWrapper.find("input");
+
+		expect(controller.getPropertyValue(propertyId)).to.equal("custom");
+		expect(dropdownInput.instance().value).to.equal("custom");
+	});
+
+	it("Validate oneofselect with custom value filtered correctly", () => {
+		controller.setControlStates({ "oneofselect-custom": { "enumFilter": ["one", "three"] } });
+		const wrapper = mount(
+			<OneofselectControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		let dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownInput = dropdownWrapper.find("input");
+		dropdownInput.simulate("click");
+		dropdownWrapper = wrapper.find("div[data-id='properties-oneofselect-custom']");
+		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
+		expect(dropdownList).to.be.length(2);
+	});
+});
+
+describe("oneofselect classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("oneofselect should have custom classname defined", () => {
+		expect(wrapper.find(".oneofselect-control-class")).to.have.length(1);
+	});
+
+	it("oneofselect should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		expect(wrapper.find(".table-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-oneofselect-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-oneofselect-control-class")).to.have.length(1);
+	});
 });

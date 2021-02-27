@@ -19,6 +19,8 @@ import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import propertyUtils from "../../_utils_/property-utils";
+import timestampParamDef from "../../test_resources/paramDefs/timestamp_paramDef.json";
 
 const controller = new Controller();
 const control = {
@@ -83,4 +85,23 @@ describe("timestamp-control renders correctly", () => {
 		expect(text.text()).to.equal("");
 	});
 
+});
+
+describe("timestamp classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(timestampParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("timestamp should have custom classname defined", () => {
+		expect(wrapper.find(".timestampfield-control-class")).to.have.length(1);
+	});
+
+	it("timestamp should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "timestamp-table-panels");
+		expect(wrapper.find(".table-timestamp-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-timestamp-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-timestamp-control-class")).to.have.length(1);
+	});
 });

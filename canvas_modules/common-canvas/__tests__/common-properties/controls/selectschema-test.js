@@ -132,3 +132,22 @@ describe("selectschema works correctly in common-properties", () => {
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
 	});
 });
+
+describe("selectschema classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectschemaParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("selectschema should have custom classname defined", () => {
+		expect(wrapper.find(".selectschema-control-class")).to.have.length(1);
+	});
+
+	it("selectschema should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "selectschema_table-error-panel");
+		expect(wrapper.find(".table-selectschema-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-selectschema-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-selectschema-control-class")).to.have.length(1);
+	});
+});

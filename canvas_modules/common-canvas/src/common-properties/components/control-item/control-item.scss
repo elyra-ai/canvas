@@ -15,7 +15,6 @@
  */
 
 .properties-control-item {
-	padding: $spacing-04 0;
 	&.hide {
 		display: none;
 	}
@@ -58,4 +57,11 @@
 	@include carbon--type-style("helper-text-01");
 	color: $text-02;
 	padding-bottom: $spacing-03;
+}
+
+// Removed padding in properties-label-container because .bx--label has margin-bottom: $spacing-03
+.bx--label {
+	.properties-label-container {
+		padding-bottom: 0;
+	}
 }

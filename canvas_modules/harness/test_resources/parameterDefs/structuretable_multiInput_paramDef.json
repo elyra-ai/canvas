@@ -157,7 +157,8 @@
           "default": "string"
         },
         {
-          "id": "schema"
+          "id": "schema",
+          "type": "string"
         }
       ]
     }

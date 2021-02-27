@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 describe("Test the supernode expanded structure", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -28,8 +28,8 @@ describe("Test the supernode expanded structure", function() {
 
 		// Verify expanded supernode's image and label location
 		cy.verifyNodeElementLocation("Supernode", "image", 5, 4);
-		cy.verifyNodeElementLocation("Supernode", "label", 30, 18);
-		cy.verifyNodeElementWidth("Supernode", "label", "65px");
+		cy.verifyNodeElementLocation("Supernode", "label", 30, 4);
+		cy.verifyNodeElementWidth("Supernode", "label", "120px");
 
 		// Add a very long label to the supernode
 		cy.openCanvasAPI("Set Node Label");
@@ -38,15 +38,15 @@ describe("Test the supernode expanded structure", function() {
 		cy.submitAPI();
 
 		// Verify new label location and width
-		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 18);
+		cy.verifyNodeElementLocation("New Very Long Supernode Label To Test The Label Abbreviation", "label", 30, 4);
 		cy.verifyNodeElementWidth(
-			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "127px"
+			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "120px"
 		);
 	});
 });
 
 describe("Test supernode expanded to correct size", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -111,7 +111,7 @@ describe("Test supernode expanded to correct size", function() {
 });
 
 describe("Test create supernode within a supernode with a new node from palette", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("supernodeCanvas.json");
@@ -205,7 +205,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 });
 
 describe("Test cut and copy supernode from first canvas to second canvas", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
 		cy.openCanvasDefinition("supernodeCanvas.json");
@@ -259,7 +259,7 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 });
 
 describe("Test create a supernode with link that does not have port info", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -303,7 +303,7 @@ describe("Test create a supernode with link that does not have port info", funct
 });
 
 describe("Test selecting the canvas background of expanded supernodes", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeNestedCanvas.json");
 	});
@@ -330,7 +330,7 @@ describe("Test selecting the canvas background of expanded supernodes", function
 });
 
 describe("Test context menu for supernode canvas background doesn't deselect nodes or comments", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -356,7 +356,7 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 });
 
 describe("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
@@ -372,7 +372,7 @@ describe("Test Select All in context menu for supernode canvas only selects non-
 });
 
 describe("Test all the nodes are correctly positioned", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodePortPosCanvas.json");
 	});

@@ -34,7 +34,6 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(formResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm));
 		// console.info("\n\n");
-
 		// Work around since comparing the objects directly doesn't work.
 		expect(isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
@@ -89,7 +88,9 @@ describe("Correct form should be created", () => {
 		};
 		let help;
 		let pixelWidth; // Pass in an undefined pixelWidth to simulate it missing from ParamDefs.
-		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data);
+		let conditions;
+		let resources;
+		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data, conditions, resources, "./test.svg");
 
 		const paramSpec = {
 			"current_parameters": {

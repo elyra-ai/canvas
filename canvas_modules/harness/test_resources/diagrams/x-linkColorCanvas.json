@@ -257,7 +257,7 @@
     "links": [
       {
         "id": "ee3dad83-d7a9-4019-b202-9137e7a25806",
-        "className": "d3-data-link okay",
+        "className": "custom-link-okay",
         "source": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
         "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82"
       },
@@ -269,25 +269,25 @@
       },
       {
         "id": "575b0cb8-426e-4845-9083-5a1d143d4aa5",
-        "className": "d3-object-link blue",
+        "className": "custom-link-blue",
         "source": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
         "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V"
       },
       {
         "id": "892b0cb3-4e26-4548-0893-5a1d143d4aa5",
-        "className": "d3-object-link blue",
+        "className": "custom-link-blue",
         "source": "1c278dfe-a598-430b-b4d9-869f5f7a7da2",
         "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V"
       },
       {
         "id": "24cbb9f6-1b89-4aa3-89fe-33a639d22ede",
-        "className": "d3-data-link warning",
+        "className": "custom-link-warning",
         "source": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
         "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4"
       },
       {
         "id": "c9831fe3-c4ba-4c0c-a16a-ee2acc0248aa",
-        "className": "d3-data-link error",
+        "className": "custom-link-error",
         "source": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
         "target": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15"
       },

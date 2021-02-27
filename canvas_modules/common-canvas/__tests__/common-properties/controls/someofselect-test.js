@@ -206,6 +206,19 @@ describe("SomeOfSelectControl renders correctly", () => {
 		const messageWrapper = someofselectWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("SomeOfSelectControl should have aria-label", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<SomeOfSelectControl
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const someofselectWrapper = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
+		expect(someofselectWrapper.props()).to.have.property("aria-label", control.label.text);
+	});
 });
 
 describe("someofselect works correctly in common-properties", () => {
@@ -278,4 +291,16 @@ describe("someofselect filtered enum works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.eql(["red"]);
 	});
 
+});
+
+describe("someofselect classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("someofselect should have custom classname defined", () => {
+		expect(wrapper.find(".someofselect-control-class")).to.have.length(1);
+	});
 });

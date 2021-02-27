@@ -1005,7 +1005,6 @@
         {
           "id": "annotation",
           "type": "array[string]",
-          "role": "text",
           "default": []
         }
       ]
@@ -1030,7 +1029,8 @@
         "description": {
           "default": "Use arrows to reorder the sorting priority. The index column will be auto-populated with an integer value for each row starting at 5. Subsequent rows will be incremented by 1.",
           "placement": "on_panel"
-        }
+        },
+        "class_name": "structuretable-control-class"
       },
       {
         "parameter_ref": "structuretableReadonlyColumnDefaultIndex",
@@ -1226,7 +1226,8 @@
         "description": {
           "default": "This is a nested structurelisteditor where the values will be returned as objects.",
           "placement": "on_panel"
-        }
+        },
+        "class_name": "nested-parent-structuretable-control-class"
       },
       {
         "parameter_ref": "nestedStructureObjectArray",
@@ -1910,7 +1911,8 @@
               "resource_key": "nestedStructures.field.label"
             },
             "summary": true,
-            "dm_image": "invalid"
+            "dm_image": "invalid",
+            "class_name": "nested-child-cell-structuretable-control-class"
           },
           {
             "parameter_ref": "nestedStructure_readonly_int",
@@ -1945,7 +1947,8 @@
             },
             "description": {
               "resource_key": "Open subpanel to modify name and type. This structure will return values as arrays"
-            }
+            },
+            "class_name": "double-nested-subpanel-structuretable-control-class"
           }
         ]
       },
@@ -1963,7 +1966,8 @@
               "operation": "index"
             },
             "control": "readonly",
-            "summary": true
+            "summary": true,
+            "class_name": "double-nested-subpanel-cell-structuretable-control-class"
           },
           {
             "parameter_ref": "nestedStructure_table_name",

@@ -39,8 +39,8 @@ describe("hidden control works correctly", () => {
 		expect(hiddenControl).not.to.be.undefined;
 		// should still set/get value correctly
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.equal("hidden");
-		// expect 1 control item for the textfield control and table in paramDef
-		expect(wrapper.find("div.properties-control-item")).to.have.length(2);
+		// expect control item for the textfield control, table in paramDef, and textfield control in table
+		expect(wrapper.find("div.properties-control-item")).to.have.length(3);
 	});
 
 	it("validate hidden table control isn't shown", () => {
@@ -53,11 +53,28 @@ describe("hidden control works correctly", () => {
 		const hiddenPropertyId = { name: "hidden_table" };
 		// validate only 1 cell value is visible
 		expect(wrapper.find("div.properties-table-cell-control")).to.have.length(1);
-		// validate only 2 headers.  1 for textfield and other for scrollbar
-		expect(wrapper.find("div.properties-vt-column")).to.have.length(2);
+		// validate only 1 header for textfield
+		expect(wrapper.find("div.properties-vt-column")).to.have.length(1);
 		wrapper.find("button.properties-add-fields-button").simulate("click");
 		wrapper.find("div[data-id='properties-hidden_table_1_1'] input").simulate("change", { target: { value: "My new value" } });
 		expect(controller.getPropertyValue(hiddenPropertyId)).to.eql([["Hopper", "Turing"], [, "My new value"]]);
 	});
 
+});
+
+describe("hidden classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(hiddenParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("hidden should have custom classname defined", () => {
+		expect(wrapper.find(".hidden-control-class")).to.have.length(1);
+	});
+
+	it("hidden should not have custom classname defined in table cells", () => {
+		// hidden controls are not rendered in table, classname should not be found
+		expect(wrapper.find(".table-hidden-control-class")).to.have.length(0);
+	});
 });

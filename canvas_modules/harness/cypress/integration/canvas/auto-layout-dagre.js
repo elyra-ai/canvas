@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 
 describe("Test for toolbar horizontal and vertical layout", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeLayoutCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
@@ -123,14 +123,14 @@ describe("Test for toolbar horizontal and vertical layout", function() {
 });
 
 describe("Test the horizontal layout of a multiport node with many descendants", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutMultiPortsCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
 	});
 
 	it("Test the horizontal layout of multiport node transforms having Vertical node format", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Root", 50, 902.5);
@@ -151,7 +151,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 	});
 
 	it("Test the horizontal layout of multiport node transforms having Horizontal node format", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Horizontal" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Horizontal" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Root", 50, 710);
@@ -173,7 +173,7 @@ describe("Test the horizontal layout of a multiport node with many descendants",
 });
 
 describe("Test the horizontal layout of a flow and a sub-flow using curve and elbow connections", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("layoutSubFlowCanvas.json");
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
@@ -181,7 +181,7 @@ describe("Test the horizontal layout of a flow and a sub-flow using curve and el
 
 	it("Test the horizontal layout of flow and sub-flow node transforms " +
   "having Vertical node format and curve connections", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Vertical", "selectedLinkType": "Curve" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Vertical", "selectedLinkType": "Curve" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Select1", 50, 210);
@@ -200,7 +200,7 @@ describe("Test the horizontal layout of a flow and a sub-flow using curve and el
 
 	it("Test the horizontal layout of flow and sub-flow node transforms " +
   "having Horizontal node format and elbow connections", function() {
-		cy.setCanvasConfig({ "selectedNodeFormat": "Horizontal", "selectedLinkType": "Elbow" });
+		cy.setCanvasConfig({ "selectedNodeFormatType": "Horizontal", "selectedLinkType": "Elbow" });
 		cy.clickToolbarArrangeHorizontally();
 		cy.clickToolbarZoomToFit();
 		cy.verifyNodeTransform("Select1", 50, 193);

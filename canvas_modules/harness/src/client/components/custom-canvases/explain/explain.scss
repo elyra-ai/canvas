@@ -21,53 +21,52 @@
 		stroke: #828281;
 		fill: #FFFAC2;
 		stroke-width: 2;
-		text-anchor: middle;
 	}
 
 	.d3-node-label {
 		font-size: 13px;
 		font-weight: 600;
-		text-anchor: middle;
+		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 
 	.small_text {
 		font-size: 11px;
-		text-anchor: middle;
+		text-align: center;
 		user-select: none; // Prevents text highlighting on drag over
 	}
 
-	.dark_purple {
+	.dark_purple > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #C2A7CE;
 		stroke-width: 2;
 	}
 
-	.light_purple {
+	.light_purple > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #F1F0FE;
 		stroke-width: 2;
 	}
 
-	.light_brown {
+	.light_brown > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #F3DAD4;
 		stroke-width: 2;
 	}
 
-	.pink {
+	.pink > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #F9BEB8;
 		stroke-width: 2;
 	}
 
-	.gray {
+	.gray > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #BCB7BD;
 		stroke-width: 2;
 	}
 
-	.light_green {
+	.light_green > .d3-node-body-outline {
 		stroke: #828281;
 		fill: #E8F0C1;
 		stroke-width: 2;

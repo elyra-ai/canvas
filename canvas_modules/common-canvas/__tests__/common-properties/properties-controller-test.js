@@ -1057,9 +1057,56 @@ describe("Properties Controller handlers", () => {
 		);
 		expect(propertyListener).to.have.property("callCount", 1);
 	});
+	it("should be able to set null values with setPropertyValues ", () => {
+		const form = Form.makeForm(structureListEditorParamDef);
+		controller.setForm(form);
+		const values = {
+			"structuretableReadonlyColumnStartValue": [],
+			"structuretableReadonlyColumnDefaultIndex": [],
+			"structuretableNoButtons": [],
+			"structuretableNoHeader": [],
+			"structuretableSortableColumns": [],
+			"structuretableErrors": [],
+			"enableSortByTable": true,
+			"structuretableSortOrder": [],
+			"showRenameFieldsTable": true,
+			"structuretableRenameFields": [],
+			"dummy_types": [],
+			"ST_mse_table": [],
+			"structuretableObjectType": [],
+			"structuretableLongValue": [],
+			"nestedStructureObject": [{
+				"field": "Cholesterol",
+				"nestedStructure_readonly_int": null,
+				"nestedStructure_sort_order": "Ascending",
+				"nestedStructure_table": [
+					{
+						"nestedStructure_table_readonly_col_index": null,
+						"nestedStructure_table_name": "hi",
+						"nestedStructure_table_data_type": ""
+					}
+				]
+			}],
+			"nestedStructureObjectArray": [],
+			"nestedStructureArrayArray": [],
+			"nestedStructureArrayObject": [[
+				"Cholesterol",
+				5,
+				"Ascending",
+				[]
+			]],
+			"nestedStructureMap": [],
+			"nestedStructureeditor": [],
+			"structuretable_filter": []
+		};
+		controller.setPropertyValues(values);
+		expect(propertyListener).to.have.property("callCount", 3);
+		const actual = controller.getPropertyValues();
+		expect(actual).to.eql(values);
+	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);
-		expect(propertyListener).to.have.property("callCount", 2);
+		expect(propertyListener).to.have.property("callCount", 4);
 	});
 	it("should fire event on updatePropertyValue returning object values", () => {
 		const form = Form.makeForm(structureListEditorParamDef);
@@ -1079,7 +1126,7 @@ describe("Properties Controller handlers", () => {
 			"readonly": "Readonly phrase"
 		}];
 		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue);
-		expect(propertyListener).to.have.property("callCount", 4);
+		expect(propertyListener).to.have.property("callCount", 6);
 		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
 	});
 });

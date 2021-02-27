@@ -24,7 +24,7 @@ import { ResourceDef } from "../util/L10nProvider";
 import { propertyOf } from "lodash";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
+	constructor(cname, icon, editorSize, pixelWidth, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata, heading) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
@@ -37,6 +37,7 @@ export class PropertyDef {
 		this.parameterMetadata = parameterMetadata;
 		this.groupMetadata = groupMetadata;
 		this.actionMetadata = actionMetadata;
+		this.heading = heading;
 	}
 
 	/**
@@ -76,7 +77,8 @@ export class PropertyDef {
 			structureMetadata,
 			parameterMetadata,
 			groupMetadata,
-			actionMetadata
+			actionMetadata,
+			propertyOf(uihints)("label")
 		);
 	}
 }

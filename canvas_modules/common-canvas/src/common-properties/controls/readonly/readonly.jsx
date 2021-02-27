@@ -132,6 +132,7 @@ class ReadonlyControl extends React.Component {
 				className={classNames("properties-readonly", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{display}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -144,6 +145,7 @@ ReadonlyControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.any, // pass in by redux

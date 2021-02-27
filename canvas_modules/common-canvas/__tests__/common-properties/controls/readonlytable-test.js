@@ -171,6 +171,15 @@ describe("readonlytable control renders correctly", () => {
 		const editButton = table.find("button.properties-edit-button");
 		expect(editButton.text()).to.equal("Edit test");
 	});
+
+	it("`readonlytable` control should have aria-label", () => {
+		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const table = tables
+			.find("div[data-id='properties-ft-readonlyStructurelistTableControl']")
+			.find(".properties-vt-autosizer")
+			.find(".ReactVirtualized__Table");
+		expect(table.props()).to.have.property("aria-label", "ReadonlyTable - structurelisteditor");
+	});
 });
 
 describe("readonlytable control conditions", () => {
@@ -201,5 +210,24 @@ describe("readonlytable control conditions", () => {
 		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-conditions-summary-panel");
 		const table = tables.find("div[data-id='properties-ci-readonlyTableDisabled']");
 		expect(table.prop("disabled")).to.equal(true);
+	});
+});
+
+describe("readonlyTable classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("readonlyTable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.find(".readonlytable-control-class")).to.have.length(1);
+	});
+
+	it("readonlyTable should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		expect(wrapper.find(".nested-parent-readonlytable-control-class")).to.have.length(1);
+		expect(wrapper.find(".nested-subpanel-readonlytable-control-class")).to.have.length(3);
 	});
 });

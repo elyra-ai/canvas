@@ -51,6 +51,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useHeading = this.useHeading.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
@@ -156,6 +157,9 @@ export default class SidePanelModal extends React.Component {
 	useExpressionValidate(checked) {
 		this.props.propertiesConfig.useExpressionValidate(checked);
 	}
+	useHeading(checked) {
+		this.props.propertiesConfig.useHeading(checked);
+	}
 
 	dropdownOptions() {
 		const options = [];
@@ -259,6 +263,16 @@ export default class SidePanelModal extends React.Component {
 				</Button>
 			</div>);
 
+		const validateSchemaEnabled = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="enable-schema-validation"
+					labelText="Enable parameterDef schema validation"
+					onToggle={this.props.propertiesConfig.enablePropertiesSchemaValidation}
+					toggled={this.props.propertiesConfig.propertiesSchemaValidation}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -300,6 +314,17 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const useHeading = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-show-heading">
+				<Toggle
+					id="harness-sidepanel-show-heading-toggle"
+					labelText="Show panel heading (icon and label)"
+					toggled={ this.props.propertiesConfig.heading }
+					onToggle={ this.useHeading }
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -309,6 +334,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{containerType}
 				{divider}
+				{validateSchemaEnabled}
+				{divider}
 				{applyOnBlur}
 				{divider}
 				{expressionBuilder}
@@ -316,6 +343,8 @@ export default class SidePanelModal extends React.Component {
 				{expressionValidate}
 				{divider}
 				{addtlCmpts}
+				{divider}
+				{useHeading}
 			</div>
 		);
 	}
@@ -343,6 +372,10 @@ SidePanelModal.propTypes = {
 		selectedPropertiesDropdownFile: PropTypes.string,
 		selectedPropertiesFileCategory: PropTypes.string,
 		fileChooserVisible: PropTypes.bool,
-		setPropertiesDropdownSelect: PropTypes.func
+		setPropertiesDropdownSelect: PropTypes.func,
+		heading: PropTypes.bool,
+		useHeading: PropTypes.func,
+		enablePropertiesSchemaValidation: PropTypes.func,
+		propertiesSchemaValidation: PropTypes.bool
 	})
 };

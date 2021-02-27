@@ -320,7 +320,8 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Move link between execution node and supernode to be between
 		// same nodes but on a different port
 		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
-		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Super node", "input1SuperNodePE");
+		cy.moveLinkHandleToPortByLinkId(
+			"a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Super node", "input1SuperNodePE");
 
 		// Check link now exists to new port.
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
@@ -351,7 +352,8 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Move end of link between execution node and supernode to be between
 		// execution node and exit binding node.
 		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
-		cy.moveLinkHandleToPort("a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Binding (exit) node", "inPort");
+		cy.moveLinkHandleToPortByLinkId(
+			"a81684aa-9b09-4620-aa59-54035a5de913", "endHandle", "Binding (exit) node", "inPort");
 
 		// Check the link from execution node to supernode DOES NOT exists
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
@@ -387,7 +389,7 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 		// Move start of link between execution node and supernode to be between
 		// entry binding node and supernode.
 		cy.clickLink("a81684aa-9b09-4620-aa59-54035a5de913");
-		cy.moveLinkHandleToPort(
+		cy.moveLinkHandleToPortByLinkId(
 			"a81684aa-9b09-4620-aa59-54035a5de913", "startHandle", "Binding (entry) node", "outPort");
 
 		// Check the link from execution node to supernode DOES NOT exists

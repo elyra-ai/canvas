@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 import * as testUtils from "../../utils/eventlog-utils";
 
 describe("Test basic undo/redo operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -178,7 +178,7 @@ describe("Test basic undo/redo operations", function() {
 });
 
 describe("Test select all canvas objects undo/redo operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -313,7 +313,7 @@ describe("Test select all canvas objects undo/redo operations", function() {
 });
 
 describe("Test Disconnect and Delete undo/redo operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -362,7 +362,7 @@ describe("Test Disconnect and Delete undo/redo operations", function() {
 });
 
 describe("Test for Multiple undo/redo operations", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
@@ -388,6 +388,8 @@ describe("Test for Multiple undo/redo operations", function() {
 		cy.clickNode("Filter");
 		cy.addCommentToPosition("Some text comment.", 30, 300);
 		cy.verifyCommentExists("Some text comment.");
+		cy.verifyEditActionInConsole("editComment", "content", "Some text comment.");
+
 		// Undo using toolbar
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
@@ -427,7 +429,7 @@ describe("Test for Multiple undo/redo operations", function() {
 });
 
 describe("Test for undo/redo of layout actions", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.setCanvasConfig({ "selectedToolbarType": "SingleLeftBarArray" });
@@ -499,7 +501,7 @@ describe("Test for undo/redo of layout actions", function() {
 });
 
 describe("Test undo/redo property values and title in common-properties", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});
@@ -539,7 +541,7 @@ describe("Test undo/redo property values and title in common-properties", functi
 });
 
 describe("Test undo/redo of shaper node", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("sparkPalette.json");
 	});
@@ -570,7 +572,7 @@ describe("Test undo/redo of shaper node", function() {
 });
 
 describe("Test undo/redo of supernode creation and deletion", function() {
-	before(() => {
+	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasPalette("modelerPalette.json");
 	});

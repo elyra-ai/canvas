@@ -25,7 +25,7 @@ import MoveableTableRows from "./../../components/moveable-table-rows";
 import ValidationMessage from "./../../components/validation-message";
 import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
-import { TABLE_SCROLLBAR_WIDTH, MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
+import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
@@ -50,13 +50,14 @@ class ListControl extends AbstractTable {
 		this.setCurrentControlValueSelected(rows);
 	}
 
-	makeCell(control, propertyId, controlPropType) {
+	makeCell(control, propertyId, controlPropType, listHeader) {
 		if (NUMBER_TYPES.indexOf(controlPropType) > -1) {
 			return (<div className="properties-table-cell-control">
 				<NumberfieldControl
 					control={control}
 					propertyId={propertyId}
 					controller={this.props.controller}
+					controlItem={listHeader}
 					tableControl
 				/>
 			</div>);
@@ -66,12 +67,13 @@ class ListControl extends AbstractTable {
 				control={control}
 				propertyId={propertyId}
 				controller={this.props.controller}
+				controlItem={listHeader}
 				tableControl
 			/>
 		</div>);
 	}
 
-	makeRows(controlValue, tableState) {
+	makeRows(controlValue, tableState, tableHeaders) {
 		const rows = [];
 		if (controlValue) {
 			for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
@@ -86,17 +88,13 @@ class ListControl extends AbstractTable {
 
 				const controlPropType = this.props.controller.getControlPropType(propertyId);
 				const control = {};
-				const cellContent = this.makeCell(control, propertyId, controlPropType);
+				// Assuming list control has only 2 columns
+				const listHeader = (typeof tableHeaders === "undefined" || tableHeaders.length === 0) ? "" : tableHeaders[0].label;
+				const cellContent = this.makeCell(control, propertyId, controlPropType, listHeader);
 				columns.push({
 					key: rowIndex + "-0-value",
 					column: "value",
 					content: cellContent
-				});
-				// add padding for scrollbar
-				columns.push({
-					column: "scrollbar",
-					width: TABLE_SCROLLBAR_WIDTH,
-					content: <div />
 				});
 				rows.push({
 					key: rowIndex,
@@ -115,7 +113,6 @@ class ListControl extends AbstractTable {
 			"key": "value",
 			"label": formatMessage(this.reactIntl, MESSAGE_KEYS.LIST_TABLE_LABEL),
 			"description": (null) });
-		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;
 	}
 
@@ -130,13 +127,14 @@ class ListControl extends AbstractTable {
 			addButtonFunction: this.addRow
 		};
 
-		const rows = this.makeRows(this.props.value, this.props.state);
+		const rows = this.makeRows(this.props.value, this.props.state, headers);
 		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
 			delete this.scrollToRow;
 		}
+		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 		const table =	(
 			<FlexibleTable
 				columns={headers}
@@ -147,6 +145,7 @@ class ListControl extends AbstractTable {
 				tableState={this.props.state}
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
+				tableLabel={tableLabel}
 				controller={this.props.controller}
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
@@ -162,6 +161,7 @@ class ListControl extends AbstractTable {
 
 		return (
 			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
+				{this.props.controlItem}
 				<MoveableTableRows
 					tableContainer={tableContainer}
 					control={this.props.control}
@@ -180,6 +180,7 @@ ListControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux

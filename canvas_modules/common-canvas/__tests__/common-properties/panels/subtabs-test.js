@@ -69,3 +69,27 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 		expect(subTab).to.have.length(0);
 	});
 });
+
+describe("subtabs classNames applied correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("subtab container should have custom classname defined", () => {
+		const mainTab = wrapper.find("div.maintab-panel-class");
+		expect(mainTab.find("div.subtab-panel-class")).to.have.length(1);
+	});
+
+	it("subtabs should have custom classname defined", () => {
+		const subTabs = wrapper.find("div.properties-sub-tab-container").at(0);
+		expect(subTabs.find(".range-fields-subtab-control-class")).to.have.length(1);
+		expect(subTabs.find(".table-subtab-control-class")).to.have.length(1);
+		expect(subTabs.find(".fruit-subtab-control-class")).to.have.length(1);
+	});
+});

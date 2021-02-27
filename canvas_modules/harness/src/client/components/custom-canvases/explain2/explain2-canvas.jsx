@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas";
@@ -35,12 +51,11 @@ export default class Explain2Canvas extends React.Component {
 				inputPortBottomPosY: 0,
 				outputPortTopPosX: DEFAULT_WIDTH / 2,
 				outputPortTopPosY: 0,
-				labelAndIconVerticalJustification: "none",
 				inputPortDisplay: false,
 				outputPortDisplay: false,
 				labelPosX: LABEL_POSX,
-				labelPosY: 20,
-				labelMaxWidth: LABEL_MAX_WIDTH,
+				labelPosY: 6,
+				labelWidth: LABEL_MAX_WIDTH,
 				ellipsisDisplay: true,
 				ellipsisWidth: 10,
 				ellipsisPosX: DEFAULT_WIDTH + 1,
@@ -86,14 +101,15 @@ export default class Explain2Canvas extends React.Component {
 				{
 					"id": "dec_index_label",
 					"x_pos": LABEL_POSX + limitedLabelWidth + 5,
-					"y_pos": 20,
+					"y_pos": 8,
 					"label": indexNo,
 					"class_name": "dec-index-label"
 				},
 				{
 					"id": "dec_percentage_label",
-					"x_pos": DEFAULT_WIDTH - PERCENTAGE_BAR_WIDTH - 5,
-					"y_pos": 20,
+					"x_pos": DEFAULT_WIDTH - PERCENTAGE_BAR_WIDTH - 45,
+					"y_pos": 8,
+					"width": 40,
 					"label": percentage + "%",
 					"class_name": "dec-percentage-label"
 				},
@@ -110,7 +126,8 @@ export default class Explain2Canvas extends React.Component {
 				{
 					"id": "dec_sql_cost_label",
 					"x_pos": LABEL_POSX,
-					"y_pos": DEFAULT_HEIGHT - 15,
+					"y_pos": DEFAULT_HEIGHT - 27,
+					"width": 300,
 					"label": "SQL cost " + sqlCost.toFixed(2),
 					"class_name": "dec-sql-cost-label"
 				}

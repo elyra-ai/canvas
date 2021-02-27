@@ -105,9 +105,6 @@
         {
           "id": "custom_name_checkbox",
           "type": "boolean",
-          "enum": [
-            "Add Description"
-          ],
           "default": false
         },
         {
@@ -190,9 +187,6 @@
         {
           "id": "first_field_checkbox",
           "type": "boolean",
-          "enum": [
-            "Add Description"
-          ],
           "default": false
         },
         {
@@ -556,7 +550,8 @@
             "parameter_ref": "userName",
             "label": {
               "default": "Name"
-            }
+            },
+            "class_name": "nested-structureeditor-cell-control-class"
           },
           {
             "parameter_ref": "userAge",
@@ -583,7 +578,8 @@
             "parameter_ref": "userAddress",
             "label": {
               "default": "Address"
-            }
+            },
+            "class_name": "double-nested-structureeditor-cell-control-class"
           },
           {
             "parameter_ref": "userZip",
@@ -726,7 +722,8 @@
         },
         "description": {
           "default": "Filter columns"
-        }
+        },
+        "class_name": "structureeditor-control-class"
       },
       {
         "parameter_ref": "hider",
@@ -790,7 +787,8 @@
         "description": {
           "default": "Example of a structureeditor control within a structureeditor"
         },
-        "separator": "after"
+        "separator": "after",
+        "class_name": "nested-structureeditor-control-class"
       },
       {
         "parameter_ref": "nestedStructureeditorTable",

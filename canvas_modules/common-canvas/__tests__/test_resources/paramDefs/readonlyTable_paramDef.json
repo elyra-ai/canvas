@@ -292,7 +292,8 @@
           "default": "Readonly structuretable control with multi row selection",
           "placement": "on_panel"
         },
-        "control": "readonlyTable"
+        "control": "readonlyTable",
+        "class_name": "readonlytable-control-class"
       },
       {
         "parameter_ref": "readonlyStructurelistTableControl",
@@ -315,7 +316,8 @@
           "default": "Readonly structuretable with a nested structurelisteditor.",
           "placement": "on_panel"
         },
-        "control": "readonlyTable"
+        "control": "readonlyTable",
+        "class_name": "nested-parent-readonlytable-control-class"
       },
       {
         "parameter_ref": "readonlyTableError",
@@ -512,7 +514,8 @@
             },
             "description": {
               "resource_key": "Open subpanel to modify name and type"
-            }
+            },
+            "class_name": "nested-subpanel-readonlytable-control-class"
           }
         ]
       },

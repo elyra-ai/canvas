@@ -384,10 +384,10 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		let expected = structureeditorParamDef.current_parameters.nestedStructureeditor;
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
-		const addressInput = structure.find("div[data-id='properties-ci-userAddress']").find("input");
+		const addressInput = structure.find("div[data-id='properties-ctrl-userAddress']").find("input");
 		addressInput.simulate("change", { target: { value: "some new address" } });
 
-		const zipInput = structure.find("div[data-id='properties-ci-userZip']").find("input");
+		const zipInput = structure.find("div[data-id='properties-ctrl-userZip']").find("input");
 		zipInput.simulate("change", { target: { value: 99999 } });
 
 		// Verify modified values
@@ -416,7 +416,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are three rows
 		structure = wrapper.find("div[data-id='properties-ci-nestedStructureeditorTable']");
-		const tableRows = structure.find("div[role='properties-data-row']");
+		const tableRows = structure.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(3);
 		const thirdRow = tableRows.at(2);
 
@@ -447,9 +447,9 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		expect(editButton).to.have.length(1);
 		editButton.simulate("click");
 
-		const zipInput = wrapper.find("div[data-id='properties-ci-userZipTable']").find("input");
+		const zipInput = wrapper.find("div[data-id='properties-ctrl-userZipTable']").find("input");
 		zipInput.simulate("change", { target: { value: 99999 } });
-		const annotationInput = wrapper.find("div[data-id='properties-ci-annotationTable']").find("textarea");
+		const annotationInput = wrapper.find("div[data-id='properties-ctrl-annotationTable']").find("textarea");
 		annotationInput.simulate("change", { target: { value: "Set a dummy zip code" } });
 
 		// Verify modified values
@@ -485,7 +485,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 
 		// Verify there are two rows
 		structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
-		const tableRows = structure.find("div[role='properties-data-row']");
+		const tableRows = structure.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const secondRow = tableRows.at(1);
 
@@ -525,5 +525,24 @@ describe("structureeditor control renders correctly in a nested structure", () =
 			]
 		];
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
+});
+
+describe("structureeditor classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureeditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structureeditor should have custom classname defined", () => {
+		expect(wrapper.find(".structureeditor-control-class")).to.have.length(1);
+	});
+
+	it("structureeditor should have custom classname defined in table cells", () => {
+		const parent = wrapper.find(".nested-structureeditor-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-structureeditor-cell-control-class")).to.have.length(1);
+		expect(parent.find(".double-nested-structureeditor-cell-control-class")).to.have.length(1);
 	});
 });

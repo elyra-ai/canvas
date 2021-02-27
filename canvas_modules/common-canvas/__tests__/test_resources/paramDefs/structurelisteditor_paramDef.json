@@ -358,9 +358,6 @@
         {
           "id": "checkbox",
           "type": "boolean",
-          "enum": [
-            "Single Checkbox Label"
-          ],
           "default": true
         }
       ]
@@ -654,7 +651,6 @@
         {
           "id": "annotation",
           "type": "array[string]",
-          "role": "text",
           "default": []
         }
       ]
@@ -677,7 +673,8 @@
         },
         "description": {
           "default": "The index column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
-        }
+        },
+        "class_name": "structurelisteditor-control-class"
       },
       {
         "parameter_ref": "inlineEditingTable",
@@ -775,7 +772,8 @@
         },
         "description": {
           "default": "Example of a nested structurelisteditor inside a structurelisteditor."
-        }
+        },
+        "class_name": "nested-parent-structurelisteditor-control-class"
       },
       {
         "parameter_ref": "nestedStructuretable",
@@ -1333,7 +1331,8 @@
               "operation": "index"
             },
             "control": "readonly",
-            "summary": true
+            "summary": true,
+            "class_name": "nested-child-cell-structurelisteditor-control-class"
           },
           {
             "parameter_ref": "name",
@@ -1372,7 +1371,8 @@
             },
             "width": 15,
             "summary": true,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "double-nested-subpanel-structurelisteditor-control-class"
           },
           {
             "parameter_ref": "nested_data_type",

@@ -52,6 +52,8 @@ export default class MoveableTableRows extends React.Component {
 					kind="ghost"
 					renderIcon={UpToTop24}
 					iconDescription={topLabel}
+					tooltipPosition="left"
+					hasIconOnly
 				/>
 				<Button
 					className="table-row-move-button"
@@ -60,6 +62,8 @@ export default class MoveableTableRows extends React.Component {
 					kind="ghost"
 					renderIcon={ArrowUp24}
 					iconDescription={upLabel}
+					tooltipPosition="left"
+					hasIconOnly
 				/>
 			</div>
 		);
@@ -74,6 +78,8 @@ export default class MoveableTableRows extends React.Component {
 					kind="ghost"
 					renderIcon={ArrowDown24}
 					iconDescription={bottomLabel}
+					tooltipPosition="left"
+					hasIconOnly
 				/>
 				<Button
 					className="table-row-move-button"
@@ -82,6 +88,8 @@ export default class MoveableTableRows extends React.Component {
 					kind="ghost"
 					renderIcon={DownToBottom24}
 					iconDescription={downLabel}
+					tooltipPosition="left"
+					hasIconOnly
 				/>
 			</div>
 		);
@@ -192,7 +200,8 @@ export default class MoveableTableRows extends React.Component {
 			);
 		}
 
-		var content = (<table className="properties-mr-table-container">
+		// Added role presentation to fix a11y violation - no headers in the table
+		var content = (<table role="presentation" className="properties-mr-table-container">
 			<tbody>
 				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
 					<td>

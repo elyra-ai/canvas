@@ -23,12 +23,13 @@ import { STATES } from "./../../constants/constants";
 
 class TextPanel extends Component {
 	render() {
+		const className = this.props.panel.className ? this.props.panel.className : "";
 		const label = this.props.panel.label ? (<div className="panel-label">{this.props.panel.label}</div>) : null;
 		const description = this.props.panel.description
 			? (<div className="panel-description">{evaluateText(this.props.panel.description, this.props.controller)}</div>)
 			: null;
 		return (
-			<div className={classNames("properties-text-panel", { "hide": this.props.panelState === STATES.HIDDEN })}
+			<div className={classNames("properties-text-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
 				disabled={this.props.panelState === STATES.DISABLED}
 			>
 				{label}

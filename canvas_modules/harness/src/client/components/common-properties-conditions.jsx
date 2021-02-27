@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import {
 	RADIOSET_HORIZONTAL_ERROR_PROPS_INFO,
 	RADIOSET_VERTICAL_WARNING_PROPS_INFO,
 	ONEOFSELECT_ERROR_PROPS_INFO,
+	MULTISELECT_ERROR_PROPS_INFO,
 	SOMEOFSELECT_ERROR_PROPS_INFO,
 	SELECTCOLUMN_ERROR_PROPS_INFO,
 	SELECTCOLUMNS_ERROR_PROPS_INFO,
@@ -327,6 +328,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "yes", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
+			{ Control: "multiselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
@@ -779,6 +782,27 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
+
+				<div className="harness-conditions-documentation-panels-controls-component">
+					<h3 id="--multiselect" className="harness-section-subtitle">multiselect</h3>
+					<p>The multiselect control is of type <span className="harness-highlight">[string]</span>.
+						The below example shows an error if the option 'red' is selected.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={MULTISELECT_ERROR_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+							/>
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(MULTISELECT_ERROR_PROPS_INFO.parameterDef, "conditions")}
+							</pre>
+						</div>
+					</div>
+				</div>
+
 				<div className="harness-conditions-documentation-panels-controls-component">
 					<h3 id="--someofselect" className="harness-section-subtitle">someofselect</h3>
 					<p>A someofselect control is of type <span className="harness-highlight">[string]</span>.
@@ -1061,8 +1085,9 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--filteredEnum" className="harness-section-subtitle">Filtered Enumeration Conditions</h3>
 					<p>The <span className="harness-highlight">enum_filter</span> condition operates upon controls
 						whose parameter is backed by an enumerated list of options. This includes radioset, checkboxset,
-						and droplist controls. When the condition is true, enum_filter conditions allow authors
-						to dynamically filter the available enumeration options based upon the state of other parameters.
+						and droplist controls, but excluding <span className="harness-highlight">multiselect</span>. When
+						the condition is true, enum_filter conditions allow authors to dynamically filter the available
+						enumeration options based upon the state of other parameters.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">

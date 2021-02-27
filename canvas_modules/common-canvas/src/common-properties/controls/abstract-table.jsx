@@ -24,11 +24,12 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import Icon from "./../../icons/icon.jsx";
+import classNames from "classnames";
 import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
 import { MESSAGE_KEYS, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
+	TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
 	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
@@ -317,10 +318,10 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const tableInfo = { table: true, allowColumnControls: this.allowColumnControls };
-		const cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		let cellContent;
 		const columnDefObj = Object.assign({}, columnDef); // clone columnDef
+		const cellClassName = columnDefObj.className ? columnDefObj.className : "";
 		if (columnDef.dmImage) {
 			const fields = this.props.controller.getDatasetMetadataFields();
 			const stringValue = PropertyUtils.stringifyFieldValue(this.props.controller.getPropertyValue(propertyId), columnDef, true);
@@ -328,7 +329,7 @@ export default class AbstractTable extends React.Component {
 				stringValue, columnDef.dmImage);
 		}
 		if (this.isReadonlyTable()) {
-			cellContent = (<div className="properties-table-cell-control">
+			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 				<ReadonlyControl
 					control={this.props.controller.getControl(propertyId)}
 					propertyId={propertyId}
@@ -340,7 +341,7 @@ export default class AbstractTable extends React.Component {
 			if (selectSummaryRow) {
 				cellContent = <div />;
 			} else {
-				cellContent = (<div className="properties-table-cell-control">
+				cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 					<ReadonlyControl
 						control={this.props.controller.getControl(propertyId)}
 						propertyId={propertyId}
@@ -355,7 +356,7 @@ export default class AbstractTable extends React.Component {
 			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
-			cellContent = (<div className="properties-table-cell-control">
+			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
 			</div>);
 
@@ -401,7 +402,7 @@ export default class AbstractTable extends React.Component {
 				const columnDef = this.props.control.subControls[colIndex];
 				if (columnDef.name === this.filterFields[i]) {
 					const value = controlValue[rowIndex][colIndex];
-					if (value.toLowerCase().indexOf(this.state.filterText.toLowerCase()) > -1) {
+					if (typeof value === "string" && value.toLowerCase().indexOf(this.state.filterText.toLowerCase()) > -1) {
 						return true;
 					}
 					break;
@@ -444,6 +445,7 @@ export default class AbstractTable extends React.Component {
 			const showHeader = false;
 			const value = this.props.controller.getPropertyValue({ name: this.selectSummaryPropertyName });
 			this.makeCells(rows, value, null, this.selectSummaryPropertyName, true);
+			const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 			return (<div className="properties-at-selectedEditRows" >
 				<div className="properties-selectedEditRows-title" >
 					<span >{title}</span>
@@ -454,6 +456,7 @@ export default class AbstractTable extends React.Component {
 					data={rows}
 					rows={0}
 					scrollKey={this.selectSummaryPropertyName}
+					tableLabel={tableLabel}
 					controller={this.props.controller}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
@@ -629,6 +632,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
+		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 
 		const table =	(
 			<FlexibleTable
@@ -646,6 +650,7 @@ export default class AbstractTable extends React.Component {
 				tableState={tableState}
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
+				tableLabel={tableLabel}
 				controller={this.props.controller}
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
@@ -689,12 +694,11 @@ export default class AbstractTable extends React.Component {
 				}
 			}
 		}
-		if (this.props.control.childItem) {
+		// subpanel column will always be empty for ReadonlyTable control based on condition in makeCells()
+		if (this.props.control.childItem && !this.isReadonlyTable()) {
 			// set to specific size
 			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH });
 		}
-		// add extra column for overlay scrollbar
-		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		return headers;
 	}
 
@@ -724,13 +728,6 @@ export default class AbstractTable extends React.Component {
 					const cell = this.buildChildItem(propertyName, rowIndex, tableState);
 					columns.push(cell);
 				}
-				// add padding for scrollbar
-				columns.push({
-					key: rowIndex + "-1-scrollbar",
-					column: "scrollbar",
-					width: TABLE_SCROLLBAR_WIDTH,
-					content: <div />
-				});
 				rows.push({
 					columns: columns
 				});

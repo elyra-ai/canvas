@@ -151,6 +151,12 @@ export class ParameterDef {
 		if (settings.actionRef) {
 			this.actionRef = settings.actionRef;
 		}
+		if (toType(settings.customValueAllowed) === "boolean") {
+			this.customValueAllowed = settings.customValueAllowed;
+		}
+		if (settings.className) {
+			this.className = settings.className;
+		}
 	}
 
 	isList() {
@@ -342,7 +348,9 @@ export class ParameterDef {
 				"rows": propertyOf(uihint)("rows"),
 				"displayChars": propertyOf(uihint)("display_chars"),
 				"uionly": propertyOf(param)("uionly"),
-				"actionRef": propertyOf(uihint)("action_ref")
+				"actionRef": propertyOf(uihint)("action_ref"),
+				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
+				"className": propertyOf(uihint)("class_name")
 			});
 		}
 		return null;

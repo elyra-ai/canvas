@@ -109,7 +109,8 @@
         "description": {
           "default": "Required timefield with value set to '5:45:9' with H:m:s format"
         },
-        "time_format": "H:m:s"
+        "time_format": "H:m:s",
+        "class_name": "timefield-control-class"
       },
       {
         "parameter_ref": "time_HHmmss",
@@ -206,7 +207,8 @@
             "width": 10,
             "label": {
               "default": "Standard"
-            }
+            },
+            "class_name": "table-timefield-control-class"
           },
           {
             "parameter_ref": "timefield2",
@@ -224,7 +226,8 @@
             "description": {
               "default": "timefield with `edit_style=on_panel`"
             },
-            "edit_style": "on_panel"
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-timefield-control-class"
           },
           {
             "parameter_ref": "timefield_sub_panel",
@@ -235,7 +238,8 @@
             "description": {
               "default": "timefield with `edit_style=sub_panel`"
             },
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-timefield-control-class"
           }
         ]
       }

@@ -33,6 +33,7 @@ export default (state = [], action) => {
 			srcNodeId: action.data.srcNodeId,
 			trgNodeId: action.data.trgNodeId,
 			type: action.data.type,
+			decorations: action.data.decorations,
 			style: action.data.style,
 			style_temp: action.data.style_temp
 		};
@@ -133,7 +134,7 @@ export default (state = [], action) => {
 			const idx = action.data.linkIds.indexOf(link.id);
 			if (idx > -1) {
 				const newLink = Object.assign({}, link);
-				newLink.style =
+				newLink.class_name =
 					Array.isArray(action.data.newClassName) ? action.data.newClassName[idx] : action.data.newClassName;
 				return newLink;
 			}

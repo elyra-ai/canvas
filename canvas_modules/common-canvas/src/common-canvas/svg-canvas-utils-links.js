@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,10 @@ const ANTI_CLOCKWISE = true;
 const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
 
 export default class SvgCanvasLinks {
-	constructor(canvasLayout, config) {
+	constructor(config, canvasLayout, nodeUtils) {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
+		this.nodeUtils = nodeUtils;
 	}
 
 	// Returns an object containing the x and y coordinates of the start position
@@ -158,16 +159,16 @@ export default class SvgCanvasLinks {
 		let trgCenterY;
 
 		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			srcCenterX = this.nodeUtils.getNodeImagePosX(srcNode) + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
+			srcCenterY = this.nodeUtils.getNodeImagePosY(srcNode) + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
 		} else {
 			srcCenterX = (srcNode.width / 2) + this.canvasLayout.linkGap;
 			srcCenterY = (srcNode.height / 2) + this.canvasLayout.linkGap;
 		}
 
 		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			trgCenterX = this.nodeUtils.getNodeImagePosX(trgNode) + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
+			trgCenterY = this.nodeUtils.getNodeImagePosY(trgNode) + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
 		} else {
 			trgCenterX = (trgNode.width / 2) + this.canvasLayout.linkGap;
 			trgCenterY = (trgNode.height / 2) + this.canvasLayout.linkGap;
@@ -278,8 +279,8 @@ export default class SvgCanvasLinks {
 		var centerY;
 
 		if (trgNode.layout.drawCommentLinkLineTo === "image_center") {
-			centerX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			centerY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			centerX = this.nodeUtils.getNodeImagePosX(trgNode) + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
+			centerY = this.nodeUtils.getNodeImagePosY(trgNode) + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
 		} else {
 			centerX = (trgNode.width / 2) + this.canvasLayout.linkGap;
 			centerY = (trgNode.height / 2) + this.canvasLayout.linkGap;

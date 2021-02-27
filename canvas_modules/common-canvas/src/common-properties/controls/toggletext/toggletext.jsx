@@ -20,12 +20,15 @@ import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { formatMessage } from "./../../util/property-utils";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
+import Isvg from "react-inlinesvg";
 
 class ToggletextControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.valuesMap = {};
 		this.iconsMap = {};
 		for (let i = 0; i < props.control.values.length; ++i) {
@@ -43,21 +46,42 @@ class ToggletextControl extends React.Component {
 
 	}
 
+	renderIcon() {
+		let icon = null;
+		if (typeof this.iconsMap[this.props.value] !== "undefined") {
+			const imgSource = this.iconsMap[this.props.value];
+			if (typeof imgSource === "string" && imgSource.slice(imgSource.length - 4) === ".svg") {
+				// svg image
+				icon = <Isvg className="bx--btn__icon" src={imgSource} />;
+			} else {
+				icon = (<img
+					className="bx--btn__icon"
+					src={imgSource}
+					alt=""
+				/>);
+			}
+		}
+		return icon;
+	}
+
 	render() {
 		let rendered = this.valuesMap[this.props.value];
 		if (typeof rendered === "undefined") {
 			rendered = this.props.value;
 		}
-		let icon = null;
-		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img className="icon" src={this.iconsMap[this.props.value]} />;
-		}
 		let button = null;
+		const buttonType = this.props.tableControl ? "ghost" : "tertiary";
 		if (typeof rendered !== "undefined") {
 			button = (
-				<Button kind="tertiary" size="small" onClick={this.onClick.bind(this)} disabled={this.props.state === STATES.DISABLED} >
-					{icon}
-					<span className="text">{rendered}</span>
+				<Button
+					kind={buttonType}
+					size="small"
+					onClick={this.onClick.bind(this)}
+					renderIcon={this.renderIcon.bind(this)}
+					iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}
+					disabled={this.props.state === STATES.DISABLED}
+				>
+					{rendered}
 				</Button>
 			);
 		}
@@ -65,7 +89,13 @@ class ToggletextControl extends React.Component {
 		const className = classNames("properties-toggletext", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 
 		return (
-			<div className={className} disabled={this.props.state === STATES.DISABLED} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+			<div
+				aria-label={(this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : ""}
+				className={className}
+				disabled={this.props.state === STATES.DISABLED}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				{this.props.tableControl ? null : this.props.controlItem}
 				{button}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
@@ -77,6 +107,7 @@ ToggletextControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.string, // pass in by redux

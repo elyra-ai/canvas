@@ -993,7 +993,7 @@ describe("structuretable columns sort correctly", () => {
 	});
 	it("should sort column alphabetically ascending and descending", () => {
 		// click on the column header to trigger the onClick sort
-		const sortableCol = tableHeader.find("div[role='columnheader']").at(0);
+		const sortableCol = tableHeader.find("div[role='columnheader']").at(1);
 		sortableCol.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
@@ -1124,7 +1124,7 @@ describe("structuretable control with nested structure tables", () => {
 		editButton.at(1).simulate("click");
 
 		// Modify value of the nested structure
-		const nameInput = wrapper.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1194,7 +1194,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1261,7 +1261,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
 		// Verify modified values for second row
@@ -1365,7 +1365,7 @@ describe("structuretable control with nested structure tables", () => {
 		expect(onPanelList).to.have.length(1);
 
 		// Modify value of the nested structure
-		const nameInput = onPanelList.find("div[data-id='properties-ci-nestedStructure_table_name']");
+		const nameInput = onPanelList.find("div[data-id='properties-ctrl-nestedStructure_table_name']");
 		nameInput.find("input").simulate("change", { target: { value: "hello" } });
 
 		subPanelTable = wrapper.find("div[data-id='properties-ci-nestedStructure_table']");
@@ -1472,7 +1472,7 @@ describe("structuretable control with nested structure tables", () => {
 		// select the second row for onPanel editing
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
 		let table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
-		const tableRows = table.find("div[role='properties-data-row']");
+		const tableRows = table.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		// const secondRow = tableRows.at(1);
 		tableUtils.selectCheckboxes(table, [1]); // Select second row for onPanel edit
@@ -1481,10 +1481,10 @@ describe("structuretable control with nested structure tables", () => {
 		table = summaryPanel.find("div[data-id='properties-ci-nestedStructureeditor']");
 		const onPanelTable = table.find("div[data-id='properties-ci-userHealthTable']");
 
-		const nameInput = onPanelTable.find("div[data-id='properties-ci-userName']");
+		const nameInput = onPanelTable.find("div[data-id='properties-ctrl-userName']");
 		nameInput.find("input").simulate("change", { target: { value: "new name" } });
 
-		const annotationInput = onPanelTable.find("div[data-id='properties-ci-annotation']");
+		const annotationInput = onPanelTable.find("div[data-id='properties-ctrl-annotation']");
 		annotationInput.find("textarea").simulate("change", { target: { value: "some annotation" } });
 
 		// Verify new row modified
@@ -1504,4 +1504,30 @@ describe("structuretable control with nested structure tables", () => {
 		expect(JSON.stringify(tableData)).to.equal(JSON.stringify(expected));
 	});
 
+});
+
+describe("structuretable classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structuretable should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
+		expect(wrapper.find(".structuretable-control-class")).to.have.length(1);
+	});
+
+	it("structuretable should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		const parent = wrapper.find(".nested-parent-structuretable-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-child-cell-structuretable-control-class")).to.have.length(1);
+		// click on subpanel edit for first row
+		const editButton = parent.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		// This class name exists in the parent table cell and in the subpanel as table
+		expect(wrapper.find(".double-nested-subpanel-structuretable-control-class")).to.have.length(2);
+		expect(wrapper.find(".double-nested-subpanel-cell-structuretable-control-class")).to.have.length(1);
+	});
 });

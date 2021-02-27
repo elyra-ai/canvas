@@ -322,7 +322,8 @@
                                       "role": "new_column"
                                     }
                                   }
-                                ]
+                                ],
+                                "className": "properties-editstyle-sub-panel"
                               },
                               "text": "...",
                               "secondaryText": "RenameFieldEntry"
@@ -470,6 +471,7 @@
       "RenameFieldEntry.new_name": "Output name",
       "RenameFieldEntry.new_label": "New Label",
       "output_name_not_empty": "The 'Output Name' field cannot be empty"
-    }
+    },
+    "icon": "./rename.svg"
   }
 }

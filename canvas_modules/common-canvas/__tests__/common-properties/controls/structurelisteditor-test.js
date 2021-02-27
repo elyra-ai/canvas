@@ -692,7 +692,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		editButton.at(1).simulate("click");
 
 		// Modify value of the nested structure
-		const nameInput = wrapper.find("div[data-id='properties-ci-nested_name']");
+		const nameInput = wrapper.find("div[data-id='properties-ctrl-nested_name']");
 		nameInput.find("input").simulate("change", { target: { value: "world" } });
 
 		// Verify modified values for second row
@@ -811,7 +811,7 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
 		table = summaryPanel.find("div[data-id='properties-ft-nestedStructureeditorTable']");
-		const tableRows = table.find("div[role='properties-data-row']");
+		const tableRows = table.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
 		const secondRow = tableRows.at(1);
 
@@ -827,13 +827,13 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		const subPanelTable = wrapper.find("div[data-id='properties-ci-userInfo']");
 		expect(subPanelTable).to.have.length(1);
 
-		const addressInput = subPanelTable.find("div[data-id='properties-ci-userAddress']");
+		const addressInput = subPanelTable.find("div[data-id='properties-ctrl-userAddress']");
 		addressInput.find("input").simulate("change", { target: { value: "new address for row 2" } });
 
-		const zipInput = subPanelTable.find("div[data-id='properties-ci-userZip']");
+		const zipInput = subPanelTable.find("div[data-id='properties-ctrl-userZip']");
 		zipInput.find("input").simulate("change", { target: { value: 12345 } });
 
-		const annotationInput = subPanelTable.find("div[data-id='properties-ci-annotation']");
+		const annotationInput = subPanelTable.find("div[data-id='properties-ctrl-annotation']");
 		annotationInput.find("textarea").simulate("change", { target: { value: "fake address" } });
 
 		// Verify new row added
@@ -851,5 +851,29 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 			]
 		];
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+	});
+});
+
+describe("structurelisteditor classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("structurelisteditor should have custom classname defined", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(wrapper.find(".structurelisteditor-control-class")).to.have.length(1);
+	});
+
+	it("structurelisteditor should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		const parent = wrapper.find(".nested-parent-structurelisteditor-control-class");
+		expect(parent).to.have.length(1);
+		expect(parent.find(".nested-child-cell-structurelisteditor-control-class")).to.have.length(1);
+		// click on subpanel edit for first row
+		const editButton = parent.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click");
+		expect(wrapper.find(".double-nested-subpanel-structurelisteditor-control-class")).to.have.length(1);
 	});
 });

@@ -43,8 +43,8 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
-	zoomPipeline(zoom, translate) {
-		this.store.dispatch({ type: "ZOOM_PIPELINE", data: { zoom: zoom }, pipelineId: this.pipelineId });
+	setPipelineZoom(zoom, translate) {
+		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}
 
 	// ---------------------------------------------------------------------------
@@ -85,7 +85,7 @@ export default class APIPipeline {
 	}
 
 	setObjectsClassName(objectIds, newClassName) {
-		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, label: newClassName }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, newClassName: newClassName }, pipelineId: this.pipelineId });
 	}
 
 	disconnectObjects(objectIds) {
@@ -688,6 +688,11 @@ export default class APIPipeline {
 		return node ? node.outputs : null;
 	}
 
+	getNodeClassName(nodeId) {
+		const node = this.getNode(nodeId);
+		return node ? node.class_name : null;
+	}
+
 	getNodeStyle(nodeId, temporary) {
 		const node = this.getNode(nodeId);
 		if (temporary) {
@@ -963,6 +968,11 @@ export default class APIPipeline {
 
 	removeCustomAttrFromComments(comIds, attrName) {
 		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: comIds, attrName: attrName }, pipelineId: this.pipelineId });
+	}
+
+	getCommentClassName(commentId) {
+		const comment = this.getComment(commentId);
+		return (comment ? comment.class_name : null);
 	}
 
 	getCommentStyle(commentId, temporary) {
@@ -1319,6 +1329,11 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_LINK_TRG_INFO", data: { linkId: linkId, trgNodeId: trgNodeId, trgNodePortId: trgNodePortId }, pipelineId: this.pipelineId });
 	}
 
+	getLinkClassName(linkId) {
+		const obj = this.getLink(linkId);
+		return (obj && obj.class_name ? obj.class_name : null);
+	}
+
 	getLinkStyle(linkId, temporary) {
 		const obj = this.getLink(linkId);
 		if (temporary) {
@@ -1328,7 +1343,7 @@ export default class APIPipeline {
 	}
 
 	setLinksClassName(linkIds, newClassName) {
-		this.store.dispatch({ type: "SET_LINKS_CLASS_NAME", data: { linkIds: linkIds, label: newClassName }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SET_LINKS_CLASS_NAME", data: { linkIds: linkIds, newClassName: newClassName }, pipelineId: this.pipelineId });
 	}
 
 	setLinkDecorations(linkId, newDecorations) {

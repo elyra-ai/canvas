@@ -47,6 +47,8 @@ class VirtualizedTable extends React.Component {
 		this.virtualizedTableRef = React.createRef();
 
 		this.isOverSelectOption = false;
+		this.mouseEventCalled = false;
+		this.keyBoardEventCalled = false;
 		this.cellRenderer = this.cellRenderer.bind(this);
 		this.selectAll = this.selectAll.bind(this);
 		this.headerRowRenderer = this.headerRowRenderer.bind(this);
@@ -121,7 +123,7 @@ class VirtualizedTable extends React.Component {
 
 	// Responsible for rendering the table header row given an array of columns.
 	headerRowRenderer(scrollKey, { className, columns, style }) {
-		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div className="properties-vt-header-checkbox">
+		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div role="columnheader" className="properties-vt-header-checkbox">
 			<Checkbox
 				id={`properties-vt-hd-cb-${scrollKey}`}
 				onChange={this.selectAll}
@@ -132,7 +134,7 @@ class VirtualizedTable extends React.Component {
 		</div>)
 			: "";
 
-		return (<div className={className} role="properties-header-row" style={style}>
+		return (<div className={className} data-role="properties-header-row" role="row" style={style}>
 			{checkbox}
 			{columns}
 		</div>);
@@ -191,8 +193,21 @@ class VirtualizedTable extends React.Component {
 		</div>);
 	}
 
-	overSelectOption() {
-		this.isOverSelectOption = !this.isOverSelectOption;
+	overSelectOption(evt) {
+		// Differentiate between mouse and keyboard event
+		if (evt.type === "mouseenter" && !this.keyBoardEventCalled) {
+			this.mouseEventCalled = true;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "mouseleave" && this.mouseEventCalled) {
+			this.mouseEventCalled = false;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "focus" && !this.mouseEventCalled) {
+			this.keyBoardEventCalled = true;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		} else if (evt.type === "blur" && this.keyBoardEventCalled) {
+			this.keyBoardEventCalled = false;
+			this.isOverSelectOption = !this.isOverSelectOption;
+		}
 	}
 
 	// Responsible for rendering a table row given an array of columns.
@@ -210,8 +225,11 @@ class VirtualizedTable extends React.Component {
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
 				selectOption = (<div className="properties-vt-row-checkbox"
-					onMouseEnter={this.overSelectOption}
-					onMouseLeave={this.overSelectOption}
+					role="gridcell"
+					onMouseEnter={(evt) => this.overSelectOption(evt)}
+					onMouseLeave={(evt) => this.overSelectOption(evt)}
+					onFocus={(evt) => this.overSelectOption(evt)}
+					onBlur={(evt) => this.overSelectOption(evt)}
 				>
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
@@ -234,7 +252,8 @@ class VirtualizedTable extends React.Component {
 				<div
 					className={className}
 					key={key}
-					role="properties-loading-row"
+					data-role="properties-loading-row"
+					role="row"
 					style={style}
 				>
 					<Loading className="properties-vt-small-loading" small withOverlay={false} />
@@ -252,9 +271,15 @@ class VirtualizedTable extends React.Component {
 					{ "properties-vt-row-selected": selectedRow },
 					{ "properties-vt-row-disabled": rowDisabled }
 				)}
-				role="properties-data-row"
+				data-role="properties-data-row"
+				role="row"
 				style={newStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
+				onKeyPress={(evt) => {
+					if (evt.code === "Space" || evt.code === "Enter") {
+						this.onRowClick(evt, rowData, index);
+					}
+				}}
 			>
 				{selectOption}
 				{columns}
@@ -282,6 +307,7 @@ class VirtualizedTable extends React.Component {
 								height={height ? height : defaultTestHeight}
 
 								className="properties-autosized-vt"
+								aria-label={this.props.tableLabel ? this.props.tableLabel : ""}
 
 								disableHeader={this.props.disableHeader}
 								headerClassName="properties-autosized-vt-header"
@@ -331,6 +357,7 @@ VirtualizedTable.defaultProps = {
 };
 
 VirtualizedTable.propTypes = {
+	tableLabel: PropTypes.string,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,

@@ -224,30 +224,32 @@ function convertObjectStructureToArray(isList, subControls, currentValues) {
 
 	if (isList) {
 		const convertedValues = [];
-		currentValues.forEach((row) => {
-			if (Array.isArray(row)) { // check if any values in the row is a nested object
-				const convertedRow = [];
-				row.forEach((field, index) => {
-					let value = field;
-					if (typeof field === "object") {
-						value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, field);
-					}
-					convertedRow.push(value);
-				});
-				convertedValues.push(convertedRow);
-			} else if (typeof row === "object") {
-				const convertedRow = [];
-				structureKeys.forEach((key, index) => {
-					let value = typeof row[key] !== "undefined" ? row[key] : null;
-					// subControls that are type 'object' will need to be converted
-					if (subControls[index].structureType && subControls[index].structureType === "object") {
-						value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, row[key]);
-					}
-					convertedRow.push(value);
-				});
-				convertedValues.push(convertedRow);
-			}
-		});
+		if (typeof currentValues === "object" && currentValues !== null && Object.keys(currentValues).length > 0) {
+			currentValues.forEach((row) => {
+				if (Array.isArray(row)) { // check if any values in the row is a nested object
+					const convertedRow = [];
+					row.forEach((field, index) => {
+						let value = field;
+						if (typeof field === "object" && field !== null && Object.keys(field).length > 0) {
+							value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, field);
+						}
+						convertedRow.push(value);
+					});
+					convertedValues.push(convertedRow);
+				} else if (typeof row === "object") {
+					const convertedRow = [];
+					structureKeys.forEach((key, index) => {
+						let value = typeof row[key] !== "undefined" ? row[key] : null;
+						// subControls that are type 'object' will need to be converted
+						if (subControls[index].structureType && subControls[index].structureType === "object") {
+							value = convertObjectStructureToArray(subControls[index].valueDef.isList, subControls[index].subControls, row[key]);
+						}
+						convertedRow.push(value);
+					});
+					convertedValues.push(convertedRow);
+				}
+			});
+		}
 		return convertedValues;
 	}
 

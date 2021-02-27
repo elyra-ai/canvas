@@ -20,11 +20,15 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import toggletextParamDef from "../../test_resources/paramDefs/toggletext_paramDef.json";
 
 const controller = new Controller();
 
 const control = {
 	"name": "toggle",
+	"label": {
+		"text": "Toggletext"
+	},
 	"values": [
 		"Ascending",
 		"Descending"
@@ -40,6 +44,9 @@ const control = {
 };
 const controlNoIcons = {
 	"name": "toggle",
+	"label": {
+		"text": "Toggletext without icons"
+	},
 	"values": [
 		"Ascending",
 		"Descending"
@@ -89,11 +96,9 @@ describe("Toggletext renders correctly", () => {
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		const button = toggleWrapper.find("button");
 		expect(button).to.have.length(1);
-		const image = button.find("img");
+		const image = button.find("svg");
 		expect(image).to.have.length(1);
-		const text = button.find("span");
-		expect(text).to.have.length(1);
-		expect(text.text()).to.equal(control.valueLabels[0]);
+		expect(button.text()).to.equal(control.valueLabels[0]);
 	});
 
 	it("Toggletext should render without icons", () => {
@@ -108,11 +113,9 @@ describe("Toggletext renders correctly", () => {
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		const button = toggleWrapper.find("button");
 		expect(button).to.have.length(1);
-		const image = button.find("img");
+		const image = button.find("svg");
 		expect(image).to.have.length(0);
-		const text = button.find("span");
-		expect(text).to.have.length(1);
-		expect(text.text()).to.equal(controlNoIcons.valueLabels[0]);
+		expect(button.text()).to.equal(controlNoIcons.valueLabels[0]);
 	});
 
 	it("toggletext should set correct value", () => {
@@ -177,4 +180,23 @@ describe("Toggletext renders correctly", () => {
 		expect(messageWrapper).to.have.length(1);
 	});
 
+});
+
+describe("toggletext classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(toggletextParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("toggletext should have custom classname defined", () => {
+		expect(wrapper.find(".toggletext-control-class")).to.have.length(1);
+	});
+
+	it("toggletext should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "toggletext-table-summary");
+		expect(wrapper.find(".table-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-toggletext-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-toggletext-control-class")).to.have.length(1);
+	});
 });

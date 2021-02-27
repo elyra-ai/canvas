@@ -21,10 +21,9 @@
     "express-session": "1.17.1",
     "isomorphic-fetch": "3.0.0",
     "istanbul-middleware": "0.2.2",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "log4js": "6.3.0",
-    "nconf": "0.10.0",
-    "node-sass": "4.14.1"
+    "nconf": "0.10.0"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",
@@ -46,7 +45,7 @@
     "carbon-icons": "7.0.7",
     "codemirror": "5.58.2",
     "css-loader": "4.3.0",
-    "cypress": "4.10.0",
+    "cypress": "6.3.0",
     "eslint": "7.9.0",
     "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-cypress": "2.11.1",
@@ -81,6 +80,7 @@
     "react-virtualized": "9.22.2",
     "reactable": "1.1.0",
     "redux": "4.0.5",
+    "sass": "1.32.2",
     "sass-lint": "1.13.1",
     "sass-loader": "10.0.2",
     "source-map-loader": "1.1.0",

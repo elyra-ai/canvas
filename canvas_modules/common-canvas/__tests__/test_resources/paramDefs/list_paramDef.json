@@ -15,7 +15,8 @@
       null
     ],
     "list_string_error": [
-      "not empty"
+      "not empty",
+      " "
     ],
     "list_double_warning": [
       1.1
@@ -33,7 +34,7 @@
           "Ascending",
           []
         ],
-				[
+        [
           "Na",
           6,
           "Ascending",
@@ -157,7 +158,8 @@
           "default": "list with a string array value"
         },
         "control": "list",
-        "moveable_rows": true
+        "moveable_rows": true,
+        "class_name": "string-list-control-class"
       },
       {
         "parameter_ref": "list_integer",
@@ -296,7 +298,8 @@
             "edit_style": "on_panel",
             "control": "list",
             "moveable_rows": true,
-            "summary": true
+            "summary": true,
+            "class_name": "table-on-panel-list-control-class"
           }
         ]
       },
@@ -346,7 +349,8 @@
             "edit_style": "subpanel",
             "control": "list",
             "moveable_rows": true,
-            "summary": true
+            "summary": true,
+            "class_name": "table-subpanel-list-control-class"
           }
         ]
       }
@@ -433,6 +437,24 @@
           "condition": {
             "parameter_ref": "list_string_error",
             "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List must have at least two non-empty elements"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "customNonEmptyListLessThan",
+            "value": 2
           }
         }
       }

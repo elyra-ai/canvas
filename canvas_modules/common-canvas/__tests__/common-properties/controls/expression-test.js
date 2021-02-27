@@ -155,6 +155,22 @@ describe("expression-control renders correctly", () => {
 		expect(input).to.have.length(1);
 	});
 
+	it("should render `launch expression builder` icon", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		const expressionBuilderIcon = wrapper.find("button.properties-expression-button");
+		expect(expressionBuilderIcon).to.have.length(1);
+		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
+	});
+
 });
 
 describe("expression-builder renders correctly", () => {
@@ -195,6 +211,47 @@ describe("expression-builder renders correctly", () => {
 		expect(wrapper.find("div.properties-functions-table-container")).to.have.length(0);
 		expect(wrapper.find("div.properties-help-table-container")).to.have.length(0);
 		expect(wrapper.find("div.properties-operator-container")).to.have.length(1);
+	});
+
+	it("Fields and Values tables should have aria-label", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// ensure fields table has aria-label
+		const fieldsTable = wrapper.find("div.properties-field-table-container").find(".ReactVirtualized__Table");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.props()).to.have.property("aria-label", "Fields table");
+
+		// ensure values table has aria-label
+		const valuesTable = wrapper.find("div.properties-value-table-container").find(".ReactVirtualized__Table");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.props()).to.have.property("aria-label", "Values table");
+	});
+
+	it("Functions table should have aria-label", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
+
+		// ensure functions table has aria-label
+		const functionsTable = wrapper.find("div.properties-functions-table-container").find(".ReactVirtualized__Table");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.props()).to.have.property("aria-label", "Functions table");
 	});
 
 });
@@ -651,6 +708,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		expect(rows.at(0).text()).to.equal("if  COND1  then  EXPR1  else  EXPR2  endifAny");
 	});
 });
+
 describe("expression builder correctly runs Recently Used dropdown options", () => {
 	it("expression builder correctly adds and reorders fields to Recently Used", () => {
 		reset();
@@ -783,5 +841,25 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(funcRows).to.have.length(2);
 		expect(funcRows.at(0).text()).to.equal("to_integer(Item)Integer");
 		expect(funcRows.at(1).text()).to.equal("count_equal(Item, List)Integer");
+	});
+});
+
+describe("expression builder classnames appear correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("expression should have custom classname defined", () => {
+		expect(wrapper.find(".expression-control-class")).to.have.length(1);
+	});
+
+	it("expression should have custom classname defined in table cells", () => {
+		propertyUtils.openSummaryPanel(wrapper, "expressionCellTable-summary-panel");
+		// const tableControlDiv = wrapper.find("div[data-id='properties-Expression Control Cell']");
+		expect(wrapper.find(".expression-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-on-panel-expression-control-class")).to.have.length(1);
+		expect(wrapper.find(".table-subpanel-expression-control-class")).to.have.length(1);
 	});
 });

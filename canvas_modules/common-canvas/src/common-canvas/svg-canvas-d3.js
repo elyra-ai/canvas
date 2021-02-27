@@ -46,20 +46,9 @@ export default class SVGCanvasD3 {
 		this.logger.logStartTimer("Constructor");
 
 		this.canvasController = canvasController;
-		this.objectModel = this.canvasController.getObjectModel();
-
-		// Initialize the canvas div object
+		this.canvasInfo = canvasInfo;
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
-
-		// Save the config
 		this.config = this.cloneConfig(config);
-
-		// Initialize dimension and layout variables
-		this.initializeLayoutInfo(config);
-
-		// We get the info from the canvas controller because it may have been
-		// changed by the initializeLayoutInfo() above.
-		this.canvasInfo = this.canvasController.getCanvasInfo();
 
 		// Create a renderer object for the primary pipeline
 		this.renderer = new SVGCanvasRenderer(
@@ -87,6 +76,7 @@ export default class SVGCanvasD3 {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
 				this.config.enableLinkSelection !== config.enableLinkSelection ||
+				this.config.enableLinkReplaceOnNewConnection !== config.enableLinkReplaceOnNewConnection ||
 				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
@@ -112,12 +102,11 @@ export default class SVGCanvasD3 {
 			// Save the config
 			this.config = this.cloneConfig(config);
 
-			// Both these methods will result in the canvas being refreshed through
+			// clearCanvas will result in the canvas being refreshed through
 			// updates to the object model so there is no need to call displayCanvas
 			// from here. Setting this.renderer to null causes a new SVGCanvasRenderer
 			// to be created when this method is called on the refresh.
 			this.renderer.clearCanvas();
-			this.initializeLayoutInfo(config);
 			this.renderer = null;
 
 			this.logger.logEndTimer("Initializing Canvas", true);
@@ -229,7 +218,7 @@ export default class SVGCanvasD3 {
 
 				// Only catch key pressses when NOT editing because, while editing,
 				// the text area needs to receive key presses for undo, redo, delete etc.
-				if (!this.renderer.isEditingComment()) {
+				if (!this.renderer.isEditingText()) {
 					if ((d3Event.keyCode === BACKSPACE_KEY || d3Event.keyCode === DELETE_KEY) && actions.delete) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 						this.canvasController.keyboardActionHandler("deleteSelectedObjects");
@@ -266,11 +255,6 @@ export default class SVGCanvasD3 {
 				}
 			});
 		return canvasDiv;
-	}
-
-	// Initializes the dimensions for nodes, comments layout etc.
-	initializeLayoutInfo(config) {
-		this.objectModel.setLayoutType(config);
 	}
 
 	paletteNodeDraggedOver(nodeTemplate, x, y) {

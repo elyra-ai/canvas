@@ -237,7 +237,8 @@ CommonProperties.propTypes = {
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
-		})
+		}),
+		schemaValidation: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -260,7 +261,8 @@ CommonProperties.defaultProps = {
 		rightFlyout: true,
 		applyOnBlur: false,
 		enableResize: true,
-		conditionReturnValueHandling: CONDITION_RETURN_VALUE_HANDLING.VALUE
+		conditionReturnValueHandling: CONDITION_RETURN_VALUE_HANDLING.VALUE,
+		schemaValidation: false
 	},
 	callbacks: {
 	},

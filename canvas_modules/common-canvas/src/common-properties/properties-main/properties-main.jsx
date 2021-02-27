@@ -26,6 +26,7 @@ import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
 import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
+import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
 import Icon from "./../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
@@ -121,6 +122,9 @@ class PropertiesMain extends React.Component {
 		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
 			formData = propertiesInfo.formData;
 		} else if (propertiesInfo.parameterDef) {
+			if (this.props.propertiesConfig.schemaValidation) {
+				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
+			}
 			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
@@ -133,18 +137,6 @@ class PropertiesMain extends React.Component {
 			this.originalTitle = formData.label;
 			this.propertiesController.setTitle(formData.label);
 		}
-
-		// convert currentParameters of type:object to array values
-		const controls = this.propertiesController.getControls();
-		Object.keys(controls).forEach((controlId) => {
-			if (PropertyUtils.isSubControlStructureObjectType(controls[controlId])) {
-				const propertyId = this.propertiesController.convertPropertyId(controlId);
-				const currentValues = this.propertiesController.getPropertyValue(propertyId);
-				const control = controls[controlId];
-				const convertedValues = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, currentValues);
-				this.propertiesController.updatePropertyValue(propertyId, convertedValues, true);
-			}
-		});
 
 		// set initial values for undo
 		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
@@ -391,6 +383,7 @@ class PropertiesMain extends React.Component {
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
 			let resizeBtn = null;
+			let hasHeading = false;
 
 			if (this.props.propertiesConfig.rightFlyout) {
 				propertiesTitle = (<TitleEditor
@@ -398,7 +391,13 @@ class PropertiesMain extends React.Component {
 					help={formData.help}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
+					icon={formData.icon}
+					heading={formData.heading}
+					showHeading={this.props.propertiesConfig.heading}
 				/>);
+
+				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
+
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -408,8 +407,12 @@ class PropertiesMain extends React.Component {
 				/>);
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
+					// Resize button label can be "Expand" or "Contract"
+					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
+						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
+						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
 					resizeBtn = (
-						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} >
+						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
 							{resizeIcon}
 						</Button>
 					);
@@ -438,7 +441,7 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesEditor>);
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
-				propertiesDialog = (<div className="properties-custom-container">
+				propertiesDialog = (<div className={classNames("properties-custom-container", { "properties-custom-container-with-heading": hasHeading })}>
 					{editorForm}
 				</div>);
 			} else { // Modal
@@ -492,10 +495,12 @@ PropertiesMain.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		heading: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
-		})
+		}),
+		schemaValidation: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

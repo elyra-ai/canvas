@@ -180,6 +180,22 @@ describe("selectcolumns renders correctly", () => {
 		const messageWrapper = selectColumnsWrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
 	});
+
+	it("selectColumns control should have aria-label", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<SelectColumns
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+					openFieldPicker={openFieldPickerSpy}
+					rightFlyout
+				/>
+			</Provider>
+		);
+		const selectColumnsTable = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
+		expect(selectColumnsTable.props()).to.have.property("aria-label", control.label.text);
+	});
 });
 
 

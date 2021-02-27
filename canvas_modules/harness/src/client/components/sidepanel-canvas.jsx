@@ -88,7 +88,7 @@ export default class SidePanelForms extends React.Component {
 			canvasPalette2: "",
 			canvasFiles: [],
 			paletteFiles: [],
-			controlsDisabled: this.props.getStateValue("selectedNodeLayout") !== EXAMPLE_APP_NONE
+			controlsDisabled: this.props.getStateValue("selectedExampleApp") !== EXAMPLE_APP_NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -106,7 +106,7 @@ export default class SidePanelForms extends React.Component {
 
 		this.notificationConfigChange = this.notificationConfigChange.bind(this);
 		this.notificationConfigToggle = this.notificationConfigToggle.bind(this);
-		this.nodeLayoutOptionChange = this.nodeLayoutOptionChange.bind(this);
+		this.exampleAppOptionChange = this.exampleAppOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 	}
@@ -238,13 +238,13 @@ export default class SidePanelForms extends React.Component {
 		this.props.setStateValue(notificationConfig, config);
 	}
 
-	nodeLayoutOptionChange(value) {
+	exampleAppOptionChange(value) {
 		if (value !== EXAMPLE_APP_NONE) {
 			this.setState({ controlsDisabled: true });
 		} else {
 			this.setState({ controlsDisabled: false });
 		}
-		this.props.setStateValue("selectedNodeLayout", value);
+		this.props.setStateValue("selectedExampleApp", value);
 	}
 
 	tipConfigChange(checked, target) {
@@ -629,6 +629,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableLinkReplaceOnNewConnection = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedLinkReplaceOnNewConnection" // Set ID to corresponding field in App.js state
+				labelText="Enable Link Replace On Drop"
+				toggled={this.props.getStateValue("selectedLinkReplaceOnNewConnection")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableAssocLinkCreation = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedAssocLinkCreation" // Set ID to corresponding field in App.js state
@@ -859,9 +868,9 @@ export default class SidePanelForms extends React.Component {
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
-					name="selectedNodeFormat" // Set name to corresponding field name in App.js
+					name="selectedNodeFormatType" // Set name to corresponding field name in App.js
 					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedNodeFormat")}
+					defaultSelected={this.props.getStateValue("selectedNodeFormatType")}
 				>
 					<RadioButton
 						value={VERTICAL_FORMAT}
@@ -934,8 +943,8 @@ export default class SidePanelForms extends React.Component {
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
 					name="node_layout_radio"
-					onChange={this.nodeLayoutOptionChange}
-					defaultSelected={this.props.getStateValue("selectedNodeLayout")}
+					onChange={this.exampleAppOptionChange}
+					defaultSelected={this.props.getStateValue("selectedExampleApp")}
 				>
 					<RadioButton
 						value={EXAMPLE_APP_FLOWS}
@@ -1277,6 +1286,8 @@ export default class SidePanelForms extends React.Component {
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHightlightNodeOnNewLinkDrag}
+					{divider}
+					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}

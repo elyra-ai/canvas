@@ -271,6 +271,7 @@
           "default": "Tab Test"
         },
         "type": "panels",
+        "class_name": "maintab-panel-class",
         "group_info": [
           {
             "id": "conditions",
@@ -286,10 +287,12 @@
               "default": "Automatic Reclassify"
             },
             "type": "subTabs",
+            "class_name": "subtab-panel-class",
             "group_info": [
               {
                 "id": "range-fields-subtab",
                 "type": "controls",
+                "class_name": "range-fields-subtab-control-class",
                 "label": {
                   "default": "Range Fields"
                 },
@@ -304,6 +307,7 @@
                   "default": "Table SubTab"
                 },
                 "type": "controls",
+                "class_name": "table-subtab-control-class",
                 "parameter_refs": [
                   "fields"
                 ]
@@ -314,6 +318,7 @@
                   "default": "Fruit"
                 },
                 "type": "controls",
+                "class_name": "fruit-subtab-control-class",
                 "parameter_refs": [
                   "fruit",
                   "other"

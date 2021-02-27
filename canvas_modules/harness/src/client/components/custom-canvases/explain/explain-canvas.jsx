@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas";
@@ -12,25 +28,22 @@ export default class ExplainCanvas extends React.Component {
 		this.canvasController.setPipelineFlow(ExplainCanvasFlow);
 
 		this.config = Object.assign({}, props.config, {
-			enableConnectionType: "Halo",
 			enableParentClass: "explain",
+			enableLinkType: "Straight",
 			enableNodeLayout:
 			{
 				defaultNodeWidth: 120,
 				defaultNodeHeight: 60,
-				labelAndIconVerticalJustification: "none",
 				drawNodeLinkLineFromTo: "node_center",
-				labelPosX: 60,
-				labelPosY: 28,
-				labelMaxWidth: 200,
+				labelPosX: 52,
+				labelPosY: 14,
+				labelWidth: 200,
+				labelHeight: 38,
 				ellipsisDisplay: true,
 				ellipsisPosX: 100,
 				ellipsisPosY: 19,
-				haloDisplay: false,
-				haloCenterX: 60,
-				haloCenterY: 30,
-				haloRadius: 30,
-				portPosY: 30
+				inputPortDisplay: false,
+				outputPortDisplay: false
 			}
 		});
 	}
@@ -81,8 +94,8 @@ export default class ExplainCanvas extends React.Component {
 
 		const nodeFormat = {
 			defaultNodeWidth: width, // Override default width with calculated width
-			labelPosX: (width / 2), // Specify center of label as center of node Note: text-anchor is set to middle in the CSS for this label
-			labelMaxWidth: width, // Set big enough so that label is not truncated and so no ... appears
+			labelPosX: (width / 2), // Specify center of label as center of node Note: text-align is set to center in the CSS for this label
+			labelWidth: width, // Set big enough so that label is not truncated and so no ... appears
 			ellipsisPosX: width - 25, // Always position 25px in from the right side
 			bodyPath: bodyPath,
 			selectionPath: selectionPath

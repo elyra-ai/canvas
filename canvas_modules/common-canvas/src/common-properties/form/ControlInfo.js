@@ -161,5 +161,11 @@ export class Control {
 		if (settings.dmImage) {
 			this.dmImage = settings.dmImage;
 		}
+		if (settings.customValueAllowed) {
+			this.customValueAllowed = settings.customValueAllowed;
+		}
+		if (settings.className) {
+			this.className = settings.className;
+		}
 	}
 }

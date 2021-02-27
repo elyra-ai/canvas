@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@
 
 import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
-import { GroupType, PanelType, Type, ControlType, ParamRole } from "../constants/form-constants";
-import { ORIENTATIONS } from "../constants/form-constants.js";
+import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from "../constants/form-constants";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
@@ -68,30 +67,39 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, controls, label) {
+	constructor(id, panelType, className, controls, label) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = controls;
 		if (label) {
 			this.label = label;
 		}
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
 class ActionPanel {
-	constructor(id, panelType, actions) {
+	constructor(id, panelType, className, actions) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = actions;
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
 class CustomControlPanel {
-	constructor(id, panelType, parameters, data) {
+	constructor(id, panelType, className, parameters, data) {
 		this.id = id;
 		this.panelType = panelType;
 		this.parameters = parameters;
 		this.data = data;
+		if (className) {
+			this.className = className;
+		}
 	}
 }
 
@@ -107,13 +115,17 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
+	const groupClassName = group.className;
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
+		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -128,12 +140,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			});
 		}
-		return UIItem.makeSubTabs(subTabItems);
+		return UIItem.makeSubTabs(subTabItems, groupClassName);
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
 		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
-		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn);
+		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn, groupClassName);
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
@@ -143,7 +155,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, panSubItems));
 	}
 	case GroupType.COLUMN_PANEL: {
 		const panSubItems = [];
@@ -153,10 +165,10 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, groupClassName, group.parameterNames(), group.data));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -167,15 +179,16 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
-		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, _makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, groupClassName,
+			_makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
 		const groupDesc = l10nProvider.l10nResource(group.description);
-		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc);
+		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName);
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -186,7 +199,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, panSubItems, groupLabel));
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
@@ -552,6 +565,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.layout = layout;
 	settings.dmImage = parameter.dmImage;
 	settings.action = action;
+	settings.customValueAllowed = parameter.customValueAllowed;
+	settings.className = parameter.className;
 
 	if (isSubControl) {
 		settings.visible = parameter.visible;
@@ -591,6 +606,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 	const panel = new ControlPanel(
 		structureDef.name,
 		PanelType.GENERAL,
+		"properties-editstyle-sub-panel",
 		_makeControls(structureDef.parameterMetadata,
 			structureDef.actionMetadata,
 			structureDef,

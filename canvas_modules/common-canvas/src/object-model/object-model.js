@@ -902,7 +902,7 @@ export default class ObjectModel {
 	// ---------------------------------------------------------------------------
 
 	setLayoutType(config) {
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayoutForConfig(config));
+		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(config));
 		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
 
 		this.store.dispatch({ type: "SET_LAYOUT_INFO",
@@ -1315,6 +1315,11 @@ export default class ObjectModel {
 	// Returns true if the object passed in is a link.
 	isLink(obj) {
 		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
+	}
+
+	// Clears any saved zom values in Local Storage
+	clearSavedZoomValues() {
+		LocalStorage.delete("canvasSavedZoomValues");
 	}
 
 	// ---------------------------------------------------------------------------

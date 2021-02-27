@@ -2330,6 +2330,61 @@ _defineConstant("ONEOFSELECT_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO", {
+	"title": "One of Select Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: oneofselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"oneofselectList": "custom"
+		},
+		"parameters": [
+			{
+				"id": "oneofselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": "yellow"
+			}
+		],
+		"uihints": {
+			"id": "oneofselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "oneofselectList",
+					"label": {
+						"default": "One of Select Control Name"
+					},
+					"description": {
+						"default": "oneofselect test"
+					},
+					"custom_value_allowed": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "Oneofselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"oneofselectList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
+	}
+});
 _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 	"title": "One of Select Title",
 	"parameterDef": {
@@ -2384,6 +2439,107 @@ _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 				"fields": []
 			}
 		]
+	}
+});
+_defineConstant("MULTISELECT_PROPS_INFO", {
+	"title": "Multiselect Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: multiselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"multiselectList": ["blue"]
+		},
+		"parameters": [
+			{
+				"id": "multiselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": ["yellow"]
+			}
+		],
+		"uihints": {
+			"id": "multiselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "multiselectList",
+					"label": {
+						"default": "Multiselect Control Name"
+					},
+					"description": {
+						"default": "multiselect test"
+					},
+					"control": "multiselect"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Multiselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"multiselectList"
+					]
+				}
+			]
+		}
+	}
+});
+_defineConstant("MULTISELECT_FILTERABLE_PROPS_INFO", {
+	"title": "Multiselect Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: multiselect",
+			"editable": false
+		},
+		"current_parameters": {
+			"multiselectList": []
+		},
+		"parameters": [
+			{
+				"id": "multiselectList",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green",
+					"blue",
+					"purple"
+				],
+				"default": ["yellow"]
+			}
+		],
+		"uihints": {
+			"id": "multiselectList",
+			"parameter_info": [
+				{
+					"parameter_ref": "multiselectList",
+					"label": {
+						"default": "Multiselect Control Name"
+					},
+					"description": {
+						"default": "multiselect test"
+					},
+					"control": "multiselect",
+					"filterable": true
+				}
+			],
+			"group_info": [
+				{
+					"id": "Multiselect Control",
+					"type": "controls",
+					"parameter_refs": [
+						"multiselectList"
+					]
+				}
+			]
+		}
 	}
 });
 _defineConstant("SOMEOFSELECT_PROPS_INFO", {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,15 +47,19 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "propertiesEdit.applyButton.label",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
 	PROPERTIESEDIT_REVERTBUTTON_LABEL: "propertiesEdit.revertButton.label",
+	PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL: "propertiesEdit.resizeButton.expand.label",
+	PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL: "propertiesEdit.resizeButton.contract.label",
 	PROPERTIES_REVERT_MESSAGE: "properties.revert.message",
 	PROPERTIES_CLOSE_MESSAGE: "properties.close.message",
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
 	TABLE_SEARCH_HEADER: "table.search.header",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
+	TABLE_SEARCH_LABEL: "table.search.label",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
+	TITLE_EDITOR_HELPBUTTON_LABEL: "title.editor.helpButton.label",
 	TABLE_SUMMARY_ERROR: "table.summary.error",
 	TABLE_SUMMARY_WARNING: "table.summary.warning",
 	CONTROL_SUMMARY_ERROR: "control.summary.error",
@@ -66,7 +70,11 @@ _defineConstant("MESSAGE_KEYS", {
 	INVALID_FIELD_ERROR: "invalid.field.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
+	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
+	EXPRESSION_FIELDS_TABLE_LABEL: "expression.fields.table.label",
+	EXPRESSION_VALUES_TABLE_LABEL: "expression.values.table.label",
+	EXPRESSION_FUNCTIONS_TABLE_LABEL: "expression.functions.table.label",
 	EXPRESSION_FIELDS_DROPDOWN_TITLE: "expression.fields.dropdown",
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
@@ -92,9 +100,14 @@ _defineConstant("MESSAGE_KEYS", {
 	LIST_TABLE_LABEL: "list.table.label",
 	DROPDOWN_TOOLTIP_OPENMENU: "dropdown.tooltip.openMenu",
 	DROPDOWN_TOOLTIP_CLOSEMENU: "dropdown.tooltip.closeMenu",
+	DROPDOWN_TOOLTIP_CLEARALL: "dropdown.tooltip.clear.all",
+	DROPDOWN_TOOLTIP_CLEARSELECTION: "dropdown.tooltip.clear.selection",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
-	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label"
+	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
+	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
+	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
+	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {
@@ -179,8 +192,6 @@ _defineConstant("ROW_HEIGHT", 42);
 _defineConstant("EXPRESSION_TABLE_ROWS", 7);
 
 _defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
-
-_defineConstant("TABLE_SCROLLBAR_WIDTH", "15px");
 
 _defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
 	VALUE: "value",

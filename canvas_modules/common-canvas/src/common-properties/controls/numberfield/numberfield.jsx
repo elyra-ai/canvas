@@ -87,6 +87,8 @@ class NumberfieldControl extends React.Component {
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
+					label={this.props.controlItem}
+					hideLabel={this.props.tableControl}
 					allowEmpty
 					light
 				/>
@@ -100,6 +102,10 @@ NumberfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.element
+	]), // list control passes string
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.number, // pass in by redux

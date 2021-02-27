@@ -42,7 +42,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "ZOOM_PIPELINE": {
+	case "SET_PIPELINE_ZOOM": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipeline.id === action.pipelineId) {
 				return Object.assign({}, pipeline, { zoom: { "k": action.data.zoom.k, "x": action.data.zoom.x, "y": action.data.zoom.y } });
@@ -108,6 +108,7 @@ export default (state = {}, action) => {
 	case "SET_LINK_PROPERTIES":
 	case "SET_LINK_SRC_INFO":
 	case "SET_LINK_TRG_INFO":
+	case "SET_LINKS_CLASS_NAME":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
 	case "UPDATE_LINK":

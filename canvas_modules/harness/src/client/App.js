@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ import AddtlCmptsTest from "./components/custom-components/AddtlCmptsTest";
 import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel";
 
 import * as CustomOpMax from "./custom/condition-ops/customMax";
+import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
@@ -158,7 +159,7 @@ class App extends React.Component {
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedConnectionType: PORTS_CONNECTION,
-			selectedNodeFormat: VERTICAL_FORMAT,
+			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
@@ -166,9 +167,10 @@ class App extends React.Component {
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
+			selectedLinkReplaceOnNewConnection: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
-			selectedNodeLayout: EXAMPLE_APP_NONE,
+			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedTipConfig: {
 				"palette": true,
@@ -192,6 +194,8 @@ class App extends React.Component {
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
 			selectedBoundingRectangles: false,
+			selectedNodeLayout: null,
+			selectedCanvasLayout: null,
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -203,6 +207,8 @@ class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			expressionValidate: true,
+			heading: false,
+			propertiesSchemaValidation: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -272,6 +278,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
+		this.useHeading = this.useHeading.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -307,6 +314,7 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
+		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -1029,6 +1037,11 @@ class App extends React.Component {
 		this.log("set properties container", type);
 	}
 
+	useHeading(enabled) {
+		this.setState({ heading: enabled });
+		this.log("show heading", enabled);
+	}
+
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
@@ -1148,18 +1161,35 @@ class App extends React.Component {
 		} else if (data.editType === "createTestHarnessNode") {
 			const nodeTemplate = canvasController.getPaletteNode(data.op);
 			if (nodeTemplate) {
-				data.editType = "createNode";
-				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
-				canvasController.editActionHandler(data);
+				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				const action = {
+					editType: "createNode",
+					nodeTemplate: convertedTemplate,
+					pipelineId: data.pipelineId,
+					offsetX: data.offsetX,
+					offsetY: data.offsetY
+				};
+
+				canvasController.editActionHandler(action);
+			} else {
+				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
 
 		} else if (data.editType === "createFromExternalObject") {
 			const nodeTemplate = canvasController.getPaletteNode("variablefile");
 			if (nodeTemplate) {
-				data.editType = "createNode";
-				data.nodeTemplate = canvasController.convertNodeTemplate(nodeTemplate);
-				data.nodeTemplate.label = data.dataTransfer.files[0].name;
-				canvasController.editActionHandler(data);
+				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
+				convertedTemplate.label = data.dataTransfer.files[0].name;
+				const action = {
+					editType: "createNode",
+					nodeTemplate: convertedTemplate,
+					pipelineId: data.pipelineId,
+					offsetX: data.offsetX,
+					offsetY: data.offsetY
+				};
+				canvasController.editActionHandler(action);
+			} else {
+				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
 
 		} else if (data.editType === "editNode") {
@@ -1339,6 +1369,10 @@ class App extends React.Component {
 		if (this.propertiesController2) {
 			this.propertiesController2.validatePropertiesValues();
 		}
+	}
+
+	enablePropertiesSchemaValidation() {
+		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -1574,6 +1608,11 @@ class App extends React.Component {
 			breadcrumbsDef={this.state.breadcrumbsDef}
 			currentPipelineId={currentPipelineId}
 		/>);
+		const consoleLabel = "console";
+		const downloadLabel = "download";
+		const apiLabel = "API";
+		const commonPropertiesModalLabel = "Common Properties Modal";
+		const commonCanvasLabel = "Common Canvas";
 
 		const navBar = (<header aria-label="Common Canvas Header" role="banner">
 			<div className="harness-app-navbar">
@@ -1582,31 +1621,31 @@ class App extends React.Component {
 						<span className="harness-title">Common Canvas</span>
 						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
 					</li>
-					<li className="harness-navbar-li harness-nav-divider" data-tip="console">
-						<a onClick={this.openConsole.bind(this) }>
+					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
+						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
 							<Isvg src={listview32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip="download">
-						<a onClick={this.download.bind(this) }>
+					<li className="harness-navbar-li" data-tip={downloadLabel}>
+						<a onClick={this.download.bind(this) } aria-label={downloadLabel}>
 							<Isvg src={download32} />
 						</a>
 					</li>
 					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
 						{breadcrumbs}
 					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="API">
-						<a onClick={this.sidePanelAPI.bind(this) }>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
+						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
 							<Isvg src={api32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip="Common Properties Modal">
-						<a onClick={this.sidePanelModal.bind(this) }>
+					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
+						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
 							<Isvg src={template32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip="Common Canvas">
-						<a onClick={this.sidePanelCanvas.bind(this) }>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
+						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
 							<Isvg src={justify32} />
 						</a>
 					</li>
@@ -1642,7 +1681,7 @@ class App extends React.Component {
 		}
 
 		let parentClass = "";
-		if (this.state.selectedNodeFormat === "Vertical") {
+		if (this.state.selectedNodeFormatType === "Vertical") {
 			parentClass = "classic-vertical";
 			if (this.state.selectedConnectionType === "Halo") {
 				parentClass = "classic-halo";
@@ -1655,7 +1694,7 @@ class App extends React.Component {
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
 			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormat,
+			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
@@ -1664,6 +1703,7 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
+			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
@@ -1683,10 +1723,8 @@ class App extends React.Component {
 			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
-			enableNodeLayout: null,
-			// enableCanvasLayout: {
-			// 	dataLinkArrowHead: true
-			// }
+			enableNodeLayout: this.state.selectedNodeLayout,
+			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
 
 		const decorationActionHandler = this.decorationActionHandler;
@@ -1694,7 +1732,7 @@ class App extends React.Component {
 
 		const commonCanvasConfig2 = {
 			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormat,
+			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: parentClass,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
@@ -1833,7 +1871,9 @@ class App extends React.Component {
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur
+			applyOnBlur: this.state.applyOnBlur,
+			heading: this.state.heading,
+			schemaValidation: this.state.propertiesSchemaValidation
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -1864,7 +1904,7 @@ class App extends React.Component {
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
 			/>);
 
 		const commonProperties2 = (
@@ -1918,12 +1958,12 @@ class App extends React.Component {
 				canvasController={this.canvasController}
 			/>);
 
-		if (this.state.selectedNodeLayout === EXAMPLE_APP_NONE) {
+		if (this.state.selectedExampleApp === EXAMPLE_APP_NONE) {
 			this.canvasRef = null;
 		} else {
 			this.canvasRef = React.createRef();
 		}
-		if (this.state.selectedNodeLayout === EXAMPLE_APP_FLOWS) {
+		if (this.state.selectedExampleApp === EXAMPLE_APP_FLOWS) {
 			firstCanvas = (
 				<FlowsCanvas
 					ref={this.canvasRef}
@@ -1931,42 +1971,42 @@ class App extends React.Component {
 					canvasController={this.canvasController}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_TABLES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_TABLES) {
 			firstCanvas = (
 				<TablesCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_DETACHED) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_DETACHED) {
 			firstCanvas = (
 				<DetachedCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXPLAIN) {
 			firstCanvas = (
 				<ExplainCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_EXPLAIN2) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXPLAIN2) {
 			firstCanvas = (
 				<Explain2Canvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_STREAMS) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STREAMS) {
 			firstCanvas = (
 				<StreamsCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedNodeLayout === EXAMPLE_APP_BLUE_ELLIPSES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_BLUE_ELLIPSES) {
 			firstCanvas = (
 				<BlueEllipsesCanvas
 					ref={this.canvasRef}
@@ -2043,10 +2083,14 @@ class App extends React.Component {
 			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
+			heading: this.state.heading,
+			useHeading: this.useHeading,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
-			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect
+			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
+			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
+			propertiesSchemaValidation: this.state.propertiesSchemaValidation
 		};
 
 		const sidePanelAPIConfig = {

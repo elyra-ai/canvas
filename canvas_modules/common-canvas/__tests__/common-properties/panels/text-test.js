@@ -84,3 +84,25 @@ describe("text panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "apple-panel" })).to.equal("hidden");
 	});
 });
+
+describe("text panel classNames applied correctly", () => {
+	let wrapper;
+	let panels;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("text panel should have custom classname defined", () => {
+		panels = wrapper.find("div.properties-text-panel");
+		expect(panels.find(".orange-panel-group-textpanel-class")).to.have.length(1);
+		// textPanel within a panelSelector
+		expect(panels.find(".panel-selector-fields1-red1-group-textpanel-class")).to.have.length(1);
+		// deeply nested textpanel group
+		expect(panels.find(".level3-group-textpanel-class")).to.have.length(1);
+	});
+});

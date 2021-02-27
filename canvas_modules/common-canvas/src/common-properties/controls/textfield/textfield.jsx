@@ -76,6 +76,7 @@ class TextfieldControl extends React.Component {
 				validation_id: this.props.control.name
 			};
 			textInput = (<div className="properties-textinput-readonly">
+				{this.props.tableControl ? null : this.props.controlItem}
 				<ReadonlyControl
 					control={this.props.control}
 					propertyId={this.props.propertyId}
@@ -92,8 +93,8 @@ class TextfieldControl extends React.Component {
 				placeholder={this.props.control.additionalText}
 				onChange={this.handleChange.bind(this)}
 				value={value}
-				labelText={this.props.control.label ? this.props.control.label.text : ""}
-				hideLabel
+				labelText={this.props.controlItem}
+				hideLabel={this.props.tableControl}
 				light
 			/>);
 		}
@@ -134,6 +135,10 @@ TextfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.element
+	]), // list control passes string
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.oneOfType([
