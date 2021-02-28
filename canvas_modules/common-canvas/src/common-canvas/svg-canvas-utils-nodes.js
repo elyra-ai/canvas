@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import CanvasUtils from "./common-canvas-utils.js";
 import { SUPER_NODE } from "./constants/canvas-constants";
 
 // Diff between border for node label div (2px) and node label text area (6px)
@@ -243,5 +244,28 @@ export default class SvgCanvasNodes {
 	isSupernode(node) {
 		return node.type === SUPER_NODE;
 	}
+
+	// Returns true if either the cardinality of the default input port or
+	// the default output port of the node passed in is maxed out based on
+	// the array of links passed in.
+	isNodeDefaultPortsCardinalityAtMax(node, links) {
+		const defInputPort = this.getDefaultInputPortId(node);
+		const defOutputPort = this.getDefaultOutputPortId(node);
+		return CanvasUtils.isSrcCardinalityAtMax(defOutputPort, node, links) ||
+			CanvasUtils.isTrgCardinalityAtMax(defInputPort, node, links);
+	}
+
+	// Returns the default input port ID for the node, which will be the ID of
+	// the first port, or null if there are no inputs.
+	getDefaultInputPortId(node) {
+		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
+	}
+
+	// Returns the default output port ID for the node, which will be the ID of
+	// the first port, or null if there are no outputs.
+	getDefaultOutputPortId(node) {
+		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
+	}
+
 
 }

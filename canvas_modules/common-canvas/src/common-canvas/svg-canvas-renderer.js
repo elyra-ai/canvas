@@ -903,7 +903,7 @@ export default class SVGCanvasRenderer {
 	paletteNodeDraggedOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
-			// Set highlighting when there is no link becasue this will turn
+			// Set highlighting when there is no link because this will turn
 			// current highlighting off. And only switch on highlighting when we are
 			// over a fully attached link (not a detached link).
 			if (!link || this.isLinkFullyAttached(link)) {
@@ -1005,7 +1005,7 @@ export default class SVGCanvasRenderer {
 				const srcNode = this.drawingNewLinkData.srcNode;
 				const trgNode = nodeNearMouse;
 				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
-				const trgNodePortId = this.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				const trgNodePortId = this.nodeUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
 
 			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
@@ -1105,7 +1105,8 @@ export default class SVGCanvasRenderer {
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
-			this.isNonBindingNode(this.dragObjects[0]));
+			this.isNonBindingNode(this.dragObjects[0]) &&
+			!this.nodeUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
 
 	isExistingNodeAttachableToDetachedLinks() {
@@ -1204,18 +1205,6 @@ export default class SVGCanvasRenderer {
 			obj = this.getComment(id);
 		}
 		return obj;
-	}
-
-	// Returns the default input port ID for the node, which will be the ID of
-	// the first port, or null if there are no inputs.
-	getDefaultInputPortId(node) {
-		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
-	}
-
-	// Returns the default output port ID for the node, which will be the ID of
-	// the first port, or null if there are no outputs.
-	getDefaultOutputPortId(node) {
-		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
@@ -2177,7 +2166,7 @@ export default class SVGCanvasRenderer {
 
 			if (this.isExistingNodeInsertableIntoLink()) {
 				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-				// Set highlighting when there is no link becasue this will turn
+				// Set highlighting when there is no link because this will turn
 				// current highlighting off. And only switch on highlighting when we are
 				// over a fully attached link (not a detached link).
 				if (!link || this.isLinkFullyAttached(link)) {
@@ -4488,7 +4477,7 @@ export default class SVGCanvasRenderer {
 	getInputNodePortId(d3Event, trgNode) {
 		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
 		if (!inputPortId) {
-			inputPortId = this.getDefaultInputPortId(trgNode);
+			inputPortId = this.nodeUtils.getDefaultInputPortId(trgNode);
 		}
 		return inputPortId;
 	}
@@ -4509,7 +4498,7 @@ export default class SVGCanvasRenderer {
 	getOutputNodePortId(d3Event, srcNode) {
 		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
 		if (!outputPortId) {
-			outputPortId = this.getDefaultOutputPortId(srcNode);
+			outputPortId = this.nodeUtils.getDefaultOutputPortId(srcNode);
 		}
 		return outputPortId;
 	}
@@ -4625,13 +4614,13 @@ export default class SVGCanvasRenderer {
 				portClassName = this.getNodeOutputPortClassName();
 				portObjectType = node.layout.outputPortObject;
 				nodeWidthOffset = node.width;
-				defaultPortId = this.getDefaultOutputPortId(node);
+				defaultPortId = this.nodeUtils.getDefaultOutputPortId(node);
 
 			} else {
 				portClassName = this.getNodeInputPortClassName();
 				portObjectType = node.layout.inputPortObject;
 				nodeWidthOffset = 0;
-				defaultPortId = this.getDefaultInputPortId(node);
+				defaultPortId = this.nodeUtils.getDefaultInputPortId(node);
 			}
 
 			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
@@ -5217,7 +5206,7 @@ export default class SVGCanvasRenderer {
 						.html((cd) => cd.content);
 
 					// Comment halo
-					// We need to dynamically set size of the halo here becasue the size
+					// We need to dynamically set size of the halo here because the size
 					// of the text object maye be changed by the user.
 					if (that.canvasLayout.connectionType === "halo") {
 						commentGrp.select(this.getSelectorForId("comment_halo", d.id))
