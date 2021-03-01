@@ -269,6 +269,8 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
+				.trigger("dragover", canvasX, canvasY, { dataTransfer });
+			cy.get("#harness-app-container")
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		}
 	});
