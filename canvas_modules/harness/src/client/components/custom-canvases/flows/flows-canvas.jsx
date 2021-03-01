@@ -46,6 +46,7 @@ export default class FlowsCanvas extends React.Component {
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
 			enableLinkSelection: "None",
+			enableLinkReplaceOnNewConnection: true,
 			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightNodeOnNewLinkDrag: true,

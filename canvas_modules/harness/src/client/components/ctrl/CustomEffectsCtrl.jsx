@@ -243,7 +243,7 @@ class CustomEffectsCtrl extends React.Component {
 			<br />
 			<Button
 				type="button"
-				small
+				size="small"
 				kind="secondary"
 				onClick={this.moveSelectedFields}
 				disabled={this.state.buildNested}
@@ -462,7 +462,7 @@ class CustomEffectsCtrl extends React.Component {
 		const targetRows = this.controller.getSelectedRows(this.UI_LIST_ID);
 		const downButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.copySourceFieldToTerm}
 			disabled={this.state.buildNested === false || this.termState === "term" || sourceRows.length !== 1}
@@ -471,7 +471,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const byButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.addByToTerm}
 			disabled={this.state.buildNested === false || this.termState.startsWith("field")}
@@ -480,7 +480,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const withinButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.addWithinToTerm}
 			disabled={this.state.buildNested === false || this.termState.startsWith("field")}
@@ -489,7 +489,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const clearButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.clearTerm}
 			disabled={this.state.buildNested === false || this.state.currentTermString === ""}
@@ -498,7 +498,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const addButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.addTerm}
 			disabled={this.state.buildNested === false ||
@@ -508,7 +508,7 @@ class CustomEffectsCtrl extends React.Component {
 		</Button>);
 		const removeButton = (<Button
 			type="button"
-			small
+			size="small"
 			kind="secondary"
 			onClick={this.removeTerms}
 			disabled={this.state.buildNested === false || targetRows.length === 0}
