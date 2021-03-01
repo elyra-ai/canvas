@@ -281,6 +281,7 @@ class App extends React.Component {
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useEditorSize = this.useEditorSize.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1044,6 +1045,11 @@ class App extends React.Component {
 		this.log("show heading", enabled);
 	}
 
+	useEditorSize(editorSize) {
+		this.setState({ initialEditorSize: editorSize });
+		this.log("set editor size ", editorSize);
+	}
+
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
@@ -1245,13 +1251,10 @@ class App extends React.Component {
 			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId, activePipelineId)) {
 				commonPropertiesRef.applyPropertiesEditing(false);
 			}
-			let initialEditorSize;
 			if (inExtraCanvas) {
 				this.currentEditorId2 = nodeId;
-				initialEditorSize = this.propertiesController2 ? this.propertiesController2.getEditorSize() : null;
 			} else {
 				this.currentEditorId = nodeId;
-				initialEditorSize = this.propertiesController ? this.propertiesController.getEditorSize() : null;
 			}
 			// currentEditorNodeId = nodeId; // set new node
 			const appData = { nodeId: nodeId, inExtraCanvas: inExtraCanvas, pipelineId: activePipelineId };
@@ -1270,7 +1273,7 @@ class App extends React.Component {
 					appData: appData,
 					additionalComponents: additionalComponents,
 					expressionInfo: expressionInfo,
-					initialEditorSize: initialEditorSize
+					initialEditorSize: this.state.initialEditorSize
 				};
 
 				if (inExtraCanvas) {
@@ -1345,14 +1348,13 @@ class App extends React.Component {
 		if (expressionInfo !== null) {
 			expressionInfo.validateLink = this.state.expressionValidate;
 		}
-		const initialEditorSize = this.propertiesController ? this.propertiesController.getEditorSize() : null;
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
-			initialEditorSize: initialEditorSize
+			initialEditorSize: this.state.initialEditorSize
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -2100,6 +2102,7 @@ class App extends React.Component {
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
 			useHeading: this.useHeading,
+			useEditorSize: this.useEditorSize,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

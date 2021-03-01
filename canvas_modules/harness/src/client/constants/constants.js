@@ -143,3 +143,10 @@ _defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
+
+_defineConstant("EDITOR_SIZE", {
+	UNSET: "unset",
+	SMALL: "small",
+	MEDIUM: "medium",
+	LARGE: "large"
+});

@@ -20,7 +20,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup } from "carbon-components-react";
+import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup, Dropdown } from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -28,7 +28,8 @@ import {
 	PROPERTIES_MODAL,
 	LOCAL_FILE_OPTION,
 	FORMS,
-	PARAMETER_DEFS
+	PARAMETER_DEFS,
+	EDITOR_SIZE
 } from "../constants/constants.js";
 
 import FormsService from "../services/FormsService";
@@ -52,6 +53,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
@@ -159,6 +161,16 @@ export default class SidePanelModal extends React.Component {
 	}
 	useHeading(checked) {
 		this.props.propertiesConfig.useHeading(checked);
+	}
+
+	useEditorSize(evt) {
+		// If unset is selected, don't persist editorSize
+		const editorSize = evt.selectedItem.label;
+		if (editorSize === EDITOR_SIZE.UNSET) {
+			this.props.propertiesConfig.useEditorSize(null);
+		} else {
+			this.props.propertiesConfig.useEditorSize(editorSize);
+		}
 	}
 
 	dropdownOptions() {
@@ -325,6 +337,37 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const editorSizes = [
+			{
+				id: EDITOR_SIZE.UNSET,
+				label: EDITOR_SIZE.UNSET,
+			},
+			{
+				id: EDITOR_SIZE.SMALL,
+				label: EDITOR_SIZE.SMALL,
+			},
+			{
+				id: EDITOR_SIZE.MEDIUM,
+				label: EDITOR_SIZE.MEDIUM,
+			},
+			{
+				id: EDITOR_SIZE.LARGE,
+				label: EDITOR_SIZE.LARGE,
+			},
+		];
+
+		const persistEditorSize = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-persist-editor-size">
+				<Dropdown
+					id="harness-sidepanel-persist-editor-size-dropdown"
+					label="Select editor size"
+					titleText="Persist editor size"
+					items={ editorSizes }
+					onChange={ this.useEditorSize }
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -333,6 +376,8 @@ export default class SidePanelModal extends React.Component {
 				{validateProperties}
 				{divider}
 				{containerType}
+				{divider}
+				{persistEditorSize}
 				{divider}
 				{validateSchemaEnabled}
 				{divider}
@@ -375,6 +420,7 @@ SidePanelModal.propTypes = {
 		setPropertiesDropdownSelect: PropTypes.func,
 		heading: PropTypes.bool,
 		useHeading: PropTypes.func,
+		useEditorSize: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,
 		propertiesSchemaValidation: PropTypes.bool
 	})
