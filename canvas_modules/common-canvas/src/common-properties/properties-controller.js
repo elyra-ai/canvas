@@ -1128,6 +1128,16 @@ export default class PropertiesController {
 		return state ? state.values : {};
 	}
 
+	/**
+	 * Retrieves the enumeration value states for the given propertyId.
+	 *
+	 * @param propertyId The of an enumeration property
+	 * @return An object containing state enumFilter
+	 */
+	getControlEnumFilterStates(propertyId) {
+		const state = this.propertiesStore.getControlState(propertyId);
+		return state ? state.enumFilter : {};
+	}
 
 	/**
 		 * Panel States Methods
