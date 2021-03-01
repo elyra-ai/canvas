@@ -4059,8 +4059,8 @@ export default class SVGCanvasRenderer {
 						pipelineId: this.pipelineId });
 
 				} else if (this.config.enableLinkReplaceOnNewConnection &&
-										CanvasUtils.isLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					const linksToTrgPort = CanvasUtils.getLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
+										CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
+					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
 					// We only replace a link to a maxed out cardinality port if there
 					// is only one link. i.e. the input port cardinality is 0:1
 					if (linksToTrgPort.length === 1) {
