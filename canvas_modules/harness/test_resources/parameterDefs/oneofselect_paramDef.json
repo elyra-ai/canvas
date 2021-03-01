@@ -489,7 +489,7 @@
         },
         "resource_key": "oneofselect_filtered_custom",
         "description": {
-          "default": "oneofselect filtered to have values 'red', 'blue', and 'green'"
+          "default": "oneofselect filtered to have values 'orange' and 'yellow'"
         },
         "custom_value_allowed": true
       },
