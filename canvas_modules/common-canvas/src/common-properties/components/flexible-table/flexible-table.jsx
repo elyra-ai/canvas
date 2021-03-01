@@ -421,7 +421,7 @@ export default class FlexibleTable extends React.Component {
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
 					<Search
 						className="properties-ft-search-text"
-						placeHolderText={placeHolder}
+						placeholder={placeHolder}
 						onChange={this.handleFilterChange}
 						disabled={disabled}
 						size="sm"
