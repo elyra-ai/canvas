@@ -1442,7 +1442,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setInputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, CanvasUtils.getPort(node.inputs, portId).label)).to.be.true;
+		expect(isEqual(newLabel, CanvasUtils.getPort(portId, node.inputs).label)).to.be.true;
 	}
 
 	function shouldUpdateOutputPortLabel(nodeId, portId, newLabel) {
@@ -1451,7 +1451,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.getAPIPipeline().setOutputPortLabel(nodeId, portId, newLabel);
 		const node = objectModel.getAPIPipeline().getNode(nodeId);
 
-		expect(isEqual(newLabel, CanvasUtils.getPort(node.outputs, portId).label)).to.be.true;
+		expect(isEqual(newLabel, CanvasUtils.getPort(portId, node.outputs).label)).to.be.true;
 	}
 
 });
