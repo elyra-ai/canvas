@@ -726,6 +726,27 @@ export default class CanvasUtils {
 	// Returns a subset of links from the links passed in which connect to
 	// the target node and port passed in.
 	static getLinksConnectedTo(trgPortId, trgNode, links) {
-		return links.filter((link) => link.trgNodeId === trgNode.id && link.trgNodePortId === trgPortId);
+		const defTrgPortId = this.getDefaultInputPortId(trgNode);
+
+		return links.filter((link) => {
+			if (link.type === NODE_LINK) {
+				const linkTrgPortId = link.trgNodePortId || defTrgPortId;
+				return link.trgNodeId === trgNode.id && linkTrgPortId === trgPortId;
+			}
+			return false;
+		});
 	}
+
+	// Returns the default input port ID for the node, which will be the ID of
+	// the first port, or null if there are no inputs.
+	static getDefaultInputPortId(node) {
+		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
+	}
+
+	// Returns the default output port ID for the node, which will be the ID of
+	// the first port, or null if there are no outputs.
+	static getDefaultOutputPortId(node) {
+		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
+	}
+
 }
