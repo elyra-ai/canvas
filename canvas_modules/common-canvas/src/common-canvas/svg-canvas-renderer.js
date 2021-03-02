@@ -134,7 +134,7 @@ export default class SVGCanvasRenderer {
 		this.dragPointerOffsetInNode = null;
 
 		// The node over which the 'guide' object for a new link or a link handle
-		// is being dragged. Used when enableHightlightNodeOnNewLinkDrag config
+		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
@@ -3854,7 +3854,7 @@ export default class SVGCanvasRenderer {
 			}
 			// Switch on an attribute to indicate a new link is being dragged
 			// towards and over a target node.
-			if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			if (this.config.enableHighlightNodeOnNewLinkDrag) {
 				this.setNewLinkOverNode(d3Event);
 			}
 		}
@@ -4056,7 +4056,7 @@ export default class SVGCanvasRenderer {
 		this.removeNewLink();
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4133,7 +4133,7 @@ export default class SVGCanvasRenderer {
 		this.removeNewLink();
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4152,7 +4152,7 @@ export default class SVGCanvasRenderer {
 
 	stopDrawingNewLink() {
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4271,7 +4271,7 @@ export default class SVGCanvasRenderer {
 
 		// Switch on an attribute to indicate a new link is being dragged
 		// towards and over a target node.
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNode(d3Event);
 		}
 	}
@@ -4291,7 +4291,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 

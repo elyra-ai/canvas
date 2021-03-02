@@ -81,7 +81,7 @@ export default class CanvasController {
 			enablePaletteLayout: "Flyout",
 			enableToolbarLayout: "Top",
 			enableInsertNodeDroppedOnLink: false,
-			enableHightlightNodeOnNewLinkDrag: false,
+			enableHighlightNodeOnNewLinkDrag: false,
 			enablePositionNodeOnRightFlyoutOpen: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,
@@ -163,8 +163,21 @@ export default class CanvasController {
 
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
+		this.canvasConfig = this.correctTypo(this.canvasConfig);
 		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
 		this.objectModel.setLayoutType(config);
+	}
+
+	// Converts the config option 'enableHightlightNodeOnNewLinkDrag' (which has
+	// a typo with a 't' in the middle of 'Highlight') if present, to the correct
+	// name.
+	// TODO -- remove this at the next major version change.
+	correctTypo(config) {
+		if (typeof config.enableHightlightNodeOnNewLinkDrag === "boolean") {
+			config.enableHighlightNodeOnNewLinkDrag = config.enableHightlightNodeOnNewLinkDrag;
+			delete config.enableHightlightNodeOnNewLinkDrag; // Delete it so it doesn't cause debugging confusion
+		}
+		return config;
 	}
 
 	getCanvasConfig() {
