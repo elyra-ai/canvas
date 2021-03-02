@@ -246,7 +246,15 @@ Cypress.Commands.add("getPortLinks", (pipeline, srcNodeName, srcPortId, trgNodeN
 				.then((trgNodeId) => {
 					var outLinks = [];
 					links.forEach(function(link) {
-						if (link.srcNodeId === srcNodeId &&
+						// In the rare case an old canvas document (x-****) is loaded,
+						// the ports will be undefined so just compare node IDs in that case.
+						if (!link.srcNodePortId && !link.trgNodePortId) {
+							if (link.srcNodeId === srcNodeId &&
+									link.trgNodeId === trgNodeId) {
+								outLinks.push(link);
+							}
+
+						} else if (link.srcNodeId === srcNodeId &&
 							link.trgNodeId === trgNodeId &&
 							link.srcNodePortId === srcPortId &&
 							link.trgNodePortId === trgPortId) {

@@ -337,13 +337,13 @@ export default class CanvasUtils {
 	// Returns true if an existing link to the target node and port can be
 	// replaced with a new link from the srcNode to the trgNode and trgPortId.
 
-	static isLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 
 		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
 			return false;
 		}
 
-		if (this.getMaxCardinality(trgNode.inputs, trgNodePortId) !== 1) {
+		if (this.getMaxCardinality(trgNodePortId, trgNode.inputs) !== 1) {
 			return false;
 		}
 
@@ -468,7 +468,7 @@ export default class CanvasUtils {
 		});
 
 		if (srcCount > 0) {
-			const maxCard = this.getMaxCardinality(srcNode.outputs, srcPortId);
+			const maxCard = this.getMaxCardinality(srcPortId, srcNode.outputs);
 			if (maxCard &&
 					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
 					srcCount >= maxCard) {
@@ -497,7 +497,7 @@ export default class CanvasUtils {
 		});
 
 		if (trgCount > 0) {
-			const maxCard = this.getMaxCardinality(trgNode.inputs, trgPortId);
+			const maxCard = this.getMaxCardinality(trgPortId, trgNode.inputs);
 			if (maxCard &&
 					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
 					trgCount >= maxCard) {
@@ -520,7 +520,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns the port from the port array indicated by the portId.
-	static getPort(portArray, portId) {
+	static getPort(portId, portArray) {
 		const index = portArray.findIndex((port) => port.id === portId);
 
 		if (index > -1) {
@@ -531,8 +531,8 @@ export default class CanvasUtils {
 
 	// Returns the maximum cardinality, if one exists, for the port ID passed in
 	// from the array of ports provided.
-	static getMaxCardinality(ports, portId) {
-		const port = this.getPort(ports, portId);
+	static getMaxCardinality(portId, ports) {
+		const port = this.getPort(portId, ports);
 		if (port &&
 				port.cardinality) {
 			return Number(port.cardinality.max);
@@ -725,7 +725,28 @@ export default class CanvasUtils {
 
 	// Returns a subset of links from the links passed in which connect to
 	// the target node and port passed in.
-	static getLinksConnectedTo(trgPortId, trgNode, links) {
-		return links.filter((link) => link.trgNodeId === trgNode.id && link.trgNodePortId === trgPortId);
+	static getDataLinksConnectedTo(trgPortId, trgNode, links) {
+		const defTrgPortId = this.getDefaultInputPortId(trgNode);
+
+		return links.filter((link) => {
+			if (link.type === NODE_LINK) {
+				const linkTrgPortId = link.trgNodePortId || defTrgPortId;
+				return link.trgNodeId === trgNode.id && linkTrgPortId === trgPortId;
+			}
+			return false;
+		});
 	}
+
+	// Returns the default input port ID for the node, which will be the ID of
+	// the first port, or null if there are no inputs.
+	static getDefaultInputPortId(node) {
+		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
+	}
+
+	// Returns the default output port ID for the node, which will be the ID of
+	// the first port, or null if there are no outputs.
+	static getDefaultOutputPortId(node) {
+		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
+	}
+
 }

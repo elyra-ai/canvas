@@ -1005,7 +1005,7 @@ export default class SVGCanvasRenderer {
 				const srcNode = this.drawingNewLinkData.srcNode;
 				const trgNode = nodeNearMouse;
 				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
-				const trgNodePortId = this.nodeUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
 
 			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
@@ -4059,8 +4059,8 @@ export default class SVGCanvasRenderer {
 						pipelineId: this.pipelineId });
 
 				} else if (this.config.enableLinkReplaceOnNewConnection &&
-										CanvasUtils.isLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					const linksToTrgPort = CanvasUtils.getLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
+										CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
+					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
 					// We only replace a link to a maxed out cardinality port if there
 					// is only one link. i.e. the input port cardinality is 0:1
 					if (linksToTrgPort.length === 1) {
@@ -4477,7 +4477,7 @@ export default class SVGCanvasRenderer {
 	getInputNodePortId(d3Event, trgNode) {
 		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
 		if (!inputPortId) {
-			inputPortId = this.nodeUtils.getDefaultInputPortId(trgNode);
+			inputPortId = CanvasUtils.getDefaultInputPortId(trgNode);
 		}
 		return inputPortId;
 	}
@@ -4498,7 +4498,7 @@ export default class SVGCanvasRenderer {
 	getOutputNodePortId(d3Event, srcNode) {
 		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
 		if (!outputPortId) {
-			outputPortId = this.nodeUtils.getDefaultOutputPortId(srcNode);
+			outputPortId = CanvasUtils.getDefaultOutputPortId(srcNode);
 		}
 		return outputPortId;
 	}
@@ -4614,13 +4614,13 @@ export default class SVGCanvasRenderer {
 				portClassName = this.getNodeOutputPortClassName();
 				portObjectType = node.layout.outputPortObject;
 				nodeWidthOffset = node.width;
-				defaultPortId = this.nodeUtils.getDefaultOutputPortId(node);
+				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
 
 			} else {
 				portClassName = this.getNodeInputPortClassName();
 				portObjectType = node.layout.inputPortObject;
 				nodeWidthOffset = 0;
-				defaultPortId = this.nodeUtils.getDefaultInputPortId(node);
+				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
 			}
 
 			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
