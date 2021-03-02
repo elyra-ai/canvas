@@ -22,18 +22,6 @@
 		.d3-node-body-outline {
 			fill: transparent;
 			stroke: transparent;
-
-			&[hover="yes"] {
-				fill: transparent;
-			}
-
-			&.node-disabled {
-				fill: $disabled-02;
-			}
-
-			&.node-disabled:hover {
-				fill: $disabled-02;
-			}
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"] {
@@ -42,45 +30,6 @@
 			stroke-width: 1;
 			fill: transparent;
 			pointer-events: none;
-		}
-
-		&[data-new-link-over="yes"] {
-			.d3-node-selection-highlight {
-				stroke: $interactive-01;
-				stroke-dasharray: 4;
-				stroke-width: 1;
-				fill: $ui-01;
-				pointer-events: none;
-			}
-		}
-
-		.d3-node-port-input {
-			stroke: transparent;
-			fill: transparent;
-			stroke-width: 1;
-
-			&[connected="yes"] {
-				stroke: transparent;
-				fill: transparent;
-				stroke-width: 2;
-			}
-		}
-
-		.d3-node-port-input-arrow[connected="yes"] {
-			stroke: transparent;
-			fill: none;
-			stroke-width: 2;
-		}
-
-		.d3-node-port-input-drop-target {
-			stroke: $interactive-01;
-			fill: $interactive-01;
-			stroke-width: 0;
-		}
-
-		.d3-node-port-input-drop-target-expanded {
-			stroke-width: 4; // Increases port radius by 2px because the stroke spans either side of the circle boundary.
-			transition: stroke-width 0.1s cubic-bezier(0.4, 0.14, 0.3, 1);
 		}
 
 		.d3-node-port-output {
@@ -120,12 +69,6 @@
 
 		/* Hover over d3-node-group */
 		&:hover {
-			.d3-node-port-input {
-				stroke: transparent;
-				fill: transparent;
-				stroke-width: 1;
-			}
-
 			.d3-node-port-output {
 				opacity: 1;
 				transform: translateX(0);
@@ -153,21 +96,22 @@
 		}
 	}
 
-	.d3-data-link {
+	.d3-data-link .d3-link-line,
+	.d3-data-link .d3-link-line-arrow-head {
 		fill: none;
-		stroke: $ui-04;
+		stroke: $ui-05;
 		stroke-width: 1;
 	}
 
 	/* For association link */
-	.d3-object-link {
+	.d3-object-link  .d3-link-line {
 		stroke: $ui-04;
 		stroke-width: 2;
 		fill: none;
 		stroke-dasharray: 5.5;
 	}
 
-	.d3-comment-link {
+	.d3-comment-link  .d3-link-line {
 		stroke: $ui-04;
 		stroke-width: 1;
 		fill: none;
@@ -175,13 +119,8 @@
 	}
 
 
-	g .d3-comment-link:hover,
-	g .d3-data-link:hover,
-	g .d3-selectable-link:hover,
-	g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
-	g .d3-data-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-	g .d3-comment-link-selection-area:hover ~ .d3-selectable-link, /* Colors arrow head when hovering over line selection area. */
-	g .d3-association-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+	.d3-link-group:hover .d3-link-line,
+	.d3-link-group:hover .d3-link-line-arrow-head {
 		stroke: $interactive-01;
 		stroke-width: 2;
 	}

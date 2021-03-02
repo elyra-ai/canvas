@@ -312,7 +312,7 @@ $new-halo-link-color: $ui-05;
 	text-align: center;
 }
 
-/* Node highlight when end of new link line is over the node */
+/* Node highlight when end of new link line is over, or approaching, the node */
 .d3-node-group[data-new-link-over="yes"] {
 	.d3-node-selection-highlight {
 		stroke: $interactive-01;
@@ -661,7 +661,8 @@ $new-halo-link-color: $ui-05;
 /* Link styles */
 
 // Common styles for all links
-.d3-link-line {
+.d3-link-line,
+.d3-link-line-arrow-head {
 	fill: none;
 	pointer-events: none; // Allow events to go to selection area
 }
@@ -674,7 +675,7 @@ $new-halo-link-color: $ui-05;
 
 .d3-comment-link .d3-link-line-arrow-head {
 	stroke: $comment-link-color;
-	stroke-width: 2;
+	stroke-width: 1;
 	stroke-dasharray: 0;
 }
 
