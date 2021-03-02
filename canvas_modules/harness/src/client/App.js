@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 27] */
+/* eslint complexity: ["error", 28] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -40,6 +40,7 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
+import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -95,6 +96,7 @@ import {
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
+	EXAMPLE_APP_LOGIC,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -1981,6 +1983,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_DETACHED) {
 			firstCanvas = (
 				<DetachedCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_LOGIC) {
+			firstCanvas = (
+				<LogicCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
