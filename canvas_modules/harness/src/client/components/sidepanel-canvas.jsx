@@ -632,7 +632,7 @@ export default class SidePanelForms extends React.Component {
 		var enableLinkReplaceOnNewConnection = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedLinkReplaceOnNewConnection" // Set ID to corresponding field in App.js state
-				labelText="Enable Link Replace On Drop"
+				labelText="Enable Link Replace On New Connection"
 				toggled={this.props.getStateValue("selectedLinkReplaceOnNewConnection")}
 				onToggle={this.setStateValue}
 			/>
@@ -750,12 +750,12 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
-		var enableHightlightNodeOnNewLinkDrag = (
+		var enableHighlightNodeOnNewLinkDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-highlight-node-on-new-link-drag-toggle">
 				<Toggle
-					id="selectedHightlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
-					labelText="Enable Hightlight Node On New Link Drag"
-					toggled={this.props.getStateValue("selectedHightlightNodeOnNewLinkDrag")}
+					id="selectedHighlightNodeOnNewLinkDrag" // Set ID to corresponding field in App.js state
+					labelText="Enable Highlight Node On New Link Drag"
+					toggled={this.props.getStateValue("selectedHighlightNodeOnNewLinkDrag")}
 					onToggle={this.setStateValue}
 				/>
 			</div>);
@@ -1285,7 +1285,7 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableInsertNodeDroppedOnLink}
 					{divider}
-					{enableHightlightNodeOnNewLinkDrag}
+					{enableHighlightNodeOnNewLinkDrag}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
