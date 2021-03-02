@@ -48,7 +48,8 @@ const RETURN_KEY = 13;
 
 const SCROLL_PADDING = 12;
 
-const NINETY_DEGREES_IN_RADIANS = 90 * (Math.PI / 180);
+const NINETY_DEGREES = 90;
+
 const INPUT_TYPE = "input_type";
 const OUTPUT_TYPE = "output_type";
 
@@ -852,22 +853,33 @@ export default class SVGCanvasRenderer {
 		// At the time of writing, Firefox takes the ghost image from only those
 		// objects that are visible (ignoring any invisible objects like the div
 		// and SVG area) consequently we position the node and label so the label
-		// (if bigger than the node width) is position up against the left edge
+		// (if bigger than the node width) is positioned up against the left edge
 		// of the invisible div and SVG area. If the label is shorter than the node
 		// width, the node is positioned up against the left edge of the SVG. We do
 		// this by translating the group object in the x direction.
+
+		// First calculate the display width of the label. The span will be the
+		// full text but it may be constricted by the label width in the layout.
 		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
 		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
-		const labelLength = Math.min(nodeLabelWidth, labelSpanWidth);
+		const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
 
-		const xOffset = Math.max(0, (labelLength - ghost.width) / 2) * this.zoomTransform.k;
-		const labelDiff = Math.max(0, (nodeLabelWidth - labelLength) / 2);
-
+		// Next calculate the amount, if any, the label protrudes beyond the edge
+		// of the node width and move the ghost group by that amount.
+		const xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
 		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
-		fObject
-			.attr("width", labelLength)
-			.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
-		fObjectDiv.attr("width", labelLength);
+
+		// If the label is center justified, restrict the label width to the
+		// display amount and adjust th x coordinate to compensate for the change
+		// in width.
+		if (node.layout.labelAlign === "center") {
+			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+
+			fObject
+				.attr("width", labelDisplayLength)
+				.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+			fObjectDiv.attr("width", labelDisplayLength);
+		}
 
 		// Calculate the zoom amount if the browser itself is zoomed.
 		// At the time of writing this value is not returned correctly by Safari.
@@ -2872,6 +2884,7 @@ export default class SVGCanvasRenderer {
 									})
 									.merge(inputPortArrowSelection)
 									.attr("d", (port) => this.getPortArrowPath(port))
+									.attr("transform", (port) => this.getPortArrowPathTransform(port))
 									.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
 								inputPortArrowSelection.exit().remove();
@@ -3543,7 +3556,8 @@ export default class SVGCanvasRenderer {
 		const nodeGrp = d3.select(node);
 		const selector = this.getSelectorForClass(cssNodePortArrow);
 		nodeGrp.selectAll(selector)
-			.attr("d", (port) => this.getPortArrowPath(port));
+			.attr("d", (port) => this.getPortArrowPath(port))
+			.attr("transform", (port) => this.getPortArrowPathTransform(port));
 	}
 
 	isEntryBindingNode(node) {
@@ -3939,7 +3953,7 @@ export default class SVGCanvasRenderer {
 						.attr("y", d.y2 - (that.drawingNewLinkData.portHeight / 2))
 						.attr("width", that.drawingNewLinkData.portWidth)
 						.attr("height", that.drawingNewLinkData.portHeight)
-						.attr("transform", that.getGuideImageTransform(d));
+						.attr("transform", that.getLinkImageTransform(d));
 				} else {
 					d3.select(this)
 						.attr("cx", d.x2)
@@ -3949,12 +3963,16 @@ export default class SVGCanvasRenderer {
 			});
 	}
 
-	getGuideImageTransform(d) {
-		const adjacent = d.x2 - d.x1;
-		const opposite = d.y2 - d.y1;
-		let angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-		angle = adjacent >= 0 ? angle : angle + 180;
-		return `rotate(${angle},${d.x2},${d.y2})`;
+	getLinkImageTransform(d) {
+		let angle = 0;
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			const adjacent = d.x2 - d.x1;
+			const opposite = d.y2 - d.y1;
+			angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
+			angle = adjacent >= 0 ? angle : angle + 180;
+			return `rotate(${angle},${d.x2},${d.y2})`;
+		}
+		return null;
 	}
 
 	drawNewCommentLinkForPorts(transPos) {
@@ -4011,7 +4029,8 @@ export default class SVGCanvasRenderer {
 					this.completeNewLink(d3Event);
 				})
 				.merge(connectionArrowHeadSel)
-				.attr("d", (d) => this.getArrowHead(d));
+				.attr("d", (d) => this.getArrowHead(d))
+				.attr("transform", (d) => this.getArrowHeadTransform(d));
 		}
 	}
 
@@ -4539,7 +4558,9 @@ export default class SVGCanvasRenderer {
 		let foundElement = null;
 
 		while (el) {
-			if (el.className && el.className.baseVal && el.className.baseVal.includes(className)) {
+			if (el.className && el.className.baseVal && el.className.baseVal.includes(".d3-new-connection-guide")) {
+				el = null;
+			} else if (el.className && el.className.baseVal && el.className.baseVal.includes(className)) {
 				foundElement = el;
 				el = null;
 			} else {
@@ -5971,6 +5992,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
+			.attr("transform", (d) => this.getArrowHeadTransform(d))
 			.attr("class", "d3-link-line-arrow-head")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
@@ -6060,7 +6082,7 @@ export default class SVGCanvasRenderer {
 						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 						.attr("width", this.canvasLayout.linkEndHandleWidth)
 						.attr("height", this.canvasLayout.linkEndHandleHeight)
-						.attr("transform", (d) => this.getGuideImageTransform(d));
+						.attr("transform", (d) => this.getLinkImageTransform(d));
 
 				} else if (this.canvasLayout.linkEndHandleObject === "circle") {
 					obj
@@ -6540,46 +6562,56 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns path for arrow head
+	// Returns path for arrow head displayed within an input port circle. It is
+	// draw so the tip is 2px in front of the origin 0,0 so it appears nicely in
+	// the port circle.
 	getPortArrowPath(port) {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return `M ${port.cx - 3} ${port.cy - 2} L ${port.cx} ${port.cy + 2} ${port.cx + 3} ${port.cy - 2}`;
-
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			return `M ${port.cx - 3} ${port.cy + 2} L ${port.cx} ${port.cy - 2} ${port.cx + 3} ${port.cy + 2}`;
-		}
-
-		return `M ${port.cx - 2} ${port.cy - 3} L ${port.cx + 2} ${port.cy} ${port.cx - 2} ${port.cy + 3}`;
+		return "M -2 3 L 2 0 -2 -3";
 	}
 
-	// Returns arrow head path. If the linkType is Elbow it makes sure
-	// the arrow head is for a horizontal line because the end of those types of
-	// line is always horizontal. Otherwise it returns an arrow head
-	// path relevant to the slope of the straight link being drawn.
+	// Returns the transform to position and, if ncessecary, rotate the port
+	// circle arrow.
+	getPortArrowPathTransform(port) {
+		const angle = this.getAngleBasedOnLinkDirection();
+		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
+	}
+
+	// Returns an SVG path to draw the arrow head.
 	getArrowHead(d) {
+		if (d.type === COMMENT_LINK) {
+			return "M -8 3 L 0 0 -8 -3";
+		}
+		return "M -8 8 L 0 0 -8 -8";
+	}
+
+	// Returns a transform for an arrow head at the end of a link line.
+	// If the linkType is Elbow, it makes sure the arrow head is either
+	// horizontal for left-right or vertical for top-bottom/bottom-top link
+	// directions, because the end of elbow lines are always at the same angle as
+	// the elbow lines. Otherwise it returns an angle so the arrow head is
+	// relevant to the slope of the straight link being drawn.
+	// TODO -- This doesn't handle "Curve" link types very well (in fact for
+	// curves it returns the same as for "Straight" links) becauset it is very
+	// difficult to write an algorithm that gives the correct angle for a
+	// "Curve" link to make it look presentable. I know, I tried!
+	getArrowHeadTransform(d) {
 		const angle =
 			this.canvasLayout.linkType === LINK_TYPE_ELBOW
-				? this.getElbowArrowHeadAngle()
-				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1));
+				? this.getAngleBasedOnLinkDirection()
+				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 
-		const clockwiseAngle = angle - 0.3;
-		const x3 = d.x2 - Math.cos(clockwiseAngle) * 10;
-		const y3 = d.y2 - Math.sin(clockwiseAngle) * 10;
-
-		const antiClockwiseAngle = angle + 0.3;
-		const x4 = d.x2 - Math.cos(antiClockwiseAngle) * 10;
-		const y4 = d.y2 - Math.sin(antiClockwiseAngle) * 10;
-
-		return `M ${d.x2} ${d.y2} L ${x3} ${y3} M ${d.x2} ${d.y2} L ${x4} ${y4}`;
+		return `translate(${d.x2}, ${d.y2}) rotate(${angle})`;
 	}
 
-	// Returns the angle the arrow head, for an elbow type link, should point.
-	getElbowArrowHeadAngle() {
+	// Returns the angle for the arrow head when perpndicular arrows are in
+	// us such as when a the link type is "Elbow" or when we are displaying an
+	// arrow head inside a port circle.
+	getAngleBasedOnLinkDirection() {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return NINETY_DEGREES_IN_RADIANS;
+			return NINETY_DEGREES;
 
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			return -NINETY_DEGREES_IN_RADIANS;
+			return -NINETY_DEGREES;
 		}
 		return 0;
 	}

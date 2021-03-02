@@ -39,6 +39,7 @@ export default class TablesCanvas extends React.Component {
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
 			enableAssocLinkType: "RightSideCurve",
+			enableLinkDirection: "LeftRight",
 			enableParentClass: "tables-join",
 			enableHightlightNodeOnNewLinkDrag: true,
 			enableNodeLayout: {

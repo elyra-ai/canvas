@@ -106,6 +106,12 @@
 	// ----------------------------------------------------
 	.d3-link-group {
 
+		&:hover .d3-link-line-arrow-head,
+		&.d3-data-link[data-selected] .d3-link-line-arrow-head {
+			fill: transparent;
+			stroke: transparent;
+		}
+
 		.d3-link-dec-group {
 			// Style the link label
 			.d3-link-dec-label {
