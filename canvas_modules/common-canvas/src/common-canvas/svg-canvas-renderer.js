@@ -870,7 +870,7 @@ export default class SVGCanvasRenderer {
 		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
 
 		// If the label is center justified, restrict the label width to the
-		// display amount and adjust th x coordinate to compensate for the change
+		// display amount and adjust the x coordinate to compensate for the change
 		// in width.
 		if (node.layout.labelAlign === "center") {
 			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
