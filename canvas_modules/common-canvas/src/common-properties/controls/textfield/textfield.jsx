@@ -37,10 +37,14 @@ class TextfieldControl extends React.Component {
 		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_FIELD);
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.isList = false;
-		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
-			this.isList = true;
+		if (this.props.control.valueDef) {
+			if (this.props.control.valueDef.isList) {
+				this.isList = true;
+			}
+			if (typeof this.props.control.valueDef.defaultValue !== "undefined") {
+				this.defaultValue = this.props.control.valueDef.defaultValue;
+			}
 		}
-
 	}
 
 	handleChange(evt) {
@@ -51,8 +55,8 @@ class TextfieldControl extends React.Component {
 		if (this.isList) {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
-		if (value.length === 0 && typeof this.props.value === "undefined") {
-			value = this.props.value;
+		if (value.length === 0 && typeof this.defaultValue === "undefined") {
+			value = this.default;
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
