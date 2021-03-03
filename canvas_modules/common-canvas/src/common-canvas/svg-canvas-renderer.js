@@ -2601,14 +2601,13 @@ export default class SVGCanvasRenderer {
 				.append("xhtml:span") // Provide a namespace when span is inside foreignObject
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
 					if (d.layout.labelEditable) {
-						clearTimeout(that.hideEditIconPending);
 						that.displayEditIcon(this, d);
 					}
 				})
 				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
 					if (d.layout.labelEditable) {
-						// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
-						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 500, this, d);
+						// Wait third of a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 300, this, d);
 					}
 				});
 

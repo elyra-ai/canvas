@@ -37,7 +37,7 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.find("foreignObject > div")
+		.find("foreignObject > div > span")
 		.dblclick();
 });
 
@@ -191,7 +191,7 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-label")
+		.find(".d3-node-label > span")
 		.trigger("mouseenter");
 });
 
