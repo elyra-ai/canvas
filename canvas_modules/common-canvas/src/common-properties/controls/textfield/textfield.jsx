@@ -56,7 +56,7 @@ class TextfieldControl extends React.Component {
 			value = ControlUtils.splitNewlines(value, arrayValueDelimiter);
 		}
 		if (value.length === 0 && typeof this.defaultValue === "undefined") {
-			value = this.default;
+			value = this.defaultValue;
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
