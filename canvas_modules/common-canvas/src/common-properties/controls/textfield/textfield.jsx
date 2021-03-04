@@ -41,9 +41,7 @@ class TextfieldControl extends React.Component {
 			if (this.props.control.valueDef.isList) {
 				this.isList = true;
 			}
-			if (typeof this.props.control.valueDef.defaultValue !== "undefined") {
-				this.defaultValue = this.props.control.valueDef.defaultValue;
-			}
+			this.defaultValue = this.props.control.valueDef.defaultValue;
 		}
 	}
 
