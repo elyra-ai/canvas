@@ -137,6 +137,11 @@ describe("Test adding links to target nodes with maxed out cardinalities", funct
 			"Out 0:3", "outPort", "0:1 & 0:2", "InputPort2", 1);
 	});
 
+	it("Test a target node port with maximum cardinality of 0 doesn't accept a new connection", function() {
+		// This should create the link and default it to the first input port
+		cy.linkNodeOutputPortToNode("Out 0:1", "outPort", "In 0:0");
+		cy.verifyNumberOfPortDataLinks(0);
+	});
 });
 
 describe("Test adding links from source nodes with maxed out cardinalities", function() {
@@ -182,6 +187,12 @@ describe("Test adding links from source nodes with maxed out cardinalities", fun
 		cy.verifyNumberOfPortDataLinks(3);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Out 0:3", "outPort", "All 0:1", "inPort4", 0);
+	});
+
+	it("Test a source node output port with maximum cardinality of 0 cannot create a new connection", function() {
+		// This should create the link and default it to the first input port
+		cy.linkNodeOutputPortToNode("Out 0:0", "outPort", "All 0:1", "inPort1");
+		cy.verifyNumberOfPortDataLinks(0);
 	});
 });
 
