@@ -467,13 +467,11 @@ export default class CanvasUtils {
 			}
 		});
 
-		if (srcCount > 0) {
-			const maxCard = this.getMaxCardinality(srcPortId, srcNode.outputs);
-			if (maxCard &&
-					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
-					srcCount >= maxCard) {
-				return true;
-			}
+		const maxCard = this.getMaxCardinality(srcPortId, srcNode.outputs);
+		if (maxCard !== null && // Might be 0! So test explicitley for non null.
+				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+				srcCount >= maxCard) {
+			return true;
 		}
 
 		return false;
@@ -496,13 +494,11 @@ export default class CanvasUtils {
 			}
 		});
 
-		if (trgCount > 0) {
-			const maxCard = this.getMaxCardinality(trgPortId, trgNode.inputs);
-			if (maxCard &&
-					maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
-					trgCount >= maxCard) {
-				return true;
-			}
+		const maxCard = this.getMaxCardinality(trgPortId, trgNode.inputs);
+		if (maxCard !== null && // Might be 0! Yes believe it or not someone does set it to zero. So test explicitley for non null.
+				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+				trgCount >= maxCard) {
+			return true;
 		}
 
 		return false;
