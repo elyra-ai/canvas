@@ -45,6 +45,10 @@ const showLinksTime = false;
 
 const ESC_KEY = 27;
 const RETURN_KEY = 13;
+const LEFT_ARROW_KEY = 37;
+const RIGHT_ARROW_KEY = 39;
+const DELETE_KEY = 46;
+const BACKSPACE_KEY = 8;
 
 const SCROLL_PADDING = 12;
 
@@ -5330,6 +5334,9 @@ export default class SVGCanvasRenderer {
 			id: d.id,
 			text: d.content,
 			singleLine: false,
+			maxCharacters: null,
+			allowReturnKey: true,
+			textCanBeEmpty: true,
 			xPos: 0,
 			yPos: 0,
 			width: d.width,
@@ -5375,6 +5382,9 @@ export default class SVGCanvasRenderer {
 			id: node.id,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
+			maxCharacters: node.layout.labelMaxCharacters,
+			allowReturnKey: node.layout.labelAllowReturnKey,
+			textCanBeEmpty: false,
 			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
 			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
 			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
@@ -5429,14 +5439,24 @@ export default class SVGCanvasRenderer {
 			.attr("class", data.className)
 			.text(data.text)
 			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all one one line.
-				if (data.singleLine && d3Event.keyCode === RETURN_KEY) {
+				// Don't accept return key press when text is all one one line or
+				// if application doesn't want line feeds insert in the label.
+				if ((data.singleLine || !data.allowReturnKey) &&
+						d3Event.keyCode === RETURN_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					that.textAreaEscKeyPressed = true;
 					that.closeTextArea(foreignObject);
+				}
+				if (data.maxCharacters &&
+						this.value.length >= data.maxCharacters &&
+						d3Event.keyCode !== DELETE_KEY &&
+						d3Event.keyCode !== BACKSPACE_KEY &&
+						d3Event.keyCode !== LEFT_ARROW_KEY &&
+						d3Event.keyCode !== RIGHT_ARROW_KEY) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 			})
 			.on("keyup", function(d3Event) {
@@ -5451,8 +5471,17 @@ export default class SVGCanvasRenderer {
 			})
 			.on("blur", function(d3Event, d) {
 				that.logger.log("Text area - blur");
+				// If the esc key was pressed to cause the blur event just return
+				// so label returns to what it was before editing started.
 				if (that.textAreaEscKeyPressed) {
 					that.textAreaEscKeyPressed = false;
+					return;
+				}
+				// If there is no text for the label and textCanBeEmpty is false
+				// just return so label returns to what it was before editing started.
+				if (!this.value && !data.textCanBeEmpty) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					that.closeTextArea(foreignObject);
 					return;
 				}
 				const newText = this.value; // Save the text before closing the foreign object

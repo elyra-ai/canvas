@@ -51,11 +51,13 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 51,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "center",
-		labelSingleLine: true,
+		labelAlign: "center", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -441,11 +443,13 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 36,
 		labelPosY: 12,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "left",
-		labelSingleLine: true,
+		labelAlign: "left", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -831,11 +835,13 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 55,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "center",
-		labelSingleLine: true,
+		labelAlign: "center", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
