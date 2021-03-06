@@ -276,12 +276,16 @@ $new-halo-link-color: $ui-05;
 }
 
 .d3-node-label-edit-icon-group {
-	.d3-node-label-edit-icon-background {
+	.d3-node-label-edit-icon-background1 {
+		fill: transparent;
+	}
+
+	.d3-node-label-edit-icon-background2 {
 		fill: $canvas-background-color;
 	}
 
 	&:hover {
-		.d3-node-label-edit-icon-background {
+		.d3-node-label-edit-icon-background2 {
 			fill: $node-label-edit-icon-hover-color;
 		}
 	}

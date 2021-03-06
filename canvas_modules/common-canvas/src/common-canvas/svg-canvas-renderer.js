@@ -3031,13 +3031,26 @@ export default class SVGCanvasRenderer {
 				that.hideEditIcon(this);
 			});
 
+		const EDIT_ICON_X_OFFSET = 5;
+		const EDIT_ICON_Y_OFFSET = -4;
+		const EDIT_ICON_POS_X = 4;
+		const EDIT_ICON_POS_Y = 4;
+
 		editIconGrpSel
 			.append("rect")
-			.attr("class", "d3-node-label-edit-icon-background")
-			.attr("width", 24)
+			.attr("class", "d3-node-label-edit-icon-background1")
+			.attr("width", 24 + EDIT_ICON_X_OFFSET)
 			.attr("height", 24)
 			.attr("x", 0)
-			.attr("y", 0);
+			.attr("y", EDIT_ICON_Y_OFFSET);
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background2")
+			.attr("width", 24)
+			.attr("height", 24)
+			.attr("x", EDIT_ICON_X_OFFSET)
+			.attr("y", EDIT_ICON_Y_OFFSET);
 
 		editIconGrpSel
 			.append("svg")
@@ -3045,8 +3058,8 @@ export default class SVGCanvasRenderer {
 			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
-			.attr("x", 4)
-			.attr("y", 4);
+			.attr("x", EDIT_ICON_X_OFFSET + EDIT_ICON_POS_X)
+			.attr("y", EDIT_ICON_Y_OFFSET + EDIT_ICON_POS_Y);
 	}
 
 	hideEditIcon(spanObj) {
