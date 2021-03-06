@@ -4559,7 +4559,8 @@ export default class SVGCanvasRenderer {
 		while (el) {
 			if (el.className && el.className.baseVal && el.className.baseVal.includes(".d3-new-connection-guide")) {
 				el = null;
-			} else if (el.className && el.className.baseVal && el.className.baseVal.includes(className)) {
+			} else if (el.className && el.className.baseVal && el.className.baseVal.includes(className) &&
+									el.getAttribute("data-pipeline-id") === this.pipelineId) {
 				foundElement = el;
 				el = null;
 			} else {
