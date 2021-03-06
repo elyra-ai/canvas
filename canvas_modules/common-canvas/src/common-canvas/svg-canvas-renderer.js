@@ -6578,7 +6578,13 @@ export default class SVGCanvasRenderer {
 	// Returns an SVG path to draw the arrow head.
 	getArrowHead(d) {
 		if (d.type === COMMENT_LINK) {
+			if (typeof this.canvasLayout.commentLinkArrowHead === "string") {
+				return this.canvasLayout.commentLinkArrowHead;
+			}
 			return "M -8 3 L 0 0 -8 -3";
+		}
+		if (typeof this.canvasLayout.dataLinkArrowHead === "string") {
+			return this.canvasLayout.dataLinkArrowHead;
 		}
 		return "M -8 8 L 0 0 -8 -8";
 	}

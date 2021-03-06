@@ -97,7 +97,7 @@ export default class DetachedCanvas extends React.Component {
 				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
-				dataLinkArrowHead: true,
+				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
