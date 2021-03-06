@@ -44,7 +44,7 @@ Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find(".d3-node-label-edit-icon-group")
-		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		// .last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
 		.click();
 });
 
