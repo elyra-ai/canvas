@@ -2581,7 +2581,7 @@ export default class SVGCanvasRenderer {
 						labelSel
 							.attr("x", that.nodeUtils.getNodeLabelHoverPosX(d))
 							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d))
-							.attr("height", that.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node()));
+							.attr("height", that.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), that.zoomTransform.k));
 						spanSel.classed("d3-node-label-full", true);
 					}
 				})
