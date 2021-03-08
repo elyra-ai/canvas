@@ -43,6 +43,16 @@ const controlList = {
 		isList: true
 	}
 };
+
+const controlList2 = {
+	name: "test-text-list",
+	additionalText: "Enter file name",
+	valueDef: {
+		isList: true,
+		defaultValue: []
+	}
+};
+
 const control2 = {
 	name: "test-text2",
 };
@@ -295,11 +305,26 @@ describe("textfield list works correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.eql(["value 1", "value 2", "value 3"]);
 	});
 
-	it("textfield should set value to [] when no value is entered", () => {
+	it("textfield should set value to undefined when no default value is provided", () => {
 		const wrapper = mount(
 			<Textfield
 				store={controller.getStore()}
 				control={controlList}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const textWrapper = wrapper.find("div[data-id='properties-test-text-list']");
+		const input = textWrapper.find("input");
+		input.simulate("change", { target: { value: "" } });
+		expect(controller.getPropertyValue(propertyId)).to.be.undefined;
+	});
+
+	it("textfield should set value to default value when no value is entered", () => {
+		const wrapper = mount(
+			<Textfield
+				store={controller.getStore()}
+				control={controlList2}
 				controller={controller}
 				propertyId={propertyId}
 			/>
