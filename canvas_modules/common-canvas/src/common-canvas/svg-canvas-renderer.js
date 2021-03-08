@@ -45,6 +45,10 @@ const showLinksTime = false;
 
 const ESC_KEY = 27;
 const RETURN_KEY = 13;
+const LEFT_ARROW_KEY = 37;
+const RIGHT_ARROW_KEY = 39;
+const DELETE_KEY = 46;
+const BACKSPACE_KEY = 8;
 
 const SCROLL_PADDING = 12;
 
@@ -2606,8 +2610,8 @@ export default class SVGCanvasRenderer {
 				})
 				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
 					if (d.layout.labelEditable) {
-						// Wait third of a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
-						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 300, this, d);
+						// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 500, this, d);
 					}
 				});
 
@@ -3027,13 +3031,26 @@ export default class SVGCanvasRenderer {
 				that.hideEditIcon(this);
 			});
 
+		const EDIT_ICON_X_OFFSET = 5;
+		const EDIT_ICON_Y_OFFSET = -4;
+		const EDIT_ICON_POS_X = 4;
+		const EDIT_ICON_POS_Y = 4;
+
 		editIconGrpSel
 			.append("rect")
-			.attr("class", "d3-node-label-edit-icon-background")
-			.attr("width", 24)
+			.attr("class", "d3-node-label-edit-icon-background1")
+			.attr("width", 24 + EDIT_ICON_X_OFFSET)
 			.attr("height", 24)
 			.attr("x", 0)
-			.attr("y", 0);
+			.attr("y", EDIT_ICON_Y_OFFSET);
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background2")
+			.attr("width", 24)
+			.attr("height", 24)
+			.attr("x", EDIT_ICON_X_OFFSET)
+			.attr("y", EDIT_ICON_Y_OFFSET);
 
 		editIconGrpSel
 			.append("svg")
@@ -3041,8 +3058,8 @@ export default class SVGCanvasRenderer {
 			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
-			.attr("x", 4)
-			.attr("y", 4);
+			.attr("x", EDIT_ICON_X_OFFSET + EDIT_ICON_POS_X)
+			.attr("y", EDIT_ICON_Y_OFFSET + EDIT_ICON_POS_Y);
 	}
 
 	hideEditIcon(spanObj) {
@@ -5331,6 +5348,9 @@ export default class SVGCanvasRenderer {
 			id: d.id,
 			text: d.content,
 			singleLine: false,
+			maxCharacters: null,
+			allowReturnKey: true,
+			textCanBeEmpty: true,
 			xPos: 0,
 			yPos: 0,
 			width: d.width,
@@ -5376,6 +5396,9 @@ export default class SVGCanvasRenderer {
 			id: node.id,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
+			maxCharacters: node.layout.labelMaxCharacters,
+			allowReturnKey: node.layout.labelAllowReturnKey,
+			textCanBeEmpty: false,
 			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
 			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
 			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
@@ -5430,14 +5453,24 @@ export default class SVGCanvasRenderer {
 			.attr("class", data.className)
 			.text(data.text)
 			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all one one line.
-				if (data.singleLine && d3Event.keyCode === RETURN_KEY) {
+				// Don't accept return key press when text is all one one line or
+				// if application doesn't want line feeds insert in the label.
+				if ((data.singleLine || !data.allowReturnKey) &&
+						d3Event.keyCode === RETURN_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					that.textAreaEscKeyPressed = true;
 					that.closeTextArea(foreignObject);
+				}
+				if (data.maxCharacters &&
+						this.value.length >= data.maxCharacters &&
+						d3Event.keyCode !== DELETE_KEY &&
+						d3Event.keyCode !== BACKSPACE_KEY &&
+						d3Event.keyCode !== LEFT_ARROW_KEY &&
+						d3Event.keyCode !== RIGHT_ARROW_KEY) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 			})
 			.on("keyup", function(d3Event) {
@@ -5452,8 +5485,17 @@ export default class SVGCanvasRenderer {
 			})
 			.on("blur", function(d3Event, d) {
 				that.logger.log("Text area - blur");
+				// If the esc key was pressed to cause the blur event just return
+				// so label returns to what it was before editing started.
 				if (that.textAreaEscKeyPressed) {
 					that.textAreaEscKeyPressed = false;
+					return;
+				}
+				// If there is no text for the label and textCanBeEmpty is false
+				// just return so label returns to what it was before editing started.
+				if (!this.value && !data.textCanBeEmpty) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					that.closeTextArea(foreignObject);
 					return;
 				}
 				const newText = this.value; // Save the text before closing the foreign object
@@ -6579,7 +6621,13 @@ export default class SVGCanvasRenderer {
 	// Returns an SVG path to draw the arrow head.
 	getArrowHead(d) {
 		if (d.type === COMMENT_LINK) {
+			if (typeof this.canvasLayout.commentLinkArrowHead === "string") {
+				return this.canvasLayout.commentLinkArrowHead;
+			}
 			return "M -8 3 L 0 0 -8 -3";
+		}
+		if (typeof this.canvasLayout.dataLinkArrowHead === "string") {
+			return this.canvasLayout.dataLinkArrowHead;
 		}
 		return "M -8 8 L 0 0 -8 -8";
 	}
