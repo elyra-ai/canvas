@@ -58,6 +58,7 @@ export default class DetachedCanvas extends React.Component {
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightNodeOnNewLinkDrag: true,
+			enableDisplayFullLabelOnHover: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,

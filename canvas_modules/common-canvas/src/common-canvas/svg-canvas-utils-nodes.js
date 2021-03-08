@@ -107,17 +107,28 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelHoverPosX(node) {
-		if (node.layout.labelAlign === "center") {
+		if (node.layout.labelSingleLine &&
+				node.layout.labelAlign === "center") {
 			return this.getNodeLabelPosX(node) - 250;
 		}
 		return this.getNodeLabelPosX(node);
 	}
 
 	getNodeLabelHoverWidth(node) {
-		if (node.layout.labelAlign === "center") {
-			return node.layout.labelWidth + 500;
+		if (node.layout.labelSingleLine) {
+			if (node.layout.labelAlign === "center") {
+				return node.layout.labelWidth + 500;
+			}
+			return node.layout.labelWidth + 40;
 		}
-		return node.layout.labelWidth + 40;
+		return node.layout.labelWidth;
+	}
+
+	getNodeLabelHoverHeight(node, spanObj) {
+		if (node.layout.labelSingleLine) {
+			return node.layout.labelHeight;
+		}
+		return spanObj.getBoundingClientRect().height + 12;
 	}
 
 	getNodeLabelTextAreaWidth(node) {

@@ -2577,9 +2577,12 @@ export default class SVGCanvasRenderer {
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelSel = d3.select(this);
 					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
+						const spanSel = labelSel.selectAll("span");
 						labelSel
 							.attr("x", that.nodeUtils.getNodeLabelHoverPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d));
+							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d))
+							.attr("height", that.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node()));
+						spanSel.classed("d3-node-label-full", true);
 					}
 				})
 				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
@@ -2587,7 +2590,9 @@ export default class SVGCanvasRenderer {
 					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
 						labelSel
 							.attr("x", that.nodeUtils.getNodeLabelPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelWidth(d));
+							.attr("width", that.nodeUtils.getNodeLabelWidth(d))
+							.attr("height", that.nodeUtils.getNodeLabelHeight(d));
+						labelSel.selectAll("span").classed("d3-node-label-full", false);
 					}
 				})
 				.on("dblclick", (d3Event, d) => {
