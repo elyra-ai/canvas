@@ -316,10 +316,12 @@ const haloDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Straight",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: true,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: true,
 
 		// Link handle for input port can be "circle" or "image".
@@ -708,10 +710,12 @@ const portsHorizontalDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Curve",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
 
 		// Link handle for input port can be "circle" or "image".
@@ -1100,10 +1104,12 @@ const portsVerticalDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Curve",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
 
 		// Link handle for input port can be "circle" or "image".
