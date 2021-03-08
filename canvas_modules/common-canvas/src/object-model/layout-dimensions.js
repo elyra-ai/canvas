@@ -51,11 +51,13 @@ const haloDefaultLayout = {
 		labelPosX: 30,
 		labelPosY: 51,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "center",
-		labelSingleLine: true,
+		labelAlign: "center", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -314,10 +316,12 @@ const haloDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Straight",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: true,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: true,
 
 		// Link handle for input port can be "circle" or "image".
@@ -441,11 +445,13 @@ const portsHorizontalDefaultLayout = {
 		labelPosX: 36,
 		labelPosY: 12,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "left",
-		labelSingleLine: true,
+		labelAlign: "left", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -704,10 +710,12 @@ const portsHorizontalDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Curve",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
 
 		// Link handle for input port can be "circle" or "image".
@@ -831,11 +839,13 @@ const portsVerticalDefaultLayout = {
 		labelPosX: 35,
 		labelPosY: 55,
 
-		// Label appearance - labelAlign can be "left" or "center"
+		// Label appearance
 		labelEditable: false,
-		labelAlign: "center",
-		labelSingleLine: true,
+		labelAlign: "center", // can be "left" or "center"
+		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
+		labelMaxCharacters: null, // null allows unlimited characters
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -1094,10 +1104,12 @@ const portsVerticalDefaultLayout = {
 		// This can be overrriden from common-canvas config properties
 		linkType: "Curve",
 
-		// Display an arrow head on the comment-to-node links
+		// Display an arrow head on the comment-to-node links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		commentLinkArrowHead: false,
 
-		// Display an arrow head on the data links
+		// Display an arrow head on the data links. May be set to true to
+		// get a default arrow head or to an SVG string for a custom arrow head.
 		dataLinkArrowHead: false,
 
 		// Link handle for input port can be "circle" or "image".
