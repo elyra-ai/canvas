@@ -96,14 +96,14 @@ export default class SvgCanvasNodes {
 			const halfLabelWidth = labelWidth / 2;
 			const xCenterPosition = posX + halfLabelWidth;
 			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
-			return xCenterPosition + xOffsetFromCenter + 5;
+			return xCenterPosition + xOffsetFromCenter;
 		}
 		const xOffsetFromStart = Math.min(labelWidth, (spanWidth / zoomScale));
-		return this.getNodeLabelPosX(node) + xOffsetFromStart + 5;
+		return this.getNodeLabelPosX(node) + xOffsetFromStart;
 	}
 
 	getNodeLabelEditIconPosY(node) {
-		return this.getNodeLabelPosY(node) - 4;
+		return this.getNodeLabelPosY(node);
 	}
 
 	getNodeLabelHoverPosX(node) {

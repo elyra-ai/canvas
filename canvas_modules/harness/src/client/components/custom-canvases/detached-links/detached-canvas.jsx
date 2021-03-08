@@ -85,6 +85,7 @@ export default class DetachedCanvas extends React.Component {
 				labelEditable: true,
 				labelSingleLine: false,
 				labelOutline: false,
+				labelMaxCharacters: 20,
 				portRadius: 10,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,

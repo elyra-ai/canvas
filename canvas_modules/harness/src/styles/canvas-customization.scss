@@ -61,7 +61,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: $node-body-fill;
 	}
 
-	.d3-node-body-outline[hover="yes"] {
+	.d3-node-group:hover .d3-node-body-outline {
 		stroke: $node-body-stroke;
 		stroke-width: 2;
 		fill: $blue;

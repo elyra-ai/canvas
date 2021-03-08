@@ -211,7 +211,7 @@ $new-halo-link-color: $ui-05;
 	fill: $node-body-fill;
 }
 
-.d3-node-body-outline[hover="yes"] {
+.d3-node-group:hover .d3-node-body-outline {
 	stroke: $node-body-stroke-hover;
 	stroke-width: 1;
 	fill: $node-body-fill-hover;
@@ -276,12 +276,16 @@ $new-halo-link-color: $ui-05;
 }
 
 .d3-node-label-edit-icon-group {
-	.d3-node-label-edit-icon-background {
+	.d3-node-label-edit-icon-background1 {
+		fill: transparent;
+	}
+
+	.d3-node-label-edit-icon-background2 {
 		fill: $canvas-background-color;
 	}
 
 	&:hover {
-		.d3-node-label-edit-icon-background {
+		.d3-node-label-edit-icon-background2 {
 			fill: $node-label-edit-icon-hover-color;
 		}
 	}
