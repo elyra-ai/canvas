@@ -1,7 +1,7 @@
 {
   "doc_type": "pipeline",
   "version": "3.0",
-  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
   "id": "4cc46a84-972d-4ca8-8064-bacc20c80b0f",
   "primary_pipeline": "6db653f2-f64f-4d78-8856-f67d5ac0eaaa",
   "pipelines": [
