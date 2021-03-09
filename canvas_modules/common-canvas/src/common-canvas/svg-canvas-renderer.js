@@ -43,12 +43,15 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 
 const showLinksTime = false;
 
-const ESC_KEY = 27;
-const RETURN_KEY = 13;
-const LEFT_ARROW_KEY = 37;
-const RIGHT_ARROW_KEY = 39;
-const DELETE_KEY = 46;
 const BACKSPACE_KEY = 8;
+const RETURN_KEY = 13;
+const ESC_KEY = 27;
+const LEFT_ARROW_KEY = 37;
+const UP_ARROW_KEY = 38;
+const RIGHT_ARROW_KEY = 39;
+const DOWN_ARROW_KEY = 40;
+const DELETE_KEY = 46;
+const A_KEY = 65;
 
 const SCROLL_PADDING = 12;
 
@@ -5367,14 +5370,14 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
-	autoSizeComment(textArea, foreignObject, id, autoSizeCallback) {
+	autoSizeComment(textArea, foreignObject, data) {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
 		if (this.textAreaHeight < scrollHeight) {
 			this.textAreaHeight = scrollHeight;
 			foreignObject.style("height", this.textAreaHeight + "px");
-			this.getComment(id).height = this.textAreaHeight;
+			this.getComment(data.id).height = this.textAreaHeight;
 			this.displayComments();
 			this.displayLinks();
 		}
@@ -5415,8 +5418,13 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
-	autoSizeNodeLabel(textArea, foreignObject, id, autoSizeCallback) {
+	autoSizeNodeLabel(textArea, foreignObject, data) {
 		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
+
+		// Restrict max characters in case text was pasted in to the text area.
+		if (textArea.value.length > data.maxCharacters) {
+			textArea.value = textArea.value.substring(0, data.maxCharacters);
+		}
 
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
@@ -5458,8 +5466,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", data.className)
 			.text(data.text)
 			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all one one line or
-				// if application doesn't want line feeds insert in the label.
+				// Don't accept return key press when text is all on one line or
+				// if application doesn't want line feeds inserted in the label.
 				if ((data.singleLine || !data.allowReturnKey) &&
 						d3Event.keyCode === RETURN_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -5471,22 +5479,19 @@ export default class SVGCanvasRenderer {
 				}
 				if (data.maxCharacters &&
 						this.value.length >= data.maxCharacters &&
-						d3Event.keyCode !== DELETE_KEY &&
-						d3Event.keyCode !== BACKSPACE_KEY &&
-						d3Event.keyCode !== LEFT_ARROW_KEY &&
-						d3Event.keyCode !== RIGHT_ARROW_KEY) {
+						!that.textAreaAllowedKeys(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 			})
 			.on("keyup", function(d3Event) {
-				data.autoSizeCallback(this, foreignObject, data.id, data.autoSizeCallback);
+				data.autoSizeCallback(this, foreignObject, data);
 			})
 			.on("paste", function() {
 				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data.id, data.autoSizeCallback);
+				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data);
 			})
 			.on("blur", function(d3Event, d) {
 				that.logger.log("Text area - blur");
@@ -5530,6 +5535,18 @@ export default class SVGCanvasRenderer {
 		foreignObject.remove();
 		this.editingText = false;
 		this.editingTextId = "";
+	}
+
+	// Returns true if one of the keys that are allowed in the text area, when
+	// checking for maximum characters, has been pressed.
+	textAreaAllowedKeys(d3Event) {
+		return d3Event.keyCode === DELETE_KEY ||
+			d3Event.keyCode === BACKSPACE_KEY ||
+			d3Event.keyCode === LEFT_ARROW_KEY ||
+			d3Event.keyCode === RIGHT_ARROW_KEY ||
+			d3Event.keyCode === UP_ARROW_KEY ||
+			d3Event.keyCode === DOWN_ARROW_KEY ||
+			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
 	}
 
 	// Adds a rectangle over the top of the canvas which is used to display a
