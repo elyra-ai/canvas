@@ -58,6 +58,7 @@ export default class DetachedCanvas extends React.Component {
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHightlightNodeOnNewLinkDrag: true,
+			enableDisplayFullLabelOnHover: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -85,7 +86,7 @@ export default class DetachedCanvas extends React.Component {
 				labelEditable: true,
 				labelSingleLine: false,
 				labelOutline: false,
-				labelMaxCharacters: 20,
+				labelMaxCharacters: 64,
 				portRadius: 10,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
