@@ -5315,14 +5315,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
-		let style = this.getObjectStyle(d, "text", type);
-
-		// When editing a comment always override the text color with
-		// 'transparent' so the SVG text becomes invisible and the user only sees
-		// the text in the textarea which is open during editing.
-		if (d.id === this.editingTextId && this.editingText) {
-			style = style ? style + " color: transparent" : "color: transparent";
-		}
+		const style = this.getObjectStyle(d, "text", type);
 		comGrp.select(this.getSelectorForId("comment_text", d.id))
 			.select("div")
 			.attr("style", style);
