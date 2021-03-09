@@ -128,7 +128,8 @@ export default class SvgCanvasNodes {
 		if (node.layout.labelSingleLine) {
 			return node.layout.labelHeight;
 		}
-		return spanObj.getBoundingClientRect().height / zoomScale;
+		const calcHeight = spanObj.getBoundingClientRect().height / zoomScale;
+		return Math.max(calcHeight, node.layout.labelHeight);
 	}
 
 	getNodeLabelTextAreaWidth(node) {

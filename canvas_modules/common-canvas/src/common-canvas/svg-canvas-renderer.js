@@ -5359,7 +5359,8 @@ export default class SVGCanvasRenderer {
 			className: "d3-comment-entry",
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeComment.bind(this),
-			saveTextChangesCallback: this.saveCommentChanges.bind(this)
+			saveTextChangesCallback: this.saveCommentChanges.bind(this),
+			closeTextAreaCallback: null
 		});
 	}
 
@@ -5393,6 +5394,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodeLabelTextArea(node, parentObj) {
+		d3.select(parentObj).selectAll("div")
+			.attr("style", "display:none;");
 		this.displayTextArea({
 			id: node.id,
 			text: node.label,
@@ -5407,7 +5410,8 @@ export default class SVGCanvasRenderer {
 			className: this.getNodeLabelTextAreaClass(node),
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
-			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this)
+			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
+			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
 		});
 	}
 
@@ -5415,10 +5419,10 @@ export default class SVGCanvasRenderer {
 		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		// Restrict max characters in case text was pasted in to the text area.
-		if (textArea.value.length > data.maxCharacters) {
+		if (data.maxCharacters &&
+				textArea.value.length > data.maxCharacters) {
 			textArea.value = textArea.value.substring(0, data.maxCharacters);
 		}
-
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
@@ -5437,6 +5441,15 @@ export default class SVGCanvasRenderer {
 			pipelineId: this.activePipeline.id
 		};
 		this.canvasController.editActionHandler(data);
+	}
+
+	// Called when the node label text area is closed. Sets the style of the
+	// div for the node label so the label is displayed (because it was hidden
+	// when the text area opened).
+	closeNodeLabelTextArea(nodeId) {
+		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", nodeId));
+		nodeGrp.selectAll("div")
+			.attr("style", null);
 	}
 
 	displayTextArea(data) {
@@ -5468,7 +5481,7 @@ export default class SVGCanvasRenderer {
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					that.textAreaEscKeyPressed = true;
-					that.closeTextArea(foreignObject);
+					that.closeTextArea(foreignObject, data);
 				}
 				if (data.maxCharacters &&
 						this.value.length >= data.maxCharacters &&
@@ -5498,11 +5511,11 @@ export default class SVGCanvasRenderer {
 				// just return so label returns to what it was before editing started.
 				if (!this.value && !data.textCanBeEmpty) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					that.closeTextArea(foreignObject);
+					that.closeTextArea(foreignObject, data);
 					return;
 				}
 				const newText = this.value; // Save the text before closing the foreign object
-				that.closeTextArea(foreignObject);
+				that.closeTextArea(foreignObject, data);
 				if (data.text !== newText) {
 					that.isCommentBeingUpdated = true;
 					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight);
@@ -5524,7 +5537,10 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Closes the text area and resets the flags.
-	closeTextArea(foreignObject) {
+	closeTextArea(foreignObject, data) {
+		if (data.closeTextAreaCallback) {
+			data.closeTextAreaCallback(data.id);
+		}
 		foreignObject.remove();
 		this.editingText = false;
 		this.editingTextId = "";
