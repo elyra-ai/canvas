@@ -1,7 +1,7 @@
 {
   "doc_type": "pipeline",
   "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-v1-schema.json",
+  "json_schema": "https://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-v1-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
