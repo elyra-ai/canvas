@@ -114,8 +114,6 @@ class SelectColumns extends AbstractTable {
 
 		const rows = this.makeRows(this.props.value, this.props.state);
 		const topRightPanel = this.makeAddRemoveButtonPanel(this.props.state, tableButtonConfig);
-		const controlValue = this.props.value ? this.props.value : [];
-		const rowCheckboxLabels = PropertyUtils.getRowCheckboxLabel(controlValue, this.props.controller, this.props.propertyId, this.props.control);
 		let rowToScrollTo;
 		if (Number.isInteger(this.scrollToRow) && rows.length > this.scrollToRow) {
 			rowToScrollTo = this.scrollToRow;
@@ -137,7 +135,6 @@ class SelectColumns extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
-				rowCheckboxLabels={rowCheckboxLabels}
 			/>);
 
 		var content = (

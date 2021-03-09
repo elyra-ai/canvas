@@ -21,7 +21,7 @@ import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants";
-import { formatMessage } from "./../../util/property-utils";
+import { formatMessage, getRowCheckboxLabel } from "./../../util/property-utils";
 
 import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -91,6 +91,17 @@ class VirtualizedTable extends React.Component {
 		}
 	}
 
+	getCheckboxLabelColumnIndex(columns) {
+		// If 1st column is Index, use the next column for labeling
+		for (let i = 0; i < columns.length; i++) {
+			if (columns[i].headerLabel !== "Index") {
+				return i;
+			}
+		}
+		// Use first column by default
+		return 0;
+	}
+
 	isRowSelected(index) {
 		if (this.props.rowsSelected) {
 			return this.props.rowsSelected.indexOf(index) > -1;
@@ -125,8 +136,8 @@ class VirtualizedTable extends React.Component {
 
 	// Responsible for rendering the table header row given an array of columns.
 	headerRowRenderer(scrollKey, { className, columns, style }) {
-		// Using second column header for checkbox label
-		const headerCheckboxLabel = (typeof this.props.columns === "undefined" || this.props.columns.length === 0) ? "" : this.props.columns[0].headerLabel;
+		const checkboxLabelColumnIndex = (typeof this.props.columns === "undefined" || this.props.columns.length === 0) ? 0 : this.getCheckboxLabelColumnIndex(this.props.columns);
+		const headerCheckboxLabel = (typeof this.props.columns === "undefined" || this.props.columns.length === 0) ? "" : this.props.columns[checkboxLabelColumnIndex].headerLabel;
 		const translatedHeaderCheckboxLabel = formatMessage(
 			this.reactIntl,
 			MESSAGE_KEYS.VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL,
@@ -224,12 +235,6 @@ class VirtualizedTable extends React.Component {
 		let selectOption = "";
 		let selectedRow = false;
 		const rowDisabled = typeof rowData.disabled === "boolean" ? rowData.disabled : false;
-		const rowCheckboxLabel = (rowCheckboxLabels && rowCheckboxLabels[index]) ? rowCheckboxLabels[index] : "null";
-		const translatedRowCheckboxLabel = formatMessage(
-			this.reactIntl,
-			MESSAGE_KEYS.VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL,
-			{ row_index: index + 1, row_checkbox_label: rowCheckboxLabel }
-		);
 
 		if (typeof this.props.rowHeight === "function" && this.props.rowHeight({ index }) === 0) {
 			return null;
@@ -239,6 +244,19 @@ class VirtualizedTable extends React.Component {
 			const rowSelected = this.isRowSelected(rowData.originalRowIndex);
 			selectedRow = this.props.selectable && rowSelected;
 			if (this.props.rowSelection !== ROW_SELECTION.SINGLE) {
+				// Get checkbox label just before rendering checkbox
+				const checkboxLabelColumnIndex = (typeof this.props.columns === "undefined" || this.props.columns.length === 0)
+					? 0
+					: this.getCheckboxLabelColumnIndex(this.props.columns);
+				const rowCheckboxLabel = (rowCheckboxLabels && rowCheckboxLabels[index])
+					? rowCheckboxLabels[index]
+					: getRowCheckboxLabel(this.props.controller, columns[checkboxLabelColumnIndex]);
+				const translatedRowCheckboxLabel = formatMessage(
+					this.reactIntl,
+					MESSAGE_KEYS.VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL,
+					{ row_index: index + 1, row_checkbox_label: rowCheckboxLabel }
+				);
+
 				selectOption = (<div className="properties-vt-row-checkbox"
 					role="gridcell"
 					onMouseEnter={(evt) => this.overSelectOption(evt)}

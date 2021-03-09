@@ -339,42 +339,37 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 	return outputList;
 }
 
-/**
- * Returns an array of values in a column next to checkbox.
- * This is used in abstract-table and selectcolumns controls.
- *
- * @param controlValue A field name, either plain or in schema.name format
- * @param controller Properties controller
- * @param inPropertyId The unique property identifier
- * @param control The control definition for the parameter
- * @return Array of checkbox labels in all rows
- */
-function getRowCheckboxLabel(controlValue, controller, inPropertyId, control) {
-	const labels = [];
-	for (let i = 0; i < controlValue.length; i++) {
-		let secondColumnValue;
-		if ("columnIndex" in control) {
-			// nested structures in structureeditor
-			let propertyId = controller.convertPropertyId(inPropertyId);
-			propertyId = controller.setChildPropertyId(propertyId, { row: i, col: 0 });
-			secondColumnValue = controller.getPropertyValue(propertyId);
-		} else {
-			secondColumnValue = controller.getPropertyValue({ name: inPropertyId.name, row: i, col: 0 });
-		}
-		if (typeof secondColumnValue === "undefined" || secondColumnValue === null || secondColumnValue === "") {
-			labels.push("");
-		} else if (typeof secondColumnValue === "object" && secondColumnValue.link_ref) {
-			labels.push(stringifyFieldValue(secondColumnValue, control));
-		} else if (Array.isArray(secondColumnValue)) {
-			// this is needed to comma separate an array of readonly strings.
-			labels.push(secondColumnValue.join(", "));
-		} else if (typeof secondColumnValue === "boolean") {
-			labels.push(secondColumnValue.toString());
-		} else {
-			labels.push(secondColumnValue);
-		}
+// Recursively get propertyId
+function getPropertyId(column) {
+	if ("propertyId" in column.props) {
+		return column.props.propertyId;
 	}
-	return labels;
+	return getPropertyId(column.props.children);
+}
+
+/**
+ * Returns checkbox label for a row.
+ *
+ * @param controller Properties controller
+ * @param column Column from virtualizedTable used for labeling
+ * @return Checkbox label string
+ */
+
+function getRowCheckboxLabel(controller, column) {
+	const propertyId = getPropertyId(column);
+	const rowCheckboxLabel = controller.getPropertyValue(propertyId);
+	if (typeof rowCheckboxLabel === "undefined" || rowCheckboxLabel === null || rowCheckboxLabel === "") {
+		return ("");
+	} else if (typeof rowCheckboxLabel === "object" && rowCheckboxLabel.link_ref) {
+		// For SelectColumns_multiInput control
+		return (rowCheckboxLabel.link_ref + "." + rowCheckboxLabel.field_name);
+	} else if (Array.isArray(rowCheckboxLabel)) {
+		// this is needed to comma separate an array of readonly strings.
+		return (rowCheckboxLabel.join(", "));
+	} else if (typeof rowCheckboxLabel === "boolean") {
+		return (rowCheckboxLabel.toString());
+	}
+	return rowCheckboxLabel;
 }
 
 /**

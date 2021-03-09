@@ -150,7 +150,6 @@ class ListControl extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
-				rowCheckboxLabels={this.props.value}
 			/>);
 
 		const tableContainer = (<div>

@@ -633,8 +633,6 @@ export default class AbstractTable extends React.Component {
 
 		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
-		const abstractTableControlValue = controlValue ? controlValue : [];
-		const rowCheckboxLabels = PropertyUtils.getRowCheckboxLabel(abstractTableControlValue, this.props.controller, this.props.propertyId, this.props.control);
 
 		const table =	(
 			<FlexibleTable
@@ -657,7 +655,6 @@ export default class AbstractTable extends React.Component {
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
-				rowCheckboxLabels={rowCheckboxLabels}
 			/>);
 		return (
 			<div>
