@@ -3251,13 +3251,13 @@ export default class SVGCanvasRenderer {
 					.attr("x", 0)
 					.attr("y", 0);
 				labelSel
-					.append("xhtml:div")
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`));
+					.append("xhtml:div");
 			}
 			labelSel
 				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
 				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
 				.select("div")
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 				.html(dec.label);
 		} else {
 			labelSel.remove();
