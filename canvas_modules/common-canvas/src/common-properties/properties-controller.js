@@ -96,6 +96,14 @@ export default class PropertiesController {
 		return this.commandStack;
 	}
 
+	setEditorSize(editorSize) {
+		this.editorSize = editorSize;
+	}
+
+	getEditorSize() {
+		return this.editorSize;
+	}
+
 	//
 	// Form and parsing Methods
 	//
