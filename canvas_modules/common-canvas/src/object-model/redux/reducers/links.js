@@ -42,9 +42,12 @@ export default (state = [], action) => {
 			Object.assign(newLink, {
 				"srcNodePortId": action.data.srcNodePortId,
 				"trgNodePortId": action.data.trgNodePortId,
-				"linkName": action.data.linkName,
 				"srcPos": action.data.srcPos,
-				"trgPos": action.data.trgPos });
+				"trgPos": action.data.trgPos,
+				"linkName": action.data.linkName,
+				"typeAttr": action.data.typeAttr,
+				"description": action.data.description
+			});
 		}
 		return [
 			...state,
