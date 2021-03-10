@@ -688,7 +688,8 @@ export default class AbstractTable extends React.Component {
 					"key": columnDef.name,
 					"label": columnLabel,
 					"width": columnDef.width,
-					"description": (columnDef.description ? columnDef.description.text : null) });
+					"description": (columnDef.description ? columnDef.description.text : null),
+					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
