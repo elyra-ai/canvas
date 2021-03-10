@@ -361,8 +361,13 @@ function getPropertyId(column) {
  */
 
 function getRowCheckboxLabel(controller, column) {
-	const propertyId = getPropertyId(column);
-	const rowCheckboxLabel = controller.getPropertyValue(propertyId);
+	let rowCheckboxLabel;
+	if (typeof column.props.children === "object") {
+		const propertyId = getPropertyId(column);
+		rowCheckboxLabel = controller.getPropertyValue(propertyId);
+	} else {
+		rowCheckboxLabel = column.props.children;
+	}
 	if (typeof rowCheckboxLabel === "undefined" || rowCheckboxLabel === null || rowCheckboxLabel === "") {
 		return ("");
 	} else if (typeof rowCheckboxLabel === "object" && rowCheckboxLabel.link_ref) {

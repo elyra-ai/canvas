@@ -57,6 +57,7 @@ class VirtualizedTable extends React.Component {
 		this.headerColRenderer = this.headerColRenderer.bind(this);
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
+		this.getCheckboxLabelForRow = this.getCheckboxLabelForRow.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -100,6 +101,14 @@ class VirtualizedTable extends React.Component {
 		}
 		// Use first column by default
 		return 0;
+	}
+
+	getCheckboxLabelForRow(column) {
+		// When no columns in table, rowCheckboxLabel will be an empty string
+		if (typeof this.props.columns === "undefined" || this.props.columns.length === 0) {
+			return "";
+		}
+		return getRowCheckboxLabel(this.props.controller, column);
 	}
 
 	isRowSelected(index) {
@@ -250,7 +259,7 @@ class VirtualizedTable extends React.Component {
 					: this.getCheckboxLabelColumnIndex(this.props.columns);
 				const rowCheckboxLabel = (rowCheckboxLabels && rowCheckboxLabels[index])
 					? rowCheckboxLabels[index]
-					: getRowCheckboxLabel(this.props.controller, columns[checkboxLabelColumnIndex]);
+					: this.getCheckboxLabelForRow(columns[checkboxLabelColumnIndex]);
 				const translatedRowCheckboxLabel = formatMessage(
 					this.reactIntl,
 					MESSAGE_KEYS.VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL,
