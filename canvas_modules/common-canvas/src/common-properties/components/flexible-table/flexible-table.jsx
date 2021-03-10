@@ -363,7 +363,14 @@ export default class FlexibleTable extends React.Component {
 			} else if (typeof (columnDef.label) === "string") {
 				headerLabel = columnDef.label;
 			}
-			headers.push({ key: columnDef.key, label: columnDef.label, width: width, description: columnDef.description, headerLabel: headerLabel });
+			headers.push({
+				key: columnDef.key,
+				label: columnDef.label,
+				width: width,
+				description: columnDef.description,
+				headerLabel: headerLabel,
+				operation: columnDef.operation
+			});
 		}
 		return {
 			headers: headers,

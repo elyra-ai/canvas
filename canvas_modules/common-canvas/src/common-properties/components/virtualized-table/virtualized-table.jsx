@@ -94,7 +94,7 @@ class VirtualizedTable extends React.Component {
 	getCheckboxLabelColumnIndex(columns) {
 		// If 1st column is Index, use the next column for labeling
 		for (let i = 0; i < columns.length; i++) {
-			if (columns[i].headerLabel !== "Index") {
+			if (columns[i].operation !== "index") {
 				return i;
 			}
 		}

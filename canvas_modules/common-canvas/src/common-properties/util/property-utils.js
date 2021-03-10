@@ -339,7 +339,12 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 	return outputList;
 }
 
-// Recursively get propertyId
+/**
+ * Recursively get propertyId from the React props.children object
+ *
+ * @param column Column which has nested children
+ * @return propertyId of the nested children
+ */
 function getPropertyId(column) {
 	if ("propertyId" in column.props) {
 		return column.props.propertyId;
