@@ -86,5 +86,7 @@
   "readonlytable.edit.button.label": "[Esperanto~Edit~eo]",
   "toggletext.icon.description": "[Esperanto~{toggletext_label} Icon~~~~eo]",
   "multiselect.dropdown.empty.label": "[Esperanto~None selected~~~~~~eo]",
-  "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~~~~~eo]"
+  "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~~~~~eo]",
+  "virtualizedTable.header.checkbox.label": "[Esperanto~Select all {header_checkbox_label}~~~~~~eo]",
+  "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index}, {row_checkbox_label}~~~~~~~~~~~~eo]"
 }
