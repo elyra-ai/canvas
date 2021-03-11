@@ -17,11 +17,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { v4 as uuid4 } from "uuid";
+
 import { CommonCanvas, CanvasController } from "common-canvas";
 
 import DetachedCanvasFlow from "./detachedCanvas.json";
 import DetachedPalette from "./detachedPalette.json";
 
+
+const MAX_PORTS = 2;
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
@@ -88,9 +92,10 @@ export default class DetachedCanvas extends React.Component {
 				labelOutline: false,
 				labelMaxCharacters: 64,
 				portRadius: 10,
+				portArcRadius: 0,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
-				outputPortRightPosY: 30,
+				outputPortRightPosY: 41,
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
@@ -127,6 +132,11 @@ export default class DetachedCanvas extends React.Component {
 		return decs;
 	}
 
+	getLinksConnectedTo(port, srcNode) {
+		return this.canvasController.getLinks().filter((lnk) =>
+			lnk.srcNodeId === srcNode.id && lnk.srcNodePortId === port.id);
+	}
+
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
@@ -135,10 +145,52 @@ export default class DetachedCanvas extends React.Component {
 	}
 
 	editActionHandler(data, command) {
-		if (data.editType === "linkNodes") {
+		switch (data.editType) {
+		case "linkNodes": {
 			this.createDecorations(data.linkIds[0]);
-		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
-			this.createDecorations(command.data.linkIds[0]);
+			const nodes = this.canvasController.getNodes(data.pipelineId);
+			const link = this.canvasController.getLink(data.linkIds[0], data.pipelineId);
+			const srcNode = nodes.find((n) => n.id === link.srcNodeId);
+			if (srcNode.outputs.length < MAX_PORTS) {
+				this.addNewPortWithMaxCardOfOne(srcNode, data.pipelineId);
+			}
+			break;
+		}
+		case "createDetachedLink": {
+			const nodes = this.canvasController.getNodes(data.pipelineId);
+			const srcNode = nodes.find((n) => n.id === data.srcNodeId);
+			if (srcNode.outputs.length < MAX_PORTS) {
+				this.addNewPortWithMaxCardOfOne(srcNode, data.pipelineId);
+			}
+			break;
+		}
+		case "deleteSelectedObjects": {
+			data.selectedObjects.forEach((obj) => {
+				if (obj.type === "nodeLink" &&
+						obj.srcNodeId) {
+					const nodes = this.canvasController.getNodes(data.pipelineId);
+					const srcNode = nodes.find((n) => n.id === obj.srcNodeId);
+					if (srcNode) {
+						srcNode.outputs = srcNode.outputs.filter((op) => op.id !== obj.srcNodePortId);
+						const lastPort = srcNode.outputs[srcNode.outputs.length - 1];
+
+						if (this.getLinksConnectedTo(lastPort, srcNode).length > 0) {
+							srcNode.outputs.push(this.createNewPortWithMaxCardOfOne(srcNode, data.pipelineId));
+						}
+						this.canvasController.setNodeProperties(srcNode.id, srcNode, data.pipelineId);
+					}
+				}
+			});
+			break;
+		}
+		case "redo": {
+			if (command.data.editType === "linkNodes") {
+				this.createDecorations(command.data.linkIds[0]);
+			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
 
@@ -146,6 +198,24 @@ export default class DetachedCanvas extends React.Component {
 		const linkLabel = "link " + linkId.substring(0, 2);
 		const decs = this.getDecorationsArray(linkLabel);
 		this.canvasController.setLinkDecorations(linkId, decs);
+	}
+
+	addNewPortWithMaxCardOfOne(node, pipelineId) {
+		const newPort = this.createNewPortWithMaxCardOfOne();
+		node.outputs.push(newPort);
+		this.canvasController.setNodeOutputPorts(node.id, node.outputs, pipelineId);
+	}
+
+	createNewPortWithMaxCardOfOne() {
+		const portId = uuid4();
+		return {
+			"id": portId,
+			"cardinality": {
+				"min": 0,
+				"max": 1
+			},
+			"label": "Output Port - " + portId.substring(0, 5)
+		};
 	}
 
 	render() {
