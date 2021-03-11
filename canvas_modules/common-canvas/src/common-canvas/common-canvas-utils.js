@@ -336,13 +336,14 @@ export default class CanvasUtils {
 
 	// Returns true if an existing link to the target node and port can be
 	// replaced with a new link from the srcNode to the trgNode and trgPortId.
-
 	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 
 		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
 			return false;
 		}
 
+		// Link replacement is only allowed when the input port has a maximum
+		// cardinality of one.
 		if (this.getMaxCardinality(trgNodePortId, trgNode.inputs) !== 1) {
 			return false;
 		}
@@ -405,26 +406,33 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
-			return false;
-		}
+		// We don't check if the association link alrady exists because it makes
+		// sense for some applications that multiple connctions bewteen nodes are
+		// allowed. Uncomment this code if we decide to add a config variable
+		// to allow this in the future.
+		// if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
+		// 	return false;
+		// }
 
 		return true;
 	}
 
+	// Note - Uncomment this function if in the future we decide to enfore
+	// preventing multiple association links to be created by providing a config
+	// variable..
 	// Returns true if an association link already exists between the two nodes
 	// passed in given the set of links passed in.
-	static assocLinkAlreadyExists(srcNode, trgNode, links) {
-		let exists = false;
-
-		links.forEach((link) => {
-			if ((link.srcNodeId === srcNode.id && link.trgNodeId === trgNode.id) ||
-					(link.srcNodeId === trgNode.id && link.trgNodeId === srcNode.id)) {
-				exists = true;
-			}
-		});
-		return exists;
-	}
+	// static assocLinkAlreadyExists(srcNode, trgNode, links) {
+	// 	let exists = false;
+	//
+	// 	links.forEach((link) => {
+	// 		if ((link.srcNodeId === srcNode.id && link.trgNodeId === trgNode.id) ||
+	// 				(link.srcNodeId === trgNode.id && link.trgNodeId === srcNode.id)) {
+	// 			exists = true;
+	// 		}
+	// 	});
+	// 	return exists;
+	// }
 
 	// Returns true if a link already exists from the source node and port to
 	// the target node and port passed in given the set of links passd in.
