@@ -233,10 +233,10 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect allows enum label different from enum value", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
@@ -245,10 +245,10 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect allows enum label to be created for an enum value with space", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
@@ -270,6 +270,18 @@ describe("oneofselect paramDef works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("cat");
 		dropdownSelect.simulate("change", { target: { value: "horse" } });
 		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("horse");
+	});
+
+	it("oneofselect control should have aria-label", () => {
+		// Dropdown should have aria-label
+		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
+		const dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect*");
+
+		// combobox should have aria-label
+		const comboboxWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_custom_value']");
+		const comboboxAriaLabelledby = comboboxWrapper.find(".bx--text-input").prop("aria-labelledby");
+		expect(comboboxWrapper.find(`#${comboboxAriaLabelledby}`).text()).to.equal("oneofselect custom value allowed*");
 	});
 });
 
