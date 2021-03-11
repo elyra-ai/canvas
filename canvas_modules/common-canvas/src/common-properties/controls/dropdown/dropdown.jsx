@@ -219,6 +219,7 @@ class DropDown extends React.Component {
 				onInputChange={this.handleOnInputChange}
 				light
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+				titleText={this.props.controlItem}
 			/>);
 		} else {
 			dropdownComponent = (<Dropdown
@@ -231,6 +232,7 @@ class DropDown extends React.Component {
 				label={this.emptyLabel}
 				light
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+				titleText={this.props.controlItem}
 			/>);
 		}
 
@@ -249,6 +251,7 @@ DropDown.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	controlOpts: PropTypes.oneOfType([
 		PropTypes.object,

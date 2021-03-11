@@ -33,7 +33,7 @@ describe("dm condition operators work correctly", () => {
 	});
 	it("checkbox control become enabled if selected item has a dmType equal to string", () => {
 		expect(controller.getControlState({ name: "checkbox" })).to.equal("disabled");
-		const dropDown = wrapper.find("div[data-id='properties-ci-dmTypeEqualList']");
+		const dropDown = wrapper.find("div[data-id='properties-ctrl-dmTypeEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
@@ -46,7 +46,7 @@ describe("dm condition operators work correctly", () => {
 
 	it("checkbox control become visible if selected item does not have a dmType equal to string", () => {
 		expect(controller.getControlState({ name: "checkbox1" })).to.equal("hidden");
-		const dropDown = wrapper.find("div[data-id='properties-ci-dmTypeNotEqualList']");
+		const dropDown = wrapper.find("div[data-id='properties-ctrl-dmTypeNotEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
@@ -58,7 +58,7 @@ describe("dm condition operators work correctly", () => {
 
 	it("checkbox control becomes enabled if selected item has a dmRole equal to input", () => {
 		expect(controller.getControlState({ name: "checkbox2" })).to.equal("disabled");
-		const dropDown = wrapper.find("div[data-id='properties-ci-dmRoleEqualList']");
+		const dropDown = wrapper.find("div[data-id='properties-ctrl-dmRoleEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");
@@ -70,7 +70,7 @@ describe("dm condition operators work correctly", () => {
 
 	it("checkbox control become visible if selected item does not have a dmRole equal to input", () => {
 		expect(controller.getControlState({ name: "checkbox3" })).to.equal("hidden");
-		const dropDown = wrapper.find("div[data-id='properties-ci-dmRoleNotEqualList']");
+		const dropDown = wrapper.find("div[data-id='properties-ctrl-dmRoleNotEqualList']");
 		const dropdownButton = dropDown.find("button").at(0);
 		dropdownButton.simulate("click");
 		const dropdownList = wrapper.find("div.bx--list-box__menu-item");

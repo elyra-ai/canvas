@@ -276,7 +276,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 		structureKeys.push(control.name);
 	});
 
-	if (isList) {
+	if (isList && currentValues && Array.isArray(currentValues)) {
 		const convertedValues = [];
 		currentValues.forEach((row, idx) => {
 			if (convert) { // this control needs to be converted, convert all values in this row and determine if there are nested structures to be converted
@@ -309,7 +309,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 
 	const converted = {};
 	structureKeys.forEach((key, index) => {
-		converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
+		converted[key] = currentValues && typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
 	});
 	return converted;
 }

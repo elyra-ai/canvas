@@ -507,9 +507,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-function-select">
-				<div className="properties-expression-table-dropdown-header">
-					{header}
-				</div>
 				<Dropdown
 					id={"properties-expression-function-select-dropdown-" + uuid4()}
 					light
@@ -517,6 +514,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					items={items}
 					onChange={this.onFunctionCatChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={header}
 				/>
 			</div>);
 	}
@@ -538,9 +536,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-field-select">
-				<div className="properties-expression-table-dropdown-header">
-					{header}
-				</div>
 				<Dropdown
 					id={"properties-expression-field-select-dropdown-" + uuid4()}
 					light
@@ -548,6 +543,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					items={newItems}
 					onChange={this.onFieldCatChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={header}
 				/>
 			</div>);
 	}
