@@ -1373,10 +1373,10 @@ describe("structuretable control with nested structure tables", () => {
 		expect(editButtons).to.have.length(2);
 		editButton = editButtons.at(1);
 		editButton.simulate("click");
-		const dropdownButton = wrapper.find("div[data-id='properties-ci-nestedStructure_table_data_type'] button");
+		const dropdownButton = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_data_type'] button");
 		dropdownButton.simulate("click");
 		// select the fourth item
-		const dropdownWrapper = wrapper.find("div[data-id='properties-ci-nestedStructure_table_data_type']");
+		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-nestedStructure_table_data_type']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(5);
 		dropdownList.at(3).simulate("click");

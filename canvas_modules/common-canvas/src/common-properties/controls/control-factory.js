@@ -70,7 +70,11 @@ const accessibleControls = [
 	ControlType.READONLYTABLE,
 	ControlType.TIMESTAMP,
 	ControlType.EXPRESSION,
-	ControlType.CODE
+	ControlType.CODE,
+	ControlType.ONEOFSELECT,
+	ControlType.MULTISELECT,
+	ControlType.SELECTSCHEMA,
+	ControlType.SELECTCOLUMN
 ];
 
 export default class ControlFactory {

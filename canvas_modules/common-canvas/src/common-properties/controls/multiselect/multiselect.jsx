@@ -99,6 +99,7 @@ class MultiSelectControl extends React.Component {
 				initialSelectedItems={multiSelectDropdown.selectedOptions}
 				onChange={this.handleOnChange}
 				placeholder={label}
+				titleText={this.props.tableControl ? null : this.props.controlItem}
 				light
 			/>);
 		} else {
@@ -110,6 +111,7 @@ class MultiSelectControl extends React.Component {
 				initialSelectedItems={multiSelectDropdown.selectedOptions}
 				onChange={this.handleOnChange}
 				label={label}
+				titleText={this.props.tableControl ? null : this.props.controlItem}
 				light
 			/>);
 		}
@@ -129,6 +131,7 @@ MultiSelectControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	controlOpts: PropTypes.object, // pass in by redux
 	state: PropTypes.string, // pass in by redux

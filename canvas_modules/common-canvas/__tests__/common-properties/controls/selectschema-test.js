@@ -131,6 +131,12 @@ describe("selectschema works correctly in common-properties", () => {
 		dropdownList.at(0).simulate("click");
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
 	});
+	it("selectschema control should have aria-label", () => {
+		const dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
+		const dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema*");
+
+	});
 });
 
 describe("selectschema classnames appear correctly", () => {
