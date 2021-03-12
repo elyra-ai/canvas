@@ -38,8 +38,17 @@ export default class MoveableTableRows extends React.Component {
 	getTableRowMoveImages() {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
-		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
+		const propertyId = this.props.propertyId.name;
+		const topEnabled = (
+			!this.props.controller.disableMoveRowButtons[propertyId] &&
+			(selected.length !== 0 && selected[0] !== 0) &&
+			!this.props.disabled
+		);
+		const bottomEnabled = (
+			!this.props.controller.disableMoveRowButtons[propertyId] &&
+			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
+			!this.props.disabled
+		);
 
 		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
 		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);

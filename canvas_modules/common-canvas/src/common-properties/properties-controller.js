@@ -65,6 +65,7 @@ export default class PropertiesController {
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
 		this.selectionListeners = {};
+		this.disableMoveRowButtons = {};
 	}
 
 	getStore() {
@@ -754,6 +755,21 @@ export default class PropertiesController {
 	clearSelectedRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearSelectedRows(propertyId);
+	}
+
+	/**
+	 * Enable/disable table row move buttons
+	 * enableTableRowMoveButtons() doesn't enable all the buttons. Buttons will be enabled based on row selection
+	 * @param propertyId Id of the property for the control to operate upon
+	 *
+	 */
+	disableTableRowMoveButtons(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.disableMoveRowButtons[propertyId.name] = true;
+	}
+	enableTableRowMoveButtons(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.disableMoveRowButtons[propertyId.name] = false;
 	}
 
 	//
