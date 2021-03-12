@@ -23,6 +23,7 @@ import setExpressionInfo from "./controls/expression/expressionInfo-parser.js";
 import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
 import * as conditionsUtil from "./ui-conditions/conditions-utils";
 import * as PropertyUtils from "./util/property-utils.js";
+import { getDataId } from "./util/control-utils";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
@@ -763,13 +764,13 @@ export default class PropertiesController {
 	 * @param propertyId Id of the property for the control to operate upon
 	 *
 	 */
-	disableTableRowMoveButtons(inPropertyId) {
-		const propertyId = this.convertPropertyId(inPropertyId);
-		this.disableMoveRowButtons[propertyId.name] = true;
+	disableTableRowMoveButtons(propertyId) {
+		const dataId = getDataId(propertyId);
+		this.disableMoveRowButtons[dataId] = true;
 	}
-	enableTableRowMoveButtons(inPropertyId) {
-		const propertyId = this.convertPropertyId(inPropertyId);
-		this.disableMoveRowButtons[propertyId.name] = false;
+	enableTableRowMoveButtons(propertyId) {
+		const dataId = getDataId(propertyId);
+		this.disableMoveRowButtons[dataId] = false;
 	}
 
 	//

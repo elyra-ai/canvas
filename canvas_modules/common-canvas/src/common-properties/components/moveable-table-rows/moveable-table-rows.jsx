@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 import { formatMessage } from "./../../util/property-utils";
+import { getDataId } from "./../../util/control-utils";
 import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";
 
@@ -38,14 +39,14 @@ export default class MoveableTableRows extends React.Component {
 	getTableRowMoveImages() {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const propertyId = this.props.propertyId.name;
+		const dataId = getDataId(this.props.propertyId);
 		const topEnabled = (
-			!this.props.controller.disableMoveRowButtons[propertyId] &&
+			!this.props.controller.disableMoveRowButtons[dataId] &&
 			(selected.length !== 0 && selected[0] !== 0) &&
 			!this.props.disabled
 		);
 		const bottomEnabled = (
-			!this.props.controller.disableMoveRowButtons[propertyId] &&
+			!this.props.controller.disableMoveRowButtons[dataId] &&
 			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
 			!this.props.disabled
 		);
