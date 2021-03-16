@@ -960,36 +960,51 @@ export default class SVGCanvasRenderer {
 				this.setNodeDragOverLinkHighlighting(this.dragOverLink, true);
 
 			} else if (link.id !== this.dragOverLink.id) {
-				this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
+				this.unsetInsertNodeIntoLinkHighlighting();
 				this.dragOverLink = link;
 				this.setNodeDragOverLinkHighlighting(this.dragOverLink, true);
 			}
 		} else {
 			if (this.dragOverLink) {
-				this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
-				this.dragOverLink = null;
+				this.unsetInsertNodeIntoLinkHighlighting();
 			}
 		}
 	}
 
-	// Switches on or off data link highlighting depending on the link element
+	// Switchs off the data link highlighting caused when an insertable
+	// node is dragged over a link (which joins two nodes together)
+	// which is enabled when 'enableInsertNodeDroppedOnLink' is true.
+	unsetInsertNodeIntoLinkHighlighting(link) {
+		if (this.dragOverLink) {
+			this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
+			this.dragOverLink = null;
+		}
+	}
+
+	// Switches on or off data link highlighting depending on the link array
 	// passed in and keeps track of the currently highlighted links. This is
 	// called when a node is dragged from the palette or the canvas over a
-	// fully or partially detached link This bheavior is enabled when
+	// fully or partially detached link This beheavior is enabled when
 	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
 	setDetachedLinkHighlighting(links) {
 		if (links && links.length > 0) {
-			this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
+			this.unsetDetachedLinkHighlighting();
 			this.dragOverDetachedLinks = links;
 			this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, true));
 
 		} else {
 			if (this.dragOverDetachedLinks.length > 0) {
-				this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
-				this.dragOverDetachedLinks = [];
-				this.dragPointerOffsetInNode = null;
+				this.unsetDetachedLinkHighlighting();
 			}
 		}
+	}
+
+	// Switchs off the link highlighting when a node is dragged over a fully or
+	// partially detached link. This beheavior is enabled when
+	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
+	unsetDetachedLinkHighlighting() {
+		this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
+		this.dragOverDetachedLinks = [];
 	}
 
 	// Switches on or off the drop-node highlighting on the link passed in.
@@ -1083,18 +1098,15 @@ export default class SVGCanvasRenderer {
 
 		// If the node template was dropped on a link
 		if (this.dragOverLink) {
-			this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
 			this.canvasController.createNodeFromTemplateOnLinkAt(
 				nodeTemplate, this.dragOverLink, transPos, this.pipelineId);
-			this.dragOverLink = null;
+			this.unsetInsertNodeIntoLinkHighlighting();
 
 		// If the node template was dropped on one or more detached links.
 		} else if (this.dragOverDetachedLinks.length > 0) {
-			this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
 			this.canvasController.createNodeFromTemplateAttachLinks(
 				nodeTemplate, this.dragOverDetachedLinks, transPos, this.pipelineId);
-			this.dragOverDetachedLinks = [];
-			this.dragPointerOffsetInNode = null;
+			this.unsetDetachedLinkHighlighting();
 
 		// If the node template was dropped on the canvas.
 		} else {
@@ -2239,21 +2251,6 @@ export default class SVGCanvasRenderer {
 			// Set to false before updating object model so main body of displayNodes is run.
 			this.dragging = false;
 
-			// If we are dragging an 'insertable' or 'attachable' node switch the translucent state off.
-			if (this.isExistingNodeInsertableIntoLink()) {
-				this.setNodeTranslucentState(this.dragObjects[0].id, false);
-				if (this.dragOverLink) {
-					this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
-				}
-			}
-
-			if (this.isExistingNodeAttachableToDetachedLinks()) {
-				this.setNodeTranslucentState(this.dragObjects[0].id, false);
-				if (this.dragOverDetachedLinks.length > 0) {
-					this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
-				}
-			}
-
 			// If the pointer hasn't moved and enableDragWithoutSelect we interpret
 			// that as a select on the object.
 			if (this.dragOffsetX === 0 &&
@@ -2306,10 +2303,11 @@ export default class SVGCanvasRenderer {
 				}
 			}
 		}
-		// Ensure we reset all the drag link variables after performing edit action.
-		this.dragOverLink = null;
-		this.dragOverDetachedLinks = [];
-		this.dragPointerOffsetInNode = null;
+
+		// Switch of any drag highlighting
+		this.setNodeTranslucentState(this.dragObjects[0].id, false);
+		this.unsetInsertNodeIntoLinkHighlighting();
+		this.unsetDetachedLinkHighlighting();
 
 		this.logger.logEndTimer("dragEnd", true);
 	}
@@ -6290,7 +6288,7 @@ export default class SVGCanvasRenderer {
 	// the side of the node and where those nodes may be positioned close to each
 	// other so it makes the ports appear on top of any adjacent node.
 	raiseNodeToTop(nodeGrp) {
-		if (this.drawingNewLinkData === null && !this.dragging) {
+		if (this.drawingNewLinkData === null && !this.dragging && this.getSelectedLinks().length === 0) {
 			nodeGrp.raise();
 		}
 	}
@@ -6740,6 +6738,16 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.comments.forEach((comment) => {
 			if (this.objectModel.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
+			}
+		});
+		return objs;
+	}
+
+	getSelectedLinks() {
+		var objs = [];
+		this.activePipeline.links.forEach((link) => {
+			if (this.objectModel.getSelectedObjectIds().includes(link.id)) {
+				objs.push(link);
 			}
 		});
 		return objs;
