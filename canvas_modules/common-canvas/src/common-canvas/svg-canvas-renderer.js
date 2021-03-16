@@ -2302,12 +2302,12 @@ export default class SVGCanvasRenderer {
 					}
 				}
 			}
-		}
 
-		// Switch of any drag highlighting
-		this.setNodeTranslucentState(this.dragObjects[0].id, false);
-		this.unsetInsertNodeIntoLinkHighlighting();
-		this.unsetDetachedLinkHighlighting();
+			// Switch of any drag highlighting
+			this.setNodeTranslucentState(this.dragObjects[0].id, false);
+			this.unsetInsertNodeIntoLinkHighlighting();
+			this.unsetDetachedLinkHighlighting();
+		}
 
 		this.logger.logEndTimer("dragEnd", true);
 	}
