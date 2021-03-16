@@ -256,6 +256,9 @@ $new-halo-link-color: $ui-05;
 .d3-node-label {
 	@include d3-node-label-mixin;
 	border-width: $node-label-display-border;
+	/* Prevent node label text from being highlighted */
+	user-select: none;
+
 
 	& span {
 		pointer-events: auto; /* Override the pointer-events: none on the foreignObject and div */
