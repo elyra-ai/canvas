@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
 import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
@@ -24,7 +25,7 @@ import classNames from "classnames";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
 
-export default class MoveableTableRows extends React.Component {
+class MoveableTableRows extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -39,14 +40,17 @@ export default class MoveableTableRows extends React.Component {
 	getTableRowMoveImages() {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort();
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const dataId = getDataId(this.props.propertyId);
+		// Check if the row move buttons should be disabled for propertyId
+		const index = Array.isArray(this.props.disableRowMoveButtonsForPropertyIds)
+			? this.props.disableRowMoveButtonsForPropertyIds.findIndex((propertyId) => getDataId(propertyId) === getDataId(this.props.propertyId))
+			: -1;
 		const topEnabled = (
-			!this.props.controller.disableMoveRowButtons[dataId] &&
+			!(index !== -1) &&
 			(selected.length !== 0 && selected[0] !== 0) &&
 			!this.props.disabled
 		);
 		const bottomEnabled = (
-			!this.props.controller.disableMoveRowButtons[dataId] &&
+			!(index !== -1) &&
 			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
 			!this.props.disabled
 		);
@@ -240,5 +244,13 @@ MoveableTableRows.propTypes = {
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	disableRowMoveButtonsForPropertyIds: PropTypes.array // set by redux
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	// Array of propertyIds - propertyId used for disabling row move buttons
+	disableRowMoveButtonsForPropertyIds: state.disableRowMoveButtonsReducer.propertyIdArray
+});
+
+export default connect(mapStateToProps)(MoveableTableRows);

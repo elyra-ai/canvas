@@ -187,6 +187,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -203,6 +204,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -220,6 +222,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([0]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -247,6 +250,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([0]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -276,6 +280,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([rows.length - 1]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -302,6 +307,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([rows.length - 1]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -330,6 +336,7 @@ describe("MoveableTableRows renders correctly", () => {
 		setControlValues([2]);
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}
@@ -347,6 +354,7 @@ describe("MoveableTableRows renders correctly", () => {
 	it("Table should have presentation role", () => {
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
+				store={controller.getStore()}
 				tableContainer={content}
 				control={control}
 				controller={controller}

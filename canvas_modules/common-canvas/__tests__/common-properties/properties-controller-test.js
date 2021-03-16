@@ -1536,23 +1536,6 @@ describe("Properties Controller row selection methods", () => {
 		expect(structuretableSelections[0]).to.equal(2);
 		expect(structuretableSelections[1]).to.equal(4);
 	});
-
-	it("should enable/disable move row buttons for given propertyId", () => {
-		reset();
-		const propertyId = {
-			name: "control"
-		};
-		expect(JSON.stringify(controller.disableMoveRowButtons)).to.equal(JSON.stringify({}));
-
-		// Verify move row buttons can be disabled
-		controller.disableTableRowMoveButtons(propertyId);
-		expect(controller.disableMoveRowButtons[propertyId.name]).to.equal(true);
-
-		// Verify move row buttons can be enabled
-		controller.enableTableRowMoveButtons(propertyId);
-		expect(controller.disableMoveRowButtons[propertyId.name]).to.equal(false);
-	});
-
 });
 
 describe("Properties Controller action methods", () => {

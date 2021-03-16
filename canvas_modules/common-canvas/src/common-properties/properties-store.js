@@ -22,7 +22,7 @@ import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
 import { setActionStates, updateActionState } from "./actions";
 
-import { clearSelectedRows, updateSelectedRows } from "./actions";
+import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 import { updateExpressionValidate } from "./actions";
 
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
@@ -36,6 +36,7 @@ import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
+import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
 import * as PropertyUtils from "./util/property-utils.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
@@ -44,7 +45,7 @@ import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
-			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer, actionStatesReducer });
+			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer, disableRowMoveButtonsReducer, actionStatesReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -372,6 +373,14 @@ export default class PropertiesStore {
 
 	clearSelectedRows(propertyId) {
 		this.store.dispatch(clearSelectedRows({ propertyId: propertyId }));
+	}
+
+	/**
+	 * Disable table row move buttons for all propertyIds in given array
+	 * @param propertyIdArray Array of propertyIds
+	 */
+	disableRowMoveButtons(propertyIdArray) {
+		this.store.dispatch(disableRowMoveButtons(propertyIdArray));
 	}
 
 	/*
