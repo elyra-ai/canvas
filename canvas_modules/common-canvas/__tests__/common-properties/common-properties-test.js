@@ -691,11 +691,17 @@ describe("CommonProperties should setForm correctly", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef); // default is applyOnBlur=true
 		const controller = renderedObject.controller;
 		const internalFormat = controller.getPropertyValue({ name: "structurelisteditorObjectType" });
-		const expected = [[1, "Hello", "World", "string", "Readonly phrase"]];
+		const expected = [[1, "Hello", "World", "string", "Readonly phrase"], [null, null, null, "number", null], [null, null, null, null, null]];
 		expect(internalFormat).to.eql(expected);
 
 		// Verify internal format gets returned correctly as array of objects
 		const originalFormat = structureListEditorParamDef.current_parameters.structurelisteditorObjectType;
+		// Default values will be returned as well for columns that didnt have values specified
+		originalFormat[1].description = null;
+		originalFormat[1].name = null;
+		originalFormat[1].readonly = null;
+		originalFormat[1].readonly_numbered_column_index = null;
+
 		const objectFormat = controller.getPropertyValue({ name: "structurelisteditorObjectType" }, { applyProperties: true });
 		expect(objectFormat).to.eql(originalFormat);
 	});
@@ -705,11 +711,17 @@ describe("CommonProperties should setForm correctly", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef); // default is applyOnBlur=true
 		const controller = renderedObject.controller;
 		const internalFormat = controller.getPropertyValues().structurelisteditorObjectType;
-		const expected = [[1, "Hello", "World", "string", "Readonly phrase"]];
+		const expected = [[1, "Hello", "World", "string", "Readonly phrase"], [null, null, null, "number", null], [null, null, null, null, null]];
 		expect(internalFormat).to.eql(expected);
 
 		// Verify internal format gets returned correctly as array of objects
 		const originalFormat = structureListEditorParamDef.current_parameters.structurelisteditorObjectType;
+		// Default values will be returned as well for columns that didnt have values specified
+		originalFormat[1].description = null;
+		originalFormat[1].name = null;
+		originalFormat[1].readonly = null;
+		originalFormat[1].readonly_numbered_column_index = null;
+
 		const objectFormat = controller.getPropertyValues({ applyProperties: true }).structurelisteditorObjectType;
 		expect(objectFormat).to.eql(originalFormat);
 	});
