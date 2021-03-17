@@ -965,9 +965,7 @@ export default class SVGCanvasRenderer {
 				this.setNodeDragOverLinkHighlighting(this.dragOverLink, true);
 			}
 		} else {
-			if (this.dragOverLink) {
-				this.unsetInsertNodeIntoLinkHighlighting();
-			}
+			this.unsetInsertNodeIntoLinkHighlighting();
 		}
 	}
 
