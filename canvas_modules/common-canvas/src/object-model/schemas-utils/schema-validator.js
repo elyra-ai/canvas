@@ -39,9 +39,6 @@ const logger = new Logger("SchemaValidator");
 var SchemaValidator = require("jsonschema").Validator;
 
 function validatePipelineFlowAgainstSchema(pipelineFlow, version) {
-	if (pipelineFlow.json_schema && pipelineFlow.json_schema.startsWith("http:")) {
-		pipelineFlow.json_schema = "https:" + pipelineFlow.json_schema.substring(5);
-	}
 	switch (version) {
 	case 1: {
 		const validator1 = getV1Validator();
