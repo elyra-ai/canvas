@@ -191,7 +191,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 		cy.wait(1500);
 
 		// Check new position of node.
-		cy.verifyZoomTransform(104, 141, 1.21);
+		cy.verifyZoomTransform(102, 141, 1.21);
 	});
 });
 
