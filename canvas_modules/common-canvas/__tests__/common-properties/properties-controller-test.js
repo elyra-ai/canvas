@@ -1536,6 +1536,7 @@ describe("Properties Controller row selection methods", () => {
 		expect(structuretableSelections[0]).to.equal(2);
 		expect(structuretableSelections[1]).to.equal(4);
 	});
+
 });
 
 describe("Properties Controller action methods", () => {

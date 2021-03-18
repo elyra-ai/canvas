@@ -351,6 +351,40 @@ describe("MoveableTableRows renders correctly", () => {
 		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(4);
 	});
 
+	it("should disable move buttons for all propertyIds passed in controller method ", () => {
+		// By default when middle row is selected, all move buttons are enabled
+		setControlValues([2]);
+		const wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate all move buttons are enabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(4);
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(0);
+
+		// Disable move buttons for given propertyId
+		const propertyIds = [propertyId];
+		controller.setDisableRowMoveButtons(propertyIds);
+		// Verify propertyIds are correctly set in the redux
+		expect(controller.getDisableRowMoveButtons()).to.equal(propertyIds);
+		expect(controller.checkIfDisableRowMoveButtons(propertyId)).to.equal(true);
+
+		// Validate all move buttons are disabled
+		wrapper.update();
+		const buttonContainerUpdated = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainerUpdated.find("button.table-row-move-button[disabled=false]")).to.have.length(0);
+		expect(buttonContainerUpdated.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
+
+	});
+
 	it("Table should have presentation role", () => {
 		const wrapper = mountWithIntl(
 			<MoveableTableRows
