@@ -44,7 +44,7 @@ export default class CanvasInHandler {
 		return {
 			doc_type: "pipeline",
 			version: "3.0",
-			json_schema: "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+			json_schema: "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
 			id: canvas.id,
 			primary_pipeline: canvas.diagram.id,
 			pipelines: [canvasInfoPipeline]
