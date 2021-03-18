@@ -20,7 +20,7 @@ function disableRowMoveButtons(state = [], action) {
 	switch (action.type) {
 	case DISABLE_ROW_MOVE_BUTTONS: {
 		const newState = state;
-		newState.propertyIdArray = action.propertyIdArray;
+		newState.propertyIds = action.propertyIds;
 		return Object.assign({}, state, newState);
 	}
 	default:

@@ -116,6 +116,6 @@ export function setActiveTab(activeTab) {
 	return { type: SET_ACTIVE_TAB, activeTab };
 }
 
-export function disableRowMoveButtons(propertyIdArray) {
-	return { type: DISABLE_ROW_MOVE_BUTTONS, propertyIdArray };
+export function disableRowMoveButtons(propertyIds) {
+	return { type: DISABLE_ROW_MOVE_BUTTONS, propertyIds };
 }

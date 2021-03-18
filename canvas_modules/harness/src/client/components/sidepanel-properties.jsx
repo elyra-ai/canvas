@@ -176,10 +176,10 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	disableRowMoveButtons(fieldName, evt) {
-		let propertyIdArray;
+		let propertyIds;
 		try {
-			propertyIdArray = JSON.parse(evt.target.value);
-			this.props.propertiesConfig.disableRowMoveButtons(propertyIdArray);
+			propertyIds = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.disableRowMoveButtons(propertyIds);
 			this.setState({ invalidPropertyId: false });
 		} catch (ex) {
 			this.setState({ invalidPropertyId: true });

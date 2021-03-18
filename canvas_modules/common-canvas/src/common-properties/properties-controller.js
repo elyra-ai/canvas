@@ -23,6 +23,7 @@ import setExpressionInfo from "./controls/expression/expressionInfo-parser.js";
 import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
 import * as conditionsUtil from "./ui-conditions/conditions-utils";
 import * as PropertyUtils from "./util/property-utils.js";
+import { getDataId } from "./util/control-utils";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
@@ -758,11 +759,36 @@ export default class PropertiesController {
 
 	/**
 	 * Disable table row move buttons for all propertyIds in given array
-	 * @param propertyIdArray Array of propertyIds
+	 * @param propertyIds Array of propertyIds
 	 *
 	 */
-	disableRowMoveButtons(propertyIdArray) {
-		this.propertiesStore.disableRowMoveButtons(propertyIdArray);
+	setDisableRowMoveButtons(propertyIds) {
+		// Verify that input is an array of objects
+		if (Array.isArray(propertyIds)) {
+			this.propertiesStore.setDisableRowMoveButtons(propertyIds);
+		}
+	}
+
+	/**
+	* Returns array of propertyIds for which row move buttons will be disabled
+	*	@return Array of propertyIds
+	*/
+	getDisableRowMoveButtons() {
+		return this.propertiesStore.getDisableRowMoveButtons();
+	}
+
+	/**
+	 * Check if row move buttons should be disabled for given propertyId
+	 * @param propertyId  The unique property identifier
+	 * @return boolean
+	 */
+	checkIfDisableRowMoveButtons(propertyId) {
+		const propertyIds = this.getDisableRowMoveButtons();
+		return (
+			Array.isArray(propertyIds)
+				? propertyIds.some((el) => getDataId(el) === getDataId(propertyId))
+				: false
+		);
 	}
 
 	//

@@ -377,10 +377,15 @@ export default class PropertiesStore {
 
 	/**
 	 * Disable table row move buttons for all propertyIds in given array
-	 * @param propertyIdArray Array of propertyIds
+	 * @param propertyIds Array of propertyIds
 	 */
-	disableRowMoveButtons(propertyIdArray) {
-		this.store.dispatch(disableRowMoveButtons(propertyIdArray));
+	setDisableRowMoveButtons(propertyIds) {
+		this.store.dispatch(disableRowMoveButtons(propertyIds));
+	}
+
+	getDisableRowMoveButtons() {
+		const state = this.store.getState();
+		return state.disableRowMoveButtonsReducer.propertyIds;
 	}
 
 	/*

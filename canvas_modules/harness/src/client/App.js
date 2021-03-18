@@ -1051,9 +1051,9 @@ class App extends React.Component {
 		this.log("set editor size ", editorSize);
 	}
 
-	disableRowMoveButtons(propertyIdArray) {
+	disableRowMoveButtons(propertyIds) {
 		if (this.propertiesController) {
-			this.propertiesController.disableRowMoveButtons(propertyIdArray);
+			this.propertiesController.setDisableRowMoveButtons(propertyIds);
 		}
 	}
 
