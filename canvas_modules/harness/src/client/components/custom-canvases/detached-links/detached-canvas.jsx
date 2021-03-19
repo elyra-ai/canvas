@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas";
 
 import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./MVPPalette.json";
+import DetachedPalette from "./detachedPalette.json";
 
 
 export default class DetachedCanvas extends React.Component {
