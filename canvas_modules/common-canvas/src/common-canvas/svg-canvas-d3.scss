@@ -264,7 +264,7 @@ $new-halo-link-color: $ui-05;
 .d3-node-label {
 	@include d3-node-label-mixin;
 	border-width: $node-label-display-border;
-	/* Prevent node label text being highlightd on double click etc */
+	/* Prevent node label text being highlighted on double click etc */
 	user-select: none;
 
 	& span {
