@@ -100,9 +100,21 @@ function openSummaryPanel(wrapper, panelId) {
 	return wrapper.find("div.properties-wf-content.show");
 }
 
+function getParameterFromParamDef(parameterId, paramDef) {
+	const parameters = paramDef.parameters;
+	let parameterFound = null;
+	parameters.forEach((parameter) => {
+		if (parameter.id === parameterId) {
+			parameterFound = parameter;
+		}
+	});
+	return parameterFound;
+}
+
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
 	setControls: setControls,
 	genLongString: genLongString,
-	openSummaryPanel: openSummaryPanel
+	openSummaryPanel: openSummaryPanel,
+	getParameterFromParamDef: getParameterFromParamDef
 };
