@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32.2 32.2"
+   x="0"
+   y="0"
+   height="50"
+   width="50"
+   version="1.1"
+   id="svg563"
+   sodipodi:docname="PxInformixXPS.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata567">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>PxInformixXPS</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="837"
+     id="namedview565"
+     showgrid="false"
+     inkscape:zoom="2.36"
+     inkscape:cx="25"
+     inkscape:cy="25"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg563" />
+  <defs
+     id="defs537">
+    <style
+       id="style535">.a{fill:#07bca9;}.b{fill:#fff;}</style>
+  </defs>
+  <title
+     id="title539">PxInformixXPS</title>
+  <rect
+     class="a"
+     width="32.2"
+     height="32.23"
+     id="rect541" />
+  <path
+     class="b"
+     d="M16.2,5.1c3.4,0,6.1,1.1,6.1,2.3s-2.7,2.4-6.1,2.4S10,8.7,10,7.4s2.8-2.3,6.2-2.3m0-1.3C12.6,3.8,8.7,5,8.7,7.4s3.9,3.7,7.5,3.7,7.4-1.2,7.4-3.7-3.8-3.6-7.4-3.6Z"
+     id="path543" />
+  <path
+     class="a"
+     d="M16.1,27.1c-6.7,0-6.9-2.4-6.9-2.4V22.9c1.1.8,3.2,1.5,7,1.5s5.8-.7,7-1.5v1.9s-.3,2.3-7.1,2.3Z"
+     id="path545" />
+  <path
+     class="b"
+     d="M22.5,24v.7c-.1.5-1.5,1.8-6.4,1.8S10,25.2,9.8,24.6V24a16.3,16.3,0,0,0,6.4,1,15.4,15.4,0,0,0,6.3-1m1.3-3.1s0,2.8-7.6,2.8-7.7-2.8-7.7-2.8v3.8s0,3.1,7.6,3.1,7.7-3,7.7-3V20.9Z"
+     id="path547" />
+  <path
+     class="a"
+     d="M16.1,21.5c-6.7,0-6.9-2.4-6.9-2.5V17.2c1.1.8,3.2,1.5,7,1.5s5.6-.5,7-1.5v1.9S22.9,21.5,16.1,21.5Z"
+     id="path549" />
+  <path
+     class="b"
+     d="M22.5,18.3v.8s-.7,1.7-6.4,1.7S10,19.5,9.8,19v-.6a18.5,18.5,0,0,0,6.4,1,15.2,15.2,0,0,0,6.3-1.1m-14-3.1v3.9s0,3,7.6,3,7.7-3,7.7-3V16.8s0-.6-.3-.6l-.4.2c-.8.8-2.7,1.7-6.9,1.7-7.6,0-7.7-2.9-7.7-2.9Z"
+     id="path551" />
+  <path
+     class="a"
+     d="M16.1,15.9c-6.7,0-6.9-2.5-6.9-2.5V11.6c1.1.8,3.2,1.5,7,1.5s5.8-.7,7-1.5v1.9s-.3,2.4-7.1,2.4Z"
+     id="path553" />
+  <path
+     class="b"
+     d="M22.5,12.7v.7c-.1.5-1.5,1.8-6.4,1.8S10,13.9,9.8,13.4v-.7a16.3,16.3,0,0,0,6.4,1,15.4,15.4,0,0,0,6.3-1m1.3-3.1s0,2.8-7.6,2.8S8.5,9.6,8.5,9.6v3.8s0,3.1,7.6,3.1,7.7-3,7.7-3V9.6Z"
+     id="path555" />
+  <circle
+     class="b"
+     cx="20.9"
+     cy="22.5"
+     r="6.6"
+     id="circle557" />
+  <path
+     class="b"
+     d="M20.9,16.4a6.1,6.1,0,1,1,0,12.1,6.1,6.1,0,1,1,0-12.1m0-1h0a7,7,0,0,0-5,2,7.1,7.1,0,0,0,5,12.1,7,7,0,0,0,5-2,7.3,7.3,0,0,0,2.1-5,7.1,7.1,0,0,0-7.1-7.1Z"
+     id="path559" />
+  <rect
+     style="fill:#07bca9;fill-opacity:1;stroke-width:0.61213338"
+     id="rect569"
+     width="4.3661017"
+     height="1.2943554"
+     x="18.833899"
+     y="19.1" />
+  <rect
+     style="fill:#07bca9;fill-opacity:1;stroke-width:0.5916667"
+     id="rect571"
+     width="1.5008475"
+     height="5.8159108"
+     x="20.334747"
+     y="19.901268" />
+  <rect
+     style="fill:#07bca9;fill-opacity:1;stroke-width:0.61213338"
+     id="rect569-6"
+     width="4.3661017"
+     height="1.2943554"
+     x="18.833899"
+     y="24.799999" />
+</svg>

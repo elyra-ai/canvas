@@ -1,0 +1,1553 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "id": "Connectors",
+      "label": "Connectors",
+      "node_types": [
+        {
+          "id": "existing-asset",
+          "type": "binding",
+          "op": "existing-asset",
+          "outputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Existing asset",
+              "description": "",
+              "image": "/images/data_stage/palette/ExistingAsset.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "postgresql-amazon",
+          "type": "binding",
+          "op": "postgresql-amazon",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Amazon RDS for PostgreSQL",
+              "description": "",
+              "image": "/images/data_stage/palette/postgresql-amazon.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "RedshiftPX",
+          "type": "binding",
+          "op": "RedshiftPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Amazon Redshift",
+              "description": "",
+              "image": "/images/data_stage/palette/RedshiftPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "AmazonS3PX",
+          "type": "binding",
+          "op": "AmazonS3PX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Amazon S3",
+              "description": "",
+              "image": "/images/data_stage/palette/AmazonS3PX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "HiveConnectorPX",
+          "type": "binding",
+          "op": "HiveConnectorPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Apache Hive",
+              "description": "",
+              "image": "/images/data_stage/palette/HiveConnectorPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "cassandra",
+          "type": "binding",
+          "op": "cassandra",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Cassandra",
+              "description": "",
+              "image": "/images/data_stage/palette/cassandra.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "cloudobjectstoragePX",
+          "type": "binding",
+          "op": "cloudobjectstoragePX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Cloud Object Storage",
+              "description": "",
+              "image": "/images/data_stage/palette/cloudobjectstoragePX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxDataSet",
+          "type": "binding",
+          "op": "PxDataSet",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Data Set",
+              "description": "",
+              "image": "/images/data_stage/palette/PxDataSet.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "dvm",
+          "type": "binding",
+          "op": "dvm",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Data Virtualization Manager for z/OS",
+              "description": "",
+              "image": "/images/data_stage/palette/dvm.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "postgresql-ibmcloud",
+          "type": "binding",
+          "op": "postgresql-ibmcloud",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Databases for PostgreSQL",
+              "description": "",
+              "image": "/images/data_stage/palette/postgresql-ibmcloud.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2",
+          "type": "binding",
+          "op": "db2",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2",
+              "description": "",
+              "image": "/images/data_stage/palette/db2.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "bigsql",
+          "type": "binding",
+          "op": "bigsql",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 Big SQL",
+              "description": "",
+              "image": "/images/data_stage/palette/bigsql.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2eventstore",
+          "type": "binding",
+          "op": "db2eventstore",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 Event Store",
+              "description": "",
+              "image": "/images/data_stage/palette/db2eventstore.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2hosted",
+          "type": "binding",
+          "op": "db2hosted",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 Hosted",
+              "description": "",
+              "image": "/images/data_stage/palette/db2hosted.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2iseries",
+          "type": "binding",
+          "op": "db2iseries",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 for i",
+              "description": "",
+              "image": "/images/data_stage/palette/db2iseries.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2zos",
+          "type": "binding",
+          "op": "db2zos",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 for z/OS",
+              "description": "",
+              "image": "/images/data_stage/palette/db2zos.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "db2cloud",
+          "type": "binding",
+          "op": "db2cloud",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 on cloud",
+              "description": "",
+              "image": "/images/data_stage/palette/db2cloud.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "dashdb",
+          "type": "binding",
+          "op": "dashdb",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Db2 warehouse",
+              "description": "",
+              "image": "/images/data_stage/palette/dashdb.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "ftp",
+          "type": "binding",
+          "op": "ftp",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "FTP",
+              "description": "",
+              "image": "/images/data_stage/palette/ftp.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "bigqueryPX",
+          "type": "binding",
+          "op": "bigqueryPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Google BigQuery",
+              "description": "",
+              "image": "/images/data_stage/palette/bigqueryPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "GoogleCloudStoragePX",
+          "type": "binding",
+          "op": "GoogleCloudStoragePX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Google Cloud Storage",
+              "description": "",
+              "image": "/images/data_stage/palette/GoogleCloudStoragePX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "greenplum",
+          "type": "binding",
+          "op": "greenplum",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Greenplum",
+              "description": "",
+              "image": "/images/data_stage/palette/greenplum.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "http",
+          "type": "binding",
+          "op": "http",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "HTTP",
+              "description": "",
+              "image": "/images/data_stage/palette/http.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "informix",
+          "type": "binding",
+          "op": "informix",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Informix",
+              "description": "",
+              "image": "/images/data_stage/palette/informix.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "KafkaConnectorPX",
+          "type": "binding",
+          "op": "KafkaConnectorPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Kafka Connector",
+              "description": "",
+              "image": "/images/data_stage/palette/KafkaConnectorPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "azureblobstorage",
+          "type": "binding",
+          "op": "azureblobstorage",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Microsoft Azure Blob Storage",
+              "description": "",
+              "image": "/images/data_stage/palette/azureblobstorage.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "AzureDatalakePX",
+          "type": "binding",
+          "op": "AzureDatalakePX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Microsoft Azure Data Lake Store",
+              "description": "",
+              "image": "/images/data_stage/palette/AzureDatalakePX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "azurefilestorage",
+          "type": "binding",
+          "op": "azurefilestorage",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Microsoft Azure File Storage",
+              "description": "",
+              "image": "/images/data_stage/palette/azurefilestorage.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "netezza",
+          "type": "binding",
+          "op": "netezza",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Netezza",
+              "description": "",
+              "image": "/images/data_stage/palette/netezza.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "oracle",
+          "type": "binding",
+          "op": "oracle",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Oracle",
+              "description": "",
+              "image": "/images/data_stage/palette/oracle.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "postgresql",
+          "type": "binding",
+          "op": "postgresql",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "PostgreSQL",
+              "description": "",
+              "image": "/images/data_stage/palette/postgresql.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "SALESFORCEJCConnectorPX",
+          "type": "binding",
+          "op": "SALESFORCEJCConnectorPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Salesforce Connector",
+              "description": "",
+              "image": "/images/data_stage/palette/SALESFORCEJCConnectorPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "salesforce",
+          "type": "binding",
+          "op": "salesforce",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Salesforce.com",
+              "description": "",
+              "image": "/images/data_stage/palette/salesforce.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "SnowflakeConnectorPX",
+          "type": "binding",
+          "op": "SnowflakeConnectorPX",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Snowflake",
+              "description": "",
+              "image": "/images/data_stage/palette/SnowflakeConnectorPX.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "teradata",
+          "type": "binding",
+          "op": "teradata",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Teradata",
+              "description": "",
+              "image": "/images/data_stage/palette/teradata.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        }
+      ]
+    },
+    {
+      "id": "Stages",
+      "label": "Stages",
+      "node_types": [
+        {
+          "id": "PxAggregator",
+          "type": "execution_node",
+          "op": "PxAggregator",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Aggregator",
+              "description": "",
+              "image": "/images/data_stage/palette/PxAggregator.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": true
+        },
+        {
+          "id": "PxChecksum",
+          "type": "execution_node",
+          "op": "PxChecksum",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Checksum",
+              "description": "",
+              "image": "/images/data_stage/palette/PxChecksum.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxCompress",
+          "type": "execution_node",
+          "op": "PxCompress",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Compress",
+              "description": "",
+              "image": "/images/data_stage/palette/PxCompress.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxCopy",
+          "type": "execution_node",
+          "op": "PxCopy",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Copy",
+              "description": "",
+              "image": "/images/data_stage/palette/PxCopy.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxFilter",
+          "type": "execution_node",
+          "op": "PxFilter",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Filter",
+              "description": "",
+              "image": "/images/data_stage/palette/PxFilter.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxFunnel",
+          "type": "execution_node",
+          "op": "PxFunnel",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Funnel",
+              "description": "",
+              "image": "/images/data_stage/palette/PxFunnel.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxHead",
+          "type": "execution_node",
+          "op": "PxHead",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Head",
+              "description": "",
+              "image": "/images/data_stage/palette/PxHead.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxJoin",
+          "type": "execution_node",
+          "op": "PxJoin",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Join",
+              "description": "",
+              "image": "/images/data_stage/palette/PxJoin.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxLookup",
+          "type": "execution_node",
+          "op": "PxLookup",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Lookup",
+              "description": "",
+              "image": "/images/data_stage/palette/PxLookup.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxMerge",
+          "type": "execution_node",
+          "op": "PxMerge",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Merge",
+              "description": "",
+              "image": "/images/data_stage/palette/PxMerge.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxModify",
+          "type": "execution_node",
+          "op": "PxModify",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Modify",
+              "description": "",
+              "image": "/images/data_stage/palette/PxModify.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxPeek",
+          "type": "execution_node",
+          "op": "PxPeek",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Peek",
+              "description": "",
+              "image": "/images/data_stage/palette/PxPeek.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxRemDup",
+          "type": "execution_node",
+          "op": "PxRemDup",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Remove Duplicates",
+              "description": "",
+              "image": "/images/data_stage/palette/PxRemDup.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxRowGenerator",
+          "type": "binding",
+          "op": "PxRowGenerator",
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Row Generator",
+              "description": "",
+              "image": "/images/data_stage/palette/PxRowGenerator.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxSort",
+          "type": "execution_node",
+          "op": "PxSort",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Sort",
+              "description": "",
+              "image": "/images/data_stage/palette/PxSort.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        },
+        {
+          "id": "PxTail",
+          "type": "execution_node",
+          "op": "PxTail",
+          "inputs": [
+            {
+              "id": "input1",
+              "app_data": {
+                "ui_data": {
+                  "label": "inPort",
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "app_data": {
+                "ui_data": {
+                  "label": "outPort"
+                }
+              }
+            }
+          ],
+          "parameters": {},
+          "app_data": {
+            "ui_data": {
+              "label": "Tail",
+              "description": "",
+              "image": "/images/data_stage/palette/PxTail.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          },
+          "checkProdAllowList": false
+        }
+      ]
+    }
+  ]
+}

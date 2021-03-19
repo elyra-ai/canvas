@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg3080"
+   version="1.1"
+   width="50"
+   height="50"
+   y="0"
+   x="0"
+   viewBox="0 0 30.8 30.8">
+  <metadata
+     id="metadata3084">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>UserVariablesActivity</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3060">
+    <style
+       id="style3058">.a{fill:#1b5664;}.b{fill:#f0f0f0;}</style>
+  </defs>
+  <title
+     id="title3062">UserVariablesActivity</title>
+  <rect
+     id="rect3064"
+     height="30.82"
+     width="30.8"
+     class="a" />
+  <rect
+     y="5.1149349"
+     x="4.562963"
+     height="21.1957"
+     width="16.779928"
+     id="rect3276"
+     style="fill:#f0f0f0;fill-opacity:1;stroke-width:0.77918518" />
+  <path
+     transform="matrix(0.28989563,0,0,0.74381831,16.435572,11.778954)"
+     d="m 10.663471,23.283693 0,-18.2423555 0,-18.2423545 15.798343,9.1211778 15.798343,9.1211771 -15.798343,9.1211781 z"
+     id="path3280"
+     style="fill:#f0f0f0;fill-opacity:1;stroke-width:0.616" />
+  <rect
+     y="7.7107892"
+     x="6.7975802"
+     height="16.106838"
+     width="13.24044"
+     id="rect3276-1"
+     style="fill:#1b5664;fill-opacity:1;stroke-width:0.60336232" />
+  <path
+     transform="matrix(0.19056099,0,0,0.49590524,17.71212,13.160198)"
+     d="m 10.663471,23.283693 0,-18.2423555 0,-18.2423545 15.798343,9.1211778 15.798343,9.1211771 -15.798343,9.1211781 z"
+     id="path3280-4"
+     style="fill:#1b5664;fill-opacity:1;stroke-width:0.616" />
+  <g
+     style="display:inline"
+     id="layer8">
+    <rect
+       y="12.17905"
+       x="8.9837914"
+       height="0.87115556"
+       width="11.325023"
+       id="rect2238"
+       style="fill:#f0f0f0;fill-opacity:1;stroke-width:0.616" />
+    <rect
+       y="14.13915"
+       x="9.0926867"
+       height="0.87115556"
+       width="11.325023"
+       id="rect2238-8"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.616" />
+    <rect
+       y="16.044804"
+       x="9.0926857"
+       height="0.87115556"
+       width="11.325023"
+       id="rect2238-3"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.616" />
+    <rect
+       y="18.004902"
+       x="9.1471338"
+       height="0.87115556"
+       width="11.325023"
+       id="rect2238-6"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.616" />
+    <rect
+       transform="rotate(-90)"
+       y="8.9837914"
+       x="-18.876059"
+       height="0.87115556"
+       width="6.6970086"
+       id="rect2238-6-1"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.47369805" />
+    <rect
+       transform="rotate(-90)"
+       y="11.725403"
+       x="-18.672279"
+       height="0.87115556"
+       width="6.2350087"
+       id="rect2238-6-1-2"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.4570668" />
+    <rect
+       transform="rotate(-90)"
+       y="14.420541"
+       x="-18.668978"
+       height="0.87115556"
+       width="6.3120084"
+       id="rect2238-6-1-0"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.45988047" />
+    <rect
+       transform="rotate(-90)"
+       y="17.014757"
+       x="-18.708849"
+       height="0.87115556"
+       width="6.3312583"
+       id="rect2238-6-1-5"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.46058118" />
+    <rect
+       transform="rotate(-90)"
+       y="19.601002"
+       x="-18.876057"
+       height="0.87115556"
+       width="6.6970086"
+       id="rect2238-6-1-20"
+       style="display:inline;fill:#f0f0f0;fill-opacity:1;stroke-width:0.47369805" />
+  </g>
+</svg>

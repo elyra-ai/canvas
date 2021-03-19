@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32.2 32.2"
+   x="0"
+   y="0"
+   height="50"
+   width="50"
+   version="1.1"
+   id="svg94"
+   sodipodi:docname="PxCFF.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata98">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>PxCFF</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="837"
+     id="namedview96"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="13.36"
+     inkscape:cx="25"
+     inkscape:cy="29.071857"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg94" />
+  <defs
+     id="defs80">
+    <style
+       id="style78">.a{fill:#07bca9;}.b{fill:#f3f3f3;}.c{fill:#fff;}</style>
+  </defs>
+  <title
+     id="title82">PxCFF</title>
+  <rect
+     class="a"
+     width="32.2"
+     height="32.23"
+     id="rect84" />
+  <path
+     class="b"
+     d="M22.5,8.1,20.2,6.3,18.7,5H8.6V27.2h15V9Zm-.6,1.1H18.8V6.7Zm.6,16.7H9.7V6.3h8v4.1h4.8Z"
+     id="path86" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:8.58666666px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.64399999;"
+     x="10.942216"
+     y="14.461078"
+     id="text102"><tspan
+       sodipodi:role="line"
+       id="tspan100"
+       x="10.942216"
+       y="37.962708"
+       style="stroke-width:0.64399999;font-size:8.58666666px;fill:#ffffff;" /></text>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot106"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.66666698px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none"
+     transform="matrix(0.53631311,0,0,0.53631311,7.9164586,3.4087494)"><flowRegion
+       id="flowRegion108"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff"><rect
+         id="rect110"
+         width="38.622753"
+         height="14.670659"
+         x="4.4910178"
+         y="19.086826"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ffffff" /></flowRegion><flowPara
+       id="flowPara112">CFF</flowPara></flowRoot>  <path
+     style="fill:#f3f3f3;fill-opacity:1;stroke-width:0.0748503"
+     d="m 18.704526,29.247794 c -1.09776,-0.302732 -1.836931,-1.089241 -2.088971,-2.222753 -0.13887,-0.624548 -0.06248,-1.863772 0.146976,-2.384323 0.497609,-1.236683 1.540312,-1.873285 3.06197,-1.869428 0.778739,0.002 1.117739,0.06003 1.765304,0.302314 l 0.416183,0.155714 v 0.78055 c 0,0.429303 -0.02075,0.78055 -0.04611,0.78055 -0.02536,0 -0.207274,-0.118305 -0.404252,-0.2629 -1.352024,-0.992477 -2.808662,-0.700211 -3.24509,0.651108 -0.15167,0.469619 -0.157017,1.263371 -0.01179,1.750153 0.395856,1.326852 1.969983,1.669622 3.240944,0.705725 0.216965,-0.164546 0.410641,-0.299175 0.430389,-0.299175 0.01975,0 0.03591,0.33872 0.03591,0.752711 v 0.752712 l -0.355153,0.157101 c -0.195334,0.08641 -0.52374,0.202002 -0.729791,0.256879 -0.466237,0.124174 -1.755719,0.120137 -2.216518,-0.0069 z"
+     id="path176"
+     inkscape:connector-curvature="0"
+     transform="scale(0.644)" />
+  <path
+     style="fill:#f3f3f3;fill-opacity:1;stroke-width:0.0748503"
+     d="m 23.353293,26.062874 v -3.218563 h 2.282935 2.282934 v 0.598802 0.598802 H 26.422156 24.92515 v 0.636228 0.636228 h 1.38473 1.384731 v 0.598802 0.598802 H 26.30988 24.92515 v 1.384731 1.38473 h -0.785928 -0.785929 z"
+     id="path178"
+     inkscape:connector-curvature="0"
+     transform="scale(0.644)" />
+  <path
+     style="fill:#f3f3f3;fill-opacity:1;stroke-width:0.0748503"
+     d="m 29.116766,26.062874 v -3.218563 h 2.282935 2.282934 v 0.598802 0.598802 h -1.497006 -1.497006 v 0.636228 0.636228 h 1.38473 1.384731 v 0.598802 0.598802 h -1.384731 -1.38473 v 1.384731 1.38473 h -0.785928 -0.785929 z"
+     id="path180"
+     inkscape:connector-curvature="0"
+     transform="scale(0.644)" />
+</svg>

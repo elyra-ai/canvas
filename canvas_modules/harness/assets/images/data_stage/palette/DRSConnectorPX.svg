@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32.2 32.2"
+   x="0"
+   y="0"
+   height="50"
+   width="50"
+   version="1.1"
+   id="svg4126"
+   sodipodi:docname="DRSConnectorPX.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata4130">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>DRSConnectorPX</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="837"
+     id="namedview4128"
+     showgrid="false"
+     inkscape:zoom="9.4469466"
+     inkscape:cx="27.189371"
+     inkscape:cy="25.415502"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4126"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="16.088161,36.948235"
+       orientation="1,0"
+       id="guide44"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-22.427987,16.088161"
+       orientation="0,1"
+       id="guide46"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4118">
+    <linearGradient
+       id="linearGradient4952"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#07bca9;stop-opacity:1;"
+         offset="0"
+         id="stop4950" />
+    </linearGradient>
+    <style
+       id="style4116">.a{fill:#07bca9;}.b{fill:#fff;}</style>
+  </defs>
+  <title
+     id="title4120">DRSConnectorPX</title>
+  <rect
+     class="a"
+     width="32.2"
+     height="32.23"
+     id="rect4122"
+     style="stroke:none" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1" />
+  <path
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.59892136"
+     d="M 17.635851,8.640378 A 6.0328683,0.88050907 0 0 1 11.658206,9.4083865 6.0328683,0.88050907 0 0 1 5.7268203,8.6876401 V 21.703907 H 17.635851 Z"
+     id="rect42"
+     inkscape:connector-curvature="0" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.99820268"
+     id="path75-9"
+     cx="11.740191"
+     cy="21.654835"
+     rx="5.9774675"
+     ry="1.5820521" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.74015826"
+     id="path75-9-3"
+     cx="11.776349"
+     cy="7.8322234"
+     rx="6.0328684"
+     ry="0.86183828" />
+  <path
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.19809425"
+     d="m 25.139502,10.134216 a 1.9953813,0.29122985 0 0 1 -1.977117,0.25402 1.9953813,0.29122985 0 0 1 -1.961815,-0.238388 V 14.455 h 3.938932 z"
+     id="rect42-2"
+     inkscape:connector-curvature="0" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.33015722"
+     id="path75-9-31"
+     cx="23.189503"
+     cy="14.438769"
+     rx="1.9770575"
+     ry="0.52326643" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.24480858"
+     id="path75-9-3-4"
+     cx="23.201462"
+     cy="9.8669176"
+     rx="1.9953814"
+     ry="0.28505448" />
+  <path
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.19809423"
+     d="m 25.168075,17.70218 a 1.9953813,0.29122984 0 0 1 -1.977117,0.25402 1.9953813,0.29122984 0 0 1 -1.961814,-0.238388 v 4.305152 h 3.938931 z"
+     id="rect42-2-4"
+     inkscape:connector-curvature="0" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.33015719"
+     id="path75-9-31-8"
+     cx="23.218075"
+     cy="22.006733"
+     rx="1.9770573"
+     ry="0.52326643" />
+  <ellipse
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.24480857"
+     id="path75-9-3-4-3"
+     cx="23.230034"
+     cy="17.434881"
+     rx="1.9953814"
+     ry="0.28505448" />
+</svg>

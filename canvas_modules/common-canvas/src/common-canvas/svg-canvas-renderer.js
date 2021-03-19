@@ -2335,6 +2335,24 @@ export default class SVGCanvasRenderer {
 			this.draggingLinkData.endBeingDragged = "start";
 		}
 
+		if (this.config.enableHighlightUnavailableNodes) {
+			if (this.draggingLinkData.endBeingDragged === "end") {
+				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
+				this.setUnavailableTargetNodesHighlighting(
+					this.getNode(this.draggingLinkData.link.srcNodeId),
+					this.draggingLinkData.link.srcNodePortId,
+					links
+				);
+			} else if (this.draggingLinkData.endBeingDragged === "start") {
+				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
+				this.setUnavailableSourceNodesHighlighting(
+					this.getNode(this.draggingLinkData.oldLink.trgNodeId),
+					this.draggingLinkData.link.trgNodePortId,
+					links
+				);
+			}
+		}
+
 		this.dragLinkHandle(d3Event);
 		this.logger.logEndTimer("dragStartLinkHandle", true);
 	}
@@ -2957,6 +2975,9 @@ export default class SVGCanvasRenderer {
 												guideImage: d.layout.outputPortGuideImage,
 												linkArray: []
 											};
+											if (this.config.enableHighlightUnavailableNodes) {
+												this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
+											}
 											this.drawNewLink(d3Event);
 										}
 									}
@@ -3026,6 +3047,31 @@ export default class SVGCanvasRenderer {
 			nodeGroupSel.exit().remove();
 		}
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	// Sets the d3-node-unavailable class on any node that is currently not
+	// available for connection as a target node for the source node and port ID,
+	// passed in, of the link being manipulated. srcNode and scrPortId may be
+	// undefined if a detached link is being manipulated.
+	setUnavailableTargetNodesHighlighting(srcNode, srcPortId, links) {
+		this.nodesLinksGrp.selectAll(".d3-node-group")
+			.filter((trgNode) => !CanvasUtils.isTrgNodeAvailable(trgNode, srcNode, srcPortId, links))
+			.classed("d3-node-unavailable", true);
+	}
+
+	// Sets the d3-node-unavailable class on any node that is currently not
+	// available for connection as a source node for the target node and port ID,
+	// passed in, of the link being manipulated. trgNode and trgPortId may be
+	// undefined if a detached link is being manipulated.
+	setUnavailableSourceNodesHighlighting(trgNode, trgPortId, links) {
+		this.nodesLinksGrp.selectAll(".d3-node-group")
+			.filter((srcNode) => !CanvasUtils.isSrcNodeAvailable(srcNode, trgNode, trgPortId, links))
+			.classed("d3-node-unavailable", true);
+	}
+
+	// Removes the d3-node-unavailable class from any node that currently has it.
+	unsetUnavailableNodesHighlighting() {
+		d3.selectAll(".d3-node-group").classed("d3-node-unavailable", false);
 	}
 
 	displayEditIcon(spanObj, node) {
@@ -3330,45 +3376,16 @@ export default class SVGCanvasRenderer {
 
 	// Sets the image passed in into the D3 image selection passed in. This loads
 	// svg files as inline SVG while other images files are loaded with href.
-	// We will only set a new image if the image is new or has changed from what
-	// it was previously set to. This allows applications to set new images while
-	// the canvas is being displayed.
 	setImageContent(imageSel, image) {
 		const nodeImageType = this.getImageType(image);
 		if (image !== imageSel.attr("data-image")) {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				this.addCopyOfImageToDefs(image);
-				this.updateUseObject(imageSel, image);
+				d3.text(image).then((img) => imageSel.html(img));
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
-		}
-	}
-
-	// If the image doesn't exist in <defs>, retrieves the image from the
-	// server and places it in the <defs> element with an id equal to the
-	// nodeImage string.
-	addCopyOfImageToDefs(nodeImage) {
-		const defs = this.canvasSVG.select("defs");
-		// Select using id as an attribute because creating a selector with a
-		// # prefix won't work when nodeImage is a file name with special characters.
-		if (defs.select(`[id='${nodeImage}']`).empty()) {
-			const defsSvg = defs.append("svg").attr("id", nodeImage);
-			d3.text(nodeImage).then((img) => defsSvg.html(img));
-		}
-	}
-
-	// Updates the <use> object on the image to reference the nodeImage passed
-	// in. This will add a new <use> object if one doesn't yet exist or update
-	// it if it does exist.
-	updateUseObject(imageObj, nodeImage) {
-		const useSel = imageObj.select("use");
-		if (useSel.empty()) {
-			imageObj.append("use").attr("href", `#${nodeImage}`);
-		} else {
-			useSel.attr("href", `#${nodeImage}`);
 		}
 	}
 
@@ -4074,6 +4091,9 @@ export default class SVGCanvasRenderer {
 
 	// Handles the completion of a new link being drawn from a source node.
 	completeNewLink(d3Event) {
+		if (this.config.enableHighlightUnavailableNodes) {
+			this.unsetUnavailableNodesHighlighting();
+		}
 		var trgNode = this.getNodeAtMousePos(d3Event);
 		if (trgNode !== null) {
 			this.completeNewLinkOnNode(d3Event, trgNode);
@@ -6522,18 +6542,18 @@ export default class SVGCanvasRenderer {
 	// Returns true if the linked objects overlap. srcObj can be either a comment
 	// or node while trgNode is always a node.
 	areLinkedObjectsOverlapping(srcObj, trgNode, linkType) {
-		const srcHightlightGap = linkType === COMMENT_LINK ? this.canvasLayout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
-		const trgHightlightGap = trgNode.layout.nodeHighlightGap;
+		const srcHighlightGap = linkType === COMMENT_LINK ? this.canvasLayout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
+		const trgHighlightGap = trgNode.layout.nodeHighlightGap;
 
-		const srcLeft = srcObj.x_pos - srcHightlightGap;
-		const srcRight = srcObj.x_pos + srcObj.width + srcHightlightGap;
-		const trgLeft = trgNode.x_pos - trgHightlightGap;
-		const trgRight = trgNode.x_pos + trgNode.width + trgHightlightGap;
+		const srcLeft = srcObj.x_pos - srcHighlightGap;
+		const srcRight = srcObj.x_pos + srcObj.width + srcHighlightGap;
+		const trgLeft = trgNode.x_pos - trgHighlightGap;
+		const trgRight = trgNode.x_pos + trgNode.width + trgHighlightGap;
 
-		const srcTop = srcObj.y_pos - srcHightlightGap;
-		const srcBottom = srcObj.y_pos + srcObj.height + srcHightlightGap;
-		const trgTop = trgNode.y_pos - trgHightlightGap;
-		const trgBottom = trgNode.y_pos + trgNode.height + trgHightlightGap;
+		const srcTop = srcObj.y_pos - srcHighlightGap;
+		const srcBottom = srcObj.y_pos + srcObj.height + srcHighlightGap;
+		const trgTop = trgNode.y_pos - trgHighlightGap;
+		const trgBottom = trgNode.y_pos + trgNode.height + trgHighlightGap;
 
 		if (srcRight >= trgLeft && trgRight >= srcLeft &&
 				srcBottom >= trgTop && trgBottom >= srcTop) {

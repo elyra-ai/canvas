@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas";
 
 import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./detachedPalette.json";
+import DetachedPalette from "./MVPPalette.json";
 
 
 export default class DetachedCanvas extends React.Component {
@@ -57,8 +57,11 @@ export default class DetachedCanvas extends React.Component {
 			enableLinkSelection: "Detachable",
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
-			enableHightlightNodeOnNewLinkDrag: true,
+			enableHighlightNodeOnNewLinkDrag: true,
+			enableHighlightUnavailableNodes: true,
 			enableDisplayFullLabelOnHover: true,
+			enableNarrowPalette: false,
+			paletteInitialState: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,

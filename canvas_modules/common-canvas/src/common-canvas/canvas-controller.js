@@ -82,6 +82,7 @@ export default class CanvasController {
 			enableToolbarLayout: "Top",
 			enableInsertNodeDroppedOnLink: false,
 			enableHighlightNodeOnNewLinkDrag: false,
+			enableHighlightUnavailableNodes: false,
 			enablePositionNodeOnRightFlyoutOpen: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableDisplayFullLabelOnHover: false,

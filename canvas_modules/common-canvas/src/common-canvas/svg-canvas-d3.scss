@@ -217,6 +217,14 @@ $new-halo-link-color: $ui-05;
 	fill: $node-body-fill-hover;
 }
 
+.d3-node-unavailable .d3-node-body-outline,
+.d3-node-unavailable .d3-node-label,
+.d3-node-unavailable svg path {
+	stroke: $disabled-02;
+	fill: $disabled-03;
+	color: $disabled-02;
+}
+
 .d3-node-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
@@ -256,9 +264,8 @@ $new-halo-link-color: $ui-05;
 .d3-node-label {
 	@include d3-node-label-mixin;
 	border-width: $node-label-display-border;
-	/* Prevent node label text from being highlighted */
+	/* Prevent node label text being highlightd on double click etc */
 	user-select: none;
-
 
 	& span {
 		pointer-events: auto; /* Override the pointer-events: none on the foreignObject and div */

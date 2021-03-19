@@ -761,6 +761,16 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
+		var enableHighlightUnavailableNodes = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-highlight-unavailable-nodes-toggle">
+				<Toggle
+					id="selectedHighlightUnavailableNodes" // Set ID to corresponding field in App.js state
+					labelText="Enable Highlight Unavailable Nodes"
+					toggled={this.props.getStateValue("selectedHighlightUnavailableNodes")}
+					onToggle={this.setStateValue}
+				/>
+			</div>);
+
 		var enableZoomIntoSubFlows = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-zoom-into-subflows-toggle">
 				<Toggle
@@ -1291,6 +1301,8 @@ export default class SidePanelForms extends React.Component {
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
+					{divider}
+					{enableHighlightUnavailableNodes}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
