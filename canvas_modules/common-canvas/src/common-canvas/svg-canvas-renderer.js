@@ -3251,7 +3251,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
-		let outlnSel = decSel.select("rect");
+		let outlnSel = decSel.selectChild("rect");
 
 		if (!dec.label && !dec.path && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
@@ -3268,7 +3268,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecPaths(dec, decSel, objType) {
-		let pathSel = decSel.select("path");
+		let pathSel = decSel.selectChild("path");
 
 		if (dec.path) {
 			pathSel = pathSel.empty() ? decSel.append("path") : pathSel;
@@ -3283,7 +3283,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecImages(dec, decSel, objType, d) {
-		let imageSel = decSel.select("g");
+		let imageSel = decSel.selectChild("g");
 
 		if (dec.image) {
 			const nodeImageType = this.getImageType(dec.image);
@@ -3301,7 +3301,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecLabels(dec, decSel, objType, d) {
-		let labelSel = decSel.select("foreignObject");
+		let labelSel = decSel.selectChild("foreignObject");
 
 		if (dec.label) {
 			if (labelSel.empty()) {
@@ -3377,12 +3377,14 @@ export default class SVGCanvasRenderer {
 	// Sets the image passed in into the D3 image selection passed in. This loads
 	// svg files as inline SVG while other images files are loaded with href.
 	setImageContent(imageSel, image) {
-		const nodeImageType = this.getImageType(image);
 		if (image !== imageSel.attr("data-image")) {
+			const nodeImageType = this.getImageType(image);
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				d3.text(image).then((img) => imageSel.html(img));
+				d3.xml(image, { cache: "force-cache" }).then((data) => {
+					imageSel.node().append(data.documentElement);
+				});
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
