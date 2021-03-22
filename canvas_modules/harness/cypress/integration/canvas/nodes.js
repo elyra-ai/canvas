@@ -28,7 +28,7 @@ describe("Test adding nodes from palette", function() {
 
 		// Wait for palette to open
 		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(2000);
+		cy.wait(4000);
 
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Var. File", 300, 200);
