@@ -30,8 +30,8 @@ npm run start-prod &
 
 # start running the test Cases
 sleep 30
-echo "Starting cypress chrome tests"
-npx cypress run --headed --browser chrome
+echo "Starting cypress headless electron tests"
+npx cypress run --headless
 
 echo "download coverage"
 mkdir -p coverage
