@@ -97,7 +97,7 @@ $comment-link-color: $ui-04;
 $object-link-color: $ui-05; // Used for association links for a regular data flow canvas
 $association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
 $data-link-color: $inverse-link;
-$link-hightlight-color: $support-04;
+$link-highlight-color: $support-04;
 $new-halo-link-color: $ui-05;
 
 /* Canvas styles */
@@ -739,14 +739,14 @@ $new-halo-link-color: $ui-05;
 // When pointer hovers over the link this style will be applied.
 .d3-link-group:hover .d3-link-line,
 .d3-link-group:hover .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 2;
 }
 
 // Style line and arrow head when link is selected.
 .d3-link-group[data-selected] .d3-link-line,
 .d3-link-group[data-selected] .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 3;
 }
 
@@ -755,7 +755,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line-arrow-head,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 5;
 }
 
@@ -770,7 +770,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group:hover .d3-link-handle-start,
 .d3-link-group[data-selected] .d3-link-handle-start {
 	display: inherit;
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	fill: $data-link-color;
 	pointer-events: all;
 }
@@ -786,7 +786,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group:hover .d3-link-handle-end,
 .d3-link-group[data-selected] .d3-link-handle-end {
 	display: inherit;
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	fill: $data-link-color;
 	pointer-events: all;
 }

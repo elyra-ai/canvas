@@ -89,7 +89,7 @@ export default class SVGCanvasD3 {
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
 				this.config.enableParentClass !== config.enableParentClass ||
-				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
+				this.config.enableHighlightNodeOnNewLinkDrag !== config.enableHighlightNodeOnNewLinkDrag ||
 				this.config.enableHighlightUnavailableNodes !== config.enableHighlightUnavailableNodes ||
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||

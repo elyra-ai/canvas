@@ -3382,7 +3382,7 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				d3.xml(image, { cache: "force-cache" }).then((data) => {
+				d3.svg(image, { cache: "force-cache" }).then((data) => {
 					imageSel.node().append(data.documentElement);
 				});
 			} else {
