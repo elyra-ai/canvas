@@ -23,13 +23,12 @@ import setExpressionInfo from "./controls/expression/expressionInfo-parser.js";
 import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
 import * as conditionsUtil from "./ui-conditions/conditions-utils";
 import * as PropertyUtils from "./util/property-utils.js";
-import { getDataId } from "./util/control-utils";
 
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
@@ -782,11 +781,11 @@ export default class PropertiesController {
 	 * @param propertyId  The unique property identifier
 	 * @return boolean
 	 */
-	checkIfDisableRowMoveButtons(propertyId) {
+	isDisableRowMoveButtons(propertyId) {
 		const propertyIds = this.getDisableRowMoveButtons();
 		return (
 			Array.isArray(propertyIds)
-				? propertyIds.some((el) => getDataId(el) === getDataId(propertyId))
+				? propertyIds.some((el) => isEqual(el, propertyId))
 				: false
 		);
 	}

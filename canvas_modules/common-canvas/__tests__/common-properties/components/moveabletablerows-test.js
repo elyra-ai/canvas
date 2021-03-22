@@ -375,7 +375,7 @@ describe("MoveableTableRows renders correctly", () => {
 		controller.setDisableRowMoveButtons(propertyIds);
 		// Verify propertyIds are correctly set in the redux
 		expect(controller.getDisableRowMoveButtons()).to.equal(propertyIds);
-		expect(controller.checkIfDisableRowMoveButtons(propertyId)).to.equal(true);
+		expect(controller.isDisableRowMoveButtons(propertyId)).to.equal(true);
 
 		// Validate all move buttons are disabled
 		wrapper.update();

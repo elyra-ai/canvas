@@ -245,7 +245,7 @@ MoveableTableRows.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
 	// check if row move buttons should be disabled for given propertyId
-	disableRowMoveButtons: ownProps.controller.checkIfDisableRowMoveButtons(ownProps.propertyId)
+	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps)(MoveableTableRows);
