@@ -375,7 +375,7 @@ export default class CanvasUtils {
 	// the source or target nodes.
 	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 
-		if (!srcNode || !trgNode) { // Source ot target are not valid.
+		if (!srcNode || !trgNode) { // Source or target are not valid.
 			return false;
 		}
 
@@ -393,7 +393,6 @@ export default class CanvasUtils {
 
 		return true;
 	}
-
 
 	// Returns true if an association link can be created between two nodes
 	// identified by the objects provided.
@@ -434,6 +433,46 @@ export default class CanvasUtils {
 	// 	return exists;
 	// }
 
+	// Returns true if the source node passed in is available to be linked to the
+	// target node and port passed in. trgNode and trgPortId may be undefined if
+	// the call is being made while a detached link is being manipulated.
+	static isSrcNodeAvailable(srcNode, trgNode, trgNodePortId, links) {
+		// Don't disable the target node
+		if (trgNode && trgNode.id === srcNode.id) {
+			return true;
+		}
+
+		if (!this.doesNodeHaveOutputPorts(srcNode)) {
+			return false;
+		}
+
+		if (this.isSrcNodePortsCardinalityAtMax(srcNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if the targt node passed in is available to be linked to the
+	// source node and port passed in. srcNode and srcPortId may be undefined if
+	// the call is being made while a detached link is being manipulated.
+	static isTrgNodeAvailable(trgNode, srcNode, srcNodePortId, links) {
+		// Don't disable the source node
+		if (srcNode && srcNode.id === trgNode.id) {
+			return true;
+		}
+
+		if (!this.doesNodeHaveInputPorts(trgNode)) {
+			return false;
+		}
+
+		if (this.isTrgNodePortsCardinalityAtMax(trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	// Returns true if a link already exists from the source node and port to
 	// the target node and port passed in given the set of links passd in.
 	static linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
@@ -448,6 +487,24 @@ export default class CanvasUtils {
 			}
 		});
 		return exists;
+	}
+
+	// Returns true if all the ports of the source node are at maximum cardinality.
+	static isSrcNodePortsCardinalityAtMax(srcNode, links) {
+		if (srcNode) {
+			const index = srcNode.outputs.findIndex((output) => !this.isSrcCardinalityAtMax(output.id, srcNode, links));
+			return index === -1;
+		}
+		return false;
+	}
+
+	// Returns true if all the ports of the target node are at maximum cardinality.
+	static isTrgNodePortsCardinalityAtMax(trgNode, links) {
+		if (trgNode) {
+			const index = trgNode.inputs.findIndex((input) => !this.isTrgCardinalityAtMax(input.id, trgNode, links));
+			return index === -1;
+		}
+		return false;
 	}
 
 	// Returns true if the cardinality is maxed out for the source and target

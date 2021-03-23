@@ -28,7 +28,6 @@ import commonPaletteV2 from "../../../harness/test_resources/palettes/v2-commonP
 import modelerPaletteV2 from "../../../harness/test_resources/palettes/v2-modelerPalette.json";
 import sparkPaletteV2 from "../../../harness/test_resources/palettes/v2-sparkPalette.json";
 
-import commonPaletteV1 from "../../../harness/test_resources/palettes/v1-commonPalette.json";
 import modelerPaletteV1 from "../../../harness/test_resources/palettes/v1-modelerPalette.json";
 import sparkPaletteV1 from "../../../harness/test_resources/palettes/v1-sparkPalette.json";
 
@@ -77,10 +76,6 @@ describe("Upgrade palette test", () => {
 	// // --------------------------------------------------------------------------
 	// // These test upgrade from v1 to the latest version
 	// // --------------------------------------------------------------------------
-	it("should upgrade a palette from v1 to latest version for commonPaletteV1", () => {
-		upgradeToLatestVersion(commonPaletteV1, commonPalette);
-	});
-
 	it("should upgrade a palette from v1 to latest version for modelerPaletteV1", () => {
 		upgradeToLatestVersion(modelerPaletteV1, modelerPalette);
 	});
