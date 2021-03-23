@@ -112,8 +112,8 @@ module.exports = {
 	plugins: plugins,
 	performance: {
 		hints: "error",
-		maxAssetSize: 2000000,
-		maxEntrypointSize: 2000000
+		maxAssetSize: 2100000,
+		maxEntrypointSize: 2100000
 	},
 	externals: {
 		"react-intl": "react-intl",

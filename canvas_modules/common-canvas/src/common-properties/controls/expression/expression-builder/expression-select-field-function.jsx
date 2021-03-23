@@ -395,6 +395,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
 			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
 		}
+		const fieldsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_TABLE_LABEL);
+		const valuesTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_TABLE_LABEL);
 
 		return (
 			<div className="properties-field-and-values-table-container" >
@@ -407,6 +409,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						filterable={["fieldName"]}
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
+						tableLabel={fieldsTableLabel}
 						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
@@ -423,6 +426,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						filterable={["values"]}
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
+						tableLabel={valuesTableLabel}
 						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
@@ -503,9 +507,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-function-select">
-				<div className="properties-expression-table-dropdown-header">
-					{header}
-				</div>
 				<Dropdown
 					id={"properties-expression-function-select-dropdown-" + uuid4()}
 					light
@@ -513,6 +514,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					items={items}
 					onChange={this.onFunctionCatChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={header}
 				/>
 			</div>);
 	}
@@ -534,9 +536,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		return (
 			<div className="properties-expression-field-select">
-				<div className="properties-expression-table-dropdown-header">
-					{header}
-				</div>
 				<Dropdown
 					id={"properties-expression-field-select-dropdown-" + uuid4()}
 					light
@@ -544,6 +543,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					items={newItems}
 					onChange={this.onFieldCatChange}
 					translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
+					titleText={header}
 				/>
 			</div>);
 	}
@@ -567,6 +567,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			data = this.sortTableRows(data, this.state.functionTableSortSpec);
 			selectedFunction = data.findIndex((row) => row.rowKey === this.state.functionSelected);
 		}
+		const functionsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TABLE_LABEL);
 
 		return (
 			<div className="properties-functions-table-container" >
@@ -578,6 +579,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						filterable={["function"]}
 						onFilter={this.onFunctionFilter}
 						rows={EXPRESSION_TABLE_ROWS}
+						tableLabel={functionsTableLabel}
 						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFunctionTableClick}

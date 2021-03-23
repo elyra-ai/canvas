@@ -188,7 +188,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
 		const groupDesc = l10nProvider.l10nResource(group.description);
-		return UIItem.makeTextPanel(groupName, new Label(groupLabel), new Description(groupDesc), groupClassName);
+		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName);
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);

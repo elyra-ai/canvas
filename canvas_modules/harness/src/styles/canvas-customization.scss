@@ -61,7 +61,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: $node-body-fill;
 	}
 
-	.d3-node-body-outline[hover="yes"] {
+	.d3-node-group:hover .d3-node-body-outline {
 		stroke: $node-body-stroke;
 		stroke-width: 2;
 		fill: $blue;
@@ -79,6 +79,13 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		stroke-width: 2;
 		fill: transparent;
 		pointer-events: none;
+	}
+
+	.d3-node-group.d3-node-unavailable .d3-node-body-outline,
+	.d3-node-group.d3-node-unavailable .d3-node-label {
+		stroke: $disabled-02;
+		fill: $disabled-03;
+		color: $disabled-02;
 	}
 
 	.d3-node-label {

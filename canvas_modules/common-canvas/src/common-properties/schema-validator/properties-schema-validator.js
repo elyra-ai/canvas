@@ -40,8 +40,8 @@ function validateAgainstSchema(data, schema, type, validator) {
 
 function getValidator() {
 	const validator = new SchemaValidator();
-	const canvasPrefix = "http://api.dataplatform.ibm.com/schemas/common-canvas/";
-	const pipelinePrefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
+	const canvasPrefix = "https://api.dataplatform.ibm.com/schemas/common-canvas/";
+	const pipelinePrefix = "https://api.dataplatform.ibm.com/schemas/common-pipeline/";
 	validator.addSchema(parameterDefsV3Schema, canvasPrefix + "parameter-defs/pipeline-flow-v3-schema.json");
 	validator.addSchema(uihintsV3Schema, pipelinePrefix + "operators/uihints-v3-schema.json");
 	validator.addSchema(conditionsV3Schema, pipelinePrefix + "operators/conditions-v3-schema.json");

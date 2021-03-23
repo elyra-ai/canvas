@@ -40,7 +40,6 @@ export default class StreamsCanvas extends React.Component {
 			enableAutoLayoutHorizontalSpacing: 80,
 			enableInternalObjectModel: true,
 			enableMoveNodesOnSupernodeResize: true,
-			enableDisplayFullLabelOnHover: true,
 			enableDropZoneOnExternalDrag: true,
 			enableNarrowPalette: false,
 			schemaValidation: true,

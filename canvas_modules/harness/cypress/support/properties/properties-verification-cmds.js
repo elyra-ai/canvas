@@ -169,7 +169,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 	// Verify "is_real" is a "keyword" in ExpressionEditor
 	const searchClass = ".cm-" + type;
 	const testWord = (type === "string") ? "\"" + word + "\"" : word;
-	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-editor")
 		.find(".CodeMirror-line")
 		.then((codeMirrorLine) => {

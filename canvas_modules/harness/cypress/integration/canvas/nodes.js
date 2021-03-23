@@ -25,6 +25,7 @@ describe("Test adding nodes from palette", function() {
 	it("Test adding nodes from palette, link nodes, link comment to node, delete node, delete comment", function() {
 		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
+
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Var. File", 300, 200);
 		cy.clickCategory("Field Ops");

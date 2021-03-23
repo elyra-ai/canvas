@@ -43,12 +43,14 @@ export default class FlowsCanvas extends React.Component {
 			enableNodeFormatType: "Vertical",
 			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
+			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
 			enableLinkSelection: "None",
+			enableLinkReplaceOnNewConnection: true,
 			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
-			enableHightlightNodeOnNewLinkDrag: true,
+			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -71,12 +73,11 @@ export default class FlowsCanvas extends React.Component {
 				imagePosY: 4,
 				labelEditable: true,
 				labelPosX: 36,
-				labelPosY: 58,
+				labelPosY: 56,
 				labelWidth: 120,
-				labelHeight: 16,
+				labelHeight: 18,
 				portRadius: 10,
-				inputPortLeftPosX: 0,
-				inputPortLeftPosY: 28,
+				inputPortDisplay: false,
 				outputPortRightPosX: 5,
 				outputPortRightPosY: 30,
 				outputPortObject: "image",
@@ -89,8 +90,7 @@ export default class FlowsCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false,
-				linkHandleRaiseToTop: false
+				displayLinkOnOverlap: false
 			}
 		});
 		return config;

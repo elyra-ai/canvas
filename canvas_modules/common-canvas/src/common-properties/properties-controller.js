@@ -96,6 +96,14 @@ export default class PropertiesController {
 		return this.commandStack;
 	}
 
+	setEditorSize(editorSize) {
+		this.editorSize = editorSize;
+	}
+
+	getEditorSize() {
+		return this.editorSize;
+	}
+
 	//
 	// Form and parsing Methods
 	//
@@ -336,6 +344,12 @@ export default class PropertiesController {
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
 				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
+
+				// convert values of type:object to the internal format array values
+				if (PropertyUtils.isSubControlStructureObjectType(control)) {
+					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
+				}
+
 				this.updatePropertyValue(propertyId, controlValue, true);
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
@@ -1128,6 +1142,16 @@ export default class PropertiesController {
 		return state ? state.values : {};
 	}
 
+	/**
+	 * Retrieves the enumeration value states for the given propertyId.
+	 *
+	 * @param propertyId The of an enumeration property
+	 * @return An object containing state enumFilter
+	 */
+	getControlEnumFilterStates(propertyId) {
+		const state = this.propertiesStore.getControlState(propertyId);
+		return state ? state.enumFilter : {};
+	}
 
 	/**
 		 * Panel States Methods

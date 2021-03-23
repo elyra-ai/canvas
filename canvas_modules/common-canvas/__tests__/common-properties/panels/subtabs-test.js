@@ -51,12 +51,12 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 	});
 
 	it("subtabs and controls should be disabled", () => {
-		let subTab = wrapper.find("li[data-id='properties-fruit-subtab']");
+		let subTab = wrapper.find("li[data-id='properties-fruit-subtab'] > button");
 		// check initial state of enabled
 		expect(subTab.prop("aria-disabled")).to.equal(false);
 		controller.updatePropertyValue({ name: "disable" }, true);
 		wrapper.update();
-		subTab = wrapper.find("li[data-id='properties-fruit-subtab']");
+		subTab = wrapper.find("li[data-id='properties-fruit-subtab'] > button");
 		expect(subTab.prop("aria-disabled")).to.equal(true);
 	});
 

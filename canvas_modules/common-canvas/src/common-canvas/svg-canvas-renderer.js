@@ -43,12 +43,20 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 
 const showLinksTime = false;
 
-const ESC_KEY = 27;
+const BACKSPACE_KEY = 8;
 const RETURN_KEY = 13;
+const ESC_KEY = 27;
+const LEFT_ARROW_KEY = 37;
+const UP_ARROW_KEY = 38;
+const RIGHT_ARROW_KEY = 39;
+const DOWN_ARROW_KEY = 40;
+const DELETE_KEY = 46;
+const A_KEY = 65;
 
 const SCROLL_PADDING = 12;
 
-const NINETY_DEGREES_IN_RADIANS = 90 * (Math.PI / 180);
+const NINETY_DEGREES = 90;
+
 const INPUT_TYPE = "input_type";
 const OUTPUT_TYPE = "output_type";
 
@@ -133,7 +141,7 @@ export default class SVGCanvasRenderer {
 		this.dragPointerOffsetInNode = null;
 
 		// The node over which the 'guide' object for a new link or a link handle
-		// is being dragged. Used when enableHightlightNodeOnNewLinkDrag config
+		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
@@ -852,22 +860,33 @@ export default class SVGCanvasRenderer {
 		// At the time of writing, Firefox takes the ghost image from only those
 		// objects that are visible (ignoring any invisible objects like the div
 		// and SVG area) consequently we position the node and label so the label
-		// (if bigger than the node width) is position up against the left edge
+		// (if bigger than the node width) is positioned up against the left edge
 		// of the invisible div and SVG area. If the label is shorter than the node
 		// width, the node is positioned up against the left edge of the SVG. We do
 		// this by translating the group object in the x direction.
+
+		// First calculate the display width of the label. The span will be the
+		// full text but it may be constricted by the label width in the layout.
 		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
 		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
-		const labelLength = Math.min(nodeLabelWidth, labelSpanWidth);
+		const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
 
-		const xOffset = Math.max(0, (labelLength - ghost.width) / 2) * this.zoomTransform.k;
-		const labelDiff = Math.max(0, (nodeLabelWidth - labelLength) / 2);
-
+		// Next calculate the amount, if any, the label protrudes beyond the edge
+		// of the node width and move the ghost group by that amount.
+		const xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
 		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
-		fObject
-			.attr("width", labelLength)
-			.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
-		fObjectDiv.attr("width", labelLength);
+
+		// If the label is center justified, restrict the label width to the
+		// display amount and adjust the x coordinate to compensate for the change
+		// in width.
+		if (node.layout.labelAlign === "center") {
+			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+
+			fObject
+				.attr("width", labelDisplayLength)
+				.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+			fObjectDiv.attr("width", labelDisplayLength);
+		}
 
 		// Calculate the zoom amount if the browser itself is zoomed.
 		// At the time of writing this value is not returned correctly by Safari.
@@ -903,11 +922,11 @@ export default class SVGCanvasRenderer {
 	paletteNodeDraggedOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
-			// Set highlighting when there is no link becasue this will turn
+			// Set highlighting when there is no link because this will turn
 			// current highlighting off. And only switch on highlighting when we are
 			// over a fully attached link (not a detached link).
 			if (!link || this.isLinkFullyAttached(link)) {
-				this.setLinkHighlighting(link);
+				this.setInsertNodeIntoLinkHighlighting(link);
 			}
 		}
 
@@ -930,45 +949,70 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Switches on or off data link highlighting depending on the element
-	// passed in and keeps track of the currently highlighted link.
-	setLinkHighlighting(link) {
+	// passed in and keeps track of the currently highlighted link. This is
+	// called when a node is being dragged from the palette or canvas onto an
+	// attached link (which joins two nodes together) which is enabled when
+	// 'enableInsertNodeDroppedOnLink' is true.
+	setInsertNodeIntoLinkHighlighting(link) {
 		if (link) {
 			if (!this.dragOverLink) {
 				this.dragOverLink = link;
-				this.setLinkDragOverHighlighting(this.dragOverLink, true);
+				this.setNodeDragOverLinkHighlighting(this.dragOverLink, true);
 
 			} else if (link.id !== this.dragOverLink.id) {
-				this.setLinkDragOverHighlighting(this.dragOverLink, false);
+				this.unsetInsertNodeIntoLinkHighlighting();
 				this.dragOverLink = link;
-				this.setLinkDragOverHighlighting(this.dragOverLink, true);
+				this.setNodeDragOverLinkHighlighting(this.dragOverLink, true);
 			}
 		} else {
-			if (this.dragOverLink) {
-				this.setLinkDragOverHighlighting(this.dragOverLink, false);
-				this.dragOverLink = null;
-			}
+			this.unsetInsertNodeIntoLinkHighlighting();
 		}
 	}
 
-	// Switches on or off data link highlighting depending on the elements
-	// passed in and keeps track of the currently highlighted links.
+	// Switchs off the data link highlighting caused when an insertable
+	// node is dragged over a link (which joins two nodes together)
+	// which is enabled when 'enableInsertNodeDroppedOnLink' is true.
+	unsetInsertNodeIntoLinkHighlighting(link) {
+		if (this.dragOverLink) {
+			this.setNodeDragOverLinkHighlighting(this.dragOverLink, false);
+			this.dragOverLink = null;
+		}
+	}
+
+	// Switches on or off data link highlighting depending on the link array
+	// passed in and keeps track of the currently highlighted links. This is
+	// called when a node is dragged from the palette or the canvas over a
+	// fully or partially detached link This beheavior is enabled when
+	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
 	setDetachedLinkHighlighting(links) {
 		if (links && links.length > 0) {
-			this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, false));
+			this.unsetDetachedLinkHighlighting();
 			this.dragOverDetachedLinks = links;
-			this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, true));
+			this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, true));
 
 		} else {
 			if (this.dragOverDetachedLinks.length > 0) {
-				this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, false));
-				this.dragOverDetachedLinks = [];
+				this.unsetDetachedLinkHighlighting();
 			}
 		}
 	}
 
+	// Switchs off the link highlighting when a node is dragged over a fully or
+	// partially detached link. This beheavior is enabled when
+	// 'enableLinkSelection 'is set to LINK_SELECTION_DETACHABLE.
+	unsetDetachedLinkHighlighting() {
+		this.dragOverDetachedLinks.forEach((link) => this.setNodeDragOverLinkHighlighting(link, false));
+		this.dragOverDetachedLinks = [];
+	}
+
 	// Switches on or off the drop-node highlighting on the link passed in.
-	// This is called when the user drags an 'insertable' node over a link.
-	setLinkDragOverHighlighting(link, state) {
+	// This is called when the user drags a node over a link.
+	// Link highlighting is used for the 'enableInsertNodeDroppedOnLink' function
+	// where a node can be dragged from either the palette or the canvas onto a
+	// link between two nodes AND it is used for the function where a node can
+	// be dragged from either the palette of canvas onto a detached link. This is
+	// enabled when enableLinkSelection is set to LINK_SELECTION_DETACHABLE.
+	setNodeDragOverLinkHighlighting(link, state) {
 		this.nodesLinksGrp
 			.selectAll(this.getSelectorForId("link_grp", link.id))
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
@@ -979,7 +1023,7 @@ export default class SVGCanvasRenderer {
 	// called as a new link is being drawn towards a target node to highlight
 	// the target node.
 	setNewLinkOverNode(d3Event) {
-		const nodeNearMouse = this.getNodeAtMousePos(d3Event, this.canvasLayout.nodeProximity);
+		const nodeNearMouse = this.getNodeNearMousePos(d3Event, this.canvasLayout.nodeProximity);
 		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
@@ -1005,12 +1049,18 @@ export default class SVGCanvasRenderer {
 				const srcNode = this.drawingNewLinkData.srcNode;
 				const trgNode = nodeNearMouse;
 				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
-				const trgNodePortId = this.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
+				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
 				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
-			}
 
-			if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				return CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, nodeNearMouse.id, this.activePipeline.links);
+			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
+				const srcNode = this.drawingNewLinkData.srcNode;
+				const trgNode = nodeNearMouse;
+				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links);
+
+			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
+				const srcObjId = this.drawingNewLinkData.srcObjId;
+				const trgNodeId = nodeNearMouse.id;
+				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.activePipeline.links);
 			}
 		} else if (this.draggingLinkData) {
 			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
@@ -1046,16 +1096,15 @@ export default class SVGCanvasRenderer {
 
 		// If the node template was dropped on a link
 		if (this.dragOverLink) {
-			this.setLinkDragOverHighlighting(this.dragOverLink, false);
 			this.canvasController.createNodeFromTemplateOnLinkAt(
 				nodeTemplate, this.dragOverLink, transPos, this.pipelineId);
+			this.unsetInsertNodeIntoLinkHighlighting();
 
 		// If the node template was dropped on one or more detached links.
 		} else if (this.dragOverDetachedLinks.length > 0) {
-			this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, false));
-			this.dragPointerOffsetInNode = null;
 			this.canvasController.createNodeFromTemplateAttachLinks(
 				nodeTemplate, this.dragOverDetachedLinks, transPos, this.pipelineId);
+			this.unsetDetachedLinkHighlighting();
 
 		// If the node template was dropped on the canvas.
 		} else {
@@ -1099,7 +1148,8 @@ export default class SVGCanvasRenderer {
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
-			this.isNonBindingNode(this.dragObjects[0]));
+			this.isNonBindingNode(this.dragObjects[0]) &&
+			!this.nodeUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
 
 	isExistingNodeAttachableToDetachedLinks() {
@@ -1198,18 +1248,6 @@ export default class SVGCanvasRenderer {
 			obj = this.getComment(id);
 		}
 		return obj;
-	}
-
-	// Returns the default input port ID for the node, which will be the ID of
-	// the first port, or null if there are no inputs.
-	getDefaultInputPortId(node) {
-		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
-	}
-
-	// Returns the default output port ID for the node, which will be the ID of
-	// the first port, or null if there are no outputs.
-	getDefaultOutputPortId(node) {
-		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
@@ -2171,11 +2209,11 @@ export default class SVGCanvasRenderer {
 
 			if (this.isExistingNodeInsertableIntoLink()) {
 				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-				// Set highlighting when there is no link becasue this will turn
+				// Set highlighting when there is no link because this will turn
 				// current highlighting off. And only switch on highlighting when we are
 				// over a fully attached link (not a detached link).
 				if (!link || this.isLinkFullyAttached(link)) {
-					this.setLinkHighlighting(link);
+					this.setInsertNodeIntoLinkHighlighting(link);
 				}
 			}
 
@@ -2210,22 +2248,6 @@ export default class SVGCanvasRenderer {
 		} else if (this.dragging) {
 			// Set to false before updating object model so main body of displayNodes is run.
 			this.dragging = false;
-
-			// If we are dragging an 'insertable' or 'attachable' node switch the translucent state off.
-			if (this.isExistingNodeInsertableIntoLink()) {
-				this.setNodeTranslucentState(this.dragObjects[0].id, false);
-				if (this.dragOverLink) {
-					this.setLinkDragOverHighlighting(this.dragOverLink, false);
-				}
-			}
-
-			if (this.isExistingNodeAttachableToDetachedLinks()) {
-				this.setNodeTranslucentState(this.dragObjects[0].id, false);
-				if (this.dragOverDetachedLinks.length > 0) {
-					this.dragOverDetachedLinks.forEach((link) => this.setLinkDragOverHighlighting(link, false));
-					this.dragPointerOffsetInNode = null;
-				}
-			}
 
 			// If the pointer hasn't moved and enableDragWithoutSelect we interpret
 			// that as a select on the object.
@@ -2278,7 +2300,13 @@ export default class SVGCanvasRenderer {
 					}
 				}
 			}
+
+			// Switch of any drag highlighting
+			this.setNodeTranslucentState(this.dragObjects[0].id, false);
+			this.unsetInsertNodeIntoLinkHighlighting();
+			this.unsetDetachedLinkHighlighting();
 		}
+
 		this.logger.logEndTimer("dragEnd", true);
 	}
 
@@ -2305,6 +2333,24 @@ export default class SVGCanvasRenderer {
 
 		} else if (handleSelection.attr("class").includes("d3-link-handle-start")) {
 			this.draggingLinkData.endBeingDragged = "start";
+		}
+
+		if (this.config.enableHighlightUnavailableNodes) {
+			if (this.draggingLinkData.endBeingDragged === "end") {
+				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
+				this.setUnavailableTargetNodesHighlighting(
+					this.getNode(this.draggingLinkData.link.srcNodeId),
+					this.draggingLinkData.link.srcNodePortId,
+					links
+				);
+			} else if (this.draggingLinkData.endBeingDragged === "start") {
+				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
+				this.setUnavailableSourceNodesHighlighting(
+					this.getNode(this.draggingLinkData.oldLink.trgNodeId),
+					this.draggingLinkData.link.trgNodePortId,
+					links
+				);
+			}
 		}
 
 		this.dragLinkHandle(d3Event);
@@ -2570,9 +2616,12 @@ export default class SVGCanvasRenderer {
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelSel = d3.select(this);
 					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
+						const spanSel = labelSel.selectAll("span");
 						labelSel
 							.attr("x", that.nodeUtils.getNodeLabelHoverPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d));
+							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d))
+							.attr("height", that.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), that.zoomTransform.k));
+						spanSel.classed("d3-node-label-full", true);
 					}
 				})
 				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
@@ -2580,7 +2629,9 @@ export default class SVGCanvasRenderer {
 					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
 						labelSel
 							.attr("x", that.nodeUtils.getNodeLabelPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelWidth(d));
+							.attr("width", that.nodeUtils.getNodeLabelWidth(d))
+							.attr("height", that.nodeUtils.getNodeLabelHeight(d));
+						labelSel.selectAll("span").classed("d3-node-label-full", false);
 					}
 				})
 				.on("dblclick", (d3Event, d) => {
@@ -2594,7 +2645,6 @@ export default class SVGCanvasRenderer {
 				.append("xhtml:span") // Provide a namespace when span is inside foreignObject
 				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
 					if (d.layout.labelEditable) {
-						clearTimeout(that.hideEditIconPending);
 						that.displayEditIcon(this, d);
 					}
 				})
@@ -2748,7 +2798,7 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.inputPortObject)
 								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.attr("connected", "no")
 								.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
 								.on("mousedown", (d3Event, port) => {
@@ -2845,7 +2895,7 @@ export default class SVGCanvasRenderer {
 									.append("path")
 									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
 									.attr("data-pipeline-id", this.activePipeline.id)
-									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no")
 									.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
@@ -2877,6 +2927,7 @@ export default class SVGCanvasRenderer {
 									})
 									.merge(inputPortArrowSelection)
 									.attr("d", (port) => this.getPortArrowPath(port))
+									.attr("transform", (port) => this.getPortArrowPathTransform(port))
 									.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
 								inputPortArrowSelection.exit().remove();
@@ -2900,30 +2951,35 @@ export default class SVGCanvasRenderer {
 								.append(d.layout.outputPortObject)
 								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
 								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortAtMousePos
+								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
 								.on("mousedown", (d3Event, port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3Event.button === 0) {
 										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
 										const srcNode = this.getNode(d.id);
-										this.drawingNewLinkData = {
-											srcObjId: d.id,
-											srcPortId: port.id,
-											action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-											srcNode: srcNode,
-											startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-											portType: "output",
-											portObject: d.layout.outputPortObject,
-											portImage: d.layout.outputPortImage,
-											portWidth: d.layout.outputPortWidth,
-											portHeight: d.layout.outputPortHeight,
-											portRadius: this.getPortRadius(srcNode),
-											minInitialLine: srcNode.layout.minInitialLine,
-											guideObject: d.layout.outputPortGuideObject,
-											guideImage: d.layout.outputPortGuideImage,
-											linkArray: []
-										};
-										this.drawNewLink(d3Event);
+										if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
+											this.drawingNewLinkData = {
+												srcObjId: d.id,
+												srcPortId: port.id,
+												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+												srcNode: srcNode,
+												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+												portType: "output",
+												portObject: d.layout.outputPortObject,
+												portImage: d.layout.outputPortImage,
+												portWidth: d.layout.outputPortWidth,
+												portHeight: d.layout.outputPortHeight,
+												portRadius: this.getPortRadius(srcNode),
+												minInitialLine: srcNode.layout.minInitialLine,
+												guideObject: d.layout.outputPortGuideObject,
+												guideImage: d.layout.outputPortGuideImage,
+												linkArray: []
+											};
+											if (this.config.enableHighlightUnavailableNodes) {
+												this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
+											}
+											this.drawNewLink(d3Event);
+										}
 									}
 								})
 								.on("mouseenter", function(d3Event, port) {
@@ -2993,6 +3049,31 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("displayNodes " + this.getFlags());
 	}
 
+	// Sets the d3-node-unavailable class on any node that is currently not
+	// available for connection as a target node for the source node and port ID,
+	// passed in, of the link being manipulated. srcNode and scrPortId may be
+	// undefined if a detached link is being manipulated.
+	setUnavailableTargetNodesHighlighting(srcNode, srcPortId, links) {
+		this.nodesLinksGrp.selectAll(".d3-node-group")
+			.filter((trgNode) => !CanvasUtils.isTrgNodeAvailable(trgNode, srcNode, srcPortId, links))
+			.classed("d3-node-unavailable", true);
+	}
+
+	// Sets the d3-node-unavailable class on any node that is currently not
+	// available for connection as a source node for the target node and port ID,
+	// passed in, of the link being manipulated. trgNode and trgPortId may be
+	// undefined if a detached link is being manipulated.
+	setUnavailableSourceNodesHighlighting(trgNode, trgPortId, links) {
+		this.nodesLinksGrp.selectAll(".d3-node-group")
+			.filter((srcNode) => !CanvasUtils.isSrcNodeAvailable(srcNode, trgNode, trgPortId, links))
+			.classed("d3-node-unavailable", true);
+	}
+
+	// Removes the d3-node-unavailable class from any node that currently has it.
+	unsetUnavailableNodesHighlighting() {
+		d3.selectAll(".d3-node-group").classed("d3-node-unavailable", false);
+	}
+
 	displayEditIcon(spanObj, node) {
 		const that = this;
 		const labelObj = spanObj.parentElement;
@@ -3018,13 +3099,26 @@ export default class SVGCanvasRenderer {
 				that.hideEditIcon(this);
 			});
 
+		const EDIT_ICON_X_OFFSET = 5;
+		const EDIT_ICON_Y_OFFSET = -4;
+		const EDIT_ICON_POS_X = 4;
+		const EDIT_ICON_POS_Y = 4;
+
 		editIconGrpSel
 			.append("rect")
-			.attr("class", "d3-node-label-edit-icon-background")
-			.attr("width", 16)
-			.attr("height", 16)
+			.attr("class", "d3-node-label-edit-icon-background1")
+			.attr("width", 24 + EDIT_ICON_X_OFFSET)
+			.attr("height", 24)
 			.attr("x", 0)
-			.attr("y", 0);
+			.attr("y", EDIT_ICON_Y_OFFSET);
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background2")
+			.attr("width", 24)
+			.attr("height", 24)
+			.attr("x", EDIT_ICON_X_OFFSET)
+			.attr("y", EDIT_ICON_Y_OFFSET);
 
 		editIconGrpSel
 			.append("svg")
@@ -3032,8 +3126,8 @@ export default class SVGCanvasRenderer {
 			.html(EDIT_ICON)
 			.attr("width", 16)
 			.attr("height", 16)
-			.attr("x", 0)
-			.attr("y", 0);
+			.attr("x", EDIT_ICON_X_OFFSET + EDIT_ICON_POS_X)
+			.attr("y", EDIT_ICON_Y_OFFSET + EDIT_ICON_POS_Y);
 	}
 
 	hideEditIcon(spanObj) {
@@ -3157,7 +3251,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
-		let outlnSel = decSel.select("rect");
+		let outlnSel = decSel.selectChild("rect");
 
 		if (!dec.label && !dec.path && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
@@ -3174,7 +3268,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecPaths(dec, decSel, objType) {
-		let pathSel = decSel.select("path");
+		let pathSel = decSel.selectChild("path");
 
 		if (dec.path) {
 			pathSel = pathSel.empty() ? decSel.append("path") : pathSel;
@@ -3189,7 +3283,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecImages(dec, decSel, objType, d) {
-		let imageSel = decSel.select("g");
+		let imageSel = decSel.selectChild("g");
 
 		if (dec.image) {
 			const nodeImageType = this.getImageType(dec.image);
@@ -3207,7 +3301,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecLabels(dec, decSel, objType, d) {
-		let labelSel = decSel.select("foreignObject");
+		let labelSel = decSel.selectChild("foreignObject");
 
 		if (dec.label) {
 			if (labelSel.empty()) {
@@ -3217,13 +3311,13 @@ export default class SVGCanvasRenderer {
 					.attr("x", 0)
 					.attr("y", 0);
 				labelSel
-					.append("xhtml:div")
-					.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`));
+					.append("xhtml:div");
 			}
 			labelSel
 				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
 				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
 				.select("div")
+				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 				.html(dec.label);
 		} else {
 			labelSel.remove();
@@ -3282,45 +3376,18 @@ export default class SVGCanvasRenderer {
 
 	// Sets the image passed in into the D3 image selection passed in. This loads
 	// svg files as inline SVG while other images files are loaded with href.
-	// We will only set a new image if the image is new or has changed from what
-	// it was previously set to. This allows applications to set new images while
-	// the canvas is being displayed.
 	setImageContent(imageSel, image) {
-		const nodeImageType = this.getImageType(image);
 		if (image !== imageSel.attr("data-image")) {
+			const nodeImageType = this.getImageType(image);
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				this.addCopyOfImageToDefs(image);
-				this.updateUseObject(imageSel, image);
+				d3.svg(image, { cache: "force-cache" }).then((data) => {
+					imageSel.node().append(data.documentElement);
+				});
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
-		}
-	}
-
-	// If the image doesn't exist in <defs>, retrieves the image from the
-	// server and places it in the <defs> element with an id equal to the
-	// nodeImage string.
-	addCopyOfImageToDefs(nodeImage) {
-		const defs = this.canvasSVG.select("defs");
-		// Select using id as an attribute because creating a selector with a
-		// # prefix won't work when nodeImage is a file name with special characters.
-		if (defs.select(`[id='${nodeImage}']`).empty()) {
-			const defsSvg = defs.append("svg").attr("id", nodeImage);
-			d3.text(nodeImage).then((img) => defsSvg.html(img));
-		}
-	}
-
-	// Updates the <use> object on the image to reference the nodeImage passed
-	// in. This will add a new <use> object if one doesn't yet exist or update
-	// it if it does exist.
-	updateUseObject(imageObj, nodeImage) {
-		const useSel = imageObj.select("use");
-		if (useSel.empty()) {
-			imageObj.append("use").attr("href", `#${nodeImage}`);
-		} else {
-			useSel.attr("href", `#${nodeImage}`);
 		}
 	}
 
@@ -3546,7 +3613,8 @@ export default class SVGCanvasRenderer {
 		const nodeGrp = d3.select(node);
 		const selector = this.getSelectorForClass(cssNodePortArrow);
 		nodeGrp.selectAll(selector)
-			.attr("d", (port) => this.getPortArrowPath(port));
+			.attr("d", (port) => this.getPortArrowPath(port))
+			.attr("transform", (port) => this.getPortArrowPathTransform(port));
 	}
 
 	isEntryBindingNode(node) {
@@ -3843,7 +3911,7 @@ export default class SVGCanvasRenderer {
 			}
 			// Switch on an attribute to indicate a new link is being dragged
 			// towards and over a target node.
-			if (this.config.enableHightlightNodeOnNewLinkDrag) {
+			if (this.config.enableHighlightNodeOnNewLinkDrag) {
 				this.setNewLinkOverNode(d3Event);
 			}
 		}
@@ -3942,7 +4010,7 @@ export default class SVGCanvasRenderer {
 						.attr("y", d.y2 - (that.drawingNewLinkData.portHeight / 2))
 						.attr("width", that.drawingNewLinkData.portWidth)
 						.attr("height", that.drawingNewLinkData.portHeight)
-						.attr("transform", that.getGuideImageTransform(d));
+						.attr("transform", that.getLinkImageTransform(d));
 				} else {
 					d3.select(this)
 						.attr("cx", d.x2)
@@ -3952,12 +4020,16 @@ export default class SVGCanvasRenderer {
 			});
 	}
 
-	getGuideImageTransform(d) {
-		const adjacent = d.x2 - d.x1;
-		const opposite = d.y2 - d.y1;
-		let angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-		angle = adjacent >= 0 ? angle : angle + 180;
-		return `rotate(${angle},${d.x2},${d.y2})`;
+	getLinkImageTransform(d) {
+		let angle = 0;
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			const adjacent = d.x2 - d.x1;
+			const opposite = d.y2 - d.y1;
+			angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
+			angle = adjacent >= 0 ? angle : angle + 180;
+			return `rotate(${angle},${d.x2},${d.y2})`;
+		}
+		return null;
 	}
 
 	drawNewCommentLinkForPorts(transPos) {
@@ -4014,12 +4086,16 @@ export default class SVGCanvasRenderer {
 					this.completeNewLink(d3Event);
 				})
 				.merge(connectionArrowHeadSel)
-				.attr("d", (d) => this.getArrowHead(d));
+				.attr("d", (d) => this.getArrowHead(d))
+				.attr("transform", (d) => this.getArrowHeadTransform(d));
 		}
 	}
 
 	// Handles the completion of a new link being drawn from a source node.
 	completeNewLink(d3Event) {
+		if (this.config.enableHighlightUnavailableNodes) {
+			this.unsetUnavailableNodesHighlighting();
+		}
 		var trgNode = this.getNodeAtMousePos(d3Event);
 		if (trgNode !== null) {
 			this.completeNewLinkOnNode(d3Event, trgNode);
@@ -4040,18 +4116,18 @@ export default class SVGCanvasRenderer {
 		this.removeNewLink();
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
 		if (trgNode !== null) {
 			const type = this.drawingNewLinkData.action;
-			if (type === NODE_LINK || type === ASSOCIATION_LINK) {
+			if (type === NODE_LINK) {
 				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
-				const trgPortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE);
+				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
 
-				if (CanvasUtils.isConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links, type)) {
+				if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
 					this.canvasController.editActionHandler({
 						editType: "linkNodes",
 						editSource: "canvas",
@@ -4060,7 +4136,38 @@ export default class SVGCanvasRenderer {
 						type: type,
 						linkType: "data", // Added for historical purposes - for WML Canvas support
 						pipelineId: this.pipelineId });
+
+				} else if (this.config.enableLinkReplaceOnNewConnection &&
+										CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
+					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
+					// We only replace a link to a maxed out cardinality port if there
+					// is only one link. i.e. the input port cardinality is 0:1
+					if (linksToTrgPort.length === 1) {
+						this.canvasController.editActionHandler({
+							editType: "linkNodesAndReplace",
+							editSource: "canvas",
+							nodes: [{ "id": this.drawingNewLinkData.srcObjId, "portId": this.drawingNewLinkData.srcPortId }],
+							targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+							type: type,
+							pipelineId: this.pipelineId,
+							replaceLink: linksToTrgPort[0]
+						});
+					}
 				}
+
+			} else if (type === ASSOCIATION_LINK) {
+				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
+
+				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links)) {
+					this.canvasController.editActionHandler({
+						editType: "linkNodes",
+						editSource: "canvas",
+						nodes: [{ "id": this.drawingNewLinkData.srcObjId }],
+						targetNodes: [{ "id": trgNode.id }],
+						type: type,
+						pipelineId: this.pipelineId });
+				}
+
 			} else {
 				if (CanvasUtils.isCommentLinkConnectionAllowed(this.drawingNewLinkData.srcObjId, trgNode.id, this.activePipeline.links)) {
 					this.canvasController.editActionHandler({
@@ -4086,7 +4193,7 @@ export default class SVGCanvasRenderer {
 		this.removeNewLink();
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4105,7 +4212,7 @@ export default class SVGCanvasRenderer {
 
 	stopDrawingNewLink() {
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4224,7 +4331,7 @@ export default class SVGCanvasRenderer {
 
 		// Switch on an attribute to indicate a new link is being dragged
 		// towards and over a target node.
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNode(d3Event);
 		}
 	}
@@ -4244,7 +4351,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Switch 'new link over node' highlighting off
-		if (this.config.enableHightlightNodeOnNewLinkDrag) {
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
 			this.setNewLinkOverNodeCancel();
 		}
 
@@ -4253,7 +4360,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, proximity) {
+	getNewLinkOnDrag(d3Event, nodeProximity) {
 		const oldLink = this.draggingLinkData.oldLink;
 		const newLink = cloneDeep(oldLink);
 
@@ -4262,10 +4369,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.srcNodePortId;
 			delete newLink.srcPos;
 
-			const srcNode = this.getNodeAtMousePos(d3Event, proximity);
+			const srcNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
-				newLink.srcNodePortId = this.getNodePortAtMousePos(d3Event, OUTPUT_TYPE, proximity);
+				newLink.srcNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
+					: this.getOutputNodePortId(d3Event, srcNode);
 			}	else {
 				newLink.srcPos = this.draggingLinkData.link.srcPos;
 			}
@@ -4275,10 +4387,15 @@ export default class SVGCanvasRenderer {
 			delete newLink.trgNodePortId;
 			delete newLink.trgPos;
 
-			const trgNode = this.getNodeAtMousePos(d3Event, proximity);
+			const trgNode = nodeProximity
+				? this.getNodeNearMousePos(d3Event, nodeProximity)
+				: this.getNodeAtMousePos(d3Event);
+
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
-				newLink.trgNodePortId = this.getNodePortAtMousePos(d3Event, INPUT_TYPE, proximity);
+				newLink.trgNodePortId = nodeProximity
+					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
+					: this.getInputNodePortId(d3Event, trgNode);
 			}	else {
 				newLink.trgPos = this.draggingLinkData.link.trgPos;
 			}
@@ -4426,14 +4543,123 @@ export default class SVGCanvasRenderer {
 		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
-	// Returns the node that is at the current mouse position. If nodeProximity
+	// Returns a node, if one can be found, at the position indicated by
+	// the clientX and clientY coordinates in the d3Event.
+	getNodeAtMousePos(d3Event) {
+		const nodeGrpElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-group");
+		return this.getNodeForElement(nodeGrpElement);
+	}
+
+	// Returns an input node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getInputNodePortId(d3Event, trgNode) {
+		let inputPortId = this.getInputNodePortIdAtMousePos(d3Event);
+		if (!inputPortId) {
+			inputPortId = CanvasUtils.getDefaultInputPortId(trgNode);
+		}
+		return inputPortId;
+	}
+
+	// Returns a node input port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getInputNodePortIdAtMousePos(d3Event) {
+		let portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input");
+		if (!portElement) {
+			portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input-arrow");
+		}
+		return this.getNodePortIdForElement(portElement);
+	}
+
+	// Returns an output node port ID for either, the port that is under the mouse
+	// position described by d3Event or, if the mouse is not over a port, the
+	// ID of the default port for the node provided.
+	getOutputNodePortId(d3Event, srcNode) {
+		let outputPortId = this.getOutputNodePortIdAtMousePos(d3Event);
+		if (!outputPortId) {
+			outputPortId = CanvasUtils.getDefaultOutputPortId(srcNode);
+		}
+		return outputPortId;
+	}
+
+	// Returns a node output port ID, if one can be found, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	getOutputNodePortIdAtMousePos(d3Event) {
+		const portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-output");
+		return this.getNodePortIdForElement(portElement);
+	}
+
+
+	// Returns a DOM element which either has the classNames passed in or
+	// has an ancestor with the className passed in, at the position
+	// indicated by the clientX and clientY coordinates in the d3Event.
+	// Note: It may not be the top-most element so we have to search through the
+	// elements array for it.
+	getElementWithClassAtMousePos(d3Event, className) {
+		const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
+		const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
+		const elements = document.elementsFromPoint(posX, posY);
+		let foundElement = null;
+		let count = 0;
+		while (!foundElement && count < elements.length) {
+			foundElement = this.getParentElementWithClass(elements[count], className);
+			count++;
+		}
+		return foundElement;
+	}
+
+	// Returns the element passed in, or an ancestor of the element, if either
+	// contains the classNames passed in. Otherwise it returns null if the
+	// className cannot be found. For example, if this element is a child of the
+	// node group object and "d3-node-group" is passed in, this function will
+	// find the group element.
+	getParentElementWithClass(element, className) {
+		let el = element;
+		let foundElement = null;
+
+		while (el) {
+			if (el.className && el.className.baseVal && el.className.baseVal.includes(".d3-new-connection-guide")) {
+				el = null;
+			} else if (el.className && el.className.baseVal && el.className.baseVal.includes(className) &&
+									el.getAttribute("data-pipeline-id") === this.pipelineId) {
+				foundElement = el;
+				el = null;
+			} else {
+				el = el.parentNode;
+			}
+		}
+		return foundElement;
+	}
+
+	// Returns the node link object from the canvasInfo corresponding to the
+	// element passed in provided it is a 'path' DOM object. Returns null if
+	// a link cannot be found.
+	getNodeForElement(element) {
+		if (element && element.nodeName === "g") {
+			const datum = d3.select(element).datum();
+			if (datum) {
+				return this.getNode(datum.id);
+			}
+		}
+		return null;
+	}
+
+	// Returns the node port Id corresponding to the lement passed in.
+	getNodePortIdForElement(element) {
+		if (element) {
+			return d3.select(element).attr("data-port-id");
+		}
+		return null;
+	}
+
+	// Returns the node that is near the current mouse position. If nodeProximity
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
-	getNodeAtMousePos(d3Event, proximity) {
+	getNodeNearMousePos(d3Event, nodeProximity) {
 		const that = this;
 		var pos = this.getTransformedMousePos(d3Event);
 		var node = null;
-		const prox = proximity || 0;
+		const prox = nodeProximity || 0;
 		const selector = this.getSelectorForClass("d3-node-group");
 		this.nodesLinksGrp.selectAll(selector)
 			.each(function(d) {
@@ -4452,14 +4678,12 @@ export default class SVGCanvasRenderer {
 		return node;
 	}
 
-	getNodePortAtMousePos(d3Event, portType, nodeProximity, portProximity) {
+	getNodePortIdNearMousePos(d3Event, portType, node) {
 		if (this.canvasLayout.connectionType === "halo") {
 			return null;
 		}
 
 		const pos = this.getTransformedMousePos(d3Event);
-		const node = this.getNodeAtMousePos(d3Event, nodeProximity);
-		const portProx = portProximity || 0;
 		let portId = null;
 		let defaultPortId = null;
 
@@ -4472,13 +4696,13 @@ export default class SVGCanvasRenderer {
 				portClassName = this.getNodeOutputPortClassName();
 				portObjectType = node.layout.outputPortObject;
 				nodeWidthOffset = node.width;
-				defaultPortId = this.getDefaultOutputPortId(node);
+				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
 
 			} else {
 				portClassName = this.getNodeInputPortClassName();
 				portObjectType = node.layout.inputPortObject;
 				nodeWidthOffset = 0;
-				defaultPortId = this.getDefaultInputPortId(node);
+				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
 			}
 
 			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
@@ -4489,19 +4713,19 @@ export default class SVGCanvasRenderer {
 						const yy = node.y_pos + Number(portObj.attr("y"));
 						const wd = Number(portObj.attr("width"));
 						const ht = Number(portObj.attr("height"));
-						if (pos.x >= xx - portProx &&
-								pos.x <= xx + nodeWidthOffset + wd + portProx &&
-								pos.y >= yy - portProx &&
-								pos.y <= yy + ht + portProx) {
+						if (pos.x >= xx &&
+								pos.x <= xx + nodeWidthOffset + wd &&
+								pos.y >= yy &&
+								pos.y <= yy + ht) {
 							portId = this.getAttribute("data-port-id");
 						}
 					} else { // Port must be a circle
 						const cx = node.x_pos + Number(portObj.attr("cx"));
 						const cy = node.y_pos + Number(portObj.attr("cy"));
-						if (pos.x >= cx - node.layout.portRadius - portProx && // Target port sticks out by its radius so need to allow for it.
-								pos.x <= cx + node.layout.portRadius + portProx &&
-								pos.y >= cy - node.layout.portRadius - portProx &&
-								pos.y <= cy + node.layout.portRadius + portProx) {
+						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+								pos.x <= cx + node.layout.portRadius &&
+								pos.y >= cy - node.layout.portRadius &&
+								pos.y <= cy + node.layout.portRadius) {
 							portId = this.getAttribute("data-port-id");
 						}
 					}
@@ -4823,7 +5047,7 @@ export default class SVGCanvasRenderer {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
-		} else if (this.dragging && !this.commentSizing && !this.nodeSizing) {
+		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			commentGroupSel
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((d) => that.getComment(d.id)); // Set the __data__ to the updated data
@@ -5064,7 +5288,7 @@ export default class SVGCanvasRenderer {
 						.html((cd) => cd.content);
 
 					// Comment halo
-					// We need to dynamically set size of the halo here becasue the size
+					// We need to dynamically set size of the halo here because the size
 					// of the text object maye be changed by the user.
 					if (that.canvasLayout.connectionType === "halo") {
 						commentGrp.select(this.getSelectorForId("comment_halo", d.id))
@@ -5127,14 +5351,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
-		let style = this.getObjectStyle(d, "text", type);
-
-		// When editing a comment always override the text color with
-		// 'transparent' so the SVG text becomes invisible and the user only sees
-		// the text in the textarea which is open during editing.
-		if (d.id === this.editingTextId && this.editingText) {
-			style = style ? style + " color: transparent" : "color: transparent";
-		}
+		const style = this.getObjectStyle(d, "text", type);
 		comGrp.select(this.getSelectorForId("comment_text", d.id))
 			.select("div")
 			.attr("style", style);
@@ -5168,6 +5385,9 @@ export default class SVGCanvasRenderer {
 			id: d.id,
 			text: d.content,
 			singleLine: false,
+			maxCharacters: null,
+			allowReturnKey: true,
+			textCanBeEmpty: true,
 			xPos: 0,
 			yPos: 0,
 			width: d.width,
@@ -5175,18 +5395,19 @@ export default class SVGCanvasRenderer {
 			className: "d3-comment-entry",
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeComment.bind(this),
-			saveTextChangesCallback: this.saveCommentChanges.bind(this)
+			saveTextChangesCallback: this.saveCommentChanges.bind(this),
+			closeTextAreaCallback: null
 		});
 	}
 
-	autoSizeComment(textArea, foreignObject, id, autoSizeCallback) {
+	autoSizeComment(textArea, foreignObject, data) {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
 		if (this.textAreaHeight < scrollHeight) {
 			this.textAreaHeight = scrollHeight;
 			foreignObject.style("height", this.textAreaHeight + "px");
-			this.getComment(id).height = this.textAreaHeight;
+			this.getComment(data.id).height = this.textAreaHeight;
 			this.displayComments();
 			this.displayLinks();
 		}
@@ -5209,10 +5430,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodeLabelTextArea(node, parentObj) {
+		d3.select(parentObj).selectAll("div")
+			.attr("style", "display:none;");
 		this.displayTextArea({
 			id: node.id,
 			text: node.label,
 			singleLine: node.layout.labelSingleLine,
+			maxCharacters: node.layout.labelMaxCharacters,
+			allowReturnKey: node.layout.labelAllowReturnKey,
+			textCanBeEmpty: false,
 			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
 			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
 			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
@@ -5220,13 +5446,19 @@ export default class SVGCanvasRenderer {
 			className: this.getNodeLabelTextAreaClass(node),
 			parentObj: parentObj,
 			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
-			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this)
+			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
+			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
 		});
 	}
 
-	autoSizeNodeLabel(textArea, foreignObject, id, autoSizeCallback) {
+	autoSizeNodeLabel(textArea, foreignObject, data) {
 		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
+		// Restrict max characters in case text was pasted in to the text area.
+		if (data.maxCharacters &&
+				textArea.value.length > data.maxCharacters) {
+			textArea.value = textArea.value.substring(0, data.maxCharacters);
+		}
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
@@ -5245,6 +5477,15 @@ export default class SVGCanvasRenderer {
 			pipelineId: this.activePipeline.id
 		};
 		this.canvasController.editActionHandler(data);
+	}
+
+	// Called when the node label text area is closed. Sets the style of the
+	// div for the node label so the label is displayed (because it was hidden
+	// when the text area opened).
+	closeNodeLabelTextArea(nodeId) {
+		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", nodeId));
+		nodeGrp.selectAll("div")
+			.attr("style", null);
 	}
 
 	displayTextArea(data) {
@@ -5267,36 +5508,54 @@ export default class SVGCanvasRenderer {
 			.attr("class", data.className)
 			.text(data.text)
 			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all one one line.
-				if (data.singleLine && d3Event.keyCode === RETURN_KEY) {
+				// Don't accept return key press when text is all on one line or
+				// if application doesn't want line feeds inserted in the label.
+				if ((data.singleLine || !data.allowReturnKey) &&
+						d3Event.keyCode === RETURN_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					that.textAreaEscKeyPressed = true;
-					that.closeTextArea(foreignObject);
+					that.closeTextArea(foreignObject, data);
+				}
+				if (data.maxCharacters &&
+						this.value.length >= data.maxCharacters &&
+						!that.textAreaAllowedKeys(d3Event)) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 			})
 			.on("keyup", function(d3Event) {
-				data.autoSizeCallback(this, foreignObject, data.id, data.autoSizeCallback);
+				data.autoSizeCallback(this, foreignObject, data);
 			})
 			.on("paste", function() {
 				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data.id, data.autoSizeCallback);
+				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data);
 			})
 			.on("blur", function(d3Event, d) {
 				that.logger.log("Text area - blur");
+				// If the esc key was pressed to cause the blur event just return
+				// so label returns to what it was before editing started.
 				if (that.textAreaEscKeyPressed) {
 					that.textAreaEscKeyPressed = false;
 					return;
 				}
+				// If there is no text for the label and textCanBeEmpty is false
+				// just return so label returns to what it was before editing started.
+				if (!this.value && !data.textCanBeEmpty) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					that.closeTextArea(foreignObject, data);
+					return;
+				}
 				const newText = this.value; // Save the text before closing the foreign object
-				that.closeTextArea(foreignObject);
+				that.closeTextArea(foreignObject, data);
 				if (data.text !== newText) {
+					that.isCommentBeingUpdated = true;
 					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight);
+					that.isCommentBeingUpdatd = false;
 				}
 			})
 			.on("focus", function(d3Event, d) {
@@ -5314,10 +5573,25 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Closes the text area and resets the flags.
-	closeTextArea(foreignObject) {
+	closeTextArea(foreignObject, data) {
+		if (data.closeTextAreaCallback) {
+			data.closeTextAreaCallback(data.id);
+		}
 		foreignObject.remove();
 		this.editingText = false;
 		this.editingTextId = "";
+	}
+
+	// Returns true if one of the keys that are allowed in the text area, when
+	// checking for maximum characters, has been pressed.
+	textAreaAllowedKeys(d3Event) {
+		return d3Event.keyCode === DELETE_KEY ||
+			d3Event.keyCode === BACKSPACE_KEY ||
+			d3Event.keyCode === LEFT_ARROW_KEY ||
+			d3Event.keyCode === RIGHT_ARROW_KEY ||
+			d3Event.keyCode === UP_ARROW_KEY ||
+			d3Event.keyCode === DOWN_ARROW_KEY ||
+			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
 	}
 
 	// Adds a rectangle over the top of the canvas which is used to display a
@@ -5827,6 +6101,7 @@ export default class SVGCanvasRenderer {
 			.selectAll(".d3-link-line-arrow-head")
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => this.getArrowHead(d))
+			.attr("transform", (d) => this.getArrowHeadTransform(d))
 			.attr("class", "d3-link-line-arrow-head")
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
@@ -5916,7 +6191,7 @@ export default class SVGCanvasRenderer {
 						.attr("y", (d) => d.y2 - (this.canvasLayout.linkEndHandleHeight / 2))
 						.attr("width", this.canvasLayout.linkEndHandleWidth)
 						.attr("height", this.canvasLayout.linkEndHandleHeight)
-						.attr("transform", (d) => this.getGuideImageTransform(d));
+						.attr("transform", (d) => this.getLinkImageTransform(d));
 
 				} else if (this.canvasLayout.linkEndHandleObject === "circle") {
 					obj
@@ -6033,7 +6308,7 @@ export default class SVGCanvasRenderer {
 	// the side of the node and where those nodes may be positioned close to each
 	// other so it makes the ports appear on top of any adjacent node.
 	raiseNodeToTop(nodeGrp) {
-		if (this.drawingNewLinkData === null && !this.dragging) {
+		if (this.drawingNewLinkData === null && !this.dragging && this.getSelectedLinks().length === 0) {
 			nodeGrp.raise();
 		}
 	}
@@ -6269,18 +6544,18 @@ export default class SVGCanvasRenderer {
 	// Returns true if the linked objects overlap. srcObj can be either a comment
 	// or node while trgNode is always a node.
 	areLinkedObjectsOverlapping(srcObj, trgNode, linkType) {
-		const srcHightlightGap = linkType === COMMENT_LINK ? this.canvasLayout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
-		const trgHightlightGap = trgNode.layout.nodeHighlightGap;
+		const srcHighlightGap = linkType === COMMENT_LINK ? this.canvasLayout.commentHighlightGap : srcObj.layout.nodeHighlightGap;
+		const trgHighlightGap = trgNode.layout.nodeHighlightGap;
 
-		const srcLeft = srcObj.x_pos - srcHightlightGap;
-		const srcRight = srcObj.x_pos + srcObj.width + srcHightlightGap;
-		const trgLeft = trgNode.x_pos - trgHightlightGap;
-		const trgRight = trgNode.x_pos + trgNode.width + trgHightlightGap;
+		const srcLeft = srcObj.x_pos - srcHighlightGap;
+		const srcRight = srcObj.x_pos + srcObj.width + srcHighlightGap;
+		const trgLeft = trgNode.x_pos - trgHighlightGap;
+		const trgRight = trgNode.x_pos + trgNode.width + trgHighlightGap;
 
-		const srcTop = srcObj.y_pos - srcHightlightGap;
-		const srcBottom = srcObj.y_pos + srcObj.height + srcHightlightGap;
-		const trgTop = trgNode.y_pos - trgHightlightGap;
-		const trgBottom = trgNode.y_pos + trgNode.height + trgHightlightGap;
+		const srcTop = srcObj.y_pos - srcHighlightGap;
+		const srcBottom = srcObj.y_pos + srcObj.height + srcHighlightGap;
+		const trgTop = trgNode.y_pos - trgHighlightGap;
+		const trgBottom = trgNode.y_pos + trgNode.height + trgHighlightGap;
 
 		if (srcRight >= trgLeft && trgRight >= srcLeft &&
 				srcBottom >= trgTop && trgBottom >= srcTop) {
@@ -6396,46 +6671,62 @@ export default class SVGCanvasRenderer {
 		return ASSOC_VAR_DOUBLE_BACK_RIGHT;
 	}
 
-	// Returns path for arrow head
+	// Returns path for arrow head displayed within an input port circle. It is
+	// draw so the tip is 2px in front of the origin 0,0 so it appears nicely in
+	// the port circle.
 	getPortArrowPath(port) {
-		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return `M ${port.cx - 3} ${port.cy - 2} L ${port.cx} ${port.cy + 2} ${port.cx + 3} ${port.cy - 2}`;
-
-		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			return `M ${port.cx - 3} ${port.cy + 2} L ${port.cx} ${port.cy - 2} ${port.cx + 3} ${port.cy + 2}`;
-		}
-
-		return `M ${port.cx - 2} ${port.cy - 3} L ${port.cx + 2} ${port.cy} ${port.cx - 2} ${port.cy + 3}`;
+		return "M -2 3 L 2 0 -2 -3";
 	}
 
-	// Returns arrow head path. If the linkType is Elbow it makes sure
-	// the arrow head is for a horizontal line because the end of those types of
-	// line is always horizontal. Otherwise it returns an arrow head
-	// path relevant to the slope of the straight link being drawn.
+	// Returns the transform to position and, if ncessecary, rotate the port
+	// circle arrow.
+	getPortArrowPathTransform(port) {
+		const angle = this.getAngleBasedOnLinkDirection();
+		return `translate(${port.cx}, ${port.cy}) rotate(${angle})`;
+	}
+
+	// Returns an SVG path to draw the arrow head.
 	getArrowHead(d) {
+		if (d.type === COMMENT_LINK) {
+			if (typeof this.canvasLayout.commentLinkArrowHead === "string") {
+				return this.canvasLayout.commentLinkArrowHead;
+			}
+			return "M -8 3 L 0 0 -8 -3";
+		}
+		if (typeof this.canvasLayout.dataLinkArrowHead === "string") {
+			return this.canvasLayout.dataLinkArrowHead;
+		}
+		return "M -8 8 L 0 0 -8 -8";
+	}
+
+	// Returns a transform for an arrow head at the end of a link line.
+	// If the linkType is Elbow, it makes sure the arrow head is either
+	// horizontal for left-right or vertical for top-bottom/bottom-top link
+	// directions, because the end of elbow lines are always at the same angle as
+	// the elbow lines. Otherwise it returns an angle so the arrow head is
+	// relevant to the slope of the straight link being drawn.
+	// TODO -- This doesn't handle "Curve" link types very well (in fact for
+	// curves it returns the same as for "Straight" links) becauset it is very
+	// difficult to write an algorithm that gives the correct angle for a
+	// "Curve" link to make it look presentable. I know, I tried!
+	getArrowHeadTransform(d) {
 		const angle =
 			this.canvasLayout.linkType === LINK_TYPE_ELBOW
-				? this.getElbowArrowHeadAngle()
-				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1));
+				? this.getAngleBasedOnLinkDirection()
+				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 
-		const clockwiseAngle = angle - 0.3;
-		const x3 = d.x2 - Math.cos(clockwiseAngle) * 10;
-		const y3 = d.y2 - Math.sin(clockwiseAngle) * 10;
-
-		const antiClockwiseAngle = angle + 0.3;
-		const x4 = d.x2 - Math.cos(antiClockwiseAngle) * 10;
-		const y4 = d.y2 - Math.sin(antiClockwiseAngle) * 10;
-
-		return `M ${d.x2} ${d.y2} L ${x3} ${y3} M ${d.x2} ${d.y2} L ${x4} ${y4}`;
+		return `translate(${d.x2}, ${d.y2}) rotate(${angle})`;
 	}
 
-	// Returns the angle the arrow head, for an elbow type link, should point.
-	getElbowArrowHeadAngle() {
+	// Returns the angle for the arrow head when perpndicular arrows are in
+	// us such as when a the link type is "Elbow" or when we are displaying an
+	// arrow head inside a port circle.
+	getAngleBasedOnLinkDirection() {
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-			return NINETY_DEGREES_IN_RADIANS;
+			return NINETY_DEGREES;
 
 		} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-			return -NINETY_DEGREES_IN_RADIANS;
+			return -NINETY_DEGREES;
 		}
 		return 0;
 	}
@@ -6467,6 +6758,16 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.comments.forEach((comment) => {
 			if (this.objectModel.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
+			}
+		});
+		return objs;
+	}
+
+	getSelectedLinks() {
+		var objs = [];
+		this.activePipeline.links.forEach((link) => {
+			if (this.objectModel.getSelectedObjectIds().includes(link.id)) {
+				objs.push(link);
 			}
 		});
 		return objs;

@@ -334,12 +334,48 @@ export default class CanvasUtils {
 		return node.outputs && node.outputs.length > 0;
 	}
 
+	// Returns true if an existing link to the target node and port can be
+	// replaced with a new link from the srcNode to the trgNode and trgPortId.
+	static isDataLinkReplacementAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		// Link replacement is only allowed when the input port has a maximum
+		// cardinality of one.
+		if (this.getMaxCardinality(trgNodePortId, trgNode.inputs) !== 1) {
+			return false;
+		}
+
+		if (!this.isTrgCardinalityAtMax(trgNodePortId, trgNode, links)) {
+			return false;
+		}
+		return true;
+	}
+
 	// Returns true if a regular node-node data link can be created between the
 	// two node/port combinations provided, given the current set of links
 	// passed in.
 	static isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
 
-		if (!srcNode || !trgNode) { // Source ot target are not valid.
+		if (!this.isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		if (this.isCardinalityAtMax(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// Returns true if a regular node-node data link can be created between the
+	// two node/port combinations provided, without checking on cardinalities of
+	// the source or target nodes.
+	static isDataConnectionAllowedNoCardinality(srcNodePortId, trgNodePortId, srcNode, trgNode, links) {
+
+		if (!srcNode || !trgNode) { // Source or target are not valid.
 			return false;
 		}
 
@@ -352,10 +388,6 @@ export default class CanvasUtils {
 		}
 
 		if (this.linkAlreadyExists(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
-			return false;
-		}
-
-		if (this.isCardinalityAtMax(srcNodePortId, trgNodePortId, srcNode, trgNode, links)) {
 			return false;
 		}
 
@@ -373,25 +405,72 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
+		// We don't check if the association link alrady exists because it makes
+		// sense for some applications that multiple connctions bewteen nodes are
+		// allowed. Uncomment this code if we decide to add a config variable
+		// to allow this in the future.
+		// if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
+		// 	return false;
+		// }
+
+		return true;
+	}
+
+	// Note - Uncomment this function if in the future we decide to enfore
+	// preventing multiple association links to be created by providing a config
+	// variable..
+	// Returns true if an association link already exists between the two nodes
+	// passed in given the set of links passed in.
+	// static assocLinkAlreadyExists(srcNode, trgNode, links) {
+	// 	let exists = false;
+	//
+	// 	links.forEach((link) => {
+	// 		if ((link.srcNodeId === srcNode.id && link.trgNodeId === trgNode.id) ||
+	// 				(link.srcNodeId === trgNode.id && link.trgNodeId === srcNode.id)) {
+	// 			exists = true;
+	// 		}
+	// 	});
+	// 	return exists;
+	// }
+
+	// Returns true if the source node passed in is available to be linked to the
+	// target node and port passed in. trgNode and trgPortId may be undefined if
+	// the call is being made while a detached link is being manipulated.
+	static isSrcNodeAvailable(srcNode, trgNode, trgNodePortId, links) {
+		// Don't disable the target node
+		if (trgNode && trgNode.id === srcNode.id) {
+			return true;
+		}
+
+		if (!this.doesNodeHaveOutputPorts(srcNode)) {
+			return false;
+		}
+
+		if (this.isSrcNodePortsCardinalityAtMax(srcNode, links)) {
 			return false;
 		}
 
 		return true;
 	}
 
-	// Returns true if an association link already exists between the two nodes
-	// passed in given the set of links passed in.
-	static assocLinkAlreadyExists(srcNode, trgNode, links) {
-		let exists = false;
+	// Returns true if the targt node passed in is available to be linked to the
+	// source node and port passed in. srcNode and srcPortId may be undefined if
+	// the call is being made while a detached link is being manipulated.
+	static isTrgNodeAvailable(trgNode, srcNode, srcNodePortId, links) {
+		// Don't disable the source node
+		if (srcNode && srcNode.id === trgNode.id) {
+			return true;
+		}
 
-		links.forEach((link) => {
-			if ((link.srcNodeId === srcNode.id && link.trgNodeId === trgNode.id) ||
-					(link.srcNodeId === trgNode.id && link.trgNodeId === srcNode.id)) {
-				exists = true;
-			}
-		});
-		return exists;
+		if (!this.doesNodeHaveInputPorts(trgNode)) {
+			return false;
+		}
+
+		if (this.isTrgNodePortsCardinalityAtMax(trgNode, links)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	// Returns true if a link already exists from the source node and port to
@@ -408,6 +487,24 @@ export default class CanvasUtils {
 			}
 		});
 		return exists;
+	}
+
+	// Returns true if all the ports of the source node are at maximum cardinality.
+	static isSrcNodePortsCardinalityAtMax(srcNode, links) {
+		if (srcNode) {
+			const index = srcNode.outputs.findIndex((output) => !this.isSrcCardinalityAtMax(output.id, srcNode, links));
+			return index === -1;
+		}
+		return false;
+	}
+
+	// Returns true if all the ports of the target node are at maximum cardinality.
+	static isTrgNodePortsCardinalityAtMax(trgNode, links) {
+		if (trgNode) {
+			const index = trgNode.inputs.findIndex((input) => !this.isTrgCardinalityAtMax(input.id, trgNode, links));
+			return index === -1;
+		}
+		return false;
 	}
 
 	// Returns true if the cardinality is maxed out for the source and target
@@ -435,14 +532,11 @@ export default class CanvasUtils {
 			}
 		});
 
-		if (srcCount > 0) {
-			const srcPort = this.getPort(srcNode.outputs, srcPortId);
-			if (srcPort &&
-					srcPort.cardinality &&
-					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					srcCount >= Number(srcPort.cardinality.max)) {
-				return true;
-			}
+		const maxCard = this.getMaxCardinality(srcPortId, srcNode.outputs);
+		if (maxCard !== null && // Might be 0! So test explicitley for non null.
+				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+				srcCount >= maxCard) {
+			return true;
 		}
 
 		return false;
@@ -465,14 +559,11 @@ export default class CanvasUtils {
 			}
 		});
 
-		if (trgCount > 0) {
-			const trgPort = this.getPort(trgNode.inputs, trgPortId);
-			if (trgPort &&
-					trgPort.cardinality &&
-					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
-					trgCount >= Number(trgPort.cardinality.max)) {
-				return true;
-			}
+		const maxCard = this.getMaxCardinality(trgPortId, trgNode.inputs);
+		if (maxCard !== null && // Might be 0! Yes believe it or not someone does set it to zero. So test explicitley for non null.
+				maxCard !== -1 && // -1 indicates an infinite numder of ports are allowed
+				trgCount >= maxCard) {
+			return true;
 		}
 
 		return false;
@@ -490,11 +581,22 @@ export default class CanvasUtils {
 	}
 
 	// Returns the port from the port array indicated by the portId.
-	static getPort(portArray, portId) {
+	static getPort(portId, portArray) {
 		const index = portArray.findIndex((port) => port.id === portId);
 
 		if (index > -1) {
 			return portArray[index];
+		}
+		return null;
+	}
+
+	// Returns the maximum cardinality, if one exists, for the port ID passed in
+	// from the array of ports provided.
+	static getMaxCardinality(portId, ports) {
+		const port = this.getPort(portId, ports);
+		if (port &&
+				port.cardinality) {
+			return Number(port.cardinality.max);
 		}
 		return null;
 	}
@@ -680,6 +782,32 @@ export default class CanvasUtils {
 			width: canvWidth,
 			height: canvHeight
 		};
+	}
+
+	// Returns a subset of links from the links passed in which connect to
+	// the target node and port passed in.
+	static getDataLinksConnectedTo(trgPortId, trgNode, links) {
+		const defTrgPortId = this.getDefaultInputPortId(trgNode);
+
+		return links.filter((link) => {
+			if (link.type === NODE_LINK) {
+				const linkTrgPortId = link.trgNodePortId || defTrgPortId;
+				return link.trgNodeId === trgNode.id && linkTrgPortId === trgPortId;
+			}
+			return false;
+		});
+	}
+
+	// Returns the default input port ID for the node, which will be the ID of
+	// the first port, or null if there are no inputs.
+	static getDefaultInputPortId(node) {
+		return (node.inputs && node.inputs.length > 0 ? node.inputs[0].id : null);
+	}
+
+	// Returns the default output port ID for the node, which will be the ID of
+	// the first port, or null if there are no outputs.
+	static getDefaultOutputPortId(node) {
+		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
 }

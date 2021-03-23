@@ -1,8 +1,8 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "https://json-schema.org/draft-04/schema#",
   "description": "WDP Pipeline Flow Schema",
   "type": "object",
-  "id": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
+  "id": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
   "properties": {
     "doc_type": {
       "description": "Document type",
@@ -17,7 +17,7 @@
     "json_schema": {
       "description": "Refers to the JSON schema used to validate documents of this type",
       "enum": [
-        "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json"
+        "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json"
       ]
     },
     "open_with_tool": {
@@ -52,7 +52,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json#/definitions/record_schema"
+        "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json#/definitions/record_schema"
       },
       "uniqueItems": true
     },
@@ -70,7 +70,7 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/parameters/parameters-v2-schema.json#/definitions/param_property_ref"
+        "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/parameters/parameters-v2-schema.json#/definitions/param_property_ref"
       },
       "uniqueItems": true
     },
@@ -269,10 +269,10 @@
           "$ref": "#/definitions/app_data_def"
         },
         "connection": {
-          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
+          "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
         },
         "data_asset": {
-          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
+          "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
         },
         "op": {
           "description": "Binding node type identifier",
@@ -312,10 +312,10 @@
           "$ref": "#/definitions/app_data_def"
         },
         "connection": {
-          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
+          "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
         },
         "data_asset": {
-          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
+          "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
         },
         "op": {
           "description": "Binding node type identifier",
@@ -503,19 +503,19 @@
         "ui_data": {
           "anyOf": [
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview_def"
+              "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview_def"
             },
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def"
+              "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def"
             },
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def"
+              "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def"
             },
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def"
+              "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def"
             },
             {
-              "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def"
+              "$ref": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def"
             }
           ]
         }

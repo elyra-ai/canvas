@@ -39,30 +39,40 @@ export default class TablesCanvas extends React.Component {
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
 			enableAssocLinkType: "RightSideCurve",
+			enableLinkDirection: "LeftRight",
 			enableParentClass: "tables-join",
+			enableHighlightNodeOnNewLinkDrag: true,
 			enableNodeLayout: {
 				defaultNodeWidth: 220,
 				defaultNodeHeight: 50,
+
 				bodyPath: this.getPath(this.left, this.right, this.top, this.bot),
 				selectionPath: this.getPath(this.left, this.right, this.top, this.bot),
+
 				imageDisplay: false,
+
 				labelEditable: true,
 				labelWidth: 150,
 				labelPosX: 23,
 				labelPosY: 8,
-				inputPortLeftPosY: 25,
-				outputPortRightPosY: 25,
-				portRadius: 8,
+
 				ellipsisPosX: 190,
 				ellipsisPosY: 16,
+
+				portRadius: 8,
+
 				inputPortObject: "image",
 				inputPortImage: "/images/custom-canvases/tables/tables-port-left.png",
 				inputPortWidth: 20,
 				inputPortHeight: 20,
+				inputPortLeftPosY: 25,
+				inputPortLeftPosX: 0,
+
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/tables/tables-port-right.png",
 				outputPortWidth: 20,
-				outputPortHeight: 20
+				outputPortHeight: 20,
+				outputPortRightPosY: 25,
 			}
 		});
 		this.layoutHandler = this.layoutHandler.bind(this);

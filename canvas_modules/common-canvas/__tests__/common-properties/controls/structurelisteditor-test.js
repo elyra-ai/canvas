@@ -632,6 +632,21 @@ describe("StructureListEditor render from paramdef", () => {
 
 	});
 
+	it("Should render the default value set in the parameter for a structure with type 'object' when current_parameters is not set", () => {
+		const defaultStructureObjectPropertyId = { name: "structurelisteditorDefaultObjectType" };
+		const internalCurrentValues = renderedController.getPropertyValue(defaultStructureObjectPropertyId);
+		const expectedInternalValues = [
+			[1, "row1name", "row1desc", "string", "row1read"],
+			[2, "row2name", "row2desc", "number", "row2read"],
+			[3, "row3name", "row3desc", "boolean", "row3read"]];
+		expect(JSON.stringify(internalCurrentValues)).to.equal(JSON.stringify(expectedInternalValues));
+
+		const externalCurrentValues = renderedController.getPropertyValue(defaultStructureObjectPropertyId, { applyProperties: true });
+		const parameter = propertyUtils.getParameterFromParamDef(defaultStructureObjectPropertyId.name, structureListEditorParamDef);
+		expect(parameter).to.not.equal(null);
+		const externalExpectedValues = parameter.default;
+		expect(JSON.stringify(externalCurrentValues)).to.equal(JSON.stringify(externalExpectedValues));
+	});
 });
 
 describe("StructureListEditor renders correctly with nested controls", () => {

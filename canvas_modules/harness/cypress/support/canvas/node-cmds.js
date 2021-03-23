@@ -37,7 +37,7 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.find("foreignObject > div")
+		.find("foreignObject > div > span")
 		.dblclick();
 });
 
@@ -45,7 +45,7 @@ Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find(".d3-node-label-edit-icon-group")
 		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
-		.click();
+		.click({ force: true });
 });
 
 Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
@@ -191,7 +191,7 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-label")
+		.find(".d3-node-label > span")
 		.trigger("mouseenter");
 });
 
@@ -268,6 +268,8 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 			// Palette Layout - Flyout
 			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
+			cy.get("#harness-app-container")
+				.trigger("dragover", canvasX, canvasY, { dataTransfer });
 			cy.get("#harness-app-container")
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		}

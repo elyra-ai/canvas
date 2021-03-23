@@ -27,10 +27,6 @@
 		.d3-node-body-outline {
 			fill: transparent;
 			stroke: transparent;
-
-			&[hover="yes"] {
-				fill: transparent;
-			}
 		}
 
 		// Style the node selection highlighting
@@ -106,11 +102,18 @@
 	// ----------------------------------------------------
 	.d3-link-group {
 
+		&:hover .d3-link-line-arrow-head,
+		&.d3-data-link[data-selected] .d3-link-line-arrow-head {
+			fill: transparent;
+			stroke: transparent;
+		}
+
 		.d3-link-dec-group {
 			// Style the link label
 			.d3-link-dec-label {
 				color: $ui-04;
 				font-weight: 700;
+				font-size: 10px;
 			}
 
 			// Style the background rectangle under the link label

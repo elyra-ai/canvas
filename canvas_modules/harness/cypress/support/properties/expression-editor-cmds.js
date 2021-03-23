@@ -17,7 +17,7 @@
 Cypress.Commands.add("enterTextInExpressionEditor", (text, propertyId) => {
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
-			cy.get(`div[data-id='properties-ci-${propertyId}']`)
+			cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 				.find(".properties-expression-editor")
 				.find(".CodeMirror")
 				.find(".CodeMirror-code")
@@ -37,7 +37,7 @@ Cypress.Commands.add("selectFirstAutoCompleteForText", (text, propertyId) => {
 });
 
 Cypress.Commands.add("clickValidateLink", (propertyId) => {
-	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-validate")
 		.find(".validateLink")
 		.click();
@@ -60,7 +60,7 @@ Cypress.Commands.add("getValidateIconInSubPanel", () => {
 });
 
 Cypress.Commands.add("clickExpressionBuilderButton", (propertyId) => {
-	cy.get(`div[data-id='properties-ci-${propertyId}']`)
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-button")
 		.click();
 });

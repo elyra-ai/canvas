@@ -276,7 +276,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 		structureKeys.push(control.name);
 	});
 
-	if (isList) {
+	if (isList && Array.isArray(currentValues)) {
 		const convertedValues = [];
 		currentValues.forEach((row, idx) => {
 			if (convert) { // this control needs to be converted, convert all values in this row and determine if there are nested structures to be converted
@@ -309,7 +309,7 @@ function convertArrayStructureToObject(isList, subControls, currentValues, conve
 
 	const converted = {};
 	structureKeys.forEach((key, index) => {
-		converted[key] = typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
+		converted[key] = currentValues && typeof currentValues[index] !== "undefined" ? currentValues[index] : null;
 	});
 	return converted;
 }
@@ -337,6 +337,49 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 		}
 	}
 	return outputList;
+}
+
+/**
+ * Recursively get propertyId from the React props.children object
+ *
+ * @param column Column which has nested children
+ * @return propertyId of the nested children
+ */
+function getPropertyId(column) {
+	if ("propertyId" in column.props) {
+		return column.props.propertyId;
+	}
+	return getPropertyId(column.props.children);
+}
+
+/**
+ * Returns checkbox label for a row.
+ *
+ * @param controller Properties controller
+ * @param column Column from virtualizedTable used for labeling
+ * @return Checkbox label string
+ */
+
+function getRowCheckboxLabel(controller, column) {
+	let rowCheckboxLabel;
+	if (typeof column.props.children === "object") {
+		const propertyId = getPropertyId(column);
+		rowCheckboxLabel = controller.getPropertyValue(propertyId);
+	} else {
+		rowCheckboxLabel = column.props.children;
+	}
+	if (typeof rowCheckboxLabel === "undefined" || rowCheckboxLabel === null || rowCheckboxLabel === "") {
+		return ("");
+	} else if (typeof rowCheckboxLabel === "object" && rowCheckboxLabel.link_ref) {
+		// For SelectColumns_multiInput control
+		return (rowCheckboxLabel.link_ref + "." + rowCheckboxLabel.field_name);
+	} else if (Array.isArray(rowCheckboxLabel)) {
+		// this is needed to comma separate an array of readonly strings.
+		return (rowCheckboxLabel.join(", "));
+	} else if (typeof rowCheckboxLabel === "boolean") {
+		return (rowCheckboxLabel.toString());
+	}
+	return rowCheckboxLabel;
 }
 
 /**
@@ -543,5 +586,6 @@ export {
 	fieldStringToValue,
 	generateId,
 	getDMDefault,
-	getDMFieldIcon
+	getDMFieldIcon,
+	getRowCheckboxLabel
 };

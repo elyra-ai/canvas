@@ -87,6 +87,7 @@ _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
 _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
+_defineConstant("EXAMPLE_APP_LOGIC", "Logic");
 
 _defineConstant("PALETTE_FLYOUT", "Flyout");
 _defineConstant("PALETTE_MODAL", "Modal");
@@ -142,3 +143,10 @@ _defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
+
+_defineConstant("EDITOR_SIZE", {
+	UNSET: "unset",
+	SMALL: "small",
+	MEDIUM: "medium",
+	LARGE: "large"
+});

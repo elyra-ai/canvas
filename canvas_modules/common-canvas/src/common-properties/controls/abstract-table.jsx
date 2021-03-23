@@ -688,13 +688,15 @@ export default class AbstractTable extends React.Component {
 					"key": columnDef.name,
 					"label": columnLabel,
 					"width": columnDef.width,
-					"description": (columnDef.description ? columnDef.description.text : null) });
+					"description": (columnDef.description ? columnDef.description.text : null),
+					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
 			}
 		}
-		if (this.props.control.childItem) {
+		// subpanel column will always be empty for ReadonlyTable control based on condition in makeCells()
+		if (this.props.control.childItem && !this.isReadonlyTable()) {
 			// set to specific size
 			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH });
 		}

@@ -76,6 +76,7 @@ export default class SVGCanvasD3 {
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
 				this.config.enableLinkSelection !== config.enableLinkSelection ||
+				this.config.enableLinkReplaceOnNewConnection !== config.enableLinkReplaceOnNewConnection ||
 				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
@@ -88,7 +89,8 @@ export default class SVGCanvasD3 {
 				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
 				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
 				this.config.enableParentClass !== config.enableParentClass ||
-				this.config.enableHightlightNodeOnNewLinkDrag !== config.enableHightlightNodeOnNewLinkDrag ||
+				this.config.enableHighlightNodeOnNewLinkDrag !== config.enableHighlightNodeOnNewLinkDrag ||
+				this.config.enableHighlightUnavailableNodes !== config.enableHighlightUnavailableNodes ||
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
 				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||

@@ -17,6 +17,7 @@
 import React from "react";
 import OneofselectControl from "../../../src/common-properties/controls/dropdown";
 import propertyUtils from "../../_utils_/property-utils";
+import controlUtils from "../../_utils_/control-utils";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -232,10 +233,10 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect allows enum label different from enum value", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		// In oneofselect_paramDef.json, enum value "gold" is assigned a label "Goldilocks"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.gold.label"]).to.equal("Goldilocks");
@@ -244,15 +245,56 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect allows enum label to be created for an enum value with space", () => {
-		let dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
-		dropdownWrapper = wrapper.find("div[data-id='properties-ci-oneofselect_null_empty_enum']");
+		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		// In our paramDef, enum value has a space in it "blue green" and is assigned a label "Blue Green"
 		expect(oneofselectParamDef.resources["oneofselect_null_empty_enum.blue green.label"]).to.equal("Blue Green");
 		// Enum value with a space can be assigned a label and renders as expected.
 		expect(dropdownList.at(8).text()).to.equal("Blue Green");
+	});
+
+	it("dropdown renders correctly in a table", () => {
+		const propertyId = { name: "oneofselect_table_error", row: 0, col: 0 };
+		const panel = propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
+		const table = panel.find("div[data-id='properties-ft-oneofselect_table_error']");
+
+		// Combobox should not be rendered in a table even though 'custom_value_allowed' is set to true
+		const dropdownSelect = table.find(".properties-dropdown").find("select");
+		expect(dropdownSelect).to.have.length(1);
+		expect(table.find(".properties-dropdown").find("input")).to.have.length(0);
+
+		// verify able to select a new option
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("cat");
+		dropdownSelect.simulate("change", { target: { value: "horse" } });
+		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("horse");
+	});
+
+	it("oneofselect control should have aria-label", () => {
+		// Dropdown should have aria-label
+		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
+		const dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect*");
+
+		// combobox should have aria-label
+		const comboboxWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_custom_value']");
+		const comboboxAriaLabelledby = comboboxWrapper.find(".bx--text-input").prop("aria-labelledby");
+		expect(comboboxWrapper.find(`#${comboboxAriaLabelledby}`).text()).to.equal("oneofselect custom value allowed*");
+	});
+});
+
+describe("oneofselect filters work correctly", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
 	});
 
 	it("Validate oneofselect should have options filtered by enum_filter", () => {
@@ -291,7 +333,7 @@ describe("oneofselect paramDef works correctly", () => {
 		const propertyId = { name: "oneofselect_filtered_default" };
 		// value was initially set to "purple" but on open the value is cleared by the filter
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("purple");
-		renderedController.updatePropertyValue({ name: "filter_default" }, true);
+		renderedController.updatePropertyValue({ name: "filter" }, true);
 		// "purple" isn't part of the filter so the value should be cleared and the default value should be set
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
 	});
@@ -313,20 +355,57 @@ describe("oneofselect paramDef works correctly", () => {
 		expect(renderedController.getPropertyValue(propertyId)).to.equal("blue");
 	});
 
-	it("dropdown renders correctly in a table", () => {
-		const propertyId = { name: "oneofselect_table_error", row: 0, col: 0 };
-		const panel = propertyUtils.openSummaryPanel(wrapper, "oneofselect_table-error-panel");
-		const table = panel.find("div[data-id='properties-ft-oneofselect_table_error']");
+	it("Validate oneofselect can have multiple enum_filter conditions on the same parameter_ref", () => {
+		const propertyIdInput = { name: "filter_input" };
+		const propertyId1 = { name: "oneofselect_filtered_1" };
+		const propertyId2 = { name: "oneofselect_filtered_2" };
+		const propertyId3 = { name: "oneofselect_filtered_3" };
 
-		// Combobox should not be rendered in a table even though 'custom_value_allowed' is set to true
-		const dropdownSelect = table.find(".properties-dropdown").find("select");
-		expect(dropdownSelect).to.have.length(1);
-		expect(table.find(".properties-dropdown").find("input")).to.have.length(0);
+		// Only 'propertyId1' should have 1 item displayed in the list
+		renderedController.updatePropertyValue(propertyIdInput, 1);
+		// // validate the correct number of options show up on open
+		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.eql(["red"]);
+		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal("yellow");
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
 
-		// verify able to select a new option
-		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("cat");
-		dropdownSelect.simulate("change", { target: { value: "horse" } });
-		expect(renderedController.getPropertyValue(propertyId)).to.be.equal("horse");
+		// Only 'propertyId2' should have 2 items displayed in the list
+		renderedController.updatePropertyValue(propertyIdInput, 2);
+		// validate the correct number of options show up on open
+		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.eql(["red", "blue"]);
+		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal("yellow");
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
+
+		// Only 'propertyId3' should have 3 items displayed in the list
+		renderedController.updatePropertyValue(propertyIdInput, 3);
+		// validate the correct number of options show up on open
+		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
+		let dropdownList = controlUtils.getDropdownItems(wrapper, propertyId1.name);
+		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
+		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId2.name);
+		expect(dropdownList).to.have.length(6);
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal(null);
+		dropdownList = controlUtils.getDropdownItems(wrapper, propertyId3.name);
+		expect(dropdownList).to.have.length(3);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.eql(["red", "blue", "green"]);
+
+		// Setting input to a value other than 1, 2, or 3 will show all items in dropdown
+		renderedController.updatePropertyValue(propertyIdInput, 10);
+		// validate the correct number of options show up on open
+		expect(renderedController.getPropertyValue(propertyId1)).to.be.equal(null);
+		expect(renderedController.getControlEnumFilterStates(propertyId1)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId2)).to.be.equal("blue");
+		expect(renderedController.getControlEnumFilterStates(propertyId2)).to.equal(null);
+		expect(renderedController.getPropertyValue(propertyId3)).to.be.equal(null);
+		expect(renderedController.getControlEnumFilterStates(propertyId3)).to.equal(null);
 	});
 });
 

@@ -644,7 +644,7 @@ function _validateDefinitionsByType(propertyId, newStates, controller, condType)
 function _validateByType(definitions, propertyId, newStates, controller, condType) {
 	if (definitions.length > 0) {
 		try {
-			for (const definition of definitions) {
+			definitions.forEach((definition, idx) => {
 				const evalState = UiConditions.validateInput(definition.definition, propertyId, controller);
 				// After the evalution, there is different processing of the result based on the condition type.
 				switch (condType) {
@@ -654,21 +654,35 @@ function _validateByType(definitions, propertyId, newStates, controller, condTyp
 				case CONDITION_TYPE.ENABLED:
 					_updateControlState(evalState, definition.definition.enabled, propertyId, newStates, controller, false);
 					break;
-				case CONDITION_TYPE.FILTEREDENUM:
-					_updateFilteredState(definition.definition, propertyId, newStates, evalState);
+				case CONDITION_TYPE.FILTEREDENUM: {
+					const lastDefinition = _isLastDefintiionForParameter(definitions, idx);
+					_updateFilteredState(definition.definition, propertyId, newStates, evalState, lastDefinition);
 					break;
+				}
 				default:
 					break;
 				}
-				// if this control has been filtered, then stop evaluating other filters for control.
-				if (evalState && condType === CONDITION_TYPE.FILTEREDENUM) {
-					break;
-				}
-			}
+			});
 		} catch (error) {
 			logger.warn("Error thrown in validation: " + error);
 		}
 	}
+}
+
+// Returns true if the defintion is the last definition for the target.parameter_ref from the list of 'definitions'
+// This is only used for 'enum_filter' conditions
+function _isLastDefintiionForParameter(definitions, index) {
+	const currentDefinition = definitions[index];
+	const currentParameter = currentDefinition.definition.enum_filter.target.parameter_ref;
+
+	let lastDefinition = true;
+	definitions.forEach((definition, idx) => {
+		// definitions are evaluated in order, so assume any defition before 'idx' are already evaluated
+		if (idx > index && definition.definition.enum_filter.target.parameter_ref === currentParameter) {
+			lastDefinition = false;
+		}
+	});
+	return lastDefinition;
 }
 
 // This function will update the control state of the control and all it children panels and controls.
@@ -742,7 +756,7 @@ function _updateRefsState(stateOn, definition, propertyId, newStates, controller
 }
 
 // Filtered state is stored in objects rather than arrays
-function _updateFilteredState(definition, inPropertyId, newStates, filtered) {
+function _updateFilteredState(definition, inPropertyId, newStates, filtered, lastDefinition) {
 	if (definition.enum_filter.target && definition.enum_filter.target.parameter_ref) {
 		const refState = newStates.controls;
 		const propertyId = getParamRefPropertyId(definition.enum_filter.target.parameter_ref, inPropertyId);
@@ -762,14 +776,20 @@ function _updateFilteredState(definition, inPropertyId, newStates, filtered) {
 					propState[colId][rowId] = {};
 				}
 				// Cells
-				propState[colId][rowId].enumFilter = _getFilteredEnumItems(definition, filtered);
+				const enumFilters = _getFilteredEnumItems(definition, filtered, propState[colId][rowId].enumFilter, propState[colId][rowId].enumFilterApplied, lastDefinition);
+				propState[colId][rowId].enumFilter = enumFilters.values;
+				propState[colId][rowId].enumFilterApplied = enumFilters.filterApplied;
 			} else {
 				// Columns
-				propState[colId].enumFilter = _getFilteredEnumItems(definition, filtered);
+				const enumFilters = _getFilteredEnumItems(definition, filtered, propState[colId].enumFilter, propState[colId].enumFilterApplied, lastDefinition);
+				propState[colId].enumFilter = enumFilters.values;
+				propState[colId].enumFilterApplied = enumFilters.filterApplied;
 			}
 		} else {
 			// Control-level state
-			propState.enumFilter = _getFilteredEnumItems(definition, filtered);
+			const enumFilters = _getFilteredEnumItems(definition, filtered, propState.enumFilter, propState.enumFilterApplied, lastDefinition);
+			propState.enumFilter = enumFilters.values;
+			propState.enumFilterApplied = enumFilters.filterApplied;
 		}
 		refState[propertyId.name] = propState;
 	}
@@ -889,11 +909,29 @@ function _updateStateIfPanel(newStates, referenceId, state, refStates) {
 	}
 }
 
-function _getFilteredEnumItems(definition, filtered) {
+function _getFilteredEnumItems(definition, filtered, previousValues, filterApplied, lastDefinition) {
+	const enumFilter = {
+		values: previousValues,
+		filterApplied: lastDefinition ? false : filterApplied || true // default to true if null
+	};
+
+	let filterValues = null; // original values
 	if (filtered) {
-		return definition.enum_filter.target.values;
+		filterValues = definition.enum_filter.target.values;
 	}
-	return null;
+
+	// values should be null if there are no other definitions that already modified this parameter
+	if (filterValues || !filterApplied) {
+		enumFilter.values = filterValues;
+		enumFilter.filterApplied = true;
+	}
+
+	// reset the filters for the next validation cycle
+	if (lastDefinition) {
+		enumFilter.filterApplied = false;
+	}
+
+	return enumFilter;
 }
 
 // state is stored in objects rather than arrays

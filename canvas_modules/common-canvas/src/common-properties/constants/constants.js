@@ -47,6 +47,8 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "propertiesEdit.applyButton.label",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
 	PROPERTIESEDIT_REVERTBUTTON_LABEL: "propertiesEdit.revertButton.label",
+	PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL: "propertiesEdit.resizeButton.expand.label",
+	PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL: "propertiesEdit.resizeButton.contract.label",
 	PROPERTIES_REVERT_MESSAGE: "properties.revert.message",
 	PROPERTIES_CLOSE_MESSAGE: "properties.close.message",
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
@@ -57,6 +59,7 @@ _defineConstant("MESSAGE_KEYS", {
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
+	TITLE_EDITOR_HELPBUTTON_LABEL: "title.editor.helpButton.label",
 	TABLE_SUMMARY_ERROR: "table.summary.error",
 	TABLE_SUMMARY_WARNING: "table.summary.warning",
 	CONTROL_SUMMARY_ERROR: "control.summary.error",
@@ -67,7 +70,11 @@ _defineConstant("MESSAGE_KEYS", {
 	INVALID_FIELD_ERROR: "invalid.field.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
+	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
+	EXPRESSION_FIELDS_TABLE_LABEL: "expression.fields.table.label",
+	EXPRESSION_VALUES_TABLE_LABEL: "expression.values.table.label",
+	EXPRESSION_FUNCTIONS_TABLE_LABEL: "expression.functions.table.label",
 	EXPRESSION_FIELDS_DROPDOWN_TITLE: "expression.fields.dropdown",
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
@@ -100,7 +107,9 @@ _defineConstant("MESSAGE_KEYS", {
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
-	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label"
+	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
+	VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL: "virtualizedTable.header.checkbox.label",
+	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

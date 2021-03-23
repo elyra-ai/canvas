@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 27] */
+/* eslint complexity: ["error", 28] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -40,6 +40,7 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
+import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -95,6 +96,7 @@ import {
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
+	EXAMPLE_APP_LOGIC,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -167,6 +169,7 @@ class App extends React.Component {
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
+			selectedLinkReplaceOnNewConnection: false,
 			selectedAssocLinkType: ASSOC_STRAIGHT,
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
@@ -185,7 +188,8 @@ class App extends React.Component {
 			selectedDisplayCustomizedDropZoneContent: false,
 			selectedDisplayCustomizedEmptyCanvasContent: true,
 			selectedInsertNodeDroppedOnLink: false,
-			selectedHightlightNodeOnNewLinkDrag: false,
+			selectedHighlightNodeOnNewLinkDrag: false,
+			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
@@ -278,6 +282,7 @@ class App extends React.Component {
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useEditorSize = this.useEditorSize.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1041,6 +1046,11 @@ class App extends React.Component {
 		this.log("show heading", enabled);
 	}
 
+	useEditorSize(editorSize) {
+		this.setState({ initialEditorSize: editorSize });
+		this.log("set editor size ", editorSize);
+	}
+
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
@@ -1263,7 +1273,8 @@ class App extends React.Component {
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
-					expressionInfo: expressionInfo
+					expressionInfo: expressionInfo,
+					initialEditorSize: this.state.initialEditorSize
 				};
 
 				if (inExtraCanvas) {
@@ -1343,7 +1354,8 @@ class App extends React.Component {
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
-			expressionInfo: expressionInfo
+			expressionInfo: expressionInfo,
+			initialEditorSize: this.state.initialEditorSize
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1698,10 +1710,12 @@ class App extends React.Component {
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
-			enableHightlightNodeOnNewLinkDrag: this.state.selectedHightlightNodeOnNewLinkDrag,
+			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
+			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
+			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
@@ -1991,6 +2005,13 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_LOGIC) {
+			firstCanvas = (
+				<LogicCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_EXPLAIN) {
 			firstCanvas = (
 				<ExplainCanvas
@@ -2091,6 +2112,7 @@ class App extends React.Component {
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
 			useHeading: this.useHeading,
+			useEditorSize: this.useEditorSize,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

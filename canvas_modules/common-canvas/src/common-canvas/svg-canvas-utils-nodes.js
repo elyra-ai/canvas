@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import CanvasUtils from "./common-canvas-utils.js";
 import { SUPER_NODE } from "./constants/canvas-constants";
 
 // Diff between border for node label div (2px) and node label text area (6px)
@@ -95,10 +96,10 @@ export default class SvgCanvasNodes {
 			const halfLabelWidth = labelWidth / 2;
 			const xCenterPosition = posX + halfLabelWidth;
 			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
-			return xCenterPosition + xOffsetFromCenter + 5;
+			return xCenterPosition + xOffsetFromCenter;
 		}
 		const xOffsetFromStart = Math.min(labelWidth, (spanWidth / zoomScale));
-		return this.getNodeLabelPosX(node) + xOffsetFromStart + 5;
+		return this.getNodeLabelPosX(node) + xOffsetFromStart;
 	}
 
 	getNodeLabelEditIconPosY(node) {
@@ -106,17 +107,29 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelHoverPosX(node) {
-		if (node.layout.labelAlign === "center") {
+		if (node.layout.labelSingleLine &&
+				node.layout.labelAlign === "center") {
 			return this.getNodeLabelPosX(node) - 250;
 		}
 		return this.getNodeLabelPosX(node);
 	}
 
 	getNodeLabelHoverWidth(node) {
-		if (node.layout.labelAlign === "center") {
-			return node.layout.labelWidth + 500;
+		if (node.layout.labelSingleLine) {
+			if (node.layout.labelAlign === "center") {
+				return node.layout.labelWidth + 500;
+			}
+			return node.layout.labelWidth + 40;
 		}
-		return node.layout.labelWidth + 40;
+		return node.layout.labelWidth;
+	}
+
+	getNodeLabelHoverHeight(node, spanObj, zoomScale) {
+		if (node.layout.labelSingleLine) {
+			return node.layout.labelHeight;
+		}
+		const calcHeight = spanObj.getBoundingClientRect().height / zoomScale;
+		return Math.max(calcHeight, node.layout.labelHeight);
 	}
 
 	getNodeLabelTextAreaWidth(node) {
@@ -244,4 +257,13 @@ export default class SvgCanvasNodes {
 		return node.type === SUPER_NODE;
 	}
 
+	// Returns true if either the cardinality of the default input port or
+	// the default output port of the node passed in is maxed out based on
+	// the array of links passed in.
+	isNodeDefaultPortsCardinalityAtMax(node, links) {
+		const defInputPort = CanvasUtils.getDefaultInputPortId(node);
+		const defOutputPort = CanvasUtils.getDefaultOutputPortId(node);
+		return CanvasUtils.isSrcCardinalityAtMax(defOutputPort, node, links) ||
+			CanvasUtils.isTrgCardinalityAtMax(defInputPort, node, links);
+	}
 }

@@ -47,6 +47,10 @@ class PropertiesMain extends React.Component {
 	constructor(props) {
 		super(props);
 		this.propertiesController = new PropertiesController();
+		// Persist editorSize when resize() is not called
+		if (this.props.propertiesInfo.initialEditorSize) {
+			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
+		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
@@ -65,12 +69,14 @@ class PropertiesMain extends React.Component {
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
+		const editorSize = this.getEditorSize();
 		this.state = {
 			showPropertiesButtons: true,
-			editorSize: this.propertiesController.getForm().editorSize
+			editorSize: editorSize
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
+		this.updateEditorSize = this.updateEditorSize.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this._getOverrideSize = this._getOverrideSize.bind(this);
 		this._getResizeButton = this._getResizeButton.bind(this);
@@ -166,6 +172,20 @@ class PropertiesMain extends React.Component {
 			return this.props.propertiesConfig.buttonLabels.secondary;
 		}
 		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+	}
+
+	getEditorSize() {
+		// Determine whether to persist initialEditorSize or set the defaultEditorSize in certain cases
+		const defaultEditorSize = this.propertiesController.getForm().editorSize;
+		const initialEditorSize = this.props.propertiesInfo.initialEditorSize;
+		if (defaultEditorSize === Size.SMALL && initialEditorSize === Size.LARGE) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.MEDIUM && initialEditorSize === Size.SMALL) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.LARGE) {
+			return defaultEditorSize;
+		}
+		return (initialEditorSize ? initialEditorSize : defaultEditorSize);
 	}
 
 	_getOverrideSize() {
@@ -344,26 +364,25 @@ class PropertiesMain extends React.Component {
 		this.setState({ showPropertiesButtons: state });
 	}
 
+	updateEditorSize(newEditorSize) {
+		this.setState({
+			editorSize: newEditorSize
+		});
+		this.propertiesController.setEditorSize(newEditorSize);
+	}
+
 	resize() {
 		if (this.propertiesController.getForm().editorSize === Size.SMALL) {
 			if (this.state.editorSize === Size.SMALL) {
-				this.setState({
-					editorSize: Size.MEDIUM
-				});
+				this.updateEditorSize(Size.MEDIUM);
 			} else {
-				this.setState({
-					editorSize: Size.SMALL
-				});
+				this.updateEditorSize(Size.SMALL);
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.MEDIUM) {
-				this.setState({
-					editorSize: Size.LARGE
-				});
+				this.updateEditorSize(Size.LARGE);
 			} else {
-				this.setState({
-					editorSize: Size.MEDIUM
-				});
+				this.updateEditorSize(Size.MEDIUM);
 			}
 		}
 	}
@@ -407,8 +426,12 @@ class PropertiesMain extends React.Component {
 				/>);
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
+					// Resize button label can be "Expand" or "Contract"
+					const resizeBtnLabel = (resizeIcon.props && resizeIcon.props.className === "properties-resize-caret-left")
+						? PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_EXPAND_LABEL)
+						: PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_RESIZEBUTTON_CONTRACT_LABEL);
 					resizeBtn = (
-						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} >
+						<Button kind="ghost" className="properties-btn-resize" onClick={this.resize.bind(this)} aria-label={resizeBtnLabel} >
 							{resizeIcon}
 						</Button>
 					);

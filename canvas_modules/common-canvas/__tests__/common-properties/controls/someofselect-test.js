@@ -304,3 +304,25 @@ describe("someofselect classnames appear correctly", () => {
 		expect(wrapper.find(".someofselect-control-class")).to.have.length(1);
 	});
 });
+
+describe("All checkboxes in someofselect must have labels", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	it("checkbox in row should have label", () => {
+		const someofselect = wrapper.find("div[data-id='properties-ctrl-someofselect']");
+		const tableRows = tableUtils.getTableRows(someofselect);
+		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
+		const secondColumnRows = tableRows.find(".ReactVirtualized__Table__rowColumn");
+		expect(secondColumnRows).to.have.length(6);
+
+		secondColumnRows.forEach((row, index) => {
+			const rowCheckboxLabel = rowCheckboxes.at(index).text();
+			const rowLabel = row.text();
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${rowLabel}`);
+		});
+	});
+});
