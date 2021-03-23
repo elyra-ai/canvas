@@ -217,6 +217,10 @@ function condition(data, propertyId, controller) {
 	paramInfo.value = controller.getPropertyValue(paramInfo.id);
 	paramInfo.control = controller.getControl(paramInfo.id);
 
+	if (typeof paramInfo.control === "undefined") {
+		logger.warn("Control not found when validating condition for " + param);
+	}
+
 	let param2Info;
 
 	if (typeof param2 !== "undefined") {
