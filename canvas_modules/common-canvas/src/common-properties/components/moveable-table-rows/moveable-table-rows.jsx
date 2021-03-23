@@ -240,7 +240,7 @@ MoveableTableRows.propTypes = {
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,
 	disabled: PropTypes.bool,
-	disableRowMoveButtons: PropTypes.boolean // set by redux
+	disableRowMoveButtons: PropTypes.bool // set by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
