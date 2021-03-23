@@ -45,7 +45,7 @@ export default class LogicCanvas extends React.Component {
 			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
 			paletteInitialState: true,
-			enableHightlightNodeOnNewLinkDrag: true,
+			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,

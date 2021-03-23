@@ -50,7 +50,7 @@ export default class FlowsCanvas extends React.Component {
 			enableLinkReplaceOnNewConnection: true,
 			paletteInitialState: true,
 			enableDropZoneOnExternalDrag: true,
-			enableHightlightNodeOnNewLinkDrag: true,
+			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
