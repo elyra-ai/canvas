@@ -283,6 +283,7 @@ class App extends React.Component {
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
+		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1049,6 +1050,12 @@ class App extends React.Component {
 	useEditorSize(editorSize) {
 		this.setState({ initialEditorSize: editorSize });
 		this.log("set editor size ", editorSize);
+	}
+
+	disableRowMoveButtons(propertyIds) {
+		if (this.propertiesController) {
+			this.propertiesController.setDisableRowMoveButtons(propertyIds);
+		}
 	}
 
 	// common-canvas
@@ -2105,6 +2112,7 @@ class App extends React.Component {
 			heading: this.state.heading,
 			useHeading: this.useHeading,
 			useEditorSize: this.useEditorSize,
+			disableRowMoveButtons: this.disableRowMoveButtons,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
