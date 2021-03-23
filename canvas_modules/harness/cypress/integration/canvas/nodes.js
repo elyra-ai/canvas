@@ -26,10 +26,6 @@ describe("Test adding nodes from palette", function() {
 		// Add nodes from palette and link nodes
 		cy.clickToolbarPaletteOpen();
 
-		// Wait for palette to open
-		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(4000);
-
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Var. File", 300, 200);
 		cy.clickCategory("Field Ops");
@@ -177,7 +173,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 
 		// Wait for the canvas to update
 		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(2000);
+		cy.wait(1000);
 
 		// Check new position of node.
 		cy.verifyZoomTransform(-173, -60, 1);
@@ -193,7 +189,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 
 		// Wait for the canvas to update
 		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(2000);
+		cy.wait(1500);
 
 		// Check new position of node.
 		cy.verifyZoomTransform(102, 141, 1.21);

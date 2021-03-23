@@ -88,10 +88,6 @@ describe("Test for toolbar Create and Delete button", function() {
 		// Double-click node to open its properties
 		cy.getNodeWithLabel("Define Types").dblclick();
 
-		// Wait for properties to open and toolbar to redraw to new width
-		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(4000);
-
 		// Delete node using toolbar
 		cy.clickToolbarOverflow();
 		cy.clickToolbarDeleteInOverflowMenu();
