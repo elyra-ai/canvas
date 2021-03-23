@@ -1065,11 +1065,11 @@ export default class APIPipeline {
 	// passed in. If a semi-detached or fully-detached link is being cloned the
 	// srcNode and/or trgNode may be null.
 	cloneNodeLink(link, srcNode, trgNode) {
-		const clonedLink = {
+		let clonedLink = {
 			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
-			type: link.type,
-			class_name: link.class_name,
+			type: link.type
 		};
+		clonedLink = this.copyCommonNodeLinkAttrs(clonedLink, link);
 
 		if (srcNode) {
 			clonedLink.srcNodeId = srcNode.id;
@@ -1087,17 +1087,28 @@ export default class APIPipeline {
 	}
 
 	createNodeLinkDetached(data) {
-		const link = {};
+		let link = {};
 		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
 		link.type = data.type;
 		link.srcNodeId = data.srcNodeId;
 		link.srcNodePortId = data.srcNodePortId;
 		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
-		if (data.class_name) {
-			link.class_name = data.class_name;
+		link = this.copyCommonNodeLinkAttrs(link, data);
+		return link;
+	}
+
+	copyCommonNodeLinkAttrs(link, copyFrom) {
+		if (copyFrom.class_name) {
+			link.class_name = copyFrom.class_name;
 		}
-		if (data.linkName) {
-			link.linkName = data.linkName;
+		if (copyFrom.linkName) {
+			link.linkName = copyFrom.linkName;
+		}
+		if (copyFrom.typeAttr) {
+			link.typeAttr = copyFrom.typeAttr;
+		}
+		if (copyFrom.description) {
+			link.description = copyFrom.description;
 		}
 		return link;
 	}

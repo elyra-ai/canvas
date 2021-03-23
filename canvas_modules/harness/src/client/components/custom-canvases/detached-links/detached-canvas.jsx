@@ -57,7 +57,11 @@ export default class DetachedCanvas extends React.Component {
 			enableLinkSelection: "Detachable",
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
-			enableHightlightNodeOnNewLinkDrag: true,
+			enableHighlightNodeOnNewLinkDrag: true,
+			enableHighlightUnavailableNodes: true,
+			enableDisplayFullLabelOnHover: true,
+			enableNarrowPalette: false,
+			paletteInitialState: true,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -85,6 +89,7 @@ export default class DetachedCanvas extends React.Component {
 				labelEditable: true,
 				labelSingleLine: false,
 				labelOutline: false,
+				labelMaxCharacters: 64,
 				portRadius: 10,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
@@ -97,7 +102,7 @@ export default class DetachedCanvas extends React.Component {
 				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
-				dataLinkArrowHead: true,
+				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",

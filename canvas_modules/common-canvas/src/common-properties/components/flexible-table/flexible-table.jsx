@@ -363,7 +363,14 @@ export default class FlexibleTable extends React.Component {
 			} else if (typeof (columnDef.label) === "string") {
 				headerLabel = columnDef.label;
 			}
-			headers.push({ key: columnDef.key, label: columnDef.label, width: width, description: columnDef.description, headerLabel: headerLabel });
+			headers.push({
+				key: columnDef.key,
+				label: columnDef.label,
+				width: width,
+				description: columnDef.description,
+				headerLabel: headerLabel,
+				operation: columnDef.operation
+			});
 		}
 		return {
 			headers: headers,
@@ -471,6 +478,8 @@ export default class FlexibleTable extends React.Component {
 									sortColumns={this.state.columnSortDir}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
+									rowCheckboxLabels={this.props.rowCheckboxLabels}
+									controller={this.props.controller}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -511,5 +520,6 @@ FlexibleTable.propTypes = {
 	onRowDoubleClick: PropTypes.func,
 	selectedRows: PropTypes.array,
 	rowSelection: PropTypes.string,
-	summaryTable: PropTypes.bool
+	summaryTable: PropTypes.bool,
+	rowCheckboxLabels: PropTypes.array
 };

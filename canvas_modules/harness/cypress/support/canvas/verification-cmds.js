@@ -169,11 +169,6 @@ Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
 				"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
 			cy.get(nodeImageSelector)
 				.should("have.attr", "data-image", value);
-			// An SVG image should only ever have a single <use> element
-			const nodeUseSelector = nodeImageSelector + " use";
-			cy.get(nodeUseSelector)
-				.should("have.length", 1);
-
 		});
 });
 

@@ -411,6 +411,12 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		const selectField = wrapper.find("div[data-id='properties-selectcolumn_table_error_0_0'] select");
 		expect(selectField).to.have.length(1); // validate dropdown rendered in table cell
 	});
+
+	it("selectcolumn control should have aria-label", () => {
+		const selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
+		const selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel*");
+	});
 });
 
 describe("selectcolumn works correctly with multi input schemas", () => {

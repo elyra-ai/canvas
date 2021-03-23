@@ -189,6 +189,7 @@ class App extends React.Component {
 			selectedDisplayCustomizedEmptyCanvasContent: true,
 			selectedInsertNodeDroppedOnLink: false,
 			selectedHighlightNodeOnNewLinkDrag: false,
+			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
@@ -281,6 +282,7 @@ class App extends React.Component {
 		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useEditorSize = this.useEditorSize.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1044,6 +1046,11 @@ class App extends React.Component {
 		this.log("show heading", enabled);
 	}
 
+	useEditorSize(editorSize) {
+		this.setState({ initialEditorSize: editorSize });
+		this.log("set editor size ", editorSize);
+	}
+
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
@@ -1266,7 +1273,8 @@ class App extends React.Component {
 					parameterDef: properties,
 					appData: appData,
 					additionalComponents: additionalComponents,
-					expressionInfo: expressionInfo
+					expressionInfo: expressionInfo,
+					initialEditorSize: this.state.initialEditorSize
 				};
 
 				if (inExtraCanvas) {
@@ -1346,7 +1354,8 @@ class App extends React.Component {
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
-			expressionInfo: expressionInfo
+			expressionInfo: expressionInfo,
+			initialEditorSize: this.state.initialEditorSize
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1702,6 +1711,7 @@ class App extends React.Component {
 			enableAssocLinkType: this.state.selectedAssocLinkType,
 			enableParentClass: parentClass,
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
+			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
@@ -2094,6 +2104,7 @@ class App extends React.Component {
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
 			useHeading: this.useHeading,
+			useEditorSize: this.useEditorSize,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

@@ -110,6 +110,7 @@ class SomeofselectControl extends React.Component {
 					updateRowSelections={this.updateSelections}
 					selectable
 					showHeader={false}
+					rowCheckboxLabels={this.props.control.values}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>

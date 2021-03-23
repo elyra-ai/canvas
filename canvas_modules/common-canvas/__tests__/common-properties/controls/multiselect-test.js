@@ -331,6 +331,12 @@ describe("multiselect paramDef works correctly", () => {
 		const expectedValue = [multiselectList.at(0).text()];
 		expect(renderedController.getPropertyValue(propertyId11)).to.eql(expectedValue);
 	});
+
+	it("multiselect control should have aria-label", () => {
+		const multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_multiple_selected']");
+		const multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(multiselectWrapper.find(`#${multiselectAriaLabelledby}`).text()).to.equal("multiselect multiple options selected*");
+	});
 });
 
 describe("multiselect classnames appear correctly", () => {

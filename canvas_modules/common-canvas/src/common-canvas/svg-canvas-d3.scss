@@ -97,7 +97,7 @@ $comment-link-color: $ui-04;
 $object-link-color: $ui-05; // Used for association links for a regular data flow canvas
 $association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
 $data-link-color: $inverse-link;
-$link-hightlight-color: $support-04;
+$link-highlight-color: $support-04;
 $new-halo-link-color: $ui-05;
 
 /* Canvas styles */
@@ -211,10 +211,18 @@ $new-halo-link-color: $ui-05;
 	fill: $node-body-fill;
 }
 
-.d3-node-body-outline[hover="yes"] {
+.d3-node-group:hover .d3-node-body-outline {
 	stroke: $node-body-stroke-hover;
 	stroke-width: 1;
 	fill: $node-body-fill-hover;
+}
+
+.d3-node-unavailable .d3-node-body-outline,
+.d3-node-unavailable .d3-node-label,
+.d3-node-unavailable svg path {
+	stroke: $disabled-02;
+	fill: $disabled-03;
+	color: $disabled-02;
 }
 
 .d3-node-selection-highlight {
@@ -247,7 +255,6 @@ $new-halo-link-color: $ui-05;
 	padding: 0; // Makes padding consistent for div and text area (overrides default 2px padding for text areas)
 	width: 100%;
 	height: 100%;
-	pointer-events: none;
 	overflow: hidden;
 	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
@@ -257,6 +264,8 @@ $new-halo-link-color: $ui-05;
 .d3-node-label {
 	@include d3-node-label-mixin;
 	border-width: $node-label-display-border;
+	/* Prevent node label text being highlighted on double click etc */
+	user-select: none;
 
 	& span {
 		pointer-events: auto; /* Override the pointer-events: none on the foreignObject and div */
@@ -268,6 +277,7 @@ $new-halo-link-color: $ui-05;
 	@include d3-node-label-mixin;
 	background-color: $field-01;
 	border-width: $node-label-entry-border;
+	pointer-events: auto; /* Override the pointer-events: none on the foreignObject and div */
 
 	&:focus {
 		@include d3-text-entry-focus-mixin;
@@ -276,12 +286,16 @@ $new-halo-link-color: $ui-05;
 }
 
 .d3-node-label-edit-icon-group {
-	.d3-node-label-edit-icon-background {
+	.d3-node-label-edit-icon-background1 {
+		fill: transparent;
+	}
+
+	.d3-node-label-edit-icon-background2 {
 		fill: $canvas-background-color;
 	}
 
 	&:hover {
-		.d3-node-label-edit-icon-background {
+		.d3-node-label-edit-icon-background2 {
 			fill: $node-label-edit-icon-hover-color;
 		}
 	}
@@ -310,6 +324,10 @@ $new-halo-link-color: $ui-05;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
+
+	& .d3-node-label-full {
+		display: inline-block;
+	}
 }
 
 .d3-node-label-middle {
@@ -721,14 +739,14 @@ $new-halo-link-color: $ui-05;
 // When pointer hovers over the link this style will be applied.
 .d3-link-group:hover .d3-link-line,
 .d3-link-group:hover .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 2;
 }
 
 // Style line and arrow head when link is selected.
 .d3-link-group[data-selected] .d3-link-line,
 .d3-link-group[data-selected] .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 3;
 }
 
@@ -737,7 +755,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line-arrow-head,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line-arrow-head {
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	stroke-width: 5;
 }
 
@@ -752,7 +770,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group:hover .d3-link-handle-start,
 .d3-link-group[data-selected] .d3-link-handle-start {
 	display: inherit;
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	fill: $data-link-color;
 	pointer-events: all;
 }
@@ -768,7 +786,7 @@ $new-halo-link-color: $ui-05;
 .d3-link-group:hover .d3-link-handle-end,
 .d3-link-group[data-selected] .d3-link-handle-end {
 	display: inherit;
-	stroke: $link-hightlight-color;
+	stroke: $link-highlight-color;
 	fill: $data-link-color;
 	pointer-events: all;
 }

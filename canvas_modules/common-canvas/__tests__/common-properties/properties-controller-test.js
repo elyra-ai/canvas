@@ -1045,6 +1045,7 @@ describe("Properties Controller handlers", () => {
 	const propertyListener = sinon.spy();
 	beforeEach(() => {
 		reset();
+		propertyListener.resetHistory();
 		controller.setHandlers({
 			propertyListener: propertyListener
 		});
@@ -1106,7 +1107,7 @@ describe("Properties Controller handlers", () => {
 	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);
-		expect(propertyListener).to.have.property("callCount", 4);
+		expect(propertyListener).to.have.property("callCount", 1);
 	});
 	it("should fire event on updatePropertyValue returning object values", () => {
 		const form = Form.makeForm(structureListEditorParamDef);
@@ -1126,7 +1127,7 @@ describe("Properties Controller handlers", () => {
 			"readonly": "Readonly phrase"
 		}];
 		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue);
-		expect(propertyListener).to.have.property("callCount", 6);
+		expect(propertyListener).to.have.property("callCount", 3);
 		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
 	});
 });
