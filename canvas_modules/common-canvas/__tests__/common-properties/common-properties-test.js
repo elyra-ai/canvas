@@ -206,6 +206,28 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 	});
 
+	it("When applyPropertiesWithoutEdit=true applyPropertyChanges should still be called", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyPropertiesWithoutEdit: true });
+		wrapper = renderedObject.wrapper;
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		commonProperties.instance().applyPropertiesEditing();
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		commonProperties.instance().applyPropertiesEditing();
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
+	});
+
+	it("When applyPropertiesWithoutEdit=false applyPropertyChanges should not be called", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyPropertiesWithoutEdit: false });
+		wrapper = renderedObject.wrapper;
+		const commonProperties = renderedObject.wrapper.find("CommonProperties");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		commonProperties.instance().applyPropertiesEditing();
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		commonProperties.instance().applyPropertiesEditing();
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+	});
+
 	it("When enableResize=false resize button should not be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { enableResize: false });
 		wrapper = renderedObject.wrapper;

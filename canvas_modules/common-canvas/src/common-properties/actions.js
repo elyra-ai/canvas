@@ -36,6 +36,7 @@ export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
 export const UPDATE_EXPRESSION_VALIDATE = "UPDATE_VALIDATE_SELECTION";
 export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
+export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
 
 /*
  * action creators
@@ -113,4 +114,8 @@ export function setTitle(title) {
 
 export function setActiveTab(activeTab) {
 	return { type: SET_ACTIVE_TAB, activeTab };
+}
+
+export function disableRowMoveButtons(propertyIds) {
+	return { type: DISABLE_ROW_MOVE_BUTTONS, propertyIds };
 }

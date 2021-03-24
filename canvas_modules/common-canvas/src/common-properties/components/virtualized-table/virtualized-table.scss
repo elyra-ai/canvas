@@ -46,7 +46,8 @@ $properties-vt-checkbox-width: 45px;
 	}
 
 	.properties-autosized-vt-header {
-		text-transform: capitalize;
+		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
+		text-transform: none;
 
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;

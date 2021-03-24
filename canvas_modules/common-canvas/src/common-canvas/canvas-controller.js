@@ -90,6 +90,7 @@ export default class CanvasController {
 			enableRightFlyoutUnderToolbar: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
+			enableBrowserEditMenu: true,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,

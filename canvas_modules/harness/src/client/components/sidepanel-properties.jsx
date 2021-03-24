@@ -20,7 +20,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup, Dropdown } from "carbon-components-react";
+import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup, Dropdown, TextInput } from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -40,7 +40,8 @@ export default class SidePanelModal extends React.Component {
 		this.state = {
 			commonProperties: "",
 			commonPropertiesFormsFiles: [],
-			commonPropertiesParamDefsFiles: []
+			commonPropertiesParamDefsFiles: [],
+			invalidPropertyId: false
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
@@ -55,6 +56,7 @@ export default class SidePanelModal extends React.Component {
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
+		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -173,6 +175,17 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
+	disableRowMoveButtons(fieldName, evt) {
+		let propertyIds;
+		try {
+			propertyIds = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.disableRowMoveButtons(propertyIds);
+			this.setState({ invalidPropertyId: false });
+		} catch (ex) {
+			this.setState({ invalidPropertyId: true });
+		}
+	}
+
 	dropdownOptions() {
 		const options = [];
 		let key = 1;
@@ -285,6 +298,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const applyPropertiesWithoutEdit = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="enable-apply-props-without-edit"
+					labelText="Apply properties without changes"
+					onToggle={this.props.propertiesConfig.enableApplyPropertiesWithoutEdit}
+					toggled={this.props.propertiesConfig.applyPropertiesWithoutEdit}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -368,6 +391,20 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const disableRowMoveButtonsInTable = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-disable-row-move-buttons">
+				<TextInput
+					labelText="Disable row move buttons for propertyId array"
+					id="harness-propertyId-array"
+					placeholder="Enter array of PropertyIds"
+					invalid={this.state.invalidPropertyId}
+					invalidText="Please enter valid JSON"
+					onChange={ this.disableRowMoveButtons.bind(this, "propertyIdArray") }
+					helperText='Array of PropertyIds Format: [{"name": "unique_id_for_control"}]'
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -379,7 +416,11 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{persistEditorSize}
 				{divider}
+				{disableRowMoveButtonsInTable}
+				{divider}
 				{validateSchemaEnabled}
+				{divider}
+				{applyPropertiesWithoutEdit}
 				{divider}
 				{applyOnBlur}
 				{divider}
@@ -421,7 +462,10 @@ SidePanelModal.propTypes = {
 		heading: PropTypes.bool,
 		useHeading: PropTypes.func,
 		useEditorSize: PropTypes.func,
+		disableRowMoveButtons: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,
-		propertiesSchemaValidation: PropTypes.bool
+		propertiesSchemaValidation: PropTypes.bool,
+		enableApplyPropertiesWithoutEdit: PropTypes.func,
+		applyPropertiesWithoutEdit: PropTypes.bool
 	})
 };
