@@ -1137,7 +1137,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the nodeTemplate passed in is 'insertable' into a data
-	// link between nodes on the canvas. This involves ensuring the node temaplate
+	// link between nodes on the canvas. This involves ensuring the node template
 	// will create a non binding node and also that the cardinality of the ports
 	// is not explicitely set to zero (which some crazy apps want to do!).
 	isNodeTemplateInsertableIntoLink(nodeTemplate) {
