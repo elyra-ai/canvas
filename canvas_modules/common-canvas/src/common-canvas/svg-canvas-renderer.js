@@ -1143,8 +1143,8 @@ export default class SVGCanvasRenderer {
 	isNodeTemplateInsertableIntoLink(nodeTemplate) {
 		return this.config.enableInsertNodeDroppedOnLink &&
 			this.isNonBindingNode(nodeTemplate) &&
-			!this.isPortMaxCardinalityZero(nodeTemplate.inputs[0]) &&
-			!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]);
+			(!this.isPortMaxCardinalityZero(nodeTemplate.inputs[0]) ||
+				!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]));
 	}
 
 	// Returns true if the current drag objects array has a single node which
