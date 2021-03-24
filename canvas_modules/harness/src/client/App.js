@@ -212,6 +212,7 @@ class App extends React.Component {
 			expressionValidate: true,
 			heading: false,
 			propertiesSchemaValidation: true,
+			applyPropertiesWithoutEdit: false,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -320,6 +321,7 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
 		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
+		this.enableApplyPropertiesWithoutEdit = this.enableApplyPropertiesWithoutEdit.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -1393,6 +1395,10 @@ class App extends React.Component {
 		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
 	}
 
+	enableApplyPropertiesWithoutEdit() {
+		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
+	}
+
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -1892,7 +1898,8 @@ class App extends React.Component {
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
 			heading: this.state.heading,
-			schemaValidation: this.state.propertiesSchemaValidation
+			schemaValidation: this.state.propertiesSchemaValidation,
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2118,7 +2125,9 @@ class App extends React.Component {
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
 			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
 			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
-			propertiesSchemaValidation: this.state.propertiesSchemaValidation
+			propertiesSchemaValidation: this.state.propertiesSchemaValidation,
+			enableApplyPropertiesWithoutEdit: this.enableApplyPropertiesWithoutEdit,
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
 		};
 
 		const sidePanelAPIConfig = {
