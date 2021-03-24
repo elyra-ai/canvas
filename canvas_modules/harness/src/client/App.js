@@ -1026,14 +1026,14 @@ class App extends React.Component {
 
 	downloadPipelineFlow() {
 		const pipelineFlow = this.getPipelineFlow();
-		var canvas = JSON.stringify(pipelineFlow, null, 2);
+		const canvas = JSON.stringify(pipelineFlow, null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
 	downloadPalette() {
 		const paletteData = this.getPaletteData();
-		var palette = JSON.stringify(paletteData, null, 2);
-		ReactFileDownload(palette, "canvas.json");
+		const palette = JSON.stringify(paletteData, null, 2);
+		ReactFileDownload(palette, "palette.json");
 	}
 
 	useApplyOnBlur(enabled) {
