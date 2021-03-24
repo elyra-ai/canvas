@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
@@ -754,6 +754,40 @@ export default class PropertiesController {
 	clearSelectedRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearSelectedRows(propertyId);
+	}
+
+	/**
+	 * Disable table row move buttons for all propertyIds in given array
+	 * @param propertyIds Array of propertyIds
+	 *
+	 */
+	setDisableRowMoveButtons(propertyIds) {
+		// Verify that input is an array of objects
+		if (Array.isArray(propertyIds)) {
+			this.propertiesStore.setDisableRowMoveButtons(propertyIds);
+		}
+	}
+
+	/**
+	* Returns array of propertyIds for which row move buttons will be disabled
+	*	@return Array of propertyIds
+	*/
+	getDisableRowMoveButtons() {
+		return this.propertiesStore.getDisableRowMoveButtons();
+	}
+
+	/**
+	 * Check if row move buttons should be disabled for given propertyId
+	 * @param propertyId  The unique property identifier
+	 * @return boolean
+	 */
+	isDisableRowMoveButtons(propertyId) {
+		const propertyIds = this.getDisableRowMoveButtons();
+		return (
+			Array.isArray(propertyIds)
+				? propertyIds.some((el) => isEqual(el, propertyId))
+				: false
+		);
 	}
 
 	//
