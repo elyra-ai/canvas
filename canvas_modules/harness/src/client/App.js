@@ -252,7 +252,8 @@ class App extends React.Component {
 
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
-		this.download = this.download.bind(this);
+		this.downloadPipelineFlow = this.downloadPipelineFlow.bind(this);
+		this.downloadPalette = this.downloadPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
 		this.setDiagramJSON2 = this.setDiagramJSON2.bind(this);
@@ -720,6 +721,17 @@ class App extends React.Component {
 		}
 	}
 
+	getPaletteData(canvController) {
+		const canvasController = canvController ? canvController : this.canvasController;
+		try {
+			return canvasController.getPaletteData();
+		} catch (err) {
+			this.log("Schema validation error: " + err);
+			return "Schema validation error";
+		}
+	}
+
+
 	getCanvasInfo() {
 		return this.canvasController.getObjectModel().getCanvasInfoPipeline();
 	}
@@ -1012,10 +1024,16 @@ class App extends React.Component {
 		this.setState({ consoleOpened: !this.state.consoleOpened });
 	}
 
-	download() {
-		const pipelineFlow = this.canvasRef ? this.canvasRef.current.canvasController.getPipelineFlow() : this.getPipelineFlow();
+	downloadPipelineFlow() {
+		const pipelineFlow = this.getPipelineFlow();
 		var canvas = JSON.stringify(pipelineFlow, null, 2);
 		ReactFileDownload(canvas, "canvas.json");
+	}
+
+	downloadPalette() {
+		const paletteData = this.getPaletteData();
+		var palette = JSON.stringify(paletteData, null, 2);
+		ReactFileDownload(palette, "canvas.json");
 	}
 
 	useApplyOnBlur(enabled) {
@@ -1628,7 +1646,8 @@ class App extends React.Component {
 			currentPipelineId={currentPipelineId}
 		/>);
 		const consoleLabel = "console";
-		const downloadLabel = "download";
+		const downloadFlowLabel = "Download pipeline flow";
+		const downloadPaletteLabel = "Download palette";
 		const apiLabel = "API";
 		const commonPropertiesModalLabel = "Common Properties Modal";
 		const commonCanvasLabel = "Common Canvas";
@@ -1645,8 +1664,13 @@ class App extends React.Component {
 							<Isvg src={listview32} />
 						</a>
 					</li>
-					<li className="harness-navbar-li" data-tip={downloadLabel}>
-						<a onClick={this.download.bind(this) } aria-label={downloadLabel}>
+					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
+						<a onClick={this.downloadPipelineFlow.bind(this) } aria-label={downloadFlowLabel}>
+							<Isvg src={download32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
+						<a onClick={this.downloadPalette.bind(this) } aria-label={downloadPaletteLabel}>
 							<Isvg src={download32} />
 						</a>
 					</li>
