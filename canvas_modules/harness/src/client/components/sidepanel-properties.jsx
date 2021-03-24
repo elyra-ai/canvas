@@ -298,6 +298,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const applyPropertiesWithoutEdit = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="enable-apply-props-without-edit"
+					labelText="Apply properties without changes"
+					onToggle={this.props.propertiesConfig.enableApplyPropertiesWithoutEdit}
+					toggled={this.props.propertiesConfig.applyPropertiesWithoutEdit}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -410,6 +420,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{validateSchemaEnabled}
 				{divider}
+				{applyPropertiesWithoutEdit}
+				{divider}
 				{applyOnBlur}
 				{divider}
 				{expressionBuilder}
@@ -452,6 +464,8 @@ SidePanelModal.propTypes = {
 		useEditorSize: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,
-		propertiesSchemaValidation: PropTypes.bool
+		propertiesSchemaValidation: PropTypes.bool,
+		enableApplyPropertiesWithoutEdit: PropTypes.func,
+		applyPropertiesWithoutEdit: PropTypes.bool
 	})
 };
