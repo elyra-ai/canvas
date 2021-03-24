@@ -1,0 +1,125 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "id": "savedNodes",
+      "label": "Saved Nodes",
+      "description": "Nodes in this category were previously saved from a flow.",
+      "image": "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyMCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM5NDkzOTQ7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5zb3VyY2VzX29wZW48L3RpdGxlPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEwLDMuNDRWMkgyVjE4SDIyVjMuNDRabTEwLjE3LDEzSDMuNzdWNS4xN0gyMC4xNFoiLz48L3N2Zz4=",
+      "node_types": [
+        {
+          "id": "",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "subflow1"
+          },
+          "inputs": [
+            {
+              "id": "inPort1",
+              "subflow_node_ref": "subflow-entry-binding",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort1",
+              "subflow_node_ref": "subflow-exit-binding",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode",
+              "image": "useDefaultIcon",
+              "x_pos": 0,
+              "y_pos": 0,
+              "description": "This supernode was created by common-canvas.",
+              "is_expanded": false
+            },
+            "pipeline_data": [
+              {
+                "id": "subflow1",
+                "nodes": [
+                  {
+                    "id": "subflow-entry-binding",
+                    "type": "binding",
+                    "app_data": {
+                      "ui_data": {
+                        "label": "Binding",
+                        "x_pos": 0,
+                        "y_pos": 0,
+                        "description": "Suubflow binding entry node"
+                      }
+                    },
+                    "outputs": [
+                      {
+                        "id": "output1",
+                        "app_data": {
+                          "ui_data": {
+                            "cardinality": {
+                              "min": 0,
+                              "max": 1
+                            },
+                            "label": "Binding output port for subflow"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "id": "subflow-exit-binding",
+                    "type": "binding",
+                    "app_data": {
+                      "ui_data": {
+                        "label": "Binding",
+                        "x_pos": 0,
+                        "y_pos": 0,
+                        "description": "Subflow binding exit node"
+                      }
+                    },
+                    "inputs": [
+                      {
+                        "id": "input1",
+                        "app_data": {
+                          "ui_data": {
+                            "cardinality": {
+                              "min": 0,
+                              "max": -1
+                            },
+                            "label": "Binding input port for subflow"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "app_data": {
+                  "ui_data": {
+                    "comments": []
+                  }
+                },
+                "runtime_ref": "test_runtime"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
