@@ -919,7 +919,7 @@ export default class SVGCanvasRenderer {
 	// Highlights any data link, that an 'insertable' nodeTemplate from the
 	// palette, is dragged over. The x and y passed in are in page coordinates
 	// based on the top left corner of the page.
-	paletteNodeDraggedOver(nodeTemplate, x, y) {
+	nodeTemplateDraggedOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
 			// Set highlighting when there is no link because this will turn
@@ -2174,8 +2174,13 @@ export default class SVGCanvasRenderer {
 			// Limit the size a drag can be so, when the user is dragging objects in
 			// an in-place subflow they do not drag them too far.
 			// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
-			if (this.dragOffsetX < 1000 && this.dragOffsetX > -1000 &&
-					this.dragOffsetY < 1000 && this.dragOffsetY > -1000) {
+			if (this.isDisplayingSubFlowInPlace() &&
+					(this.dragOffsetX > 1000 || this.dragOffsetX < -1000 ||
+						this.dragOffsetY > 1000 || this.dragOffsetY < -1000)) {
+				this.dragOffsetX -= d3Event.dx;
+				this.dragOffsetY -= d3Event.dy;
+
+			} else {
 				let	increment = { x: 0, y: 0 };
 
 				if (this.config.enableSnapToGridType === "During") {
@@ -2200,9 +2205,6 @@ export default class SVGCanvasRenderer {
 					d.x_pos += increment.x;
 					d.y_pos += increment.y;
 				});
-			} else {
-				this.dragOffsetX -= d3Event.dx;
-				this.dragOffsetY -= d3Event.dy;
 			}
 
 			this.displayCanvas();

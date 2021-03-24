@@ -258,8 +258,8 @@ export default class SVGCanvasD3 {
 		return canvasDiv;
 	}
 
-	paletteNodeDraggedOver(nodeTemplate, x, y) {
-		this.renderer.paletteNodeDraggedOver(nodeTemplate, x, y);
+	nodeTemplateDraggedOver(nodeTemplate, x, y) {
+		this.renderer.nodeTemplateDraggedOver(nodeTemplate, x, y);
 	}
 
 	nodeTemplateDropped(nodeTemplate, x, y) {

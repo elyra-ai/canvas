@@ -23,7 +23,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
 		let nonEmptyCount = 0;
 		paramInfo.value.forEach((item) => {
-			if (item.length > 0) {
+			if (typeof item !== "undefined" && item.length > 0) {
 				nonEmptyCount++;
 			}
 		});
