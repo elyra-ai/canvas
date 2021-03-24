@@ -172,7 +172,6 @@
       }
     ],
     "action_info": [
-
       {
         "id": "increment",
         "label": {
@@ -216,8 +215,8 @@
         "image": {
           "url": "/images/winter.jpg",
           "size": {
-            "height": 60,
-            "width": 60
+            "height": 30,
+            "width": 50
           }
         }
       },
@@ -233,8 +232,8 @@
         "image": {
           "url": "/images/summer.jpg",
           "size": {
-            "height": 60,
-            "width": 60
+            "height": 30,
+            "width": 50
           }
         }
       },
@@ -251,8 +250,8 @@
           "url": "/images/fall.jpg",
           "placement": "right",
           "size": {
-            "height": 60,
-            "width": 60
+            "height": 30,
+            "width": 50
           }
         }
       },
@@ -268,8 +267,8 @@
         "image": {
           "url": "/images/spring.jpg",
           "size": {
-            "height": 60,
-            "width": 60
+            "height": 30,
+            "width": 50
           }
         }
       },
@@ -504,7 +503,6 @@
               "disable_image_text"
             ]
           }
-
         ]
       },
       {
@@ -596,8 +594,6 @@
         }
       }
     }
-
-
   ],
   "dataset_metadata": [
     {
@@ -672,11 +668,11 @@
     "increment": "Increment",
     "decrement": "Decrement",
     "dm-update": "Add Field",
-    "winter":    "Winter",
-    "summer":    "Summer",
-    "fall":      "Fall",
-    "spring":    "Spring",
-    "moon":      "Moon",
-    "meteor":    "Meteor"
+    "winter": "Winter",
+    "summer": "Summer",
+    "fall": "Fall",
+    "spring": "Spring",
+    "moon": "Moon",
+    "meteor": "Meteor"
   }
 }
