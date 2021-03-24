@@ -46,7 +46,11 @@ $properties-vt-checkbox-width: 45px;
 	}
 
 	.properties-autosized-vt-header {
-		text-transform: capitalize;
+		// sentence style column headers
+		text-transform: lowercase;
+		::first-letter {
+			text-transform: uppercase;
+		}
 
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
