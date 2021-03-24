@@ -213,7 +213,7 @@ class DiagramCanvas extends React.Component {
 		if (nodeTemplate && (this.dragX !== event.clientX || this.dragY !== event.clientY)) {
 			this.dragX = event.clientX;
 			this.dragY = event.clientY;
-			this.canvasD3Layout.paletteNodeDraggedOver(nodeTemplate, event.clientX, event.clientY);
+			this.canvasD3Layout.nodeTemplateDraggedOver(nodeTemplate, event.clientX, event.clientY);
 		}
 	}
 
