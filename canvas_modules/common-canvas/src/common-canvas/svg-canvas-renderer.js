@@ -1137,10 +1137,14 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the nodeTemplate passed in is 'insertable' into a data
-	// link between nodes on the canvas.
+	// link between nodes on the canvas. This involves ensuring the node temaplate
+	// will create a non binding node and also that the cardinality of the ports
+	// is not explicitely set to zero (which some crazy apps want to do!).
 	isNodeTemplateInsertableIntoLink(nodeTemplate) {
 		return this.config.enableInsertNodeDroppedOnLink &&
-			this.isNonBindingNode(nodeTemplate);
+			this.isNonBindingNode(nodeTemplate) &&
+			!this.isPortMaxCardinalityZero(nodeTemplate.inputs[0]) &&
+			!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]);
 	}
 
 	// Returns true if the current drag objects array has a single node which
@@ -3632,6 +3636,13 @@ export default class SVGCanvasRenderer {
 						node.inputs.length > 0 &&
 						node.outputs &&
 						node.outputs.length > 0);
+	}
+
+	// Returns true if the port (from a node template) passed in has a max
+	// cardinaility of zero. If cardinality or cardinality.max is missing the
+	// max is considered to be non-zero.
+	isPortMaxCardinalityZero(port) {
+		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
 	}
 
 	removeDynamicNodeIcons(d, nodeGrp) {
