@@ -602,6 +602,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableBrowserEditMenu = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedBrowserEditMenu" // Set ID to corresponding field in App.js state
+				labelText="Enable Browser Edit Menu"
+				toggled={this.props.getStateValue("selectedBrowserEditMenu")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableRightFlyoutUnderToolbar = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedRightFlyoutUnderToolbar" // Set ID to corresponding field in App.js state
@@ -1333,6 +1342,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCreateSupernodeNonContiguous}
 					{divider}
 					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					{enableBrowserEditMenu}
 					{divider}
 					{displayBoudingRectangles}
 					{divider}
