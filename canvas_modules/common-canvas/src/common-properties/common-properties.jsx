@@ -238,7 +238,8 @@ CommonProperties.propTypes = {
 			primary: PropTypes.string,
 			secondary: PropTypes.string
 		}),
-		schemaValidation: PropTypes.bool
+		schemaValidation: PropTypes.bool,
+		applyPropertiesWithoutEdit: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -262,7 +263,8 @@ CommonProperties.defaultProps = {
 		applyOnBlur: false,
 		enableResize: true,
 		conditionReturnValueHandling: CONDITION_RETURN_VALUE_HANDLING.VALUE,
-		schemaValidation: false
+		schemaValidation: false,
+		applyPropertiesWithoutEdit: false
 	},
 	callbacks: {
 	},
