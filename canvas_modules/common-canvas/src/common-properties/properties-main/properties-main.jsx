@@ -330,7 +330,8 @@ class PropertiesMain extends React.Component {
 		if (this.originalTitle !== this.propertiesController.getTitle() ||
 				(this.currentParameters && JSON.stringify(this.currentParameters) !==
 				JSON.stringify(this.propertiesController.getPropertyValues())) ||
-				(JSON.stringify(this.previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
+				(JSON.stringify(this.previousErrorMessages) !== JSON.stringify(newErrorMessages)) ||
+				this.props.propertiesConfig.applyPropertiesWithoutEdit) {
 
 			// set current values
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
@@ -519,7 +520,8 @@ PropertiesMain.propTypes = {
 			primary: PropTypes.string,
 			secondary: PropTypes.string
 		}),
-		schemaValidation: PropTypes.bool
+		schemaValidation: PropTypes.bool,
+		applyPropertiesWithoutEdit: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
