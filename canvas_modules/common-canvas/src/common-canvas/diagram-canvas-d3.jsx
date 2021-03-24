@@ -48,6 +48,9 @@ class DiagramCanvas extends React.Component {
 		this.dragX = null;
 		this.dragY = null;
 
+		// Record whether we added the event listeners or not.
+		this.eventListenersAdded = false;
+
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
@@ -76,9 +79,10 @@ class DiagramCanvas extends React.Component {
 				this.svgCanvasDivSelector,
 				this.props.config,
 				this.props.canvasController);
-		document.addEventListener("cut", this.onCut, true);
-		document.addEventListener("copy", this.onCopy, true);
-		document.addEventListener("paste", this.onPaste, true);
+
+		if (this.props.config.enableBrowserEditMenu) {
+			this.addEventListeners();
+		}
 		this.focusOnCanvas();
 	}
 
@@ -86,12 +90,16 @@ class DiagramCanvas extends React.Component {
 		if (this.canvasD3Layout && !this.isDropZoneDisplayed()) {
 			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
 		}
+		// Manage the event browsers in case this config property changes.
+		if (this.props.config.enableBrowserEditMenu) {
+			this.addEventListeners();
+		} else {
+			this.removeEventListeners();
+		}
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("cut", this.onCut, true);
-		document.removeEventListener("copy", this.onCopy, true);
-		document.removeEventListener("paste", this.onPaste, true);
+		this.removeEventListeners();
 	}
 
 	onCut(evt) {
@@ -164,6 +172,24 @@ class DiagramCanvas extends React.Component {
 			return event.dataTransfer.types.includes("Files");
 		}
 		return false;
+	}
+
+	addEventListeners() {
+		if (!this.eventListenersAdded) {
+			document.addEventListener("cut", this.onCut, true);
+			document.addEventListener("copy", this.onCopy, true);
+			document.addEventListener("paste", this.onPaste, true);
+			this.eventListenersAdded = true;
+		}
+	}
+
+	removeEventListeners() {
+		if (this.eventListenersAdded) {
+			document.removeEventListener("cut", this.onCut, true);
+			document.removeEventListener("copy", this.onCopy, true);
+			document.removeEventListener("paste", this.onPaste, true);
+			this.eventListenersAdded = false;
+		}
 	}
 
 	zoomTo(zoomObject) {
