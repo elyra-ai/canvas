@@ -2712,7 +2712,7 @@ export default class SVGCanvasRenderer {
 
 					// Node selection highlighting
 					nodeGrp.select(this.getSelectorForId("node_sel_outline", d.id))
-						.attr("d", (nd) => this.getNodeShapePathOutline(nd))
+						.attr("d", (nd) => this.getNodeSelectionOutline(nd))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", (nd) => "d3-node-selection-highlight")
 						.datum(node); // Set the __data__ to the updated data
@@ -4759,9 +4759,9 @@ export default class SVGCanvasRenderer {
 		return this.getRectangleNodeShapePath(data, data.layout.nodeSizingArea);
 	}
 
-	// Returns a path string that will draw the outline shape of the node.
-	getNodeShapePathOutline(data) {
-		if (data.layout.selectionPath) {
+	// Returns a path string that will draw the selection outline shape of the node.
+	getNodeSelectionOutline(data) {
+		if (data.layout.selectionPath && !this.nodeUtils.isExpanded(data)) {
 			return data.layout.selectionPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -4773,7 +4773,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
-		if (data.layout.bodyPath) {
+		if (data.layout.bodyPath && !this.nodeUtils.isExpanded(data)) {
 			return data.layout.bodyPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -6296,9 +6296,14 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-node-body-outline") {
 			customClass = " " + d.class_name;
 		}
+
+		const supernodeClass = this.nodeUtils.isSupernode(d) && this.nodeUtils.isExpanded(d)
+			? " d3-node-supernode-expanded"
+			: "";
+
 		// If the class name provided IS the default, or there is no classname,
 		// return the class name.
-		return "d3-node-group" + customClass;
+		return "d3-node-group" + supernodeClass + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
