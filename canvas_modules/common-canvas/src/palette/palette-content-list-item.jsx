@@ -19,7 +19,8 @@ import PropTypes from "prop-types";
 import has from "lodash/has";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
+import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
+import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 
 class PaletteContentListItem extends React.Component {
 	constructor(props) {
@@ -102,12 +103,14 @@ class PaletteContentListItem extends React.Component {
 		}
 
 		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
-			const image = this.props.nodeTemplate.app_data.ui_data.image;
+			let image = this.props.nodeTemplate.app_data.ui_data.image;
 
-			icon = <img src={image} className="palette-list-item-icon" draggable="false" />;
-			if (image.endsWith(".svg")) {
-				icon = <SVG src={image} className="palette-list-item-icon" draggable="false" />;
+			if (image === USE_DEFAULT_ICON) {
+				image = SUPERNODE_ICON;
 			}
+			icon = image.endsWith(".svg")
+				? <SVG src={image} className="palette-list-item-icon" draggable="false" />
+				: <img src={image} className="palette-list-item-icon" draggable="false" />;
 		}
 
 		// Special case for when there are no nodes in the category so we show
