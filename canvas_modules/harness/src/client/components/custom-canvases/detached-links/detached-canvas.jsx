@@ -142,6 +142,17 @@ export default class DetachedCanvas extends React.Component {
 			this.createDecorations(data.linkIds[0]);
 		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
 			this.createDecorations(command.data.linkIds[0]);
+		} else if (data.editType === "createSuperNode" ||
+								data.editType === "redo" && command.data.editType === "createSuperNode") {
+			const newNodeProps =
+				{ label: "Local Container",
+					description: "A Data Stage Container that is local",
+					image: "/images/custom-canvases/flows/palette/icons/supernode.svg" };
+
+			this.canvasController.setNodeProperties(
+				command.supernode.id,
+				newNodeProps,
+				command.apiPipeline.pipelineId);
 		}
 	}
 

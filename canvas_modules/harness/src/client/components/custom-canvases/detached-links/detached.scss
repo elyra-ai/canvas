@@ -29,6 +29,11 @@
 			stroke: transparent;
 		}
 
+		&.d3-node-supernode-expanded > .d3-node-body-outline {
+			stroke: $ui-03;
+			fill: $ui-03;
+		}
+
 		// Style the node selection highlighting
 		.d3-node-selection-highlight[data-selected="yes"] {
 			stroke: $gray-50;
