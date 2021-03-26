@@ -104,6 +104,14 @@ export default class PropertiesController {
 		return this.editorSize;
 	}
 
+	setPropertiesConfig(config) {
+		this.propertiesConfig = config;
+	}
+
+	getPropertiesConfig() {
+		return this.propertiesConfig;
+	}
+
 	//
 	// Form and parsing Methods
 	//
@@ -1009,16 +1017,18 @@ export default class PropertiesController {
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
 	*/
-	getPropertyValue(inPropertyId, options) {
+	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
-		let filteredValue;
+		let filteredValue = defaultValue;
 
 		// don't return hidden/disabled values
-		if (options && options.filterHiddenDisabled === true) {
+		const filterHidden = options && (options.filterHiddenDisabled || options.filterHidden);
+		const filterDisabled = options && (options.filterHiddenDisabled || options.filterDisabled);
+		if (filterHidden || filterDisabled) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
-			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+			if ((controlState === STATES.DISABLED && filterDisabled) || (controlState === STATES.HIDDEN && filterHidden)) {
 				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
@@ -1034,7 +1044,7 @@ export default class PropertiesController {
 								col: colIdx
 							};
 							const valueState = this.getControlState(colPropertyId);
-							if (valueState === STATES.DISABLED || valueState === STATES.HIDDEN) {
+							if ((valueState === STATES.DISABLED && filterDisabled) || (valueState === STATES.HIDDEN && filterHidden)) {
 								filteredValue[rowIdx][colIdx] = null;
 							}
 						}

@@ -23,6 +23,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.control.controlType !== "passwordfield") {
 		const dataType = typeof paramInfo.value;
 		if (typeof param2Info !== "undefined") {
+			if (paramInfo.value === null || param2Info.value === null) {
+				return paramInfo.value !== param2Info.value;
+			}
 			switch (dataType) {
 			case "undefined":
 			case "boolean":
@@ -40,6 +43,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
+			if (paramInfo.value === null || value === null) {
+				return paramInfo.value !== value;
+			}
 			switch (dataType) {
 			case "undefined":
 			case "boolean":

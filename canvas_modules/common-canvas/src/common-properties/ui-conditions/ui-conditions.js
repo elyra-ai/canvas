@@ -213,8 +213,19 @@ function condition(data, propertyId, controller) {
 	const param2 = data.parameter_2_ref;
 	const value = data.value;
 
+	// get configuration options to determine how properties values are handled in condition logic
+	const options = {};
+	const propertiesConfig = controller.getPropertiesConfig();
+	if (propertiesConfig.conditionDisabledPropertyHandling === "null") {
+		options.filterDisabled = true;
+	}
+	if (propertiesConfig.conditionHiddenPropertyHandling === "null") {
+		options.filterHidden = true;
+	}
+
 	const paramInfo = { param: param, id: _getPropertyIdFromParam(propertyId, param) };
-	paramInfo.value = controller.getPropertyValue(paramInfo.id);
+
+	paramInfo.value = controller.getPropertyValue(paramInfo.id, options, null);
 	paramInfo.control = controller.getControl(paramInfo.id);
 
 	if (typeof paramInfo.control === "undefined") {
@@ -228,7 +239,7 @@ function condition(data, propertyId, controller) {
 			param: param2,
 			id: _getPropertyIdFromParam(propertyId, param2),
 		};
-		param2Info.value = controller.getPropertyValue(param2Info.id);
+		param2Info.value = controller.getPropertyValue(param2Info.id, options, null);
 		param2Info.control = controller.getControl(param2Info.id);
 	}
 	const operation = controller.getConditionOp(op);

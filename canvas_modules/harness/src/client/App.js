@@ -324,6 +324,8 @@ class App extends React.Component {
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
 		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
 		this.enableApplyPropertiesWithoutEdit = this.enableApplyPropertiesWithoutEdit.bind(this);
+		this.setConditionHiddenPropertyHandling = this.setConditionHiddenPropertyHandling.bind(this);
+		this.setConditionDisabledPropertyHandling = this.setConditionDisabledPropertyHandling.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -759,6 +761,14 @@ class App extends React.Component {
 		}
 		this.canvasController.setNodeDecorations(nodeId, newDecs);
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
+	}
+
+	setConditionHiddenPropertyHandling(value) {
+		this.setState({ conditionHiddenPropertyHandling: value });
+	}
+
+	setConditionDisabledPropertyHandling(value) {
+		this.setState({ conditionDisabledPropertyHandling: value });
 	}
 
 	setLinkDecorations(linkId, newDecorations) {
@@ -1925,7 +1935,9 @@ class App extends React.Component {
 			applyOnBlur: this.state.applyOnBlur,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2153,7 +2165,11 @@ class App extends React.Component {
 			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
 			propertiesSchemaValidation: this.state.propertiesSchemaValidation,
 			enableApplyPropertiesWithoutEdit: this.enableApplyPropertiesWithoutEdit,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling
 		};
 
 		const sidePanelAPIConfig = {

@@ -391,6 +391,32 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const conditionHiddenPropertyHandling = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-cond-hidden-prop-handling">
+				<Dropdown
+					id="harness-sidepanel-cond-hidden-prop-handling-dropdown"
+					label="Select conditionHiddenPropertyHandling"
+					titleText="conditionHiddenPropertyHandling"
+					items={ [{ id: "value", label: "value" }, { id: "null", label: "null" }] }
+					initialSelectedItem={this.props.propertiesConfig.conditionHiddenPropertyHandling}
+					onChange={ (evt) => this.props.propertiesConfig.setConditionHiddenPropertyHandling(evt.selectedItem.label) }
+				/>
+			</div>
+		);
+
+		const conditionDisabledPropertyHandling = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-cond-disabled-prop-handling">
+				<Dropdown
+					id="harness-sidepanel-cond-disabled-prop-handling-dropdown"
+					label="Select conditionDisabledPropertyHandling"
+					titleText="conditionDisabledPropertyHandling"
+					items={ [{ id: "value", label: "value" }, { id: "null", label: "null" }] }
+					initialSelectedItem={this.props.propertiesConfig.conditionDisabledPropertyHandling}
+					onChange={ (evt) => this.props.propertiesConfig.setConditionDisabledPropertyHandling(evt.selectedItem.label) }
+				/>
+			</div>
+		);
+
 		const disableRowMoveButtonsInTable = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-disable-row-move-buttons">
 				<TextInput
@@ -414,10 +440,6 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{containerType}
 				{divider}
-				{persistEditorSize}
-				{divider}
-				{disableRowMoveButtonsInTable}
-				{divider}
 				{validateSchemaEnabled}
 				{divider}
 				{applyPropertiesWithoutEdit}
@@ -431,6 +453,14 @@ export default class SidePanelModal extends React.Component {
 				{addtlCmpts}
 				{divider}
 				{useHeading}
+				{divider}
+				{persistEditorSize}
+				{divider}
+				{conditionHiddenPropertyHandling}
+				{divider}
+				{conditionDisabledPropertyHandling}
+				{divider}
+				{disableRowMoveButtonsInTable}
 			</div>
 		);
 	}
@@ -466,6 +496,10 @@ SidePanelModal.propTypes = {
 		enablePropertiesSchemaValidation: PropTypes.func,
 		propertiesSchemaValidation: PropTypes.bool,
 		enableApplyPropertiesWithoutEdit: PropTypes.func,
-		applyPropertiesWithoutEdit: PropTypes.bool
+		applyPropertiesWithoutEdit: PropTypes.bool,
+		setConditionHiddenPropertyHandling: PropTypes.func,
+		conditionHiddenPropertyHandling: PropTypes.string,
+		setConditionDisabledPropertyHandling: PropTypes.func,
+		conditionDisabledPropertyHandling: PropTypes.string
 	})
 };
