@@ -197,7 +197,7 @@ class App extends React.Component {
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
 			selectedAutoLinkOnlyFromSelNodes: false,
-			selectedBrowserEditMenu: false,
+			selectedBrowserEditMenu: true,
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
 			selectedCanvasLayout: null,
