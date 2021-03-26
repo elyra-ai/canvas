@@ -271,13 +271,15 @@ export default class APIPipeline {
 	// 1. The selected node, if only *one* node is currently selected or
 	// 2. The most recently added node, provided it has one or more output ports or
 	// 3. The most-recent-but-one added node, provided it has one or more output ports
-	getAutoSourceNode() {
+	getAutoSourceNode(autoLinkOnlyFromSelNodes) {
 		var sourceNode = null;
 		var selectedNodes = this.objectModel.getSelectedNodes();
 
-		if (selectedNodes.length === 1) {
+		if (selectedNodes.length === 1 &&
+				this.isViableAutoSourceNode(selectedNodes[0])) {
 			sourceNode = selectedNodes[0];
-		} else {
+
+		} else if (!autoLinkOnlyFromSelNodes) {
 			var nodesArray = this.getNodes();
 			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
@@ -292,6 +294,14 @@ export default class APIPipeline {
 			}
 		}
 		return sourceNode;
+	}
+
+	// Returns true if the node passed in is OK to be used as a source node
+	// for a node which is to be auto-added to the canvas.
+	isViableAutoSourceNode(node) {
+		return node.outputs &&
+			node.outputs.length > 0 &&
+			!CanvasUtils.isSrcCardinalityAtMax(node.outputs[0].id, node, this.getLinks());
 	}
 
 	// Returns a newly created 'auto node' whose position is based on the

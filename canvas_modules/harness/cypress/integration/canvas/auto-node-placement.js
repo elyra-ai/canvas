@@ -25,30 +25,6 @@ describe("Test auto layout variations", function() {
   ", undo, redo functions", function() {
 		cy.clickToolbarPaletteOpen();
 
-		// Double click Object Store node on canvas
-		cy.clickCategory("Export");
-		cy.doubleClickNodeInCategory("Object Store");
-		cy.verifyNodeTransform("Object Store", 50, 50);
-		cy.verifyNumberOfNodes(1);
-		cy.verifyNumberOfPortDataLinks(0);
-
-		// Double click Table node on canvas
-		cy.clickCategory("Outputs");
-		cy.doubleClickNodeInCategory("Table");
-		cy.verifyNodeTransform("Table", 200, 50);
-		cy.verifyNumberOfNodes(2);
-		cy.verifyNumberOfPortDataLinks(0);
-
-		// Click undo
-		cy.clickToolbarUndo();
-		cy.verifyNumberOfNodes(1);
-		cy.verifyNumberOfPortDataLinks(0);
-
-		// Click undo
-		cy.clickToolbarUndo();
-		cy.verifyNumberOfNodes(0);
-		cy.verifyNumberOfPortDataLinks(0);
-
 		// Double click Var. File node on canvas
 		cy.clickCategory("Import");
 		cy.doubleClickNodeInCategory("Var. File");
@@ -132,7 +108,7 @@ describe("Test auto layout variations", function() {
 		// Double click Object Store node on canvas
 		cy.doubleClickNodeInCategory("Object Store");
 		cy.verifyNumberOfNodes(11);
-		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfPortDataLinks(9);
 
 		// Click undo
 		cy.clickToolbarUndo();
@@ -162,7 +138,35 @@ describe("Test auto layout variations", function() {
 		// Click Redo
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfNodes(11);
-		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfPortDataLinks(9);
+	});
+
+	it("Test an execution node auto-added after a binding exit node goes on new line & undo, redo.", function() {
+		cy.clickToolbarPaletteOpen();
+
+		// Double click Object Store node on canvas
+		cy.clickCategory("Export");
+		cy.doubleClickNodeInCategory("Object Store");
+		cy.verifyNodeTransform("Object Store", 50, 50);
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Double click Table node on canvas
+		cy.clickCategory("Outputs");
+		cy.doubleClickNodeInCategory("Table");
+		cy.verifyNodeTransform("Table", 50, 205);
+		cy.verifyNumberOfNodes(2);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Click undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfNodes(1);
+		cy.verifyNumberOfPortDataLinks(0);
+
+		// Click undo
+		cy.clickToolbarUndo();
+		cy.verifyNumberOfNodes(0);
+		cy.verifyNumberOfPortDataLinks(0);
 	});
 });
 
