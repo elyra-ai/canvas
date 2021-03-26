@@ -189,7 +189,7 @@ _defineConstant("ACTIONS", {
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
-_defineConstant("ROW_HEIGHT", 42);
+_defineConstant("ROW_HEIGHT", 32);
 
 _defineConstant("EXPRESSION_TABLE_ROWS", 7);
 

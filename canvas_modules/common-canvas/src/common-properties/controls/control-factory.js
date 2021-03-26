@@ -77,6 +77,15 @@ const accessibleControls = [
 	ControlType.SELECTCOLUMN
 ];
 
+const tableControls = [
+	ControlType.LIST,
+	ControlType.READONLYTABLE,
+	ControlType.SOMEOFSELECT,
+	ControlType.SELECTCOLUMNS,
+	ControlType.STRUCTURETABLE,
+	ControlType.STRUCTURELISTEDITOR
+];
+
 export default class ControlFactory {
 
 	constructor(controller) {
@@ -123,6 +132,7 @@ export default class ControlFactory {
 					control={control}
 					controlObj={controlObj}
 					accessibleControls={accessibleControls}
+					tableControl = {tableControls.includes(control.controlType)}
 				/>
 			</div>);
 	}
@@ -147,6 +157,7 @@ export default class ControlFactory {
 				propertyId={propertyId}
 				control={control}
 				accessibleControls={accessibleControls}
+				tableControl = {tableControls.includes(control.controlType)}
 			/>
 		);
 		if (tableInfo) {
