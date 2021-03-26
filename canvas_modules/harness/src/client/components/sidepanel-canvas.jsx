@@ -602,6 +602,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableAutoLinkOnlyFromSelNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
+				labelText="Enable Auto Link Only From Selected Nodes"
+				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableBrowserEditMenu = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedBrowserEditMenu" // Set ID to corresponding field in App.js state
@@ -1342,6 +1351,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCreateSupernodeNonContiguous}
 					{divider}
 					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
 					{enableBrowserEditMenu}
 					{divider}

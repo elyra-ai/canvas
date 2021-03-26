@@ -91,6 +91,7 @@ export default class CanvasController {
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
+			enableAutoLinkOnlyFromSelNodes: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
@@ -1947,7 +1948,7 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoNode": {
-				command = new CreateAutoNodeAction(data, this.objectModel);
+				command = new CreateAutoNodeAction(data, this.objectModel, this.canvasConfig.enableAutoLinkOnlyFromSelNodes);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
