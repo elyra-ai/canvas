@@ -21,7 +21,7 @@ import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import { isEmpty, cloneDeep, has } from "lodash";
+import { isEmpty, cloneDeep, has, union } from "lodash";
 import seedrandom from "seedrandom";
 
 
@@ -54,9 +54,13 @@ function validatePropertiesConditions(controller) {
 	validatePropertiesListConditions(controller, controls, newStates);
 	// propagate parent panel states
 	_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+	const updatePropertyIds = _updatedControlStates(newStates.controls, controller);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
+	for (const updatePropertyId of updatePropertyIds) {
+		validateConditions(updatePropertyId, controller, true);
+	}
 }
 
 // ========= Validate a list of properties
@@ -198,7 +202,7 @@ function validateInput(inPropertyId, controller) {
 * @param {object} propertyId. required
 * @param {object} properties controller. required
 */
-function validateConditions(inPropertyId, controller) {
+function validateConditions(inPropertyId, controller, isRerun) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -233,10 +237,32 @@ function validateConditions(inPropertyId, controller) {
 	} else {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
+
+
+	const updatePropertyIds = _updatedControlStates(newStates.controls, isRerun, controller);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
+	for (const updatePropertyId of updatePropertyIds) {
+		validateConditions(updatePropertyId, controller, true);
+	}
+}
 
+function _updatedControlStates(newControlStates, isRerun, controller) {
+	if (isRerun) {
+		return [];
+	}
+	const controlStates = controller.getControlStates();
+	const updatePropertyIds = [];
+	const keys = union(Object.keys(controlStates), Object.keys(newControlStates));
+	for (const key of keys) {
+		const currentControlState = controlStates[key];
+		const newControlState = newControlStates[key];
+		if (!currentControlState || !newControlState || currentControlState.value !== newControlState.value) {
+			updatePropertyIds.push({ name: key });
+		}
+	}
+	return updatePropertyIds;
 }
 
 /**

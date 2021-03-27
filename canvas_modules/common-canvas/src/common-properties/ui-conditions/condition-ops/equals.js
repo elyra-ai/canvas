@@ -23,7 +23,7 @@ function op() {
 function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.control.controlType !== "passwordfield") {
 		const dataType = typeof paramInfo.value;
-		if (typeof param2Info !== "undefined") {
+		if (param2Info) {
 			if (paramInfo.value === null || param2Info.value === null) {
 				return paramInfo.value === param2Info.value;
 			}

@@ -216,10 +216,10 @@ function condition(data, propertyId, controller) {
 	// get configuration options to determine how properties values are handled in condition logic
 	const options = {};
 	const propertiesConfig = controller.getPropertiesConfig();
-	if (propertiesConfig.conditionDisabledPropertyHandling === "null") {
+	if (propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
 		options.filterDisabled = true;
 	}
-	if (propertiesConfig.conditionHiddenPropertyHandling === "null") {
+	if (propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
 		options.filterHidden = true;
 	}
 
