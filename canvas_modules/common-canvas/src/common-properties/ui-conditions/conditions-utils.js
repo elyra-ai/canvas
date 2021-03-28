@@ -238,13 +238,16 @@ function validateConditions(inPropertyId, controller, isRerun) {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
 
-
 	const updatePropertyIds = _updatedControlStates(newStates.controls, controller, isRerun);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
 	for (const updatePropertyId of updatePropertyIds) {
 		validateConditions(updatePropertyId, controller, true);
+	}
+	if (isRerun) {
+		// need to make sure all children of panels get correct states after rerun
+		_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
 	}
 }
 

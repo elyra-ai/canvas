@@ -125,7 +125,7 @@ function evaluate(data, propertyId, controller) {
 	} else if (data.and) {
 		return and(data.and, propertyId, controller);
 	} else if (data.condition) { // condition
-		return condition(data.condition, propertyId, controller);
+		return condition(data.condition, propertyId, controller, data.isValidation);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -207,9 +207,10 @@ function andFilter(propertyId, filterItem, conditionItems, controller, inFields)
  * @param {Object} data.parameter_2_ref optional parameter the condition checks for
  * @param {Object} data.value optional value the condition checks for
  * @param {Object} info optional dataset fields and cell coordinates info
+ * @param {boolean} isValidation optional parameter used to determine type of condition
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
-function condition(data, propertyId, controller) {
+function condition(data, propertyId, controller, isValidation) {
 	const op = data.op;
 	const param = data.parameter_ref;
 	const param2 = data.parameter_2_ref;
@@ -219,10 +220,10 @@ function condition(data, propertyId, controller) {
 	// get actual value for input validation (isValidation)
 	const options = {};
 	const propertiesConfig = controller.getPropertiesConfig();
-	if (!data.isValidation && propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
+	if (!isValidation && propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
 		options.filterDisabled = true;
 	}
-	if (!data.isValidation && propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
+	if (!isValidation && propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
 		options.filterHidden = true;
 	}
 
