@@ -51,7 +51,9 @@ function validateInput(definition, propertyId, controller) {
  */
 function validation(data, propertyId, controller) {
 	if (data.fail_message && data.evaluate) {
-		const result = evaluate(data.evaluate, propertyId, controller);
+		const evaluateData = data.evaluate;
+		evaluateData.isValidation = true;
+		const result = evaluate(evaluateData, propertyId, controller);
 		if (typeof result === "object") {
 			return result;
 		}
@@ -214,12 +216,13 @@ function condition(data, propertyId, controller) {
 	const value = data.value;
 
 	// get configuration options to determine how properties values are handled in condition logic
+	// get actual value for input validation (isValidation)
 	const options = {};
 	const propertiesConfig = controller.getPropertiesConfig();
-	if (propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
+	if (!data.isValidation && propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
 		options.filterDisabled = true;
 	}
-	if (propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
+	if (!data.isValidation && propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
 		options.filterHidden = true;
 	}
 

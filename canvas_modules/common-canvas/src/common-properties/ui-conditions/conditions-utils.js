@@ -202,7 +202,7 @@ function validateInput(inPropertyId, controller) {
 * @param {object} propertyId. required
 * @param {object} properties controller. required
 */
-function validateConditions(inPropertyId, controller) {
+function validateConditions(inPropertyId, controller, isRerun) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -239,16 +239,20 @@ function validateConditions(inPropertyId, controller) {
 	}
 
 
-	const updatePropertyIds = _updatedControlStates(newStates.controls, controller);
+	const updatePropertyIds = _updatedControlStates(newStates.controls, controller, isRerun);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
 	for (const updatePropertyId of updatePropertyIds) {
-		validateConditions(updatePropertyId, controller);
+		validateConditions(updatePropertyId, controller, true);
 	}
 }
 
-function _updatedControlStates(newControlStates, controller) {
+function _updatedControlStates(newControlStates, controller, isRerun) {
+	// only rerun conditions once at this point to prevent infinite looping
+	if (isRerun) {
+		return [];
+	}
 	const controlStates = controller.getControlStates();
 	const updatePropertyIds = [];
 	const keys = union(Object.keys(controlStates), Object.keys(newControlStates));
