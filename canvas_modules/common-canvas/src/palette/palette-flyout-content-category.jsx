@@ -88,10 +88,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		let caretImage = null;
 		if (this.props.itemCount > 0 || this.props.category.empty_text) {
-			caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
-			if (this.props.selectedCategoryId === this.props.category.id) {
-				caretImage = <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />;
-			}
+			caretImage = this.props.isCategorySelected
+				? <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />
+				: <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
 		}
 
 		let itemImage = null;
@@ -177,7 +176,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
-	selectedCategoryId: PropTypes.string.isRequired,
+	isCategorySelected: PropTypes.bool.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
 	itemCount: PropTypes.number.isRequired,
 	itemsFiltered: PropTypes.bool.isRequired,
