@@ -76,11 +76,13 @@ describe("Test auto layout variations", function() {
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Double click Database node on canvas
-		cy.clickCategory("Import");
 		cy.doubleClickNodeInCategory("Database");
 		cy.verifyNodeTransform("Database", 50, 360);
 		cy.verifyNumberOfNodes(8);
 		cy.verifyNumberOfPortDataLinks(6);
+
+		// Close the import category
+		cy.clickCategory("Import");
 
 		// Select Database node
 		cy.clickNode("Database");

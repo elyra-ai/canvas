@@ -58,7 +58,7 @@ describe("Palette renders correctly", () => {
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentCategory)).to.have.length(2);
 	});
 
-	it("should render 1 <PaletteFlyoutContentList/> and 3 <PaletteFlyoutContentListItem/> component", () => {
+	it("should leave currently opened category open when a new category is opened", () => {
 		const wrapper = createMountedPalette();
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
@@ -66,6 +66,18 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(3);
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
+		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(5);
+	});
+
+	it("should close a category when two categories are currently open", () => {
+		const wrapper = createMountedPalette();
+		const importCat = findCategoryElement(wrapper, "Import");
+		importCat.simulate("click");
+		const outputsCat = findCategoryElement(wrapper, "Outputs");
+		outputsCat.simulate("click");
+		const importCat2 = findCategoryElement(wrapper, "Import");
+		importCat2.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
 		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(2);
 	});
