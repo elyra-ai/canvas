@@ -353,12 +353,12 @@ class VirtualizedTable extends React.Component {
 
 								disableHeader={this.props.disableHeader}
 								headerClassName="properties-autosized-vt-header"
-								headerHeight={40}
+								headerHeight={32}
 								headerRowRenderer={this.headerRowRenderer.bind(this, this.props.scrollKey)}
 								onHeaderClick={this.props.onHeaderClick}
 
 								rowClassName="properties-vt-row-class"
-								rowHeight={this.props.rowHeight ? this.props.rowHeight : 40}
+								rowHeight={this.props.rowHeight ? this.props.rowHeight : 32}
 
 								rowCount={this.state.rowCount}
 								rowGetter={this.props.rowGetter}

@@ -42,6 +42,12 @@
 			text-decoration: underline;
 		}
 	}
+	&.table-control {
+		label, .properties-required-indicator {
+			@include carbon--type-style("productive-heading-01");
+			color: $text-01;
+		}
+	}
 }
 
 .properties-label-container, .properties-summary-link-container {
