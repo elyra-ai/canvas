@@ -1194,7 +1194,7 @@ export default class SVGCanvasRenderer {
 
 		if (attachableLinks.length > 0) {
 
-			// No make sure the attachable links can be attached to the node based on
+			// Make sure the attachable links can be attached to the node based on
 			// the availability of ports and whether they are maxed out or not.
 			const linkArrays =
 				CanvasUtils.getDetachedLinksToUpdate(node, attachableLinks, this.activePipeline.links);
