@@ -939,7 +939,8 @@ export default class SVGCanvasRenderer {
 				x2: mousePos.x + (ghost.width / 2),
 				y2: mousePos.y + (ghost.height / 2)
 			};
-			const links = this.getAttachableLinksForNodeAtPos(nodeTemplate, ghostArea, mousePos);
+			const template = this.canvasController.convertNodeTemplate(nodeTemplate);
+			const links = this.getAttachableLinksForNodeAtPos(template, ghostArea);
 			this.setDetachedLinkHighlighting(links);
 		}
 
@@ -1171,11 +1172,11 @@ export default class SVGCanvasRenderer {
 	// Note: The passed in 'node' will be a node when an existing node on the
 	// canvas is being dragged but will be a node template when a node is being
 	// dragged from the palette. Since both have inputs and outputs all should be OK.
-	getAttachableLinksForNodeAtPos(node, ghostArea, mousePos) {
+	getAttachableLinksForNodeAtPos(node, ghostArea) {
 		const nodeHasInputs = node.inputs && node.inputs.length > 0;
 		const nodeHasOutputs = node.outputs && node.outputs.length > 0;
 
-		const attachableLinks = this.activePipeline.links.filter((link) => {
+		let attachableLinks = this.activePipeline.links.filter((link) => {
 			if (link.srcPos && nodeHasOutputs &&
 					CanvasUtils.isPosInArea(link.srcPos, ghostArea, this.canvasLayout.ghostAreaPadding)) {
 				link.nodeOverSrcPos = true;
@@ -1191,6 +1192,14 @@ export default class SVGCanvasRenderer {
 			return false;
 		});
 
+		if (attachableLinks.length > 0) {
+
+			// Make sure the attachable links can be attached to the node based on
+			// the availability of ports and whether they are maxed out or not.
+			const linkArrays =
+				CanvasUtils.getDetachedLinksToUpdate(node, attachableLinks, this.activePipeline.links);
+			attachableLinks = linkArrays.oldLinks;
+		}
 		return attachableLinks;
 	}
 
@@ -2232,7 +2241,7 @@ export default class SVGCanvasRenderer {
 					x2: mousePos.x - this.dragPointerOffsetInNode.x + node.width,
 					y2: mousePos.y - this.dragPointerOffsetInNode.y + node.height
 				};
-				const links = this.getAttachableLinksForNodeAtPos(node, ghostArea, mousePos);
+				const links = this.getAttachableLinksForNodeAtPos(node, ghostArea);
 				this.setDetachedLinkHighlighting(links);
 			}
 		}
