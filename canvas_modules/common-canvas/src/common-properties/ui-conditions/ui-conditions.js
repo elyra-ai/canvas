@@ -220,10 +220,10 @@ function condition(data, propertyId, controller, isValidation) {
 	// get actual value for input validation (isValidation)
 	const options = {};
 	const propertiesConfig = controller.getPropertiesConfig();
-	if (!isValidation && propertiesConfig && propertiesConfig.conditionDisabledPropertyHandling === "null") {
+	if (!isValidation && propertiesConfig.conditionDisabledPropertyHandling === "null") {
 		options.filterDisabled = true;
 	}
-	if (!isValidation && propertiesConfig && propertiesConfig.conditionHiddenPropertyHandling === "null") {
+	if (!isValidation && propertiesConfig.conditionHiddenPropertyHandling === "null") {
 		options.filterHidden = true;
 	}
 

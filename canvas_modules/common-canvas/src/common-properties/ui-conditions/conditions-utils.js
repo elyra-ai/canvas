@@ -21,7 +21,7 @@ import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import { isEmpty, cloneDeep, has, union } from "lodash";
+import { isEmpty, cloneDeep, has, union, isEqual } from "lodash";
 import seedrandom from "seedrandom";
 
 
@@ -50,15 +50,23 @@ function validatePropertiesConditions(controller) {
 		panels: controller.getPanelStates(),
 		actions: controller.getActionStates()
 	};
+
 	const controls = controller.getControls();
 	validatePropertiesListConditions(controller, controls, newStates);
 	// propagate parent panel states
 	_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
-	const updatePropertyIds = _updatedControlStates(newStates.controls, controller);
+
+	// get property values before any states have been updated
+	const prevPropertyValues = _getConditionPropertyValues(controller);
+
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
-	for (const updatePropertyId of updatePropertyIds) {
+	// get property values before any states have been updated
+	const newPropertyValues = _getConditionPropertyValues(controller);
+	// compared values to see if any values change based on state updates
+	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues);
+	for (const updatePropertyId of updatedPropertyIds) {
 		validateConditions(updatePropertyId, controller);
 	}
 }
@@ -237,12 +245,19 @@ function validateConditions(inPropertyId, controller, isRerun) {
 	} else {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
+	// get property values before any states have been updated
+	const prevPropertyValues = _getConditionPropertyValues(controller);
 
-	const updatePropertyIds = _updatedControlStates(newStates.controls, controller, isRerun);
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
-	for (const updatePropertyId of updatePropertyIds) {
+
+	// get property values before any states have been updated
+	const newPropertyValues = _getConditionPropertyValues(controller);
+	// compared values to see if any values change based on state updates
+	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues);
+	// rerun validation on controls where value changes based on state updates
+	for (const updatePropertyId of updatedPropertyIds) {
 		validateConditions(updatePropertyId, controller, true);
 	}
 	if (isRerun) {
@@ -251,22 +266,32 @@ function validateConditions(inPropertyId, controller, isRerun) {
 	}
 }
 
-function _updatedControlStates(newControlStates, controller, isRerun) {
-	// only rerun conditions once at this point to prevent infinite looping
-	if (isRerun) {
-		return [];
-	}
-	const controlStates = controller.getControlStates();
+function _comparePropertyValues(prevPropertyValues, newPropertyValues) {
 	const updatePropertyIds = [];
-	const keys = union(Object.keys(controlStates), Object.keys(newControlStates));
+	const keys = union(Object.keys(prevPropertyValues), Object.keys(newPropertyValues));
 	for (const key of keys) {
-		const currentControlState = controlStates[key];
-		const newControlState = newControlStates[key];
-		if (!currentControlState || !newControlState || currentControlState.value !== newControlState.value) {
+		const prevPropertyValue = prevPropertyValues[key];
+		const newPropertyValue = newPropertyValues[key];
+		if (!isEqual(prevPropertyValue, newPropertyValue)) {
 			updatePropertyIds.push({ name: key });
 		}
 	}
 	return updatePropertyIds;
+}
+
+function _getConditionPropertyValues(controller) {
+	const propertiesConfig = controller.getPropertiesConfig();
+	const options = {};
+	if (propertiesConfig.conditionDisabledPropertyHandling === "null") {
+		options.filterDisabled = true;
+	}
+	if (propertiesConfig.conditionHiddenPropertyHandling === "null") {
+		options.filterHidden = true;
+	}
+	if (isEmpty(options)) {
+		return {};
+	}
+	return controller.getPropertyValues(options);
 }
 
 /**

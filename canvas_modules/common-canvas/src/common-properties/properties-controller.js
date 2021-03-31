@@ -42,6 +42,7 @@ export default class PropertiesController {
 			actionHandler: null,
 			buttonHandler: null
 		};
+		this.propertiesConfig = {};
 		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
@@ -1016,6 +1017,8 @@ export default class PropertiesController {
 	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*   filterHidden: true - filter out values from controls that are hidden
+	*   filterDisabled: true - filter out values from controls that are disabled
 	*/
 	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
@@ -1084,11 +1087,13 @@ export default class PropertiesController {
 	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*   filterHidden: true - filter out values from controls that are hidden
+	*   filterDisabled: true - filter out values from controls that are disabled
 	*/
 	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		let returnValues = propertyValues;
-		if (options && options.filterHiddenDisabled === true) {
+		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled)) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
