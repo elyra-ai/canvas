@@ -283,7 +283,7 @@
           "default": "string condition handling"
         },
         "description": {
-          "default": "Will be disabled when string_disabled or string_hidden are disabled or hidden"
+          "default": "Will be disabled when string_disabled or string_hidden are disabled or hidden if condition handling conditionHiddenPropertyHandling=null or conditionDisabledPropertyHandling=null"
         }
       },
       {

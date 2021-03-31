@@ -67,7 +67,7 @@ function validatePropertiesConditions(controller) {
 	// compared values to see if any values change based on state updates
 	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues);
 	for (const updatePropertyId of updatedPropertyIds) {
-		validateConditions(updatePropertyId, controller);
+		validateConditions(updatePropertyId, controller, true);
 	}
 }
 
@@ -255,7 +255,7 @@ function validateConditions(inPropertyId, controller, isRerun) {
 	// get property values before any states have been updated
 	const newPropertyValues = _getConditionPropertyValues(controller);
 	// compared values to see if any values change based on state updates
-	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues);
+	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues, isRerun);
 	// rerun validation on controls where value changes based on state updates
 	for (const updatePropertyId of updatedPropertyIds) {
 		validateConditions(updatePropertyId, controller, true);
@@ -266,8 +266,11 @@ function validateConditions(inPropertyId, controller, isRerun) {
 	}
 }
 
-function _comparePropertyValues(prevPropertyValues, newPropertyValues) {
+function _comparePropertyValues(prevPropertyValues, newPropertyValues, isRerun) {
 	const updatePropertyIds = [];
+	if (isRerun) {
+		return [];
+	}
 	const keys = union(Object.keys(prevPropertyValues), Object.keys(newPropertyValues));
 	for (const key of keys) {
 		const prevPropertyValue = prevPropertyValues[key];
