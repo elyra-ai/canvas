@@ -27,6 +27,7 @@ import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import expressionTestResource from "../test_resources/json/expression-one-category.json";
 
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
+import textfieldResource from "../test_resources/paramDefs/textfield_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
@@ -831,6 +832,40 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
 		const wrapper = renderedObject.wrapper;
 		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
+	});
+});
+
+describe("CommonProperties conditionHandling option tests", () => {
+	let wrapper;
+	const propertyId = { name: "string_condition_handling" };
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("valation when conditionHiddenPropertyHandling=null hidden controls return null values in conditions", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { conditionHiddenPropertyHandling: "null" }); // default is applyOnBlur=true
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		expect(controller.getControlState(propertyId)).to.equal("disabled");
+		controller.updatePropertyValue({ name: "hide" }, false);
+		expect(controller.getControlState(propertyId)).to.equal("enabled");
+
+	});
+
+	it("valation when conditionDisabledPropertyHandling=null disabled controls return null values in conditions", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { conditionDisabledPropertyHandling: "null" }); // default is applyOnBlur=true
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		expect(controller.getControlState(propertyId)).to.equal("disabled");
+		controller.updatePropertyValue({ name: "disable" }, false);
+		expect(controller.getControlState(propertyId)).to.equal("enabled");
+	});
+
+	it("valation when neither conditionDisabledPropertyHandling or conditionHiddenPropertyHandling are set values are returned in conditions", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource); // default is applyOnBlur=true
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		expect(controller.getControlState(propertyId)).to.equal("enabled");
 	});
 });
 

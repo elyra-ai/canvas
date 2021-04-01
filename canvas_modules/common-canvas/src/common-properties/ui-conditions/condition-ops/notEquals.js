@@ -22,7 +22,10 @@ function op() {
 function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.control.controlType !== "passwordfield") {
 		const dataType = typeof paramInfo.value;
-		if (typeof param2Info !== "undefined") {
+		if (param2Info) {
+			if (paramInfo.value === null || param2Info.value === null) {
+				return paramInfo.value !== param2Info.value;
+			}
 			switch (dataType) {
 			case "undefined":
 			case "boolean":
@@ -31,15 +34,15 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.trim() !== param2Info.value.trim();
 			case "object":
-				if (paramInfo.value === null) {
-					return paramInfo.value !== param2Info.value;
-				}
 				return JSON.stringify(paramInfo.value) !== JSON.stringify(param2Info.value);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
+			if (paramInfo.value === null || value === null) {
+				return paramInfo.value !== value;
+			}
 			switch (dataType) {
 			case "undefined":
 			case "boolean":
@@ -48,9 +51,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.trim() !== value.trim();
 			case "object":
-				if (paramInfo.value === null) {
-					return paramInfo.value !== value;
-				}
 				return JSON.stringify(paramInfo.value) !== JSON.stringify(value);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);

@@ -47,6 +47,7 @@ class PropertiesMain extends React.Component {
 	constructor(props) {
 		super(props);
 		this.propertiesController = new PropertiesController();
+		this.propertiesController.setPropertiesConfig(this.props.propertiesConfig);
 		// Persist editorSize when resize() is not called
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
@@ -521,7 +522,9 @@ PropertiesMain.propTypes = {
 			secondary: PropTypes.string
 		}),
 		schemaValidation: PropTypes.bool,
-		applyPropertiesWithoutEdit: PropTypes.bool
+		applyPropertiesWithoutEdit: PropTypes.bool,
+		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"])
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
