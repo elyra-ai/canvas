@@ -22,15 +22,16 @@ import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import * as PropertyUtils from "./../../util/property-utils";
 import { Type, ParamRole } from "./../../constants/form-constants";
-import { STATES } from "./../../constants/constants";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
-import { reject, findIndex, cloneDeep } from "lodash";
+import { reject, findIndex, cloneDeep, isEmpty, has } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 
 class StructureTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
@@ -168,21 +169,28 @@ class StructureTableControl extends AbstractTable {
 			</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
+		const disabled = this.props.state === STATES.DISABLED;
+		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
+		const emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		const emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
+
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-column-structure-wrapper"
 			>
-				<div className="properties-column-structure">
-					<MoveableTableRows
-						tableContainer={content}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-					/>
-				</div>
+				{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(emptyTableButtonLabel, emptyTableButtonClickHandler, disabled)
+					: <div className="properties-column-structure">
+						<MoveableTableRows
+							tableContainer={content}
+							control={this.props.control}
+							controller={this.props.controller}
+							propertyId={this.props.propertyId}
+							setScrollToRow={this.setScrollToRow}
+							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+							disabled={disabled}
+						/>
+					</div>
+				}
 				<div>
 					{onPanelContainer}
 				</div>

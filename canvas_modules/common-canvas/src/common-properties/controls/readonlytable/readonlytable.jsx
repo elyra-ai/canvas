@@ -25,6 +25,7 @@ import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
+import { isEmpty, has } from "lodash";
 
 class ReadonlyTableControl extends AbstractTable {
 	constructor(props) {
@@ -61,23 +62,27 @@ class ReadonlyTableControl extends AbstractTable {
 				</div>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
+		const disabled = this.props.state === STATES.DISABLED;
+		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-readonly-table-wrapper"
 			>
 				{this.props.controlItem}
-				<div className="properties-readonly-table">
-					<MoveableTableRows
-						tableContainer={content}
-						control={this.props.control}
-						controller={this.props.controller}
-						propertyId={this.props.propertyId}
-						setScrollToRow={this.setScrollToRow}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						disabled={this.props.state === STATES.DISABLED}
-					/>
-				</div>
+				{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(buttonLabel, this.editCallback, disabled)
+					: <div className="properties-readonly-table">
+						<MoveableTableRows
+							tableContainer={content}
+							control={this.props.control}
+							controller={this.props.controller}
+							propertyId={this.props.propertyId}
+							setScrollToRow={this.setScrollToRow}
+							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+							disabled={disabled}
+						/>
+					</div>
+				}
 			</div>
 		);
 	}

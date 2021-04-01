@@ -56,3 +56,14 @@
 		}
 	}
 }
+
+.properties-empty-table {
+	@include carbon--type-style("body-short-01");
+	&[disabled] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	.properties-empty-table-button {
+		margin: $spacing-05 0;
+	}
+}

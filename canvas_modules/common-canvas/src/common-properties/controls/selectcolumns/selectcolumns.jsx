@@ -23,6 +23,7 @@ import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
+import { isEmpty, has } from "lodash";
 
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
@@ -145,20 +146,26 @@ class SelectColumns extends AbstractTable {
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
+		const disabled = this.props.state === STATES.DISABLED;
+		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
+		const emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		const emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={content}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
+				{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(emptyTableButtonLabel, emptyTableButtonClickHandler, disabled)
+					: <MoveableTableRows
+						tableContainer={content}
+						control={this.props.control}
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						disabled={disabled}
 
-				/>
+					/>
+				}
 			</div>
 		);
 	}

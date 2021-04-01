@@ -27,6 +27,7 @@ import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
+import { isEmpty, has } from "lodash";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
 class ListControl extends AbstractTable {
@@ -158,19 +159,23 @@ class ListControl extends AbstractTable {
 			</div>
 			<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 		</div>);
+		const disabled = this.props.state === STATES.DISABLED;
+		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 
 		return (
 			<div data-id={getDataId(this.props.propertyId)} className="properties-list-control" >
 				{this.props.controlItem}
-				<MoveableTableRows
-					tableContainer={tableContainer}
-					control={this.props.control}
-					controller={this.props.controller}
-					propertyId={this.props.propertyId}
-					setScrollToRow={this.setScrollToRow}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					disabled={this.props.state === STATES.DISABLED}
-				/>
+				{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(tableButtonConfig.addButtonLabel, this.addRow, disabled)
+					: <MoveableTableRows
+						tableContainer={tableContainer}
+						control={this.props.control}
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						disabled={disabled}
+					/>
+				}
 			</div>
 		);
 	}

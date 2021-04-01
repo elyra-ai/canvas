@@ -73,6 +73,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
+		this.makeEmptyTablePanel = this.makeEmptyTablePanel.bind(this);
 
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
@@ -769,6 +770,35 @@ export default class AbstractTable extends React.Component {
 			width: TABLE_SUBPANEL_BUTTON_WIDTH,
 			content: subCell
 		};
+	}
+
+	makeEmptyTablePanel(emptyTableButtonLabel, buttonClickHandler, disabled) {
+		// Empty table text can be customized
+		const overrideEmptyTableTextKey = `${this.props.control.name}.empty.table.text`;
+		const defaultEmptyTableText = PropertyUtils.formatMessage(
+			this.props.controller.getReactIntl(),
+			MESSAGE_KEYS.PROPERTIES_EMPTY_TABLE_TEXT,
+			{ button_label: emptyTableButtonLabel }
+		);
+		const emptyTableText = this.props.controller.getResource(overrideEmptyTableTextKey, defaultEmptyTableText);
+
+		const emptyTableContent = (
+			<div className="properties-empty-table" disabled={disabled}>
+				<span >{emptyTableText}</span>
+				<br />
+				<Button
+					className="properties-empty-table-button"
+					kind="tertiary"
+					size="small"
+					renderIcon={this.isReadonlyTable() ? Edit16 : Add16}
+					onClick={buttonClickHandler}
+					disabled={disabled}
+				>
+					{emptyTableButtonLabel}
+				</Button>
+			</div>
+		);
+		return emptyTableContent;
 	}
 }
 

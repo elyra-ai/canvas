@@ -24,6 +24,14 @@ function openFieldPicker(wrapper, dataIdName) {
 	return wrapper.find("div.properties-fp-table");
 }
 
+// When table has 0 rows, click on Add columns button to open FieldPicker
+function openFieldPickerForEmptyTable(wrapper, dataIdName) {
+	const tableWrapper = wrapper.find("div[data-id=\"" + dataIdName + "\"]");
+	const emptyTableButton = tableWrapper.find("button.properties-empty-table-button");
+	emptyTableButton.simulate("click"); // open field picker
+	return wrapper.find("div.properties-fp-table");
+}
+
 // expectedFields is optional
 // fieldsToSelect is an array of field names or objects with name and schema. ex: { "name": "age", "schema": "schema1" }
 function fieldPicker(fieldpickerWrapper, fieldsToSelect, expectedFields) {
@@ -196,6 +204,7 @@ function validateSelectedRowNum(wrapper) {
 
 module.exports = {
 	openFieldPicker: openFieldPicker,
+	openFieldPickerForEmptyTable: openFieldPickerForEmptyTable,
 	fieldPicker: fieldPicker,
 	verifyFieldPickerRow: verifyFieldPickerRow,
 	getTableHeaderRows: getTableHeaderRows,

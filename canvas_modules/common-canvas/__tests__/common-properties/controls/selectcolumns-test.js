@@ -196,6 +196,19 @@ describe("selectcolumns renders correctly", () => {
 		const selectColumnsTable = wrapper.find(".properties-vt-autosizer").find(".ReactVirtualized__Table");
 		expect(selectColumnsTable.props()).to.have.property("aria-label", control.label.text);
 	});
+
+	it("should render empty table content when selectcolumns is empty", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		const wrapper = renderedObject.wrapper;
+
+		const emptyFields = wrapper.find("div[data-id='properties-ctrl-fields_empty']");
+		// Verify empty table content is rendered
+		expect(emptyFields.find("div.properties-empty-table")).to.have.length(1);
+		expect(emptyFields.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Add columns\"");
+		expect(emptyFields.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(emptyFields.find("button.properties-empty-table-button").text()).to.be.equal("Add columns");
+	});
 });
 
 
@@ -211,11 +224,11 @@ describe("selectcolumns control filters values correctly", () => {
 	});
 
 	it("should filter type value from selectcolumn control", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_type");
 		tableUtils.fieldPicker(fieldPicker, ["age"], ["age", "age2", "age3", "age4"]);
 	});
 	it("should filter role values from selectcolumn control", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-fields_filter_roles");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-fields_filter_roles");
 		tableUtils.fieldPicker(fieldPicker, [], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
 	});
 
@@ -282,7 +295,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 
 	it("should filter by type in selectcolumns control", () => {
 		// open the "filter by type" select columns field picker
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_type");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_type");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -297,7 +310,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 
 	it("should filter by types in selectcolumns control", () => {
 		// open the "filter by types" select columns field picker
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_types");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_types");
 		const fieldTable = [
 			{ "name": "age", "schema": "Schema-1" },
 			{ "name": "AGE", "schema": "Schema-1" },
@@ -316,8 +329,8 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 
 
 	it("should filter by measurement in selectcolumns control", () => {
-		// open the "filter by types" select columns field picker
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurement");
+		// open the "filter by measurement" select columns field picker
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_measurement");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "BP2", "schema": "Schema-1" },
@@ -329,7 +342,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 	});
 
 	it("should filter by measurements in selectcolumns control", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_measurements");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_measurements");
 		const fieldTable = [
 			{ "name": "BP", "schema": "Schema-1" },
 			{ "name": "drug", "schema": "Schema-1" },
@@ -346,7 +359,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 	});
 
 	it("should filter by type and measurement in selectcolumns control", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_and");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_and");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -358,7 +371,7 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 	});
 
 	it("should filter by type or measurement in selectcolumns control", () => {
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields_filter_or");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-fields_filter_or");
 		const fieldTable = [
 			{ "name": "drug", "schema": "Schema-1" },
 			{ "name": "drug2", "schema": "Schema-1" },
@@ -401,8 +414,8 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const summaryPanelWrapper = wrapper.find("div[data-id='properties-structurelist-summary-panel2']");
 		summaryPanelWrapper.find("button").simulate("click");
 		let tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
-		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // add row button
-		addFieldsButtons.at(0).simulate("click"); // add row button
+		const emptyTableButton = tableWrapper.find("button.properties-empty-table-button"); // add row button for empty table
+		emptyTableButton.simulate("click"); // add row button
 
 		// open the subpanel for the added row
 		tableWrapper = wrapper.find("div[data-id='properties-structurelist2']");
@@ -436,10 +449,10 @@ describe("selectcolumns control functions correctly in a table", () => {
 		summaryPanelWrapper.find("button").simulate("click");
 
 		// select the add column button
-		let tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
+		let tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelist_sub_panel']");
 		expect(tableWrapper.length).to.equal(1);
-		const addFieldsButtons = tableWrapper.find("button.properties-add-fields-button"); // add row button
-		addFieldsButtons.at(0).simulate("click"); // add row button
+		const emptyTableButton = tableWrapper.find("button.properties-empty-table-button"); // add row button for empty table
+		emptyTableButton.simulate("click"); // add row button
 
 		// Need to reassign tableWrapper after adding row.
 		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");

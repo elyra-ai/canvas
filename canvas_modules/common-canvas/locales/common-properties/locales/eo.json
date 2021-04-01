@@ -1,9 +1,9 @@
 {
   "subPanel.button.tooltip": "[Esperanto~Edit~eo]",
-  "structureListEditor.addButton.label": "[Esperanto~Add Value~~~~eo]",
+  "structureListEditor.addButton.label": "[Esperanto~Add value~~~~eo]",
   "structureListEditor.removeButton.label": "[Esperanto~Remove~~~eo]",
   "structureListEditor.addButton.tooltip": "[Esperanto~Add new row~eo]",
-  "structureTable.addButton.label": "[Esperanto~Add Columns~eo]",
+  "structureTable.addButton.label": "[Esperanto~Add columns~eo]",
   "structureTable.removeButton.label": "[Esperanto~Remove~eo]",
   "fieldPicker.saveButton.label": "[Esperanto~Select Fields for~~~eo]",
   "fieldPicker.saveButton.tooltip": "[Esperanto~Save and return~eo]",
@@ -88,5 +88,6 @@
   "multiselect.dropdown.empty.label": "[Esperanto~None selected~~~~~~eo]",
   "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~~~~~eo]",
   "virtualizedTable.header.checkbox.label": "[Esperanto~Select all {header_checkbox_label}~~~~~~eo]",
-  "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index}, {row_checkbox_label}~~~~~~~~~~~~eo]"
+  "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index}, {row_checkbox_label}~~~~~~~~~~~~eo]",
+  "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~~~eo]"
 }

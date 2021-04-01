@@ -78,7 +78,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 		// select age
 		dropdownList.at(1).simulate("click");
 		panel1 = wrapper.find("div[data-id='properties-selectcolumn']");
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-selectcolumns");
 		tableUtils.fieldPicker(fieldPicker, ["BP"], ["BP", "Na", "drug"]);
 		const panel2 = wrapper.find("div[data-id='properties-selectcolumns']");
 		const rows = tableUtils.getTableRows(panel2);
@@ -210,7 +210,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		let actualOptions = panel1.find("Dropdown").prop("items");
 		expect(actualOptions.length).to.equal(fieldTable.length + 1); // +1 for "..."
 
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-selectcolumns");
 		tableUtils.fieldPicker(fieldPicker, ["0.drug2", "2.drug2"], fieldTable);
 
 		// open the dropdown
@@ -245,7 +245,8 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	it("should show correct values from selectcolumns controls with multi schema input", () => {
 		const selectColumnsTable2 = wrapper.find("div[data-id='properties-ft-selectcolumns2']");
 		expect(selectColumnsTable2).to.have.length(1);
-		const selectColumnsTable3 = wrapper.find("div[data-id='properties-ft-selectcolumns3']");
+		// selectColumnsTable3 is an empty table. It shows empty table text and Add columns button
+		const selectColumnsTable3 = wrapper.find("div[data-id='properties-ctrl-selectcolumns3']");
 		expect(selectColumnsTable3).to.have.length(1);
 
 		const table2Rows = tableUtils.getTableRows(selectColumnsTable2);
@@ -293,7 +294,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "link_ref": "2", "field_name": "drug2" },
 			{ "link_ref": "2", "field_name": "drug3" }
 		];
-		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-selectcolumns3");
+		const fieldPicker = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-ctrl-selectcolumns3");
 		tableUtils.fieldPicker(fieldPicker, selectcolumns3, fieldTable);
 		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3A);
 
