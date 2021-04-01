@@ -60,6 +60,7 @@ export default class DetachedCanvas extends React.Component {
 			enableHighlightNodeOnNewLinkDrag: true,
 			enableHighlightUnavailableNodes: true,
 			enableDisplayFullLabelOnHover: true,
+			enableAutoLinkOnlyFromSelNodes: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
 			tipConfig: {

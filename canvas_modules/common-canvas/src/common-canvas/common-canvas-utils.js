@@ -622,12 +622,12 @@ export default class CanvasUtils {
 		return exists;
 	}
 
-	// Returns an array of info objects that describe how links need to be updated
-	// during attach actions. The array is based on the array of
-	// detached links passed in and has one entry for each detached link that can
-	// be added to the node passed in. The output object contains the array of
-	// new links and an array of the original links. allDataLinks is the array of
-	// all node-node data links on the canvas.
+	// Returns an object containing two arrays: old links and new links. There is
+	// one new link in the new links array for each old link in the old links
+	// array. The new links have their properties adjusted so they are attached
+	// to the first found output or input port, that is not maxed out with respect
+	// to its maximum cardinality, of the provided node. The allDataLinks
+	// parameter is the array of all node-node data links on the canvas.
 	static getDetachedLinksToUpdate(node, detachedLinks, allNodeDataLinks) {
 		const newLinks = [];
 		const oldLinks = [];
@@ -636,7 +636,7 @@ export default class CanvasUtils {
 				let connected = false;
 				node.outputs.forEach((output) => {
 					if (connected === false &&
-							this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, allNodeDataLinks.concat(newLinks))) {
+							this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, this.getReplacedLinks(allNodeDataLinks, newLinks))) {
 						const newLink = Object.assign({}, link, { srcNodeId: node.id, srcNodePortId: output.id });
 						delete newLink.srcPos;
 						newLinks.push(newLink);
@@ -649,7 +649,7 @@ export default class CanvasUtils {
 				let connected = false;
 				node.inputs.forEach((input) => {
 					if (connected === false &&
-							this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, allNodeDataLinks.concat(newLinks))) {
+							this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, this.getReplacedLinks(allNodeDataLinks, newLinks))) {
 						const newLink = Object.assign({}, link, { trgNodeId: node.id, trgNodePortId: input.id });
 						delete newLink.trgPos;
 						newLinks.push(newLink);
@@ -662,6 +662,14 @@ export default class CanvasUtils {
 		return { newLinks, oldLinks };
 	}
 
+	// Returns an array which is a copy of the allNodeDataLinks array but with
+	// any elements replaced from the newLinks array if those elements have the same ID.
+	static getReplacedLinks(allNodeDataLinks, newLinks) {
+		return allNodeDataLinks.map((link) => {
+			const index = newLinks.findIndex((nl) => nl.id === link.id);
+			return index > -1 ? newLinks[index] : link;
+		});
+	}
 
 	// Returns an array of selected object IDs for nodes, comments and links
 	// that are within the region provided. Links are only included if

@@ -16,12 +16,12 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateAutoNodeAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, autoLinkOnlyFromSelNodes) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.srcNode = this.apiPipeline.getAutoSourceNode();
+		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
 		this.newNode = this.apiPipeline.createAutoNode(data, this.srcNode);
 		this.newLink = null;
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {

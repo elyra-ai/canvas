@@ -91,6 +91,7 @@ export default class CanvasController {
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
+			enableAutoLinkOnlyFromSelNodes: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
@@ -1551,7 +1552,7 @@ export default class CanvasController {
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: this.objectModel.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
 
@@ -1560,7 +1561,7 @@ export default class CanvasController {
 
 	// Called when a node is dragged from the palette onto the canvas
 	createNodeFromTemplateAt(nodeTemplate, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createNode",
 			editSource: "canvas",
@@ -1576,7 +1577,7 @@ export default class CanvasController {
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto an existing link between two data nodes.
 	createNodeFromTemplateOnLinkAt(nodeTemplate, link, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		if (this.canNewNodeBeDroppedOnLink(newNodeTemplate)) {
 			var data = {
 				editType: "createNodeOnLink",
@@ -1595,7 +1596,7 @@ export default class CanvasController {
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto one or more semi-detached or fully-detached links.
 	createNodeFromTemplateAttachLinks(nodeTemplate, detachedLinks, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		if (detachedLinks &&
 				this.canNewNodeBeAttachedToLinks(newNodeTemplate)) {
 			var data = {
@@ -1947,7 +1948,7 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoNode": {
-				command = new CreateAutoNodeAction(data, this.objectModel);
+				command = new CreateAutoNodeAction(data, this.objectModel, this.canvasConfig.enableAutoLinkOnlyFromSelNodes);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();

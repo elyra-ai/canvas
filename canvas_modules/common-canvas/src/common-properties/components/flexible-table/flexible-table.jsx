@@ -241,8 +241,8 @@ export default class FlexibleTable extends React.Component {
 			return;
 		}
 		let newHeight = this.state.tableHeight;
-		const rowHeight = 3; // in em
-		const headerHeight = 3; // in em
+		const rowHeight = 2.25; // in em
+		const headerHeight = 2.5; // in em
 		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 4;
 		if (rows > 0) {
 			newHeight = (rowHeight * rows + headerHeight);

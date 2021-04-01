@@ -40,6 +40,23 @@ describe("Test adding nodes into empty canvas", function() {
 		// Verify node doesn't exist in search results
 		cy.verifyNodeDoesNotExistInPalette("Sample");
 	});
+
+	it("Test open categories remain open when a new one is opened and closes when it is clicked", function() {
+		cy.clickToolbarPaletteOpen();
+
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 300, 200);
+
+		cy.clickCategory("Field Ops");
+		cy.dragNodeToPosition("Derive", 400, 200);
+
+		// If Import category is still open we will be able to drag a "Var File"
+		cy.dragNodeToPosition("Var. File", 500, 200);
+
+		// Close Import category
+		cy.clickCategory("Import");
+		cy.verifyNodeDoesNotExistInPalette("Var. File");
+	});
 });
 
 describe("Test adding node type to palette Flyout Panel", function() {

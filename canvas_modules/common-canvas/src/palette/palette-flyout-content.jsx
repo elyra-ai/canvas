@@ -32,7 +32,7 @@ class PaletteFlyoutContent extends React.Component {
 		super(props);
 
 		this.state = {
-			selectedCategoryId: "",
+			selectedCategoryIds: [],
 			filterKeyword: ""
 		};
 
@@ -71,12 +71,15 @@ class PaletteFlyoutContent extends React.Component {
 	}
 
 	categorySelected(catSelId) {
-		// Hide category if clicked again
-		if (this.state.selectedCategoryId !== catSelId) {
-			this.setState({ selectedCategoryId: catSelId });
-		} else {
-			this.setState({ selectedCategoryId: "" });
-		}
+		const selCatIds = this.isCategorySelected(catSelId)
+			? this.state.selectedCategoryIds.filter((catId) => catId !== catSelId)
+			: this.state.selectedCategoryIds.concat(catSelId);
+
+		this.setState({ selectedCategoryIds: selCatIds });
+	}
+
+	isCategorySelected(categoryId) {
+		return this.state.selectedCategoryIds.some((cId) => cId === categoryId);
 	}
 
 	filterNodeTypes(nodeTypes) {
@@ -112,8 +115,10 @@ class PaletteFlyoutContent extends React.Component {
 			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.id);
 			filteredNodeTypes = this.filterNodeTypes(nodeTypes);
 
+			const isCategorySelected = this.isCategorySelected(category.id);
+
 			let content = null;
-			if (this.state.selectedCategoryId === category.id) {
+			if (isCategorySelected) {
 				content = (
 					<PaletteContentList
 						style={style}
@@ -130,12 +135,13 @@ class PaletteFlyoutContent extends React.Component {
 			if (this.state.filterKeyword) {
 				itemsFiltered = true;
 			}
+
 			contentDivs.push(
 				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
-						selectedCategoryId={this.state.selectedCategoryId}
+						isCategorySelected={isCategorySelected}
 						categorySelectedMethod={this.categorySelected}
 						itemCount={filteredNodeTypes.length}
 						itemsFiltered={itemsFiltered}
