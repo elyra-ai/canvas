@@ -26,7 +26,7 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 	it("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Fields in Sub-panel");
-		cy.clickButtonInTable("Add", "structurelist_sub_panel");
+		cy.clickButtonInTable("Add in empty table", "structurelist_sub_panel");
 		cy.clickSubPanelButtonInRow("structurelist_sub_panel", 0);
 		cy.clickButtonInTable("Add", "fields2");
 		cy.selectFieldInFieldPickerPanel("Na", "double", "Select Fields for Select Columns");
@@ -60,6 +60,7 @@ describe("Test the feature to have tables use the available vertical space", fun
 	it("Test the feature to have tables use the available vertical space", function() {
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Configure Fields in Sub-panel");
+		cy.clickButtonInTable("Add in empty table", "structurelist_sub_panel");
 		cy.verifyHeightOfTable("structurelist_sub_panel", "524px");
 	});
 });

@@ -202,13 +202,17 @@ Cypress.Commands.add("selectAllRowsInTable", (propertyId) => {
 });
 
 Cypress.Commands.add("clickButtonInTable", (buttonName, propertyId) => {
-	cy.get(`div[data-id='properties-ft-${propertyId}']`)
+	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.then((tableDiv) => {
 			cy.wrap(tableDiv).should("exist");
 
 			if (buttonName === "Add") {
 				cy.wrap(tableDiv)
 					.find(".properties-add-fields-button")
+					.click();
+			} else if (buttonName === "Add in empty table") {
+				cy.wrap(tableDiv)
+					.find(".properties-empty-table-button")
 					.click();
 			} else {
 				cy.wrap(tableDiv)
