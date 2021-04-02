@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,5 @@
  * limitations under the License.
  */
 
-@import "./control-item/control-item";
-@import "./title-editor/title-editor";
-@import "./moveable-table-rows/moveable-table-rows";
-@import "./field-picker/field-picker";
-@import "./properties-modal/properties-modal";
-@import "./wide-flyout/wide-flyout";
-@import "./validation-message/validation-message";
-@import "./properties-buttons/properties-buttons";
-@import "./editor-form/editor-form";
-@import "./flexible-table/flexible-table";
-@import "./virtualized-table/virtualized-table";
-@import "./empty-table/empty-table";
+import EmptyTable from "./empty-table.jsx";
+export default EmptyTable;

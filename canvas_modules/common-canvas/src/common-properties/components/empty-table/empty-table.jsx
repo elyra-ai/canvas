@@ -1,0 +1,76 @@
+/*
+ * Copyright 2017-2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React from "react";
+import PropTypes from "prop-types";
+import { formatMessage } from "./../../util/property-utils";
+import { MESSAGE_KEYS } from "./../../constants/constants";
+import { ControlType } from "./../../constants/form-constants";
+import { Add16, Edit16 } from "@carbon/icons-react";
+import { Button } from "carbon-components-react";
+
+export default class EmptyTable extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.getEmptyTableText = this.getEmptyTableText.bind(this);
+		this.isReadonlyTable = this.isReadonlyTable.bind(this);
+	}
+
+	getEmptyTableText() {
+		// Empty table text can be customized
+		const overrideEmptyTableTextKey = `${this.props.control.name}.empty.table.text`;
+		const defaultEmptyTableText = formatMessage(
+			this.props.controller.getReactIntl(),
+			MESSAGE_KEYS.PROPERTIES_EMPTY_TABLE_TEXT,
+			{ button_label: this.props.emptyTableButtonLabel }
+		);
+		return this.props.controller.getResource(overrideEmptyTableTextKey, defaultEmptyTableText);
+	}
+
+	isReadonlyTable() {
+		return this.props.control.controlType === ControlType.READONLYTABLE;
+	}
+
+	render() {
+		const emptyTableText = this.getEmptyTableText();
+		const emptyTableContent = (
+			<div className="properties-empty-table" disabled={this.props.disabled}>
+				<span >{emptyTableText}</span>
+				<br />
+				<Button
+					className="properties-empty-table-button"
+					kind="tertiary"
+					size="small"
+					renderIcon={this.isReadonlyTable() ? Edit16 : Add16}
+					onClick={this.props.emptyTableButtonClickHandler}
+					disabled={this.props.disabled}
+				>
+					{this.props.emptyTableButtonLabel}
+				</Button>
+			</div>
+		);
+		return emptyTableContent;
+	}
+}
+
+EmptyTable.propTypes = {
+	control: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	emptyTableButtonLabel: PropTypes.string,
+	emptyTableButtonClickHandler: PropTypes.func,
+	disabled: PropTypes.bool,
+};

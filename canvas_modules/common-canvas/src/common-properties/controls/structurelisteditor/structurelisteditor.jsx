@@ -23,7 +23,7 @@ import { formatMessage } from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
 import * as ControlUtils from "./../../util/control-utils";
-import { isEmpty, has } from "lodash";
+import { isEmpty } from "lodash";
 
 class StructurelisteditorControl extends AbstractTable {
 
@@ -58,8 +58,6 @@ class StructurelisteditorControl extends AbstractTable {
 		</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
-		const disabled = this.props.state === STATES.DISABLED;
-		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-sle-wrapper"
@@ -67,17 +65,18 @@ class StructurelisteditorControl extends AbstractTable {
 				<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 					className="properties-sle-container"
 				>
-					{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(tableButtonConfig.addButtonLabel, this.addRow, disabled)
-						: <MoveableTableRows
-							tableContainer={tableContainer}
-							control={this.props.control}
-							controller={this.props.controller}
-							propertyId={this.props.propertyId}
-							setScrollToRow={this.setScrollToRow}
-							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-							disabled={disabled}
-						/>
-					}
+					<MoveableTableRows
+						tableContainer={tableContainer}
+						control={this.props.control}
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						disabled={this.props.state === STATES.DISABLED}
+						isEmptyTable={isEmpty(this.props.value)}
+						emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+						emptyTableButtonClickHandler={this.addRow}
+					/>
 				</div>
 				<div>
 					{onPanelContainer}

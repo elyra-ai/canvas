@@ -25,7 +25,7 @@ import { Type, ParamRole } from "./../../constants/form-constants";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
-import { reject, findIndex, cloneDeep, isEmpty, has } from "lodash";
+import { reject, findIndex, cloneDeep, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 
 class StructureTableControl extends AbstractTable {
@@ -169,8 +169,6 @@ class StructureTableControl extends AbstractTable {
 			</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
-		const disabled = this.props.state === STATES.DISABLED;
-		const addRemoveRows = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 		const emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
 		const emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 
@@ -178,19 +176,20 @@ class StructureTableControl extends AbstractTable {
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-column-structure-wrapper"
 			>
-				{isEmpty(this.props.value) && addRemoveRows ? this.makeEmptyTablePanel(emptyTableButtonLabel, emptyTableButtonClickHandler, disabled)
-					: <div className="properties-column-structure">
-						<MoveableTableRows
-							tableContainer={content}
-							control={this.props.control}
-							controller={this.props.controller}
-							propertyId={this.props.propertyId}
-							setScrollToRow={this.setScrollToRow}
-							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-							disabled={disabled}
-						/>
-					</div>
-				}
+				<div className="properties-column-structure">
+					<MoveableTableRows
+						tableContainer={content}
+						control={this.props.control}
+						controller={this.props.controller}
+						propertyId={this.props.propertyId}
+						setScrollToRow={this.setScrollToRow}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						disabled={this.props.state === STATES.DISABLED}
+						isEmptyTable={isEmpty(this.props.value)}
+						emptyTableButtonLabel={emptyTableButtonLabel}
+						emptyTableButtonClickHandler={emptyTableButtonClickHandler}
+					/>
+				</div>
 				<div>
 					{onPanelContainer}
 				</div>
