@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 
-class PaletteContentGridNode extends React.Component {
+class PaletteDialogContentGridNode extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -109,15 +109,15 @@ class PaletteContentGridNode extends React.Component {
 		}
 
 		let draggable = "true";
-		let txtClassName = "palette-grid-node-text";
+		let txtClassName = "palette-dialog-grid-node-text";
 
 		// Special case for when there are no nodes in the category so we show
 		// a dummy node to include the empty text from the category.
 		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			label = this.props.category.empty_text;
 			draggable = "false";
-			txtClassName = "palette-grid-node-text-warning";
-			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-grid-node-icon-warning" draggable="false" />);
+			txtClassName = "palette-dialog-grid-node-text-warning";
+			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-dialog-grid-node-icon-warning" draggable="false" />);
 		}
 
 		return (
@@ -128,10 +128,10 @@ class PaletteContentGridNode extends React.Component {
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 				onMouseDown={this.onMouseDown}
-				className="palette-grid-node-outer"
+				className="palette-dialog-grid-node-outer"
 			>
-				<div className="palette-grid-node-inner">
-					<div className="palette-grid-node-icon">
+				<div className="palette-dialog-grid-node-inner">
+					<div className="palette-dialog-grid-node-icon">
 						{icon}
 					</div>
 					<div className={ txtClassName }>
@@ -143,10 +143,10 @@ class PaletteContentGridNode extends React.Component {
 	}
 }
 
-PaletteContentGridNode.propTypes = {
+PaletteDialogContentGridNode.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTemplate: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteContentGridNode;
+export default PaletteDialogContentGridNode;

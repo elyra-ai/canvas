@@ -131,15 +131,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 			);
 		}
 
-		var itemCount = null;
-		if (this.props.isPaletteOpen && this.props.itemsFiltered && this.props.itemCount > 0) {
-			itemCount = (
-				<span className="palette-flyout-category-count">
-					{"(" + this.props.itemCount + ")"}
-				</span>
-			);
-		}
-
 		const content = (
 			<div className="palette-flyout-category"
 				onClick={this.categorySelected}
@@ -150,7 +141,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 				<div className="palette-flyout-category-item">
 					{itemImage}
 					{itemText}
-					{itemCount}
 				</div>
 				{caretImage}
 			</div>
@@ -179,7 +169,6 @@ PaletteFlyoutContentCategory.propTypes = {
 	isCategorySelected: PropTypes.bool.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
 	itemCount: PropTypes.number.isRequired,
-	itemsFiltered: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired
 };

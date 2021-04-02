@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ThreeWayIcon from "./three-way-icon.jsx";
+import PaletteDialogTopbarThreeWayIcon from "./palette-dialog-topbar-three-way-icon.jsx";
 import Close32Icon from "../../assets/images/palette/close_32.svg";
 import PaletteGridSelectedIcon from "../../assets/images/palette/palette_grid_selected.svg";
 import PaletteGridHoverIcon from "../../assets/images/palette/palette_grid_hover.svg";
@@ -25,7 +25,7 @@ import PaletteListSelectedIcon from "../../assets/images/palette/palette_list_se
 import PaletteListHoverIcon from "../../assets/images/palette/palette_list_hover.svg";
 import PaletteListDeSelectedIcon from "../../assets/images/palette/palette_list_deselected.svg";
 
-class PaletteTopbar extends React.Component {
+class PaletteDialogTopbar extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -61,15 +61,15 @@ class PaletteTopbar extends React.Component {
 
 	render() {
 		return (
-			<div className="palette-topbar" onMouseDown={this.mouseDown} onDoubleClick={this.doubleClick}>
+			<div className="palette-dialog-topbar" onMouseDown={this.mouseDown} onDoubleClick={this.doubleClick}>
 				<span className="left-navbar">
-					<ThreeWayIcon iconClickedMethod={this.gridViewSelected}
+					<PaletteDialogTopbarThreeWayIcon iconClickedMethod={this.gridViewSelected}
 						isSelected={this.props.showGrid}
 						selectedIconName={PaletteGridSelectedIcon}
 						hoverIconName={PaletteGridHoverIcon}
 						deselectedIconName={PaletteGridDeSelectedIcon}
 					/>
-					<ThreeWayIcon iconClickedMethod={this.listViewSelected}
+					<PaletteDialogTopbarThreeWayIcon iconClickedMethod={this.listViewSelected}
 						isSelected={!this.props.showGrid}
 						selectedIconName={PaletteListSelectedIcon}
 						hoverIconName={PaletteListHoverIcon}
@@ -86,7 +86,7 @@ class PaletteTopbar extends React.Component {
 	}
 }
 
-PaletteTopbar.propTypes = {
+PaletteDialogTopbar.propTypes = {
 	showGridMethod: PropTypes.func.isRequired,
 	windowMaximizeMethod: PropTypes.func.isRequired,
 	showGrid: PropTypes.bool.isRequired,
@@ -94,4 +94,4 @@ PaletteTopbar.propTypes = {
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteTopbar;
+export default PaletteDialogTopbar;

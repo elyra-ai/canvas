@@ -17,7 +17,9 @@
 $palette-border-width: 1px;
 $palette-border-color: $ui-03;
 
-/* Palette styles */
+//--------------------------------------------------------
+// Classes used by Flyout palette
+//--------------------------------------------------------
 .palette-flyout-div {
 	border-right: $palette-border-width solid $palette-border-color;
 	font-size: 14px;
@@ -35,7 +37,7 @@ $palette-border-color: $ui-03;
 
 .palette-flyout-div-open {
 	.palette-flyout-content {
-		width: 250px;
+		width: 255px;
 		transition: 0.2s ease-in-out;
 	}
 }
@@ -48,13 +50,6 @@ $palette-border-color: $ui-03;
 .palette-flyout-content {
 	height: 41px;
 
-	.palette-list-item {
-		border-width: 0;
-	}
-
-	.palette-list-item:active {
-		background-color: $ui-03;
-	}
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 	}
@@ -63,11 +58,115 @@ $palette-border-color: $ui-03;
 		border-bottom: $palette-border-width solid $palette-border-color;
 	}
 
-	.palette-list-item .palette-list-item-text-div {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+	.palette-no-results-title {
+		@include carbon--type-style("body-short-01");
+		width: 100%;
+		padding: 20px 20px 0;
+		text-align: center;
 	}
+
+	.palette-no-results-desc {
+		@include carbon--type-style("caption-01");
+		width: 100%;
+		padding: 0 20px;
+		text-align: center;
+	}
+
+	.palette-flyout-restrict-item {
+		@include carbon--type-style("helper-text-01");
+		width: 100%;
+		padding: $spacing-08 20px;
+	}
+
+	.palette-list-item-desc-button {
+		color: $link-01;
+		cursor: pointer;
+		padding: 5px 0 0;
+	}
+
+	.palette-list-item {
+		height: 46px;
+		border-width: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		/* Prevent elements from being selectable */
+		/* This stops it being dragged incorrectly.*/
+		user-select: none;
+
+		&:hover {
+			background-color: $ui-03;
+		}
+
+		.palette-list-item-category-label {
+			@include carbon--type-style("caption-01");
+			width: 100%;
+			padding: $spacing-05 10px 0 60px;
+		}
+
+		.palette-list-item-icon-and-text {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			height: 46px;
+			align-items: center;
+		}
+
+		.palette-list-item-icon {
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			margin-left: 20px;
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-02;
+		}
+
+		.palette-list-item-text {
+			@include carbon--type-style("productive-heading-01");
+			font-weight: 400;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			margin-left: 10px;
+
+			& mark {
+				color: $interactive-01;
+				background-color: $highlight;
+				font-weight: 500;
+			}
+		}
+
+		.palette-list-item-icon-warning {
+			transform: scale(1.5);
+			margin-left: 25px;
+		}
+
+		.palette-list-item-description {
+			@include carbon--type-style("caption-01");
+			width: calc(100% - 10px);
+			padding: $spacing-03 10px $spacing-03 54px;
+			word-break: break-word;
+
+			& mark {
+				color: $interactive-01;
+				background-color: $highlight;
+				font-weight: 500;
+			}
+		}
+
+		& .highlight {
+			background-color: $interactive-01;
+		}
+
+		&.search-result {
+			min-height: 46px;
+			height: fit-content;
+			border-bottom: $palette-border-width solid $palette-border-color;
+
+			.palette-list-item-icon-and-text {
+				height: 30px;
+			}
+		}
+	}
+
 }
 
 .palette-flyout-category {
@@ -198,14 +297,17 @@ $palette-border-color: $ui-03;
 	overflow-y: overlay;
 }
 
-.palette-div {
+//--------------------------------------------------------
+// Classes used by Dialog palette
+//--------------------------------------------------------
+.palette-dialog-div {
 	position: absolute;
 	bottom: 35px;
 	left: 60px;
 	width: 473px;   /* Set default width to show three columns of nodes in grid view. */
 	/* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
 	height: 450px;  /* If this is changed see palette-content height below */
-	/* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-topbar height + padding */
+	/* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-dialog-topbar height + padding */
 	font-size: 14px;
 	border: 3px solid transparent; /* transparent border provides sizing hover zone */
 	cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -213,57 +315,99 @@ $palette-border-color: $ui-03;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
+
+
+	.palette-list-item {
+		height: 46px;
+		border-width: 1px;
+		border-color: $palette-border-color;
+		border-style: solid;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		/* Prevent elements from being selectable */
+		/* This stops it being dragged incorrectly.*/
+		user-select: none;
+
+		&:hover {
+			background-color: $ui-03;
+		}
+
+		.palette-list-item-icon-and-text {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			height: 46px;
+			align-items: center;
+		}
+
+		.palette-list-item-icon {
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			margin-left: 20px;
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-02;
+		}
+
+		.palette-list-item-text-span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			margin-left: 10px;
+			line-height: 16px;
+		}
+
+		.palette-list-item-icon-warning {
+			transform: scale(1.5);
+			margin-left: 25px;
+		}
+	}
 }
 
-.palette-show-button {
-	position: fixed;
-	bottom: 15px;
-	left: 35px;
-	width: 48px;
-	height: 48px;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
-}
-
-#paletteTooltip {
-	position: fixed;  /* Override position to ensure the 'show palette' button tooltip is next to the button */
-}
-
-.palette-topbar {
+.palette-dialog-topbar {
 	height: 40px;
 	padding: 10px;
 	background-color: $ui-03;
 	border-bottom: $palette-border-width solid $palette-border-color;
+
+	.left-navbar {
+		height: 20px;
+		float: left;
+		vertical-align: middle;
+		/* Prevent elements from being selectable */
+		/* This stops it being dragged incorrectly.*/
+		user-select: none;
+	}
+
+	.right-navbar {
+		height: 20px;
+		float: right;
+		vertical-align: middle;
+	}
+
+	.secondary-action {
+		margin-left: 10px;
+		display: inline-block;
+		cursor: pointer;
+		width: 20px;
+	}
+
+	.close-icon svg {
+		fill: $interactive-02;
+	}
+
+	.palette-three-way-icon-div {
+		margin-left: 5px;
+		display: inline-block;
+		cursor: pointer;
+		width: 20px;
+		height: 20px;
+		/* Prevent elements from being selectable */
+		/* This stops it being dragged incorrectly.*/
+		user-select: none;
+	}
 }
 
-.palette-topbar .left-navbar {
-	height: 20px;
-	float: left;
-	vertical-align: middle;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
-}
-
-.palette-topbar .right-navbar {
-	height: 20px;
-	float: right;
-	vertical-align: middle;
-}
-
-.palette-topbar .secondary-action {
-	margin-left: 10px;
-	display: inline-block;
-	cursor: pointer;
-	width: 20px;
-}
-
-.palette-topbar .close-icon svg {
-	fill: $interactive-02;
-}
-
-.palette-content {
+.palette-dialog-content {
 	height: 404px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
 	display: flex;
 	background-color: $ui-01;
@@ -271,11 +415,7 @@ $palette-border-color: $ui-03;
 	border-right: $palette-border-width solid $palette-border-color;
 }
 
-.palette-scroll {
-	overflow-y: auto;
-}
-
-.palette-categories {
+.palette-dialog-categories {
 	background-color: $ui-03;
 	width: 130px;
 	min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
@@ -283,7 +423,7 @@ $palette-border-color: $ui-03;
 	overflow-x: hidden;
 }
 
-.palette-category {
+.palette-dialog-category {
 	padding: 10px;
 	border-width: 0 0 0 $palette-border-width;
 	cursor: pointer;
@@ -292,11 +432,11 @@ $palette-border-color: $ui-03;
 	user-select: none;
 }
 
-.palette-category:hover {
+.palette-dialog-category:hover {
 	font-weight: 600;
 }
 
-.palette-category-selected {
+.palette-dialog-category-selected {
 	font-weight: 600;
 	border-color: $interactive-02;
 	border-width: 0 0 0 $palette-border-width;
@@ -312,7 +452,7 @@ $palette-border-color: $ui-03;
 	user-select: none;
 }
 
-.palette-grid-node-outer {
+.palette-dialog-grid-node-outer {
 	width: 112px;
 	height: 134px;
 	display: inline-block; /* This makes the nodes layout across and then down inside the content area. */
@@ -326,82 +466,46 @@ $palette-border-color: $ui-03;
 	user-select: none;
 }
 
-.palette-grid-node-outer:hover {
+.palette-dialog-grid-node-outer:hover {
 	border-color: $interactive-02;
 	color: $interactive-02;
 }
 
-.palette-grid-node-inner {
+.palette-dialog-grid-node-inner {
 	padding-top: 16px;
 }
 
-.palette-grid-node-icon svg {
+.palette-dialog-grid-node-icon svg {
 	display: inline-block;
 }
 
-.palette-grid-node-icon .node-icon {
+.palette-dialog-grid-node-icon .node-icon {
 	width: 64px;
 	height: 64px;
 }
 
-.palette-grid-node-icon-warning {
+.palette-dialog-grid-node-icon-warning {
 	transform: scale(4);
 	margin-top: 25px;
 }
 
-.palette-grid-node-text-warning {
+.palette-dialog-grid-node-text-warning {
 	width: 100%;
 	padding-top: 30px;
 }
 
-.palette-grid-node-text {
+.palette-dialog-grid-node-text {
 	width: 100%;
 	padding-top: 6px;
 }
 
+//--------------------------------------------------------
+// Common calsses used by Flyout and Dialog palette
+//--------------------------------------------------------
+.palette-scroll {
+	overflow-y: auto;
+}
+
 .palette-content-list {
 	width: 100%;
-}
-
-.palette-list-item {
-	height: 46px;
-	border-width: 1px;
-	border-color: $palette-border-color;
-	border-style: solid;
-	display: flex;
-	align-items: center;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
-}
-
-.palette-list-item:hover {
-	background-color: $ui-03;
-}
-
-.palette-list-item-icon {
-	width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-	margin-left: 20px;
-}
-
-.palette-list-item-icon-warning {
-	transform: scale(1.5);
-	margin-left: 25px;
-}
-
-.palette-list-item-text-span {
-	line-height: 46px;  /* Must be same as containing div height */
-	margin-left: 10px;
-	color: $text-02;
-}
-
-.palette-three-way-icon-div {
-	margin-left: 5px;
-	display: inline-block;
-	cursor: pointer;
-	width: 20px;
-	height: 20px;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
 }

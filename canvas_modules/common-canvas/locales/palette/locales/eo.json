@@ -1,5 +1,9 @@
 {
 	"palette.flyout.search.placeholder": "[Esperanto~Find palette nodes~~~~eo]",
+	"palette.flyout.search.adjustsearch": "[Esperanto~Try adjusting your search to find what you're looking for.~~~~eo]",
+	"palette.flyout.search.resultsrestricted": "[Esperanto~Results restricted to 10 nodes. Try refining your search.~~~~eo]",
+	"palette.flyout.search.more": "[Esperanto~Show more~~~~eo]",
+	"palette.flyout.search.less": "[Esperanto~Show less~~~~eo]",
 	"palette.flyout.label": "[Esperanto~Flyout Palette~eo]",
 	"palette.dialog.label": "[Esperanto~Dialog Palette~eo]"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PaletteContentCategory from "./palette-content-category.jsx";
+import PaletteDialogContentCategory from "./palette-dialog-content-category.jsx";
 
-class PaletteContentCategories extends React.Component {
+class PaletteDialogContentCategories extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -31,7 +31,7 @@ class PaletteContentCategories extends React.Component {
 
 		for (var idx = 0; idx < this.props.categories.length; idx++) {
 			catDivs.push(
-				<PaletteContentCategory
+				<PaletteDialogContentCategory
 					key={this.props.categories[idx]}
 					categoryName={this.props.categories[idx]}
 					selectedCategory={this.props.selectedCategory}
@@ -41,17 +41,17 @@ class PaletteContentCategories extends React.Component {
 		}
 
 		return (
-			<div className="palette-categories palette-scroll">
+			<div className="palette-dialog-categories palette-scroll">
 				{catDivs}
 			</div>
 		);
 	}
 }
 
-PaletteContentCategories.propTypes = {
+PaletteDialogContentCategories.propTypes = {
 	categories: PropTypes.array.isRequired,
 	selectedCategory: PropTypes.string.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired
 };
 
-export default PaletteContentCategories;
+export default PaletteDialogContentCategories;

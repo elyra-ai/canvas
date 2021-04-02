@@ -16,9 +16,9 @@
 
 import React from "react";
 import { mountWithIntl } from "../_utils_/intl-utils";
-import Palette from "../../src/palette/palette.jsx";
-import PaletteTopbar from "../../src/palette/palette-topbar.jsx";
-import PaletteContent from "../../src/palette/palette-content.jsx";
+import PaletteDialog from "../../src/palette/palette-dialog.jsx";
+import PaletteDialogTopbar from "../../src/palette/palette-dialog-topbar.jsx";
+import PaletteDialogContent from "../../src/palette/palette-dialog-content.jsx";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import sinon from "sinon";
 import { expect } from "chai";
@@ -28,17 +28,17 @@ describe("Palette renders correctly", () => {
 
 	it("should use a `.palette-div` CSS class", () => {
 		const popupPalette = createPalette();
-		expect(popupPalette.find(".palette-div")).to.have.length(1);
+		expect(popupPalette.find(".palette-dialog-div")).to.have.length(1);
 	});
 
 	it("should render one <PaletteTopbar/> component", () => {
 		const popupPalette = createPalette();
-		expect(popupPalette.find(PaletteTopbar)).to.have.length(1);
+		expect(popupPalette.find(PaletteDialogTopbar)).to.have.length(1);
 	});
 
 	it("should render one <PaletteContent/> component", () => {
 		const popupPalette = createPalette();
-		expect(popupPalette.find(PaletteContent)).to.have.length(1);
+		expect(popupPalette.find(PaletteDialogContent)).to.have.length(1);
 	});
 });
 
@@ -86,7 +86,7 @@ function createPalette() {
 	const deleteTempNodeCallback = sinon.spy();
 	const canvasController = new CanvasController();
 	const popupPalette = mountWithIntl(
-		<Palette paletteJSON={paletteSpec}
+		<PaletteDialog paletteJSON={paletteSpec}
 			showPalette
 			closePalette={closePaletteCallback}
 			createTempNode={createTempNodeCallback}

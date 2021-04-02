@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-class PaletteContentCategory extends React.Component {
+class PaletteDialogContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -33,10 +33,10 @@ class PaletteContentCategory extends React.Component {
 	}
 
 	render() {
-		var style = "palette-category";
+		var style = "palette-dialog-category";
 
 		if (this.props.selectedCategory === this.props.categoryName) {
-			style = "palette-category-selected";
+			style = "palette-dialog-category-selected";
 		}
 
 		return (
@@ -47,10 +47,10 @@ class PaletteContentCategory extends React.Component {
 	}
 }
 
-PaletteContentCategory.propTypes = {
+PaletteDialogContentCategory.propTypes = {
 	categoryName: PropTypes.string.isRequired,
 	selectedCategory: PropTypes.string.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired
 };
 
-export default PaletteContentCategory;
+export default PaletteDialogContentCategory;

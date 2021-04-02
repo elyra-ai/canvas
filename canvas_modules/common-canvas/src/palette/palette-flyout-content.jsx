@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,39 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import has from "lodash/has";
+import { throttle } from "throttle-debounce";
+import { getOccurances } from "./palette-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
+import PaletteFlyoutContentFilteredList from "./palette-flyout-content-filtered-list.jsx";
+import Logger from "../logging/canvas-logger.js";
+
+const logger = new Logger("PaletteFlyoutContent");
 
 class PaletteFlyoutContent extends React.Component {
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (!nextProps.isPaletteOpen) {
-			return ({ filterKeyword: "" });
-		}
-		return ({});
-	}
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			selectedCategoryIds: [],
-			filterKeyword: ""
+			filterKeyword: "",
+			filteredNodeTypeInfos: []
 		};
 
+		this.categories = [];
+
 		this.categorySelected = this.categorySelected.bind(this);
-		this.getCategories = this.getCategories.bind(this);
-		this.getNodeTypesForCategory = this.getNodeTypesForCategory.bind(this);
+		this.getUniqueCategories = this.getUniqueCategories.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
+		this.filterNodeTypeInfosThrottled = throttle(500, this.filterNodeTypeInfos);
 	}
 
 	/*
 	* Returns a unique set of categories in case category labels
 	* are duplicated in the categories list.
 	*/
-	getCategories(categories) {
+	getUniqueCategories(categories) {
 		var out = [];
 		if (categories) {
 			for (const category of categories) {
@@ -58,16 +60,93 @@ class PaletteFlyoutContent extends React.Component {
 		return out;
 	}
 
-	getNodeTypesForCategory(categories, id) {
-		var out = [];
-		if (categories) {
-			for (const category of categories) {
-				if (category.id === id) {
-					out = category.node_types;
+	getContentDivs(categories) {
+		const contentDivs = [];
+		for (let idx = 0; idx < categories.length; idx++) {
+			const category = categories[idx];
+			const isLastCategory = idx === categories.length - 1;
+			const nodeTypeInfos = category.node_types.map((nt) => ({ nodeType: nt, category: category }));
+			const isCategorySelected = this.isCategorySelected(category.id);
+
+			let content = null;
+			if (isCategorySelected) {
+				content = (
+					<PaletteContentList
+						key={category.label + "-nodes"}
+						show
+						category={category}
+						nodeTypeInfos={nodeTypeInfos}
+						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.isPaletteOpen}
+						isLastCategory={isLastCategory}
+					/>);
+			}
+
+			contentDivs.push(
+				<div key={category.label + "-container"}>
+					<PaletteFlyoutContentCategory
+						key={category.id}
+						category={category}
+						isCategorySelected={isCategorySelected}
+						categorySelectedMethod={this.categorySelected}
+						itemCount={nodeTypeInfos.length}
+						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.isPaletteOpen}
+					/>
+					{content}
+				</div>
+			);
+		}
+		return contentDivs;
+	}
+
+	getFilteredContentDivs(categories) {
+		let isNodeTypeInfosArrayTruncated = false;
+		let filteredNodeTypeInfos = this.state.filteredNodeTypeInfos;
+
+		if (this.state.filteredNodeTypeInfos.length > 10) {
+			filteredNodeTypeInfos = this.state.filteredNodeTypeInfos.slice(0, 10);
+			isNodeTypeInfosArrayTruncated = true;
+		}
+
+		const content = (
+			<PaletteFlyoutContentFilteredList
+				key={"filtered-nodes"}
+				nodeTypeInfos={filteredNodeTypeInfos}
+				canvasController={this.props.canvasController}
+				isPaletteOpen={this.props.isPaletteOpen}
+				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
+			/>);
+
+		return [content];
+	}
+
+	getFilteredNodeTypeInfosAllCategories(categories) {
+		logger.logStartTimer("getFilteredNodeTypeInfosAllCategories");
+		const filteredNodeTypeInfos = [];
+		const lowercaseFilteredKeyword = this.state.filterKeyword.toLowerCase();
+		const filterStrings = lowercaseFilteredKeyword.split(" ");
+		for (let idx = 0; idx < categories.length; idx++) {
+			filteredNodeTypeInfos.push(...this.getFilteredNodeTypeInfos(categories[idx], filterStrings));
+		}
+		const rankedFilteredNodeTypeInfos =
+			filteredNodeTypeInfos.sort((e1, e2) => ((e1.occuranceInfo.ranking < e2.occuranceInfo.ranking) ? 1 : -1));
+
+		logger.logEndTimer("getFilteredNodeTypeInfosAllCategories");
+		return rankedFilteredNodeTypeInfos;
+	}
+
+	getFilteredNodeTypeInfos(category, filterStrings) {
+		var filteredNodeTypeInfos = [];
+		if (category.node_types) {
+			for (const nodeType of category.node_types) {
+				const occuranceInfo = getOccurances(nodeType, filterStrings);
+				if (occuranceInfo) {
+					filteredNodeTypeInfos.push({ nodeType, category, occuranceInfo });
 				}
 			}
 		}
-		return out;
+		return filteredNodeTypeInfos;
 	}
 
 	categorySelected(catSelId) {
@@ -82,76 +161,24 @@ class PaletteFlyoutContent extends React.Component {
 		return this.state.selectedCategoryIds.some((cId) => cId === categoryId);
 	}
 
-	filterNodeTypes(nodeTypes) {
-		var filteredNodeTypes = [];
-		if (nodeTypes) {
-			const lowercaseFilteredKeyword = this.state.filterKeyword.toLowerCase();
-			for (const nodeType of nodeTypes) {
-				if (has(nodeType, "app_data.ui_data.label") &&
-						nodeType.app_data.ui_data.label.toLowerCase().indexOf(lowercaseFilteredKeyword) > -1) {
-					filteredNodeTypes.push(nodeType);
-				}
-			}
-		}
-		return filteredNodeTypes;
+	handleFilterChange(evt) {
+		const value = evt.target.value || "";
+
+		this.setState({ filterKeyword: value }, () => {
+			this.filterNodeTypeInfosThrottled(this.state.filterKeyword);
+		});
 	}
 
-	handleFilterChange(evt) {
-		this.setState({ filterKeyword: evt.target.value || "" });
+	filterNodeTypeInfos() {
+		const filteredNodeTypeInfos = this.getFilteredNodeTypeInfosAllCategories(this.categories);
+		this.setState({ filteredNodeTypeInfos: filteredNodeTypeInfos });
 	}
 
 	render() {
-		var categories = this.getCategories(this.props.paletteJSON.categories);
-		var contentDivs = [];
-		for (var idx = 0; idx < categories.length; idx++) {
-			const category = categories[idx];
-			var style = {};
-			if (idx === categories.length - 1) {
-				style = { "borderBottom": "none" };
-			}
-
-			let filteredNodeTypes = null;
-
-			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.id);
-			filteredNodeTypes = this.filterNodeTypes(nodeTypes);
-
-			const isCategorySelected = this.isCategorySelected(category.id);
-
-			let content = null;
-			if (isCategorySelected) {
-				content = (
-					<PaletteContentList
-						style={style}
-						show
-						key={category.label + "-nodes"}
-						category={category}
-						nodeTypes={filteredNodeTypes}
-						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
-					/>);
-			}
-
-			var itemsFiltered = false;
-			if (this.state.filterKeyword) {
-				itemsFiltered = true;
-			}
-
-			contentDivs.push(
-				<div key={category.label + "-container"}>
-					<PaletteFlyoutContentCategory
-						key={category.id}
-						category={category}
-						isCategorySelected={isCategorySelected}
-						categorySelectedMethod={this.categorySelected}
-						itemCount={filteredNodeTypes.length}
-						itemsFiltered={itemsFiltered}
-						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
-					/>
-					{content}
-				</div>
-			);
-		}
+		this.categories = this.getUniqueCategories(this.props.paletteJSON.categories);
+		const contentDivs = this.props.isPaletteOpen && this.state.filterKeyword
+			? this.getFilteredContentDivs(this.categories)
+			: this.getContentDivs(this.categories);
 
 		const contentCategories = (
 			<div className="palette-flyout-content-categories">
