@@ -63,11 +63,13 @@ class ExpressionControl extends React.Component {
 		super(props);
 		this.state = {
 			showExpressionBuilder: false,
+			validationInProgress: false
 		};
 
 		this.origHint = "";
 		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.handleValidate = this.handleValidate.bind(this);
+		this.hasValidate = this.hasValidate.bind(this);
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
 		this.hideExpressionBuilder = this.hideExpressionBuilder.bind(this);
 		this.showExpressionBuilder = this.showExpressionBuilder.bind(this);
@@ -86,11 +88,10 @@ class ExpressionControl extends React.Component {
 				const newPos = (data.removed[0].length > 0) ? { line: data.from.line, ch: data.from.ch + 1 } : { line: data.to.line, ch: data.to.ch + 1 };
 				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
 			}
-			// change the validate icon because something has been entered.
-			if (this.props.controller.getExpressionValidate(this.props.propertyId.name)) {
-				this.props.controller.updateExpressionValidate(this.props.propertyId.name, false);
-				this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
-			}
+			this.setState({
+				validateIcon: null
+			});
+			this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
 		};
 	}
 
@@ -204,13 +205,26 @@ class ExpressionControl extends React.Component {
 		this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
 		this.props.controller.updateErrorMessage(this.props.propertyId, this.initialMessage);
 		this.props.controller.updateControlState(this.props.propertyId, this.initialState);
-		this.props.controller.updateExpressionValidate(this.props.propertyId.name, this.initalValidateState);
 		this.hideExpressionBuilder();
 	}
 
 	handleValidate() {
-		this.props.controller.updateExpressionValidate(this.props.propertyId.name, true);
-		this.props.controller.validateInput(this.props.propertyId);
+		this.setState({
+			validateIcon: null,
+			validationInProgress: true
+		});
+		const appData = this.props.controller.getAppData();
+		this.props.controller.getHandlers().validationHandler(this.props.controller, this.props.propertyId, this.props.value, appData, (response) => {
+			this.props.controller.updateErrorMessage(this.props.propertyId, response); // expects "text" and "type" in response
+			this.setState({
+				validateIcon: response.type,
+				validationInProgress: false
+			});
+		});
+	}
+
+	hasValidate() {
+		return typeof this.props.controller.getHandlers().validationHandler === "function";
 	}
 
 	handleKeyDown(editor, evt) {
@@ -266,18 +280,18 @@ class ExpressionControl extends React.Component {
 			: null;
 
 		let validateIcon = null;
-		if (this.props.controller.getExpressionValidate(this.props.propertyId.name)) {
-			const iconType = (messageType === CONDITION_MESSAGE_TYPE.SUCCESS || messageType === CONDITION_MESSAGE_TYPE.INFO)
-				? CONDITION_MESSAGE_TYPE.SUCCESS : messageType;
-			validateIcon = (<div className="icon validateIcon">
-				<Icon type={iconType} className={`properties-validation-icon-${iconType}`} />
-			</div>);
+		if (this.state.validateIcon) {
+			validateIcon = (
+				<div className="icon validateIcon">
+					<Icon type={this.state.validateIcon} className={`properties-validation-icon-${this.state.validateIcon}`} />
+				</div>);
 		}
 
-		const validateLabel = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
-		const validateLink = this.expressionInfo.validateLink && this.props.validateLink ? (
+		const validateLabel = this.state.validationInProgress ? formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATING_LABEL)
+			: formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_VALIDATE_LABEL);
+		const validateLink = this.hasValidate() && this.props.validateLink ? (
 			<div className="properties-expression-validate" disabled={this.props.state === STATES.DISABLED}>
-				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED}>
+				<Button className="validateLink" kind="ghost" onClick={this.handleValidate} disabled={this.props.state === STATES.DISABLED || this.state.validationInProgress}>
 					{validateLabel}
 				</Button>
 				{validateIcon}

@@ -331,6 +331,7 @@ class App extends React.Component {
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
+		this.validationHandler = this.validationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -1158,6 +1159,22 @@ class App extends React.Component {
 		}
 	}
 
+	validationHandler(appData, controller, propertyId, value, callback) {
+		const response = {
+			type: "error",
+			text: "Error validating expression"
+		};
+		if (this.currentValidation === "error") {
+			response.type = "success";
+			response.text = "Expression validate";
+
+		}
+		this.currentValidation = response.type;
+		setTimeout(() => {
+			callback(response);
+		}, 2000);
+	}
+
 	helpClickHandler(nodeTypeId, helpData, appData) {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
@@ -1948,7 +1965,8 @@ class App extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
-			buttonHandler: this.buttonHandler
+			buttonHandler: this.buttonHandler,
+			validationHandler: this.validationHandler
 		};
 		const callbacks2 = {
 			controllerHandler: this.propertiesControllerHandler2,
