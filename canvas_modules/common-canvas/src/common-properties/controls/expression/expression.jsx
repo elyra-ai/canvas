@@ -194,7 +194,6 @@ class ExpressionControl extends React.Component {
 		this.initialControlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.initialMessage = this.props.controller.getErrorMessage(this.props.propertyId);
 		this.initialState = this.props.controller.getControlState(this.props.propertyId);
-		this.initalValidateState = this.props.controller.getExpressionValidate(this.props.propertyId.name);
 		this.setState({ showExpressionBuilder: true });
 	}
 	hideExpressionBuilder() {
