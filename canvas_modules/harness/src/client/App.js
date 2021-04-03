@@ -1161,7 +1161,7 @@ class App extends React.Component {
 		}
 	}
 
-	validationHandler(appData, controller, propertyId, value, callback) {
+	validationHandler(controller, propertyId, value, appData, callback) {
 		const response = {
 			type: "error",
 			text: "Error validating expression"
