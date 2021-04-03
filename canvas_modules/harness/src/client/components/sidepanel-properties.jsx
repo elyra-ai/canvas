@@ -308,6 +308,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const validationHandler = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="validation-handler"
+					labelText="Enable validation in expression control"
+					onToggle={this.props.propertiesConfig.enablePropertiesValidationHandler}
+					toggled={this.props.propertiesConfig.propertiesValidationHandler}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -450,6 +460,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{expressionValidate}
 				{divider}
+				{validationHandler}
+				{divider}
 				{addtlCmpts}
 				{divider}
 				{useHeading}
@@ -500,6 +512,8 @@ SidePanelModal.propTypes = {
 		setConditionHiddenPropertyHandling: PropTypes.func,
 		conditionHiddenPropertyHandling: PropTypes.string,
 		setConditionDisabledPropertyHandling: PropTypes.func,
-		conditionDisabledPropertyHandling: PropTypes.string
+		conditionDisabledPropertyHandling: PropTypes.string,
+		enablePropertiesValidationHandler: PropTypes.func,
+		propertiesValidationHandler: PropTypes.bool
 	})
 };

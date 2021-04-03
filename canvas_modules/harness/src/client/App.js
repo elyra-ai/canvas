@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 28] */
+/* eslint complexity: ["error", 40] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -215,6 +215,7 @@ class App extends React.Component {
 			heading: false,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
+			propertiesValidationHandler: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -332,6 +333,7 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
+		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -1445,6 +1447,9 @@ class App extends React.Component {
 	enableApplyPropertiesWithoutEdit() {
 		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
 	}
+	enablePropertiesValidationHandler() {
+		this.setState({ propertiesValidationHandler: !this.state.propertiesValidationHandler });
+	}
 
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
@@ -1965,9 +1970,11 @@ class App extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
-			buttonHandler: this.buttonHandler,
-			validationHandler: this.validationHandler
+			buttonHandler: this.buttonHandler
 		};
+		if (this.state.propertiesValidationHandler) {
+			callbacks.validationHandler = this.validationHandler;
+		}
 		const callbacks2 = {
 			controllerHandler: this.propertiesControllerHandler2,
 			propertyListener: this.propertyListener,
@@ -2189,7 +2196,9 @@ class App extends React.Component {
 			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
-			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
+			propertiesValidationHandler: this.state.propertiesValidationHandler,
 		};
 
 		const sidePanelAPIConfig = {
