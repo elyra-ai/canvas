@@ -51,7 +51,6 @@ export default class SidePanelModal extends React.Component {
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
@@ -158,9 +157,6 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.useExpressionBuilder(checked);
 	}
 
-	useExpressionValidate(checked) {
-		this.props.propertiesConfig.useExpressionValidate(checked);
-	}
 	useHeading(checked) {
 		this.props.propertiesConfig.useHeading(checked);
 	}
@@ -338,16 +334,6 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
-		const expressionValidate = (
-			<div className="harness-sidepanel-children">
-				<Toggle
-					id="sidepanel-expressionValidate-toggle"
-					labelText="Show Expression Validate Link"
-					toggled={this.props.propertiesConfig.expressionValidate}
-					onToggle={this.useExpressionValidate}
-				/>
-			</div>);
-
 		const addtlCmpts = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-additional-components">
 				<Toggle
@@ -458,8 +444,6 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{expressionBuilder}
 				{divider}
-				{expressionValidate}
-				{divider}
 				{validationHandler}
 				{divider}
 				{addtlCmpts}
@@ -493,8 +477,6 @@ SidePanelModal.propTypes = {
 		useApplyOnBlur: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,
-		expressionValidate: PropTypes.bool,
-		useExpressionValidate: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,
 		useDisplayAdditionalComponents: PropTypes.func,
 		selectedPropertiesDropdownFile: PropTypes.string,

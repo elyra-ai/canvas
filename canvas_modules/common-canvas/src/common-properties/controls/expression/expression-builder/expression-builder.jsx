@@ -69,7 +69,7 @@ export default class ExpressionBuilder extends React.Component {
 	onBlur(editor, evt) {
 		this.lastCursorPos = editor.getCursor();
 		const newValue = this.editor.getValue();
-		let skipValidate = this.expressionInfo.validateLink;
+		let skipValidate = false;
 		if (this.expressionSelectionPanel && this.expressionSelectionPanel.contains(evt.relatedTarget)) {
 			// don't validate on old content when adding new content
 			skipValidate = true;

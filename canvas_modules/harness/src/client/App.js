@@ -211,7 +211,6 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
-			expressionValidate: true,
 			heading: false,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
@@ -284,7 +283,6 @@ class App extends React.Component {
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
@@ -1062,11 +1060,6 @@ class App extends React.Component {
 		this.log("use expression builder", enabled);
 	}
 
-	useExpressionValidate(enabled) {
-		this.setState({ expressionValidate: enabled });
-		this.log("use expression validate link", enabled);
-	}
-
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
 		this.log("additional components display", enabled);
@@ -1321,9 +1314,6 @@ class App extends React.Component {
 				const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-				if (expressionInfo !== null) {
-					expressionInfo.validateLink = this.state.expressionValidate;
-				}
 				const propsInfo = {
 					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 					messages: messages,
@@ -1404,9 +1394,6 @@ class App extends React.Component {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-		if (expressionInfo !== null) {
-			expressionInfo.validateLink = this.state.expressionValidate;
-		}
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
@@ -2177,8 +2164,6 @@ class App extends React.Component {
 			useApplyOnBlur: this.useApplyOnBlur,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
-			expressionValidate: this.state.expressionValidate,
-			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
