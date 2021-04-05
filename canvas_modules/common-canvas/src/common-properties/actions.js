@@ -33,7 +33,6 @@ export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 export const SET_DATASET_METADATA = "SET_DATASET_METADATA";
 export const UPDATE_SELECTED_ROWS = "UPDATE_SELECTED_ROWS";
 export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
-export const UPDATE_EXPRESSION_VALIDATE = "UPDATE_VALIDATE_SELECTION";
 export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
@@ -102,10 +101,6 @@ export function updateSelectedRows(info) {
 
 export function clearSelectedRows(info) {
 	return { type: CLEAR_SELECTED_ROWS, info };
-}
-
-export function updateExpressionValidate(info) {
-	return { type: UPDATE_EXPRESSION_VALIDATE, info };
 }
 
 export function setTitle(title) {

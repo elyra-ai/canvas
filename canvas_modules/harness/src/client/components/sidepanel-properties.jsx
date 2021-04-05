@@ -51,7 +51,6 @@ export default class SidePanelModal extends React.Component {
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
@@ -158,9 +157,6 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.useExpressionBuilder(checked);
 	}
 
-	useExpressionValidate(checked) {
-		this.props.propertiesConfig.useExpressionValidate(checked);
-	}
 	useHeading(checked) {
 		this.props.propertiesConfig.useHeading(checked);
 	}
@@ -308,6 +304,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const validationHandler = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="validation-handler"
+					labelText="Enable validation in expression control"
+					onToggle={this.props.propertiesConfig.enablePropertiesValidationHandler}
+					toggled={this.props.propertiesConfig.propertiesValidationHandler}
+				/>
+			</div>);
+
 		const applyOnBlur = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -325,16 +331,6 @@ export default class SidePanelModal extends React.Component {
 					labelText="Show Expression Builder"
 					toggled={this.props.propertiesConfig.expressionBuilder}
 					onToggle={this.useExpressionBuilder}
-				/>
-			</div>);
-
-		const expressionValidate = (
-			<div className="harness-sidepanel-children">
-				<Toggle
-					id="sidepanel-expressionValidate-toggle"
-					labelText="Show Expression Validate Link"
-					toggled={this.props.propertiesConfig.expressionValidate}
-					onToggle={this.useExpressionValidate}
 				/>
 			</div>);
 
@@ -448,7 +444,7 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{expressionBuilder}
 				{divider}
-				{expressionValidate}
+				{validationHandler}
 				{divider}
 				{addtlCmpts}
 				{divider}
@@ -481,8 +477,6 @@ SidePanelModal.propTypes = {
 		useApplyOnBlur: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,
-		expressionValidate: PropTypes.bool,
-		useExpressionValidate: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,
 		useDisplayAdditionalComponents: PropTypes.func,
 		selectedPropertiesDropdownFile: PropTypes.string,
@@ -500,6 +494,8 @@ SidePanelModal.propTypes = {
 		setConditionHiddenPropertyHandling: PropTypes.func,
 		conditionHiddenPropertyHandling: PropTypes.string,
 		setConditionDisabledPropertyHandling: PropTypes.func,
-		conditionDisabledPropertyHandling: PropTypes.string
+		conditionDisabledPropertyHandling: PropTypes.string,
+		enablePropertiesValidationHandler: PropTypes.func,
+		propertiesValidationHandler: PropTypes.bool
 	})
 };

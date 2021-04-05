@@ -83,7 +83,7 @@ export default class PropertiesController {
 	setHandlers(inHandlers) {
 		this.handlers = Object.assign(this.handlers, inHandlers);
 		if (this.handlers.controllerHandler && !this.controllerHandlerCalled) {
-			this.handlers.controllerHandler(this); // ontime call to return controller
+			this.handlers.controllerHandler(this); // one time call to return controller
 			// probably isn't needed but seems like it can cause infinite loops
 			this.controllerHandlerCalled = true;
 		}
@@ -945,14 +945,6 @@ export default class PropertiesController {
 
 	clearExpressionFieldsRecentlyUsed() {
 		this.expressionFieldsRecentlyUsed = [];
-	}
-
-	getExpressionValidate(controlName) {
-		return this.propertiesStore.getExpressionValidate(controlName);
-	}
-
-	updateExpressionValidate(controlName, validate) {
-		this.propertiesStore.updateExpressionValidate(controlName, validate);
 	}
 
 	/**

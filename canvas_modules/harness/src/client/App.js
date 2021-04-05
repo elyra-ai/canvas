@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 28] */
+/* eslint complexity: ["error", 40] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -211,10 +211,10 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
-			expressionValidate: true,
 			heading: false,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
+			propertiesValidationHandler: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -283,7 +283,6 @@ class App extends React.Component {
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
@@ -331,6 +330,8 @@ class App extends React.Component {
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
+		this.validationHandler = this.validationHandler.bind(this);
+		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -1059,11 +1060,6 @@ class App extends React.Component {
 		this.log("use expression builder", enabled);
 	}
 
-	useExpressionValidate(enabled) {
-		this.setState({ expressionValidate: enabled });
-		this.log("use expression validate link", enabled);
-	}
-
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
 		this.log("additional components display", enabled);
@@ -1156,6 +1152,22 @@ class App extends React.Component {
 		if (data.propertyId.name === "readonlyTableError") {
 			this.propertiesController.validateInput(data.propertyId);
 		}
+	}
+
+	validationHandler(controller, propertyId, value, appData, callback) {
+		const response = {
+			type: "error",
+			text: "Error validating expression"
+		};
+		if (this.currentValidation === "error") {
+			response.type = "success";
+			response.text = "Expression validate";
+
+		}
+		this.currentValidation = response.type;
+		setTimeout(() => {
+			callback(response);
+		}, 2000);
 	}
 
 	helpClickHandler(nodeTypeId, helpData, appData) {
@@ -1302,9 +1314,6 @@ class App extends React.Component {
 				const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-				if (expressionInfo !== null) {
-					expressionInfo.validateLink = this.state.expressionValidate;
-				}
 				const propsInfo = {
 					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 					messages: messages,
@@ -1385,9 +1394,6 @@ class App extends React.Component {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-		if (expressionInfo !== null) {
-			expressionInfo.validateLink = this.state.expressionValidate;
-		}
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
@@ -1427,6 +1433,9 @@ class App extends React.Component {
 
 	enableApplyPropertiesWithoutEdit() {
 		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
+	}
+	enablePropertiesValidationHandler() {
+		this.setState({ propertiesValidationHandler: !this.state.propertiesValidationHandler });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -1950,6 +1959,9 @@ class App extends React.Component {
 			helpClickHandler: this.helpClickHandler,
 			buttonHandler: this.buttonHandler
 		};
+		if (this.state.propertiesValidationHandler) {
+			callbacks.validationHandler = this.validationHandler;
+		}
 		const callbacks2 = {
 			controllerHandler: this.propertiesControllerHandler2,
 			propertyListener: this.propertyListener,
@@ -2152,8 +2164,6 @@ class App extends React.Component {
 			useApplyOnBlur: this.useApplyOnBlur,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
-			expressionValidate: this.state.expressionValidate,
-			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
@@ -2171,7 +2181,9 @@ class App extends React.Component {
 			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
-			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
+			propertiesValidationHandler: this.state.propertiesValidationHandler,
 		};
 
 		const sidePanelAPIConfig = {

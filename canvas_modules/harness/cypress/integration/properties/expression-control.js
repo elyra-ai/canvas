@@ -103,9 +103,9 @@ describe("Test of expression builder", function() {
 	it("Test of expression builder", function() {
 		cy.clickExpressionBuilderButton("defaultExpr");
 
-		// Generate a success validate
+		// Clicking validate returns error -> success -> error ...
 		cy.clickValidateLinkInSubPanel();
-		cy.verifyIconInSubPanel("canvas-state-icon-success");
+		cy.verifyIconInSubPanel("canvas-state-icon-error");
 
 		// Verify the icon goes away on the next input
 		cy.selectFieldFromPropertyInSubPanel("Age", "field");
@@ -114,15 +114,18 @@ describe("Test of expression builder", function() {
 		// Generate an error
 		cy.selectTabFromPropertyInSubPanel("Functions", "function");
 		cy.selectFieldFromPropertyInSubPanel("is_integer(ITEM)", "functions");
-		cy.clickValidateLinkInSubPanel();
+		cy.selectTabFromPropertyInSubPanel("Functions", "function"); // trigger blur
 		cy.verifyValidationMessage("Expression cannot contain '?'");
-		cy.verifyIconInSubPanel("canvas-state-icon-error");
 
 		// substitute a param char '?' (dependent on the test above)
 		cy.selectTabFromPropertyInSubPanel("Fields", "fields");
 
 		cy.selectFieldFromPropertyInSubPanel("Age", "field");
 		cy.verifyIconInSubPanel("none");
+
+		// Clicking validate returns error -> success -> error ...
+		cy.clickValidateLinkInSubPanel();
+		cy.verifyIconInSubPanel("canvas-state-icon-success");
 	});
 });
 
