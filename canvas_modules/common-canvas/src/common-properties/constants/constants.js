@@ -110,7 +110,8 @@ _defineConstant("MESSAGE_KEYS", {
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
 	VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL: "virtualizedTable.header.checkbox.label",
-	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label"
+	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label",
+	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

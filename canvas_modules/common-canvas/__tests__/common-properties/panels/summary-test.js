@@ -140,8 +140,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		// add row back in tables
 		tableCategory.find("button.properties-summary-link-button").simulate("click");
 		wideflyout = wrapper.find("div.properties-wf-content.show");
-		wideflyout.find("button.properties-add-fields-button").at(0)
-			.simulate("click");
+		wideflyout.find("button.properties-empty-table-button").simulate("click");
 		// close fly-out
 		wideflyout.find("button.properties-apply-button").simulate("click");
 
@@ -174,9 +173,9 @@ describe("summary panel renders error/warning status correctly", () => {
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
 			tableUtils.selectCheckboxes(tableInputBodyData, [0]);
 			const tableInputRemoveButton = wideflyout.find("button.properties-remove-fields-button");
-			expect(tableInputRemoveButton).to.have.length(2);
+			expect(tableInputRemoveButton).to.have.length(1);
 
-			tableInputRemoveButton.at(1).simulate("click");
+			tableInputRemoveButton.simulate("click");
 		});
 		// check that all rows were removed
 		wideflyout = wrapper.find("div.properties-wf-content.show");
@@ -206,7 +205,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		tableCategory.find("button.properties-summary-link-button").simulate("click");
 		wideflyout = wrapper.find("div.properties-wf-content.show");
 
-		wideflyout.find("button.properties-add-fields-button").at(1)
+		wideflyout.find("button.properties-empty-table-button").at(1)
 			.simulate("click");
 		// close fly-out
 		wideflyout.find("button.properties-apply-button").simulate("click");

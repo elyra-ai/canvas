@@ -27,6 +27,7 @@ import { formatMessage } from "./../../util/property-utils";
 import { getDataId } from "./../../util/control-utils";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { Type } from "./../../constants/form-constants.js";
+import { isEmpty } from "lodash";
 
 const NUMBER_TYPES = [Type.INTEGER, Type.DOUBLE, Type.LONG];
 class ListControl extends AbstractTable {
@@ -170,6 +171,9 @@ class ListControl extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					disabled={this.props.state === STATES.DISABLED}
+					isEmptyTable={isEmpty(this.props.value)}
+					emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+					emptyTableButtonClickHandler={this.addRow}
 				/>
 			</div>
 		);

@@ -582,5 +582,8 @@
         }
       ]
     }
-  ]
+  ],
+  "resources": {
+    "list_long_disabled.empty.table.text": "This is a custom empty text for list."
+  }
 }

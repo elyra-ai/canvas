@@ -110,12 +110,14 @@ describe("readonlytable control renders correctly", () => {
 		expect(wrapper.dive().prop("buildUIItem")).to.equal(genUIItem);
 	});
 
-	it("should render a `readonlytable` control without edit button", () => {
+	it("should render empty table content for `readonlytable` control", () => {
+		// We need getReactIntl() in the controller which will set the empty table text
+		const renderedObject = propertyUtils.flyoutEditorForm(readonlyTableParamDef);
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ReadonlyTableControl
 					control={control}
-					controller={controller}
+					controller={renderedObject.controller}
 					propertyId={propertyId}
 					buildUIItem={genUIItem}
 					rightFlyout
@@ -124,15 +126,12 @@ describe("readonlytable control renders correctly", () => {
 		);
 
 		expect(wrapper.find("div[data-id='properties-keys']")).to.have.length(1);
-		// should have a search bar
-		expect(wrapper.find("div.properties-ft-search-container")).to.have.length(1);
-		// should not have abstract table buttons
-		const buttons = wrapper.find(".properties-at-buttons-container");
-		expect(buttons).to.have.length(0);
-		// should have moveable table rows
-		const moveableRowsContainer = wrapper.find(".properties-mr-button-container");
-		expect(moveableRowsContainer).to.have.length(1);
-		expect(moveableRowsContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
+		// Verify empty table content is rendered
+		expect(wrapper.find("div.properties-empty-table")).to.have.length(1);
+		expect(wrapper.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Edit\"");
+		expect(wrapper.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(wrapper.find("button.properties-empty-table-button").text()).to.be.equal("Edit");
 	});
 
 	let wrapper;

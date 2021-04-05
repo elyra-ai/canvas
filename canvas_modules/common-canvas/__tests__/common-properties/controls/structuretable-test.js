@@ -23,7 +23,6 @@ import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
-import isEqual from "lodash/isEqual";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
@@ -451,27 +450,21 @@ describe("condition renders correctly with structure table control", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	it("should render a table error message", () => {
+	it("should render empty table content", () => {
 		const conditionsPropertyId = { name: "structuretableReadonlyColumnStartValue" };
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 		renderedController.updatePropertyValue(conditionsPropertyId, []);
-
-		const structuretableSortOrderErrorMessages = {
-			"validation_id": "structuretableReadonlyColumnStartValue",
-			"type": "error",
-			"text": "table cannot be empty"
-		};
-		const actual = renderedController.getErrorMessage(conditionsPropertyId);
-		expect(isEqual(JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
 		wrapper.update();
 		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
 
 		const tableWrapper = wrapper.find("div[data-id='properties-structuretableReadonlyColumnStartValue']");
-		expect(tableWrapper.find("div.properties-validation-message")).to.have.length(1);
-		expect(tableWrapper.find("div.properties-validation-message span")
-			.text()).to.be.equal(structuretableSortOrderErrorMessages.text);
+		// Verify empty table content is rendered
+		expect(tableWrapper.find("div.properties-empty-table")).to.have.length(1);
+		expect(tableWrapper.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Add columns\"");
+		expect(tableWrapper.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(tableWrapper.find("button.properties-empty-table-button").text()).to.be.equal("Add columns");
 	});
 	it("should render an table cell error", () => {
 		// set error condition on cell

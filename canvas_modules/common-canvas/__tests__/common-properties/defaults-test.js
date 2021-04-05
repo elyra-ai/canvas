@@ -131,7 +131,7 @@ describe("add rows in tables with correct default values", () => {
 		expect(tableRows).to.have.length(0);
 
 		// add a row
-		let fieldPickerWrapper = tableUtils.openFieldPicker(wrapper, "properties-structureTableDefault-default");
+		let fieldPickerWrapper = tableUtils.openFieldPickerForEmptyTable(wrapper, "properties-structureTableDefault-default");
 		tableUtils.fieldPicker(fieldPickerWrapper, ["Age"]);
 		wideflyout = wrapper.find("div[data-id='properties-structureTableDefault-summary-panel']");
 		tableRows = tableUtils.getTableRows(wideflyout);

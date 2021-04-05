@@ -58,6 +58,22 @@ const controlInteger = {
 	}
 };
 
+const controlEmpty = {
+	"name": "test-list-empty",
+	"label": {
+		"text": "test empty list"
+	},
+	"description": {
+		"text": "list control description"
+	},
+	"controlType": "list",
+	"valueDef": {
+		"isList": true,
+		"isMap": false,
+		"propType": "string"
+	}
+};
+
 const listStringCurrentValues = ["list item 1", ""];
 const listIntegerCurrentValues = [10, null];
 
@@ -65,6 +81,7 @@ const listLongStringCurrentValues = [propertyUtils.genLongString(TRUNCATE_LIMIT 
 
 const listStringPopertyId = { name: "test-list-string" };
 const listIntegerPopertyId = { name: "test-list-integer" };
+const listEmptyPopertyId = { name: "test-list-empty" };
 
 describe("list renders correctly for array[string]", () => {
 	const controller = new Controller();
@@ -231,6 +248,27 @@ describe("list renders correctly for array[string]", () => {
 		const rowsSelected = validateSelectedRowNum(rows);
 		expect(rowsSelected).to.have.length(1);
 	});
+
+	it("should render empty table content when list is empty", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(listParamDef);
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<List
+					store={controller.getStore()}
+					control={controlEmpty}
+					controller={renderedObject.controller}
+					propertyId={listEmptyPopertyId}
+				/>
+			</Provider>
+		);
+
+		// Verify empty table content is rendered
+		expect(wrapper.find("div.properties-empty-table")).to.have.length(1);
+		expect(wrapper.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Add value\"");
+		expect(wrapper.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(wrapper.find("button.properties-empty-table-button").text()).to.be.equal("Add value");
+	});
 });
 
 describe("list renders correctly for array[integer]", () => {
@@ -376,10 +414,16 @@ describe("list renders correctly as a nested control", () => {
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(1);
 
+		// select Add value button in empty nested list - this adds 1 row in the list
+		let emptyTableButton = onPanelList.find("button.properties-empty-table-button");
+		expect(emptyTableButton).to.have.length(1);
+		emptyTableButton.simulate("click");
+
+		wrapper.update();
+		onPanelList = wrapper.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		// select the add column button in nested list
 		let addColumnButton = onPanelList.find("button.properties-add-fields-button");
 		expect(addColumnButton).to.have.length(1);
-		addColumnButton.simulate("click");
 		addColumnButton.simulate("click");
 
 		// The table content should increase by 2
@@ -432,10 +476,12 @@ describe("list renders correctly as a nested control", () => {
 			.find("div[data-id='properties-ctrl-complexListStructurelisteditor_list']");
 		expect(onPanelList).to.have.length(1);
 
-		// select the add column button in nested list
-		addColumnButton = onPanelList.find("button.properties-add-fields-button");
-		expect(addColumnButton).to.have.length(1);
-		addColumnButton.simulate("click");
+		// select Add value button in empty nested list - this adds 1 row in the list
+		emptyTableButton = onPanelList.find("button.properties-empty-table-button");
+		expect(emptyTableButton).to.have.length(1);
+		emptyTableButton.simulate("click");
+
+		wrapper.update();
 
 		// edit nested list row index 0
 		summaryPanel = propertyUtils.openSummaryPanel(wrapper, "nested-list-summary-panel");
@@ -463,10 +509,16 @@ describe("list renders correctly as a nested control", () => {
 
 		// subPanel table
 		let subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
-		// select the add column button in nested list
-		let addColumnButton = subPanelTable.find("button.properties-add-fields-button");
+		// select Add value button in empty nested list - this adds 1 row in the list
+		let emptyTableButton = subPanelTable.find("button.properties-empty-table-button");
+		expect(emptyTableButton).to.have.length(1);
+		emptyTableButton.simulate("click");
+
+		wrapper.update();
+		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']");
+		// select the add value button in nested list
+		const addColumnButton = subPanelTable.find("button.properties-add-fields-button");
 		expect(addColumnButton).to.have.length(1);
-		addColumnButton.simulate("click");
 		addColumnButton.simulate("click");
 
 		// The table content should increase by 2
@@ -499,10 +551,12 @@ describe("list renders correctly as a nested control", () => {
 
 		// subPanel table of second row
 		subPanelTable = wrapper.find("div[data-id='properties-complexListStructuretables']").at(1);
-		// select the add column button in nested list
-		addColumnButton = subPanelTable.find("button.properties-add-fields-button");
-		expect(addColumnButton).to.have.length(1);
-		addColumnButton.simulate("click");
+		// select Add value button in empty nested list - this adds 1 row in the list
+		emptyTableButton = subPanelTable.find("button.properties-empty-table-button");
+		expect(emptyTableButton).to.have.length(1);
+		emptyTableButton.simulate("click");
+
+		wrapper.update();
 
 		tableData = renderedController.getPropertyValue(propertyId);
 		expected = [["Cholesterol", 5, "Ascending", ["new value list 0", "new value list 1"]], ["Na", 6, "Ascending", [""]]];
