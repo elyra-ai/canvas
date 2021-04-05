@@ -23,7 +23,6 @@ import { setPanelStates, updatePanelState } from "./actions";
 import { setActionStates, updateActionState } from "./actions";
 
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
-import { updateExpressionValidate } from "./actions";
 
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
@@ -387,23 +386,6 @@ export default class PropertiesStore {
 		const state = this.store.getState();
 		return state.disableRowMoveButtonsReducer.propertyIds;
 	}
-
-	/*
-	* Expression validate Methods
-	*/
-	getExpressionValidate(controlName) {
-		const state = this.store.getState();
-		if (typeof state.componentMetadataReducer[controlName] === "undefined" ||
-	typeof state.componentMetadataReducer[controlName].expressionValidate === "undefined") {
-			return false;
-		}
-		return state.componentMetadataReducer[controlName].expressionValidate;
-	}
-
-	updateExpressionValidate(controlName, Validate) {
-		this.store.dispatch(updateExpressionValidate({ name: controlName, expressionValidate: Validate }));
-	}
-
 
 	setTitle(title) {
 		this.store.dispatch(setTitle(title));

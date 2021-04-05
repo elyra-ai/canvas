@@ -69,6 +69,7 @@ _defineConstant("MESSAGE_KEYS", {
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
+	EXPRESSION_VALIDATING_LABEL: "expression.validating.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
 	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",

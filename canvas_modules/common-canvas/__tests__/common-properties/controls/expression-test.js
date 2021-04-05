@@ -17,6 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import deepFreeze from "deep-freeze";
+import sinon from "sinon";
 
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
@@ -104,6 +105,13 @@ const dataModel = [{
 	]
 }];
 deepFreeze(dataModel);
+
+
+const validationHandler = sinon.spy();
+
+const callbacks = {
+	validationHandler: validationHandler
+};
 
 function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
@@ -465,18 +473,18 @@ describe("expression handles no expression builder resources correctly", () => {
 		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(0);
 	});
 
-	it("CommonProperties renders with validateLink set false", () => {
-		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
-		propertiesInfo.expressionInfo.validateLink = false;
-		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
-		expect(renderedObject.wrapper.find(".validateLink")).to.have.length(0);
-	});
-
 	it("CommonProperties renders with validateLink set true", () => {
 		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
-		propertiesInfo.expressionInfo.validateLink = true;
-		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, null, propertiesInfo);
+		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
 		expect(renderedObject.wrapper.find("button.validateLink")).to.have.length(8); // there are 8 expressions in this paramdef
+	});
+
+	it("CommonProperties renders with validateLink and callback is called on click", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = propertyUtils.flyoutEditorForm(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		wrapper.find("div[data-id='properties-ctrl-expression'] button.validateLink").simulate("click");
+		expect(renderedObject.callbacks.validationHandler).to.have.property("callCount", 1);
 	});
 
 

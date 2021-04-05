@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SET_TITLE, SET_ACTIVE_TAB, UPDATE_EXPRESSION_VALIDATE } from "../actions";
+import { SET_TITLE, SET_ACTIVE_TAB } from "../actions";
 
 
 function componentMetadata(state = [], action) {
@@ -27,11 +27,6 @@ function componentMetadata(state = [], action) {
 	case SET_ACTIVE_TAB: {
 		const newState = state;
 		newState.activeTab = action.activeTab;
-		return Object.assign({}, state, newState);
-	}
-	case UPDATE_EXPRESSION_VALIDATE: {
-		const newState = state;
-		newState[action.info.name] = { expressionValidate: action.info.expressionValidate };
 		return Object.assign({}, state, newState);
 	}
 	default:
