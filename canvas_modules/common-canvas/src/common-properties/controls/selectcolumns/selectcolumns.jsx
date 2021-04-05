@@ -36,6 +36,8 @@ class SelectColumns extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
+		this.emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		this.emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 	}
 
 	makeRows(controlValue, tableState) {
@@ -146,8 +148,6 @@ class SelectColumns extends AbstractTable {
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
-		const emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
-		const emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.propertyId)} className="properties-column-select" >
@@ -161,8 +161,8 @@ class SelectColumns extends AbstractTable {
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					disabled={this.props.state === STATES.DISABLED}
 					isEmptyTable={isEmpty(this.props.value)}
-					emptyTableButtonLabel={emptyTableButtonLabel}
-					emptyTableButtonClickHandler={emptyTableButtonClickHandler}
+					emptyTableButtonLabel={this.emptyTableButtonLabel}
+					emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
 				/>
 			</div>
 		);

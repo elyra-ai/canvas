@@ -36,6 +36,8 @@ class StructureTableControl extends AbstractTable {
 		this.removeColumns = this.removeColumns.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.indexOfRow = this.indexOfRow.bind(this);
+		this.emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		this.emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 	}
 
 	indexOfRow(columnName) {
@@ -169,8 +171,6 @@ class StructureTableControl extends AbstractTable {
 			</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
-		const emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
-		const emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
@@ -186,8 +186,8 @@ class StructureTableControl extends AbstractTable {
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						disabled={this.props.state === STATES.DISABLED}
 						isEmptyTable={isEmpty(this.props.value)}
-						emptyTableButtonLabel={emptyTableButtonLabel}
-						emptyTableButtonClickHandler={emptyTableButtonClickHandler}
+						emptyTableButtonLabel={this.emptyTableButtonLabel}
+						emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
 					/>
 				</div>
 				<div>
