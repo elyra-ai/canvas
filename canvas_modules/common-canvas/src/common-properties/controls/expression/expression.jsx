@@ -88,10 +88,12 @@ class ExpressionControl extends React.Component {
 				const newPos = (data.removed[0].length > 0) ? { line: data.from.line, ch: data.from.ch + 1 } : { line: data.to.line, ch: data.to.ch + 1 };
 				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
 			}
-			this.setState({
-				validateIcon: null
-			});
-			this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
+			if (this.state.validateIcon) {
+				this.setState({
+					validateIcon: null
+				});
+				this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
+			}
 		};
 	}
 
