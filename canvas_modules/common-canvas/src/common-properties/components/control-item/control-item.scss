@@ -24,6 +24,16 @@
 			pointer-events: none;
 		}
 	}
+	// TODO: Remove this after all controls are accessible - CSS for inaccessible controls
+	.properties-action-image  {
+		&.right {
+			margin-left: auto;
+			float: right;
+		}
+		&.left {
+			float: left;
+		}
+	}
 }
 
 .properties-label-container {

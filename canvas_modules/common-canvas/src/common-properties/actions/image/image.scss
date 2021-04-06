@@ -20,12 +20,9 @@
 .properties-action-image  {
 	padding: 1px 2px;
 	cursor: pointer;
-	&.right {
-		margin-left: auto;
-		float: right;
-	}
+	align-self: flex-end;
 	&.left {
-		float: left;
+		order: -1;
 	}
 	&.hide {
 		display: none;

@@ -110,7 +110,6 @@ class ControlItem extends React.Component {
 				>
 					{label}
 					{description}
-					{action}
 				</div>
 			);
 		}
