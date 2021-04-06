@@ -16,7 +16,15 @@
     "hide_image": false,
     "disable_image": false,
     "disable_image_text": "this should be disabled when button is clicked",
-    "disable_button_text": "this should be disabled when button is clicked"
+    "disable_button_text": "this should be disabled when button is clicked",
+    "oneofselect": "blue",
+    "oneofselect_null": null,
+    "oneofselect_empty_string": "",
+    "oneofselect_custom_value": "custom",
+    "radioString": "entropy",
+    "radioBooleanWithEnum": true,
+    "radioBooleanWithoutEnum": true,
+    "radioBooleanWithLabels": false
   },
   "parameters": [
     {
@@ -64,6 +72,81 @@
     {
       "id": "disable_button_text",
       "type": "string"
+    },
+    {
+      "id": "oneofselect",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_null",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_empty_string",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioString",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioBooleanWithEnum",
+      "enum": [
+        true,
+        false
+      ],
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "radioBooleanWithoutEnum",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "radioBooleanWithLabels",
+      "type": "boolean",
+      "required": true
     }
   ],
   "uihints": {
@@ -169,6 +252,99 @@
           "default": "Try pressing the button"
         },
         "control": "readonly"
+      },
+      {
+        "parameter_ref": "oneofselect",
+        "label": {
+          "default": "Accessible control - action image right"
+        },
+        "description": {
+          "default": "oneofselect control with action image placement right"
+        },
+        "class_name": "oneofselect-control-class",
+        "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "oneofselect_null",
+        "label": {
+          "default": "Accessible control - action image left"
+        },
+        "description": {
+          "default": "oneofselect control with action image placement left"
+        },
+        "action_ref": "moon1"
+      },
+      {
+        "parameter_ref": "oneofselect_empty_string",
+        "label": {
+          "default": "Accessible control - action image w/o placement"
+        },
+        "description": {
+          "default": "oneofselect control with action image without placement"
+        },
+        "action_ref": "moon2"
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value",
+        "label": {
+          "default": "Accessible control - action button"
+        },
+        "description": {
+          "default": "oneofselect control with action button"
+        },
+        "custom_value_allowed": true,
+        "action_ref": "increment1"
+      },
+      {
+        "parameter_ref": "radioString",
+        "label": {
+          "default": "Inaccessible control - action image right"
+        },
+        "description": {
+          "default": "Inaccessible control with action image placement right"
+        },
+        "control": "radioset",
+        "resource_key": "withradioString",
+        "class_name": "radioset-control-class",
+        "action_ref": "moon3"
+      },
+      {
+        "parameter_ref": "radioBooleanWithEnum",
+        "label": {
+          "default": "Inaccessible control - action image left"
+        },
+        "description": {
+          "default": "Inaccessible control with action image placement left"
+        },
+        "label_visible": true,
+        "control": "radioset",
+        "resource_key": "withradioBoolean",
+        "action_ref": "moon4"
+      },
+      {
+        "parameter_ref": "radioBooleanWithoutEnum",
+        "label": {
+          "default": "Inaccessible control - action image w/o placement"
+        },
+        "description": {
+          "default": "Inaccessible control with action image without placement"
+        },
+        "label_visible": true,
+        "control": "radioset",
+        "action_ref": "moon5"
+      },
+      {
+        "parameter_ref": "radioBooleanWithLabels",
+        "label": {
+          "default": "Inaccessible control - action button"
+        },
+        "description": {
+          "default": "Inaccessible control with action button"
+        },
+        "label_visible": true,
+        "control": "radioset",
+        "resource_key": "radioBooleanWithLabels",
+        "action_ref": "increment2"
       }
     ],
     "action_info": [
@@ -184,6 +360,32 @@
         "control": "button",
         "data": {
           "parameter_ref": "number"
+        }
+      },
+      {
+        "id": "increment1",
+        "label": {
+          "resource_key": "increment"
+        },
+        "description": {
+          "default": "This will increment the number field by 1."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "oneofselect_custom_value"
+        }
+      },
+      {
+        "id": "increment2",
+        "label": {
+          "resource_key": "increment"
+        },
+        "description": {
+          "default": "This will increment the number field by 1."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "radioBooleanWithLabels"
         }
       },
       {
@@ -288,6 +490,94 @@
           "size": {
             "height": 20,
             "width": 25
+          }
+        }
+      },
+      {
+        "id": "moon1",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "oneofselect_null"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "left",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon2",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "oneofselect_empty_string"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon3",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "radioString"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon4",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "radioString"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "left",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon5",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "radioString"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "size": {
+            "height": 30,
+            "width": 30
           }
         }
       },
@@ -430,6 +720,62 @@
             "type": "controls",
             "parameter_refs": [
               "meteor_showers"
+            ]
+          },
+          {
+            "id": "oneofselect-control",
+            "type": "controls",
+            "parameter_refs": [
+              "oneofselect"
+            ]
+          },
+          {
+            "id": "oneofselect-null-control",
+            "type": "controls",
+            "parameter_refs": [
+              "oneofselect_null"
+            ]
+          },
+          {
+            "id": "oneofselect-empty-string-control",
+            "type": "controls",
+            "parameter_refs": [
+              "oneofselect_empty_string"
+            ]
+          },
+          {
+            "id": "oneofselect_custom_value-control",
+            "type": "controls",
+            "parameter_refs": [
+              "oneofselect_custom_value"
+            ]
+          },
+          {
+            "id": "radioString-control",
+            "type": "controls",
+            "parameter_refs": [
+              "radioString"
+            ]
+          },
+          {
+            "id": "radioBooleanWithEnum-control",
+            "type": "controls",
+            "parameter_refs": [
+              "radioBooleanWithEnum"
+            ]
+          },
+          {
+            "id": "radioBooleanWithoutEnum-control",
+            "type": "controls",
+            "parameter_refs": [
+              "radioBooleanWithoutEnum"
+            ]
+          },
+          {
+            "id": "radioBooleanWithLabels-control",
+            "type": "controls",
+            "parameter_refs": [
+              "radioBooleanWithLabels"
             ]
           }
         ]
