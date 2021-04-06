@@ -36,7 +36,7 @@
 	}
 	&.action {
 		display: flex;
-		div:first-child {
+		> div:first-child {
 			width: 100%;
 		}
 	}
