@@ -34,4 +34,10 @@
 	&.hide {
 		display: none;
 	}
+	&.action {
+		display: flex;
+		div:first-child {
+			width: 100%;
+		}
+	}
 }
