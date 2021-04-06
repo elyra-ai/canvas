@@ -48,7 +48,7 @@ import ReadonlyTableControl from "./readonlytable";
 
 import ControlItem from "./../components/control-item";
 import ActionFactory from "./../actions/action-factory.js";
-import { isNil, has } from "lodash";
+import { has } from "lodash";
 
 /*
 * <ControlItem /> should be called from every control.
@@ -338,7 +338,7 @@ export default class ControlFactory {
 				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
 					className={classNames(
 						"properties-ctrl-wrapper",
-						{ "hide": hidden, "action": !isNil(action) && has(control, "action.image.placement") },
+						{ "hide": hidden, "action": has(control, "action.image.placement") },
 						className
 					)}
 				>

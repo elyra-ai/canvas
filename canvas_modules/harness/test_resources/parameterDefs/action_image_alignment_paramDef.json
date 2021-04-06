@@ -1,0 +1,285 @@
+{
+  "titleDefinition": {
+    "title": "Action image alignment"
+  },
+  "current_parameters": {
+    "oneofselect": "blue",
+    "oneofselect_custom_value": "custom",
+    "oneofselect_null": null,
+    "oneofselect_empty_string": "",
+    "oneofselect_null_empty_enum": null
+  },
+  "parameters": [
+    {
+      "id": "oneofselect",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_default",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": "blue",
+      "required": true
+    },
+    {
+      "id": "oneofselect_undefined",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_null",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_empty_string",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_null_empty_enum",
+      "enum": [
+        null,
+        "",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple",
+        "blue green",
+        "gold"
+      ]
+    }
+  ],
+  "complex_types": [
+  ],
+  "uihints": {
+    "id": "oneofselect",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "One of Select"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "oneofselect",
+        "label": {
+          "default": "oneofselect"
+        },
+        "description": {
+          "default": "oneofselect control with action image placement right"
+        },
+        "class_name": "oneofselect-control-class",
+        "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value",
+        "label": {
+          "default": "oneofselect custom value allowed"
+        },
+        "description": {
+          "default": "oneofselect control with action button"
+        },
+        "custom_value_allowed": true,
+        "action_ref": "increment"
+      },
+      {
+        "parameter_ref": "oneofselect_null",
+        "label": {
+          "default": "oneofselect null"
+        },
+        "description": {
+          "default": "oneofselect control with action image placement left"
+        },
+        "action_ref": "moon1"
+      },
+      {
+        "parameter_ref": "oneofselect_undefined",
+        "label": {
+          "default": "oneofselect undefined"
+        },
+        "description": {
+          "default": "oneofselect with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_empty_string",
+        "label": {
+          "default": "oneofselect Empty String"
+        },
+        "description": {
+          "default": "oneofselect control with action image without placement"
+        },
+        "action_ref": "moon2"
+      },
+      {
+        "parameter_ref": "oneofselect_null_empty_enum",
+        "label": {
+          "default": "oneofselect with 'null'"
+        },
+        "resource_key": "oneofselect_null_empty_enum",
+        "description": {
+          "default": "oneofselect with 'null' and '\"\"' as an enum values."
+        },
+        "place_holder_text": {
+          "default": "..."
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_default",
+        "label": {
+          "default": "oneofselect Default Value"
+        },
+        "description": {
+          "default": "oneofselect with parameter value set to 'blue'"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "oneofselect-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "oneofselect",
+          "oneofselect_custom_value",
+          "oneofselect_null",
+          "oneofselect_empty_string",
+          "oneofselect_undefined",
+          "oneofselect_default",
+          "oneofselect_null_empty_enum"
+        ]
+      }
+    ],
+		"action_info": [
+			{
+        "id": "moon",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "oneofselect"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon1",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "oneofselect_null"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "left",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "moon2",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "oneofselect_empty_string"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "size": {
+            "height": 30,
+            "width": 30
+          }
+        }
+      },
+      {
+        "id": "increment",
+        "label": {
+          "resource_key": "increment"
+        },
+        "description": {
+          "default": "This will increment the number field by 1."
+        },
+        "control": "button",
+        "placement": "right",
+        "data": {
+          "parameter_ref": "oneofselect_custom_value"
+        }
+      }
+		]
+  },
+  "resources": {
+    "oneofselect_null_empty_enum.null.label": "Null...",
+    "oneofselect_null_empty_enum..label": "Empty...",
+    "oneofselect_null_empty_enum.red.label": "Red",
+    "oneofselect_null_empty_enum.orange.label": "Orange",
+    "oneofselect_null_empty_enum.yellow.label": "Yellow",
+    "oneofselect_null_empty_enum.green.label": "Green",
+    "oneofselect_null_empty_enum.purple.label": "Purple",
+    "oneofselect_null_empty_enum.blue.label": "Blue",
+    "oneofselect_null_empty_enum.blue green.label": "Blue Green",
+    "oneofselect_null_empty_enum.gold.label": "Goldilocks"
+  }
+}
