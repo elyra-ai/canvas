@@ -614,11 +614,11 @@ describe("All checkboxes in list must have labels", () => {
 		const rowCheckboxes = listOfStrings.find(".properties-vt-row-checkbox");
 		const textfields = listOfStrings.find("TextfieldControl");
 		expect(textfields).to.have.length(3);
+		const tableName = listOfStrings.find(".properties-control-label").text();
 
 		textfields.forEach((textfield, index) => {
 			const rowCheckboxLabel = rowCheckboxes.at(index).text();
-			const textfieldLabel = textfield.prop("value");
-			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${textfieldLabel}`);
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
 });

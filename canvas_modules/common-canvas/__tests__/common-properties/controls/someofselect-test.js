@@ -318,11 +318,11 @@ describe("All checkboxes in someofselect must have labels", () => {
 		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
 		const secondColumnRows = tableRows.find(".ReactVirtualized__Table__rowColumn");
 		expect(secondColumnRows).to.have.length(6);
+		const tableName = someofselect.find(".properties-control-label").text();
 
 		secondColumnRows.forEach((row, index) => {
 			const rowCheckboxLabel = rowCheckboxes.at(index).text();
-			const rowLabel = row.text();
-			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${rowLabel}`);
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
 });

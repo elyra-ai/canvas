@@ -105,12 +105,10 @@ class SomeofselectControl extends React.Component {
 					data={tableOptions.options}
 					scrollKey={this.props.control.name}
 					tableLabel={tableLabel}
-					controller={this.props.controller}
 					selectedRows={tableOptions.selected}
 					updateRowSelections={this.updateSelections}
 					selectable
 					showHeader={false}
-					rowCheckboxLabels={this.props.control.values}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
