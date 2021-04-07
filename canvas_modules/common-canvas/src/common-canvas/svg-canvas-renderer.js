@@ -3390,13 +3390,14 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Sets the image passed in into the D3 image selection passed in. This loads
-	// svg files as inline SVG while other images files are loaded with href.
+	// svg files as inline SVG while other image files are loaded with href.
 	setImageContent(imageSel, image) {
 		if (image !== imageSel.attr("data-image")) {
 			const nodeImageType = this.getImageType(image);
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
+				imageSel.selectChild("svg").remove();
 				d3.svg(image, { cache: "force-cache" }).then((data) => {
 					imageSel.node().append(data.documentElement);
 				});
