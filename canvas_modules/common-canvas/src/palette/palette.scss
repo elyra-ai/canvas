@@ -348,6 +348,10 @@ $palette-border-color: $ui-03;
 			color: $text-02;
 		}
 
+		.palette-list-item-text-div {
+			margin-left: 10px;
+		}
+
 		.palette-list-item-text-span {
 			overflow: hidden;
 			text-overflow: ellipsis;
