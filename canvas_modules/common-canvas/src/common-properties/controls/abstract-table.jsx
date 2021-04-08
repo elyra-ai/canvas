@@ -457,7 +457,6 @@ export default class AbstractTable extends React.Component {
 					rows={0}
 					scrollKey={this.selectSummaryPropertyName}
 					tableLabel={tableLabel}
-					controller={this.props.controller}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
 				/>
@@ -651,7 +650,6 @@ export default class AbstractTable extends React.Component {
 				messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)}
 				rows={this.props.control.rows}
 				tableLabel={tableLabel}
-				controller={this.props.controller}
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}

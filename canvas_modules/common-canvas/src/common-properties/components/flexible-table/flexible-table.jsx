@@ -17,17 +17,18 @@
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
+import { injectIntl } from "react-intl";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Search } from "carbon-components-react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
-import { formatMessage } from "./../../util/property-utils";
-import { MESSAGE_KEYS, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import { has } from "lodash";
+import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-export default class FlexibleTable extends React.Component {
+class FlexibleTable extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -419,10 +420,14 @@ export default class FlexibleTable extends React.Component {
 		let searchBar = null;
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
-			const searchBarLabel = formatMessage(this.props.controller.getReactIntl(),
-				MESSAGE_KEYS.TABLE_SEARCH_LABEL, { table_name: this.props.tableLabel });
+			const placeHolder = this.props.intl.formatMessage(
+				{ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] },
+				{ column_name: searchLabel }
+			);
+			const searchBarLabel = this.props.intl.formatMessage(
+				{ id: "table.search.label", defaultMessage: defaultMessages["table.search.label"] },
+				{ table_name: this.props.tableLabel }
+			);
 
 			searchBar = (
 				<div className={classNames("properties-ft-search-container", { "disabled": disabled })}>
@@ -478,8 +483,6 @@ export default class FlexibleTable extends React.Component {
 									sortColumns={this.state.columnSortDir}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
-									rowCheckboxLabels={this.props.rowCheckboxLabels}
-									controller={this.props.controller}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -511,7 +514,6 @@ FlexibleTable.propTypes = {
 	topRightPanel: PropTypes.object,
 	scrollKey: PropTypes.string,
 	tableLabel: PropTypes.string,
-	controller: PropTypes.object,
 	rows: PropTypes.number,
 	noAutoSize: PropTypes.bool,
 	tableState: PropTypes.string,
@@ -521,5 +523,7 @@ FlexibleTable.propTypes = {
 	selectedRows: PropTypes.array,
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,
-	rowCheckboxLabels: PropTypes.array
+	intl: PropTypes.object.isRequired
 };
+
+export default injectIntl(FlexibleTable);

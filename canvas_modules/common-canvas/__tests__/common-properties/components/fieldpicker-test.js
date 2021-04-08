@@ -815,13 +815,12 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const tableRows = tableUtils.getTableRows(fieldpicker);
 		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
 		const fieldNames = tableRows.find(".properties-fp-field");
-		const schemaNames = tableRows.find(".properties-fp-schema");
 		expect(fieldNames).to.have.length(29);
+		const tableName = wrapper.find(".properties-wf-title").text();
 
 		tableRows.forEach((row, index) => {
 			const rowCheckboxLabel = rowCheckboxes.at(index).text();
-			const rowLabel = `${schemaNames.at(index).text()}.${fieldNames.at(index).text()}`;
-			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${rowLabel}`);
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
 

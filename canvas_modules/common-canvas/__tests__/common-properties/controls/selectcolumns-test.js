@@ -519,11 +519,11 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 		const rowCheckboxes = tableRows.find(".properties-vt-row-checkbox");
 		const readOnlyFields = tableRows.find("ReadonlyControl");
 		expect(readOnlyFields).to.have.length(1);
+		const tableName = fields1Panel.find(".properties-control-label").text();
 
 		readOnlyFields.forEach((readonlyField, index) => {
 			const rowCheckboxLabel = rowCheckboxes.at(index).text();
-			const readonlyFieldLabel = readonlyField.prop("value");
-			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1}, ${readonlyFieldLabel}`);
+			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
 });

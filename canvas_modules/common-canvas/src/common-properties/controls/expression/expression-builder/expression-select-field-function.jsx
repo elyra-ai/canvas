@@ -410,7 +410,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={fieldsTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
 						selectedRows={[selectedField]}
@@ -427,7 +426,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={valuesTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
 						selectedRows={[selectedValue]}
@@ -580,7 +578,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFunctionFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={functionsTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFunctionTableClick}
 						selectedRows={[selectedFunction]}
