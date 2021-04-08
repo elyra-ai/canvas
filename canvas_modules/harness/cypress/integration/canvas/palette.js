@@ -47,6 +47,10 @@ describe("Test adding nodes into empty canvas", function() {
 		// Search for a node in Palette Search bar
 		cy.findNodeInPalette("Data File");
 
+		// Search function can run slowly on build machine so give it some time.
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
 		// Verify nodes exist in search results in corrct order
 		cy.verifyNodeDoesExistInPaletteAtIndex("Var. File", 0);
 		cy.verifyNodeDoesExistInPaletteAtIndex("Database", 1);
