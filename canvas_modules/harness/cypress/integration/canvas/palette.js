@@ -40,6 +40,19 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.verifyNodeDoesNotExistInPalette("Sample");
 	});
 
+	it("Test searching for multiple words returns correct nodes", function() {
+		// Test adding nodes from palette on canvas
+		cy.clickToolbarPaletteOpen();
+
+		// Search for a node in Palette Search bar
+		cy.findNodeInPalette("Data File");
+
+		// Verify nodes exist in search results in corrct order
+		cy.verifyNodeDoesExistInPaletteAtIndex("Var. File", 0);
+		cy.verifyNodeDoesExistInPaletteAtIndex("Database", 1);
+		cy.verifyNodeDoesExistInPaletteAtIndex("Data Audit", 2);
+	});
+
 	it("Test open categories remain open when a new one is opened and closes when it is clicked", function() {
 		cy.clickToolbarPaletteOpen();
 

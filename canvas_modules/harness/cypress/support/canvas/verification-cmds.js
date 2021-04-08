@@ -781,6 +781,11 @@ Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
 		.then((idx) => expect(idx).to.equal(-1));
 });
 
+Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) => {
+	cy.findNodeIndexInPalette(nodeName)
+		.then((idx) => expect(idx).to.equal(index));
+});
+
 Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
 	// Verify category exists in palette
 	cy.findCategory(nodeCategory)

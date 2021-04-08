@@ -142,7 +142,7 @@ $palette-border-color: $ui-03;
 		.palette-list-item-description {
 			@include carbon--type-style("caption-01");
 			width: calc(100% - 10px);
-			padding: $spacing-03 10px $spacing-03 54px;
+			padding: $spacing-03 10px $spacing-05 54px;
 			word-break: break-word;
 
 			& mark {

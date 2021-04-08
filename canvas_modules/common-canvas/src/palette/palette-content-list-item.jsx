@@ -106,7 +106,7 @@ class PaletteContentListItem extends React.Component {
 		if (desc.length > 150) {
 			isLongDescription = true;
 			if (!this.state.showFullDescription) {
-				desc = desc.substring(0, 150);
+				desc = desc.substring(0, 150) + " ...";
 			}
 		}
 
