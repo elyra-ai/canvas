@@ -115,14 +115,12 @@ $palette-border-color: $ui-03;
 			flex-direction: row;
 			width: 100%;
 			min-height: 46px;
-
 			align-items: center;
 		}
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
 			margin-left: 20px;
-			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-02;
 		}
 
@@ -130,6 +128,7 @@ $palette-border-color: $ui-03;
 			@include carbon--type-style("productive-heading-01");
 			font-weight: 400;
 			padding: 0 10px;
+			width: calc(100% - 68px);
 
 			& mark {
 				color: $interactive-01;
@@ -167,7 +166,6 @@ $palette-border-color: $ui-03;
 
 			.palette-list-item-icon-and-text {
 				min-height: 30px;
-				height: 35px;
 			}
 		}
 	}
