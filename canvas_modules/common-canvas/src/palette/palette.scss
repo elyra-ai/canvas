@@ -119,7 +119,7 @@ $palette-border-color: $ui-03;
 			color: $text-02;
 		}
 
-		.palette-list-item-text {
+		.palette-list-item-text-div {
 			@include carbon--type-style("productive-heading-01");
 			font-weight: 400;
 			overflow: hidden;
@@ -289,7 +289,7 @@ $palette-border-color: $ui-03;
 	}
 }
 
-.palette-flyout-content-categories {
+.palette-flyout-categories {
 	height: calc(100% - 48px);
 	width: 100%;
 	position: absolute;

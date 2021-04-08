@@ -34,7 +34,6 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.findNodeInPalette("sel");
 
 		// Add a node found in search results
-		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Select", 500, 200);
 
 		// Verify node doesn't exist in search results

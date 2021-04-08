@@ -213,7 +213,7 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		const nodeLabel = itemText
-			? <div className="palette-list-item-text">{itemText}</div>
+			? <div className="palette-list-item-text-div">{itemText}</div>
 			: null;
 
 		return (

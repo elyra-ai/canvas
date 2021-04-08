@@ -181,7 +181,7 @@ class PaletteFlyoutContent extends React.Component {
 			: this.getContentDivs(this.categories);
 
 		const contentCategories = (
-			<div className="palette-flyout-content-categories">
+			<div className="palette-flyout-categories">
 				{contentDivs}
 			</div>
 		);
