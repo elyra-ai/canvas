@@ -214,7 +214,8 @@ class PaletteContentListItem extends React.Component {
 			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)
 			: null;
 
-		const description = this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.description")
+		const description = this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.description") &&
+												this.props.nodeTypeInfo.nodeType.app_data.ui_data.description
 			? (<div className={"palette-list-item-description"}>{this.getHighlightedDesc()}</div>)
 			: null;
 

@@ -101,7 +101,7 @@ $palette-border-color: $ui-03;
 		.palette-list-item-category-label {
 			@include carbon--type-style("caption-01");
 			width: 100%;
-			padding: $spacing-05 10px 0 60px;
+			padding: $spacing-05 10px 0 58px;
 
 			& mark {
 				color: $interactive-01;
@@ -114,7 +114,8 @@ $palette-border-color: $ui-03;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			height: 46px;
+			min-height: 46px;
+
 			align-items: center;
 		}
 
@@ -128,10 +129,7 @@ $palette-border-color: $ui-03;
 		.palette-list-item-text-div {
 			@include carbon--type-style("productive-heading-01");
 			font-weight: 400;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			margin-left: 10px;
+			padding: 0 10px;
 
 			& mark {
 				color: $interactive-01;
@@ -147,8 +145,7 @@ $palette-border-color: $ui-03;
 
 		.palette-list-item-description {
 			@include carbon--type-style("caption-01");
-			width: calc(100% - 10px);
-			padding: $spacing-03 10px $spacing-05 54px;
+			padding: 0 10px 0 58px;
 			word-break: break-word;
 
 			& mark {
@@ -165,10 +162,12 @@ $palette-border-color: $ui-03;
 		&.search-result {
 			min-height: 46px;
 			height: fit-content;
+			padding-bottom: $spacing-05;
 			border-bottom: $palette-border-width solid $palette-border-color;
 
 			.palette-list-item-icon-and-text {
-				height: 30px;
+				min-height: 30px;
+				height: 35px;
 			}
 		}
 	}
