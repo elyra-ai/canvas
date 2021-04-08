@@ -74,6 +74,8 @@ describe("title-editor renders correctly", () => {
 				helpClickHandler={callback}
 				labelEditable
 				help={help}
+				heading={"heading"}
+				showHeading
 			/>
 		);
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
@@ -99,6 +101,8 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				labelEditable
 				help={help}
+				heading={"heading"}
+				showHeading
 			/>
 		);
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
@@ -201,6 +205,8 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				labelEditable
 				help={help}
+				heading={"heading"}
+				showHeading
 			/>
 		);
 		// Edit title button

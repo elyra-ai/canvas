@@ -17,8 +17,7 @@
 .properties-title-editor {
 	display: block;
 	align-items: center;
-	padding-top: $spacing-05;
-	padding-bottom: $spacing-05;
+	padding: $spacing-05 0;
 	height: 72px;
 	border-bottom: 1px $ui-03 solid;
 	&.properties-title-with-heading {
@@ -27,8 +26,7 @@
 }
 
 .properties-title-heading {
-	padding-left: $spacing-05;
-	padding-right: $spacing-05;
+	padding: 0 $spacing-05;
 	height: $spacing-06;
 	display: flex;
 	align-items: center;
@@ -49,9 +47,6 @@
 	display: inline-flex;
 	align-items: center;
 
-	&.properties-title-editor-with-help {
-		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
-	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
 		position: absolute;
@@ -92,7 +87,6 @@
 		background-color: $ui-03;
 	}
 	&.help {
-		margin-top: $spacing-02;
-		margin-bottom: $spacing-02;
+		margin-left: $spacing-02;
 	}
 }

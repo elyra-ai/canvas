@@ -99,6 +99,7 @@ class TitleEditor extends Component {
 				heading = (<div className="properties-title-heading">
 					{icon}
 					{label}
+					{helpButton}
 				</div>);
 			}
 		}
@@ -108,7 +109,7 @@ class TitleEditor extends Component {
 				{ "properties-title-with-heading": this.props.showHeading && (this.props.heading || this.props.icon) })}
 			>
 				{heading}
-				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help })}>
+				<div className="properties-title-editor-input">
 					<TextInput
 						id={this.id}
 						ref={this.textInputRef}
@@ -124,7 +125,6 @@ class TitleEditor extends Component {
 					/>
 					{propertiesTitleEdit}
 				</div>
-				{helpButton}
 			</div>
 		);
 	}
