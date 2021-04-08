@@ -54,8 +54,6 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
 	TABLE_SEARCH_HEADER: "table.search.header",
-	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
-	TABLE_SEARCH_LABEL: "table.search.label",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
@@ -109,8 +107,6 @@ _defineConstant("MESSAGE_KEYS", {
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
-	VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL: "virtualizedTable.header.checkbox.label",
-	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label",
 	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
 });
 
