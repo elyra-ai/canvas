@@ -15,59 +15,66 @@
  */
 import has from "lodash/has";
 
-// Returns an object containing the label and description occurances of the
+// Returns an object containing the label and description occurences of the
 // stings in the filterString array passed based on the nodeType passed in.
 // The object also contains a ranking which can be used to rand the object
 // returned against other objects returned from this method.
-export function getOccurances(nodeType, filterStrings) {
+export function getOccurences(nodeType, category, filterStrings) {
 	if (filterStrings.length > 0) {
-		let labelOccurances = [];
-		let descOccurances = [];
+		let catLabelOccurences = [];
+		let labelOccurences = [];
+		let descOccurences = [];
 		let ranking = 0;
+		if (has(category, "label")) {
+			const catLabel = category.label.toLowerCase();
+			const { occurences, rank } = wordOccurences(catLabel, filterStrings);
+			catLabelOccurences = occurences;
+			ranking += rank;
+		}
 		if (has(nodeType, "app_data.ui_data.label")) {
 			const label = nodeType.app_data.ui_data.label.toLowerCase();
-			const { occurances, rank } = wordOccurances(label, filterStrings);
-			labelOccurances = occurances;
+			const { occurences, rank } = wordOccurences(label, filterStrings);
+			labelOccurences = occurences;
 			ranking += rank;
 		}
 		if (has(nodeType, "app_data.ui_data.description")) {
 			const label = nodeType.app_data.ui_data.description.toLowerCase();
-			const { occurances, rank } = wordOccurances(label, filterStrings);
-			descOccurances = occurances;
+			const { occurences, rank } = wordOccurences(label, filterStrings);
+			descOccurences = occurences;
 			ranking += rank;
 		}
-		if (labelOccurances.length > 0 || descOccurances.length > 0) {
-			return { labelOccurances, descOccurances, ranking };
+		if (catLabelOccurences.length > 0 || labelOccurences.length > 0 || descOccurences.length > 0) {
+			return { catLabelOccurences, labelOccurences, descOccurences, ranking };
 		}
 	}
 	return null;
 }
 
-function wordOccurances(mainString, filterStrings) {
-	let occurances = [];
+function wordOccurences(mainString, filterStrings) {
+	let occurences = [];
 	let rank = 0;
 	filterStrings.forEach((s) => {
 		if (s) {
-			const newOccurances = wordOccurancesByString(mainString, s);
-			occurances = normalize(occurances, newOccurances);
-			rank += newOccurances.length > 0 ? 20 + newOccurances.length : 0;
+			const newOccurences = wordOccurencesByString(mainString, s);
+			occurences = normalize(occurences, newOccurences);
+			rank += newOccurences.length > 0 ? 20 + newOccurences.length : 0;
 		}
 	});
-	return { occurances, rank };
+	return { occurences, rank };
 }
 
-function normalize(occurances, newOccurances) {
-	if (occurances.length === 0) {
-		return newOccurances;
+function normalize(occurences, newOccurences) {
+	if (occurences.length === 0) {
+		return newOccurences;
 	}
-	if (newOccurances.length === 0) {
-		return occurances;
+	if (newOccurences.length === 0) {
+		return occurences;
 	}
 
-	const addOccurances = [];
-	newOccurances.forEach((newOcc) => {
+	const addOccurences = [];
+	newOccurences.forEach((newOcc) => {
 		let handled = false;
-		occurances.forEach((occ) => {
+		occurences.forEach((occ) => {
 			if (newOcc.start >= occ.start && newOcc.start <= occ.end) {
 				if (newOcc.end > occ.end) {
 					occ.end = newOcc.end;
@@ -82,28 +89,28 @@ function normalize(occurances, newOccurances) {
 			}
 		});
 		if (!handled) {
-			addOccurances.push(newOcc);
+			addOccurences.push(newOcc);
 		}
 	});
 
-	let outOccurances = occurances.concat(addOccurances);
-	outOccurances = outOccurances.sort((occ1, occ2) => ((occ1.start < occ2.start) ? -1 : 1));
-	return outOccurances;
+	let outOccurences = occurences.concat(addOccurences);
+	outOccurences = outOccurences.sort((occ1, occ2) => ((occ1.start < occ2.start) ? -1 : 1));
+	return outOccurences;
 }
 
-function wordOccurancesByString(mainString, searchString) {
-	const occurances = [];
+function wordOccurencesByString(mainString, searchString) {
+	const occurences = [];
 	let start = 0;
 	let index = 0;
 
 	while (index > -1) {
 		index = mainString.indexOf(searchString, start);
 		if (index > -1) {
-			occurances.push({ start: index, end: index + searchString.length });
+			occurences.push({ start: index, end: index + searchString.length });
 			start = index + searchString.length;
 		}
 	}
-	return occurances;
+	return occurences;
 }
 
 // If we need to support a local specific search we can uncomment the code

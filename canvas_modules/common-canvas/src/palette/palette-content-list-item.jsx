@@ -94,10 +94,16 @@ class PaletteContentListItem extends React.Component {
 		this.props.canvasController.closeTip();
 	}
 
+	getHighlightedCategoryLabel() {
+		return this.getHighlightedText(
+			this.props.nodeTypeInfo.category.label,
+			this.props.nodeTypeInfo.occurenceInfo.catLabelOccurences);
+	}
+
 	getHighlightedLabel() {
 		return this.getHighlightedText(
 			this.props.nodeTypeInfo.nodeType.app_data.ui_data.label,
-			this.props.nodeTypeInfo.occuranceInfo.labelOccurances);
+			this.props.nodeTypeInfo.occurenceInfo.labelOccurences);
 	}
 
 	getHighlightedDesc() {
@@ -112,7 +118,7 @@ class PaletteContentListItem extends React.Component {
 
 		const elements = this.getHighlightedText(
 			desc,
-			this.props.nodeTypeInfo.occuranceInfo.descOccurances);
+			this.props.nodeTypeInfo.occurenceInfo.descOccurences);
 
 		if (isLongDescription) {
 			if (this.state.showFullDescription) {
@@ -128,15 +134,15 @@ class PaletteContentListItem extends React.Component {
 		return elements;
 	}
 
-	getHighlightedText(textToHighlight, occurances) {
-		if (!occurances || occurances.length === 0) {
+	getHighlightedText(textToHighlight, occurences) {
+		if (!occurences || occurences.length === 0) {
 			return (<span>{textToHighlight}</span>);
 		}
 
 		const highlightedElements = [];
 		let index = 0;
 		let text = "";
-		occurances.forEach((occ, i) => {
+		occurences.forEach((occ, i) => {
 			text = textToHighlight.substring(index, occ.start);
 			highlightedElements.push(<span key={"s" + i}>{text}</span>);
 
@@ -145,7 +151,7 @@ class PaletteContentListItem extends React.Component {
 
 			index = occ.end;
 
-			if (i === occurances.length - 1 &&
+			if (i === occurences.length - 1 &&
 					occ.end < textToHighlight.length) {
 				text = textToHighlight.substring(occ.end);
 				highlightedElements.push(<span key={"f" + i}>{text}</span>);
@@ -205,7 +211,7 @@ class PaletteContentListItem extends React.Component {
 			: "palette-list-item";
 
 		const categoryLabel = this.props.isDisplaySearchResult
-			? (<div className={"palette-list-item-category-label"}>{this.props.nodeTypeInfo.category.label}</div>)
+			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)
 			: null;
 
 		const description = this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.description")

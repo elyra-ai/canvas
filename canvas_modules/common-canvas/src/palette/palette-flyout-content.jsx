@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { throttle } from "throttle-debounce";
-import { getOccurances } from "./palette-utils.js";
+import { getOccurences } from "./palette-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -130,7 +130,7 @@ class PaletteFlyoutContent extends React.Component {
 			filteredNodeTypeInfos.push(...this.getFilteredNodeTypeInfos(categories[idx], filterStrings));
 		}
 		const rankedFilteredNodeTypeInfos =
-			filteredNodeTypeInfos.sort((e1, e2) => ((e1.occuranceInfo.ranking < e2.occuranceInfo.ranking) ? 1 : -1));
+			filteredNodeTypeInfos.sort((e1, e2) => ((e1.occurenceInfo.ranking < e2.occurenceInfo.ranking) ? 1 : -1));
 
 		logger.logEndTimer("getFilteredNodeTypeInfosAllCategories");
 		return rankedFilteredNodeTypeInfos;
@@ -140,9 +140,9 @@ class PaletteFlyoutContent extends React.Component {
 		var filteredNodeTypeInfos = [];
 		if (category.node_types) {
 			for (const nodeType of category.node_types) {
-				const occuranceInfo = getOccurances(nodeType, filterStrings);
-				if (occuranceInfo) {
-					filteredNodeTypeInfos.push({ nodeType, category, occuranceInfo });
+				const occurenceInfo = getOccurences(nodeType, category, filterStrings);
+				if (occurenceInfo) {
+					filteredNodeTypeInfos.push({ nodeType, category, occurenceInfo });
 				}
 			}
 		}

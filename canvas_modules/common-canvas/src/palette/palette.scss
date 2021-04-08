@@ -102,6 +102,12 @@ $palette-border-color: $ui-03;
 			@include carbon--type-style("caption-01");
 			width: 100%;
 			padding: $spacing-05 10px 0 60px;
+
+			& mark {
+				color: $interactive-01;
+				background-color: $highlight;
+				font-weight: 500;
+			}
 		}
 
 		.palette-list-item-icon-and-text {
