@@ -100,16 +100,19 @@ function normalize(occurences, newOccurences) {
 	return outOccurences;
 }
 
+// Returns up to a maximum of 20 occurences of the searchString in the mainString
 function wordOccurencesByString(mainString, searchString) {
 	const occurences = [];
 	let start = 0;
 	let index = 0;
+	let count = 0;
 
-	while (index > -1) {
+	while (index > -1 && count < 20) {
 		index = mainString.indexOf(searchString, start);
 		if (index > -1) {
 			occurences.push({ start: index, end: index + searchString.length });
 			start = index + searchString.length;
+			count++;
 		}
 	}
 	return occurences;
