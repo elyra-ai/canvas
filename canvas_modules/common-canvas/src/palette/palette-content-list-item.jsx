@@ -153,7 +153,13 @@ class PaletteContentListItem extends React.Component {
 	// description to account for any text that has been removed from the
 	// beginning of the description.
 	getAbbreviatedDescription(desc, descOccurences, displayLen) {
-		const firstOccurenceStart = this.props.nodeTypeInfo.occurenceInfo.descOccurences[0].start;
+		// Not all descriptions will have occurencs. If not, just abbreviate and return.
+		if (descOccurences.length === 0) {
+			const abbr = desc.substring(0, displayLen) + " ...";
+			return { abbrDesc: abbr, occurences: descOccurences };
+		}
+
+		const firstOccurenceStart = descOccurences[0].start;
 		const remainder = desc.length - firstOccurenceStart;
 		let abbrDesc = "";
 		let offset = 0;
@@ -183,7 +189,7 @@ class PaletteContentListItem extends React.Component {
 	// that indicate where text should be highlighted.
 	getHighlightedText(textToHighlight, occurences) {
 		if (!occurences || occurences.length === 0) {
-			return (<span>{textToHighlight}</span>);
+			return [<span key="o">{textToHighlight}</span>];
 		}
 
 		const highlightedElements = [];
@@ -205,7 +211,7 @@ class PaletteContentListItem extends React.Component {
 			}
 		});
 
-		return (highlightedElements);
+		return highlightedElements;
 	}
 
 	showFullDescription() {
