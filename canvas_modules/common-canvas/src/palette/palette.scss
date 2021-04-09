@@ -146,6 +146,7 @@ $palette-border-color: $ui-03;
 			@include carbon--type-style("caption-01");
 			padding: 0 10px 0 58px;
 			word-break: break-word;
+			width: 100%; // Needed when the description is only one line long
 
 			& mark {
 				color: $interactive-01;
