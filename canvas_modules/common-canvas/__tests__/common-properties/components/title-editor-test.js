@@ -74,8 +74,6 @@ describe("title-editor renders correctly", () => {
 				helpClickHandler={callback}
 				labelEditable
 				help={help}
-				heading={"heading"}
-				showHeading
 			/>
 		);
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
@@ -101,8 +99,6 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				labelEditable
 				help={help}
-				heading={"heading"}
-				showHeading
 			/>
 		);
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
@@ -205,8 +201,6 @@ describe("title-editor renders correctly", () => {
 				controller={controller}
 				labelEditable
 				help={help}
-				heading={"heading"}
-				showHeading
 			/>
 		);
 		// Edit title button
@@ -216,6 +210,52 @@ describe("title-editor renders correctly", () => {
 		// Help button
 		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
 		expect(helpButton.props()).to.have.property("aria-label", "help");
+
+	});
+	it("If heading is enabled, help button should be added in the heading", () => {
+		controller.setTitle("test title");
+		helpClickHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+				heading={"heading"}
+				showHeading
+			/>
+		);
+		// Help button in heading
+		const heading = wrapper.find(".properties-title-heading");
+		expect(heading).to.have.length(1);
+		const helpButton = heading.find("button.properties-title-editor-btn[data-id='help']");
+		expect(helpButton).to.have.length(1);
+
+		// Help button should not be added in title editor
+		const titleEditorWithHelp = wrapper.find(".properties-title-editor-with-help");
+		expect(titleEditorWithHelp).to.have.length(0);
+	});
+	it("If heading is disabled, help button should be added next to edit title button", () => {
+		controller.setTitle("test title");
+		helpClickHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+			/>
+		);
+
+		// Ensure heading is disabled
+		const heading = wrapper.find(".properties-title-heading");
+		expect(heading).to.have.length(0);
+
+		// Help button next to edit title button
+		const titleEditorWithHelp = wrapper.find(".properties-title-editor-with-help");
+		expect(titleEditorWithHelp).to.have.length(1);
+		const helpButton = wrapper.find("button.properties-title-editor-btn[data-id='help']");
+		expect(helpButton).to.have.length(1);
 
 	});
 });

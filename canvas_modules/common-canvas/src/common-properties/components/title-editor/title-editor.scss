@@ -38,6 +38,11 @@
 	.properties-title-heading-label {
 		@include carbon--type-style("label-01");
 	}
+	.properties-title-editor-btn.help {
+		&.help {
+			margin: 0 0 0 $spacing-02; // spacing between heading label and help button
+		}
+	}
 }
 .properties-title-editor-input {
 	height: $spacing-08;
@@ -47,6 +52,9 @@
 	display: inline-flex;
 	align-items: center;
 
+	&.properties-title-editor-with-help {
+		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
+	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
 		position: absolute;
@@ -87,6 +95,6 @@
 		background-color: $ui-03;
 	}
 	&.help {
-		margin-left: $spacing-02;
+		margin: $spacing-02 0;
 	}
 }
