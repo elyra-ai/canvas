@@ -86,8 +86,8 @@ PaletteFlyoutContentFilteredList.propTypes = {
 	nodeTypeInfos: PropTypes.array.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
-	isShowRanking: PropTypes.bool.isRequired,
-	isNodeTypeInfosArrayTruncated: PropTypes.bool
+	isNodeTypeInfosArrayTruncated: PropTypes.bool,
+	isShowRanking: PropTypes.bool
 };
 
 export default injectIntl(PaletteFlyoutContentFilteredList);

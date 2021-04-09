@@ -306,9 +306,9 @@ PaletteContentListItem.propTypes = {
 	intl: PropTypes.object.isRequired,
 	nodeTypeInfo: PropTypes.object.isRequired,
 	isDisplaySearchResult: PropTypes.bool.isRequired,
-	isShowRanking: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isShowRanking: PropTypes.bool
 };
 
 export default injectIntl(PaletteContentListItem);
