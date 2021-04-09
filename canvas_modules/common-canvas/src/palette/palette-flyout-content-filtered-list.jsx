@@ -51,6 +51,7 @@ class PaletteFlyoutContentFilteredList extends React.Component {
 					<PaletteContentListItem
 						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
 						isDisplaySearchResult
+						isShowRanking={this.props.isShowRanking}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>
@@ -85,6 +86,7 @@ PaletteFlyoutContentFilteredList.propTypes = {
 	nodeTypeInfos: PropTypes.array.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
+	isShowRanking: PropTypes.bool.isRequired,
 	isNodeTypeInfosArrayTruncated: PropTypes.bool
 };
 

@@ -115,6 +115,7 @@ class PaletteFlyoutContent extends React.Component {
 				nodeTypeInfos={filteredNodeTypeInfos}
 				canvasController={this.props.canvasController}
 				isPaletteOpen={this.props.isPaletteOpen}
+				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
 				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
 			/>);
 

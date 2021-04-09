@@ -53,13 +53,12 @@ export function getOccurences(nodeType, category, filterStrings) {
 function wordOccurences(mainString, filterStrings) {
 	let occurences = [];
 	let rank = 0;
-	let rankInc = 20; // Increases rank for each of the filterStrings - so multiple hits get bigger rank.
+	const multiHitRankInc = 50; // Large rank offset so hits across multiple filter strings gets biggest rank.
 	filterStrings.forEach((s) => {
 		if (s) {
 			const newOccurences = wordOccurencesByString(mainString, s);
 			occurences = normalize(occurences, newOccurences);
-			rank += newOccurences.length > 0 ? rankInc + newOccurences.length : 0;
-			rankInc += 20;
+			rank += newOccurences.length > 0 ? multiHitRankInc + newOccurences.length : 0;
 		}
 	});
 	return { occurences, rank };

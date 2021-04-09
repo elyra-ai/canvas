@@ -249,6 +249,10 @@ class PaletteContentListItem extends React.Component {
 				: (<span>{this.props.nodeTypeInfo.nodeType.app_data.ui_data.label}</span>);
 		}
 
+		const ranking = this.props.isShowRanking && this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo, "occurenceInfo.ranking")
+			? (<span>{this.props.nodeTypeInfo.occurenceInfo.ranking}</span>)
+			: null;
+
 		// Special case for when there are no nodes in the category so we show
 		// a dummy node to include the empty text from the category.
 		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
@@ -290,6 +294,7 @@ class PaletteContentListItem extends React.Component {
 				<div className="palette-list-item-icon-and-text">
 					{icon}
 					{nodeLabel}
+					{ranking}
 				</div>
 				{description}
 			</div>
@@ -301,6 +306,7 @@ PaletteContentListItem.propTypes = {
 	intl: PropTypes.object.isRequired,
 	nodeTypeInfo: PropTypes.object.isRequired,
 	isDisplaySearchResult: PropTypes.bool.isRequired,
+	isShowRanking: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired
 };
