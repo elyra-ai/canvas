@@ -107,19 +107,24 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	getHighlightedDesc() {
+		const DISPLAY_LEN = 150; // Max number of characters for a description.
 		let desc = this.props.nodeTypeInfo.nodeType.app_data.ui_data.description;
+		let descOccurences = this.props.nodeTypeInfo.occurenceInfo.descOccurences;
 		let isLongDescription = false;
-		if (desc.length > 150) {
+
+		if (desc.length > DISPLAY_LEN) {
 			isLongDescription = true;
 			if (!this.state.showFullDescription) {
-				desc = desc.substring(0, 150) + " ...";
+				const { abbrDesc, occurences } = this.getAbbreviatedDescription(desc, descOccurences, DISPLAY_LEN);
+				desc = abbrDesc;
+				descOccurences = occurences;
 			}
 		}
 
-		const elements = this.getHighlightedText(
-			desc,
-			this.props.nodeTypeInfo.occurenceInfo.descOccurences);
+		const elements = this.getHighlightedText(desc, descOccurences);
 
+		// If its a long description we need to add either the 'Show more' or
+		// 'Show less' button depending on whether the full description is shown or not.
 		if (isLongDescription) {
 			if (this.state.showFullDescription) {
 				const less =
@@ -134,6 +139,48 @@ class PaletteContentListItem extends React.Component {
 		return elements;
 	}
 
+	// Returns an abbeviated description, constrained to the displayLen passed in,
+	// based on the full description passed in. The function makes sure the first
+	// occurence of text to be hightlighted is displayed with the abbreviated
+	// text. There are three possibilities:
+	// 1. The first occurence is within the first displayLen number of characters
+	//    meaning we end the abbreviated text with " ..."
+	// 2. The first occurence is somewhere in the middle of the text in which
+	//    the abbreviated dscription is prefixed with "... " and suffixed with " ..."
+	// 3. The first occurence is within displayLen number of characters of the end
+	//    of the description in which case we prefix the descriptin with "... "
+	// This function also adjusts the occurencs of highlighted text in the
+	// description to account for any text that has been removed from the
+	// beginning of the description.
+	getAbbreviatedDescription(desc, descOccurences, displayLen) {
+		const firstOccurenceStart = this.props.nodeTypeInfo.occurenceInfo.descOccurences[0].start;
+		const remainder = desc.length - firstOccurenceStart;
+		let abbrDesc = "";
+		let offset = 0;
+
+		if (firstOccurenceStart < displayLen) {
+			offset = 0;
+			abbrDesc = desc.substring(offset, displayLen) + " ...";
+
+		} else if (remainder > displayLen) {
+			offset = firstOccurenceStart;
+			abbrDesc = "... " + desc.substring(offset, firstOccurenceStart + displayLen) + " ...";
+			offset -= 4; // Subtract 4 for the "... " string
+
+		} else {
+			offset = desc.length - displayLen;
+			abbrDesc = "... " + desc.substring(offset, desc.length);
+			offset -= 4; // Subtract 4 for the "... " string
+		}
+
+		const occurences = descOccurences.map((occ) => ({ start: occ.start - offset, end: occ.end - offset }));
+
+		return { abbrDesc, occurences };
+	}
+
+	// Returns an array of highlighted and non-highlighted text based on the
+	// textToHighlight passed in and the occurences array which contains elements
+	// that indicate where text should be highlighted.
 	getHighlightedText(textToHighlight, occurences) {
 		if (!occurences || occurences.length === 0) {
 			return (<span>{textToHighlight}</span>);
