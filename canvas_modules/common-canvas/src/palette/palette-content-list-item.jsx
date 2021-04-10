@@ -123,7 +123,7 @@ class PaletteContentListItem extends React.Component {
 
 		const elements = this.getHighlightedText(desc, descOccurences);
 
-		// If its a long description we need to add either the 'Show more' or
+		// If it's a long description, we need to add either the 'Show more' or
 		// 'Show less' button depending on whether the full description is shown or not.
 		if (isLongDescription) {
 			if (this.state.showFullDescription) {

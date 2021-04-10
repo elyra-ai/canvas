@@ -24,7 +24,19 @@ class PaletteFlyoutContentSearch extends React.Component {
 
 	constructor() {
 		super();
+
+		this.state = {
+			searchString: ""
+		};
 		this.searchOnClick = this.searchOnClick.bind(this);
+		this.handleSearchStringChange = this.handleSearchStringChange.bind(this);
+	}
+
+	handleSearchStringChange(evt) {
+		const value = evt.target.value || "";
+		this.setState({ searchString: value },
+			() => this.props.handleSearchStringChange(value)
+		);
 	}
 
 	searchOnClick() {
@@ -43,9 +55,9 @@ class PaletteFlyoutContentSearch extends React.Component {
 					key="palette-flyout-search"
 					className="palette-flyout-search"
 					placeholder={placeHolder}
-					onChange={this.props.handleFilterChange}
+					onChange={this.handleSearchStringChange}
 					size="sm"
-					value={this.props.searchString}
+					value={this.state.searchString}
 					labelText={placeHolder}
 					onClick={this.searchOnClick}
 				/>
@@ -56,8 +68,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 
 PaletteFlyoutContentSearch.propTypes = {
 	intl: PropTypes.object.isRequired,
-	handleFilterChange: PropTypes.func.isRequired,
-	searchString: PropTypes.string.isRequired,
+	handleSearchStringChange: PropTypes.func.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };

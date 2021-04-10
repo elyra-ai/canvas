@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import throttle from "lodash/throttle";
-import { getFilteredNodeTypeInfos } from "./palette-utils.js";
+import debounce from "lodash/debounce";
+import { getFilteredNodeTypeInfos } from "./palette-flyout-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -30,18 +30,25 @@ class PaletteFlyoutContent extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// Note: searchString below is a copy of searchString in
+		// palette-flyout-content-search this duplication is necessaery to allow
+		// the debounce function to work. When a key is pressed, the searchString in
+		// palette-flyout-content-search is updated causing its text to be rendered.
+		// The handleSearchStringChange() in this class is then called that handles
+		// debounce and after the debounce unwinds it sets searchString in this
+		// class which causes the filtered result set to be calculated and displayed.
 		this.state = {
 			selectedCategoryIds: [],
-			searchString: "",
-			filteredNodeTypeInfos: []
+			searchString: ""
 		};
 
 		this.categories = [];
 
 		this.categorySelected = this.categorySelected.bind(this);
 		this.getUniqueCategories = this.getUniqueCategories.bind(this);
-		this.handleFilterChange = this.handleFilterChange.bind(this);
-		this.filterNodeTypeInfosThrottled = throttle(this.filterNodeTypeInfos, 500);
+		this.setSearchString = this.setSearchString.bind(this);
+		this.handleSearchStringChange = this.handleSearchStringChange.bind(this);
+		this.setSearchStringThrottled = debounce(this.setSearchString, 200);
 	}
 
 	/*
@@ -101,11 +108,14 @@ class PaletteFlyoutContent extends React.Component {
 	}
 
 	getFilteredContentDivs(categories) {
-		let isNodeTypeInfosArrayTruncated = false;
-		let filteredNodeTypeInfos = this.state.filteredNodeTypeInfos;
+		logger.logStartTimer("getFilteredNodeTypeInfos");
+		let filteredNodeTypeInfos = getFilteredNodeTypeInfos(this.categories, this.state.searchString);
+		logger.logEndTimer("getFilteredNodeTypeInfos");
 
-		if (this.state.filteredNodeTypeInfos.length > 10) {
-			filteredNodeTypeInfos = this.state.filteredNodeTypeInfos.slice(0, 10);
+		let isNodeTypeInfosArrayTruncated = false;
+
+		if (filteredNodeTypeInfos.length > 10) {
+			filteredNodeTypeInfos = filteredNodeTypeInfos.slice(0, 10);
 			isNodeTypeInfosArrayTruncated = true;
 		}
 
@@ -122,6 +132,15 @@ class PaletteFlyoutContent extends React.Component {
 		return [content];
 	}
 
+	setSearchString() {
+		this.setState({ searchString: this.ss });
+	}
+
+	handleSearchStringChange(s) {
+		this.ss = s;
+		this.setSearchStringThrottled();
+	}
+
 	categorySelected(catSelId) {
 		const selCatIds = this.isCategorySelected(catSelId)
 			? this.state.selectedCategoryIds.filter((catId) => catId !== catSelId)
@@ -132,21 +151,6 @@ class PaletteFlyoutContent extends React.Component {
 
 	isCategorySelected(categoryId) {
 		return this.state.selectedCategoryIds.some((cId) => cId === categoryId);
-	}
-
-	handleFilterChange(evt) {
-		const value = evt.target.value || "";
-
-		this.setState({ searchString: value }, () => {
-			this.filterNodeTypeInfosThrottled(this.state.searchString);
-		});
-	}
-
-	filterNodeTypeInfos() {
-		logger.logStartTimer("getFilteredNodeTypeInfos");
-		const filteredNodeTypeInfos = getFilteredNodeTypeInfos(this.categories, this.state.searchString);
-		logger.logEndTimer("getFilteredNodeTypeInfos");
-		this.setState({ filteredNodeTypeInfos: filteredNodeTypeInfos });
 	}
 
 	render() {
@@ -163,8 +167,7 @@ class PaletteFlyoutContent extends React.Component {
 
 		const contentSearch = (
 			<PaletteFlyoutContentSearch
-				handleFilterChange={this.handleFilterChange}
-				searchString={this.state.searchString}
+				handleSearchStringChange={this.handleSearchStringChange}
 				isPaletteOpen={this.props.isPaletteOpen}
 				canvasController={this.props.canvasController}
 			/>
