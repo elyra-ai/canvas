@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { throttle } from "throttle-debounce";
-import { getOccurences } from "./palette-utils.js";
+import throttle from "lodash/throttle";
+import { getFilteredNodeTypeInfos } from "./palette-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -32,7 +32,7 @@ class PaletteFlyoutContent extends React.Component {
 
 		this.state = {
 			selectedCategoryIds: [],
-			filterKeyword: "",
+			searchString: "",
 			filteredNodeTypeInfos: []
 		};
 
@@ -41,7 +41,7 @@ class PaletteFlyoutContent extends React.Component {
 		this.categorySelected = this.categorySelected.bind(this);
 		this.getUniqueCategories = this.getUniqueCategories.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
-		this.filterNodeTypeInfosThrottled = throttle(500, this.filterNodeTypeInfos);
+		this.filterNodeTypeInfosThrottled = throttle(this.filterNodeTypeInfos, 500);
 	}
 
 	/*
@@ -122,34 +122,6 @@ class PaletteFlyoutContent extends React.Component {
 		return [content];
 	}
 
-	getFilteredNodeTypeInfosAllCategories(categories) {
-		logger.logStartTimer("getFilteredNodeTypeInfosAllCategories");
-		const filteredNodeTypeInfos = [];
-		const lowercaseFilteredKeyword = this.state.filterKeyword.toLowerCase();
-		const filterStrings = lowercaseFilteredKeyword.split(" ");
-		for (let idx = 0; idx < categories.length; idx++) {
-			filteredNodeTypeInfos.push(...this.getFilteredNodeTypeInfos(categories[idx], filterStrings));
-		}
-		const rankedFilteredNodeTypeInfos =
-			filteredNodeTypeInfos.sort((e1, e2) => ((e1.occurenceInfo.ranking < e2.occurenceInfo.ranking) ? 1 : -1));
-
-		logger.logEndTimer("getFilteredNodeTypeInfosAllCategories");
-		return rankedFilteredNodeTypeInfos;
-	}
-
-	getFilteredNodeTypeInfos(category, filterStrings) {
-		var filteredNodeTypeInfos = [];
-		if (category.node_types) {
-			for (const nodeType of category.node_types) {
-				const occurenceInfo = getOccurences(nodeType, category, filterStrings);
-				if (occurenceInfo) {
-					filteredNodeTypeInfos.push({ nodeType, category, occurenceInfo });
-				}
-			}
-		}
-		return filteredNodeTypeInfos;
-	}
-
 	categorySelected(catSelId) {
 		const selCatIds = this.isCategorySelected(catSelId)
 			? this.state.selectedCategoryIds.filter((catId) => catId !== catSelId)
@@ -165,19 +137,21 @@ class PaletteFlyoutContent extends React.Component {
 	handleFilterChange(evt) {
 		const value = evt.target.value || "";
 
-		this.setState({ filterKeyword: value }, () => {
-			this.filterNodeTypeInfosThrottled(this.state.filterKeyword);
+		this.setState({ searchString: value }, () => {
+			this.filterNodeTypeInfosThrottled(this.state.searchString);
 		});
 	}
 
 	filterNodeTypeInfos() {
-		const filteredNodeTypeInfos = this.getFilteredNodeTypeInfosAllCategories(this.categories);
+		logger.logStartTimer("getFilteredNodeTypeInfos");
+		const filteredNodeTypeInfos = getFilteredNodeTypeInfos(this.categories, this.state.searchString);
+		logger.logEndTimer("getFilteredNodeTypeInfos");
 		this.setState({ filteredNodeTypeInfos: filteredNodeTypeInfos });
 	}
 
 	render() {
 		this.categories = this.getUniqueCategories(this.props.paletteJSON.categories);
-		const contentDivs = this.props.isPaletteOpen && this.state.filterKeyword
+		const contentDivs = this.props.isPaletteOpen && this.state.searchString
 			? this.getFilteredContentDivs(this.categories)
 			: this.getContentDivs(this.categories);
 
@@ -190,7 +164,7 @@ class PaletteFlyoutContent extends React.Component {
 		const contentSearch = (
 			<PaletteFlyoutContentSearch
 				handleFilterChange={this.handleFilterChange}
-				filterKeyword={this.state.filterKeyword}
+				searchString={this.state.searchString}
 				isPaletteOpen={this.props.isPaletteOpen}
 				canvasController={this.props.canvasController}
 			/>

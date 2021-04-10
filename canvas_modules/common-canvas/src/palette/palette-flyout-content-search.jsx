@@ -45,7 +45,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 					placeholder={placeHolder}
 					onChange={this.props.handleFilterChange}
 					size="sm"
-					value={this.props.filterKeyword}
+					value={this.props.searchString}
 					labelText={placeHolder}
 					onClick={this.searchOnClick}
 				/>
@@ -57,7 +57,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 PaletteFlyoutContentSearch.propTypes = {
 	intl: PropTypes.object.isRequired,
 	handleFilterChange: PropTypes.func.isRequired,
-	filterKeyword: PropTypes.string.isRequired,
+	searchString: PropTypes.string.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };

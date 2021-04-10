@@ -15,55 +15,118 @@
  */
 import has from "lodash/has";
 
+// The entry point to this utils file.
+// Returns a filtered, ranked array of nodeTypeInfo objects for the nodeTypes
+// in the categories passed in and the searchString passed in.
+export function getFilteredNodeTypeInfos(categories, searchString) {
+	const filteredNodeTypeInfos = [];
+	const lowercaseFilteredKeyword = searchString.toLowerCase();
+	const filterStrings = lowercaseFilteredKeyword.split(" ").filter((kw) => kw !== "");
+	for (let idx = 0; idx < categories.length; idx++) {
+		filteredNodeTypeInfos.push(...getFilteredNodeTypeInfosByCategory(categories[idx], filterStrings));
+	}
+	const rankedFilteredNodeTypeInfos =
+		filteredNodeTypeInfos.sort((e1, e2) => ((e1.occurenceInfo.ranking <= e2.occurenceInfo.ranking) ? 1 : -1));
+
+	return rankedFilteredNodeTypeInfos;
+}
+
+// Returns a filtered, ranked array of nodeTypeInfo objects for the nodeTypes
+// in the category passed in and the searchString passed in.
+function getFilteredNodeTypeInfosByCategory(category, filterStrings) {
+	var filteredNodeTypeInfos = [];
+	if (category.node_types) {
+		for (const nodeType of category.node_types) {
+			const occurenceInfo = getOccurences(nodeType, category, filterStrings);
+			if (occurenceInfo) {
+				filteredNodeTypeInfos.push({ nodeType, category, occurenceInfo });
+			}
+		}
+	}
+	return filteredNodeTypeInfos;
+}
+
 // Returns an object containing the label and description occurences of the
 // stings in the filterString array passed based on the nodeType passed in.
 // The object also contains a ranking which can be used to rand the object
 // returned against other objects returned from this method.
-export function getOccurences(nodeType, category, filterStrings) {
+function getOccurences(nodeType, category, filterStrings) {
 	if (filterStrings.length > 0) {
 		let catLabelOccurences = [];
 		let labelOccurences = [];
 		let descOccurences = [];
-		let ranking = 0;
+
+		let catLabelHitCounts = [];
+		let labelHitCounts = [];
+		let descHitCounts = [];
+
 		if (has(category, "label")) {
 			const catLabel = category.label.toLowerCase();
-			const { occurences, rank } = wordOccurences(catLabel, filterStrings);
+			const { occurences, hitCounts } = wordOccurences(catLabel, filterStrings);
 			catLabelOccurences = occurences;
-			ranking += rank;
+			catLabelHitCounts = hitCounts;
 		}
 		if (has(nodeType, "app_data.ui_data.label")) {
 			const label = nodeType.app_data.ui_data.label.toLowerCase();
-			const { occurences, rank } = wordOccurences(label, filterStrings);
+			const { occurences, hitCounts } = wordOccurences(label, filterStrings);
 			labelOccurences = occurences;
-			ranking += rank;
+			labelHitCounts = hitCounts;
 		}
 		if (has(nodeType, "app_data.ui_data.description")) {
 			const label = nodeType.app_data.ui_data.description.toLowerCase();
-			const { occurences, rank } = wordOccurences(label, filterStrings);
+			const { occurences, hitCounts } = wordOccurences(label, filterStrings);
 			descOccurences = occurences;
-			ranking += rank;
+			descHitCounts = hitCounts;
 		}
+
 		if (catLabelOccurences.length > 0 || labelOccurences.length > 0 || descOccurences.length > 0) {
+			const ranking = calcRanking(catLabelHitCounts, labelHitCounts, descHitCounts, filterStrings.length);
 			return { catLabelOccurences, labelOccurences, descOccurences, ranking };
 		}
 	}
 	return null;
 }
 
+// Calcuates a ranking value for the node type info object being processed based
+// on the valrious hit count arrays passed in.
+function calcRanking(catLabelHitCounts, labelHitCounts, descHitCounts, filterStringsLength) {
+	let ranking = 0;
+
+	const totalHitCount = [filterStringsLength];
+	for (let i = 0; i < filterStringsLength; i++) {
+		totalHitCount[i] = catLabelHitCounts[i] + labelHitCounts[i] + descHitCounts[i];
+	}
+
+	let multiStringHits = 0;
+	for (let i = 0; i < totalHitCount.length; i++) {
+		ranking += totalHitCount[i];
+		if (totalHitCount[i] > 0) {
+			multiStringHits++;
+		}
+	}
+
+	return ranking + (multiStringHits * 50);
+}
+
+// Returns an object containing an array of occurences and hit counts for the
+// main string passed in after being searched by the strings in the
+// filterStrings array passed in.
 function wordOccurences(mainString, filterStrings) {
 	let occurences = [];
-	let rank = 0;
-	const multiHitRankInc = 50; // Large rank offset so hits across multiple filter strings gets biggest rank.
+	const hitCounts = [];
 	filterStrings.forEach((s) => {
 		if (s) {
 			const newOccurences = wordOccurencesByString(mainString, s);
 			occurences = normalize(occurences, newOccurences);
-			rank += newOccurences.length > 0 ? multiHitRankInc + newOccurences.length : 0;
+			hitCounts.push(newOccurences.length > 0 ? 1 : 0);
 		}
 	});
-	return { occurences, rank };
+	return { occurences, hitCounts };
 }
 
+// Returns an array of occurences where the occurences from the two arrays
+// passed in are joined together where they overlap so that the returned
+// array has no overlapping occurences.
 function normalize(occurences, newOccurences) {
 	if (occurences.length === 0) {
 		return newOccurences;
@@ -99,7 +162,10 @@ function normalize(occurences, newOccurences) {
 	return outOccurences;
 }
 
-// Returns up to a maximum of 20 occurences of the searchString in the mainString
+// Returns up to a maximum of 20 occurences of the searchString in the mainString.
+// 20 is an arbitrary number chosen to improve search performance since it is
+// considerd unlikely a user will care about anythig more than 20 hits on a
+// string (which would most likely be in a description string).
 function wordOccurencesByString(mainString, searchString) {
 	const occurences = [];
 	let start = 0;
