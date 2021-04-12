@@ -33,6 +33,10 @@ describe("Test adding nodes into empty canvas", function() {
 		// Search for a node in Palette Search bar
 		cy.findNodeInPalette("sel");
 
+		// Search function can run slowly on build machine so give it some time.
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
 		// Add a node found in search results
 		cy.dragNodeToPosition("Select", 500, 200);
 
