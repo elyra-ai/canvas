@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { mountWithIntl } from "../_utils_/intl-utils";
@@ -31,6 +30,11 @@ import testPalette2 from "../test_resources/palettes/test-palette2.json";
 
 const canvasController = new CanvasController();
 
+// This describe() function needs to be positioned above the other describe()
+// function in this file otherwise the test within it fails. I wasn't able to
+// find out why that happens. It seems like the tests in one describe
+// should not have affect tests in another describe but somehow they do in this
+// case. Anyway, positioning them in this way seems to work OK.
 describe("Palette search renders correctly", () => {
 
 	beforeEach(() => {
@@ -49,35 +53,36 @@ describe("Palette search renders correctly", () => {
 		const searchInput = wrapper.find("div.palette-flyout-search-container");
 		searchInput.simulate("click");
 
-		act(() => {
-			const input = searchInput.find("input");
-			input.simulate("change", { target: { value: "data" } });
-			jest.advanceTimersByTime(500);
-		});
-
+		simulateSearchEntry(searchInput, "data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
 
-		act(() => {
-			const input = searchInput.find("input");
-			input.simulate("change", { target: { value: "var" } });
-			jest.advanceTimersByTime(500);
-		});
-
+		simulateSearchEntry(searchInput, "var");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
 
-		act(() => {
-			const input = searchInput.find("input");
-			input.simulate("change", { target: { value: "data import" } });
-			jest.advanceTimersByTime(500);
-		});
-
+		simulateSearchEntry(searchInput, "data import");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+
+		simulateSearchEntry(searchInput, "d");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+
+		simulateSearchEntry(searchInput, "import data");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+
 	});
 });
 
+function simulateSearchEntry(searchInput, searchString) {
+	act(() => {
+		const input = searchInput.find("input");
+		input.simulate("change", { target: { value: searchString } });
+		jest.advanceTimersByTime(500);
+	});
+}
 
 describe("Palette renders correctly", () => {
 
