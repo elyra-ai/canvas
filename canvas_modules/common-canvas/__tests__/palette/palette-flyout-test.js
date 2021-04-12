@@ -52,7 +52,7 @@ describe("Palette search renders correctly", () => {
 		act(() => {
 			const input = searchInput.find("input");
 			input.simulate("change", { target: { value: "data" } });
-			jest.advanceTimersByTime(5000);
+			jest.advanceTimersByTime(500);
 		});
 
 		wrapper.update();
@@ -61,7 +61,7 @@ describe("Palette search renders correctly", () => {
 		act(() => {
 			const input = searchInput.find("input");
 			input.simulate("change", { target: { value: "var" } });
-			jest.advanceTimersByTime(5000);
+			jest.advanceTimersByTime(500);
 		});
 
 		wrapper.update();
@@ -70,7 +70,7 @@ describe("Palette search renders correctly", () => {
 		act(() => {
 			const input = searchInput.find("input");
 			input.simulate("change", { target: { value: "data import" } });
-			jest.advanceTimersByTime(5000);
+			jest.advanceTimersByTime(500);
 		});
 
 		wrapper.update();
