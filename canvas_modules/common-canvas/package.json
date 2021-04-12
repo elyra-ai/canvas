@@ -43,7 +43,6 @@
     "react-virtualized": "9.22.2",
     "redux": "4.0.5",
     "seedrandom": "3.0.5",
-    "throttle-debounce": "3.0.1",
     "uuid": "8.3.0"
   },
   "devDependencies": {
