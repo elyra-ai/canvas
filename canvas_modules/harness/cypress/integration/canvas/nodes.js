@@ -173,7 +173,7 @@ describe("Test opening properties moves node to center with enablePositionNodeOn
 
 		// Wait for the canvas to update
 		/* eslint cypress/no-unnecessary-waiting: "off" */
-		cy.wait(1000);
+		cy.wait(1500);
 
 		// Check new position of node.
 		cy.verifyZoomTransform(-173, -60, 1);

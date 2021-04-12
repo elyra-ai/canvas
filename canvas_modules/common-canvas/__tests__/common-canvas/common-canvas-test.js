@@ -16,7 +16,7 @@
 
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import DiagramCanvasD3 from "../../src/common-canvas/diagram-canvas-d3.jsx";
-import Palette from "../../src/palette/palette.jsx";
+import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
@@ -40,7 +40,7 @@ describe("CommonCanvas renders correctly", () => {
 	it("should render one <Palette/> component when Palette is enabled", () => {
 		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config, canvasController);
-		expect(wrapper.find(Palette)).to.have.length(1);
+		expect(wrapper.find(PaletteDialog)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when Palette layout is not provided", () => {
@@ -58,7 +58,7 @@ describe("CommonCanvas renders correctly", () => {
 	it("should not render any <Palette/> component when Palette layout is not provided", () => {
 		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config, canvasController);
-		expect(wrapper.find(Palette)).to.have.length(0);
+		expect(wrapper.find(PaletteDialog)).to.have.length(0);
 	});
 
 	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {

@@ -62,7 +62,7 @@ Cypress.Commands.add("openCanvasPalette", (paletteName) => {
 	cy.document().then((doc) => {
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			// Palette Layout - Modal
-			cy.get(".palette-categories");
+			cy.get(".palette-dialog-categories");
 		} else {
 			// Palette Layout - Flyout
 			cy.get(".palette-flyout-category");

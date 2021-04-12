@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import defaultMessages from "../../locales/palette/locales/en.json";
-import PaletteTopbar from "./palette-topbar.jsx";
-import PaletteContent from "./palette-content.jsx";
+import PaletteDialogTopbar from "./palette-dialog-topbar.jsx";
+import PaletteDialogContent from "./palette-dialog-content.jsx";
 
-class Palette extends React.Component {
+class PaletteDialog extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -193,7 +193,7 @@ class Palette extends React.Component {
 	// Sets the size of the content div, and the divs inside content div, so
 	// they adopt the same height as the palette.
 	setContentDivHeight(paletteDiv, newHeight) {
-		const topbarHeight = this.removePx(this.getStyleProperty(".palette-topbar", "height"));
+		const topbarHeight = this.removePx(this.getStyleProperty(".palette-dialog-topbar", "height"));
 		const newContentHeight = (newHeight - topbarHeight - this.totalHoverZoneSize) + "px";
 		const contentDiv = paletteDiv.childNodes[1];
 		contentDiv.style.height = newContentHeight;
@@ -345,11 +345,11 @@ class Palette extends React.Component {
 		// is resizing a maximized window.
 		this.isMaximized = false;
 
-		const minWidth = this.removePx(this.getStyleProperty(".palette-grid-node-outer", "width")) +
-											this.removePx(this.getStyleProperty(".palette-categories", "min-width")) +
+		const minWidth = this.removePx(this.getStyleProperty(".palette-dialog-grid-node-outer", "width")) +
+											this.removePx(this.getStyleProperty(".palette-dialog-categories", "min-width")) +
 											(2 * this.hoverZoneSize);
-		const minHeight = this.removePx(this.getStyleProperty(".palette-grid-node-outer", "height")) +
-											this.removePx(this.getStyleProperty(".palette-topbar", "height")) +
+		const minHeight = this.removePx(this.getStyleProperty(".palette-dialog-grid-node-outer", "height")) +
+											this.removePx(this.getStyleProperty(".palette-dialog-topbar", "height")) +
 											(2 * this.hoverZoneSize);
 
 		if (this.horizontalSizingAction === "left") {
@@ -402,14 +402,14 @@ class Palette extends React.Component {
 
 	// Calculate snap to grid width
 	snapToWidth(newWidth) {
-		const gridNodeWidth = this.removePx(this.getStyleProperty(".palette-grid-node-outer", "width"));
+		const gridNodeWidth = this.removePx(this.getStyleProperty(".palette-dialog-grid-node-outer", "width"));
 		const snapWidth = Math.round((newWidth - this.adjustedWidth) / gridNodeWidth) * gridNodeWidth;
 		return (snapWidth + this.adjustedWidth);
 	}
 
 	// Calculate snap to grid height
 	snapToHeight(newHeight) {
-		const gridHeight = this.state.showGrid ? this.removePx(this.getStyleProperty(".palette-grid-node-outer", "height"))
+		const gridHeight = this.state.showGrid ? this.removePx(this.getStyleProperty(".palette-dialog-grid-node-outer", "height"))
 			: this.removePx(this.getStyleProperty(".palette-list-item", "height"));
 		const snapHeight = Math.round((newHeight - this.adjustedHeight) / gridHeight) * gridHeight;
 		return (snapHeight + this.adjustedHeight);
@@ -531,18 +531,18 @@ class Palette extends React.Component {
 
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.dialog.label", defaultMessage: defaultMessages["palette.dialog.label"] })} role="navigation">
-				<div className="palette-div"
+				<div className="palette-dialog-div"
 					ref="palette"
 					onMouseDown={this.mouseDownOnPalette}
 					style={{ display: displayValue }}
 				>
-					<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
+					<PaletteDialogTopbar mouseDownMethod={this.mouseDownOnTopBar}
 						showGridMethod={this.showGrid}
 						windowMaximizeMethod={this.windowMaximize}
 						showGrid={this.state.showGrid}
 						canvasController={this.props.canvasController}
 					/>
-					<PaletteContent paletteJSON={this.props.paletteJSON}
+					<PaletteDialogContent paletteJSON={this.props.paletteJSON}
 						showGrid={this.state.showGrid}
 						canvasController={this.props.canvasController}
 					/>
@@ -552,7 +552,7 @@ class Palette extends React.Component {
 	}
 }
 
-Palette.propTypes = {
+PaletteDialog.propTypes = {
 	intl: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
@@ -560,4 +560,4 @@ Palette.propTypes = {
 	canvasController: PropTypes.object.isRequired
 };
 
-export default injectIntl(Palette);
+export default injectIntl(PaletteDialog);

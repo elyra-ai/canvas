@@ -266,7 +266,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
+			cy.get(".palette-list-item-text-div").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
 				.trigger("dragover", canvasX, canvasY, { dataTransfer });
@@ -394,7 +394,7 @@ Cypress.Commands.add("findCategory", (nodeCategory) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-categories > div")
+			cy.get(".palette-dialog-categories > div")
 				.then((categories) => {
 					let category = null;
 					for (let idx = 0; idx < categories.length; idx++) {
@@ -467,7 +467,7 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-text")
+			cy.get(".palette-dialog-grid-node-text")
 				.then((listItems) => {
 					let nodeIndex = -1;
 					for (let idx = 0; idx < listItems.length; idx++) {
@@ -479,7 +479,7 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 				});
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-span")
+			cy.get(".palette-list-item-text-div")
 				.then((listItems) => {
 					let nodeIndex = -1;
 					for (let idx = 0; idx < listItems.length; idx++) {

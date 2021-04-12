@@ -15,12 +15,13 @@
  */
 
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
 import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
 import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx";
-import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list-item.jsx";
+import PaletteContentListItem from "../../src/palette/palette-content-list-item.jsx";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
@@ -29,6 +30,53 @@ import testPalette2 from "../test_resources/palettes/test-palette2.json";
 
 
 const canvasController = new CanvasController();
+
+describe("Palette search renders correctly", () => {
+
+	beforeEach(() => {
+		jest.useFakeTimers("modern");
+	});
+
+	afterEach(() => {
+		jest.useRealTimers();
+	});
+
+	it("should filter nodes based on search text", () => {
+
+		const wrapper = createMountedPalette();
+
+		// Simulate click on search input to open palette with search bar
+		const searchInput = wrapper.find("div.palette-flyout-search-container");
+		searchInput.simulate("click");
+
+		act(() => {
+			const input = searchInput.find("input");
+			input.simulate("change", { target: { value: "data" } });
+			jest.advanceTimersByTime(500);
+		});
+
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+
+		act(() => {
+			const input = searchInput.find("input");
+			input.simulate("change", { target: { value: "var" } });
+			jest.advanceTimersByTime(500);
+		});
+
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
+
+		act(() => {
+			const input = searchInput.find("input");
+			input.simulate("change", { target: { value: "data import" } });
+			jest.advanceTimersByTime(500);
+		});
+
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+	});
+});
 
 
 describe("Palette renders correctly", () => {
@@ -63,11 +111,11 @@ describe("Palette renders correctly", () => {
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
-		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(3);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(3);
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(5);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 	});
 
 	it("should close a category when two categories are currently open", () => {
@@ -79,23 +127,7 @@ describe("Palette renders correctly", () => {
 		const importCat2 = findCategoryElement(wrapper, "Import");
 		importCat2.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
-		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(2);
-	});
-
-	it("should filter nodes based on search text", () => {
-		const wrapper = createMountedPalette();
-		const importCat = findCategoryElement(wrapper, "Import");
-		importCat.simulate("click");
-		// Simulate click on search input to open palette with search bar
-		const searchInput = wrapper.find("div.palette-flyout-search");
-		searchInput.simulate("click");
-
-		const input = searchInput.find("input");
-		input.simulate("change", { target: { value: "Var" } });
-		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(1);
-
-		input.simulate("change", { target: { value: "VAR" } });
-		expect(wrapper.find(PaletteFlyoutContentListItem)).to.have.length(1);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 	});
 
 	it("should show wide palette", () => {
@@ -126,7 +158,7 @@ describe("Palette renders correctly", () => {
 		const category = findCategoryElement(palette, "Category1");
 		category.simulate("click");
 		// 2 nodes should be rendered
-		expect(palette.find(PaletteFlyoutContentListItem)).to.have.length(2);
+		expect(palette.find(PaletteContentListItem)).to.have.length(2);
 	});
 
 	it("narrow palette should show correct values for category and node with and without an image", () => {
@@ -144,7 +176,7 @@ describe("Palette renders correctly", () => {
 		expect(category.find("span").text()).to.equal("Cat");
 		category.simulate("click");
 		// 2 nodes should be rendered
-		expect(palette.find(PaletteFlyoutContentListItem)).to.have.length(2);
+		expect(palette.find(PaletteContentListItem)).to.have.length(2);
 		// Category2 should show image when provided
 		const category2 = findCategoryElement(palette, "Category2");
 		expect(category2.find("img")).to.have.length(1);

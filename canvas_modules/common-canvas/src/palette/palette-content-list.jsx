@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,22 +33,22 @@ class PaletteContentList extends React.Component {
 			contentItems.push(
 				<div key={"item_empty"}>
 					<PaletteContentListItem
-						category={this.props.category}
-						nodeTemplate={ {} }
+						nodeTypeInfo={{ nodeType: {}, category: this.props.category }}
+						isDisplaySearchResult={false}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>
 				</div>
 			);
 		} else {
-			for (var idx = 0; idx < this.props.nodeTypes.length; idx++) {
+			for (var idx = 0; idx < this.props.nodeTypeInfos.length; idx++) {
 				var itemKey = "item_" + idx;
 
 				contentItems.push(
 					<div key={itemKey}>
 						<PaletteContentListItem
-							category={this.props.category}
-							nodeTemplate={this.props.nodeTypes[idx]}
+							nodeTypeInfo={this.props.nodeTypeInfos[idx]}
+							isDisplaySearchResult={false}
 							canvasController={this.props.canvasController}
 							isPaletteOpen={this.props.isPaletteOpen}
 						/>
@@ -58,10 +58,12 @@ class PaletteContentList extends React.Component {
 		}
 
 		const style = {};
+		style.borderBottom = this.props.isLastCategory ? "none" : null;
 		style.display = this.props.show ? "block" : "none";
+
 		return (
 			<div width="100%" draggable="false" className="palette-content-list palette-scroll"
-				style={ Object.assign(style, this.props.style) }
+				style={ style }
 			>
 				{contentItems}
 			</div>
@@ -71,15 +73,11 @@ class PaletteContentList extends React.Component {
 
 PaletteContentList.propTypes = {
 	category: PropTypes.object.isRequired,
-	nodeTypes: PropTypes.array.isRequired,
+	nodeTypeInfos: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
-	style: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
-};
-
-PaletteContentList.defaultProps = {
-	style: {}
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isLastCategory: PropTypes.bool.isRequired
 };
 
 export default PaletteContentList;
