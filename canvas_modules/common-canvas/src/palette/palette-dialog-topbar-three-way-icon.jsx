@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-class ThreeWayIcon extends React.Component {
+class PaletteDialogTopbarThreeWayIcon extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -71,7 +71,7 @@ class ThreeWayIcon extends React.Component {
 	}
 }
 
-ThreeWayIcon.propTypes = {
+PaletteDialogTopbarThreeWayIcon.propTypes = {
 	iconClickedMethod: PropTypes.func.isRequired,
 	isSelected: PropTypes.bool.isRequired,
 	selectedIconName: PropTypes.string.isRequired,
@@ -79,4 +79,4 @@ ThreeWayIcon.propTypes = {
 	deselectedIconName: PropTypes.string.isRequired
 };
 
-export default ThreeWayIcon;
+export default PaletteDialogTopbarThreeWayIcon;

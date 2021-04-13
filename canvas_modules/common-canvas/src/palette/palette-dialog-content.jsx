@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PaletteContentCategories from "./palette-content-categories.jsx";
-import PaletteContentGrid from "./palette-content-grid.jsx";
+import PaletteDialogContentCategories from "./palette-dialog-content-categories.jsx";
+import PaletteDialogContentGrid from "./palette-dialog-content-grid.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 
-class PaletteContent extends React.Component {
+class PaletteDialogContent extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// We get the paletteJSON after the initial render so set the
 		// default selected category when it is recieved.
@@ -41,11 +41,11 @@ class PaletteContent extends React.Component {
 		};
 
 		this.categorySelected = this.categorySelected.bind(this);
-		this.getCategories = this.getCategories.bind(this);
+		this.getUniqueCategories = this.getUniqueCategories.bind(this);
 		this.getSelectedCategory = this.getSelectedCategory.bind(this);
 	}
 
-	getCategories(categories) {
+	getUniqueCategories(categories) {
 		var out = [];
 
 		if (categories) {
@@ -76,37 +76,38 @@ class PaletteContent extends React.Component {
 	}
 
 	render() {
-		const cats = this.getCategories(this.props.paletteJSON.categories);
-
+		const cats = this.getUniqueCategories(this.props.paletteJSON.categories);
 		const category = this.getSelectedCategory(this.props.paletteJSON.categories);
 		const nodeTypes = category ? category.node_types : [];
+		const nodeTypeInfos = nodeTypes.map((nt) =>	({ nodeType: nt, category: category }));
 
 		return (
-			<div className="palette-content" ref="palettecontent">
-				<PaletteContentCategories categories={cats}
+			<div className="palette-dialog-content" ref="palettecontent">
+				<PaletteDialogContentCategories categories={cats}
 					selectedCategory={this.state.selectedCategory}
 					categorySelectedMethod={this.categorySelected}
 				/>
-				<PaletteContentGrid show={this.props.showGrid}
+				<PaletteDialogContentGrid show={this.props.showGrid}
 					category={category}
 					nodeTypes={nodeTypes}
 					canvasController={this.props.canvasController}
 				/>
 				<PaletteContentList show={!this.props.showGrid}
 					category={category}
-					nodeTypes={nodeTypes}
+					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
 					isPaletteOpen
+					isLastCategory={false}
 				/>
 			</div>
 		);
 	}
 }
 
-PaletteContent.propTypes = {
+PaletteDialogContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showGrid: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteContent;
+export default PaletteDialogContent;

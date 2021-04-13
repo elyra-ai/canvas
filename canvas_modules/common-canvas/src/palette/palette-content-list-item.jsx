@@ -17,6 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import has from "lodash/has";
+import { injectIntl } from "react-intl";
+import defaultMessages from "../../locales/palette/locales/en.json";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
@@ -27,9 +29,13 @@ class PaletteContentListItem extends React.Component {
 		super(props);
 
 		this.state = {
+			showFullDescription: false
 		};
 
 		this.ghostData = null;
+
+		this.showFullDescription = this.showFullDescription.bind(this);
+		this.showShortDescription = this.showShortDescription.bind(this);
 
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
@@ -44,14 +50,14 @@ class PaletteContentListItem extends React.Component {
 
 		// Prepare the ghost image on mouse down because asynchronous loading of
 		// SVG files will be too slow if this is done in onDragStart.
-		this.ghostData = this.props.canvasController.getGhostNode(this.props.nodeTemplate);
+		this.ghostData = this.props.canvasController.getGhostNode(this.props.nodeTypeInfo.nodeType);
 	}
 
 	onDragStart(ev) {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
-		this.props.canvasController.setDragNodeTemplate(this.props.nodeTemplate);
+		this.props.canvasController.setDragNodeTemplate(this.props.nodeTypeInfo.nodeType);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -64,28 +70,156 @@ class PaletteContentListItem extends React.Component {
 
 	onDoubleClick() {
 		if (this.props.canvasController.createAutoNode) {
-			this.props.canvasController.createAutoNode(this.props.nodeTemplate);
+			this.props.canvasController.createAutoNode(this.props.nodeTypeInfo.nodeType);
 		}
 	}
 
 	onMouseOver(ev) {
 		if (ev.buttons === 0) {
-			const nodeTemplate = this.props.category.empty_text
-				? { app_data: { ui_data: { label: this.props.category.empty_text } } }
-				: this.props.nodeTemplate;
+			const nodeTemplate = this.props.nodeTypeInfo.category.empty_text
+				? { app_data: { ui_data: { label: this.props.nodeTypeInfo.category.empty_text } } }
+				: this.props.nodeTypeInfo.nodeType;
 
 			this.props.canvasController.openTip({
-				id: "paletteTip_" + this.props.nodeTemplate.op,
+				id: "paletteTip_" + this.props.nodeTypeInfo.nodeType.op,
 				type: TIP_TYPE_PALETTE_ITEM,
 				targetObj: ev.currentTarget,
 				nodeTemplate: nodeTemplate,
-				category: this.props.category
+				category: this.props.nodeTypeInfo.category
 			});
 		}
 	}
 
 	onMouseLeave() {
 		this.props.canvasController.closeTip();
+	}
+
+	getHighlightedCategoryLabel() {
+		return this.getHighlightedText(
+			this.props.nodeTypeInfo.category.label,
+			this.props.nodeTypeInfo.occurenceInfo.catLabelOccurences);
+	}
+
+	getHighlightedLabel() {
+		return this.getHighlightedText(
+			this.props.nodeTypeInfo.nodeType.app_data.ui_data.label,
+			this.props.nodeTypeInfo.occurenceInfo.labelOccurences);
+	}
+
+	getHighlightedDesc() {
+		const DISPLAY_LEN = 150; // Max number of characters for a description.
+		let desc = this.props.nodeTypeInfo.nodeType.app_data.ui_data.description;
+		let descOccurences = this.props.nodeTypeInfo.occurenceInfo.descOccurences;
+		let isLongDescription = false;
+
+		if (desc.length > DISPLAY_LEN) {
+			isLongDescription = true;
+			if (!this.state.showFullDescription) {
+				const { abbrDesc, occurences } = this.getAbbreviatedDescription(desc, descOccurences, DISPLAY_LEN);
+				desc = abbrDesc;
+				descOccurences = occurences;
+			}
+		}
+
+		const elements = this.getHighlightedText(desc, descOccurences);
+
+		// If it's a long description, we need to add either the 'Show more' or
+		// 'Show less' button depending on whether the full description is shown or not.
+		if (isLongDescription) {
+			if (this.state.showFullDescription) {
+				const less =
+					this.props.intl.formatMessage({ id: "palette.flyout.search.less", defaultMessage: defaultMessages["palette.flyout.search.less"] });
+				elements.push(<div key="l_btn" className = "palette-list-item-desc-button" onClick={this.showShortDescription}>{less}</div>);
+			} else {
+				const more =
+					this.props.intl.formatMessage({ id: "palette.flyout.search.more", defaultMessage: defaultMessages["palette.flyout.search.more"] });
+				elements.push(<div key="m_btn" className = "palette-list-item-desc-button" onClick={this.showFullDescription}>{more}</div>);
+			}
+		}
+		return elements;
+	}
+
+	// Returns an abbeviated description, constrained to the displayLen passed in,
+	// based on the full description passed in. The function makes sure the first
+	// occurence of text to be hightlighted is displayed with the abbreviated
+	// text. There are three possibilities:
+	// 1. The first occurence is within the first displayLen number of characters
+	//    meaning we end the abbreviated text with " ..."
+	// 2. The first occurence is somewhere in the middle of the text in which
+	//    the abbreviated dscription is prefixed with "... " and suffixed with " ..."
+	// 3. The first occurence is within displayLen number of characters of the end
+	//    of the description in which case we prefix the descriptin with "... "
+	// This function also adjusts the occurencs of highlighted text in the
+	// description to account for any text that has been removed from the
+	// beginning of the description.
+	getAbbreviatedDescription(desc, descOccurences, displayLen) {
+		// Not all descriptions will have occurencs. If not, just abbreviate and return.
+		if (descOccurences.length === 0) {
+			const abbr = desc.substring(0, displayLen) + " ...";
+			return { abbrDesc: abbr, occurences: descOccurences };
+		}
+
+		const firstOccurenceStart = descOccurences[0].start;
+		const remainder = desc.length - firstOccurenceStart;
+		let abbrDesc = "";
+		let offset = 0;
+
+		if (firstOccurenceStart < displayLen) {
+			offset = 0;
+			abbrDesc = desc.substring(offset, displayLen) + " ...";
+
+		} else if (remainder > displayLen) {
+			offset = firstOccurenceStart;
+			abbrDesc = "... " + desc.substring(offset, firstOccurenceStart + displayLen) + " ...";
+			offset -= 4; // Subtract 4 for the "... " string
+
+		} else {
+			offset = desc.length - displayLen;
+			abbrDesc = "... " + desc.substring(offset, desc.length);
+			offset -= 4; // Subtract 4 for the "... " string
+		}
+
+		const occurences = descOccurences.map((occ) => ({ start: occ.start - offset, end: occ.end - offset }));
+
+		return { abbrDesc, occurences };
+	}
+
+	// Returns an array of highlighted and non-highlighted text based on the
+	// textToHighlight passed in and the occurences array which contains elements
+	// that indicate where text should be highlighted.
+	getHighlightedText(textToHighlight, occurences) {
+		if (!occurences || occurences.length === 0) {
+			return [<span key="o">{textToHighlight}</span>];
+		}
+
+		const highlightedElements = [];
+		let index = 0;
+		let text = "";
+		occurences.forEach((occ, i) => {
+			text = textToHighlight.substring(index, occ.start);
+			highlightedElements.push(<span key={"s" + i}>{text}</span>);
+
+			text = textToHighlight.substring(occ.start, occ.end);
+			highlightedElements.push(<mark key={"m" + i}>{text}</mark>);
+
+			index = occ.end;
+
+			if (i === occurences.length - 1 &&
+					occ.end < textToHighlight.length) {
+				text = textToHighlight.substring(occ.end);
+				highlightedElements.push(<span key={"f" + i}>{text}</span>);
+			}
+		});
+
+		return highlightedElements;
+	}
+
+	showFullDescription() {
+		this.setState({ showFullDescription: true });
+	}
+
+	showShortDescription() {
+		this.setState({ showFullDescription: false });
 	}
 
 	imageDrag() {
@@ -95,15 +229,10 @@ class PaletteContentListItem extends React.Component {
 	render() {
 		let itemText = null;
 		let draggable = "true";
-		let icon = <div className="palette-list-item-icon" />;
+		let icon = null;
 
-		if (this.props.isPaletteOpen &&
-				has(this.props.nodeTemplate, "app_data.ui_data.label")) {
-			itemText = this.props.nodeTemplate.app_data.ui_data.label;
-		}
-
-		if (has(this.props.nodeTemplate, "app_data.ui_data.image")) {
-			let image = this.props.nodeTemplate.app_data.ui_data.image;
+		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
+			let image = this.props.nodeTypeInfo.nodeType.app_data.ui_data.image;
 
 			if (image === USE_DEFAULT_ICON) {
 				image = SUPERNODE_ICON;
@@ -113,44 +242,73 @@ class PaletteContentListItem extends React.Component {
 				: <img src={image} className="palette-list-item-icon" draggable="false" />;
 		}
 
+		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.label") &&
+				(this.props.isPaletteOpen || !icon)) {
+			itemText = this.props.isDisplaySearchResult
+				? this.getHighlightedLabel()
+				: (<span>{this.props.nodeTypeInfo.nodeType.app_data.ui_data.label}</span>);
+		}
+
+		const ranking = this.props.isShowRanking && this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo, "occurenceInfo.ranking")
+			? (<span>{this.props.nodeTypeInfo.occurenceInfo.ranking}</span>)
+			: null;
+
 		// Special case for when there are no nodes in the category so we show
 		// a dummy node to include the empty text from the category.
-		if (this.props.category.node_types.length === 0 && this.props.category.empty_text) {
+		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
 			if (this.props.isPaletteOpen) {
-				itemText = this.props.category.empty_text;
+				itemText = this.props.nodeTypeInfo.category.empty_text;
 			}
 			draggable = "false";
 			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
 		}
 
+		const mainDivClass = this.props.isDisplaySearchResult
+			? "palette-list-item search-result"
+			: "palette-list-item";
+
+		const categoryLabel = this.props.isDisplaySearchResult
+			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)
+			: null;
+
+		const description = this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.description") &&
+												this.props.nodeTypeInfo.nodeType.app_data.ui_data.description
+			? (<div className={"palette-list-item-description"}>{this.getHighlightedDesc()}</div>)
+			: null;
+
+		const nodeLabel = itemText
+			? <div className="palette-list-item-text-div">{itemText}</div>
+			: null;
+
 		return (
-			<div id={this.props.nodeTemplate.id}
+			<div id={this.props.nodeTypeInfo.nodeType.id}
 				draggable={draggable}
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}
-				className="palette-list-item"
+				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 				onMouseDown={this.onMouseDown}
 			>
-				<div>
+				{categoryLabel}
+				<div className="palette-list-item-icon-and-text">
 					{icon}
+					{nodeLabel}
+					{ranking}
 				</div>
-				<div className="palette-list-item-text-div">
-					<span className="palette-list-item-text-span">
-						{itemText}
-					</span>
-				</div>
+				{description}
 			</div>
 		);
 	}
 }
 
 PaletteContentListItem.propTypes = {
-	category: PropTypes.object.isRequired,
-	nodeTemplate: PropTypes.object.isRequired,
+	intl: PropTypes.object.isRequired,
+	nodeTypeInfo: PropTypes.object.isRequired,
+	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isShowRanking: PropTypes.bool
 };
 
-export default PaletteContentListItem;
+export default injectIntl(PaletteContentListItem);
