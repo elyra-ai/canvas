@@ -298,6 +298,7 @@ class SummaryPanel extends React.Component {
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
 			title={this.props.panel.label}
+			light={this.props.controller.getLight()}
 		>
 			<div>
 				{this.props.children}

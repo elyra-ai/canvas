@@ -43,7 +43,6 @@
 	width: 100%;
 
 	display: flex;
-	background-color: $ui-01;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 $spacing-06;
@@ -114,4 +113,8 @@
 	.properties-link-text {
 		@include carbon--type-style("body-short-01");
 	}
+}
+
+.properties-light-enabled {
+	background-color: $ui-01; // Override theme background-color when light option is true
 }

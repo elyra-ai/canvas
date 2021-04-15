@@ -150,4 +150,11 @@ $properties-vt-checkbox-width: 45px;
 		height: 100%;
 		width: 100%;
 	}
+
+	.properties-light-disabled {
+		background-color: $ui-01;
+		.bx--select--inline .bx--select-input[disabled] {
+			background-color: $ui-background;
+		}
+	}
 }

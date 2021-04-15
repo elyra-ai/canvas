@@ -440,6 +440,7 @@ export default class FieldPicker extends React.Component {
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}
 				rowSelection={ROW_SELECTION.MULTIPLE}
+				light={this.props.controller.getLight()}
 			/>
 		);
 	}

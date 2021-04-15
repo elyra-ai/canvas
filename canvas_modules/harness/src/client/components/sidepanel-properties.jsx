@@ -53,6 +53,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
@@ -159,6 +160,10 @@ export default class SidePanelModal extends React.Component {
 
 	useHeading(checked) {
 		this.props.propertiesConfig.useHeading(checked);
+	}
+
+	useLightOption(checked) {
+		this.props.propertiesConfig.useLightOption(checked);
 	}
 
 	useEditorSize(evt) {
@@ -356,6 +361,17 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const useLightOption = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-light">
+				<Toggle
+					id="harness-sidepanel-light-toggle"
+					labelText="Enable light option"
+					toggled={ this.props.propertiesConfig.light }
+					onToggle={ this.useLightOption }
+				/>
+			</div>
+		);
+
 		const editorSizes = [
 			{
 				id: EDITOR_SIZE.UNSET,
@@ -450,6 +466,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{useHeading}
 				{divider}
+				{useLightOption}
+				{divider}
 				{persistEditorSize}
 				{divider}
 				{conditionHiddenPropertyHandling}
@@ -485,6 +503,8 @@ SidePanelModal.propTypes = {
 		setPropertiesDropdownSelect: PropTypes.func,
 		heading: PropTypes.bool,
 		useHeading: PropTypes.func,
+		light: PropTypes.bool,
+		useLightOption: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,

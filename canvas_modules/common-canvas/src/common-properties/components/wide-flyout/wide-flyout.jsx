@@ -89,7 +89,7 @@ export default class WideFlyout extends Component {
 			<div className="properties-wf-modal" ref={ (ref) => (this.wideFlyout = ref) }>
 				<Portal node={this.commonPropertiesParent}>
 					{ overlay }
-					<div className={classNames("properties-wf-content", { "show": this.props.show })} style={this.state.style}>
+					<div className={classNames("properties-wf-content", { "show": this.props.show, "properties-light-disabled": !this.props.light })} style={this.state.style}>
 						{title}
 						{children}
 						{buttons}
@@ -108,7 +108,8 @@ WideFlyout.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	title: PropTypes.string
+	title: PropTypes.string,
+	light: PropTypes.bool
 };
 
 WideFlyout.defaultProps = {

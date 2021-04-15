@@ -90,7 +90,7 @@ class NumberfieldControl extends React.Component {
 					label={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					allowEmpty
-					light
+					light={this.props.controller.getLight()}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

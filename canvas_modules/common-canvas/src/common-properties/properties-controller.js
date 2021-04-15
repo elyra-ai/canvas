@@ -66,6 +66,7 @@ export default class PropertiesController {
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
 		this.selectionListeners = {};
+		this.light = true; // Enable light option by default
 	}
 
 	getStore() {
@@ -103,6 +104,14 @@ export default class PropertiesController {
 
 	getEditorSize() {
 		return this.editorSize;
+	}
+
+	setLight(light) {
+		this.light = light;
+	}
+
+	getLight() {
+		return this.light;
 	}
 
 	setPropertiesConfig(config) {

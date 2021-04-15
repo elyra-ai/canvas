@@ -157,7 +157,7 @@ class EditorForm extends React.Component {
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="properties-category-container">
 						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
-							className="properties-category-title"
+							className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
 						>
 							{tab.text}{this._getMessageCountForCategory(tab)}
 							{panelArrow}
@@ -194,7 +194,7 @@ class EditorForm extends React.Component {
 			);
 		}
 		return (
-			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected}>
+			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected} light={this.props.controller.getLight()}>
 				{tabContent}
 			</Tabs>
 		);
@@ -556,6 +556,7 @@ class EditorForm extends React.Component {
 				showPropertiesButtons={false}
 				show
 				title={title}
+				light={this.props.controller.getLight()}
 			>
 				{this.fieldPicker(title)}
 			</WideFlyout>);

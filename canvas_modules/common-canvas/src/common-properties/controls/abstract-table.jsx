@@ -459,6 +459,7 @@ export default class AbstractTable extends React.Component {
 					tableLabel={tableLabel}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
+					light={this.props.controller.getLight()}
 				/>
 			</div>);
 		}
@@ -653,6 +654,7 @@ export default class AbstractTable extends React.Component {
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
+				light={this.props.controller.getLight()}
 			/>);
 		return (
 			<div>
