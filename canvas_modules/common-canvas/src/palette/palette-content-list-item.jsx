@@ -75,7 +75,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onMouseOver(ev) {
-		if (ev.buttons === 0) {
+		if (!this.props.isDisplaySearchResult && ev.buttons === 0) {
 			const nodeTemplate = this.props.nodeTypeInfo.category.empty_text
 				? { app_data: { ui_data: { label: this.props.nodeTypeInfo.category.empty_text } } }
 				: this.props.nodeTypeInfo.nodeType;
@@ -103,7 +103,7 @@ class PaletteContentListItem extends React.Component {
 	getHighlightedLabel() {
 		return this.getHighlightedText(
 			this.props.nodeTypeInfo.nodeType.app_data.ui_data.label,
-			this.props.nodeTypeInfo.occurenceInfo.labelOccurences);
+			this.props.nodeTypeInfo.occurenceInfo.nodeLabelOccurences);
 	}
 
 	getHighlightedDesc() {

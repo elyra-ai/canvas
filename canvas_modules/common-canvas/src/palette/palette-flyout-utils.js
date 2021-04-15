@@ -53,11 +53,11 @@ function getFilteredNodeTypeInfosByCategory(category, filterStrings) {
 function getOccurences(nodeType, category, filterStrings) {
 	if (filterStrings.length > 0) {
 		let catLabelOccurences = [];
-		let labelOccurences = [];
+		let nodeLabelOccurences = [];
 		let descOccurences = [];
 
 		let catLabelHitCounts = [];
-		let labelHitCounts = [];
+		let nodeLabelHitCounts = [];
 		let descHitCounts = [];
 
 		if (has(category, "label")) {
@@ -67,40 +67,42 @@ function getOccurences(nodeType, category, filterStrings) {
 			catLabelHitCounts = hitCounts;
 		}
 		if (has(nodeType, "app_data.ui_data.label")) {
-			const label = nodeType.app_data.ui_data.label.toLowerCase();
-			const { occurences, hitCounts } = wordOccurences(label, filterStrings);
-			labelOccurences = occurences;
-			labelHitCounts = hitCounts;
+			const nodeLabel = nodeType.app_data.ui_data.label.toLowerCase();
+			const { occurences, hitCounts } = wordOccurences(nodeLabel, filterStrings);
+			nodeLabelOccurences = occurences;
+			nodeLabelHitCounts = hitCounts;
 		}
 		if (has(nodeType, "app_data.ui_data.description")) {
-			const label = nodeType.app_data.ui_data.description.toLowerCase();
-			const { occurences, hitCounts } = wordOccurences(label, filterStrings);
+			const desc = nodeType.app_data.ui_data.description.toLowerCase();
+			const { occurences, hitCounts } = wordOccurences(desc, filterStrings);
 			descOccurences = occurences;
 			descHitCounts = hitCounts;
 		}
 
-		if (catLabelOccurences.length > 0 || labelOccurences.length > 0 || descOccurences.length > 0) {
-			const ranking = calcRanking(catLabelHitCounts, labelHitCounts, descHitCounts, filterStrings.length);
-			return { catLabelOccurences, labelOccurences, descOccurences, ranking };
+		if (catLabelOccurences.length > 0 || nodeLabelOccurences.length > 0 || descOccurences.length > 0) {
+			const ranking = calcRanking(catLabelHitCounts, nodeLabelHitCounts, descHitCounts, filterStrings.length);
+			return { catLabelOccurences, nodeLabelOccurences, descOccurences, ranking };
 		}
 	}
 	return null;
 }
 
-// Calcuates a ranking value for the node type info object being processed based
-// on the valrious hit count arrays passed in.
-function calcRanking(catLabelHitCounts, labelHitCounts, descHitCounts, filterStringsLength) {
+// Calculates a ranking value for the node type info object being processed,
+// based on the various hit count arrays passed in. Each hit count array has
+// one element for each filter string entered by the user. Each element
+// contains either a 1 or 0 to indicate a hit on that filter string or not.
+// Ranking is based on:
+// * The number of hits across the 3 areas (category label, node label, description)
+// * Whether or not multiple filter strings (if more than one is provided)
+//   appear in any of the areas.
+function calcRanking(catLabelHitCounts, nodeLabelHitCounts, descHitCounts, filterStringsLength) {
 	let ranking = 0;
-
-	const totalHitCount = [filterStringsLength];
-	for (let i = 0; i < filterStringsLength; i++) {
-		totalHitCount[i] = catLabelHitCounts[i] + labelHitCounts[i] + descHitCounts[i];
-	}
-
 	let multiStringHits = 0;
-	for (let i = 0; i < totalHitCount.length; i++) {
-		ranking += totalHitCount[i];
-		if (totalHitCount[i] > 0) {
+
+	for (let i = 0; i < filterStringsLength; i++) {
+		ranking += catLabelHitCounts[i] + (10 * nodeLabelHitCounts[i]) + descHitCounts[i]; // Give extra weight to node label hit
+
+		if (catLabelHitCounts[i] + nodeLabelHitCounts[i] + descHitCounts[i] > 0) {
 			multiStringHits++;
 		}
 	}
@@ -117,7 +119,7 @@ function wordOccurences(mainString, filterStrings) {
 	filterStrings.forEach((s) => {
 		if (s) {
 			const newOccurences = wordOccurencesByString(mainString, s);
-			occurences = normalize(occurences, newOccurences);
+			occurences = joinOccurences(occurences, newOccurences, mainString);
 			hitCounts.push(newOccurences.length > 0 ? 1 : 0);
 		}
 	});
@@ -127,7 +129,7 @@ function wordOccurences(mainString, filterStrings) {
 // Returns an array of occurences where the occurences from the two arrays
 // passed in are joined together where they overlap so that the returned
 // array has no overlapping occurences.
-function normalize(occurences, newOccurences) {
+function joinOccurences(occurences, newOccurences) {
 	if (occurences.length === 0) {
 		return newOccurences;
 	}
@@ -139,19 +141,40 @@ function normalize(occurences, newOccurences) {
 	newOccurences.forEach((newOcc) => {
 		let handled = false;
 		occurences.forEach((occ) => {
-			if (newOcc.start >= occ.start && newOcc.start <= occ.end) {
-				if (newOcc.end > occ.end) {
+			//   Occurence         <-->
+			//   New occurence   <------->
+			//   Result          <------->
+			// and also:
+			//   Occurence         <-->
+			//   New occurence     <-->
+			//   Result            <-->
+			if (newOcc.start <= occ.start && newOcc.end >= occ.end) {
+				occ.start = newOcc.start;
+				occ.end = newOcc.end;
+				handled = true;
+
+			//   Occurence         <-->
+			//   New occurence       <--->
+			//   Result            <----->
+			} else if (newOcc.start >= occ.start && newOcc.start < occ.end) {
+				if (newOcc.end >= occ.end) {
 					occ.end = newOcc.end;
 				}
 				handled = true;
 
-			} else if (newOcc.end >= occ.start && newOcc.end <= occ.end) {
+			//   Occurence         <-->
+			//   New occurence  <--->
+			//   Result         <----->
+			} else if (newOcc.end > occ.start && newOcc.end <= occ.end) {
 				if (newOcc.start < occ.start) {
 					occ.start = newOcc.start;
 				}
 				handled = true;
 			}
 		});
+		//   Occurence         <-->
+		//   New occurence          <-->
+		//   Result            <--> <-->
 		if (!handled) {
 			addOccurences.push(newOcc);
 		}

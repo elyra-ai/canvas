@@ -599,7 +599,7 @@ export default class SVGCanvasRenderer {
 			.attr("x", 0)
 			.attr("y", 0)
 			.style("fill", "none")
-			.style("stroke", "black");
+			.style("stroke", "darkorange");
 
 		this.boundingRectsGrp
 			.append("rect")
