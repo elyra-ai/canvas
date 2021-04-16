@@ -41,6 +41,7 @@ class TitleEditor extends Component {
 			MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		this.textInputOnFocus = this.textInputOnFocus.bind(this);
 		this.textInputOnBlur = this.textInputOnBlur.bind(this);
+		this.headingEnabled = this.props.showHeading && (this.props.heading || this.props.icon);
 
 	}
 
@@ -86,7 +87,7 @@ class TitleEditor extends Component {
 			: null;
 
 		let heading = null;
-		if (this.props.showHeading && (this.props.heading || this.props.icon)) {
+		if (this.headingEnabled) {
 			const label = this.props.heading
 				? (<div className="properties-title-heading-label">
 					{this.props.heading}
@@ -99,16 +100,17 @@ class TitleEditor extends Component {
 				heading = (<div className="properties-title-heading">
 					{icon}
 					{label}
+					{helpButton}
 				</div>);
 			}
 		}
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.props.showHeading && (this.props.heading || this.props.icon) })}
+				{ "properties-title-with-heading": this.headingEnabled })}
 			>
 				{heading}
-				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help })}>
+				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help && !this.headingEnabled })}>
 					<TextInput
 						id={this.id}
 						ref={this.textInputRef}
@@ -124,7 +126,7 @@ class TitleEditor extends Component {
 					/>
 					{propertiesTitleEdit}
 				</div>
-				{helpButton}
+				{!this.headingEnabled ? helpButton : null}
 			</div>
 		);
 	}
