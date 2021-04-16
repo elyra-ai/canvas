@@ -122,6 +122,7 @@ class TitleEditor extends Component {
 						hideLabel
 						onFocus={this.textInputOnFocus}
 						onBlur={this.textInputOnBlur}
+						light={this.props.controller.getLight()}
 						{... this.state.focused && { className: "properties-title-editor-focused" }}
 					/>
 					{propertiesTitleEdit}

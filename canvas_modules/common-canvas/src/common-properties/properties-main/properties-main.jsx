@@ -54,6 +54,7 @@ class PropertiesMain extends React.Component {
 		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
+		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
 		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
 		this.propertiesController.setHandlers({
@@ -480,7 +481,13 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
-			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
+			const className = classNames("properties-wrapper",
+				{
+					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
+					"properties-light-enabled": this.props.light,
+					"properties-light-disabled": !this.props.light
+				},
+				`properties-${this.state.editorSize}`);
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
@@ -541,6 +548,7 @@ PropertiesMain.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
+	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
 };
 

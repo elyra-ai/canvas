@@ -74,6 +74,7 @@ export default class SubPanelInvoker extends React.Component {
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
 				title={this.state.title}
+				light={this.props.controller.getLight()}
 			>
 				<div>
 					{this.state.panel}

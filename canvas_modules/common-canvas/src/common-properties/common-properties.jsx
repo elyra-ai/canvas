@@ -73,6 +73,7 @@ class CommonProperties extends React.Component {
 				callbacks= {this.props.callbacks}
 				customControls={this.props.customControls}
 				customConditionOps={this.props.customConditionOps}
+				light={this.props.light}
 			/>);
 		return propertiesMain;
 	}
@@ -256,6 +257,7 @@ CommonProperties.propTypes = {
 	customPanels: PropTypes.array,
 	customControls: PropTypes.array,
 	customConditionOps: PropTypes.array,
+	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
 };
 
@@ -271,6 +273,7 @@ CommonProperties.defaultProps = {
 	},
 	callbacks: {
 	},
+	light: true // Enable light option by default
 };
 
 export default injectIntl(CommonProperties, { forwardRef: true });

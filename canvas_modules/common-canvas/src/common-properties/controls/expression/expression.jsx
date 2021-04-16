@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
+import classNames from "classnames";
 
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
@@ -315,6 +316,7 @@ class ExpressionControl extends React.Component {
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
 			title={expressonTitle}
+			light={this.props.controller.getLight()}
 		>
 			<div>
 				<ExpressionBuilder
@@ -325,7 +327,7 @@ class ExpressionControl extends React.Component {
 			</div>
 		</WideFlyout>) : null;
 
-		const className = "properties-expression-editor " + messageType;
+		const className = classNames(`properties-expression-editor ${messageType}`, { "properties-light-disabled": !this.props.controller.getLight() });
 
 		const expressionLink = (<div className="properties-expression-link-container" >
 			{button}

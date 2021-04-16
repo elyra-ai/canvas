@@ -153,6 +153,34 @@ describe("datefield-control renders correctly", () => {
 		const input = dateWrapper.find("input");
 		expect(input.getDOMNode().placeholder).to.equal(control.additionalText);
 	});
+
+	it("should render `DatefieldControl` with light mode enabled", () => {
+		controller.setLight(true);
+		const wrapper = mount(
+			<DatefieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
+		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(1);
+	});
+
+	it("should render `DatefieldControl` with light mode disabled", () => {
+		controller.setLight(false);
+		const wrapper = mount(
+			<DatefieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
+		expect(dateWrapper.find(".bx--text-input--light")).to.have.length(0);
+	});
 });
 
 describe("error messages renders correctly for datefield controls", () => {

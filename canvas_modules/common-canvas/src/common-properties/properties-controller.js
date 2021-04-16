@@ -105,6 +105,14 @@ export default class PropertiesController {
 		return this.editorSize;
 	}
 
+	setLight(light) {
+		this.light = light;
+	}
+
+	getLight() {
+		return this.light;
+	}
+
 	setPropertiesConfig(config) {
 		this.propertiesConfig = config;
 	}

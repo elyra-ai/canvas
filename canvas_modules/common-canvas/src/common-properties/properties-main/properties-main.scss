@@ -21,7 +21,6 @@
 	font-size: 14px;
 	width: 0;
 	height: 100%;
-	background-color: $ui-01;
 	overflow: hidden;
 	border-left: 1px solid $ui-03;
 	outline: none;
@@ -74,4 +73,12 @@
 	&.properties-custom-container-with-heading {
 		height: calc(100% - 160px);
 	}
+}
+
+.properties-light-enabled {
+	background-color: $ui-01; // Override theme background-color when light option is true
+}
+
+.properties-light-disabled {
+	background-color: $ui-background;
 }

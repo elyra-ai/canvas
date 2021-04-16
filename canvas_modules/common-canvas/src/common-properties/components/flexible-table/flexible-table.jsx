@@ -438,6 +438,7 @@ class FlexibleTable extends React.Component {
 						disabled={disabled}
 						size="sm"
 						labelText={searchBarLabel}
+						light={this.props.light}
 					/>
 				</div>
 			);
@@ -483,6 +484,7 @@ class FlexibleTable extends React.Component {
 									sortColumns={this.state.columnSortDir}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
+									light={this.props.light}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -495,7 +497,8 @@ class FlexibleTable extends React.Component {
 }
 
 FlexibleTable.defaultProps = {
-	showHeader: true
+	showHeader: true,
+	light: true
 };
 
 FlexibleTable.propTypes = {
@@ -523,6 +526,7 @@ FlexibleTable.propTypes = {
 	selectedRows: PropTypes.array,
 	rowSelection: PropTypes.string,
 	summaryTable: PropTypes.bool,
+	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
 };
 

@@ -66,7 +66,7 @@ class Subtabs extends React.Component {
 		}
 		return (
 			<div className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout }, className)}>
-				<Tabs className="properties-subtabs" selected={activeTab}>
+				<Tabs className="properties-subtabs" selected={activeTab} light={this.props.controller.getLight()}>
 					{subTabs}
 				</Tabs>
 			</div>

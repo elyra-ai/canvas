@@ -321,7 +321,8 @@ class VirtualizedTable extends React.Component {
 		return (
 			<div className="properties-vt">
 				<div className={classNames("properties-vt-autosizer",
-					{ "properties-vt-single-selection": this.props.rowSelection && this.props.rowSelection === ROW_SELECTION.SINGLE })}
+					{ "properties-vt-single-selection": this.props.rowSelection && this.props.rowSelection === ROW_SELECTION.SINGLE,
+						"properties-light-disabled": !this.props.light })}
 				>
 					<AutoSizer>
 						{({ height, width }) => ( // Table height: subtract 50 for margin below the table.
@@ -407,6 +408,7 @@ VirtualizedTable.propTypes = {
 	onHeaderClick: PropTypes.func,
 	scrollKey: PropTypes.string,
 	tableState: PropTypes.string,
+	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
 };
 

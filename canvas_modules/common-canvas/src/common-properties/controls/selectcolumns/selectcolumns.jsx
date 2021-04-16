@@ -137,6 +137,7 @@ class SelectColumns extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
+				light={this.props.controller.getLight()}
 			/>);
 
 		var content = (

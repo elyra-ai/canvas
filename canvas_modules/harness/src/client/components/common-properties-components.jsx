@@ -93,7 +93,8 @@ class CommonPropertiesComponents extends React.Component {
 		super(props);
 		this.state = {
 			showRightFlyout: false,
-			rightFlyoutContent: null
+			rightFlyoutContent: null,
+			light: false
 		};
 
 		this.propertiesConfig = { containerType: "Custom" };
@@ -514,6 +515,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={CONTROLS_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(CONTROLS_PROPS_INFO)}
 						</div>
@@ -534,6 +536,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={PANELS_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(PANELS_PROPS_INFO)}
 							</div>
@@ -557,6 +560,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={TABS_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(TABS_PROPS_INFO)}
 							</div>
@@ -583,6 +587,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={SUBTABS_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(SUBTABS_PROPS_INFO)}
 							</div>
@@ -611,6 +616,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(PANEL_SELECTOR_PROPS_INFO)}
 							</div>
@@ -636,6 +642,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={PANEL_SELECTOR_INSERT_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(PANEL_SELECTOR_INSERT_PROPS_INFO)}
 							</div>
@@ -663,6 +670,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={SUMMARY_PANEL_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(SUMMARY_PANEL_PROPS_INFO)}
 							</div>
@@ -687,6 +695,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={TWISTY_PANEL_PROPS_INFO}
 									callbacks={{ actionHandler: this.twistyActionHandler, controllerHandler: this.twistyControllerHandler }}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(TWISTY_PANEL_PROPS_INFO)}
 							</div>
@@ -707,6 +716,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={COLUMN_PANEL_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(COLUMN_PANEL_PROPS_INFO)}
 							</div>
@@ -733,6 +743,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={COLUMNSELECTION_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(COLUMNSELECTION_PROPS_INFO)}
 							</div>
@@ -754,6 +765,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={TEXT_PANEL_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(TEXT_PANEL_PROPS_INFO)}
 							</div>
@@ -782,6 +794,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={TEXTFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -800,6 +813,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={TEXTAREA_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(TEXTAREA_PROPS_INFO)}
 						</div>
@@ -825,6 +839,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={LIST_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(LIST_PROPS_INFO)}
 						</div>
@@ -843,6 +858,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(PASSWORD_FIELD_PROPS_INFO)}
 						</div>
@@ -876,6 +892,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={expressionInfoProps}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(expressionInfoProps)}
 						</div>
@@ -894,6 +911,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={CODE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(CODE_PROPS_INFO)}
 						</div>
@@ -913,6 +931,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={HIDDEN_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(HIDDEN_PROPS_INFO)}
 						</div>
@@ -932,6 +951,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={READONLY_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(READONLY_PROPS_INFO)}
 						</div>
@@ -950,6 +970,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={NUMBERFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(NUMBERFIELD_PROPS_INFO)}
 						</div>
@@ -967,6 +988,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(NUMBERFIELD_GENERATOR_PROPS_INFO)}
 						</div>
@@ -991,6 +1013,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SPINNER_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SPINNER_PROPS_INFO)}
 						</div>
@@ -1017,6 +1040,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={DATEFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(DATEFIELD_PROPS_INFO)}
 						</div>
@@ -1045,6 +1069,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={TIMEFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(TIMEFIELD_PROPS_INFO)}
 						</div>
@@ -1065,6 +1090,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(CHECKBOX_SINGLE_PROPS_INFO)}
 						</div>
@@ -1086,6 +1112,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={CHECKBOX_SET_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(CHECKBOX_SET_PROPS_INFO)}
 						</div>
@@ -1109,6 +1136,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(RADIOSET_HORIZONTAL_PROPS_INFO)}
 						</div>
@@ -1125,6 +1153,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(RADIOSET_VERTICAL_PROPS_INFO)}
 						</div>
@@ -1146,6 +1175,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={ONEOFSELECT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(ONEOFSELECT_PROPS_INFO)}
 						</div>
@@ -1164,6 +1194,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO)}
 						</div>
@@ -1186,6 +1217,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(FORCED_RADIOSET_PROPS_INFO)}
 						</div>
@@ -1209,6 +1241,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={MULTISELECT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(MULTISELECT_PROPS_INFO)}
 						</div>
@@ -1225,6 +1258,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={MULTISELECT_FILTERABLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(MULTISELECT_FILTERABLE_PROPS_INFO)}
 						</div>
@@ -1252,6 +1286,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SOMEOFSELECT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SOMEOFSELECT_PROPS_INFO)}
 						</div>
@@ -1273,6 +1308,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(FORCED_CHECKBOX_SET_PROPS_INFO)}
 						</div>
@@ -1297,6 +1333,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SELECTSCHEMA_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SELECTSCHEMA_PROPS_INFO)}
 						</div>
@@ -1322,6 +1359,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SELECTCOLUMN_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMN_PROPS_INFO)}
 						</div>
@@ -1346,6 +1384,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SELECTCOLUMN_MULTI_INPUT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO)}
 						</div>
@@ -1370,6 +1409,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMNS_PROPS_INFO)}
 						</div>
@@ -1392,6 +1432,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO)}
 						</div>
@@ -1412,6 +1453,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={TOGGLETEXT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(TOGGLETEXT_PROPS_INFO)}
 						</div>
@@ -1429,6 +1471,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(TOGGLETEXTICONS_PROPS_INFO)}
 						</div>
@@ -1485,6 +1528,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO)}
 						</div>
@@ -1509,6 +1553,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURELISTEDITOR_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_PROPS_INFO)}
 						</div>
@@ -1538,6 +1583,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={READONLYTABLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
 								callbacks={this.callbacks}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(READONLYTABLE_PROPS_INFO)}
 						</div>
@@ -1569,6 +1615,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO)}
 						</div>
@@ -1586,6 +1633,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -1604,6 +1652,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -1634,6 +1683,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									propertiesInfo={STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO}
 									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
 								/>
 								{this.renderRightFlyoutButton(STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO)}
 							</div>
@@ -1656,6 +1706,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_MOVEABLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_MOVEABLE_PROPS_INFO)}
 						</div>
@@ -1679,6 +1730,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_ROW_SELECTION_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO)}
 						</div>
@@ -1702,6 +1754,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO)}
 						</div>
@@ -1730,6 +1783,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_SORTABLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_SORTABLE_PROPS_INFO)}
 						</div>
@@ -1757,6 +1811,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_FILTERABLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_FILTERABLE_PROPS_INFO)}
 						</div>
@@ -1798,6 +1853,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={SUMMARY_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(SUMMARY_PROPS_INFO)}
 						</div>
@@ -1817,6 +1873,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO)}
 						</div>
@@ -1835,6 +1892,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO)}
 						</div>
@@ -1867,6 +1925,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={ACTION_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
 								callbacks={{ actionHandler: this.actionHandler, controllerHandler: this.controllerHandler }}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(ACTION_PROPS_INFO)}
 						</div>
@@ -1887,6 +1946,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={ACTION_IMAGE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
 								callbacks={{ actionHandler: this.actionHandler, controllerHandler: this.controllerHandler }}
+								light={this.state.light}
 							/>
 							{this.renderRightFlyoutButton(ACTION_IMAGE_PROPS_INFO)}
 						</div>

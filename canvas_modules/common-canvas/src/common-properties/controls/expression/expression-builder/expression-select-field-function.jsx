@@ -415,6 +415,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						selectedRows={[selectedField]}
 						onRowDoubleClick={this.onFieldTableDblClick}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -431,6 +432,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						selectedRows={[selectedValue]}
 						onRowDoubleClick={this.onValueTableDblClick}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 			</div>
@@ -507,7 +509,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			<div className="properties-expression-function-select">
 				<Dropdown
 					id={"properties-expression-function-select-dropdown-" + uuid4()}
-					light
+					light={this.props.controller.getLight()}
 					label={label}
 					items={items}
 					onChange={this.onFunctionCatChange}
@@ -536,7 +538,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			<div className="properties-expression-field-select">
 				<Dropdown
 					id={"properties-expression-field-select-dropdown-" + uuid4()}
-					light
+					light={this.props.controller.getLight()}
 					label={label}
 					items={newItems}
 					onChange={this.onFieldCatChange}
@@ -583,6 +585,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						selectedRows={[selectedFunction]}
 						onRowDoubleClick={this.onFunctionTableDblClick}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 				<div className="properties-help-table-container" >

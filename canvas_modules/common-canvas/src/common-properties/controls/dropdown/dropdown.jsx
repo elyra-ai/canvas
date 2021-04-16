@@ -205,6 +205,7 @@ class DropDown extends React.Component {
 				disabled={this.props.state === STATES.DISABLED}
 				onChange={this.handleChange}
 				value={selection}
+				light={this.props.controller.getLight()}
 			>
 				{ options }
 			</Select>);
@@ -217,7 +218,7 @@ class DropDown extends React.Component {
 				items={dropDown.options}
 				onChange={this.handleComboOnChange}
 				onInputChange={this.handleOnInputChange}
-				light
+				light={this.props.controller.getLight()}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				titleText={this.props.controlItem}
 			/>);
@@ -230,7 +231,7 @@ class DropDown extends React.Component {
 				onChange={this.handleChange}
 				selectedItem={dropDown.selectedOption}
 				label={this.emptyLabel}
-				light
+				light={this.props.controller.getLight()}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				titleText={this.props.controlItem}
 			/>);

@@ -212,6 +212,7 @@ class App extends React.Component {
 			applyOnBlur: true,
 			expressionBuilder: true,
 			heading: false,
+			light: true,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
 			propertiesValidationHandler: true,
@@ -285,6 +286,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
 
@@ -1073,6 +1075,11 @@ class App extends React.Component {
 	useHeading(enabled) {
 		this.setState({ heading: enabled });
 		this.log("show heading", enabled);
+	}
+
+	useLightOption(enabled) {
+		this.setState({ light: enabled });
+		this.log("light option", enabled);
 	}
 
 	useEditorSize(editorSize) {
@@ -1983,6 +1990,7 @@ class App extends React.Component {
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				light={this.state.light}
 			/>);
 
 		const commonProperties2 = (
@@ -1997,6 +2005,7 @@ class App extends React.Component {
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				light={this.state.light}
 			/>);
 
 		let commonPropertiesContainer = null;
@@ -2168,6 +2177,8 @@ class App extends React.Component {
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
 			useHeading: this.useHeading,
+			light: this.state.light,
+			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

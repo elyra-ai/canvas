@@ -478,6 +478,34 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("aside.properties-small")).to.have.length(0);
 		expect(wrapper.find("aside.properties-medium")).to.have.length(1);
 	});
+
+	it("when light=true, common properties should render with light mode enabled", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		wrapper = mount(
+			<IntlProvider key="IntlProvider2" locale={ locale }>
+				<CommonProperties
+					propertiesInfo={newPropertiesInfo}
+					callbacks={callbacks}
+					light
+				/>
+			</IntlProvider>
+		);
+		expect(wrapper.find("aside.properties-light-enabled")).to.have.length(1);
+	});
+
+	it("when light=false, common properties should render with light mode disabled", () => {
+		const newPropertiesInfo = JSON.parse(JSON.stringify(propertiesInfo));
+		wrapper = mount(
+			<IntlProvider key="IntlProvider2" locale={ locale }>
+				<CommonProperties
+					propertiesInfo={newPropertiesInfo}
+					callbacks={callbacks}
+					light={false}
+				/>
+			</IntlProvider>
+		);
+		expect(wrapper.find("aside.properties-light-enabled")).to.have.length(0);
+	});
 });
 
 describe("Common properties modals return the correct Carbon modal size", () => {
