@@ -141,30 +141,33 @@ function joinOccurrences(occurrences, newOccurrences) {
 	newOccurrences.forEach((newOcc) => {
 		let handled = false;
 		occurrences.forEach((occ) => {
+			//   String         abdefghijklmno
 			//   Occurrence         <-->
 			//   New occurrence   <------->
-			//   Result          <------->
+			//   Result           <------->
 			// and also:
 			//   Occurrence         <-->
 			//   New occurrence     <-->
-			//   Result            <-->
+			//   Result             <-->
 			if (newOcc.start <= occ.start && newOcc.end >= occ.end) {
 				occ.start = newOcc.start;
 				occ.end = newOcc.end;
 				handled = true;
 
+			//   String         abdefghijklmno
 			//   Occurrence         <-->
 			//   New occurrence       <--->
-			//   Result            <----->
+			//   Result             <----->
 			} else if (newOcc.start >= occ.start && newOcc.start < occ.end) {
 				if (newOcc.end >= occ.end) {
 					occ.end = newOcc.end;
 				}
 				handled = true;
 
+			//   String         abdefghijklmno
 			//   Occurrence         <-->
 			//   New occurrence  <--->
-			//   Result         <----->
+			//   Result          <----->
 			} else if (newOcc.end > occ.start && newOcc.end <= occ.end) {
 				if (newOcc.start < occ.start) {
 					occ.start = newOcc.start;

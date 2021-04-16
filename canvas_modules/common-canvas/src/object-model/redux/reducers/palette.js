@@ -28,6 +28,7 @@ export default (state = {}, action) => {
 	case "REMOVE_NODE_TYPES_FROM_PALETTE":
 	case "SET_CATEGORY_LOADING_TEXT":
 	case "SET_CATEGORY_EMPTY_TEXT": {
+		// Save version for the palette in case this is the first action performed on an empty palette.
 		return Object.assign({}, state, { categories: categories(state.categories, action), version: "3.0" });
 	}
 	default:
