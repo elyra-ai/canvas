@@ -482,7 +482,11 @@ class PropertiesMain extends React.Component {
 				</PropertiesModal>);
 			}
 			const className = classNames("properties-wrapper",
-				{ "properties-right-flyout": this.props.propertiesConfig.rightFlyout, "properties-light-enabled": this.props.light },
+				{
+					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
+					"properties-light-enabled": this.props.light,
+					"properties-light-disabled": !this.props.light
+				},
 				`properties-${this.state.editorSize}`);
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;

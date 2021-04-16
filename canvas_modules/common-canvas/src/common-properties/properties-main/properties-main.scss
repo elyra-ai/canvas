@@ -78,3 +78,7 @@
 .properties-light-enabled {
 	background-color: $ui-01; // Override theme background-color when light option is true
 }
+
+.properties-light-disabled {
+	background-color: $ui-background;
+}
