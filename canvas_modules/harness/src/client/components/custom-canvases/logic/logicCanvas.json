@@ -18,7 +18,17 @@
               "image": "images/custom-canvases/flows/palette/icons/select.svg",
               "x_pos": 84,
               "y_pos": 180,
-              "description": "Run an experiment to se what we get."
+              "description": "Run an experiment to see what we get.",
+              "decorations": [{
+                "id": "123",
+                "position": "topRight",
+                "height": 30,
+                "width": 30,
+                "x_pos": -50,
+                "y_pos": 15,
+                "outline": false,
+                "image": "images/palette-animations/index-dev.gif"
+              }]
             }
           },
           "inputs": [
