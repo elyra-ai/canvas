@@ -1952,7 +1952,6 @@ class App extends React.Component {
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
 			heading: this.state.heading,
-			light: this.state.light,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,

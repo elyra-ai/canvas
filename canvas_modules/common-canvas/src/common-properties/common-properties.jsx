@@ -273,6 +273,7 @@ CommonProperties.defaultProps = {
 	},
 	callbacks: {
 	},
+	light: true // Enable light option by default
 };
 
 export default injectIntl(CommonProperties, { forwardRef: true });

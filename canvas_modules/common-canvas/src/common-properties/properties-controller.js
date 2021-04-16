@@ -66,7 +66,6 @@ export default class PropertiesController {
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
 		this.selectionListeners = {};
-		this.light = true; // Enable light option by default
 	}
 
 	getStore() {

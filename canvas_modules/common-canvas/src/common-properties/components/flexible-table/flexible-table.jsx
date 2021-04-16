@@ -438,7 +438,7 @@ class FlexibleTable extends React.Component {
 						disabled={disabled}
 						size="sm"
 						labelText={searchBarLabel}
-						light={has(this.props, "light") ? this.props.light : false}
+						light={this.props.light}
 					/>
 				</div>
 			);
@@ -484,7 +484,7 @@ class FlexibleTable extends React.Component {
 									sortColumns={this.state.columnSortDir}
 									sortDirection={this.state.columnSortDir[this.state.currentSortColumn]}
 									tableState={this.props.tableState}
-									light={has(this.props, "light") ? this.props.light : true}
+									light={this.props.light}
 									{...(scrollIndex !== -1 && { scrollToIndex: scrollIndex, scrollToAlignment: "center" })}
 								/>
 							</div>
@@ -497,7 +497,8 @@ class FlexibleTable extends React.Component {
 }
 
 FlexibleTable.defaultProps = {
-	showHeader: true
+	showHeader: true,
+	light: true
 };
 
 FlexibleTable.propTypes = {
