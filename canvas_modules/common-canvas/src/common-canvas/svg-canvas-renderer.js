@@ -6810,7 +6810,7 @@ export default class SVGCanvasRenderer {
 	// Return the x,y coordinates of the svg group relative to the window's viewport
 	// This is used when a new comment is created from the toolbar to make sure the
 	// new comment always appears in the view port.
-	getSvgViewportOffset() {
+	getDefaultCommentOffset() {
 		let xPos = this.canvasLayout.addCommentOffset;
 		let yPos = this.canvasLayout.addCommentOffset;
 

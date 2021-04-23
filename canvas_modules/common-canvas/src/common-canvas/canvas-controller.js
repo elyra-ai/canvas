@@ -959,6 +959,11 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
 	}
 
+	// Returns default position of a new comment created from toolbar
+	getDefaultCommentPosition() {
+		return this.commonCanvas.getDefaultCommentOffset();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Links methods
 	// ---------------------------------------------------------------------------
@@ -1960,8 +1965,8 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoComment": {
-				const svgPos = this.commonCanvas.getSvgViewportOffset();
-				command = new CreateCommentAction(data, this.objectModel, svgPos);
+				const defaultCommentPosition = this.getDefaultCommentPosition();
+				command = new CreateCommentAction(data, this.objectModel, defaultCommentPosition);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;

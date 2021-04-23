@@ -139,8 +139,8 @@ class CommonCanvas extends React.Component {
 		}
 	}
 
-	getSvgViewportOffset() {
-		return this.diagramCanvasRef.current.getSvgViewportOffset();
+	getDefaultCommentOffset() {
+		return this.diagramCanvasRef.current.getDefaultCommentOffset();
 	}
 
 	getTransformedViewportDimensions() {
