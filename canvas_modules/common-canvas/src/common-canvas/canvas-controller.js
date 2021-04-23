@@ -960,8 +960,11 @@ export default class CanvasController {
 	}
 
 	// Returns default position of a new comment created from toolbar
-	getDefaultCommentPosition() {
-		return this.commonCanvas.getDefaultCommentOffset();
+	// pipelineId - The ID of the pipeline
+	getDefaultCommentPosition(pipelineId) {
+		const commentPosition = this.commonCanvas.getDefaultCommentOffset();
+		// Get the position that is not occupied by an existing comment
+		return this.objectModel.getAPIPipeline(pipelineId).getNewCommentPosition(commentPosition);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1966,7 +1969,11 @@ export default class CanvasController {
 			}
 			case "createAutoComment": {
 				const defaultCommentPosition = this.getDefaultCommentPosition();
-				command = new CreateCommentAction(data, this.objectModel, defaultCommentPosition);
+				data.mousePos = {
+					x: defaultCommentPosition.x_pos,
+					y: defaultCommentPosition.y_pos
+				};
+				command = new CreateCommentAction(data, this.objectModel);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;

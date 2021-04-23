@@ -16,22 +16,11 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateCommentAction extends Action {
-	constructor(data, objectModel, svgPos) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-
-		// If we are provided with a svgPos then we are being called from the
-		// toolbar and therefore need to calculate the position of the comment.
-		if (svgPos) {
-			const comPos = this.apiPipeline.getNewCommentPosition(svgPos);
-			this.data.mousePos = {
-				x: comPos.x_pos,
-				y: comPos.y_pos
-			};
-		}
-
 		this.comment = this.apiPipeline.createComment(data);
 	}
 
