@@ -174,13 +174,13 @@ Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
 });
 
 Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
-	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
+	cy.getNodePortSelector(nodeName, "output", srcPortId)
 		.then((portSelector) => cy.get(portSelector).rightclick("bottom"));
 });
 
 Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 	// Added { force: true } to disable element visibility errorCheck from Cypress
-	cy.getNodePortSelector(nodeName, "inp_port", trgPortId)
+	cy.getNodePortSelector(nodeName, "input", trgPortId)
 		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
 });
 
@@ -202,7 +202,7 @@ Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 });
 
 Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
-	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+	cy.getNodePortSelector(nodeName, "input", inputPortId)
 		.then((portSelector) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });
@@ -210,7 +210,7 @@ Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
 });
 
 Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
-	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });
@@ -280,7 +280,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
-			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const srcSelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-body-outline";
 			cy.window().then((win) => {
 				cy.getCanvasTranslateCoords()
 					.then((transform) => {

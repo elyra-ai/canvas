@@ -339,7 +339,7 @@ $new-halo-link-color: $ui-05;
 	.d3-node-selection-highlight {
 		stroke: $interactive-01;
 		stroke-dasharray: 4;
-		stroke-width: 1;
+		stroke-width: 2;
 		fill: $ui-01;
 		pointer-events: none;
 	}
@@ -513,13 +513,15 @@ $new-halo-link-color: $ui-05;
 	stroke-width: 1.25;
 }
 
-.d3-node-port-input-assoc {
+.d3-node-port-input-assoc,
+.d3-node-port-output-assoc {
 	stroke: $node-port-input-stroke-color;
 	fill: $node-port-input-fill-color;
 	stroke-width: 1.25;
 }
 
-.d3-node-port-input-assoc:hover {
+.d3-node-port-input-assoc:hover,
+.d3-node-port-output-assoc:hover {
 	stroke: $node-port-output-hover-stroke;
 	fill: $node-port-output-hover-fill;
 }
@@ -528,6 +530,12 @@ $new-halo-link-color: $ui-05;
 	stroke: $node-port-input-connected-stroke-color;
 	fill: $node-port-input-connected-fill-color;
 	stroke-width: 1;
+
+	.d3-node-port-input-arrow {
+		stroke: $node-port-input-arrow-connected-stroke-color;
+		stroke-width: 1;
+		fill: $node-port-input-arrow-connected-fill-color;
+	}
 }
 
 .d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
@@ -539,12 +547,6 @@ $new-halo-link-color: $ui-05;
 .d3-node-port-input-arrow {
 	stroke: transparent;
 	fill: transparent;
-}
-
-.d3-node-port-input-arrow[connected="yes"] {
-	stroke: $node-port-input-arrow-connected-stroke-color;
-	stroke-width: 1;
-	fill: $node-port-input-arrow-connected-fill-color;
 }
 
 /* New connection dynamic line styles. */

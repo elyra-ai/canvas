@@ -468,7 +468,7 @@ export default class SVGCanvasRenderer {
 		this.canvasSVG.attr("y", dims.y);
 
 		// Keep the background rectangle the same size as the SVG area.
-		const background = this.canvasSVG.selectAll(this.getSelectorForClass("d3-svg-background"));
+		const background = this.canvasSVG.selectChildren(".d3-svg-background");
 		background.attr("width", dims.width);
 		background.attr("height", dims.height);
 
@@ -518,13 +518,12 @@ export default class SVGCanvasRenderer {
 		// 	" width = " + transformedSVGRect.width +
 		// 	" height = " + transformedSVGRect.height);
 
-		const nodeSelector = this.getSelectorForClass("d3-node-group");
 		const supernodeDatum = this.getParentSupernodeDatum();
 
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM ||
 				this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
 			const svgWid = supernodeDatum.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
-			this.nodesLinksGrp.selectAll(nodeSelector).each((d) => {
+			this.activePipeline.nodes.forEach((d) => {
 				if (d.isSupernodeInputBinding) {
 					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.inputs);
 					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.outputs[0].cx;
@@ -543,7 +542,7 @@ export default class SVGCanvasRenderer {
 
 		} else {
 			const svgHt = supernodeDatum.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-			this.nodesLinksGrp.selectAll(nodeSelector).each((d) => {
+			this.activePipeline.nodes.forEach((d) => {
 				if (d.isSupernodeInputBinding) {
 					d.x_pos = transformedSVGRect.x - d.width;
 					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
@@ -585,15 +584,14 @@ export default class SVGCanvasRenderer {
 		const canv = this.getCanvasDimensionsAdjustedForScale(1);
 		const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
 
-		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_svg_rect")).remove();
-		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_svg_rect_trans")).remove();
-		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_canvas_rect")).remove();
-		this.boundingRectsGrp.selectAll(this.getSelectorForId("br_canvas_rect_with_padding")).remove();
+		this.boundingRectsGrp.selectChildren(".d3-bounding").remove();
 
-		this.boundingRectsGrp
+		const grp = this.boundingRectsGrp
+			.append("g")
+			.attr("class", "d3-bounding");
+
+		grp
 			.append("rect")
-			.attr("data-id", this.getId("br_svg_rect"))
-			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", svgRect.height)
 			.attr("width", svgRect.width)
 			.attr("x", 0)
@@ -601,10 +599,8 @@ export default class SVGCanvasRenderer {
 			.style("fill", "none")
 			.style("stroke", "darkorange");
 
-		this.boundingRectsGrp
+		grp
 			.append("rect")
-			.attr("data-id", this.getId("br_svg_rect_trans"))
-			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("height", transformedSVGRect.height)
 			.attr("width", transformedSVGRect.width - 2)
 			.attr("x", transformedSVGRect.x)
@@ -613,10 +609,8 @@ export default class SVGCanvasRenderer {
 			.style("stroke", "red");
 
 		if (canv) {
-			this.boundingRectsGrp
+			grp
 				.append("rect")
-				.attr("data-id", this.getId("br_canvas_rect"))
-				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("height", canv.height)
 				.attr("width", canv.width)
 				.attr("x", canv.left)
@@ -626,10 +620,8 @@ export default class SVGCanvasRenderer {
 		}
 
 		if (canvWithPadding) {
-			this.boundingRectsGrp
+			grp
 				.append("rect")
-				.attr("data-id", this.getId("br_canvas_rect_with_padding"))
-				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("height", canvWithPadding.height)
 				.attr("width", canvWithPadding.width)
 				.attr("x", canvWithPadding.left)
@@ -667,6 +659,20 @@ export default class SVGCanvasRenderer {
 		sel += `[data-pipeline-id='${this.activePipeline.id}']`;
 		return sel;
 	}
+
+	getNodeGroupSelectionById(nodeId) {
+		const nodeGrpSelector = this.getSelectorForIdWithoutPipeline("node_grp", nodeId);
+		return this.nodesLinksGrp.selectChildren(nodeGrpSelector);
+	}
+
+	getAllNodeGroupsSelection() {
+		return this.nodesLinksGrp.selectChildren(".d3-node-group");
+	}
+
+	getAllCommentGroupsSelection() {
+		return this.nodesLinksGrp.selectChildren(".d3-comment-group");
+	}
+
 
 	// Returns a selector for the ID string like one of the following:
 	// * [data-id='prefix_instanceID']
@@ -1076,7 +1082,7 @@ export default class SVGCanvasRenderer {
 	// This is called when the user drags a new link towards a target node.
 	setNewLinkOverNodeHighlighting(node, state) {
 		if (node) {
-			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id))
+			this.getNodeGroupSelectionById(node.id)
 				.attr("data-new-link-over", state ? "yes" : "no");
 		}
 	}
@@ -2390,9 +2396,7 @@ export default class SVGCanvasRenderer {
 	// the canvas. It makes is easier for the user to see the highlighted link
 	// when the node is dragged over it.
 	setNodeTranslucentState(nodeId, state) {
-		const nodeGrpSelector = this.getSelectorForId("node_grp", nodeId);
-		const nodeGrpSel = this.canvasSVG.select(nodeGrpSelector);
-		nodeGrpSel.classed("d3-node-group-translucent", state);
+		this.getNodeGroupSelectionById(nodeId).classed("d3-node-group-translucent", state);
 	}
 
 	// Returns the snap-to-grid position of the object positioned at
@@ -2428,11 +2432,8 @@ export default class SVGCanvasRenderer {
 		// will cause its ports to move.
 		this.setPortPositionsAllNodes();
 
-		const nodeSelector = this.getSelectorForClass("d3-node-group");
-
-		var nodeGroupSel = this.nodesLinksGrp
-			.selectAll(nodeSelector)
-			.data(this.activePipeline.nodes, function(d) { return d.id; });
+		const nodeGroupSel = this.getAllNodeGroupsSelection()
+			.data(this.activePipeline.nodes, (d) => d.id);
 
 		// For any of these activities we don't need to do anything to the nodes.
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
@@ -2441,28 +2442,27 @@ export default class SVGCanvasRenderer {
 
 		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
 			nodeGroupSel
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.datum((d) => that.getNode(d.id)); // Set the __data__ to the updated data
+				.datum((d) => that.getNode(d.id))
+				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
 
 			if (this.isDisplayingSubFlow()) {
 				nodeGroupSel
-					.each(function(d) { // Use function so the 'this' pointer refers to the node.
+					.each((d, i, nodeGrps) => {
 						if (d.isSupernodeInputBinding) {
-							that.updatePortRadiusAndPos(this, d, "d3-node-port-output");
+							that.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
 						}
 						if (d.isSupernodeOutputBinding) {
-							that.updatePortRadiusAndPos(this, d, "d3-node-port-input");
-							that.updatePortArrowPath(this, d, "d3-node-port-input-arrow");
+							that.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
+							that.updatePortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
 						}
 					});
 			}
 
 		} else if (this.selecting || this.regionSelect) {
-			nodeGroupSel.each(function(d) {
-				const nodeGrp = d3.select(this);
-				nodeGrp.select(that.getSelectorForId("node_sel_outline", d.id))
-					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-					.attr("class", "d3-node-selection-highlight");
+			nodeGroupSel.each((d, i, nodeGrpObjs) => {
+				const nodeGrp = d3.select(nodeGrpObjs[i]);
+				nodeGrp.selectChildren(".d3-node-selection-highlight")
+					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no");
 				that.setNodeStyles(d, "default", nodeGrp);
 			});
 
@@ -2473,595 +2473,595 @@ export default class SVGCanvasRenderer {
 			});
 
 		} else {
-			// Handle new nodes
-			var newNodeGroups = nodeGroupSel.enter()
-				.append("g")
-				.attr("data-id", (d) => that.getId("node_grp", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", (nd) => that.getNodeGroupClass(nd))
+			nodeGroupSel
+				.join(
+					(enter) => this.createNodes(enter)
+				)
+				.datum((d) => this.getNode(d.id))
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM node group object
-					const nodeGrp = d3.select(this);
-					that.raiseNodeToTop(nodeGrp);
-					that.setNodeStyles(d, "hover", nodeGrp);
-					that.addDynamicNodeIcons(d, nodeGrp);
-					if (that.canOpenTip(TIP_TYPE_NODE)) {
-						that.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
-						that.canvasController.openTip({
-							id: that.getId("node_tip", d.id),
-							type: TIP_TYPE_NODE,
-							targetObj: this,
-							pipelineId: that.activePipeline.id,
-							node: d
-						});
-					}
-				})
-				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
-					const nodeGrp = d3.select(this);
-					that.setNodeStyles(d, "default", nodeGrp);
-					nodeGrp.select(that.getSelectorForId("node_body", d.id)).attr("hover", "no");
-					that.removeDynamicNodeIcons(d, nodeGrp);
-					that.canvasController.closeTip();
-				})
-				// Use mouse down instead of click because it gets called before drag start.
+				.attr("class", (d) => that.getNodeGroupClass(d))
+				.attr("style", (d) => that.getNodeGrpStyle(d))
+				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+		}
+	}
+
+	createNodes(enter) {
+		const newNodeGroups = enter
+			.append("g")
+			.attr("data-id", (d) => this.getId("node_grp", d.id))
+			.call(this.attachNodeGroupListeners.bind(this))
+			.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
+
+		// Node Sizing Area.
+		newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
+			.append("path")
+			.attr("class", "d3-node-sizing")
+			.call(this.attachNodeSizingListeners.bind(this));
+
+		// Node Selection Highlighting Outline.
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+			.append("path")
+			.attr("class", "d3-node-selection-highlight");
+
+		// Node Body
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+			.append("path")
+			.attr("class", "d3-node-body-outline");
+
+		// Node Image
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
+			.each((node, i, nodeGrps) => {
+				const nodeImage = this.getNodeImage(node);
+				const nodeImageType = this.getImageType(nodeImage);
+				d3.select(nodeGrps[i])
+					.append(nodeImageType)
+					.attr("class", (d) => this.getNodeImageClass(d));
+			});
+
+		// Node Label
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+			.append("foreignObject")
+			.attr("class", "d3-foreign-object ")
+			.call(this.attachNodeLabelListeners.bind(this))
+			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+			.call(this.attachNodeLabelSpanListeners.bind(this));
+
+		// Create Supernode renderers for any super nodes. Display/hide will be
+		// handled in the 'updateNodes' method.
+		newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
+			.each((d, i, nodeGrps) => {
+				this.createSupernodeRenderer(d, d3.select(nodeGrps[i]));
+			});
+
+		// Halo
+		if (this.canvasLayout.connectionType === "halo") {
+			newNodeGroups.append("circle")
+				.filter((d) => d.layout.haloDisplay)
+				.attr("data-id", (d) => this.getId("node_halo", d.id))
+				.attr("data-pipeline-id", this.activePipeline.id)
+				.attr("class", "d3-node-halo")
+				.attr("cx", (d) => d.layout.haloCenterX)
+				.attr("cy", (d) => d.layout.haloCenterY)
+				.attr("r", (d) => d.layout.haloRadius)
 				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Node Group - mouse down");
-					if (!this.config.enableDragWithoutSelect) {
+					this.logger.log("Halo - mouse down");
+					d3Event.stopPropagation();
+					this.drawingNewLinkData = {
+						srcObjId: d.id,
+						action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+						startPos: this.getTransformedMousePos(d3Event),
+						linkArray: []
+					};
+					this.drawNewLink(d3Event);
+				});
+		}
+
+		return newNodeGroups;
+	}
+
+	updateNodes(joinedNodeGrps) {
+		// Node Sizing Area
+		joinedNodeGrps.selectChildren(".d3-node-sizing")
+			.datum((d) => this.getNode(d.id))
+			.attr("d", (d) => this.getNodeShapePathSizing(d));
+
+		// Node Selection Highlighting Outline.
+		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
+			.datum((d) => this.getNode(d.id))
+			.attr("d", (d) => this.getNodeSelectionOutline(d))
+			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"))
+			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
+
+		// Node Body
+		joinedNodeGrps.selectChildren(".d3-node-body-outline")
+			.datum((d) => this.getNode(d.id))
+			.attr("d", (d) => this.getNodeShapePath(d))
+			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
+
+		// Node Image
+		joinedNodeGrps.selectChildren(".d3-node-image")
+			.datum((d) => this.getNode(d.id))
+			.each((d, i, nodeGrps) => this.setNodeImageContent(nodeGrps[i], d))
+			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
+			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
+			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
+			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
+			.attr("style", (d) => this.getNodeImageStyle(d, "default"))
+			// This code will remove custom attributes from a node. This might happen when
+			// the user clicks the canvas background to remove the greyed out appearance of
+			// a node that was 'cut' to the clipboard.
+			// TODO - Remove this code if/when common canvas supports setting this with
+			// the setStyle function instead of using custom attributes.
+			.each(function(nd) {
+				var imageObj = d3.select(this);
+				if (nd.customAttrs && nd.customAttrs.length > 0) {
+					nd.customAttrs.forEach((customAttr) => {
+						imageObj.attr(customAttr, "");
+					});
+				} else {
+					imageObj.attr("data-is-cut", null); // TODO - This should be made generic
+				}
+			});
+
+		// Node Label
+		joinedNodeGrps.selectChildren(".d3-foreign-object")
+			.datum((d) => this.getNode(d.id))
+			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
+			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
+			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
+			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
+			.attr("class", (d) => this.getNodeLabelForeignClass(d))
+			.select("div")
+			.attr("class", (d) => this.getNodeLabelClass(d))
+			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
+			.select("span")
+			.html((d) => d.label);
+
+		// Node Ellipsis Icon - if one exists
+		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
+			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
+
+		// Node (Suprnode) Expansion Icon - if one exists
+		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
+			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
+
+		// Supernode sub-flow display
+		joinedNodeGrps.each((d, index, grps) => {
+			const nodeGrp = d3.select(grps[index]);
+
+			if (this.canvasLayout.connectionType === "ports") {
+				this.displayPorts(nodeGrp, d);
+			}
+
+			if (this.nodeUtils.isSupernode(d)) {
+				const ren = this.getRendererForSupernode(d);
+				if (ren) {
+					if (this.nodeUtils.isExpanded(d)) {
+						ren.displayCanvas();
+					} else {
+						ren.hideCanvas(d);
+					}
+				}
+			}
+
+			if (!CanvasUtils.isSuperBindingNode(d)) {
+				// Display error indicator
+				this.addErrorMarker(d, nodeGrp);
+
+				// Display Decorators
+				const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
+				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
+			}
+		});
+
+		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	displayPorts(nodeGrp, d) {
+		// Empty inputs arrays are allowed because some apps support that when ports are deleted.
+		if (d.layout.inputPortDisplay && Array.isArray(d.inputs)) {
+			this.displayInputPorts(nodeGrp, d);
+		}
+
+		// Empty outputs arrays are allowed because some apps support that when ports are deleted.
+		if (d.layout.outputPortDisplay && Array.isArray(d.outputs)) {
+			this.displayOutputPorts(nodeGrp, d);
+		}
+	}
+
+	displayInputPorts(nodeGrp, node) {
+		const inSelector = "." + this.getNodeInputPortClassName();
+
+		nodeGrp.selectChildren(inSelector)
+			.data(node.inputs, (p) => p.id)
+			.join(
+				(enter) => this.createInputPorts(enter, node)
+			)
+			.attr("connected", "no") // Display-links code will set this to "yes" if necessary.
+			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.call((joinedInputPortGrps) => this.updateInputPorts(joinedInputPortGrps, node));
+	}
+
+	createInputPorts(enter, node) {
+		const inputPortGroups = enter
+			.append("g")
+			.attr("data-port-id", (port) => port.id)
+			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
+			.call(this.attachInputPortListeners.bind(this), node);
+
+		inputPortGroups
+			.append(node.layout.inputPortObject)
+			.attr("class", "d3-node-port-input-main");
+
+		// Don't show the port arrow when we are supporting association
+		// link creation
+		if (!this.config.enableAssocLinkCreation &&
+				node.layout.inputPortObject === "circle" &&
+				!CanvasUtils.isSuperBindingNode(node)) {
+			// Input port arrow in circle for nodes which are not supernode binding nodes.
+			inputPortGroups
+				.append("path")
+				.attr("class", "d3-node-port-input-arrow");
+		}
+
+		return inputPortGroups;
+	}
+
+	updateInputPorts(joinedInputPortGrps, node) {
+		joinedInputPortGrps.selectChildren(".d3-node-port-input-main")
+			.datum((port) => node.inputs.find((i) => port.id === i.id))
+			.each((port, i, inputPorts) => {
+				const obj = d3.select(inputPorts[i]);
+				if (node.layout.inputPortObject === PORT_OBJECT_IMAGE) {
+					obj
+						.attr("xlink:href", node.layout.inputPortImage)
+						.attr("x", port.cx - (node.layout.inputPortWidth / 2))
+						.attr("y", port.cy - (node.layout.inputPortHeight / 2))
+						.attr("width", node.layout.inputPortWidth)
+						.attr("height", node.layout.inputPortHeight);
+				} else {
+					obj
+						.attr("r", this.getPortRadius(node))
+						.attr("cx", port.cx)
+						.attr("cy", port.cy);
+				}
+			});
+
+		joinedInputPortGrps.selectChildren(".d3-node-port-input-arrow")
+			.datum((port) => node.inputs.find((i) => port.id === i.id))
+			.each((port, i, inputPorts) => {
+				const obj = d3.select(inputPorts[i]);
+				if (node.layout.inputPortObject !== PORT_OBJECT_IMAGE) {
+					obj
+						.attr("d", this.getPortArrowPath(port))
+						.attr("transform", this.getPortArrowPathTransform(port));
+				}
+			});
+	}
+
+	displayOutputPorts(nodeGrp, node) {
+		const outSelector = "." + this.getNodeOutputPortClassName();
+
+		nodeGrp.selectChildren(outSelector)
+			.data(node.outputs, (p) => p.id)
+			.join(
+				(enter) => this.createOutputPorts(enter, node)
+			)
+			.attr("connected", "no") // Display-links code will set this to "yes" if necessary.
+			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
+			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
+	}
+
+	createOutputPorts(enter, node) {
+		const outputPortGroups = enter
+			.append("g")
+			.attr("data-port-id", (port) => port.id)
+			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
+			.call(this.attachOutputPortListeners.bind(this), node);
+
+		outputPortGroups
+			.append(node.layout.outputPortObject)
+			.attr("class", "d3-node-port-output-main");
+
+		return outputPortGroups;
+	}
+
+	updateOutputPorts(joinedOutputPortGroups, node) {
+		joinedOutputPortGroups.selectChildren(".d3-node-port-output-main")
+			.datum((port) => node.outputs.find((o) => port.id === o.id))
+			.each((port, i, outputPorts) => {
+				const obj = d3.select(outputPorts[i]);
+				if (node.layout.outputPortObject === PORT_OBJECT_IMAGE) {
+					obj
+						.attr("xlink:href", node.layout.outputPortImage)
+						.attr("x", port.cx - (node.layout.outputPortWidth / 2))
+						.attr("y", port.cy - (node.layout.outputPortHeight / 2))
+						.attr("width", node.layout.outputPortWidth)
+						.attr("height", node.layout.outputPortHeight);
+				} else {
+					obj
+						.attr("r", this.getPortRadius(node))
+						.attr("cx", port.cx)
+						.attr("cy", port.cy);
+				}
+			});
+	}
+
+	// Attaches the appropriate listeners to the node groups.
+	attachNodeGroupListeners(nodeGrps) {
+		nodeGrps
+			.on("mouseenter", (d3Event, d) => {
+				const nodeGrp = d3.select(d3Event.currentTarget);
+				this.raiseNodeToTop(nodeGrp);
+				this.setNodeStyles(d, "hover", nodeGrp);
+				this.addDynamicNodeIcons(d, nodeGrp);
+				if (this.canOpenTip(TIP_TYPE_NODE)) {
+					this.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
+					this.canvasController.openTip({
+						id: this.getId("node_tip", d.id),
+						type: TIP_TYPE_NODE,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						node: d
+					});
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				const nodeGrp = d3.select(d3Event.currentTarget);
+				this.setNodeStyles(d, "default", nodeGrp);
+				this.removeDynamicNodeIcons(d, nodeGrp);
+				this.canvasController.closeTip();
+			})
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Node Group - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Node Group - finished mouse down");
+			})
+			.on("mousemove", (d3Event, d) => {
+				// this.logger.log("Node Group - mouse move");
+				// Don't stop propogation. Mouse move messages must be allowed to
+				// propagate to canvas zoom operation.
+			})
+			.on("mouseup", (d3Event, d) => {
+				d3Event.stopPropagation();
+				this.logger.log("Node Group - mouse up");
+				if (this.drawingNewLinkData) {
+					this.completeNewLink(d3Event);
+				}
+				if (this.draggingLinkData) {
+					this.completeDraggedLink(d3Event, d);
+				}
+			})
+			.on("click", (d3Event, d) => {
+				this.logger.log("Node Group - click");
+				d3Event.stopPropagation();
+			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Node Group - double click");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				var selObjIds = this.objectModel.getSelectedObjectIds();
+				this.canvasController.clickActionHandler({
+					clickType: "DOUBLE_CLICK",
+					objectType: "node",
+					id: d.id,
+					selectedObjectIds: selObjIds,
+					pipelineId: this.activePipeline.id
+				});
+			})
+			.on("contextmenu", (d3Event, d) => {
+				this.logger.log("Node Group - context menu");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				if (!CanvasUtils.isSuperBindingNode(d)) {
+					// With enableDragWithoutSelect set to true, the object for which the
+					// context menu is being requested needs to be implicitely selected.
+					if (this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d);
 					}
-					this.logger.log("Node Group - finished mouse down");
-				})
-				.on("mousemove", (d3Event, d) => {
-					// this.logger.log("Node Group - mouse move");
-					// Don't stop propogation. Mouse move messages must be allowed to
-					// propagate to canvas zoom operation.
-				})
-				.on("mouseup", (d3Event, d) => {
-					d3Event.stopPropagation();
-					this.logger.log("Node Group - mouse up");
-					if (this.drawingNewLinkData) {
-						this.completeNewLink(d3Event);
+					this.openContextMenu(d3Event, "node", d);
+				}
+			});
+	}
+
+	attachNodeSizingListeners(nodeGrps) {
+		nodeGrps
+			.on("mousedown", (d3Event, d) => {
+				if (this.nodeUtils.isExpandedSupernode(d)) {
+					this.nodeSizing = true;
+					this.nodeSizingInitialSize = { width: d.width, height: d.height };
+					this.nodeSizingId = d.id;
+					// Note - node resizing and finalization of size is handled by drag functions.
+					this.addTempCursorOverlay(this.nodeSizingCursor);
+				}
+			})
+			// Use mousemove as well as mouseenter so the cursor will change
+			// if the pointer moves from one area of the node outline to another
+			// (eg. from east area to north-east area) without exiting the node outline.
+			// A mouseenter is triggered when the sizing operation stops and the
+			// pointer leaves the temporary overlay (which is removed) and enters
+			// the node outline.
+			.on("mousemove mouseenter", (d3Event, d) => {
+				if (this.nodeUtils.isExpandedSupernode(d) &&
+						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
+					let cursorType = "pointer";
+					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
+						this.nodeSizingDirection = this.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
+						this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
+						cursorType = this.nodeSizingCursor;
 					}
-					if (this.draggingLinkData) {
-						this.completeDraggedLink(d3Event, d);
-					}
-				})
-				.on("click", (d3Event, d) => {
-					this.logger.log("Node Group - click");
-					d3Event.stopPropagation();
-				})
-				.on("dblclick", (d3Event, d) => {
-					this.logger.log("Node Group - double click");
+					d3.select(d3Event.currentTarget).style("cursor", cursorType);
+				}
+			});
+	}
+
+	attachNodeLabelListeners(nodeLabels) {
+		nodeLabels
+			.on("mouseenter", (d3Event, d) => {
+				const labelSel = d3.select(d3Event.currentTarget);
+				if (this.config.enableDisplayFullLabelOnHover && !this.nodeUtils.isExpandedSupernode(d)) {
+					const spanSel = labelSel.selectAll("span");
+					labelSel
+						.attr("x", this.nodeUtils.getNodeLabelHoverPosX(d))
+						.attr("width", this.nodeUtils.getNodeLabelHoverWidth(d))
+						.attr("height", this.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), this.zoomTransform.k));
+					spanSel.classed("d3-node-label-full", true);
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				const labelSel = d3.select(d3Event.currentTarget);
+				if (this.config.enableDisplayFullLabelOnHover && !this.nodeUtils.isExpandedSupernode(d)) {
+					labelSel
+						.attr("x", this.nodeUtils.getNodeLabelPosX(d))
+						.attr("width", this.nodeUtils.getNodeLabelWidth(d))
+						.attr("height", this.nodeUtils.getNodeLabelHeight(d));
+					labelSel.selectAll("span").classed("d3-node-label-full", false);
+				}
+			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Node Label - double click");
+				if (d.layout.labelEditable) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					var selObjIds = this.objectModel.getSelectedObjectIds();
-					this.canvasController.clickActionHandler({
-						clickType: "DOUBLE_CLICK",
-						objectType: "node",
-						id: d.id,
-						selectedObjectIds: selObjIds,
-						pipelineId: this.activePipeline.id
-					});
-				})
-				.on("contextmenu", (d3Event, d) => {
-					this.logger.log("Node Group - context menu");
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					if (!CanvasUtils.isSuperBindingNode(d)) {
-						// With enableDragWithoutSelect set to true, the object for which the
-						// context menu is being requested needs to be implicitely selected.
-						if (this.config.enableDragWithoutSelect) {
-							this.selectObjectD3Event(d3Event, d);
-						}
-						that.openContextMenu(d3Event, "node", d);
-					}
-				})
-				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
+					this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+				}
+			});
+	}
 
-			// Node sizing area.
-			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
-				.append("path")
-				.attr("data-id", (d) => this.getId("node_sizing", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mousedown", (d3Event, d) => {
-					if (this.nodeUtils.isExpandedSupernode(d)) {
-						this.nodeSizing = true;
-						this.nodeSizingInitialSize = { width: d.width, height: d.height };
-						this.nodeSizingId = d.id;
-						// Note - node resizing and finalization of size is handled by drag functions.
-						this.addTempCursorOverlay(this.nodeSizingCursor);
-					}
-				})
-				// Use mousemove as well as mouseenter so the cursor will change
-				// if the pointer moves from one area of the node outline to another
-				// (eg. from east area to north-east area) without exiting the node outline.
-				// A mouseenter is triggered when the sizing operation stops and the
-				// pointer leaves the temporary overlay (which is removed) and enters
-				// the node outline.
-				.on("mousemove mouseenter", function(d3Event, d) {
-					if (that.nodeUtils.isExpandedSupernode(d) &&
-							!that.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
-						let cursorType = "pointer";
-						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
-							that.nodeSizingDirection = that.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
-							that.nodeSizingCursor = that.getCursorBasedOnDirection(that.nodeSizingDirection);
-							cursorType = that.nodeSizingCursor;
-						}
-						d3.select(this).style("cursor", cursorType);
-					}
-				});
+	attachNodeLabelSpanListeners(nodeLabelSpans) {
+		nodeLabelSpans
+			.on("mouseenter", (d3Event, d) => {
+				if (d.layout.labelEditable) {
+					this.displayEditIcon(d3Event.currentTarget, d);
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				if (d.layout.labelEditable) {
+					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, d);
+				}
+			});
+	}
 
-			// Node selection highlighting outline.
-			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-				.append("path")
-				.attr("data-id", (d) => this.getId("node_sel_outline", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id);
-
-			// Node body
-			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-				.append("path")
-				.attr("class", "d3-node-body-outline")
-				.attr("data-id", (d) => this.getId("node_body", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id);
-
-			// Image outline - this code used for debugging purposes
-			// newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			// 	.append("rect")
-			// 	.attr("x", (nd) => this.nodeUtils.getNodeImagePosX(nd))
-			// 	.attr("y", (nd) => this.nodeUtils.getNodeImagePosY(nd))
-			// 	.attr("width", (nd) => this.nodeUtils.getNodeImageWidth(nd))
-			// 	.attr("height", (nd) => this.nodeUtils.getNodeImageHeight(nd))
-			// 	.attr("class", "d3-node-image-outline");
-
-			// Node image
-			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
-				.each(function(nd) {
-					const nodeImage = that.getNodeImage(nd);
-					const nodeImageType = that.getImageType(nodeImage);
-					d3.select(this)
-						.append(nodeImageType)
-						.attr("data-id", (d) => that.getId("node_image", d.id))
-						.attr("data-pipeline-id", that.activePipeline.id)
-						.attr("class", (d) => that.getNodeImageClass(d));
-				});
-
-			// Node Label
-			newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-				.append("foreignObject")
-				.attr("data-id", (d) => this.getId("node_label", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-					const labelSel = d3.select(this);
-					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
-						const spanSel = labelSel.selectAll("span");
-						labelSel
-							.attr("x", that.nodeUtils.getNodeLabelHoverPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelHoverWidth(d))
-							.attr("height", that.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), that.zoomTransform.k));
-						spanSel.classed("d3-node-label-full", true);
-					}
-				})
-				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-					const labelSel = d3.select(this);
-					if (that.config.enableDisplayFullLabelOnHover && !that.nodeUtils.isExpandedSupernode(d)) {
-						labelSel
-							.attr("x", that.nodeUtils.getNodeLabelPosX(d))
-							.attr("width", that.nodeUtils.getNodeLabelWidth(d))
-							.attr("height", that.nodeUtils.getNodeLabelHeight(d));
-						labelSel.selectAll("span").classed("d3-node-label-full", false);
-					}
-				})
-				.on("dblclick", (d3Event, d) => {
-					that.logger.log("Node Label - double click");
-					if (d.layout.labelEditable) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						that.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
-					}
-				})
-				.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-				.append("xhtml:span") // Provide a namespace when span is inside foreignObject
-				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
-					if (d.layout.labelEditable) {
-						that.displayEditIcon(this, d);
-					}
-				})
-				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM span object
-					if (d.layout.labelEditable) {
-						// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
-						that.hideEditIconPending = setTimeout(that.hideEditIcon.bind(that), 500, this, d);
-					}
-				});
-
-			// Create Supernode renderers for any super nodes. Display/hide will be handled in 'new and existing'.
-			newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
-				.each(function(d) {
-					that.createSupernodeRenderer(d, d3.select(this));
-				});
-
-			// Halo
-			if (this.canvasLayout.connectionType === "halo") {
-				newNodeGroups.append("circle")
-					.filter((d) => d.layout.haloDisplay)
-					.attr("data-id", (d) => this.getId("node_halo", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("class", "d3-node-halo")
-					.attr("cx", (d) => d.layout.haloCenterX)
-					.attr("cy", (d) => d.layout.haloCenterY)
-					.attr("r", (d) => d.layout.haloRadius)
-					.on("mousedown", (d3Event, d) => {
-						this.logger.log("Halo - mouse down");
-						d3Event.stopPropagation();
+	attachInputPortListeners(inputPorts, node) {
+		inputPorts
+			.on("mousedown", (d3Event, port) => {
+				if (this.config.enableAssocLinkCreation) {
+					// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
+					if (d3Event.button === 0) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
+						const srcNode = this.getNode(node.id);
 						this.drawingNewLinkData = {
-							srcObjId: d.id,
+							srcObjId: node.id,
+							srcPortId: port.id,
 							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-							startPos: this.getTransformedMousePos(d3Event),
+							srcNode: srcNode,
+							startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+							portType: "input",
+							portObject: node.layout.inputPortObject,
+							portImage: node.layout.inputPortImage,
+							portWidth: node.layout.inputPortWidth,
+							portHeight: node.layout.inputPortHeight,
+							portRadius: this.getPortRadius(srcNode),
+							minInitialLine: srcNode.layout.minInitialLine,
+							guideObject: node.layout.inputPortGuideObject,
+							guideImage: node.layout.inputPortGuideImage,
 							linkArray: []
 						};
 						this.drawNewLink(d3Event);
+					}
+				}
+			})
+			.on("mouseenter", (d3Event, port) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
+				if (this.canOpenTip(TIP_TYPE_PORT)) {
+					this.canvasController.closeTip();
+					this.canvasController.openTip({
+						id: this.getId("node_port_tip", port.id),
+						type: TIP_TYPE_PORT,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						node: node,
+						port: port
 					});
-			}
+				}
+			})
+			.on("mouseleave", () => {
+				this.canvasController.closeTip();
+			})
+			.on("contextmenu", (d3Event, port) => {
+				this.logger.log("Input Port Circle - context menu");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				// With enableDragWithoutSelect set to true, the object for which the
+				// context menu is being requested needs to be implicitely selected.
+				if (this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, node);
+				}
 
-			const newAndExistingNodeGrps =
-				nodeGroupSel.enter().merge(nodeGroupSel);
+				this.openContextMenu(d3Event, "input_port", node, port);
+			});
+	}
 
-			newAndExistingNodeGrps
-				.each((d) => {
-					const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", d.id));
-					const node = this.getNode(d.id);
-
-					nodeGrp
-						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
-						.attr("style", that.getNodeGrpStyle(d))
-						.attr("class", (nd) => that.getNodeGroupClass(nd))
-						.datum(node); // Set the __data__ to the updated data
-
-					// Node sizing area
-					nodeGrp.select(this.getSelectorForId("node_sizing", d.id))
-						.attr("d", (nd) => this.getNodeShapePathSizing(nd))
-						.attr("class", "d3-node-sizing")
-						.datum(node); // Set the __data__ to the updated data
-
-					// Node selection highlighting
-					nodeGrp.select(this.getSelectorForId("node_sel_outline", d.id))
-						.attr("d", (nd) => this.getNodeSelectionOutline(nd))
-						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-						.attr("class", (nd) => "d3-node-selection-highlight")
-						.datum(node); // Set the __data__ to the updated data
-
-					// Move the dynamic icons (if any exist)
-					nodeGrp.select(this.getSelectorForId("node_ellipsis_group", d.id))
-						.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd));
-
-					nodeGrp.select(this.getSelectorForId("node_exp_group", d.id))
-						.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd));
-
-					// Node styles
-					this.setNodeStyles(d, "default", nodeGrp);
-
-					// Node image
-					// This code will remove custom attributes from a node. This might happen when
-					// the user clicks the canvas background to remove the greyed out appearance of
-					// a node that was 'cut' to the clipboard.
-					// TODO - Remove this code if/when common canvas supports cut (which removes nodes
-					// from the canvas) and when WML Canvas uses that clipboard support in place
-					// of its own.
-					nodeGrp.select(this.getSelectorForId("node_image", d.id))
-						.each(function() { that.setNodeImageContent(this, d); })
-						.attr("x", (nd) => this.nodeUtils.getNodeImagePosX(nd))
-						.attr("y", (nd) => this.nodeUtils.getNodeImagePosY(nd))
-						.attr("width", (nd) => this.nodeUtils.getNodeImageWidth(nd))
-						.attr("height", (nd) => this.nodeUtils.getNodeImageHeight(nd))
-						.datum(node) // Set the __data__ to the updated data
-						.each(function(nd) {
-							var imageObj = d3.select(this);
-							if (nd.customAttrs && nd.customAttrs.length > 0) {
-								nd.customAttrs.forEach((customAttr) => {
-									imageObj.attr(customAttr, "");
-								});
-							} else {
-								imageObj.attr("data-is-cut", null); // TODO - This should be made generic
-							}
-						});
-
-					// Set y for node label in new and existing nodes
-					nodeGrp.select(this.getSelectorForId("node_label", d.id))
-						.datum(node) // Set the __data__ to the updated data
-						.attr("x", (nd) => this.nodeUtils.getNodeLabelPosX(nd))
-						.attr("y", (nd) => this.nodeUtils.getNodeLabelPosY(nd))
-						.attr("width", (nd) => this.nodeUtils.getNodeLabelWidth(nd))
-						.attr("height", (nd) => this.nodeUtils.getNodeLabelHeight(nd))
-						.attr("class", this.getNodeLabelForeignClass(node))
-						.select("div")
-						.attr("class", (nd) => this.getNodeLabelClass(nd))
-						.select("span")
-						.html((nd) => nd.label);
-
-					// Supernode sub-flow display
-					if (this.nodeUtils.isSupernode(d)) {
-						const ren = this.getRendererForSupernode(d);
-						if (ren) {
-							if (this.nodeUtils.isExpanded(d)) {
-								ren.displayCanvas();
-							} else {
-								ren.hideCanvas(d);
-							}
+	attachOutputPortListeners(outputPorts, node) {
+		outputPorts
+			.on("mousedown", (d3Event, port) => {
+				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
+				if (d3Event.button === 0) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
+					const srcNode = this.getNode(node.id);
+					if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
+						this.drawingNewLinkData = {
+							srcObjId: node.id,
+							srcPortId: port.id,
+							action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+							srcNode: srcNode,
+							startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+							portType: "output",
+							portObject: node.layout.outputPortObject,
+							portImage: node.layout.outputPortImage,
+							portWidth: node.layout.outputPortWidth,
+							portHeight: node.layout.outputPortHeight,
+							portRadius: this.getPortRadius(srcNode),
+							minInitialLine: srcNode.layout.minInitialLine,
+							guideObject: node.layout.outputPortGuideObject,
+							guideImage: node.layout.outputPortGuideImage,
+							linkArray: []
+						};
+						if (this.config.enableHighlightUnavailableNodes) {
+							this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
 						}
+						this.drawNewLink(d3Event);
 					}
-
-					// Node body updates
-					nodeGrp.select(this.getSelectorForId("node_body", d.id))
-						.datum(node) // Set the __data__ to the updated data
-						.attr("d", (cd) => this.getNodeShapePath(cd))
-						.attr("class", "d3-node-body-outline");
-
-					// Handle port related objects
-					if (this.canvasLayout.connectionType === "ports") {
-						// Input ports
-						// Empty inputs arrays are allowed because some apps support that when ports are deleted.
-						if (d.layout.inputPortDisplay && Array.isArray(d.inputs)) {
-							// This selector will select all input ports which are for the currently
-							// active pipeline. It is necessary to select them by the active pipeline
-							// because an expanded super node will include its own input ports as well
-							// as those of the sub-flow nodes displayed in the supernode container and
-							// when selecting for a supernode we need to exclude the ones from the sub-flow.
-							const inSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
-
-							var inputPortSelection =
-								nodeGrp.selectAll(inSelector)
-									.data(d.inputs, function(p) { return p.id; });
-
-							// Input port object
-							inputPortSelection.enter()
-								.append(d.layout.inputPortObject)
-								.attr("data-id", (port) => this.getId("node_inp_port", d.id, port.id))
-								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
-								.attr("connected", "no")
-								.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
-								.on("mousedown", (d3Event, port) => {
-									if (this.config.enableAssocLinkCreation) {
-										// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-										if (d3Event.button === 0) {
-											CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-											const srcNode = this.getNode(d.id);
-											this.drawingNewLinkData = {
-												srcObjId: d.id,
-												srcPortId: port.id,
-												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-												srcNode: srcNode,
-												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-												portType: "input",
-												portObject: d.layout.inputPortObject,
-												portImage: d.layout.inputPortImage,
-												portWidth: d.layout.inputPortWidth,
-												portHeight: d.layout.inputPortHeight,
-												portRadius: this.getPortRadius(srcNode),
-												minInitialLine: srcNode.layout.minInitialLine,
-												guideObject: d.layout.inputPortGuideObject,
-												guideImage: d.layout.inputPortGuideImage,
-												linkArray: []
-											};
-											this.drawNewLink(d3Event);
-										}
-									}
-								})
-								.on("mouseenter", function(d3Event, port) {
-									CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
-									if (that.canOpenTip(TIP_TYPE_PORT)) {
-										that.canvasController.closeTip();
-										that.canvasController.openTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.activePipeline.id,
-											node: d,
-											port: port
-										});
-									}
-								})
-								.on("mouseleave", () => {
-									this.canvasController.closeTip();
-								})
-								.on("contextmenu", (d3Event, port) => {
-									this.logger.log("Input Port Circle - context menu");
-									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-									// With enableDragWithoutSelect set to true, the object for which the
-									// context menu is being requested needs to be implicitely selected.
-									if (this.config.enableDragWithoutSelect) {
-										this.selectObjectD3Event(d3Event, d);
-									}
-
-									this.openContextMenu(d3Event, "input_port", d, port);
-								})
-								.merge(inputPortSelection)
-								.each(function(port) {
-									const obj = d3.select(this);
-									if (d.layout.inputPortObject === PORT_OBJECT_IMAGE) {
-										obj
-											.attr("xlink:href", d.layout.inputPortImage)
-											.attr("x", port.cx - (d.layout.inputPortWidth / 2))
-											.attr("y", port.cy - (d.layout.inputPortHeight / 2))
-											.attr("width", d.layout.inputPortWidth)
-											.attr("height", d.layout.inputPortHeight);
-									} else {
-										obj
-											.attr("r", that.getPortRadius(d))
-											.attr("cx", port.cx)
-											.attr("cy", port.cy);
-									}
-								})
-								.attr("class", (port) =>
-									this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
-								.datum((port) => that.getNodePort(d.id, port.id, "input"));
-
-							inputPortSelection.exit().remove();
-
-							// Don't show the port arrow when we are supporting association
-							// link creation
-							if (!this.config.enableAssocLinkCreation &&
-									d.layout.inputPortObject === "circle" &&
-									!CanvasUtils.isSuperBindingNode(d)) {
-								const inArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
-
-								var inputPortArrowSelection =
-									nodeGrp.selectAll(inArrSelector)
-										.data(d.inputs, function(p) { return p.id; });
-
-								// Input port arrow in circle for nodes which are not supernode binding nodes.
-								inputPortArrowSelection.enter()
-									.append("path")
-									.attr("data-id", (port) => this.getId("node_inp_port_arrow", d.id, port.id))
-									.attr("data-pipeline-id", this.activePipeline.id)
-									.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
-									.attr("class", "d3-node-port-input-arrow")
-									.attr("connected", "no")
-									.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(d) ? "yes" : "no")
-									.on("mouseenter", function(d3Event, port) {
-										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
-										if (that.canOpenTip(TIP_TYPE_PORT)) {
-											that.canvasController.openTip({
-												id: that.getId("node_port_tip", port.id),
-												type: TIP_TYPE_PORT,
-												targetObj: this,
-												pipelineId: that.activePipeline.id,
-												node: d,
-												port: port
-											});
-										}
-									})
-									.on("mouseleave", () => {
-										this.canvasController.closeTip();
-									})
-									.on("contextmenu", (d3Event, port) => {
-										this.logger.log("Input Port Arrow - context menu");
-										CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-										// With enableDragWithoutSelect set to true, the object for which the
-										// context menu is being requested needs to be implicitely selected.
-										if (this.config.enableDragWithoutSelect) {
-											this.selectObjectD3Event(d3Event, d);
-										}
-										this.openContextMenu(d3Event, "input_port", d, port);
-									})
-									.merge(inputPortArrowSelection)
-									.attr("d", (port) => this.getPortArrowPath(port))
-									.attr("transform", (port) => this.getPortArrowPathTransform(port))
-									.datum((port) => this.getNodePort(d.id, port.id, "input"));
-
-								inputPortArrowSelection.exit().remove();
-							}
-						}
-
-						// Output ports
-						// Empty outputs arrays are allowed because some apps support that when ports are deleted.
-						if (d.layout.outputPortDisplay && Array.isArray(d.outputs)) {
-							// This selector will select all output ports which are for the currently
-							// active pipeline. It is necessary to select them by the active pipeline
-							// because an expanded super node will include its own output ports as well
-							// as those of the sub-flow nodes displayed in the supernode container and
-							// when selecting for a supernode we need to exclude the ones from the sub-flow.
-							const outSelector = this.getSelectorForClass("d3-node-port-output");
-
-							var outputPortSelection = nodeGrp.selectAll(outSelector)
-								.data(d.outputs, function(p) { return p.id; });
-
-							outputPortSelection.enter()
-								.append(d.layout.outputPortObject)
-								.attr("data-id", (port) => this.getId("node_out_port", d.id, port.id))
-								.attr("data-pipeline-id", this.activePipeline.id)
-								.attr("data-port-id", (port) => port.id) // This is needed by getNodePortIdNearMousePos and getNodeAtMousePos
-								.on("mousedown", (d3Event, port) => {
-									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-									if (d3Event.button === 0) {
-										CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-										const srcNode = this.getNode(d.id);
-										if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
-											this.drawingNewLinkData = {
-												srcObjId: d.id,
-												srcPortId: port.id,
-												action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-												srcNode: srcNode,
-												startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-												portType: "output",
-												portObject: d.layout.outputPortObject,
-												portImage: d.layout.outputPortImage,
-												portWidth: d.layout.outputPortWidth,
-												portHeight: d.layout.outputPortHeight,
-												portRadius: this.getPortRadius(srcNode),
-												minInitialLine: srcNode.layout.minInitialLine,
-												guideObject: d.layout.outputPortGuideObject,
-												guideImage: d.layout.outputPortGuideImage,
-												linkArray: []
-											};
-											if (this.config.enableHighlightUnavailableNodes) {
-												this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
-											}
-											this.drawNewLink(d3Event);
-										}
-									}
-								})
-								.on("mouseenter", function(d3Event, port) {
-									CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
-									if (that.canOpenTip(TIP_TYPE_PORT)) {
-										that.canvasController.closeTip();
-										that.canvasController.openTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.activePipeline.id,
-											node: d,
-											port: port
-										});
-									}
-								})
-								.on("mouseleave", () => {
-									this.canvasController.closeTip();
-								})
-								.on("contextmenu", (d3Event, port) => {
-									this.logger.log("Output Port Circle - context menu");
-									CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-									// With enableDragWithoutSelect set to true, the object for which the
-									// context menu is being requested needs to be implicitely selected.
-									if (this.config.enableDragWithoutSelect) {
-										this.selectObjectD3Event(d3Event, d);
-									}
-									this.openContextMenu(d3Event, "output_port", d, port);
-								})
-								.merge(outputPortSelection)
-								.each(function(port) {
-									const obj = d3.select(this);
-									if (d.layout.outputPortObject === PORT_OBJECT_IMAGE) {
-										obj
-											.attr("xlink:href", d.layout.outputPortImage)
-											.attr("x", port.cx - (d.layout.outputPortWidth / 2))
-											.attr("y", port.cy - (d.layout.outputPortHeight / 2))
-											.attr("width", d.layout.outputPortWidth)
-											.attr("height", d.layout.outputPortHeight);
-									} else {
-										obj
-											.attr("r", that.getPortRadius(d))
-											.attr("cx", port.cx)
-											.attr("cy", port.cy);
-									}
-								})
-								.attr("class", (port) => "d3-node-port-output" + (port.class_name ? " " + port.class_name : ""))
-								.datum((port) => this.getNodePort(d.id, port.id, "output"));
-
-							outputPortSelection.exit().remove();
-						}
-					}
-
-					if (!CanvasUtils.isSuperBindingNode(d)) {
-						// Display error indicator
-						this.addErrorMarker(d, nodeGrp);
-
-						// Display decorators
-						const decorations = CanvasUtils.getCombinedDecorations(d.layout.decorations, d.decorations);
-						this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
-					}
-				});
-
-			// Remove any nodes that are no longer in the diagram.nodes array.
-			nodeGroupSel.exit().remove();
-		}
-		this.logger.logEndTimer("displayNodes " + this.getFlags());
+				}
+			})
+			.on("mouseenter", (d3Event, port) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event); // stop event propagation, otherwise node tip is shown
+				if (this.canOpenTip(TIP_TYPE_PORT)) {
+					this.canvasController.closeTip();
+					this.canvasController.openTip({
+						id: this.getId("node_port_tip", port.id),
+						type: TIP_TYPE_PORT,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						node: node,
+						port: port
+					});
+				}
+			})
+			.on("mouseleave", () => {
+				this.canvasController.closeTip();
+			})
+			.on("contextmenu", (d3Event, port) => {
+				this.logger.log("Output Port Circle - context menu");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				// With enableDragWithoutSelect set to true, the object for which the
+				// context menu is being requested needs to be implicitely selected.
+				if (this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, node);
+				}
+				this.openContextMenu(d3Event, "output_port", node, port);
+			});
 	}
 
 	// Sets the d3-node-unavailable class on any node that is currently not
@@ -3069,7 +3069,7 @@ export default class SVGCanvasRenderer {
 	// passed in, of the link being manipulated. srcNode and scrPortId may be
 	// undefined if a detached link is being manipulated.
 	setUnavailableTargetNodesHighlighting(srcNode, srcPortId, links) {
-		this.nodesLinksGrp.selectAll(".d3-node-group")
+		this.getAllNodeGroupsSelection()
 			.filter((trgNode) => !CanvasUtils.isTrgNodeAvailable(trgNode, srcNode, srcPortId, links))
 			.classed("d3-node-unavailable", true);
 	}
@@ -3079,14 +3079,14 @@ export default class SVGCanvasRenderer {
 	// passed in, of the link being manipulated. trgNode and trgPortId may be
 	// undefined if a detached link is being manipulated.
 	setUnavailableSourceNodesHighlighting(trgNode, trgPortId, links) {
-		this.nodesLinksGrp.selectAll(".d3-node-group")
+		this.getAllNodeGroupsSelection()
 			.filter((srcNode) => !CanvasUtils.isSrcNodeAvailable(srcNode, trgNode, trgPortId, links))
 			.classed("d3-node-unavailable", true);
 	}
 
 	// Removes the d3-node-unavailable class from any node that currently has it.
 	unsetUnavailableNodesHighlighting() {
-		d3.selectAll(".d3-node-group").classed("d3-node-unavailable", false);
+		this.getAllNodeGroupsSelection().classed("d3-node-unavailable", false);
 	}
 
 	displayEditIcon(spanObj, node) {
@@ -3340,19 +3340,16 @@ export default class SVGCanvasRenderer {
 	}
 
 	addErrorMarker(d, nodeGrp) {
-		const errorMarkerSelector = this.getSelectorForClass("node-error-marker");
-		const errorMarkerSelection = nodeGrp.selectAll(errorMarkerSelector);
+		const errorMarkerSelection = nodeGrp.selectChildren(".node-error-marker");
 
 		if (d.messages && d.messages.length > 0) {
 			if (errorMarkerSelection.empty()) {
 				nodeGrp
 					.append("svg")
-					.attr("data-id", this.getId("node_error_marker", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("class", () => "node-error-marker"); // Need to set this so following selection will work
+					.attr("class", "node-error-marker"); // Need to set this so following selection will work
 			}
 
-			nodeGrp.selectAll(errorMarkerSelector)
+			nodeGrp.selectChildren(".node-error-marker")
 				.attr("class", () => "node-error-marker " + this.getErrorMarkerClass(d.messages))
 				.html(this.getErrorMarkerIcon(d))
 				.attr("width", this.nodeUtils.getNodeErrorWidth(d))
@@ -3367,14 +3364,14 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	getNodeInputPortClassName(port) {
+	getNodeInputPortClassName() {
 		if (this.config.enableAssocLinkCreation) {
 			return "d3-node-port-input-assoc";
 		}
 		return "d3-node-port-input";
 	}
 
-	getNodeOutputPortClassName(port) {
+	getNodeOutputPortClassName() {
 		if (this.config.enableAssocLinkCreation) {
 			return "d3-node-port-output-assoc";
 		}
@@ -3434,27 +3431,44 @@ export default class SVGCanvasRenderer {
 	}
 
 	setNodeBodyStyles(d, type, nodeGrp) {
-		let style = this.getObjectStyle(d, "body", type);
-		// For port-arcs display we reapply the drop shadow if no styles is provided
-		if (style === null && d.layout.dropShadow) {
-			style = `filter:url(${this.getId("#node_drop_shadow")})`;
-		}
-		nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("style", style);
+		const style = this.getNodeBodyStyle(d, type);
+		nodeGrp.selectChildren(".d3-node-body-outline").attr("style", style);
 	}
 
 	setNodeSelectionOutlineStyles(d, type, nodeGrp) {
-		const style = this.getObjectStyle(d, "selection_outline", type);
-		nodeGrp.select(this.getSelectorForId("node_sel_outline", d.id)).attr("style", style);
+		const style = this.getNodeSelectionOutlineStyle(d, type);
+		nodeGrp.selectChildren(".d3-node-selection-highlight").attr("style", style);
 	}
 
 	setNodeImageStyles(d, type, nodeGrp) {
-		const style = this.getObjectStyle(d, "image", type);
-		nodeGrp.select(this.getSelectorForId("node_image", d.id)).attr("style", style);
+		const style = this.getNodeImageStyle(d, type);
+		nodeGrp.selectChildren(".d3-node-image").attr("style", style);
 	}
 
 	setNodeLabelStyles(d, type, nodeGrp) {
-		const style = this.getObjectStyle(d, "label", type);
-		nodeGrp.select(this.getSelectorForId("node_label", d.id)).attr("style", style);
+		const style = this.getNodeLabelStyle(d, type);
+		nodeGrp.selectChildren(".d3-node-label").attr("style", style);
+	}
+
+	getNodeBodyStyle(d, type) {
+		let style = this.getObjectStyle(d, "body", type);
+		// For port-arcs display we reapply the drop shadow if no style is provided
+		if (style === null && d.layout.dropShadow) {
+			style = `filter:url(${this.getId("#node_drop_shadow")})`;
+		}
+		return style;
+	}
+
+	getNodeSelectionOutlineStyle(d, type) {
+		return this.getObjectStyle(d, "selection_outline", type);
+	}
+
+	getNodeImageStyle(d, type) {
+		return this.getObjectStyle(d, "image", type);
+	}
+
+	getNodeLabelStyle(d, type) {
+		return this.getObjectStyle(d, "label", type);
 	}
 
 	getNodeGrpStyle(d) {
@@ -3542,13 +3556,10 @@ export default class SVGCanvasRenderer {
 
 	addDynamicNodeIcons(d, nodeGrp) {
 		if (!this.nodeSizing && !CanvasUtils.isSuperBindingNode(d)) {
-			nodeGrp.select(this.getSelectorForId("node_body", d.id)).attr("hover", "yes");
 
 			const ellipsisGrp = nodeGrp
 				.append("g")
 				.filter(() => d.layout.ellipsisDisplay)
-				.attr("data-id", this.getId("node_ellipsis_group", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
 				.attr("class", "d3-node-ellipsis-group")
 				.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
 				.on("mousedown", () => {
@@ -3581,8 +3592,6 @@ export default class SVGCanvasRenderer {
 			if (this.nodeUtils.isExpandedSupernode(d)) {
 				const expGrp = nodeGrp
 					.append("g")
-					.attr("data-id", this.getId("node_exp_group", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
 					.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
 					.attr("class", "d3-node-super-expand-icon-group")
 					.on("click", (d3Event) => {
@@ -3616,21 +3625,33 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	updatePortRadiusAndPos(node, d, cssNodePort) {
-		const nodeGrp = d3.select(node);
-		const selector = this.getSelectorForClass(cssNodePort);
-		nodeGrp.selectAll(selector)
-			.attr("r", () => this.getPortRadius(d))
+	updatePortRadiusAndPos(nodeObj, node, portObjClassName) {
+		const nodeGrp = d3.select(nodeObj);
+		nodeGrp.selectAll("." + portObjClassName)
+			.attr("r", () => this.getPortRadius(node))
 			.attr("cx", (port) => port.cx)
 			.attr("cy", (port) => port.cy); // Port position may change for binding nodes with multiple-ports.
 	}
 
-	updatePortArrowPath(node, d, cssNodePortArrow) {
-		const nodeGrp = d3.select(node);
-		const selector = this.getSelectorForClass(cssNodePortArrow);
-		nodeGrp.selectAll(selector)
+	updatePortArrowPath(nodeObj, portArrowClassName) {
+		const nodeGrp = d3.select(nodeObj);
+		nodeGrp.selectAll("." + portArrowClassName)
 			.attr("d", (port) => this.getPortArrowPath(port))
 			.attr("transform", (port) => this.getPortArrowPathTransform(port));
+	}
+
+	updateBindingNodeInputPort(nodeGrpObj, d) {
+		const nodeGrp = d3.select(nodeGrpObj);
+		nodeGrp
+			.selectChildren("." + this.getNodeInputPortClassName())
+			.attr("transform", (port) => `translate(${port.cx}, ${port.cy}) scale(${this.zoomTransform.k})`); // Port position may change for binding nodes with multiple-ports.
+	}
+
+	updateBindingNodeOutputPort(nodeGrpObj, d) {
+		const nodeGrp = d3.select(nodeGrpObj);
+		nodeGrp
+			.selectChildren("." + this.getNodeOutputPortClassName())
+			.attr("transform", (port) => `translate(${port.cx}, ${port.cy}) scale(${this.zoomTransform.k})`); // Port position may change for binding nodes with multiple-ports.
 	}
 
 	isEntryBindingNode(node) {
@@ -3657,9 +3678,9 @@ export default class SVGCanvasRenderer {
 
 	removeDynamicNodeIcons(d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
-			nodeGrp.selectAll(this.getSelectorForId("node_ellipsis_group", d.id)).remove();
+			nodeGrp.selectChildren(".d3-node-ellipsis-group").remove();
 		}
-		nodeGrp.selectAll(this.getSelectorForId("node_exp_group", d.id)).remove();
+		nodeGrp.selectChildren(".d3-node-super-expand-icon-group").remove();
 	}
 
 	createSupernodeRenderer(d, supernodeD3Object) {
@@ -3747,18 +3768,10 @@ export default class SVGCanvasRenderer {
 			zoom: this.zoomTransform.k });
 	}
 
-	setTrgPortStatus(trgId, trgPortId, newStatus) {
-		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", trgId));
-		const trgPrtSelector = this.getSelectorForId("node_inp_port", trgId, trgPortId);
-		const trgPrtArrSelector = this.getSelectorForId("node_inp_port_arrow", trgId, trgPortId);
-		nodeGrp.selectAll(trgPrtSelector).attr("connected", newStatus);
-		nodeGrp.selectAll(trgPrtArrSelector).attr("connected", newStatus);
-	}
-
-	setSrcPortStatus(srcId, srcPortId, newStatus) {
-		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", srcId));
-		const srcPrtSelector = this.getSelectorForId("node_out_port", srcId, srcPortId);
-		nodeGrp.selectAll(srcPrtSelector).attr("connected", newStatus);
+	setPortStatus(nodeId, portId, newStatus) {
+		this.getNodeGroupSelectionById(nodeId)
+			.selectChildren(`[data-port-id='${portId}']`)
+			.attr("connected", newStatus);
 	}
 
 	getDecorator(id, decorations) {
@@ -4535,13 +4548,11 @@ export default class SVGCanvasRenderer {
 		return link;
 	}
 
-	// Returns a link-selection-area DOM element, if one can be found, at the
-	// position indicated by x and y coordinates. Note: It may not be the
-	// top-most element so we have to search through the array for it.
+	// Returns a link DOM element, if one can be found, at the
+	// position indicated by x and y coordinates.
 	getLinkElementAtMousePos(x, y) {
 		this.setDataLinkSelectionAreaWider(true);
-		const elements = document.elementsFromPoint(x, y);
-		const element = elements.find((el) => el.className && el.className.baseVal && el.className.baseVal.includes("d3-data-link-selection-area"));
+		const element = this.getElementWithClassAtPosition(x, y, "d3-data-link");
 		this.setDataLinkSelectionAreaWider(false);
 		return element;
 	}
@@ -4550,7 +4561,7 @@ export default class SVGCanvasRenderer {
 	// element passed in provided it is a 'path' DOM object. Returns null if
 	// a link cannot be found.
 	getNodeLinkForElement(element) {
-		if (element && element.nodeName === "path") {
+		if (element) {
 			const datum = d3.select(element).datum();
 			if (datum) {
 				var foundLink = this.getLink(datum.id, this.pipelineId);
@@ -4587,10 +4598,7 @@ export default class SVGCanvasRenderer {
 	// Returns a node input port ID, if one can be found, at the position
 	// indicated by the clientX and clientY coordinates in the d3Event.
 	getInputNodePortIdAtMousePos(d3Event) {
-		let portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input");
-		if (!portElement) {
-			portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-input-arrow");
-		}
+		const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeInputPortClassName());
 		return this.getNodePortIdForElement(portElement);
 	}
 
@@ -4608,10 +4616,16 @@ export default class SVGCanvasRenderer {
 	// Returns a node output port ID, if one can be found, at the position
 	// indicated by the clientX and clientY coordinates in the d3Event.
 	getOutputNodePortIdAtMousePos(d3Event) {
-		const portElement = this.getElementWithClassAtMousePos(d3Event, "d3-node-port-output");
+		const portElement = this.getElementWithClassAtMousePos(d3Event, this.getNodeOutputPortClassName());
 		return this.getNodePortIdForElement(portElement);
 	}
 
+	// Returns an element, with the class name passed in, if one exists, at the
+	// position defined by x,y.
+	getElementAtPoint(x, y, className) {
+		const elements = document.elementsFromPoint(x, y);
+		return elements.find((el) => this.isClassNameIncluded(el, className));
+	}
 
 	// Returns a DOM element which either has the classNames passed in or
 	// has an ancestor with the className passed in, at the position
@@ -4621,7 +4635,11 @@ export default class SVGCanvasRenderer {
 	getElementWithClassAtMousePos(d3Event, className) {
 		const posX = d3Event.clientX ? d3Event.clientX : d3Event.sourceEvent.clientX;
 		const posY = d3Event.clientY ? d3Event.clientY : d3Event.sourceEvent.clientY;
-		const elements = document.elementsFromPoint(posX, posY);
+		return this.getElementWithClassAtPosition(posX, posY, className);
+	}
+
+	getElementWithClassAtPosition(x, y, className) {
+		const elements = document.elementsFromPoint(x, y);
 		let foundElement = null;
 		let count = 0;
 		while (!foundElement && count < elements.length) {
@@ -4641,10 +4659,13 @@ export default class SVGCanvasRenderer {
 		let foundElement = null;
 
 		while (el) {
-			if (el.className && el.className.baseVal && el.className.baseVal.includes(".d3-new-connection-guide")) {
+			// No need to proceed if we find either of these. Stopping at svg-area
+			// prevents the search transitioning from a sub-flow to a parent flow.
+			if (this.isClassNameIncluded(el, ".d3-new-connection-guide") ||
+					this.isClassNameIncluded(el, ".svg-area")) {
 				el = null;
-			} else if (el.className && el.className.baseVal && el.className.baseVal.includes(className) &&
-									el.getAttribute("data-pipeline-id") === this.pipelineId) {
+
+			} else if (this.isClassNameIncluded(el, className)) {
 				foundElement = el;
 				el = null;
 			} else {
@@ -4652,6 +4673,12 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		return foundElement;
+	}
+
+	// Returns true if the class name passed in is one of the classes assigned
+	// to the element passed in.
+	isClassNameIncluded(el, className) {
+		return el.classList && el.classList.contains(className);
 	}
 
 	// Returns the node link object from the canvasInfo corresponding to the
@@ -4679,16 +4706,14 @@ export default class SVGCanvasRenderer {
 	// is provided it will be used as additional space beyond the node boundary
 	// to decide if the node is under the current mouse position.
 	getNodeNearMousePos(d3Event, nodeProximity) {
-		const that = this;
 		var pos = this.getTransformedMousePos(d3Event);
 		var node = null;
 		const prox = nodeProximity || 0;
-		const selector = this.getSelectorForClass("d3-node-group");
-		this.nodesLinksGrp.selectAll(selector)
-			.each(function(d) {
+		this.getAllNodeGroupsSelection()
+			.each((d) => {
 				let portRadius = d.layout.portRadius;
 				if (CanvasUtils.isSuperBindingNode(d)) {
-					portRadius = that.canvasLayout.supernodeBindingPortRadius / that.zoomTransform.k;
+					portRadius = this.canvasLayout.supernodeBindingPortRadius / this.zoomTransform.k;
 				}
 
 				if (pos.x >= d.x_pos - portRadius - prox && // Target port sticks out by its radius so need to allow for it.
@@ -4711,48 +4736,28 @@ export default class SVGCanvasRenderer {
 		let defaultPortId = null;
 
 		if (node) {
-			let portClassName;
-			let portObjectType;
-			let nodeWidthOffset;
-
 			if (portType === OUTPUT_TYPE) {
-				portClassName = this.getNodeOutputPortClassName();
-				portObjectType = node.layout.outputPortObject;
-				nodeWidthOffset = node.width;
+				const portObjs = this.getAllNodeGroupsSelection()
+					.selectChildren("." + this.getNodeOutputPortClassName())
+					.selectChildren(".d3-node-port-output-main");
+
+				portId = this.searchForPortNearMouse(
+					node, pos, portObjs,
+					node.layout.outputPortObject,
+					node.width);
 				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
 
 			} else {
-				portClassName = this.getNodeInputPortClassName();
-				portObjectType = node.layout.inputPortObject;
-				nodeWidthOffset = 0;
+				const portObjs = this.getAllNodeGroupsSelection()
+					.selectChildren("." + this.getNodeInputPortClassName())
+					.selectChildren(".d3-node-port-input-main");
+
+				portId = this.searchForPortNearMouse(
+					node, pos, portObjs,
+					node.layout.inputPortObject,
+					0);
 				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
 			}
-
-			this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", node.id)).selectAll("." + portClassName)
-				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
-					const portObj = d3.select(this);
-					if (portObjectType === PORT_OBJECT_IMAGE) {
-						const xx = node.x_pos + Number(portObj.attr("x"));
-						const yy = node.y_pos + Number(portObj.attr("y"));
-						const wd = Number(portObj.attr("width"));
-						const ht = Number(portObj.attr("height"));
-						if (pos.x >= xx &&
-								pos.x <= xx + nodeWidthOffset + wd &&
-								pos.y >= yy &&
-								pos.y <= yy + ht) {
-							portId = this.getAttribute("data-port-id");
-						}
-					} else { // Port must be a circle
-						const cx = node.x_pos + Number(portObj.attr("cx"));
-						const cy = node.y_pos + Number(portObj.attr("cy"));
-						if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-								pos.x <= cx + node.layout.portRadius &&
-								pos.y >= cy - node.layout.portRadius &&
-								pos.y <= cy + node.layout.portRadius) {
-							portId = this.getAttribute("data-port-id");
-						}
-					}
-				});
 		}
 
 		if (!portId) {
@@ -4761,6 +4766,38 @@ export default class SVGCanvasRenderer {
 		return portId;
 	}
 
+	// Returns a port ID for the port identified by the position (pos) on the
+	// node (node) further specified by the other parameters.
+	searchForPortNearMouse(node, pos, portObjs, portObjectType, nodeWidthOffset) {
+		let portId = null;
+		portObjs
+			.each((p, i, portGrps) => {
+				const portSel = d3.select(portGrps[i]);
+				if (portObjectType === PORT_OBJECT_IMAGE) {
+					const xx = node.x_pos + Number(portSel.attr("x"));
+					const yy = node.y_pos + Number(portSel.attr("y"));
+					const wd = Number(portSel.attr("width"));
+					const ht = Number(portSel.attr("height"));
+					if (pos.x >= xx &&
+							pos.x <= xx + nodeWidthOffset + wd &&
+							pos.y >= yy &&
+							pos.y <= yy + ht) {
+						portId = this.getAttribute("data-port-id");
+					}
+				} else { // Port must be a circle
+					const cx = node.x_pos + Number(portSel.attr("cx"));
+					const cy = node.y_pos + Number(portSel.attr("cy"));
+					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+							pos.x <= cx + node.layout.portRadius &&
+							pos.y >= cy - node.layout.portRadius &&
+							pos.y <= cy + node.layout.portRadius) {
+						portId = this.getAttribute("data-port-id");
+					}
+				}
+			});
+
+		return portId;
+	}
 
 	// Returns a sizing rectangle for nodes and comments. This extends an
 	// invisible area out beyond the highlight sizing line to improve usability
@@ -5073,7 +5110,7 @@ export default class SVGCanvasRenderer {
 		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			commentGroupSel
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.datum((d) => that.getComment(d.id)); // Set the __data__ to the updated data
+				.datum((d) => that.getComment(d.id));
 
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
@@ -5083,7 +5120,7 @@ export default class SVGCanvasRenderer {
 					.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
 					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 					.attr("class", "d3-comment-selection-highlight")
-					.datum(() => that.getComment(d.id)); // Set the __data__ to the updated data
+					.datum(() => that.getComment(d.id));
 
 				// This code will remove custom attributes from a comment. This might happen when
 				// the user clicks the canvas background to remove the greyed out appearance of
@@ -5093,7 +5130,7 @@ export default class SVGCanvasRenderer {
 				// of its own.
 				const comBodySelector = that.getSelectorForId("comment_body", d.id);
 				that.commentsGrp.selectAll(comBodySelector)
-					.datum(() => that.getComment(d.id)) // Set the __data__ to the updated data
+					.datum(() => that.getComment(d.id))
 					.each(function(cd) {
 						var imageObj = d3.select(this);
 						if (cd.customAttrs && cd.customAttrs.length > 0) {
@@ -5263,7 +5300,7 @@ export default class SVGCanvasRenderer {
 					commentGrp
 						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 						.attr("class", this.getCommentGroupClass(d))
-						.datum(comment); // Set the __data__ to the updated data
+						.datum(comment);
 
 					// Comment sizing area
 					commentGrp.select(this.getSelectorForId("comment_sizing", d.id))
@@ -5272,7 +5309,7 @@ export default class SVGCanvasRenderer {
 						.attr("height", d.height + (2 * that.canvasLayout.commentSizingArea))
 						.attr("width", d.width + (2 * that.canvasLayout.commentSizingArea))
 						.attr("class", "d3-comment-sizing")
-						.datum(comment); // Set the __data__ to the updated data
+						.datum(comment);
 
 					// Comment selection highlighting outline
 					commentGrp.select(this.getSelectorForId("comment_sel_outline", d.id))
@@ -5282,7 +5319,7 @@ export default class SVGCanvasRenderer {
 						.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
 						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
 						.attr("class", "d3-comment-selection-highlight")
-						.datum(comment); // Set the __data__ to the updated data
+						.datum(comment);
 
 					// Set comments styles
 					this.setCommentStyles(d, "default", commentGrp);
@@ -5292,7 +5329,7 @@ export default class SVGCanvasRenderer {
 						.attr("height", d.height)
 						.attr("width", d.width)
 						.attr("class", "d3-comment-rect")
-						.datum(comment) // Set the __data__ to the updated data
+						.datum(comment)
 						.each(function(cd) {
 							if (cd.customAttrs) {
 								var imageObj = d3.select(this);
@@ -5304,7 +5341,7 @@ export default class SVGCanvasRenderer {
 
 					// Comment text
 					commentGrp.select(this.getSelectorForId("comment_text", d.id))
-						.datum(comment) // Set the __data__ to the updated data
+						.datum(comment)
 						.attr("width", (cd) => cd.width)
 						.attr("height", (cd) => cd.height)
 						.select("div")
@@ -5319,7 +5356,7 @@ export default class SVGCanvasRenderer {
 							.attr("y", 0 - this.canvasLayout.haloCommentGap)
 							.attr("width", d.width + (2 * that.canvasLayout.haloCommentGap))
 							.attr("height", d.height + (2 * that.canvasLayout.haloCommentGap))
-							.datum(comment); // Set the __data__ to the updated data
+							.datum(comment);
 					}
 				});
 
@@ -5506,8 +5543,8 @@ export default class SVGCanvasRenderer {
 	// div for the node label so the label is displayed (because it was hidden
 	// when the text area opened).
 	closeNodeLabelTextArea(nodeId) {
-		const nodeGrp = this.nodesLinksGrp.selectAll(this.getSelectorForId("node_grp", nodeId));
-		nodeGrp.selectAll("div")
+		this.getNodeGroupSelectionById(nodeId)
+			.selectAll("div")
 			.attr("style", null);
 	}
 
@@ -5951,7 +5988,7 @@ export default class SVGCanvasRenderer {
 		const afterLineArray = Date.now();
 
 		this.nodesLinksGrp.selectAll(linkSelector)
-			.data(lineArray, function(line) { return line.id; })
+			.data(lineArray, (line) => line.id)
 			.join(
 				(enter) => this.createNewLinks(enter)
 			)
@@ -5964,19 +6001,20 @@ export default class SVGCanvasRenderer {
 
 		// Set connection status of output ports and input ports plus arrow.
 		if (this.canvasLayout.connectionType === "ports") {
-			const portOutSelector = this.getSelectorForClass("d3-node-port-output");
-			const portInSelector = this.getSelectorForClass(this.getNodeInputPortClassName());
-			const portInArrSelector = this.getSelectorForClass("d3-node-port-input-arrow");
-			this.nodesLinksGrp.selectAll(portOutSelector).attr("connected", "no");
-			this.nodesLinksGrp.selectAll(portInSelector).attr("connected", "no");
-			this.nodesLinksGrp.selectAll(portInArrSelector).attr("connected", "no");
+			const portInSelector = "." + this.getNodeInputPortClassName();
+			const portOutSelector = "." + this.getNodeOutputPortClassName();
+
+			const nodeGrps = this.getAllNodeGroupsSelection();
+			nodeGrps.selectChildren(portInSelector).attr("connected", "no");
+			nodeGrps.selectChildren(portOutSelector).attr("connected", "no");
+
 			lineArray.forEach((line) => {
 				if (line.type === NODE_LINK) {
 					if (line.trg) {
-						this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
+						this.setPortStatus(line.trg.id, line.trgPortId, "yes");
 					}
 					if (line.src) {
-						this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
+						this.setPortStatus(line.src.id, line.srcPortId, "yes");
 					}
 				}
 			});

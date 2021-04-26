@@ -125,7 +125,7 @@ Cypress.Commands.add("verifyNodeIsSelected", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
 			const nodeOutlineSelector =
-			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+				".d3-node-group[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-selection-highlight";
 			cy.get(nodeOutlineSelector)
 				.should("have.attr", "data-selected", "yes");
 		});
@@ -153,7 +153,7 @@ Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
 			const nodeOutlineSelector =
-			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+				".d3-node-group[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-selection-highlight";
 			cy.get(nodeOutlineSelector)
 				.should("have.attr", "data-selected", "no");
 		});
@@ -166,7 +166,7 @@ Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
 			const nodeImageSelector =
-				"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
+				".d3-node-group[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-image";
 			cy.get(nodeImageSelector)
 				.should("have.attr", "data-image", value);
 		});
@@ -241,7 +241,8 @@ Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, 
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			const className = nodeElement === "label" ? ".d3-foreign-object" : ".d3-node-image";
+			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > " + className;
 			cy.get(nodeElementSelector)
 				.should("have.attr", "x", String(xPos))
 				.and("have.attr", "y", String(yPos));
@@ -252,7 +253,8 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			const className = nodeElement === "label" ? ".d3-foreign-object" : ".d3-node-image";
+			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > " + className;
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
 				.then((cssValue) => {
@@ -962,7 +964,7 @@ Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, superno
 });
 
 Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, portName) => {
-	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+	cy.getNodePortSelector(nodeName, "input", inputPortId)
 		.then((portSelector) => {
 			cy.getNodePortTipSelector(inputPortId)
 				.then((portTipSelector) => {
@@ -995,7 +997,7 @@ Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
 });
 
 Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
-	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
 			cy.getNodePortTipSelector(outputPortId)
 				.then((portTipSelector) => {
