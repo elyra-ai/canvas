@@ -1969,11 +1969,7 @@ export default class CanvasController {
 			}
 			case "createAutoComment": {
 				const defaultCommentPosition = this.getDefaultCommentPosition();
-				data.mousePos = {
-					x: defaultCommentPosition.x_pos,
-					y: defaultCommentPosition.y_pos
-				};
-				command = new CreateCommentAction(data, this.objectModel);
+				command = new CreateCommentAction(data, this.objectModel, defaultCommentPosition);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;

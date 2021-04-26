@@ -16,11 +16,21 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateCommentAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, defaultCommentPosition) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+
+		// If we are provided with a defaultCommentPosition then we are being called from the
+		// toolbar and therefore need to calculate the position of the comment.
+		if (defaultCommentPosition) {
+			this.data.mousePos = {
+				x: defaultCommentPosition.x_pos,
+				y: defaultCommentPosition.y_pos
+			};
+		}
+
 		this.comment = this.apiPipeline.createComment(data);
 	}
 
