@@ -2425,67 +2425,91 @@ export default class SVGCanvasRenderer {
 		// Do not return from here if there are no nodes because there may
 		// be still nodes on display that need to be deleted.
 
-		const that = this;
-
-		// Set the port positions for all ports - these will be needed when displaying
-		// nodes and links. This needs to be done here because resizing the supernode
-		// will cause its ports to move.
-		this.setPortPositionsAllNodes();
-
-		const nodeGroupSel = this.getAllNodeGroupsSelection()
-			.data(this.activePipeline.nodes, (d) => d.id);
-
 		// For any of these activities we don't need to do anything to the nodes.
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
 			this.logger.logEndTimer("displayNodes " + this.getFlags());
 			return;
 
 		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
-			nodeGroupSel
-				.datum((d) => that.getNode(d.id))
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
-
-			if (this.isDisplayingSubFlow()) {
-				nodeGroupSel
-					.each((d, i, nodeGrps) => {
-						if (d.isSupernodeInputBinding) {
-							that.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
-						}
-						if (d.isSupernodeOutputBinding) {
-							that.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
-							that.updatePortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
-						}
-					});
-			}
+			this.displayMovedNodes();
 
 		} else if (this.selecting || this.regionSelect) {
-			nodeGroupSel.each((d, i, nodeGrpObjs) => {
-				const nodeGrp = d3.select(nodeGrpObjs[i]);
-				nodeGrp.selectChildren(".d3-node-selection-highlight")
-					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no");
-				that.setNodeStyles(d, "default", nodeGrp);
-			});
-
-			this.superRenderers.forEach((renderer) => {
-				renderer.selecting = true;
-				renderer.displayNodes();
-				renderer.selecting = false;
-			});
+			this.displayNodesSelectionStatus();
 
 		} else {
+			this.displayAllNodes();
+		}
+		this.logger.logEndTimer("displayNodes " + this.getFlags());
+	}
+
+	displayMovedNodes() {
+		// Set the port positions for all ports - these will be needed when displaying
+		// nodes and links. This needs to be done here because resizing the supernode
+		// will cause its ports to move.
+		this.setPortPositionsAllNodes();
+
+		const nodeGroupSel = this.getAllNodeGroupsSelection();
+		nodeGroupSel
+			.datum((d) => this.getNode(d.id))
+			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
+
+		if (this.isDisplayingSubFlow()) {
 			nodeGroupSel
-				.join(
-					(enter) => this.createNodes(enter)
-				)
-				.datum((d) => this.getNode(d.id))
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.attr("class", (d) => that.getNodeGroupClass(d))
-				.attr("style", (d) => that.getNodeGrpStyle(d))
-				.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+				.each((d, i, nodeGrps) => {
+					if (d.isSupernodeInputBinding) {
+						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-output-main");
+					}
+					if (d.isSupernodeOutputBinding) {
+						this.updatePortRadiusAndPos(nodeGrps[i], d, "d3-node-port-input-main");
+						this.updatePortArrowPath(nodeGrps[i], "d3-node-port-input-arrow");
+					}
+				});
 		}
 	}
 
+	displayNodesSelectionStatus() {
+		this.getAllNodeGroupsSelection().each((d, i, nodeGrpObjs) => {
+			const nodeGrp = d3.select(nodeGrpObjs[i]);
+			nodeGrp.selectChildren(".d3-node-selection-highlight")
+				.attr("data-selected", this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no");
+			this.setNodeStyles(d, "default", nodeGrp);
+		});
+
+		this.superRenderers.forEach((renderer) => {
+			renderer.selecting = true;
+			renderer.displayNodes();
+			renderer.selecting = false;
+		});
+	}
+
+	// Displays all the nodes on the canvas either by creating new nodes,
+	// updating existing nodes or removing unwanted nodes.
+	displayAllNodes() {
+		// Set the port positions for all ports - these will be needed when displaying
+		// nodes and links. This needs to be done here because a resized supernode
+		// will cause its ports to move.
+		this.setPortPositionsAllNodes();
+
+		this.getAllNodeGroupsSelection()
+			.data(this.activePipeline.nodes, (d) => d.id)
+			.join(
+				(enter) => this.createNodes(enter)
+			)
+			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+			.attr("class", (d) => this.getNodeGroupClass(d))
+			.attr("style", (d) => this.getNodeGrpStyle(d))
+			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+	}
+
 	createNodes(enter) {
+		// Need to return from here when enter is empty (when only updates are being done)
+		// because running this function with an empty enter causes the nodes in
+		// the DOM to be rarranged based on the ocurrence of their data in the
+		// array which is a problem if the order has been dynamically changed on hover.
+		if (enter.empty()) {
+			return d3.select(null);
+		}
+
 		const newNodeGroups = enter
 			.append("g")
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
@@ -2654,8 +2678,6 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
-
-		this.logger.logEndTimer("displayNodes " + this.getFlags());
 	}
 
 	displayPorts(nodeGrp, d) {
