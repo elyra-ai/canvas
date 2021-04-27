@@ -1021,7 +1021,7 @@ export default class SVGCanvasRenderer {
 	// enabled when enableLinkSelection is set to LINK_SELECTION_DETACHABLE.
 	setNodeDragOverLinkHighlighting(link, state) {
 		this.nodesLinksGrp
-			.selectAll(this.getSelectorForId("link_grp", link.id))
+			.selectChildren(this.getSelectorForIdWithoutPipeline("link_grp", link.id))
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 
@@ -2340,7 +2340,7 @@ export default class SVGCanvasRenderer {
 		const link = this.getLink(d.id);
 		const oldLink = cloneDeep(link);
 
-		const linkGrpSelector = this.getSelectorForId("link_grp", d.id);
+		const linkGrpSelector = this.getSelectorForIdWithoutPipeline("link_grp", d.id);
 
 		this.draggingLinkData = {
 			lineInfo: d,
@@ -2449,6 +2449,7 @@ export default class SVGCanvasRenderer {
 		this.setPortPositionsAllNodes();
 
 		const nodeGroupSel = this.getAllNodeGroupsSelection();
+
 		nodeGroupSel
 			.datum((d) => this.getNode(d.id))
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
@@ -2467,7 +2468,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	displayNodesSelectionStatus() {
+	displayNodesSelectionStatus(nodeGroupSel) {
 		this.getAllNodeGroupsSelection().each((d, i, nodeGrpObjs) => {
 			const nodeGrp = d3.select(nodeGrpObjs[i]);
 			nodeGrp.selectChildren(".d3-node-selection-highlight")
@@ -2502,14 +2503,6 @@ export default class SVGCanvasRenderer {
 	}
 
 	createNodes(enter) {
-		// Need to return from here when enter is empty (when only updates are being done)
-		// because running this function with an empty enter causes the nodes in
-		// the DOM to be rarranged based on the ocurrence of their data in the
-		// array which is a problem if the order has been dynamically changed on hover.
-		if (enter.empty()) {
-			return d3.select(null);
-		}
-
 		const newNodeGroups = enter
 			.append("g")
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
@@ -3584,11 +3577,12 @@ export default class SVGCanvasRenderer {
 				.filter(() => d.layout.ellipsisDisplay)
 				.attr("class", "d3-node-ellipsis-group")
 				.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
-				.on("mousedown", () => {
-					this.ellipsisClicked = true;
-				})
-				.on("click", (d3Event) => {
+				.on("mousedown", (d3Event) => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.ellipsisClicked = true;
+					if (!this.config.enableDragWithoutSelect) {
+						this.selectObjectD3Event(d3Event, d);
+					}
 					this.openContextMenu(d3Event, "node", d);
 				});
 
@@ -5982,37 +5976,45 @@ export default class SVGCanvasRenderer {
 		// Do not return from here if there are no links because there may
 		// be still links on display that need to be deleted.
 
-		var startTimeDrawingLines = Date.now();
-		const linkSelector = this.getSelectorForClass("d3-link-group");
-
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
+			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
 
 		} else if (this.selecting || this.regionSelect) {
-			if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-				this.nodesLinksGrp
-					.selectAll(linkSelector)
-					.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
+			this.displayLinksSelectionStatus();
 
-				this.superRenderers.forEach((renderer) => {
-					renderer.selecting = true;
-					renderer.displayLinks();
-					renderer.selecting = false;
-				});
-			}
-
-			this.logger.logEndTimer("displayLinks " + this.getFlags());
-			return;
+		} else {
+			this.displayAllLinks();
 		}
+
+		this.logger.logEndTimer("displayLinks " + this.getFlags());
+	}
+
+	displayLinksSelectionStatus() {
+		if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+			this.nodesLinksGrp
+				.selectChildren(".d3-link-group")
+				.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
+
+			this.superRenderers.forEach((renderer) => {
+				renderer.selecting = true;
+				renderer.displayLinks();
+				renderer.selecting = false;
+			});
+		}
+	}
+
+	displayAllLinks() {
+		var startTimeDrawingLines = Date.now();
 
 		const timeAfterDelete = Date.now();
 		const lineArray = this.buildLineArray();
 		const afterLineArray = Date.now();
 
-		this.nodesLinksGrp.selectAll(linkSelector)
+		this.nodesLinksGrp.selectChildren(".d3-link-group")
 			.data(lineArray, (line) => line.id)
 			.join(
-				(enter) => this.createNewLinks(enter)
+				(enter) => this.createLinks(enter)
 			)
 			.attr("class", (d) => this.getLinkGroupClass(d))
 			.attr("style", (d) => this.getLinkGrpStyle(d))
@@ -6048,7 +6050,6 @@ export default class SVGCanvasRenderer {
 			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
-		this.logger.logEndTimer("displayLinks " + this.getFlags());
 	}
 
 	getBuildLineArrayData(id, lineArray) {
@@ -6056,13 +6057,10 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Creates all newly created links specified in the enter selection.
-	createNewLinks(enter) {
-		const that = this;
-
+	createLinks(enter) {
 		// Add groups for links
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
-			.attr("data-pipeline-id", this.activePipeline.id)
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
@@ -6100,7 +6098,7 @@ export default class SVGCanvasRenderer {
 						type: TIP_TYPE_LINK,
 						targetObj: targetObj,
 						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: that.activePipeline.id,
+						pipelineId: this.activePipeline.id,
 						link: link
 					});
 				}
@@ -6140,15 +6138,15 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-link-decorations-group");
 
 		// Add a group to store link handles, if needed.
-		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			newLinkGrps
 				.append("g")
 				.attr("class", "d3-link-handles-group")
-				.each(function(d) {
+				.each((d, i, linkGrps) => {
 					if (d.type === NODE_LINK) {
 						// Since there are always just two handles we create the here.
-						that.createNewHandles(d3.select(this));
+						this.createNewHandles(d3.select(linkGrps[i]));
 					}
 				});
 		}
@@ -6160,8 +6158,6 @@ export default class SVGCanvasRenderer {
 	// selection object. The selection object will contain newly created links
 	// as well as existing links.
 	updateLinks(joinedLinkGrps, lineArray) {
-		const that = this;
-
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
@@ -6189,19 +6185,19 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
-		joinedLinkGrps.each(function(d) {
+		joinedLinkGrps.each((d, i, linkGrps) => {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				that.displayDecorations(d, DEC_LINK, d3.select(this).selectAll(".d3-link-decorations-group"), d.decorations);
+				this.displayDecorations(d, DEC_LINK, d3.select(linkGrps[i]).selectAll(".d3-link-decorations-group"), d.decorations);
 			}
 		});
 
 		// Add link line handles at start and end of line, if required
-		if (that.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-				that.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-			joinedLinkGrps.each(function(d) {
+		if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+			joinedLinkGrps.each((d, i, linkGrps) => {
 				if (d.type === NODE_LINK) {
 					// We only need to update handles since they were created in the create link step
-					that.updateHandles(d3.select(this).selectAll(".d3-link-handles-group"), lineArray);
+					this.updateHandles(d3.select(linkGrps[i]).selectAll(".d3-link-handles-group"), lineArray);
 				}
 			});
 		}
