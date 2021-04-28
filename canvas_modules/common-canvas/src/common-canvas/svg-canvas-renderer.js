@@ -679,7 +679,6 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
-
 	// Transforms the x, y, height and width fields of the object passed in by the
 	// current zoom transformation amounts to convert coordinate positions and
 	// dimensions in screen pixels to coordinate positions and dimensions in
@@ -3392,7 +3391,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeBodyStyle(d, type) {
-		let style = this.getObjectStyle(d, "body", type);
+		let style = CanvasUtils.getObjectStyle(d, "body", type);
 		// For port-arcs display we reapply the drop shadow if no style is provided
 		if (style === null && d.layout.dropShadow) {
 			style = `filter:url(${this.getId("#node_drop_shadow")})`;
@@ -3401,15 +3400,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodeSelectionOutlineStyle(d, type) {
-		return this.getObjectStyle(d, "selection_outline", type);
+		return CanvasUtils.getObjectStyle(d, "selection_outline", type);
 	}
 
 	getNodeImageStyle(d, type) {
-		return this.getObjectStyle(d, "image", type);
+		return CanvasUtils.getObjectStyle(d, "image", type);
 	}
 
 	getNodeLabelStyle(d, type) {
-		return this.getObjectStyle(d, "label", type);
+		return CanvasUtils.getObjectStyle(d, "label", type);
 	}
 
 	getNodeGrpStyle(d) {
@@ -5343,38 +5342,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	getCommentSelectionOutlineStyle(d, type) {
-		return this.getObjectStyle(d, "selection_outline", type);
+		return CanvasUtils.getObjectStyle(d, "selection_outline", type);
 	}
 
 	getCommentBodyStyle(d, type) {
-		return this.getObjectStyle(d, "body", type);
+		return CanvasUtils.getObjectStyle(d, "body", type);
 	}
 
 	getCommentTextStyle(d, type) {
-		return this.getObjectStyle(d, "text", type);
-	}
-
-	getObjectStyle(d, part, type) {
-		if (!d.style && !d.style_temp) {
-			return null;
-		}
-		let style = null;
-
-		if (type === "hover") {
-			style = this.getStyleValue(d, part, "default") + ";" + this.getStyleValue(d, part, "hover");
-
-		} else if (type === "default") {
-			style = this.getStyleValue(d, part, "default");
-		}
-		return style;
-	}
-
-	getStyleValue(d, part, type) {
-		const style = get(d, `style_temp.${part}.${type}`, null);
-		if (style !== null) {
-			return style;
-		}
-		return get(d, `style.${part}.${type}`, null);
+		return CanvasUtils.getObjectStyle(d, "text", type);
 	}
 
 	displayCommentTextArea(d, parentObj) {
@@ -6036,7 +6012,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
 			.attr("d", (d) => d.pathInfo.path)
 			.attr("class", "d3-link-line")
-			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
+			.attr("style", (d) => CanvasUtils.getObjectStyle(d, "line", "default"));
 
 		// Update link line arrow head
 		joinedLinkGrps
@@ -6048,7 +6024,7 @@ export default class SVGCanvasRenderer {
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("transform", (d) => this.getArrowHeadTransform(d))
 			.attr("class", "d3-link-line-arrow-head")
-			.attr("style", (d) => this.getObjectStyle(d, "line", "default"));
+			.attr("style", (d) => CanvasUtils.getObjectStyle(d, "line", "default"));
 
 		// Update decorations on the node-node or association links.
 		joinedLinkGrps.each((d, i, linkGrps) => {
@@ -6204,7 +6180,7 @@ export default class SVGCanvasRenderer {
 
 	// Sets the custom inline styles on the link object passed in.
 	setLinkLineStyles(linkObj, link, type) {
-		const style = this.getObjectStyle(link, "line", type);
+		const style = CanvasUtils.getObjectStyle(link, "line", type);
 		const linkSel = d3.select(linkObj);
 		linkSel.select(".d3-link-line").attr("style", style);
 		linkSel.select(".d3-link-line-arrow-head").attr("style", style);

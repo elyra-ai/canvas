@@ -18,6 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
+import get from "lodash/get";
 import { ASSOCIATION_LINK, NODE_LINK } from "../common-canvas/constants/canvas-constants.js";
 
 
@@ -824,4 +825,35 @@ export default class CanvasUtils {
 		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
+	// Returns a full style string value that can be applied as an in-line style to
+	// the representation of the object in the DOM. The style is based either
+	// on the 'style' or 'style_temp' property of the object.
+	// Parameters:
+	// d - The object
+	// part - A string of the part of the object to be styled. eg 'body' or 'image'
+	//        This is dependent on the style spec in eiether the 'style' or
+	//        'temp_style' property.
+	// type = Either 'hover' or 'default'
+	static getObjectStyle(d, part, type) {
+		if (!d.style && !d.style_temp) {
+			return null;
+		}
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getStyleValue(d, part, "default") + ";" + this.getStyleValue(d, part, "hover");
+
+		} else if (type === "default") {
+			style = this.getStyleValue(d, part, "default");
+		}
+		return style;
+	}
+
+	static getStyleValue(d, part, type) {
+		const style = get(d, `style_temp.${part}.${type}`, null);
+		if (style !== null) {
+			return style;
+		}
+		return get(d, `style.${part}.${type}`, null);
+	}
 }
