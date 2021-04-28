@@ -38,8 +38,9 @@ import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import SvgCanvasLinks from "./svg-canvas-utils-links.js";
+import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
+import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 
 const showLinksTime = false;
 
@@ -74,7 +75,6 @@ export default class SVGCanvasRenderer {
 		this.parentRenderer = parentRenderer; // Optional parameter, only provided with sub-flow in-place display.
 		this.parentSupernodeD3Selection = parentSupernodeD3Selection; // Optional parameter, only provided with sub-flow in-place display.
 		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
-		this.setDisplayState();
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -85,11 +85,15 @@ export default class SVGCanvasRenderer {
 		// Get the canvas layout info
 		this.canvasLayout = this.objectModel.getCanvasLayout();
 
-		// Initialize zoom variables
-		this.initializeZoomVariables();
-
+		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.parentSupernodeD3Selection, this.pipelineId);
 		this.nodeUtils = new SvgCanvasNodes(this.config, this.canvasLayout);
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils);
+
+		this.dispUtils.setDisplayState();
+		this.logger.log(this.dispUtils.getDisplayStateMsg());
+
+		// Initialize zoom variables
+		this.initializeZoomVariables();
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -215,13 +219,13 @@ export default class SVGCanvasRenderer {
 
 		this.displayCanvas();
 
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			this.restoreZoom();
 		}
 
 		// If we are showing a sub-flow in full screen mode, or the options is
 		// switched on to always display it, show the 'back to parent' control.
-		if (this.isDisplayingSubFlowFullPage() ||
+		if (this.dispUtils.isDisplayingSubFlowFullPage() ||
 				this.canvasLayout.alwaysDisplayBackToParentFlow) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
 		}
@@ -229,7 +233,7 @@ export default class SVGCanvasRenderer {
 		// If we are showing a sub-flow in full screen mode, zoom it to fit the
 		// screen so it looks similar to the in-place sub-flow view unless there
 		// is a saved zoom for this pipeline.
-		if (this.isDisplayingSubFlowFullPage()) {
+		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			if (!this.config.enableSaveZoom ||
 					this.config.enableSaveZoom === "None" ||
 					(this.config.enableSaveZoom === "LocalStorage" && !this.getSavedZoom()) ||
@@ -238,40 +242,6 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		this.logger.logEndTimer("Constructor");
-	}
-
-	setDisplayState() {
-		if (this.canvasController.getBreadcrumbs().length > 1 &&
-				this.isDisplayingCurrentPipeline()) {
-			this.displayState = "sub-flow-full-page";
-
-		} else if (this.parentSupernodeD3Selection) { // Existence of this varable means we are rendering an in-place sub-flow
-			this.displayState = "sub-flow-in-place";
-
-		} else {
-			this.displayState = "primary-flow-full-page";
-		}
-		this.logger.log("Display state set to " + this.displayState);
-	}
-
-	isDisplayingPrimaryFlowFullPage() {
-		return this.displayState === "primary-flow-full-page";
-	}
-
-	isDisplayingSubFlow() {
-		return this.displayState === "sub-flow-in-place" || this.displayState === "sub-flow-full-page";
-	}
-
-	isDisplayingSubFlowInPlace() {
-		return this.displayState === "sub-flow-in-place";
-	}
-
-	isDisplayingSubFlowFullPage() {
-		return this.displayState === "sub-flow-full-page";
-	}
-
-	isDisplayingFullPage() {
-		return this.displayState === "primary-flow-full-page" || this.displayState === "sub-flow-full-page";
 	}
 
 	isCanvasEmptyOrBindingsOnly() {
@@ -283,26 +253,22 @@ export default class SVGCanvasRenderer {
 		return !pipeline.nodes.find((node) => !CanvasUtils.isSuperBindingNode(node));
 	}
 
+	// Returns the data object for the parent supernode that references the
+	// active pipeline (managed by this renderer). We get the supernode by
+	// looking through the overall canvas info objects.
+	// Don't be tempted into thinking you can retrieve the supernode datum by
+	// calling the parent renderer because there is no parent renderer when we
+	// are showing a sub-flow in full page mode.
 	getParentSupernodeDatum() {
-		return this.getSupernodeReferencing(this.activePipeline.id);
-	}
-
-	getParentRenderer() {
-		return this.parentRenderer;
-	}
-
-	getSupernodeReferencing(targetPipelineId) {
 		let node = null;
 		this.canvasInfo.pipelines.forEach((pipeline) => {
 			if (!node) {
-				node = this.getSupernodeReferencingTarget(pipeline, targetPipelineId);
+				node =
+					pipeline.nodes.find((n) =>
+						this.nodeUtils.isSupernode(n) && n.subflow_ref.pipeline_id_ref === this.activePipeline.id);
 			}
 		});
 		return node;
-	}
-
-	getSupernodeReferencingTarget(pipeline, targetPipelineId) {
-		return this.getSupernodes(pipeline).find((sn) => sn.subflow_ref.pipeline_id_ref === targetPipelineId);
 	}
 
 	getSupernodes(pipeline) {
@@ -337,7 +303,8 @@ export default class SVGCanvasRenderer {
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
-		this.setDisplayState();
+		this.dispUtils.setDisplayState();
+		this.logger.log(this.dispUtils.getDisplayStateMsg());
 
 		// Reset the SVG area's zoom behaviors. We do this in case the canvas has
 		// changed from empty (no nodes/comments) where we do not need any zoom
@@ -381,23 +348,15 @@ export default class SVGCanvasRenderer {
 		return newSuperRenderers;
 	}
 
-	isExistingPipeline(pipelineId) {
-		return this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
-	}
-
 	clearCanvas() {
 		this.canvasController.clearSelections();
 		this.initializeZoomVariables();
 		this.canvasSVG.remove();
 	}
 
-	isDisplayingCurrentPipeline() {
-		return this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId;
-	}
-
 	// This is called when the user changes the size of the canvas area.
 	refreshOnSizeChange() {
-		if (this.isDisplayingSubFlowFullPage()) {
+		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayBindingNodesToFitSVG();
 		}
 
@@ -430,13 +389,13 @@ export default class SVGCanvasRenderer {
 		this.displayNodes();
 		this.displayLinks();
 
-		if (this.isDisplayingSubFlowInPlace()) {
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
 			this.displaySVGToFitSupernode();
 		}
 
 		// The supernode will not have any calculated port positions when the
 		// subflow is being displayed full screen, so calculate them first.
-		if (this.isDisplayingSubFlowFullPage()) {
+		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
 
@@ -444,7 +403,7 @@ export default class SVGCanvasRenderer {
 			this.displayBoundingRectangles();
 		}
 
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+		if (this.config.enableCanvasUnderlay !== "None" && this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
 
@@ -493,10 +452,6 @@ export default class SVGCanvasRenderer {
 
 	getParentSupernodeSVGDimensions() {
 		const datum = this.getParentSupernodeDatum();
-		return this.getSupernodeSVGDimensions(datum);
-	}
-
-	getSupernodeSVGDimensions(datum) {
 		return {
 			width: datum.width - (2 * this.canvasLayout.supernodeSVGAreaPadding),
 			height: datum.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding,
@@ -525,14 +480,14 @@ export default class SVGCanvasRenderer {
 			const svgWid = supernodeDatum.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
 			this.activePipeline.nodes.forEach((d) => {
 				if (d.isSupernodeInputBinding) {
-					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.inputs);
+					const x = this.nodeUtils.getSupernodePortXOffset(d.id, supernodeDatum.inputs);
 					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.outputs[0].cx;
 					d.y_pos = this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM
 						? transformedSVGRect.y - d.height
 						: transformedSVGRect.y + transformedSVGRect.height;
 				}
 				if (d.isSupernodeOutputBinding) {
-					const x = this.getSupernodePortXOffset(d.id, supernodeDatum.outputs);
+					const x = this.nodeUtils.getSupernodePortXOffset(d.id, supernodeDatum.outputs);
 					d.x_pos = (transformedSVGRect.width * (x / svgWid)) + transformedSVGRect.x - d.inputs[0].cx;
 					d.y_pos = this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM
 						? d.y_pos = transformedSVGRect.y + transformedSVGRect.height
@@ -545,32 +500,16 @@ export default class SVGCanvasRenderer {
 			this.activePipeline.nodes.forEach((d) => {
 				if (d.isSupernodeInputBinding) {
 					d.x_pos = transformedSVGRect.x - d.width;
-					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
+					const y = this.nodeUtils.getSupernodePortYOffset(d.id, supernodeDatum.inputs);
 					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.outputs[0].cy;
 				}
 				if (d.isSupernodeOutputBinding) {
 					d.x_pos = transformedSVGRect.x + transformedSVGRect.width;
-					const y = this.getSupernodePortYOffset(d.id, supernodeDatum.outputs);
+					const y = this.nodeUtils.getSupernodePortYOffset(d.id, supernodeDatum.outputs);
 					d.y_pos = (transformedSVGRect.height * (y / svgHt)) + transformedSVGRect.y - d.inputs[0].cy;
 				}
 			});
 		}
-	}
-
-	getSupernodePortXOffset(nodeId, ports) {
-		if (ports) {
-			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
-			return supernodePort.cx - this.canvasLayout.supernodeSVGAreaPadding;
-		}
-		return 0;
-	}
-
-	getSupernodePortYOffset(nodeId, ports) {
-		if (ports) {
-			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
-			return supernodePort.cy - this.canvasLayout.supernodeTopAreaHeight;
-		}
-		return 0;
 	}
 
 	// Display bounding rectangles around the SVG area and the canvas area defined
@@ -765,7 +704,7 @@ export default class SVGCanvasRenderer {
 	// with an absolute position and with a z-index to make it 'appear'
 	// underneath the svg area.
 	initializeGhostDiv() {
-		if (this.isDisplayingFullPage() &&
+		if (this.dispUtils.isDisplayingFullPage() &&
 				this.getGhostDivSel().empty()) {
 			this.canvasDiv
 				.append("div")
@@ -941,7 +880,7 @@ export default class SVGCanvasRenderer {
 			this.setDetachedLinkHighlighting(links);
 		}
 
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+		if (this.config.enableCanvasUnderlay !== "None" && this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize(x, y);
 		}
 	}
@@ -1263,7 +1202,7 @@ export default class SVGCanvasRenderer {
 	// or calls the same method on our parent renderer if we are a sub-flow. This
 	// means the factors will multiply as they percolate up to the top flow.
 	setMaxZoomExtent(factor) {
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			const newMaxExtent = this.maxScaleExtent * factor;
 
 			this.zoom.scaleExtent([this.minScaleExtent, newMaxExtent]);
@@ -1289,7 +1228,7 @@ export default class SVGCanvasRenderer {
 
 		// When rendering supernode contents we use the parent supernode as the
 		// parent for the svg object.
-		if (this.isDisplayingSubFlowInPlace()) {
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
 			parentObject = this.parentSupernodeD3Selection;
 			dims = this.getParentSupernodeSVGDimensions();
 		}
@@ -1340,7 +1279,7 @@ export default class SVGCanvasRenderer {
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying
 		// either the primary pipeline full page or a sub-pipeline full page.
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			// Add defs element to allow a filter for the drop shadow
 			// This only needs to be done once for the whole page.
 			var defs = canvasSVG.append("defs");
@@ -1365,7 +1304,7 @@ export default class SVGCanvasRenderer {
 		// area i.e. when we are displaying either the primary pipeline full page
 		// or a sub-pipeline full page.
 		if (!this.isCanvasEmptyOrBindingsOnly() &&
-				this.isDisplayingFullPage()) {
+				this.dispUtils.isDisplayingFullPage()) {
 			this.canvasSVG
 				.call(this.zoom);
 		}
@@ -1389,7 +1328,7 @@ export default class SVGCanvasRenderer {
 				// When displaying inplace subflow and a context menu is requested
 				// suppress the mouse down which would go to the containing supernode.
 				// This prevents the deselection of any selected nodes in the subflow.
-				if (this.isDisplayingSubFlowInPlace() &&
+				if (this.dispUtils.isDisplayingSubFlowInPlace() &&
 						d3Event.button === CONTEXT_MENU_BUTTON) {
 					d3Event.stopPropagation();
 				}
@@ -1408,7 +1347,7 @@ export default class SVGCanvasRenderer {
 				this.selecting = true;
 				// Only clear selections if clicked on the canvas of the current active pipeline.
 				// Clicking the canvas of an expanded supernode will select that node.
-				if (this.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
+				if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
 					this.canvasController.clearSelections();
 				}
 				this.contextMenuClosedOnZoom = false;
@@ -1441,7 +1380,7 @@ export default class SVGCanvasRenderer {
 
 	// Retuens the appropriate cursor for the canvas SVG area.
 	getCanvasCursor() {
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
 					this.isCanvasEmptyOrBindingsOnly()) {
 				return "default";
@@ -1456,7 +1395,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	createCanvasUnderlay(canvasGrp, className) {
-		if (this.config.enableCanvasUnderlay !== "None" && this.isDisplayingPrimaryFlowFullPage()) {
+		if (this.config.enableCanvasUnderlay !== "None" && this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			return canvasGrp.append("rect").attr("class", className);
 		}
 		return null;
@@ -1703,7 +1642,7 @@ export default class SVGCanvasRenderer {
 	getZoomToFitPadding() {
 		let padding = this.canvasLayout.zoomToFitPadding;
 
-		if (this.isDisplayingSubFlow()) {
+		if (this.dispUtils.isDisplayingSubFlow()) {
 			// Allocate some space for connecting lines and the binding node ports
 			const newPadding = this.getMaxZoomToFitPaddingForConnections() + (2 * this.canvasLayout.supernodeBindingPortRadius);
 			padding = Math.max(padding, newPadding);
@@ -1795,7 +1734,7 @@ export default class SVGCanvasRenderer {
 	getViewportDimensions() {
 		let viewportDimensions = {};
 
-		if (this.isDisplayingSubFlowInPlace()) {
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
 			const dims = this.getParentSupernodeSVGDimensions();
 			viewportDimensions.width = dims.width;
 			viewportDimensions.height = dims.height;
@@ -1821,9 +1760,10 @@ export default class SVGCanvasRenderer {
 		// subflow), when the user zooms the canvas, the full page flow is handling
 		// that zoom, which causes a refresh in the subflow, so the full page flow
 		// will take care of closing the context menu. This means the in-place
-		// subflow doesn’t need to do anything on zoom, hence: !this.isDisplayingSubFlowInPlace()
+		// subflow doesn’t need to do anything on zoom,
+		// hence: !this.dispUtils.isDisplayingSubFlowInPlace()
 		if (this.canvasController.isContextMenuDisplayed() &&
-				!this.isDisplayingSubFlowInPlace()) {
+				!this.dispUtils.isDisplayingSubFlowInPlace()) {
 			this.canvasController.closeContextMenu();
 			this.contextMenuClosedOnZoom = true;
 		}
@@ -1927,7 +1867,7 @@ export default class SVGCanvasRenderer {
 			}
 			this.regionSelect = false;
 
-		} else if (this.isDisplayingFullPage()) {
+		} else if (this.dispUtils.isDisplayingFullPage()) {
 			// Set the internal zoom value for canvasSVG used by D3. This will be
 			// used by d3Event next time a zoom action is initiated.
 			this.canvasSVG.property("__zoom", this.zoomTransform);
@@ -1956,7 +1896,7 @@ export default class SVGCanvasRenderer {
 	zoomCanvasBackground(d3Event) {
 		this.regionSelect = false;
 
-		if (this.isDisplayingPrimaryFlowFullPage()) {
+		if (this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			const incTransform = this.getTransformIncrement(d3Event);
 			this.zoomTransform = this.zoomConstrainRegular(incTransform, this.getViewportDimensions(), this.zoomCanvasDimensions);
 		} else {
@@ -1970,13 +1910,13 @@ export default class SVGCanvasRenderer {
 		}
 
 		if (this.config.enableCanvasUnderlay !== "None" &&
-				this.isDisplayingPrimaryFlowFullPage()) {
+				this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
 
 		// The supernode will not have any calculated port positions when the
 		// subflow is being displayed full screen, so calculate them first.
-		if (this.isDisplayingSubFlowFullPage()) {
+		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
 	}
@@ -2183,7 +2123,7 @@ export default class SVGCanvasRenderer {
 			// Limit the size a drag can be so, when the user is dragging objects in
 			// an in-place subflow they do not drag them too far.
 			// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.dragOffsetY);
-			if (this.isDisplayingSubFlowInPlace() &&
+			if (this.dispUtils.isDisplayingSubFlowInPlace() &&
 					(this.dragOffsetX > 1000 || this.dragOffsetX < -1000 ||
 						this.dragOffsetY > 1000 || this.dragOffsetY < -1000)) {
 				this.dragOffsetX -= d3Event.dx;
@@ -2444,7 +2384,7 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.getNode(d.id))
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
 
-		if (this.isDisplayingSubFlow()) {
+		if (this.dispUtils.isDisplayingSubFlow()) {
 			nodeGroupSel
 				.each((d, i, nodeGrps) => {
 					if (d.isSupernodeInputBinding) {
@@ -5658,7 +5598,7 @@ export default class SVGCanvasRenderer {
 	// styles set in the CSS because the style for the overlay rectangle overrides
 	// any cursor styles of the underlying objects.
 	addTempCursorOverlay(cursorStyle) {
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			if (this.canvasDiv.selectAll(".d3-temp-cursor-overlay").size() > 0) {
 				this.removeTempCursorOverlay();
 			}
@@ -5678,7 +5618,7 @@ export default class SVGCanvasRenderer {
 
 	// Removes the temporary cursor overlay.
 	removeTempCursorOverlay() {
-		if (this.isDisplayingFullPage()) {
+		if (this.dispUtils.isDisplayingFullPage()) {
 			this.canvasDiv.selectAll(".d3-temp-cursor-overlay").remove();
 		}
 	}
@@ -5689,9 +5629,8 @@ export default class SVGCanvasRenderer {
 		if (this.regionSelect || this.nodeSizing || this.commentSizing) {
 			return true;
 		}
-		const parentRenderer = this.getParentRenderer();
-		if (parentRenderer) {
-			if (parentRenderer.isRegionSelectOrSizingInProgress()) {
+		if (this.parentRenderer) {
+			if (this.parentRenderer.isRegionSelectOrSizingInProgress()) {
 				return true;
 			}
 		}
@@ -5801,7 +5740,7 @@ export default class SVGCanvasRenderer {
 			}
 			this.displayNodes();
 			this.displayLinks();
-			if (this.isDisplayingSubFlow()) {
+			if (this.dispUtils.isDisplayingSubFlow()) {
 				this.displayBindingNodesToFitSVG();
 			}
 			this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());

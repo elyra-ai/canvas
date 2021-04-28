@@ -1,0 +1,67 @@
+/*
+ * Copyright 2021 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// import CanvasUtils from "./common-canvas-utils.js";
+// import { SUPER_NODE } from "./constants/canvas-constants";
+
+export default class SvgCanvasUtilsDisplay {
+	constructor(canvasController, isSubflow, pipelineId) {
+		this.canvasController = canvasController;
+		this.isSubflow = isSubflow;
+		this.pipelineId = pipelineId;
+	}
+
+	isDisplayingCurrentPipeline() {
+		return this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId;
+	}
+
+	setDisplayState() {
+		if (this.canvasController.getBreadcrumbs().length > 1 &&
+				this.isDisplayingCurrentPipeline()) {
+			this.displayState = "sub-flow-full-page";
+
+		} else if (this.isSubflow) {
+			this.displayState = "sub-flow-in-place";
+
+		} else {
+			this.displayState = "primary-flow-full-page";
+		}
+	}
+
+	getDisplayStateMsg() {
+		return "Display state set to " + this.displayState;
+	}
+
+	isDisplayingPrimaryFlowFullPage() {
+		return this.displayState === "primary-flow-full-page";
+	}
+
+	isDisplayingSubFlow() {
+		return this.displayState === "sub-flow-in-place" || this.displayState === "sub-flow-full-page";
+	}
+
+	isDisplayingSubFlowInPlace() {
+		return this.displayState === "sub-flow-in-place";
+	}
+
+	isDisplayingSubFlowFullPage() {
+		return this.displayState === "sub-flow-full-page";
+	}
+
+	isDisplayingFullPage() {
+		return this.displayState === "primary-flow-full-page" || this.displayState === "sub-flow-full-page";
+	}
+}
