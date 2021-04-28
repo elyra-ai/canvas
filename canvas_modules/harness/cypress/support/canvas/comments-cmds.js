@@ -184,7 +184,7 @@ Cypress.Commands.add("addCommentToPosition", (commentText, canvasX, canvasY) => 
 Cypress.Commands.add("moveCommentToPosition", (commentText, canvasX, canvasY) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "text") + "'] > div";
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > foreignobject > div";
 			cy.getCanvasTranslateCoords()
 				.then((transform) => {
 					cy.window().then((win) => {
@@ -202,17 +202,17 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 	// Click the comment at topLeft corner to display the guide
 	// srcSelector is the selector of guide
 	cy.getCommentWithText(commentText).then((comment) => {
-		const sel = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "text") + "'] > div";
+		const sel = "[data-id='" + comment[0].getAttribute("data-id") + "'] > foreignobject > div";
 		cy.get(sel).click();
 
 		cy.document().then((doc) => {
 			// Connection Type - Halo
 			let srcSelector;
 			if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "halo") + "']";
+				srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-halo";
 			} else {
 				// Connection Type - Ports
-				srcSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "port") + "']";
+				srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-port-circle";
 			}
 			cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
 				// Target canvas position within the center of the target node
@@ -236,8 +236,8 @@ Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector,
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
-			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
+			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
 				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
@@ -285,8 +285,8 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
-			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sizing") + "']";
+			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
+			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
 			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
 				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area

@@ -649,44 +649,35 @@ export default class SVGCanvasRenderer {
 		return state;
 	}
 
-	// Returns a selector for the ID string like one of the following:
-	// * [data-id='prefix_instanceID'][data-pipeline-id='1234']
-	// * [data-id='prefix_instanceID_suffix'][data-pipeline-id='1234']
-	// * [data-id='prefix_instanceID_suffix_suffix2'][data-pipeline-id='1234']
-	// depending on what parameters are provided.
-	getSelectorForId(prefix, suffix, suffix2) {
-		let sel = this.getSelectorForIdWithoutPipeline(prefix, suffix, suffix2);
-		sel += `[data-pipeline-id='${this.activePipeline.id}']`;
-		return sel;
-	}
-
-	getNodeGroupSelectionById(nodeId) {
-		const nodeGrpSelector = this.getSelectorForIdWithoutPipeline("node_grp", nodeId);
-		return this.nodesLinksGrp.selectChildren(nodeGrpSelector);
-	}
-
 	getAllNodeGroupsSelection() {
 		return this.nodesLinksGrp.selectChildren(".d3-node-group");
 	}
 
-	getAllCommentGroupsSelection() {
-		return this.nodesLinksGrp.selectChildren(".d3-comment-group");
+	getAllLinkGroupsSelection() {
+		return this.nodesLinksGrp.selectChildren(".d3-link-group");
 	}
 
+	getAllCommentGroupsSelection() {
+		return this.commentsGrp.selectChildren(".d3-comment-group");
+	}
+
+	getNodeGroupSelectionById(nodeId) {
+		const nodeGrpSelector = this.getSelectorForId("node_grp", nodeId);
+		return this.nodesLinksGrp.selectChildren(nodeGrpSelector);
+	}
+
+	getLinkGroupSelectionById(nodeId) {
+		const linkGrpSelector = this.getSelectorForId("link_grp", nodeId);
+		return this.nodesLinksGrp.selectChildren(linkGrpSelector);
+	}
 
 	// Returns a selector for the ID string like one of the following:
 	// * [data-id='prefix_instanceID']
 	// * [data-id='prefix_instanceID_suffix']
 	// * [data-id='prefix_instanceID_suffix_suffix2']
 	// depending on what parameters are provided.
-	getSelectorForIdWithoutPipeline(prefix, suffix, suffix2) {
+	getSelectorForId(prefix, suffix, suffix2) {
 		return `[data-id='${this.getId(prefix, suffix, suffix2)}']`;
-	}
-
-	// Returns a selector for the class name passed in which includes a
-	// condition for selecting on the current pipelineId.
-	getSelectorForClass(classs) {
-		return `.${classs}[data-pipeline-id='${this.activePipeline.id}']`; // Add a '.' when selecting on a class
 	}
 
 	// Returns an ID string like one of the following:
@@ -1020,8 +1011,7 @@ export default class SVGCanvasRenderer {
 	// be dragged from either the palette of canvas onto a detached link. This is
 	// enabled when enableLinkSelection is set to LINK_SELECTION_DETACHABLE.
 	setNodeDragOverLinkHighlighting(link, state) {
-		this.nodesLinksGrp
-			.selectChildren(this.getSelectorForIdWithoutPipeline("link_grp", link.id))
+		this.getLinkGroupSelectionById(link.id)
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 
@@ -2340,7 +2330,7 @@ export default class SVGCanvasRenderer {
 		const link = this.getLink(d.id);
 		const oldLink = cloneDeep(link);
 
-		const linkGrpSelector = this.getSelectorForIdWithoutPipeline("link_grp", d.id);
+		const linkGrpSelector = this.getLinkGroupSelectionById(d.id);
 
 		this.draggingLinkData = {
 			lineInfo: d,
@@ -2469,12 +2459,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodesSelectionStatus(nodeGroupSel) {
-		this.getAllNodeGroupsSelection().each((d, i, nodeGrpObjs) => {
-			const nodeGrp = d3.select(nodeGrpObjs[i]);
-			nodeGrp.selectChildren(".d3-node-selection-highlight")
-				.attr("data-selected", this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no");
-			this.setNodeStyles(d, "default", nodeGrp);
-		});
+		this.getAllNodeGroupsSelection()
+			.selectChildren(".d3-node-selection-highlight")
+			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"));
 
 		this.superRenderers.forEach((renderer) => {
 			renderer.selecting = true;
@@ -3252,22 +3239,21 @@ export default class SVGCanvasRenderer {
 		const that = this;
 		const decorations = decs || [];
 		const decGrpClassName = `d3-${objType}-dec-group`;
-		const decGrpSelector = this.getSelectorForClass(decGrpClassName);
-		trgGrp.selectAll(decGrpSelector)
+		const decGrpSelector = "." + decGrpClassName;
+		trgGrp.selectChildren(decGrpSelector)
 			.data(decorations, (dec) => dec.id)
 			.join(
-				(enter) => this.createNewDecorations(enter, objType, decGrpClassName)
+				(enter) => this.createDecorations(enter, objType, decGrpClassName)
 			)
 			.attr("transform", (dec) => `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`)
 			.on("mousedown", (d3Event, dec) => (dec.hotspot ? that.callDecoratorCallback(d3Event, d, dec) : null))
 			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
 	}
 
-	createNewDecorations(enter, objType, decGrpClassName) {
+	createDecorations(enter, objType, decGrpClassName) {
 		const newDecGroups = enter
 			.append("g")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
-			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", decGrpClassName);
 
 		return newDecGroups;
@@ -5109,287 +5095,265 @@ export default class SVGCanvasRenderer {
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		// Do not return from here if there are no comments because there may
-		// be still comments on display that need to be deleted.
-
-		const that = this;
-		const comSelector = this.getSelectorForClass("d3-comment-group");
-
-		var commentGroupSel = this.commentsGrp
-			.selectAll(comSelector)
-			.data(this.activePipeline.comments, function(d) { return d.id; });
-
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.nodeSizing) {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
 		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
-			commentGroupSel
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.datum((d) => that.getComment(d.id));
+			this.displayMovedComments();
 
 		} else if (this.selecting || this.regionSelect) {
-			commentGroupSel.each(function(d) {
-				const comOutlineSelector = that.getSelectorForId("comment_sel_outline", d.id);
-				that.commentsGrp.selectAll(comOutlineSelector)
-					.attr("height", d.height + (2 * that.canvasLayout.commentHighlightGap))
-					.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
-					.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-					.attr("class", "d3-comment-selection-highlight")
-					.datum(() => that.getComment(d.id));
-
-				// This code will remove custom attributes from a comment. This might happen when
-				// the user clicks the canvas background to remove the greyed out appearance of
-				// a comment that was 'cut' to the clipboard.
-				// TODO - Remove this code if/when common canvas supports cut (which removes comments
-				// from the canvas) and when WML Canvas uses that clipboard support in place
-				// of its own.
-				const comBodySelector = that.getSelectorForId("comment_body", d.id);
-				that.commentsGrp.selectAll(comBodySelector)
-					.datum(() => that.getComment(d.id))
-					.each(function(cd) {
-						var imageObj = d3.select(this);
-						if (cd.customAttrs && cd.customAttrs.length > 0) {
-							cd.customAttrs.forEach((customAttr) => {
-								imageObj.attr(customAttr, "");
-							});
-						} else {
-							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
-						}
-					});
-				that.setCommentStyles(d, "default", d3.select(this));
-			});
-
-			this.superRenderers.forEach((renderer) => {
-				renderer.selecting = true;
-				renderer.displayComments();
-				renderer.selecting = false;
-			});
+			this.displayCommentsSelectionStatus();
 
 		} else {
-			// Handle new comments
-			var newCommentGroups = commentGroupSel.enter()
-				.append("g")
-				.attr("data-id", (d) => this.getId("comment_grp", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", (d) => this.getCommentGroupClass(d))
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.setCommentStyles(d, "hover", d3.select(this));
-					if (that.canvasLayout.connectionType === "ports") {
-						that.createCommentPort(d3.select(this), d);
-					}
-				})
-				.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.setCommentStyles(d, "default", d3.select(this));
-					if (that.canvasLayout.connectionType === "ports") {
-						that.commentsGrp.selectAll(that.getSelectorForId("comment_port", d.id)).remove();
-					}
-				})
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Comment Group - mouse down");
-
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
-					this.logger.log("Comment Group - finished mouse down");
-				})
-				.on("click", (d3Event, d) => {
-					this.logger.log("Comment Group - click");
-					d3Event.stopPropagation();
-				})
-				.on("dblclick", (d3Event, d) => {
-					that.logger.log("Comment Group - double click");
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-
-					that.displayCommentTextArea(d, d3Event.currentTarget);
-
-					that.canvasController.clickActionHandler({
-						clickType: "DOUBLE_CLICK",
-						objectType: "comment",
-						id: d.id,
-						selectedObjectIds: that.objectModel.getSelectedObjectIds(),
-						pipelineId: that.activePipeline.id });
-				})
-				.on("contextmenu", (d3Event, d) => {
-					this.logger.log("Comment Group - context menu");
-					// With enableDragWithoutSelect set to true, the object for which the
-					// context menu is being requested needs to be implicitely selected.
-					if (this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
-					this.openContextMenu(d3Event, "comment", d);
-				})
-				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-
-			// Comment sizing area
-			newCommentGroups.append("rect")
-				.attr("data-id", (d) => this.getId("comment_sizing", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.on("mousedown", (d3Event, d) => {
-					this.commentSizing = true;
-					this.commentSizingId = d.id;
-					// Note - comment resizing and finalization of size is handled by drag functions.
-					this.addTempCursorOverlay(this.commentSizingCursor);
-				})
-				// Use mousemove here rather than mouseenter so the cursor will change
-				// if the pointer moves from one area of the node outline to another
-				// (eg. from east area to north-east area) without exiting the node outline.
-				// A mouseenter is triggered when the sizing operation stops and the
-				// pointer leaves the temporary overlay (which is removed) and enters
-				// the node outline.
-				.on("mousemove mouseenter", function(d3Event, d) {
-					if (!that.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
-					{
-						let cursorType = "pointer";
-						if (!that.isPointerCloseToBodyEdge(d3Event, d)) {
-							that.commentSizingDirection = that.getSizingDirection(d3Event, d, that.canvasLayout.commentCornerResizeArea);
-							that.commentSizingCursor = that.getCursorBasedOnDirection(that.commentSizingDirection);
-							cursorType = that.commentSizingCursor;
-						}
-						d3.select(this).style("cursor", cursorType);
-					}
-				});
-
-			// Comment selection highlighting outline
-			newCommentGroups.append("rect")
-				.attr("data-id", (d) => this.getId("comment_sel_outline", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id);
-
-			// Background rectangle for comment
-			newCommentGroups.append("rect")
-				.attr("data-id", (d) => this.getId("comment_body", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("width", (d) => d.width)
-				.attr("height", (d) => d.height)
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("class", "d3-comment-rect")
-				.each(function(d) {
-					if (d.customAttrs) {
-						var imageObj = d3.select(this);
-						d.customAttrs.forEach((customAttr) => {
-							imageObj.attr(customAttr, "");
-						});
-					}
-				});
-
-			// Comment text
-			newCommentGroups.append("foreignObject")
-				.attr("data-id", (d) => that.getId("comment_text", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-foreign-object")
-				.attr("x", 0)
-				.attr("y", 0)
-				.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-				.attr("class", "d3-comment-text");
-
-			// Halo
-			if (this.canvasLayout.connectionType === "halo") {
-				newCommentGroups.append("rect")
-					.attr("data-id", (d) => that.getId("comment_halo", d.id))
-					.attr("data-pipeline-id", this.activePipeline.id)
-					.attr("class", "d3-comment-halo")
-					.on("mousedown", (d3Event, d) => {
-						this.logger.log("Comment Halo - mouse down");
-						d3Event.stopPropagation();
-						this.drawingNewLinkData = {
-							srcObjId: d.id,
-							action: COMMENT_LINK,
-							startPos: this.getTransformedMousePos(d3Event),
-							linkArray: []
-						};
-						this.drawNewLink(d3Event);
-					});
-			}
-
-			const newAndExistingCommentGrps =
-				commentGroupSel.enter().merge(commentGroupSel);
-
-			newAndExistingCommentGrps
-				.each((d) => {
-					const commentGrp = this.commentsGrp.selectAll(that.getSelectorForId("comment_grp", d.id));
-					const comment = this.getComment(d.id);
-
-					commentGrp
-						.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
-						.attr("class", this.getCommentGroupClass(d))
-						.datum(comment);
-
-					// Comment sizing area
-					commentGrp.select(this.getSelectorForId("comment_sizing", d.id))
-						.attr("x", -this.canvasLayout.commentSizingArea)
-						.attr("y", -this.canvasLayout.commentSizingArea)
-						.attr("height", d.height + (2 * that.canvasLayout.commentSizingArea))
-						.attr("width", d.width + (2 * that.canvasLayout.commentSizingArea))
-						.attr("class", "d3-comment-sizing")
-						.datum(comment);
-
-					// Comment selection highlighting outline
-					commentGrp.select(this.getSelectorForId("comment_sel_outline", d.id))
-						.attr("x", -this.canvasLayout.commentHighlightGap)
-						.attr("y", -this.canvasLayout.commentHighlightGap)
-						.attr("height", d.height + (2 * that.canvasLayout.commentHighlightGap))
-						.attr("width", d.width + (2 * that.canvasLayout.commentHighlightGap))
-						.attr("data-selected", that.objectModel.isSelected(d.id, that.activePipeline.id) ? "yes" : "no")
-						.attr("class", "d3-comment-selection-highlight")
-						.datum(comment);
-
-					// Set comments styles
-					this.setCommentStyles(d, "default", commentGrp);
-
-					// Background rectangle for comment
-					commentGrp.select(this.getSelectorForId("comment_body", d.id))
-						.attr("height", d.height)
-						.attr("width", d.width)
-						.attr("class", "d3-comment-rect")
-						.datum(comment)
-						.each(function(cd) {
-							if (cd.customAttrs) {
-								var imageObj = d3.select(this);
-								cd.customAttrs.forEach((customAttr) => {
-									imageObj.attr(customAttr, "");
-								});
-							}
-						});
-
-					// Comment text
-					commentGrp.select(this.getSelectorForId("comment_text", d.id))
-						.datum(comment)
-						.attr("width", (cd) => cd.width)
-						.attr("height", (cd) => cd.height)
-						.select("div")
-						.html((cd) => cd.content);
-
-					// Comment halo
-					// We need to dynamically set size of the halo here because the size
-					// of the text object maye be changed by the user.
-					if (that.canvasLayout.connectionType === "halo") {
-						commentGrp.select(this.getSelectorForId("comment_halo", d.id))
-							.attr("x", 0 - this.canvasLayout.haloCommentGap)
-							.attr("y", 0 - this.canvasLayout.haloCommentGap)
-							.attr("width", d.width + (2 * that.canvasLayout.haloCommentGap))
-							.attr("height", d.height + (2 * that.canvasLayout.haloCommentGap))
-							.datum(comment);
-					}
-				});
-
-			// Remove any comments that are no longer in the diagram.nodes array.
-			commentGroupSel.exit().remove();
+			this.displayAllComments();
 		}
+
 		this.logger.logEndTimer("displayComments " + this.getFlags());
+	}
+
+	displayMovedComments() {
+		this.getAllCommentGroupsSelection()
+			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.datum((d) => this.getComment(d.id));
+	}
+
+	displayCommentsSelectionStatus() {
+		this.getAllCommentGroupsSelection()
+			.selectChildren(".d3-comment-selection-highlight")
+			.attr("data-selected", (c) => (this.objectModel.isSelected(c.id, this.activePipeline.id) ? "yes" : "no"));
+
+		this.superRenderers.forEach((renderer) => {
+			renderer.selecting = true;
+			renderer.displayComments();
+			renderer.selecting = false;
+		});
+	}
+
+	displayAllComments() {
+		this.getAllCommentGroupsSelection()
+			.data(this.activePipeline.comments, (c) => c.id)
+			.join(
+				(enter) => this.createComments(enter)
+			)
+			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.attr("class", (c) => this.getCommentGroupClass(c))
+			.call((joinedCommentGrps) => this.updateComments(joinedCommentGrps));
+	}
+
+	createComments(enter) {
+		const newCommentGroups = enter
+			.append("g")
+			.attr("data-id", (c) => this.getId("comment_grp", c.id))
+			.call(this.attachCommentGroupListeners.bind(this))
+			.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
+
+		// Comment Sizing Area
+		newCommentGroups
+			.append("rect")
+			.attr("class", "d3-comment-sizing")
+			.call(this.attachCommentSizingListeners.bind(this));
+
+		// Comment Selection Highlighting Outline
+		newCommentGroups
+			.append("rect")
+			.attr("class", "d3-comment-selection-highlight");
+
+		// Background Rectangle
+		newCommentGroups
+			.append("rect")
+			.attr("width", (c) => c.width)
+			.attr("height", (c) => c.height)
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("class", "d3-comment-rect")
+			.each((c, i, comGrps) => {
+				if (c.customAttrs) {
+					var imageObj = d3.select(comGrps[i]);
+					c.customAttrs.forEach((customAttr) => {
+						imageObj.attr(customAttr, "");
+					});
+				}
+			});
+
+		// Comment Text
+		newCommentGroups
+			.append("foreignObject")
+			.attr("class", "d3-foreign-object")
+			.attr("x", 0)
+			.attr("y", 0)
+			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+			.attr("class", "d3-comment-text");
+
+		// Halo
+		if (this.canvasLayout.connectionType === "halo") {
+			newCommentGroups
+				.append("rect")
+				.attr("class", "d3-comment-halo")
+				.on("mousedown", (d3Event, d) => {
+					this.logger.log("Comment Halo - mouse down");
+					d3Event.stopPropagation();
+					this.drawingNewLinkData = {
+						srcObjId: d.id,
+						action: COMMENT_LINK,
+						startPos: this.getTransformedMousePos(d3Event),
+						linkArray: []
+					};
+					this.drawNewLink(d3Event);
+				});
+		}
+		return newCommentGroups;
+	}
+
+	updateComments(joinedCommentGrps) {
+		joinedCommentGrps
+			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
+			.attr("class", (c) => this.getCommentGroupClass(c));
+
+		// Comment Sizing Area
+		joinedCommentGrps.selectChildren(".d3-comment-sizing")
+			.datum((c) => this.getComment(c.id))
+			.attr("x", -this.canvasLayout.commentSizingArea)
+			.attr("y", -this.canvasLayout.commentSizingArea)
+			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
+			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
+			.attr("class", "d3-comment-sizing");
+
+		// Comment Selection Highlighting Outline
+		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
+			.datum((c) => this.getComment(c.id))
+			.attr("x", -this.canvasLayout.commentHighlightGap)
+			.attr("y", -this.canvasLayout.commentHighlightGap)
+			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentHighlightGap))
+			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentHighlightGap))
+			.attr("data-selected", (c) => (this.objectModel.isSelected(c.id, this.activePipeline.id) ? "yes" : "no"))
+			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
+
+		// Comment Body
+		joinedCommentGrps.selectChildren(".d3-comment-rect")
+			.datum((c) => this.getComment(c.id))
+			.attr("height", (c) => c.height)
+			.attr("width", (c) => c.width)
+			.attr("class", "d3-comment-rect")
+			.attr("style", (c) => this.getCommentBodyStyle(c, "default"))
+			.each((cd, i, comGrps) => {
+				if (cd.customAttrs) {
+					var imageObj = d3.select(comGrps[i]);
+					cd.customAttrs.forEach((customAttr) => {
+						imageObj.attr(customAttr, "");
+					});
+				}
+			});
+
+		// Comment Text
+		joinedCommentGrps.selectChildren(".d3-foreign-object")
+			.datum((c) => this.getComment(c.id))
+			.attr("width", (c) => c.width)
+			.attr("height", (c) => c.height)
+			.select("div")
+			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
+			.html((c) => c.content);
+
+		// Comment halo
+		// We need to dynamically set size of the halo here because the size
+		// of the text object maye be changed by the user.
+		if (this.canvasLayout.connectionType === "halo") {
+			joinedCommentGrps.selectChildren(".d3-comment-halo")
+				.datum((c) => this.getComment(c.id))
+				.attr("x", 0 - this.canvasLayout.haloCommentGap)
+				.attr("y", 0 - this.canvasLayout.haloCommentGap)
+				.attr("width", (c) => c.width + (2 * this.canvasLayout.haloCommentGap))
+				.attr("height", (c) => c.height + (2 * this.canvasLayout.haloCommentGap));
+		}
+	}
+
+	// Attaches the appropriate listeners to the comment groups.
+	attachCommentGroupListeners(commentGrps) {
+		commentGrps
+			.on("mouseenter", (d3Event, d) => {
+				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
+				if (this.canvasLayout.connectionType === "ports") {
+					this.createCommentPort(d3Event.currentTarget, d);
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
+				if (this.canvasLayout.connectionType === "ports") {
+					this.deleteCommentPort(d3Event.currentTarget);
+				}
+			})
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Comment Group - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.logger.log("Comment Group - finished mouse down");
+			})
+			.on("click", (d3Event, d) => {
+				this.logger.log("Comment Group - click");
+				d3Event.stopPropagation();
+			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Comment Group - double click");
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+
+				this.displayCommentTextArea(d, d3Event.currentTarget);
+
+				this.canvasController.clickActionHandler({
+					clickType: "DOUBLE_CLICK",
+					objectType: "comment",
+					id: d.id,
+					selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+					pipelineId: this.activePipeline.id });
+			})
+			.on("contextmenu", (d3Event, d) => {
+				this.logger.log("Comment Group - context menu");
+				// With enableDragWithoutSelect set to true, the object for which the
+				// context menu is being requested needs to be implicitely selected.
+				if (this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.openContextMenu(d3Event, "comment", d);
+			});
+	}
+
+	attachCommentSizingListeners(commentGrps) {
+		commentGrps
+			.on("mousedown", (d3Event, d) => {
+				this.commentSizing = true;
+				this.commentSizingId = d.id;
+				// Note - comment resizing and finalization of size is handled by drag functions.
+				this.addTempCursorOverlay(this.commentSizingCursor);
+			})
+			// Use mousemove here rather than mouseenter so the cursor will change
+			// if the pointer moves from one area of the node outline to another
+			// (eg. from east area to north-east area) without exiting the node outline.
+			// A mouseenter is triggered when the sizing operation stops and the
+			// pointer leaves the temporary overlay (which is removed) and enters
+			// the node outline.
+			.on("mousemove mouseenter", (d3Event, d) => {
+				if (!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
+				{
+					let cursorType = "pointer";
+					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
+						this.commentSizingDirection = this.getSizingDirection(d3Event, d, this.canvasLayout.commentCornerResizeArea);
+						this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
+						cursorType = this.commentSizingCursor;
+					}
+					d3.select(d3Event.currentTarget).style("cursor", cursorType);
+				}
+			});
 	}
 
 	// Creates a port object (a grey circle in the top left corner of the
 	// comment for creating links to nodes) for the comment asscoiated with
 	// the comment group object passed in.
-	createCommentPort(commentGrp, d) {
+	createCommentPort(commentObj, d) {
+		const commentGrp = d3.select(commentObj);
+
 		commentGrp
 			.append("circle")
-			.attr("data-id", this.getId("comment_port", d.id))
-			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("cx", 0 - this.canvasLayout.commentHighlightGap)
 			.attr("cy", 0 - this.canvasLayout.commentHighlightGap)
 			.attr("r", this.canvasLayout.commentPortRadius)
@@ -5410,27 +5374,44 @@ export default class SVGCanvasRenderer {
 
 	}
 
+	deleteCommentPort(commentObj) {
+		d3.select(commentObj)
+			.selectChildren(".d3-comment-port-circle")
+			.remove();
+	}
+
 	setCommentStyles(d, type, comGrp) {
-		this.setCommentBodyStyles(d, type, comGrp);
 		this.setCommentSelectionOutlineStyles(d, type, comGrp);
+		this.setCommentBodyStyles(d, type, comGrp);
 		this.setCommentTextStyles(d, type, comGrp);
 	}
 
-	setCommentBodyStyles(d, type, comGrp) {
-		const style = this.getObjectStyle(d, "body", type);
-		comGrp.select(this.getSelectorForId("comment_body", d.id)).attr("style", style);
+	setCommentSelectionOutlineStyles(d, type, comGrp) {
+		const style = this.getCommentSelectionOutlineStyle(d, type);
+		comGrp.selectChildren(".d3-comment-selection-highlight").attr("style", style);
 	}
 
-	setCommentSelectionOutlineStyles(d, type, comGrp) {
-		const style = this.getObjectStyle(d, "selection_outline", type);
-		comGrp.select(this.getSelectorForId("comment_sel_outline", d.id)).attr("style", style);
+	setCommentBodyStyles(d, type, comGrp) {
+		const style = this.getCommentBodyStyle(d, type);
+		comGrp.selectChildren(".d3-comment-rect").attr("style", style);
 	}
 
 	setCommentTextStyles(d, type, comGrp) {
-		const style = this.getObjectStyle(d, "text", type);
-		comGrp.select(this.getSelectorForId("comment_text", d.id))
-			.select("div")
+		const style = this.getCommentTextStyle(d, type);
+		comGrp.selectChildren(".d3-foreign-object").select("div")
 			.attr("style", style);
+	}
+
+	getCommentSelectionOutlineStyle(d, type) {
+		return this.getObjectStyle(d, "selection_outline", type);
+	}
+
+	getCommentBodyStyle(d, type) {
+		return this.getObjectStyle(d, "body", type);
+	}
+
+	getCommentTextStyle(d, type) {
+		return this.getObjectStyle(d, "text", type);
 	}
 
 	getObjectStyle(d, part, type) {
@@ -5973,9 +5954,6 @@ export default class SVGCanvasRenderer {
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
-		// Do not return from here if there are no links because there may
-		// be still links on display that need to be deleted.
-
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
 			this.logger.logEndTimer("displayLinks " + this.getFlags());
 			return;
@@ -5992,8 +5970,7 @@ export default class SVGCanvasRenderer {
 
 	displayLinksSelectionStatus() {
 		if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-			this.nodesLinksGrp
-				.selectChildren(".d3-link-group")
+			this.getAllLinkGroupsSelection()
 				.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null));
 
 			this.superRenderers.forEach((renderer) => {
@@ -6011,7 +5988,7 @@ export default class SVGCanvasRenderer {
 		const lineArray = this.buildLineArray();
 		const afterLineArray = Date.now();
 
-		this.nodesLinksGrp.selectChildren(".d3-link-group")
+		this.getAllLinkGroupsSelection()
 			.data(lineArray, (line) => line.id)
 			.join(
 				(enter) => this.createLinks(enter)
@@ -6061,57 +6038,7 @@ export default class SVGCanvasRenderer {
 		// Add groups for links
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
-			.on("mousedown", (d3Event, d, index, links) => {
-				this.logger.log("Link Group - mouse down");
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
-				}
-				d3Event.stopPropagation();
-			})
-			.on("mouseup", () => {
-				this.logger.log("Link Group - mouse up");
-			})
-			.on("click", (d3Event, d) => {
-				this.logger.log("Link Group - click");
-				d3Event.stopPropagation();
-			})
-			.on("contextmenu", (d3Event, d) => {
-				this.logger.log("Link Group - context menu");
-				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
-				}
-				this.openContextMenu(d3Event, "link", d);
-			})
-			.on("mouseenter", (d3Event, link) => {
-				const targetObj = d3Event.currentTarget;
-
-				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-					this.raiseLinkToTop(targetObj);
-				}
-				this.setLinkLineStyles(targetObj, link, "hover");
-
-				if (this.canOpenTip(TIP_TYPE_LINK) &&
-						!this.draggingLinkData) {
-					this.canvasController.openTip({
-						id: this.getId("link_tip", link.id),
-						type: TIP_TYPE_LINK,
-						targetObj: targetObj,
-						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
-						pipelineId: this.activePipeline.id,
-						link: link
-					});
-				}
-			})
-			.on("mouseleave", (d3Event, link) => {
-				const targetObj = d3Event.currentTarget;
-
-				if (!targetObj.getAttribute("data-selected")) {
-					this.lowerLinkToBottom(targetObj);
-				}
-				this.setLinkLineStyles(targetObj, link, "default");
-				this.canvasController.closeTip();
-			});
+			.call(this.attachLinkGroupListeners.bind(this));
 
 		// Add selection area for link line
 		newLinkGrps
@@ -6203,6 +6130,61 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.setDisplayOrder(joinedLinkGrps);
+	}
+
+	attachLinkGroupListeners(linkGrps) {
+		linkGrps
+			.on("mousedown", (d3Event, d, index, links) => {
+				this.logger.log("Link Group - mouse down");
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				d3Event.stopPropagation();
+			})
+			.on("mouseup", () => {
+				this.logger.log("Link Group - mouse up");
+			})
+			.on("click", (d3Event, d) => {
+				this.logger.log("Link Group - click");
+				d3Event.stopPropagation();
+			})
+			.on("contextmenu", (d3Event, d) => {
+				this.logger.log("Link Group - context menu");
+				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+				this.openContextMenu(d3Event, "link", d);
+			})
+			.on("mouseenter", (d3Event, link) => {
+				const targetObj = d3Event.currentTarget;
+
+				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
+						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+					this.raiseLinkToTop(targetObj);
+				}
+				this.setLinkLineStyles(targetObj, link, "hover");
+
+				if (this.canOpenTip(TIP_TYPE_LINK) &&
+						!this.draggingLinkData) {
+					this.canvasController.openTip({
+						id: this.getId("link_tip", link.id),
+						type: TIP_TYPE_LINK,
+						targetObj: targetObj,
+						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
+						pipelineId: this.activePipeline.id,
+						link: link
+					});
+				}
+			})
+			.on("mouseleave", (d3Event, link) => {
+				const targetObj = d3Event.currentTarget;
+
+				if (!targetObj.getAttribute("data-selected")) {
+					this.lowerLinkToBottom(targetObj);
+				}
+				this.setLinkLineStyles(targetObj, link, "default");
+				this.canvasController.closeTip();
+			});
 	}
 
 	// Creates a new start handle and a new end handle for the link groups

@@ -723,7 +723,7 @@ Cypress.Commands.add("verifyNodeDimensions", (nodeId, width, height) => {
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const commentSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const commentSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
 			cy.getCommentDimensions(commentSelector)
 				.then((commentDimensions) => {
 					cy.verifyValueInCompareRange(commentDimensions.width, width);
