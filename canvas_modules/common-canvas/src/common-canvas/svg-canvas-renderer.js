@@ -2530,22 +2530,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
-			.attr("style", (d) => this.getNodeImageStyle(d, "default"))
-			// This code will remove custom attributes from a node. This might happen when
-			// the user clicks the canvas background to remove the greyed out appearance of
-			// a node that was 'cut' to the clipboard.
-			// TODO - Remove this code if/when common canvas supports setting this with
-			// the setStyle function instead of using custom attributes.
-			.each(function(nd) {
-				var imageObj = d3.select(this);
-				if (nd.customAttrs && nd.customAttrs.length > 0) {
-					nd.customAttrs.forEach((customAttr) => {
-						imageObj.attr(customAttr, "");
-					});
-				} else {
-					imageObj.attr("data-is-cut", null); // TODO - This should be made generic
-				}
-			});
+			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
 		joinedNodeGrps.selectChildren(".d3-foreign-object")
@@ -5105,15 +5090,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.attr("class", "d3-comment-rect")
-			.each((c, i, comGrps) => {
-				if (c.customAttrs) {
-					var imageObj = d3.select(comGrps[i]);
-					c.customAttrs.forEach((customAttr) => {
-						imageObj.attr(customAttr, "");
-					});
-				}
-			});
+			.attr("class", "d3-comment-rect");
 
 		// Comment Text
 		newCommentGroups
@@ -5174,15 +5151,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.attr("width", (c) => c.width)
 			.attr("class", "d3-comment-rect")
-			.attr("style", (c) => this.getCommentBodyStyle(c, "default"))
-			.each((cd, i, comGrps) => {
-				if (cd.customAttrs) {
-					var imageObj = d3.select(comGrps[i]);
-					cd.customAttrs.forEach((customAttr) => {
-						imageObj.attr(customAttr, "");
-					});
-				}
-			});
+			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
 		// Comment Text
 		joinedCommentGrps.selectChildren(".d3-foreign-object")
