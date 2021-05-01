@@ -2464,7 +2464,7 @@ export default class SVGCanvasRenderer {
 		// Node Label
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object ")
+			.attr("class", "d3-foreign-object")
 			.call(this.attachNodeLabelListeners.bind(this))
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
