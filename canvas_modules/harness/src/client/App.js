@@ -289,7 +289,8 @@ class App extends React.Component {
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
-		this.setDefaultMaxLength = this.setDefaultMaxLength.bind(this);
+		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
+		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -790,9 +791,14 @@ class App extends React.Component {
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
-	setDefaultMaxLength(maxLength) {
-		this.setState({ maxLength: maxLength });
-		this.log("set default maxLength ", maxLength);
+	setMaxLengthForMultiLineControls(maxLengthForMultiLineControls) {
+		this.setState({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
+		this.log("set maxLengthForMultiLineControls ", maxLengthForMultiLineControls);
+	}
+
+	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
+		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
+		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
 	}
 
 	initLocale() {
@@ -1962,7 +1968,8 @@ class App extends React.Component {
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
-			maxLength: this.state.maxLength
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2188,7 +2195,8 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
-			setDefaultMaxLength: this.setDefaultMaxLength,
+			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
+			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

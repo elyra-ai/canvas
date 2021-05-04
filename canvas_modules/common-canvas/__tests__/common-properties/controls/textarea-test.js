@@ -50,7 +50,7 @@ const controlList = {
 
 const propertyId = { name: "test-textarea" };
 const propertyIdList = { name: "test-textarea-list" };
-const maxLength = 1024;
+const maxLengthForMultiLineControls = 1024;
 propertyUtils.setControls(controller, [control, controlList, controlNoLimit]);
 
 describe("textarea control renders correctly", () => {
@@ -139,8 +139,8 @@ describe("textarea control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textarea should set maxLength correctly without charLimit", () => {
-		controller.setPropertiesConfig({ maxLength: maxLength });
+	it("textarea should set maxLengthForMultiLineControls correctly without charLimit", () => {
+		controller.setPropertiesConfig({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
 		const wrapper = mount(
 			<TextArea
 				store={controller.getStore()}
@@ -149,11 +149,11 @@ describe("textarea control renders correctly", () => {
 				propertyId={propertyIdList}
 			/>
 		);
-		const value = propertyUtils.genLongString(maxLength + 10);
+		const value = propertyUtils.genLongString(maxLengthForMultiLineControls + 10);
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
 		const input = textWrapper.find("textarea");
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, maxLength)]);
+		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, maxLengthForMultiLineControls)]);
 	});
 
 	it("textarea should not have a text limit when charList set to -1", () => {
@@ -165,11 +165,11 @@ describe("textarea control renders correctly", () => {
 				propertyId={propertyIdList}
 			/>
 		);
-		const value = propertyUtils.genLongString(maxLength + 10);
+		const value = propertyUtils.genLongString(maxLengthForMultiLineControls + 10);
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
 		const input = textWrapper.find("textarea");
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyIdList)).to.equal(value.substr(0, maxLength + 10));
+		expect(controller.getPropertyValue(propertyIdList)).to.equal(value.substr(0, maxLengthForMultiLineControls + 10));
 	});
 
 	it("textarea should set correct control type`", () => {

@@ -57,7 +57,7 @@ const control2 = {
 	name: "test-text2",
 };
 
-const maxLength = 1024;
+const maxLengthForSingleLineControls = 128;
 propertyUtils.setControls(controller, [control, control2, controlList]);
 
 
@@ -153,9 +153,9 @@ describe("textfield renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textfield should set maxLength correctly without charLimit set", () => {
+	it("textfield should set maxLengthForSingleLineControls correctly without charLimit set", () => {
 		const propertyId2 = { name: "test-text2" };
-		controller.setPropertiesConfig({ maxLength: maxLength });
+		controller.setPropertiesConfig({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		const wrapper = mount(
 			<Textfield
 				store={controller.getStore()}
@@ -166,9 +166,9 @@ describe("textfield renders correctly", () => {
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-text2']");
 		const input = textWrapper.find("input");
-		const value = propertyUtils.genLongString(maxLength + 10);
+		const value = propertyUtils.genLongString(maxLengthForSingleLineControls + 10);
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyId2)).to.equal(value.substr(0, maxLength));
+		expect(controller.getPropertyValue(propertyId2)).to.equal(value.substr(0, maxLengthForSingleLineControls));
 	});
 
 	it("textfield should set placeholder text", () => {

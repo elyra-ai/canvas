@@ -33,7 +33,7 @@ class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
-		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getPropertiesConfig().maxLength);
+		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForMultiLineControls());
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 

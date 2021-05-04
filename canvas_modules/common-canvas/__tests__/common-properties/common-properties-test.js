@@ -28,6 +28,7 @@ import expressionTestResource from "../test_resources/json/expression-one-catego
 
 import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import textfieldResource from "../test_resources/paramDefs/textfield_paramDef.json";
+import textAreaResource from "../test_resources/paramDefs/textarea_paramDef.json";
 import emptyParamDef from "../test_resources/paramDefs/empty_paramDef.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureEditorParamDef from "../test_resources/paramDefs/structureeditor_paramDef.json";
@@ -897,36 +898,51 @@ describe("CommonProperties conditionHandling option tests", () => {
 	});
 });
 
-describe("CommonProperties should set maxLength in propertiesConfig", () => {
+describe("CommonProperties should set maxLengthForMultiLineControls and maxLengthForSingleLineControls in propertiesConfig", () => {
 	let wrapper;
+	const maxLengthForSingleLineControls = 5;
+	const maxLengthForMultiLineControls = 15;
 	afterEach(() => {
 		wrapper.unmount();
 	});
 
-	it("verify number of characters for string type controls don't exceed maxLength from propertiesConfig", () => {
-		const maxNoOfCharacters = 5;
-		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLength: maxNoOfCharacters });
+	it("verify number of characters for single-line string type controls don't exceed maxLengthForSingleLineControls from propertiesConfig", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// Only 5 characters are allowed
-		expect(controller.getPropertiesConfig().maxLength).to.equal(maxNoOfCharacters);
+		expect(controller.getMaxLengthForSingleLineControls()).to.equal(maxLengthForSingleLineControls);
 		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string']");
 		const input = textWrapper.find("input");
-		const newValue = "This sentence has more characters than maxLength.";
+		const newValue = "This sentence has more characters than maxLengthForSingleLineControls.";
 		input.simulate("change", { target: { value: newValue } });
 		// Verify only 5 characters are displayed - "This "
-		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxNoOfCharacters));
+		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxLengthForSingleLineControls));
 
 	});
 
-	it("verify char_limit from uiHints overrides the value of maxLength from propertiesConfig", () => {
-		const maxNoOfCharacters = 5;
-		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLength: maxNoOfCharacters });
+	it("verify number of characters for multi-line string type controls don't exceed maxLengthForMultiLineControls from propertiesConfig", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textAreaResource, { maxLengthForMultiLineControls: maxLengthForMultiLineControls });
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// Only 15 characters are allowed
+		expect(controller.getMaxLengthForMultiLineControls()).to.equal(maxLengthForMultiLineControls);
+		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string']");
+		const textarea = textWrapper.find("textarea");
+		const newValue = "This sentence has more characters than maxLengthForMultiLineControls.";
+		textarea.simulate("change", { target: { value: newValue } });
+		// Verify only 15 characters are displayed - "This sentence h"
+		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxLengthForMultiLineControls));
+
+	});
+
+	it("verify char_limit from uiHints overrides the value of maxLengthForSingleLineControls from propertiesConfig", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		const charLimit = controller.controls.string_charLimit.charLimit;
 		// maxLength = 5 and char_limit = 10
-		expect(controller.getPropertiesConfig().maxLength).to.equal(maxNoOfCharacters);
+		expect(controller.getMaxLengthForSingleLineControls()).to.equal(maxLengthForSingleLineControls);
 		expect(charLimit).to.equal(10);
 
 		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string_charLimit']");
@@ -935,6 +951,40 @@ describe("CommonProperties should set maxLength in propertiesConfig", () => {
 		input.simulate("change", { target: { value: newValue } });
 		// Verify 10 characters are displayed - "This sente"
 		expect(controller.getPropertyValue("string_charLimit")).to.equal(newValue.substring(0, charLimit));
+
+	});
+
+	it("verify char_limit from uiHints overrides the value of maxLengthForMultiLineControls from propertiesConfig", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textAreaResource, { maxLengthForMultiLineControls: maxLengthForMultiLineControls });
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		const charLimit = controller.controls.string_charLimit.charLimit;
+		// maxLength = 15 and char_limit = 20
+		expect(controller.getMaxLengthForMultiLineControls()).to.equal(maxLengthForMultiLineControls);
+		expect(charLimit).to.equal(20);
+
+		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string_charLimit']");
+		const textarea = textWrapper.find("textarea");
+		const newValue = "This sentence should display 20 characters.";
+		textarea.simulate("change", { target: { value: newValue } });
+		// Verify 20 characters are displayed - "This sentence should"
+		expect(textarea.text()).to.equal(newValue.substring(0, charLimit));
+
+	});
+
+	it("verify default value of maxLengthForMultiLineControls is 1024", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textAreaResource);
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		expect(controller.getMaxLengthForMultiLineControls()).to.equal(1024);
+
+	});
+
+	it("verify default value of maxLengthForSingleLineControls is 128", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource);
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		expect(controller.getMaxLengthForSingleLineControls()).to.equal(128);
 
 	});
 });

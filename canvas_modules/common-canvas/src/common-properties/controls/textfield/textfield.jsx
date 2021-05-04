@@ -34,7 +34,7 @@ class TextfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
-		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getPropertiesConfig().maxLength);
+		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForSingleLineControls());
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.isList = false;
 		if (this.props.control.valueDef) {

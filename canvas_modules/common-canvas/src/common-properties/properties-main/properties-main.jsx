@@ -533,7 +533,8 @@ PropertiesMain.propTypes = {
 		applyPropertiesWithoutEdit: PropTypes.bool,
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
-		maxLength: PropTypes.number
+		maxLengthForMultiLineControls: PropTypes.number,
+		maxLengthForSingleLineControls: PropTypes.number
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

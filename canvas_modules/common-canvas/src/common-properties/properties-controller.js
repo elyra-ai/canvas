@@ -1569,4 +1569,30 @@ export default class PropertiesController {
 		}
 		return "Custom control not found: " + control.customControlId;
 	}
+
+	/*
+	* maxLength for single-line and multi-line control methods
+	*/
+
+	/**
+	* Returns the maximum characters allowed for multi-line string controls like textarea
+	* Default value is 1024
+	*/
+	getMaxLengthForMultiLineControls() {
+		const maxLengthForMultiLineControls = (typeof this.getPropertiesConfig().maxLengthForMultiLineControls !== "undefined")
+			? this.getPropertiesConfig().maxLengthForMultiLineControls
+			: 1024;
+		return maxLengthForMultiLineControls;
+	}
+
+	/**
+	* Returns the maximum characters allowed for single-line string controls like textfield
+	* Default value is 128
+	*/
+	getMaxLengthForSingleLineControls() {
+		const maxLengthForSingleLineControls = (typeof this.getPropertiesConfig().maxLengthForSingleLineControls !== "undefined")
+			? this.getPropertiesConfig().maxLengthForSingleLineControls
+			: 128;
+		return maxLengthForSingleLineControls;
+	}
 }
