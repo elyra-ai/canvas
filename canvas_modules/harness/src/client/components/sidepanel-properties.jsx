@@ -120,6 +120,11 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
+	setDefaultMaxLength(fieldName, evt) {
+		const maxLength = parseInt(evt.imaginaryTarget.value, 10);
+		this.props.propertiesConfig.setDefaultMaxLength(maxLength);
+	}
+
 	submitProperties() {
 		if (this.state.commonProperties.name) {
 			this.props.log("Submit common properties file", this.state.commonProperties.name);
@@ -199,11 +204,6 @@ export default class SidePanelModal extends React.Component {
 		} catch (ex) {
 			this.setState({ invalidPropertyId: true });
 		}
-	}
-
-	setDefaultMaxLength(fieldName, evt) {
-		const maxLength = parseInt(evt.imaginaryTarget.value, 10);
-		this.props.propertiesConfig.setDefaultMaxLength(maxLength);
 	}
 
 	dropdownOptions() {

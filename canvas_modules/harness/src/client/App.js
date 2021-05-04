@@ -790,6 +790,11 @@ class App extends React.Component {
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
+	setDefaultMaxLength(maxLength) {
+		this.setState({ maxLength: maxLength });
+		this.log("set default maxLength ", maxLength);
+	}
+
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
 		// Get locale from browser
@@ -1092,11 +1097,6 @@ class App extends React.Component {
 		if (this.propertiesController) {
 			this.propertiesController.setDisableRowMoveButtons(propertyIds);
 		}
-	}
-
-	setDefaultMaxLength(maxLength) {
-		this.setState({ maxLength: maxLength });
-		this.log("set default maxLength ", maxLength);
 	}
 
 	// common-canvas
