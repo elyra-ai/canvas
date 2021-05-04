@@ -22,7 +22,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { CHARACTER_LIMITS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
+import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
@@ -33,7 +33,7 @@ class TextareaControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
-		this.charLimit = ControlUtils.getCharLimit(props.control, CHARACTER_LIMITS.TEXT_AREA);
+		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getPropertiesConfig().maxLength);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 

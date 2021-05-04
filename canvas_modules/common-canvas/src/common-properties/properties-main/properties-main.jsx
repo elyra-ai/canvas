@@ -532,7 +532,8 @@ PropertiesMain.propTypes = {
 		schemaValidation: PropTypes.bool,
 		applyPropertiesWithoutEdit: PropTypes.bool,
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
-		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"])
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		maxLength: PropTypes.number
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

@@ -20,7 +20,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup, Dropdown, TextInput } from "carbon-components-react";
+import {
+	Toggle,
+	FileUploader,
+	Button,
+	Select,
+	SelectItemGroup,
+	SelectItem,
+	RadioButtonGroup,
+	RadioButton,
+	FormGroup,
+	Dropdown,
+	TextInput,
+	NumberInput
+} from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -57,6 +70,7 @@ export default class SidePanelModal extends React.Component {
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setDefaultMaxLength = this.setDefaultMaxLength.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -185,6 +199,11 @@ export default class SidePanelModal extends React.Component {
 		} catch (ex) {
 			this.setState({ invalidPropertyId: true });
 		}
+	}
+
+	setDefaultMaxLength(fieldName, evt) {
+		const maxLength = parseInt(evt.imaginaryTarget.value, 10);
+		this.props.propertiesConfig.setDefaultMaxLength(maxLength);
 	}
 
 	dropdownOptions() {
@@ -443,6 +462,19 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const setDefaultMaxLength = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-default-max-length">
+				<NumberInput
+					label="Maximum number of characters allowed for string type controls"
+					id="harness-sidepanel-max-characters"
+					onChange={ this.setDefaultMaxLength.bind(this, "maxLength") }
+					min={0}
+					step={10}
+					value={1024}
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -475,6 +507,8 @@ export default class SidePanelModal extends React.Component {
 				{conditionDisabledPropertyHandling}
 				{divider}
 				{disableRowMoveButtonsInTable}
+				{divider}
+				{setDefaultMaxLength}
 			</div>
 		);
 	}
@@ -507,6 +541,7 @@ SidePanelModal.propTypes = {
 		useLightOption: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
+		setDefaultMaxLength: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,
 		propertiesSchemaValidation: PropTypes.bool,
 		enableApplyPropertiesWithoutEdit: PropTypes.func,

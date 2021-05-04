@@ -289,6 +289,7 @@ class App extends React.Component {
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setDefaultMaxLength = this.setDefaultMaxLength.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -1091,6 +1092,11 @@ class App extends React.Component {
 		if (this.propertiesController) {
 			this.propertiesController.setDisableRowMoveButtons(propertyIds);
 		}
+	}
+
+	setDefaultMaxLength(maxLength) {
+		this.setState({ maxLength: maxLength });
+		this.log("set default maxLength ", maxLength);
 	}
 
 	// common-canvas
@@ -1955,7 +1961,8 @@ class App extends React.Component {
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
-			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			maxLength: this.state.maxLength
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -2181,6 +2188,7 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
+			setDefaultMaxLength: this.setDefaultMaxLength,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,

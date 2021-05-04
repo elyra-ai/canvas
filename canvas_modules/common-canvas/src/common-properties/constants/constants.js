@@ -110,11 +110,6 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
 });
 
-_defineConstant("CHARACTER_LIMITS", {
-	TEXT_FIELD: 128,
-	TEXT_AREA: 1024
-});
-
 _defineConstant("TRUNCATE_LIMIT", 10000);
 
 _defineConstant("CONDITION_ERROR_MESSAGE", {

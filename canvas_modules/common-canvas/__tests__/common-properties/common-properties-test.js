@@ -897,6 +897,48 @@ describe("CommonProperties conditionHandling option tests", () => {
 	});
 });
 
+describe("CommonProperties should set maxLength in propertiesConfig", () => {
+	let wrapper;
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("verify number of characters for string type controls don't exceed maxLength from propertiesConfig", () => {
+		const maxNoOfCharacters = 5;
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLength: maxNoOfCharacters });
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// Only 5 characters are allowed
+		expect(controller.getPropertiesConfig().maxLength).to.equal(maxNoOfCharacters);
+		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string']");
+		const input = textWrapper.find("input");
+		const newValue = "This sentence has more characters than maxLength.";
+		input.simulate("change", { target: { value: newValue } });
+		// Verify only 5 characters are displayed - "This "
+		expect(controller.getPropertyValue("string")).to.equal(newValue.substring(0, maxNoOfCharacters));
+
+	});
+
+	it("verify char_limit from uiHints overrides the value of maxLength from propertiesConfig", () => {
+		const maxNoOfCharacters = 5;
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldResource, { maxLength: maxNoOfCharacters });
+		wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		const charLimit = controller.controls.string_charLimit.charLimit;
+		// maxLength = 5 and char_limit = 10
+		expect(controller.getPropertiesConfig().maxLength).to.equal(maxNoOfCharacters);
+		expect(charLimit).to.equal(10);
+
+		const textWrapper = wrapper.find("div[data-id='properties-ctrl-string_charLimit']");
+		const input = textWrapper.find("input");
+		const newValue = "This sentence should display 10 characters.";
+		input.simulate("change", { target: { value: newValue } });
+		// Verify 10 characters are displayed - "This sente"
+		expect(controller.getPropertyValue("string_charLimit")).to.equal(newValue.substring(0, charLimit));
+
+	});
+});
+
 function createCommonProperties(container, messages) {
 	const propertiesConfig = { containerType: container };
 	if (container === "Custom") {
