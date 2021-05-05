@@ -4,11 +4,21 @@
   },
   "current_parameters": {
     "multiselect_empty": [],
-    "multiselect": ["blue"],
-    "multiselect_multiple_selected": ["orange", "yellow"],
+    "multiselect": [
+      "blue"
+    ],
+    "multiselect_multiple_selected": [
+      "orange",
+      "yellow"
+    ],
     "multiselect_filterable": [],
-    "multiselect_filterable_single": ["green"],
-    "multiselect_filterable_multiple_selected": ["orange", "yellow"],
+    "multiselect_filterable_single": [
+      "green"
+    ],
+    "multiselect_filterable_multiple_selected": [
+      "orange",
+      "yellow"
+    ],
     "multiselect_custom_labels": [],
     "multiselect_error": [],
     "multiselect_warning": [],
@@ -18,15 +28,27 @@
     "multiselect_disabled": [],
     "multiselect_table": [
       [
-        ["cat"],
-        ["pear"],
-        ["blue"]
+        [
+          "cat"
+        ],
+        [
+          "pear"
+        ],
+        [
+          "blue"
+        ]
       ],
       [
         [],
         [],
-        ["red"]
+        [
+          "red"
+        ]
       ]
+    ],
+    "filter": false,
+    "multiselect_filtered": [
+      "yellow"
     ]
   },
   "parameters": [
@@ -172,6 +194,22 @@
       "id": "multiselect_table",
       "type": "array[multiselect_table_struct]",
       "default": []
+    },
+    {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "multiselect_filtered",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
     }
   ],
   "complex_types": [
@@ -187,7 +225,9 @@
             "horse",
             "all of the above animals"
           ],
-          "default": ["horse"]
+          "default": [
+            "horse"
+          ]
         },
         {
           "id": "fruit",
@@ -208,11 +248,13 @@
             "orange",
             "brown"
           ],
-          "default": ["red"]
+          "default": [
+            "red"
+          ]
         }
       ]
     }
-],
+  ],
   "uihints": {
     "id": "multiselect",
     "icon": "images/default.svg",
@@ -358,6 +400,16 @@
           "default": "A multiselect should not be displayed in the table 'inline'. This control is best used 'on_panel' or in a 'subpanel'. As shown below, if 'inline', the select options will be clipped within the row.",
           "placement": "on_panel"
         }
+      },
+      {
+        "parameter_ref": "multiselect_filtered",
+        "label": {
+          "default": "multiselect Filtered"
+        },
+        "description": {
+          "default": "multiselect filtered to have values 'red', 'blue', and 'green'"
+        },
+        "control": "multiselect"
       }
     ],
     "complex_type_info": [
@@ -431,6 +483,8 @@
         },
         "type": "controls",
         "parameter_refs": [
+          "filter",
+          "multiselect_filtered",
           "multiselect_error",
           "multiselect_warning",
           "hide",
@@ -466,6 +520,25 @@
     ]
   },
   "conditions": [
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "multiselect_filtered",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
