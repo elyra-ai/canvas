@@ -242,7 +242,9 @@ CommonProperties.propTypes = {
 		schemaValidation: PropTypes.bool,
 		applyPropertiesWithoutEdit: PropTypes.bool,
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "value"]),
-		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "value"])
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "value"]),
+		maxLengthForMultiLineControls: PropTypes.number,
+		maxLengthForSingleLineControls: PropTypes.number
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -269,7 +271,9 @@ CommonProperties.defaultProps = {
 		enableResize: true,
 		conditionReturnValueHandling: "value",
 		schemaValidation: false,
-		applyPropertiesWithoutEdit: false
+		applyPropertiesWithoutEdit: false,
+		maxLengthForMultiLineControls: 1024,
+		maxLengthForSingleLineControls: 128
 	},
 	callbacks: {
 	},

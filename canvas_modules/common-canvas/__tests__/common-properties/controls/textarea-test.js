@@ -16,7 +16,7 @@
 
 import React from "react";
 import TextArea from "../../../src/common-properties/controls/textarea";
-import { CHARACTER_LIMITS, TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
+import { TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -50,6 +50,7 @@ const controlList = {
 
 const propertyId = { name: "test-textarea" };
 const propertyIdList = { name: "test-textarea-list" };
+const maxLengthForMultiLineControls = 1024;
 propertyUtils.setControls(controller, [control, controlList, controlNoLimit]);
 
 describe("textarea control renders correctly", () => {
@@ -138,7 +139,8 @@ describe("textarea control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textarea should set maxLength correctly without charLimit", () => {
+	it("textarea should set maxLengthForMultiLineControls correctly without charLimit", () => {
+		controller.setPropertiesConfig({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
 		const wrapper = mount(
 			<TextArea
 				store={controller.getStore()}
@@ -147,11 +149,11 @@ describe("textarea control renders correctly", () => {
 				propertyId={propertyIdList}
 			/>
 		);
-		const value = propertyUtils.genLongString(CHARACTER_LIMITS.TEXT_AREA + 10);
+		const value = propertyUtils.genLongString(maxLengthForMultiLineControls + 10);
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
 		const input = textWrapper.find("textarea");
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, CHARACTER_LIMITS.TEXT_AREA)]);
+		expect(controller.getPropertyValue(propertyIdList)).to.eql([value.substr(0, maxLengthForMultiLineControls)]);
 	});
 
 	it("textarea should not have a text limit when charList set to -1", () => {
@@ -163,11 +165,11 @@ describe("textarea control renders correctly", () => {
 				propertyId={propertyIdList}
 			/>
 		);
-		const value = propertyUtils.genLongString(CHARACTER_LIMITS.TEXT_AREA + 10);
+		const value = propertyUtils.genLongString(maxLengthForMultiLineControls + 10);
 		const textWrapper = wrapper.find("div[data-id='properties-test-textarea-list']");
 		const input = textWrapper.find("textarea");
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyIdList)).to.equal(value.substr(0, CHARACTER_LIMITS.TEXT_AREA + 10));
+		expect(controller.getPropertyValue(propertyIdList)).to.equal(value.substr(0, maxLengthForMultiLineControls + 10));
 	});
 
 	it("textarea should set correct control type`", () => {

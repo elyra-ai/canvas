@@ -20,7 +20,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Toggle, FileUploader, Button, Select, SelectItemGroup, SelectItem, RadioButtonGroup, RadioButton, FormGroup, Dropdown, TextInput } from "carbon-components-react";
+import {
+	Toggle,
+	FileUploader,
+	Button,
+	Select,
+	SelectItemGroup,
+	SelectItem,
+	RadioButtonGroup,
+	RadioButton,
+	FormGroup,
+	Dropdown,
+	TextInput,
+	NumberInput
+} from "carbon-components-react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -57,6 +70,8 @@ export default class SidePanelModal extends React.Component {
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
+		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -104,6 +119,16 @@ export default class SidePanelModal extends React.Component {
 					that.props.propertiesConfig.setPropertiesJSON(res);
 				});
 		}
+	}
+
+	setMaxLengthForMultiLineControls(fieldName, evt) {
+		const maxLengthForMultiLineControls = parseInt(evt.imaginaryTarget.value, 10);
+		this.props.propertiesConfig.setMaxLengthForMultiLineControls(maxLengthForMultiLineControls);
+	}
+
+	setMaxLengthForSingleLineControls(fieldName, evt) {
+		const maxLengthForSingleLineControls = parseInt(evt.imaginaryTarget.value, 10);
+		this.props.propertiesConfig.setMaxLengthForSingleLineControls(maxLengthForSingleLineControls);
 	}
 
 	submitProperties() {
@@ -443,6 +468,32 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const setMaxLengthForMultiLineControls = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-max-length-for-multiline-controls">
+				<NumberInput
+					label="Maximum characters allowed for multi-line string controls like textarea"
+					id="harness-sidepanel-max-length-for-multiline-controls"
+					onChange={ this.setMaxLengthForMultiLineControls.bind(this, "maxLengthForMultiLineControls") }
+					min={-1}
+					step={10}
+					value={1024}
+				/>
+			</div>
+		);
+
+		const setMaxLengthForSingleLineControls = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-max-length-for-singleline-controls">
+				<NumberInput
+					label="Maximum characters allowed for single-line string controls like textfield"
+					id="harness-sidepanel-max-length-for-singleline-controls"
+					onChange={ this.setMaxLengthForSingleLineControls.bind(this, "maxLengthForSingleLineControls") }
+					min={-1}
+					step={10}
+					value={128}
+				/>
+			</div>
+		);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -475,6 +526,10 @@ export default class SidePanelModal extends React.Component {
 				{conditionDisabledPropertyHandling}
 				{divider}
 				{disableRowMoveButtonsInTable}
+				{divider}
+				{setMaxLengthForMultiLineControls}
+				{divider}
+				{setMaxLengthForSingleLineControls}
 			</div>
 		);
 	}
@@ -507,6 +562,8 @@ SidePanelModal.propTypes = {
 		useLightOption: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
+		setMaxLengthForMultiLineControls: PropTypes.func,
+		setMaxLengthForSingleLineControls: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,
 		propertiesSchemaValidation: PropTypes.bool,
 		enableApplyPropertiesWithoutEdit: PropTypes.func,

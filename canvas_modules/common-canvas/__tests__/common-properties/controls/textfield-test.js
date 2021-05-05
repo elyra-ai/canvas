@@ -17,7 +17,7 @@
 import React from "react";
 import Textfield from "./../../../src/common-properties/controls/textfield";
 import Controller from "./../../../src/common-properties/properties-controller";
-import { CHARACTER_LIMITS, TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
+import { TRUNCATE_LIMIT } from "./../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import { Provider } from "react-redux";
@@ -56,6 +56,8 @@ const controlList2 = {
 const control2 = {
 	name: "test-text2",
 };
+
+const maxLengthForSingleLineControls = 128;
 propertyUtils.setControls(controller, [control, control2, controlList]);
 
 
@@ -151,8 +153,9 @@ describe("textfield renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(value.substr(0, control.charLimit));
 	});
 
-	it("textfield should set default charLimit correctly without charLimit set", () => {
+	it("textfield should set maxLengthForSingleLineControls correctly without charLimit set", () => {
 		const propertyId2 = { name: "test-text2" };
+		controller.setPropertiesConfig({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		const wrapper = mount(
 			<Textfield
 				store={controller.getStore()}
@@ -163,9 +166,9 @@ describe("textfield renders correctly", () => {
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-text2']");
 		const input = textWrapper.find("input");
-		const value = propertyUtils.genLongString(CHARACTER_LIMITS.TEXT_FIELD + 10);
+		const value = propertyUtils.genLongString(maxLengthForSingleLineControls + 10);
 		input.simulate("change", { target: { value: value } });
-		expect(controller.getPropertyValue(propertyId2)).to.equal(value.substr(0, CHARACTER_LIMITS.TEXT_FIELD));
+		expect(controller.getPropertyValue(propertyId2)).to.equal(value.substr(0, maxLengthForSingleLineControls));
 	});
 
 	it("textfield should set placeholder text", () => {
