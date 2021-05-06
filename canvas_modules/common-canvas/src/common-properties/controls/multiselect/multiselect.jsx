@@ -24,7 +24,7 @@ import classNames from "classnames";
 import * as PropertyUtils from "./../../util/property-utils.js";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
-import { isEqual, intersection } from "lodash";
+import { isEqual, intersection, isEmpty } from "lodash";
 
 class MultiSelectControl extends React.Component {
 	constructor(props) {
@@ -94,8 +94,14 @@ class MultiSelectControl extends React.Component {
 
 	// this is needed in order to reset the property value when a value is filtered out.
 	updateValueFromFilterEnum(skipValidateInput) {
-		const newValues = intersection(this.props.value, this.props.controlOpts.values);
+		let newValues = intersection(this.props.value, this.props.controlOpts.values);
 		if (!isEqual(newValues, this.props.value)) {
+			// set back to default values if default values is in filtered enum list
+			if (isEmpty(newValues)) {
+				if (this.props.control.valueDef && this.props.control.valueDef.defaultValue) {
+					newValues = intersection(this.props.control.valueDef.defaultValue, this.props.controlOpts.values);
+				}
+			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
 		}
 	}

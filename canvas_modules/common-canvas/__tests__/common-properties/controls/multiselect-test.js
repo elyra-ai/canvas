@@ -396,8 +396,16 @@ describe("multiselect filters work correctly", () => {
 		const propertyId = { name: "multiselect_filtered" };
 		expect(renderedController.getPropertyValue(propertyId)).to.eql(["yellow"]);
 		renderedController.updatePropertyValue({ name: "filter" }, true);
-		// "orange" isn't part of the filter so the value should be cleared
+		// "yellow" isn't part of the filter so the value should be cleared
 		expect(renderedController.getPropertyValue(propertyId)).to.eql([]);
+	});
+
+	it("Validate multiselect default is set when current values are filtered", () => {
+		const propertyId = { name: "multiselect_filtered_default" };
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["yellow", "purple"]);
+		renderedController.updatePropertyValue({ name: "filter_default" }, true);
+		// "purple" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["red"]);
 	});
 
 });

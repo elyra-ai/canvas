@@ -49,6 +49,11 @@
     "filter": false,
     "multiselect_filtered": [
       "yellow"
+    ],
+    "filter_default": false,
+    "multiselect_filtered_default": [
+      "yellow",
+      "purple"
     ]
   },
   "parameters": [
@@ -208,8 +213,26 @@
         "green",
         "blue",
         "purple"
+      ]
+    },
+    {
+      "id": "filter_default",
+      "type": "boolean"
+    },
+    {
+      "id": "multiselect_filtered_default",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
       ],
-      "required": true
+      "default": [
+        "purple",
+        "red"
+      ]
     }
   ],
   "complex_types": [
@@ -402,12 +425,34 @@
         }
       },
       {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter 'multiselect Filtered'"
+        }
+      },
+      {
         "parameter_ref": "multiselect_filtered",
         "label": {
           "default": "multiselect Filtered"
         },
         "description": {
           "default": "multiselect filtered to have values 'red', 'blue', and 'green'"
+        },
+        "control": "multiselect"
+      },
+      {
+        "parameter_ref": "filter_default",
+        "label": {
+          "default": "Filter 'multiselect filtered default'"
+        }
+      },
+      {
+        "parameter_ref": "multiselect_filtered_default",
+        "label": {
+          "default": "multiselect filtered with default value"
+        },
+        "description": {
+          "default": "multiselect dropdown to have values 'red', 'blue', and 'green'"
         },
         "control": "multiselect"
       }
@@ -485,6 +530,8 @@
         "parameter_refs": [
           "filter",
           "multiselect_filtered",
+          "filter_default",
+          "multiselect_filtered_default",
           "multiselect_error",
           "multiselect_warning",
           "hide",
@@ -533,6 +580,25 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "multiselect_filtered_default",
+          "values": [
+            "red",
+            "blue",
+            "green"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_default",
             "op": "equals",
             "value": true
           }
