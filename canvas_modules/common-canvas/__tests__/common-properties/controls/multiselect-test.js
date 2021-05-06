@@ -356,3 +356,56 @@ describe("multiselect classnames appear correctly", () => {
 		expect(wrapper.find(".table-subpanel-multiselect-control-class")).to.have.length(2);
 	});
 });
+
+describe("multiselect filters work correctly", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(multiselectParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate multiselect should have options filtered by enum_filter", () => {
+		let multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
+		// open the multiselect
+		let multiselectButton = multiselectWrapper.find("button");
+		multiselectButton.simulate("click");
+		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
+		let multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
+		expect(multiselectList).to.be.length(6);
+
+
+		// checked the filter box
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+
+		wrapper.update();
+		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
+		multiselectButton = multiselectWrapper.find("button");
+		multiselectButton.simulate("click");
+		multiselectWrapper = wrapper.find("div[data-id='properties-multiselect_filtered']");
+		multiselectList = multiselectWrapper.find("div.bx--list-box__menu-item");
+		expect(multiselectList).to.be.length(3);
+
+	});
+
+	it("Validate multiselect should clear the property value if filtered", () => {
+		const propertyId = { name: "multiselect_filtered" };
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["yellow"]);
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		// "yellow" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.eql([]);
+	});
+
+	it("Validate multiselect default is set when current values are filtered", () => {
+		const propertyId = { name: "multiselect_filtered_default" };
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["yellow", "purple"]);
+		renderedController.updatePropertyValue({ name: "filter_default" }, true);
+		// "purple" isn't part of the filter so the value should be cleared
+		expect(renderedController.getPropertyValue(propertyId)).to.eql(["red"]);
+	});
+
+});
