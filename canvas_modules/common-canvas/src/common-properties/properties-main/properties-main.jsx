@@ -532,7 +532,9 @@ PropertiesMain.propTypes = {
 		schemaValidation: PropTypes.bool,
 		applyPropertiesWithoutEdit: PropTypes.bool,
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
-		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"])
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		maxLengthForMultiLineControls: PropTypes.number,
+		maxLengthForSingleLineControls: PropTypes.number
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
