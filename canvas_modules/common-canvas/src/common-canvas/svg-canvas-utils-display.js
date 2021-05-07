@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-// import CanvasUtils from "./common-canvas-utils.js";
-// import { SUPER_NODE } from "./constants/canvas-constants";
-
 export default class SvgCanvasUtilsDisplay {
 	constructor(canvasController, isSubflow, pipelineId) {
 		this.canvasController = canvasController;
