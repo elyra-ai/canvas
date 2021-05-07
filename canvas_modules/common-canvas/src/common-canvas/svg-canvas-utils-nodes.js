@@ -266,4 +266,26 @@ export default class SvgCanvasNodes {
 		return CanvasUtils.isSrcCardinalityAtMax(defOutputPort, node, links) ||
 			CanvasUtils.isTrgCardinalityAtMax(defInputPort, node, links);
 	}
+
+	// Returns the X offset for the port which references the nodeId passed in
+	// based on the precalculated X coordinate of the port.
+	getSupernodePortXOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cx - this.canvasLayout.supernodeSVGAreaPadding;
+		}
+		return 0;
+	}
+
+	// Returns the Y offset for the port which references the nodeId passed in
+	// based on the precalculated Y coordinate of the port.
+	getSupernodePortYOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cy - this.canvasLayout.supernodeTopAreaHeight;
+		}
+		return 0;
+	}
+
+
 }

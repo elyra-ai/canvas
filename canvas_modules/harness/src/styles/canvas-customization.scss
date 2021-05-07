@@ -119,13 +119,15 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		stroke-width: 2;
 	}
 
-	.d3-node-port-input-assoc {
+	.d3-node-port-input-assoc,
+	.d3-node-port-output-assoc {
 		stroke: $node-port-input-stroke-color;
 		fill: $node-port-input-fill-color;
 		stroke-width: 2;
 	}
 
-	.d3-node-port-input-assoc:hover {
+	.d3-node-port-input-assoc:hover,
+	.d3-node-port-output-assoc:hover {
 		stroke: $node-port-output-hover-stroke;
 		fill: $node-port-output-hover-fill;
 	}
@@ -134,6 +136,11 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		stroke: $node-port-input-connected-stroke-color;
 		fill: $node-port-input-connected-fill-color;
 		stroke-width: 2;
+
+		.d3-node-port-input-arrow {
+			stroke: $node-port-input-arrow-connected-stroke-color;
+			fill: $node-port-input-arrow-connected-fill-color;
+		}
 	}
 
 	.d3-node-port-input[connected="yes"][isSupernodeBinding="yes"] {
@@ -145,11 +152,6 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 	.d3-node-port-input-arrow {
 		stroke: transparent;
 		fill: transparent;
-	}
-
-	.d3-node-port-input-arrow[connected="yes"] {
-		stroke: $node-port-input-arrow-connected-stroke-color;
-		fill: $node-port-input-arrow-connected-fill-color;
 	}
 
 	.d3-comment-selection-highlight {
