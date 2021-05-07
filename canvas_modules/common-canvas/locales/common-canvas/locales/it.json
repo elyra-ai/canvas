@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "Nuovo commento",
+	"canvas.addNodeToStart": "Iniziare aggiungendo un nodo.",
 	"canvas.deleteObject": "Elimina",
+	"canvas.flowIsEmpty": "Il flusso è vuoto.",
+	"canvas.label": "Area di disegno",
 	"canvas.redo": "Ripeti",
 	"canvas.selectAll": "Seleziona tutto",
 	"canvas.undo": "Annulla",

@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "Novo comentário",
+	"canvas.addNodeToStart": "Comece incluindo um nó.",
 	"canvas.deleteObject": "Excluir",
+	"canvas.flowIsEmpty": "Seu fluxo está vazio.",
+	"canvas.label": "Tela",
 	"canvas.redo": "Refazer",
 	"canvas.selectAll": "Selecionar todos",
 	"canvas.undo": "Desfazer",

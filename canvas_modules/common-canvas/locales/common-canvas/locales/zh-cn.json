@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "新建注释",
+	"canvas.addNodeToStart": "通过添加节点开始。",
 	"canvas.deleteObject": "删除",
+	"canvas.flowIsEmpty": "该流程是空的。",
+	"canvas.label": "画布",
 	"canvas.redo": "重做",
 	"canvas.selectAll": "全选",
 	"canvas.undo": "撤销",
