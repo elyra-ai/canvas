@@ -14,7 +14,7 @@
 	"canvas.redo": "[Esperanto~Redo~eo]",
 	"canvas.deleteObject": "[Esperanto~Delete~eo]",
 	"canvas.flowIsEmpty": "[Esperanto~Your flow is empty.~~~~~~~~~eo]",
-  "canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",
+	"canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.expandSupernodeInPlace": "[Esperanto~Expand supernode~~eo]",
 	"node.collapseSupernodeInPlace": "[Esperanto~Collapse supernode~~~~eo]",
