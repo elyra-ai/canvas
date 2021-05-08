@@ -1,3 +1,10 @@
 {
-	"palette.flyout.search.placeholder": "Найти узлы палитры"
+	"palette.dialog.label": "Палитра диалоговых окон",
+	"palette.flyout.label": "Палитра выносных элементов",
+	"palette.flyout.search.adjustsearch": "Попробуйте настроить поиск, чтобы найти то, что вы ищете.",
+	"palette.flyout.search.less": "Показать меньше",
+	"palette.flyout.search.more": "Показать больше",
+	"palette.flyout.search.noresults": "Результаты не найдены.",
+	"palette.flyout.search.placeholder": "Найти узлы палитры",
+	"palette.flyout.search.resultsrestricted": "Результаты ограничен 10 узлами. Попробуйте уточнить свой поиск."
 }

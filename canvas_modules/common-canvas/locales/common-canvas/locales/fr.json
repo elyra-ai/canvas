@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "Nouveau commentaire",
+	"canvas.addNodeToStart": "Pour commencer, ajoutez un noeud.",
 	"canvas.deleteObject": "Supprimer",
+	"canvas.flowIsEmpty": "Votre flux est vide.",
+	"canvas.label": "Canevas",
 	"canvas.redo": "Rétablir",
 	"canvas.selectAll": "Sélectionner tout",
 	"canvas.undo": "Annuler",

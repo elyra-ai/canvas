@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "Neuer Kommentar",
+	"canvas.addNodeToStart": "Beginnen Sie, indem Sie einen Knoten hinzufügen.",
 	"canvas.deleteObject": "Löschen",
+	"canvas.flowIsEmpty": "Der Ablauf ist leer.",
+	"canvas.label": "Erstellungsbereich",
 	"canvas.redo": "Wiederholen",
 	"canvas.selectAll": "Alle auswählen",
 	"canvas.undo": "Rückgängig",
