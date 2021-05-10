@@ -1,6 +1,9 @@
 {
 	"canvas.addComment": "Новый комментарий",
+	"canvas.addNodeToStart": "Начните работу с добавления узла.",
 	"canvas.deleteObject": "Удалить",
+	"canvas.flowIsEmpty": "Ваш поток пуст.",
+	"canvas.label": "Холст",
 	"canvas.redo": "Повторить",
 	"canvas.selectAll": "Выделить все",
 	"canvas.undo": "Отменить",
@@ -8,7 +11,7 @@
 	"edit.copySelection": "Скопировать",
 	"edit.cutSelection": "Вырезать",
 	"edit.pasteSelection": "Вставить",
-	"link.deleteLink": "Удалить",
+	"link.deleteLink": "Удаление",
 	"menu.highlight": "Выделить",
 	"menu.highlightBranch": "Выделить ветвь",
 	"menu.highlightDownstream": "Выделить нисходящий поток",
@@ -17,7 +20,7 @@
 	"node.collapseSupernodeInPlace": "Свернуть надузел",
 	"node.createSupernode": "Создать надузел",
 	"node.disconnectNode": "Разъединиться",
-	"node.editMenu": "Изменить",
+	"node.editMenu": "Редактировать",
 	"node.editNode": "Открыть",
 	"node.expandSupernodeInPlace": "Развернуть надузел",
 	"node.saveToPalette": "Сохранить в палитру"
