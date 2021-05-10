@@ -113,7 +113,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputIncrement = wrapper.find("button").at(0);
+		const inputIncrement = wrapper.find("button").at(1);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(45);
@@ -132,7 +132,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 
-		const inputDecrement = wrapper.find("button").at(1);
+		const inputDecrement = wrapper.find("button").at(0);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(43);
@@ -151,7 +151,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44.3" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.3);
 
-		const inputIncrement = wrapper.find("button").at(0);
+		const inputIncrement = wrapper.find("button").at(1);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
@@ -170,7 +170,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44.5" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.5);
 
-		const inputDecrement = wrapper.find("button").at(1);
+		const inputDecrement = wrapper.find("button").at(0);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.4);
@@ -190,7 +190,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputIncrement = wrapper.find("button").at(0);
+		const inputIncrement = wrapper.find("button").at(1);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6688);
@@ -210,7 +210,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "44.6666" } });
 		expect(controller.getPropertyValue(propertyId2)).to.equal(44.6666);
 
-		const inputDecrement = wrapper.find("button").at(1);
+		const inputDecrement = wrapper.find("button").at(0);
 		expect(inputDecrement).to.have.length(1);
 		inputDecrement.simulate("click");
 		inputDecrement.simulate("click");
@@ -233,7 +233,7 @@ describe("spinner-control renders correctly", () => {
 		input.simulate("change", { target: { value: "45" } });
 		expect(controller.getPropertyValue(propertyId3)).to.equal(45);
 
-		const inputIncrement = wrapper.find("button").at(0);
+		const inputIncrement = wrapper.find("button").at(1);
 		expect(inputIncrement).to.have.length(1);
 		inputIncrement.simulate("click");
 		expect(controller.getPropertyValue(propertyId3)).to.equal(46);

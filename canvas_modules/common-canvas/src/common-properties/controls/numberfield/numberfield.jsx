@@ -51,7 +51,7 @@ class NumberfieldControl extends React.Component {
 	}
 
 	handleChange(evt, direction) {
-		if (direction) {
+		if (typeof direction === "string") {
 			this.onDirection(direction);
 			return;
 		}
