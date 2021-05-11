@@ -335,7 +335,12 @@ describe("multiselect paramDef works correctly", () => {
 	it("multiselect control should have aria-label", () => {
 		const multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_multiple_selected']");
 		const multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(multiselectWrapper.find(`#${multiselectAriaLabelledby}`).text()).to.equal("multiselect multiple options selected*");
+		expect(
+			multiselectWrapper
+				.find(`#${multiselectAriaLabelledby}`)
+				.find(".properties-control-item")
+				.text()
+		).to.equal("multiselect multiple options selected*");
 	});
 });
 
