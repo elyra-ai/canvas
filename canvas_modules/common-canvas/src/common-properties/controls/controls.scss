@@ -32,13 +32,13 @@
 
 .properties-ctrl-wrapper {
 	padding: $spacing-04 0; // Adds padding to the control
-	&.hide {
-		display: none;
-	}
 	&.action {
 		display: flex;
 		> div:first-child {
 			width: 100%;
 		}
+	}
+	&.hide {
+		display: none;
 	}
 }
