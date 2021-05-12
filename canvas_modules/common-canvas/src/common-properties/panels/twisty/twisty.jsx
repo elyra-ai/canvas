@@ -32,7 +32,7 @@ class TwistyPanel extends React.Component {
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
 				<Accordion>
-					<AccordionItem title={this.props.panel.label}>
+					<AccordionItem title={this.props.panel.label} className="properties-twisty-item">
 						{this.props.children}
 					</AccordionItem>
 				</Accordion>

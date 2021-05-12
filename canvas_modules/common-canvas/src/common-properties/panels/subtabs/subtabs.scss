@@ -15,7 +15,7 @@
  */
 
 .properties-sub-tab-container.vertical {
-	margin-bottom: 20px;
+	padding: 0 0 $spacing-08 0;
 	border: 1px solid $ui-03;
 	> div {
 		display: flex;
@@ -47,5 +47,8 @@
 .properties-right-flyout {
 	.properties-sub-tab-container {
 		overflow-x: auto;
+		.bx--tab-content {
+			padding: 0; // override carbon styling
+		}
 	}
 }
