@@ -280,6 +280,45 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toolbar-item.toggleNotificationPanel-action")).to.have.length(0);
 	});
 
+	// When notification panel is open, toolbar button should have class notification-panel-selected
+	// this class shows blue bottom border for the button
+	it("Notifications button in rightBar should have class notification-panel-selected when notification panel is open", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+			],
+			rightBar: [
+				{ divider: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true }
+			]
+		};
+		// isNotificationOpen is set to true
+		wrapper = createIntlCommonCanvasToolbar(toolbarConfig, true, true, notificationConfig, true, canvasController);
+		expect(wrapper.find(".toggleNotificationPanel-action.notification-panel-selected")).to.have.length(1);
+	});
+
+	// When notification panel is closed, toolbar button should NOT have class notification-panel-selected
+	it("Notifications button in rightBar should not have class notification-panel-selected when notification panel is closed", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+			],
+			rightBar: [
+				{ divider: true },
+				{ action: "cut", label: "Cut", enable: true },
+				{ action: "copy", label: "Copy", enable: true },
+				{ action: "paste", label: "Paste", enable: true }
+			]
+		};
+		// isNotificationOpen is set to false
+		wrapper = createIntlCommonCanvasToolbar(toolbarConfig, true, true, notificationConfig, false, canvasController);
+		expect(wrapper.find(".toggleNotificationPanel-action.notification-panel-selected")).to.have.length(0);
+	});
+
 });
 
 describe("Common Canvas Toolbar renders correctly with config as ARRAY", () => {

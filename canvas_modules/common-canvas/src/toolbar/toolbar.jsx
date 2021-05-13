@@ -209,6 +209,7 @@ class Toolbar extends React.Component {
 						overflow={overflow}
 						instanceId={this.props.instanceId}
 						onFocus={this.onFocus}
+						isNotificationOpen={this.props.isNotificationOpen}
 					/>
 				);
 			}
@@ -304,7 +305,8 @@ Toolbar.propTypes = {
 	config: PropTypes.object.isRequired,
 	instanceId: PropTypes.number,
 	toolbarActionHandler: PropTypes.func,
-	additionalText: PropTypes.object
+	additionalText: PropTypes.object,
+	isNotificationOpen: PropTypes.bool
 };
 
 export default injectIntl(Toolbar);

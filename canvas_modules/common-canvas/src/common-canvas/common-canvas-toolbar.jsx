@@ -262,6 +262,7 @@ class CommonCanvasToolbar extends React.Component {
 				instanceId={this.props.canvasController.getInstanceId()}
 				toolbarActionHandler={this.toolbarActionHandler}
 				additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
+				isNotificationOpen={this.props.isNotificationOpen}
 			/>
 		);
 	}
