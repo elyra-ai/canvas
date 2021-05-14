@@ -37,7 +37,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	position: absolute;
 	width: 320px;
 	height: fit-content;
-	right: $spacing-01;
+	right: 0;
 	top: $toolbar-button-height;
 }
 
