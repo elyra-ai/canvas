@@ -17,7 +17,7 @@
   "canvas.addNodeToStart": "Get started by adding a node.",
   "node.createSupernode": "Create supernode",
   "node.createSupernodeExternal": "Create external supernode",
-  "node.expandSupernodeInPlace": "Expand supernode in-place",
+  "node.expandSupernode": "Expand supernode",
   "node.expandSupernodeFullScreen": "Expand supernode full-screen",
   "node.collapseSupernodeInPlace": "Collapse supernode",
   "canvas.validateFlow": "Validate Flow",

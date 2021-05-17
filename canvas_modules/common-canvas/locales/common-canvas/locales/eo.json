@@ -17,7 +17,7 @@
 	"canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.createSupernodeExternal": "[Esperanto~Create external supernode~~eo]",
-	"node.expandSupernodeInPlace": "[Esperanto~Expand supernode~~eo]",
+	"node.expandSupernode": "[Esperanto~Expand supernode~~eo]",
 	"node.expandSupernodeFullScreen": "[Esperanto~Expand supernode full-screen~~eo]",
 	"node.collapseSupernodeInPlace": "[Esperanto~Collapse supernode~~~~eo]",
 	"canvas.validateFlow": "[Esperanto~Validate Flow~eo]",
