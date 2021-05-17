@@ -134,6 +134,13 @@ export default class CreateSuperNodeAction extends Action {
 			"comments": this.subflowComments,
 			"links": this.subflowLinks
 		};
+
+		// If subflow pipeline being created will be for an external pipeline flow,
+		// set the pipeline's parentUrl property appropriately.
+		if (data.external_url) {
+			this.subPipelineInfo.parentUrl = data.external_url;
+		}
+
 		this.canvasInfoSubPipeline = this.objectModel.createCanvasInfoPipeline(this.subPipelineInfo);
 		this.subPipeline = this.objectModel.getAPIPipeline(this.canvasInfoSubPipeline.id);
 
@@ -172,6 +179,12 @@ export default class CreateSuperNodeAction extends Action {
 				pipeline_id_ref: this.canvasInfoSubPipeline.id
 			},
 		};
+
+		// If supernode being created is to reference an external pipeline flow set
+		// the node's subflow_ref.url appropriately.
+		if (data.external_url) {
+			supernodeTemplate.subflow_ref.url = data.external_url;
+		}
 
 		const supernodeData = {
 			editType: "createNode",
@@ -428,6 +441,11 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
 
+		if (this.data.external_url) {
+			this.objectModel.createExternalPipelineFlow(
+				this.data.external_url, this.data.external_pipeline_flow_id, this.canvasInfoSubPipeline.id);
+		}
+
 		// Add subflow_node_ref to supernode ports.
 		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
 			const portId = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].portId;
@@ -467,7 +485,8 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(node, this.subflowPipelines[node.id]);
+				const subFlow = node.subflow_ref.url && !node.is_expanded ? [] : this.subflowPipelines[node.id];
+				this.apiPipeline.addSupernode(node, subFlow);
 			} else {
 				this.apiPipeline.addNode(node);
 			}
@@ -481,6 +500,11 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addLinks(this.supernodeInputLinks);
 		this.apiPipeline.addLinks(this.supernodeOutputLinks);
 		this.apiPipeline.addLinks(this.linksToDelete);
+
+		if (this.data.external_url) {
+			this.objectModel.removeExternalPipelineFlow(
+				this.data.external_pipeline_flow_id, this.data.external_url);
+		}
 	}
 
 	redo() {

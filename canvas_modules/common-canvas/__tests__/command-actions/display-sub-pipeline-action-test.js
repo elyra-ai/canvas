@@ -20,17 +20,20 @@ import DisplaySubPipeline from "../../src/command-actions/displaySubPipelineActi
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
+objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }] });
 
 describe("DisplaySubPipeline action handles calls correctly", () => {
 	it("should handle calls, undo, and redo to multiple actions", () => {
-		const displaySubPipeline1 = new DisplaySubPipeline({ pipelineInfo: { pipelineId: "test 1" } }, objectModel);
+		const targetObj = { subflow_ref: { pipeline_id_ref: "test 1" } };
+		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj, pipelineInfo: { pipelineId: "test 1" } }, objectModel);
 		expect(objectModel.getBreadcrumbs()).to.have.length(1);
 
 		displaySubPipeline1.do();
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
-		const displaySubPipeline2 = new DisplaySubPipeline({ pipelineInfo: { pipelineId: "test 2" } }, objectModel);
+		const targetObj2 = { subflow_ref: { pipeline_id_ref: "test 2" } };
+		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj2, pipelineInfo: { pipelineId: "test 2" } }, objectModel);
 		displaySubPipeline2.do();
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);

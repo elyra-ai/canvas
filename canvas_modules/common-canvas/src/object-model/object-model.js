@@ -24,6 +24,7 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
+import Logger from "../logging/canvas-logger.js";
 
 import differenceWith from "lodash/differenceWith";
 import isEmpty from "lodash/isEmpty";
@@ -42,6 +43,8 @@ import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INF
 export default class ObjectModel {
 
 	constructor() {
+		this.logger = new Logger("Object Model");
+
 		// Create a store defaulting to an empty canvas.
 		const emptyCanvasInfo = this.getEmptyCanvasInfo();
 		this.store = new CanvasStore(emptyCanvasInfo);
@@ -357,6 +360,111 @@ export default class ObjectModel {
 			type: "SET_CANVAS_INFO",
 			canvasInfo: canvasInfo,
 			currentCanvasInfo: this.getCanvasInfo() });
+	}
+
+	// Ensures the pipelines being handled is loaded in memory which might not
+	// be the case if it is an external pipeline.
+	ensurePipelineIsLoaded(data) {
+		const url = data.targetObject.subflow_ref.url;
+		const pipelineId = data.targetObject.subflow_ref.pipeline_id_ref;
+
+		// If the pipeline isn't loaded check to make sure the external pipeline
+		// flow provided contains the target pipeline and, if so, load the pipeline
+		// flow into memory.
+		if (!this.isPipelineLoaded(pipelineId, url)) {
+			if (this.flowContainsPipeline(data.external_pipeline_flow, data.external_pipelineId)) {
+				this.addExternalPipelineFlow(data.external_pipeline_flow, data.external_url);
+				return;
+			}
+			this.logger.error("The external pipeline flow '" + data.external_url + "' does not contain a pipeline with ID: " + data.external_pipelineId);
+		}
+	}
+
+	// Returns true if the pipelineFlow passd in contains the pipeline identified
+	// by the pipelineId passed in.
+	flowContainsPipeline(pipelineFlow, pipelineId) {
+		if (pipelineFlow.pipelines) {
+			return pipelineFlow.pipelines.some((p) => p.id === pipelineId);
+		}
+		return false;
+	}
+
+	// Adds the external pipeline flow, which has been retrieved using the url,
+	// into memory. This means adding the pipelines into the standed set of
+	// pipelines in the canvas info and saving the non-pipelines properties from
+	// the pipeline flow with the externalpipelineflows reducer.
+	addExternalPipelineFlow(extPipelineFlow, url) {
+		const pipelineFlow = this.validateAndUpgrade(extPipelineFlow);
+		const convertedPf = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
+		convertedPf.pipelines = this.prepareNodes(convertedPf.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
+
+		// Make a copy and remove the pipelines from the pipleine flow
+		const newPipelineFlow = Object.assign({}, convertedPf);
+		newPipelineFlow.pipelines = [];
+		newPipelineFlow.url = url;
+
+		this.store.dispatch({
+			type: "ADD_EXTERNAL_PIPELINE_FLOW",
+			newPipelineFlow: newPipelineFlow,
+			newPipelines: convertedPf.pipelines
+		});
+	}
+
+	removeExternalPipelineFlow(pipelineFlowId, url) {
+		this.store.dispatch({
+			type: "REMOVE_EXTERNAL_PIPELINE_FLOW",
+			pipelineFlowId: pipelineFlowId,
+			externalUrl: url
+		});
+	}
+
+
+	createExternalPipelineFlow(url, pipelineFlowId, pipelineId) {
+		// Create new header object for the external pipeline flow. The pipelines
+		// will be added to the pipeline flow when it is retrieved using
+		// CommonCanvas.getExternalPipelineFlow.
+		const newPipelineFlow = {
+			"doc_type": "pipeline",
+			"version": "3.0",
+			"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+			"id": pipelineFlowId,
+			"primary_pipeline": pipelineId,
+			"pipelines": [],
+			"schemas": [],
+			"runtimes": []
+		};
+
+		// The url property is not part of the pipeline flow schema but it is
+		// needed to identify the pipeline flow in the external pipeline flows array
+		// with respect to the url it matches to.
+		newPipelineFlow.url = url;
+
+		this.store.dispatch({
+			type: "ADD_EXTERNAL_PIPELINE_FLOW",
+			newPipelineFlow: newPipelineFlow,
+			newPipelines: []
+		});
+	}
+
+	getExternalPipelineFlow(url) {
+		// Get the external pipeline flow
+		const pipelineFlow = this.store.getExternalPipelineFlow(url);
+
+		if (pipelineFlow) {
+			// Remove the url field because that not part of the pipeline flow specification
+			delete pipelineFlow.url;
+
+			// Extract the pipelines from the canvas info that correspond to the url
+			// and add them to the pipeline flow.
+			const canvasInfo = this.getCanvasInfo();
+			pipelineFlow.pipelines = canvasInfo.pipelines.filter((p) => p.parentUrl === url);
+
+			// Remove the parentUrl property because it is not part of the pipeline flow schema.
+			pipelineFlow.pipelines.forEach((p) => delete p.parentUrl);
+		}
+
+		return pipelineFlow;
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.
@@ -760,6 +868,31 @@ export default class ObjectModel {
 
 	deletePipeline(pipelineId) {
 		this.store.dispatch({ type: "DELETE_PIPELINE", data: { id: pipelineId } });
+	}
+
+	// Returns true if the pipeline is loaded into memory. It may not be in
+	// memory if it is an external pipeline.
+	isPipelineLoaded(pipelineId, url) {
+		const canvasInfo = this.getCanvasInfo();
+		if (!canvasInfo) {
+			return false;
+		}
+
+		return canvasInfo.pipelines.some((p) => this.isPipeline(p, pipelineId, url));
+	}
+
+	// Returns true if the pipeline passed in is the same as that specified by the
+	// pipelineId and url parameters passed in. If url is not defined then only
+	// the pipeline ID is used for comparison. A url will only be specified for
+	// external pipelines.
+	isPipeline(p, pipelineId, url) {
+		if (p.id === pipelineId) {
+			if (!p.parentUrl && !url) {
+				return true;
+			}
+			return p.parentUrl === url;
+		}
+		return false;
 	}
 
 	// Clones the contents of the input node (which is expected to be a supernode)

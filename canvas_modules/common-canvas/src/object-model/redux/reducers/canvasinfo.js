@@ -34,6 +34,21 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
 	}
 
+	// Add pipelines from the external pipeline flow into the canvas info pipelines array
+	case "ADD_EXTERNAL_PIPELINE_FLOW": {
+		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.newPipelines) });
+	}
+
+	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
+		const canvasInfoPipelines = state.pipelines.filter((pipeline) => {
+			if (pipeline.parentUrl) {
+				return pipeline.parentUrl !== action.externalUrl;
+			}
+			return true;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	// Delete a pipeline from the pipeline flow pipelines array.
 	case "DELETE_PIPELINE": {
 		const canvasInfoPipelines = state.pipelines.filter((pipeline) => {

@@ -46,7 +46,7 @@ import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import has from "lodash/has";
+import { get, has } from "lodash";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
@@ -85,6 +85,7 @@ export default class CanvasController {
 			enableHighlightUnavailableNodes: false,
 			enablePositionNodeOnRightFlyoutOpen: false,
 			enableMoveNodesOnSupernodeResize: true,
+			enableExternalPipelineFlows: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
 			enableRightFlyoutUnderToolbar: false,
@@ -266,6 +267,10 @@ export default class CanvasController {
 	// Returns the ID of the primary pipeline from the pipelineFlow.
 	getPrimaryPipelineId() {
 		return this.objectModel.getPrimaryPipelineId();
+	}
+
+	getExternalPipelineFlow(url) {
+		return this.objectModel.getExternalPipelineFlow(url);
 	}
 
 	// Returns the internal format of all canvas data stored in memory by
@@ -1660,12 +1665,10 @@ export default class CanvasController {
 	}
 
 
-	// Opens a full screen display if a sub-flow. pipelineInfo should contain two
-	// fields:
-	// pipelineId: The pipeline ID of the pipeline to be shown.
-	// pipelineFlowId: The ID of the pipelineFlow document
-	displaySubPipeline(pipelineInfo) {
-		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo, editSource: "canvas" };
+	// Opens a full screen display of a sub-flow identified by the pipelineInfo
+	// passed in.
+	displaySubPipeline(d) {
+		const data = { editType: "displaySubPipeline", targetObject: d, editSource: "canvas" };
 		this.editActionHandler(data);
 	}
 
@@ -1750,6 +1753,9 @@ export default class CanvasController {
 						this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
 						this.areSelectedNodesContiguous())) {
 				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node.createSupernode") }]);
+				if (this.canvasConfig.enableExternalPipelineFlows) {
+					menuDefinition = menuDefinition.concat([{ action: "createSuperNodeExternal", label: this.getLabel("node.createSupernodeExternal") }]);
+				}
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
@@ -1759,7 +1765,9 @@ export default class CanvasController {
 			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
-					label: this.getLabel("node.expandSupernodeInPlace") }, { divider: true });
+					label: this.getLabel("node.expandSupernodeInPlace") });
+				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
+					label: this.getLabel("node.expandSupernodeFullScreen") }, { divider: true });
 			}
 			// Collapse
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
@@ -1871,6 +1879,19 @@ export default class CanvasController {
 		let data = cmndData;
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
+
+		// Generate a dummy external URL when an external sub-flow is being
+		// created.
+		if (data.editType === "createSuperNodeExternal") {
+			data.external_url = "";
+			data.external_pipeline_flow_id = "";
+		}
+
+		// Pre-process for expanding a supernode
+		if (data.editType === "expandSuperNodeInPlace" ||
+				data.editType === "displaySubPipeline") {
+			data = this.preProcessForExternalPipelines(data);
+		}
 
 		// Check with host application if it wants to proceed with the command
 		// and also let the application modify the command input data if required.
@@ -2059,7 +2080,8 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-			case "createSuperNode": {
+			case "createSuperNode":
+			case "createSuperNodeExternal": {
 				command = new CreateSuperNodeAction(data, this.objectModel, this.intl);
 				this.commandStack.do(command);
 				break;
@@ -2153,6 +2175,32 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data, command);
 		}
+	}
+
+	// Sets the appropriate values when handling an external pipleine flow
+	// when performing sub-flow actions.
+	preProcessForExternalPipelines(data) {
+		// If displaying SubPipeline include pipelineInfo for historical reasons.
+		if (data.editType === "displaySubPipeline") {
+			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
+		}
+
+		const pipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
+		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
+
+		data.external_pipeline_flow_load = false;
+		// If there is a URL then we must be accessing an external pipeline flow.
+		if (externalPipelineFlowUrl) {
+			data.external_url = externalPipelineFlowUrl;
+			data.external_pipelineId = pipelineId;
+			// Try to retrieve the pipeline from our store. If it is not there then
+			// we'll need to load it from the host application so switch load flag on.
+			data.external_pipeline_flow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+			if (!data.external_pipeline_flow) {
+				data.external_pipeline_flow_load = true;
+			}
+		}
+		return data;
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

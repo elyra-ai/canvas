@@ -116,6 +116,8 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
+import EXTERNAL_SUB_FLOW_CANVAS from "../../test_resources/diagrams/externalSubFlowCanvas.json";
+
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
 import justify32 from "../graphics/justify_32.svg";
@@ -191,6 +193,7 @@ class App extends React.Component {
 			selectedHighlightNodeOnNewLinkDrag: false,
 			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
+			selectedExternalPipelineFlows: false,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -1223,6 +1226,22 @@ class App extends React.Component {
 		// if (data && data.editType === "editComment") {
 		// 	data.content += " -- Added text";
 		// }
+
+		if (data.editType === "expandSuperNodeInPlace" ||
+				data.editType === "displaySubPipeline") {
+			if (data.external_pipeline_flow_load) {
+				if (data.external_url === "all-types-external-pipeline-flow-url") {
+					data.external_pipeline_flow = EXTERNAL_SUB_FLOW_CANVAS;
+					return data;
+				}
+				return null;
+			}
+		}
+
+		if (cmndData.editType === "createSuperNodeExternal") {
+			data.external_url = "my-external-flow-url";
+			data.external_pipeline_flow_id = "my-external-pipeline-flow-id";
+		}
 		return data;
 	}
 
@@ -1279,7 +1298,12 @@ class App extends React.Component {
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
+		} else if (data.editType === "createSuperNodeExternal") {
+			// Uncomment this to test retrieveal of newly cretaed external pipeline flow
+			// const pf = this.canvasController.getExternalPipelineFlow("my-external-flow-url");
+			// console.log(pf);
 		}
+
 		this.log("editActionHandler(): " + data.editType, data);
 	}
 
@@ -1789,6 +1813,7 @@ class App extends React.Component {
 			enableParentClass: parentClass,
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
 			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
+			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,

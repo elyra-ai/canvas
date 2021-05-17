@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Action from "../command-stack/action.js";
 
-export default class DisplaySubPipeline extends Action {
-	constructor(data, objectModel) {
-		super(data);
-		this.data = data;
-		this.objectModel = objectModel;
+
+export default (state = [], action) => {
+	switch (action.type) {
+	case "ADD_EXTERNAL_PIPELINE_FLOW": {
+		return [...state, action.newPipelineFlow];
 	}
 
-	// Standard methods
-	do() {
-		// Make sure pipeline is loaded in case it is part of an external pipeline flow.
-		this.objectModel.ensurePipelineIsLoaded(this.data);
-		this.objectModel.addNewBreadcrumb(this.data.pipelineInfo);
+	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
+		return state.filter((pf) => pf.id !== action.pipelineFlowId);
 	}
 
-	undo() {
-		this.objectModel.setPreviousBreadcrumb();
+	default:
+		return state;
 	}
-
-	redo() {
-		this.do();
-	}
-
-}
+};

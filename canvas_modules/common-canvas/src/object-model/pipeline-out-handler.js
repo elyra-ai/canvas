@@ -37,9 +37,17 @@ export default class PipelineOutHandler {
 
 	static createPipelinesFromCanvasInfo(canvasInfo) {
 		if (canvasInfo) {
-			return canvasInfo.pipelines.map((canvasInfoPipeline) => this.createPipeline(canvasInfoPipeline));
+			const filteredPipelines = this.filterOutExternalPipelines(canvasInfo.pipelines);
+			return filteredPipelines.map((canvasInfoPipeline) => this.createPipeline(canvasInfoPipeline));
 		}
 		return {};
+	}
+
+	// Returns a subset of pipelines from the array passed in that are pipelines
+	// that are local to the pipelineFlow i.e. those that are not for external
+	// pipelines. External pipelines are those that have a parentUrl property.
+	static filterOutExternalPipelines(pipelines) {
+		return pipelines.filter((canvasInfoPipeline) => !canvasInfoPipeline.parentUrl);
 	}
 
 	static createPipeline(canvasInfoPipeline) {

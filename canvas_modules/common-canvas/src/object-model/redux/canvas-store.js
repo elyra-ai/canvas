@@ -21,13 +21,14 @@ import canvasinfo from "./reducers/canvasinfo.js";
 import breadcrumbs from "./reducers/breadcrumbs.js";
 import palette from "./reducers/palette.js";
 import notifications from "./reducers/notifications.js";
+import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
 export default class CanavasStore {
 	constructor(emptyCanvasInfo) {
 		// Put selectioninfo reducer first so selections are handled before
 		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
 		// because node heights and width are calculated based on layoutinfo.
-		var combinedReducer = combineReducers({ selectioninfo, layoutinfo, canvasinfo, breadcrumbs, palette, notifications });
+		var combinedReducer = combineReducers({ selectioninfo, layoutinfo, canvasinfo, breadcrumbs, palette, notifications, externalpipelineflows });
 
 		const initialState = {
 			selectioninfo: {},
@@ -35,7 +36,8 @@ export default class CanavasStore {
 			canvasinfo: emptyCanvasInfo,
 			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
 			palette: {},
-			notifications: []
+			notifications: [],
+			externalpipelineflows: []
 		};
 
 		let enableDevTools = false;
@@ -87,6 +89,14 @@ export default class CanavasStore {
 
 	getSelectionInfo() {
 		return this.copyData(this.store.getState().selectioninfo);
+	}
+
+	getExternalPipelineFlow(url) {
+		const epf = this.store.getState().externalpipelineflows.find((pf) => pf.url === url);
+		if (epf) {
+			return this.copyData(epf);
+		}
+		return null;
 	}
 
 	copyData(data) {
