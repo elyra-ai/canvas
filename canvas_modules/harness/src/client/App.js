@@ -1222,13 +1222,11 @@ class App extends React.Component {
 
 	beforeEditActionHandler(cmndData, command) {
 		const data = cmndData;
-		// Uncomment to play with setting the command data.
-		// if (data && data.editType === "editComment") {
-		// 	data.content += " -- Added text";
-		// }
 
-		if (data.editType === "expandSuperNodeInPlace" ||
-				data.editType === "displaySubPipeline") {
+		switch (data.editType) {
+
+		case "expandSuperNodeInPlace":
+		case "displaySubPipeline": {
 			if (data.external_pipeline_flow_load) {
 				if (data.external_url === "all-types-external-pipeline-flow-url") {
 					data.external_pipeline_flow = EXTERNAL_SUB_FLOW_CANVAS;
@@ -1236,12 +1234,21 @@ class App extends React.Component {
 				}
 				return null;
 			}
+			break;
+		}
+		case "createSuperNodeExternal": {
+			data.external_url = "test-external-flow-url-" + Date.now();
+			data.external_pipeline_flow_id = "test-external-pipeline-flow-id-" + Date.now();
+			break;
+		}
+		case "editComment": {
+		// Uncomment to play with setting the command data.
+		// 	data.content += " -- Added text";
+			break;
+		}
+		default:
 		}
 
-		if (cmndData.editType === "createSuperNodeExternal") {
-			data.external_url = "my-external-flow-url";
-			data.external_pipeline_flow_id = "my-external-pipeline-flow-id";
-		}
 		return data;
 	}
 

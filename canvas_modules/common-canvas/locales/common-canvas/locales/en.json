@@ -18,7 +18,7 @@
   "node.createSupernode": "Create supernode",
   "node.createSupernodeExternal": "Create external supernode",
   "node.expandSupernode": "Expand supernode",
-  "node.expandSupernodeFullScreen": "Expand supernode full-screen",
+  "node.expandSupernodeFullPage": "Expand supernode full-page",
   "node.collapseSupernodeInPlace": "Collapse supernode",
   "canvas.validateFlow": "Validate Flow",
   "node.editNode": "Open",

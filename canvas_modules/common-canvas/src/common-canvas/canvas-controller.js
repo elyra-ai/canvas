@@ -1767,7 +1767,7 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
 					label: this.getLabel("node.expandSupernode") });
 				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
-					label: this.getLabel("node.expandSupernodeFullScreen") }, { divider: true });
+					label: this.getLabel("node.expandSupernodeFullPage") }, { divider: true });
 			}
 			// Collapse
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {

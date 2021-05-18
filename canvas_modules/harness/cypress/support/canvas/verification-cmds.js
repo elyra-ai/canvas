@@ -18,9 +18,11 @@
 import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
-const dataLinkSelector = ".d3-link-group.d3-data-link .d3-link-line";
-const commentLinkSelector = ".d3-link-group.d3-comment-link .d3-link-line";
-const assocLinkSelector = ".d3-link-group.d3-object-link .d3-link-line";
+const mainCanvasSelector = "#canvas-div-0 > #d3-svg-canvas-div-0 > .svg-area > .d3-canvas-group > .d3-nodes-links-group > ";
+const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-link-line";
+const commentLinkSelector = mainCanvasSelector + ".d3-link-group.d3-comment-link .d3-link-line";
+const assocLinkSelector = mainCanvasSelector + ".d3-link-group.d3-object-link .d3-link-line";
+const nodeImageSelector = mainCanvasSelector + "g > .d3-node-image";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
@@ -263,9 +265,7 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-node-image").length) {
-			cy.get("#canvas-div-0")
-				.get(".svg-area")
-				.find(".d3-node-image")
+			cy.get(nodeImageSelector)
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
@@ -468,6 +468,13 @@ Cypress.Commands.add("verifyNumberOfPipelines", (noOfPipelines) => {
 Cypress.Commands.add("verifyNumberOfPipelinesInExtraCanvas", (noOfPipelines) => {
 	cy.getCanvasDataForExtraCanvas().then((extraCanvasData) => {
 		expect(extraCanvasData.pipelines.length).to.equal(noOfPipelines);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfExternalPipelines", (noOfPipelines) => {
+	cy.getCanvasData().then((canvasData) => {
+		const externalPipelines = canvasData.pipelines.filter((p) => p.parentUrl);
+		expect(externalPipelines.length).to.equal(noOfPipelines);
 	});
 });
 
