@@ -25,6 +25,22 @@ export default (state = [], action) => {
 		return state.filter((pf) => pf.id !== action.pipelineFlowId);
 	}
 
+	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
+		return state.filter((pf) => pf.url !== action.data.externalFlowUrl);
+	}
+
+	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
+		delete action.data.externalPipelineFlow.pipelines;
+		return [...state, action.data.externalPipelineFlow];
+	}
+
+	case "DELETE_SUPERNODE": {
+		if (action.data.supernode.subflow_ref.url) {
+			return state.filter((epf) => epf.url !== action.data.supernode.subflow_ref.url);
+		}
+		return state;
+	}
+
 	default:
 		return state;
 	}

@@ -498,6 +498,7 @@ export default class APIPipeline {
 				type: "DELETE_SUPERNODE",
 				data: {
 					id: supernode.id,
+					supernode: supernode,
 					pipelineIds: pipelineIds
 				},
 				pipelineId: this.pipelineId

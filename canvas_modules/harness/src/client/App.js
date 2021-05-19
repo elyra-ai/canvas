@@ -193,7 +193,7 @@ class App extends React.Component {
 			selectedHighlightNodeOnNewLinkDrag: false,
 			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
-			selectedExternalPipelineFlows: false,
+			selectedExternalPipelineFlows: true,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -345,6 +345,11 @@ class App extends React.Component {
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+
+		// Array to handle external flows. It is initialized to contain a sub-flow
+		// used by the test flow: externalMainCanvas.json
+		this.externalPipelineFlows = [];
+		this.externalPipelineFlows["all-types-external-pipeline-flow-url"] = EXTERNAL_SUB_FLOW_CANVAS;
 
 		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
@@ -1225,25 +1230,44 @@ class App extends React.Component {
 
 		switch (data.editType) {
 
-		case "expandSuperNodeInPlace":
-		case "displaySubPipeline": {
-			if (data.external_pipeline_flow_load) {
-				if (data.external_url === "all-types-external-pipeline-flow-url") {
-					data.external_pipeline_flow = EXTERNAL_SUB_FLOW_CANVAS;
-					return data;
-				}
-				return null;
-			}
-			break;
-		}
-		case "createSuperNodeExternal": {
-			data.external_url = "test-external-flow-url-" + Date.now();
-			data.external_pipeline_flow_id = "test-external-pipeline-flow-id-" + Date.now();
-			break;
-		}
 		case "editComment": {
 		// Uncomment to play with setting the command data.
 		// 	data.content += " -- Added text";
+			break;
+		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			data.externalUrl = "external-flow-url-" + Date.now();
+			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+			break;
+		}
+		case "expandSuperNodeInPlace":
+		case "displaySubPipeline":
+		case "convertSuperNodeExternalToLocal": {
+			if (data.externalPipelineFlowLoad) {
+				data.externalPipelineFlow = this.externalPipelineFlows[data.externalUrl];
+			}
+			break;
+		}
+		case "deleteSelectedObjects": {
+			data.selectedObjects.forEach((so) => {
+				if (so.type === "super_node" && so.subflow_ref.url) {
+					// App needs to make decision here if this command deletes the
+					// external pipeline flow in the repository.
+					window.alert("Delete external pipeline flow: " + so.subflow_ref.url);
+				}
+			});
+			break;
+		}
+		case "undo": {
+			if (data.editType === "undo") {
+				if (command.editType === "convertSuperNodeExternalToLocal") {
+					// App needs to make decision here if this command deletes the
+					// external pipeline flow in the repository.
+					const pf = this.canvasController.getExternalPipelineFlow(data.targetObject.subflow_ref.url);
+					window.alert("Reinstate external pipeline flow: " + pf.id);
+				}
+			}
 			break;
 		}
 		default:
@@ -1259,11 +1283,14 @@ class App extends React.Component {
 			canvasController = this.canvasController2;
 		}
 
-		if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
+		switch (data.editType) {
+		case "displaySubPipeline":
+		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
-
-		} else if (data.editType === "createTestHarnessNode") {
+			break;
+		}
+		case "createTestHarnessNode": {
 			const nodeTemplate = canvasController.getPaletteNode(data.op);
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1279,8 +1306,9 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "createFromExternalObject") {
+			break;
+		}
+		case "createFromExternalObject": {
 			const nodeTemplate = canvasController.getPaletteNode("variablefile");
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1296,19 +1324,28 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "editNode") {
+			break;
+		}
+		case "editNode": {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
-
-		} else if (data.editType === "runit") {
+			break;
+		}
+		case "runit": {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
-		} else if (data.editType === "createSuperNodeExternal") {
-			// Uncomment this to test retrieveal of newly cretaed external pipeline flow
-			// const pf = this.canvasController.getExternalPipelineFlow("my-external-flow-url");
-			// console.log(pf);
+			break;
+		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			this.externalPipelineFlows[data.externalUrl] =
+				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		default: {
+			// Do nothing
+		}
 		}
 
 		this.log("editActionHandler(): " + data.editType, data);

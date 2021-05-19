@@ -20,6 +20,8 @@
 	"node.expandSupernode": "[Esperanto~Expand supernode~~eo]",
 	"node.expandSupernodeFullPage": "[Esperanto~Expand supernode full-page~~eo]",
 	"node.collapseSupernodeInPlace": "[Esperanto~Collapse supernode~~~~eo]",
+	"node.convertSupernodeExternalToLocal": "[Esperanto~Convert external to local~~~~eo]",
+	"node.convertSupernodeLocalToExternal": "[Esperanto~Convert local to external~~~~eo]",
 	"canvas.validateFlow": "[Esperanto~Validate Flow~eo]",
 	"node.editNode": "[Esperanto~Open~eo]",
 	"node.editMenu": "[Esperanto~Edit~eo]",

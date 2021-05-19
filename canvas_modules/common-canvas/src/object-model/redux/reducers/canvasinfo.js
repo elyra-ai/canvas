@@ -49,6 +49,49 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
+	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			// We need to alter the supernode so its subflow_ref.url field is removed.
+			// The supernode is identified by the supernodePipelineId and the
+			// supernodeId passed in.
+			if (pipeline.id === action.data.supernodePipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action) });
+			}
+			// We need to remove the parentUrl field from the pipeline which is the
+			// sub-flow for the supernode being convertd to local. This will be a
+			// different pipeline to the one where the supernode exists.
+			if (pipeline.parentUrl === action.data.externalFlowUrl) {
+				const p = Object.assign({}, pipeline);
+				delete p.parentUrl;
+				return p;
+			}
+
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			// We need to alter the supernode so a subflow_ref.url field is added.
+			// The supernode is identified by the supernodePipelineId and the
+			// supernodeId passed in.
+			if (pipeline.id === action.data.supernodePipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action) });
+			}
+
+			// We need to add the parntUrl property to the subflow pipeline that
+			// is being made external.
+			if (pipeline.id === action.data.subflowPipelineId) {
+				return Object.assign({}, pipeline, { parentUrl: action.data.externalFlowUrl });
+			}
+			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	// Delete a pipeline from the pipeline flow pipelines array.
 	case "DELETE_PIPELINE": {
 		const canvasInfoPipelines = state.pipelines.filter((pipeline) => {

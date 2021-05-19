@@ -372,11 +372,11 @@ export default class ObjectModel {
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
 		if (!this.isPipelineLoaded(pipelineId, url)) {
-			if (this.flowContainsPipeline(data.external_pipeline_flow, data.external_pipelineId)) {
-				this.addExternalPipelineFlow(data.external_pipeline_flow, data.external_url);
+			if (this.flowContainsPipeline(data.externalPipelineFlow, data.externalPipelineId)) {
+				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl);
 				return;
 			}
-			this.logger.error("The external pipeline flow '" + data.external_url + "' does not contain a pipeline with ID: " + data.external_pipelineId);
+			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + data.externalPipelineId);
 		}
 	}
 
@@ -393,8 +393,8 @@ export default class ObjectModel {
 	// into memory. This means adding the pipelines into the standed set of
 	// pipelines in the canvas info and saving the non-pipelines properties from
 	// the pipeline flow with the externalpipelineflows reducer.
-	addExternalPipelineFlow(extPipelineFlow, url) {
-		const pipelineFlow = this.validateAndUpgrade(extPipelineFlow);
+	addExternalPipelineFlow(externalPipelineFlow, url) {
+		const pipelineFlow = this.validateAndUpgrade(externalPipelineFlow);
 		const convertedPf = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
 		convertedPf.pipelines = this.prepareNodes(convertedPf.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
@@ -419,11 +419,22 @@ export default class ObjectModel {
 		});
 	}
 
-
+	// Create a pipeline flow artifact in the externalpipelineflows redux storage.
 	createExternalPipelineFlow(url, pipelineFlowId, pipelineId) {
-		// Create new header object for the external pipeline flow. The pipelines
-		// will be added to the pipeline flow when it is retrieved using
-		// CommonCanvas.getExternalPipelineFlow.
+		const newPipelineFlow =
+			this.getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId);
+
+		this.store.dispatch({
+			type: "ADD_EXTERNAL_PIPELINE_FLOW",
+			newPipelineFlow: newPipelineFlow,
+			newPipelines: []
+		});
+	}
+
+	// Returns a new header object for the external pipeline flow. The pipelines
+	// will be added to the pipeline flow when it is retrieved using
+	// CommonCanvas.getExternalPipelineFlow.
+	getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId) {
 		const newPipelineFlow = {
 			"doc_type": "pipeline",
 			"version": "3.0",
@@ -440,16 +451,12 @@ export default class ObjectModel {
 		// with respect to the url it matches to.
 		newPipelineFlow.url = url;
 
-		this.store.dispatch({
-			type: "ADD_EXTERNAL_PIPELINE_FLOW",
-			newPipelineFlow: newPipelineFlow,
-			newPipelines: []
-		});
+		return newPipelineFlow;
 	}
 
 	getExternalPipelineFlow(url) {
 		// Get the external pipeline flow
-		const pipelineFlow = this.store.getExternalPipelineFlow(url);
+		let pipelineFlow = this.store.getExternalPipelineFlow(url);
 
 		if (pipelineFlow) {
 			// Remove the url field because that not part of the pipeline flow specification
@@ -462,9 +469,28 @@ export default class ObjectModel {
 
 			// Remove the parentUrl property because it is not part of the pipeline flow schema.
 			pipelineFlow.pipelines.forEach((p) => delete p.parentUrl);
+
+			pipelineFlow =
+				PipelineOutHandler.createPipelineFlow(pipelineFlow);
+
+			if (this.schemaValidation) {
+				validatePipelineFlowAgainstSchema(pipelineFlow);
+			}
+
 		}
 
 		return pipelineFlow;
+	}
+
+	convertSuperNodeExternalToLocal(data) {
+		this.store.dispatch({ type: "CONVERT_SN_EXTERNAL_TO_LOCAL", data: data });
+	}
+
+	convertSuperNodeLocalToExternal(data) {
+		data.externalPipelineFlow =
+			this.getExternalPipelineFlowTemplate(
+				data.externalFlowUrl, data.externalPipelineFlowId, data.subflowPipelineId);
+		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.

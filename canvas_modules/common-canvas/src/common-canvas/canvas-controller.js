@@ -18,6 +18,8 @@ import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
+import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
+import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
 import constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
@@ -1759,8 +1761,9 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Expand and Collapse supernode
+		// Supernode option
 		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
+			// Expand and Collapse supernode
 			// Expand
 			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
@@ -1774,7 +1777,18 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
 					label: this.getLabel("node.collapseSupernodeInPlace") }, { divider: true });
 			}
+			// Convert supernode
+			if (this.canvasConfig.enableExternalPipelineFlows) {
+				if (source.targetObject.subflow_ref.url) {
+					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
+						label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+				} else {
+					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
+						label: this.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
+				}
+			}
 		}
+
 		// Delete link
 		if (this.canvasConfig.enableLinkSelection === LINK_SELECTION_NONE &&
 				source.type === "link") {
@@ -1882,14 +1896,15 @@ export default class CanvasController {
 
 		// Generate a dummy external URL when an external sub-flow is being
 		// created.
-		if (data.editType === "createSuperNodeExternal") {
-			data.external_url = "";
-			data.external_pipeline_flow_id = "";
-		}
+		if (data.editType === "createSuperNodeExternal" ||
+				data.editType === "convertSuperNodeLocalToExternal") {
+			data.externalUrl = "";
+			data.externalPipelineFlowId = "";
 
-		// Pre-process for expanding a supernode
-		if (data.editType === "expandSuperNodeInPlace" ||
-				data.editType === "displaySubPipeline") {
+		// Pre-process for handling external pipeline flows.
+		} else if (data.editType === "expandSuperNodeInPlace" ||
+				data.editType === "displaySubPipeline" ||
+				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
 		}
 
@@ -2096,6 +2111,16 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "convertSuperNodeExternalToLocal": {
+				command = new ConvertSuperNodeExternalToLocal(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "convertSuperNodeLocalToExternal": {
+				command = new ConvertSuperNodeLocalToExternal(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "deleteLink": {
 				command = new DeleteLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -2188,16 +2213,16 @@ export default class CanvasController {
 		const pipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
 		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
 
-		data.external_pipeline_flow_load = false;
+		data.externalPipelineFlowLoad = false;
 		// If there is a URL then we must be accessing an external pipeline flow.
 		if (externalPipelineFlowUrl) {
-			data.external_url = externalPipelineFlowUrl;
-			data.external_pipelineId = pipelineId;
+			data.externalUrl = externalPipelineFlowUrl;
+			data.externalPipelineId = pipelineId;
 			// Try to retrieve the pipeline from our store. If it is not there then
 			// we'll need to load it from the host application so switch load flag on.
-			data.external_pipeline_flow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
-			if (!data.external_pipeline_flow) {
-				data.external_pipeline_flow_load = true;
+			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+			if (!data.externalPipelineFlow) {
+				data.externalPipelineFlowLoad = true;
 			}
 		}
 		return data;

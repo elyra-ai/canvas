@@ -30,8 +30,8 @@
             "ui_data": {
               "label": "Binding (entry) node",
               "image": "/images/nodes/varfile.svg",
-              "x_pos": 89,
-              "y_pos": 99.5,
+              "x_pos": 28,
+              "y_pos": 125.5,
               "description": "Imports data from a comma-delimited file"
             }
           },
@@ -111,8 +111,8 @@
             "ui_data": {
               "label": "Execution node",
               "image": "/images/nodes/sort.svg",
-              "x_pos": 297,
-              "y_pos": 138.5,
+              "x_pos": 167.00001525878906,
+              "y_pos": 142.5,
               "description": "Sorts the data"
             }
           },
@@ -199,9 +199,9 @@
             },
             "ui_data": {
               "label": "Super node",
-              "image": "useDefaultIcon",
-              "x_pos": 500,
-              "y_pos": 170,
+              "image": "useDefaultExtIcon",
+              "x_pos": 322,
+              "y_pos": 180,
               "class_name": "canvas-node",
               "description": "nodeIDSuperNodePE",
               "is_expanded": false,
@@ -292,8 +292,8 @@
             "ui_data": {
               "label": "Model Node",
               "image": "/images/nodes/model.svg",
-              "x_pos": 760,
-              "y_pos": 230.99999237060547,
+              "x_pos": 542,
+              "y_pos": 143.99999237060547,
               "class_name": "canvas-node"
             }
           },
@@ -371,8 +371,8 @@
             "ui_data": {
               "label": "Binding (exit) node",
               "image": "/images/nodes/table.svg",
-              "x_pos": 642,
-              "y_pos": 375.99999237060547,
+              "x_pos": 543,
+              "y_pos": 320.99999237060547,
               "class_name": "canvas-node",
               "associations": [
                 {
@@ -452,35 +452,8 @@
               "width": 200,
               "height": 64,
               "class_name": "canvas-comment",
-              "content": "This canvas shows the 4 different node types and three link types: node links, association links and comments links.",
+              "content": "This canvas contains a super node that references an external pipeline flow. It needs to be opened in the Elyra Canvas test harness which is modified to serve up th eexternal flow in the 'beforeEditaActionHandler' callback.",
               "associated_id_refs": []
-            },
-            {
-              "id": ">.9?/`~!@#$%^&*()_+=-{}][|:;<,",
-              "x_pos": 400,
-              "y_pos": 50,
-              "width": 200,
-              "height": 37,
-              "class_name": "canvas-comment",
-              "content": "The 4 different node types",
-              "associated_id_refs": [
-                {
-                  "node_ref": "id8I6RH2V91XW",
-                  "class_name": "canvas-comment-link"
-                },
-                {
-                  "node_ref": "|:;<,>.9?/`~!@#$%^&*()_+=-{}][",
-                  "class_name": "canvas-comment-link"
-                },
-                {
-                  "node_ref": "nodeIDSuperNodePE",
-                  "class_name": "canvas-comment-link"
-                },
-                {
-                  "node_ref": "id125TTEEIK7V",
-                  "class_name": "canvas-comment-link"
-                }
-              ]
             }
           ]
         }

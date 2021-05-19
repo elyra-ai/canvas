@@ -32,9 +32,10 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERRO
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON }
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
+import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
 import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
@@ -3370,6 +3371,10 @@ export default class SVGCanvasRenderer {
 		} else if (d.image === USE_DEFAULT_ICON) {
 			if (this.nodeUtils.isSupernode(d)) {
 				return SUPERNODE_ICON;
+			}
+		} else if (d.image === USE_DEFAULT_EXT_ICON) {
+			if (this.nodeUtils.isSupernode(d)) {
+				return SUPERNODE_EXT_ICON;
 			}
 		}
 		return d.image;
