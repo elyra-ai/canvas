@@ -96,7 +96,8 @@ export default class SVGCanvasD3 {
 				this.config.enableAutoLinkOnlyFromSelNodes !== config.enableAutoLinkOnlyFromSelNodes ||
 				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
-				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
+				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout) ||
+				!this.enableLinkLayoutExactlyMatches(this.config.enableLinkLayout, config.enableLinkLayout)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
 			this.canvasInfo = canvasInfo;
@@ -174,6 +175,18 @@ export default class SVGCanvasD3 {
 	// Returns true if the contents of enableLayout1 and enableLayout2 including
 	// their decorations arrays are exactly the same.
 	enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
+		if (!enableLayout1 && !enableLayout2) {
+			return true;
+		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&
+			this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
+			return true;
+		}
+		return false;
+	}
+
+	// Returns true if the contents of enableLayout1 and enableLayout2 including
+	// their decorations arrays are exactly the same.
+	enableLinkLayoutExactlyMatches(enableLayout1, enableLayout2) {
 		if (!enableLayout1 && !enableLayout2) {
 			return true;
 		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&

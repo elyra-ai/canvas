@@ -37,6 +37,7 @@ import DisplaySubPipelineAction from "../command-actions/displaySubPipelineActio
 import EditCommentAction from "../command-actions/editCommentAction.js";
 import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
+import UpdateLinkLabelAction from "../command-actions/updateLinkLabelAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
@@ -107,7 +108,8 @@ export default class CanvasController {
 			schemaValidation: false,
 			tipConfig: this.defaultTipConfig,
 			enableCanvasLayout: {},
-			enableNodeLayout: {}
+			enableNodeLayout: {},
+			enableLinkLayout: {}
 		};
 
 		this.contextMenuConfig = {
@@ -2003,6 +2005,11 @@ export default class CanvasController {
 			}
 			case "setNodeLabel": {
 				command = new SetNodeLabelAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "updateLinkLabel": {
+				command = new UpdateLinkLabelAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

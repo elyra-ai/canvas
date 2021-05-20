@@ -181,6 +181,9 @@ export default class SVGCanvasRenderer {
 		// no link is currently being drawn.
 		this.drawingNewLinkData = null;
 
+		// Get link layout info
+		this.linkLayout = this.config.enableLinkLayout;
+
 		// Create a drag object for use with nodes and comments.
 		this.drag = d3.drag()
 			.on("start", this.dragStart.bind(this))
@@ -2869,6 +2872,73 @@ export default class SVGCanvasRenderer {
 				}
 			});
 	}
+	displayLinkEditIcon(spanObj, node) {
+		const that = this;
+		const labelObj = spanObj.parentElement;
+		const foreignObj = labelObj.parentElement;
+		const decObj = foreignObj.parentElement;
+		const decorationsObj = decObj.parentElement;
+		const linkNode = decorationsObj.parentElement;
+		const linkGrpSel = d3.select(decObj);
+		const linkIdStr = (linkNode.getAttribute("data-id"));
+		const index = (linkNode.getAttribute("data-id")).lastIndexOf("_");
+		const linkId = linkIdStr.substring(index + 1, linkIdStr.length);
+		const editIconGrpSel = linkGrpSel.append("g")
+			.attr("class", "d3-node-label-edit-icon-group")
+			.on("mouseenter", function(d3Event, d) {
+				that.mouseOverLabelEditIcon = true;
+			})
+			.on("mouseleave", function(d3Event, d) {
+				that.mouseOverLabelEditIcon = false;
+				that.hideLinkEditIcon(this);
+			})
+			.on("click", function(d3Event, d) {
+				that.displayLinkLabelTextArea(linkId, d, foreignObj);
+				that.mouseOverLabelEditIcon = false;
+				that.hideLinkEditIcon(this);
+			});
+
+		const EDIT_ICON_X_OFFSET = 22;
+		const EDIT_ICON_Y_OFFSET = -4;
+		const EDIT_ICON_POS_X = 4;
+		const EDIT_ICON_POS_Y = 4;
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background1")
+			.attr("width", 18 + EDIT_ICON_X_OFFSET)
+			.attr("height", 18)
+			.attr("x", 0)
+			.attr("y", EDIT_ICON_Y_OFFSET);
+
+		editIconGrpSel
+			.append("rect")
+			.attr("class", "d3-node-label-edit-icon-background2")
+			.attr("width", 18)
+			.attr("height", 18)
+			.attr("x", EDIT_ICON_X_OFFSET)
+			.attr("y", EDIT_ICON_Y_OFFSET);
+
+		editIconGrpSel
+			.append("svg")
+			.attr("class", "d3-node-edit-label-icon")
+			.html(EDIT_ICON)
+			.attr("width", 16)
+			.attr("height", 16)
+			.attr("x", EDIT_ICON_X_OFFSET + EDIT_ICON_POS_X)
+			.attr("y", EDIT_ICON_Y_OFFSET + EDIT_ICON_POS_Y);
+	}
+
+	hideLinkEditIcon(spanObj) {
+		if (!this.mouseOverLabelEditIcon) {
+			const labelObj = spanObj.parentElement;
+			const foreignObj = labelObj.parentElement;
+			const decObj = foreignObj.parentElement;
+			const decorationsObj = decObj.parentElement;
+			const linkGrpSel = d3.select(decorationsObj);
+			linkGrpSel.selectAll(".d3-node-label-edit-icon-group").remove();
+		}
+	}
 
 	attachInputPortListeners(inputPorts, node) {
 		inputPorts
@@ -3248,22 +3318,117 @@ export default class SVGCanvasRenderer {
 				labelSel = decSel
 					.append("foreignObject")
 					.attr("class", "d3-foreign-object")
+					.call(this.attachLinkLabelListeners.bind(this))
 					.attr("x", 0)
 					.attr("y", 0);
 				labelSel
-					.append("xhtml:div");
+					.append("xhtml:div")
+					.append("xhtml:span")
+					.call(this.attachLinkLabelSpanListeners.bind(this)); // Provide a namespace when span is inside foreignObject;
 			}
 			labelSel
 				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
 				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
-				.select("div")
+				.select("span")
 				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
 				.html(dec.label);
 		} else {
 			labelSel.remove();
 		}
 	}
+	attachLinkLabelListeners(linkLabels) {
+		linkLabels
+			.on("mouseenter", (d3Event, d) => {
+				const labelSel = d3.select(d3Event.currentTarget);
+				if (this.config.enableDisplayFullLabelOnHover) {
+					const spanSel = labelSel.selectAll("span");
+					labelSel
+						.attr("x", 0)
+						.attr("width", d.width)
+						.attr("height", d.height);
+					spanSel.classed("d3-node-label-full", true);
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				const labelSel = d3.select(d3Event.currentTarget);
+				if (this.config.enableDisplayFullLabelOnHover) {
+					labelSel
+						.attr("x", 0)
+						.attr("width", d.width)
+						.attr("height", d.height);
+					labelSel.selectAll("span").classed("d3-node-label-full", false);
+				}
+			})
+			.on("dblclick", (d3Event, d) => {
+				this.logger.log("Link Label - double click");
+				if (this.linkLayout.labelEditable) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					const linkIdStr = (d3Event.currentTarget.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id"));
+					const index = (d3Event.currentTarget.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id")).lastIndexOf("_");
+					const linkId = linkIdStr.substring(index + 1, linkIdStr.length);
+					this.displayLinkLabelTextArea(linkId, d, d3Event.currentTarget.parentNode);
+				}
+			});
 
+	}
+	attachLinkLabelSpanListeners(linkLabelSpans) {
+		linkLabelSpans
+			.on("mouseenter", (d3Event, d) => {
+				if (this.linkLayout.labelEditable) {
+					this.displayLinkEditIcon(d3Event.currentTarget, d);
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+				if (this.linkLayout.labelEditable) {
+					this.hideEditIconPending = setTimeout(this.hideLinkEditIcon.bind(this), 500, d3Event.currentTarget, d);
+				}
+			});
+	}
+	displayLinkLabelTextArea(linkId, link, parentObj) {
+		this.linkId = linkId;
+		this.displayTextArea({
+			id: link.id,
+			text: link.label,
+			singleLine: this.linkLayout.labelSingleLine,
+			maxCharacters: this.linkLayout.labelMaxCharacters,
+			allowReturnKey: this.linkLayout.labelAllowReturnKey,
+			textCanBeEmpty: false,
+			xPos: 0,
+			yPos: 0,
+			width: link.width + 10,
+			height: link.height,
+			className: "d3-node-label-entry d3-node-label-multi-line",
+			parentObj: parentObj.parentNode,
+			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
+			saveTextChangesCallback: this.saveLinkLabelChanges.bind(this),
+			closeTextAreaCallback: this.closeLinkLabelTextArea.bind(this)
+		});
+	}
+	saveLinkLabelChanges(id, newText, newHeight) {
+		const linkDecorations = this.canvasController.getLinkDecorations(this.linkId, this.activePipeline.id);
+		const newLinkDecLabel = newText;
+		linkDecorations.forEach((linkDec) => {
+			if (linkDec.id === id) {
+				linkDec.label = newLinkDecLabel;
+			}
+		});
+
+		const data = {
+			editType: "updateLinkLabel",
+			editSource: "canvas",
+			linkId: this.linkId,
+			newDec: linkDecorations,
+			oldDec: this.canvasController.getLinkDecorations(this.linkId, this.activePipeline.id),
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
+	}
+	closeLinkLabelTextArea(nodeId) {
+		this.getNodeGroupSelectionById(nodeId)
+			.selectAll("span")
+			.attr("style", null);
+	}
 	addErrorMarker(d, nodeGrp) {
 		const errorMarkerSelection = nodeGrp.selectChildren(".node-error-marker");
 
