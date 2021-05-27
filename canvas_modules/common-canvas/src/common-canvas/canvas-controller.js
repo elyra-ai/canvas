@@ -1923,6 +1923,21 @@ export default class CanvasController {
 			}
 		}
 
+		// Now preprocessing is complete, execuete the action itself.
+		this.editAction(data);
+	}
+
+	// Performs the edit action using the 'data' parameter, which contains the
+	// approprite action parameters, without executing any of the preprocessing
+	// or the beforeEditActionhandler callback. This is useful for applications
+	// that need to do asynchronous activty in their beforeEditActionHandler code.
+	// Those applications should call this method to execute the command, after
+	// their asynchronous activity has ended, instead of the editActionHandler
+	// method otherwise the host app's beforeEdtActionHandler callback will be
+	// called a second time.
+	editAction(cmndData) {
+		let data = cmndData;
+
 		// Only execute the delete if there are some selections to delete.
 		// This prevents an 'empty' command being added to the command stack when
 		// 'delete' is pressed on the keyboard.

@@ -1113,7 +1113,6 @@ class App extends React.Component {
 		}
 	}
 
-	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
@@ -1237,6 +1236,15 @@ class App extends React.Component {
 		}
 		case "createSuperNodeExternal":
 		case "convertSuperNodeLocalToExternal": {
+			// This code when commented out, simulates some asynchronous activity by
+			// the host app using setTimeout.
+			// setTimeout(function(inData, app) {
+			// 	inData.externalUrl = "external-flow-url-" + Date.now();
+			// 	inData.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+			// 	app.canvasController.editAction(inData);
+			// }, 2000, data, this);
+			// data = null;
+
 			data.externalUrl = "external-flow-url-" + Date.now();
 			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
 			break;
@@ -1245,6 +1253,14 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
+				// This code when commented out, simulates some asynchronous activity by
+				// the host app using setTimeout.
+				// setTimeout(function(inData, app) {
+				// 	inData.externalPipelineFlow = app.externalPipelineFlows[inData.externalUrl];
+				// 	app.canvasController.editAction(inData);
+				// }, 2000, data, this);
+				// data = null;
+
 				data.externalPipelineFlow = this.externalPipelineFlows[data.externalUrl];
 			}
 			break;
