@@ -36,7 +36,9 @@ export default class ConvertSuperNodeLocalToExternal extends Action {
 		this.objectModel.convertSuperNodeExternalToLocal(
 			{ externalFlowUrl: this.data.externalUrl,
 				supernodeId: this.data.targetObject.id,
-				supernodePipelineId: this.data.pipelineId });
+				supernodeParentPipelineId: this.data.pipelineId,
+				supernodePipelineId: this.data.externalPipelineId,
+				supernodePipelineFlow: this.data.externalPipelineFlow });
 	}
 
 	redo() {

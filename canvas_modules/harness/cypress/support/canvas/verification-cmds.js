@@ -478,6 +478,12 @@ Cypress.Commands.add("verifyNumberOfExternalPipelines", (noOfPipelines) => {
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfExternalPipelineFlows", (noOfExtPipelineFlows) => {
+	cy.getExternalPipelineFlows().then((extPFlows) => {
+		expect(extPFlows.length).to.equal(noOfExtPipelineFlows);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
 	// verify the number of nodes in the internal object model
 	cy.getPipeline().then((pipeline) => {

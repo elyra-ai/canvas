@@ -191,7 +191,7 @@
           "open_with_tool": "canvas",
           "subflow_ref": {
             "url": "all-types-external-pipeline-flow-url",
-            "pipeline_id_ref": "modeler-sub-pipeline"
+            "pipeline_id_ref": "extrnal-sub-flow-pipeline"
           },
           "app_data": {
             "my_data": {

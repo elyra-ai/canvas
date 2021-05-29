@@ -3,7 +3,7 @@
   "version": "3.0",
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
   "id": "external-pipeline-flow",
-  "primary_pipeline": "modeler-sub-pipeline",
+  "primary_pipeline": "extrnal-sub-flow-pipeline",
   "parameters": {
     "props": [
       {
@@ -16,7 +16,7 @@
   },
   "pipelines": [
     {
-      "id": "modeler-sub-pipeline",
+      "id": "extrnal-sub-flow-pipeline",
       "nodes": [
         {
           "id": "entryID1SE",

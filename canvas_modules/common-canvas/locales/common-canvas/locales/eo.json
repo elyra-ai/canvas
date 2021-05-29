@@ -18,7 +18,6 @@
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.createSupernodeExternal": "[Esperanto~Create external supernode~~eo]",
 	"node.expandSupernode": "[Esperanto~Expand supernode~~eo]",
-	"node.expandSupernodeFullPage": "[Esperanto~Expand supernode full-page~~eo]",
 	"node.collapseSupernodeInPlace": "[Esperanto~Collapse supernode~~~~eo]",
 	"node.convertSupernodeExternalToLocal": "[Esperanto~Convert external to local~~~~eo]",
 	"node.convertSupernodeLocalToExternal": "[Esperanto~Convert local to external~~~~eo]",

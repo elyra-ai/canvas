@@ -352,9 +352,7 @@ export default class ObjectModel {
 			this.setDefaultLayout();
 		}
 
-		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
-		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		const canvasInfo = this.preparePipelineFlow(newPipelineFlow);
 
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_CANVAS_INFO",
@@ -394,9 +392,7 @@ export default class ObjectModel {
 	// pipelines in the canvas info and saving the non-pipelines properties from
 	// the pipeline flow with the externalpipelineflows reducer.
 	addExternalPipelineFlow(externalPipelineFlow, url) {
-		const pipelineFlow = this.validateAndUpgrade(externalPipelineFlow);
-		const convertedPf = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		convertedPf.pipelines = this.prepareNodes(convertedPf.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
 		// Make a copy and remove the pipelines from the pipleine flow
@@ -454,12 +450,17 @@ export default class ObjectModel {
 		return newPipelineFlow;
 	}
 
+	// Used by Cypress tests
+	getExternalPipelineFlows() {
+		return this.store.getExternalPipelineFlows();
+	}
+
 	getExternalPipelineFlow(url) {
 		// Get the external pipeline flow
 		let pipelineFlow = this.store.getExternalPipelineFlow(url);
 
 		if (pipelineFlow) {
-			// Remove the url field because that not part of the pipeline flow specification
+			// Remove the url field because it is not part of the pipeline flow specification
 			delete pipelineFlow.url;
 
 			// Extract the pipelines from the canvas info that correspond to the url
@@ -483,6 +484,12 @@ export default class ObjectModel {
 	}
 
 	convertSuperNodeExternalToLocal(data) {
+		if (has(data, "supernodePipelineFlow.pipelines") &&
+				!this.isPipelineLoaded(data.supernodePipelineId, data.externalFlowUrl)) {
+			const preparedFlow = this.preparePipelineFlow(data.supernodePipelineFlow);
+			data.newPipelines = preparedFlow.pipelines;
+		}
+
 		this.store.dispatch({ type: "CONVERT_SN_EXTERNAL_TO_LOCAL", data: data });
 	}
 
@@ -491,6 +498,16 @@ export default class ObjectModel {
 			this.getExternalPipelineFlowTemplate(
 				data.externalFlowUrl, data.externalPipelineFlowId, data.subflowPipelineId);
 		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
+	}
+
+	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
+	// involves flattening the pipleine flow hierarchy and adding layout info
+	// to the nodes in the pipelines.
+	preparePipelineFlow(newPipelineFlow) {
+		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
+		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		return canvasInfo;
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.

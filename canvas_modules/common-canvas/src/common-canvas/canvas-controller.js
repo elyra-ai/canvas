@@ -1769,8 +1769,6 @@ export default class CanvasController {
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
 					label: this.getLabel("node.expandSupernode") });
-				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
-					label: this.getLabel("node.expandSupernodeFullPage") }, { divider: true });
 			}
 			// Collapse
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {

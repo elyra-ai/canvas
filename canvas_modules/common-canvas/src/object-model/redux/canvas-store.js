@@ -91,6 +91,10 @@ export default class CanavasStore {
 		return this.copyData(this.store.getState().selectioninfo);
 	}
 
+	getExternalPipelineFlows() {
+		return this.copyData(this.store.getState().externalpipelineflows);
+	}
+
 	getExternalPipelineFlow(url) {
 		const epf = this.store.getState().externalpipelineflows.find((pf) => pf.url === url);
 		if (epf) {
