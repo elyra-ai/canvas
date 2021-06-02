@@ -1276,7 +1276,8 @@ class App extends React.Component {
 			break;
 		}
 		case "undo": {
-			if (command.data.editType === "convertSuperNodeExternalToLocal") {
+			if (command && command.data &&
+					command.data.editType === "convertSuperNodeExternalToLocal") {
 				// App needs to make decision here if this command deletes the
 				// external pipeline flow in the repository.
 				window.alert("Reinstate external pipeline flow.");
