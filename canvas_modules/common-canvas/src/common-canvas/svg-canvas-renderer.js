@@ -2859,7 +2859,7 @@ export default class SVGCanvasRenderer {
 		nodeLabelSpans
 			.on("mouseenter", (d3Event, d) => {
 				if (d.layout.labelEditable) {
-					this.displayEditIcon(d3Event.currentTarget, d);
+					this.displayNodeLabelEditIcon(d3Event.currentTarget, d);
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
@@ -3015,18 +3015,37 @@ export default class SVGCanvasRenderer {
 		this.getAllNodeGroupsSelection().classed("d3-node-unavailable", false);
 	}
 
-	displayEditIcon(spanObj, node) {
-		const that = this;
+
+	displayNodeLabelEditIcon(spanObj, node) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
 		const nodeObj = foreignObj.parentElement;
 		const nodeGrpSel = d3.select(nodeObj);
+		const transform = this.nodeUtils.getNodeLabelEditIconTranslate(node, spanObj,
+			this.zoomTransform.k, this.config.enableDisplayFullLabelOnHover);
+
+		this.displayEditIcon(spanObj, nodeGrpSel, transform,
+			(d3Event, d) => this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode));
+	}
+
+	displayDecLabelEditIcon(spanObj, dec, link) {
+		const labelObj = spanObj.parentElement;
+		const foreignObj = labelObj.parentElement;
+		const decObj = foreignObj.parentElement;
+		const decGrpSel = d3.select(decObj);
+		const transform = this.nodeUtils.getDecLabelEditIconTranslate(dec, spanObj,
+			this.zoomTransform.k);
+
+		this.displayEditIcon(spanObj, decGrpSel, transform,
+			(d3Event, d) => this.displayDecLabelTextArea(dec, link, d3Event.currentTarget.parentNode));
+	}
+
+	displayEditIcon(spanObj, nodeGrpSel, transform, displayTextArea) {
+		const that = this;
 
 		const editIconGrpSel = nodeGrpSel.append("g")
 			.attr("class", "d3-node-label-edit-icon-group")
-			.attr("transform", (nd) =>
-				this.nodeUtils.getNodeLabelEditIconTranslate(nd, spanObj,
-					this.zoomTransform.k, this.config.enableDisplayFullLabelOnHover))
+			.attr("transform", transform)
 			.on("mouseenter", function(d3Event, d) {
 				that.mouseOverLabelEditIcon = true;
 			})
@@ -3035,7 +3054,7 @@ export default class SVGCanvasRenderer {
 				that.hideEditIcon(this);
 			})
 			.on("click", function(d3Event, d) {
-				that.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
+				displayTextArea(d3Event, d);
 				that.mouseOverLabelEditIcon = false;
 				that.hideEditIcon(this);
 			});
@@ -3249,19 +3268,49 @@ export default class SVGCanvasRenderer {
 					.append("foreignObject")
 					.attr("class", "d3-foreign-object")
 					.attr("x", 0)
-					.attr("y", 0);
+					.attr("y", 0)
+					.call(this.attachDecLabelListeners.bind(this, d));
 				labelSel
-					.append("xhtml:div");
+					.append("xhtml:div")
+					.append("xhtml:span")
+					.call(this.attachDecLabelSpanListeners.bind(this, d));
 			}
 			labelSel
 				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
 				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
 				.select("div")
 				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
+				.select("span")
 				.html(dec.label);
 		} else {
 			labelSel.remove();
 		}
+	}
+
+	attachDecLabelListeners(obj, decLabels) {
+		decLabels
+			.on("dblclick", (d3Event, dec) => {
+				this.logger.log("Decoration Label - double click");
+				if (dec.labelEditable) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.displayDecLabelTextArea(dec, obj, d3Event.currentTarget.parentNode);
+				}
+			});
+	}
+
+	attachDecLabelSpanListeners(link, decLabelSpans) {
+		decLabelSpans
+			.on("mouseenter", (d3Event, dec) => {
+				if (dec.labelEditable) {
+					this.displayDecLabelEditIcon(d3Event.currentTarget, dec, link);
+				}
+			})
+			.on("mouseleave", (d3Event, dec) => {
+				if (dec.labelEditable) {
+					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
+					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, dec);
+				}
+			});
 	}
 
 	addErrorMarker(d, nodeGrp) {
@@ -5410,7 +5459,7 @@ export default class SVGCanvasRenderer {
 		foreignObject.style("height", this.textAreaHeight + "px");
 	}
 
-	saveNodeLabelChanges(id, newText, newHeight) {
+	saveNodeLabelChanges(id, newText, newHeight, taData) {
 		const data = {
 			editType: "setNodeLabel",
 			editSource: "canvas",
@@ -5428,6 +5477,43 @@ export default class SVGCanvasRenderer {
 		this.getNodeGroupSelectionById(nodeId)
 			.selectAll("div")
 			.attr("style", null);
+	}
+
+	displayDecLabelTextArea(dec, link, parentObj) {
+		this.displayTextArea({
+			id: dec.id,
+			linkId: link.id,
+			text: dec.label,
+			singleLine: false,
+			maxCharacters: null,
+			allowReturnKey: true,
+			textCanBeEmpty: true,
+			xPos: this.nodeUtils.getDecLabelTextAreaPosX(dec),
+			yPos: this.nodeUtils.getDecLabelTextAreaPosY(dec),
+			width: this.nodeUtils.getDecLabelTextAreaWidth(dec),
+			height: this.nodeUtils.getDecLabelTextAreaHeight(dec),
+			className: "d3-dec-label-entry",
+			parentObj: parentObj,
+			autoSizeCallback: this.autoSizeDecLabel.bind(this),
+			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
+			closeTextAreaCallback: null
+		});
+	}
+
+	autoSizeDecLabel() {
+		//
+	}
+
+	saveDecLabelChanges(id, newText, newHeight, taData) {
+		const data = {
+			editType: "editDecorationLabel",
+			editSource: "canvas",
+			decId: id,
+			linkId: taData.linkId,
+			label: newText,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
 	}
 
 	displayTextArea(data) {
@@ -5496,7 +5582,7 @@ export default class SVGCanvasRenderer {
 				that.closeTextArea(foreignObject, data);
 				if (data.text !== newText) {
 					that.isCommentBeingUpdated = true;
-					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight);
+					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight, data);
 					that.isCommentBeingUpdatd = false;
 				}
 			})

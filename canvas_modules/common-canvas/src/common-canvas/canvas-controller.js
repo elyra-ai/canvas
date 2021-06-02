@@ -35,6 +35,7 @@ import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.
 import DisplayPreviousPipelineAction from "../command-actions/displayPreviousPipelineAction.js";
 import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
+import EditDecorationLabelAction from "../command-actions/editDecorationLabelAction.js";
 import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
@@ -2008,6 +2009,11 @@ export default class CanvasController {
 			}
 			case "editComment": {
 				command = new EditCommentAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "editDecorationLabel": {
+				command = new EditDecorationLabelAction(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}

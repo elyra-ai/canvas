@@ -148,6 +148,34 @@ export default class SvgCanvasNodes {
 		return this.getNodeLabelPosY(node) - TEXT_AREA_BORDER_ADJUSTMENT;
 	}
 
+	getDecLabelEditIconTranslate(dec, spanObj, zoomScale) {
+		return `translate(${this.getDecLabelEditIconPosX(dec, spanObj, zoomScale)}, ${this.getDecLabelEditIconPosY(dec)})`;
+	}
+
+	getDecLabelEditIconPosX(dec, spanObj, zoomScale) {
+		return spanObj.getBoundingClientRect().width / zoomScale;
+	}
+
+	getDecLabelEditIconPosY(dec) {
+		return 0;
+	}
+
+	getDecLabelTextAreaPosX(dec) {
+		return -TEXT_AREA_BORDER_ADJUSTMENT;
+	}
+
+	getDecLabelTextAreaPosY(dec) {
+		return -TEXT_AREA_BORDER_ADJUSTMENT;
+	}
+
+	getDecLabelTextAreaWidth(dec) {
+		return dec.width + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
+	getDecLabelTextAreaHeight(dec) {
+		return dec.height + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
+	}
+
 	getNodeEllipsisTranslate(node) {
 		return `translate(${this.getNodeEllipsisPosX(node)}, ${this.getNodeEllipsisPosY(node)})`;
 	}
