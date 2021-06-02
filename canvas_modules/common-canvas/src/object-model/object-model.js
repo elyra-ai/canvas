@@ -371,7 +371,7 @@ export default class ObjectModel {
 		// flow into memory.
 		if (!this.isPipelineLoaded(pipelineId, url)) {
 			if (this.flowContainsPipeline(data.externalPipelineFlow, data.externalPipelineId)) {
-				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl);
+				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
 				return;
 			}
 			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + data.externalPipelineId);
@@ -391,7 +391,7 @@ export default class ObjectModel {
 	// into memory. This means adding the pipelines into the standed set of
 	// pipelines in the canvas info and saving the non-pipelines properties from
 	// the pipeline flow with the externalpipelineflows reducer.
-	addExternalPipelineFlow(externalPipelineFlow, url) {
+	addExternalPipelineFlow(externalPipelineFlow, url, addPipelines) {
 		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
@@ -403,7 +403,7 @@ export default class ObjectModel {
 		this.store.dispatch({
 			type: "ADD_EXTERNAL_PIPELINE_FLOW",
 			newPipelineFlow: newPipelineFlow,
-			newPipelines: convertedPf.pipelines
+			newPipelines: addPipelines ? convertedPf.pipelines : []
 		});
 	}
 

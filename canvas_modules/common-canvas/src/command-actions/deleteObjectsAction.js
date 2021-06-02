@@ -236,7 +236,7 @@ export default class DeleteObjectsAction extends Action {
 			const extUrl = supernode.subflow_ref.url; // Url reference to the external pipeline flow.
 			if (extUrl) {
 				const extPF = this.extPipelineFlowsToDelete[extUrl];
-				this.objectModel.addExternalPipelineFlow(extPF, extUrl);
+				this.objectModel.addExternalPipelineFlow(extPF, extUrl, false); // false indicates pipelines should not be added
 			}
 		});
 

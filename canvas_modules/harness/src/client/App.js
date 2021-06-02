@@ -1276,13 +1276,10 @@ class App extends React.Component {
 			break;
 		}
 		case "undo": {
-			if (data.editType === "undo") {
-				if (command.editType === "convertSuperNodeExternalToLocal") {
-					// App needs to make decision here if this command deletes the
-					// external pipeline flow in the repository.
-					const pf = this.canvasController.getExternalPipelineFlow(data.targetObject.subflow_ref.url);
-					window.alert("Reinstate external pipeline flow: " + pf.id);
-				}
+			if (command.data.editType === "convertSuperNodeExternalToLocal") {
+				// App needs to make decision here if this command deletes the
+				// external pipeline flow in the repository.
+				window.alert("Reinstate external pipeline flow.");
 			}
 			break;
 		}
