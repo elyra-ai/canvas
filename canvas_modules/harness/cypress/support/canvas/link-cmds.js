@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getLinkFromName", (linkName) => {
-	const nodeNames = linkName.split("-");
+Cypress.Commands.add("getLinkWithLabel", (linkLabel) => {
+	const nodeNames = linkLabel.split("-");
 	cy.getPipeline()
 		.then((pipeline) => {
 			// Get source node id
@@ -36,6 +36,15 @@ Cypress.Commands.add("getLinkFromName", (linkName) => {
 		});
 });
 
+Cypress.Commands.add("getLinkIdForLabel", (linkLabel) =>
+	cy.getLinkWithLabel(linkLabel)
+		.then((link) => {
+			if (link) {
+				return link[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
 
 Cypress.Commands.add("getLinkUsingId", (linkId) => {
 	cy.getPipeline()
@@ -43,6 +52,28 @@ Cypress.Commands.add("getLinkUsingId", (linkId) => {
 			cy.get(getLinkSelector(linkId, "grp"))
 				.then((link) => link);
 		});
+});
+
+Cypress.Commands.add("hoverOverLabelForLinkDec", (linkLabel, decId) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "']")
+		.trigger("mouseenter");
+});
+
+Cypress.Commands.add("clickEditIconForLinkDecLabel", (linkLabel) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find(".d3-label-edit-icon-group")
+		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		.click({ force: true });
+});
+
+Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
 });
 
 
@@ -62,7 +93,7 @@ function getLinkSelector(linkId, element) {
 }
 
 Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}]`)
 		.click();
 });
@@ -278,7 +309,7 @@ Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 });
 
 Cypress.Commands.add("hoverOverLinkName", (linkName) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.children()
 		.eq(1)
 		.trigger("mouseenter", { force: true });

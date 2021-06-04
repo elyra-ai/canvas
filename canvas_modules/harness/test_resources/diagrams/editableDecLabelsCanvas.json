@@ -38,7 +38,7 @@
                   "id": "456",
                   "label": "Node Label",
                   "label_editable": true,
-									"label_single_line": false,
+                  "label_single_line": false,
                   "position": "bottomLeft",
                   "x_pos": 0,
                   "y_pos": 20,

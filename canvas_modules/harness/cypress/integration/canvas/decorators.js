@@ -72,8 +72,8 @@ describe("Test adding a decorator to a node", function() {
 		);
 		cy.submitAPI();
 		cy.verifyNumberOfLabelDecoratorsOnNode("No Decorator", 2);
-		cy.verifyLabelDecoration("No Decorator", "label_1", "A first test label", -20, -25);
-		cy.verifyLabelDecoration("No Decorator", "label_2", "A second test label", 40, 90);
+		cy.verifyLabelDecorationOnNode("No Decorator", "label_1", "A first test label", -20, -25);
+		cy.verifyLabelDecorationOnNode("No Decorator", "label_2", "A second test label", 40, 90);
 
 		// Check the Big Node decorators are all positioned correctly based on their anchor nodePositions
 		cy.verifyNumberOfDecoratorsOnNode("Big Node", 9);
@@ -109,11 +109,17 @@ describe("Test adding a decorator to a node", function() {
 		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
 	});
 
-	// it("Test editable multi-line label decoration on a node.", function() {
-	// 	cy.selectNodeForDecoration("No Decorator");
-	// 	cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"position\": \"bottomLeft\", \"y_pos\": \"20\"{}}]");
-	// 	cy.submitAPI();
-	// });
+	it("Test editable multi-line label decoration on a node.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLabelForNodeDec("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
 
 });
 
@@ -227,6 +233,19 @@ describe("Test adding a decorator to a link", function() {
 
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
 	});
+
+	it("Test editable multi-line label decoration on a link.", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLabelForLinkDec("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 508, 215);
+	});
+
 });
 
 function verifyDecorationHandlerEntryInConsole(decoratorId) {

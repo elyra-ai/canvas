@@ -284,30 +284,8 @@ $new-halo-link-color: $ui-05;
 	}
 }
 
-.d3-node-label-edit-icon-group {
-	.d3-node-label-edit-icon-background1 {
-		fill: transparent;
-	}
-
-	.d3-node-label-edit-icon-background2 {
-		fill: $canvas-background-color;
-	}
-
-	&:hover {
-		.d3-node-label-edit-icon-background2 {
-			fill: $node-label-edit-icon-hover-color;
-		}
-	}
-
-	& svg {
-		// These properties will pass the color to icon paths in an SVG icon provided
-		// the icon doesn't have any hard coded fill color set.
-		fill: currentColor;
-		color: $icon-01;
-	}
-}
-
 /* Node highlight when end of new link line is over, or approaching, the node */
+
 .d3-node-group[data-new-link-over="yes"] {
 	.d3-node-selection-highlight {
 		stroke: $interactive-01;
@@ -363,6 +341,28 @@ $new-halo-link-color: $ui-05;
 	text-align: center;
 }
 
+.d3-label-edit-icon-group {
+	.d3-label-edit-icon-background1 {
+		fill: transparent;
+	}
+
+	.d3-label-edit-icon-background2 {
+		fill: $canvas-background-color;
+	}
+
+	&:hover {
+		.d3-label-edit-icon-background2 {
+			fill: $node-label-edit-icon-hover-color;
+		}
+	}
+
+	& svg {
+		// These properties will pass the color to icon paths in an SVG icon provided
+		// the icon doesn't have any hard coded fill color set.
+		fill: currentColor;
+		color: $icon-01;
+	}
+}
 
 /* Node decorations styles */
 

@@ -192,3 +192,21 @@ Cypress.Commands.add("getObjectCountFromObjectModel", () => {
 			(pipeline.nodes.length + pipeline.comments.length + pipeline.links.length)
 		);
 });
+
+Cypress.Commands.add("setNodeDecorations", (nodeName, decorations) => {
+	cy.document().then((doc) => {
+		cy.getNodeIdForLabel(nodeName)
+			.then((nodeId) => {
+				doc.canvasController.setNodeDecorations(nodeId, decorations);
+			});
+	});
+});
+
+Cypress.Commands.add("setLinkDecorations", (linkName, decorations) => {
+	cy.document().then((doc) => {
+		cy.getLinkIdForLabel(linkName)
+			.then((linkId) => {
+				doc.canvasController.setLinkDecorations(linkId, decorations);
+			});
+	});
+});

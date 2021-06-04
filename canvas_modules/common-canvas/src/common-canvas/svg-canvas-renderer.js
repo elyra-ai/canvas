@@ -3001,7 +3001,7 @@ export default class SVGCanvasRenderer {
 		const that = this;
 
 		const editIconGrpSel = grpSel.append("g")
-			.attr("class", "d3-node-label-edit-icon-group")
+			.attr("class", "d3-label-edit-icon-group")
 			.attr("transform", transform)
 			.on("mouseenter", function(d3Event, d) {
 				that.mouseOverLabelEditIcon = true;
@@ -3023,7 +3023,7 @@ export default class SVGCanvasRenderer {
 
 		editIconGrpSel
 			.append("rect")
-			.attr("class", "d3-node-label-edit-icon-background1")
+			.attr("class", "d3-label-edit-icon-background1")
 			.attr("width", 24 + EDIT_ICON_X_OFFSET)
 			.attr("height", 24)
 			.attr("x", 0)
@@ -3031,7 +3031,7 @@ export default class SVGCanvasRenderer {
 
 		editIconGrpSel
 			.append("rect")
-			.attr("class", "d3-node-label-edit-icon-background2")
+			.attr("class", "d3-label-edit-icon-background2")
 			.attr("width", 24)
 			.attr("height", 24)
 			.attr("x", EDIT_ICON_X_OFFSET)
@@ -3053,7 +3053,7 @@ export default class SVGCanvasRenderer {
 			const foreignObj = labelObj.parentElement;
 			const nodeObj = foreignObj.parentElement;
 			const nodeGrpSel = d3.select(nodeObj);
-			nodeGrpSel.selectAll(".d3-node-label-edit-icon-group").remove();
+			nodeGrpSel.selectAll(".d3-label-edit-icon-group").remove();
 		}
 	}
 
