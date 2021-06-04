@@ -22,7 +22,6 @@ import Icon from "../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
@@ -167,7 +166,7 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item": !this.props.overflow && !actionObj.jsx,
 				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
 				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx,
-				"notification-panel-selected": actionObj.action === TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL && this.props.isNotificationOpen },
+				"associated-panel-selected": actionObj.action === this.props.associatedPanelAction && this.props.isAssociatedPanelOpen },
 			kindAsClass,
 			actionName);
 
@@ -204,7 +203,8 @@ ToolbarActionItem.propTypes = {
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
-	isNotificationOpen: PropTypes.bool
+	isAssociatedPanelOpen: PropTypes.bool,
+	associatedPanelAction: PropTypes.string
 };
 
 export default ToolbarActionItem;
