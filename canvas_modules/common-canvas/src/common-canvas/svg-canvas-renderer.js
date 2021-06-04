@@ -23,13 +23,13 @@ var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-s
 import { get, set } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
-import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
+import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	WARNING, CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, NODE_ERROR_ICON, NODE_WARNING_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
+	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, INTERACTION_MOUSE, INTERACTION_TRACKPAD, USE_DEFAULT_ICON }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -1489,52 +1489,6 @@ export default class SVGCanvasRenderer {
 		var feMerge = dropShadowFilter.append("feMerge");
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
-	}
-
-	getMessageLevel(messages) {
-		let messageLevel = "";
-		if (messages && messages.length > 0) {
-			for (const message of messages) {
-				if (message.type === ERROR) {
-					return message.type;
-				} else if (message.type === WARNING) {
-					messageLevel = message.type;
-				}
-			}
-		}
-		return messageLevel;
-	}
-
-	getMessageLabelClass(messages) {
-		const messageLevel = this.getMessageLevel(messages);
-		let labelClass = "";
-		switch (messageLevel) {
-		case ERROR:
-			labelClass = "d3-node-error-label";
-			break;
-		case WARNING:
-			labelClass = "d3-node-warning-label";
-			break;
-		default:
-			break;
-		}
-		return labelClass;
-	}
-
-	getErrorMarkerClass(messages) {
-		const messageLevel = this.getMessageLevel(messages);
-		let labelClass = "d3-error-circle-off";
-		switch (messageLevel) {
-		case ERROR:
-			labelClass = "d3-error-circle";
-			break;
-		case WARNING:
-			labelClass = "d3-warning-circle";
-			break;
-		default:
-			break;
-		}
-		return labelClass;
 	}
 
 	// Restores the zoom of the canvas, if it has changed, based on the type
@@ -3327,8 +3281,8 @@ export default class SVGCanvasRenderer {
 			}
 
 			nodeGrp.selectChildren(".node-error-marker")
-				.attr("class", () => "node-error-marker " + this.getErrorMarkerClass(d.messages))
-				.html(this.getErrorMarkerIcon(d))
+				.attr("class", () => "node-error-marker " + this.nodeUtils.getErrorMarkerClass(d.messages))
+				.html(this.nodeUtils.getErrorMarkerIcon(d))
 				.attr("width", this.nodeUtils.getNodeErrorWidth(d))
 				.attr("height", this.nodeUtils.getNodeErrorHeight(d))
 				.attr("x", this.nodeUtils.getNodeErrorPosX(d))
@@ -6596,22 +6550,6 @@ export default class SVGCanvasRenderer {
 			return -NINETY_DEGREES;
 		}
 		return 0;
-	}
-
-	getErrorMarkerIcon(data) {
-		const messageLevel = this.getMessageLevel(data.messages);
-		let iconPath = "";
-		switch (messageLevel) {
-		case ERROR:
-			iconPath = NODE_ERROR_ICON;
-			break;
-		case WARNING:
-			iconPath = NODE_WARNING_ICON;
-			break;
-		default:
-			break;
-		}
-		return iconPath;
 	}
 
 	getSelectedNodesAndComments() {
