@@ -38,7 +38,7 @@ export default class SvgCanvasDecs {
 	getDecLabelClass(dec, objType) {
 		const lineTypeClass = dec.label_single_line ? " d3-label-single-line" : " d3-label-multi-line";
 		const justificationClass = dec.label_align === "center" ? " d3-label-center" : "";
-		return this.decUtils.getDecClass(dec, `d3-${objType}-dec-label`) + lineTypeClass + justificationClass;
+		return this.getDecClass(dec, `d3-${objType}-dec-label`) + lineTypeClass + justificationClass;
 	}
 
 	getDecLabelTextAreaClass(dec) {

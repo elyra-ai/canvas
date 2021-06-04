@@ -108,6 +108,13 @@ describe("Test adding a decorator to a node", function() {
 		// Check the path is correct
 		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
 	});
+
+	// it("Test editable multi-line label decoration on a node.", function() {
+	// 	cy.selectNodeForDecoration("No Decorator");
+	// 	cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"position\": \"bottomLeft\", \"y_pos\": \"20\"{}}]");
+	// 	cy.submitAPI();
+	// });
+
 });
 
 
@@ -220,7 +227,6 @@ describe("Test adding a decorator to a link", function() {
 
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
 	});
-
 });
 
 function verifyDecorationHandlerEntryInConsole(decoratorId) {
