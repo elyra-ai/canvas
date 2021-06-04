@@ -19,38 +19,31 @@ describe("Test adding a decorator to a node", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
-		cy.openCanvasAPI("Set Node Decorations");
 	});
 
 	it("Test adding a new decoration, move decoration, replace decoration," +
   " add label decorations at customized positions", function() {
 		// Add a new decoration to the top left position
-		cy.selectNodeForDecoration("No Decorator");
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"position\": \"topLeft\"{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("No Decorator", [{ "id": "123", "position": "topLeft" }]);
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
 		cy.verifyDecorationTransformOnNode("No Decorator", "123", 10, 5);
 
 		// Move the decoration to the top right position
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"position\": \"topRight\"{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("No Decorator", [{ "id": "123", "position": "topRight" }]);
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
 		cy.verifyDecorationTransformOnNode("No Decorator", "123", 46, 5);
 
 		// Add a new decoration to the bottom left position along with the existing decoration
-		cy.selectNodeForDecoration("No Decorator");
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"position\": \"topRight\"{}}," +
-    "{{}\"id\": \"345\", \"position\": \"bottomLeft\"{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "topRight" }, { "id": "345", "position": "bottomLeft" }]);
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 2);
 		cy.verifyDecorationTransformOnNode("No Decorator", "123", 46, 5);
 		cy.verifyDecorationTransformOnNode("No Decorator", "345", 10, 41);
 
 		// Replace decorations with a new decoration at the bottom right position with an image and a hotspot
-		cy.selectNodeForDecoration("No Decorator");
-		cy.updateDecorationsJSON("[{{}\"id\": \"678\", \"position\": \"bottomRight\"," +
-    " \"image\": \"/images/decorators/zoom-in_32.svg\", \"hotspot\": true{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "678", "position": "bottomRight",
+				"image": "/images/decorators/zoom-in_32.svg", "hotspot": true }]);
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
 		cy.verifyDecorationTransformOnNode("No Decorator", "678", 46, 41);
 		cy.verifyDecorationImageOnNode("No Decorator", "678", "/images/decorators/zoom-in_32.svg");
@@ -60,17 +53,16 @@ describe("Test adding a decorator to a node", function() {
 		verifyDecorationHandlerEntryInConsole("678");
 
 		// Add a decoration at a customized position
-		cy.updateDecorationsJSON("[{{}\"id\": \"999\", \"x_pos\": -20, \"y_pos\": -25{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "999", "x_pos": -20, "y_pos": -25 }]);
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
 		cy.verifyDecorationTransformOnNode("No Decorator", "999", -20, -25);
 
 		// Add a two label decorations at customized positions
-		cy.updateDecorationsJSON(
-			"[{{}\"id\": \"label_1\", \"x_pos\": -20, \"y_pos\": -25, \"label\": \"A first test label\"{}}," +
-      " {{}\"id\": \"label_2\", \"x_pos\": 40, \"y_pos\": 90, \"label\": \"A second test label\"{}}]"
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "label_1", "x_pos": -20, "y_pos": -25, "label": "A first test label" },
+				{ "id": "label_2", "x_pos": 40, "y_pos": 90, "label": "A second test label" }]
 		);
-		cy.submitAPI();
 		cy.verifyNumberOfLabelDecoratorsOnNode("No Decorator", 2);
 		cy.verifyLabelDecorationOnNode("No Decorator", "label_1", "A first test label", -20, -25);
 		cy.verifyLabelDecorationOnNode("No Decorator", "label_2", "A second test label", 40, 90);
@@ -91,10 +83,10 @@ describe("Test adding a decorator to a node", function() {
 
 	it("Test adding a path decoration to a node", function() {
 		// Add a new decoration to the top left position
-		cy.selectNodeForDecoration("Custom position");
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"path\": \"M 0 0 L 10 10 -10 10 Z\", " +
-			"\"outline\": false, \"x_pos\": -20, \"y_pos\": 20, \"hotspot\": true{}}]");
-		cy.submitAPI();
+		cy.setNodeDecorations("Custom position",
+			[{ "id": "123", "path": "M 0 0 L 10 10 -10 10 Z",
+				"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
+		);
 		// TODO: this next click is a workaround, the next click on the toggle won't trigger
 		// an onClick unless elsewhere on the panel is clicked first. remove when fixed
 		cy.clickOutsideNotificationPanel();
@@ -109,11 +101,28 @@ describe("Test adding a decorator to a node", function() {
 		cy.verifyDecorationPathOnNode("Custom position", "123", "M 0 0 L 10 10 -10 10 Z");
 	});
 
+	it("Test editable single-line label decoration on a node with max number of characters.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_max_characters": 12,
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverLabelForNodeDec("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Te", 90, 55);
+	});
+
+
 	it("Test editable multi-line label decoration on a node.", function() {
 		cy.setNodeDecorations("No Decorator",
 			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
 				"label_editable": true, "label_single_line": false, "height": 28,
-				"x_pos": "20", "y_pos": "-20" }]);
+				"label_align": "center",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
 		cy.hoverOverLabelForNodeDec("No Decorator", "123");
 		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
 		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
@@ -128,7 +137,6 @@ describe("Test adding a decorator to a link", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("decoratorCanvas.json");
-		cy.openCanvasAPI("Set Link Decorations");
 	});
 
 	it("Test adding a new decoration to a link, remove decorations, add label decorator," +
@@ -147,33 +155,27 @@ describe("Test adding a decorator to a link", function() {
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "789", 583, 225);
 
 		// Remove all decorations from the association link
-		cy.selectLinkForDecoration("Top Left-Top Right");
-		cy.updateDecorationsJSON("[]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Top Left-Top Right", []);
 		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 0);
 
 		// Remove all decorations from the node data link
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Bottom Left-Bottom Right", []);
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 0);
 
 		// Add a rectangle decorator to association link
-		cy.selectLinkForDecoration("Top Left-Top Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\"{}}]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Top Left-Top Right", [{ "id": "123" }]);
 		cy.verifyNumberOfDecoratorsOnLink("Top Left-Top Right", 1);
 
 		// Add a label decorator to association link
-		cy.updateDecorationsJSON("[{{}\"id\": \"123\", \"label\": \"Link Decoration\"{}}]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Top Left-Top Right",
+			[{ "id": "123", "label": "Link Decoration" }]
+		);
 		cy.verifyNumberOfLabelDecoratorsOnLink("Top Left-Top Right", 1);
 
 		// Add an image decorator with a hotspot to the node data link
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"456\", \"position\": \"source\"," +
-    " \"image\": \"/images/decorators/zoom-in_32.svg\", \"hotspot\": true{}}]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "456", "position": "source", "image": "/images/decorators/zoom-in_32.svg", "hotspot": true }]
+		);
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 
 		// Click on the hotspot and make sure it works
@@ -183,10 +185,10 @@ describe("Test adding a decorator to a link", function() {
 
 	it("Test adding a path decoration to a link", function() {
 		// Add a new decoration to the top left position
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"path\": \"M 0 0 L 10 10 -10 10 Z\", " +
-			"\"outline\": false, \"x_pos\": -20, \"y_pos\": 20, \"hotspot\": true{}}]");
-		cy.submitAPI();
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "path": "M 0 0 L 10 10 -10 10 Z",
+				"outline": false, "x_pos": -20, "y_pos": 20, "hotspot": true }]
+		);
 		cy.verifyNumberOfPathDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 
 		// Click on the hot spot and make sure it calls the callback function
@@ -202,49 +204,59 @@ describe("Test adding a decorator to a link", function() {
 		cy.setCanvasConfig({ "selectedLinkType": "Straight" });
 
 		// Test positive distance from source position
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"source\", " +
-			"\"distance\": 30{}}]");
-		cy.submitAPI();
-
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "source",
+				"distance": 30 }]
+		);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 410, 243.5);
 
 		// Test negative distance from target position
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"target\", " +
-			"\"distance\": -30{}}]");
-		cy.submitAPI();
-
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "target", "distance": -30 }]
+		);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 566, 243.5);
 
 		// Test negative distance from middle position
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"middle\", " +
-			"\"distance\": -20{}}]");
-		cy.submitAPI();
-
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "middle", "distance": -20 }]
+		);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 468, 243.5);
 
 		// Test positive distance from middle position
-		cy.selectLinkForDecoration("Bottom Left-Bottom Right");
-		cy.updateDecorationsJSON("[{{}\"id\": \"555\", \"position\": \"middle\", " +
-			"\"distance\": 20{}}]");
-		cy.submitAPI();
-
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "555", "position": "middle", "distance": 20 }]
+		);
 		cy.verifyDecorationTransformOnLink("Bottom Left-Bottom Right", "555", 508, 243.5);
+	});
+
+	it("Test editable single-line label decoration on a link with max number of characters.", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 14,
+				"label_max_characters": 12,
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverLabelForLinkDec("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		// New label should be truncated because max number of characters is 12
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Te", 508, 215);
 	});
 
 	it("Test editable multi-line label decoration on a link.", function() {
 		cy.setLinkDecorations("Bottom Left-Bottom Right",
 			[{ "id": "123", "label": "Dec Label",
 				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center",
 				"x_pos": "20", "y_pos": "-20" }]);
 		cy.hoverOverLabelForLinkDec("Bottom Left-Bottom Right", "123");
 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
-		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 508, 215);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
 	});
+
 
 });
 
