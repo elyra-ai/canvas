@@ -22,9 +22,7 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import { ERROR, WARNING, SUCCESS, INFO,
-	NOTIFICATION_ICON_CLASS } from "../common-canvas/constants/canvas-constants";
-
-const TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
+	NOTIFICATION_ICON_CLASS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
@@ -179,7 +177,7 @@ class CommonCanvasToolbar extends React.Component {
 			const notificationCount = this.props.canvasController.getNotificationMessages().length;
 			const notificationTools = [
 				{ divider: true },
-				{ action: TOGGLE_NOTIFICATION_PANEL,
+				{ action: TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfig.label,
 					enable: true,
 					className: this.getNotificationClassName(),
@@ -262,6 +260,8 @@ class CommonCanvasToolbar extends React.Component {
 				instanceId={this.props.canvasController.getInstanceId()}
 				toolbarActionHandler={this.toolbarActionHandler}
 				additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
+				isAssociatedPanelOpen={this.props.isNotificationOpen}
+				associatedPanelAction={TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL}
 			/>
 		);
 	}

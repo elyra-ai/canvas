@@ -74,6 +74,10 @@ $toolbar-divider-width: 1px;
 			background-color: $hover-field;
 		}
 
+		& button:focus {
+			background-color: $hover-field;
+		}
+
 		& button:disabled:hover {
 			background-color: $ui-01;
 		}
@@ -205,6 +209,18 @@ $toolbar-divider-width: 1px;
 	vertical-align: top;
 	position: relative;
 	padding: 0;
+}
+
+.associated-panel-selected {
+	&.default,
+	&.ghost {
+		& button {
+			background-color: $ui-03;
+			border-color: transparent;
+			box-shadow: none;
+			border-bottom: 2px solid $interactive-01;
+		}
+	}
 }
 
 .toolbar-divider {
