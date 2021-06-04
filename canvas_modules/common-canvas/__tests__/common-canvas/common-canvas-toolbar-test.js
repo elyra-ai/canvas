@@ -300,8 +300,8 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		expect(wrapper.find(".toggleNotificationPanel-action.associated-panel-selected")).to.have.length(1);
 	});
 
-	// When notification panel is closed, toolbar button should NOT have class notification-panel-selected
-	it("Notifications button in rightBar should not have class notification-panel-selected when notification panel is closed", () => {
+	// When notification panel is closed, toolbar button should NOT have class associated-panel-selected
+	it("Notifications button in rightBar should not have class associated-panel-selected when notification panel is closed", () => {
 		const toolbarConfig = {
 			leftBar: [
 				{ action: "undo", label: "Undo", enable: true },
@@ -316,7 +316,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 		};
 		// isNotificationOpen is set to false
 		wrapper = createIntlCommonCanvasToolbar(toolbarConfig, true, true, notificationConfig, false, canvasController);
-		expect(wrapper.find(".toggleNotificationPanel-action.notification-panel-selected")).to.have.length(0);
+		expect(wrapper.find(".toggleNotificationPanel-action.associated-panel-selected")).to.have.length(0);
 	});
 
 });
