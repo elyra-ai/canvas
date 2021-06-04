@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-$notification-panel-arrow-height: 8px;
 $notification-panel-header-height: 35px;
 $notification-message-height: 48px;
 $notification-left-border-color-width: 4px;
@@ -30,7 +29,6 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 		transition: 0.25s ease-in-out;
 		display: block;
 		opacity: 0;
-		margin-top: -$notification-panel-arrow-height;
 		visibility: hidden;
 	}
 }
@@ -39,23 +37,12 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	position: absolute;
 	width: 320px;
 	height: fit-content;
-	right: 8px;
+	right: 0;
 	top: $toolbar-button-height;
-}
-
-.notification-popup-arrow {
-	display: block;
-	fill: $ui-01;
-	stroke: $ui-03;
-	position: absolute;
-	right: 16px;
-	top: 0;
-	width: 16px;
 }
 
 .notification-panel-header-container {
 	min-height: $notification-panel-header-height;
-	margin-top: $notification-panel-arrow-height;
 	width: inherit;
 	background-color: $ui-01;
 	display: flex;
@@ -65,7 +52,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	border-bottom: 0;
 	padding: $spacing-05;
 	.notification-panel-header {
-		@include carbon--type-style("body-short-02");
+		@include carbon--type-style("productive-heading-02");
 	}
 	.notification-panel-subtitle {
 		@include carbon--type-style("helper-text-01");
@@ -75,7 +62,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	.notification-panel-close-icon {
 		position: absolute;
 		right: $spacing-05;
-		top: $spacing-06;
+		top: ($spacing-05 + $spacing-02);
 		cursor: pointer;
 	}
 }
@@ -100,7 +87,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 .notification-panel-messages-container {
 	width: inherit;
-	max-height: calc(100% - #{$notification-panel-arrow-height} - #{$notification-panel-header-height});
+	max-height: calc(100% - #{$notification-panel-header-height});
 	height: fit-content;
 }
 .notification-panel-messages {
