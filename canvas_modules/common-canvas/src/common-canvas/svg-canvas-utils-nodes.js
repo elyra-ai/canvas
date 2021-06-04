@@ -15,15 +15,39 @@
  */
 
 import CanvasUtils from "./common-canvas-utils.js";
-import { SUPER_NODE } from "./constants/canvas-constants";
-
-// Diff between border for node label div (2px) and node label text area (6px)
-const TEXT_AREA_BORDER_ADJUSTMENT = 4;
+import { SUPER_NODE, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
 export default class SvgCanvasNodes {
 	constructor(config, canvasLayout) {
 		this.config = config;
 		this.canvasLayout = canvasLayout;
+	}
+
+	getNodeImageClass(node) {
+		return "d3-node-image";
+	}
+
+	getNodeLabelForeignClass(node) {
+		const outlineClass = node.layout.labelOutline ? " d3-node-label-outline" : "";
+		return "d3-foreign-object" + outlineClass;
+	}
+
+	getNodeLabelClass(node) {
+		if (this.isExpandedSupernode(node)) {
+			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
+		}
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-label-center" : "";
+		return "d3-node-label " + this.getMessageLabelClass(node.messages) + lineTypeClass + justificationClass;
+	}
+
+	getNodeLabelTextAreaClass(node) {
+		if (this.isExpandedSupernode(node)) {
+			return "d3-node-label-entry d3-label-single-line";
+		}
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-label-center" : "";
+		return "d3-node-label-entry" + lineTypeClass + justificationClass;
 	}
 
 	getNodeImagePosX(node) {
@@ -146,34 +170,6 @@ export default class SvgCanvasNodes {
 
 	getNodeLabelTextAreaPosY(node) {
 		return this.getNodeLabelPosY(node) - TEXT_AREA_BORDER_ADJUSTMENT;
-	}
-
-	getDecLabelEditIconTranslate(dec, spanObj, zoomScale) {
-		return `translate(${this.getDecLabelEditIconPosX(dec, spanObj, zoomScale)}, ${this.getDecLabelEditIconPosY(dec)})`;
-	}
-
-	getDecLabelEditIconPosX(dec, spanObj, zoomScale) {
-		return spanObj.getBoundingClientRect().width / zoomScale;
-	}
-
-	getDecLabelEditIconPosY(dec) {
-		return 0;
-	}
-
-	getDecLabelTextAreaPosX(dec) {
-		return -TEXT_AREA_BORDER_ADJUSTMENT;
-	}
-
-	getDecLabelTextAreaPosY(dec) {
-		return -TEXT_AREA_BORDER_ADJUSTMENT;
-	}
-
-	getDecLabelTextAreaWidth(dec) {
-		return dec.width + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
-	}
-
-	getDecLabelTextAreaHeight(dec) {
-		return dec.height + (2 * TEXT_AREA_BORDER_ADJUSTMENT);
 	}
 
 	getNodeEllipsisTranslate(node) {
@@ -314,6 +310,4 @@ export default class SvgCanvasNodes {
 		}
 		return 0;
 	}
-
-
 }

@@ -20,9 +20,7 @@
 
 // Import just the D3 modules that are needed.
 var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
-import get from "lodash/get";
-import set from "lodash/set";
-import has from "lodash/has";
+import { get, set } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, ERROR,
@@ -41,6 +39,7 @@ import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
+import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 
 const showLinksTime = false;
 
@@ -88,6 +87,7 @@ export default class SVGCanvasRenderer {
 		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.parentSupernodeD3Selection, this.pipelineId);
 		this.nodeUtils = new SvgCanvasNodes(this.config, this.canvasLayout);
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils);
+		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 
 		this.dispUtils.setDisplayState();
 		this.logger.log(this.dispUtils.getDisplayStateMsg());
@@ -782,11 +782,11 @@ export default class SVGCanvasRenderer {
 			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
 			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
 			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", this.getNodeLabelForeignClass(node));
+			.attr("class", this.nodeUtils.getNodeLabelForeignClass(node));
 
 		const fObjectDiv = fObject
 			.append("xhtml:div")
-			.attr("class", this.getNodeLabelClass(node));
+			.attr("class", this.nodeUtils.getNodeLabelClass(node));
 
 		const fObjectSpan = fObjectDiv
 			.append("xhtml:span")
@@ -2458,7 +2458,7 @@ export default class SVGCanvasRenderer {
 				const nodeImageType = this.getImageType(nodeImage);
 				d3.select(nodeGrps[i])
 					.append(nodeImageType)
-					.attr("class", (d) => this.getNodeImageClass(d));
+					.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
 			});
 
 		// Node Label
@@ -2539,9 +2539,9 @@ export default class SVGCanvasRenderer {
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-			.attr("class", (d) => this.getNodeLabelForeignClass(d))
+			.attr("class", (d) => this.nodeUtils.getNodeLabelForeignClass(d))
 			.select("div")
-			.attr("class", (d) => this.getNodeLabelClass(d))
+			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
 			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
 			.select("span")
 			.html((d) => d.label);
@@ -2833,7 +2833,7 @@ export default class SVGCanvasRenderer {
 						.attr("x", this.nodeUtils.getNodeLabelHoverPosX(d))
 						.attr("width", this.nodeUtils.getNodeLabelHoverWidth(d))
 						.attr("height", this.nodeUtils.getNodeLabelHoverHeight(d, spanSel.node(), this.zoomTransform.k));
-					spanSel.classed("d3-node-label-full", true);
+					spanSel.classed("d3-label-full", true);
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
@@ -2843,7 +2843,7 @@ export default class SVGCanvasRenderer {
 						.attr("x", this.nodeUtils.getNodeLabelPosX(d))
 						.attr("width", this.nodeUtils.getNodeLabelWidth(d))
 						.attr("height", this.nodeUtils.getNodeLabelHeight(d));
-					labelSel.selectAll("span").classed("d3-node-label-full", false);
+					labelSel.selectAll("span").classed("d3-label-full", false);
 				}
 			})
 			.on("dblclick", (d3Event, d) => {
@@ -3015,7 +3015,6 @@ export default class SVGCanvasRenderer {
 		this.getAllNodeGroupsSelection().classed("d3-node-unavailable", false);
 	}
 
-
 	displayNodeLabelEditIcon(spanObj, node) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
@@ -3028,22 +3027,26 @@ export default class SVGCanvasRenderer {
 			(d3Event, d) => this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode));
 	}
 
-	displayDecLabelEditIcon(spanObj, dec, link) {
+	// Displays the edit icon for an editable decoration label.
+	// obj can be either DEC_NODE or DEC_LINK.
+	displayDecLabelEditIcon(spanObj, dec, obj, objType) {
 		const labelObj = spanObj.parentElement;
 		const foreignObj = labelObj.parentElement;
 		const decObj = foreignObj.parentElement;
 		const decGrpSel = d3.select(decObj);
-		const transform = this.nodeUtils.getDecLabelEditIconTranslate(dec, spanObj,
-			this.zoomTransform.k);
+		const transform = this.decUtils.getDecLabelEditIconTranslate(
+			dec, obj, objType, spanObj, this.zoomTransform.k);
 
 		this.displayEditIcon(spanObj, decGrpSel, transform,
-			(d3Event, d) => this.displayDecLabelTextArea(dec, link, d3Event.currentTarget.parentNode));
+			(d3Event, d) => this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode));
 	}
 
-	displayEditIcon(spanObj, nodeGrpSel, transform, displayTextArea) {
+	// Displays the edit icon (which can be clicked to start editing) next
+	// to an editable node label or editable text decoration
+	displayEditIcon(spanObj, grpSel, transform, displayTextArea) {
 		const that = this;
 
-		const editIconGrpSel = nodeGrpSel.append("g")
+		const editIconGrpSel = grpSel.append("g")
 			.attr("class", "d3-node-label-edit-icon-group")
 			.attr("transform", transform)
 			.on("mouseenter", function(d3Event, d) {
@@ -3188,7 +3191,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createDecorations(enter, objType, decGrpClassName)
 			)
-			.attr("transform", (dec) => `translate(${this.getDecoratorX(dec, d, objType)}, ${this.getDecoratorY(dec, d, objType)})`)
+			.attr("transform", (dec) => this.decUtils.getDecTransform(dec, d, objType))
 			.on("mousedown", (d3Event, dec) => (dec.hotspot ? that.callDecoratorCallback(d3Event, d, dec) : null))
 			.each((dec, i, elements) => this.updateDecoration(dec, d3.select(elements[i]), objType, d));
 	}
@@ -3215,11 +3218,11 @@ export default class SVGCanvasRenderer {
 		if (!dec.label && !dec.path && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
 			outlnSel
-				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-outline`))
+				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-outline`))
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("width", this.getDecoratorWidth(dec, d, objType))
-				.attr("height", this.getDecoratorHeight(dec, d, objType))
+				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
+				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
 				.lower(); // Make sure the outline goes below the image
 		} else {
 			outlnSel.remove();
@@ -3232,7 +3235,7 @@ export default class SVGCanvasRenderer {
 		if (dec.path) {
 			pathSel = pathSel.empty() ? decSel.append("path") : pathSel;
 			pathSel
-				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-path`))
+				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-path`))
 				.attr("x", 0)
 				.attr("y", 0)
 				.attr("d", dec.path);
@@ -3248,11 +3251,11 @@ export default class SVGCanvasRenderer {
 			const nodeImageType = this.getImageType(dec.image);
 			imageSel = imageSel.empty() ? decSel.append("g").append(nodeImageType) : imageSel.select(nodeImageType);
 			imageSel
-				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-image`))
-				.attr("x", this.getDecoratorPadding(dec, d, objType))
-				.attr("y", this.getDecoratorPadding(dec, d, objType))
-				.attr("width", this.getDecoratorWidth(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
-				.attr("height", this.getDecoratorHeight(dec, d, objType) - (2 * this.getDecoratorPadding(dec, d, objType)))
+				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-image`))
+				.attr("x", this.decUtils.getDecPadding(dec, d, objType))
+				.attr("y", this.decUtils.getDecPadding(dec, d, objType))
+				.attr("width", this.decUtils.getDecWidth(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
+				.attr("height", this.decUtils.getDecHeight(dec, d, objType) - (2 * this.decUtils.getDecPadding(dec, d, objType)))
 				.each(() => this.setImageContent(imageSel, dec.image));
 		} else {
 			imageSel.remove();
@@ -3266,20 +3269,20 @@ export default class SVGCanvasRenderer {
 			if (labelSel.empty()) {
 				labelSel = decSel
 					.append("foreignObject")
-					.attr("class", "d3-foreign-object")
+					.attr("class", this.decUtils.getDecLabelForeignClass(dec))
 					.attr("x", 0)
 					.attr("y", 0)
-					.call(this.attachDecLabelListeners.bind(this, d));
+					.call(this.attachDecLabelListeners.bind(this, d, objType));
 				labelSel
 					.append("xhtml:div")
 					.append("xhtml:span")
-					.call(this.attachDecLabelSpanListeners.bind(this, d));
+					.call(this.attachDecLabelSpanListeners.bind(this, d, objType));
 			}
 			labelSel
-				.attr("width", this.getDecoratorLabelWidth(dec, d, objType))
-				.attr("height", this.getDecoratorLabelHeight(dec, d, objType))
+				.attr("width", this.decUtils.getDecLabelWidth(dec, d, objType))
+				.attr("height", this.decUtils.getDecLabelHeight(dec, d, objType))
 				.select("div")
-				.attr("class", this.getDecoratorClass(dec, `d3-${objType}-dec-label`))
+				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
 				.html(dec.label);
 		} else {
@@ -3287,26 +3290,26 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	attachDecLabelListeners(obj, decLabels) {
+	attachDecLabelListeners(obj, objType, decLabels) {
 		decLabels
 			.on("dblclick", (d3Event, dec) => {
 				this.logger.log("Decoration Label - double click");
-				if (dec.labelEditable) {
+				if (dec.label_editable) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.displayDecLabelTextArea(dec, obj, d3Event.currentTarget.parentNode);
+					this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode);
 				}
 			});
 	}
 
-	attachDecLabelSpanListeners(link, decLabelSpans) {
+	attachDecLabelSpanListeners(obj, objType, decLabelSpans) {
 		decLabelSpans
 			.on("mouseenter", (d3Event, dec) => {
-				if (dec.labelEditable) {
-					this.displayDecLabelEditIcon(d3Event.currentTarget, dec, link);
+				if (dec.label_editable) {
+					this.displayDecLabelEditIcon(d3Event.currentTarget, dec, obj, objType);
 				}
 			})
 			.on("mouseleave", (d3Event, dec) => {
-				if (dec.labelEditable) {
+				if (dec.label_editable) {
 					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
 					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, dec);
 				}
@@ -3702,33 +3705,6 @@ export default class SVGCanvasRenderer {
 		this.canvasController.displaySubPipeline({ pipelineId: d.subflow_ref.pipeline_id_ref, pipelineFlowId: this.pipelineFlowId });
 	}
 
-	getNodeImageClass(node) {
-		return "d3-node-image";
-	}
-
-	getNodeLabelForeignClass(node) {
-		const outlineClass = node.layout.labelOutline ? " d3-node-label-outline" : "";
-		return "d3-foreign-object" + outlineClass;
-	}
-
-	getNodeLabelClass(node) {
-		if (this.nodeUtils.isExpandedSupernode(node)) {
-			return "d3-node-label d3-node-label-single-line " + this.getMessageLabelClass(node.messages);
-		}
-		const lineTypeClass = node.layout.labelSingleLine ? " d3-node-label-single-line" : " d3-node-label-multi-line";
-		const justificationClass = node.layout.labelAlign === "center" ? " d3-node-label-middle" : "";
-		return "d3-node-label " + this.getMessageLabelClass(node.messages) + lineTypeClass + justificationClass;
-	}
-
-	getNodeLabelTextAreaClass(node) {
-		if (this.nodeUtils.isExpandedSupernode(node)) {
-			return "d3-node-label-entry d3-node-label-single-line";
-		}
-		const lineTypeClass = node.layout.labelSingleLine ? " d3-node-label-single-line" : " d3-node-label-multi-line";
-		const justificationClass = node.layout.labelAlign === "center" ? " d3-node-label-middle" : "";
-		return "d3-node-label-entry" + lineTypeClass + justificationClass;
-	}
-
 	openContextMenu(d3Event, type, d, port) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
@@ -3747,159 +3723,6 @@ export default class SVGCanvasRenderer {
 		this.getNodeGroupSelectionById(nodeId)
 			.selectChildren(`[data-port-id='${portId}']`)
 			.attr("connected", newStatus);
-	}
-
-	getDecorator(id, decorations) {
-		if (decorations) {
-			const dec = decorations.find((nd) => nd.id === id);
-			return dec;
-		}
-		return null;
-	}
-
-	getDecoratorX(dec, data, objType) {
-		if (objType === DEC_LINK) {
-			return this.getLinkDecoratorX(dec, data);
-		}
-		return this.getNodeDecoratorX(dec, data);
-	}
-
-	getNodeDecoratorX(dec, node) {
-		const position = dec.position || "topLeft";
-		let x = 0;
-		if (position === "topLeft" || position === "middleLeft" || position === "bottomLeft") {
-			x = typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorLeftX;
-		} else if (position === "topCenter" || position === "middleCenter" || position === "bottomCenter") {
-			x = (node.width / 2) + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorCenterX);
-		} else if (position === "topRight" || position === "middleRight" || position === "bottomRight") {
-			x = node.width + (typeof dec.x_pos !== "undefined" ? Number(dec.x_pos) : node.layout.decoratorRightX);
-		}
-		return x;
-	}
-
-	getLinkDecoratorX(dec, link) {
-		const position = dec.position || "middle";
-		let x = 0;
-		if (position === "middle") {
-			x = link.pathInfo.centerPoint ? link.pathInfo.centerPoint.x : link.x1 + ((link.x2 - link.x1) / 2);
-		} else if (position === "source") {
-			x = link.pathInfo.sourcePoint ? link.pathInfo.sourcePoint.x : link.x1;
-		} else if (position === "target") {
-			x = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.x : link.x2;
-		}
-		x = typeof dec.x_pos !== "undefined" ? x + Number(dec.x_pos) : x;
-
-		// 'angle' will only be available when displaying straight link lines so
-		//  distance field is only applicable with straight lines.
-		// 'angle' may be 0 so use has to check that it is not undefined.
-		if (dec.distance && has(link, "pathInfo.angle")) {
-			x += Math.cos(link.pathInfo.angle) * dec.distance;
-		}
-		return x;
-	}
-
-	getDecoratorY(dec, data, objType) {
-		if (objType === DEC_LINK) {
-			return this.getLinkDecoratorY(dec, data);
-		}
-		return this.getNodeDecoratorY(dec, data);
-	}
-
-	getNodeDecoratorY(dec, node) {
-		const position = dec.position || "topLeft";
-		let y = 0;
-		if (position === "topLeft" || position === "topCenter" || position === "topRight") {
-			y = typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorTopY;
-		} else if (position === "middleLeft" || position === "middleCenter" || position === "middleRight") {
-			y = (node.height / 2) + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorMiddleY);
-		} else if (position === "bottomLeft" || position === "bottomCenter" || position === "bottomRight") {
-			y = node.height + (typeof dec.y_pos !== "undefined" ? Number(dec.y_pos) : node.layout.decoratorBottomY);
-		}
-		return y;
-	}
-
-	getLinkDecoratorY(dec, link) {
-		const position = dec.position || "middle";
-		let y = 0;
-		if (position === "middle") {
-			y = link.pathInfo.centerPoint ? link.pathInfo.centerPoint.y : link.y1 + ((link.y2 - link.y1) / 2);
-		} else if (position === "source") {
-			y = link.pathInfo.sourcePoint ? link.pathInfo.sourcePoint.y : link.y1;
-		} else if (position === "target") {
-			y = link.pathInfo.targetPoint ? link.pathInfo.targetPoint.y : link.y2;
-		}
-		y = typeof dec.y_pos !== "undefined" ? y + Number(dec.y_pos) : y;
-
-		// 'angle' will only be available when displaying straight link lines so
-		// distance field is only applicable with straight lines.
-		// 'angle' may be 0 so use has to check that it is not undefined.
-		if (dec.distance && has(link, "pathInfo.angle")) {
-			y += Math.sin(link.pathInfo.angle) * dec.distance;
-		}
-
-		return y;
-	}
-
-	getDecoratorPadding(dec, obj, objType) {
-		// If outline is set to false we don't pad the decorator image.
-		if (dec.outline === false) {
-			return 0;
-		}
-		if (objType === DEC_LINK) {
-			return this.canvasLayout.linkDecoratorPadding;
-		}
-		return obj.layout.decoratorPadding;
-	}
-
-	getDecoratorWidth(dec, obj, objType) {
-		if (typeof dec.width !== "undefined") {
-			return Number(dec.width);
-		} else if (objType === DEC_LINK) {
-			return this.canvasLayout.linkDecoratorWidth;
-		}
-		return obj.layout.decoratorWidth;
-	}
-
-	getDecoratorHeight(dec, obj, objType) {
-		if (typeof dec.height !== "undefined") {
-			return Number(dec.height);
-		} else if (objType === DEC_LINK) {
-			return this.canvasLayout.linkDecoratorHeight;
-		}
-		return obj.layout.decoratorHeight;
-	}
-
-	getDecoratorLabelWidth(dec, obj, objType) {
-		if (typeof dec.width !== "undefined") {
-			return Number(dec.width);
-		} else if (objType === DEC_LINK) {
-			return this.canvasLayout.linkDecoratorLabelWidth;
-		}
-		return obj.layout.decoratorLabelWidth;
-	}
-
-	getDecoratorLabelHeight(dec, obj, objType) {
-		if (typeof dec.height !== "undefined") {
-			return Number(dec.height);
-		} else if (objType === DEC_LINK) {
-			return this.canvasLayout.linkDecoratorLabelHeight;
-		}
-		return obj.layout.decoratorLabelHeight;
-	}
-
-	getDecoratorClass(dec, inClassName) {
-		let className = inClassName;
-		if (dec && dec.class_name) {
-			className += " " + dec.class_name;
-		}
-		return className;
-	}
-
-	getDecoratorImage(dec) {
-		if (dec) {
-			return dec.image;
-		}
-		return "";
 	}
 
 	callDecoratorCallback(d3Event, node, dec) {
@@ -5371,7 +5194,7 @@ export default class SVGCanvasRenderer {
 		return CanvasUtils.getObjectStyle(d, "text", type);
 	}
 
-	displayCommentTextArea(d, parentObj) {
+	displayCommentTextArea(d, parentDomObj) {
 		this.displayTextArea({
 			id: d.id,
 			text: d.content,
@@ -5384,7 +5207,7 @@ export default class SVGCanvasRenderer {
 			width: d.width,
 			height: d.height,
 			className: "d3-comment-entry",
-			parentObj: parentObj,
+			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeComment.bind(this),
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
 			closeTextAreaCallback: null
@@ -5420,8 +5243,8 @@ export default class SVGCanvasRenderer {
 		this.canvasController.editActionHandler(data);
 	}
 
-	displayNodeLabelTextArea(node, parentObj) {
-		d3.select(parentObj).selectAll("div")
+	displayNodeLabelTextArea(node, parentDomObj) {
+		d3.select(parentDomObj).selectAll("div")
 			.attr("style", "display:none;");
 		this.displayTextArea({
 			id: node.id,
@@ -5434,15 +5257,20 @@ export default class SVGCanvasRenderer {
 			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
 			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
 			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
-			className: this.getNodeLabelTextAreaClass(node),
-			parentObj: parentObj,
-			autoSizeCallback: this.autoSizeNodeLabel.bind(this),
+			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
+			parentDomObj: parentDomObj,
+			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
 			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
 		});
 	}
 
-	autoSizeNodeLabel(textArea, foreignObject, data) {
+	// Increases the size of the editable multi-line text area for a label based
+	//  on the characters entered, and also ensures the maximum number of
+	//  characters for the label, if one is provided, is not exceeded.
+	// This callback works for editable multi-line node labels and also
+	// editable multi-line text decorations for either nodes or links.
+	autoSizeMultiLineLabel(textArea, foreignObject, data) {
 		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		// Restrict max characters in case text was pasted in to the text area.
@@ -5479,43 +5307,46 @@ export default class SVGCanvasRenderer {
 			.attr("style", null);
 	}
 
-	displayDecLabelTextArea(dec, link, parentObj) {
+	// Displays a text area for an editable text decoration on either a node
+	// or link.
+	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
 		this.displayTextArea({
 			id: dec.id,
-			linkId: link.id,
 			text: dec.label,
-			singleLine: false,
-			maxCharacters: null,
-			allowReturnKey: true,
-			textCanBeEmpty: true,
-			xPos: this.nodeUtils.getDecLabelTextAreaPosX(dec),
-			yPos: this.nodeUtils.getDecLabelTextAreaPosY(dec),
-			width: this.nodeUtils.getDecLabelTextAreaWidth(dec),
-			height: this.nodeUtils.getDecLabelTextAreaHeight(dec),
-			className: "d3-dec-label-entry",
-			parentObj: parentObj,
-			autoSizeCallback: this.autoSizeDecLabel.bind(this),
+			singleLine: dec.label_single_line || true,
+			maxCharacters: dec.label_max_characters || null,
+			allowReturnKey: dec.label_allow_return_key || false,
+			textCanBeEmpty: false,
+			xPos: this.decUtils.getDecLabelTextAreaPosX(),
+			yPos: this.decUtils.getDecLabelTextAreaPosY(),
+			width: this.decUtils.getDecLabelTextAreaWidth(dec, obj, objType),
+			height: this.decUtils.getDecLabelTextAreaHeight(dec, obj, objType),
+			className: this.decUtils.getDecLabelTextAreaClass(dec),
+			parentDomObj: parentDomObj,
+			objId: obj.id,
+			objType: objType,
+			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
 			closeTextAreaCallback: null
 		});
 	}
 
-	autoSizeDecLabel() {
-		//
-	}
-
+	// Handles saved changes to editable text decorations.
 	saveDecLabelChanges(id, newText, newHeight, taData) {
 		const data = {
 			editType: "editDecorationLabel",
 			editSource: "canvas",
 			decId: id,
-			linkId: taData.linkId,
+			objId: taData.objId,
+			objType: taData.objType,
 			label: newText,
 			pipelineId: this.activePipeline.id
 		};
 		this.canvasController.editActionHandler(data);
 	}
 
+	// Displays a text area to allow text entry and editing for: comments;
+	// node labels; or text decorations on either a node or link.
 	displayTextArea(data) {
 		const that = this;
 
@@ -5523,7 +5354,7 @@ export default class SVGCanvasRenderer {
 		this.editingText = true;
 		this.editingTextId = data.id;
 
-		const foreignObject = d3.select(data.parentObj)
+		const foreignObject = d3.select(data.parentDomObj)
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object")
 			.attr("width", data.width)

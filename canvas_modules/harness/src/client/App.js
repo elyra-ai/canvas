@@ -1107,7 +1107,13 @@ class App extends React.Component {
 
 	// common-canvas
 	clickActionHandler(source) {
-		this.log("clickActionHandler()", source);
+		// TODO - Logging causes the entire canvas to be refreshed. This can cause
+		// problems if the click action handler is called while common-canvas is
+		// in the middle of procssing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all proceesing
+		// or logging in the test harness should be refactored to not cause the
+		// canvas to refresh.
+		// this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
 				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
@@ -1119,7 +1125,13 @@ class App extends React.Component {
 	}
 
 	extraCanvasClickActionHandler(source) {
-		this.log("extraCanvasClickActionHandler()", source);
+		// TODO - Logging causes the entire canvas to be refreshed. This can cause
+		// problems if the click action handler is called while common-canvas is
+		// in the middle of procssing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all proceesing
+		// or logging in the test harness should be refactored to not cause the
+		// canvas to refresh.
+		// this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
 				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
