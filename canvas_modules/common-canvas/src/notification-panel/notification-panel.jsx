@@ -193,9 +193,6 @@ class NotificationPanel extends React.Component {
 					</div>
 					{clearAll}
 				</div>
-				<svg className="notification-popup-arrow" x="0px" y="0px" viewBox="0 0 16 9">
-					<polyline points="0,9 8,0 16,9" />
-				</svg>
 			</div>
 		</div>);
 	}
