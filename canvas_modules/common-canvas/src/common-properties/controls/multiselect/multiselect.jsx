@@ -29,6 +29,7 @@ import { isEqual, intersection, isEmpty } from "lodash";
 class MultiSelectControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.getSelectedOption = this.getSelectedOption.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.handleOnChange = this.handleOnChange.bind(this);
