@@ -3572,33 +3572,8 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (port) => this.getPortArrowPathTransform(port));
 	}
 
-	updateBindingNodeInputPort(nodeGrpObj, d) {
-		const nodeGrp = d3.select(nodeGrpObj);
-		nodeGrp
-			.selectChildren("." + this.getNodeInputPortClassName())
-			.attr("transform", (port) => `translate(${port.cx}, ${port.cy}) scale(${this.zoomTransform.k})`); // Port position may change for binding nodes with multiple-ports.
-	}
-
-	updateBindingNodeOutputPort(nodeGrpObj, d) {
-		const nodeGrp = d3.select(nodeGrpObj);
-		nodeGrp
-			.selectChildren("." + this.getNodeOutputPortClassName())
-			.attr("transform", (port) => `translate(${port.cx}, ${port.cy}) scale(${this.zoomTransform.k})`); // Port position may change for binding nodes with multiple-ports.
-	}
-
-	isEntryBindingNode(node) {
-		return node.type === "binding" && node.outputs && node.outputs.length > 0;
-	}
-
-	isExitBindingNode(node) {
-		return node.type === "binding" && node.inputs && node.inputs.length > 0;
-	}
-
 	isNonBindingNode(node) {
-		return (node.inputs &&
-						node.inputs.length > 0 &&
-						node.outputs &&
-						node.outputs.length > 0);
+		return (node.type !== "binding");
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
