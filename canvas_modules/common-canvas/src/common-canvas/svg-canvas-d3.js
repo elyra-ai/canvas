@@ -81,6 +81,7 @@ export default class SVGCanvasD3 {
 				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
 				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
 				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
+				this.config.enableExternalPipelineFlows !== config.enableExternalPipelineFlows ||
 				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
 				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
 				this.config.enableSaveZoom !== config.enableSaveZoom ||

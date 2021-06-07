@@ -847,6 +847,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableExternalPipelineFlows = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedExternalPipelineFlows" // Set ID to corresponding field in App.js state
+				labelText="Enable External Pipeline Flows"
+				toggled={this.props.getStateValue("selectedExternalPipelineFlows")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
 			<FormGroup
 				legendText="Interaction Type"
@@ -1351,6 +1360,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCreateSupernodeNonContiguous}
 					{divider}
 					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					{enableExternalPipelineFlows}
 					{divider}
 					{enableAutoLinkOnlyFromSelNodes}
 					{divider}

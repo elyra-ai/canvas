@@ -278,11 +278,11 @@ export default class SvgCanvasNodes {
 	}
 
 	// Returns the Y offset for the port which references the nodeId passed in
-	// based on the precalculated Y coordinate of the port.
+	// based on the pre-calculated Y coordinate of the port.
 	getSupernodePortYOffset(nodeId, ports) {
 		if (ports) {
 			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
-			return supernodePort.cy - this.canvasLayout.supernodeTopAreaHeight;
+			return supernodePort.cy;
 		}
 		return 0;
 	}

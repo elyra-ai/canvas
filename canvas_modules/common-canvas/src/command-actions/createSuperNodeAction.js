@@ -15,7 +15,7 @@
  */
 
 import Action from "../command-stack/action.js";
-import { SUPER_NODE, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
+import { SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/command-actions/locales/en.json";
 
 export default class CreateSuperNodeAction extends Action {
@@ -134,6 +134,13 @@ export default class CreateSuperNodeAction extends Action {
 			"comments": this.subflowComments,
 			"links": this.subflowLinks
 		};
+
+		// If subflow pipeline being created will be for an external pipeline flow,
+		// set the pipeline's parentUrl property appropriately.
+		if (data.externalUrl) {
+			this.subPipelineInfo.parentUrl = data.externalUrl;
+		}
+
 		this.canvasInfoSubPipeline = this.objectModel.createCanvasInfoPipeline(this.subPipelineInfo);
 		this.subPipeline = this.objectModel.getAPIPipeline(this.canvasInfoSubPipeline.id);
 
@@ -163,7 +170,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Supernode
 		const supernodeTemplate = {
 			description: this.getLabel("supernode.template.description"),
-			image: USE_DEFAULT_ICON,
+			image: data.externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
 			label: this.getLabel("supernode.template.label"),
 			inputs: supernodeInputPorts,
 			outputs: supernodeOutputPorts,
@@ -172,6 +179,12 @@ export default class CreateSuperNodeAction extends Action {
 				pipeline_id_ref: this.canvasInfoSubPipeline.id
 			},
 		};
+
+		// If supernode being created is to reference an external pipeline flow set
+		// the node's subflow_ref.url appropriately.
+		if (data.externalUrl) {
+			supernodeTemplate.subflow_ref.url = data.externalUrl;
+		}
 
 		const supernodeData = {
 			editType: "createNode",
@@ -428,6 +441,11 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
 
+		if (this.data.externalUrl) {
+			this.objectModel.createExternalPipelineFlow(
+				this.data.externalUrl, this.data.externalPipelineFlowId, this.canvasInfoSubPipeline.id);
+		}
+
 		// Add subflow_node_ref to supernode ports.
 		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
 			const portId = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].portId;
@@ -467,7 +485,8 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(node, this.subflowPipelines[node.id]);
+				const subFlow = node.subflow_ref.url && !node.is_expanded ? [] : this.subflowPipelines[node.id];
+				this.apiPipeline.addSupernode(node, subFlow);
 			} else {
 				this.apiPipeline.addNode(node);
 			}
@@ -481,6 +500,11 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addLinks(this.supernodeInputLinks);
 		this.apiPipeline.addLinks(this.supernodeOutputLinks);
 		this.apiPipeline.addLinks(this.linksToDelete);
+
+		if (this.data.externalUrl) {
+			this.objectModel.removeExternalPipelineFlow(
+				this.data.externalPipelineFlowId, this.data.externalUrl);
+		}
 	}
 
 	redo() {
