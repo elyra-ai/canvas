@@ -238,7 +238,7 @@ describe("Test clipboard with detachable links enabled", function() {
 
 	it("Test cutting semi-detached and fully-detached links using keyboard", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -247,12 +247,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCut();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
-		// Revert back to otriginal canvas
+		// Revert back to original canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -261,12 +261,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCut();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -275,12 +275,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCut();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 	});
 
 	it("Test copying semi-detached and fully-detached link using keyboard", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -289,11 +289,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCopy();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -302,11 +302,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCopy();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -315,12 +315,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.shortcutKeysCopy();
 		cy.shortcutKeysPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 	});
 
 	it("Test cutting semi-detached and fully-detached links using toolbar", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -329,12 +329,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCut();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -343,12 +343,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCut();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -357,12 +357,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCut();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 	});
 
 	it("Test copying semi-detached and fully-detached link using toolbar", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -371,11 +371,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCopy();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -384,11 +384,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCopy();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -397,12 +397,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarCopy();
 		cy.clickToolbarPaste();
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 	});
 
 	it("Test cutting semi-detached and fully-detached links using context menu", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -415,12 +415,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -433,12 +433,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -451,12 +451,12 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 	});
 
 	it("Test copying semi-detached and fully-detached link using context menu", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("source-attached-dddddddddd");
@@ -469,11 +469,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -486,11 +486,11 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfLinks(13);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -503,13 +503,13 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfLinks(14);
 	});
 
 	it("Test cutting node and semi-detached link using context menu", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link and node
 		cy.clickLink("source-attached-dddddddddd");
@@ -523,15 +523,15 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(10); // Goes to 10 because one of the comment links is deleted during the 'cut'
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -545,15 +545,15 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(10); // Goes to 10 because one of the comment links is deleted during the 'cut'
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -567,15 +567,15 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(10); // Goes to 10 because one of the comment links is deleted during the 'cut'
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(2);
 	});
 
 	it("Test copying node and semi-detached link using context menu", function() {
 		// Validate there are 11 links on the canvas
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link and node
 		cy.clickLink("source-attached-dddddddddd");
@@ -589,14 +589,14 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
-		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
 		cy.clickLink("target-attached-dddddddddd");
@@ -610,14 +610,14 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
-		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfLinks(11);
-		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
@@ -631,8 +631,8 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12);
-		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(2);
 	});
 });

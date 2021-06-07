@@ -445,58 +445,58 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 	});
 
 	it("Test a detached link can be created and undone", function() {
-		cy.verifyNumberOfPortDataLinks(6);
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfLinks(13);
 
 		// Create detached node
 		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
-		cy.verifyNumberOfPortDataLinks(7); // One new data link should be created.
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfPortDataLinks(9); // One new data link should be created.
+		cy.verifyNumberOfLinks(14);
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(6); // The data link should have been removed.
-		cy.verifyNumberOfLinks(11);
+		cy.verifyNumberOfPortDataLinks(8); // The data link should have been removed.
+		cy.verifyNumberOfLinks(13);
 
 		// Redo
 		cy.clickToolbarRedo();
-		cy.verifyNumberOfPortDataLinks(7); // The data link should have been added back.
-		cy.verifyNumberOfLinks(12);
+		cy.verifyNumberOfPortDataLinks(9); // The data link should have been added back.
+		cy.verifyNumberOfLinks(14);
 	});
 
 	it("Test a node can be deleted and leave detached links behind", function() {
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Delete the supernode
 		cy.deleteNodeUsingContextMenu("Super node");
-		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfPortDataLinks(8); // Data links should remain
 		cy.verifyNumberOfCommentLinks(3); // Comment link should be deleted
 		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfPortDataLinks(8); // Data links should remain
 		cy.verifyNumberOfCommentLinks(4); // Comment link should be replaced
 		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
 
 		// Redo
 		cy.clickToolbarRedo();
-		cy.verifyNumberOfPortDataLinks(6); // Data links should remain
+		cy.verifyNumberOfPortDataLinks(8); // Data links should remain
 		cy.verifyNumberOfCommentLinks(3); // Comment link should be removed
 		cy.verifyNumberOfAssociationLinks(1); // Association links should be unaffected
 	});
 
 	it("Test selected detached links can be deleted", function() {
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Select and delete the fully detached link
 		cy.clickLink("total-detached-dddd-dddddddddd");
 		cy.clickToolbarDelete();
-		cy.verifyNumberOfPortDataLinks(5); // The data link should be removed
+		cy.verifyNumberOfPortDataLinks(7); // The data link should be removed
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
@@ -504,19 +504,25 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.clickLink("source-attached-dddddddddd");
 		cy.ctrlOrCmdClickLink("target-attached-dddddddddd");
 		cy.clickToolbarDelete();
-		cy.verifyNumberOfPortDataLinks(3); // The data links should be removed
+		cy.verifyNumberOfPortDataLinks(5); // The data links should be removed
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(5); // The data links should be added back
+		cy.verifyNumberOfPortDataLinks(7); // The data links should be added back
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(6); // The fully detached link should be added back
+		cy.verifyNumberOfPortDataLinks(8); // The fully detached link should be added back
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+
+		// Redo
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPortDataLinks(7); // The fully detached link should be added back
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
@@ -525,16 +531,10 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.verifyNumberOfPortDataLinks(5); // The fully detached link should be added back
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
-
-		// Redo
-		cy.clickToolbarRedo();
-		cy.verifyNumberOfPortDataLinks(3); // The fully detached link should be added back
-		cy.verifyNumberOfCommentLinks(4);
-		cy.verifyNumberOfAssociationLinks(1);
 	});
 
 	it("Test deleting nodes (linked with data links) leaves detached links behind", function() {
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
@@ -546,25 +546,25 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.ctrlOrCmdClickNode("Model Node");
 		cy.ctrlOrCmdClickNode("Binding (exit) node");
 		cy.clickToolbarDelete();
-		cy.verifyNumberOfPortDataLinks(6); // All data links should remain
+		cy.verifyNumberOfPortDataLinks(8); // All data links should remain
 		cy.verifyNumberOfCommentLinks(0); // All comment links should be removed
 		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Redo
 		cy.clickToolbarRedo();
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(0);
 		cy.verifyNumberOfAssociationLinks(0);
 	});
 
 	it("Test a combination of detached links, regular links and nodes can be deleted", function() {
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
@@ -574,26 +574,26 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.ctrlOrCmdClickLink("a81684aa-9b09-4620-aa59-54035a5de913");
 		cy.ctrlOrCmdClickNode("Model Node");
 		cy.clickToolbarDelete();
-		cy.verifyNumberOfPortDataLinks(4); // The data links should be removed
+		cy.verifyNumberOfPortDataLinks(6); // The data links should be removed
 		cy.verifyNumberOfCommentLinks(3); // Comment link to model node should be removed
 		cy.verifyNumberOfAssociationLinks(0); // Association link should be removed
 
 		// Undo
 		cy.clickToolbarUndo();
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfCommentLinks(4);
 		cy.verifyNumberOfAssociationLinks(1);
 
 		// Redo
 		cy.clickToolbarRedo();
-		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyNumberOfCommentLinks(3);
 		cy.verifyNumberOfAssociationLinks(0);
 	});
 
 	it("Test all objects including links are selected with SelectAll from keyboard", function() {
 		cy.shortcutKeysSelectAllCanvasObjects();
-		cy.verifyNumberOfSelectedObjects(18);
+		cy.verifyNumberOfSelectedObjects(21);
 
 		// Test delete key deletes all objects
 		cy.shortcutKeysDelete();
@@ -603,7 +603,7 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 	it("Test all objects including links are selected with SelectAll from context menu", function() {
 		cy.rightClickToDisplayContextMenu(400, 100);
 		cy.clickOptionFromContextMenu("Select All");
-		cy.verifyNumberOfSelectedObjects(18);
+		cy.verifyNumberOfSelectedObjects(21);
 
 		// Check delete in toolbar deletes all objects
 		cy.clickToolbarDelete();
