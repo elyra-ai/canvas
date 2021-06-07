@@ -30,8 +30,7 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
-
+	BINDING, SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
 	constructor(pipelineId, objectModel) {
@@ -411,18 +410,24 @@ export default class APIPipeline {
 		return isLinkNeededWithAutoNode;
 	}
 
+	// Returns true if the node passed in is an entry binding node. We detect
+	// this by checking that there are no inputs.
 	isEntryBindingNode(node) {
-		if (node.inputs && node.inputs.length > 0) {
-			return false;
+		if (node.type === BINDING && (!node.inputs || node.inputs.length === 0)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
+	// Returns true if the node passed in is an exit binding node. We detect
+	// this by checking that the node *has* inputs because with the 'alt_outputs'
+	// feature an exit binding node might have outputs since pipeline-in-handler
+	// will convert alt_outputs to outputs.
 	isExitBindingNode(node) {
-		if (node.outputs && node.outputs.length > 0) {
-			return false;
+		if (node.type === BINDING && node.inputs && node.inputs.length > 0) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	isNodeOverlappingOthers(node) {

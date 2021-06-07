@@ -107,7 +107,13 @@ export default class PipelineOutHandler {
 		}
 
 		if (ciNode.outputs) {
-			newNode.outputs = this.createOutputs(ciNode);
+			// If a binding node with outputs also has inputs, it must be an exit
+			// binding node so write the outputs to the alt_outputs property.
+			if (ciNode.type === BINDING && ciNode.inputs) {
+				newNode.alt_outputs = this.createOutputs(ciNode);
+			} else {
+				newNode.outputs = this.createOutputs(ciNode);
+			}
 		}
 
 		if (ciNode.parameters && !isEmpty(ciNode.parameters)) {
