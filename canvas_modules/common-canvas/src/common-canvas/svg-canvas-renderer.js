@@ -2345,6 +2345,12 @@ export default class SVGCanvasRenderer {
 		// Do not return from here if there are no nodes because there may
 		// be still nodes on display that need to be deleted.
 
+		// Set the port positions for all ports - these will be needed when displaying
+		// nodes and links. This needs to be done here because a resized supernode
+		// will cause its ports to move and resizing comments causes links to be
+		// redrawn which will need port positions to be set appropriately.
+		this.setPortPositionsAllNodes();
+
 		// For any of these activities we don't need to do anything to the nodes.
 		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
 			this.logger.logEndTimer("displayNodes " + this.getFlags());
@@ -2363,11 +2369,6 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayMovedNodes() {
-		// Set the port positions for all ports - these will be needed when displaying
-		// nodes and links. This needs to be done here because resizing the supernode
-		// will cause its ports to move.
-		this.setPortPositionsAllNodes();
-
 		const nodeGroupSel = this.getAllNodeGroupsSelection();
 
 		nodeGroupSel
@@ -2403,11 +2404,6 @@ export default class SVGCanvasRenderer {
 	// Displays all the nodes on the canvas either by creating new nodes,
 	// updating existing nodes or removing unwanted nodes.
 	displayAllNodes() {
-		// Set the port positions for all ports - these will be needed when displaying
-		// nodes and links. This needs to be done here because a resized supernode
-		// will cause its ports to move.
-		this.setPortPositionsAllNodes();
-
 		this.getAllNodeGroupsSelection()
 			.data(this.activePipeline.nodes, (d) => d.id)
 			.join(
@@ -5386,7 +5382,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("focus", function(d3Event, d) {
 				that.logger.log("Text area - focus");
-				data.autoSizeCallback(this, foreignObject, data.id, data.autoSizeCallback);
+				data.autoSizeCallback(this, foreignObject, data);
 			})
 			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
