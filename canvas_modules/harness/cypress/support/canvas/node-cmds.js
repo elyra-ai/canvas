@@ -43,7 +43,7 @@ Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 
 Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.find(".d3-node-label-edit-icon-group")
+		.find(".d3-label-edit-icon-group")
 		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
 		.click({ force: true });
 });
@@ -195,7 +195,6 @@ Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 		.trigger("mouseenter");
 });
 
-
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
 		.trigger("mouseenter", { force: true });
@@ -215,6 +214,28 @@ Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });
 		});
+});
+
+Cypress.Commands.add("hoverOverLabelForNodeDec", (nodeName, decId) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "']")
+		.trigger("mouseenter");
+});
+
+Cypress.Commands.add("clickEditIconForNodeDecLabel", (nodeName) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-label-edit-icon-group")
+		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		.click({ force: true });
+});
+
+Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {

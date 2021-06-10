@@ -585,7 +585,7 @@ Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-group")
 		.should("have.length", noOfDecorators);
 });
@@ -603,22 +603,31 @@ Cypress.Commands.add("verifyNumberOfPathDecoratorsOnNode", (nodeName, noOfDecora
 });
 
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-label")
 		.should("have.length", noOfDecorators);
 });
 
 Cypress.Commands.add("verifyNumberOfPathDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-path")
 		.should("have.length", noOfDecorators);
 });
 
-Cypress.Commands.add("verifyLabelDecoration", (nodeName, decoratorId, label, xPos, yPos) => {
+Cypress.Commands.add("verifyLabelDecorationOnNode", (nodeName, decoratorId, label, xPos, yPos) => {
 	cy.verifyDecorationTransformOnNode(nodeName, decoratorId, xPos, yPos)
 		.then((labelDecorator) => {
 			cy.wrap(labelDecorator)
 				.find(".d3-node-dec-label")
+				.should("have.text", label);
+		});
+});
+
+Cypress.Commands.add("verifyLabelDecorationOnLink", (linkLabel, decoratorId, label, xPos, yPos) => {
+	cy.verifyDecorationTransformOnLink(linkLabel, decoratorId, xPos, yPos)
+		.then((labelDecorator) => {
+			cy.wrap(labelDecorator)
+				.find(".d3-link-dec-label")
 				.should("have.text", label);
 		});
 });
@@ -636,7 +645,7 @@ Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, 
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, xPos, yPos) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-group")
 		.then((decorators) => {
 			const decorator = decorators.filter((idx) =>
@@ -664,7 +673,7 @@ Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path)
 });
 
 Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}] .d3-link-dec-path`)
 		.then((decPaths) => {
 			cy.log("d = " + decPaths[0].getAttribute("d"));
