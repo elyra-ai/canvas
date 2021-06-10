@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
@@ -49,6 +50,8 @@ export default class expandSuperNodeInPlaceAction extends Action {
 
 	// Standard methods
 	do() {
+		// Make sure pipeline is loaded in case it is part of an external pipeline flow.
+		this.objectModel.ensurePipelineIsLoaded(this.data);
 		this.apiPipeline.expandSuperNodeInPlace(this.data.id, this.newNodePositions);
 	}
 

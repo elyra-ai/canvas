@@ -24,6 +24,8 @@ export default class DisplaySubPipeline extends Action {
 
 	// Standard methods
 	do() {
+		// Make sure pipeline is loaded in case it is part of an external pipeline flow.
+		this.objectModel.ensurePipelineIsLoaded(this.data);
 		this.objectModel.addNewBreadcrumb(this.data.pipelineInfo);
 	}
 

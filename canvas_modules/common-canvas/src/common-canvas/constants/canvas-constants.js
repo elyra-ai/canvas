@@ -129,6 +129,7 @@ _defineConstant("EXECUTION_NODE", "execution_node");
 _defineConstant("SAVED_NODES_CATEGORY_ID", "savedNodes");
 
 _defineConstant("USE_DEFAULT_ICON", "useDefaultIcon");
+_defineConstant("USE_DEFAULT_EXT_ICON", "useDefaultExtIcon");
 
 _defineConstant("CONTEXT_MENU_BUTTON", 2);
 

@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+Cypress.Commands.add("getExternalPipelineFlows", () => {
+	cy.document().then((doc) => {
+		const extPFlows = doc.canvasController.getObjectModel().getExternalPipelineFlows();
+		return extPFlows;
+	});
+});
+
 Cypress.Commands.add("getCanvasData", () => {
 	cy.document().then((doc) => {
 		const canvasData = doc.canvasController.getCanvasInfo();

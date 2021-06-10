@@ -381,6 +381,14 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 		});
 });
 
+Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".d3-node-ellipsis-group")
+		.eq(0)
+		.click();
+});
+
+
 Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
 		.find(".svg-area")

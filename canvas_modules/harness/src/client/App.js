@@ -116,6 +116,8 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
+import EXTERNAL_SUB_FLOW_CANVAS from "../../test_resources/diagrams/externalSubFlowCanvas.json";
+
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
 import justify32 from "../graphics/justify_32.svg";
@@ -191,6 +193,7 @@ class App extends React.Component {
 			selectedHighlightNodeOnNewLinkDrag: false,
 			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
+			selectedExternalPipelineFlows: true,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -342,6 +345,11 @@ class App extends React.Component {
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+
+		// Array to handle external flows. It is initialized to contain a sub-flow
+		// used by the test flow: externalMainCanvas.json
+		this.externalPipelineFlows = [];
+		this.externalPipelineFlows["all-types-external-pipeline-flow-url"] = EXTERNAL_SUB_FLOW_CANVAS;
 
 		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
@@ -1105,7 +1113,6 @@ class App extends React.Component {
 		}
 	}
 
-	// common-canvas
 	clickActionHandler(source) {
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
@@ -1231,10 +1238,67 @@ class App extends React.Component {
 
 	beforeEditActionHandler(cmndData, command) {
 		const data = cmndData;
+
+		switch (data.editType) {
+
+		case "editComment": {
 		// Uncomment to play with setting the command data.
-		// if (data && data.editType === "editComment") {
 		// 	data.content += " -- Added text";
-		// }
+			break;
+		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			// This code when commented out, simulates some asynchronous activity by
+			// the host app using setTimeout.
+			// setTimeout(function(inData, app) {
+			// 	inData.externalUrl = "external-flow-url-" + Date.now();
+			// 	inData.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+			// 	app.canvasController.editAction(inData);
+			// }, 2000, data, this);
+			// data = null;
+
+			data.externalUrl = "external-flow-url-" + Date.now();
+			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+			break;
+		}
+		case "expandSuperNodeInPlace":
+		case "displaySubPipeline":
+		case "convertSuperNodeExternalToLocal": {
+			if (data.externalPipelineFlowLoad) {
+				// This code when commented out, simulates some asynchronous activity by
+				// the host app using setTimeout.
+				// setTimeout(function(inData, app) {
+				// 	inData.externalPipelineFlow = app.externalPipelineFlows[inData.externalUrl];
+				// 	app.canvasController.editAction(inData);
+				// }, 2000, data, this);
+				// data = null;
+
+				data.externalPipelineFlow = this.externalPipelineFlows[data.externalUrl];
+			}
+			break;
+		}
+		case "deleteSelectedObjects": {
+			data.selectedObjects.forEach((so) => {
+				if (so.type === "super_node" && so.subflow_ref.url) {
+					// App needs to make decision here if this command deletes the
+					// external pipeline flow in the repository.
+					window.alert("Delete external pipeline flow: " + so.subflow_ref.url);
+				}
+			});
+			break;
+		}
+		case "undo": {
+			if (command && command.data &&
+					command.data.editType === "convertSuperNodeExternalToLocal") {
+				// App needs to make decision here if this command deletes the
+				// external pipeline flow in the repository.
+				window.alert("Reinstate external pipeline flow.");
+			}
+			break;
+		}
+		default:
+		}
+
 		return data;
 	}
 
@@ -1245,11 +1309,14 @@ class App extends React.Component {
 			canvasController = this.canvasController2;
 		}
 
-		if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
+		switch (data.editType) {
+		case "displaySubPipeline":
+		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
-
-		} else if (data.editType === "createTestHarnessNode") {
+			break;
+		}
+		case "createTestHarnessNode": {
 			const nodeTemplate = canvasController.getPaletteNode(data.op);
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1265,8 +1332,9 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "createFromExternalObject") {
+			break;
+		}
+		case "createFromExternalObject": {
 			const nodeTemplate = canvasController.getPaletteNode("variablefile");
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1282,16 +1350,30 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "editNode") {
+			break;
+		}
+		case "editNode": {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
-
-		} else if (data.editType === "runit") {
+			break;
+		}
+		case "runit": {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
+			break;
 		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			this.externalPipelineFlows[data.externalUrl] =
+				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		default: {
+			// Do nothing
+		}
+		}
+
 		this.log("editActionHandler(): " + data.editType, data);
 	}
 
@@ -1801,6 +1883,7 @@ class App extends React.Component {
 			enableParentClass: parentClass,
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
 			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
+			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
