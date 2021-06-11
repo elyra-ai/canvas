@@ -1339,6 +1339,15 @@ export default class CanvasController {
 		return false;
 	}
 
+	displaySubPipeline(node) {
+		const data = { editType: "displaySubPipeline", targetObject: node, editSource: "canvas" };
+		this.editActionHandler(data);
+	}
+
+	displayPreviousPipeline() {
+		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
+		this.editActionHandler(data);
+	}
 
 	zoomIn() {
 		if (this.commonCanvas) {
@@ -1425,6 +1434,10 @@ export default class CanvasController {
 	clearSavedZoomValues() {
 		this.objectModel.clearSavedZoomValues();
 	}
+
+	// ---------------------------------------------------------------------------
+	// Utility/helper methods
+	// ---------------------------------------------------------------------------
 
 	getGhostNode(nodeTemplate) {
 		if (this.commonCanvas) {
@@ -1667,18 +1680,6 @@ export default class CanvasController {
 		return false;
 	}
 
-
-	// Opens a full screen display of a sub-flow identified by the pipelineInfo
-	// passed in.
-	displaySubPipeline(d) {
-		const data = { editType: "displaySubPipeline", targetObject: d, editSource: "canvas" };
-		this.editActionHandler(data);
-	}
-
-	displayPreviousPipeline() {
-		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
-		this.editActionHandler(data);
-	}
 
 	getLabel(labelId) {
 		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
