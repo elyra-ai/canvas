@@ -357,7 +357,8 @@ export default class ObjectModel {
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_CANVAS_INFO",
 			canvasInfo: canvasInfo,
-			currentCanvasInfo: this.getCanvasInfo() });
+			canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo)
+		});
 	}
 
 	// Ensures the pipelines being handled is loaded in memory which might not
@@ -889,7 +890,7 @@ export default class ObjectModel {
 		}
 		const canvasInfo = Object.assign({}, inCanvasInfo);
 		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
-		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, currentCanvasInfo: this.getCanvasInfo() });
+		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo) });
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -998,6 +999,12 @@ export default class ObjectModel {
 
 	getCanvasInfo() {
 		return this.store.getCanvasInfo();
+	}
+
+	// Returns true if the ID of the canvasInfo passed in is different to the
+	// current canvasInfo ID.
+	hasCanvasInfoIdChanged(canvasInfo) {
+		return canvasInfo.id !== this.getCanvasInfo().id;
 	}
 
 	setSubdueStyle(newStyle) {

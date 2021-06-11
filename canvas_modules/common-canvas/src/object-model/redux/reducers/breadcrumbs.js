@@ -22,8 +22,7 @@ export default (state = [], action) => {
 		// we're given a completely new canvas or the current breadcrumb does not
 		// reference a pipeline Id in the incoming pipelineFlow, which might happen
 		// if the pipeline has been removed.
-		if ((action.canvasInfo && action.currentCanvasInfo &&
-					action.canvasInfo.id !== action.currentCanvasInfo.id) ||
+		if (action.canvasInfoIdChanged ||
 				!isCurrentBreadcrumbInPipelineFlow(state, action.canvasInfo)) {
 			return [{ pipelineId: action.canvasInfo.primary_pipeline, pipelineFlowId: action.canvasInfo.id }];
 		}
