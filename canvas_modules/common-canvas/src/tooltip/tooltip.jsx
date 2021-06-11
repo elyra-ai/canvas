@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class ToolTip extends React.Component {
 
 	setTooltipVisible(visible) {
 		// clear the display timer if set
-		if (this.props.disable || (!visible && this.pendingTooltip)) {
+		if (!this.showTooltip() || (!visible && this.pendingTooltip)) {
 			clearTimeout(this.pendingTooltip);
 			this.pendingTooltip = null;
 			this.setState({
@@ -58,7 +58,7 @@ class ToolTip extends React.Component {
 		}
 
 
-		if (!this.props.disable) {
+		if (this.showTooltip()) {
 			const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
 			this.pendingTooltip = null;
 			this.setState({
@@ -101,9 +101,39 @@ class ToolTip extends React.Component {
 		return newDirection;
 	}
 
+	showTooltip() {
+		const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
+		const showToolTip = (
+			// show tooltip if not disabled and showToolTipIfTruncated is false
+			(!this.props.disable && !this.props.showToolTipIfTruncated) ||
+			// show tooltip if not disabled and showToolTipIfTruncated is true and string is truncated
+			(!this.props.disable && this.props.showToolTipIfTruncated && !canDisplayFullText));
+		return showToolTip;
+	}
+
+	// Return true if the string can be displayed in the available space
+	// Return false if the string is truncated and ellipsis is shown on the UI
+	// (offsetWidth) is a measurement in pixels of the element's CSS width, including any borders, padding, and vertical scrollbars
+	// (scrollWidth) value is equal to the minimum width the element would require
+	//  in order to fit all the content in the viewport without using a horizontal scrollbar
+	canDisplayFullText(elem) {
+		if (elem) {
+			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
+			const displayWidth = elem.offsetWidth;
+			let fullWidth = firstChildWidth;
+			if (firstChildWidth === 0) {
+				fullWidth = elem.scrollWidth;
+			}
+			const canDisplayFullText = fullWidth <= displayWidth;
+			return canDisplayFullText;
+		}
+		return false; // Show tooltip if we cannot read the width (Canvas objects)
+	}
+
 	showTooltipWithDelay() {
+
 		// set a delay on displaying the tooltip
-		if (!this.pendingTooltip && !this.props.disable) {
+		if (!this.pendingTooltip && this.showTooltip()) {
 			const that = this;
 			this.pendingTooltip = setTimeout(function() {
 				that.setTooltipVisible(true);
@@ -281,7 +311,14 @@ class ToolTip extends React.Component {
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
 
-			triggerContent = (<div data-id={this.props.id + "-trigger"} className="tooltip-trigger" onMouseOver={mouseover} onMouseLeave={mouseleave} onMouseDown={mousedown}>
+			triggerContent = (<div
+				data-id={this.props.id + "-trigger"}
+				className="tooltip-trigger"
+				onMouseOver={mouseover}
+				onMouseLeave={mouseleave}
+				onMouseDown={mousedown}
+				ref={(ref) => (this.triggerRef = ref)}
+			>
 				{this.props.children}
 			</div>);
 		}
@@ -330,13 +367,15 @@ ToolTip.propTypes = {
 	id: PropTypes.string.isRequired,
 	className: PropTypes.string,
 	mousePos: PropTypes.object,
-	disable: PropTypes.bool,
+	disable: PropTypes.bool, // Tooltip will not show if disabled
+	showToolTipIfTruncated: PropTypes.bool, // Set to true to only display tooltip if full text does not fit in displayable width
 	delay: PropTypes.number
 };
 
 ToolTip.defaultProps = {
 	delay: 1000,
-	direction: "bottom"
+	direction: "bottom",
+	showToolTipIfTruncated: false // False will always show Tooltip even when whole word can be displayed
 };
 
 export default ToolTip;

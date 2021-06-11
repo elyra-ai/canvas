@@ -139,7 +139,7 @@ class SummaryPanel extends React.Component {
 										style={{ width: colWidth }}
 										onMouseMove={this._onMouseMove.bind(this)}
 									>
-										<Tooltip id={uuid4()} tip={contentValue} mousePos={this.state.mousePos}>
+										<Tooltip id={uuid4()} tip={contentValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
 											<span id={"span_" + uuid4()}>{contentValue}</span>
 										</Tooltip>
 									</td>);
@@ -149,7 +149,7 @@ class SummaryPanel extends React.Component {
 						const displayValue = this._getSummaryDisplayValue(rowValue, propertyId);
 						rowData.push(
 							<td key={"summary-table-row-data-" + rowIdx} className={"properties-summary-row-data "}>
-								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos}>
+								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
 									<span id={"span_" + uuid4()}>{displayValue}</span>
 								</Tooltip>
 							</td>);
