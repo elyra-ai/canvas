@@ -1238,6 +1238,7 @@ class App extends React.Component {
 
 	beforeEditActionHandler(cmndData, command) {
 		const data = cmndData;
+		const testAsyncExecution = false; // Set to true to test asynchronous activity
 
 		switch (data.editType) {
 
@@ -1248,14 +1249,15 @@ class App extends React.Component {
 		}
 		case "createSuperNodeExternal":
 		case "convertSuperNodeLocalToExternal": {
-			// This code when commented out, simulates some asynchronous activity by
-			// the host app using setTimeout.
-			// setTimeout(function(inData, app) {
-			// 	inData.externalUrl = "external-flow-url-" + Date.now();
-			// 	inData.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
-			// 	app.canvasController.editAction(inData);
-			// }, 2000, data, this);
-			// data = null;
+			// This code simulates some asynchronous activity by the host app.
+			if (testAsyncExecution) {
+				setTimeout(function(inData, app) {
+					inData.externalUrl = "external-flow-url-" + Date.now();
+					inData.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+					app.canvasController.editAction(inData);
+				}, 2000, data, this);
+				return null;
+			}
 
 			data.externalUrl = "external-flow-url-" + Date.now();
 			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
@@ -1265,13 +1267,14 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
-				// This code when commented out, simulates some asynchronous activity by
-				// the host app using setTimeout.
-				// setTimeout(function(inData, app) {
-				// 	inData.externalPipelineFlow = app.externalPipelineFlows[inData.externalUrl];
-				// 	app.canvasController.editAction(inData);
-				// }, 2000, data, this);
-				// data = null;
+				// This code simulates some asynchronous activity by the host app.
+				if (testAsyncExecution) {
+					setTimeout(function(inData, app) {
+						inData.externalPipelineFlow = app.externalPipelineFlows[inData.externalUrl];
+						app.canvasController.editAction(inData);
+					}, 2000, data, this);
+					return null;
+				}
 
 				data.externalPipelineFlow = this.externalPipelineFlows[data.externalUrl];
 			}
