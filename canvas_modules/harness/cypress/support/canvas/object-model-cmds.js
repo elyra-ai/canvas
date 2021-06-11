@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+Cypress.Commands.add("getExternalPipelineFlows", () => {
+	cy.document().then((doc) => {
+		const extPFlows = doc.canvasController.getObjectModel().getExternalPipelineFlows();
+		return extPFlows;
+	});
+});
+
 Cypress.Commands.add("getCanvasData", () => {
 	cy.document().then((doc) => {
 		const canvasData = doc.canvasController.getCanvasInfo();
@@ -191,4 +198,22 @@ Cypress.Commands.add("getObjectCountFromObjectModel", () => {
 		.then((pipeline) =>
 			(pipeline.nodes.length + pipeline.comments.length + pipeline.links.length)
 		);
+});
+
+Cypress.Commands.add("setNodeDecorations", (nodeName, decorations) => {
+	cy.document().then((doc) => {
+		cy.getNodeIdForLabel(nodeName)
+			.then((nodeId) => {
+				doc.canvasController.setNodeDecorations(nodeId, decorations);
+			});
+	});
+});
+
+Cypress.Commands.add("setLinkDecorations", (linkName, decorations) => {
+	cy.document().then((doc) => {
+		cy.getLinkIdForLabel(linkName)
+			.then((linkId) => {
+				doc.canvasController.setLinkDecorations(linkId, decorations);
+			});
+	});
 });

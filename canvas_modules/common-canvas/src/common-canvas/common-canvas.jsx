@@ -23,7 +23,7 @@ import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
-import Palette from "../palette/palette.jsx";
+import PaletteDialog from "../palette/palette-dialog.jsx";
 import PaletteFlyout from "../palette/palette-flyout.jsx";
 import CommonCanvasToolbar from "./common-canvas-toolbar.jsx";
 import NotificationPanel from "../notification-panel/notification-panel.jsx";
@@ -366,7 +366,7 @@ class CommonCanvas extends React.Component {
 					paletteWidth={this.state.paletteWidth}
 				/>);
 			} else if (config.enablePaletteLayout === "Modal") {
-				palette = (<Palette
+				palette = (<PaletteDialog
 					paletteJSON={this.canvasController.getPaletteData()}
 					showPalette={this.state.isPaletteOpen}
 					parentDivId={this.itemsContainerDivId}

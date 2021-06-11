@@ -18,6 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
+import get from "lodash/get";
 import { ASSOCIATION_LINK, NODE_LINK } from "../common-canvas/constants/canvas-constants.js";
 
 
@@ -622,12 +623,12 @@ export default class CanvasUtils {
 		return exists;
 	}
 
-	// Returns an array of info objects that describe how links need to be updated
-	// during attach actions. The array is based on the array of
-	// detached links passed in and has one entry for each detached link that can
-	// be added to the node passed in. The output object contains the array of
-	// new links and an array of the original links. allDataLinks is the array of
-	// all node-node data links on the canvas.
+	// Returns an object containing two arrays: old links and new links. There is
+	// one new link in the new links array for each old link in the old links
+	// array. The new links have their properties adjusted so they are attached
+	// to the first found output or input port, that is not maxed out with respect
+	// to its maximum cardinality, of the provided node. The allDataLinks
+	// parameter is the array of all node-node data links on the canvas.
 	static getDetachedLinksToUpdate(node, detachedLinks, allNodeDataLinks) {
 		const newLinks = [];
 		const oldLinks = [];
@@ -636,7 +637,7 @@ export default class CanvasUtils {
 				let connected = false;
 				node.outputs.forEach((output) => {
 					if (connected === false &&
-							this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, allNodeDataLinks.concat(newLinks))) {
+							this.isSrcConnectionAllowedWithDetachedLinks(output.id, node, this.getReplacedLinks(allNodeDataLinks, newLinks))) {
 						const newLink = Object.assign({}, link, { srcNodeId: node.id, srcNodePortId: output.id });
 						delete newLink.srcPos;
 						newLinks.push(newLink);
@@ -649,7 +650,7 @@ export default class CanvasUtils {
 				let connected = false;
 				node.inputs.forEach((input) => {
 					if (connected === false &&
-							this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, allNodeDataLinks.concat(newLinks))) {
+							this.isTrgConnectionAllowedWithDetachedLinks(input.id, node, this.getReplacedLinks(allNodeDataLinks, newLinks))) {
 						const newLink = Object.assign({}, link, { trgNodeId: node.id, trgNodePortId: input.id });
 						delete newLink.trgPos;
 						newLinks.push(newLink);
@@ -662,6 +663,14 @@ export default class CanvasUtils {
 		return { newLinks, oldLinks };
 	}
 
+	// Returns an array which is a copy of the allNodeDataLinks array but with
+	// any elements replaced from the newLinks array if those elements have the same ID.
+	static getReplacedLinks(allNodeDataLinks, newLinks) {
+		return allNodeDataLinks.map((link) => {
+			const index = newLinks.findIndex((nl) => nl.id === link.id);
+			return index > -1 ? newLinks[index] : link;
+		});
+	}
 
 	// Returns an array of selected object IDs for nodes, comments and links
 	// that are within the region provided. Links are only included if
@@ -816,4 +825,35 @@ export default class CanvasUtils {
 		return (node.outputs && node.outputs.length > 0 ? node.outputs[0].id : null);
 	}
 
+	// Returns a full style string value that can be applied as an in-line style to
+	// the representation of the object in the DOM. The style is based either
+	// on the 'style' or 'style_temp' property of the object.
+	// Parameters:
+	// d - The object
+	// part - A string of the part of the object to be styled. eg 'body' or 'image'
+	//        This is dependent on the style spec in eiether the 'style' or
+	//        'temp_style' property.
+	// type = Either 'hover' or 'default'
+	static getObjectStyle(d, part, type) {
+		if (!d.style && !d.style_temp) {
+			return null;
+		}
+		let style = null;
+
+		if (type === "hover") {
+			style = this.getStyleValue(d, part, "default") + ";" + this.getStyleValue(d, part, "hover");
+
+		} else if (type === "default") {
+			style = this.getStyleValue(d, part, "default");
+		}
+		return style;
+	}
+
+	static getStyleValue(d, part, type) {
+		const style = get(d, `style_temp.${part}.${type}`, null);
+		if (style !== null) {
+			return style;
+		}
+		return get(d, `style.${part}.${type}`, null);
+	}
 }

@@ -23,6 +23,7 @@ import { formatMessage } from "./../../util/property-utils";
 import ValidationMessage from "./../../components/validation-message";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants";
 import * as ControlUtils from "./../../util/control-utils";
+import { isEmpty } from "lodash";
 
 class StructurelisteditorControl extends AbstractTable {
 
@@ -72,6 +73,9 @@ class StructurelisteditorControl extends AbstractTable {
 						setScrollToRow={this.setScrollToRow}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						disabled={this.props.state === STATES.DISABLED}
+						isEmptyTable={isEmpty(this.props.value)}
+						emptyTableButtonLabel={tableButtonConfig.addButtonLabel}
+						emptyTableButtonClickHandler={this.addRow}
 					/>
 				</div>
 				<div>

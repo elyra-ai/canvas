@@ -21,8 +21,9 @@ import { Button } from "carbon-components-react";
 import { formatMessage } from "./../../util/property-utils";
 import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons-react";
 import classNames from "classnames";
-
+import EmptyTable from "./../empty-table";
 import { MESSAGE_KEYS } from "./../../constants/constants";
+import { has } from "lodash";
 
 class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -33,6 +34,42 @@ class MoveableTableRows extends React.Component {
 		this.upMoveRow = this.upMoveRow.bind(this);
 		this.downMoveRow = this.downMoveRow.bind(this);
 		this.bottomMoveRow = this.bottomMoveRow.bind(this);
+		this.getMoveableTableRows = this.getMoveableTableRows.bind(this);
+	}
+
+	getMoveableTableRows() {
+		var moveCol = null;
+		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
+			const moveImages = this.getTableRowMoveImages();
+			moveCol = (
+				<div
+					className="properties-mr-button-container"
+				>
+					{moveImages}
+				</div>
+			);
+		}
+
+		// Added role presentation to fix a11y violation - no headers in the table
+		var content = (<table role="presentation" className="properties-mr-table-container">
+			<tbody>
+				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
+					<td>
+						{this.props.tableContainer}
+					</td>
+					<td>
+						{moveCol}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		);
+
+		return (
+			<div>
+				{content}
+			</div>
+		);
 	}
 
 	// enabled the move up and down arrows based on which row is selected
@@ -196,38 +233,17 @@ class MoveableTableRows extends React.Component {
 	}
 
 	render() {
-
-		var moveCol = null;
-		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
-			const moveImages = this.getTableRowMoveImages();
-			moveCol = (
-				<div
-					className="properties-mr-button-container"
-				>
-					{moveImages}
-				</div>
-			);
-		}
-
-		// Added role presentation to fix a11y violation - no headers in the table
-		var content = (<table role="presentation" className="properties-mr-table-container">
-			<tbody>
-				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
-					<td>
-						{this.props.tableContainer}
-					</td>
-					<td>
-						{moveCol}
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		);
-
+		const addRemoveRowsEnabled = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 		return (
-			<div>
-				{content}
-			</div>
+			this.props.isEmptyTable && addRemoveRowsEnabled
+				? <EmptyTable
+					control={this.props.control}
+					controller={this.props.controller}
+					emptyTableButtonLabel={this.props.emptyTableButtonLabel}
+					emptyTableButtonClickHandler={this.props.emptyTableButtonClickHandler}
+					disabled={this.props.disabled}
+				/>
+				: this.getMoveableTableRows()
 		);
 	}
 }
@@ -240,6 +256,9 @@ MoveableTableRows.propTypes = {
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,
 	disabled: PropTypes.bool,
+	isEmptyTable: PropTypes.bool.isRequired,
+	emptyTableButtonLabel: PropTypes.string,
+	emptyTableButtonClickHandler: PropTypes.func,
 	disableRowMoveButtons: PropTypes.bool // set by redux
 };
 

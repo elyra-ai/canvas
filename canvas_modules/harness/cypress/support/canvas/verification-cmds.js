@@ -18,9 +18,11 @@
 import * as testUtils from "../../utils/eventlog-utils";
 import { extractTransformValues } from "./utils-cmds.js";
 
-const dataLinkSelector = ".d3-link-group.d3-data-link .d3-link-line";
-const commentLinkSelector = ".d3-link-group.d3-comment-link .d3-link-line";
-const assocLinkSelector = ".d3-link-group.d3-object-link .d3-link-line";
+const mainCanvasSelector = "#canvas-div-0 > #d3-svg-canvas-div-0 > .svg-area > .d3-canvas-group > .d3-nodes-links-group > ";
+const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-link-line";
+const commentLinkSelector = mainCanvasSelector + ".d3-link-group.d3-comment-link .d3-link-line";
+const assocLinkSelector = mainCanvasSelector + ".d3-link-group.d3-object-link .d3-link-line";
+const nodeImageSelector = mainCanvasSelector + "g > .d3-node-image";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
@@ -124,8 +126,7 @@ Cypress.Commands.add("verifyNodeIsSelected", (nodeName) => {
 	// Verify node is selected on document
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeOutlineSelector =
-			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			const nodeOutlineSelector = getNodeSelectionOutlineSelector(node[0]);
 			cy.get(nodeOutlineSelector)
 				.should("have.attr", "data-selected", "yes");
 		});
@@ -138,8 +139,7 @@ Cypress.Commands.add("verifyCommentIsSelected", (commentText) => {
 	// Verify comment is selected on document
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const commentOutlineSelector =
-			"[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			const commentOutlineSelector = getCommentSelectionOutlineSelector(comment[0]);
 			cy.get(commentOutlineSelector)
 				.should("have.attr", "data-selected", "yes");
 		});
@@ -152,8 +152,7 @@ Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 	// Verify node is not selected on document
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeOutlineSelector =
-			"[data-id='" + node[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			const nodeOutlineSelector = getNodeSelectionOutlineSelector(node[0]);
 			cy.get(nodeOutlineSelector)
 				.should("have.attr", "data-selected", "no");
 		});
@@ -165,8 +164,7 @@ Cypress.Commands.add("verifyNodeIsNotSelected", (nodeName) => {
 Cypress.Commands.add("verifyNodeImage", (nodeLabel, value) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
-			const nodeImageSelector =
-				"[data-id='" + node[0].getAttribute("data-id").replace("grp", "image") + "']";
+			const nodeImageSelector = getNodeImageSelector(node[0]);
 			cy.get(nodeImageSelector)
 				.should("have.attr", "data-image", value);
 		});
@@ -176,8 +174,7 @@ Cypress.Commands.add("verifyCommentIsNotSelected", (commentText) => {
 	// Verify comment is not selected on document
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const commentOutlineSelector =
-			"[data-id='" + comment[0].getAttribute("data-id").replace("grp", "sel_outline") + "']";
+			const commentOutlineSelector = getCommentSelectionOutlineSelector(comment[0]);
 			cy.get(commentOutlineSelector)
 				.should("have.attr", "data-selected", "no");
 		});
@@ -241,7 +238,9 @@ Cypress.Commands.add("verifyNodeElementLocation", (nodeName, nodeElement, xPos, 
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			const nodeElementSelector = nodeElement === "label"
+				? getNodeLabelSelector(node[0])
+				: getNodeImageSelector(node[0]);
 			cy.get(nodeElementSelector)
 				.should("have.attr", "x", String(xPos))
 				.and("have.attr", "y", String(yPos));
@@ -252,7 +251,9 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 	// nodeElement can be either "image" or "label"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeElementSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", nodeElement) + "']";
+			const nodeElementSelector = nodeElement === "label"
+				? getNodeLabelSelector(node[0])
+				: getNodeImageSelector(node[0]);
 			cy.get(nodeElementSelector)
 				.invoke("css", "width")
 				.then((cssValue) => {
@@ -264,9 +265,7 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-node-image").length) {
-			cy.get("#canvas-div-0")
-				.get(".svg-area")
-				.find(".d3-node-image")
+			cy.get(nodeImageSelector)
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
@@ -472,6 +471,19 @@ Cypress.Commands.add("verifyNumberOfPipelinesInExtraCanvas", (noOfPipelines) => 
 	});
 });
 
+Cypress.Commands.add("verifyNumberOfExternalPipelines", (noOfPipelines) => {
+	cy.getCanvasData().then((canvasData) => {
+		const externalPipelines = canvasData.pipelines.filter((p) => p.parentUrl);
+		expect(externalPipelines.length).to.equal(noOfPipelines);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfExternalPipelineFlows", (noOfExtPipelineFlows) => {
+	cy.getExternalPipelineFlows().then((extPFlows) => {
+		expect(extPFlows.length).to.equal(noOfExtPipelineFlows);
+	});
+});
+
 Cypress.Commands.add("verifyNumberOfNodesInPipeline", (noOfNodes) => {
 	// verify the number of nodes in the internal object model
 	cy.getPipeline().then((pipeline) => {
@@ -573,7 +585,7 @@ Cypress.Commands.add("verifyNumberOfDecoratorsOnNode", (nodeName, noOfDecorators
 });
 
 Cypress.Commands.add("verifyNumberOfDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-group")
 		.should("have.length", noOfDecorators);
 });
@@ -591,22 +603,31 @@ Cypress.Commands.add("verifyNumberOfPathDecoratorsOnNode", (nodeName, noOfDecora
 });
 
 Cypress.Commands.add("verifyNumberOfLabelDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-label")
 		.should("have.length", noOfDecorators);
 });
 
 Cypress.Commands.add("verifyNumberOfPathDecoratorsOnLink", (linkName, noOfDecorators) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-path")
 		.should("have.length", noOfDecorators);
 });
 
-Cypress.Commands.add("verifyLabelDecoration", (nodeName, decoratorId, label, xPos, yPos) => {
+Cypress.Commands.add("verifyLabelDecorationOnNode", (nodeName, decoratorId, label, xPos, yPos) => {
 	cy.verifyDecorationTransformOnNode(nodeName, decoratorId, xPos, yPos)
 		.then((labelDecorator) => {
 			cy.wrap(labelDecorator)
 				.find(".d3-node-dec-label")
+				.should("have.text", label);
+		});
+});
+
+Cypress.Commands.add("verifyLabelDecorationOnLink", (linkLabel, decoratorId, label, xPos, yPos) => {
+	cy.verifyDecorationTransformOnLink(linkLabel, decoratorId, xPos, yPos)
+		.then((labelDecorator) => {
+			cy.wrap(labelDecorator)
+				.find(".d3-link-dec-label")
 				.should("have.text", label);
 		});
 });
@@ -624,7 +645,7 @@ Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, 
 });
 
 Cypress.Commands.add("verifyDecorationTransformOnLink", (linkName, decoratorId, xPos, yPos) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(".d3-link-dec-group")
 		.then((decorators) => {
 			const decorator = decorators.filter((idx) =>
@@ -652,7 +673,7 @@ Cypress.Commands.add("verifyDecorationPathOnNode", (nodeName, decoratorId, path)
 });
 
 Cypress.Commands.add("verifyDecorationPathOnLink", (linkName, decoratorId, path) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}] .d3-link-dec-path`)
 		.then((decPaths) => {
 			cy.log("d = " + decPaths[0].getAttribute("d"));
@@ -721,7 +742,7 @@ Cypress.Commands.add("verifyNodeDimensions", (nodeId, width, height) => {
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
-			const commentSelector = "[data-id='" + comment[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const commentSelector = getCommentBodySelector(comment[0]);
 			cy.getCommentDimensions(commentSelector)
 				.then((commentDimensions) => {
 					cy.verifyValueInCompareRange(commentDimensions.width, width);
@@ -779,6 +800,11 @@ Cypress.Commands.add("verifyNodeDoesNotExistInPalette", (nodeName) => {
 	// expect index is -1 since node should not be found in palette
 	cy.findNodeIndexInPalette(nodeName)
 		.then((idx) => expect(idx).to.equal(-1));
+});
+
+Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) => {
+	cy.findNodeIndexInPalette(nodeName)
+		.then((idx) => expect(idx).to.equal(index));
 });
 
 Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
@@ -957,7 +983,7 @@ Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, superno
 });
 
 Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, portName) => {
-	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+	cy.getNodePortSelector(nodeName, "input", inputPortId)
 		.then((portSelector) => {
 			cy.getNodePortTipSelector(inputPortId)
 				.then((portTipSelector) => {
@@ -990,7 +1016,7 @@ Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
 });
 
 Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
-	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
 			cy.getNodePortTipSelector(outputPortId)
 				.then((portTipSelector) => {
@@ -1123,4 +1149,24 @@ Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
 
 function compareCloseTo(value, compareValue) {
 	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
+}
+
+function getNodeSelectionOutlineSelector(node) {
+	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-node-selection-highlight";
+}
+
+function getNodeImageSelector(node) {
+	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-node-image";
+}
+
+function getNodeLabelSelector(node) {
+	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-foreign-object";
+}
+
+function getCommentSelectionOutlineSelector(comment) {
+	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-comment-selection-highlight";
+}
+
+function getCommentBodySelector(comment) {
+	return "[data-id='" + comment.getAttribute("data-id") + "'] > .d3-comment-rect";
 }

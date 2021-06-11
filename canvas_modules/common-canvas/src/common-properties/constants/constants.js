@@ -54,8 +54,6 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIES_SUPPORT_MESSAGE: "properties.support.message",
 	PROPERTIES_UNEXPECTED_MESSAGE: "properties.unexpected.message",
 	TABLE_SEARCH_HEADER: "table.search.header",
-	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
-	TABLE_SEARCH_LABEL: "table.search.label",
 	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
 	ALERTS_TAB_TITLE: "alerts.tab.title",
 	TITLE_EDITOR_LABEL: "title.editor.label",
@@ -69,6 +67,7 @@ _defineConstant("MESSAGE_KEYS", {
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
+	EXPRESSION_VALIDATING_LABEL: "expression.validating.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
 	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
@@ -108,13 +107,7 @@ _defineConstant("MESSAGE_KEYS", {
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
-	VIRTUALIZEDTABLE_HEADER_CHECKBOX_LABEL: "virtualizedTable.header.checkbox.label",
-	VIRTUALIZEDTABLE_ROW_CHECKBOX_LABEL: "virtualizedTable.row.checkbox.label"
-});
-
-_defineConstant("CHARACTER_LIMITS", {
-	TEXT_FIELD: 128,
-	TEXT_AREA: 1024
+	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
 });
 
 _defineConstant("TRUNCATE_LIMIT", 10000);
@@ -189,7 +182,7 @@ _defineConstant("ACTIONS", {
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
 
-_defineConstant("ROW_HEIGHT", 42);
+_defineConstant("ROW_HEIGHT", 32);
 
 _defineConstant("EXPRESSION_TABLE_ROWS", 7);
 

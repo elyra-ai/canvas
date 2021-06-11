@@ -647,6 +647,33 @@ describe("StructureListEditor render from paramdef", () => {
 		const externalExpectedValues = parameter.default;
 		expect(JSON.stringify(externalCurrentValues)).to.equal(JSON.stringify(externalExpectedValues));
 	});
+
+	it("should render empty table content when StructureListEditor is empty", () => {
+		propertyUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		wrapper.update();
+		let tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
+		expect(tableWrapper).to.have.length(1);
+
+		// Select all rows in configureTableInput
+		tableWrapper.find(".properties-vt-header-checkbox input").simulate("change", { target: { checked: true } });
+		wrapper.update();
+		tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
+		const rows = tableUtils.getTableRows(tableWrapper);
+		const selectedRows = tableUtils.validateSelectedRowNum(rows);
+		expect(selectedRows.length).to.equal(rows.length);
+
+		// Remove all rows
+		tableWrapper.find("button.properties-remove-fields-button").simulate("click");
+		wrapper.update();
+		tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelisteditorTableInput']");
+
+		// Verify empty table content is rendered
+		expect(tableWrapper.find("div.properties-empty-table")).to.have.length(1);
+		expect(tableWrapper.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Add value\"");
+		expect(tableWrapper.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(tableWrapper.find("button.properties-empty-table-button").text()).to.be.equal("Add value");
+	});
 });
 
 describe("StructureListEditor renders correctly with nested controls", () => {
@@ -766,12 +793,18 @@ describe("StructureListEditor renders correctly with nested controls", () => {
 		expect(editButtons).to.have.length(2);
 		editButtons.at(1).simulate("click"); // edit the second row
 
-		// subPanel table
-		const subPanelTable = wrapper.find("div[data-id='properties-ft-nestedStructuretableArrayArrays']");
+		// subPanel table - this is an empty table
+		let subPanelTable = wrapper.find("div[data-id='properties-ctrl-nestedStructuretableArrayArrays']");
 		expect(subPanelTable).to.have.length(1);
+		// select Add value button in empty subPanel table - this adds 1 row in the list
+		const emptyTableButton = subPanelTable.find("button.properties-empty-table-button");
+		expect(emptyTableButton).to.have.length(1);
+		emptyTableButton.simulate("click");
+
+		wrapper.update();
+		subPanelTable = wrapper.find("div[data-id='properties-ctrl-nestedStructuretableArrayArrays']");
 		addValueBtn = subPanelTable.find("button.properties-add-fields-button");
 		addValueBtn.simulate("click");
-		addValueBtn.simulate("click"); // add two rows
 
 		// Verify new rows added
 		tableData = renderedController.getPropertyValue(propertyIdNestedStructurelisteditorArrayArray);

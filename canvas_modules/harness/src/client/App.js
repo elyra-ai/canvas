@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint complexity: ["error", 28] */
+/* eslint complexity: ["error", 40] */
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
@@ -116,6 +116,8 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
+import EXTERNAL_SUB_FLOW_CANVAS from "../../test_resources/diagrams/externalSubFlowCanvas.json";
+
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
 import justify32 from "../graphics/justify_32.svg";
@@ -191,11 +193,13 @@ class App extends React.Component {
 			selectedHighlightNodeOnNewLinkDrag: false,
 			selectedHighlightUnavailableNodes: false,
 			selectedCreateSupernodeNonContiguous: false,
+			selectedExternalPipelineFlows: true,
 			selectedMoveNodesOnSupernodeResize: true,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
 			selectedNarrowPalette: true,
 			selectedSchemaValidation: true,
+			selectedAutoLinkOnlyFromSelNodes: false,
 			selectedBrowserEditMenu: true,
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
@@ -210,10 +214,11 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			applyOnBlur: true,
 			expressionBuilder: true,
-			expressionValidate: true,
 			heading: false,
+			light: true,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
+			propertiesValidationHandler: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -282,11 +287,13 @@ class App extends React.Component {
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useExpressionValidate = this.useExpressionValidate.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
+		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -324,16 +331,25 @@ class App extends React.Component {
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
 		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
 		this.enableApplyPropertiesWithoutEdit = this.enableApplyPropertiesWithoutEdit.bind(this);
+		this.setConditionHiddenPropertyHandling = this.setConditionHiddenPropertyHandling.bind(this);
+		this.setConditionDisabledPropertyHandling = this.setConditionDisabledPropertyHandling.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
+		this.validationHandler = this.validationHandler.bind(this);
+		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+
+		// Array to handle external flows. It is initialized to contain a sub-flow
+		// used by the test flow: externalMainCanvas.json
+		this.externalPipelineFlows = [];
+		this.externalPipelineFlows["all-types-external-pipeline-flow-url"] = EXTERNAL_SUB_FLOW_CANVAS;
 
 		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
@@ -761,6 +777,14 @@ class App extends React.Component {
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
 	}
 
+	setConditionHiddenPropertyHandling(value) {
+		this.setState({ conditionHiddenPropertyHandling: value });
+	}
+
+	setConditionDisabledPropertyHandling(value) {
+		this.setState({ conditionDisabledPropertyHandling: value });
+	}
+
 	setLinkDecorations(linkId, newDecorations) {
 		let newDecs = JSON.parse(newDecorations);
 		if (isEmpty(newDecs)) {
@@ -773,6 +797,16 @@ class App extends React.Component {
 	getZoomToReveal(nodeId, xOffset, yOffset) {
 		this.log("Zoom object requested");
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
+	}
+
+	setMaxLengthForMultiLineControls(maxLengthForMultiLineControls) {
+		this.setState({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
+		this.log("set maxLengthForMultiLineControls ", maxLengthForMultiLineControls);
+	}
+
+	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
+		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
+		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
 	}
 
 	initLocale() {
@@ -1048,11 +1082,6 @@ class App extends React.Component {
 		this.log("use expression builder", enabled);
 	}
 
-	useExpressionValidate(enabled) {
-		this.setState({ expressionValidate: enabled });
-		this.log("use expression validate link", enabled);
-	}
-
 	useDisplayAdditionalComponents(enabled) {
 		this.setState({ displayAdditionalComponents: enabled });
 		this.log("additional components display", enabled);
@@ -1068,6 +1097,11 @@ class App extends React.Component {
 		this.log("show heading", enabled);
 	}
 
+	useLightOption(enabled) {
+		this.setState({ light: enabled });
+		this.log("light option", enabled);
+	}
+
 	useEditorSize(editorSize) {
 		this.setState({ initialEditorSize: editorSize });
 		this.log("set editor size ", editorSize);
@@ -1079,9 +1113,14 @@ class App extends React.Component {
 		}
 	}
 
-	// common-canvas
 	clickActionHandler(source) {
-		this.log("clickActionHandler()", source);
+		// TODO - Logging causes the entire canvas to be refreshed. This can cause
+		// problems if the click action handler is called while common-canvas is
+		// in the middle of procssing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all proceesing
+		// or logging in the test harness should be refactored to not cause the
+		// canvas to refresh.
+		// this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
 				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
@@ -1093,7 +1132,13 @@ class App extends React.Component {
 	}
 
 	extraCanvasClickActionHandler(source) {
-		this.log("extraCanvasClickActionHandler()", source);
+		// TODO - Logging causes the entire canvas to be refreshed. This can cause
+		// problems if the click action handler is called while common-canvas is
+		// in the middle of procssing an event. Preferably, common-canvas should be
+		//  fixed to only issue a click action after it has finished all proceesing
+		// or logging in the test harness should be refactored to not cause the
+		// canvas to refresh.
+		// this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
 				((this.state.selectedDragWithoutSelect &&
 					source.clickType === "SINGLE_CLICK" &&
@@ -1147,6 +1192,22 @@ class App extends React.Component {
 		}
 	}
 
+	validationHandler(controller, propertyId, value, appData, callback) {
+		const response = {
+			type: "error",
+			text: "Error validating expression"
+		};
+		if (this.currentValidation === "error") {
+			response.type = "success";
+			response.text = "Expression validate";
+
+		}
+		this.currentValidation = response.type;
+		setTimeout(() => {
+			callback(response);
+		}, 2000);
+	}
+
 	helpClickHandler(nodeTypeId, helpData, appData) {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
@@ -1177,10 +1238,70 @@ class App extends React.Component {
 
 	beforeEditActionHandler(cmndData, command) {
 		const data = cmndData;
+		const testAsyncExecution = false; // Set to true to test asynchronous activity
+
+		switch (data.editType) {
+
+		case "editComment": {
 		// Uncomment to play with setting the command data.
-		// if (data && data.editType === "editComment") {
 		// 	data.content += " -- Added text";
-		// }
+			break;
+		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			// This code simulates some asynchronous activity by the host app.
+			if (testAsyncExecution) {
+				setTimeout(function(inData, app) {
+					inData.externalUrl = "external-flow-url-" + Date.now();
+					inData.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+					app.canvasController.editAction(inData);
+				}, 2000, data, this);
+				return null;
+			}
+
+			data.externalUrl = "external-flow-url-" + Date.now();
+			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+			break;
+		}
+		case "expandSuperNodeInPlace":
+		case "displaySubPipeline":
+		case "convertSuperNodeExternalToLocal": {
+			if (data.externalPipelineFlowLoad) {
+				// This code simulates some asynchronous activity by the host app.
+				if (testAsyncExecution) {
+					setTimeout(function(inData, app) {
+						inData.externalPipelineFlow = app.externalPipelineFlows[inData.externalUrl];
+						app.canvasController.editAction(inData);
+					}, 2000, data, this);
+					return null;
+				}
+
+				data.externalPipelineFlow = this.externalPipelineFlows[data.externalUrl];
+			}
+			break;
+		}
+		case "deleteSelectedObjects": {
+			data.selectedObjects.forEach((so) => {
+				if (so.type === "super_node" && so.subflow_ref.url) {
+					// App needs to make decision here if this command deletes the
+					// external pipeline flow in the repository.
+					window.alert("Delete external pipeline flow: " + so.subflow_ref.url);
+				}
+			});
+			break;
+		}
+		case "undo": {
+			if (command && command.data &&
+					command.data.editType === "convertSuperNodeExternalToLocal") {
+				// App needs to make decision here if this command deletes the
+				// external pipeline flow in the repository.
+				window.alert("Reinstate external pipeline flow.");
+			}
+			break;
+		}
+		default:
+		}
+
 		return data;
 	}
 
@@ -1191,11 +1312,14 @@ class App extends React.Component {
 			canvasController = this.canvasController2;
 		}
 
-		if (data.editType === "displaySubPipeline" || data.editType === "displayPreviousPipeline") {
+		switch (data.editType) {
+		case "displaySubPipeline":
+		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
 			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
-
-		} else if (data.editType === "createTestHarnessNode") {
+			break;
+		}
+		case "createTestHarnessNode": {
 			const nodeTemplate = canvasController.getPaletteNode(data.op);
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1211,8 +1335,9 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "createFromExternalObject") {
+			break;
+		}
+		case "createFromExternalObject": {
 			const nodeTemplate = canvasController.getPaletteNode("variablefile");
 			if (nodeTemplate) {
 				const convertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
@@ -1228,16 +1353,30 @@ class App extends React.Component {
 			} else {
 				window.alert("A palette node could not be found for the dropped object. Load the 'modelerPalette.json' file and try again.");
 			}
-
-		} else if (data.editType === "editNode") {
+			break;
+		}
+		case "editNode": {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
-
-		} else if (data.editType === "runit") {
+			break;
+		}
+		case "runit": {
 			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
 					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
 				this.runProgress();
 			}
+			break;
 		}
+		case "createSuperNodeExternal":
+		case "convertSuperNodeLocalToExternal": {
+			this.externalPipelineFlows[data.externalUrl] =
+				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		default: {
+			// Do nothing
+		}
+		}
+
 		this.log("editActionHandler(): " + data.editType, data);
 	}
 
@@ -1291,9 +1430,6 @@ class App extends React.Component {
 				const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
 				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-				if (expressionInfo !== null) {
-					expressionInfo.validateLink = this.state.expressionValidate;
-				}
 				const propsInfo = {
 					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 					messages: messages,
@@ -1374,9 +1510,6 @@ class App extends React.Component {
 		var properties = this.state.propertiesJson;
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
-		if (expressionInfo !== null) {
-			expressionInfo.validateLink = this.state.expressionValidate;
-		}
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
@@ -1416,6 +1549,9 @@ class App extends React.Component {
 
 	enableApplyPropertiesWithoutEdit() {
 		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
+	}
+	enablePropertiesValidationHandler() {
+		this.setState({ propertiesValidationHandler: !this.state.propertiesValidationHandler });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -1750,6 +1886,7 @@ class App extends React.Component {
 			enableParentClass: parentClass,
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
 			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
+			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enableLinkSelection: this.state.selectedLinkSelection,
@@ -1760,6 +1897,7 @@ class App extends React.Component {
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
 			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
+			enableAutoLinkOnlyFromSelNodes: this.state.selectedAutoLinkOnlyFromSelNodes,
 			enableBrowserEditMenu: this.state.selectedBrowserEditMenu,
 			tipConfig: this.state.selectedTipConfig,
 			schemaValidation: this.state.selectedSchemaValidation,
@@ -1933,7 +2071,11 @@ class App extends React.Component {
 			applyOnBlur: this.state.applyOnBlur,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -1944,6 +2086,9 @@ class App extends React.Component {
 			helpClickHandler: this.helpClickHandler,
 			buttonHandler: this.buttonHandler
 		};
+		if (this.state.propertiesValidationHandler) {
+			callbacks.validationHandler = this.validationHandler;
+		}
 		const callbacks2 = {
 			controllerHandler: this.propertiesControllerHandler2,
 			propertyListener: this.propertyListener,
@@ -1965,6 +2110,7 @@ class App extends React.Component {
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				light={this.state.light}
 			/>);
 
 		const commonProperties2 = (
@@ -1979,6 +2125,7 @@ class App extends React.Component {
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
 				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				light={this.state.light}
 			/>);
 
 		let commonPropertiesContainer = null;
@@ -2146,14 +2293,16 @@ class App extends React.Component {
 			useApplyOnBlur: this.useApplyOnBlur,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
-			expressionValidate: this.state.expressionValidate,
-			useExpressionValidate: this.useExpressionValidate,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
 			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
 			useHeading: this.useHeading,
+			light: this.state.light,
+			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
+			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
+			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
@@ -2161,7 +2310,13 @@ class App extends React.Component {
 			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
 			propertiesSchemaValidation: this.state.propertiesSchemaValidation,
 			enableApplyPropertiesWithoutEdit: this.enableApplyPropertiesWithoutEdit,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
+			propertiesValidationHandler: this.state.propertiesValidationHandler,
 		};
 
 		const sidePanelAPIConfig = {

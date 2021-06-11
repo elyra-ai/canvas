@@ -24,6 +24,10 @@ function _defineConstant(constName, value) {
 	});
 }
 
+// Diff between the border for a text div (2px) and a label's editable text area (6px)
+// This is used for node labels and also node/link text decorations.
+_defineConstant("TEXT_AREA_BORDER_ADJUSTMENT", 4);
+
 // Public Methods ------------------------------------------------------------->
 _defineConstant("DND_DATA_TEXT", "text");
 _defineConstant("DRAG_MOVE", "move");
@@ -125,6 +129,7 @@ _defineConstant("EXECUTION_NODE", "execution_node");
 _defineConstant("SAVED_NODES_CATEGORY_ID", "savedNodes");
 
 _defineConstant("USE_DEFAULT_ICON", "useDefaultIcon");
+_defineConstant("USE_DEFAULT_EXT_ICON", "useDefaultExtIcon");
 
 _defineConstant("CONTEXT_MENU_BUTTON", 2);
 

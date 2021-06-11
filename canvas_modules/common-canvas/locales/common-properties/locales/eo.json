@@ -1,9 +1,8 @@
 {
   "subPanel.button.tooltip": "[Esperanto~Edit~eo]",
-  "structureListEditor.addButton.label": "[Esperanto~Add Value~~~~eo]",
+  "structureListEditor.addButton.label": "[Esperanto~Add value~~~~eo]",
   "structureListEditor.removeButton.label": "[Esperanto~Remove~~~eo]",
-  "structureListEditor.addButton.tooltip": "[Esperanto~Add new row~eo]",
-  "structureTable.addButton.label": "[Esperanto~Add Columns~eo]",
+  "structureTable.addButton.label": "[Esperanto~Add columns~eo]",
   "structureTable.removeButton.label": "[Esperanto~Remove~eo]",
   "fieldPicker.saveButton.label": "[Esperanto~Select Fields for~~~eo]",
   "fieldPicker.saveButton.tooltip": "[Esperanto~Save and return~eo]",
@@ -31,7 +30,7 @@
   "properties.support.message": "[Esperanto~If the problem persists, contact support.~~~~~~~~~~eo]",
   "properties.unexpected.message": "[Esperanto~Oops, the pane didn't load.~~~~~~~eo]",
   "table.search.header": "[Esperanto~View in tables~~eo]",
-  "table.search.placeholder": "[Esperanto~Find in column~~eo]",
+  "table.search.placeholder": "[Esperanto~Find in column {column_name}~~eo]",
   "table.search.label": "[Esperanto~Search in {table_name} table~~~~~~~~eo]",
   "summary.longTable.placeholder": "[Esperanto~More than ten fields...~~~~eo]",
   "alerts.tab.title": "[Esperanto~Alerts~eo]",
@@ -46,6 +45,7 @@
   "datetime.format.error": "[Esperanto~Invalid {role}. Format should be {format}.~~~~~~~~~~~eo]",
   "invalid.field.error": "[Esperanto~Invalid {label}, field not found in data set.~~~~~~~~~~~~~eo]",
   "expression.validate.label": "[Esperanto~Validate~~eo]",
+  "expression.validating.label": "[Esperanto~Validating~~eo]",
   "expression.builder.title": "[Esperanto~Expression Builder~~~~eo]",
   "expression.builder.icon.description": "[Esperanto~launch expression builder~~~~~~eo]",
   "expression.builder.label": "[Esperanto~Expression~~~~~~eo]",
@@ -88,5 +88,6 @@
   "multiselect.dropdown.empty.label": "[Esperanto~None selected~~~~~~eo]",
   "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~~~~~eo]",
   "virtualizedTable.header.checkbox.label": "[Esperanto~Select all {header_checkbox_label}~~~~~~eo]",
-  "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index}, {row_checkbox_label}~~~~~~~~~~~~eo]"
+  "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index} from {table_label}~~~~~~~~~~~~eo]",
+  "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~~~eo]"
 }

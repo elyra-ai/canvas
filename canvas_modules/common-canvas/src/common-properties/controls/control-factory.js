@@ -47,6 +47,8 @@ import StructurelisteditorControl from "./structurelisteditor";
 import ReadonlyTableControl from "./readonlytable";
 
 import ControlItem from "./../components/control-item";
+import ActionFactory from "./../actions/action-factory.js";
+import { has } from "lodash";
 
 /*
 * <ControlItem /> should be called from every control.
@@ -77,11 +79,21 @@ const accessibleControls = [
 	ControlType.SELECTCOLUMN
 ];
 
+const tableControls = [
+	ControlType.LIST,
+	ControlType.READONLYTABLE,
+	ControlType.SOMEOFSELECT,
+	ControlType.SELECTCOLUMNS,
+	ControlType.STRUCTURETABLE,
+	ControlType.STRUCTURELISTEDITOR
+];
+
 export default class ControlFactory {
 
 	constructor(controller) {
 		this.rightFlyout = true;
 		this.controller = controller;
+		this.actionFactory = new ActionFactory(this.controller);
 	}
 
 	setFunctions(openFieldPicker, genUIItem) {
@@ -123,6 +135,7 @@ export default class ControlFactory {
 					control={control}
 					controlObj={controlObj}
 					accessibleControls={accessibleControls}
+					tableControl = {tableControls.includes(control.controlType)}
 				/>
 			</div>);
 	}
@@ -135,6 +148,7 @@ export default class ControlFactory {
 		// setup common properties used by all controls
 		const controlKey = ControlUtils.getDataId(propertyId);
 		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		const action = this.actionFactory.generateAction(0, control.action);
 		const props = {};
 		props.key = controlKey;
 		props.control = control;
@@ -147,6 +161,7 @@ export default class ControlFactory {
 				propertyId={propertyId}
 				control={control}
 				accessibleControls={accessibleControls}
+				tableControl = {tableControls.includes(control.controlType)}
 			/>
 		);
 		if (tableInfo) {
@@ -321,9 +336,14 @@ export default class ControlFactory {
 			const className = control.className ? control.className : "";
 			return (
 				<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
-					className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+					className={classNames(
+						"properties-ctrl-wrapper",
+						{ "hide": hidden, "action": has(control, "action.image.placement") },
+						className
+					)}
 				>
 					{createdControl}
+					{action}
 				</div>
 			);
 		}

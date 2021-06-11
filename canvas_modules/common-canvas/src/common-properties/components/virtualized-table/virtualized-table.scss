@@ -38,7 +38,7 @@ $properties-vt-checkbox-width: 45px;
 	}
 
 	.properties-vt-header-checkbox {
-		height: 40px;
+		height: $spacing-07;
 		display: flex;
 		align-items: center;
 		flex: 0 1 $properties-vt-checkbox-width;
@@ -69,7 +69,7 @@ $properties-vt-checkbox-width: 45px;
 	}
 
 	.properties-vt-row-checkbox {
-		height: 32px;
+		height: $spacing-07;
 		margin-left: $spacing-05;
 		flex: 0 1 $properties-vt-checkbox-width;
 	}
@@ -149,5 +149,12 @@ $properties-vt-checkbox-width: 45px;
 	.properties-vt-autosizer {
 		height: 100%;
 		width: 100%;
+	}
+
+	.properties-light-disabled {
+		background-color: $ui-01;
+		.bx--select--inline .bx--select-input[disabled] {
+			background-color: $ui-background;
+		}
 	}
 }

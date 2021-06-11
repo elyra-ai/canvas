@@ -23,6 +23,7 @@ import AbstractTable from "./../abstract-table.jsx";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import * as PropertyUtils from "./../../util/property-utils";
+import { isEmpty } from "lodash";
 
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
@@ -35,6 +36,8 @@ class SelectColumns extends AbstractTable {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
+		this.emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		this.emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 	}
 
 	makeRows(controlValue, tableState) {
@@ -131,10 +134,10 @@ class SelectColumns extends AbstractTable {
 				messageInfo={this.props.messageInfo}
 				rows={this.props.control.rows}
 				tableLabel={tableLabel}
-				controller={this.props.controller}
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
+				light={this.props.controller.getLight()}
 			/>);
 
 		var content = (
@@ -157,7 +160,9 @@ class SelectColumns extends AbstractTable {
 					setScrollToRow={this.setScrollToRow}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					disabled={this.props.state === STATES.DISABLED}
-
+					isEmptyTable={isEmpty(this.props.value)}
+					emptyTableButtonLabel={this.emptyTableButtonLabel}
+					emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
 				/>
 			</div>
 		);

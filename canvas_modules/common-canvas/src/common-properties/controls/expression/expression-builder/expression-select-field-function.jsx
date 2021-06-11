@@ -410,12 +410,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFieldFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={fieldsTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFieldTableClick}
 						selectedRows={[selectedField]}
 						onRowDoubleClick={this.onFieldTableDblClick}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -427,12 +427,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onValueFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={valuesTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onValueTableClick}
 						selectedRows={[selectedValue]}
 						onRowDoubleClick={this.onValueTableDblClick}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 			</div>
@@ -509,7 +509,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			<div className="properties-expression-function-select">
 				<Dropdown
 					id={"properties-expression-function-select-dropdown-" + uuid4()}
-					light
+					light={this.props.controller.getLight()}
 					label={label}
 					items={items}
 					onChange={this.onFunctionCatChange}
@@ -538,7 +538,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			<div className="properties-expression-field-select">
 				<Dropdown
 					id={"properties-expression-field-select-dropdown-" + uuid4()}
-					light
+					light={this.props.controller.getLight()}
 					label={label}
 					items={newItems}
 					onChange={this.onFieldCatChange}
@@ -580,12 +580,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onFilter={this.onFunctionFilter}
 						rows={EXPRESSION_TABLE_ROWS}
 						tableLabel={functionsTableLabel}
-						controller={this.props.controller}
 						rowSelection={ROW_SELECTION.SINGLE}
 						updateRowSelections={this.onFunctionTableClick}
 						selectedRows={[selectedFunction]}
 						onRowDoubleClick={this.onFunctionTableDblClick}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
+						light={this.props.controller.getLight()}
 					/>
 				</div>
 				<div className="properties-help-table-container" >

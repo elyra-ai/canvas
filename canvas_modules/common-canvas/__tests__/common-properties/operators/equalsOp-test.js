@@ -55,7 +55,7 @@ describe("validating equals operator works correctly", () => {
 		expect(equals(wrap(null), wrap(null), null, controller)).to.equal(true);
 		expect(equals(wrap({ temp: "value" }), wrap({ temp: "value2" }), null, controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
-		expect(equals(wrap(emptyFunc), null, null, controller)).to.equal(true);
+		expect(equals(wrap(emptyFunc), wrap({ temp: "value2" }), null, controller)).to.equal(true);
 	});
 
 	it("Test equals behaves as expected comparing paramInfo and value", () => {
@@ -69,7 +69,7 @@ describe("validating equals operator works correctly", () => {
 		expect(equals(wrap(null), undefinedPlaceholder, null, controller)).to.equal(true);
 		expect(equals(wrap({ temp: "value" }), undefinedPlaceholder, { temp: "value2" }, controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
-		expect(equals(wrap(emptyFunc), undefinedPlaceholder, null, controller)).to.equal(true);
+		expect(equals(wrap(emptyFunc), undefinedPlaceholder, "value", controller)).to.equal(true);
 	});
 
 

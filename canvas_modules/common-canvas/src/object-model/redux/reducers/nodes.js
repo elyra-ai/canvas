@@ -15,7 +15,8 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { SUPER_NODE } from "../../../common-canvas/constants/canvas-constants.js";
+import { SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	from "../../../common-canvas/constants/canvas-constants.js";
 import ports from "./ports.js";
 
 export default (state = [], action) => {
@@ -284,6 +285,30 @@ export default (state = [], action) => {
 			}
 			return node;
 		});
+
+	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
+		return state.map((node, index) => {
+			if (action.data.supernodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.image = (newNode.image === USE_DEFAULT_EXT_ICON ? USE_DEFAULT_ICON : newNode.image);
+				delete newNode.subflow_ref.url;
+				return newNode;
+			}
+			return node;
+		});
+	}
+
+	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
+		return state.map((node, index) => {
+			if (action.data.supernodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.image = (newNode.image === USE_DEFAULT_ICON ? USE_DEFAULT_EXT_ICON : newNode.image);
+				newNode.subflow_ref.url = action.data.externalFlowUrl;
+				return newNode;
+			}
+			return node;
+		});
+	}
 
 	default:
 		return state;

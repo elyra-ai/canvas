@@ -30,8 +30,7 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
-
+	BINDING, SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
 	constructor(pipelineId, objectModel) {
@@ -271,13 +270,15 @@ export default class APIPipeline {
 	// 1. The selected node, if only *one* node is currently selected or
 	// 2. The most recently added node, provided it has one or more output ports or
 	// 3. The most-recent-but-one added node, provided it has one or more output ports
-	getAutoSourceNode() {
+	getAutoSourceNode(autoLinkOnlyFromSelNodes) {
 		var sourceNode = null;
 		var selectedNodes = this.objectModel.getSelectedNodes();
 
-		if (selectedNodes.length === 1) {
+		if (selectedNodes.length === 1 &&
+				this.isViableAutoSourceNode(selectedNodes[0])) {
 			sourceNode = selectedNodes[0];
-		} else {
+
+		} else if (!autoLinkOnlyFromSelNodes) {
 			var nodesArray = this.getNodes();
 			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
@@ -292,6 +293,14 @@ export default class APIPipeline {
 			}
 		}
 		return sourceNode;
+	}
+
+	// Returns true if the node passed in is OK to be used as a source node
+	// for a node which is to be auto-added to the canvas.
+	isViableAutoSourceNode(node) {
+		return node.outputs &&
+			node.outputs.length > 0 &&
+			!CanvasUtils.isSrcCardinalityAtMax(node.outputs[0].id, node, this.getLinks());
 	}
 
 	// Returns a newly created 'auto node' whose position is based on the
@@ -401,18 +410,24 @@ export default class APIPipeline {
 		return isLinkNeededWithAutoNode;
 	}
 
+	// Returns true if the node passed in is an entry binding node. We detect
+	// this by checking that there are no inputs.
 	isEntryBindingNode(node) {
-		if (node.inputs && node.inputs.length > 0) {
-			return false;
+		if (node.type === BINDING && (!node.inputs || node.inputs.length === 0)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
+	// Returns true if the node passed in is an exit binding node. We detect
+	// this by checking that the node *has* inputs because with the 'alt_outputs'
+	// feature an exit binding node might have outputs since pipeline-in-handler
+	// will convert alt_outputs to outputs.
 	isExitBindingNode(node) {
-		if (node.outputs && node.outputs.length > 0) {
-			return false;
+		if (node.type === BINDING && node.inputs && node.inputs.length > 0) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	isNodeOverlappingOthers(node) {
@@ -488,6 +503,7 @@ export default class APIPipeline {
 				type: "DELETE_SUPERNODE",
 				data: {
 					id: supernode.id,
+					supernode: supernode,
 					pipelineIds: pipelineIds
 				},
 				pipelineId: this.pipelineId

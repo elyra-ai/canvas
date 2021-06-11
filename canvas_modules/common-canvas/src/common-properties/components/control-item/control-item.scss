@@ -24,6 +24,16 @@
 			pointer-events: none;
 		}
 	}
+	// TODO: Remove this after all controls are accessible - CSS for inaccessible controls
+	.properties-action-image  {
+		&.right {
+			margin-left: auto;
+			float: right;
+		}
+		&.left {
+			float: left;
+		}
+	}
 }
 
 .properties-label-container {
@@ -40,6 +50,12 @@
 		min-height: 30px;
 		span {
 			text-decoration: underline;
+		}
+	}
+	&.table-control {
+		label, .properties-required-indicator {
+			@include carbon--type-style("productive-heading-01");
+			color: $text-01;
 		}
 	}
 }

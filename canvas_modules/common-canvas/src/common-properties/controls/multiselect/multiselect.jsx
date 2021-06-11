@@ -24,13 +24,47 @@ import classNames from "classnames";
 import * as PropertyUtils from "./../../util/property-utils.js";
 import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
+import { isEqual, intersection, isEmpty } from "lodash";
 
 class MultiSelectControl extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.getSelectedOption = this.getSelectedOption.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.handleOnChange = this.handleOnChange.bind(this);
+		this.updateValueFromFilterEnum = this.updateValueFromFilterEnum.bind(this);
+		this.setShouldRender = this.setShouldRender.bind(this);
+		this.state = {
+			shouldRender: true
+		};
+	}
+
+	componentDidMount() {
+		this.updateValueFromFilterEnum(true);
+	}
+
+	componentDidUpdate(prevProps) {
+		// only update if filter options have changed. Fixes issue where filter options are updated after value in setProperties
+		if (!isEqual(this.props.controlOpts, prevProps.controlOpts)) {
+			this.updateValueFromFilterEnum();
+		}
+		this.setShouldRender(prevProps);
+	}
+
+	/*
+	* workaround for https://github.com/elyra-ai/canvas/issues/510
+	*/
+	setShouldRender(prevProps) {
+		if (!isEqual(this.props.controlOpts.values, prevProps.controlOpts.values) && this.state.shouldRender) {
+			this.setState({
+				shouldRender: false
+			});
+		} else if (!this.state.shouldRender) {
+			this.setState({
+				shouldRender: true
+			});
+		}
 	}
 
 	getSelectedOption(options, selectedValues) {
@@ -59,6 +93,20 @@ class MultiSelectControl extends React.Component {
 		};
 	}
 
+	// this is needed in order to reset the property value when a value is filtered out.
+	updateValueFromFilterEnum(skipValidateInput) {
+		let newValues = intersection(this.props.value, this.props.controlOpts.values);
+		if (!isEqual(newValues, this.props.value)) {
+			// set back to default values if default values is in filtered enum list
+			if (isEmpty(newValues)) {
+				if (this.props.control.valueDef && this.props.control.valueDef.defaultValue) {
+					newValues = intersection(this.props.control.valueDef.defaultValue, this.props.controlOpts.values);
+				}
+			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
+		}
+	}
+
 	handleOnChange(evt) {
 		const controlValues = [];
 		for (let i = 0; i < evt.selectedItems.length; i++) {
@@ -69,6 +117,10 @@ class MultiSelectControl extends React.Component {
 
 	render() {
 		const multiSelectDropdown = this.genSelectOptions(this.props.value);
+		// workaround to recreate react component on filter_enum
+		if (!this.state.shouldRender) {
+			return null;
+		}
 
 		const listBoxMenuIconTranslationIds = {
 			"close.menu": formatMessage(this.reactIntl, MESSAGE_KEYS.DROPDOWN_TOOLTIP_CLOSEMENU),
@@ -100,7 +152,7 @@ class MultiSelectControl extends React.Component {
 				onChange={this.handleOnChange}
 				placeholder={label}
 				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light
+				light={this.props.controller.getLight()}
 			/>);
 		} else {
 			dropdownComponent = (<MultiSelect
@@ -112,7 +164,7 @@ class MultiSelectControl extends React.Component {
 				onChange={this.handleOnChange}
 				label={label}
 				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light
+				light={this.props.controller.getLight()}
 			/>);
 		}
 

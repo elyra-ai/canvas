@@ -22,19 +22,22 @@ import AbstractTable from "./../abstract-table.jsx";
 import MoveableTableRows from "./../../components/moveable-table-rows";
 import * as PropertyUtils from "./../../util/property-utils";
 import { Type, ParamRole } from "./../../constants/form-constants";
-import { STATES } from "./../../constants/constants";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants";
 
 import ValidationMessage from "./../../components/validation-message";
-import { reject, findIndex, cloneDeep } from "lodash";
+import { reject, findIndex, cloneDeep, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 
 class StructureTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.indexOfRow = this.indexOfRow.bind(this);
+		this.emptyTableButtonClickHandler = this.addOnClick.bind(this, this.props.propertyId);
+		this.emptyTableButtonLabel = PropertyUtils.formatMessage(this.reactIntl, MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL);
 	}
 
 	indexOfRow(columnName) {
@@ -168,6 +171,7 @@ class StructureTableControl extends AbstractTable {
 			</div>);
 
 		const onPanelContainer = this.getOnPanelContainer(this.props.selectedRows);
+
 		return (
 			<div data-id={ControlUtils.getDataId(this.props.control, this.props.propertyId)}
 				className="properties-column-structure-wrapper"
@@ -181,6 +185,9 @@ class StructureTableControl extends AbstractTable {
 						setScrollToRow={this.setScrollToRow}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						disabled={this.props.state === STATES.DISABLED}
+						isEmptyTable={isEmpty(this.props.value)}
+						emptyTableButtonLabel={this.emptyTableButtonLabel}
+						emptyTableButtonClickHandler={this.emptyTableButtonClickHandler}
 					/>
 				</div>
 				<div>

@@ -15,15 +15,102 @@
  */
 
 import CanvasUtils from "./common-canvas-utils.js";
-import { SUPER_NODE } from "./constants/canvas-constants";
-
-// Diff between border for node label div (2px) and node label text area (6px)
-const TEXT_AREA_BORDER_ADJUSTMENT = 4;
+import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
+	SUPER_NODE, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
 export default class SvgCanvasNodes {
 	constructor(config, canvasLayout) {
 		this.config = config;
 		this.canvasLayout = canvasLayout;
+	}
+
+	getNodeImageClass(node) {
+		return "d3-node-image";
+	}
+
+	getNodeLabelForeignClass(node) {
+		const outlineClass = node.layout.labelOutline ? " d3-node-label-outline" : "";
+		return "d3-foreign-object" + outlineClass;
+	}
+
+	getNodeLabelClass(node) {
+		if (this.isExpandedSupernode(node)) {
+			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
+		}
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-label-center" : "";
+		return "d3-node-label " + this.getMessageLabelClass(node.messages) + lineTypeClass + justificationClass;
+	}
+
+	getNodeLabelTextAreaClass(node) {
+		if (this.isExpandedSupernode(node)) {
+			return "d3-node-label-entry d3-label-single-line";
+		}
+		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
+		const justificationClass = node.layout.labelAlign === "center" ? " d3-label-center" : "";
+		return "d3-node-label-entry" + lineTypeClass + justificationClass;
+	}
+
+	getErrorMarkerIcon(data) {
+		const messageLevel = this.getMessageLevel(data.messages);
+		let iconPath = "";
+		switch (messageLevel) {
+		case ERROR:
+			iconPath = NODE_ERROR_ICON;
+			break;
+		case WARNING:
+			iconPath = NODE_WARNING_ICON;
+			break;
+		default:
+			break;
+		}
+		return iconPath;
+	}
+
+	getMessageLevel(messages) {
+		let messageLevel = "";
+		if (messages && messages.length > 0) {
+			for (const message of messages) {
+				if (message.type === ERROR) {
+					return message.type;
+				} else if (message.type === WARNING) {
+					messageLevel = message.type;
+				}
+			}
+		}
+		return messageLevel;
+	}
+
+	getMessageLabelClass(messages) {
+		const messageLevel = this.getMessageLevel(messages);
+		let labelClass = "";
+		switch (messageLevel) {
+		case ERROR:
+			labelClass = "d3-node-error-label";
+			break;
+		case WARNING:
+			labelClass = "d3-node-warning-label";
+			break;
+		default:
+			break;
+		}
+		return labelClass;
+	}
+
+	getErrorMarkerClass(messages) {
+		const messageLevel = this.getMessageLevel(messages);
+		let labelClass = "d3-error-circle-off";
+		switch (messageLevel) {
+		case ERROR:
+			labelClass = "d3-error-circle";
+			break;
+		case WARNING:
+			labelClass = "d3-warning-circle";
+			break;
+		default:
+			break;
+		}
+		return labelClass;
 	}
 
 	getNodeImagePosX(node) {
@@ -265,5 +352,25 @@ export default class SvgCanvasNodes {
 		const defOutputPort = CanvasUtils.getDefaultOutputPortId(node);
 		return CanvasUtils.isSrcCardinalityAtMax(defOutputPort, node, links) ||
 			CanvasUtils.isTrgCardinalityAtMax(defInputPort, node, links);
+	}
+
+	// Returns the X offset for the port which references the nodeId passed in
+	// based on the precalculated X coordinate of the port.
+	getSupernodePortXOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cx - this.canvasLayout.supernodeSVGAreaPadding;
+		}
+		return 0;
+	}
+
+	// Returns the Y offset for the port which references the nodeId passed in
+	// based on the pre-calculated Y coordinate of the port.
+	getSupernodePortYOffset(nodeId, ports) {
+		if (ports) {
+			const supernodePort = ports.find((port) => port.subflow_node_ref === nodeId);
+			return supernodePort.cy;
+		}
+		return 0;
 	}
 }

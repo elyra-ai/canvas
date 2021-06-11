@@ -602,6 +602,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableAutoLinkOnlyFromSelNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedAutoLinkOnlyFromSelNodes" // Set ID to corresponding field in App.js state
+				labelText="Enable Auto Link Only From Selected Nodes"
+				toggled={this.props.getStateValue("selectedAutoLinkOnlyFromSelNodes")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enableBrowserEditMenu = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedBrowserEditMenu" // Set ID to corresponding field in App.js state
@@ -834,6 +843,15 @@ export default class SidePanelForms extends React.Component {
 				id="selectedMoveNodesOnSupernodeResize" // Set ID to corresponding field in App.js state
 				labelText="Enable move surrounding nodes when resizing a supernode."
 				toggled={this.props.getStateValue("selectedMoveNodesOnSupernodeResize")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableExternalPipelineFlows = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedExternalPipelineFlows" // Set ID to corresponding field in App.js state
+				labelText="Enable External Pipeline Flows"
+				toggled={this.props.getStateValue("selectedExternalPipelineFlows")}
 				onToggle={this.setStateValue}
 			/>
 		</div>);
@@ -1342,6 +1360,10 @@ export default class SidePanelForms extends React.Component {
 					{enableCreateSupernodeNonContiguous}
 					{divider}
 					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					{enableExternalPipelineFlows}
+					{divider}
+					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
 					{enableBrowserEditMenu}
 					{divider}

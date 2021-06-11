@@ -43,7 +43,7 @@ Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 
 Cypress.Commands.add("clickNodeLabelEditIcon", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
-		.find(".d3-node-label-edit-icon-group")
+		.find(".d3-label-edit-icon-group")
 		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
 		.click({ force: true });
 });
@@ -174,13 +174,13 @@ Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
 });
 
 Cypress.Commands.add("rightClickSourcePortOfNode", (nodeName, srcPortId) => {
-	cy.getNodePortSelector(nodeName, "out_port", srcPortId)
+	cy.getNodePortSelector(nodeName, "output", srcPortId)
 		.then((portSelector) => cy.get(portSelector).rightclick("bottom"));
 });
 
 Cypress.Commands.add("rightClickTargetPortOfNode", (nodeName, trgPortId) => {
 	// Added { force: true } to disable element visibility errorCheck from Cypress
-	cy.getNodePortSelector(nodeName, "inp_port", trgPortId)
+	cy.getNodePortSelector(nodeName, "input", trgPortId)
 		.then((portSelector) => cy.get(portSelector).rightclick({ force: true }));
 });
 
@@ -195,14 +195,13 @@ Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 		.trigger("mouseenter");
 });
 
-
 Cypress.Commands.add("hoverOverNodeInSupernode", (nodeName, supernodeName) => {
 	cy.getNodeWithLabelInSupernode(nodeName, supernodeName)
 		.trigger("mouseenter", { force: true });
 });
 
 Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
-	cy.getNodePortSelector(nodeName, "inp_port", inputPortId)
+	cy.getNodePortSelector(nodeName, "input", inputPortId)
 		.then((portSelector) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });
@@ -210,11 +209,33 @@ Cypress.Commands.add("hoverOverInputPortOfNode", (nodeName, inputPortId) => {
 });
 
 Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
-	cy.getNodePortSelector(nodeName, "out_port", outputPortId)
+	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
 			cy.get(portSelector)
 				.trigger("mouseenter", { force: true });
 		});
+});
+
+Cypress.Commands.add("hoverOverLabelForNodeDec", (nodeName, decId) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "']")
+		.trigger("mouseenter");
+});
+
+Cypress.Commands.add("clickEditIconForNodeDecLabel", (nodeName) => {
+	cy.getNodeWithLabel(nodeName)
+		.find(".d3-label-edit-icon-group")
+		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		.click({ force: true });
+});
+
+Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
 });
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
@@ -266,7 +287,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel)
+			cy.get(".palette-list-item-text-div").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
 				.trigger("dragover", canvasX, canvasY, { dataTransfer });
@@ -280,7 +301,7 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
-			const srcSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "body") + "']";
+			const srcSelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-body-outline";
 			cy.window().then((win) => {
 				cy.getCanvasTranslateCoords()
 					.then((transform) => {
@@ -360,6 +381,14 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 		});
 });
 
+Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
+	cy.getNodeWithLabel(supernodeName)
+		.find(".d3-node-ellipsis-group")
+		.eq(0)
+		.click();
+});
+
+
 Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
 		.find(".svg-area")
@@ -394,7 +423,7 @@ Cypress.Commands.add("findCategory", (nodeCategory) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-categories > div")
+			cy.get(".palette-dialog-categories > div")
 				.then((categories) => {
 					let category = null;
 					for (let idx = 0; idx < categories.length; idx++) {
@@ -467,7 +496,7 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-text")
+			cy.get(".palette-dialog-grid-node-text")
 				.then((listItems) => {
 					let nodeIndex = -1;
 					for (let idx = 0; idx < listItems.length; idx++) {
@@ -479,7 +508,7 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 				});
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-span")
+			cy.get(".palette-list-item-text-div")
 				.then((listItems) => {
 					let nodeIndex = -1;
 					for (let idx = 0; idx < listItems.length; idx++) {

@@ -47,19 +47,22 @@ class PropertiesMain extends React.Component {
 	constructor(props) {
 		super(props);
 		this.propertiesController = new PropertiesController();
+		this.propertiesController.setPropertiesConfig(this.props.propertiesConfig);
 		// Persist editorSize when resize() is not called
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
+		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
 		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
 		this.propertiesController.setHandlers({
 			controllerHandler: props.callbacks.controllerHandler,
 			propertyListener: props.callbacks.propertyListener,
 			actionHandler: props.callbacks.actionHandler,
-			buttonHandler: props.callbacks.buttonHandler
+			buttonHandler: props.callbacks.buttonHandler,
+			validationHandler: props.callbacks.validationHandler
 		});
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
@@ -478,7 +481,13 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesModal>);
 			}
-			const className = classNames("properties-wrapper", { "properties-right-flyout": this.props.propertiesConfig.rightFlyout }, `properties-${this.state.editorSize}`);
+			const className = classNames("properties-wrapper",
+				{
+					"properties-right-flyout": this.props.propertiesConfig.rightFlyout,
+					"properties-light-enabled": this.props.light,
+					"properties-light-disabled": !this.props.light
+				},
+				`properties-${this.state.editorSize}`);
 			const overrideSize = this._getOverrideSize();
 			let overrideStyle = null;
 			if (overrideSize !== null) {
@@ -521,7 +530,11 @@ PropertiesMain.propTypes = {
 			secondary: PropTypes.string
 		}),
 		schemaValidation: PropTypes.bool,
-		applyPropertiesWithoutEdit: PropTypes.bool
+		applyPropertiesWithoutEdit: PropTypes.bool,
+		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		maxLengthForMultiLineControls: PropTypes.number,
+		maxLengthForSingleLineControls: PropTypes.number
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -531,11 +544,13 @@ PropertiesMain.propTypes = {
 		applyPropertyChanges: PropTypes.func,
 		helpClickHandler: PropTypes.func,
 		setPropertiesHasMounted: PropTypes.func,
-		buttonHandler: PropTypes.func
+		buttonHandler: PropTypes.func,
+		validationHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	customConditionOps: PropTypes.array, // array of custom condition ops
+	light: PropTypes.bool,
 	intl: PropTypes.object.isRequired
 };
 

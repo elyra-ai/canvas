@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PaletteContentGridNode from "./palette-content-grid-node.jsx";
+import PaletteDialogContentGridNode from "./palette-dialog-content-grid-node.jsx";
 
 
-class PaletteContentGrid extends React.Component {
+class PaletteDialogContentGrid extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -32,7 +32,7 @@ class PaletteContentGrid extends React.Component {
 
 		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			gridNodes.push(
-				<PaletteContentGridNode key={"pal_grid_node_empty"}
+				<PaletteDialogContentGridNode key={"pal_grid_node_empty"}
 					category={this.props.category}
 					nodeTemplate={ {} }
 					canvasController={this.props.canvasController}
@@ -41,7 +41,7 @@ class PaletteContentGrid extends React.Component {
 		} else {
 			for (var idx = 0; idx < this.props.nodeTypes.length; idx++) {
 				gridNodes.push(
-					<PaletteContentGridNode key={"pal_grid_node_" + idx}
+					<PaletteDialogContentGridNode key={"pal_grid_node_" + idx}
 						category={this.props.category}
 						nodeTemplate={this.props.nodeTypes[idx]}
 						canvasController={this.props.canvasController}
@@ -62,11 +62,11 @@ class PaletteContentGrid extends React.Component {
 	}
 }
 
-PaletteContentGrid.propTypes = {
+PaletteDialogContentGrid.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTypes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 
-export default PaletteContentGrid;
+export default PaletteDialogContentGrid;

@@ -21,7 +21,7 @@ import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import { isEmpty, cloneDeep, has } from "lodash";
+import { isEmpty, cloneDeep, has, union, isEqual } from "lodash";
 import seedrandom from "seedrandom";
 
 
@@ -50,13 +50,25 @@ function validatePropertiesConditions(controller) {
 		panels: controller.getPanelStates(),
 		actions: controller.getActionStates()
 	};
+
 	const controls = controller.getControls();
 	validatePropertiesListConditions(controller, controls, newStates);
 	// propagate parent panel states
 	_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+
+	// get property values before any states have been updated
+	const prevPropertyValues = _getConditionPropertyValues(controller);
+
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
+	// get property values before any states have been updated
+	const newPropertyValues = _getConditionPropertyValues(controller);
+	// compared values to see if any values change based on state updates
+	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues);
+	for (const updatePropertyId of updatedPropertyIds) {
+		validateConditions(updatePropertyId, controller, 1);
+	}
 }
 
 // ========= Validate a list of properties
@@ -197,8 +209,9 @@ function validateInput(inPropertyId, controller) {
 *
 * @param {object} propertyId. required
 * @param {object} properties controller. required
+* @param {int} runCount. Used to prevent an infinite loop of rerun conditions
 */
-function validateConditions(inPropertyId, controller) {
+function validateConditions(inPropertyId, controller, runCount = 0) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -233,10 +246,57 @@ function validateConditions(inPropertyId, controller) {
 	} else {
 		_validateConditionsByType(propertyId, newStates, controller);
 	}
+	// get property values before any states have been updated
+	const prevPropertyValues = _getConditionPropertyValues(controller);
+
 	controller.setControlStates(newStates.controls);
 	controller.setPanelStates(newStates.panels);
 	controller.setActionStates(newStates.actions);
 
+	// get property values before any states have been updated
+	const newPropertyValues = _getConditionPropertyValues(controller);
+	// compared values to see if any values change based on state updates
+	const updatedPropertyIds = _comparePropertyValues(prevPropertyValues, newPropertyValues, runCount);
+	// rerun validation on controls where value changes based on state updates
+	for (const updatePropertyId of updatedPropertyIds) {
+		validateConditions(updatePropertyId, controller, runCount + 1);
+	}
+	if (runCount > 0) {
+		// need to make sure all children of panels get correct states after rerun
+		_propagateParentPanelStates(controller.panelTree, newStates, PANEL_TREE_ROOT);
+	}
+}
+
+function _comparePropertyValues(prevPropertyValues, newPropertyValues, runCount) {
+	const updatePropertyIds = [];
+	if (runCount > 10) { // stop at top reruns.  After this it's most likely an infinite loop
+		logger.warn("More than 10 iteration of processing conditions found. Check your conditions for loops. Updated properties: " + JSON.stringify(newPropertyValues));
+		return [];
+	}
+	const keys = union(Object.keys(prevPropertyValues), Object.keys(newPropertyValues));
+	for (const key of keys) {
+		const prevPropertyValue = prevPropertyValues[key];
+		const newPropertyValue = newPropertyValues[key];
+		if (!isEqual(prevPropertyValue, newPropertyValue)) {
+			updatePropertyIds.push({ name: key });
+		}
+	}
+	return updatePropertyIds;
+}
+
+function _getConditionPropertyValues(controller) {
+	const propertiesConfig = controller.getPropertiesConfig();
+	const options = {};
+	if (propertiesConfig.conditionDisabledPropertyHandling === "null") {
+		options.filterDisabled = true;
+	}
+	if (propertiesConfig.conditionHiddenPropertyHandling === "null") {
+		options.filterHidden = true;
+	}
+	if (isEmpty(options)) {
+		return {};
+	}
+	return controller.getPropertyValues(options);
 }
 
 /**

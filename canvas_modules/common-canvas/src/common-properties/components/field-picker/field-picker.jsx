@@ -61,7 +61,6 @@ export default class FieldPicker extends React.Component {
 		this.filterList = [];
 
 		this.filterType = this.filterType.bind(this);
-		this.getCheckboxLabels = this.getCheckboxLabels.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
 		this.handleSave = this.handleSave.bind(this);
@@ -124,23 +123,6 @@ export default class FieldPicker extends React.Component {
 			}
 		}
 		return filters;
-	}
-
-	/**
-	* Returns array of visible values in second column
-	*/
-	getCheckboxLabels() {
-		const fields = this.getVisibleData();
-		const labels = [];
-		for (let i = 0; i < fields.length; i++) {
-			const field = fields[i];
-			if ("name" in field) {
-				labels.push(field.name);
-			} else {
-				labels.push("");
-			}
-		}
-		return labels;
 	}
 
 	getTableData() {
@@ -442,7 +424,6 @@ export default class FieldPicker extends React.Component {
 		headers.push({ "key": "dataType", "label": dataTypeColumnLabel });
 
 		const tableData = this.getTableData();
-		const rowCheckboxLabels = this.getCheckboxLabels();
 
 		return (
 			<FlexibleTable className="properties-fp-table"
@@ -456,11 +437,10 @@ export default class FieldPicker extends React.Component {
 				scrollKey="field-picker"
 				rows={-1}
 				tableLabel={this.props.title ? this.props.title : ""}
-				controller={this.props.controller}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}
 				rowSelection={ROW_SELECTION.MULTIPLE}
-				rowCheckboxLabels={rowCheckboxLabels}
+				light={this.props.controller.getLight()}
 			/>
 		);
 	}

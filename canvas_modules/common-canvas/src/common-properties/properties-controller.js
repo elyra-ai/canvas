@@ -42,6 +42,7 @@ export default class PropertiesController {
 			actionHandler: null,
 			buttonHandler: null
 		};
+		this.propertiesConfig = {};
 		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
@@ -82,7 +83,7 @@ export default class PropertiesController {
 	setHandlers(inHandlers) {
 		this.handlers = Object.assign(this.handlers, inHandlers);
 		if (this.handlers.controllerHandler && !this.controllerHandlerCalled) {
-			this.handlers.controllerHandler(this); // ontime call to return controller
+			this.handlers.controllerHandler(this); // one time call to return controller
 			// probably isn't needed but seems like it can cause infinite loops
 			this.controllerHandlerCalled = true;
 		}
@@ -102,6 +103,22 @@ export default class PropertiesController {
 
 	getEditorSize() {
 		return this.editorSize;
+	}
+
+	setLight(light) {
+		this.light = light;
+	}
+
+	getLight() {
+		return this.light;
+	}
+
+	setPropertiesConfig(config) {
+		this.propertiesConfig = config;
+	}
+
+	getPropertiesConfig() {
+		return this.propertiesConfig;
 	}
 
 	//
@@ -938,14 +955,6 @@ export default class PropertiesController {
 		this.expressionFieldsRecentlyUsed = [];
 	}
 
-	getExpressionValidate(controlName) {
-		return this.propertiesStore.getExpressionValidate(controlName);
-	}
-
-	updateExpressionValidate(controlName, validate) {
-		this.propertiesStore.updateExpressionValidate(controlName, validate);
-	}
-
 	/**
 	* Retrieve filtered enumeration items.
 	*
@@ -1008,17 +1017,21 @@ export default class PropertiesController {
 	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*   filterHidden: true - filter out values from controls that are hidden
+	*   filterDisabled: true - filter out values from controls that are disabled
 	*/
-	getPropertyValue(inPropertyId, options) {
+	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
-		let filteredValue;
+		let filteredValue = defaultValue;
 
 		// don't return hidden/disabled values
-		if (options && options.filterHiddenDisabled === true) {
+		const filterHidden = options && (options.filterHiddenDisabled || options.filterHidden);
+		const filterDisabled = options && (options.filterHiddenDisabled || options.filterDisabled);
+		if (filterHidden || filterDisabled) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
-			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+			if ((controlState === STATES.DISABLED && filterDisabled) || (controlState === STATES.HIDDEN && filterHidden)) {
 				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
@@ -1034,7 +1047,7 @@ export default class PropertiesController {
 								col: colIdx
 							};
 							const valueState = this.getControlState(colPropertyId);
-							if (valueState === STATES.DISABLED || valueState === STATES.HIDDEN) {
+							if ((valueState === STATES.DISABLED && filterDisabled) || (valueState === STATES.HIDDEN && filterHidden)) {
 								filteredValue[rowIdx][colIdx] = null;
 							}
 						}
@@ -1074,11 +1087,13 @@ export default class PropertiesController {
 	* options - optional object of config options where
 	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
+	*   filterHidden: true - filter out values from controls that are hidden
+	*   filterDisabled: true - filter out values from controls that are disabled
 	*/
 	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		let returnValues = propertyValues;
-		if (options && options.filterHiddenDisabled === true) {
+		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled)) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
@@ -1553,5 +1568,31 @@ export default class PropertiesController {
 			}
 		}
 		return "Custom control not found: " + control.customControlId;
+	}
+
+	/*
+	* maxLength for single-line and multi-line control methods
+	*/
+
+	/**
+	* Returns the maximum characters allowed for multi-line string controls like textarea
+	* Default value is 1024
+	*/
+	getMaxLengthForMultiLineControls() {
+		const maxLengthForMultiLineControls = (typeof this.getPropertiesConfig().maxLengthForMultiLineControls !== "undefined")
+			? this.getPropertiesConfig().maxLengthForMultiLineControls
+			: 1024;
+		return maxLengthForMultiLineControls;
+	}
+
+	/**
+	* Returns the maximum characters allowed for single-line string controls like textfield
+	* Default value is 128
+	*/
+	getMaxLengthForSingleLineControls() {
+		const maxLengthForSingleLineControls = (typeof this.getPropertiesConfig().maxLengthForSingleLineControls !== "undefined")
+			? this.getPropertiesConfig().maxLengthForSingleLineControls
+			: 128;
+		return maxLengthForSingleLineControls;
 	}
 }

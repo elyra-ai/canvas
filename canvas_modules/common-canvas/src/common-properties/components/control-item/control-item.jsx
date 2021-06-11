@@ -86,7 +86,7 @@ class ControlItem extends React.Component {
 				</Button>);
 			}
 			label = (
-				<div className="properties-label-container">
+				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
 					{requiredIndicator}
 					{numberGenerator}
@@ -110,7 +110,6 @@ class ControlItem extends React.Component {
 				>
 					{label}
 					{description}
-					{action}
 				</div>
 			);
 		}
@@ -133,6 +132,7 @@ ControlItem.propTypes = {
 	controller: PropTypes.object.isRequired,
 	controlObj: PropTypes.object,
 	accessibleControls: PropTypes.array, // TODO: Remove this after all controls are accessible
+	tableControl: PropTypes.bool,
 	state: PropTypes.string // passed by redux
 };
 

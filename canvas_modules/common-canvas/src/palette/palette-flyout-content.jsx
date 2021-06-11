@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,46 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import has from "lodash/has";
+import debounce from "lodash/debounce";
+import { getFilteredNodeTypeInfos } from "./palette-flyout-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
+import PaletteFlyoutContentFilteredList from "./palette-flyout-content-filtered-list.jsx";
+import Logger from "../logging/canvas-logger.js";
+
+const logger = new Logger("PaletteFlyoutContent");
 
 class PaletteFlyoutContent extends React.Component {
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (!nextProps.isPaletteOpen) {
-			return ({ filterKeyword: "" });
-		}
-		return ({});
-	}
 	constructor(props) {
 		super(props);
 
+		// Note: searchString below is a copy of searchString in
+		// palette-flyout-content-search this duplication is necessaery to allow
+		// the debounce function to work. When a key is pressed, the searchString in
+		// palette-flyout-content-search is updated causing its text to be rendered.
+		// The handleSearchStringChange() in this class is then called that handles
+		// debounce and after the debounce unwinds it sets searchString in this
+		// class which causes the filtered result set to be calculated and displayed.
 		this.state = {
-			selectedCategoryId: "",
-			filterKeyword: ""
+			selectedCategoryIds: [],
+			searchString: ""
 		};
 
+		this.categories = [];
+
 		this.categorySelected = this.categorySelected.bind(this);
-		this.getCategories = this.getCategories.bind(this);
-		this.getNodeTypesForCategory = this.getNodeTypesForCategory.bind(this);
-		this.handleFilterChange = this.handleFilterChange.bind(this);
+		this.getUniqueCategories = this.getUniqueCategories.bind(this);
+		this.setSearchString = this.setSearchString.bind(this);
+		this.handleSearchStringChange = this.handleSearchStringChange.bind(this);
+		this.setSearchStringThrottled = debounce(this.setSearchString, 200);
 	}
 
 	/*
 	* Returns a unique set of categories in case category labels
 	* are duplicated in the categories list.
 	*/
-	getCategories(categories) {
+	getUniqueCategories(categories) {
 		var out = [];
 		if (categories) {
 			for (const category of categories) {
@@ -58,87 +67,36 @@ class PaletteFlyoutContent extends React.Component {
 		return out;
 	}
 
-	getNodeTypesForCategory(categories, id) {
-		var out = [];
-		if (categories) {
-			for (const category of categories) {
-				if (category.id === id) {
-					out = category.node_types;
-				}
-			}
-		}
-		return out;
-	}
-
-	categorySelected(catSelId) {
-		// Hide category if clicked again
-		if (this.state.selectedCategoryId !== catSelId) {
-			this.setState({ selectedCategoryId: catSelId });
-		} else {
-			this.setState({ selectedCategoryId: "" });
-		}
-	}
-
-	filterNodeTypes(nodeTypes) {
-		var filteredNodeTypes = [];
-		if (nodeTypes) {
-			const lowercaseFilteredKeyword = this.state.filterKeyword.toLowerCase();
-			for (const nodeType of nodeTypes) {
-				if (has(nodeType, "app_data.ui_data.label") &&
-						nodeType.app_data.ui_data.label.toLowerCase().indexOf(lowercaseFilteredKeyword) > -1) {
-					filteredNodeTypes.push(nodeType);
-				}
-			}
-		}
-		return filteredNodeTypes;
-	}
-
-	handleFilterChange(evt) {
-		this.setState({ filterKeyword: evt.target.value || "" });
-	}
-
-	render() {
-		var categories = this.getCategories(this.props.paletteJSON.categories);
-		var contentDivs = [];
-		for (var idx = 0; idx < categories.length; idx++) {
+	getContentDivs(categories) {
+		const contentDivs = [];
+		for (let idx = 0; idx < categories.length; idx++) {
 			const category = categories[idx];
-			var style = {};
-			if (idx === categories.length - 1) {
-				style = { "borderBottom": "none" };
-			}
-
-			let filteredNodeTypes = null;
-
-			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.id);
-			filteredNodeTypes = this.filterNodeTypes(nodeTypes);
+			const isLastCategory = idx === categories.length - 1;
+			const nodeTypeInfos = category.node_types.map((nt) => ({ nodeType: nt, category: category }));
+			const isCategorySelected = this.isCategorySelected(category.id);
 
 			let content = null;
-			if (this.state.selectedCategoryId === category.id) {
+			if (isCategorySelected) {
 				content = (
 					<PaletteContentList
-						style={style}
-						show
 						key={category.label + "-nodes"}
+						show
 						category={category}
-						nodeTypes={filteredNodeTypes}
+						nodeTypeInfos={nodeTypeInfos}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
+						isLastCategory={isLastCategory}
 					/>);
 			}
 
-			var itemsFiltered = false;
-			if (this.state.filterKeyword) {
-				itemsFiltered = true;
-			}
 			contentDivs.push(
 				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
-						selectedCategoryId={this.state.selectedCategoryId}
+						isCategorySelected={isCategorySelected}
 						categorySelectedMethod={this.categorySelected}
-						itemCount={filteredNodeTypes.length}
-						itemsFiltered={itemsFiltered}
+						itemCount={nodeTypeInfos.length}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>
@@ -146,17 +104,70 @@ class PaletteFlyoutContent extends React.Component {
 				</div>
 			);
 		}
+		return contentDivs;
+	}
+
+	getFilteredContentDivs(categories) {
+		logger.logStartTimer("getFilteredNodeTypeInfos");
+		let filteredNodeTypeInfos = getFilteredNodeTypeInfos(this.categories, this.state.searchString);
+		logger.logEndTimer("getFilteredNodeTypeInfos");
+
+		let isNodeTypeInfosArrayTruncated = false;
+
+		if (filteredNodeTypeInfos.length > 10) {
+			filteredNodeTypeInfos = filteredNodeTypeInfos.slice(0, 10);
+			isNodeTypeInfosArrayTruncated = true;
+		}
+
+		const content = (
+			<PaletteFlyoutContentFilteredList
+				key={"filtered-nodes"}
+				nodeTypeInfos={filteredNodeTypeInfos}
+				canvasController={this.props.canvasController}
+				isPaletteOpen={this.props.isPaletteOpen}
+				// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
+				isNodeTypeInfosArrayTruncated={isNodeTypeInfosArrayTruncated}
+			/>);
+
+		return [content];
+	}
+
+	setSearchString() {
+		this.setState({ searchString: this.ss });
+	}
+
+	handleSearchStringChange(s) {
+		this.ss = s;
+		this.setSearchStringThrottled();
+	}
+
+	categorySelected(catSelId) {
+		const selCatIds = this.isCategorySelected(catSelId)
+			? this.state.selectedCategoryIds.filter((catId) => catId !== catSelId)
+			: this.state.selectedCategoryIds.concat(catSelId);
+
+		this.setState({ selectedCategoryIds: selCatIds });
+	}
+
+	isCategorySelected(categoryId) {
+		return this.state.selectedCategoryIds.some((cId) => cId === categoryId);
+	}
+
+	render() {
+		this.categories = this.getUniqueCategories(this.props.paletteJSON.categories);
+		const contentDivs = this.props.isPaletteOpen && this.state.searchString
+			? this.getFilteredContentDivs(this.categories)
+			: this.getContentDivs(this.categories);
 
 		const contentCategories = (
-			<div className="palette-flyout-content-categories">
+			<div className="palette-flyout-categories">
 				{contentDivs}
 			</div>
 		);
 
 		const contentSearch = (
 			<PaletteFlyoutContentSearch
-				handleFilterChange={this.handleFilterChange}
-				filterKeyword={this.state.filterKeyword}
+				handleSearchStringChange={this.handleSearchStringChange}
 				isPaletteOpen={this.props.isPaletteOpen}
 				canvasController={this.props.canvasController}
 			/>

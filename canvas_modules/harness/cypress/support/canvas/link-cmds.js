@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("getLinkFromName", (linkName) => {
-	const nodeNames = linkName.split("-");
+Cypress.Commands.add("getLinkWithLabel", (linkLabel) => {
+	const nodeNames = linkLabel.split("-");
 	cy.getPipeline()
 		.then((pipeline) => {
 			// Get source node id
@@ -36,6 +36,15 @@ Cypress.Commands.add("getLinkFromName", (linkName) => {
 		});
 });
 
+Cypress.Commands.add("getLinkIdForLabel", (linkLabel) =>
+	cy.getLinkWithLabel(linkLabel)
+		.then((link) => {
+			if (link) {
+				return link[0].getAttribute("data-id").substring(11);
+			}
+			return null;
+		})
+);
 
 Cypress.Commands.add("getLinkUsingId", (linkId) => {
 	cy.getPipeline()
@@ -43,6 +52,28 @@ Cypress.Commands.add("getLinkUsingId", (linkId) => {
 			cy.get(getLinkSelector(linkId, "grp"))
 				.then((link) => link);
 		});
+});
+
+Cypress.Commands.add("hoverOverLabelForLinkDec", (linkLabel, decId) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "']")
+		.trigger("mouseenter");
+});
+
+Cypress.Commands.add("clickEditIconForLinkDecLabel", (linkLabel) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find(".d3-label-edit-icon-group")
+		.last() // With horizontal format nodes, two edit icons may be on the canvas while running tests
+		.click({ force: true });
+});
+
+Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel);
+	// Click canvas to complete text entry
+	cy.get("#canvas-div-0").click(1, 1);
 });
 
 
@@ -62,7 +93,7 @@ function getLinkSelector(linkId, element) {
 }
 
 Cypress.Commands.add("clickDecoratorHotspotOnLink", (decoratorId, linkName) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.find(`.d3-link-dec-group[data-id=link_dec_group_0_${decoratorId}]`)
 		.click();
 });
@@ -119,7 +150,7 @@ Cypress.Commands.add("moveLinkHandleToPort", (
 
 Cypress.Commands.add("moveLinkHandleToPortByLinkId", (linkId, element, nodeName, portId) => {
 	cy.window().then((win) => {
-		const portElement = element === "endHandle" ? "inp_port" : "out_port";
+		const portElement = element === "endHandle" ? "input" : "output";
 		cy.getNodePortSelector(nodeName, portElement, portId)
 			.then((trgSelector) => {
 				cy.get(getLinkSelector(linkId, element))
@@ -142,9 +173,9 @@ Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
 });
 
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {
-	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+	cy.getNodePortSelector(srcNodeName, "output", srcPortId)
 		.then((srcSelector) => {
-			cy.getNodePortSelector(trgNodeName, "inp_port", trgPortId)
+			cy.getNodePortSelector(trgNodeName, "input", trgPortId)
 				.then((trgSelector) => {
 					// We're using { force: true } on mousemove and mouseup triggers
 					// to disable element visibility errorCheck from Cypress
@@ -159,9 +190,9 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPortInSupernode",
 	(supernodeName, srcNodeName, srcPortId, trgNodeName, trgPortId) => {
-		cy.getNodePortSelectorInSupernode(supernodeName, srcNodeName, "out_port", srcPortId)
+		cy.getNodePortSelectorInSupernode(supernodeName, srcNodeName, "output", srcPortId)
 			.then((srcSelector) => {
-				cy.getNodePortSelectorInSupernode(supernodeName, trgNodeName, "inp_port", trgPortId)
+				cy.getNodePortSelectorInSupernode(supernodeName, trgNodeName, "input", trgPortId)
 					.then((trgSelector) => {
 						// We're using { force: true } on mousemove and mouseup triggers
 						// to disable element visibility errorCheck from Cypress
@@ -178,7 +209,7 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 	// This will simulate a drag from a specific port onto a target node rather
 	// than a specific port. This should be interpreted as a link to the zeroth
 	// port of the target node.
-	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+	cy.getNodePortSelector(srcNodeName, "output", srcPortId)
 		.then((srcSelector) => {
 			cy.getNodeWithLabel(trgNodeName)
 				.then((trgSelector) => {
@@ -195,7 +226,7 @@ Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortI
 	// This will simulate a drag from a specific port to a position on the canvas
 	// which will create a detached link when enableDetachableLinks config field
 	// is set to true.
-	cy.getNodePortSelector(srcNodeName, "out_port", srcPortId)
+	cy.getNodePortSelector(srcNodeName, "output", srcPortId)
 		.then((srcSelector) => {
 			cy.get(srcSelector)
 				.trigger("mousedown", { button: 0 });
@@ -218,7 +249,9 @@ Cypress.Commands.add("getNodePortSelector", (nodeName, nodeElement, portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	cy.getNodeIdForLabel(nodeName)
 		.then((nodeId) => {
-			const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
+			const portSelector =
+				`.d3-node-group[data-id='node_grp_${inst}_${nodeId}'] ` +
+				`> .d3-node-port-${nodeElement}[data-port-id='${portId}']`;
 			return portSelector;
 		});
 });
@@ -227,7 +260,9 @@ Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName,
 	const inst = document.extraCanvas === true ? "1" : "0";
 	cy.getNodeIdForLabelInSupernode(nodeName, supernodeName)
 		.then((nodeId) => {
-			const portSelector = `[data-id='node_${nodeElement}_${inst}_${nodeId}_${portId}']`;
+			const portSelector =
+				`.d3-node-group[data-id='node_grp_${inst}_${nodeId}'] ` +
+				`> .d3-node-port-${nodeElement}[data-port-id='${portId}']`;
 			return portSelector;
 		});
 });
@@ -274,7 +309,7 @@ Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 });
 
 Cypress.Commands.add("hoverOverLinkName", (linkName) => {
-	cy.getLinkFromName(linkName)
+	cy.getLinkWithLabel(linkName)
 		.children()
 		.eq(1)
 		.trigger("mouseenter", { force: true });

@@ -23,7 +23,6 @@ import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
 import Controller from "../../../src/common-properties/properties-controller";
-import isEqual from "lodash/isEqual";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
@@ -451,27 +450,21 @@ describe("condition renders correctly with structure table control", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
-	it("should render a table error message", () => {
+	it("should render empty table content", () => {
 		const conditionsPropertyId = { name: "structuretableReadonlyColumnStartValue" };
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 		renderedController.updatePropertyValue(conditionsPropertyId, []);
-
-		const structuretableSortOrderErrorMessages = {
-			"validation_id": "structuretableReadonlyColumnStartValue",
-			"type": "error",
-			"text": "table cannot be empty"
-		};
-		const actual = renderedController.getErrorMessage(conditionsPropertyId);
-		expect(isEqual(JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
 		wrapper.update();
 		propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnStartValue-summary-panel");
 
 		const tableWrapper = wrapper.find("div[data-id='properties-structuretableReadonlyColumnStartValue']");
-		expect(tableWrapper.find("div.properties-validation-message")).to.have.length(1);
-		expect(tableWrapper.find("div.properties-validation-message span")
-			.text()).to.be.equal(structuretableSortOrderErrorMessages.text);
+		// Verify empty table content is rendered
+		expect(tableWrapper.find("div.properties-empty-table")).to.have.length(1);
+		expect(tableWrapper.find("div.properties-empty-table span")
+			.text()).to.be.equal("To begin, click \"Add columns\"");
+		expect(tableWrapper.find("button.properties-empty-table-button")).to.have.length(1);
+		expect(tableWrapper.find("button.properties-empty-table-button").text()).to.be.equal("Add columns");
 	});
 	it("should render an table cell error", () => {
 		// set error condition on cell
@@ -815,10 +808,10 @@ describe("structuretable multiselect edit works", () => {
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find(".properties-vt-row-checkbox");
 		expect(selectedEditRow).to.have.length(1);
 
-		// verify the select header row is 3em in height
+		// verify the select header row is 2.5em in height
 		const selectHeaderTable = wrapper.find("div.properties-at-selectedEditRows").find("div.properties-ft-container-wrapper");
 		const heightStyle = selectHeaderTable.prop("style");
-		expect(heightStyle).to.eql({ "height": "3em" });
+		expect(heightStyle).to.eql({ "height": "2.5em" });
 	});
 });
 

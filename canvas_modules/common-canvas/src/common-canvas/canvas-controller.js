@@ -18,6 +18,8 @@ import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
+import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
+import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
 import constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
@@ -35,6 +37,7 @@ import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.
 import DisplayPreviousPipelineAction from "../command-actions/displayPreviousPipelineAction.js";
 import DisplaySubPipelineAction from "../command-actions/displaySubPipelineAction.js";
 import EditCommentAction from "../command-actions/editCommentAction.js";
+import EditDecorationLabelAction from "../command-actions/editDecorationLabelAction.js";
 import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
@@ -46,7 +49,7 @@ import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import has from "lodash/has";
+import { get, has } from "lodash";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
@@ -85,12 +88,14 @@ export default class CanvasController {
 			enableHighlightUnavailableNodes: false,
 			enablePositionNodeOnRightFlyoutOpen: false,
 			enableMoveNodesOnSupernodeResize: true,
+			enableExternalPipelineFlows: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
 			enableRightFlyoutUnderToolbar: false,
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
+			enableAutoLinkOnlyFromSelNodes: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,
@@ -265,6 +270,10 @@ export default class CanvasController {
 	// Returns the ID of the primary pipeline from the pipelineFlow.
 	getPrimaryPipelineId() {
 		return this.objectModel.getPrimaryPipelineId();
+	}
+
+	getExternalPipelineFlow(url) {
+		return this.objectModel.getExternalPipelineFlow(url);
 	}
 
 	// Returns the internal format of all canvas data stored in memory by
@@ -1330,6 +1339,15 @@ export default class CanvasController {
 		return false;
 	}
 
+	displaySubPipeline(node) {
+		const data = { editType: "displaySubPipeline", targetObject: node, editSource: "canvas" };
+		this.editActionHandler(data);
+	}
+
+	displayPreviousPipeline() {
+		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
+		this.editActionHandler(data);
+	}
 
 	zoomIn() {
 		if (this.commonCanvas) {
@@ -1416,6 +1434,10 @@ export default class CanvasController {
 	clearSavedZoomValues() {
 		this.objectModel.clearSavedZoomValues();
 	}
+
+	// ---------------------------------------------------------------------------
+	// Utility/helper methods
+	// ---------------------------------------------------------------------------
 
 	getGhostNode(nodeTemplate) {
 		if (this.commonCanvas) {
@@ -1551,7 +1573,7 @@ export default class CanvasController {
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: this.objectModel.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
 			pipelineId: apiPipeline.pipelineId
 		};
 
@@ -1560,7 +1582,7 @@ export default class CanvasController {
 
 	// Called when a node is dragged from the palette onto the canvas
 	createNodeFromTemplateAt(nodeTemplate, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createNode",
 			editSource: "canvas",
@@ -1576,7 +1598,7 @@ export default class CanvasController {
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto an existing link between two data nodes.
 	createNodeFromTemplateOnLinkAt(nodeTemplate, link, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		if (this.canNewNodeBeDroppedOnLink(newNodeTemplate)) {
 			var data = {
 				editType: "createNodeOnLink",
@@ -1595,7 +1617,7 @@ export default class CanvasController {
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto one or more semi-detached or fully-detached links.
 	createNodeFromTemplateAttachLinks(nodeTemplate, detachedLinks, pos, pipelineId) {
-		const newNodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		if (detachedLinks &&
 				this.canNewNodeBeAttachedToLinks(newNodeTemplate)) {
 			var data = {
@@ -1658,20 +1680,6 @@ export default class CanvasController {
 		return false;
 	}
 
-
-	// Opens a full screen display if a sub-flow. pipelineInfo should contain two
-	// fields:
-	// pipelineId: The pipeline ID of the pipeline to be shown.
-	// pipelineFlowId: The ID of the pipelineFlow document
-	displaySubPipeline(pipelineInfo) {
-		const data = { editType: "displaySubPipeline", pipelineInfo: pipelineInfo, editSource: "canvas" };
-		this.editActionHandler(data);
-	}
-
-	displayPreviousPipeline() {
-		const data = { editType: "displayPreviousPipeline", pipelineInfo: this.objectModel.getPreviousBreadcrumb(), editSource: "canvas" };
-		this.editActionHandler(data);
-	}
 
 	getLabel(labelId) {
 		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
@@ -1749,23 +1757,38 @@ export default class CanvasController {
 						this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
 						this.areSelectedNodesContiguous())) {
 				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node.createSupernode") }]);
+				if (this.canvasConfig.enableExternalPipelineFlows) {
+					menuDefinition = menuDefinition.concat([{ action: "createSuperNodeExternal", label: this.getLabel("node.createSupernodeExternal") }]);
+				}
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Expand and Collapse supernode
+		// Supernode option
 		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
+			// Expand and Collapse supernode
 			// Expand
 			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
-					label: this.getLabel("node.expandSupernodeInPlace") }, { divider: true });
+					label: this.getLabel("node.expandSupernode") });
 			}
 			// Collapse
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
 					label: this.getLabel("node.collapseSupernodeInPlace") }, { divider: true });
 			}
+			// Convert supernode
+			if (this.canvasConfig.enableExternalPipelineFlows) {
+				if (source.targetObject.subflow_ref.url) {
+					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
+						label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+				} else {
+					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
+						label: this.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
+				}
+			}
 		}
+
 		// Delete link
 		if (this.canvasConfig.enableLinkSelection === LINK_SELECTION_NONE &&
 				source.type === "link") {
@@ -1871,6 +1894,20 @@ export default class CanvasController {
 		data.selectedObjectIds = this.getSelectedObjectIds();
 		data.selectedObjects = this.getSelectedObjects();
 
+		// Generate a dummy external URL when an external sub-flow is being
+		// created.
+		if (data.editType === "createSuperNodeExternal" ||
+				data.editType === "convertSuperNodeLocalToExternal") {
+			data.externalUrl = "";
+			data.externalPipelineFlowId = "";
+
+		// Pre-process for handling external pipeline flows.
+		} else if (data.editType === "expandSuperNodeInPlace" ||
+				data.editType === "displaySubPipeline" ||
+				data.editType === "convertSuperNodeExternalToLocal") {
+			data = this.preProcessForExternalPipelines(data);
+		}
+
 		// Check with host application if it wants to proceed with the command
 		// and also let the application modify the command input data if required.
 		if (this.handlers.beforeEditActionHandler) {
@@ -1885,6 +1922,21 @@ export default class CanvasController {
 				return;
 			}
 		}
+
+		// Now preprocessing is complete, execuete the action itself.
+		this.editAction(data);
+	}
+
+	// Performs the edit action using the 'data' parameter, which contains the
+	// approprite action parameters, without executing any of the preprocessing
+	// or the beforeEditActionhandler callback. This is useful for applications
+	// that need to do asynchronous activty in their beforeEditActionHandler code.
+	// Those applications should call this method to execute the command, after
+	// their asynchronous activity has ended, instead of the editActionHandler
+	// method otherwise the host app's beforeEdtActionHandler callback will be
+	// called a second time.
+	editAction(cmndData) {
+		let data = cmndData;
 
 		// Only execute the delete if there are some selections to delete.
 		// This prevents an 'empty' command being added to the command stack when
@@ -1947,7 +1999,7 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoNode": {
-				command = new CreateAutoNodeAction(data, this.objectModel);
+				command = new CreateAutoNodeAction(data, this.objectModel, this.canvasConfig.enableAutoLinkOnlyFromSelNodes);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
@@ -2010,6 +2062,11 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "editDecorationLabel": {
+				command = new EditDecorationLabelAction(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
 			case "linkNodes": {
 				command = new CreateNodeLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
@@ -2058,7 +2115,8 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
-			case "createSuperNode": {
+			case "createSuperNode":
+			case "createSuperNodeExternal": {
 				command = new CreateSuperNodeAction(data, this.objectModel, this.intl);
 				this.commandStack.do(command);
 				break;
@@ -2070,6 +2128,16 @@ export default class CanvasController {
 			}
 			case "collapseSuperNodeInPlace": {
 				command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+			case "convertSuperNodeExternalToLocal": {
+				command = new ConvertSuperNodeExternalToLocal(data, this.objectModel);
+				this.commandStack.do(command);
+				break;
+			}
+			case "convertSuperNodeLocalToExternal": {
+				command = new ConvertSuperNodeLocalToExternal(data, this.objectModel);
 				this.commandStack.do(command);
 				break;
 			}
@@ -2152,6 +2220,32 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data, command);
 		}
+	}
+
+	// Sets the appropriate values when handling an external pipleine flow
+	// when performing sub-flow actions.
+	preProcessForExternalPipelines(data) {
+		// If displaying SubPipeline include pipelineInfo for historical reasons.
+		if (data.editType === "displaySubPipeline") {
+			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
+		}
+
+		const pipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
+		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
+
+		data.externalPipelineFlowLoad = false;
+		// If there is a URL then we must be accessing an external pipeline flow.
+		if (externalPipelineFlowUrl) {
+			data.externalUrl = externalPipelineFlowUrl;
+			data.externalPipelineId = pipelineId;
+			// Try to retrieve the pipeline from our store. If it is not there then
+			// we'll need to load it from the host application so switch load flag on.
+			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+			if (!data.externalPipelineFlow) {
+				data.externalPipelineFlowLoad = true;
+			}
+		}
+		return data;
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

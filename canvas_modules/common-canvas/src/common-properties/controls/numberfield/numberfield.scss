@@ -41,11 +41,11 @@
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
 		.bx--number__controls {
-			bottom: unset;
+			display: none; // TODO: Remove this code after carbon supports hiding -/+ buttons
 		}
 		input[type="number"] { //override styling from carbon
 			background-color: unset;
-			padding-left: 0;
+			padding: 0;
 			height: 1.5rem;
 		}
 		.bx--number input[type="number"] {

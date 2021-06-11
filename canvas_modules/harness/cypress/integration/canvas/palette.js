@@ -33,12 +33,49 @@ describe("Test adding nodes into empty canvas", function() {
 		// Search for a node in Palette Search bar
 		cy.findNodeInPalette("sel");
 
+		// Search function can run slowly on build machine so give it some time.
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
 		// Add a node found in search results
-		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Select", 500, 200);
 
 		// Verify node doesn't exist in search results
 		cy.verifyNodeDoesNotExistInPalette("Sample");
+	});
+
+	it("Test searching for multiple words returns correct nodes", function() {
+		// Test adding nodes from palette on canvas
+		cy.clickToolbarPaletteOpen();
+
+		// Search for a node in Palette Search bar
+		cy.findNodeInPalette("Data File");
+
+		// Search function can run slowly on build machine so give it some time.
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
+		// Verify nodes exist in search results in corrct order
+		cy.verifyNodeDoesExistInPaletteAtIndex("Var. File", 0);
+		cy.verifyNodeDoesExistInPaletteAtIndex("Database", 1);
+		cy.verifyNodeDoesExistInPaletteAtIndex("Data Audit", 2);
+	});
+
+	it("Test open categories remain open when a new one is opened and closes when it is clicked", function() {
+		cy.clickToolbarPaletteOpen();
+
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 300, 200);
+
+		cy.clickCategory("Field Ops");
+		cy.dragNodeToPosition("Derive", 400, 200);
+
+		// If Import category is still open we will be able to drag a "Var File"
+		cy.dragNodeToPosition("Var. File", 500, 200);
+
+		// Close Import category
+		cy.clickCategory("Import");
+		cy.verifyNodeDoesNotExistInPalette("Var. File");
 	});
 });
 
