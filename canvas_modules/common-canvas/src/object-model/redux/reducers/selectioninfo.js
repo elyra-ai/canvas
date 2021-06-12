@@ -21,8 +21,7 @@ export default (state = [], action) => {
 		// In some instances, with an external object model, the same canvas info may
 		// be set multiple times. Consequently, we only clear the selections if
 		// we're given a completely new canvas.
-		if (action.canvasInfo && action.currentCanvasInfo &&
-				action.canvasInfo.id !== action.currentCanvasInfo.id) {
+		if (action.canvasInfoIdChanged) {
 			return {};
 		}
 		return state;
