@@ -123,6 +123,7 @@ class ReadonlyControl extends React.Component {
 				delay={TOOL_TIP_DELAY}
 				className="properties-tooltips"
 				disable={disabled}
+				showToolTipIfTruncated
 			>
 				{content}
 			</Tooltip>);
