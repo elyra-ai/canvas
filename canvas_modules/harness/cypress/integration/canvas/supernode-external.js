@@ -207,10 +207,14 @@ describe("Test the external supernode/sub-flows support", function() {
 
 		// Open a different pipeline flow
 		cy.openCanvasDefinition("externalSubFlowCanvas.json");
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
 		cy.verifyNumberOfNodes(5);
 
 		// Reopen the original pipeline flow/canvas
 		cy.openCanvasDefinition("externalMainCanvas.json");
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
 
 		cy.clickNode("Super node");
 		cy.rightClickNode("Super node");
