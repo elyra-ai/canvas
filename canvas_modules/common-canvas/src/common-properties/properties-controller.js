@@ -1012,12 +1012,6 @@ export default class PropertiesController {
 			conditionsUtil.validateInput(inPropertyId, this, true);
 		}
 
-		// If there are any required parameters empty, disable save button.
-		// If all required properties are filled, enable save button.
-		// this.requiredDefinitionsIds;
-		// const errors = this.getErrorMessages();
-		// console.log("!!! errors " + Object.keys(errors));
-
 		if (this.handlers.propertyListener) {
 			const convertedValue = this._convertObjectStructure(propertyId, value);
 			this.handlers.propertyListener(

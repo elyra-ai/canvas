@@ -148,7 +148,6 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		const rcontroller = renderedObject.controller;
 
 		const actualErrors = rcontroller.getErrorMessages(false, false, false, false);
-		// console.log("!!! errors " + JSON.stringify(errors));
 		const expectedErrors = {
 			"string_empty": {
 				"type": "error",
