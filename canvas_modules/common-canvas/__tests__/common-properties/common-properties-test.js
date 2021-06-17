@@ -50,34 +50,40 @@ const validationErrorMessages = {
 	"number_undefined": {
 		"type": "error",
 		"text": "Required parameter 'Undefined' has no value.",
-		"validation_id": "required_number_undefined_272.9520234285945"
+		"validation_id": "required_number_undefined_272.9520234285945",
+		"required": true
 	},
 	"number_null": {
 		"type": "error",
 		"text": "Required parameter 'Null' has no value.",
-		"validation_id": "required_number_null_401.11526920064296"
+		"validation_id": "required_number_null_401.11526920064296",
+		"required": true
 	},
 	"number_error": {
 		"type": "error",
 		"text": "Needs to be greaterThan 0",
-		"validation_id": "number_error"
+		"validation_id": "number_error",
+		"required": false
 	},
 	"number_warning": {
 		"type": "warning",
 		"text": "Needs to be greaterThan 1",
-		"validation_id": "number_warning"
+		"validation_id": "number_warning",
+		"required": false
 	},
 	"number_table": {
 		"0": {
 			"0": {
 				"type": "error",
 				"text": "Needs to be greaterThan 1",
-				"validation_id": "number_table"
+				"validation_id": "number_table",
+				"required": false
 			},
 			"1": {
 				"type": "warning",
 				"text": "Needs to be greaterThan 1",
-				"validation_id": "number_table"
+				"validation_id": "number_table",
+				"required": false
 			}
 		}
 	}

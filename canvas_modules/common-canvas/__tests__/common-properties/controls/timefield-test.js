@@ -173,6 +173,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
+			"required": false,
 			"validation_id": "Format_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Invalid time. Format should be H:m:s.",
@@ -199,6 +200,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		timeWrapper = wrapper.find("div[data-id='properties-time_hms']");
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
+			"required": true,
 			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Required parameter 'Required Time H:m:s' has no value.",

@@ -213,7 +213,8 @@ class App extends React.Component {
 			selectedPanel: null,
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
-			applyOnBlur: true,
+			applyOnBlur: false,
+			disableSaveIfRequiredPropertiesEmpty: true,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -287,6 +288,7 @@ class App extends React.Component {
 		this.setStateValue = this.setStateValue.bind(this);
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
@@ -1077,6 +1079,11 @@ class App extends React.Component {
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
 		this.log("apply changes on blur", enabled);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.setState({ disableSaveIfRequiredPropertiesEmpty: disabled });
+		this.log("save button disabled", disabled);
 	}
 
 	useExpressionBuilder(enabled) {
@@ -2064,6 +2071,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveIfRequiredPropertiesEmpty: this.state.disableSaveIfRequiredPropertiesEmpty,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
@@ -2285,7 +2293,9 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveIfRequiredPropertiesEmpty: this.state.disableSaveIfRequiredPropertiesEmpty,
 			useApplyOnBlur: this.useApplyOnBlur,
+			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,

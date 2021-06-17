@@ -440,6 +440,7 @@ describe("StructureListEditor render from paramdef", () => {
 		checkboxCell.simulate("change");
 
 		const errorMessage = {
+			"required": false,
 			"validation_id": "tableerrortest3",
 			"type": "error",
 			"text": "checkbox cannot be off",
@@ -454,8 +455,8 @@ describe("StructureListEditor render from paramdef", () => {
 
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(errorMessage).to.eql(actual);
-		const messages = renderedController.getErrorMessages();
-		const rowErrorMsg = { "0": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
+		const messages = renderedController.getErrorMessages(false, false, false, false);
+		const rowErrorMsg = { "0": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// select the localhost row in the table
@@ -487,6 +488,7 @@ describe("StructureListEditor render from paramdef", () => {
 		checkboxCell.simulate("change");
 
 		const errorMessage = {
+			"required": false,
 			"validation_id": "tableerrortest3",
 			"type": "error",
 			"text": "checkbox cannot be off",
@@ -499,8 +501,8 @@ describe("StructureListEditor render from paramdef", () => {
 		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
 		removeColumnButton.simulate("click");
 
-		const messages = renderedController.getErrorMessages();
-		const rowErrorMsg = { "1": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
+		const messages = renderedController.getErrorMessages(false, false, false, false);
+		const rowErrorMsg = { "1": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
 		// remove the error row and ensure the error message is removed from the table.
@@ -540,6 +542,7 @@ describe("StructureListEditor render from paramdef", () => {
 		checkboxCell.getDOMNode().checked = false;
 		checkboxCell.simulate("change");
 		let errorMessage = {
+			"required": false,
 			"validation_id": "tableerrortest3",
 			"type": "error",
 			"text": "checkbox cannot be off",
@@ -552,6 +555,7 @@ describe("StructureListEditor render from paramdef", () => {
 		const toggleCell = summaryPanel.find("div.properties-toggletext button").at(0);
 		toggleCell.simulate("click");
 		errorMessage = {
+			"required": false,
 			"validation_id": "tableerrortest3",
 			"type": "error",
 			"text": "There are 2 error cells. ",
@@ -565,10 +569,10 @@ describe("StructureListEditor render from paramdef", () => {
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
 		const moveRowBottom = summaryPanel.find("button.table-row-move-button").at(3);
 		moveRowBottom.simulate("click");
-		let messages = renderedController.getErrorMessages();
+		let messages = renderedController.getErrorMessages(false, false, false, false);
 		let rowErrorMsg = {
-			"3": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
-			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
+			"3": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
+			"4": { "2": { required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
@@ -580,10 +584,10 @@ describe("StructureListEditor render from paramdef", () => {
 		const moveRowTop = summaryPanel.find("button.table-row-move-button").at(0);
 		moveRowTop.simulate("click");
 
-		messages = renderedController.getErrorMessages();
+		messages = renderedController.getErrorMessages(false, false, false, false);
 		rowErrorMsg = {
-			"0": { "3": { type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
-			"4": { "2": { type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
+			"0": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
+			"4": { "2": { required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
 		};
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 	});

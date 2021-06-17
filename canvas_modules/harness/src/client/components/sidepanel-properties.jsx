@@ -63,6 +63,7 @@ export default class SidePanelModal extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
@@ -177,6 +178,10 @@ export default class SidePanelModal extends React.Component {
 
 	useApplyOnBlur(checked) {
 		this.props.propertiesConfig.useApplyOnBlur(checked);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.props.propertiesConfig.useSaveButtonDisable(disabled);
 	}
 
 	useExpressionBuilder(checked) {
@@ -354,6 +359,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const setSaveButtonDisable = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="harness-sidepanel-setSaveButtonDisable-toggle"
+					labelText="Set save button disabled if required properties is empty"
+					toggled={this.props.propertiesConfig.disableSaveIfRequiredPropertiesEmpty}
+					onToggle={this.useSaveButtonDisable}
+				/>
+			</div>);
+
 		const expressionBuilder = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -509,6 +524,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{applyOnBlur}
 				{divider}
+				{setSaveButtonDisable}
+				{divider}
 				{expressionBuilder}
 				{divider}
 				{validationHandler}
@@ -548,6 +565,8 @@ SidePanelModal.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
+		disableSaveIfRequiredPropertiesEmpty: PropTypes.bool,
+		useSaveButtonDisable: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,

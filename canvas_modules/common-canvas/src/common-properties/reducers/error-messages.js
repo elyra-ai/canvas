@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,10 @@ function messages(state = {}, action) {
 				}
 				newState[propertyId.name][strRow][strCol] = action.message.value;
 			} else {
-				newState[propertyId.name][strRow] = Object.assign(newState[propertyId.name][strRow], action.message.value);
+				newState[propertyId.name][strRow] = Object.assign({}, action.message.value);
 			}
 		} else {
-			newState[propertyId.name] = Object.assign(newState[propertyId.name], action.message.value);
+			newState[propertyId.name] = Object.assign({}, action.message.value);
 		}
 		return Object.assign({}, state, newState);
 	}
@@ -62,6 +62,8 @@ function messages(state = {}, action) {
 				delete newState[action.message.propertyId.name].type;
 				delete newState[action.message.propertyId.name].text;
 				delete newState[action.message.propertyId.name].validation_id;
+				delete newState[action.message.propertyId.name].required;
+				delete newState[action.message.propertyId.name].displayError;
 				if (isEmpty(newState[action.message.propertyId.name])) {
 					delete newState[action.message.propertyId.name];
 				}

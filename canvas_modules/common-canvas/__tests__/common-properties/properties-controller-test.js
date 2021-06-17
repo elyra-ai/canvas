@@ -786,7 +786,7 @@ describe("Properties Controller datasetMetadata", () => {
 describe("Properties Controller property messages", () => {
 	it("should set property messages correctly", () => {
 		reset();
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		expect(getCopy(errorMessages)).to.eql(actualValues);
 	});
 	it("should update a simple property message correctly", () => {
@@ -796,7 +796,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Testing error messages"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_int = {
 			validation_id: "param_int",
@@ -812,7 +812,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "warning in array"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_str_array = {};
 		expectedValues.param_str_array[2] = {
@@ -829,7 +829,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad cell value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_mix_table[2] = {};
 		expectedValues.param_mix_table[2][3] = {
@@ -849,7 +849,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad data value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.structureeditor = {
 			"1": {
@@ -957,7 +957,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "Pick a better value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getErrorMessages(false, false, false, false);
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_complex[1] = {
 			validation_id: "param_complex",
@@ -1280,10 +1280,11 @@ describe("Properties Controller updatePropertyValue validation", () => {
 			{
 				type: "error",
 				text: "The checkpoint interval value must either be >= 1 or -1 to disable",
-				validation_id: "numberfieldCheckpointInterval"
+				validation_id: "numberfieldCheckpointInterval",
+				required: false
 			}
 		};
-		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(errorMessage));
+		expect(JSON.stringify(controller.getErrorMessages(false, false, false, false))).to.equal(JSON.stringify(errorMessage));
 	});
 
 	it("should removePropertyValue if the value is undefined", () => {
@@ -1590,5 +1591,133 @@ describe("Properties Controller getControlPropType", () => {
 
 		const propType2 = controller.getControlPropType({ name: "param_complex", col: 2 }); // subcontrol: "zoom_label"
 		expect(propType2).to.equal("string");
+	});
+});
+
+describe("Properties Controller getRequiredDefinitionIds", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct required definition IDs from required parameters", () => {
+		const renderedObject = testUtils.flyoutEditorForm(actionParamDef);
+		controller = renderedObject.controller;
+
+		const requiredIds = controller.getRequiredDefinitionIds();
+		expect(requiredIds).to.eql(["required_fields_294.69762842919897"]);
+	});
+});
+
+describe("Properties Controller getRequiredErrorMessages", () => {
+	const requiredErrors = {
+		"numberfieldMaxBins": {
+			"type": "error",
+			"text": "Required parameter 'Maximum number of bins' has no value.",
+			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
+			"required": true,
+			"displayError": false
+		},
+		"checkboxTypes": {
+			"type": "warning",
+			"text": "No data types are selected",
+			"validation_id": "checkboxTypes",
+			"required": false,
+			"displayError": false
+		},
+		"textfieldName": {
+			"type": "warning",
+			"text": "password cannot contain name",
+			"validation_id": "textfieldtest3",
+			"required": true,
+			"displayError": true
+		},
+		"textareaDescription": {
+			"type": "error",
+			"text": "Required parameter 'Description' has no value.",
+			"validation_id": "required_textareaDescription_708.576019526482",
+			"required": false,
+			"displayError": true
+		},
+		"field_types": {
+			"7": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": true,
+					"displayError": true
+				}
+			},
+			"8": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": false,
+					"displayError": false
+				}
+			},
+			"9": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": false,
+					"displayError": true
+				}
+			},
+			"10": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": true,
+					"displayError": false
+				}
+			}
+		}
+	};
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct required error messages", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualRequiredErrors = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors = {
+			"numberfieldMaxBins": requiredErrors.numberfieldMaxBins,
+			"textfieldName": requiredErrors.textfieldName,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors).to.eql(expectedRequiredErrors);
+	});
+
+	it("should return correct error messages with filterDisplayError = true", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualDisplayErrors = controller.getErrorMessages(false, false, false, true);
+		const expectedDisplayErrors = {
+			"textfieldName": requiredErrors.textfieldName,
+			"textareaDescription": requiredErrors.textareaDescription,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"9": {
+					"0": requiredErrors.field_types["9"]["0"]
+				}
+			}
+		};
+		expect(actualDisplayErrors).to.eql(expectedDisplayErrors);
+	});
+
+	it("should return all error messages with filterDisplayError = false", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualDisplayErrors = controller.getErrorMessages(false, false, false, false);
+		expect(actualDisplayErrors).to.eql(requiredErrors);
 	});
 });

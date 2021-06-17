@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
-import PropertiesButtons from "./../components/properties-buttons";
+import MainEditorPropertiesButtons from "./../components/main-editor-properties-buttons";
 import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
@@ -67,8 +67,9 @@ class PropertiesMain extends React.Component {
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
+		this.propertiesController.validatePropertiesValues(false);
 		if (props.propertiesInfo.messages) {
-			this.propertiesController.validatePropertiesValues();
+			this.propertiesController.validatePropertiesValues(true);
 			this.previousErrorMessages = this.propertiesController.getErrorMessages();
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
@@ -340,7 +341,7 @@ class PropertiesMain extends React.Component {
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
 			valueInfo = this._setValueInforProperties(valueInfo, { applyProperties: true });
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
-			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
+			const errorMessages = this.propertiesController.getErrorMessages(true, true, true, false);
 			if (errorMessages) {
 				valueInfo.additionalInfo.messages = errorMessages;
 			}
@@ -421,12 +422,14 @@ class PropertiesMain extends React.Component {
 
 				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
 
-				buttonsContainer = (<PropertiesButtons
+				buttonsContainer = (<MainEditorPropertiesButtons
+					controller={this.propertiesController}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
+					disableSaveIfRequiredPropertiesEmpty={this.props.propertiesConfig.disableSaveIfRequiredPropertiesEmpty}
 				/>);
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
@@ -520,6 +523,7 @@ PropertiesMain.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
+		disableSaveIfRequiredPropertiesEmpty: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,

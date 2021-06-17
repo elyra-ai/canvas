@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
 export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
+export const SET_SAVE_BUTTON_DISABLE = "SET_SAVE_BUTTON_DISABLE";
 
 /*
  * action creators
@@ -113,4 +114,8 @@ export function setActiveTab(activeTab) {
 
 export function disableRowMoveButtons(propertyIds) {
 	return { type: DISABLE_ROW_MOVE_BUTTONS, propertyIds };
+}
+
+export function setSaveButtonDisable(disableState) {
+	return { type: SET_SAVE_BUTTON_DISABLE, disableState };
 }

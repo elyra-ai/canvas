@@ -47,8 +47,8 @@ describe("validateInput validates input and updates controller correctly", () =>
 		let expected =
 			{
 				"0": {
-					"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond" },
-					"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond" }
+					"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond", required: false },
+					"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond", required: false }
 				}
 			};
 		messages = controller.getErrorMessages();
@@ -62,11 +62,11 @@ describe("validateInput validates input and updates controller correctly", () =>
 		expected =
 				{
 					"0": {
-						"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond" },
-						"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond" } },
+						"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond", required: false },
+						"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond", required: false } },
 					"1": {
-						"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond" },
-						"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond" } } };
+						"1": { type: "error", text: "Readonly in a table error testing", validation_id: "readonly_table_cond", required: false },
+						"2": { type: "warning", text: "Readonly in a table warning testing", validation_id: "readonly_table_cond", required: false } } };
 		messages = controller.getErrorMessages();
 		expect(messages.readonly_table_cond).to.eql(expected);
 	});

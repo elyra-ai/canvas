@@ -54,6 +54,7 @@ class PropertiesButtons extends Component {
 				type="button"
 				size="small"
 				onClick={this.props.okHandler}
+				disabled={!this.props.applyButtonEnabled}
 			>
 				{applyButtonLabel}
 			</Button>
@@ -77,7 +78,12 @@ PropertiesButtons.propTypes = {
 	okHandler: PropTypes.func,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	showPropertiesButtons: PropTypes.bool
+	showPropertiesButtons: PropTypes.bool,
+	applyButtonEnabled: PropTypes.bool
+};
+
+PropertiesButtons.defaultProps = {
+	applyButtonEnabled: true
 };
 
 export default injectIntl(PropertiesButtons);

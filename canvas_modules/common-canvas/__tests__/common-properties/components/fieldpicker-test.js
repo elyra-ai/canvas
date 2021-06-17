@@ -721,11 +721,13 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const warningMessage = {
 			fields: {
 				"1": {
+					"required": false,
 					"type": "warning",
 					"text": "Invalid Select Columns, field not found in data set.",
 					"validation_id": "validField_fields[0]_294.69762842919897"
 				},
 				"2": {
+					"required": false,
 					"type": "warning",
 					"text": "Invalid Select Columns, field not found in data set.",
 					"validation_id": "validField_fields[0]_294.69762842919897"
@@ -733,7 +735,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 			}
 		};
 
-		const actual = renderedController.getErrorMessages();
+		const actual = renderedController.getErrorMessages(false, false, false, true);
 		expect(warningMessage).to.eql(actual);
 	});
 

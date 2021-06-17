@@ -205,6 +205,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"required": false,
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D.",
@@ -235,6 +236,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"required": false,
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D.",
@@ -263,6 +265,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"required": true,
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
 			"text": "Required parameter 'Required Date M-D-Y' has no value.",
