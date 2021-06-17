@@ -82,6 +82,11 @@ Cypress.Commands.add("selectTabFromPropertyInSubPanel", (tabName, propertyId) =>
 		.click({ force: true });
 });
 
+Cypress.Commands.add("triggerBlurInExpressionBuilder", () => {
+	cy.get(".properties-expression-selection-content-switcher")
+		.click({ force: true });
+});
+
 function getCellMatch(tableCells, fieldName) {
 	for (let idx = 0; idx < tableCells.length; idx++) {
 		if (tableCells[idx].textContent === fieldName) {

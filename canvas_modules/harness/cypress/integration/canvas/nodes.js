@@ -204,6 +204,10 @@ describe("Test changing node properties is reflected in canvas", function() {
 	});
 
 	it("Test changing node names is reflected in canvas", function() {
+		// Set applyOnBlur to true
+		cy.toggleCommonPropertiesSidePanel();
+		cy.toggleApplyOnBlur();
+
 		// Add nodes from Palette
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Import");
