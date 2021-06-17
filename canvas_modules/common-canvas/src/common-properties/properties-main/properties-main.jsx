@@ -24,7 +24,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
@@ -158,6 +158,10 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
+
+		if (this.props.callbacks.propertyListener) {
+			this.props.callbacks.propertyListener({ action: ACTIONS.PROPERTIES_LOADED });
+		}
 	}
 
 	getApplyButtonLabel() {

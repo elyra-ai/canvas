@@ -1078,6 +1078,9 @@ class App extends React.Component {
 
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
+		if (enabled) {
+			this.setState({ disableSaveIfRequiredPropertiesEmpty: false });
+		}
 		this.log("apply changes on blur", enabled);
 	}
 
