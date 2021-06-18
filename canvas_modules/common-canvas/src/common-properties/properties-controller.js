@@ -1607,7 +1607,7 @@ export default class PropertiesController {
 		const parameterNames = Object.keys(this.controls);
 		parameterNames.forEach((parameterName) => {
 			const control = this.controls[parameterName];
-			if (control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.addRemoveRows)) {
+			if (control.valueDef && control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.addRemoveRows)) {
 				const propertyId = { name: control.name };
 				this.setAddRemoveRows(propertyId, control.addRemoveRows);
 			}
