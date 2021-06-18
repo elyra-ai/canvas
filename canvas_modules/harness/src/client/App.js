@@ -814,6 +814,23 @@ class App extends React.Component {
 		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
 	}
 
+	// Textfield to set the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(propertyId) {
+		this.setState({ addRemoveRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.setState({ addRemoveRowsEnabled: enabled });
+	}
+
+	// Button to call propertiesController to set addRemoveRows
+	setAddRemoveRows() {
+		if (this.propertiesController) {
+			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
+	}
+
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
 		// Get locale from browser
@@ -1115,23 +1132,6 @@ class App extends React.Component {
 	disableRowMoveButtons(propertyIds) {
 		if (this.propertiesController) {
 			this.propertiesController.setDisableRowMoveButtons(propertyIds);
-		}
-	}
-
-	// Textfield to set the propertyId for addRemoveRows
-	setAddRemoveRowsPropertyId(propertyId) {
-		this.setState({ addRemoveRowsPropertyId: propertyId });
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setAddRemoveRowsEnabled(enabled) {
-		this.setState({ addRemoveRowsEnabled: enabled });
-	}
-
-	// Button to call propertiesController to set addRemoveRows
-	setAddRemoveRows() {
-		if (this.propertiesController) {
-			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
 		}
 	}
 
@@ -2315,7 +2315,6 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
-			addRemoveRowsPropertyId: this.state.addRemoveRowsPropertyId,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,

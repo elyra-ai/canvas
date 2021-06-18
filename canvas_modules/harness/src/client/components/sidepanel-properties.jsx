@@ -135,6 +135,27 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.setMaxLengthForSingleLineControls(maxLengthForSingleLineControls);
 	}
 
+	// Textfield to enter the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(evt) {
+		try {
+			const propertyId = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.setAddRemoveRowsPropertyId(propertyId);
+			this.setState({ invalidSetAddRemoveRowPropertyId: false });
+		} catch (ex) {
+			this.setState({ invalidSetAddRemoveRowPropertyId: true });
+		}
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.props.propertiesConfig.setAddRemoveRowsEnabled(enabled);
+	}
+
+	// Button to submit addRemoveRows data and call propertiesController
+	setAddRemoveRows(evt) {
+		this.props.propertiesConfig.setAddRemoveRows();
+	}
+
 	submitProperties() {
 		if (this.state.commonProperties.name) {
 			this.props.log("Submit common properties file", this.state.commonProperties.name);
@@ -214,27 +235,6 @@ export default class SidePanelModal extends React.Component {
 		} catch (ex) {
 			this.setState({ invalidPropertyId: true });
 		}
-	}
-
-	// Textfield to enter the propertyId for addRemoveRows
-	setAddRemoveRowsPropertyId(evt) {
-		try {
-			const propertyId = JSON.parse(evt.target.value);
-			this.props.propertiesConfig.setAddRemoveRowsPropertyId(propertyId);
-			this.setState({ invalidSetAddRemoveRowPropertyId: false });
-		} catch (ex) {
-			this.setState({ invalidSetAddRemoveRowPropertyId: true });
-		}
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setAddRemoveRowsEnabled(enabled) {
-		this.props.propertiesConfig.setAddRemoveRowsEnabled(enabled);
-	}
-
-	// Button to submit addRemoveRows data and call propertiesController
-	setAddRemoveRows(evt) {
-		this.props.propertiesConfig.setAddRemoveRows();
 	}
 
 	dropdownOptions() {
