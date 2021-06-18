@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
@@ -161,6 +161,10 @@ export default class PropertiesController {
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
 			// default value set in the above loop.
 			this._addToControlValues(true);
+
+			// set initial values for addRemoveRows in redux
+			this.setInitialAddRemoveRows();
+
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
@@ -1594,5 +1598,38 @@ export default class PropertiesController {
 			? this.getPropertiesConfig().maxLengthForSingleLineControls
 			: 128;
 		return maxLengthForSingleLineControls;
+	}
+
+	/**
+	* Set the initial values of addRemoveRows for all structure controls
+	*/
+	setInitialAddRemoveRows() {
+		const parameterNames = Object.keys(this.controls);
+		parameterNames.forEach((parameterName) => {
+			const control = this.controls[parameterName];
+			if (control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.addRemoveRows)) {
+				const propertyId = { name: control.name };
+				this.setAddRemoveRows(propertyId, control.addRemoveRows);
+			}
+		});
+
+	}
+
+	/**
+	* Set the addRemoveRows attribute to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param enabled boolean value to enable or disable addRemoveRows
+	*/
+	setAddRemoveRows(propertyId, enabled) {
+		this.propertiesStore.setAddRemoveRows(propertyId, enabled);
+	}
+
+	/**
+	* Returns the true if addRemoveRows is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getAddRemoveRows(propertyId) {
+		return this.propertiesStore.getAddRemoveRows(propertyId);
 	}
 }

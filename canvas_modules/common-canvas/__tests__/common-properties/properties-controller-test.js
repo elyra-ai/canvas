@@ -1578,3 +1578,45 @@ describe("Properties Controller getControlPropType", () => {
 		expect(propType2).to.equal("string");
 	});
 });
+
+describe("Properties Controller addRemoveRows", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should setInitialAddRemoveRows when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+
+		const parameters = Object.keys(structureListEditorParamDef.current_parameters);
+		parameters.forEach((parameterName) => {
+			if (parameterName === "inlineEditingTableNoButtons") { // 'add_remove_rows' is set to false in parameterDef
+				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.false;
+			} else {
+				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.true;
+			}
+		});
+	});
+
+	it("structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { name: "structurelisteditorTableInput" };
+
+		// Verify buttons are visible when editor opens
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+
+		// Set the addRemoveRows to false for this control
+		controller.setAddRemoveRows(propertyId, false);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		// Set the addRemoveRows to true for this control
+		controller.setAddRemoveRows(propertyId, true);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
+});

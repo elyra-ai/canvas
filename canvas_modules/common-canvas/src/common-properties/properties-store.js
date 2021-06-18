@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata } from "./actions";
+import { setDatasetMetadata, setAddRemoveRows } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -36,6 +36,7 @@ import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
+import propertiesSettingsReducer from "./reducers/properties-settings";
 import * as PropertyUtils from "./util/property-utils.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
@@ -44,7 +45,8 @@ import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
-			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer, disableRowMoveButtonsReducer, actionStatesReducer });
+			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer,
+			disableRowMoveButtonsReducer, actionStatesReducer, propertiesSettingsReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -403,5 +405,24 @@ export default class PropertiesStore {
 	getActiveTab() {
 		const state = this.store.getState();
 		return state.componentMetadataReducer.activeTab;
+	}
+
+	/**
+	* Set the addRemoveRows attribute to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param enabled boolean value to enable or disable addRemoveRows
+	*/
+	setAddRemoveRows(propertyId, enabled) {
+		this.store.dispatch(setAddRemoveRows({ propertyId: propertyId, value: enabled }));
+	}
+
+	/**
+	* Returns the true if addRemoveRows is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getAddRemoveRows(propertyId) {
+		const state = this.store.getState();
+		return state.propertiesSettingsReducer[propertyId.name] && state.propertiesSettingsReducer[propertyId.name].addRemoveRows;
 	}
 }
