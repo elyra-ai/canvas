@@ -30,7 +30,8 @@ describe("numberfield-control renders correctly", () => {
 		additionalText: "Enter number",
 		valueDef: {
 			isList: false
-		}
+		},
+		controlType: "numberfield"
 	};
 	const propertyId = { name: "test-number" };
 
@@ -69,6 +70,19 @@ describe("numberfield-control renders correctly", () => {
 		);
 		const input = wrapper.find("input[type='number']");
 		expect(input).to.have.length(1);
+	});
+
+	it("numberfield should NOT have steppers", () => {
+		const wrapper = mount(
+			<NumberfieldControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		expect(wrapper.find(".bx--number--nosteppers")).to.have.length(1);
+		expect(wrapper.find(".bx--number__controls")).to.have.length(0);
 	});
 
 	it("numberfield should set placeholder text", () => {
@@ -231,6 +245,14 @@ describe("numberfield control works correctly", () => {
 		generator.simulate("click");
 		const newValue = controller.getPropertyValue(numPropertyId);
 		expect(oldValue).not.equal(newValue);
+	});
+	it("numberfield control in Table cell should NOT have steppers", () => {
+		propertyUtils.openSummaryPanel(wrapper, "numberfield-table-summary");
+		const numberfieldInTable = wrapper.find(".properties-table-cell-control").find(".properties-numberfield");
+		numberfieldInTable.forEach((numberfieldInTableCell) => {
+			expect(numberfieldInTableCell.find(".bx--number--nosteppers")).to.have.length(1);
+			expect(numberfieldInTableCell.find(".bx--number__controls")).to.have.length(0);
+		});
 	});
 });
 
