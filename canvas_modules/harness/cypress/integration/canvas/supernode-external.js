@@ -50,15 +50,17 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// There should now be 5 nodes and 4 links in the main flow
-		// and 5 in the sub-flow (including the binding nodes).
+		// and 5 in the sub-flow (including the binding nodes) and
+		// 3 in the sub-flow in the sub-flow (including the binding nodes).
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 
 		// The original flow had 1 pipelines so now there should be 2.
-		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfPipelines(3);
 		cy.verifyNumberOfNodesInPipeline(5);
-		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelines(2);
 
 		cy.verifyNumberOfNodesInSupernode("Super node", 5); // Includes 3 supernode binding nodes
 		cy.verifyNumberOfLinksInSupernode("Super node", 3);
@@ -200,13 +202,15 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// There should now be 5 nodes and 4 links in the main flow.
-		// and 5 in the sub-flow (including the 3 binding nodes)
+		// and 5 in the sub-flows (including the 3 binding nodes) and
+		// 3 in the sub-flow in the sub-flow (including 2 binding nodes).
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 
 		// Open a different pipeline flow
-		cy.openCanvasDefinition("externalSubFlowCanvas.json");
+		cy.openCanvasDefinition("externalSubFlowCanvas1.json");
 		/* eslint cypress/no-unnecessary-waiting: "off" */
 		cy.wait(1000);
 		cy.verifyNumberOfNodes(5);
@@ -217,15 +221,35 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.wait(1000);
 
 		cy.clickNode("Super node");
-		cy.rightClickNode("Super node");
+		cy.rightClickNode("Super node", "topLeft");
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// There should now be 5 nodes and 4 links in the main flow.
-		// and 5 in the sub-flow (including the 3 binding nodes).
+		// and 5 in the sub-flow (including the 3 binding nodes) and also
+		// 3 in the subflow inside the sub-flow.
 		// If an error occurred this sub-flow would not open.
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfPortDataLinks(4);
 		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	});
+
+	it("Test opening a flow with an expanded external supernode loads the external pipeline and displays it", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+
+		// When the canvas is displayed common-canvas should load the external
+		// pipelines that are expanded which is both the sub-flow of the
+		// 'Super node' node and the subflow of Supernode 2' supernode.
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+		// There should be 3 pipelines in memory with 2 of them as external
+		// pipelines.
+		cy.verifyNumberOfPipelines(3);
+		cy.verifyNumberOfExternalPipelines(2);
 	});
 
 });
@@ -235,16 +259,18 @@ function testForExternalInPlace() {
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
 
-	// There should be 5 in th sub-flow (including 3 binding nodes).
+	// There should be 5 in the sub-flow (including 3 binding nodes) and
+	// 3 in the sub-flow in the sub-flow (including 2 binding nodes).
 	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 
-	// The flow should still have 2 pipelines (the sub-flow pipeline remains
+	// The flow should still have 3 pipelines (the sub-flow pipeline remains
 	// loaded even though it became external) and one of them should be external.
-	cy.verifyNumberOfPipelines(2);
-	cy.verifyNumberOfExternalPipelines(1);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(2);
 
-	// Ext flow is back!
-	cy.verifyNumberOfExternalPipelineFlows(1);
+	// Ext flows are back!
+	cy.verifyNumberOfExternalPipelineFlows(2);
 }
 
 function testForLocalInPlace() {
@@ -252,15 +278,17 @@ function testForLocalInPlace() {
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
 
-	// There should be 5 in th sub-flow (including 3 binding nodes).
+	// There should be 5 in th sub-flow (including 3 binding nodes) and
+	// 3 in the sub-flow in the sub-flow (including 2 binding nodes).
 	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 
-	// The original flow had 1 pipelines so now there should be 2.
-	cy.verifyNumberOfPipelines(2);
-	cy.verifyNumberOfExternalPipelines(0);
+	// The original flow had 1 pipelines so now there should be 3.
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(1);
 
 	// The external flow should be gone!
-	cy.verifyNumberOfExternalPipelineFlows(0);
+	cy.verifyNumberOfExternalPipelineFlows(1);
 }
 
 function testForExternalCollapse(pipelines, extFlows) {

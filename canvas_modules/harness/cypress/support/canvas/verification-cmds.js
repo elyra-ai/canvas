@@ -23,7 +23,8 @@ const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-l
 const commentLinkSelector = mainCanvasSelector + ".d3-link-group.d3-comment-link .d3-link-line";
 const assocLinkSelector = mainCanvasSelector + ".d3-link-group.d3-object-link .d3-link-line";
 const nodeImageSelector = mainCanvasSelector + "g > .d3-node-image";
-const nodesInSubFlowSelector = ".d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
+const nodesInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
+const nodesInSubFlowInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group> .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 
 
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
@@ -291,6 +292,19 @@ Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
 		}
 	});
 });
+
+Cypress.Commands.add("verifyNumberOfNodesInSubFlowInSubFlow", (noOfNodes) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(".d3-node-image").length) {
+			cy.get(nodesInSubFlowInSubFlowSelector)
+				.should("have.length", noOfNodes);
+		} else {
+			// No nodes found on canvas
+			expect(0).equal(noOfNodes);
+		}
+	});
+});
+
 
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 	cy.get("#canvas-div-1").find(".d3-node-image")

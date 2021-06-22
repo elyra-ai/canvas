@@ -163,9 +163,9 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	});
 });
 
-Cypress.Commands.add("rightClickNode", (nodeName) => {
+Cypress.Commands.add("rightClickNode", (nodeName, position) => {
 	cy.getNodeWithLabel(nodeName)
-		.rightclick();
+		.rightclick(position); // position defaults to 'center' if not provided
 });
 
 Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {

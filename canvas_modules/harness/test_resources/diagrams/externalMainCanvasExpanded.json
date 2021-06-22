@@ -204,7 +204,7 @@
               "y_pos": 219,
               "class_name": "canvas-node",
               "description": "nodeIDSuperNodePE",
-              "is_expanded": false,
+              "is_expanded": true,
               "expanded_width": 200,
               "expanded_height": 200
             }
