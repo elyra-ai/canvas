@@ -249,6 +249,10 @@ export default class CanvasController {
 	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
 		this.objectModel.setPipelineFlow(flow);
+		// When a pipeline flow is loaded it may have expanded supernodes which
+		// refer to external pipelines and these need to be loaded for the
+		// pipeline to display correctly.
+		this.ensureVisibleExpandedPipelinesAreLoaded();
 	}
 
 	// Clears the pipleine flow and displays an empty canvas.
@@ -1902,7 +1906,8 @@ export default class CanvasController {
 			data.externalPipelineFlowId = "";
 
 		// Pre-process for handling external pipeline flows.
-		} else if (data.editType === "expandSuperNodeInPlace" ||
+		} else if (data.editType === "loadPipelineFlow" ||
+				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
@@ -1970,6 +1975,10 @@ export default class CanvasController {
 		}
 		case "toggleNotificationPanel": {
 			this.toggleNotificationPanel();
+			break;
+		}
+		case "loadPipelineFlow": {
+			this.objectModel.ensurePipelineIsLoaded(data);
 			break;
 		}
 		default:
@@ -2220,6 +2229,14 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data, command);
 		}
+
+		// After executing the 'loadPipelineFlow' and 'expandSuperNodeInPlace'
+		// actions we need to check to see if there are any more expanded
+		// supernodes that refer to external pipelines. These need to be loaded
+		// for the pipeline to display correctly. If there is more than one expanded
+		// pipeline visible they will be loaded one by one when this check is
+		// encountered.
+		this.ensureVisibleExpandedPipelinesAreLoaded();
 	}
 
 	// Sets the appropriate values when handling an external pipleine flow
@@ -2230,14 +2247,14 @@ export default class CanvasController {
 			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
 		}
 
-		const pipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
+		const externalPipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
 		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
 
 		data.externalPipelineFlowLoad = false;
 		// If there is a URL then we must be accessing an external pipeline flow.
 		if (externalPipelineFlowUrl) {
 			data.externalUrl = externalPipelineFlowUrl;
-			data.externalPipelineId = pipelineId;
+			data.externalPipelineId = externalPipelineId;
 			// Try to retrieve the pipeline from our store. If it is not there then
 			// we'll need to load it from the host application so switch load flag on.
 			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
@@ -2246,6 +2263,20 @@ export default class CanvasController {
 			}
 		}
 		return data;
+	}
+
+	// Ensures that any external pipeline, associated with any visible expanded
+	// supernodes in the pipeline flow being displayed, are loaded. This method
+	// is called for one pipeline at a time until all needed pipeline flows are
+	// loaded. This allows the host app to serve up one pipeline flow at a time.
+	ensureVisibleExpandedPipelinesAreLoaded() {
+		const expandedSupernodes = this.objectModel.getVisibleExpandedSupernodes();
+		if (expandedSupernodes && expandedSupernodes.length > 0) {
+			this.editActionHandler({
+				editType: "loadPipelineFlow",
+				targetObject: expandedSupernodes[0]
+			});
+		}
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

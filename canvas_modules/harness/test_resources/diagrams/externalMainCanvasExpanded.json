@@ -2,7 +2,7 @@
   "doc_type": "pipeline",
   "version": "3.0",
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-  "id": "external-main-canvas",
+  "id": "external-main-canvas-expanded",
   "primary_pipeline": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
   "parameters": {
     "props": [
@@ -204,7 +204,7 @@
               "y_pos": 219,
               "class_name": "canvas-node",
               "description": "nodeIDSuperNodePE",
-              "is_expanded": false,
+              "is_expanded": true,
               "expanded_width": 200,
               "expanded_height": 200
             }
