@@ -538,6 +538,8 @@ export default class SidePanelModal extends React.Component {
 				<Toggle
 					id="harness-sidepanel-setAddRemoveRowsEnabled-toggle"
 					labelText="Set addRemoveRows enabled for the propertyId entered above"
+					labelA="disable"
+					labelB="enable"
 					toggled={this.props.propertiesConfig.addRemoveRowsEnabled}
 					onToggle={this.setAddRemoveRowsEnabled}
 				/>
