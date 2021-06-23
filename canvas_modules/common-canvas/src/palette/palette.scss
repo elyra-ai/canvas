@@ -263,18 +263,14 @@ $palette-border-color: $ui-03;
 		// Style for magnifier icon and x icon (when it appears)
 		svg {
 			fill: $icon-01;
-		}
-
-		// Move the magnifier icon so it lines up with the category icons in the
-		// category divs.
-		.bx--search-magnifier {
-			margin-left: 5px;
+			margin-left: 10px;
 		}
 
 		input {
 			background: $field-01;
 			height: 100%;
 			padding-right: 3rem;
+			padding-left: 52px;
 		}
 
 		// Move the x icon button to the right (when it appears after the user
