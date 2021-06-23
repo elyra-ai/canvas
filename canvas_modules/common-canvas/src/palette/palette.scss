@@ -260,12 +260,18 @@ $palette-border-color: $ui-03;
 		height: 100%;
 		overflow: hidden;
 
-		// Style for magnifier icon and x icon (when it appears)
-		svg {
-			fill: $icon-01;
+		// Move the magnifying glass icon to be positioned over the category icons
+		// in the palette as required from DUX rview.
+		.bx--search-magnifier svg {
 			margin-left: 10px;
 		}
 
+		svg {
+			fill: $icon-01;
+		}
+
+		// Position the search text to be directly over the category text in the
+		// palette as required from DUX rview.
 		input {
 			background: $field-01;
 			height: 100%;
