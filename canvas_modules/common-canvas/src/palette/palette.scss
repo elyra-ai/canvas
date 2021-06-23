@@ -280,7 +280,9 @@ $palette-border-color: $ui-03;
 		}
 
 		// Position the x icon button to the right (when it appears after the user
-		// enters text).
+		// enters text) so that it lines up with the carets in the category divs
+		// (although with the 'immediate' search feature the category caret's and
+		// the x icon are not visible at the same time).  
 		// Getting rid of ::before allows the right side of the highlight rectangle
 		// on hover to appear.
 		button {
