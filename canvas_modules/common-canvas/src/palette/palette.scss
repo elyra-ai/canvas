@@ -260,25 +260,29 @@ $palette-border-color: $ui-03;
 		height: 100%;
 		overflow: hidden;
 
-		// Style for magnifier icon and x icon (when it appears)
+		// Move the magnifying glass icon to be positioned over the category icons
+		// in the palette, as required from DUX review.
+		.bx--search-magnifier svg {
+			margin-left: 10px;
+		}
+
 		svg {
 			fill: $icon-01;
 		}
 
-		// Move the magnifier icon so it lines up with the category icons in the
-		// category divs.
-		.bx--search-magnifier {
-			margin-left: 5px;
-		}
-
+		// Position the search text to be directly over the category text in the
+		// palette as, required from DUX review.
 		input {
 			background: $field-01;
 			height: 100%;
 			padding-right: 3rem;
+			padding-left: 52px;
 		}
 
-		// Move the x icon button to the right (when it appears after the user
-		// enters text) so that it lines up with the carets in the category divs.
+		// Position the x icon button to the right (when it appears after the user
+		// enters text) so that it lines up with the carets in the category divs
+		// (although with the 'immediate' search feature the category caret's and
+		// the x icon are not visible at the same time).  
 		// Getting rid of ::before allows the right side of the highlight rectangle
 		// on hover to appear.
 		button {
