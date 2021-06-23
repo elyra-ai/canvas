@@ -50,6 +50,8 @@ describe("validating notContains operator works correctly", () => {
 		expect(notContains(wrap("sbeve"), wrap("be"), null, controller)).to.equal(false);
 		expect(notContains(wrap(null), wrap(null), null, controller)).to.equal(true);
 		expect(notContains(wrap([1, 2, 3]), wrap(2), null, controller)).to.equal(false);
+		expect(notContains(wrap(["test 1", "test 2"]), wrap("test 1"), null, controller)).to.equal(false);
+		expect(notContains(wrap(["test 1", "test 2"]), wrap("test"), null, controller)).to.equal(true);
 		// pass in a function as a way to hit the default switch case
 		expect(notContains(wrap(emptyFunc), wrap("string"), null, controller)).to.equal(true);
 	});
@@ -60,6 +62,8 @@ describe("validating notContains operator works correctly", () => {
 		expect(notContains(wrap("sbeve"), undefinedPlaceholder, "be", controller)).to.equal(false);
 		expect(notContains(wrap(null), undefinedPlaceholder, null, controller)).to.equal(true);
 		expect(notContains(wrap([1, 2, 3]), undefinedPlaceholder, 2, controller)).to.equal(false);
+		expect(notContains(wrap(["test 1", "test 2"]), undefinedPlaceholder, "test 1", controller)).to.equal(false);
+		expect(notContains(wrap(["test 1", "test 2"]), undefinedPlaceholder, "test", controller)).to.equal(true);
 		// pass in a function as a way to hit the default switch case
 		expect(notContains(wrap(emptyFunc), undefinedPlaceholder, "string", controller)).to.equal(true);
 	});

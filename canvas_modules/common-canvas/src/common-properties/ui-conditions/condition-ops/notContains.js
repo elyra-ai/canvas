@@ -15,7 +15,7 @@
  */
 
 import logger from "./../../../../utils/logger";
-import { searchInArray } from "./../conditions-utils.js";
+import { includes } from "lodash";
 
 function op() {
 	return "notContains";
@@ -30,9 +30,8 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "undefined":
 				return true;
 			case "string":
-				return paramInfo.value.indexOf(param2Info.value) < 0;
 			case "object":
-				return paramInfo.value === null ? true : !searchInArray(paramInfo.value, param2Info.value, false);
+				return !includes(paramInfo.value, param2Info.value);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
@@ -42,9 +41,8 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "undefined":
 				return true;
 			case "string":
-				return paramInfo.value.indexOf(value) < 0;
 			case "object":
-				return paramInfo.value === null ? true : !searchInArray(paramInfo.value, value, false);
+				return !includes(paramInfo.value, value);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
