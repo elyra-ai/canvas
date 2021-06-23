@@ -420,9 +420,8 @@ export default class APIPipeline {
 	}
 
 	// Returns true if the node passed in is an exit binding node. We detect
-	// this by checking that the node *has* inputs because with the 'alt_outputs'
-	// feature an exit binding node might have outputs since pipeline-in-handler
-	// will convert alt_outputs to outputs.
+	// this by checking that the node *has* inputs because an exit binding node
+	// might have outputs.
 	isExitBindingNode(node) {
 		if (node.type === BINDING && node.inputs && node.inputs.length > 0) {
 			return true;
