@@ -379,6 +379,43 @@ export default class ObjectModel {
 		}
 	}
 
+	// Returns an array of 'visible' supernodes that refer to external pipelines
+	// which are not currently loaded into memory. 'Visible' in this context means
+	// they are either in the primary pipeline flow or are within the sub-flow
+	// of an expanded supernode.
+	getVisibleExpandedSupernodes() {
+		const canvasInfo = this.getCanvasInfo();
+		const topLevelPipelineId = this.getAPIPipeline().pipelineId;
+		const topLevelPipeline = canvasInfo.pipelines.find((p) => p.id === topLevelPipelineId);
+		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(topLevelPipeline, canvasInfo.pipelines);
+		return supernodes;
+	}
+
+	// Returns an array of 'visible' expanded supernodes for the pipeline passed
+	// in given the current set of pipelines that are in memory.
+	getVisibleExpandedExternalSupernodesForPipeline(pipeline, pipelines) {
+		let supernodes = [];
+		pipeline.nodes.forEach((n) => {
+			if (n.type === SUPER_NODE && n.is_expanded) {
+				// This might return falsey if the pipeline has not yet been loaded.
+				const subFlowPipeline = pipelines.find((p) => p.id === n.subflow_ref.pipeline_id_ref);
+
+				// If this expanded supernode refers to an external pipeline that is
+				// not yet loaded then save to our output.
+				if (n.subflow_ref.url && !subFlowPipeline) {
+					supernodes.push(n);
+				}
+				// For expanded supernodes, check the referenced pipeline to see if
+				// it has any nested expanded supernodes.
+				if (subFlowPipeline) {
+					const sns = this.getVisibleExpandedExternalSupernodesForPipeline(subFlowPipeline, pipelines);
+					supernodes = supernodes.concat(sns);
+				}
+			}
+		});
+		return supernodes;
+	}
+
 	// Returns true if the pipelineFlow passd in contains the pipeline identified
 	// by the pipelineId passed in.
 	flowContainsPipeline(pipelineFlow, pipelineId) {

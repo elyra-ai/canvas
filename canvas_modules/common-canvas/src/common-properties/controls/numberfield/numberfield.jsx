@@ -22,6 +22,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
+import { ControlType } from "./../../constants/form-constants";
 
 class NumberfieldControl extends React.Component {
 	constructor(props) {
@@ -91,7 +92,7 @@ class NumberfieldControl extends React.Component {
 					hideLabel={this.props.tableControl}
 					allowEmpty
 					light={this.props.controller.getLight()}
-					hideSteppers={this.props.tableControl}
+					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>

@@ -116,7 +116,8 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS
 } from "./constants/constants.js";
 
-import EXTERNAL_SUB_FLOW_CANVAS from "../../test_resources/diagrams/externalSubFlowCanvas.json";
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
 
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
@@ -351,10 +352,11 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
-		// Array to handle external flows. It is initialized to contain a sub-flow
+		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
 		this.externalPipelineFlows = [];
-		this.externalPipelineFlows["all-types-external-pipeline-flow-url"] = EXTERNAL_SUB_FLOW_CANVAS;
+		this.externalPipelineFlows["external-sub-flow-url-1"] = EXTERNAL_SUB_FLOW_CANVAS_1;
+		this.externalPipelineFlows["external-sub-flow-url-2"] = EXTERNAL_SUB_FLOW_CANVAS_2;
 
 		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
@@ -1285,6 +1287,7 @@ class App extends React.Component {
 			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
 			break;
 		}
+		case "loadPipelineFlow":
 		case "expandSuperNodeInPlace":
 		case "displaySubPipeline":
 		case "convertSuperNodeExternalToLocal": {

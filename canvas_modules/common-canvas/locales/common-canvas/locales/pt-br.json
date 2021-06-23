@@ -16,7 +16,7 @@
 	"menu.highlightBranch": "Destacar ramificação",
 	"menu.highlightDownstream": "Destacar recebimento de dados",
 	"menu.highlightUpstream": "Destacar envio de dados",
-	"menu.unhighlight": "Remover Destaque",
+	"menu.unhighlight": "Remover destaque",
 	"node.collapseSupernodeInPlace": "Reduzir o supernó",
 	"node.createSupernode": "Criar o supernó",
 	"node.disconnectNode": "Desconectar",

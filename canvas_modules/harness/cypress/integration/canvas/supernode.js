@@ -355,18 +355,18 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 	});
 });
 
-describe("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
+describe("Test Select all in context menu for supernode canvas only selects non-binding nodes", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
+	it("Test Select all in context menu for supernode canvas only selects non-binding nodes", function() {
 		// Expand supernode and select all objects in supernode
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.verifyNumberOfSelectedObjects(5);
 	});
 });

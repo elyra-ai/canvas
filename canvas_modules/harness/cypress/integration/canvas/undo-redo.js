@@ -246,7 +246,7 @@ describe("Test select all canvas objects undo/redo operations", function() {
 
 		// Select all nodes and comments using context menu and delete a node
 		cy.rightClickToDisplayContextMenu(300, 10);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.deleteNodeUsingContextMenu("Define Types");
 		cy.verifyNodeIsDeleted("Define Types", true);
 		// Verify canvas is empty
@@ -282,7 +282,7 @@ describe("Test select all canvas objects undo/redo operations", function() {
 
 		// Select all nodes and comments using context menu and press delete key
 		cy.rightClickToDisplayContextMenu(300, 10);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.shortcutKeysDelete();
 		// Verify canvas is empty
 		cy.verifyCanvasIsEmpty();
@@ -594,7 +594,7 @@ describe("Test undo/redo of supernode creation and deletion", function() {
 
 		// Select all nodes and create supernode
 		cy.rightClickToDisplayContextMenu(300, 10);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.rightClickNode("Derive");
 		cy.clickOptionFromContextMenu("Create supernode");
 

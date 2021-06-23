@@ -265,7 +265,7 @@ describe("Test enableLinkSelection = 'LinkOnly' configuration option", function(
 
 	it("Test all objects including links are selected with SelectAll from context menu", function() {
 		cy.rightClickToDisplayContextMenu(400, 100);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.verifyNumberOfSelectedObjects(16);
 
 		// Check delete in toolbar deletes all objects
@@ -425,7 +425,7 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 
 	it("Test all objects including links are selected with SelectAll from context menu", function() {
 		cy.rightClickToDisplayContextMenu(400, 100);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.verifyNumberOfSelectedObjects(16);
 
 		// Check delete in toolbar deletes all objects
@@ -602,7 +602,7 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 
 	it("Test all objects including links are selected with SelectAll from context menu", function() {
 		cy.rightClickToDisplayContextMenu(400, 100);
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.verifyNumberOfSelectedObjects(21);
 
 		// Check delete in toolbar deletes all objects

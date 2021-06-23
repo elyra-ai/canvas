@@ -1,8 +1,8 @@
 {
   "toolbar.palette": "Palette",
-  "toolbar.zoomIn": "Zoom In",
-  "toolbar.zoomOut": "Zoom Out",
-  "toolbar.zoomToFit": "Zoom To Fit",
-  "toolbar.overflowMenu": "Overflow Menu",
-  "toolbar.label": "Canvas Toolbar"
+  "toolbar.zoomIn": "Zoom in",
+  "toolbar.zoomOut": "Zoom out",
+  "toolbar.zoomToFit": "Zoom to fit",
+  "toolbar.overflowMenu": "Overflow menu",
+  "toolbar.label": "Canvas toolbar"
 }

@@ -556,23 +556,6 @@ function injectDefaultValidations(controls, validationDefinitions, intl) {
 	}
 }
 
-function searchInArray(array, element, state) {
-	let found = state;
-	for (let i = 0; i < array.length; i++) {
-		if (Array.isArray(array[i])) {
-			found = searchInArray(array[i], element, found);
-		} else if (typeof array[i] === "string" && array[i].indexOf(element) >= 0) {
-			found = true;
-		} else if (array[i] === element) { // compare whole cell
-			found = true;
-		}
-		if (found) {
-			return true;
-		}
-	}
-	return found;
-}
-
 
 // ========= internal functions
 
@@ -1163,6 +1146,5 @@ export {
 	getParamRefPropertyId,
 	injectDefaultValidations,
 	updatePanelChildrenStatesForPanelIds,
-	searchInArray,
 	getMetadataFieldMatch
 };
