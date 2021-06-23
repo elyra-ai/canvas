@@ -417,12 +417,33 @@ export default class PropertiesStore {
 	}
 
 	/**
-	* Returns the true if addRemoveRows is enabled for the given propertyID
+	* Returns true if addRemoveRows is enabled for the given propertyID
 	* @param propertyId The unique property identifier
 	* @return boolean
 	*/
 	getAddRemoveRows(propertyId) {
 		const state = this.store.getState();
-		return state.propertiesSettingsReducer[propertyId.name] && state.propertiesSettingsReducer[propertyId.name].addRemoveRows;
+		if (state.propertiesSettingsReducer[propertyId.name]) {
+			if (typeof propertyId.row !== "undefined") {
+				return getNestedAddRemoveRows(propertyId, state.propertiesSettingsReducer[propertyId.name]);
+			}
+			return state.propertiesSettingsReducer[propertyId.name].addRemoveRows;
+		}
+		return true; // Default to true to show the addRemoveRows buttons
 	}
+}
+
+function getNestedAddRemoveRows(propertyId, state) {
+	if (typeof propertyId.row !== "undefined" && state[propertyId.row]) {
+		if (typeof propertyId.col !== "undefined" && state[propertyId.row][propertyId.col]) {
+			if (typeof propertyId.propertyId !== "undefined") {
+				return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row][propertyId.col]);
+			}
+			return state[propertyId.row][propertyId.col].addRemoveRows;
+		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+			return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row]);
+		}
+		return state[propertyId.row].addRemoveRows;
+	}
+	return true; // Default to true to show the addRemoveRows buttons
 }

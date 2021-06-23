@@ -1619,4 +1619,45 @@ describe("Properties Controller addRemoveRows", () => {
 		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
 	});
+
+	it("nested structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { name: "nestedStructurelisteditor", row: 0, col: 3 };
+
+		// Verify buttons are visible when editor opens
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
+		parentTable.find(".properties-subpanel-button").at(0)
+			.simulate("click");
+		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+
+		// Set the addRemoveRows to false for this control
+		controller.setAddRemoveRows(propertyId, false);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		// Set the addRemoveRows to true for this control
+		controller.setAddRemoveRows(propertyId, true);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
+
+	it("deeply nested structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+
+		const propertyId = { name: "nestedStructurelisteditor", row: 0, col: 3, propertyId: { row: 0, col: 1 } };
+		controller.setAddRemoveRows(propertyId, false);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		controller.setAddRemoveRows(propertyId, true);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
 });

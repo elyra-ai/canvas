@@ -31,12 +31,39 @@ function states(state = {}, action) {
 		if (typeof newState[propertyId.name] === "undefined") {
 			newState[propertyId.name] = {};
 		}
-		newState[propertyId.name].addRemoveRows = action.info.value;
+
+		if (typeof propertyId.row !== "undefined") {
+			updateNestedAddRemoveRows(propertyId, newState[propertyId.name], action.info.value);
+		} else {
+			newState[propertyId.name].addRemoveRows = action.info.value;
+		}
 		return Object.assign({}, state, newState);
 	}
 	default: {
 		return state;
 	}
+	}
+}
+
+function updateNestedAddRemoveRows(propertyId, newState, value) {
+	if (typeof propertyId.row !== "undefined") {
+		if (typeof newState[propertyId.row] === "undefined") {
+			newState[propertyId.row] = {};
+		}
+		if (typeof propertyId.col !== "undefined") {
+			if (typeof newState[propertyId.row][propertyId.col] === "undefined") {
+				newState[propertyId.row][propertyId.col] = {};
+			}
+			if (typeof propertyId.propertyId !== "undefined") {
+				updateNestedAddRemoveRows(propertyId.propertyId, newState[propertyId.row][propertyId.col], value);
+			} else {
+				newState[propertyId.row][propertyId.col].addRemoveRows = value;
+			}
+		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+			updateNestedAddRemoveRows(propertyId.propertyId, newState[propertyId.row], value);
+		} else {
+			newState[propertyId.row].addRemoveRows = value;
+		}
 	}
 }
 
