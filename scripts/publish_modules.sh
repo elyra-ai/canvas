@@ -52,7 +52,7 @@ setup_git_branch
 checkout_branch ${MASTER}
 
 cd ./canvas_modules/common-canvas
-npm version minor
+npm version major
 NPM_VERSION=`node -p "require('./package.json').version"`
 echo "Updated master build $NPM_VERSION"
 commit_changes ${MASTER} "Update common-canvas to version ${NPM_VERSION} [skip ci]"
