@@ -329,7 +329,7 @@ class FlexibleTable extends React.Component {
 					this.setState({ checkedAllRows: false });
 				}
 				this.props.updateRowSelections(current);
-			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE) { // Table row is clicked
+			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && typeof this.props.updateRowSelections !== "undefined") { // Table row is clicked
 				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);
 			}
 		}

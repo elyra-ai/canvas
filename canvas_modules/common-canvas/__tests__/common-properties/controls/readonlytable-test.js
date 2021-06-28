@@ -179,6 +179,18 @@ describe("readonlytable control renders correctly", () => {
 			.find(".ReactVirtualized__Table");
 		expect(table.props()).to.have.property("aria-label", "ReadonlyTable - structurelisteditor");
 	});
+
+	it("`readonlytable` control with single row selection should be non-interactive", () => {
+		const tables = propertyUtils.openSummaryPanel(wrapper, "readonlyTable-summary-panel");
+		const table = tables
+			.find("div[data-id='properties-ft-readonlyStructurelistTableControl']")
+			.find(".properties-vt-autosizer")
+			.find(".ReactVirtualized__Table");
+		const rows = table.find("div[data-role='properties-data-row']");
+		rows.forEach((row) => {
+			expect(row.hasClass("properties-vt-row-non-interactive")).to.equal(true);
+		});
+	});
 });
 
 describe("readonlytable control conditions", () => {
