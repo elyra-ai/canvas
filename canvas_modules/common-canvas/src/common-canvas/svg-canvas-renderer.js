@@ -3562,7 +3562,7 @@ export default class SVGCanvasRenderer {
 					.attr("class", "d3-node-super-expand-icon-group")
 					.on("mousedown", (d3Event) => {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.displaySubPipeline(d);
+						this.canvasController.displaySubPipelineForNode(d);
 					})
 					.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
 						d3.select(this).attr("data-pointer-hover", "yes");
@@ -3662,10 +3662,6 @@ export default class SVGCanvasRenderer {
 		// We assume that there cannot be more than one renderer for the
 		// same sub-flow pipeline
 		return this.superRenderers.findIndex((sr) => sr.pipelineId === d.subflow_ref.pipeline_id_ref);
-	}
-
-	displaySupernodeFullPage(d) {
-		this.canvasController.displaySubPipeline({ pipelineId: d.subflow_ref.pipeline_id_ref, pipelineFlowId: this.pipelineFlowId });
 	}
 
 	openContextMenu(d3Event, type, d, port) {
