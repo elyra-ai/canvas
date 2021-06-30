@@ -267,3 +267,9 @@ Cypress.Commands.add("submitAPI", () => {
 		.find("button")
 		.click();
 });
+
+Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
+	cy.get(".harness-pipeline-breadcrumbs-label")
+		.contains(breadCrumb)
+		.click();
+});

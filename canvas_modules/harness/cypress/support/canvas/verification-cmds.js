@@ -22,7 +22,7 @@ const mainCanvasSelector = "#canvas-div-0 > #d3-svg-canvas-div-0 > .svg-area > .
 const dataLinkSelector = mainCanvasSelector + ".d3-link-group.d3-data-link .d3-link-line";
 const commentLinkSelector = mainCanvasSelector + ".d3-link-group.d3-comment-link .d3-link-line";
 const assocLinkSelector = mainCanvasSelector + ".d3-link-group.d3-object-link .d3-link-line";
-const nodeImageSelector = mainCanvasSelector + "g > .d3-node-image";
+const nodesInFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 const nodesInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 const nodesInSubFlowInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group> .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 
@@ -266,8 +266,8 @@ Cypress.Commands.add("verifyNodeElementWidth", (nodeName, nodeElement, width) =>
 
 Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-image").length) {
-			cy.get(nodeImageSelector)
+		if ($body.find(nodesInFlowSelector).length) {
+			cy.get(nodesInFlowSelector)
 				.should("have.length", noOfNodes);
 		} else {
 			// No nodes found on canvas
@@ -276,9 +276,14 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 	});
 
 	// verify the number of nodes in the internal object model
-	cy.getPipeline().then((pipeline) => {
-		cy.getCountNodes(pipeline).should("eq", noOfNodes);
-	});
+	cy.get(".svg-area")
+		.find(".d3-svg-background")
+		.then((background) => {
+			cy.getPipelineById(background.attr("data-pipeline-id"))
+				.then((pipeline) => {
+					cy.getCountNodes(pipeline).should("eq", noOfNodes);
+				});
+		});
 });
 
 Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
@@ -1178,16 +1183,20 @@ function compareCloseTo(value, compareValue) {
 	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
 }
 
+function getNodeGroupSelector(node) {
+	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "']";
+}
+
 function getNodeSelectionOutlineSelector(node) {
-	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-node-selection-highlight";
+	return getNodeGroupSelector(node) + " > .d3-node-selection-highlight";
 }
 
 function getNodeImageSelector(node) {
-	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-node-image";
+	return getNodeGroupSelector(node) + " > .d3-node-image";
 }
 
 function getNodeLabelSelector(node) {
-	return ".d3-node-group[data-id='" + node.getAttribute("data-id") + "'] > .d3-foreign-object";
+	return getNodeGroupSelector(node) + " > .d3-foreign-object";
 }
 
 function getCommentSelectionOutlineSelector(comment) {
