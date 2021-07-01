@@ -24,7 +24,7 @@ class MainEditorPropertiesButtons extends Component {
 
 	shouldEnabledSaveButton() {
 		if (this.props.saveButtonEnabled) {
-			if (this.props.disableSaveIfRequiredPropertiesEmpty) {
+			if (this.props.disableSaveOnRequiredErrors) {
 				// Return false if any required fields are not filled in
 				return Object.keys(this.props.requiredErrorMessages).length === 0;
 			}
@@ -53,7 +53,7 @@ MainEditorPropertiesButtons.propTypes = {
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
 	showPropertiesButtons: PropTypes.bool,
-	disableSaveIfRequiredPropertiesEmpty: PropTypes.bool,
+	disableSaveOnRequiredErrors: PropTypes.bool,
 	saveButtonEnabled: PropTypes.bool, // pass in by redux
 	requiredErrorMessages: PropTypes.object // pass in by redux
 };

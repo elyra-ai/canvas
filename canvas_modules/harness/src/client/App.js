@@ -214,7 +214,7 @@ class App extends React.Component {
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
-			disableSaveIfRequiredPropertiesEmpty: true,
+			disableSaveOnRequiredErrors: true,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -1079,13 +1079,13 @@ class App extends React.Component {
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
 		if (enabled) {
-			this.setState({ disableSaveIfRequiredPropertiesEmpty: false });
+			this.setState({ disableSaveOnRequiredErrors: false });
 		}
 		this.log("apply changes on blur", enabled);
 	}
 
 	useSaveButtonDisable(disabled) {
-		this.setState({ disableSaveIfRequiredPropertiesEmpty: disabled });
+		this.setState({ disableSaveOnRequiredErrors: disabled });
 		this.log("save button disabled", disabled);
 	}
 
@@ -2074,7 +2074,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
-			disableSaveIfRequiredPropertiesEmpty: this.state.disableSaveIfRequiredPropertiesEmpty,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
@@ -2296,7 +2296,7 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
-			disableSaveIfRequiredPropertiesEmpty: this.state.disableSaveIfRequiredPropertiesEmpty,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
 			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,

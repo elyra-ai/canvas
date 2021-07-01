@@ -364,7 +364,7 @@ export default class SidePanelModal extends React.Component {
 				<Toggle
 					id="harness-sidepanel-setSaveButtonDisable-toggle"
 					labelText="Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true"
-					toggled={this.props.propertiesConfig.disableSaveIfRequiredPropertiesEmpty}
+					toggled={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 					onToggle={this.useSaveButtonDisable}
 				/>
 			</div>);
@@ -565,7 +565,7 @@ SidePanelModal.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
-		disableSaveIfRequiredPropertiesEmpty: PropTypes.bool,
+		disableSaveOnRequiredErrors: PropTypes.bool,
 		useSaveButtonDisable: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,

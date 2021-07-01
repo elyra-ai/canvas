@@ -70,7 +70,7 @@ class SummaryPanel extends React.Component {
 		}
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValues = this.props.controller.getPropertyValues();
-		this.initialMessages = this.props.controller.getErrorMessages();
+		this.initialMessages = this.props.controller.getErrorMessages(false, false, false, false);
 		this.initialStates = this.props.controller.getControlStates();
 	}
 
