@@ -631,8 +631,13 @@ export default class AbstractTable extends React.Component {
 			delete this.scrollToRow;
 		}
 
-		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		// ReadonlyTable with single row selection is non-interactive. rowClickCallback should be undefined.
+		let rowClickCallback;
+		const singleRowSelectionReadonlyTable = this.isReadonlyTable() && this.props.control.rowSelection === ROW_SELECTION.SINGLE;
+		if (!singleRowSelectionReadonlyTable) {
+			rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
+		}
 
 		const table =	(
 			<FlexibleTable

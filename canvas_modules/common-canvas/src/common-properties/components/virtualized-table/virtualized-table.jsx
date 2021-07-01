@@ -293,7 +293,8 @@ class VirtualizedTable extends React.Component {
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
-					{ "properties-vt-row-disabled": rowDisabled }
+					{ "properties-vt-row-disabled": rowDisabled },
+					{ "properties-vt-row-non-interactive": !this.props.selectable } // ReadonlyTable with single row selection is non-interactive.
 				)}
 				data-role="properties-data-row"
 				role="row"
