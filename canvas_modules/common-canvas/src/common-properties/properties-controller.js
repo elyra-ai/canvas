@@ -990,7 +990,11 @@ export default class PropertiesController {
 	updatePropertyValue(inPropertyId, value, skipValidateInput) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const initialValue = this.getPropertyValue(propertyId);
-		this.propertiesStore.updatePropertyValue(propertyId, value);
+		if (typeof value === "undefined") {
+			this.removePropertyValue(propertyId);
+		} else {
+			this.propertiesStore.updatePropertyValue(propertyId, value);
+		}
 		if (!conditionsUtil.allowConditions(inPropertyId, this)) {
 			this.propertiesStore.updatePropertyValue(propertyId, initialValue);
 			return;
