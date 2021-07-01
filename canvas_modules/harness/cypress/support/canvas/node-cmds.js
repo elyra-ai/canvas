@@ -388,6 +388,20 @@ Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 		.click();
 });
 
+Cypress.Commands.add("clickExpansionIconOfSupernode", (supernodeName) => {
+	cy.hoverOverNode(supernodeName);
+	cy.getNodeWithLabel(supernodeName)
+		.find(".d3-node-super-expand-icon-group")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("clickReturnToPreviousButton", () => {
+	cy.get("#canvas-div-0")
+		.find(".d3-back-to-previous-flow-text")
+		.eq(0)
+		.click();
+});
 
 Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)

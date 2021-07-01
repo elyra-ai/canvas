@@ -1285,6 +1285,20 @@ describe("Properties Controller updatePropertyValue validation", () => {
 		};
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(errorMessage));
 	});
+
+	it("should removePropertyValue if the value is undefined", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const propertyId = { name: "numberfieldImpurity" };
+		expect(controller.getPropertyValue(propertyId)).to.equal("entropy");
+
+		// updatePropertyValue with new value undefined
+		/* eslint no-undefined: "off" */
+		controller.updatePropertyValue(propertyId, undefined);
+
+		// Verify undefined property is removed
+		expect(controller.getPropertyValues()).to.not.have.own.property(propertyId.name);
+	});
 });
 
 describe("Properties Controller updateControlEnumValues validation", () => {

@@ -371,6 +371,56 @@ describe("Test Select all in context menu for supernode canvas only selects non-
 	});
 });
 
+describe("Test navigation in and out of a supernode", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+	});
+
+	it("Test clicking expansion icon and 'back to previous' button goes in and out of subflow", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfNodes(15);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.clickExpansionIconOfSupernode("Supernode");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfNodes(8);
+
+		// Click return to go back to main flow.
+		cy.clickReturnToPreviousButton();
+
+		// Check the main flow is dispayed by counting number of nodes
+		cy.verifyNumberOfNodes(15);
+
+	});
+
+	it("Test clicking expansion icon and 'primary' breadcrumb button goes in and out of subflow", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfNodes(15);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.clickExpansionIconOfSupernode("Supernode");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfNodes(8);
+
+		// Click return to go back to main flow.
+		cy.clickBreadcrumb("Primary");
+
+		// Check the main flow is dispayed by counting number of nodes
+		cy.verifyNumberOfNodes(15);
+
+	});
+
+});
+
 describe("Test all the nodes are correctly positioned", function() {
 	beforeEach(() => {
 		cy.visit("/");

@@ -1343,8 +1343,14 @@ export default class CanvasController {
 		return false;
 	}
 
-	displaySubPipeline(node) {
-		const data = { editType: "displaySubPipeline", targetObject: node, editSource: "canvas" };
+	displaySubPipeline(pipelineInfo) {
+		const targetObject = { subflow_ref: { pipeline_id_ref: pipelineInfo.pipelineId, url: pipelineInfo.url } };
+		const data = { editType: "displaySubPipeline", targetObject: targetObject, editSource: "canvas" };
+		this.editActionHandler(data);
+	}
+
+	displaySubPipelineForNode(supernode) {
+		const data = { editType: "displaySubPipeline", targetObject: supernode, editSource: "canvas" };
 		this.editActionHandler(data);
 	}
 

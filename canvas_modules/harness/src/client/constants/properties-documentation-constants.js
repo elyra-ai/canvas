@@ -1905,8 +1905,9 @@ _defineConstant("SPINNER_PROPS_INFO", {
 						"default": "Integer"
 					},
 					"description": {
-						"default": "spinner with parameter value set to '10'"
+						"default": "spinner with increment=1 should increment/decrement by 1"
 					},
+					"control": "spinner",
 					"increment": 1
 				}
 			],
