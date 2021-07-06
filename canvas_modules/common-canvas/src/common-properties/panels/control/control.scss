@@ -25,6 +25,11 @@
 	}
 }
 
-.properties-editor-form .properties-control-panel .properties-control-panel {
-	padding: 0 0 0 $spacing-03; // Ensure grandchildren have a padding
+.properties-editor-form .properties-control-nested-panel {
+	padding: 0 0 0 $spacing-05; // Ensure panel type properties have a padding
+	border-left: 1px solid $ui-04;
+}
+
+.properties-editor-form .properties-control-nested-panel .properties-control-nested-panel {
+	border-left: 1px solid $ui-03;
 }
