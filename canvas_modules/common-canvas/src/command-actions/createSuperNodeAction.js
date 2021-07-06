@@ -15,7 +15,8 @@
  */
 
 import Action from "../command-stack/action.js";
-import { SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON } from "../common-canvas/constants/canvas-constants.js";
+import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, SUPER_NODE }
+	from "../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/command-actions/locales/en.json";
 
 export default class CreateSuperNodeAction extends Action {
@@ -28,7 +29,7 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes = this.objectModel.getSelectedNodes();
 		this.subflowComments = this.objectModel.getSelectedComments();
-		const supernodes = this.subflowNodes.filter((node) => node.type === "super_node");
+		const supernodes = this.subflowNodes.filter((node) => node.type === SUPER_NODE);
 		this.subflowPipelines = this.objectModel.getReferencedPipelines(supernodes);
 
 		this.subflowLinks = [];
@@ -41,10 +42,10 @@ export default class CreateSuperNodeAction extends Action {
 			// Ensure each link is only stored once.
 			objectLinks.forEach((objectLink) => {
 				if (!this.subflowLinks.find((link) => (link.id === objectLink.id))) {
-					if (objectLink.type === "nodeLink" || objectLink.type === "associationLink") {
+					if (objectLink.type === NODE_LINK || objectLink.type === ASSOCIATION_LINK) {
 						this.subflowLinks.push(objectLink);
 					// Do not add any comment links to the supernode at this moment.
-					} else if ((!this.commentLinks.find((link) => (link.id === objectLink.id))) && objectLink.type === "commentLink") {
+					} else if ((!this.commentLinks.find((link) => (link.id === objectLink.id))) && objectLink.type === COMMENT_LINK) {
 						this.commentLinks.push(objectLink);
 					}
 				}
@@ -98,7 +99,7 @@ export default class CreateSuperNodeAction extends Action {
 		subflowNodeLinks.forEach((link) => {
 			if ((!this.apiPipeline.isObjectIdInObjects(link.srcNodeId, this.subflowNodes)) &&
 				(!this.supernodeInputLinks.find((supernodeInputLink) => (supernodeInputLink.id === link.trgNodeId)))) {
-				if (link.type === "associationLink") { // Break off associationLink.
+				if (link.type === ASSOCIATION_LINK) { // Break off associationLink.
 					this.removeLinkFromSubflow(link, true);
 				} else {
 					this.supernodeInputLinks.push(link);
@@ -106,7 +107,7 @@ export default class CreateSuperNodeAction extends Action {
 			}
 			if ((!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) &&
 				(!this.supernodeOutputLinks.find((supernodeOutputLink) => (supernodeOutputLink.id === link.srcNodeId)))) {
-				if (link.type === "associationLink") { // Break off associationLink.
+				if (link.type === ASSOCIATION_LINK) { // Break off associationLink.
 					this.removeLinkFromSubflow(link, true);
 				} else {
 					this.supernodeOutputLinks.push(link);
@@ -428,7 +429,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Create new links to and from supernode in the main flow.
 		this.newLinks = [];
 		for (let idx = 0; idx < this.linkSrcDefs.length; idx++) {
-			this.newLinks.push(this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx], { type: "nodeLink" }));
+			this.newLinks.push(this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx], { type: NODE_LINK }));
 		}
 		this.apiPipeline.addLinks(this.newLinks);
 
@@ -444,7 +445,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.supernodeNewLinks = [];
 		for (let idx = 0; idx < this.bindingNodeLinkSrcDefs.length; idx++) {
 			this.supernodeNewLinks.push(
-				this.subPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: "nodeLink" }));
+				this.subPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: NODE_LINK }));
 		}
 		this.subPipeline.addLinks(this.supernodeNewLinks);
 	}
