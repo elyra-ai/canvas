@@ -786,7 +786,7 @@ describe("Properties Controller datasetMetadata", () => {
 describe("Properties Controller property messages", () => {
 	it("should set property messages correctly", () => {
 		reset();
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		expect(getCopy(errorMessages)).to.eql(actualValues);
 	});
 	it("should update a simple property message correctly", () => {
@@ -796,7 +796,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Testing error messages"
 		});
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_int = {
 			validation_id: "param_int",
@@ -812,7 +812,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "warning in array"
 		});
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_str_array = {};
 		expectedValues.param_str_array[2] = {
@@ -829,7 +829,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad cell value"
 		});
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_mix_table[2] = {};
 		expectedValues.param_mix_table[2][3] = {
@@ -849,7 +849,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad data value"
 		});
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.structureeditor = {
 			"1": {
@@ -957,7 +957,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "Pick a better value"
 		});
-		const actualValues = controller.getErrorMessages(false, false, false, false);
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_complex[1] = {
 			validation_id: "param_complex",
@@ -1284,7 +1284,7 @@ describe("Properties Controller updatePropertyValue validation", () => {
 				required: false
 			}
 		};
-		expect(JSON.stringify(controller.getErrorMessages(false, false, false, false))).to.equal(JSON.stringify(errorMessage));
+		expect(JSON.stringify(controller.getAllErrorMessages())).to.equal(JSON.stringify(errorMessage));
 	});
 
 	it("should removePropertyValue if the value is undefined", () => {
@@ -1717,7 +1717,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 
 	it("should return all error messages with filterDisplayError = false", () => {
 		controller.setErrorMessages(requiredErrors);
-		const actualDisplayErrors = controller.getErrorMessages(false, false, false, false);
+		const actualDisplayErrors = controller.getAllErrorMessages();
 		expect(actualDisplayErrors).to.eql(requiredErrors);
 	});
 });

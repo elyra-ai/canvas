@@ -455,7 +455,7 @@ describe("StructureListEditor render from paramdef", () => {
 
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(errorMessage).to.eql(actual);
-		const messages = renderedController.getErrorMessages(false, false, false, false);
+		const messages = renderedController.getAllErrorMessages();
 		const rowErrorMsg = { "0": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
@@ -501,7 +501,7 @@ describe("StructureListEditor render from paramdef", () => {
 		const removeColumnButton = summaryPanel.find("button.properties-remove-fields-button");
 		removeColumnButton.simulate("click");
 
-		const messages = renderedController.getErrorMessages(false, false, false, false);
+		const messages = renderedController.getAllErrorMessages();
 		const rowErrorMsg = { "1": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } } };
 		expect(messages.inlineEditingTableError).to.eql(rowErrorMsg);
 
@@ -569,7 +569,7 @@ describe("StructureListEditor render from paramdef", () => {
 		summaryPanel = wrapper.find("div.properties-wf-content.show");
 		const moveRowBottom = summaryPanel.find("button.table-row-move-button").at(3);
 		moveRowBottom.simulate("click");
-		let messages = renderedController.getErrorMessages(false, false, false, false);
+		let messages = renderedController.getAllErrorMessages();
 		let rowErrorMsg = {
 			"3": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": { required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
@@ -584,7 +584,7 @@ describe("StructureListEditor render from paramdef", () => {
 		const moveRowTop = summaryPanel.find("button.table-row-move-button").at(0);
 		moveRowTop.simulate("click");
 
-		messages = renderedController.getErrorMessages(false, false, false, false);
+		messages = renderedController.getAllErrorMessages();
 		rowErrorMsg = {
 			"0": { "3": { required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": { required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }

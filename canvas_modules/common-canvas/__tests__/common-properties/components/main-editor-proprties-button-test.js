@@ -147,7 +147,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		const wrapper = renderedObject.wrapper;
 		const rcontroller = renderedObject.controller;
 
-		const actualErrors = rcontroller.getErrorMessages(false, false, false, false);
+		const actualErrors = rcontroller.getAllErrorMessages();
 		const expectedErrors = {
 			"string_empty": {
 				"type": "error",
@@ -171,6 +171,6 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		// Save nutton should not be disabled anymore
 		applyButton = wrapper.find("button.properties-apply-button");
 		expect(applyButton.prop("disabled")).to.be.false;
-		expect(rcontroller.getErrorMessages(false, false, false, false)).to.eql({});
+		expect(rcontroller.getAllErrorMessages()).to.eql({});
 	});
 });

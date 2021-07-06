@@ -1335,6 +1335,10 @@ export default class PropertiesController {
 		return messages;
 	}
 
+	getAllErrorMessages() {
+		return this.getErrorMessages(false, false, false, false);
+	}
+
 	getRequiredErrorMessages() {
 		const messages = this.propertiesStore.getErrorMessages();
 		const requiredMessages = this._filterNonRequiredErrors(messages);
