@@ -15,7 +15,6 @@
  */
 
 .properties-summary-panel.properties-summary-panel {
-	padding: $spacing-04 0 $spacing-04 8px;
 	&.hide {
 		display: none;
 	}
@@ -35,16 +34,16 @@
 
 .properties-summary-values {
 	border-top: 1px solid $ui-03;
-	padding-top: 3px;
+	padding: $spacing-05 0;
 }
 
 .properties-summary-table {
 	@include carbon--type-style("body-short-01");
 	color: $text-01;
 	max-height: 270px;
-	width: calc(100% - 10px);
+	width: 100%;
 	display: flex;
-	margin: 5px 0 5px 10px;
+	margin: $spacing-03 0;
 }
 
 .properties-summary-table > tbody {
@@ -54,7 +53,7 @@
 .properties-summary-label {
 	@include carbon--type-style("productive-heading-01");
 	color: $text-01;
-	margin-bottom: 10px;
+	margin-bottom: $spacing-05;
 }
 
 .properties-summary-row-data > .tooltip-container {

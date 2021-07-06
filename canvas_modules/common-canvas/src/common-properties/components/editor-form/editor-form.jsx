@@ -228,12 +228,12 @@ class EditorForm extends React.Component {
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			let className = "properties-control-panel";
+			let className = "properties-control-nested-panel";
 			if (tab.content && tab.content.itemType === "textPanel") {
 				className = "";
 			}
 			if (indent) {
-				className += " properties-control-panel";
+				className += " properties-control-nested-panel";
 			}
 			subPanels[tab.group] = (
 				<div className={classNames(className, groupClassName)} key={tab.group + key}>

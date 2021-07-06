@@ -26,9 +26,10 @@
 		border-top: 0;
 	}
 	.bx--accordion__item--active .bx--accordion__content {
-		padding: 0 0 0 10px;
+		padding-left: 0;
 	}
 	.bx--accordion__title {
 		font-size: 14px;
+		margin-left: 0;
 	}
 }
