@@ -127,21 +127,8 @@ export default class CreateSuperNodeAction extends Action {
 		});
 
 		// Sub-Pipeline
-		const primaryPipelineRuntimeRef = this.objectModel.getCanvasInfoPipeline(this.objectModel.getPrimaryPipelineId()).runtime_ref;
-		this.subPipelineInfo = {
-			"runtime_ref": primaryPipelineRuntimeRef,
-			"nodes": this.subflowNodes,
-			"comments": this.subflowComments,
-			"links": this.subflowLinks
-		};
-
-		// If subflow pipeline being created will be for an external pipeline flow,
-		// set the pipeline's parentUrl property appropriately.
-		if (data.externalUrl) {
-			this.subPipelineInfo.parentUrl = data.externalUrl;
-		}
-
-		this.canvasInfoSubPipeline = this.objectModel.createCanvasInfoPipeline(this.subPipelineInfo);
+		this.canvasInfoSubPipeline =
+			this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks, this.data.externalUrl);
 		this.subPipeline = this.objectModel.getAPIPipeline(this.canvasInfoSubPipeline.id);
 
 		this.createBindingNodeData = [];
@@ -168,32 +155,14 @@ export default class CreateSuperNodeAction extends Action {
 		const topLeftNodePosition = this.getTopLeftNodePosition(subflowRect, this.subflowNodes);
 
 		// Supernode
-		const supernodeTemplate = {
-			description: this.getLabel("supernode.template.description"),
-			image: data.externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
-			label: this.getLabel("supernode.template.label"),
-			inputs: supernodeInputPorts,
-			outputs: supernodeOutputPorts,
-			type: SUPER_NODE,
-			subflow_ref: {
-				pipeline_id_ref: this.canvasInfoSubPipeline.id
-			},
-		};
-
-		// If supernode being created is to reference an external pipeline flow set
-		// the node's subflow_ref.url appropriately.
-		if (data.externalUrl) {
-			supernodeTemplate.subflow_ref.url = data.externalUrl;
-		}
-
-		const supernodeData = {
-			editType: "createNode",
-			nodeTemplate: supernodeTemplate,
-			offsetX: topLeftNodePosition.xPos,
-			offsetY: topLeftNodePosition.yPos
-		};
-
-		this.supernode = this.apiPipeline.createNode(supernodeData);
+		this.supernode = this.apiPipeline.createSupernode(
+			this.getLabel("supernode.template.label"),
+			this.getLabel("supernode.template.description"),
+			this.canvasInfoSubPipeline.id,
+			supernodeInputPorts,
+			supernodeOutputPorts,
+			topLeftNodePosition,
+			this.data.externalUrl);
 
 		// Links to and from supernode.
 		this.linkSrcDefs = [];
