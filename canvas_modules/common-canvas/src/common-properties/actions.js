@@ -37,6 +37,7 @@ export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
 export const SET_SAVE_BUTTON_DISABLE = "SET_SAVE_BUTTON_DISABLE";
+export const SET_ADD_REMOVE_ROWS = "SET_ADD_REMOVE_ROWS";
 
 /*
  * action creators
@@ -118,4 +119,8 @@ export function disableRowMoveButtons(propertyIds) {
 
 export function setSaveButtonDisable(disableState) {
 	return { type: SET_SAVE_BUTTON_DISABLE, disableState };
+}
+
+export function setAddRemoveRows(info) {
+	return { type: SET_ADD_REMOVE_ROWS, info };
 }

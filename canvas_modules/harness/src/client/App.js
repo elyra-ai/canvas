@@ -215,6 +215,8 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
 			disableSaveOnRequiredErrors: true,
+			addRemoveRowsPropertyId: {},
+			addRemoveRowsEnabled: true,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -295,6 +297,9 @@ class App extends React.Component {
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
+		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
+		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
@@ -811,6 +816,23 @@ class App extends React.Component {
 	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
 		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
+	}
+
+	// Textfield to set the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(propertyId) {
+		this.setState({ addRemoveRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.setState({ addRemoveRowsEnabled: enabled });
+	}
+
+	// Button to call propertiesController to set addRemoveRows
+	setAddRemoveRows() {
+		if (this.propertiesController) {
+			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
 	}
 
 	initLocale() {
@@ -2309,6 +2331,10 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
+			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
+			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
+			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
+			setAddRemoveRows: this.setAddRemoveRows,
 			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
 			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

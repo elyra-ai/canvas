@@ -818,9 +818,10 @@ export default class ObjectModel {
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
-	// Returns an associative array (indexed by the node ID) of pipeline arrays.
-	// The pipeline arrays are any descendent pipelines of the supernode being
-	// processed from the array of supernodes passed in.
+	// Returns an object with fields for supernode IDs with their values set
+	// to pipeline arrays for each supernode. The pipeline arrays are any
+	// descendent pipelines of the supernode being processed from the array
+	// of supernodes passed in.
 	getReferencedPipelines(supernodes) {
 		const pipelines = {};
 		supernodes.forEach((supernode) => {
@@ -1417,7 +1418,7 @@ export default class ObjectModel {
 		}
 	}
 
-	// Creates an empty pipeline.  Used for shaper and supernodes without sub pipeline defined
+	// Creates an empty pipeline. Used for supernodes without sub pipeline defined
 	createEmptyPipeline() {
 		const primaryPipeline = this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
 		const subPipelineInfo = {
@@ -1426,8 +1427,25 @@ export default class ObjectModel {
 			"comments": [],
 			"links": []
 		};
-		const canvasInfoSubPipeline = this.createCanvasInfoPipeline(subPipelineInfo);
-		return canvasInfoSubPipeline;
+		return this.createCanvasInfoPipeline(subPipelineInfo);
+	}
+
+	// Creates a pipeline from the parameters passed in. Used for supernodes without sub-pipeline defined.
+	createPipeline(subflowNodes, subflowComments, subflowLinks, externalUrl) {
+		const primaryPipeline = this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
+		const subPipelineInfo = {
+			"runtime_ref": primaryPipeline.runtime_ref,
+			"nodes": subflowNodes,
+			"comments": subflowComments,
+			"links": subflowLinks
+		};
+
+		// If subflow pipeline being created will be for an external pipeline flow,
+		// set the pipeline's parentUrl property appropriately.
+		if (externalUrl) {
+			subPipelineInfo.parentUrl = externalUrl;
+		}
+		return this.createCanvasInfoPipeline(subPipelineInfo);
 	}
 
 	executeWithSelectionChange(func, arg) {

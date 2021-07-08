@@ -30,7 +30,8 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	BINDING, SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
+	BINDING, SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
 	constructor(pipelineId, objectModel) {
@@ -263,6 +264,34 @@ export default class APIPipeline {
 		}
 
 		return node;
+	}
+
+	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
+		const supernodeTemplate = {
+			description: description,
+			image: externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
+			label: label,
+			inputs: inputPorts,
+			outputs: outputPorts,
+			type: SUPER_NODE,
+			subflow_ref: {
+				pipeline_id_ref: subPipelineId
+			},
+		};
+
+		// If supernode being created is to reference an external pipeline flow set
+		// the node's subflow_ref.url appropriately.
+		if (externalUrl) {
+			supernodeTemplate.subflow_ref.url = externalUrl;
+		}
+
+		const supernodeData = {
+			nodeTemplate: supernodeTemplate,
+			offsetX: topLeftNodePosition.xPos,
+			offsetY: topLeftNodePosition.yPos
+		};
+
+		return this.createNode(supernodeData);
 	}
 
 	// Returns a source node for auto completion or null if no source node can be

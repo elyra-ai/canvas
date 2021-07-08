@@ -618,7 +618,7 @@ export default class AbstractTable extends React.Component {
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
 
-		let topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
+		let topRightPanel = this.props.addRemoveRows
 			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
 			: <div />;
 		if (this.isReadonlyTable()) {
@@ -785,5 +785,10 @@ AbstractTable.propTypes = {
 	openFieldPicker: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
 	value: PropTypes.array, // pass in by redux
-	selectedRows: PropTypes.array // set by redux
+	selectedRows: PropTypes.array, // set by redux
+	addRemoveRows: PropTypes.bool // set by redux
+};
+
+AbstractTable.defaultProps = {
+	addRemoveRows: true
 };
