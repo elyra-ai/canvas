@@ -1354,7 +1354,7 @@ export default class PropertiesController {
 				continue;
 			}
 
-			// This does not work for table cell conditions. The propertyId is missing col and row
+			// This returns top-level message for tables
 			const paramMessage = this.getErrorMessage({ name: paramKey }, filterHiddenDisable, filterSuccess);
 			if (paramMessage && paramMessage.text) {
 				if (filteredPipeline) {

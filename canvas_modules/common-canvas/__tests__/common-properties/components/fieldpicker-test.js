@@ -722,9 +722,8 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 			fields: {
 				"1": {
 					"propertyId": {
-						"col": 0,
 						"name": "fields",
-						"row": 4
+						"row": 1
 					},
 					"required": false,
 					"type": "warning",
@@ -733,9 +732,8 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 				},
 				"2": {
 					"propertyId": {
-						"col": 0,
 						"name": "fields",
-						"row": 4
+						"row": 2
 					},
 					"required": false,
 					"type": "warning",

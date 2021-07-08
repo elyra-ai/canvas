@@ -91,8 +91,8 @@ const validationErrorMessages = {
 				"validation_id": "number_table",
 				"propertyId": {
 					"name": "number_table",
-					"row": 0,
-					"col": 3
+					"col": 0,
+					"row": 0
 				},
 				"required": false
 			},
@@ -102,8 +102,8 @@ const validationErrorMessages = {
 				"validation_id": "number_table",
 				"propertyId": {
 					"name": "number_table",
-					"row": 0,
-					"col": 3
+					"col": 1,
+					"row": 0
 				},
 				"required": false
 			}

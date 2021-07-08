@@ -602,10 +602,10 @@ describe("StructureListEditor render from paramdef", () => {
 			"3": { "3": { propertyId: {
 				col: 3,
 				name: "inlineEditingTableError",
-				row: 4
+				row: 3
 			}, required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": { propertyId: {
-				col: 3,
+				col: 2,
 				name: "inlineEditingTableError",
 				row: 4
 			}, required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
@@ -626,11 +626,11 @@ describe("StructureListEditor render from paramdef", () => {
 				propertyId: {
 					"col": 3,
 					"name": "inlineEditingTableError",
-					"row": 4
+					"row": 0
 				}, required: false, type: "error", text: "checkbox cannot be off", validation_id: "tableerrortest3" } },
 			"4": { "2": {
 				propertyId: {
-					"col": 3,
+					"col": 2,
 					"name": "inlineEditingTableError",
 					"row": 4
 				}, required: false, type: "error", text: "order cannot be descending", validation_id: "tableerrortest2" } }
