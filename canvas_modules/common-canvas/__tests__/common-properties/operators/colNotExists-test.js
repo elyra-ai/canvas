@@ -59,6 +59,11 @@ describe("validating colNotExists operator works correctly in a table", () => {
 		// update value in cell to match the a dataModel value outside of current row
 		renderedController.updatePropertyValue(cellId, "Ag");
 		const expectedError = {
+			"propertyId": {
+				"col": 1,
+				"name": "structuretableRenameFields",
+				"row": 0,
+			},
 			"required": false,
 			"type": "error",
 			"text": "The given column name is already in use",

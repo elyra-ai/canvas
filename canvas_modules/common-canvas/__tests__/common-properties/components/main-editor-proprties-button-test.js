@@ -154,7 +154,10 @@ describe("main-editor-properties-buttons renders correctly", () => {
 				"text": "Required parameter 'Empty' has no value.",
 				"validation_id": "required_string_empty_938.7063182960883",
 				"required": true,
-				"displayError": false
+				"displayError": false,
+				"propertyId": {
+					"name": "string_empty"
+				}
 			}
 		};
 		expect(actualErrors).to.eql(expectedErrors);

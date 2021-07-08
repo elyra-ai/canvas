@@ -721,12 +721,22 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		const warningMessage = {
 			fields: {
 				"1": {
+					"propertyId": {
+						"col": 0,
+						"name": "fields",
+						"row": 4
+					},
 					"required": false,
 					"type": "warning",
 					"text": "Invalid Select Columns, field not found in data set.",
 					"validation_id": "validField_fields[0]_294.69762842919897"
 				},
 				"2": {
+					"propertyId": {
+						"col": 0,
+						"name": "fields",
+						"row": 4
+					},
 					"required": false,
 					"type": "warning",
 					"text": "Invalid Select Columns, field not found in data set.",

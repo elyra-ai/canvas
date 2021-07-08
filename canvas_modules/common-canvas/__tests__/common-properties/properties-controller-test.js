@@ -1281,6 +1281,7 @@ describe("Properties Controller updatePropertyValue validation", () => {
 				type: "error",
 				text: "The checkpoint interval value must either be >= 1 or -1 to disable",
 				validation_id: "numberfieldCheckpointInterval",
+				propertyId: { name: "numberfieldCheckpointInterval" },
 				required: false
 			}
 		};
@@ -1614,6 +1615,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 			"text": "Required parameter 'Maximum number of bins' has no value.",
 			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
 			"required": true,
+			"propertyId": { "name": "numberfieldMaxBins" },
 			"displayError": false
 		},
 		"checkboxTypes": {
@@ -1621,6 +1623,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 			"text": "No data types are selected",
 			"validation_id": "checkboxTypes",
 			"required": false,
+			"propertyId": { "name": "checkboxTypes" },
 			"displayError": false
 		},
 		"textfieldName": {
@@ -1628,6 +1631,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 			"text": "password cannot contain name",
 			"validation_id": "textfieldtest3",
 			"required": true,
+			"propertyId": { "name": "textfieldName" },
 			"displayError": true
 		},
 		"textareaDescription": {
@@ -1635,6 +1639,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 			"text": "Required parameter 'Description' has no value.",
 			"validation_id": "required_textareaDescription_708.576019526482",
 			"required": false,
+			"propertyId": { "name": "textareaDescription" },
 			"displayError": true
 		},
 		"field_types": {
@@ -1644,6 +1649,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 					"text": "Invalid Field, field not found in data set.",
 					"validation_id": "validField_field_types[0]_408.7341493615164",
 					"required": true,
+					"propertyId": { "name": "field_types", "row": 7, "col": 0 },
 					"displayError": true
 				}
 			},
@@ -1653,6 +1659,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 					"text": "Invalid Field, field not found in data set.",
 					"validation_id": "validField_field_types[0]_408.7341493615164",
 					"required": false,
+					"propertyId": { "name": "field_types", "row": 8, "col": 0 },
 					"displayError": false
 				}
 			},
@@ -1662,6 +1669,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 					"text": "Invalid Field, field not found in data set.",
 					"validation_id": "validField_field_types[0]_408.7341493615164",
 					"required": false,
+					"propertyId": { "name": "field_types", "row": 9, "col": 0 },
 					"displayError": true
 				}
 			},
@@ -1671,6 +1679,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 					"text": "Invalid Field, field not found in data set.",
 					"validation_id": "validField_field_types[0]_408.7341493615164",
 					"required": true,
+					"propertyId": { "name": "field_types", "row": 10, "col": 0 },
 					"displayError": false
 				}
 			}
@@ -1719,5 +1728,37 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		controller.setErrorMessages(requiredErrors);
 		const actualDisplayErrors = controller.getAllErrorMessages();
 		expect(actualDisplayErrors).to.eql(requiredErrors);
+	});
+
+	it("should return all required error messages with hidden/disabled errors removed", () => {
+		controller.setErrorMessages(requiredErrors);
+		controller.updateControlState(requiredErrors.textfieldName.propertyId, "hidden");
+		const actualRequiredErrors = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors = {
+			"numberfieldMaxBins": requiredErrors.numberfieldMaxBins,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors).to.eql(expectedRequiredErrors);
+
+		controller.updateControlState(requiredErrors.numberfieldMaxBins.propertyId, "disabled");
+		const actualRequiredErrors2 = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors2 = {
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors2).to.eql(expectedRequiredErrors2);
 	});
 });

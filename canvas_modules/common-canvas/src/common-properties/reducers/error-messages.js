@@ -63,6 +63,7 @@ function messages(state = {}, action) {
 				delete newState[action.message.propertyId.name].text;
 				delete newState[action.message.propertyId.name].validation_id;
 				delete newState[action.message.propertyId.name].required;
+				delete newState[action.message.propertyId.name].propertyId;
 				delete newState[action.message.propertyId.name].displayError;
 				if (isEmpty(newState[action.message.propertyId.name])) {
 					delete newState[action.message.propertyId.name];

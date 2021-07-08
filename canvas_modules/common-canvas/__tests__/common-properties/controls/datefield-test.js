@@ -205,6 +205,9 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"propertyId": {
+				"name": "date_ymd"
+			},
 			"required": false,
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
@@ -236,6 +239,9 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"propertyId": {
+				"name": "date_ymd"
+			},
 			"required": false,
 			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
@@ -265,6 +271,9 @@ describe("error messages renders correctly for datefield controls", () => {
 		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"propertyId": {
+				"name": "date_mdy"
+			},
 			"required": true,
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",

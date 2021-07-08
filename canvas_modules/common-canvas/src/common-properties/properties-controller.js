@@ -1342,7 +1342,8 @@ export default class PropertiesController {
 	getRequiredErrorMessages() {
 		const messages = this.propertiesStore.getErrorMessages();
 		const requiredMessages = this._filterNonRequiredErrors(messages);
-		return requiredMessages;
+		const filtered = this._filterHiddenDisabledErrors(requiredMessages); // Exclude errors for controls that are hidden or disabled
+		return filtered;
 	}
 
 	_filterMessages(messages, filteredPipeline, filterHiddenDisable, filterSuccess) {
@@ -1388,13 +1389,24 @@ export default class PropertiesController {
 		return filteredMessages;
 	}
 
+	// Remove error messages that are disabled or hidden
+	_filterHiddenDisabledErrors(messages) {
+		const filterCondition = (testMessage, propertyId) => {
+			const controlState = this.getControlState(propertyId);
+			return controlState !== "hidden" && controlState !== "disabled";
+		};
+		const filteredMessages = this._filterErrors(messages, filterCondition);
+		return filteredMessages;
+	}
+
+
 	// Remove error messages that do not satisfy the given condition
 	_filterErrors(messages, condition) {
 		const filteredMessages = {};
 		const parameterNames = Object.keys(messages);
 		parameterNames.forEach((paramKey) => {
 			const parameterError = messages[paramKey];
-			if (parameterError.text && condition(parameterError)) { // not table
+			if (parameterError.text && condition(parameterError, parameterError.propertyId)) { // not table
 				filteredMessages[paramKey] = parameterError;
 			} else { // table cell
 				for (const rowKey in parameterError) {
@@ -1402,7 +1414,7 @@ export default class PropertiesController {
 						continue;
 					}
 					const rowMessage = parameterError[rowKey];
-					if (rowMessage && rowMessage.text && condition(rowMessage)) {
+					if (rowMessage && rowMessage.text && condition(rowMessage, rowMessage.propertyId)) {
 						if (typeof filteredMessages[paramKey] === "undefined") {
 							filteredMessages[paramKey] = {};
 						}
@@ -1413,7 +1425,7 @@ export default class PropertiesController {
 								continue;
 							}
 							const colMessage = rowMessage[colKey];
-							if (colMessage && colMessage.text && condition(colMessage)) {
+							if (colMessage && colMessage.text && condition(colMessage, colMessage.propertyId)) {
 								if (typeof filteredMessages[paramKey] === "undefined") {
 									filteredMessages[paramKey] = {};
 								}
