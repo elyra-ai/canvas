@@ -23,7 +23,6 @@ import { ArrowUp24, ArrowDown24, UpToTop24, DownToBottom24 } from "@carbon/icons
 import classNames from "classnames";
 import EmptyTable from "./../empty-table";
 import { MESSAGE_KEYS } from "./../../constants/constants";
-import { has } from "lodash";
 
 class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -233,9 +232,8 @@ class MoveableTableRows extends React.Component {
 	}
 
 	render() {
-		const addRemoveRowsEnabled = has(this.props.control, "addRemoveRows") ? this.props.control.addRemoveRows : true;
 		return (
-			this.props.isEmptyTable && addRemoveRowsEnabled
+			this.props.isEmptyTable && this.props.addRemoveRows
 				? <EmptyTable
 					control={this.props.control}
 					controller={this.props.controller}
@@ -259,12 +257,18 @@ MoveableTableRows.propTypes = {
 	isEmptyTable: PropTypes.bool.isRequired,
 	emptyTableButtonLabel: PropTypes.string,
 	emptyTableButtonClickHandler: PropTypes.func,
-	disableRowMoveButtons: PropTypes.bool // set by redux
+	disableRowMoveButtons: PropTypes.bool, // set by redux
+	addRemoveRows: PropTypes.bool // set by redux
+};
+
+MoveableTableRows.defaultProps = {
+	addRemoveRows: true
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	// check if row move buttons should be disabled for given propertyId
-	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId)
+	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId),
+	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps)(MoveableTableRows);
