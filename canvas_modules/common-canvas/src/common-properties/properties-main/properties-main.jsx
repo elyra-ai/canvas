@@ -72,6 +72,10 @@ class PropertiesMain extends React.Component {
 			this.propertiesController.validatePropertiesValues(true);
 			this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 		}
+		// Callback after all values and messages are set
+		if (this.props.callbacks.propertyListener) {
+			this.props.callbacks.propertyListener({ action: ACTIONS.PROPERTIES_LOADED });
+		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		const editorSize = this.getEditorSize();
 		this.state = {
@@ -158,10 +162,6 @@ class PropertiesMain extends React.Component {
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
 		this.initialValueInfo.undoInfo.messages = this.propertiesController.getAllErrorMessages(); // used for undoing when node editor open
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
-
-		if (this.props.callbacks.propertyListener) {
-			this.props.callbacks.propertyListener({ action: ACTIONS.PROPERTIES_LOADED });
-		}
 	}
 
 	getApplyButtonLabel() {
