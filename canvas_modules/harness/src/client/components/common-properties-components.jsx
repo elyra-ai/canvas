@@ -528,8 +528,8 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--panels" className="harness-section-subtitle">panels</h3>
-					<p>To create a padded grouping of controls, use type <span className="harness-highlight">panels</span>.
-						The default padding is set to 16px.</p>
+					<p>To create grouping of controls, use type <span className="harness-highlight">panels</span>.
+						Spacing between two panels is 40px.</p>
 					<div className="harness-section-row">
 						<div className="harness-section-row">
 							<div className="harness-section-column">
