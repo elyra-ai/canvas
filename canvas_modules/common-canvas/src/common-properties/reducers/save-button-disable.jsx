@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-.properties-modal-buttons {
-	justify-content: flex-end;
-	display: flex;
-	height: $spacing-10;
-	bottom: 0;
-	position: absolute;
-	width: 100%;
-	left: 0;
-	&.hide {
-		display: none;
-	}
+import { SET_SAVE_BUTTON_DISABLE } from "../actions";
 
-	.properties-apply-button, .properties-cancel-button {
-		width: 50%;
-		max-width: unset;
-		padding: 0 0 $spacing-05 $spacing-05;
+function setSaveButtonDisable(state = [], action) {
+	switch (action.type) {
+	case SET_SAVE_BUTTON_DISABLE: {
+		const newState = state;
+		newState.disable = action.disableState;
+		return Object.assign({}, state, newState);
+	}
+	default:
+		return state;
 	}
 }
+
+export default setSaveButtonDisable;

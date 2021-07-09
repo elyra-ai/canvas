@@ -64,6 +64,7 @@ export default class SidePanelModal extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
@@ -202,6 +203,10 @@ export default class SidePanelModal extends React.Component {
 
 	useApplyOnBlur(checked) {
 		this.props.propertiesConfig.useApplyOnBlur(checked);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.props.propertiesConfig.useSaveButtonDisable(disabled);
 	}
 
 	useExpressionBuilder(checked) {
@@ -376,6 +381,16 @@ export default class SidePanelModal extends React.Component {
 					labelText="Apply changes on blur"
 					toggled={this.props.propertiesConfig.applyOnBlur}
 					onToggle={this.useApplyOnBlur}
+				/>
+			</div>);
+
+		const setSaveButtonDisable = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="harness-sidepanel-setSaveButtonDisable-toggle"
+					labelText="Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true"
+					toggled={this.props.propertiesConfig.disableSaveOnRequiredErrors}
+					onToggle={this.useSaveButtonDisable}
 				/>
 			</div>);
 
@@ -569,6 +584,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{applyOnBlur}
 				{divider}
+				{setSaveButtonDisable}
+				{divider}
 				{expressionBuilder}
 				{divider}
 				{validationHandler}
@@ -612,6 +629,8 @@ SidePanelModal.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
+		disableSaveOnRequiredErrors: PropTypes.bool,
+		useSaveButtonDisable: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,

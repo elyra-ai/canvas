@@ -50,38 +50,67 @@ const validationErrorMessages = {
 	"number_undefined": {
 		"type": "error",
 		"text": "Required parameter 'Undefined' has no value.",
-		"validation_id": "required_number_undefined_272.9520234285945"
+		"validation_id": "required_number_undefined_272.9520234285945",
+		"propertyId": {
+			"name": "number_undefined"
+		},
+		"required": true
 	},
 	"number_null": {
 		"type": "error",
 		"text": "Required parameter 'Null' has no value.",
-		"validation_id": "required_number_null_401.11526920064296"
+		"validation_id": "required_number_null_401.11526920064296",
+		"propertyId": {
+			"name": "number_null"
+		},
+		"required": true
 	},
 	"number_error": {
 		"type": "error",
 		"text": "Needs to be greaterThan 0",
-		"validation_id": "number_error"
+		"validation_id": "number_error",
+		"propertyId": {
+			"name": "number_error"
+		},
+		"required": false
 	},
 	"number_warning": {
 		"type": "warning",
 		"text": "Needs to be greaterThan 1",
-		"validation_id": "number_warning"
+		"validation_id": "number_warning",
+		"propertyId": {
+			"name": "number_warning"
+		},
+		"required": false
 	},
 	"number_table": {
 		"0": {
 			"0": {
 				"type": "error",
 				"text": "Needs to be greaterThan 1",
-				"validation_id": "number_table"
+				"validation_id": "number_table",
+				"propertyId": {
+					"name": "number_table",
+					"col": 0,
+					"row": 0
+				},
+				"required": false
 			},
 			"1": {
 				"type": "warning",
 				"text": "Needs to be greaterThan 1",
-				"validation_id": "number_table"
+				"validation_id": "number_table",
+				"propertyId": {
+					"name": "number_table",
+					"col": 1,
+					"row": 0
+				},
+				"required": false
 			}
 		}
 	}
 };
+
 
 const propertiesInfo = {};
 propertiesInfo.parameterDef = editStyleResource.paramDef;
@@ -473,7 +502,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		// Click on resize button
 		wrapper.find("button.properties-btn-resize").simulate("click");
 
-		//  controller should set editorSize to medium
+		//	controller should set editorSize to medium
 		expect(renderedObject.controller.getEditorSize()).to.equal("medium");
 		// Right flyout panel should have editorSize medium
 		expect(wrapper.find("aside.properties-small")).to.have.length(0);

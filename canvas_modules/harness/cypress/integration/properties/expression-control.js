@@ -114,7 +114,7 @@ describe("Test of expression builder", function() {
 		// Generate an error
 		cy.selectTabFromPropertyInSubPanel("Functions", "function");
 		cy.selectFieldFromPropertyInSubPanel("is_integer(ITEM)", "functions");
-		cy.selectTabFromPropertyInSubPanel("Functions", "function"); // trigger blur
+		cy.triggerBlurInExpressionBuilder(); // trigger blur
 		cy.verifyValidationMessage("Expression cannot contain '?'");
 
 		// substitute a param char '?' (dependent on the test above)
