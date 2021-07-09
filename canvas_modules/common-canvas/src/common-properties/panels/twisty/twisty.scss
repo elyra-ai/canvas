@@ -26,7 +26,7 @@
 		border-top: 0;
 	}
 	.bx--accordion__item--active .bx--accordion__content {
-		padding-left: 0;
+		padding: $spacing-06 0 0;
 	}
 	.bx--accordion__title {
 		font-size: 14px;

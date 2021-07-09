@@ -16,6 +16,9 @@
 
 .properties-control-panel {
 	display: block;
+	&:last-child {
+		padding-bottom: $spacing-03; // (8px + 16px from properties-ctrl-wrapper + 16px outer padding)
+	}
 	&.hide {
 		display: none;
 	}
@@ -25,11 +28,14 @@
 	}
 }
 
-.properties-editor-form .properties-control-nested-panel {
-	padding: 0 0 0 $spacing-05; // Ensure panel type properties have a padding
-	border-left: 1px solid $ui-04;
+.properties-control-panel .properties-control-panel:not(:empty) {
+	// Total 40px spacing between panels
+	padding-bottom: $spacing-06; // (24px + 16px from properties-ctrl-wrapper)
+	&:last-child {
+		padding-bottom: 0;
+	}
 }
 
-.properties-editor-form .properties-control-nested-panel .properties-control-nested-panel {
-	border-left: 1px solid $ui-03;
+.properties-control-panel .properties-control-panel .properties-control-panel {
+	padding-bottom: 0;
 }
