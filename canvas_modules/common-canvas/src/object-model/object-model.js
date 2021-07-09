@@ -371,11 +371,11 @@ export default class ObjectModel {
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
 		if (!this.isPipelineLoaded(pipelineId, url)) {
-			if (this.flowContainsPipeline(data.externalPipelineFlow, data.externalPipelineId)) {
+			if (this.flowContainsPipeline(data.externalPipelineFlow, pipelineId)) {
 				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
 				return;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + data.externalPipelineId);
+			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + pipelineId);
 		}
 	}
 
@@ -523,7 +523,7 @@ export default class ObjectModel {
 
 	convertSuperNodeExternalToLocal(data) {
 		if (has(data, "supernodePipelineFlow.pipelines") &&
-				!this.isPipelineLoaded(data.supernodePipelineId, data.externalFlowUrl)) {
+				!this.isPipelineLoaded(data.supernode.subflow_ref.pipeline_id_ref, data.externalFlowUrl)) {
 			const preparedFlow = this.preparePipelineFlow(data.supernodePipelineFlow);
 			data.newPipelines = preparedFlow.pipelines;
 		}
@@ -534,7 +534,7 @@ export default class ObjectModel {
 	convertSuperNodeLocalToExternal(data) {
 		data.externalPipelineFlow =
 			this.getExternalPipelineFlowTemplate(
-				data.externalFlowUrl, data.externalPipelineFlowId, data.subflowPipelineId);
+				data.externalFlowUrl, data.externalPipelineFlowId, data.supernode.subflow_ref.pipeline_id_ref);
 		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
 	}
 
@@ -1431,7 +1431,7 @@ export default class ObjectModel {
 	}
 
 	// Creates a pipeline from the parameters passed in. Used for supernodes without sub-pipeline defined.
-	createPipeline(subflowNodes, subflowComments, subflowLinks, externalUrl) {
+	createPipeline(subflowNodes, subflowComments, subflowLinks) {
 		const primaryPipeline = this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
 		const subPipelineInfo = {
 			"runtime_ref": primaryPipeline.runtime_ref,
@@ -1440,11 +1440,6 @@ export default class ObjectModel {
 			"links": subflowLinks
 		};
 
-		// If subflow pipeline being created will be for an external pipeline flow,
-		// set the pipeline's parentUrl property appropriately.
-		if (externalUrl) {
-			subPipelineInfo.parentUrl = externalUrl;
-		}
 		return this.createCanvasInfoPipeline(subPipelineInfo);
 	}
 

@@ -24,21 +24,20 @@ export default class ConvertSuperNodeExternalToLocal extends Action {
 	}
 
 	do() {
-		this.objectModel.convertSuperNodeExternalToLocal(
-			{ externalFlowUrl: this.data.targetObject.subflow_ref.url,
-				supernodeId: this.data.targetObject.id,
-				supernodeParentPipelineId: this.data.pipelineId,
-				supernodePipelineId: this.data.externalPipelineId,
-				supernodePipelineFlow: this.data.externalPipelineFlow });
+		this.objectModel.convertSuperNodeExternalToLocal({
+			supernode: this.data.targetObject,
+			pipelineId: this.data.pipelineId,
+			externalFlowUrl: this.data.externalUrl
+		});
 	}
 
 	undo() {
-		this.objectModel.convertSuperNodeLocalToExternal(
-			{ subflowPipelineId: this.data.targetObject.subflow_ref.pipeline_id_ref,
-				externalFlowUrl: this.data.externalUrl,
-				externalPipelineFlowId: this.data.externalPipelineFlow.id,
-				supernodeId: this.data.targetObject.id,
-				supernodePipelineId: this.data.pipelineId });
+		this.objectModel.convertSuperNodeLocalToExternal({
+			supernode: this.data.targetObject,
+			pipelineId: this.data.pipelineId,
+			externalFlowUrl: this.data.externalUrl,
+			externalPipelineFlowId: this.data.externalPipelineFlow.id
+		});
 	}
 
 	redo() {

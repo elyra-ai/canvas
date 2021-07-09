@@ -54,7 +54,7 @@ export default (state = {}, action) => {
 			// We need to alter the supernode so its subflow_ref.url field is removed.
 			// The supernode is identified by the supernodeParentPipelineId and the
 			// supernodeId passed in.
-			if (pipeline.id === action.data.supernodeParentPipelineId) {
+			if (pipeline.id === action.data.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action) });
 			}
@@ -86,14 +86,14 @@ export default (state = {}, action) => {
 			// We need to alter the supernode so a subflow_ref.url field is added.
 			// The supernode is identified by the supernodePipelineId and the
 			// supernodeId passed in.
-			if (pipeline.id === action.data.supernodePipelineId) {
+			if (pipeline.id === action.data.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action) });
 			}
 
-			// We need to add the parntUrl property to the subflow pipeline that
+			// We need to add the parentUrl property to the subflow pipeline that
 			// is being made external.
-			if (pipeline.id === action.data.subflowPipelineId) {
+			if (pipeline.id === action.data.supernode.subflow_ref.pipeline_id_ref) {
 				return Object.assign({}, pipeline, { parentUrl: action.data.externalFlowUrl });
 			}
 			return pipeline;

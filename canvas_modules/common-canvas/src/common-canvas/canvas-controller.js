@@ -2253,14 +2253,13 @@ export default class CanvasController {
 			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
 		}
 
-		const externalPipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
 		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
 
 		data.externalPipelineFlowLoad = false;
 		// If there is a URL then we must be accessing an external pipeline flow.
 		if (externalPipelineFlowUrl) {
 			data.externalUrl = externalPipelineFlowUrl;
-			data.externalPipelineId = externalPipelineId;
+
 			// Try to retrieve the pipeline from our store. If it is not there then
 			// we'll need to load it from the host application so switch load flag on.
 			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
