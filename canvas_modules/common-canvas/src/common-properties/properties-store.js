@@ -15,7 +15,7 @@
  */
 
 import { createStore, combineReducers } from "redux";
-import { has, isEqual } from "lodash";
+import { has, isEqual, cloneDeep } from "lodash";
 
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata } from "./actions";
+import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -36,6 +36,8 @@ import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
+import saveButtonDisableReducer from "./reducers/save-button-disable";
+import propertiesSettingsReducer from "./reducers/properties-settings";
 import * as PropertyUtils from "./util/property-utils.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
@@ -44,7 +46,8 @@ import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
-			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer, disableRowMoveButtonsReducer, actionStatesReducer });
+			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer,
+			disableRowMoveButtonsReducer, actionStatesReducer, saveButtonDisableReducer, propertiesSettingsReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -206,6 +209,14 @@ export default class PropertiesStore {
 		this.store.dispatch(updateActionState({ actionId: actionId, value: value }));
 	}
 
+	setSaveButtonDisable(disableState) {
+		this.store.dispatch(setSaveButtonDisable(disableState));
+	}
+
+	getSaveButtonDisable() {
+		const state = this.store.getState();
+		return state.saveButtonDisableReducer.disable;
+	}
 
 	/*
 	* Retrieves filtered enumeration values for the given propertyId.
@@ -247,16 +258,17 @@ export default class PropertiesStore {
 				return controlMsg[propertyId.col.toString()]; // return cell message
 			}
 			if (controlMsg && controlMsg.text) {
-				return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return row message
+				return controlMsg;
 			}
 		}
 		let controlMessage = null;
 		let returnMessage = null;
 		if (controlMsg && controlMsg.text) { // save the control level message
-			controlMessage = { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return prop message
+			controlMessage = controlMsg;
 		}
 		if (controlMsg) {
-			returnMessage = this._getTableCellErrors(controlMsg, intl);
+			const clonedControlMsg = cloneDeep(controlMsg); // Prevent modifying state directly
+			returnMessage = this._getTableCellErrors(clonedControlMsg, intl);
 		}
 		if (controlMessage !== null && returnMessage !== null) {
 			controlMessage.text = controlMessage.text + " " + returnMessage.text;
@@ -281,7 +293,7 @@ export default class PropertiesStore {
 			}
 			const rowMessage = controlMsg[rowKey];
 			if (rowMessage && rowMessage.text) {
-				returnMessage = { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text };
+				returnMessage = rowMessage;
 				errorMsgCount += (rowMessage.type === CONDITION_MESSAGE_TYPE.ERROR) ? 1 : 0;
 				warningMsgCount += (rowMessage.type === CONDITION_MESSAGE_TYPE.WARNING) ? 1 : 0;
 			}
@@ -295,7 +307,7 @@ export default class PropertiesStore {
 					}
 					const colMessage = rowMessage[colKey];
 					if (colMessage && colMessage.text) {
-						returnMessage = { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text };
+						returnMessage = colMessage;
 						errorMsgCount += (colMessage.type === CONDITION_MESSAGE_TYPE.ERROR) ? 1 : 0;
 						warningMsgCount += (colMessage.type === CONDITION_MESSAGE_TYPE.WARNING) ? 1 : 0;
 					}
@@ -404,4 +416,44 @@ export default class PropertiesStore {
 		const state = this.store.getState();
 		return state.componentMetadataReducer.activeTab;
 	}
+
+	/**
+	* Set the addRemoveRows attribute to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param enabled boolean value to enable or disable addRemoveRows
+	*/
+	setAddRemoveRows(propertyId, enabled) {
+		this.store.dispatch(setAddRemoveRows({ propertyId: propertyId, value: enabled }));
+	}
+
+	/**
+	* Returns true if addRemoveRows is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getAddRemoveRows(propertyId) {
+		const state = this.store.getState();
+		if (state.propertiesSettingsReducer[propertyId.name]) {
+			if (typeof propertyId.row !== "undefined") {
+				return getNestedAddRemoveRows(propertyId, state.propertiesSettingsReducer[propertyId.name]);
+			}
+			return state.propertiesSettingsReducer[propertyId.name].addRemoveRows;
+		}
+		return true; // Default to true to show the addRemoveRows buttons
+	}
+}
+
+function getNestedAddRemoveRows(propertyId, state) {
+	if (typeof propertyId.row !== "undefined" && state[propertyId.row]) {
+		if (typeof propertyId.col !== "undefined" && state[propertyId.row][propertyId.col]) {
+			if (typeof propertyId.propertyId !== "undefined") {
+				return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row][propertyId.col]);
+			}
+			return state[propertyId.row][propertyId.col].addRemoveRows;
+		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
+			return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row]);
+		}
+		return state[propertyId.row].addRemoveRows;
+	}
+	return true; // Default to true to show the addRemoveRows buttons
 }

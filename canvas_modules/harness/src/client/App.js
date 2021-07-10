@@ -213,7 +213,10 @@ class App extends React.Component {
 			selectedPanel: null,
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
-			applyOnBlur: true,
+			applyOnBlur: false,
+			disableSaveOnRequiredErrors: true,
+			addRemoveRowsPropertyId: {},
+			addRemoveRowsEnabled: true,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -287,12 +290,16 @@ class App extends React.Component {
 		this.setStateValue = this.setStateValue.bind(this);
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
+		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
+		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
@@ -811,6 +818,23 @@ class App extends React.Component {
 		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
 	}
 
+	// Textfield to set the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(propertyId) {
+		this.setState({ addRemoveRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.setState({ addRemoveRowsEnabled: enabled });
+	}
+
+	// Button to call propertiesController to set addRemoveRows
+	setAddRemoveRows() {
+		if (this.propertiesController) {
+			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
+	}
+
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
 		// Get locale from browser
@@ -1076,7 +1100,15 @@ class App extends React.Component {
 
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
+		if (enabled) {
+			this.setState({ disableSaveOnRequiredErrors: false });
+		}
 		this.log("apply changes on blur", enabled);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.setState({ disableSaveOnRequiredErrors: disabled });
+		this.log("save button disabled", disabled);
 	}
 
 	useExpressionBuilder(enabled) {
@@ -2064,6 +2096,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
@@ -2285,7 +2318,9 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
+			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
@@ -2296,6 +2331,10 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
+			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
+			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
+			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
+			setAddRemoveRows: this.setAddRemoveRows,
 			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
 			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

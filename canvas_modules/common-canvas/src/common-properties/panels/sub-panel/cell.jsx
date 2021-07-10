@@ -47,7 +47,7 @@ export default class SubPanelCell extends React.Component {
 	showSubPanel() {
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValue = cloneDeep(this.props.controller.getPropertyValue(this.props.propertyId));
-		this.initialMessages = this.props.controller.getErrorMessages();
+		this.initialMessages = this.props.controller.getAllErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
 		this.subPanelInvoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
 	}
