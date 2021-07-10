@@ -288,7 +288,7 @@ export default (state = [], action) => {
 
 	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
 		return state.map((node, index) => {
-			if (action.data.supernodeId === node.id) {
+			if (action.data.supernode.id === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.image = (newNode.image === USE_DEFAULT_EXT_ICON ? USE_DEFAULT_ICON : newNode.image);
 				delete newNode.subflow_ref.url;
@@ -300,7 +300,7 @@ export default (state = [], action) => {
 
 	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
 		return state.map((node, index) => {
-			if (action.data.supernodeId === node.id) {
+			if (action.data.supernode.id === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.image = (newNode.image === USE_DEFAULT_ICON ? USE_DEFAULT_EXT_ICON : newNode.image);
 				newNode.subflow_ref.url = action.data.externalFlowUrl;

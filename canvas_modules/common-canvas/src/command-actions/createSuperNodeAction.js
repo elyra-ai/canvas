@@ -29,8 +29,6 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes = this.objectModel.getSelectedNodes();
 		this.subflowComments = this.objectModel.getSelectedComments();
-		const supernodes = this.subflowNodes.filter((node) => node.type === SUPER_NODE);
-		this.subflowPipelines = this.objectModel.getReferencedPipelines(supernodes);
 
 		this.subflowLinks = [];
 		this.linksToDelete = [];
@@ -129,7 +127,7 @@ export default class CreateSuperNodeAction extends Action {
 
 		// Sub-Pipeline
 		this.canvasInfoSubPipeline =
-			this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks, this.data.externalUrl);
+			this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks);
 		this.subPipeline = this.objectModel.getAPIPipeline(this.canvasInfoSubPipeline.id);
 
 		this.createBindingNodeData = [];
@@ -162,8 +160,7 @@ export default class CreateSuperNodeAction extends Action {
 			this.canvasInfoSubPipeline.id,
 			supernodeInputPorts,
 			supernodeOutputPorts,
-			topLeftNodePosition,
-			this.data.externalUrl);
+			topLeftNodePosition);
 
 		// Links to and from supernode.
 		this.linkSrcDefs = [];
@@ -411,7 +408,17 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
 
+		// If we are creating an external supernode we convert the created supernode
+		// (which is currently local) to be external, then create an external
+		// pipeline flow object.
 		if (this.data.externalUrl) {
+			this.objectModel.convertSuperNodeLocalToExternal({
+				supernode: this.supernode,
+				pipelineId: this.data.pipelineId,
+				externalFlowUrl: this.data.externalUrl,
+				externalPipelineFlowId: this.data.externalPipelineFlowId
+			});
+
 			this.objectModel.createExternalPipelineFlow(
 				this.data.externalUrl, this.data.externalPipelineFlowId, this.canvasInfoSubPipeline.id);
 		}
@@ -451,12 +458,32 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	undo() {
-		this.apiPipeline.deleteSupernode(this.supernode.id);
+		// If we are undoing the creation of an external supernode, first we
+		// convert it back to a local supernode before it is deleted (this will
+		// take care or reverting any sub-flows back to local) and also
+		// remove the external pipeline flow.
+		if (this.data.externalUrl) {
+			this.objectModel.convertSuperNodeExternalToLocal({
+				supernode: this.data.targetObject,
+				pipelineId: this.data.pipelineId,
+				externalFlowUrl: this.data.externalUrl,
+				externalPipelineFlow: this.objectModel.getExternalPipelineFlow(this.data.externalUrl)
+			});
+
+			this.objectModel.removeExternalPipelineFlow(
+				this.data.externalPipelineFlowId, this.data.externalUrl);
+		}
+
+		// Delete the supernode. Usually this would delete all referenced pipelines
+		// but we pass false so only the newly created pipeline referenced by the
+		// supernode is removed. We leave pipelines in place because any supernodes
+		// added back in the next step will need them.
+		this.apiPipeline.deleteSupernode(this.supernode.id, false);
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {
-				const subFlow = node.subflow_ref.url && !node.is_expanded ? [] : this.subflowPipelines[node.id];
-				this.apiPipeline.addSupernode(node, subFlow);
+				// No need to pass any pipelines because they will already exist.
+				this.apiPipeline.addSupernode(node, []);
 			} else {
 				this.apiPipeline.addNode(node);
 			}
@@ -470,11 +497,6 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addLinks(this.supernodeInputLinks);
 		this.apiPipeline.addLinks(this.supernodeOutputLinks);
 		this.apiPipeline.addLinks(this.linksToDelete);
-
-		if (this.data.externalUrl) {
-			this.objectModel.removeExternalPipelineFlow(
-				this.data.externalPipelineFlowId, this.data.externalUrl);
-		}
 	}
 
 	redo() {

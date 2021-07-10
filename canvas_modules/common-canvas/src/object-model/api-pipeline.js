@@ -279,12 +279,6 @@ export default class APIPipeline {
 			},
 		};
 
-		// If supernode being created is to reference an external pipeline flow set
-		// the node's subflow_ref.url appropriately.
-		if (externalUrl) {
-			supernodeTemplate.subflow_ref.url = externalUrl;
-		}
-
 		const supernodeData = {
 			nodeTemplate: supernodeTemplate,
 			offsetX: topLeftNodePosition.xPos,
@@ -519,13 +513,15 @@ export default class APIPipeline {
 		this.deleteObject(id);
 	}
 
-	deleteSupernode(supernodeId) {
+	deleteSupernode(supernodeId, deletePipelines = true) {
 		let pipelineIds = [];
 		const supernode = this.getNode(supernodeId);
 		if (supernode) {
 			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+				if (deletePipelines) {
+					pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+				}
 			}
 			this.store.dispatch({
 				type: "DELETE_SUPERNODE",
