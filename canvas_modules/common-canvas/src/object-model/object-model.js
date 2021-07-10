@@ -522,9 +522,9 @@ export default class ObjectModel {
 	}
 
 	convertSuperNodeExternalToLocal(data) {
-		if (has(data, "supernodePipelineFlow.pipelines") &&
+		if (has(data, "externalPipelineFlow.pipelines") &&
 				!this.isPipelineLoaded(data.supernode.subflow_ref.pipeline_id_ref, data.externalFlowUrl)) {
-			const preparedFlow = this.preparePipelineFlow(data.supernodePipelineFlow);
+			const preparedFlow = this.preparePipelineFlow(data.externalPipelineFlow);
 			data.newPipelines = preparedFlow.pipelines;
 		}
 

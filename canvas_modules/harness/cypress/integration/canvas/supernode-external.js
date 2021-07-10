@@ -309,7 +309,7 @@ function testForLocalCollapse() {
 	cy.verifyNumberOfPortDataLinks(4);
 
 	// The original flow had 1 pipeline so now there should be 2 because the
-	// external pipeline should be loaded when he converting from external
+	// external pipeline should be loaded when converting from external
 	// to local.
 	cy.verifyNumberOfPipelines(2);
 	cy.verifyNumberOfExternalPipelines(0);
