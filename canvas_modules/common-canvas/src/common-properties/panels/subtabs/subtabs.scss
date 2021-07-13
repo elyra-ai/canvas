@@ -16,6 +16,8 @@
 
 .properties-sub-tab-container {
 	.bx--tab-content {
-		padding-left: 0; // override carbon padding
+		// override carbon padding
+		padding-left: 0;
+		padding-right: 0;
 	}
 }
