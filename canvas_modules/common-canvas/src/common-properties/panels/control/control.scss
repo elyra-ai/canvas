@@ -32,10 +32,6 @@
 	// Total 40px spacing between panels
 	padding-bottom: $spacing-06; // (24px + 16px from properties-ctrl-wrapper)
 	&:last-child {
-		padding-bottom: 0;
+		padding-bottom: 0; // Padding already added on last-child of .properties-control-panel
 	}
-}
-
-.properties-control-panel .properties-control-panel .properties-control-panel {
-	padding-bottom: 0;
 }

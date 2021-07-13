@@ -24,12 +24,13 @@
 	}
 	.bx--accordion__item {
 		border-top: 0;
+		margin: 0 -1rem; // Remove 16px outer padding for accordion title and content
 	}
 	.bx--accordion__item--active .bx--accordion__content {
-		padding: $spacing-06 0 0;
+		padding-top: $spacing-06; // 24px padding between accordion title and content (issue #3106)
+		padding-right: $spacing-05;
 	}
 	.bx--accordion__title {
 		font-size: 14px;
-		margin-left: 0;
 	}
 }
