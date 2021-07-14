@@ -32,10 +32,11 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfNodes(4);
 		cy.verifyNumberOfPortDataLinks(3);
 
-		// The original flow had 2 pipelines so now there should be 3.
+		// The original flow had 2 pipelines so now there should be 3
+		// of which 2 are external.
 		cy.verifyNumberOfPipelines(3);
 		cy.verifyNumberOfNodesInPipeline(4);
-		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelines(2);
 
 		cy.verifyNumberOfNodesInSupernode("Supernode", 4); // Includes supernode binding nodes
 		cy.verifyNumberOfLinksInSupernode("Supernode", 3);
