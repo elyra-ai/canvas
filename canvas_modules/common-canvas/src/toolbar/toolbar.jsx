@@ -41,6 +41,11 @@ class Toolbar extends React.Component {
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 	}
 
+	componentDidUpdate() {
+		this.setLeftBarItemsTabIndex();
+		this.setRightBarItemsTabIndex();
+	}
+
 	// When the toolbar is initially opened the tabindex for each element may not
 	// be set correctly because of the time it takes to initially render the DOM.
 	// Typically, this means the tabindex is not set correctly on whichever
@@ -82,7 +87,7 @@ class Toolbar extends React.Component {
 	// of the toolbar.
 	setLeftBarItemsTabIndex() {
 		const bar = this.getBar("left");
-		if (!bar) {
+		if (!bar || !bar.querySelectorAll) {
 			return;
 		}
 
@@ -98,8 +103,10 @@ class Toolbar extends React.Component {
 			if (itemRect.top === topRow) {
 				lastTopRowElement = i;
 				this.setToolbarItemButtonTabIndex(items[i], 0);
+				this.setToolbarItemButtonVisible(items[i], true);
 			} else {
 				this.setToolbarItemButtonTabIndex(items[i], -1);
+				this.setToolbarItemButtonVisible(items[i], false);
 			}
 		}
 
@@ -124,8 +131,10 @@ class Toolbar extends React.Component {
 
 			if (itemRect.top === topRow) {
 				this.setToolbarItemButtonTabIndex(items[i], 0);
+				this.setToolbarItemButtonVisible(items[i], true);
 			} else {
 				this.setToolbarItemButtonTabIndex(items[i], -1);
+				this.setToolbarItemButtonVisible(items[i], false);
 			}
 		}
 	}
@@ -138,7 +147,7 @@ class Toolbar extends React.Component {
 
 	getRightBarItems() {
 		const bar = this.getBar("right");
-		if (!bar) {
+		if (!bar || !bar.querySelectorAll) {
 			return [];
 		}
 		return bar.querySelectorAll("[data-toolbar-item=true]") || [];
@@ -162,6 +171,20 @@ class Toolbar extends React.Component {
 		const button = item.querySelector("button");
 		if (button) {
 			button.setAttribute("tabindex", tabIndex);
+		}
+	}
+
+	// Applies the invisble style to toolbar items that are *not* on the first
+	// row of the left or right side toolbar. This is actually only really
+	// necessary when the host app is displaying a dropdown control because that
+	// is displayed using a <div> with 'position: absolute' and absolutely
+	// positioned divs are not hidden by the 'overflow: hidden' style on the
+	// toolbar. However, applying it to all items not on the top row is OK.
+	setToolbarItemButtonVisible(item, visible) {
+		if (visible) {
+			item.classList.remove("toolbar-item-button-invisible");
+		} else {
+			item.classList.add("toolbar-item-button-invisible");
 		}
 	}
 

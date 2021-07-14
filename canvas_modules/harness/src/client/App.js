@@ -71,7 +71,7 @@ import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
 
-import { InlineLoading, Checkbox, Button } from "carbon-components-react";
+import { InlineLoading, Checkbox, Dropdown, Button } from "carbon-components-react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -2056,20 +2056,28 @@ class App extends React.Component {
 			// This example shows how custom JSX can be provided to the toolbar in the
 			// jsx field to replace the content specified in the other fields. The JSX
 			// added can be customized using the host applications own CSS.
+			const items = [{ id: "1", label: "First" }, { id: "2", label: "Second" }];
 			toolbarConfig = {
 				leftBar: [
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "custom-loading",
-						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+						jsx: (<div style={{ padding: "4px 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
 					{ divider: true },
 					{ action: "custom-checkbox",
-						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+						jsx: (<div style={{ padding: "5px 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ divider: true },
+					{ action: "custom-dropdown",
+						jsx: (
+							<div style={{ width: "196px", height: "100%" }}>
+								<Dropdown style={{ width: "196px", position: "absolute" }} id={"drpdwn1"} items={items} label="Dropdown Label" />
+							</div>
+						) },
 					{ divider: true },
 					{ action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+						jsx: (<Button id={"btn1"} size="field" kind="primary">Custom button </Button>) },
 					{ divider: true }
 				]
 			};
