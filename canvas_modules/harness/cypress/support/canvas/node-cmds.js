@@ -134,13 +134,14 @@ Cypress.Commands.add("clickNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName).click();
 });
 
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
+// position parameter is optional
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, position) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
 			.getNodeWithLabel(nodeName)
-			.click();
+			.click(position);
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
 		// causing problems with subsequent selections.
@@ -163,9 +164,10 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	});
 });
 
-Cypress.Commands.add("rightClickNode", (nodeName, position) => {
+Cypress.Commands.add("rightClickNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.rightclick(position); // position defaults to 'center' if not provided
+		.find("> .d3-node-body-outline")
+		.rightclick("top"); // Always use top so the click misses the image
 });
 
 Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {

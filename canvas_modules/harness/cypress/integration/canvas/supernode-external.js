@@ -20,7 +20,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.setCanvasConfig({ "selectedExternalPipelineFlows": true });
 	});
 
-	it("Test creating a supernode referencing an external pipeline flow", function() {
+	it("Test creating an external supernode referencing an external pipeline flow", function() {
 		cy.openCanvasDefinition("allTypesCanvas.json");
 
 		cy.clickNode("Super node");
@@ -41,6 +41,79 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfNodesInSupernode("Supernode", 4); // Includes supernode binding nodes
 		cy.verifyNumberOfLinksInSupernode("Supernode", 3);
 	});
+
+	it("Test creating and converting an external supernode referencing multiple nested supernodes", function() {
+		cy.openCanvasDefinition("externalNestedCanvas.json");
+
+		// Check initial contents
+		checkContentsOfExternalNestedCanvas();
+
+		// Create a new supernode
+		cy.clickNode("Aggregate");
+		cy.ctrlOrCmdClickNode("Supernode-1", "top");
+		cy.rightClickNode("Supernode-1");
+		cy.clickOptionFromContextMenu("Create external supernode");
+
+		// Expand the new supernode
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		// Check external supernode was created OK
+		checkCreatedSupernodeInExternalNestedCanvas();
+
+		cy.clickToolbarUndo(); // Undo: 'Expand supernode'
+		cy.clickToolbarUndo(); // Undo: 'Create external supernode'
+
+		// Check initial contents were restored
+		checkContentsOfExternalNestedCanvas();
+
+		// Redo the chnanges
+		cy.clickToolbarRedo(); // Redo: 'Create external supernode'
+		cy.clickToolbarRedo(); // Redo: 'Expand supernode'
+
+		// Check external supernode was re-created OK
+		checkCreatedSupernodeInExternalNestedCanvas();
+
+		// No convert the external supernode to local
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Convert external to local");
+
+		// The flow has 7 pipelines but now after converion to local only 2 of them
+		// are external (which are the two that are in a different pipeline flow)
+		// in the original externalNestedCanvas was loaded.
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(2);
+
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(6);
+
+		cy.clickToolbarRedo();
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(2);
+
+		// Now convert the local supernode to an external
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Convert local to external");
+
+		// The flow has 7 pipelines but now after converion to external 6 of them
+		// are external (which are the two that are in a different pipeline flow plus)
+		// 4 that were converted).
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(6);
+
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(2);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(7);
+		cy.verifyNumberOfExternalPipelines(6);
+	});
+
 
 	it("Test opening and loading a sub-flow pipeline in an external pipeline flow using expand in place", function() {
 		// Open a flow that referencs an external subflow
@@ -235,7 +308,8 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 	});
 
-	it("Test opening a flow with an expanded external supernode loads the external pipeline and displays it", function() {
+	it("Test opening a flow with an expanded external supernode loads the external pipeline " +
+		"and displays it", function() {
 		// Open a flow that referencs an external subflow
 		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
 
@@ -314,4 +388,28 @@ function testForLocalCollapse() {
 	// to local.
 	cy.verifyNumberOfPipelines(2);
 	cy.verifyNumberOfExternalPipelines(0);
+}
+
+function checkContentsOfExternalNestedCanvas() {
+	cy.verifyNumberOfPipelines(6);
+	cy.verifyNumberOfNodesInPipeline(4);
+	cy.verifyNumberOfExternalPipelines(2);
+}
+
+function checkCreatedSupernodeInExternalNestedCanvas() {
+	// There should now be 4 nodes and 3 links in the main flow.
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfPortDataLinks(2);
+
+	// The original flow had 6 pipelines so now there should be 7
+	// of which 6 are external.
+	cy.verifyNumberOfPipelines(7);
+	cy.verifyNumberOfNodesInPipeline(3);
+	cy.verifyNumberOfExternalPipelines(6);
+
+	cy.verifyNumberOfNodesInSupernode("Supernode", 4); // Includes supernode binding nodes
+	cy.verifyNumberOfLinksInSupernode("Supernode", 3);
+
+	cy.verifyNumberOfNodesInSupernodeNested("Supernode-1", "Supernode", 6); // Includes supernode binding nodes
+	cy.verifyNumberOfLinksInSupernodeNested("Supernode-1", "Supernode", 5);
 }
