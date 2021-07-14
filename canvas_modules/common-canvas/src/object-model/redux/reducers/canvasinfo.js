@@ -15,6 +15,8 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
+import { SUPER_NODE } from "../../../common-canvas/constants/canvas-constants.js";
+
 import nodes from "./nodes.js";
 import comments from "./comments.js";
 import links from "./links.js";
@@ -50,25 +52,29 @@ export default (state = {}, action) => {
 	}
 
 	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
+		const supernode = getSupernode(action.data.supernodeId, action.data.pipelineId, state.pipelines);
+		const supernodesToConvert =
+			getSupernodesToConvert([supernode], action.data.pipelineId,
+				action.type, action.data.externalFlowUrl, state.pipelines);
+		const pipelineIdsToConvert = getPipelineIdsToConvert(supernodesToConvert);
+
 		let canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			// We need to alter the supernode so its subflow_ref.url field is removed.
-			// The supernode is identified by the supernodeParentPipelineId and the
-			// supernodeId passed in.
-			if (pipeline.id === action.data.pipelineId) {
-				return Object.assign({}, pipeline, {
+			let pLine = pipeline;
+
+			// We need to alter the supernodes so subflow_ref.url field is removed.
+			if (supernodesToConvert[pipeline.id] &&
+					supernodesToConvert[pipeline.id].length > 0) {
+				action.data.supernodesToConvert = supernodesToConvert[pipeline.id];
+				pLine = Object.assign({}, pLine, {
 					nodes: nodes(pipeline.nodes, action) });
 			}
-			// If the pipeline is loaded, we need to remove the parentUrl field from
-			// the pipeline which is the sub-flow for the supernode being converted
-			// to local. This will be a different pipeline to the one where the
-			// supernode exists.
-			if (pipeline.parentUrl === action.data.externalFlowUrl) {
-				const p = Object.assign({}, pipeline);
-				delete p.parentUrl;
-				return p;
-			}
 
-			return pipeline;
+			// We need to add the parentUrl property to the subflow pipelines that
+			// are being made local.
+			if (pipelineIdsToConvert.some((pId) => pId === pipeline.id)) {
+				delete pLine.parentUrl;
+			}
+			return pLine;
 		});
 
 		// If the pipeline is not loaded we will be provided by one (or more new
@@ -82,21 +88,29 @@ export default (state = {}, action) => {
 	}
 
 	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
+		const supernode = getSupernode(action.data.supernodeId, action.data.pipelineId, state.pipelines);
+		const supernodesToConvert =
+			getSupernodesToConvert([supernode], action.data.pipelineId,
+				action.type, "", state.pipelines);
+		const pipelineIdsToConvert = getPipelineIdsToConvert(supernodesToConvert);
+
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			// We need to alter the supernode so a subflow_ref.url field is added.
-			// The supernode is identified by the supernodePipelineId and the
-			// supernodeId passed in.
-			if (pipeline.id === action.data.pipelineId) {
-				return Object.assign({}, pipeline, {
+			let pLine = pipeline;
+
+			// We need to alter the supernodes so a subflow_ref.url field is added.
+			if (supernodesToConvert[pipeline.id] &&
+					supernodesToConvert[pipeline.id].length > 0) {
+				action.data.supernodesToConvert = supernodesToConvert[pipeline.id];
+				pLine = Object.assign({}, pLine, {
 					nodes: nodes(pipeline.nodes, action) });
 			}
 
-			// We need to add the parentUrl property to the subflow pipeline that
-			// is being made external.
-			if (pipeline.id === action.data.supernode.subflow_ref.pipeline_id_ref) {
-				return Object.assign({}, pipeline, { parentUrl: action.data.externalFlowUrl });
+			// We need to add the parentUrl property to the subflow pipelines that
+			// are being made external.
+			if (pipelineIdsToConvert.some((pId) => pId === pipeline.id)) {
+				pLine = Object.assign({}, pLine, { parentUrl: action.data.externalFlowUrl });
 			}
-			return pipeline;
+			return pLine;
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
@@ -267,3 +281,59 @@ export default (state = {}, action) => {
 		return state;
 	}
 };
+
+function getSupernode(supernodeId, pipelineId, pipelines) {
+	const pipeline = getPipeline(pipelineId, pipelines);
+	return pipeline.nodes.find((n) => n.id === supernodeId);
+}
+
+function getSupernodesToConvert(supernodes, supernodePipelineId, type, url, pipelines) {
+	let supernodesToConvert = {};
+	supernodesToConvert[supernodePipelineId] = [];
+
+	supernodes.forEach((sn) => {
+		if ((type === "CONVERT_SN_LOCAL_TO_EXTERNAL" && !sn.subflow_ref.url) ||
+				(type === "CONVERT_SN_EXTERNAL_TO_LOCAL" && sn.subflow_ref.url === url)) {
+			supernodesToConvert[supernodePipelineId].push(sn);
+			const sns = getChildSupernodes(sn, pipelines);
+			if (sns.length > 0) {
+				const res = getSupernodesToConvert(sns, sn.subflow_ref.pipeline_id_ref, type, url, pipelines);
+				supernodesToConvert = Object.assign(supernodesToConvert, res);
+			}
+		}
+	});
+	return supernodesToConvert;
+}
+
+// Returns an array of pipeline IDs to convert from the object containing
+// arrays of supernodes that are to be converted.
+function getPipelineIdsToConvert(supernodesToConvert) {
+	const pipelinesToConvert = [];
+
+	for (const key in supernodesToConvert) {
+		if (supernodesToConvert[key]) {
+			const sns = supernodesToConvert[key];
+			sns.forEach((sn) => {
+				pipelinesToConvert.push(sn.subflow_ref.pipeline_id_ref);
+			});
+		}
+	}
+
+	return pipelinesToConvert;
+}
+
+// Returns and array of supernodes containd within the pipeline referenced by
+// the parent supernode passed in, based on the set of existing pipelines
+// passed in.
+function getChildSupernodes(sn, pipelines) {
+	const snPipelineId = sn.subflow_ref.pipeline_id_ref;
+	const snPipeline = getPipeline(snPipelineId, pipelines);
+	if (snPipeline) {
+		return snPipeline.nodes.filter((n) => n.type === SUPER_NODE);
+	}
+	return [];
+}
+
+function getPipeline(id, pipelines) {
+	return pipelines.find((p) => p.id === id);
+}

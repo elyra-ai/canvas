@@ -25,7 +25,7 @@ export default (state = [], action) => {
 	case "ADD_AUTO_NODE": {
 		return [
 			...state,
-			action.data.newNode
+			Object.assign({}, action.data.newNode)
 		];
 	}
 
@@ -288,9 +288,10 @@ export default (state = [], action) => {
 
 	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
 		return state.map((node, index) => {
-			if (action.data.supernode.id === node.id) {
+			if (action.data.supernodesToConvert.some((n) => n.id === node.id)) {
 				const newNode = Object.assign({}, node);
 				newNode.image = (newNode.image === USE_DEFAULT_EXT_ICON ? USE_DEFAULT_ICON : newNode.image);
+				newNode.subflow_ref = Object.assign({}, newNode.subflow_ref);
 				delete newNode.subflow_ref.url;
 				return newNode;
 			}
@@ -300,9 +301,10 @@ export default (state = [], action) => {
 
 	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
 		return state.map((node, index) => {
-			if (action.data.supernode.id === node.id) {
+			if (action.data.supernodesToConvert.some((n) => n.id === node.id)) {
 				const newNode = Object.assign({}, node);
 				newNode.image = (newNode.image === USE_DEFAULT_ICON ? USE_DEFAULT_EXT_ICON : newNode.image);
+				newNode.subflow_ref = Object.assign({}, newNode.subflow_ref);
 				newNode.subflow_ref.url = action.data.externalFlowUrl;
 				return newNode;
 			}
