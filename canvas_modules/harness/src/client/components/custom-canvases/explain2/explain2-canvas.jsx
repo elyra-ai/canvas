@@ -101,8 +101,9 @@ export default class Explain2Canvas extends React.Component {
 				{
 					"id": "dec_index_label",
 					"x_pos": LABEL_POSX + limitedLabelWidth + 5,
-					"y_pos": 8,
+					"y_pos": 5,
 					"label": indexNo,
+					"height": 30,
 					"class_name": "dec-index-label"
 				},
 				{
@@ -110,6 +111,7 @@ export default class Explain2Canvas extends React.Component {
 					"x_pos": DEFAULT_WIDTH - PERCENTAGE_BAR_WIDTH - 45,
 					"y_pos": 8,
 					"width": 40,
+					"height": 30,
 					"label": percentage + "%",
 					"class_name": "dec-percentage-label"
 				},
@@ -128,6 +130,7 @@ export default class Explain2Canvas extends React.Component {
 					"x_pos": LABEL_POSX,
 					"y_pos": DEFAULT_HEIGHT - 27,
 					"width": 300,
+					"height": 30,
 					"label": "SQL cost " + sqlCost.toFixed(2),
 					"class_name": "dec-sql-cost-label"
 				}
