@@ -51,7 +51,8 @@ describe("Test the external supernode/sub-flows support", function() {
 		// Create a new supernode
 		cy.clickNode("Aggregate");
 		cy.ctrlOrCmdClickNode("Supernode-1", "top");
-		cy.rightClickNode("Supernode-1");
+		cy.hoverOverNode("Supernode-1");
+		cy.clickEllipsisIconOfSupernode("Supernode-1");
 		cy.clickOptionFromContextMenu("Create external supernode");
 
 		// Expand the new supernode
@@ -75,7 +76,8 @@ describe("Test the external supernode/sub-flows support", function() {
 		checkCreatedSupernodeInExternalNestedCanvas();
 
 		// No convert the external supernode to local
-		cy.rightClickNode("Supernode");
+		cy.hoverOverNode("Supernode");
+		cy.clickEllipsisIconOfSupernode("Supernode");
 		cy.clickOptionFromContextMenu("Convert external to local");
 
 		// The flow has 7 pipelines but now after converion to local only 2 of them
@@ -94,7 +96,8 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfExternalPipelines(2);
 
 		// Now convert the local supernode to an external
-		cy.rightClickNode("Supernode");
+		cy.hoverOverNode("Supernode");
+		cy.clickEllipsisIconOfSupernode("Supernode");
 		cy.clickOptionFromContextMenu("Convert local to external");
 
 		// The flow has 7 pipelines but now after converion to external 6 of them

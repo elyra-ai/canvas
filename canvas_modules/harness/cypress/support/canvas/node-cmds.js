@@ -164,10 +164,10 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	});
 });
 
-Cypress.Commands.add("rightClickNode", (nodeName) => {
+// position parameter is optional
+Cypress.Commands.add("rightClickNode", (nodeName, position) => {
 	cy.getNodeWithLabel(nodeName)
-		.find("> .d3-node-body-outline")
-		.rightclick("top"); // Always use top so the click misses the image
+		.rightclick(position);
 });
 
 Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
@@ -385,7 +385,7 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 
 Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
-		.find(".d3-node-ellipsis-group")
+		.find("> .d3-node-ellipsis-group")
 		.eq(0)
 		.click();
 });
