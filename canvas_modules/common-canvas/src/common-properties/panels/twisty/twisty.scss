@@ -29,6 +29,7 @@
 	.bx--accordion__item--active .bx--accordion__content {
 		padding-top: $spacing-06; // 24px padding between accordion title and content (issue #3106)
 		padding-right: $spacing-05;
+		padding-bottom: 0; // Because there's 40px padding below .properties-control-panel
 	}
 	.bx--accordion__title {
 		font-size: 14px;

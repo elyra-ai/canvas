@@ -163,6 +163,7 @@
               "panel": {
                 "id": "settings",
                 "panelType": "columnSelection",
+                "nestedPanel":false,
                 "uiItems": [
                   {
                     "itemType": "control",

@@ -21,6 +21,7 @@ import classNames from "classnames";
 import { Accordion, AccordionItem } from "carbon-components-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
+import { get } from "lodash";
 
 
 class TwistyPanel extends React.Component {
@@ -28,7 +29,13 @@ class TwistyPanel extends React.Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		return (
-			<div className={classNames("properties-twisty-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-twisty-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+					className
+				)}
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
 				<Accordion>

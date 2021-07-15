@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
+import { get } from "lodash";
 
 
 class ColumnPanel extends React.Component {
@@ -42,7 +43,13 @@ class ColumnPanel extends React.Component {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		// grid-template-columns
 		return (
-			<div className={classNames("properties-column-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-column-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+					className
+				)}
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 				style={this.style}
 			>
