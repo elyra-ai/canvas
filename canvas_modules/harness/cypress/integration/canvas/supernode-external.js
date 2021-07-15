@@ -51,9 +51,14 @@ describe("Test the external supernode/sub-flows support", function() {
 		// Create a new supernode
 		cy.clickNode("Aggregate");
 		cy.ctrlOrCmdClickNode("Supernode-1", "top");
+
+		cy.wait(500);
+
 		cy.hoverOverNode("Supernode-1");
 		cy.clickEllipsisIconOfSupernode("Supernode-1");
 		cy.clickOptionFromContextMenu("Create external supernode");
+
+		cy.wait(500);
 
 		// Expand the new supernode
 		cy.rightClickNode("Supernode");
