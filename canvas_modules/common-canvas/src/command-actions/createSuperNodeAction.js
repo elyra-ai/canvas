@@ -409,18 +409,17 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
 
 		// If we are creating an external supernode we convert the created supernode
-		// (which is currently local) to be external, then create an external
-		// pipeline flow object.
+		// (which is currently local) to be external. This will convert any local
+		// child pipelines to be local and also create a external pipeline flow
+		// object in redux.
 		if (this.data.externalUrl) {
 			this.objectModel.convertSuperNodeLocalToExternal({
-				supernode: this.supernode,
 				pipelineId: this.data.pipelineId,
+				supernodeId: this.supernode.id,
+				supernodePipelineId: this.supernode.subflow_ref.pipeline_id_ref,
 				externalFlowUrl: this.data.externalUrl,
 				externalPipelineFlowId: this.data.externalPipelineFlowId
 			});
-
-			this.objectModel.createExternalPipelineFlow(
-				this.data.externalUrl, this.data.externalPipelineFlowId, this.canvasInfoSubPipeline.id);
 		}
 
 		// Add subflow_node_ref to supernode ports.
@@ -460,18 +459,16 @@ export default class CreateSuperNodeAction extends Action {
 	undo() {
 		// If we are undoing the creation of an external supernode, first we
 		// convert it back to a local supernode before it is deleted (this will
-		// take care or reverting any sub-flows back to local) and also
-		// remove the external pipeline flow.
+		// take care or reverting any sub-flows back to local) and will also
+		// remove the external pipeline flow object.
 		if (this.data.externalUrl) {
 			this.objectModel.convertSuperNodeExternalToLocal({
-				supernode: this.data.targetObject,
 				pipelineId: this.data.pipelineId,
+				supernodeId: this.supernode.id,
+				supernodePipelineId: this.supernode.subflow_ref.pipeline_id_ref,
 				externalFlowUrl: this.data.externalUrl,
 				externalPipelineFlow: this.objectModel.getExternalPipelineFlow(this.data.externalUrl)
 			});
-
-			this.objectModel.removeExternalPipelineFlow(
-				this.data.externalPipelineFlowId, this.data.externalUrl);
 		}
 
 		// Delete the supernode. Usually this would delete all referenced pipelines

@@ -523,7 +523,7 @@ export default class ObjectModel {
 
 	convertSuperNodeExternalToLocal(data) {
 		if (has(data, "externalPipelineFlow.pipelines") &&
-				!this.isPipelineLoaded(data.supernode.subflow_ref.pipeline_id_ref, data.externalFlowUrl)) {
+				!this.isPipelineLoaded(data.supernodePipelineId, data.externalFlowUrl)) {
 			const preparedFlow = this.preparePipelineFlow(data.externalPipelineFlow);
 			data.newPipelines = preparedFlow.pipelines;
 		}
@@ -534,7 +534,7 @@ export default class ObjectModel {
 	convertSuperNodeLocalToExternal(data) {
 		data.externalPipelineFlow =
 			this.getExternalPipelineFlowTemplate(
-				data.externalFlowUrl, data.externalPipelineFlowId, data.supernode.subflow_ref.pipeline_id_ref);
+				data.externalFlowUrl, data.externalPipelineFlowId, data.supernodePipelineId);
 		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
 	}
 

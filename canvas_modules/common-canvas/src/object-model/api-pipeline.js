@@ -492,7 +492,7 @@ export default class APIPipeline {
 			if (pipeline.id === this.pipelineId) {
 				const newNodes = [
 					...pipeline.nodes,
-					newSupernode
+					Object.assign({}, newSupernode)
 				];
 				return Object.assign({}, pipeline, { nodes: newNodes });
 			}
