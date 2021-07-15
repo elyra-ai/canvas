@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
+import propertyUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
@@ -24,6 +25,7 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
+import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
 
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
@@ -1129,6 +1131,42 @@ describe("Properties Controller handlers", () => {
 		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue);
 		expect(propertyListener).to.have.property("callCount", 3);
 		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
+	});
+	it("should callback after all properties are loaded", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
+		expect(propertyListener.calledWith({ action: "PROPERTIES_LOADED" })).to.be.true;
+
+		// Verify values and messages are set after PROPERTIES_LOADED
+		const actualRequiredMessages = renderedObject.controller.getRequiredErrorMessages();
+		const expectedRequiredMessages = {
+			"number_undefined": {
+				"type": "error",
+				"text": "Required parameter 'Undefined' has no value.",
+				"validation_id": "required_number_undefined_272.9520234285945",
+				"propertyId": {
+					"name": "number_undefined"
+				},
+				"required": true,
+				"displayError": false
+			},
+			"number_null": {
+				"type": "error",
+				"text": "Required parameter 'Null' has no value.",
+				"validation_id": "required_number_null_401.11526920064296",
+				"propertyId": {
+					"name": "number_null"
+				},
+				"required": true,
+				"displayError": false
+			}
+		};
+		expect(expectedRequiredMessages).to.eql(actualRequiredMessages);
+		const expectedValues = Object.assign({}, numberfieldParamDef.current_parameters, {
+			"number_default": 3,
+			"number_zero_default": 0
+		});
+		const actualValues = renderedObject.controller.getPropertyValues();
+		expect(expectedValues).to.eql(actualValues);
 	});
 });
 
