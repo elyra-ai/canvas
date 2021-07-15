@@ -134,14 +134,14 @@ Cypress.Commands.add("clickNode", (nodeName) => {
 	cy.getNodeWithLabel(nodeName).click();
 });
 
-// position parameter is optional
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, position) => {
+// posX and posY parameters is optional
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, posX, posY) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
 			.getNodeWithLabel(nodeName)
-			.click(position);
+			.click(posX, posY);
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
 		// causing problems with subsequent selections.
