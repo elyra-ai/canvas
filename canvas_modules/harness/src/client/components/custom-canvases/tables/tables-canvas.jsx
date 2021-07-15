@@ -120,8 +120,8 @@ export default class TablesCanvas extends React.Component {
 
 	decorationActionHandler(link, id, pipeline) {
 		const decs = this.canvasController.getLinkDecorations(link.id);
-		const decImage = decs.find((d) => d.id === id);
-		const decLabel = decs.find((d) => d.label);
+		const decImage = decs.find((d) => d.id === "assoc-dec-image");
+		const decLabel = decs.find((d) => d.id === "assoc-dec-label");
 		if (decImage && decLabel) {
 			if (decImage.image && decImage.image === "/images/custom-canvases/tables/tables-join-keys-selected.png") {
 				decImage.image = "/images/custom-canvases/tables/tables-join-keys-unselected.png";
@@ -138,7 +138,7 @@ export default class TablesCanvas extends React.Component {
 		if (data.editType === "linkNodes") {
 			const decs = [
 				{
-					"id": "assocDec1",
+					"id": "assoc-dec-image",
 					"x_pos": -35,
 					"y_pos": -20,
 					"height": 40,
@@ -148,7 +148,7 @@ export default class TablesCanvas extends React.Component {
 					"hotspot": true
 				},
 				{
-					"id": "assocDec2",
+					"id": "assoc-dec-label",
 					"x_pos": 0,
 					"y_pos": -5,
 					"label": "0 Keys",
