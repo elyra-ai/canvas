@@ -130,8 +130,9 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-Cypress.Commands.add("clickNode", (nodeName) => {
-	cy.getNodeWithLabel(nodeName).click();
+// posX and posY parameters is optional
+Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
+	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
 // posX and posY parameters is optional

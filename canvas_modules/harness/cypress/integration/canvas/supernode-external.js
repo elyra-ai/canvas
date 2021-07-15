@@ -49,9 +49,12 @@ describe("Test the external supernode/sub-flows support", function() {
 		checkContentsOfExternalNestedCanvas();
 
 		// Create a new supernode
-		// Select at offset 8, 8 so we don't select in middle of the supernode's subflow
-		cy.clickNode("Aggregate");
-		cy.ctrlOrCmdClickNode("Supernode-1", 8, 8);
+		// Select at offset 20, 20 so we don't select in middle of the supernode's subflow
+		// Note: We need to select these nodes in this order. If we select the
+		// supernode second, instead of first, we get an error when subsequently
+		// clicking the ellipsis (when running on the build machine).
+		cy.clickNode("Supernode-1", 20, 20);
+		cy.ctrlOrCmdClickNode("Aggregate");
 
 		cy.hoverOverNode("Supernode-1");
 		cy.clickEllipsisIconOfSupernode("Supernode-1");
