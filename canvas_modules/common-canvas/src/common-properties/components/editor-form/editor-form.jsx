@@ -21,7 +21,7 @@ import { setActiveTab } from "./../../actions";
 import { Tab, Tabs } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
-import { cloneDeep, isEmpty, sortBy } from "lodash";
+import { cloneDeep, isEmpty, sortBy, get } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
@@ -232,8 +232,9 @@ class EditorForm extends React.Component {
 			if (tab.content && tab.content.itemType === "textPanel") {
 				className = "";
 			}
+			// Always show indentation when insert_panels set to true
 			if (indent) {
-				className += " properties-control-panel";
+				className += " properties-control-nested-panel";
 			}
 			subPanels[tab.group] = (
 				<div className={classNames(className, groupClassName)} key={tab.group + key}>
@@ -320,6 +321,7 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 				rightFlyout={this.props.rightFlyout}
 				genUIItem={this.genUIItem}
+				nestedPanel={uiItem.nestedPanel}
 			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
@@ -347,9 +349,13 @@ class EditorForm extends React.Component {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
 					try {
-						return (<div className="properties-custom-panel" key={"custom." + key}>
-							{new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel()}
-						</div>);
+						return (
+							<div
+								className={classNames("properties-custom-panel", { "properties-control-nested-panel": get(panel, "nestedPanel", false) }) }
+								key={"custom." + key}
+							>
+								{new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel()}
+							</div>);
 					} catch (error) {
 						logger.warn("Error thrown creating custom panel: " + error);
 						return null;

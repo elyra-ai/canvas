@@ -65,7 +65,14 @@ class Subtabs extends React.Component {
 			}
 		}
 		return (
-			<div className={classNames("properties-sub-tab-container", { vertical: !this.props.rightFlyout }, className)}>
+			<div
+				className={classNames(
+					"properties-sub-tab-container",
+					{ vertical: !this.props.rightFlyout },
+					{ "properties-control-nested-panel": this.props.nestedPanel },
+					className
+				)}
+			>
 				<Tabs className="properties-subtabs" selected={activeTab} light={this.props.controller.getLight()}>
 					{subTabs}
 				</Tabs>
@@ -79,7 +86,8 @@ Subtabs.propTypes = {
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
 	genUIItem: PropTypes.func.isRequired,
-	className: PropTypes.string
+	className: PropTypes.string,
+	nestedPanel: PropTypes.bool
 };
 
 export default Subtabs;
