@@ -818,22 +818,6 @@ export default class ObjectModel {
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
-	// Returns an object with fields for supernode IDs with their values set
-	// to pipeline arrays for each supernode. The pipeline arrays are any
-	// descendent pipelines of the supernode being processed from the array
-	// of supernodes passed in.
-	getReferencedPipelines(supernodes) {
-		const pipelines = {};
-		supernodes.forEach((supernode) => {
-			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-				let pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-				pipelines[supernode.id] = this.getPipelines(pipelineIds);
-			}
-		});
-		return pipelines;
-	}
-
 	getDescendentPipelineIds(pipelineId) {
 		let pipelineIds = [];
 		this.getAPIPipeline(pipelineId).getSupernodes()
@@ -847,17 +831,30 @@ export default class ObjectModel {
 		return pipelineIds;
 	}
 
-	getDescendentPipelines(supernode) {
+	getDescendantPipelines(supernodes) {
+		const pipelines = [];
+		supernodes.forEach((supernode) => {
+			const descPipelines = this.getDescendantPipelinesForSupernode(supernode);
+			if (descPipelines && descPipelines.length > 0) {
+				pipelines[supernode.id] = descPipelines;
+			}
+		});
+		return pipelines;
+	}
+
+	getDescendantPipelinesForSupernode(supernode) {
 		let pipelines = [];
 		const snPipelineId = this.getSupernodePipelineID(supernode);
 		if (snPipelineId) {
 			const subPipeline = this.getCanvasInfoPipeline(snPipelineId);
-			pipelines.push(subPipeline);
+			if (subPipeline) {
+				pipelines.push(subPipeline);
 
-			this.getAPIPipeline(snPipelineId).getSupernodes()
-				.forEach((supernode2) => {
-					pipelines = pipelines.concat(this.getDescendentPipelines(supernode2));
-				});
+				this.getAPIPipeline(snPipelineId).getSupernodes()
+					.forEach((supernode2) => {
+						pipelines = pipelines.concat(this.getDescendantPipelinesForSupernode(supernode2));
+					});
+			}
 		}
 		return pipelines;
 	}

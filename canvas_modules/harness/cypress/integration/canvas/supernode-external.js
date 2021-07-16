@@ -155,7 +155,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickNode("Super node");
 		cy.rightClickNode("Super node");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert from external to local
@@ -163,7 +163,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert external to local");
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert back to external
@@ -171,7 +171,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert local to external");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert from external to local
@@ -179,7 +179,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert external to local");
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert back to external
@@ -187,37 +187,37 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert local to external");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Undo to local -> external -> local -> external
 		// -------------------------------------------------------------------------
 		cy.clickToolbarUndo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Redo to external -> local -> external
 		// -------------------------------------------------------------------------
 		cy.clickToolbarRedo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 	});
 
@@ -335,9 +335,78 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfExternalPipelines(2);
 	});
 
+	it("Test deleting (and undo/redo) of an external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalMainCanvas.json");
+		testForExternalMainCanvas();
+
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalMainCanvasSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalMainCanvas();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasSupernodeDeleted();
+	});
+
+	it("Test deleting (and undo/redo) of an expanded external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+		testForExternalMainCanvasExpanded();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalMainCanvasExpandedSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpanded();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedSupernodeDeleted();
+	});
+
+	it("Test deleting (and undo/redo) of a supernode with nested external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalNestedCanvas.json");
+		testForExternalNestedCanvas();
+
+		cy.hoverOverNode("Supernode-1");
+		cy.clickEllipsisIconOfSupernode("Supernode-1");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalNestedCanvasSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalNestedCanvas();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalNestedCanvasSupernodeDeleted();
+	});
 });
 
-function testForExternalInPlace() {
+function testForExternalMainCanvas() {
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
+function testForExternalMainCanvasSupernodeDeleted() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
+function testForExternalMainCanvasSupernodeExpandedInPlace() {
 	// There should now be 5 nodes and 4 links in the main flow.
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
@@ -356,7 +425,7 @@ function testForExternalInPlace() {
 	cy.verifyNumberOfExternalPipelineFlows(2);
 }
 
-function testForLocalInPlace() {
+function testForExternalMainCanvasLocalSupernodeExpandedInPlace() {
 	// There should now be 5 nodes and 4 links in the main flow.
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
@@ -373,6 +442,35 @@ function testForLocalInPlace() {
 	// The external flow should be gone!
 	cy.verifyNumberOfExternalPipelineFlows(1);
 }
+
+function testForExternalMainCanvasExpanded() {
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(2);
+}
+
+function testForExternalMainCanvasExpandedSupernodeDeleted() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
+function testForExternalNestedCanvas() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(3);
+	cy.verifyNumberOfPipelines(6);
+	cy.verifyNumberOfExternalPipelines(2);
+}
+
+function testForExternalNestedCanvasSupernodeDeleted() {
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
 
 function testForExternalCollapse(pipelines, extFlows) {
 	// There should now be 5 nodes and 4 links in the main flow.
