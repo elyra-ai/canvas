@@ -180,12 +180,14 @@
               "panel": {
                 "id": "fields-settings",
                 "panelType": "general",
+                "nestedPanel":false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
                       "panelType": "columnSelection",
+                      "nestedPanel":false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -237,6 +239,7 @@
               "panel": {
                 "id": "settings",
                 "panelType": "general",
+                "nestedPanel":false,
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -280,6 +283,7 @@
                           "panel": {
                             "id": "Include",
                             "panelType": "general",
+                            "nestedPanel":false,
                             "uiItems": [
                               {
                                 "itemType": "control",
@@ -317,6 +321,7 @@
                           "panel": {
                             "id": "Discard",
                             "panelType": "general",
+                            "nestedPanel":false,
                             "uiItems": [
                               {
                                 "itemType": "control",
@@ -347,6 +352,7 @@
                     "panel": {
                       "id": "boolean-settings",
                       "panelType": "general",
+                      "nestedPanel":false,
                       "uiItems": [
                         {
                           "itemType": "control",

@@ -20,7 +20,7 @@ import { has, propertyOf } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
 class Group {
-	constructor(cname, parameters, actions, type, label, dependsOn, insertPanels, subGroups, description, data, className) {
+	constructor(cname, parameters, actions, type, label, dependsOn, insertPanels, nestedPanel, subGroups, description, data, className) {
 		this.name = cname;
 		this.parameters = parameters;
 		this.actions = actions;
@@ -28,6 +28,7 @@ class Group {
 		this.label = ResourceDef.make(label);
 		this.dependsOn = dependsOn;
 		this.insertPanels = insertPanels;
+		this.nestedPanel = nestedPanel;
 		this.subGroups = subGroups;
 		this.description = ResourceDef.make(description);
 		this.data = data;
@@ -66,6 +67,7 @@ class Group {
 				propertyOf(uiGroup)("label"),
 				propertyOf(uiGroup)("depends_on_ref"),
 				propertyOf(uiGroup)("insert_panels"),
+				propertyOf(uiGroup)("nested_panel"),
 				subGroups,
 				propertyOf(uiGroup)("description"),
 				propertyOf(uiGroup)("data"),

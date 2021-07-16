@@ -23,7 +23,7 @@ import { Add16 } from "@carbon/icons-react";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
-import { isEmpty } from "lodash";
+import { isEmpty, get } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
@@ -305,7 +305,13 @@ class SummaryPanel extends React.Component {
 			</div>
 		</WideFlyout>) : <div />;
 		const panelClassName = this.props.panel.className ? this.props.panel.className : "";
-		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN }, panelClassName);
+		const className = classNames(
+			"properties-summary-panel",
+			"properties-control-panel",
+			{ "hide": this.props.panelState === STATES.HIDDEN },
+			{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+			panelClassName
+		);
 		return (
 			<div className={className} disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}>
 				{flyout}

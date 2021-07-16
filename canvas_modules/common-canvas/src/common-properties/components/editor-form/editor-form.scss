@@ -22,7 +22,7 @@
 
 // styling when there is only 1 tab
 .properties-category {
-	padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
+	padding: $spacing-05;
 }
 
 .properties-category-container {
@@ -46,7 +46,7 @@
 	background-color: $ui-background;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 $spacing-06;
+	padding: 0 $spacing-05;
 	border: 0; // override for button styling
 	outline: none; // override for button styling
 	border-bottom: 1px solid $ui-03;
@@ -63,7 +63,7 @@
 
 .properties-category-content {
 	height: 100%;
-	padding: $spacing-04 $spacing-06 $spacing-06 $spacing-06;
+	padding: $spacing-05;
 	border-bottom: 1px solid $ui-03;
 	display: none;
 	&.show {
@@ -71,7 +71,7 @@
 	}
 }
 
-.properties-subtabs, .properties-primaryTabs{
+.properties-subtabs, .properties-primaryTabs {
 	.bx--tabs__nav {
 		overflow-x: auto; // override carbon so scrollbar doesn't always show
 	}

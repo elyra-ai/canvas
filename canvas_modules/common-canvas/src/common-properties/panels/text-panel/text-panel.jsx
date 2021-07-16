@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { evaluateText } from "./../../util/property-utils.js";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants";
+import { get } from "lodash";
 
 class TextPanel extends Component {
 	render() {
@@ -29,7 +30,13 @@ class TextPanel extends Component {
 			? (<div className="panel-description">{evaluateText(this.props.panel.description, this.props.controller)}</div>)
 			: null;
 		return (
-			<div className={classNames("properties-text-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-text-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+					className
+				)}
 				disabled={this.props.panelState === STATES.DISABLED}
 			>
 				{label}
