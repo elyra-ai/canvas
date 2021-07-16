@@ -18,10 +18,14 @@
 	"menu.highlightUpstream": "Evidenzia upstream",
 	"menu.unhighlight": "Annulla evidenziazione",
 	"node.collapseSupernodeInPlace": "Riduci supernodo",
+	"node.convertSupernodeExternalToLocal": "Converti esterno in locale",
+	"node.convertSupernodeLocalToExternal": "Converti locale in esterno",
 	"node.createSupernode": "Crea supernodo",
+	"node.createSupernodeExternal": "Crea supernodo esterno",
 	"node.disconnectNode": "Disconnetti",
 	"node.editMenu": "Modifica",
 	"node.editNode": "Apri",
+	"node.expandSupernode": "Espandi supernodo",
 	"node.expandSupernodeInPlace": "Espandi supernodo",
 	"node.saveToPalette": "Salva nella tavolozza"
 }

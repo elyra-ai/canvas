@@ -53,7 +53,7 @@
 	"list.table.label": "Valores",
 	"moveable.table.button.bottom": "Mover para o fundo",
 	"moveable.table.button.down": "Mover para baixo",
-	"moveable.table.button.top": "Mover para a parte superior",
+	"moveable.table.button.top": "Mover para o topo",
 	"moveable.table.button.up": "Mover para cima",
 	"multi.selected.row.action": "A mudança de um valor nesta linha mudará o valor em todas as linhas selecionadas permitidas.",
 	"multi.selected.row.label": "linhas selecionadas.",

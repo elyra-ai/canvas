@@ -18,10 +18,14 @@
 	"menu.highlightUpstream": "Выделить восходящий поток",
 	"menu.unhighlight": "Отменить выделение",
 	"node.collapseSupernodeInPlace": "Свернуть надузел",
+	"node.convertSupernodeExternalToLocal": "Преобразовать внешнюю в локальную",
+	"node.convertSupernodeLocalToExternal": "Преобразовать локальную во внешнюю",
 	"node.createSupernode": "Создать надузел",
+	"node.createSupernodeExternal": "Создать внешний надузел",
 	"node.disconnectNode": "Разъединиться",
 	"node.editMenu": "Редактировать",
 	"node.editNode": "Открыть",
+	"node.expandSupernode": "Развернуть надузел",
 	"node.expandSupernodeInPlace": "Развернуть надузел",
 	"node.saveToPalette": "Сохранить в палитру"
 }

@@ -1,5 +1,5 @@
 {
-	"canvas.addComment": "Neuer kommentar",
+	"canvas.addComment": "Neuer Kommentar",
 	"canvas.addNodeToStart": "Beginnen Sie, indem Sie einen Knoten hinzufügen.",
 	"canvas.deleteObject": "Löschen",
 	"canvas.flowIsEmpty": "Der Ablauf ist leer.",
@@ -18,10 +18,14 @@
 	"menu.highlightUpstream": "Vorgeordnete hervorheben",
 	"menu.unhighlight": "Hervorhebung entfernen",
 	"node.collapseSupernodeInPlace": "Superknoten ausblenden",
+	"node.convertSupernodeExternalToLocal": "Extern in lokal konvertieren",
+	"node.convertSupernodeLocalToExternal": "Lokal in extern konvertieren",
 	"node.createSupernode": "Superknoten erstellen",
+	"node.createSupernodeExternal": "Externen Superknoten erstellen",
 	"node.disconnectNode": "Trennen",
 	"node.editMenu": "Bearbeiten",
 	"node.editNode": "Öffnen",
+	"node.expandSupernode": "Superknoten einblenden",
 	"node.expandSupernodeInPlace": "Superknoten einblenden",
 	"node.saveToPalette": "In Palette speichern"
 }

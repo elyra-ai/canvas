@@ -53,7 +53,7 @@
 	"list.table.label": "Valores",
 	"moveable.table.button.bottom": "Mover al final",
 	"moveable.table.button.down": "Bajar",
-	"moveable.table.button.top": "Mover al principio",
+	"moveable.table.button.top": "Subir al principio",
 	"moveable.table.button.up": "Subir",
 	"multi.selected.row.action": "Si se cambia un valor en esta fila se cambiará el valor en todas las filas seleccionadas permitidas.",
 	"multi.selected.row.label": "filas seleccionadas.",

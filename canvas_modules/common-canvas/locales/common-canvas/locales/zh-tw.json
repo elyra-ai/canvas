@@ -18,10 +18,14 @@
 	"menu.highlightUpstream": "強調顯示上游",
 	"menu.unhighlight": "取消強調顯示",
 	"node.collapseSupernodeInPlace": "收合超級節點",
+	"node.convertSupernodeExternalToLocal": "將外部轉換為本端",
+	"node.convertSupernodeLocalToExternal": "將本端轉換為外部",
 	"node.createSupernode": "建立超級節點",
+	"node.createSupernodeExternal": "建立外部超級節點",
 	"node.disconnectNode": "中斷連線",
 	"node.editMenu": "編輯",
 	"node.editNode": "開啟",
+	"node.expandSupernode": "展開超級節點",
 	"node.expandSupernodeInPlace": "展開超級節點",
 	"node.saveToPalette": "儲存至選用區"
 }

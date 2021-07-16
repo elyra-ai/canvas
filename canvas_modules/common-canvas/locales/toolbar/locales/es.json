@@ -2,7 +2,7 @@
 	"toolbar.label": "Barra de herramientas del lienzo",
 	"toolbar.overflowMenu": "Menú de desbordamiento",
 	"toolbar.palette": "Paleta",
-	"toolbar.zoomIn": "Acercar",
+	"toolbar.zoomIn": "Aumentar",
 	"toolbar.zoomOut": "Alejar",
 	"toolbar.zoomToFit": "Ajustar"
 }
