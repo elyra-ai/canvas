@@ -54,6 +54,7 @@ module.exports = {
 		"lib/properties/flexible-table": "./src/common-properties/components/flexible-table/index.js",
 		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
 		"lib/command-stack": "./src/command-stack/command-stack.js",
+		"lib/tooltip": "./src/tooltip/tooltip.jsx",
 		"lib/canvas": "./src/common-canvas/index.js",
 		"common-canvas": "./src/index.js",
 		"styles/common-canvas": "./src/themes/light.scss"
