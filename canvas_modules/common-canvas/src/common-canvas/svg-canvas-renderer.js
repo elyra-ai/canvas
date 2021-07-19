@@ -5841,7 +5841,7 @@ export default class SVGCanvasRenderer {
 		return newLinkGrps;
 	}
 
-	// Updates all the link groups (and descendent objects) in the joinedLinkGrps
+	// Updates all the link groups (and descendant objects) in the joinedLinkGrps
 	// selection object. The selection object will contain newly created links
 	// as well as existing links.
 	updateLinks(joinedLinkGrps, lineArray) {
