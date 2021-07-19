@@ -51,7 +51,7 @@ describe("Test supernode expanded to correct size", function() {
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it("Test expanding supernode, rename supernode, create a nested supernode, " +
+	it.skip("Test expanding supernode, rename supernode, create a nested supernode, " +
 	"expand and delete nested supernode, undo delete, verify number of nodes and links in all pipelines", function() {
 		// Expand supernode using context menu
 		cy.rightClickNode("Supernode");
