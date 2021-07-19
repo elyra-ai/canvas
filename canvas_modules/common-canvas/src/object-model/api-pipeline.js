@@ -486,7 +486,7 @@ export default class APIPipeline {
 	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
 	addSupernode(newSupernode, newSubPipelines) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
-		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines);
+		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
 		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
 			if (pipeline.id === this.pipelineId) {

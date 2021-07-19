@@ -51,7 +51,7 @@ export default class DeleteObjectsAction extends Action {
 		// Remember all the pipelines that are being deleted when any selected
 		// supernodes are being deleted.
 		this.supernodesToDelete = this.apiPipeline.getSupernodes(this.nodesToDelete);
-		this.supernodePipelinesToDelete = this.getPipelinesToDelete(this.supernodesToDelete);
+		this.supernodePipelinesToDelete = this.objectModel.getDescendantPipelines(this.supernodesToDelete);
 		this.extPipelineFlowsToDelete = this.getExternalPipelineFlowsToDelete(this.supernodesToDelete);
 
 		// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
@@ -198,21 +198,16 @@ export default class DeleteObjectsAction extends Action {
 		return this.nodesToDelete.findIndex((nc) => nc.id === link.trgNodeId) !== -1;
 	}
 
-	getPipelinesToDelete(superNodes) {
-		const pipelinesToDelete = [];
-		this.supernodesToDelete.forEach((supernode) => {
-			pipelinesToDelete[supernode.id] = this.objectModel.getDescendentPipelines(supernode);
-		});
-		return pipelinesToDelete;
-	}
-
 	getExternalPipelineFlowsToDelete(superNodes) {
 		const extPipelineFlowsToDelete = [];
 		this.supernodesToDelete.forEach((supernode) => {
 			const extUrl = supernode.subflow_ref.url;
 			if (extUrl) {
-				extPipelineFlowsToDelete[extUrl] =
-					this.objectModel.getExternalPipelineFlow(extUrl);
+				const extFlow = this.objectModel.getExternalPipelineFlow(extUrl);
+				// extFlow may not yet be loaded if the supernode has not been expanded.
+				if (extFlow) {
+					extPipelineFlowsToDelete[extUrl] = extFlow;
+				}
 			}
 		});
 		return extPipelineFlowsToDelete;
@@ -233,10 +228,15 @@ export default class DeleteObjectsAction extends Action {
 		this.supernodesToDelete.forEach((supernode) => {
 			this.apiPipeline.addSupernode(supernode, this.supernodePipelinesToDelete[supernode.id]);
 
-			const extUrl = supernode.subflow_ref.url; // Url reference to the external pipeline flow.
+			const extUrl = supernode.subflow_ref.url;
 			if (extUrl) {
 				const extPF = this.extPipelineFlowsToDelete[extUrl];
-				this.objectModel.addExternalPipelineFlow(extPF, extUrl, false); // false indicates pipelines should not be added
+				// External pipeline flow may be missing if the external supernode that
+				// was deleted was never expanded (meaning the pipeline flow would
+				// not have been loaded).
+				if (extPF) {
+					this.objectModel.addExternalPipelineFlow(extPF, extUrl, false); // false indicates pipelines should not be added
+				}
 			}
 		});
 
