@@ -364,18 +364,18 @@ export default class ObjectModel {
 	// Ensures the pipelines being handled is loaded in memory which might not
 	// be the case if it is an external pipeline.
 	ensurePipelineIsLoaded(data) {
-		const url = data.targetObject.subflow_ref.url;
-		const pipelineId = data.targetObject.subflow_ref.pipeline_id_ref;
+		const snPipelineUrl = this.getSupernodePipelineUrl(data.targetObject);
+		const snPipelineId = this.getSupernodePipelineId(data.targetObject);
 
 		// If the pipeline isn't loaded check to make sure the external pipeline
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
-		if (!this.isPipelineLoaded(pipelineId, url)) {
-			if (this.flowContainsPipeline(data.externalPipelineFlow, pipelineId)) {
+		if (!this.isPipelineLoaded(snPipelineId, snPipelineUrl)) {
+			if (this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
 				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
 				return;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + pipelineId);
+			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + snPipelineId);
 		}
 	}
 
@@ -398,7 +398,7 @@ export default class ObjectModel {
 		pipeline.nodes.forEach((n) => {
 			if (n.type === SUPER_NODE && n.is_expanded) {
 				// This might return falsey if the pipeline has not yet been loaded.
-				const subFlowPipeline = pipelines.find((p) => p.id === n.subflow_ref.pipeline_id_ref);
+				const subFlowPipeline = pipelines.find((p) => p.id === this.getSupernodePipelineId(n));
 
 				// If this expanded supernode refers to an external pipeline that is
 				// not yet loaded then save to our output.
@@ -570,11 +570,12 @@ export default class ObjectModel {
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
 				pipeline.nodes.forEach((node) => {
-					if (node.type === SUPER_NODE && node.subflow_ref && node.subflow_ref.pipeline_id_ref) {
+					const snPipelineId = this.getSupernodePipelineId(node);
+					if (snPipelineId) {
 						if (node.inputs) {
 							node.inputs.forEach((input) => {
 								if (input.subflow_node_ref) {
-									const subNode = this.findNode(input.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
 									if (subNode) {
 										subNode.isSupernodeInputBinding = true;
 									}
@@ -584,7 +585,7 @@ export default class ObjectModel {
 						if (node.outputs) {
 							node.outputs.forEach((output) => {
 								if (output.subflow_node_ref) {
-									const subNode = this.findNode(output.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
+									const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
 									if (subNode) {
 										subNode.isSupernodeOutputBinding = true;
 									}
@@ -818,19 +819,22 @@ export default class ObjectModel {
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
-	getDescendentPipelineIds(pipelineId) {
+	getDescendantPipelineIds(pipelineId) {
 		let pipelineIds = [];
 		this.getAPIPipeline(pipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const subPipelineId = this.getSupernodePipelineID(supernode);
-				if (subPipelineId) {
-					pipelineIds.push(subPipelineId);
-					pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(subPipelineId));
+				const snPipelineId = this.getSupernodePipelineId(supernode);
+				if (snPipelineId) {
+					pipelineIds.push(snPipelineId);
+					pipelineIds = pipelineIds.concat(this.getDescendantPipelineIds(snPipelineId));
 				}
 			});
 		return pipelineIds;
 	}
 
+	// Returns an object with one field for each supernode passed in (where the
+	// field name is the supernode's ID). Each field value is an array of
+	// descendant pipelines for the supernode.
 	getDescendantPipelines(supernodes) {
 		const pipelines = [];
 		supernodes.forEach((supernode) => {
@@ -844,7 +848,7 @@ export default class ObjectModel {
 
 	getDescendantPipelinesForSupernode(supernode) {
 		let pipelines = [];
-		const snPipelineId = this.getSupernodePipelineID(supernode);
+		const snPipelineId = this.getSupernodePipelineId(supernode);
 		if (snPipelineId) {
 			const subPipeline = this.getCanvasInfoPipeline(snPipelineId);
 			if (subPipeline) {
@@ -857,6 +861,14 @@ export default class ObjectModel {
 			}
 		}
 		return pipelines;
+	}
+
+	// Returns an array of descendant pipelines, that conform to the schema, for
+	// the supernode passed in or an empty array if the supernode doesn't
+	// reference a pipeline.
+	getSchemaPipelinesForSupernode(supernode) {
+		const pipelines = this.getDescendantPipelinesForSupernode(supernode);
+		return pipelines.map((p) => PipelineOutHandler.createPipeline(p));
 	}
 
 	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
@@ -875,12 +887,12 @@ export default class ObjectModel {
 		let ancestors = [];
 		this.getAPIPipeline(upperPipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const subPipelineId = this.getSupernodePipelineID(supernode);
-				if (subPipelineId) {
-					if (this.isAncestorOfPipeline(subPipelineId, lowerPipelineId) || subPipelineId === lowerPipelineId) {
-						ancestors.push({ pipelineId: subPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
+				const snPipelineId = this.getSupernodePipelineId(supernode);
+				if (snPipelineId) {
+					if (this.isAncestorOfPipeline(snPipelineId, lowerPipelineId) || snPipelineId === lowerPipelineId) {
+						ancestors.push({ pipelineId: snPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
 					}
-					ancestors = ancestors.concat(this.getAncestorsBetween(subPipelineId, lowerPipelineId));
+					ancestors = ancestors.concat(this.getAncestorsBetween(snPipelineId, lowerPipelineId));
 				}
 			});
 		return ancestors;
@@ -888,16 +900,21 @@ export default class ObjectModel {
 
 	// Returns true if ancestorId is an ancestor pipeline of pipelineId.
 	isAncestorOfPipeline(ancestorId, pipelineId) {
-		const decendents = this.getDescendentPipelineIds(ancestorId);
-		if (decendents.indexOf(pipelineId) > -1) {
-			return true;
-		}
-		return false;
+		return this.getDescendantPipelineIds(ancestorId).includes(pipelineId);
 	}
 
-	getSupernodePipelineID(supernode) {
-		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+	getSupernodePipelineId(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
 			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
+
+	getSupernodePipelineUrl(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.url")) {
+			return supernode.subflow_ref.url;
 		}
 		return null;
 	}
@@ -908,7 +925,7 @@ export default class ObjectModel {
 		let supernodeRef;
 		if (pipelineId === this.getPrimaryPipelineId()) {
 			const supernodes = this.getAPIPipeline(pipelineId).getSupernodes();
-			supernodeRef = supernodes.find((supernode) => has(supernode, "subflow_ref.pipeline_id_ref") && supernode.subflow_ref.pipeline_id_ref === pipelineId).id;
+			supernodeRef = supernodes.find((supernode) => this.getSupernodePipelineId(supernode) === pipelineId).id;
 		} else {
 			const ancestorPipelines = this.getAncestorPipelineIds(pipelineId);
 			const supernodePipelineObj = ancestorPipelines.find((pipelineObj) => pipelineObj.pipelineId === pipelineId && has(pipelineObj, "supernodeId"));
@@ -976,13 +993,13 @@ export default class ObjectModel {
 
 	// Clones the contents of the input node (which is expected to be a supernode)
 	// and returns an array of cloned pipelines from the inPipelines array that
-	// correspond to descendents of the supernode passed in. The returned
+	// correspond to descendants of the supernode passed in. The returned
 	// pipelines are in the internal 'canvasinfo' format.
 	cloneSuperNodeContents(node, inPipelines) {
 		let subPipelines = [];
-		if (node.type === SUPER_NODE &&
-				has(node, "subflow_ref.pipeline_id_ref")) {
-			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === node.subflow_ref.pipeline_id_ref);
+		const snPipelineId = this.getSupernodePipelineId(node);
+		if (snPipelineId) {
+			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === snPipelineId);
 			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
 			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 			const canvInfoPipeline =
@@ -1004,25 +1021,6 @@ export default class ObjectModel {
 	clonePipelineWithNewId(pipeline) {
 		const clonedPipeline = JSON.parse(JSON.stringify(pipeline));
 		return Object.assign({}, clonedPipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": clonedPipeline }) });
-	}
-
-	// Returns an array of pipelines, that conform to the schema, for the
-	// supernode passed in or an empty array if the supernode doesn't reference
-	// a pipeline.
-	getSubPipelinesForSupernode(supernode) {
-		const schemaPipelines = [];
-		if (supernode.type === SUPER_NODE &&
-				has(supernode, "subflow_ref.pipeline_id_ref")) {
-			let subPipelines = [supernode.subflow_ref.pipeline_id_ref];
-			subPipelines = subPipelines.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-
-			subPipelines.forEach((subPiplineId) => {
-				const canvInfoPipeline = this.getCanvasInfoPipeline(subPiplineId);
-				const schemaPipeline = PipelineOutHandler.createPipeline(canvInfoPipeline);
-				schemaPipelines.push(schemaPipeline);
-			});
-		}
-		return schemaPipelines;
 	}
 
 	createCanvasInfoPipeline(pipelineInfo) {
@@ -1643,23 +1641,23 @@ export default class ObjectModel {
 
 	// If nodeId and pipelineId specify a supernode, this method populates the
 	// highlightNodeIds and highlightLinkIds arrays with all the nodes and links
-	// that are in the supernode and any of its descendent supernodes.
+	// that are in the supernode and any of its descendant supernodes.
 	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
 		const node = this.getAPIPipeline(pipelineId).getNode(nodeId);
 		if (node.type === SUPER_NODE) {
-			const supernodePipelineId = this.getSupernodePipelineID(node);
+			const snPipelineId = this.getSupernodePipelineId(node);
 
-			highlightNodeIds[supernodePipelineId] = highlightNodeIds[supernodePipelineId] || [];
-			highlightLinkIds[supernodePipelineId] = highlightLinkIds[supernodePipelineId] || [];
+			highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+			highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
 
-			const nodeIds = this.getAPIPipeline(supernodePipelineId).getNodeIds();
-			const linkIds = this.getAPIPipeline(supernodePipelineId).getLinkIds();
+			const nodeIds = this.getAPIPipeline(snPipelineId).getNodeIds();
+			const linkIds = this.getAPIPipeline(snPipelineId).getLinkIds();
 
-			highlightNodeIds[supernodePipelineId] = union(highlightNodeIds[supernodePipelineId], nodeIds);
-			highlightLinkIds[supernodePipelineId] = union(highlightLinkIds[supernodePipelineId], linkIds);
+			highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], nodeIds);
+			highlightLinkIds[snPipelineId] = union(highlightLinkIds[snPipelineId], linkIds);
 
 			nodeIds.forEach((nId) => {
-				this.getSupernodeNodeIds(nId, supernodePipelineId, highlightNodeIds, highlightLinkIds);
+				this.getSupernodeNodeIds(nId, snPipelineId, highlightNodeIds, highlightLinkIds);
 			});
 		}
 	}
@@ -1686,15 +1684,15 @@ export default class ObjectModel {
 
 					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
 					if (srcNodeOutputPort) {
-						const subflowPipelineId = srcNode.subflow_ref.pipeline_id_ref;
-						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
+						const snPipelineId = this.getSupernodePipelineId(srcNode);
+						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getUpstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getUpstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
 						}
 					} else {
 						this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
@@ -1725,7 +1723,7 @@ export default class ObjectModel {
 								const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
 								if (upstreamSupernodeOutputPort) {
 									const bindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
-									this.getUpstreamObjIdsFrom(bindingNodeId, upstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
+									this.getUpstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(upstreamSupernode), highlightNodeIds, highlightLinkIds);
 								}
 							} else {
 								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -1759,15 +1757,15 @@ export default class ObjectModel {
 
 					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
 					if (trgNodeInputPort) {
-						const subflowPipelineId = trgNode.subflow_ref.pipeline_id_ref;
-						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
+						const snPipelineId = this.getSupernodePipelineId(trgNode);
+						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getDownstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getDownstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
 						}
 					} else {
 						this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
@@ -1798,7 +1796,7 @@ export default class ObjectModel {
 									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
 									if (downstreamSupernodeInputPort) {
 										const bindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
-										this.getDownstreamObjIdsFrom(bindingNodeId, downstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
+										this.getDownstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(downstreamSupernode), highlightNodeIds, highlightLinkIds);
 									}
 								} else {
 									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -1816,7 +1814,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's input ports.
 	getSupernodeInputPortForLink(trgNode, link) {
 		let port = null;
-		if (has(trgNode, "subflow_ref.pipeline_id_ref") && link.trgNodePortId) {
+		if (this.getSupernodePipelineId(trgNode) && link.trgNodePortId) {
 			trgNode.inputs.forEach((inputPort) => {
 				if (inputPort.id === link.trgNodePortId) {
 					port = inputPort;
@@ -1832,7 +1830,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's output ports.
 	getSupernodeOutputPortForLink(srcNode, link) {
 		let port = null;
-		if (has(srcNode, "subflow_ref.pipeline_id_ref") && link.srcNodePortId) {
+		if (this.getSupernodePipelineId(srcNode) && link.srcNodePortId) {
 			srcNode.outputs.forEach((outputPort) => {
 				if (outputPort.id === link.srcNodePortId) {
 					port = outputPort;
@@ -1879,7 +1877,7 @@ export default class ObjectModel {
 			let pipelines = [];
 			const supernodes = apiPipeline.getSupernodes(nodes);
 			supernodes.forEach((supernode) => {
-				pipelines = pipelines.concat(this.getSubPipelinesForSupernode(supernode));
+				pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
 			});
 			copyData.pipelines = pipelines;
 		}

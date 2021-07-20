@@ -401,7 +401,7 @@ export default class APIPipeline {
 					if (!node.app_data) {
 						node.app_data = {};
 					}
-					node.app_data.pipeline_data = this.objectModel.getSubPipelinesForSupernode(node);
+					node.app_data.pipeline_data = this.objectModel.getSchemaPipelinesForSupernode(node);
 				}
 				newNodes.push(node);
 			}
@@ -520,7 +520,7 @@ export default class APIPipeline {
 			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
 				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
 				if (deletePipelines) {
-					pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
+					pipelineIds = pipelineIds.concat(this.objectModel.getDescendantPipelineIds(supernode.subflow_ref.pipeline_id_ref));
 				}
 			}
 			this.store.dispatch({

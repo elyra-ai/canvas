@@ -50,7 +50,7 @@ import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import { get, has } from "lodash";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SUPER_NODE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -1344,7 +1344,7 @@ export default class CanvasController {
 	}
 
 	displaySubPipeline(pipelineInfo) {
-		const targetObject = { subflow_ref: { pipeline_id_ref: pipelineInfo.pipelineId, url: pipelineInfo.url } };
+		const targetObject = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: pipelineInfo.pipelineId, url: pipelineInfo.url } };
 		const data = { editType: "displaySubPipeline", targetObject: targetObject, editSource: "canvas" };
 		this.editActionHandler(data);
 	}

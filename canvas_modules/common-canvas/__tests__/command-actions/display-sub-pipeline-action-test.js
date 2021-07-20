@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import DisplaySubPipeline from "../../src/command-actions/displaySubPipelineAction.js";
+import { SUPER_NODE } from "../../src/common-canvas/constants/canvas-constants.js";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
@@ -24,7 +25,7 @@ objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }] });
 
 describe("DisplaySubPipeline action handles calls correctly", () => {
 	it("should handle calls, undo, and redo to multiple actions", () => {
-		const targetObj = { subflow_ref: { pipeline_id_ref: "test 1" } };
+		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
 		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj, pipelineInfo: { pipelineId: "test 1" } }, objectModel);
 		expect(objectModel.getBreadcrumbs()).to.have.length(1);
 
@@ -32,7 +33,7 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
-		const targetObj2 = { subflow_ref: { pipeline_id_ref: "test 2" } };
+		const targetObj2 = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 2" } };
 		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj2, pipelineInfo: { pipelineId: "test 2" } }, objectModel);
 		displaySubPipeline2.do();
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
