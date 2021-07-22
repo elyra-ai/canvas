@@ -87,9 +87,9 @@ $properties-vt-checkbox-width: 45px;
 		line-height: 20px;
 		border-bottom: 1px solid $ui-03;
 
-		&:hover:not(.properties-vt-row-non-interactive) {
+		&:hover:not(.properties-vt-row-non-interactive):not(.properties-vt-row-selected) {
 			// ReadonlyTable with single row selection is non-interactive. Nothing should happen on hover
-			background-color: $hover-row;
+			background-color: $hover-ui;
 		}
 
 		.properties-table-cell-control {
