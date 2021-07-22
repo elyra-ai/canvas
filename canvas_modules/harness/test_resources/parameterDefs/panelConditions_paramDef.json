@@ -1344,6 +1344,7 @@
           {
             "id": "Level1",
             "type": "textPanel",
+            "nested_panel": true,
             "label": {
               "default": "Level1 Group"
             }
@@ -1351,6 +1352,7 @@
           {
             "id": "level1",
             "type": "panels",
+            "nested_panel": true,
             "class_name": "level1-group-panels-class",
             "group_info": [
               {
@@ -1364,6 +1366,7 @@
                   {
                     "id": "Level2",
                     "type": "textPanel",
+                    "nested_panel": true,
                     "label": {
                       "default": "Level2 Group"
                     }
@@ -1371,6 +1374,7 @@
                   {
                     "id": "level2",
                     "type": "panels",
+                    "nested_panel": true,
                     "group_info": [
                       {
                         "id": "level3buttons",
@@ -1386,6 +1390,7 @@
                           {
                             "id": "Level3",
                             "type": "textPanel",
+                            "nested_panel": true,
                             "class_name": "level3-group-textpanel-class",
                             "label": {
                               "default": "Level3 Group"
@@ -1394,6 +1399,7 @@
                           {
                             "id": "level3",
                             "type": "panels",
+                            "nested_panel": true,
                             "class_name": "level3-group-panels-class",
                             "group_info": [
                               {
@@ -1449,6 +1455,7 @@
           {
             "id": "init1level1",
             "type": "panels",
+            "nested_panel": true,
             "group_info": [
               {
                 "id": "init1level2buttons",
@@ -1465,6 +1472,7 @@
                   {
                     "id": "init1level2",
                     "type": "panels",
+                    "nested_panel": true,
                     "group_info": [
                       {
                         "id": "init1level3buttons",
@@ -1483,6 +1491,7 @@
                           {
                             "id": "init1level3",
                             "type": "panels",
+                            "nested_panel": true,
                             "group_info": [
                               {
                                 "id": "init1level3control",

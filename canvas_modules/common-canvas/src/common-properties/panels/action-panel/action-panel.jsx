@@ -20,7 +20,6 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
-import { get } from "lodash";
 
 class ActionPanel extends Component {
 	render() {
@@ -30,7 +29,7 @@ class ActionPanel extends Component {
 				className={classNames(
 					"properties-action-panel",
 					{ "hide": this.props.panelState === STATES.HIDDEN },
-					{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
 					className
 				)}
 				data-id={ControlUtils.getDataId({ name: this.props.panel.id })}

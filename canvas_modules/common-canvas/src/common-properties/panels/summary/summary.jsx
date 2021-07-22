@@ -23,7 +23,7 @@ import { Add16 } from "@carbon/icons-react";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
-import { isEmpty, get } from "lodash";
+import { isEmpty } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
@@ -309,7 +309,7 @@ class SummaryPanel extends React.Component {
 			"properties-summary-panel",
 			"properties-control-panel",
 			{ "hide": this.props.panelState === STATES.HIDDEN },
-			{ "properties-control-nested-panel": get(this.props.panel, "nestedPanel", false) },
+			{ "properties-control-nested-panel": this.props.panel.nestedPanel },
 			panelClassName
 		);
 		return (

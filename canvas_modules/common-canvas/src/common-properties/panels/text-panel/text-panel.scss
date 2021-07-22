@@ -16,7 +16,7 @@
 
 .properties-text-panel {
 	:not(:empty) {
-		padding-bottom: $spacing-05;
+		padding-bottom: $spacing-03;
 	}
 	.panel-label {
 		@include carbon--type-style("productive-heading-01");
