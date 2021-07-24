@@ -43,6 +43,14 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
+	getPipeline() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+	}
+
+	isPipelineExternal() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId).parentUrl;
+	}
+
 	setPipelineZoom(zoom, translate) {
 		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}

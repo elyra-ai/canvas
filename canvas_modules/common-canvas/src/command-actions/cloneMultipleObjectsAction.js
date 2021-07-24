@@ -28,7 +28,6 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.clonedLinks = [];
-		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.

@@ -29,7 +29,7 @@ export default class Breadcrumbs extends React.Component {
 			const link = index !== this.props.breadcrumbsDef.length - 1
 				? (<button className="harness-pipeline-breadcrumbs-label"
 					key={breadcrumbDef.pipelineId}
-					onClick={that.breadcrumbOnClick.bind(that, breadcrumbDef.pipelineId) }
+					onClick={that.breadcrumbOnClick.bind(that, breadcrumbDef) }
 				>
 					{label}
 				</button>)
@@ -47,8 +47,8 @@ export default class Breadcrumbs extends React.Component {
 		return breadcrumbs;
 	}
 
-	breadcrumbOnClick(pipelineId) {
-		this.props.canvasController.displaySubPipeline({ pipelineId: pipelineId });
+	breadcrumbOnClick(breadcrumbDef) {
+		this.props.canvasController.displaySubPipeline({ pipelineId: breadcrumbDef.pipelineId });
 	}
 
 	render() {

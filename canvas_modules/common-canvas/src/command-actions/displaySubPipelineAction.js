@@ -20,17 +20,29 @@ export default class DisplaySubPipeline extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.oldBreadcrumbs = this.objectModel.getBreadcrumbs();
 	}
 
 	// Standard methods
 	do() {
-		// Make sure pipeline is loaded in case it is part of an external pipeline flow.
-		this.objectModel.ensurePipelineIsLoaded(this.data);
-		this.objectModel.addNewBreadcrumb(this.data.pipelineInfo);
+		if (this.data.addBreadcrumbs) {
+			// Make sure pipeline is loaded in case it is part of an external pipeline flow.
+			this.objectModel.ensurePipelineIsLoaded(this.data);
+			this.objectModel.addBreadcrumbs(this.data);
+
+		} else if (this.data.breadcrumbIndex) {
+			// Make sure pipeline is loaded in case it is part of an external pipeline flow.
+			this.objectModel.ensurePipelineIsLoaded(this.data);
+			this.objectModel.setIndexedBreadcrumb(this.data);
+
+		} else {
+			// No need to test pipeline flow is loaded -- this will be for the primary pipeline.
+			this.objectModel.resetBreadcrumb();
+		}
 	}
 
 	undo() {
-		this.objectModel.setPreviousBreadcrumb();
+		this.objectModel.setBreadcrumbs(this.oldBreadcrumbs);
 	}
 
 	redo() {

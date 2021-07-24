@@ -18,6 +18,7 @@
   "node.createSupernode": "Create supernode",
   "node.createSupernodeExternal": "Create external supernode",
   "node.expandSupernode": "Expand supernode",
+	"node.displaySupernodeFullPage": "Display full page",
   "node.collapseSupernodeInPlace": "Collapse supernode",
 	"node.convertSupernodeExternalToLocal": "Convert external to local",
 	"node.convertSupernodeLocalToExternal": "Convert local to external",

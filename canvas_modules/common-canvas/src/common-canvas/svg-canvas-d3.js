@@ -123,12 +123,17 @@ export default class SVGCanvasD3 {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
 				this.renderer.displayCanvas();
 			} else {
+				const currentBreadcrumb = this.canvasController.getCurrentBreadcrumb();
 				this.renderer = new SVGCanvasRenderer(
-					this.canvasController.getCurrentBreadcrumb().pipelineId,
+					currentBreadcrumb.pipelineId,
 					this.canvasDiv,
 					this.canvasController,
 					this.canvasInfo,
-					config);
+					config,
+					{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
+						pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
+					}
+				);
 			}
 
 			this.logger.logEndTimer("Set Canvas Info", true);

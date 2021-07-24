@@ -25,26 +25,30 @@ objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }] });
 
 describe("DisplaySubPipeline action handles calls correctly", () => {
 	it("should handle calls, undo, and redo to multiple actions", () => {
-		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
-		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj, pipelineInfo: { pipelineId: "test 1" } }, objectModel);
 		expect(objectModel.getBreadcrumbs()).to.have.length(1);
 
+		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
+		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj, addBreadcrumbs: [{ pipelineId: "test 1" }] }, objectModel);
 		displaySubPipeline1.do();
+
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
 		const targetObj2 = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 2" } };
-		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj2, pipelineInfo: { pipelineId: "test 2" } }, objectModel);
+		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj2, addBreadcrumbs: [{ pipelineId: "test 2" }] }, objectModel);
 		displaySubPipeline2.do();
+
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
 
-		displaySubPipeline1.undo();
+		displaySubPipeline2.undo();
+
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
-		displaySubPipeline1.redo();
-		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
+		displaySubPipeline2.redo();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
 	});
 

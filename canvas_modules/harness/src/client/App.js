@@ -693,8 +693,8 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
 	}
 
-	setBreadcrumbsDefinition(currentPipelineId) {
-		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+	setBreadcrumbsDefinition() {
+		const breadcrumbs = this.canvasController.getBreadcrumbs();
 		breadcrumbs[0].label = PRIMARY;
 		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
@@ -2079,7 +2079,8 @@ class App extends React.Component {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 

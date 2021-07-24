@@ -29,18 +29,38 @@ export default (state = [], action) => {
 		return state;
 	}
 
-	case "ADD_NEW_BREADCRUMB":
+	case "SET_BREADCRUMBS":
+		return action.data.breadcrumbs.map((a) => Object.assign({}, a));
+
+	case "ADD_BREADCRUMB":
 		return [
 			...state,
-			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+			{
+				pipelineId: action.data.pipelineId,
+				supernodeId: action.data.supernodeId,
+				supernodeParentPipelineId: action.data.supernodeParentPipelineId,
+				externalUrl: action.data.externalUrl,
+				label: action.data.label
+			}
 		];
+
+	case "ADD_BREADCRUMBS":
+		return [
+			...state,
+			...action.data.addBreadcrumbs
+		];
+
+	case "SET_TO_INDEXED_BREADCRUMB":
+		return action.data.breadcrumbIndex >= 0 && action.data.breadcrumbIndex < state.length
+			? state.slice(0, action.data.breadcrumbIndex + 1)
+			: state;
 
 	case "SET_TO_PREVIOUS_BREADCRUMB":
 		return state.length > 1 ? state.slice(0, state.length - 1) : state;
 
 	case "RESET_BREADCRUMB":
 		return [
-			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+			{ pipelineId: action.data.pipelineId }
 		];
 
 	default:

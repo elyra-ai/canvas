@@ -311,6 +311,18 @@ export default class CanvasController {
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the pipeline object for the pipeline Id passed in.
+	getPipeline(pipelineId) {
+		return this.objectModel.getCanvasInfoPipeline(pipelineId);
+	}
+
+	// Returns truty if the pipeline is external (that is it is part of an
+	// external pipeline flow). Otherwise, return falsy to indicate the pipeline
+	// is local.
+	isPipelineExternal(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).isPipelineExternal();
+	}
+
 	// Returns the flow validation messages for the pipeline ID passed in.
 	getFlowMessages(pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getFlowMessages();
@@ -1344,14 +1356,44 @@ export default class CanvasController {
 	}
 
 	displaySubPipeline(pipelineInfo) {
-		const targetObject = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: pipelineInfo.pipelineId, url: pipelineInfo.url } };
-		const data = { editType: "displaySubPipeline", targetObject: targetObject, editSource: "canvas" };
+		const breadcrumbs = this.objectModel.getBreadcrumbs();
+		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineInfo.pipelineId);
+		const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
+
+		const data = {
+			editType: "displaySubPipeline",
+			editSource: "canvas",
+			targetObject: supernode,
+			breadcrumbIndex: index,
+			// Include pipelineInfo which, historically, is passsed to the callbacks.
+			pipelineInfo: pipelineInfo
+		};
 		this.editActionHandler(data);
 	}
 
-	displaySubPipelineForNode(supernode) {
-		const data = { editType: "displaySubPipeline", targetObject: supernode, editSource: "canvas" };
+	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
+		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
+		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
+
+		const data = {
+			editType: "displaySubPipeline",
+			editSource: "canvas",
+			targetObject: supernode,
+			addBreadcrumbs: addBreadcrumbs,
+			// Include pipelineInfo which, historically, is passsed to the callbacks.
+			pipelineInfo: { pipelineId: lastBreadcrumb.pipelineId }
+		};
 		this.editActionHandler(data);
+	}
+
+	getSupernodeFromBreadcrumb(breadcrumb) {
+		if (breadcrumb.supernodeParentPipelineId) {
+			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
+			return apiPipeline.getNode(breadcrumb.supernodeId);
+		}
+		// breadcrumb.supernodeParentPipelineId might be missing when processing
+		// the breadcrumb for the primary pipeline.
+		return null;
 	}
 
 	displayPreviousPipeline() {
@@ -1773,25 +1815,38 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Supernode option
-		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
-			// Expand and Collapse supernode
-			// Expand
-			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
+		// Supernode options - only applicable with a single supernode selected
+		// which is opened by the "canvas" (default) editor.
+		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Collapse supernode
+			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
+					label: this.getLabel("node.collapseSupernodeInPlace") });
+			// Expand supernode
+			} else {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
 					label: this.getLabel("node.expandSupernode") });
 			}
-			// Collapse
-			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
-					label: this.getLabel("node.collapseSupernodeInPlace") }, { divider: true });
+
+			// Expand supernode to full page display
+			if (get(this, "contextMenuConfig.defaultMenuEntries.displaySupernodeFullPage")) {
+				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
+					label: this.getLabel("node.displaySupernodeFullPage") });
 			}
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Convert supernode
 			if (this.canvasConfig.enableExternalPipelineFlows) {
+				// Convert External to Local
 				if (source.targetObject.subflow_ref.url) {
-					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
-						label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					// Supernodes inside an external sub-flow cannot be made local.
+					if (!this.isPipelineExternal(source.pipelineId)) {
+						menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
+							label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					}
+				// Convert Local to External
 				} else {
 					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
 						label: this.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
@@ -1858,8 +1913,12 @@ export default class CanvasController {
 	contextMenuActionHandler(action) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
-		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
-		this.editActionHandler(data);
+		if (action === "displaySubPipeline") {
+			this.displaySubPipelineForBreadcrumbs(this.contextMenuSource.breadcrumbs);
+		} else {
+			const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
+			this.editActionHandler(data);
+		}
 
 		this.commonCanvas.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		this.closeContextMenu();
@@ -2248,25 +2307,26 @@ export default class CanvasController {
 	// Sets the appropriate values when handling an external pipleine flow
 	// when performing sub-flow actions.
 	preProcessForExternalPipelines(data) {
-		// If displaying SubPipeline include pipelineInfo for historical reasons.
-		if (data.editType === "displaySubPipeline") {
-			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
-		}
-
-		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
-
 		data.externalPipelineFlowLoad = false;
-		// If there is a URL then we must be accessing an external pipeline flow.
-		if (externalPipelineFlowUrl) {
-			data.externalUrl = externalPipelineFlowUrl;
 
-			// Try to retrieve the pipeline from our store. If it is not there then
-			// we'll need to load it from the host application so switch load flag on.
-			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
-			if (!data.externalPipelineFlow) {
-				data.externalPipelineFlowLoad = true;
+		// targetObject might be missing if we are handing display of the
+		// primary pipeline which will always be 'local' not 'external'.
+		if (data.targetObject) {
+			const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
+
+			// If there is a URL then we must be accessing an external pipeline flow.
+			if (externalPipelineFlowUrl) {
+				data.externalUrl = externalPipelineFlowUrl;
+
+				// Try to retrieve the pipeline from our store. If it is not there then
+				// we'll need to load it from the host application so switch load flag on.
+				data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+				if (!data.externalPipelineFlow) {
+					data.externalPipelineFlowLoad = true;
+				}
 			}
 		}
+
 		return data;
 	}
 

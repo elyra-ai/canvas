@@ -362,7 +362,9 @@ export default class ObjectModel {
 	}
 
 	// Ensures the pipelines being handled is loaded in memory which might not
-	// be the case if it is an external pipeline.
+	// be the case if it is an external pipeline. The data parameter is expected
+	// to contain targetObject (which is the supernode) and externalPipelineFlow
+	// which is the pipeline flow referenced by the supernode's URL.
 	ensurePipelineIsLoaded(data) {
 		const snPipelineUrl = this.getSupernodePipelineUrl(data.targetObject);
 		const snPipelineId = this.getSupernodePipelineId(data.targetObject);
@@ -372,10 +374,10 @@ export default class ObjectModel {
 		// flow into memory.
 		if (!this.isPipelineLoaded(snPipelineId, snPipelineUrl)) {
 			if (this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
-				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
+				this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
 				return;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + snPipelineId);
+			this.logger.error("The external pipeline flow '" + data.externalPipelineFlow.id + "' does not contain a pipeline with ID: " + snPipelineId);
 		}
 	}
 
@@ -1000,19 +1002,23 @@ export default class ObjectModel {
 		const snPipelineId = this.getSupernodePipelineId(node);
 		if (snPipelineId) {
 			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === snPipelineId);
-			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
-			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
-			const canvInfoPipeline =
-				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getCanvasLayout());
+			// A target pipeline may not exist if the supernode is external. In which
+			// case, its pipelines will not be on the clipboard.
+			if (targetPipeline) {
+				const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
+				node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
+				const canvInfoPipeline =
+					PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getCanvasLayout());
 
-			subPipelines.push(canvInfoPipeline);
+				subPipelines.push(canvInfoPipeline);
 
-			clonedPipeline.nodes.forEach((clonedNode) => {
-				if (clonedNode.type === SUPER_NODE) {
-					const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
-					subPipelines = subPipelines.concat(extraPipelines);
-				}
-			});
+				clonedPipeline.nodes.forEach((clonedNode) => {
+					if (clonedNode.type === SUPER_NODE) {
+						const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
+						subPipelines = subPipelines.concat(extraPipelines);
+					}
+				});
+			}
 		}
 		return subPipelines;
 	}
@@ -1065,15 +1071,34 @@ export default class ObjectModel {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
-	// Adds a new breadcrumb, for the pipelineInfo passed in, to the array of
-	// breadcrumbs, or reset the breadcrumbs to the primary pipeline if navigating
-	// to the primary pipeline.
-	addNewBreadcrumb(pipelineInfo) {
-		if (pipelineInfo && pipelineInfo.pipelineId !== this.getPrimaryPipelineId()) {
-			this.store.dispatch({ type: "ADD_NEW_BREADCRUMB", data: pipelineInfo });
+	createBreadcrumb(supernodeDatum, parentPipelineId) {
+		return {
+			pipelineId: supernodeDatum.subflow_ref.pipeline_id_ref,
+			supernodeId: supernodeDatum.id,
+			supernodeParentPipelineId: parentPipelineId,
+			externalUrl: supernodeDatum.subflow_ref.url,
+			label: supernodeDatum.label
+		};
+	}
+
+	addBreadcrumb(data) {
+		if (data && data.pipelineId !== this.getPrimaryPipelineId()) {
+			this.store.dispatch({ type: "ADD_BREADCRUMB", data: data });
 		} else {
 			this.resetBreadcrumb();
 		}
+	}
+
+	addBreadcrumbs(data) {
+		this.store.dispatch({ type: "ADD_BREADCRUMBS", data: data });
+	}
+
+	setIndexedBreadcrumb(data) {
+		this.store.dispatch({ type: "SET_TO_INDEXED_BREADCRUMB", data: data });
+	}
+
+	setBreadcrumbs(breadcrumbs) {
+		this.store.dispatch({ type: "SET_BREADCRUMBS", data: { breadcrumbs: breadcrumbs } });
 	}
 
 	// Sets the breadcrumbs to the previous breadcrumb in the breadcrumbs array.
@@ -1877,7 +1902,10 @@ export default class ObjectModel {
 			let pipelines = [];
 			const supernodes = apiPipeline.getSupernodes(nodes);
 			supernodes.forEach((supernode) => {
-				pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
+				// Save the supernode's pipelines unless it is an external supernode.
+				if (!this.getSupernodePipelineUrl(supernode)) {
+					pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
+				}
 			});
 			copyData.pipelines = pipelines;
 		}
