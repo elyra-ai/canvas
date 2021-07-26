@@ -32,8 +32,10 @@
 		white-space: normal;
 		line-height: 1.5;
 		overflow-wrap: break-word;
+		user-select: text; // Readonly content is selectable
 		&[disabled] {
 			opacity: 0.5;
+			user-select: none;
 		}
 	}
 	.properties-field-readonly {
