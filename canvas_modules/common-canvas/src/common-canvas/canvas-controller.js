@@ -1355,22 +1355,28 @@ export default class CanvasController {
 		return false;
 	}
 
-	displaySubPipeline(pipelineInfo) {
+	// Displays a pipeline (identified by the pipelineId passed in). This must be
+	// one of the pipelines referencd by the current set of breadcrumbs. It cannot
+	// be used to open a new pipeline outside the current set of breakpoints.
+	displaySubPipeline(pipelineId) {
 		const breadcrumbs = this.objectModel.getBreadcrumbs();
-		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineInfo.pipelineId);
+		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineId);
 		const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
 
 		const data = {
 			editType: "displaySubPipeline",
 			editSource: "canvas",
 			targetObject: supernode,
-			breadcrumbIndex: index,
-			// Include pipelineInfo which, historically, is passsed to the callbacks.
-			pipelineInfo: pipelineInfo
+			breadcrumbIndex: index
 		};
 		this.editActionHandler(data);
 	}
 
+	// Displays a pipeline for the supernode (identifid by the supernodeId
+	// parameter) in the pipeline (identifid by the pipelineId parameter). For
+	// correct breadcrumb generation this pipeline should be the one in the last
+	// of the current set of breadcumbs. That is, the pipeline currently shown
+	// "full page" in the canvas.
 	displaySubPipelineForSupernode(supernodeId, pipelineId) {
 		const sn = this.getNode(supernodeId, pipelineId);
 		if (sn && sn.type === SUPER_NODE) {
@@ -1380,6 +1386,9 @@ export default class CanvasController {
 		}
 	}
 
+	// Adds the breadcrumbs provided to the current set of breadcrumbs and then
+	// displays "full page" the pipeline identified by the last of the additional
+	// set of breadcrumbs. This is a convenience function for the common-canvas.
 	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
 		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
 		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
@@ -1388,13 +1397,12 @@ export default class CanvasController {
 			editType: "displaySubPipeline",
 			editSource: "canvas",
 			targetObject: supernode,
-			addBreadcrumbs: addBreadcrumbs,
-			// Include pipelineInfo which, historically, is passsed to the callbacks.
-			pipelineInfo: { pipelineId: lastBreadcrumb.pipelineId }
+			addBreadcrumbs: addBreadcrumbs
 		};
 		this.editActionHandler(data);
 	}
 
+	// Returns the supernode speified in the bradcrumb provided.
 	getSupernodeFromBreadcrumb(breadcrumb) {
 		if (breadcrumb.supernodeParentPipelineId) {
 			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
@@ -1922,12 +1930,8 @@ export default class CanvasController {
 	contextMenuActionHandler(action) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
-		if (action === "displaySubPipeline") {
-			this.displaySubPipelineForBreadcrumbs(this.contextMenuSource.breadcrumbs);
-		} else {
-			const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
-			this.editActionHandler(data);
-		}
+		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
+		this.editActionHandler(data);
 
 		this.commonCanvas.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		this.closeContextMenu();

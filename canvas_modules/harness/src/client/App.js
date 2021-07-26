@@ -1351,7 +1351,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
+			this.setBreadcrumbsDefinition(data.pipelineId);
 			break;
 		}
 		case "createTestHarnessNode": {

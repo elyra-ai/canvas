@@ -3703,7 +3703,7 @@ export default class SVGCanvasRenderer {
 			cmPos: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
 			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-			breadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
+			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
 			zoom: this.zoomTransform.k });
 	}

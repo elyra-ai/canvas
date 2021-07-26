@@ -19,12 +19,10 @@ import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import DisplaySubPipeline from "../../src/command-actions/displaySubPipelineAction.js";
 import { SUPER_NODE } from "../../src/common-canvas/constants/canvas-constants.js";
 
-const canvasController = new CanvasController();
-const objectModel = canvasController.getObjectModel();
-objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }] });
-
 describe("DisplaySubPipeline action handles calls correctly", () => {
-	it("should handle calls, undo, and redo to multiple actions", () => {
+	it("should handle calls, undo, and redo when adding breadcrumbs", () => {
+		// Newly created object model will have a single root breadcrumb
+		const objectModel = createObjectModel();
 		expect(objectModel.getBreadcrumbs()).to.have.length(1);
 
 		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
@@ -34,6 +32,8 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
+		// Setting addBreadcrumbs will add that array of breadcrumbs to the
+		// current set of breadcrumbs.
 		const targetObj2 = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 2" } };
 		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj2, addBreadcrumbs: [{ pipelineId: "test 2" }] }, objectModel);
 		displaySubPipeline2.do();
@@ -52,4 +52,80 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
 	});
 
+	it("should handle calls, undo, and redo when adding displaying an indexed breadcrumb", () => {
+		// Newly created object model will have a single root breadcrumb
+		const objectModel = createObjectModel();
+		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+
+		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
+		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj,
+			addBreadcrumbs: [{ pipelineId: "test 1" }, { pipelineId: "test 2" }, { pipelineId: "test 3" }] }, objectModel);
+		displaySubPipeline1.do();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 3");
+		expect(objectModel.getBreadcrumbs()).to.have.length(4);
+
+		// Setting breadcrumbIndex in the input object will truncate the
+		// breadcrumbs array to the index position.
+		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj, breadcrumbIndex: 2 }, objectModel);
+		displaySubPipeline2.do();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
+		expect(objectModel.getBreadcrumbs()).to.have.length(3);
+
+		displaySubPipeline2.undo();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 3");
+		expect(objectModel.getBreadcrumbs()).to.have.length(4);
+
+		displaySubPipeline2.redo();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
+		expect(objectModel.getBreadcrumbs()).to.have.length(3);
+	});
+
+
+	it("should handle calls, undo, and redo when resetting to the breadcrumbs", () => {
+		// Newly created object model will have a single root breadcrumb
+		const objectModel = createObjectModel();
+		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+
+		const targetObj = { type: SUPER_NODE, subflow_ref: { pipeline_id_ref: "test 1" } };
+		const displaySubPipeline1 = new DisplaySubPipeline({ targetObject: targetObj,
+			addBreadcrumbs: [{ pipelineId: "test 1" }, { pipelineId: "test 2" }, { pipelineId: "test 3" }] }, objectModel);
+		displaySubPipeline1.do();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 3");
+		expect(objectModel.getBreadcrumbs()).to.have.length(4);
+
+		// If we don't provide either addBreadcrumbs or breadcrumbIndex in the input
+		// object the breadcrumbs will be set back to a single root breadcrumb which,
+		// in this test, contains an undefined pipelineId.
+		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj }, objectModel);
+		displaySubPipeline2.do();
+
+		/* eslint no-undefined: "off" */
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal(undefined);
+		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+
+		displaySubPipeline2.undo();
+
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 3");
+		expect(objectModel.getBreadcrumbs()).to.have.length(4);
+
+		displaySubPipeline2.redo();
+
+		/* eslint no-undefined: "off" */
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal(undefined);
+		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+	});
+
+
 });
+
+function createObjectModel() {
+	const canvasController = new CanvasController();
+	const objectModel = canvasController.getObjectModel();
+	objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }, { id: "test 3" }] });
+	return objectModel;
+}
