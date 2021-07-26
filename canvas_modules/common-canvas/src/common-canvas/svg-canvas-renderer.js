@@ -2235,7 +2235,7 @@ export default class SVGCanvasRenderer {
 			}
 
 			// Switch of any drag highlighting
-			this.setNodeTranslucentState(this.dragObjects[0].id, false);
+			this.unsetNodeTranslucentState();
 			this.unsetInsertNodeIntoLinkHighlighting();
 			this.unsetDetachedLinkHighlighting();
 		}
@@ -2309,6 +2309,14 @@ export default class SVGCanvasRenderer {
 	// when the node is dragged over it.
 	setNodeTranslucentState(nodeId, state) {
 		this.getNodeGroupSelectionById(nodeId).classed("d3-node-group-translucent", state);
+	}
+
+	// Switched off the translucent state of the objects being dragged (if
+	// there are any).
+	unsetNodeTranslucentState() {
+		if (this.dragObjects && this.dragObjects.length > 0) {
+			this.setNodeTranslucentState(this.dragObjects[0].id, false);
+		}
 	}
 
 	// Returns the snap-to-grid position of the object positioned at

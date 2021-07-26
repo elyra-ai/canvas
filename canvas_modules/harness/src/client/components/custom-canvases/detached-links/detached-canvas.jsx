@@ -32,6 +32,7 @@ export default class DetachedCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 
 		// Add decorations to the links
@@ -157,6 +158,16 @@ export default class DetachedCanvas extends React.Component {
 		}
 	}
 
+	clickActionHandler(source) {
+		if (source.clickType === "DOUBLE_CLICK") {
+			const node = this.canvasController.getNode(source.id, source.pipelineId);
+			if (node && node.type === "super_node") {
+				this.canvasController.displaySubPipelineForSupernode(source.id, source.pipelineId);
+			}
+		}
+
+	}
+
 	createDecorations(linkId) {
 		const linkLabel = "link " + linkId.substring(0, 2);
 		const decs = this.getDecorationsArray(linkLabel);
@@ -170,6 +181,7 @@ export default class DetachedCanvas extends React.Component {
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
+				clickActionHandler={this.clickActionHandler}
 				config={config}
 			/>
 		);

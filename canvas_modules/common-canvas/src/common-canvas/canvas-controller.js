@@ -1371,6 +1371,15 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
+	displaySubPipelineForSupernode(supernodeId, pipelineId) {
+		const sn = this.getNode(supernodeId, pipelineId);
+		if (sn && sn.type === SUPER_NODE) {
+			const currentBreadcrumb = this.objectModel.getCurrentBreadcrumb();
+			const bc = this.objectModel.createBreadcrumb(sn, currentBreadcrumb.pipelineId);
+			this.displaySubPipelineForBreadcrumbs([bc]);
+		}
+	}
+
 	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
 		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
 		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
