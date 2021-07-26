@@ -1277,7 +1277,7 @@
           },
           {
             "parameter_ref": "order",
-            "width": 15,
+            "width": 20,
             "label": {
               "resource_key": "sort_order.label"
             },
@@ -1299,7 +1299,7 @@
               "resource_key": "dropdown.desc"
             },
             "width": 10,
-            "edit_style": "inline"
+            "edit_style": "subpanel"
           }
         ]
       },
