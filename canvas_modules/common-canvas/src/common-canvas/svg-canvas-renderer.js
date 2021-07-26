@@ -3585,7 +3585,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns an array of breadcrumbs for the DOM element passed in. The DOM
-	// element is expeced to be an element within a node (like the expansion
+	// element is expected to be an element within a node (like the expansion
 	// icon). The output array will contain one breadcrumb for each nested
 	// supernode down to the supernode of which the DOM element is a part. So if
 	// there are three nested supernodes and the DOM element is part of the third
