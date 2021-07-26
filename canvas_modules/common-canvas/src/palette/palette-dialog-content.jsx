@@ -51,7 +51,7 @@ class PaletteDialogContent extends React.Component {
 		if (categories) {
 			for (var idx = 0; idx < categories.length; idx++) {
 				if (out.indexOf(categories[idx].label) === -1) {
-					out.push(categories[idx].label);
+					out.push(categories[idx]);
 				}
 			}
 		}
