@@ -1356,20 +1356,22 @@ export default class CanvasController {
 	}
 
 	// Displays a pipeline (identified by the pipelineId passed in). This must be
-	// one of the pipelines referencd by the current set of breadcrumbs. It cannot
-	// be used to open a new pipeline outside the current set of breakpoints.
+	// one of the pipelines referenced by the current set of breadcrumbs. It
+	// cannot be used to open a new pipeline outside the current set of breadcruumbs.
 	displaySubPipeline(pipelineId) {
 		const breadcrumbs = this.objectModel.getBreadcrumbs();
 		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineId);
-		const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
+		if (index > -1) {
+			const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
 
-		const data = {
-			editType: "displaySubPipeline",
-			editSource: "canvas",
-			targetObject: supernode,
-			breadcrumbIndex: index
-		};
-		this.editActionHandler(data);
+			const data = {
+				editType: "displaySubPipeline",
+				editSource: "canvas",
+				targetObject: supernode,
+				breadcrumbIndex: index
+			};
+			this.editActionHandler(data);
+		}
 	}
 
 	// Displays a pipeline for the supernode (identifid by the supernodeId

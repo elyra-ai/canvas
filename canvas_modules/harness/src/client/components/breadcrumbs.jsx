@@ -48,7 +48,7 @@ export default class Breadcrumbs extends React.Component {
 	}
 
 	breadcrumbOnClick(breadcrumbDef) {
-		this.props.canvasController.displaySubPipeline({ pipelineId: breadcrumbDef.pipelineId });
+		this.props.canvasController.displaySubPipeline(breadcrumbDef.pipelineId);
 	}
 
 	render() {
