@@ -392,6 +392,62 @@ describe("Test the external supernode/sub-flows support", function() {
 	});
 });
 
+describe("Test navigate into and out of an external sub-flow inside a sub-flow", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+	});
+
+	it("Test navigaton using the expansion icon for the inner sub-flow", function() {
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+		cy.clickExpansionIconOfSupernodeInsideSupernode("Supernode 2", "Super node");
+		testBreadcrumbNavigationForExternalMainCanvasExpanded();
+	});
+
+	it("Test navigaton using the ellipsis icon for the inner sub-flow", function() {
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+		cy.clickEllipsisIconOfSupernodeInSupernode("Supernode 2", "Super node");
+		cy.clickOptionFromContextMenu("Display full page");
+		testBreadcrumbNavigationForExternalMainCanvasExpanded();
+	});
+
+});
+
+function testBreadcrumbNavigationForExternalMainCanvasExpanded() {
+	cy.verifyNumberOfNodes(3);
+
+	cy.clickBreadcrumb("Super node");
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+
+	cy.clickBreadcrumb("Primary");
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(3);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+}
+
 function testForExternalMainCanvas() {
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
