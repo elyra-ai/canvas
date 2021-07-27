@@ -421,31 +421,48 @@ describe("Test navigate into and out of an external sub-flow inside a sub-flow",
 
 function testBreadcrumbNavigationForExternalMainCanvasExpanded() {
 	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
 
 	cy.clickBreadcrumb("Super node");
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
 
 	cy.clickBreadcrumb("Primary");
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfNodesInSubFlow(5);
 	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
 
 	cy.clickToolbarUndo();
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
 
 	cy.clickToolbarUndo();
 	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
 
 	cy.clickToolbarRedo();
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
 
 	cy.clickToolbarRedo();
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfNodesInSubFlow(5);
 	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
 }
 
 function testForExternalMainCanvas() {

@@ -27,6 +27,11 @@ const nodesInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-grou
 const nodesInSubFlowInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group> .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 
 
+Cypress.Commands.add("verifyNumberOfBreadcrumbs", (noOfBreadcrumbs) => {
+	cy.get(".harness-pipeline-breadcrumbs-label")
+		.should("have.length", noOfBreadcrumbs);
+});
+
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {

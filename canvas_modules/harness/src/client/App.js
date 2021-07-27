@@ -387,7 +387,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
@@ -591,7 +591,7 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+			this.setBreadcrumbsDefinition();
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -1017,7 +1017,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
-		this.setBreadcrumbsDefinition(pipelineId);
+		this.setBreadcrumbsDefinition();
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1351,7 +1351,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineId);
+			this.setBreadcrumbsDefinition();
 			break;
 		}
 		case "createTestHarnessNode": {
@@ -1405,6 +1405,13 @@ class App extends React.Component {
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
 				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		case "undo":
+		case "redo": {
+			if (command.data.editType === "displaySubPipeline") {
+				this.setBreadcrumbsDefinition();
+			}
 			break;
 		}
 		default: {
