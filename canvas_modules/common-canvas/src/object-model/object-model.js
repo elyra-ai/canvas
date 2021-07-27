@@ -373,11 +373,24 @@ export default class ObjectModel {
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
 		if (!this.isPipelineLoaded(snPipelineId, snPipelineUrl)) {
-			if (this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
-				this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
-				return;
+			// If no pipeline flow is provided from beforeEditActionHandler we cannot
+			// continue otherwise an endless loop will occur. So throw and exception.
+			if (!data.externalPipelineFlow) {
+				const msg = "The external pipeline flow at '" + data.externalUrl +
+					"' was not provided. Make sure you have implemented beforeEditActionHanlder to support external pipeline flows.";
+				this.logger.error(msg);
+				throw msg;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalPipelineFlow.id + "' does not contain a pipeline with ID: " + snPipelineId);
+
+			// If the flow doesn't contain the pipeline we're looking for.
+			if (!this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
+				const msg = "The external pipeline flow '" + data.externalPipelineFlow.id +
+					"' does not contain a pipeline with ID: " + snPipelineId;
+				this.logger.error(msg);
+				throw msg;
+			}
+
+			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
 		}
 	}
 
