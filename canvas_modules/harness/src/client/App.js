@@ -23,7 +23,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { isEmpty, has, forIn } from "lodash";
+import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -1409,7 +1409,7 @@ class App extends React.Component {
 		}
 		case "undo":
 		case "redo": {
-			if (command.data.editType === "displaySubPipeline") {
+			if (get(command, "data.editType") === "displaySubPipeline") {
 				this.setBreadcrumbsDefinition();
 			}
 			break;
