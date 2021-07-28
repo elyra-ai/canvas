@@ -7,6 +7,7 @@
     "number_dbl": 11.012,
     "number_null": null,
     "number_random": 12345,
+    "number_random_resource_key": 67890,
     "number_longControlName": 12,
     "number_error": -1,
     "number_warning": 0.1,
@@ -66,6 +67,11 @@
     },
     {
       "id": "number_random",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_random_resource_key",
       "type": "integer",
       "required": true
     },
@@ -217,11 +223,29 @@
           "default": "Random"
         },
         "description": {
-          "default": "numberfield with parameter with random number generator"
+          "default": "numberfield with random number generator default label"
         },
         "number_generator": {
           "label": {
-            "default": "Random"
+            "default": "NumberGenerator default"
+          },
+          "range": {
+            "min": 1000000,
+            "max": 9999999
+          }
+        }
+      },
+      {
+        "parameter_ref": "number_random_resource_key",
+        "label": {
+          "default": "Random"
+        },
+        "description": {
+          "default": "numberfield with random number generator resource_key label"
+        },
+        "number_generator": {
+          "label": {
+            "resource_key": "numberGenerator.label"
           },
           "range": {
             "min": 1000000,
@@ -395,6 +419,7 @@
           "number_undefined",
           "number_null",
           "number_random",
+          "number_random_resource_key",
           "number_longControlName",
           "number_placeholder"
         ]
@@ -545,5 +570,8 @@
         }
       }
     }
-  ]
+  ],
+  "resources": {
+    "numberGenerator.label": "NumberGenerator resource_key"
+  }
 }
