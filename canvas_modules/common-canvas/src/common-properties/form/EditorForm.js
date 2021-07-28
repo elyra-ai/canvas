@@ -103,6 +103,15 @@ class CustomControlPanel {
 	}
 }
 
+class NumberGenerator {
+	constructor(text, numberGenerator) {
+		this.text = text;
+		if (numberGenerator.range) {
+			this.range = numberGenerator.range;
+		}
+	}
+}
+
 /**
  * Creates tab based on parameter definition
  */
@@ -372,7 +381,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	const orientation = parameter.orientation;
 	const required = parameter.required;
 	if (parameter.numberGenerator) {
-		parameter.numberGenerator.text = l10nProvider.l10nLabel(parameter.numberGenerator);
+		parameter.numberGenerator = new NumberGenerator(l10nProvider.l10nLabel(parameter.numberGenerator, parameter.name), parameter.numberGenerator);
 	}
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name), parameter.numberGenerator);
 	let controlDesc;
