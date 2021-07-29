@@ -31,7 +31,7 @@
 @import "./multiselect/multiselect";
 
 .properties-ctrl-wrapper {
-	padding: $spacing-04 0; // Adds padding to the control
+	padding-bottom: $spacing-05; // Adds padding to the control
 	&.action {
 		display: flex;
 		> div:first-child {

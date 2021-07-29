@@ -1372,11 +1372,16 @@
           {
             "id": "Level1",
             "type": "textPanel",
-            "class_name": "level1-group-textpanel-class"
+            "nested_panel": true,
+            "class_name": "level1-group-textpanel-class",
+            "label": {
+              "default": "Level1 Group"
+            }
           },
           {
             "id": "level1",
             "type": "panels",
+            "nested_panel": true,
             "class_name": "level1-group-panels-class",
             "group_info": [
               {
@@ -1391,11 +1396,16 @@
                   {
                     "id": "Level2",
                     "type": "textPanel",
-                    "class_name": "level2-group-textpanel-class"
+                    "nested_panel": true,
+                    "class_name": "level2-group-textpanel-class",
+                    "label": {
+                      "default": "Level2 Group"
+                    }
                   },
                   {
                     "id": "level2",
                     "type": "panels",
+                    "nested_panel": true,
                     "class_name": "level2-group-panels-class",
                     "group_info": [
                       {
@@ -1413,11 +1423,16 @@
                           {
                             "id": "Level3",
                             "type": "textPanel",
-                            "class_name": "level3-group-textpanel-class"
+                            "nested_panel": true,
+                            "class_name": "level3-group-textpanel-class",
+                            "label": {
+                              "default": "Level3 Group"
+                            }
                           },
                           {
                             "id": "level3",
                             "type": "panels",
+                            "nested_panel": true,
                             "class_name": "level3-group-panels-class",
                             "group_info": [
                               {
@@ -1476,6 +1491,7 @@
           {
             "id": "init1level1",
             "type": "panels",
+            "nested_panel": true,
             "class_name": "init1level1-group-panels-class",
             "group_info": [
               {
@@ -1495,6 +1511,7 @@
                   {
                     "id": "init1level2",
                     "type": "panels",
+                    "nested_panel": true,
                     "class_name": "init1level2-group-panels-class",
                     "group_info": [
                       {
@@ -1516,6 +1533,7 @@
                           {
                             "id": "init1level3",
                             "type": "panels",
+                            "nested_panel": true,
                             "class_name": "init1level3-group-panels-class",
                             "group_info": [
                               {

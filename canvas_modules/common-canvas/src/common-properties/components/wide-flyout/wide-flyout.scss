@@ -55,7 +55,7 @@ $properties-modal-buttons-height: 64px;
 		border-bottom: 1px solid $ui-03;
 	}
 	.properties-wf-children {
-		padding: $spacing-04 $spacing-06 $spacing-06;
+		padding: $spacing-05;
 		overflow-y: auto;
 		height: calc(100% - #{$properties-wf-title-height} - #{$properties-modal-buttons-height});
 	}

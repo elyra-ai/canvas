@@ -220,11 +220,13 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "general",
+                "nestedPanel":false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "panelType": "columnSelection",
+                      "nestedPanel":false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -303,6 +305,7 @@
                               "panel": {
                                 "id": "RenameFieldEntry",
                                 "panelType": "general",
+                                "nestedPanel":false,
                                 "uiItems": [
                                   {
                                     "itemType": "control",
