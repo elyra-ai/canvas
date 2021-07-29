@@ -95,6 +95,7 @@ export class ParameterDef {
 			this.required = settings.required;
 		}
 		if (settings.numberGenerator) {
+			settings.numberGenerator.label = ResourceDef.make(settings.numberGenerator.label);
 			this.numberGenerator = settings.numberGenerator;
 		}
 		if (settings.isKey) {

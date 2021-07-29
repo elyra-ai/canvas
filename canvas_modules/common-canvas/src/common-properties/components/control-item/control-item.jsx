@@ -82,7 +82,7 @@ class ControlItem extends React.Component {
 					disabled={disabled}
 					kind="ghost"
 				>
-					<span>{this.props.control.label.numberGenerator.label.default}</span>
+					<span>{this.props.control.label.numberGenerator.text}</span>
 				</Button>);
 			}
 			label = (
