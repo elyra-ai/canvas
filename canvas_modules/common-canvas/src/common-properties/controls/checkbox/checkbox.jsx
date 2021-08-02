@@ -51,7 +51,7 @@ class CheckboxControl extends React.Component {
 			<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
+				direction="bottom"
 				delay={TOOL_TIP_DELAY}
 				className="properties-tooltips"
 			>

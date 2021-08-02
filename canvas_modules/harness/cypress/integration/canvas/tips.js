@@ -161,12 +161,12 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 	});
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
-		cy.moveMouseToCoordinatesInCommonProperties(65, 100);
-		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "top", "Include or discard rows");
+		cy.clickAtCoordinatesInCommonProperties(65, 100);
+		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "bottom", "Include or discard rows");
 
-		cy.moveMouseToCoordinatesInCommonProperties(245, 160);
+		cy.clickAtCoordinatesInCommonProperties(245, 160);
 		cy.verifyTipForLabelIsVisibleAtLocation(
-			"Modeler CLEM Condition Expression", "top", "Enter a boolean expression to use for filtering rows"
+			"Modeler CLEM Condition Expression", "bottom", "Enter a boolean expression to use for filtering rows"
 		);
 	});
 });

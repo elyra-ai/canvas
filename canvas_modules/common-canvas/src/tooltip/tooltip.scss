@@ -21,20 +21,18 @@
 .common-canvas-tooltip {
 	font-size: 12px;
 	position: fixed;
-	padding: 5px 10px;
 	background-color: $inverse-02;
 	border: 1px solid $inverse-02;
 	font-weight: 400;
 	opacity: 90%;
 	color: $inverse-01;
 	line-height: 1.2;
-	text-align: center;
-	z-index: 8000;
+	text-align: left;
+	z-index: 10000; // Modal layout has z-index 9000. Show tooltip on top of modal.
 	pointer-events: none;
 	word-wrap: break-word;
 	max-width: 228px;
 	border-radius: 2px;
-	transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out, transform 0.1s cubic-bezier(0.71, 1.7, 0.77, 1.24);
 }
 
 .common-canvas-tooltip[direction="right"] {
@@ -51,6 +49,14 @@
 
 .common-canvas-tooltip[direction="bottom"] {
 	transform: translate3d(0, -22px, 0);
+}
+
+.single-line-tooltip {
+	padding: $spacing-01 $spacing-05;
+}
+
+.multi-line-tooltip {
+	padding: $spacing-05;
 }
 
 .common-canvas-tooltip #tipArrow {
@@ -117,8 +123,8 @@
 	position: absolute;
 	width: 12px;
 	height: 12px;
-	right: 10px;
-	top: 10px;
+	right: $spacing-05;
+	top: $spacing-02;
 	&.warning {
 		fill: $support-03;
 	}

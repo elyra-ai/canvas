@@ -376,7 +376,7 @@ export default class FieldPicker extends React.Component {
 						<Tooltip
 							id={filterTooltipId}
 							tip={tooltip}
-							direction="top"
+							direction="bottom"
 							delay={TOOL_TIP_DELAY}
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}

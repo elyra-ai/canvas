@@ -62,9 +62,10 @@ class ControlItem extends React.Component {
 					tooltip = (<Tooltip
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
-						direction="top"
+						direction="bottom"
 						delay={TOOL_TIP_DELAY_ICON}
 						disable={hidden || disabled}
+						showToolTipOnClick
 					>
 						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 					</Tooltip>);

@@ -20,12 +20,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
+import classNames from "classnames";
 
 class ToolTip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showToolTip: false
+			showToolTip: false,
+			singleLineTooltip: true
 		};
 
 		this.pendingTooltip = null;
@@ -74,6 +76,12 @@ class ToolTip extends React.Component {
 				}
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+					if (tooltip.offsetHeight > 20 && this.state.singleLineTooltip) {
+						this.setState({ singleLineTooltip: false });
+					} else if (tooltip.offsetHeight <= 48 && !this.state.singleLineTooltip) {
+						// Multi-line tooltip initially but after resizing right flyout panel, tooltip is in single line
+						this.setState({ singleLineTooltip: true });
+					}
 				}
 			}
 		}
@@ -307,16 +315,29 @@ class ToolTip extends React.Component {
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
+			// If showToolTipOnClick enabled, don't show tooltip on mouseover and mouseleave
 			const mouseover = () => this.showTooltipWithDelay();
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
+			const onFocus = () => this.showTooltipWithDelay();
+			const onBlur = () => this.setTooltipVisible(false);
+			const click = (evt) => {
+				// click event shouldn't call onBlur
+				evt.stopPropagation();
+				evt.preventDefault();
+				this.showTooltipWithDelay();
+			};
 
 			triggerContent = (<div
+				tabIndex={0}
 				data-id={this.props.id + "-trigger"}
 				className="tooltip-trigger"
-				onMouseOver={mouseover}
-				onMouseLeave={mouseleave}
-				onMouseDown={mousedown}
+				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
+				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
+				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
+				onClick={this.props.showToolTipOnClick ? click : null}
+				onFocus={onFocus} // When focused using keyboard
+				onBlur={onBlur}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
@@ -341,12 +362,14 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
+		// Different padding for single line and multi-line tooltips
+		const tooltipLengthClass = this.state.singleLineTooltip ? "single-line-tooltip" : "multi-line-tooltip";
 
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
 				<Portal>
-					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+					<div data-id={this.props.id} className={classNames(tipClass, tooltipLengthClass)} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
@@ -369,13 +392,15 @@ ToolTip.propTypes = {
 	mousePos: PropTypes.object,
 	disable: PropTypes.bool, // Tooltip will not show if disabled
 	showToolTipIfTruncated: PropTypes.bool, // Set to true to only display tooltip if full text does not fit in displayable width
-	delay: PropTypes.number
+	delay: PropTypes.number,
+	showToolTipOnClick: PropTypes.bool
 };
 
 ToolTip.defaultProps = {
 	delay: 1000,
 	direction: "bottom",
-	showToolTipIfTruncated: false // False will always show Tooltip even when whole word can be displayed
+	showToolTipIfTruncated: false, // False will always show Tooltip even when whole word can be displayed
+	showToolTipOnClick: false
 };
 
 export default ToolTip;

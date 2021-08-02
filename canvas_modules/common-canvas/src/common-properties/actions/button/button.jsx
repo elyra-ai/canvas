@@ -70,7 +70,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
+				direction="bottom"
 				delay={TOOL_TIP_DELAY}
 				className="properties-tooltips"
 				disable={disabled}

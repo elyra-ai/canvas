@@ -37,7 +37,7 @@ export default class ValidationMessage extends React.Component {
 				<Tooltip
 					id={uuid4() + "-table-cell-msg-icon"}
 					tip={this.props.messageInfo.text}
-					direction="top"
+					direction="bottom"
 					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
