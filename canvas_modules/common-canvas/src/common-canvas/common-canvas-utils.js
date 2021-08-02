@@ -19,7 +19,8 @@
 // the CanvasRender objects.
 
 import get from "lodash/get";
-import { ASSOCIATION_LINK, NODE_LINK } from "../common-canvas/constants/canvas-constants.js";
+import { ASSOCIATION_LINK, NODE_LINK, SUPER_NODE }
+	from "../common-canvas/constants/canvas-constants.js";
 
 
 export default class CanvasUtils {
@@ -855,5 +856,10 @@ export default class CanvasUtils {
 			return style;
 		}
 		return get(d, `style.${part}.${type}`, null);
+	}
+
+	// Returns a subset array of supernodes from the nodes passed in.
+	static filterSupernodes(inNodes) {
+		return inNodes.filter((n) => n.type === SUPER_NODE);
 	}
 }

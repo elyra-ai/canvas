@@ -37,7 +37,8 @@ export default class CloneMultipleObjectsAction extends Action {
 			data.objects.nodes.forEach((node) => {
 				const clonedNode = this.apiPipeline.cloneNode(node);
 				if (node.type === SUPER_NODE) {
-					const subPipelines = this.objectModel.cloneSuperNodeContents(clonedNode, data.objects.pipelines);
+					const pipelines = this.objectModel.convertSchemaPipelinesToCanvasInfo(data.objects.pipelines);
+					const subPipelines = this.objectModel.cloneSupernodeContents(clonedNode, pipelines);
 					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode, pipelines: subPipelines });
 				} else {
 					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
@@ -182,16 +183,28 @@ export default class CloneMultipleObjectsAction extends Action {
 	}
 
 	undo() {
-		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			if (clonedNodeInfo.node.type === SUPER_NODE) {
-				this.apiPipeline.deleteSupernode(clonedNodeInfo.node.id);
-			} else {
-				this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
-			}
+		// Handle regular nodes
+		const nodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type !== SUPER_NODE);
+
+		nodeInfos.forEach((clonedNodeInfo) => {
+			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
 		});
+
+		// Handle supernodes
+		const supernodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type === SUPER_NODE);
+		const supernodes = supernodeInfos.map((si) => si.node);
+
+		this.pipelinesToDelete = this.objectModel.getPipelinesToDelete(supernodes, this.data.pipelineId);
+		this.extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(this.pipelinesToDelete);
+		this.apiPipeline.deleteSupernodes(supernodes, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
+
+		// Handle comments
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
 			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
 		});
+
+		// Handle links
 		this.clonedLinks.forEach((clonedLink) => {
 			this.apiPipeline.deleteLink(clonedLink);
 		});

@@ -28,8 +28,10 @@ export default class CreateNodeAction extends Action {
 		if (this.newNode.type === SUPER_NODE) {
 			this.subPipelines = [];
 			if (has(this.newNode, "app_data.pipeline_data")) {
-				const pipelines = this.newNode.app_data.pipeline_data;
-				this.subPipelines = this.objectModel.cloneSuperNodeContents(this.newNode, pipelines);
+				const pipelines = this.objectModel.convertSchemaPipelinesToCanvasInfo(this.newNode.app_data.pipeline_data);
+				this.subPipelines = this.newNode.subflow_ref.url
+					? [] // If supernode references external pipeline there's nothing to clone.
+					: this.subPipelines = this.objectModel.cloneSupernodeContents(this.newNode, pipelines);
 				delete this.newNode.app_data.pipeline_data; // Remove the pipeline_data so it doesn't get included in the pipelineFlow
 			} else {
 				this.newPipeline = this.objectModel.createEmptyPipeline();
@@ -60,7 +62,7 @@ export default class CreateNodeAction extends Action {
 
 	undo() {
 		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernode(this.newNode.id);
+			this.apiPipeline.deleteSupernode(this.newNode, this.subPipelines);
 		} else {
 			this.apiPipeline.deleteNode(this.newNode.id);
 		}

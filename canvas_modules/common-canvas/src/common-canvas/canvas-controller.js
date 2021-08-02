@@ -2350,7 +2350,7 @@ export default class CanvasController {
 	// is called for one pipeline at a time until all needed pipeline flows are
 	// loaded. This allows the host app to serve up one pipeline flow at a time.
 	ensureVisibleExpandedPipelinesAreLoaded() {
-		const expandedSupernodes = this.objectModel.getVisibleExpandedSupernodes();
+		const expandedSupernodes = this.objectModel.getVisibleExpandedExternalSupernodes();
 		if (expandedSupernodes && expandedSupernodes.length > 0) {
 			this.editActionHandler({
 				editType: "loadPipelineFlow",

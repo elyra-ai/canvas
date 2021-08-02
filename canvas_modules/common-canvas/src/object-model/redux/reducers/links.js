@@ -19,6 +19,15 @@ import { NODE_LINK, COMMENT_LINK } from "../../../common-canvas/constants/canvas
 
 export default (state = [], action) => {
 	switch (action.type) {
+	case "DELETE_SUPERNODES":
+		return state.filter((link) => {
+			const removeLink = action.data.supernodesToDelete.some((sn) => {
+				return (link.srcNodeId === sn.id || // If node being deleted is either source or target of link remove this link
+					link.trgNodeId === sn.id);
+			});
+			return !removeLink;
+		});
+
 	case "DELETE_SUPERNODE":
 	case "DELETE_OBJECT":
 		return state.filter((link) => {

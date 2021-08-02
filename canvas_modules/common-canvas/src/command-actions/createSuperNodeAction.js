@@ -15,6 +15,7 @@
  */
 
 import Action from "../command-stack/action.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/command-actions/locales/en.json";
@@ -126,9 +127,9 @@ export default class CreateSuperNodeAction extends Action {
 		});
 
 		// Sub-Pipeline
-		this.canvasInfoSubPipeline =
+		this.subPipeline =
 			this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks);
-		this.subPipeline = this.objectModel.getAPIPipeline(this.canvasInfoSubPipeline.id);
+		this.subAPIPipeline = this.objectModel.getAPIPipeline(this.subPipeline.id);
 
 		this.createBindingNodeData = [];
 
@@ -157,10 +158,11 @@ export default class CreateSuperNodeAction extends Action {
 		this.supernode = this.apiPipeline.createSupernode(
 			this.getLabel("supernode.template.label"),
 			this.getLabel("supernode.template.description"),
-			this.canvasInfoSubPipeline.id,
+			this.subPipeline.id,
 			supernodeInputPorts,
 			supernodeOutputPorts,
-			topLeftNodePosition);
+			topLeftNodePosition,
+			this.data.externalUrl);
 
 		// Links to and from supernode.
 		this.linkSrcDefs = [];
@@ -254,6 +256,16 @@ export default class CreateSuperNodeAction extends Action {
 				portId: link.srcNodePortId ? "input_" + link.srcNodeId + "_" + link.srcNodePortId : link.srcNodePortId
 			});
 		});
+
+		if (this.data.externalUrl) {
+			const supernodes = CanvasUtils.filterSupernodes(this.subflowNodes);
+			const descPipelines = this.objectModel.getDescendantPipelinesForSupernodes(supernodes);
+			this.descPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipelines
+
+			this.newPipelineFlow =
+				this.objectModel.createExternalPipelineFlowTemplate(
+					this.data.externalPipelineFlowId, this.supernode.subflow_ref.pipeline_id_ref);
+		}
 	}
 
 	// Reorder the links in the same order the ports are defined in the binding nodes.
@@ -357,7 +369,7 @@ export default class CreateSuperNodeAction extends Action {
 			offsetY: pos.y
 		};
 
-		return this.subPipeline.createNode(bindingNodeData);
+		return this.subAPIPipeline.createNode(bindingNodeData);
 	}
 
 	getLabel(labelId) {
@@ -375,7 +387,7 @@ export default class CreateSuperNodeAction extends Action {
 	getData() {
 		this.data.newNode = this.supernode;
 		this.data.newLinks = this.newLinks;
-		this.data.subPipelineId = this.canvasInfoSubPipeline.id;
+		this.data.subPipelineId = this.subPipeline.id;
 		return this.data;
 	}
 
@@ -406,21 +418,7 @@ export default class CreateSuperNodeAction extends Action {
 		// Delete links from comments that are not in the subpipeline.
 		this.apiPipeline.deleteLinks(this.linksToDelete);
 
-		this.apiPipeline.addSupernode(this.supernode, [this.canvasInfoSubPipeline]);
-
-		// If we are creating an external supernode we convert the created supernode
-		// (which is currently local) to be external. This will convert any local
-		// child pipelines to be local and also create a external pipeline flow
-		// object in redux.
-		if (this.data.externalUrl) {
-			this.objectModel.convertSuperNodeLocalToExternal({
-				pipelineId: this.data.pipelineId,
-				supernodeId: this.supernode.id,
-				supernodePipelineId: this.supernode.subflow_ref.pipeline_id_ref,
-				externalFlowUrl: this.data.externalUrl,
-				externalPipelineFlowId: this.data.externalPipelineFlowId
-			});
-		}
+		this.apiPipeline.addSupernode(this.supernode, [this.subPipeline]);
 
 		// Add subflow_node_ref to supernode ports.
 		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
@@ -441,41 +439,41 @@ export default class CreateSuperNodeAction extends Action {
 
 		// Add the binding nodes to the subflow.
 		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
-			this.subPipeline.addNode(bindingNode);
+			this.subAPIPipeline.addNode(bindingNode);
 		});
 		this.supernodeExitBindingNodes.forEach((bindingNode) => {
-			this.subPipeline.addNode(bindingNode);
+			this.subAPIPipeline.addNode(bindingNode);
 		});
 
 		// Create links to and from the subflow binding nodes.
 		this.supernodeNewLinks = [];
 		for (let idx = 0; idx < this.bindingNodeLinkSrcDefs.length; idx++) {
 			this.supernodeNewLinks.push(
-				this.subPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: NODE_LINK }));
+				this.subAPIPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: NODE_LINK }));
 		}
-		this.subPipeline.addLinks(this.supernodeNewLinks);
+		this.subAPIPipeline.addLinks(this.supernodeNewLinks);
+
+		// If we are creating an external supernode create the external flow
+		// header info and switch the parentUrls for descendant pipelines (including
+		// the newly created pipeline for the newly created supernode).
+		if (this.data.externalUrl) {
+			this.objectModel.addExternalPipelineFlow(this.newPipelineFlow, this.data.externalUrl, false);
+			const pipelines = [this.subPipeline].concat(this.descPipelines);
+			this.objectModel.setParentUrl(pipelines, this.data.externalUrl);
+		}
 	}
 
 	undo() {
-		// If we are undoing the creation of an external supernode, first we
-		// convert it back to a local supernode before it is deleted (this will
-		// take care or reverting any sub-flows back to local) and will also
-		// remove the external pipeline flow object.
 		if (this.data.externalUrl) {
-			this.objectModel.convertSuperNodeExternalToLocal({
-				pipelineId: this.data.pipelineId,
-				supernodeId: this.supernode.id,
-				supernodePipelineId: this.supernode.subflow_ref.pipeline_id_ref,
-				externalFlowUrl: this.data.externalUrl,
-				externalPipelineFlow: this.objectModel.getExternalPipelineFlow(this.data.externalUrl)
-			});
+			this.objectModel.removeExternalPipelineFlow(this.data.externalUrl);
+			this.objectModel.setParentUrl(this.descPipelines); // This will delete the parentUrl from the pipelines
 		}
 
-		// Delete the supernode. Usually this would delete all referenced pipelines
-		// but we pass false so only the newly created pipeline referenced by the
-		// supernode is removed. We leave pipelines in place because any supernodes
+		// Delete the supernode and also the sub-pipeline it references. We do
+		// not delete lower level sub-pipelines (i.e. ones that supernodes
+		// in this sub-pipeline refer to) because any supernodes
 		// added back in the next step will need them.
-		this.apiPipeline.deleteSupernode(this.supernode.id, false);
+		this.apiPipeline.deleteSupernode(this.supernode, [this.subPipeline]);
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {

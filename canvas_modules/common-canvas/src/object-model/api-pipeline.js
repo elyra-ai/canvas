@@ -22,7 +22,6 @@
 // ---------------------------------------------------------------------------
 
 import dagre from "dagre/dist/dagre.min.js";
-import has from "lodash/has";
 
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
@@ -274,6 +273,8 @@ export default class APIPipeline {
 		return node;
 	}
 
+	// Returns a newly created supernode based on the parameters passed in. The
+	// externalUrl parameter indicates whether it is an external supernode or not.
 	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
 		const supernodeTemplate = {
 			description: description,
@@ -286,6 +287,10 @@ export default class APIPipeline {
 				pipeline_id_ref: subPipelineId
 			},
 		};
+
+		if (externalUrl) {
+			supernodeTemplate.subflow_ref.url = externalUrl;
+		}
 
 		const supernodeData = {
 			nodeTemplate: supernodeTemplate,
@@ -491,6 +496,16 @@ export default class APIPipeline {
 		}
 	}
 
+	addSupernodes(supernodesToAdd, pipelinesToAdd, extPipelineFlowsToAdd) {
+		this.store.dispatch({ type: "ADD_SUPERNODES", data: {
+			supernodesToAdd: supernodesToAdd,
+			pipelinesToAdd: pipelinesToAdd,
+			extPipelineFlowsToAdd: extPipelineFlowsToAdd,
+			pipelineId: this.pipelineId
+		} });
+	}
+
+
 	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
 	addSupernode(newSupernode, newSubPipelines) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
@@ -521,26 +536,29 @@ export default class APIPipeline {
 		this.deleteObject(id);
 	}
 
-	deleteSupernode(supernodeId, deletePipelines = true) {
-		let pipelineIds = [];
-		const supernode = this.getNode(supernodeId);
-		if (supernode) {
-			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				if (deletePipelines) {
-					pipelineIds = pipelineIds.concat(this.objectModel.getDescendantPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-				}
-			}
-			this.store.dispatch({
-				type: "DELETE_SUPERNODE",
-				data: {
-					id: supernode.id,
-					supernode: supernode,
-					pipelineIds: pipelineIds
-				},
+	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
+		this.store.dispatch({
+			type: "DELETE_SUPERNODES",
+			data: {
+				supernodesToDelete: supernodesToDelete,
+				pipelinesToDelete: pipelinesToDelete,
+				extPipelineFlowsToDelete: extPipelineFlowsToDelete,
 				pipelineId: this.pipelineId
-			});
-		}
+			}
+		});
+	}
+
+	// Deletes the supernode passed in along with pipelines passed in
+	deleteSupernode(supernode, pipelinesToDelete) {
+		this.store.dispatch({
+			type: "DELETE_SUPERNODE",
+			data: {
+				id: supernode.id,
+				supernode: supernode,
+				pipelinesToDelete: pipelinesToDelete,
+				pipelineId: this.pipelineId
+			}
+		});
 	}
 
 	getNodes() {
@@ -566,15 +584,8 @@ export default class APIPipeline {
 		});
 	}
 
-	getSupernodes(inNodes) {
-		const supernodes = [];
-		const listOfNodes = inNodes ? inNodes : this.getNodes();
-		listOfNodes.forEach((node) => {
-			if (node.type === SUPER_NODE) {
-				supernodes.push(node);
-			}
-		});
-		return supernodes;
+	getSupernodes() {
+		return CanvasUtils.filterSupernodes(this.getNodes());
 	}
 
 	isDataNode(objId) {

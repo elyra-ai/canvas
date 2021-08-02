@@ -98,15 +98,13 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 3");
 		expect(objectModel.getBreadcrumbs()).to.have.length(4);
 
-		// If we don't provide either addBreadcrumbs or breadcrumbIndex in the input
-		// object the breadcrumbs will be set back to a single root breadcrumb which,
-		// in this test, contains an undefined pipelineId.
-		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj }, objectModel);
+		// If we don't provide breadcrumbIndex in the input
+		// object the breadcrumbs will be set back to that index.
+		const displaySubPipeline2 = new DisplaySubPipeline({ targetObject: targetObj, breadcrumbIndex: 1 }, objectModel);
 		displaySubPipeline2.do();
 
-		/* eslint no-undefined: "off" */
-		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal(undefined);
-		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
+		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 
 		displaySubPipeline2.undo();
 
@@ -115,9 +113,8 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 
 		displaySubPipeline2.redo();
 
-		/* eslint no-undefined: "off" */
-		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal(undefined);
-		expect(objectModel.getBreadcrumbs()).to.have.length(1);
+		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
+		expect(objectModel.getBreadcrumbs()).to.have.length(2);
 	});
 
 
@@ -126,6 +123,6 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 function createObjectModel() {
 	const canvasController = new CanvasController();
 	const objectModel = canvasController.getObjectModel();
-	objectModel.setCanvasInfo({ pipelines: [{ id: "test 1" }, { id: "test 2" }, { id: "test 3" }] });
+	objectModel.setCanvasInfo({ primary_pipeline: "test 0", pipelines: [{ id: "test 0" }, { id: "test 1" }, { id: "test 2" }, { id: "test 3" }] });
 	return objectModel;
 }

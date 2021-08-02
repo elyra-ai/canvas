@@ -34,10 +34,6 @@ export default class DisplaySubPipeline extends Action {
 			// Make sure pipeline is loaded in case it is part of an external pipeline flow.
 			this.objectModel.ensurePipelineIsLoaded(this.data);
 			this.objectModel.setIndexedBreadcrumb(this.data);
-
-		} else {
-			// No need to test pipeline flow is loaded -- this will be for the primary pipeline.
-			this.objectModel.resetBreadcrumb();
 		}
 	}
 

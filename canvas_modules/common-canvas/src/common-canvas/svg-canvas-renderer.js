@@ -3679,18 +3679,13 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	deleteSupernodeRenderer(d) {
-		// TODO - using pipelineId as unique identifier for renderer may be
-		// a problem if two super nodes are displayed for the same sub-flow pipeline
-		const idx = this.indexOfSuperRenderer(d);
-		if (idx > -1) {
-			this.superRenderers[idx].clearCanvas();
-			this.superRenderers = this.superRenderers.splice(idx, 1);
-		}
-	}
-
+	// Returns the renderer for the supernode passed in. With external
+	// pipeline handling the pipeline referencd by the supernode can change
+	// over time so we have to make sure the renderer is for the supernode AND
+	// for the active pipeline.
 	getRendererForSupernode(d) {
-		return this.superRenderers.find((sr) => sr.supernodeInfo.id === d.id);
+		return this.superRenderers.find((sr) =>
+			sr.supernodeInfo.id === d.id && sr.activePipeline.id === d.subflow_ref.pipeline_id_ref);
 	}
 
 	openContextMenu(d3Event, type, d, port) {
