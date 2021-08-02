@@ -30,6 +30,10 @@ export default class DisplaySubPipeline extends Action {
 			this.objectModel.ensurePipelineIsLoaded(this.data);
 			this.objectModel.addBreadcrumbs(this.data);
 
+		} else if (this.data.breadcrumbIndex === 0) {
+			// Index 0 is the primary pipeline so no need to check pipeline is loaded.
+			this.objectModel.setIndexedBreadcrumb(this.data);
+
 		} else if (this.data.breadcrumbIndex) {
 			// Make sure pipeline is loaded in case it is part of an external pipeline flow.
 			this.objectModel.ensurePipelineIsLoaded(this.data);

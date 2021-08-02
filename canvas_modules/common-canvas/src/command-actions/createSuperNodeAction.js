@@ -465,8 +465,9 @@ export default class CreateSuperNodeAction extends Action {
 
 	undo() {
 		if (this.data.externalUrl) {
+			// Delete the parentUrl from the pipelines and make them local again.
+			this.objectModel.setParentUrl(this.descPipelines);
 			this.objectModel.removeExternalPipelineFlow(this.data.externalUrl);
-			this.objectModel.setParentUrl(this.descPipelines); // This will delete the parentUrl from the pipelines
 		}
 
 		// Delete the supernode and also the sub-pipeline it references. We do

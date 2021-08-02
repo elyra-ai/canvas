@@ -1695,7 +1695,7 @@ describe("Copy and Paste Supernode", () => {
 
 		expect(isEqual(JSON.stringify(originalPipeline), JSON.stringify(clonedOriginalPipeline))).to.be.true;
 		expect(isEqual(JSON.stringify(originalPipeline2), JSON.stringify(clonedOriginalPipeline2))).to.be.true;
-		// expect(isEqual(JSON.stringify(originalPipeline2Subflow), JSON.stringify(clonedOriginalPipeline2Subflow))).to.be.true;
+		expect(isEqual(JSON.stringify(originalPipeline2Subflow), JSON.stringify(clonedOriginalPipeline2Subflow))).to.be.true;
 		expect(isEqual(JSON.stringify(originalPipeline2NestedSubflow), JSON.stringify(clonedOriginalPipeline2NestedSubflow))).to.be.true;
 
 		// Undo the clone action.

@@ -34,10 +34,10 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.adjustObjectsPositions();
 
 		if (data.objects.nodes) {
+			const pipelines = this.objectModel.convertSchemaPipelinesToCanvasInfo(data.objects.pipelines);
 			data.objects.nodes.forEach((node) => {
 				const clonedNode = this.apiPipeline.cloneNode(node);
 				if (node.type === SUPER_NODE) {
-					const pipelines = this.objectModel.convertSchemaPipelinesToCanvasInfo(data.objects.pipelines);
 					const subPipelines = this.objectModel.cloneSupernodeContents(clonedNode, pipelines);
 					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode, pipelines: subPipelines });
 				} else {

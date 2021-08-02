@@ -357,7 +357,11 @@ export default class SVGCanvasRenderer {
 			if (ren) {
 				newSuperRenderers.push(ren);
 			}
+
+			this.getDiscardedRenderersForSupernode(supernode)
+				.forEach((dr) => dr.canvasSVG.remove());
 		});
+
 		return newSuperRenderers;
 	}
 
@@ -3686,6 +3690,14 @@ export default class SVGCanvasRenderer {
 	getRendererForSupernode(d) {
 		return this.superRenderers.find((sr) =>
 			sr.supernodeInfo.id === d.id && sr.activePipeline.id === d.subflow_ref.pipeline_id_ref);
+	}
+
+	// Returns an array containing any renderers that are for the supernode passed
+	// in but where the supernode does NOT reference the renderer's active pipeline.
+	getDiscardedRenderersForSupernode(d) {
+		return this.superRenderers.filter((sr) =>
+			sr.supernodeInfo.id === d.id && sr.activePipeline.id !== d.subflow_ref.pipeline_id_ref);
+
 	}
 
 	openContextMenu(d3Event, type, d, port) {
