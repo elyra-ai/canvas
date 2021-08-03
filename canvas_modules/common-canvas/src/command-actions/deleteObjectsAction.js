@@ -51,7 +51,7 @@ export default class DeleteObjectsAction extends Action {
 		// Remember all the pipelines that are being deleted when any selected
 		// supernodes are being deleted.
 		this.supernodesToDelete = CanvasUtils.filterSupernodes(this.nodesToDelete);
-		this.pipelinesToDelete = this.objectModel.getPipelinesToDelete(this.supernodesToDelete, this.data.pipelineId);
+		this.pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(this.supernodesToDelete, this.data.pipelineId);
 		this.extPipelineFlowsToDelete =
 			this.objectModel.getExternalPipelineFlowsForPipelines(this.pipelinesToDelete);
 

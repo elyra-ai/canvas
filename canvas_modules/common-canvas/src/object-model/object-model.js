@@ -413,7 +413,6 @@ export default class ObjectModel {
 		let supernodes = [];
 		pipeline.nodes.forEach((n) => {
 			if (n.type === SUPER_NODE && n.is_expanded) {
-				// This will return falsey if the pipeline has not yet been loaded.
 				const subFlowPipeline = pipelines.find((p) => p.id === this.getSupernodePipelineId(n));
 
 				// If this expanded supernode refers to an external pipeline that is
