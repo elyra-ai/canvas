@@ -185,7 +185,6 @@ export default class CloneMultipleObjectsAction extends Action {
 	undo() {
 		// Handle regular nodes
 		const nodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type !== SUPER_NODE);
-
 		nodeInfos.forEach((clonedNodeInfo) => {
 			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
 		});
@@ -193,11 +192,7 @@ export default class CloneMultipleObjectsAction extends Action {
 		// Handle supernodes
 		const supernodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type === SUPER_NODE);
 		const supernodes = supernodeInfos.map((si) => si.node);
-
-		this.pipelinesToDelete = this.objectModel.getPipelinesToDelete(supernodes, this.data.pipelineId);
-		this.extPipelineFlowsToDelete =
-			this.objectModel.getExternalPipelineFlowsForPipelines(this.pipelinesToDelete);
-		this.apiPipeline.deleteSupernodes(supernodes, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
+		this.apiPipeline.deleteSupernodesAndDescPipelines(supernodes);
 
 		// Handle comments
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {

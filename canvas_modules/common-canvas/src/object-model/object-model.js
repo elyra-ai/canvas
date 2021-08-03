@@ -402,8 +402,8 @@ export default class ObjectModel {
 	// they are either in the primary pipeline flow or are within the sub-flow
 	// of an expanded supernode.
 	getVisibleExpandedExternalSupernodes() {
-		const primaryPipeline = this.getPrimaryPipeline();
-		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(primaryPipeline, this.getPipelines());
+		const pipeline = this.getCurrentPipeline();
+		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(pipeline, this.getPipelines());
 		return supernodes;
 	}
 
@@ -866,7 +866,7 @@ export default class ObjectModel {
 	// referenced by other supernodes/pipelines outside of the array passed in.
 	// This situation may occur when two supernodes reference the same
 	// external pipeline and one is to be deleted but the other is to remain.
-	getPipelinesToDelete(supernodesToDel, parentPipelineId) {
+	getDescPipelinesToDelete(supernodesToDel, parentPipelineId) {
 		const supernodeInfosToDel = this.getDescendantSupernodeInfos(supernodesToDel, parentPipelineId);
 		const otherSupernodeInfos = this.getOtherSupernodeInfos(supernodesToDel, parentPipelineId);
 
@@ -1084,6 +1084,10 @@ export default class ObjectModel {
 
 	getPrimaryPipeline() {
 		return this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
+	}
+
+	getCurrentPipeline() {
+		return this.getCanvasInfoPipeline(this.getCurrentBreadcrumb().pipelineId);
 	}
 
 	isPrimaryPipelineEmpty() {

@@ -85,7 +85,6 @@ export default (state = [], action) => {
 			return !removeNode;
 		});
 
-	case "DELETE_SUPERNODE":
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found

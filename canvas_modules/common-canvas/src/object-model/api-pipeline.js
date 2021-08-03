@@ -536,6 +536,17 @@ export default class APIPipeline {
 		this.deleteObject(id);
 	}
 
+	// Deletes the supernodes passed in and also any descending pipelines. It
+	// makes sure it doesn't delete any external pipeline that is referenced by
+	// other supernodes in the canvas info.
+	deleteSupernodesAndDescPipelines(supernodes) {
+		const pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(supernodes, this.pipelineId);
+		const extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(pipelinesToDelete);
+		this.deleteSupernodes(supernodes, pipelinesToDelete, extPipelineFlowsToDelete);
+	}
+
+	// Deletes the supernodes passed in along with any pipelines and xternal flows.
 	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
 		this.store.dispatch({
 			type: "DELETE_SUPERNODES",
@@ -543,19 +554,6 @@ export default class APIPipeline {
 				supernodesToDelete: supernodesToDelete,
 				pipelinesToDelete: pipelinesToDelete,
 				extPipelineFlowsToDelete: extPipelineFlowsToDelete,
-				pipelineId: this.pipelineId
-			}
-		});
-	}
-
-	// Deletes the supernode passed in along with pipelines passed in
-	deleteSupernode(supernode, pipelinesToDelete) {
-		this.store.dispatch({
-			type: "DELETE_SUPERNODE",
-			data: {
-				id: supernode.id,
-				supernode: supernode,
-				pipelinesToDelete: pipelinesToDelete,
 				pipelineId: this.pipelineId
 			}
 		});

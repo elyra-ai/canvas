@@ -62,7 +62,7 @@ export default class CreateNodeAction extends Action {
 
 	undo() {
 		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernode(this.newNode, this.subPipelines);
+			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
 		} else {
 			this.apiPipeline.deleteNode(this.newNode.id);
 		}

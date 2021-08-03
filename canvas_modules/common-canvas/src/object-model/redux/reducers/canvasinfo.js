@@ -147,26 +147,6 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "DELETE_SUPERNODE": {
-		// Delete the supernode pipelines.
-		let canvasInfoPipelines = state.pipelines.filter((pipeline) => {
-			const removePipeline = action.data.pipelinesToDelete.some((p) => p.id === pipeline.id);
-			return !removePipeline;
-		});
-
-		// Delete the supernode.
-		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
-			if (pipeline.id === action.data.pipelineId) {
-				return Object.assign({}, pipeline, {
-					nodes: nodes(pipeline.nodes, action),
-					links: links(pipeline.links, action)
-				});
-			}
-			return pipeline;
-		});
-		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
-	}
-
 	case "SET_SUBDUE_STYLE":
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 

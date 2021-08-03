@@ -45,13 +45,6 @@ export default (state = [], action) => {
 		});
 	}
 
-	case "DELETE_SUPERNODE": {
-		if (action.data.supernode.subflow_ref.url) {
-			return state.filter((epf) => epf.url !== action.data.supernode.subflow_ref.url);
-		}
-		return state;
-	}
-
 	case "SET_CANVAS_INFO": {
 		// If we are handling new canvasInfo we need to clear out any old
 		// external pipeline flows.

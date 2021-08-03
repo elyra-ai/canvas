@@ -474,7 +474,7 @@ export default class CreateSuperNodeAction extends Action {
 		// not delete lower level sub-pipelines (i.e. ones that supernodes
 		// in this sub-pipeline refer to) because any supernodes
 		// added back in the next step will need them.
-		this.apiPipeline.deleteSupernode(this.supernode, [this.subPipeline]);
+		this.apiPipeline.deleteSupernodes([this.supernode], [this.subPipeline], []);
 
 		this.subflowNodes.forEach((node) => {
 			if (node.type === SUPER_NODE) {

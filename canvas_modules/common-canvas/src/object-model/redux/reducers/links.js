@@ -28,7 +28,6 @@ export default (state = [], action) => {
 			return !removeLink;
 		});
 
-	case "DELETE_SUPERNODE":
 	case "DELETE_OBJECT":
 		return state.filter((link) => {
 			return (link.srcNodeId !== action.data.id && // If node being deleted is either source or target of link remove this link

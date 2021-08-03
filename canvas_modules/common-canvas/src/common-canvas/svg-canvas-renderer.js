@@ -76,7 +76,7 @@ export default class SVGCanvasRenderer {
 		this.config = config;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
-		this.activePipeline = this.getPipeline(pipelineId); // Must come after line setting this.canvasInfo
+		this.activePipeline = this.getActivePipeline(pipelineId); // Must come after line setting this.canvasInfo
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -300,7 +300,7 @@ export default class SVGCanvasRenderer {
 		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
 	}
 
-	getPipeline(pipelineId) {
+	getActivePipeline(pipelineId) {
 		const pipeline = this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
 		if (pipeline) {
 			return pipeline;
@@ -311,7 +311,7 @@ export default class SVGCanvasRenderer {
 	setCanvasInfoRenderer(canvasInfo) {
 		this.logger.logStartTimer("setCanvasInfoRenderer");
 		this.canvasInfo = canvasInfo;
-		this.activePipeline = this.getPipeline(this.pipelineId);
+		this.activePipeline = this.getActivePipeline(this.pipelineId);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
@@ -3455,7 +3455,7 @@ export default class SVGCanvasRenderer {
 	doesExpandedSupernodeHaveStyledNodes(d) {
 		let expandedSupernodeHaveStyledNodes = false;
 		if (this.nodeUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
-			const subflow = this.getPipeline(d.subflow_ref.pipeline_id_ref);
+			const subflow = this.getActivePipeline(d.subflow_ref.pipeline_id_ref);
 			const nodeGrp = subflow.nodes;
 			nodeGrp.forEach((node) => {
 				if (node.style || node.style_temp) {
