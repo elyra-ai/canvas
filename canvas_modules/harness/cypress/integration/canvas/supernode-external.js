@@ -333,6 +333,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		// pipelines.
 		cy.verifyNumberOfPipelines(3);
 		cy.verifyNumberOfExternalPipelines(2);
+		cy.verifyNumberOfExternalPipelineFlows(2);
 	});
 
 	it("Test deleting (and undo/redo) of an external supernode", function() {
@@ -416,7 +417,78 @@ describe("Test navigate into and out of an external sub-flow inside a sub-flow",
 		cy.clickOptionFromContextMenu("Display full page");
 		testBreadcrumbNavigationForExternalMainCanvasExpanded();
 	});
+});
 
+describe("Test navigate copy and paste with external pipeline flows", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+	});
+
+
+	it("Test copy and paste of expanded external supernode]", function() {
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+		testForExternalMainCanvasExpanded();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+
+		cy.hoverOverNodeLabel("Super node");
+		cy.clickNodeLabelEditIcon("Super node");
+		cy.enterLabelForNode("Super node", "Supernode Original");
+
+		testForExternalMainCanvasExpanded();
+
+		// Paste a copy of the supernode
+		cy.rightClickToDisplayContextMenu(200, 450);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		testForExternalMainCanvasExpandedCopiedSupernode();
+
+		// Undo the paste
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpanded();
+
+		// Redo the paste
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedCopiedSupernode();
+	});
+
+	it("Test copy and paste of external supernode]", function() {
+		cy.openCanvasDefinition("externalMainCanvas.json");
+		testForExternalMainCanvas();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+
+		cy.hoverOverNodeLabel("Super node");
+		cy.clickNodeLabelEditIcon("Super node");
+		cy.enterLabelForNode("Super node", "Supernode Original");
+
+		testForExternalMainCanvas();
+
+		// Paste a copy of the supernode
+		cy.rightClickToDisplayContextMenu(200, 450);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		testForExternalMainCanvasCopiedSupernode();
+
+		// Undo the paste
+		cy.clickToolbarUndo();
+		testForExternalMainCanvas();
+
+		// Redo the paste
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasCopiedSupernode();
+
+		// Expand the copied Supernode
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		testForExternalMainCanvasCopiedSupernodExpanded();
+
+	});
 });
 
 function testBreadcrumbNavigationForExternalMainCanvasExpanded() {
@@ -470,6 +542,23 @@ function testForExternalMainCanvas() {
 	cy.verifyNumberOfPortDataLinks(4);
 	cy.verifyNumberOfPipelines(1);
 	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
+}
+
+function testForExternalMainCanvasCopiedSupernode() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
+}
+
+function testForExternalMainCanvasCopiedSupernodExpanded() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
 }
 
 function testForExternalMainCanvasSupernodeDeleted() {
@@ -477,6 +566,7 @@ function testForExternalMainCanvasSupernodeDeleted() {
 	cy.verifyNumberOfPortDataLinks(1);
 	cy.verifyNumberOfPipelines(1);
 	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
 }
 
 function testForExternalMainCanvasSupernodeExpandedInPlace() {
@@ -520,7 +610,18 @@ function testForExternalMainCanvasExpanded() {
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
 	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
 	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasExpandedCopiedSupernode() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfNodesInSubFlow(10);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(6);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
 }
 
 function testForExternalMainCanvasExpandedSupernodeDeleted() {
