@@ -15,7 +15,7 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+import { SUPER_NODE }
 	from "../../../common-canvas/constants/canvas-constants.js";
 import ports from "./ports.js";
 
