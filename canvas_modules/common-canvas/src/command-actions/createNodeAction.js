@@ -16,8 +16,6 @@
 import Action from "../command-stack/action.js";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
-import has from "lodash/has";
-
 export default class CreateNodeAction extends Action {
 	constructor(data, objectModel) {
 		super(data);
@@ -26,20 +24,9 @@ export default class CreateNodeAction extends Action {
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.newNode = this.apiPipeline.createNode(data);
 		if (this.newNode.type === SUPER_NODE) {
-			this.subPipelines = [];
-			if (has(this.newNode, "app_data.pipeline_data")) {
-				const pipelines = this.objectModel.convertSchemaPipelinesToCanvasInfo(this.newNode.app_data.pipeline_data);
-				this.subPipelines = this.newNode.subflow_ref.url
-					? [] // If supernode references external pipeline there's nothing to clone.
-					: this.subPipelines = this.objectModel.cloneSupernodeContents(this.newNode, pipelines);
-				delete this.newNode.app_data.pipeline_data; // Remove the pipeline_data so it doesn't get included in the pipelineFlow
-			} else {
-				this.newPipeline = this.objectModel.createEmptyPipeline();
-				this.newNode.subflow_ref = {
-					pipeline_id_ref: this.newPipeline.id
-				};
-				this.subPipelines.push(this.newPipeline);
-			}
+			const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(this.newNode);
+			this.subPipelines = subPipelines;
+			this.newNode = supernode;
 		}
 	}
 

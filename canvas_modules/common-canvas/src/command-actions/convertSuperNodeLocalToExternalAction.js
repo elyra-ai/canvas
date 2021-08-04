@@ -46,31 +46,32 @@ export default class ConvertSuperNodeLocalToExternal extends Action {
 		this.newPipelineFlow =
 			this.objectModel.createExternalPipelineFlowTemplate(
 				this.data.pipelineFlowId, this.newSupernode.subflow_ref.pipeline_id_ref);
+		this.newPipelineFlow.pipelines = [];
+		this.newPipelineFlow.url = this.data.externalUrl;
 	}
 
 	do() {
-		// Add the external pipeline flow.
-		this.objectModel.addExternalPipelineFlow(this.newPipelineFlow, this.data.externalUrl, false);
-
-		// Replace the pipelines and the supernode
+		// Replace the supernode, pipelines and external pipeline flow
 		this.objectModel.replaceSupernodeAndPipelines({
 			pipelineId: this.data.pipelineId, // Used by canvasinfo reducer
 			topSupernode: this.newSupernode, // Used by nodes reducer
 			pipelinesToAdd: this.newPipelines, // Used by canvasinfo reducer
-			pipelinesToRemove: this.oldPipelines // Used by canvasinfo reducer
+			pipelinesToRemove: this.oldPipelines, // Used by canvasinfo reducer
+			extPipelineFlowsToAdd: [this.newPipelineFlow], // Used by externalpipelineflows reducer
+			extPipelineFlowsToDelete: [] // Used by externalpipelineflows reducer
+
 		});
 	}
 
 	undo() {
-		// Remove the external pipeline flow.
-		this.objectModel.removeExternalPipelineFlow(this.data.externalUrl);
-
-		// Replace the pipelines and the supernode
+		// Replace the supernode, pipelines and external pipeline flow
 		this.objectModel.replaceSupernodeAndPipelines({
 			pipelineId: this.data.pipelineId, // Used by canvasinfo reducer
 			topSupernode: this.oldSupernode, // Used by nodes reducer
 			pipelinesToAdd: this.oldPipelines, // Used by canvasinfo reducer
-			pipelinesToRemove: this.newPipelines // Used by canvasinfo reducer
+			pipelinesToRemove: this.newPipelines, // Used by canvasinfo reducer
+			extPipelineFlowsToAdd: [], // Used by externalpipelineflows reducer
+			extPipelineFlowsToDelete: [this.newPipelineFlow] // Used by externalpipelineflows reducer
 		});
 	}
 

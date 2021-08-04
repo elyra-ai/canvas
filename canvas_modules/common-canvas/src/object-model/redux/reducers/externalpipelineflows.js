@@ -30,9 +30,14 @@ export default (state = [], action) => {
 		return state.filter((epf) => epf.url !== action.externalUrl);
 	}
 
-	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
-		delete action.data.externalPipelineFlow.pipelines;
-		return [...state, action.data.externalPipelineFlow];
+	case "REPLACE_SN_AND_PIPELINES": {
+		const subset = state.filter((epf) => {
+			const remove = action.data.extPipelineFlowsToDelete.some((efd) => efd.url === epf.url);
+			return !remove;
+		});
+
+		const newset = [...subset, ...action.data.extPipelineFlowsToAdd];
+		return newset;
 	}
 
 	case "ADD_SUPERNODES":

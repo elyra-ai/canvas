@@ -505,9 +505,9 @@ export default class APIPipeline {
 		} });
 	}
 
-
-	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
-	addSupernode(newSupernode, newSubPipelines) {
+	// Add the newSupernode to canvasInfo and an array of newSubPipelines that
+	// it references. Optionally, a link may also be added.
+	addSupernode(newSupernode, newSubPipelines, newLink) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
 		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
@@ -517,7 +517,14 @@ export default class APIPipeline {
 					...pipeline.nodes,
 					Object.assign({}, newSupernode)
 				];
-				return Object.assign({}, pipeline, { nodes: newNodes });
+				let newLinks = pipeline.links;
+				if (newLink) {
+					newLinks = [
+						...pipeline.links,
+						Object.assign({}, newLink)
+					];
+				}
+				return Object.assign({}, pipeline, { nodes: newNodes, links: newLinks });
 			}
 			return pipeline;
 		});
