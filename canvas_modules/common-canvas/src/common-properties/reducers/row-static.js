@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { UPDATE_FREEZED_ROWS, CLEAR_FREEZED_ROWS } from "../actions";
+import { UPDATE_STATIC_ROWS, CLEAR_STATIC_ROWS } from "../actions";
 /* eslint max-depth: ["error", 6] */
 
 /*
@@ -23,7 +23,7 @@ import { UPDATE_FREEZED_ROWS, CLEAR_FREEZED_ROWS } from "../actions";
 */
 function states(state = {}, action) {
 	switch (action.type) {
-	case UPDATE_FREEZED_ROWS: {
+	case UPDATE_STATIC_ROWS: {
 		const newState = state;
 		const propertyId = action.info.propertyId;
 		if (!newState[propertyId.name]) {
@@ -39,16 +39,16 @@ function states(state = {}, action) {
 				if (!newState[propertyId.name][strRow][strCol]) {
 					newState[propertyId.name][strRow][strCol] = {};
 				}
-				newState[propertyId.name][strRow][strCol].freezedRows = action.info.freezedRows;
+				newState[propertyId.name][strRow][strCol].staticRows = action.info.staticRows;
 			} else {
-				newState[propertyId.name][strRow].freezedRows = action.info.freezedRows;
+				newState[propertyId.name][strRow].staticRows = action.info.staticRows;
 			}
 		} else {
-			newState[propertyId.name].freezedRows = action.info.freezedRows;
+			newState[propertyId.name].staticRows = action.info.staticRows;
 		}
 		return Object.assign({}, state, newState);
 	}
-	case CLEAR_FREEZED_ROWS: {
+	case CLEAR_STATIC_ROWS: {
 		const newState = state;
 		const propertyId = action.info.propertyId;
 		if (action.info.propertyId) {
@@ -56,12 +56,12 @@ function states(state = {}, action) {
 				if (Number.isInteger(propertyId.row) && newState[propertyId.name][String(propertyId.row)]) {
 					const strRow = String(propertyId.row);
 					if (Number.isInteger(propertyId.col) && newState[propertyId.name][strRow][String(propertyId.col)]) {
-						newState[propertyId.name][strRow][String(propertyId.col)].freezedRows = [];
+						newState[propertyId.name][strRow][String(propertyId.col)].staticRows = [];
 					} else {
-						newState[propertyId.name][strRow].freezedRows = [];
+						newState[propertyId.name][strRow].staticRows = [];
 					}
 				} else {
-					newState[propertyId.name].freezedRows = [];
+					newState[propertyId.name].staticRows = [];
 				}
 			}
 			return Object.assign({}, state, newState);

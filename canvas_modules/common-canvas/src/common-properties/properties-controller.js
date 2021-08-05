@@ -1754,38 +1754,38 @@ export default class PropertiesController {
 	 *
 	 */
 
-	getFreezedRows(inPropertyId) {
+	getStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
-		return this.propertiesStore.getFreezedRows(propertyId);
+		return this.propertiesStore.getStaticRows(propertyId);
 	}
 
-	updateFreezedRows(inPropertyId, freezedRows) {
+	updateStaticRows(inPropertyId, staticRows) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const controlValue = this.getPropertyValue(inPropertyId);
-		freezedRows = freezedRows.sort();
-		const isValidSlection = this.validateSelectionValues(freezedRows, controlValue);
+		staticRows = staticRows.sort();
+		const isValidSlection = this.validateSelectionValues(staticRows, controlValue);
 		if (isValidSlection) {
-			this.propertiesStore.updateFreezedRows(propertyId, freezedRows);
+			this.propertiesStore.updateStaticRows(propertyId, staticRows);
 		}
 	}
 
-	clearFreezedRows(inPropertyId) {
+	clearStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
-		this.propertiesStore.clearFreezedRows(propertyId);
+		this.propertiesStore.clearStaticRows(propertyId);
 	}
 
 	/**
 	 * Validate if the array for freeze rows is correct. Should only have continuos value of row indexes
 	 * Must not contain first and last row index together in the array ever. you can only freeze either first row or the last row
-	 * @param freezedRows Array of rows you want to freeze
+	 * @param staticRows Array of rows you want to freeze
 	 * @param controlValue the property values for the property Id
 	 * @returns 
 	 */
-	validateSelectionValues(freezedRows, controlValue) {
-		if (freezedRows && controlValue.length > 0) {
-			const consecutiveAry = freezedRows.slice(1).map(function(n, i) { return n - freezedRows[i]; });
+	validateSelectionValues(staticRows, controlValue) {
+		if (staticRows && controlValue.length > 0) {
+			const consecutiveAry = staticRows.slice(1).map(function(n, i) { return n - staticRows[i]; });
 			const isDifference = consecutiveAry.every(value => value == 1);
-			if (isDifference && ((freezedRows.includes(0) && !freezedRows.includes(controlValue.length - 1)) || (!freezedRows.includes(0) && freezedRows.includes(controlValue.length - 1)))) {
+			if (isDifference && ((staticRows.includes(0) && !staticRows.includes(controlValue.length - 1)) || (!staticRows.includes(0) && staticRows.includes(controlValue.length - 1)))) {
 				return true;
 			} else {
 				return false;

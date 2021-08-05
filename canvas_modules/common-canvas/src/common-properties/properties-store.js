@@ -23,7 +23,7 @@ import { setPanelStates, updatePanelState } from "./actions";
 import { setActionStates, updateActionState } from "./actions";
 
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
-import { clearFreezedRows, updateFreezedRows } from "./actions";
+import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
@@ -34,7 +34,7 @@ import actionStatesReducer from "./reducers/action-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
-import rowFreezeReducer from "./reducers/row-Freeze";
+import rowFreezeReducer from "./reducers/row-static";
 import componentMetadataReducer from "./reducers/component-metadata";
 import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
 import saveButtonDisableReducer from "./reducers/save-button-disable";
@@ -387,27 +387,27 @@ export default class PropertiesStore {
 		this.store.dispatch(clearSelectedRows({ propertyId: propertyId }));
 	}
 
-	getFreezedRows(propertyId) {
+	getStaticRows(propertyId) {
 		if (typeof propertyId === "undefined") {
 			return [];
 		}
 		const state = this.store.getState();
-		let rowFreezed = state.rowFreezeReducer[propertyId.name];
-		if (Number.isInteger(propertyId.row) && rowFreezed) {
-			rowFreezed = rowFreezed[String(propertyId.row)]; // row selection
-			if (Number.isInteger(propertyId.col) && rowFreezed) {
-				rowFreezed = rowFreezed[String(propertyId.col)]; // cell selection
+		let rowStatic = state.rowFreezeReducer[propertyId.name];
+		if (Number.isInteger(propertyId.row) && rowStatic) {
+			rowStatic = rowStatic[String(propertyId.row)]; // row selection
+			if (Number.isInteger(propertyId.col) && rowStatic) {
+				rowStatic = rowStatic[String(propertyId.col)]; // cell selection
 			}
 		}
-		return rowFreezed && rowFreezed.freezedRows ? rowFreezed.freezedRows : [];
+		return rowStatic && rowStatic.staticRows ? rowStatic.staticRows : [];
 	}
 
-	updateFreezedRows(propertyId, freezedRows) {
-		this.store.dispatch(updateFreezedRows({ propertyId: propertyId, freezedRows: freezedRows }));
+	updateStaticRows(propertyId, staticRows) {
+		this.store.dispatch(updateStaticRows({ propertyId: propertyId, staticRows: staticRows }));
 	}
 
-	clearFreezedRows(propertyId) {
-		this.store.dispatch(clearFreezedRows({ propertyId: propertyId }));
+	clearStaticRows(propertyId) {
+		this.store.dispatch(clearStaticRows({ propertyId: propertyId }));
 	}
 
 	/**

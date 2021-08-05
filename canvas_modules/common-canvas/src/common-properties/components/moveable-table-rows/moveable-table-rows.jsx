@@ -85,18 +85,18 @@ class MoveableTableRows extends React.Component {
 			(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
 			!this.props.disabled
 		);
-		const freezedRows = this.props.controller.getFreezedRows(this.props.propertyId).sort();
-		if (selected.length > 0 && freezedRows.length > 0 && freezedRows.includes(selected[0])) {
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (selected.length > 0 && staticRows.length > 0 && staticRows.includes(selected[0])) {
 			topEnabled = false;
 			bottomEnabled = false;
-		} else if (selected[0] === freezedRows[freezedRows.length - 1] + 1) {
+		} else if (selected[0] === staticRows[staticRows.length - 1] + 1) {
 			topEnabled = false;
 			bottomEnabled = (
 				!this.props.disableRowMoveButtons &&
 				(selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) &&
 				!this.props.disabled
 			);
-		} else if (selected[0] === freezedRows[0] - 1) {
+		} else if (selected[0] === staticRows[0] - 1) {
 			bottomEnabled = false
 		}
 
@@ -162,20 +162,20 @@ class MoveableTableRows extends React.Component {
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		let leastValue = 0;
-		const freezedRows = this.props.controller.getFreezedRows(this.props.propertyId).sort();
-		if (freezedRows && freezedRows.length > 0 && freezedRows.includes(0)) {
-			leastValue = freezedRows[freezedRows.length - 1];
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
+			leastValue = staticRows[staticRows.length - 1];
 		}
 		for (var firstRow = selected[0]; firstRow > leastValue; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
-				if (freezedRows.length > 0 && selected[0] > leastValue + 1) {
+				if (staticRows.length > 0 && selected[0] > leastValue + 1) {
 					const selectedRow = selected.shift();
 					const tmpRow = controlValue[selectedRow - 1];
 					controlValue[selectedRow - 1] = controlValue[selectedRow];
 					controlValue[selectedRow] = tmpRow;
 					selected.push(selectedRow - 1);
 					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
-				} else if (freezedRows.length === 0) {
+				} else if (staticRows.length === 0) {
 					const selectedRow = selected.shift();
 					const tmpRow = controlValue[selectedRow - 1];
 					controlValue[selectedRow - 1] = controlValue[selectedRow];
@@ -196,23 +196,23 @@ class MoveableTableRows extends React.Component {
 			return a - b;
 		});
 		let leastValue = 0;
-		const freezedRows = this.props.controller.getFreezedRows(this.props.propertyId).sort();
-		if (freezedRows && freezedRows.length > 0 && freezedRows.includes(0)) {
-			leastValue = freezedRows[freezedRows.length - 1];
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
+			leastValue = staticRows[staticRows.length - 1];
 		}
 		// only move up if not already at the top especially for multiple selected
-		// Move up only till the freezed rows index
+		// Move up only till the static rows index
 		if (selected.length !== 0 && selected[0] > leastValue) {
 			const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 			for (var i = 0; i <= selected.length - 1; i++) {
-				if (freezedRows.length > 0 && selected[0] > leastValue + 1) {
+				if (staticRows.length > 0 && selected[0] > leastValue + 1) {
 					const selectedRow = selected.shift();
 					const tmpRow = controlValue[selectedRow - 1];
 					controlValue[selectedRow - 1] = controlValue[selectedRow];
 					controlValue[selectedRow] = tmpRow;
 					selected.push(selectedRow - 1);
 					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
-				} else if (freezedRows.length === 0) {
+				} else if (staticRows.length === 0) {
 					const selectedRow = selected.shift();
 					if (selectedRow !== 0) {
 						const tmpRow = controlValue[selectedRow - 1];
@@ -234,9 +234,9 @@ class MoveableTableRows extends React.Component {
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		let maxValue = controlValue.length - 1;
-		const freezedRows = this.props.controller.getFreezedRows(this.props.propertyId).sort();
-		if (freezedRows && freezedRows.length > 0 && freezedRows.includes(controlValue.length - 1)) {
-			maxValue = freezedRows[0] - 1;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
+			maxValue = staticRows[0] - 1;
 		}
 		// only move down if not already at the end especially for multiple selected
 		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
@@ -265,9 +265,9 @@ class MoveableTableRows extends React.Component {
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		let maxValue = controlValue.length - 1;
-		const freezedRows = this.props.controller.getFreezedRows(this.props.propertyId).sort();
-		if (freezedRows && freezedRows.length > 0 && freezedRows.includes(controlValue.length - 1)) {
-			maxValue = freezedRows[0] - 1;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
+			maxValue = staticRows[0] - 1;
 		}
 		for (var lastRow = selected[selected.length - 1]; lastRow < maxValue; lastRow++) {
 			for (var i = selected.length - 1; i >= 0; i--) {
