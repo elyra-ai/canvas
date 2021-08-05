@@ -194,7 +194,7 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-label > span")
+		.find("> foreignObject > .d3-node-label > span")
 		.trigger("mouseenter");
 });
 
@@ -391,9 +391,26 @@ Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 		.click();
 });
 
+Cypress.Commands.add("clickEllipsisIconOfSupernodeInSupernode", (supernodeName1, supernodeName2) => {
+	cy.hoverOverNodeInSupernode(supernodeName1, supernodeName2);
+	cy.getNodeWithLabelInSupernode(supernodeName1, supernodeName2)
+		.find("> .d3-node-ellipsis-group")
+		.eq(0)
+		.click();
+});
+
+
 Cypress.Commands.add("clickExpansionIconOfSupernode", (supernodeName) => {
 	cy.hoverOverNode(supernodeName);
 	cy.getNodeWithLabel(supernodeName)
+		.find(".d3-node-super-expand-icon-group")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("clickExpansionIconOfSupernodeInsideSupernode", (supernodeName1, supernodeName2) => {
+	cy.hoverOverNodeInSupernode(supernodeName1, supernodeName2);
+	cy.getNodeWithLabelInSupernode(supernodeName1, supernodeName2)
 		.find(".d3-node-super-expand-icon-group")
 		.eq(0)
 		.click();

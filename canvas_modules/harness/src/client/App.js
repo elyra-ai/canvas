@@ -23,7 +23,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { isEmpty, has, forIn } from "lodash";
+import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -387,7 +387,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
@@ -591,7 +591,7 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+			this.setBreadcrumbsDefinition();
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -693,8 +693,8 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
 	}
 
-	setBreadcrumbsDefinition(currentPipelineId) {
-		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+	setBreadcrumbsDefinition() {
+		const breadcrumbs = this.canvasController.getBreadcrumbs();
 		breadcrumbs[0].label = PRIMARY;
 		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
@@ -1017,7 +1017,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
-		this.setBreadcrumbsDefinition(pipelineId);
+		this.setBreadcrumbsDefinition();
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1351,7 +1351,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
+			this.setBreadcrumbsDefinition();
 			break;
 		}
 		case "createTestHarnessNode": {
@@ -1405,6 +1405,13 @@ class App extends React.Component {
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
 				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		case "undo":
+		case "redo": {
+			if (get(command, "data.editType") === "displaySubPipeline") {
+				this.setBreadcrumbsDefinition();
+			}
 			break;
 		}
 		default: {
@@ -2079,7 +2086,8 @@ class App extends React.Component {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 

@@ -1556,6 +1556,7 @@ describe("Copy and Paste Supernode", () => {
 		// Delete the unique ids before comparing.
 		deleteSupernodeUniqueIds(originalSupernode);
 		deleteSupernodeUniqueIds(clonedSupernode);
+		delete clonedSupernode.app_data;
 		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedSupernode))).to.be.true;
 
 		expect(pipelineFlow.pipelines).to.have.length(5);
@@ -1645,6 +1646,8 @@ describe("Copy and Paste Supernode", () => {
 		deleteSupernodeUniqueIds(newSupernode2);
 		deleteSupernodeUniqueIds(clonedOriginalSupernode);
 		deleteSupernodeUniqueIds(clonedNewSupernode2);
+		delete clonedOriginalSupernode.app_data;
+		delete clonedNewSupernode2.app_data;
 		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedOriginalSupernode))).to.be.true;
 		expect(isEqual(JSON.stringify(newSupernode2), JSON.stringify(clonedNewSupernode2))).to.be.true;
 

@@ -26,10 +26,7 @@ import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
 import Logger from "../logging/canvas-logger.js";
 
-import differenceWith from "lodash/differenceWith";
-import isEmpty from "lodash/isEmpty";
-import has from "lodash/has";
-import union from "lodash/union";
+import { differenceWith, get, has, isEmpty, set, union } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
@@ -233,7 +230,7 @@ export default class ObjectModel {
 
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
-		if (!isEmpty(this.getPaletteData())) {
+		if (nodeOpIdRef && !isEmpty(this.getPaletteData())) {
 			this.getPaletteData().categories.forEach((category) => {
 				category.node_types.forEach((nodeType) => {
 					if (nodeType.op === nodeOpIdRef) {
@@ -362,7 +359,10 @@ export default class ObjectModel {
 	}
 
 	// Ensures the pipelines being handled is loaded in memory which might not
-	// be the case if it is an external pipeline.
+	// be the case if it is an external pipeline. The data parameter is expected
+	// to contain targetObject (which is the supernode) and externalPipelineFlow
+	// which is the pipeline flow referenced by the supernode's URL. Returns
+	// true if a pipeline flow was loaded and false if not.
 	ensurePipelineIsLoaded(data) {
 		const snPipelineUrl = this.getSupernodePipelineUrl(data.targetObject);
 		const snPipelineId = this.getSupernodePipelineId(data.targetObject);
@@ -371,23 +371,36 @@ export default class ObjectModel {
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
 		if (!this.isPipelineLoaded(snPipelineId, snPipelineUrl)) {
-			if (this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
-				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
-				return;
+			// If no pipeline flow is provided from beforeEditActionHandler we cannot
+			// continue otherwise an endless loop will occur. So throw and exception.
+			if (!data.externalPipelineFlow) {
+				const msg = "The external pipeline flow at '" + data.externalUrl +
+					"' was not provided. Make sure you have implemented beforeEditActionHandler to support external pipeline flows.";
+				this.logger.error(msg);
+				throw msg;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + snPipelineId);
+
+			// If the flow doesn't contain the pipeline we're looking for.
+			if (!this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
+				const msg = "The external pipeline flow '" + data.externalPipelineFlow.id +
+					"' does not contain a pipeline with ID: " + snPipelineId;
+				this.logger.error(msg);
+				throw msg;
+			}
+
+			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
+			return true;
 		}
+		return false;
 	}
 
 	// Returns an array of 'visible' supernodes that refer to external pipelines
 	// which are not currently loaded into memory. 'Visible' in this context means
 	// they are either in the primary pipeline flow or are within the sub-flow
 	// of an expanded supernode.
-	getVisibleExpandedSupernodes() {
-		const canvasInfo = this.getCanvasInfo();
-		const topLevelPipelineId = this.getAPIPipeline().pipelineId;
-		const topLevelPipeline = canvasInfo.pipelines.find((p) => p.id === topLevelPipelineId);
-		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(topLevelPipeline, canvasInfo.pipelines);
+	getVisibleExpandedExternalSupernodes() {
+		const pipeline = this.getCurrentPipeline();
+		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(pipeline, this.getPipelines());
 		return supernodes;
 	}
 
@@ -397,7 +410,6 @@ export default class ObjectModel {
 		let supernodes = [];
 		pipeline.nodes.forEach((n) => {
 			if (n.type === SUPER_NODE && n.is_expanded) {
-				// This might return falsey if the pipeline has not yet been loaded.
 				const subFlowPipeline = pipelines.find((p) => p.id === this.getSupernodePipelineId(n));
 
 				// If this expanded supernode refers to an external pipeline that is
@@ -427,9 +439,11 @@ export default class ObjectModel {
 
 	// Adds the external pipeline flow, which has been retrieved using the url,
 	// into memory. This means adding the pipelines into the standed set of
-	// pipelines in the canvas info and saving the non-pipelines properties from
-	// the pipeline flow with the externalpipelineflows reducer.
-	addExternalPipelineFlow(externalPipelineFlow, url, addPipelines) {
+	// pipelines in the canvas info and saving the pipeline flow properties
+	// (except for the pipelines property) using the externalpipelineflows
+	// reducer. shouldAddPipelines is a boolean that controls whether pipelines
+	// are added or not.
+	addExternalPipelineFlow(externalPipelineFlow, url, shouldAddPipelines = true) {
 		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
@@ -441,56 +455,68 @@ export default class ObjectModel {
 		this.store.dispatch({
 			type: "ADD_EXTERNAL_PIPELINE_FLOW",
 			newPipelineFlow: newPipelineFlow,
-			newPipelines: addPipelines ? convertedPf.pipelines : []
+			newPipelines: shouldAddPipelines ? convertedPf.pipelines : []
 		});
 	}
 
-	removeExternalPipelineFlow(pipelineFlowId, url) {
+	// Removes the external pipeline flow specified by the url passed in.
+	removeExternalPipelineFlow(url) {
 		this.store.dispatch({
 			type: "REMOVE_EXTERNAL_PIPELINE_FLOW",
-			pipelineFlowId: pipelineFlowId,
 			externalUrl: url
 		});
 	}
 
-	// Create a pipeline flow artifact in the externalpipelineflows redux storage.
-	createExternalPipelineFlow(url, pipelineFlowId, pipelineId) {
-		const newPipelineFlow =
-			this.getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId);
-
-		this.store.dispatch({
-			type: "ADD_EXTERNAL_PIPELINE_FLOW",
-			newPipelineFlow: newPipelineFlow,
-			newPipelines: []
-		});
-	}
-
-	// Returns a new header object for the external pipeline flow. The pipelines
-	// will be added to the pipeline flow when it is retrieved using
+	// Returns a new header object for the external pipeline flow. A dummy
+	// pipeline will be added to the pipeline flow. This will be replaced by
+	// the actual pipelines when th epipeline flow  is retrieved using
 	// CommonCanvas.getExternalPipelineFlow.
-	getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId) {
-		const newPipelineFlow = {
+	createExternalPipelineFlowTemplate(pipelineFlowId, pipelineId) {
+		return {
 			"doc_type": "pipeline",
 			"version": "3.0",
 			"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
 			"id": pipelineFlowId,
 			"primary_pipeline": pipelineId,
-			"pipelines": [],
+			"pipelines": [{ "id": "", "runtime_ref": "", "nodes": [] }],
 			"schemas": [],
 			"runtimes": []
 		};
-
-		// The url property is not part of the pipeline flow schema but it is
-		// needed to identify the pipeline flow in the external pipeline flows array
-		// with respect to the url it matches to.
-		newPipelineFlow.url = url;
-
-		return newPipelineFlow;
 	}
 
 	// Used by Cypress tests
 	getExternalPipelineFlows() {
 		return this.store.getExternalPipelineFlows();
+	}
+
+	// Returns a unique set of external pipeline flows corresponding
+	// to the the set of pipelines passed in.
+	getExternalPipelineFlowsForPipelines(pipelines) {
+		const urls = this.getUniqueUrls(pipelines);
+		return this.getExternalPipelineFlowsForUrls(urls);
+	}
+
+	// Returns a unique array of URLS from the array of pipelines passed in.
+	getUniqueUrls(pipelines) {
+		const urls = [];
+		pipelines.forEach((p) => {
+			if (p.parentUrl && !urls.includes(p.parentUrl)) {
+				urls.push(p.parentUrl);
+			}
+		});
+		return urls;
+	}
+
+	// Returns an array of external pipeline flows corresponding to the
+	// array of URLs passed in.
+	getExternalPipelineFlowsForUrls(urls) {
+		const extPipelineFlows = [];
+		urls.forEach((url) => {
+			const extFlow = this.getExternalPipelineFlow(url);
+			extFlow.url = url;
+			extPipelineFlows.push(extFlow);
+		});
+		return extPipelineFlows;
 	}
 
 	getExternalPipelineFlow(url) {
@@ -521,21 +547,12 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	convertSuperNodeExternalToLocal(data) {
-		if (has(data, "externalPipelineFlow.pipelines") &&
-				!this.isPipelineLoaded(data.supernodePipelineId, data.externalFlowUrl)) {
-			const preparedFlow = this.preparePipelineFlow(data.externalPipelineFlow);
-			data.newPipelines = preparedFlow.pipelines;
-		}
-
-		this.store.dispatch({ type: "CONVERT_SN_EXTERNAL_TO_LOCAL", data: data });
+	setParentUrl(pipelines, url) {
+		this.store.dispatch({ type: "SET_PIPELINE_PARENT_URL", data: { pipelines: pipelines, url: url } });
 	}
 
-	convertSuperNodeLocalToExternal(data) {
-		data.externalPipelineFlow =
-			this.getExternalPipelineFlowTemplate(
-				data.externalFlowUrl, data.externalPipelineFlowId, data.supernodePipelineId);
-		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
+	replaceSupernodeAndPipelines(data) {
+		this.store.dispatch({ type: "REPLACE_SN_AND_PIPELINES", data: data });
 	}
 
 	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
@@ -774,32 +791,6 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	// Returns a pipeline flow based on the initial pipeline flow we were given
-	// with the changes to canvasinfo made by the user. We don't do this in the
-	// redux code because that would result is continuous update of the pipelineflow
-	// as the consuming app makes getPipelineFlow() calls which are difficult to
-	// handle when testing.
-	getPipelineFlow() {
-		const pipelineFlow =
-			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
-
-		if (this.schemaValidation) {
-			validatePipelineFlowAgainstSchema(pipelineFlow);
-		}
-
-		return pipelineFlow;
-	}
-
-	// Returns an array of pipelines based on the array of pipeline IDs
-	// passed in.
-	getPipelines(pipelineIds) {
-		const pipelines = [];
-		pipelineIds.forEach((pipelineId) => {
-			pipelines.push(this.getCanvasInfoPipeline(pipelineId));
-		});
-		return pipelines;
-	}
-
 	// Returns the pipeline for the ID passed or the primary pipeline if no
 	// pipeline ID was provided otherwise null.
 	getCanvasInfoPipeline(pipelineId) {
@@ -832,16 +823,10 @@ export default class ObjectModel {
 		return pipelineIds;
 	}
 
-	// Returns an object with one field for each supernode passed in (where the
-	// field name is the supernode's ID). Each field value is an array of
-	// descendant pipelines for the supernode.
-	getDescendantPipelines(supernodes) {
-		const pipelines = [];
-		supernodes.forEach((supernode) => {
-			const descPipelines = this.getDescendantPipelinesForSupernode(supernode);
-			if (descPipelines && descPipelines.length > 0) {
-				pipelines[supernode.id] = descPipelines;
-			}
+	getDescendantPipelinesForSupernodes(supernodes) {
+		let pipelines = [];
+		supernodes.forEach((sn) => {
+			pipelines = pipelines.concat(this.getDescendantPipelinesForSupernode(sn));
 		});
 		return pipelines;
 	}
@@ -865,10 +850,133 @@ export default class ObjectModel {
 
 	// Returns an array of descendant pipelines, that conform to the schema, for
 	// the supernode passed in or an empty array if the supernode doesn't
-	// reference a pipeline.
+	// reference a pipeline. Only 'local' pipelines are returned not external
+	// ones.
 	getSchemaPipelinesForSupernode(supernode) {
-		const pipelines = this.getDescendantPipelinesForSupernode(supernode);
+		const pipelines = this.getDescendantPipelinesForSupernode(supernode)
+			.filter((p) => !p.parentUrl);
+
 		return pipelines.map((p) => PipelineOutHandler.createPipeline(p));
+	}
+
+	// Returns an array of pipelines to delete if all the supernodes passed in
+	// were to be deleted.  That is the set of descendant pipelines referenced by
+	// the supernodes passed in, minus any external pipelines that are also
+	// referenced by other supernodes/pipelines outside of the array passed in.
+	// This situation may occur when two supernodes reference the same
+	// external pipeline and one is to be deleted but the other is to remain.
+	getDescPipelinesToDelete(supernodesToDel, parentPipelineId) {
+		const supernodeInfosToDel = this.getDescendantSupernodeInfos(supernodesToDel, parentPipelineId);
+		const otherSupernodeInfos = this.getOtherSupernodeInfos(supernodesToDel, parentPipelineId);
+
+		const pipelinesToDelete = [];
+		supernodeInfosToDel.forEach((sid) => {
+			if (this.shouldBeDeleted(sid, otherSupernodeInfos)) {
+				const p = this.getCanvasInfoPipeline(sid.pipelineId);
+				pipelinesToDelete.push(p);
+			}
+		});
+		return pipelinesToDelete;
+	}
+
+	// Returns true if the supernode info object indicates a pipeline that
+	// should be deleted because it is not referenced by any of the
+	// otherSupernodeInfos passed in.
+	shouldBeDeleted(supernodeInfo, otherSupernodeInfos) {
+		let state = true;
+		otherSupernodeInfos.forEach((osi) => {
+			if (osi.pipelineId === supernodeInfo.pipelineId) {
+				state = false;
+			}
+		});
+		return state;
+	}
+
+	// Returns an array of all pipelines from the entire canvas info, minus any
+	// pipelines that are descendants of the supernodes passed in (which all must
+	// be in the pipeline identified by parentPipelineId)
+	getOtherSupernodeInfos(supernodesToIgnore, parentPipelineId) {
+		const primaryPipelineId = this.getPrimaryPipelineId();
+		const primaryPipeline = this.getCanvasInfoPipeline(primaryPipelineId);
+		const supernodes = CanvasUtils.filterSupernodes(primaryPipeline.nodes);
+		return this.getDescendantSupernodeInfos(supernodes, primaryPipelineId,
+			{ supernodesToIgnore: supernodesToIgnore, parentPipelineId: parentPipelineId });
+	}
+
+	// Returns an array of pipelines that are the descendants of the array of
+	// supernodes passed in (which must all be in the pipeline identified by the
+	// parentPipelineId passed in) minus any descendant pipelines of the
+	// supernodes identified by the ignoreInfo object. This has these fields:
+	// supernodesToIgnore - an array of supernodes whose descendant pipelines
+	//                      should be ignored.
+	// parentPipelineId - the ID of the pipeline the supernodes are in.
+	getDescendantSupernodeInfos(supernodes, parentPipelineId, ignoreInfo) {
+		const outSupernodeInfos = [];
+		supernodes.forEach((sn) => {
+			const descInfo = this.getDescendantSupernodeInfosForSupernode(sn, parentPipelineId, ignoreInfo);
+			// Only insert new supernode infos into the array.
+			descInfo.forEach((di) => {
+				if (!this.isSupernodeInfoInArray(di, outSupernodeInfos)) {
+					outSupernodeInfos.push(di);
+				}
+			});
+		});
+		return outSupernodeInfos;
+	}
+
+	// Returns an array of pipelines that are the descendants of the
+	// supernode passed in (which must all be in the pipeline identified by the
+	// parentPipelineId passed in) minus any descendant pipelines of the
+	// supernodes identified by the ignoreInfo object. This has these fields:
+	// supernodesToIgnore - an array of supernodes whose descendant pipelines
+	//                      should be ignored.
+	// parentPipelineId - the ID of the pipeline the supernodes are in.
+	getDescendantSupernodeInfosForSupernode(supernode, parentPipelineId, ignoreInfo) {
+		let supernodeInfos = [];
+		if (this.continueNavigation(supernode, parentPipelineId, ignoreInfo)) {
+			const pipelineId = this.getSupernodePipelineId(supernode);
+			const pipeline = this.getCanvasInfoPipeline(pipelineId);
+			// An external pipeline might not be loaded if the supernode is collapsed.
+			if (pipeline) {
+				supernodeInfos.push({ pipelineId: pipelineId, supernode: supernode, parentPipelineId: parentPipelineId });
+				const supernodes = CanvasUtils.filterSupernodes(pipeline.nodes);
+				supernodes.forEach((sn) => {
+					supernodeInfos = supernodeInfos.concat(this.getDescendantSupernodeInfosForSupernode(sn, pipelineId, ignoreInfo));
+				});
+			}
+		}
+
+		return supernodeInfos;
+	}
+
+	// Returns true if the code should continue navigating down the supernode
+	// hierarchy from the supernode (in parentPipelineId) passed based on the
+	// ignoreInfo object.
+	continueNavigation(sn, parentPipelineId, ignoreInfo) {
+		if (ignoreInfo &&
+				ignoreInfo.parentPipelineId === parentPipelineId &&
+				ignoreInfo.supernodesToIgnore.some((sn2d) => sn2d.id === sn.id)) {
+			return false;
+		}
+		return true;
+	}
+
+	// Returns true if the supernode info object passed in is in the
+	// supernodeInfos array passed in.
+	isSupernodeInfoInArray(di, supernodeInfos) {
+		let found = false;
+		supernodeInfos.forEach((si) => {
+			if (this.isSupernodeInfoEqual(si, di)) {
+				found = true;
+			}
+		});
+		return found;
+	}
+
+	// Returns true if the two supernode info objects are the same.
+	isSupernodeInfoEqual(si1, si2) {
+		return si1.supernode.id === si2.supernode.id &&
+			si1.parentPipelineId === si2.parentPipelineId;
 	}
 
 	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
@@ -945,9 +1053,24 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo) });
 	}
 
-	isPrimaryPipelineEmpty() {
-		const primaryPipeline = this.getAPIPipeline(this.getCanvasInfo().primary_pipeline);
-		return primaryPipeline.isEmpty();
+	// Returns a pipeline flow based on the initial pipeline flow we were given
+	// with the changes to canvasinfo made by the user. We don't do this in the
+	// redux code because that would result is continuous update of the pipelineflow
+	// as the consuming app makes getPipelineFlow() calls which are difficult to
+	// handle when testing.
+	getPipelineFlow() {
+		const pipelineFlow =
+			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
+
+		if (this.schemaValidation) {
+			validatePipelineFlowAgainstSchema(pipelineFlow);
+		}
+
+		return pipelineFlow;
+	}
+
+	getPipelines() {
+		return this.getCanvasInfo().pipelines;
 	}
 
 	getPipelineFlowId() {
@@ -956,6 +1079,18 @@ export default class ObjectModel {
 
 	getPrimaryPipelineId() {
 		return this.getCanvasInfo().primary_pipeline;
+	}
+
+	getPrimaryPipeline() {
+		return this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
+	}
+
+	getCurrentPipeline() {
+		return this.getCanvasInfoPipeline(this.getCurrentBreadcrumb().pipelineId);
+	}
+
+	isPrimaryPipelineEmpty() {
+		return this.getAPIPipeline(this.getPrimaryPipelineId()).isEmpty();
 	}
 
 	addPipeline(pipeline) {
@@ -991,28 +1126,61 @@ export default class ObjectModel {
 		return false;
 	}
 
-	// Clones the contents of the input node (which is expected to be a supernode)
-	// and returns an array of cloned pipelines from the inPipelines array that
-	// correspond to descendants of the supernode passed in. The returned
-	// pipelines are in the internal 'canvasinfo' format.
-	cloneSuperNodeContents(node, inPipelines) {
+	// Returns a modified supernode and cloned sub-pipelines for the supernode
+	// passed in. The pipelines are created from the app_data.pipeline_data field
+	// in the supernode which is an array of pipelines in the schema format
+	// (i.e. they comply with the pipeline flow schema.
+	createSubPipelinesFromData(supernode) {
+		let subPipelines = [];
+		const pipelineData = get(supernode, "app_data.pipeline_data");
+		if (pipelineData) {
+			const pipelines = this.convertSchemaPipelinesToCanvasInfo(pipelineData);
+			subPipelines = supernode.subflow_ref.url
+				? [] // If supernode references external pipeline there's nothing to clone.
+				: this.cloneSupernodeContents(supernode, pipelines);
+			delete supernode.app_data.pipeline_data; // Remove the pipeline_data so it doesn't get included in the pipelineFlow
+
+		} else {
+			const newPipeline = this.createEmptyPipeline();
+			supernode.subflow_ref = {
+				pipeline_id_ref: newPipeline.id
+			};
+			subPipelines.push(newPipeline);
+		}
+		return { supernode, subPipelines };
+	}
+
+	// Returns an array of pipelines that conform to the internal 'canvas info'
+	// format based on the array of pipelines passed in that are expected to
+	// conform to the 'schema format' (i.e. correspond to the pipelineFlow schema).
+	convertSchemaPipelinesToCanvasInfo(pipelines) {
+		return PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pipelines, this.getCanvasLayout());
+	}
+
+	// Clones the contents of the input node (which is expected to be a supernode
+	// with a reference to one of the pipelines passed in) and returns an array
+	// of cloned pipelines from the inPipelines array that correspond to
+	// descendants of the supernode passed in.
+	cloneSupernodeContents(node, inPipelines) {
 		let subPipelines = [];
 		const snPipelineId = this.getSupernodePipelineId(node);
 		if (snPipelineId) {
-			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === snPipelineId);
-			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
-			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
-			const canvInfoPipeline =
-				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getCanvasLayout());
+			const targetPipeline = inPipelines.find((p) => p.id === snPipelineId);
+			// A target pipeline may not exist if the supernode is external. In which
+			// case, its pipelines will not be in the inPipelines array.
+			if (targetPipeline) {
+				const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
+				node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 
-			subPipelines.push(canvInfoPipeline);
+				subPipelines.push(clonedPipeline);
 
-			clonedPipeline.nodes.forEach((clonedNode) => {
-				if (clonedNode.type === SUPER_NODE) {
-					const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
-					subPipelines = subPipelines.concat(extraPipelines);
-				}
-			});
+				clonedPipeline.nodes.forEach((clonedNode) => {
+					if (clonedNode.type === SUPER_NODE) {
+						const extraPipelines = this.cloneSupernodeContents(clonedNode, inPipelines);
+						subPipelines = subPipelines.concat(extraPipelines);
+					}
+				});
+			}
 		}
 		return subPipelines;
 	}
@@ -1065,15 +1233,34 @@ export default class ObjectModel {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
-	// Adds a new breadcrumb, for the pipelineInfo passed in, to the array of
-	// breadcrumbs, or reset the breadcrumbs to the primary pipeline if navigating
-	// to the primary pipeline.
-	addNewBreadcrumb(pipelineInfo) {
-		if (pipelineInfo && pipelineInfo.pipelineId !== this.getPrimaryPipelineId()) {
-			this.store.dispatch({ type: "ADD_NEW_BREADCRUMB", data: pipelineInfo });
+	createBreadcrumb(supernodeDatum, parentPipelineId) {
+		return {
+			pipelineId: supernodeDatum.subflow_ref.pipeline_id_ref,
+			supernodeId: supernodeDatum.id,
+			supernodeParentPipelineId: parentPipelineId,
+			externalUrl: supernodeDatum.subflow_ref.url,
+			label: supernodeDatum.label
+		};
+	}
+
+	addBreadcrumb(data) {
+		if (data && data.pipelineId !== this.getPrimaryPipelineId()) {
+			this.store.dispatch({ type: "ADD_BREADCRUMB", data: data });
 		} else {
 			this.resetBreadcrumb();
 		}
+	}
+
+	addBreadcrumbs(data) {
+		this.store.dispatch({ type: "ADD_BREADCRUMBS", data: data });
+	}
+
+	setIndexedBreadcrumb(data) {
+		this.store.dispatch({ type: "SET_TO_INDEXED_BREADCRUMB", data: data });
+	}
+
+	setBreadcrumbs(breadcrumbs) {
+		this.store.dispatch({ type: "SET_BREADCRUMBS", data: { breadcrumbs: breadcrumbs } });
 	}
 
 	// Sets the breadcrumbs to the previous breadcrumb in the breadcrumbs array.
@@ -1083,7 +1270,7 @@ export default class ObjectModel {
 
 	// Sets the breadcrumbs to the primary pipeline in the breadcrumbs array.
 	resetBreadcrumb() {
-		this.store.dispatch({ type: "RESET_BREADCRUMB", data: { pipelineId: this.getPrimaryPipelineId(), pipelineFlowId: this.getPipelineFlowId() } });
+		this.store.dispatch({ type: "RESET_BREADCRUMB", data: { pipelineId: this.getPrimaryPipelineId() } });
 	}
 
 	getBreadcrumbs() {
@@ -1875,11 +2062,11 @@ export default class ObjectModel {
 		if (nodes && nodes.length > 0) {
 			copyData.nodes = nodes;
 			let pipelines = [];
-			const supernodes = apiPipeline.getSupernodes(nodes);
+			const supernodes = CanvasUtils.filterSupernodes(nodes);
 			supernodes.forEach((supernode) => {
 				pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
+				set(supernode, "app_data.pipeline_data", pipelines);
 			});
-			copyData.pipelines = pipelines;
 		}
 
 		if (comments && comments.length > 0) {

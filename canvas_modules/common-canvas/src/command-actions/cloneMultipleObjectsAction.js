@@ -28,7 +28,6 @@ export default class CloneMultipleObjectsAction extends Action {
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.clonedLinks = [];
-		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.
@@ -37,9 +36,9 @@ export default class CloneMultipleObjectsAction extends Action {
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
 				const clonedNode = this.apiPipeline.cloneNode(node);
-				if (node.type === SUPER_NODE) {
-					const subPipelines = this.objectModel.cloneSuperNodeContents(clonedNode, data.objects.pipelines);
-					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode, pipelines: subPipelines });
+				if (clonedNode.type === SUPER_NODE) {
+					const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(clonedNode);
+					this.clonedNodesInfo.push({ originalId: node.id, node: supernode, pipelines: subPipelines });
 				} else {
 					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
 				}
@@ -183,16 +182,23 @@ export default class CloneMultipleObjectsAction extends Action {
 	}
 
 	undo() {
-		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			if (clonedNodeInfo.node.type === SUPER_NODE) {
-				this.apiPipeline.deleteSupernode(clonedNodeInfo.node.id);
-			} else {
-				this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
-			}
+		// Handle regular nodes
+		const nodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type !== SUPER_NODE);
+		nodeInfos.forEach((clonedNodeInfo) => {
+			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
 		});
+
+		// Handle supernodes
+		const supernodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type === SUPER_NODE);
+		const supernodes = supernodeInfos.map((si) => si.node);
+		this.apiPipeline.deleteSupernodesAndDescPipelines(supernodes);
+
+		// Handle comments
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
 			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
 		});
+
+		// Handle links
 		this.clonedLinks.forEach((clonedLink) => {
 			this.apiPipeline.deleteLink(clonedLink);
 		});
