@@ -32,7 +32,8 @@ export default class ConvertSuperNodeExternalToLocal extends Action {
 
 		this.oldSupernode = this.apiPipeline.getNode(this.data.targetObject.id);
 
-		// Find the pipelines and flows to convert
+		// Find the pipelines and flows to remove. This will only return pipelines
+		// that are NOT referenced by other supernodes on the canvas.
 		this.oldPipelines = this.objectModel.getDescPipelinesToDelete([this.oldSupernode], this.data.pipelineId);
 		this.oldPipelines = this.oldPipelines.filter((p) => p.parentUrl === this.data.externalUrl);
 		this.oldExtPipelineFlows = this.objectModel.getExternalPipelineFlowsForPipelines(this.oldPipelines);
@@ -44,7 +45,9 @@ export default class ConvertSuperNodeExternalToLocal extends Action {
 		delete this.newSupernode.subflow_ref.url;
 
 		// Clone pipelines
-		this.newPipelines = this.objectModel.cloneSupernodeContents(this.newSupernode, this.oldPipelines);
+		const pipelinesToClone = this.objectModel.getDescendantPipelinesForSupernode(this.newSupernode)
+			.filter((p) => p.parentUrl === this.data.externalUrl);
+		this.newPipelines = this.objectModel.cloneSupernodeContents(this.newSupernode, pipelinesToClone);
 		this.newPipelines = this.newPipelines.map((p) => {
 			delete p.parentUrl;
 			return p;
