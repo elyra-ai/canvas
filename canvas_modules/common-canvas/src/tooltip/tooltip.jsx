@@ -325,7 +325,13 @@ class ToolTip extends React.Component {
 				// click event shouldn't call onBlur
 				evt.stopPropagation();
 				evt.preventDefault();
-				this.showTooltipWithDelay();
+				if (this.state.showToolTip) {
+					// Tooltip is visible, clicked on i icon again -> hide tooltip
+					this.setTooltipVisible(false);
+				} else {
+					// Tooltip is hidden
+					this.setTooltipVisible(true);
+				}
 			};
 
 			triggerContent = (<div
