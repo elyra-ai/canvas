@@ -135,6 +135,14 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 	});
 
+	it("Palette flyout categories should have data-id attribute", () => {
+		const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
+		const flyoutPaletteCategories = flyoutPaletteContent.find(".palette-flyout-category");
+		flyoutPaletteCategories.forEach((category, idx) => {
+			expect(category.props()).to.have.property("data-id", testPalette2.categories[idx].id);
+		});
+	});
+
 	it("should show wide palette", () => {
 		const palette = createMountedPalette().find(".palette-flyout-div-open");
 		expect(palette).to.have.length(1);

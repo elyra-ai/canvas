@@ -663,7 +663,7 @@ describe("StructureListEditor render from paramdef", () => {
 
 		// change a value in the select summary row.
 		const selectedEditCells = selectedEditRow.find(".properties-table-cell-control");
-		expect(selectedEditCells).to.have.length(3);
+		expect(selectedEditCells).to.have.length(2); // Animals column has edit_style: "subpanel". Can't edit from selectedEditCells.
 		const integerNumber = selectedEditCells.at(0).find("input");
 		integerNumber.simulate("change", { target: { value: "44" } });
 

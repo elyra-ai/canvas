@@ -95,6 +95,7 @@ export class ParameterDef {
 			this.required = settings.required;
 		}
 		if (settings.numberGenerator) {
+			settings.numberGenerator.label = ResourceDef.make(settings.numberGenerator.label);
 			this.numberGenerator = settings.numberGenerator;
 		}
 		if (settings.isKey) {
@@ -227,7 +228,7 @@ export class ParameterDef {
 			return typ.substring(6, this.type.length - 1);
 		} else if (this.isMapValue()) {
 			// "map[<key-type>,<value-type>]" so remove everything up to and including "," and drop the trailing "]"
-			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1);
+			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1).trim();
 		} else if (this.valueRestriction && !this.type) { // assume String for enums
 			return Type.STRING;
 		}

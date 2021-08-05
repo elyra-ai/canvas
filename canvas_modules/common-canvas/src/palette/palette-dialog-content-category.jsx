@@ -35,20 +35,20 @@ class PaletteDialogContentCategory extends React.Component {
 	render() {
 		var style = "palette-dialog-category";
 
-		if (this.props.selectedCategory === this.props.categoryName) {
+		if (this.props.selectedCategory === this.props.category.label) {
 			style = "palette-dialog-category-selected";
 		}
 
 		return (
-			<div className={style} onClick={this.categorySelected}>
-				{this.props.categoryName}
+			<div data-id={this.props.category.id} className={style} onClick={this.categorySelected}>
+				{this.props.category.label}
 			</div>
 		);
 	}
 }
 
 PaletteDialogContentCategory.propTypes = {
-	categoryName: PropTypes.string.isRequired,
+	category: PropTypes.object.isRequired,
 	selectedCategory: PropTypes.string.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired
 };
