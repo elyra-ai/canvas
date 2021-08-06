@@ -699,29 +699,23 @@ export default class ObjectModel {
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
 	setNodeDimensionAttributesLeftRight(node, canvasLayout) {
-		if (canvasLayout.connectionType === "ports") {
-			node.inputPortsHeight = node.inputs
-				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.inputPortsHeight = node.inputs
+			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.outputPortsHeight = node.outputs
-				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.outputPortsHeight = node.outputs
+			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+		node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
 
-			if (node.type === SUPER_NODE && node.is_expanded) {
-				node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
-				// If an expanded height is provided make sure it is at least as big
-				// as the node height.
-				if (node.expanded_height) {
-					node.expanded_height = Math.max(node.expanded_height, node.height);
-				}
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
+			// If an expanded height is provided make sure it is at least as big
+			// as the node height.
+			if (node.expanded_height) {
+				node.expanded_height = Math.max(node.expanded_height, node.height);
 			}
-		} else { // 'halo' connection type
-			node.inputPortsHeight = 0;
-			node.outputPortsHeight = 0;
-			node.height = node.layout.defaultNodeHeight;
 		}
 		node.width = node.layout.defaultNodeWidth;
 
@@ -737,29 +731,23 @@ export default class ObjectModel {
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
 	setNodeDimensionAttributesVertical(node, canvasLayout) {
-		if (canvasLayout.connectionType === "ports") {
-			node.inputPortsWidth = node.inputs
-				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.inputPortsWidth = node.inputs
+			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.outputPortsWidth = node.outputs
-				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.outputPortsWidth = node.outputs
+			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
+		node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
 
-			if (node.type === SUPER_NODE && node.is_expanded) {
-				node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
-				// If an expanded height is provided make sure it is at least as big
-				// as the node height.
-				if (node.expanded_width) {
-					node.expanded_width = Math.max(node.expanded_width, node.width);
-				}
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
+			// If an expanded height is provided make sure it is at least as big
+			// as the node height.
+			if (node.expanded_width) {
+				node.expanded_width = Math.max(node.expanded_width, node.width);
 			}
-		} else { // 'halo' connection type
-			node.inputPortsWidth = 0;
-			node.outputPortsWidth = 0;
-			node.width = node.layout.defaultNodeWidth;
 		}
 		node.height = node.layout.defaultNodeHeight;
 

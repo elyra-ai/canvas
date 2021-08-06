@@ -100,7 +100,6 @@ class App extends React.Component {
 			// enableSnapToGridY: null,
 			// enableAutoLayoutVerticalSpacing: 50,
 			// enableAutoLayoutHorizontalSpacing: 50,
-			// enableConnectionType: "Ports",
 			// enableNodeFormatType: "Horizontal",
 			// enableLinkType: "Curve",
 			// enableNodeLayout: null,

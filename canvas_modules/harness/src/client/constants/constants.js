@@ -57,9 +57,6 @@ _defineConstant("AFTER_DRAG", "After");
 _defineConstant("INTERACTION_MOUSE", "Mouse");
 _defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
-_defineConstant("PORTS_CONNECTION", "Ports");
-_defineConstant("HALO_CONNECTION", "Halo");
-
 _defineConstant("VERTICAL_FORMAT", "Vertical");
 _defineConstant("HORIZONTAL_FORMAT", "Horizontal");
 

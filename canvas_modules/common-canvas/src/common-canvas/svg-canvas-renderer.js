@@ -2461,29 +2461,6 @@ export default class SVGCanvasRenderer {
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
 			.call(this.attachNodeLabelSpanListeners.bind(this));
 
-		// Halo
-		if (this.canvasLayout.connectionType === "halo") {
-			newNodeGroups.append("circle")
-				.filter((d) => d.layout.haloDisplay)
-				.attr("data-id", (d) => this.getId("node_halo", d.id))
-				.attr("data-pipeline-id", this.activePipeline.id)
-				.attr("class", "d3-node-halo")
-				.attr("cx", (d) => d.layout.haloCenterX)
-				.attr("cy", (d) => d.layout.haloCenterY)
-				.attr("r", (d) => d.layout.haloRadius)
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Halo - mouse down");
-					d3Event.stopPropagation();
-					this.drawingNewLinkData = {
-						srcObjId: d.id,
-						action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-						startPos: this.getTransformedMousePos(d3Event),
-						linkArray: []
-					};
-					this.drawNewLink(d3Event);
-				});
-		}
-
 		return newNodeGroups;
 	}
 
@@ -2542,9 +2519,7 @@ export default class SVGCanvasRenderer {
 		joinedNodeGrps.each((d, index, grps) => {
 			const nodeGrp = d3.select(grps[index]);
 
-			if (this.canvasLayout.connectionType === "ports") {
-				this.displayPorts(nodeGrp, d);
-			}
+			this.displayPorts(nodeGrp, d);
 
 			if (this.nodeUtils.isSupernode(d)) {
 				let ren = this.getRendererForSupernode(d);
@@ -3731,31 +3706,16 @@ export default class SVGCanvasRenderer {
 	drawNewLink(d3Event) {
 		const transPos = this.getTransformedMousePos(d3Event);
 
-		if (this.canvasLayout.connectionType === "halo") {
-			this.drawNewLinkForHalo(transPos);
+		if (this.drawingNewLinkData.action === COMMENT_LINK) {
+			this.drawNewCommentLinkForPorts(transPos);
 		} else {
-			if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				this.drawNewCommentLinkForPorts(transPos);
-			} else {
-				this.drawNewNodeLinkForPorts(transPos);
-			}
-			// Switch on an attribute to indicate a new link is being dragged
-			// towards and over a target node.
-			if (this.config.enableHighlightNodeOnNewLinkDrag) {
-				this.setNewLinkOverNode(d3Event);
-			}
+			this.drawNewNodeLinkForPorts(transPos);
 		}
-	}
-
-	drawNewLinkForHalo(transPos) {
-		this.removeNewLink();
-		this.nodesLinksGrp
-			.append("line")
-			.attr("x1", this.drawingNewLinkData.startPos.x)
-			.attr("y1", this.drawingNewLinkData.startPos.y)
-			.attr("x2", transPos.x - 2) // Offset mouse position so mouse messages don't go to link line
-			.attr("y2", transPos.y - 2) // Offset mouse position so mouse messages don't go to link line
-			.attr("class", "d3-new-halo-connection");
+		// Switch on an attribute to indicate a new link is being dragged
+		// towards and over a target node.
+		if (this.config.enableHighlightNodeOnNewLinkDrag) {
+			this.setNewLinkOverNode(d3Event);
+		}
 	}
 
 	drawNewNodeLinkForPorts(transPos) {
@@ -4046,16 +4006,7 @@ export default class SVGCanvasRenderer {
 			this.setNewLinkOverNodeCancel();
 		}
 
-		if (this.canvasLayout.connectionType === "halo") {
-			this.stopDrawingNewLinkForHalo();
-		} else {
-			this.stopDrawingNewLinkForPorts();
-		}
-	}
-
-	stopDrawingNewLinkForHalo() {
-		this.removeNewLink();
-		this.drawingNewLinkData = null;
+		this.stopDrawingNewLinkForPorts();
 	}
 
 	stopDrawingNewLinkForPorts() {
@@ -4132,14 +4083,10 @@ export default class SVGCanvasRenderer {
 	}
 
 	removeNewLink() {
-		if (this.canvasLayout.connectionType === "halo") {
-			this.nodesLinksGrp.selectAll(".d3-new-halo-connection").remove();
-		} else {
-			this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
-			this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
-			this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
-			this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
-		}
+		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
+		this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
+		this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
+		this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
 	}
 
 	dragLinkHandle(d3Event) {
@@ -4521,10 +4468,6 @@ export default class SVGCanvasRenderer {
 	}
 
 	getNodePortIdNearMousePos(d3Event, portType, node) {
-		if (this.canvasLayout.connectionType === "halo") {
-			return null;
-		}
-
 		const pos = this.getTransformedMousePos(d3Event);
 		let portId = null;
 		let defaultPortId = null;
@@ -4969,23 +4912,6 @@ export default class SVGCanvasRenderer {
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.attr("class", "d3-comment-text");
 
-		// Halo
-		if (this.canvasLayout.connectionType === "halo") {
-			newCommentGroups
-				.append("rect")
-				.attr("class", "d3-comment-halo")
-				.on("mousedown", (d3Event, d) => {
-					this.logger.log("Comment Halo - mouse down");
-					d3Event.stopPropagation();
-					this.drawingNewLinkData = {
-						srcObjId: d.id,
-						action: COMMENT_LINK,
-						startPos: this.getTransformedMousePos(d3Event),
-						linkArray: []
-					};
-					this.drawNewLink(d3Event);
-				});
-		}
 		return newCommentGroups;
 	}
 
@@ -5029,18 +4955,6 @@ export default class SVGCanvasRenderer {
 			.select("div")
 			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
 			.html((c) => c.content);
-
-		// Comment halo
-		// We need to dynamically set size of the halo here because the size
-		// of the text object maye be changed by the user.
-		if (this.canvasLayout.connectionType === "halo") {
-			joinedCommentGrps.selectChildren(".d3-comment-halo")
-				.datum((c) => this.getComment(c.id))
-				.attr("x", 0 - this.canvasLayout.haloCommentGap)
-				.attr("y", 0 - this.canvasLayout.haloCommentGap)
-				.attr("width", (c) => c.width + (2 * this.canvasLayout.haloCommentGap))
-				.attr("height", (c) => c.height + (2 * this.canvasLayout.haloCommentGap));
-		}
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
@@ -5048,15 +4962,11 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				if (this.canvasLayout.connectionType === "ports") {
-					this.createCommentPort(d3Event.currentTarget, d);
-				}
+				this.createCommentPort(d3Event.currentTarget, d);
 			})
 			.on("mouseleave", (d3Event, d) => {
 				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
-				if (this.canvasLayout.connectionType === "ports") {
-					this.deleteCommentPort(d3Event.currentTarget);
-				}
+				this.deleteCommentPort(d3Event.currentTarget);
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
@@ -5798,25 +5708,23 @@ export default class SVGCanvasRenderer {
 			});
 
 		// Set connection status of output ports and input ports plus arrow.
-		if (this.canvasLayout.connectionType === "ports") {
-			const portInSelector = "." + this.getNodeInputPortClassName();
-			const portOutSelector = "." + this.getNodeOutputPortClassName();
+		const portInSelector = "." + this.getNodeInputPortClassName();
+		const portOutSelector = "." + this.getNodeOutputPortClassName();
 
-			const nodeGrps = this.getAllNodeGroupsSelection();
-			nodeGrps.selectChildren(portInSelector).attr("connected", "no");
-			nodeGrps.selectChildren(portOutSelector).attr("connected", "no");
+		const nodeGrps = this.getAllNodeGroupsSelection();
+		nodeGrps.selectChildren(portInSelector).attr("connected", "no");
+		nodeGrps.selectChildren(portOutSelector).attr("connected", "no");
 
-			lineArray.forEach((line) => {
-				if (line.type === NODE_LINK) {
-					if (line.trg) {
-						this.setPortStatus(line.trg.id, line.trgPortId, "yes");
-					}
-					if (line.src) {
-						this.setPortStatus(line.src.id, line.srcPortId, "yes");
-					}
+		lineArray.forEach((line) => {
+			if (line.type === NODE_LINK) {
+				if (line.trg) {
+					this.setPortStatus(line.trg.id, line.trgPortId, "yes");
 				}
-			});
-		}
+				if (line.src) {
+					this.setPortStatus(line.src.id, line.srcPortId, "yes");
+				}
+			}
+		});
 
 		var endTimeDrawingLines = Date.now();
 

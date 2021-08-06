@@ -206,14 +206,7 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 		cy.get(sel).click();
 
 		cy.document().then((doc) => {
-			// Connection Type - Halo
-			let srcSelector;
-			if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-				srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-halo";
-			} else {
-				// Connection Type - Ports
-				srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-port-circle";
-			}
+			const srcSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-port-circle";
 			cy.getNodeDimensions(nodeLabel).then((nodeDimensions) => {
 				// Target canvas position within the center of the target node
 				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);

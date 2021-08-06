@@ -34,8 +34,6 @@ import {
 	LOCAL_FILE_OPTION,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
-	HALO_CONNECTION,
-	PORTS_CONNECTION,
 	INTERACTION_MOUSE,
 	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
@@ -878,31 +876,9 @@ export default class SidePanelForms extends React.Component {
 			</FormGroup>
 		</div>);
 
-		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
-			<FormGroup
-				legendText="Connection Type"
-			>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedConnectionType" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedConnectionType")}
-				>
-					<RadioButton
-						value={PORTS_CONNECTION}
-						labelText={PORTS_CONNECTION}
-					/>
-					<RadioButton
-						value={HALO_CONNECTION}
-						labelText={HALO_CONNECTION}
-					/>
-				</RadioButtonGroup>
-			</FormGroup>
-		</div>);
-
 		var nodeFormatType = (<div className="harness-sidepanel-children">
 			<FormGroup
-				legendText="Node Format Type (for 'Ports')"
+				legendText="Node Format Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -924,7 +900,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-type">
 			<FormGroup
-				legendText="Link Type (for 'Ports')"
+				legendText="Link Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -950,7 +926,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
 			<FormGroup
-				legendText="Link Direction (for 'Ports')"
+				legendText="Link Direction"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -1300,8 +1276,6 @@ export default class SidePanelForms extends React.Component {
 					{canvasInput}
 					{divider}
 					{paletteInput}
-					{divider}
-					{connectionType}
 					{divider}
 					{nodeFormatType}
 					{divider}
