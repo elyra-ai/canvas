@@ -35,7 +35,6 @@ export default class TablesCanvas extends React.Component {
 		this.bot = 50;
 
 		this.config = Object.assign({}, props.config, {
-			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableAssocLinkCreation: true,
 			enableAssocLinkType: "RightSideCurve",

@@ -94,8 +94,7 @@ export default class SvgCanvasLinks {
 				Math.abs(line.y1 - line.y2) < 20) {
 			return this.getStraightPath(line);
 
-		} else if (this.canvasLayout.connectionType === "ports" &&
-				line.type === NODE_LINK) {
+		} else if (line.type === NODE_LINK) {
 
 			if (this.canvasLayout.linkType === LINK_TYPE_CURVE ||
 					this.canvasLayout.linkType === LINK_TYPE_ELBOW) {

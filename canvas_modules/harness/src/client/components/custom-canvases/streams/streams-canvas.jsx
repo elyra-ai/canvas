@@ -30,7 +30,6 @@ export default class StreamsCanvas extends React.Component {
 
 		// The below overrides were provided by Mary Komor from the Streams team
 		this.config = Object.assign({}, props.config, {
-			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Elbow",
 			enablePaletteLayout: "Flyout",

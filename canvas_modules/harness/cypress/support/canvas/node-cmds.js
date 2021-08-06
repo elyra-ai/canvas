@@ -35,6 +35,17 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 		})
 );
 
+Cypress.Commands.add("getFirstOutputPortIdForLabel", (nodeLabel) =>
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			if (node) {
+				return node[0].__data__.outputs[0].id;
+			}
+			return null;
+		})
+);
+
+
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > div > span")

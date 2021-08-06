@@ -70,7 +70,6 @@ export default class CanvasController {
 
 		this.canvasConfig = {
 			enableInteractionType: "Mouse",
-			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
