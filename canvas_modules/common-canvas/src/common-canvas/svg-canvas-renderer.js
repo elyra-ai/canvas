@@ -4455,8 +4455,8 @@ export default class SVGCanvasRenderer {
 		while (el) {
 			// No need to proceed if we find either of these. Stopping at svg-area
 			// prevents the search transitioning from a sub-flow to a parent flow.
-			if (this.isClassNameIncluded(el, ".d3-new-connection-guide") ||
-					this.isClassNameIncluded(el, ".svg-area")) {
+			if (this.isClassNameIncluded(el, "d3-new-connection-guide") ||
+					this.isClassNameIncluded(el, "svg-area")) {
 				el = null;
 
 			} else if (this.isClassNameIncluded(el, className)) {
