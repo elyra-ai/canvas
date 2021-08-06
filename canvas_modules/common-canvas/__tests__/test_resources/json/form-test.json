@@ -180,14 +180,14 @@
               "panel": {
                 "id": "fields-settings",
                 "panelType": "general",
-                "nestedPanel":false,
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
                       "panelType": "columnSelection",
-                      "nestedPanel":false,
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -224,10 +224,12 @@
                             "role": "column"
                           }
                         }
-                      ]
+                      ],
+                      "open": false
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           },
@@ -239,7 +241,7 @@
               "panel": {
                 "id": "settings",
                 "panelType": "general",
-                "nestedPanel":false,
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -283,7 +285,7 @@
                           "panel": {
                             "id": "Include",
                             "panelType": "general",
-                            "nestedPanel":false,
+                            "nestedPanel": false,
                             "uiItems": [
                               {
                                 "itemType": "control",
@@ -309,7 +311,8 @@
                               {
                                 "itemType": "hSeparator"
                               }
-                            ]
+                            ],
+                            "open": false
                           }
                         }
                       },
@@ -321,7 +324,7 @@
                           "panel": {
                             "id": "Discard",
                             "panelType": "general",
-                            "nestedPanel":false,
+                            "nestedPanel": false,
                             "uiItems": [
                               {
                                 "itemType": "control",
@@ -340,7 +343,8 @@
                                   }
                                 }
                               }
-                            ]
+                            ],
+                            "open": false
                           }
                         }
                       }
@@ -352,7 +356,7 @@
                     "panel": {
                       "id": "boolean-settings",
                       "panelType": "general",
-                      "nestedPanel":false,
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -403,10 +407,12 @@
                             "charLimit": 64
                           }
                         }
-                      ]
+                      ],
+                      "open": false
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           }

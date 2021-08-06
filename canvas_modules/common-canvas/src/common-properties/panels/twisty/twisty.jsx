@@ -27,6 +27,7 @@ class TwistyPanel extends React.Component {
 
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
+		const disabled = this.props.panelState === STATES.DISABLED;
 		return (
 			<div
 				className={classNames(
@@ -34,11 +35,10 @@ class TwistyPanel extends React.Component {
 					{ "hide": this.props.panelState === STATES.HIDDEN },
 					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
 					className
-				)}
-				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
+				)} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 			>
-				<Accordion>
-					<AccordionItem title={this.props.panel.label}>
+				<Accordion disabled={disabled}>
+					<AccordionItem disabled={disabled} open={this.props.panel.open} title={this.props.panel.label}>
 						{this.props.children}
 					</AccordionItem>
 				</Accordion>

@@ -18,10 +18,6 @@
 	&.hide {
 		display: none;
 	}
-	&[disabled] {
-		opacity: 0.5;
-		pointer-events: none;
-	}
 	.bx--accordion__item {
 		border-top: 0;
 		margin: 0 -1rem; // Remove 16px outer padding for accordion title and content
@@ -30,8 +26,5 @@
 		padding-top: $spacing-06; // 24px padding between accordion title and content (issue #3106)
 		padding-right: $spacing-05;
 		padding-bottom: 0; // Because there's 40px padding below .properties-control-panel
-	}
-	.bx--accordion__title {
-		font-size: 14px;
 	}
 }
