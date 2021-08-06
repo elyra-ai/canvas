@@ -71,13 +71,19 @@ class ToolTip extends React.Component {
 					tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
 				}
 				if (tooltipTrigger && tooltip) {
-					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
-					// Multi-line tooltips have offsetHeight > 20
 					if (tooltip.offsetHeight > 20 && this.state.singleLineTooltip) {
-						this.setState({ singleLineTooltip: false });
+						// Multi-line tooltips
+						this.setState({ singleLineTooltip: false }, () => {
+							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+						});
 					} else if (tooltip.offsetHeight <= 48 && !this.state.singleLineTooltip) {
 						// Multi-line tooltip initially but after resizing right flyout panel, tooltip is in single line
-						this.setState({ singleLineTooltip: true });
+						this.setState({ singleLineTooltip: true }, () => {
+							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+						});
+					} else {
+						// Single line tooltips
+						this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 					}
 				}
 			}
@@ -325,7 +331,6 @@ class ToolTip extends React.Component {
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
-			// If showToolTipOnClick enabled, don't show tooltip on mouseover and mouseleave
 			const mouseover = () => this.setTooltipVisible(true);
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
@@ -335,6 +340,7 @@ class ToolTip extends React.Component {
 			const onBlur = () => this.setTooltipVisible(false);
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
+			// If showToolTipOnClick enabled, don't show tooltip on mouseover and mouseleave
 			triggerContent = (<div
 				tabIndex={0}
 				data-id={this.props.id + "-trigger"}
