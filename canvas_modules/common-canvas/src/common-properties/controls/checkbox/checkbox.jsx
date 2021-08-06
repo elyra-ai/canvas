@@ -21,7 +21,7 @@ import { isEmpty } from "lodash";
 import { Checkbox } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { TOOL_TIP_DELAY, STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
@@ -52,7 +52,6 @@ class CheckboxControl extends React.Component {
 				id={tooltipId}
 				tip={tooltip}
 				direction="bottom"
-				delay={TOOL_TIP_DELAY}
 				className="properties-tooltips"
 			>
 				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />

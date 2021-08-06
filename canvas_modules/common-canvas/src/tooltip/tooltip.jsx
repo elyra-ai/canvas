@@ -26,7 +26,7 @@ class ToolTip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showToolTip: false,
+			isTooltipVisible: false,
 			singleLineTooltip: true
 		};
 
@@ -35,11 +35,7 @@ class ToolTip extends React.Component {
 
 	componentDidMount() {
 		if (this.props.targetObj) {
-			if (this.props.delay === 0) {
-				this.setTooltipVisible(true);
-			} else {
-				this.showTooltipWithDelay();
-			}
+			this.setTooltipVisible(true);
 		}
 	}
 
@@ -55,7 +51,7 @@ class ToolTip extends React.Component {
 			clearTimeout(this.pendingTooltip);
 			this.pendingTooltip = null;
 			this.setState({
-				showToolTip: false
+				isTooltipVisible: false
 			});
 		}
 
@@ -64,7 +60,7 @@ class ToolTip extends React.Component {
 			const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
 			this.pendingTooltip = null;
 			this.setState({
-				showToolTip: visible
+				isTooltipVisible: visible
 			});
 			// updates the tooltip display
 			if (visible) {
@@ -76,6 +72,7 @@ class ToolTip extends React.Component {
 				}
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+					// Multi-line tooltips have offsetHeight > 20
 					if (tooltip.offsetHeight > 20 && this.state.singleLineTooltip) {
 						this.setState({ singleLineTooltip: false });
 					} else if (tooltip.offsetHeight <= 48 && !this.state.singleLineTooltip) {
@@ -310,29 +307,33 @@ class ToolTip extends React.Component {
 				((tooltipTop + tooltip.offsetHeight) > document.documentElement.clientHeight)); // to the bottom
 	}
 
+	toggleTooltipOnClick(evt) {
+		// 'blur' event occurs before 'click' event. Because of this, onBlur function is called which hides the tooltip.
+		// To prevent this default behavior, stopPropagation and preventDefault is used.
+		evt.stopPropagation();
+		evt.preventDefault();
+		if (this.state.isTooltipVisible) {
+			// Tooltip is visible and user clicks on trigger element again, hide tooltip
+			this.setTooltipVisible(false);
+		} else {
+			this.setTooltipVisible(true);
+		}
+	}
+
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
 			// If showToolTipOnClick enabled, don't show tooltip on mouseover and mouseleave
-			const mouseover = () => this.showTooltipWithDelay();
+			const mouseover = () => this.setTooltipVisible(true);
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
+			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
+			// Ref - https://stackoverflow.com/a/49512400
 			const onFocus = () => this.showTooltipWithDelay();
 			const onBlur = () => this.setTooltipVisible(false);
-			const click = (evt) => {
-				// click event shouldn't call onBlur
-				evt.stopPropagation();
-				evt.preventDefault();
-				if (this.state.showToolTip) {
-					// Tooltip is visible, clicked on i icon again -> hide tooltip
-					this.setTooltipVisible(false);
-				} else {
-					// Tooltip is hidden
-					this.setTooltipVisible(true);
-				}
-			};
+			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
 				tabIndex={0}
@@ -375,7 +376,7 @@ class ToolTip extends React.Component {
 			<div className="tooltip-container">
 				{triggerContent}
 				<Portal>
-					<div data-id={this.props.id} className={classNames(tipClass, tooltipLengthClass)} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+					<div data-id={this.props.id} className={classNames(tipClass, tooltipLengthClass)} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
@@ -403,7 +404,7 @@ ToolTip.propTypes = {
 };
 
 ToolTip.defaultProps = {
-	delay: 1000,
+	delay: 200,
 	direction: "bottom",
 	showToolTipIfTruncated: false, // False will always show Tooltip even when whole word can be displayed
 	showToolTipOnClick: false

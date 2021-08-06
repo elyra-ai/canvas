@@ -24,7 +24,7 @@ import * as PropertyUtils from "./../../util/property-utils";
 
 import { Button } from "carbon-components-react";
 
-import { MESSAGE_KEYS, DATA_TYPE, TOOL_TIP_DELAY, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
+import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 import { ArrowLeft24, Reset24 } from "@carbon/icons-react";
 
@@ -315,7 +315,6 @@ export default class FieldPicker extends React.Component {
 					id={tooltipId}
 					tip={tooltip}
 					direction="left"
-					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
 					<div>
@@ -377,7 +376,6 @@ export default class FieldPicker extends React.Component {
 							id={filterTooltipId}
 							tip={tooltip}
 							direction="bottom"
-							delay={TOOL_TIP_DELAY}
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}
 						>

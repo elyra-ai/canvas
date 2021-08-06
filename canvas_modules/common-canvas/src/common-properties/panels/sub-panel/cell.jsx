@@ -23,7 +23,6 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";
 
 import { MESSAGE_KEYS } from "./../../constants/constants";
-import { TOOL_TIP_DELAY } from "./../../constants/constants.js";
 
 
 import SubPanelInvoker from "./invoker.jsx";
@@ -73,7 +72,6 @@ export default class SubPanelCell extends React.Component {
 						id={uuid4() + "-" + tooltipId}
 						tip={subPanelToolTip}
 						direction="left"
-						delay={TOOL_TIP_DELAY}
 						className="properties-tooltips"
 					>
 						<Button

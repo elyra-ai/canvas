@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
 import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -63,7 +63,6 @@ class ControlItem extends React.Component {
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
 						direction="bottom"
-						delay={TOOL_TIP_DELAY_ICON}
 						disable={hidden || disabled}
 						showToolTipOnClick
 					>

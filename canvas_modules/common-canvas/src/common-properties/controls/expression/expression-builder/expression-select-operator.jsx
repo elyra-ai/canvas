@@ -18,7 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 
-import { TOOL_TIP_DELAY } from "./../../../constants/constants";
 import Tooltip from "./../../../../tooltip/tooltip";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
@@ -48,7 +47,6 @@ export default class ExpressionSelectOperator extends React.Component {
 							id={tooltipId}
 							tip={tooltip}
 							direction="left"
-							delay={TOOL_TIP_DELAY}
 							className="properties-tooltips"
 						>
 							<Button

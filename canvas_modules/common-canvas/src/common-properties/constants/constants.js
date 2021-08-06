@@ -148,9 +148,6 @@ _defineConstant("ELLIPSIS_STRING", "...");
 
 _defineConstant("DISPLAY_CHARS_DEFAULT", 64);
 
-_defineConstant("TOOL_TIP_DELAY", 1000);
-_defineConstant("TOOL_TIP_DELAY_ICON", 500);
-
 _defineConstant("STATES", {
 	VISIBLE: "visible",
 	HIDDEN: "hidden",
