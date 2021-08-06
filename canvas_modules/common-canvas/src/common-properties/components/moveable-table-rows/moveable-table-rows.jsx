@@ -97,7 +97,7 @@ class MoveableTableRows extends React.Component {
 				!this.props.disabled
 			);
 		} else if (selected[0] === staticRows[0] - 1) {
-			bottomEnabled = false
+			bottomEnabled = false;
 		}
 
 
@@ -220,8 +220,8 @@ class MoveableTableRows extends React.Component {
 						controlValue[selectedRow] = tmpRow;
 						selected.push(selectedRow - 1);
 						this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
-				   }
-			}
+					}
+				}
 			}
 			this.props.setScrollToRow(selected[0]);
 			this.props.setCurrentControlValueSelected(controlValue, selected);
