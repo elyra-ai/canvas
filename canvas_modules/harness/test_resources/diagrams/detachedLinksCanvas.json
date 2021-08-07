@@ -37,29 +37,29 @@
           },
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "schema_ref": "TQRecT",
               "app_data": {
-                "my_data": {
-                  "my_field": "Binding node -> Outputs -> My data -> My field -> My value"
-                },
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
                     "max": -1
                   },
-                  "label": "Output Port"
+                  "label": "Output Port 1"
                 }
-              },
-              "parameters": {
-                "props": [
-                  {
-                    "field1": "binding-node-port-param-val1"
+              }
+            },
+            {
+              "id": "outPort2",
+              "schema_ref": "TQRecT",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
                   },
-                  {
-                    "field2": "binding-node-port-param-val2"
-                  }
-                ]
+                  "label": "Output Port 2"
+                }
               }
             }
           ],

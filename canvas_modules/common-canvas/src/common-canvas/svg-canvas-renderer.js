@@ -2644,6 +2644,7 @@ export default class SVGCanvasRenderer {
 
 	createOutputPorts(enter, node) {
 		const outputPortGroups = enter
+			.filter((port, i, ports) => this.shouldPortBeDisplayed(i, ports))
 			.append("g")
 			.attr("data-port-id", (port) => port.id)
 			.attr("isSupernodeBinding", CanvasUtils.isSuperBindingNode(node) ? "yes" : "no")
@@ -2675,6 +2676,14 @@ export default class SVGCanvasRenderer {
 						.attr("cy", port.cy);
 				}
 			});
+	}
+
+
+	// Returns true if the port at index i should be displayed. If the config
+	// field, enableSingleOutputPortDisplay is true, only the last port is
+	// displayed.
+	shouldPortBeDisplayed(i, ports) {
+		return !this.config.enableSingleOutputPortDisplay || i === ports.length - 1;
 	}
 
 	// Attaches the appropriate listeners to the node groups.
@@ -4733,7 +4742,8 @@ export default class SVGCanvasRenderer {
 			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY);
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY,
+				this.config.enableSingleOutputPortDisplay);
 		}
 	}
 
@@ -4749,7 +4759,7 @@ export default class SVGCanvasRenderer {
 		return node.height + node.layout.inputPortBottomPosY;
 	}
 
-	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {
+	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos, singlePort) {
 		if (ports && ports.length > 0) {
 			if (data.width <= data.layout.defaultNodeWidth &&
 					ports.length === 1) {
@@ -4788,13 +4798,23 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos) {
+	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos, displaySinglePort = false) {
 		if (ports && ports.length > 0) {
 			if (data.height <= data.layout.defaultNodeHeight &&
 					ports.length === 1) {
 				ports[0].cx = xPos;
 				ports[0].cy = yPos;
 			} else {
+				// If we are only going to display a single port we can set all the
+				// port positions to be the same as if there is only one port.
+				if (displaySinglePort) {
+					ports.forEach((p) => {
+						p.cx = xPos;
+						p.cy = yPos;
+					});
+					return;
+				}
+
 				let yPosition = 0;
 
 				if (this.nodeUtils.isExpandedSupernode(data)) {
@@ -4816,7 +4836,6 @@ export default class SVGCanvasRenderer {
 				if (CanvasUtils.isSuperBindingNode(data)) {
 					multiplier = 1 / this.zoomTransform.k;
 				}
-
 				ports.forEach((p) => {
 					yPosition += (data.layout.portArcRadius * multiplier);
 					p.cx = xPos;

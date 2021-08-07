@@ -103,6 +103,7 @@ export default class CanvasController {
 			enableAutoLayoutHorizontalSpacing: null,
 			enableBoundingRectangles: false,
 			enableCanvasUnderlay: "None",
+			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			paletteInitialState: false,
 			emptyCanvasContent: null,
