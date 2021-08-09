@@ -77,7 +77,10 @@ class ToolTip extends React.Component {
 							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 						});
 					} else if (tooltip.offsetHeight <= 48 && !this.state.singleLineTooltip) {
-						// Multi-line tooltip initially but after resizing right flyout panel, tooltip is in single line
+						// tooltip.offsetHeight <= 48 is a 2 line tooltip. It is possible 2nd line contains a single word.
+						// Right flyout panel is resizable. Tooltip is a 2 line tooltip when flyout size is "small".
+						// When right flyout panel is resized to "medium" or "large" and tooltip width is smaller than max-width of .common-canvas-tooltip,
+						// tooltip becomes a single line tooltip.
 						this.setState({ singleLineTooltip: true }, () => {
 							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 						});
@@ -340,7 +343,6 @@ class ToolTip extends React.Component {
 			const onBlur = () => this.setTooltipVisible(false);
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
-			// If showToolTipOnClick enabled, don't show tooltip on mouseover and mouseleave
 			triggerContent = (<div
 				tabIndex={0}
 				data-id={this.props.id + "-trigger"}
