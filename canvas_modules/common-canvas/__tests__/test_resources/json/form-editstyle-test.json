@@ -220,13 +220,13 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "general",
-                "nestedPanel":false,
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "panelType": "columnSelection",
-                      "nestedPanel":false,
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -305,7 +305,7 @@
                               "panel": {
                                 "id": "RenameFieldEntry",
                                 "panelType": "general",
-                                "nestedPanel":false,
+                                "nestedPanel": false,
                                 "uiItems": [
                                   {
                                     "itemType": "control",
@@ -326,6 +326,7 @@
                                     }
                                   }
                                 ],
+                                "open": false,
                                 "className": "properties-editstyle-sub-panel"
                               },
                               "text": "...",
@@ -342,10 +343,12 @@
                             "editStyle": "inline"
                           }
                         }
-                      ]
+                      ],
+                      "open": false
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           }

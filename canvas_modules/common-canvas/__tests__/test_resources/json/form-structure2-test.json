@@ -204,7 +204,7 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "columnSelection",
-                "nestedPanel":false,
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -281,7 +281,8 @@
                       "editStyle": "inline"
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           }

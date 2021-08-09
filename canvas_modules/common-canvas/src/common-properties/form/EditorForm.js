@@ -68,11 +68,12 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, className, nestedPanel, controls, label) {
+	constructor(id, panelType, className, nestedPanel, controls, label, copen = false) {
 		this.id = id;
 		this.panelType = panelType;
 		this.nestedPanel = nestedPanel;
 		this.uiItems = controls;
+		this.open = copen;
 		if (label) {
 			this.label = label;
 		}
@@ -213,7 +214,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.open));
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
