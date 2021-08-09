@@ -34,6 +34,8 @@ class MoveableTableRows extends React.Component {
 		this.downMoveRow = this.downMoveRow.bind(this);
 		this.bottomMoveRow = this.bottomMoveRow.bind(this);
 		this.getMoveableTableRows = this.getMoveableTableRows.bind(this);
+		this.getLeastValue = this.getLeastValue.bind(this);
+		this.getMaxValue = this.getMaxValue.bind(this);
 	}
 
 	getMoveableTableRows() {
@@ -161,11 +163,8 @@ class MoveableTableRows extends React.Component {
 			return a - b;
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let leastValue = 0;
+		const leastValue = this.getLeastValue();
 		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
-			leastValue = staticRows[staticRows.length - 1];
-		}
 		for (var firstRow = selected[0]; firstRow > leastValue; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
 				if (staticRows.length > 0 && selected[0] > leastValue + 1) {
@@ -195,11 +194,8 @@ class MoveableTableRows extends React.Component {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
-		let leastValue = 0;
+		const leastValue = this.getLeastValue();
 		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
-			leastValue = staticRows[staticRows.length - 1];
-		}
 		// only move up if not already at the top especially for multiple selected
 		// Move up only till the static rows index
 		if (selected.length !== 0 && selected[0] > leastValue) {
@@ -228,16 +224,21 @@ class MoveableTableRows extends React.Component {
 		}
 	}
 
+	getLeastValue() {
+		let leastValue = 0;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
+			leastValue = staticRows[staticRows.length - 1];
+		}
+		return leastValue;
+	}
+
 	downMoveRow(evt) {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let maxValue = controlValue.length - 1;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
-			maxValue = staticRows[0] - 1;
-		}
+		const maxValue = this.getMaxValue();
 		// only move down if not already at the end especially for multiple selected
 		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
 			for (var i = selected.length - 1; i >= 0; i--) {
@@ -264,11 +265,7 @@ class MoveableTableRows extends React.Component {
 			return a - b;
 		});
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let maxValue = controlValue.length - 1;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
-			maxValue = staticRows[0] - 1;
-		}
+		const maxValue = this.getMaxValue();
 		for (var lastRow = selected[selected.length - 1]; lastRow < maxValue; lastRow++) {
 			for (var i = selected.length - 1; i >= 0; i--) {
 				const selectedRow = selected.pop();
@@ -283,6 +280,16 @@ class MoveableTableRows extends React.Component {
 			this.props.setScrollToRow(selected[selected.length - 1]);
 		}
 		this.props.setCurrentControlValueSelected(controlValue, selected);
+	}
+
+	getMaxValue() {
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let maxValue = controlValue.length - 1;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
+			maxValue = staticRows[0] - 1;
+		}
+		return maxValue;
 	}
 
 	render() {
