@@ -50,7 +50,6 @@ export default class DetachedCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "detached-links",
 			enableNodeFormatType: "Vertical",
-			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",

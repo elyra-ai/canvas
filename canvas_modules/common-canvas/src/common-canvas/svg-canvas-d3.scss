@@ -35,7 +35,6 @@ $node-body-fill-hover: $hover-selected-ui;
 $node-selection-color: $inverse-link;
 
 $node-decoration-outline: $ui-05;
-$node-halo-color: $inverse-link;
 
 $node-super-expand-icon-color: $brand-01;
 $node-super-expand-icon-background-hover-color: $ui-03;
@@ -83,7 +82,6 @@ $node-port-input-arrow-connected-fill-color: transparent;
 $comment-outline-color: $ui-04;
 $comment-fill-color: $ui-01;
 $comment-text-color: $text-02;
-$comment-halo-color: $inverse-link;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -98,7 +96,6 @@ $object-link-color: $ui-05; // Used for association links for a regular data flo
 $association-link-color: $ui-04; // Used for association links when config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE.
 $data-link-color: $inverse-link;
 $link-highlight-color: $support-04;
-$new-halo-link-color: $ui-05;
 
 /* Canvas styles */
 
@@ -432,21 +429,6 @@ $new-halo-link-color: $ui-05;
 	color: $icon-01;
 }
 
-
-/* Node halo styles */
-
-.d3-node-halo {
-	fill: none;
-	stroke: transparent;
-	stroke-width: 8;
-}
-
-.d3-node-halo:hover {
-	fill: none;
-	stroke: $node-halo-color;
-	stroke-width: 8;
-}
-
 /* Node ellipsis styles */
 
 .d3-node-ellipsis-group {
@@ -621,13 +603,6 @@ $new-halo-link-color: $ui-05;
 	fill: $comment-link-color;
 }
 
-/* Halo - Temporary connector line pulled out from halo */
-
-.d3-new-halo-connection {
-	stroke: $new-halo-link-color;
-	stroke-dasharray: 2.2;
-}
-
 /* Comment styles */
 
 /* Style for comment background rectangle */
@@ -689,20 +664,6 @@ $new-halo-link-color: $ui-05;
 	&:focus {
 		@include d3-text-entry-focus-mixin;
 	}
-}
-
-/* Comment halo styles */
-
-.d3-comment-halo {
-	fill: none;
-	stroke: transparent;
-	stroke-width: 8;
-}
-
-.d3-comment-halo:hover {
-	fill: none;
-	stroke: $comment-halo-color;
-	stroke-width: 8;
 }
 
 /* Link styles */

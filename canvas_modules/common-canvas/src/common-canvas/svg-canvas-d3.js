@@ -71,7 +71,6 @@ export default class SVGCanvasD3 {
 				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
 				this.config.enableAutoLayoutVerticalSpacing !== config.enableAutoLayoutVerticalSpacing ||
 				this.config.enableAutoLayoutHorizontalSpacing !== config.enableAutoLayoutHorizontalSpacing ||
-				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
