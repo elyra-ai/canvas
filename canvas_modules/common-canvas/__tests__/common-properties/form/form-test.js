@@ -166,7 +166,7 @@ describe("Correct form should be created", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(placementResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
-	it.only("should create a form with actions and summaryPanel", () => {
+	it("should create a form with actions and summaryPanel", () => {
 		const generatedForm = Form.makeForm(actionResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(actionResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
