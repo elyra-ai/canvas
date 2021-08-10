@@ -4754,7 +4754,7 @@ export default class SVGCanvasRenderer {
 		return node.height + node.layout.inputPortBottomPosY;
 	}
 
-	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos, singlePort) {
+	setPortPositionsVertical(data, ports, portsWidth, xPos, yPos) {
 		if (ports && ports.length > 0) {
 			if (data.width <= data.layout.defaultNodeWidth &&
 					ports.length === 1) {

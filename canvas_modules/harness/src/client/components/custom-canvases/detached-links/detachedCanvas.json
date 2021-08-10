@@ -23,14 +23,14 @@
           },
           "outputs": [
             {
-              "id": "outPort1",
+              "id": "outPort",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
                     "max": 1
                   },
-                  "label": "Output Port 1"
+                  "label": "Output Port"
                 }
               }
             }
@@ -65,7 +65,7 @@
                 {
                   "id": "Link One",
                   "node_id_ref": "f8ae4e15-86fd-4947-bbec-43c5aa2b8927",
-                  "port_id_ref": "outPort1"
+                  "port_id_ref": "outPort"
                 }
               ]
             }
