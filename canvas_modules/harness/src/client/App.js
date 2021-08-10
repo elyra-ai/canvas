@@ -112,7 +112,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "./constants/constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -372,7 +373,7 @@ class App extends React.Component {
 		}
 
 		// Add these methods to the global document object so they can be called
-		// from the Chimp test cases.
+		// from the Cypress test cases.
 		document.setCanvasConfig = this.setCanvasConfig;
 		document.canvasController = this.canvasController;
 		document.canvasController2 = this.canvasController2;
@@ -2073,6 +2074,21 @@ class App extends React.Component {
 						tooltip: "A custom button of type primary!",
 						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
 					{ divider: true }
+				]
+			};
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE) {
+			toolbarConfig = {
+				overrideAutoEnableDisable: true,
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: false },
+					{ action: "redo", label: "Redo", enable: false },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: false, tooltip: "Cut from clipboard" },
+					{ action: "copy", label: "Copy", enable: false, tooltip: "Copy from clipboard" },
+					{ action: "paste", label: "Paste", enable: false, tooltip: "Paste to canvas" },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: false },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: false }
 				]
 			};
 		}

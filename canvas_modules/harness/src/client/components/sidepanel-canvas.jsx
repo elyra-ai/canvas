@@ -73,7 +73,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_ENABLEDISABLE
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -1100,6 +1101,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
 						labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_OVERRIDE_ENABLEDISABLE}
+						labelText={TOOLBAR_TYPE_OVERRIDE_ENABLEDISABLE}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
