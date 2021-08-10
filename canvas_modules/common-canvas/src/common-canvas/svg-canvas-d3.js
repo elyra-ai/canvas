@@ -94,6 +94,7 @@ export default class SVGCanvasD3 {
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
 				this.config.enableAutoLinkOnlyFromSelNodes !== config.enableAutoLinkOnlyFromSelNodes ||
+				this.config.enableSingleOutputPortDisplay !== config.enableSingleOutputPortDisplay ||
 				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
