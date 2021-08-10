@@ -21,6 +21,7 @@
 .common-canvas-tooltip {
 	font-size: 12px;
 	position: fixed;
+	padding: $spacing-05;
 	background-color: $inverse-02;
 	border: 1px solid $inverse-02;
 	font-weight: 400;
@@ -51,12 +52,8 @@
 	transform: translate3d(0, -22px, 0);
 }
 
-.single-line-tooltip {
+.icon-tooltip {
 	padding: $spacing-01 $spacing-05;
-}
-
-.multi-line-tooltip {
-	padding: $spacing-05;
 }
 
 .common-canvas-tooltip #tipArrow {

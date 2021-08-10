@@ -20,14 +20,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
-import classNames from "classnames";
 
 class ToolTip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isTooltipVisible: false,
-			singleLineTooltip: true
+			isTooltipVisible: false
 		};
 
 		this.pendingTooltip = null;
@@ -71,23 +69,7 @@ class ToolTip extends React.Component {
 					tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
 				}
 				if (tooltipTrigger && tooltip) {
-					if (tooltip.offsetHeight > 20 && this.state.singleLineTooltip) {
-						// Multi-line tooltips
-						this.setState({ singleLineTooltip: false }, () => {
-							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
-						});
-					} else if (tooltip.offsetHeight <= 48 && !this.state.singleLineTooltip) {
-						// tooltip.offsetHeight <= 48 is a 2 line tooltip. It is possible 2nd line contains a single word.
-						// Right flyout panel is resizable. Tooltip is a 2 line tooltip when flyout size is "small".
-						// When right flyout panel is resized to "medium" or "large" and tooltip width is smaller than max-width of .common-canvas-tooltip,
-						// tooltip becomes a single line tooltip.
-						this.setState({ singleLineTooltip: true }, () => {
-							this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
-						});
-					} else {
-						// Single line tooltips
-						this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
-					}
+					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
 			}
 		}
@@ -377,14 +359,12 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
-		// Different padding for single line and multi-line tooltips
-		const tooltipLengthClass = this.state.singleLineTooltip ? "single-line-tooltip" : "multi-line-tooltip";
 
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
 				<Portal>
-					<div data-id={this.props.id} className={classNames(tipClass, tooltipLengthClass)} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
+					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />

@@ -72,7 +72,7 @@ export default class SubPanelCell extends React.Component {
 						id={uuid4() + "-" + tooltipId}
 						tip={subPanelToolTip}
 						direction="left"
-						className="properties-tooltips"
+						className="properties-tooltips icon-tooltip"
 					>
 						<Button
 							className="properties-subpanel-button"

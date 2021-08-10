@@ -139,7 +139,7 @@ class ToolbarActionItem extends React.Component {
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
 
 			return (
-				<Tooltip id={tooltipId} tip={tipText} disable={false} >
+				<Tooltip id={tooltipId} tip={tipText} disable={false} className="icon-tooltip" >
 					{content}
 				</Tooltip>
 			);

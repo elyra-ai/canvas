@@ -46,7 +46,7 @@ export default class ExpressionSelectOperator extends React.Component {
 						<Tooltip
 							id={tooltipId}
 							tip={tooltip}
-							direction="left"
+							direction="bottom"
 							className="properties-tooltips"
 						>
 							<Button

@@ -376,7 +376,7 @@ export default class FieldPicker extends React.Component {
 							id={filterTooltipId}
 							tip={tooltip}
 							direction="bottom"
-							className="properties-tooltips"
+							className="properties-tooltips icon-tooltip"
 							disable={isEmpty(filter.type)}
 						>
 							<Button
