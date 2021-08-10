@@ -6503,7 +6503,7 @@ export default class SVGCanvasRenderer {
 		if (typeof this.canvasLayout.dataLinkArrowHead === "string") {
 			return this.canvasLayout.dataLinkArrowHead;
 		}
-		return "M -8 8 L 0 0 -8 -8";
+		return "M -6 6 L 0 0 -6 -6";
 	}
 
 	// Returns a transform for an arrow head at the end of a link line.
