@@ -53,6 +53,7 @@ class CheckboxControl extends React.Component {
 				tip={tooltip}
 				direction="bottom"
 				className="properties-tooltips"
+				showToolTipOnClick
 			>
 				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 			</Tooltip>
@@ -60,7 +61,6 @@ class CheckboxControl extends React.Component {
 		const checkboxLabel = (
 			<span className="properties-checkbox-label">
 				{label}
-				{tooltipIcon}
 			</span>
 		);
 		return (
@@ -75,6 +75,7 @@ class CheckboxControl extends React.Component {
 					checked={Boolean(this.props.value)}
 					hideLabel={this.props.tableControl}
 				/>
+				{tooltipIcon}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);

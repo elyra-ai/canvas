@@ -15,6 +15,17 @@
  */
 
 .properties-checkbox {
+	display: flex;
+	align-items: center;
+	.tooltip-container {
+		margin-left: $spacing-02;
+		.tooltip-trigger {
+			display: flex;
+		}
+	}
+	.bx--form-item.bx--checkbox-wrapper {
+		flex: initial; // override carbon style to show tooltipIcon next to checkbox label
+	}
 	&.hide {
 		display: none;
 	}
@@ -23,15 +34,5 @@
 	.bx--form-item.bx--checkbox-wrapper:first-of-type {
 		margin-top: 0;
 		padding: 1px; // Allow space for checkbox borders to show when embedded within a table.
-	}
-}
-.properties-checkbox-label {
-	display: flex;
-	align-items: center;
-	.tooltip-container {
-		margin-left: $spacing-02;
-		.tooltip-trigger {
-			display: flex;
-		}
 	}
 }
