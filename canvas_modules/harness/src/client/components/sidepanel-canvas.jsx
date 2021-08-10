@@ -797,6 +797,17 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
+		var enableSingleOutputPortDisplay = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-single-output-port-display-toggle">
+				<Toggle
+					id="selectedSingleOutputPortDisplay" // Set ID to corresponding field in App.js state
+					labelText="Enable Single Output Port Display"
+					toggled={this.props.getStateValue("selectedSingleOutputPortDisplay")}
+					onToggle={this.setStateValue}
+				/>
+			</div>);
+
+
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
 				<Toggle
@@ -1310,6 +1321,8 @@ export default class SidePanelForms extends React.Component {
 					{enableAssocLinkCreation}
 					{divider}
 					{assocLinkType}
+					{divider}
+					{enableSingleOutputPortDisplay}
 					{divider}
 					{enableRightFlyoutUnderToolbar}
 					{divider}

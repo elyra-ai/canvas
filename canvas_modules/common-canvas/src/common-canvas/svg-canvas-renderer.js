@@ -2632,8 +2632,12 @@ export default class SVGCanvasRenderer {
 	displayOutputPorts(nodeGrp, node) {
 		const outSelector = "." + this.getNodeOutputPortClassName();
 
+		const outputs = this.config.enableSingleOutputPortDisplay && node.outputs.length > 1
+			? [node.outputs[node.outputs.length - 1]]
+			: node.outputs;
+
 		nodeGrp.selectChildren(outSelector)
-			.data(node.outputs, (p) => p.id)
+			.data(outputs, (p) => p.id)
 			.join(
 				(enter) => this.createOutputPorts(enter, node)
 			)
@@ -4733,7 +4737,8 @@ export default class SVGCanvasRenderer {
 			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY);
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY,
+				this.config.enableSingleOutputPortDisplay);
 		}
 	}
 
@@ -4788,43 +4793,74 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos) {
+	setPortPositionsLeftRight(data, ports, portsHeight, xPos, yPos, displaySinglePort = false) {
 		if (ports && ports.length > 0) {
 			if (data.height <= data.layout.defaultNodeHeight &&
 					ports.length === 1) {
 				ports[0].cx = xPos;
 				ports[0].cy = yPos;
 			} else {
-				let yPosition = 0;
-
-				if (this.nodeUtils.isExpandedSupernode(data)) {
-					const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
-					const remainingSpace = heightSvgArea - portsHeight;
-					yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
-
-				} else if (portsHeight < data.height) {
-					yPosition = (data.height - portsHeight) / 2;
+				// If we are only going to display a single port, we can set all the
+				// port positions to be the same as if there is only one port.
+				if (displaySinglePort) {
+					this.setPortPositionsLeftRightSinglePort(data, ports, xPos, yPos);
+				} else {
+					this.setPortPositionsLeftRightAllPorts(data, ports, portsHeight, xPos, yPos);
 				}
-
-				yPosition += data.layout.portArcOffset;
-
-				// Sub-flow binding node ports need to be spaced by the inverse of the
-				// zoom amount so that, after zoomToFit on the in-place sub-flow the
-				// binding node ports line up with those on the supernode. This is only
-				// necessary with binding nodes with mutiple ports.
-				let multiplier = 1;
-				if (CanvasUtils.isSuperBindingNode(data)) {
-					multiplier = 1 / this.zoomTransform.k;
-				}
-
-				ports.forEach((p) => {
-					yPosition += (data.layout.portArcRadius * multiplier);
-					p.cx = xPos;
-					p.cy = yPosition;
-					yPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
-				});
 			}
 		}
+	}
+
+	// Sets the ports x and y coordinates for regular and expanded supernodes
+	// when all ports are displayed in a normal manner (as opposed to when a
+	// single port is displayed).
+	setPortPositionsLeftRightAllPorts(data, ports, portsHeight, xPos, yPos) {
+		let yPosition = 0;
+
+		if (this.nodeUtils.isExpandedSupernode(data)) {
+			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+			const remainingSpace = heightSvgArea - portsHeight;
+			yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
+
+		} else if (portsHeight < data.height) {
+			yPosition = (data.height - portsHeight) / 2;
+		}
+
+		yPosition += data.layout.portArcOffset;
+
+		// Sub-flow binding node ports need to be spaced by the inverse of the
+		// zoom amount so that, after zoomToFit on the in-place sub-flow the
+		// binding node ports line up with those on the supernode. This is only
+		// necessary with binding nodes with mutiple ports.
+		let multiplier = 1;
+		if (CanvasUtils.isSuperBindingNode(data)) {
+			multiplier = 1 / this.zoomTransform.k;
+		}
+		ports.forEach((p) => {
+			yPosition += (data.layout.portArcRadius * multiplier);
+			p.cx = xPos;
+			p.cy = yPosition;
+			yPosition += ((data.layout.portArcRadius + data.layout.portArcSpacing) * multiplier);
+		});
+	}
+
+	// If only a single port is to be displayed, this methods sets the x and y
+	// coordinates of all the ports to the same values appropriately for either
+	// regular nodes or expanded supernodes.
+	setPortPositionsLeftRightSinglePort(data, ports, xPos, yPos) {
+		let yPosition = 0;
+		if (this.nodeUtils.isExpandedSupernode(data)) {
+			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
+			yPosition = this.canvasLayout.supernodeTopAreaHeight + (heightSvgArea / 2);
+
+		} else {
+			yPosition = yPos;
+		}
+
+		ports.forEach((p) => {
+			p.cx = xPos;
+			p.cy = yPosition;
+		});
 	}
 
 	displayComments() {

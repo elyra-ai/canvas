@@ -167,6 +167,7 @@ class App extends React.Component {
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedSingleOutputPortDisplay: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -1948,6 +1949,7 @@ class App extends React.Component {
 			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
 			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
