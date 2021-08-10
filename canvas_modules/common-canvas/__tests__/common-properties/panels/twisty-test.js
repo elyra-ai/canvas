@@ -31,10 +31,14 @@ describe("twisty panel renders correctly", () => {
 		wrapper.unmount();
 	});
 
-	it("should have displayed the twisty panel with the initial control hidden", () => {
+	it("should have displayed the twisty panel with first panel closed and 2nd panel open", () => {
 		const twisty = wrapper.find("div[data-id='properties-TwistyPanel1']");
 		expect(twisty.find("li.bx--accordion__item")).to.have.length(1);
 		expect(twisty.find("li.bx--accordion__item--active")).to.have.length(0);
+
+		const tableTwisty = wrapper.find("div[data-id='properties-TableTwisty']");
+		expect(tableTwisty.find("li.bx--accordion__item")).to.have.length(1);
+		expect(tableTwisty.find("li.bx--accordion__item--active")).to.have.length(1);
 	});
 
 	it("should expand content when twisty panel link clicked", () => {
@@ -81,13 +85,14 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "twisty-panel1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield2" })).to.equal("disabled");
-		expect(twistyPanel.prop("disabled")).to.equal(true);
+		expect(twistyPanel.find("li.bx--accordion__item--disabled")).to.have.length(1);
 
 
 		// can also disable a twisty that is opened
 		// enable and open the twistypanel
 		disabledCheckbox.getDOMNode().checked = false;
 		disabledCheckbox.simulate("change");
+		twistyPanel = wrapper.find("div[data-id='properties-twisty-panel1']");
 		twistyPanel.find("button")
 			.at(0)
 			.simulate("click");
@@ -108,7 +113,7 @@ describe("twisty panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "twisty-panel1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "numberfield2" })).to.equal("disabled");
-		expect(twistyPanel.prop("disabled")).to.equal(true);
+		expect(twistyPanel.find("li.bx--accordion__item--disabled")).to.have.length(1);
 
 	});
 

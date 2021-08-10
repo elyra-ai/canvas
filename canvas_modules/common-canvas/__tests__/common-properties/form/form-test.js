@@ -76,7 +76,8 @@ describe("Correct form should be created", () => {
 										]
 									}
 								}
-							]
+							],
+							"open": false,
 						}
 					}
 				}
