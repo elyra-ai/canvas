@@ -620,18 +620,18 @@ export default class SidePanelModal extends React.Component {
 				<TextInput
 					labelText="Set the indexes for static rows"
 					id="harness-propertyId-staticRows"
-					placeholder='[0, 1]'
+					placeholder="[0, 1]"
 					invalid={this.state.invalidSetStaticRowIndexes}
 					invalidText="Please enter valid array of row indexes"
 					onChange={ this.setStaticRowsIndexes }
-					helperText='Indexes format: [Array of row indexes]'
+					helperText="Indexes format: [Array of row indexes]"
 				/>
 			</div>);
 
 		const submitStaticRows = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-submit">
 			<Button size="small"
 				disabled={this.state.invalidSetStaticRowIndexes}
-				disabled={this.state.invalidSetStaticRowPropertyId|| this.state.invalidSetStaticRowIndexes}
+				disabled={this.state.invalidSetStaticRowPropertyId || this.state.invalidSetStaticRowIndexes}
 				onClick={this.props.propertiesConfig.setStaticRows}
 			>
 				Submit
