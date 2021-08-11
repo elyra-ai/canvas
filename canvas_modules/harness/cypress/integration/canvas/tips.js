@@ -89,6 +89,40 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 	});
 });
 
+describe("Test to check if tips are hidden on scroll", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.openPropertyDefinition("action_paramDef.json");
+	});
+
+	it("Test to check if palette tips are hidden on scroll", function() {
+		cy.clickToolbarPaletteOpen();
+
+		// Open multiple categories so that palette is scrollable
+		cy.clickCategory("Import");
+		cy.clickCategory("Record Ops");
+		cy.clickCategory("Modeling");
+
+		cy.hoverOverCategory("Import");
+		cy.verifyTipForCategory("Import");
+
+		cy.get(".palette-flyout-categories")
+			.scrollTo("bottom", { ensureScrollable: false });
+		cy.verifyTipDoesNotShowForCategory("Import");
+	});
+
+	it("Test to check if properties tips are hidden on scroll", function() {
+		cy.get("div[data-id='properties-ctrl-number']")
+			.find(".tooltip-container")
+			.click();
+		cy.verifyTipForLabelIsVisibleAtLocation("Integer", "bottom", "Try pressing Increment or Descrement buttons");
+		cy.get(".properties-custom-container")
+			.scrollTo("bottom", { ensureScrollable: false });
+		cy.verifyTipForLabelIsHidden("Integer", "Try pressing Increment or Descrement buttons");
+	});
+});
+
 describe("Test changing node name to update node tip", function() {
 	beforeEach(() => {
 		cy.visit("/");
