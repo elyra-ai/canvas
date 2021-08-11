@@ -158,6 +158,25 @@ class MoveableTableRows extends React.Component {
 		return [topImages, bottomImages];
 	}
 
+	getLeastValue() {
+		let leastValue = 0;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
+			leastValue = staticRows[staticRows.length - 1];
+		}
+		return leastValue;
+	}
+
+	getMaxValue() {
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let maxValue = controlValue.length - 1;
+		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
+		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
+			maxValue = staticRows[0] - 1;
+		}
+		return maxValue;
+	}
+
 	topMoveRow(evt) {
 		var selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
@@ -224,15 +243,6 @@ class MoveableTableRows extends React.Component {
 		}
 	}
 
-	getLeastValue() {
-		let leastValue = 0;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(0)) {
-			leastValue = staticRows[staticRows.length - 1];
-		}
-		return leastValue;
-	}
-
 	downMoveRow(evt) {
 		const selected = this.props.controller.getSelectedRows(this.props.propertyId).sort(function(a, b) {
 			return a - b;
@@ -280,16 +290,6 @@ class MoveableTableRows extends React.Component {
 			this.props.setScrollToRow(selected[selected.length - 1]);
 		}
 		this.props.setCurrentControlValueSelected(controlValue, selected);
-	}
-
-	getMaxValue() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let maxValue = controlValue.length - 1;
-		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
-		if (staticRows && staticRows.length > 0 && staticRows.includes(controlValue.length - 1)) {
-			maxValue = staticRows[0] - 1;
-		}
-		return maxValue;
 	}
 
 	render() {
