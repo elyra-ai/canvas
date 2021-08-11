@@ -876,6 +876,16 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 		});
 });
 
+Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
+	cy.get(".toolbar-div")
+		.find("." + action + "-action > button")
+		.then((buttons) => {
+			const classList = Array.from(buttons[0].classList);
+			const enabled = !classList.includes("bx--btn--disabled");
+			expect(enabled).to.equal(state);
+		});
+});
+
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {

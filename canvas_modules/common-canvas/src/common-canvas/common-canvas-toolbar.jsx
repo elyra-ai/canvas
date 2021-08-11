@@ -108,7 +108,7 @@ class CommonCanvasToolbar extends React.Component {
 			config = this.getDefaultToolbar();
 		}
 
-		config = Object.assign({},
+		config = Object.assign({}, config,
 			{ leftBar: this.optionallyAddPaletteTool(config.leftBar || []) },
 			{ rightBar: this.optionallyAddNotificationTool(config.rightBar || []) }
 		);
@@ -127,6 +127,9 @@ class CommonCanvasToolbar extends React.Component {
 		}
 
 		const config = {};
+		if (this.props.config.overrideAutoEnableDisable) {
+			config.overrideAutoEnableDisable = true;
+		}
 		if (this.props.config && this.props.config.leftBar) {
 			config.leftBar = [...this.props.config.leftBar];
 		}
@@ -193,7 +196,8 @@ class CommonCanvasToolbar extends React.Component {
 		// We only set toolbar state with the internal object model. With the
 		// external object model the host app must set toolbar state through the
 		// toolbar config params.
-		if (!this.props.canvasController.isInternalObjectModelEnabled()) {
+		if (!this.props.canvasController.isInternalObjectModelEnabled() ||
+				toolbarConfig.overrideAutoEnableDisable) {
 			return toolbarConfig;
 		}
 
