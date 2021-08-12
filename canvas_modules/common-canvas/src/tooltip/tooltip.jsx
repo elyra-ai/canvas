@@ -329,7 +329,13 @@ class ToolTip extends React.Component {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
 			const mouseover = () => this.setTooltipVisible(true);
 			const mouseleave = () => this.setTooltipVisible(false);
-			const mousedown = () => this.setTooltipVisible(false);
+			const mousedown = (evt) => {
+				// Hide tooltip after clicking (mousedown) on toolbar icons, node, palette category
+				// After `mousedown` event is complete, `focus` event occurs which shows the tooltip.
+				// Using preventDefault to make sure `focus` event is not triggered.
+				evt.preventDefault();
+				this.setTooltipVisible(false);
+			};
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
 			const onFocus = () => this.showTooltipWithDelay();
