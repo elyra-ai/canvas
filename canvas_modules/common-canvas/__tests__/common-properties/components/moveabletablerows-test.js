@@ -400,4 +400,284 @@ describe("MoveableTableRows renders correctly", () => {
 		expect(wrapper.find(".properties-mr-table-container").props()).to.have.property("role", "presentation");
 	});
 
+	it("should disable all move buttons when first row is static and selected", () => {
+		
+		setControlValues([0]);
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [0]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
+	});
+
+	it("should disable up move buttons when first row is static and second row is selected", () => {
+		setControlValues([1]);
+		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
+		if (isDisableRowMoveButtons === true) {
+			controller.setDisableRowMoveButtons([]);
+		}
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [0]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(2);
+	});
+
+	it("should disable all move buttons when last row is static and selected", () => {
+		
+		setControlValues([rows.length - 1]);
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [rows.length - 1]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
+	});
+
+	it("should disable down move buttons when last row is static and second last row is selected", () => {
+		
+		setControlValues([rows.length - 2]);
+		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
+		if (isDisableRowMoveButtons === true) {
+			controller.setDisableRowMoveButtons([]);
+		}
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [rows.length - 1]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(2);
+	});
+
+	it("should enable all move buttons when last row is static and third last row is selected", () => {
+		
+		setControlValues([rows.length - 3]);
+		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
+		if (isDisableRowMoveButtons === true) {
+			controller.setDisableRowMoveButtons([]);
+		}
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [rows.length - 1]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(4);
+	});
+
+	it("should enable all move buttons when first row is static and third row is selected", () => {
+		
+		setControlValues([2]);
+		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
+		if (isDisableRowMoveButtons === true) {
+			controller.setDisableRowMoveButtons([]);
+		}
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [0]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(4);
+	});
+
+	it("should select bottom row and move up to top row after the static rows", () => {
+		setControlValues([rows.length - 1]);
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [0]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(2);
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(2);
+		buttonContainer.find("button.table-row-move-button[disabled=false]")
+			.at(0)
+			.simulate("click");
+
+		// validate the last row is moved
+		const tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows[1][0]).to.equal("Address");
+		expect(tableRows[rows.length - 1][0]).to.equal("Occupation");
+	});
+
+	it("should select top row and move down to the row before the static rows", () => {
+		setControlValues([0]);
+		let wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		controller.updateStaticRows(propertyId, [rows.length - 1]);
+		wrapper = mountWithIntl(
+			<MoveableTableRows
+				store={controller.getStore()}
+				tableContainer={content}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				setScrollToRow={setScrollToRow}
+				setCurrentControlValueSelected={setCurrentControlValueSelected}
+			/>
+		);
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("div.properties-mr-button-container");
+		expect(buttonContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(2);
+		expect(buttonContainer.find("button.table-row-move-button[disabled=false]")).to.have.length(2);
+		buttonContainer.find("button.table-row-move-button[disabled=false]")
+			.at(1)
+			.simulate("click");
+
+		// validate the first row is moved
+		const tableRows = controller.getPropertyValue(propertyId);
+		expect(tableRows[0][0]).to.equal("Age");
+		expect(tableRows[rows.length - 2][0]).to.equal("Na");
+	});
+
+
 });
