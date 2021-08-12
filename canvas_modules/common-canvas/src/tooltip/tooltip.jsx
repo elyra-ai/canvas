@@ -42,7 +42,7 @@ class ToolTip extends React.Component {
 
 	componentWillUnmount() {
 		window.removeEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
-		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
+		window.removeEventListener("resize", this.hideTooltipOnScrollAndResize, true);
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
