@@ -19,7 +19,8 @@
 	align-items: center;
 	flex-wrap: wrap;
 	.tooltip-container {
-		margin-left: $spacing-02;
+		margin-left: $spacing-03;
+		cursor: pointer;
 		.tooltip-trigger {
 			display: flex;
 		}

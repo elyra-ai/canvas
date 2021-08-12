@@ -29,18 +29,20 @@ class ToolTip extends React.Component {
 		};
 
 		this.pendingTooltip = null;
-		this.hideTooltipOnScroll = this.hideTooltipOnScroll.bind(this);
+		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 	}
 
 	componentDidMount() {
-		window.addEventListener("scroll", this.hideTooltipOnScroll, true);
+		window.addEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
+		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
 		if (this.props.targetObj) {
 			this.setTooltipVisible(true);
 		}
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener("scroll", this.hideTooltipOnScroll, true);
+		window.removeEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
+		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
@@ -314,7 +316,7 @@ class ToolTip extends React.Component {
 		}
 	}
 
-	hideTooltipOnScroll(evt) {
+	hideTooltipOnScrollAndResize(evt) {
 		if (this.state.isTooltipVisible) {
 			this.setTooltipVisible(false);
 		}
