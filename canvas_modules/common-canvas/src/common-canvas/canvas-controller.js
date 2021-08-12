@@ -276,6 +276,9 @@ export default class CanvasController {
 		return this.objectModel.getPrimaryPipelineId();
 	}
 
+	// Returns the external pipeline flow for the url passed in. The external
+	// flow must have been loaded through some common canvas action for this
+	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
