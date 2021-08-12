@@ -215,3 +215,35 @@ describe("Test for toolbar add comment", function() {
 		cy.verifyCommentTransform("Comment 5a", -492, -56);
 	});
 });
+
+describe("Test overrideAutoEnableDisable toolbar config option", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedToolbarType": "OverrideAutoEnableDisable" });
+	});
+
+	it("Test overrideAutoEnableDisable leaves all standard buttons disabled", function() {
+		cy.verifyToolbarButtonEnabled("undo", false);
+		cy.verifyToolbarButtonEnabled("redo", false);
+
+		cy.verifyToolbarButtonEnabled("cut", false);
+		cy.verifyToolbarButtonEnabled("copy", false);
+		cy.verifyToolbarButtonEnabled("paste", false);
+
+		cy.verifyToolbarButtonEnabled("createAutoComment", false);
+		cy.verifyToolbarButtonEnabled("deleteSelectedObjects", false);
+
+		// The zoom icons will be enabled because they are not auto enabled.
+		cy.verifyToolbarButtonEnabled("zoomIn", true);
+		cy.verifyToolbarButtonEnabled("zoomOut", true);
+		cy.verifyToolbarButtonEnabled("zoomToFit", true);
+
+		// Add a comment using context menu
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("New comment");
+
+		// After adding a comment undo should still be disabled because
+		// the automatic enable/disabled code is overriden.
+		cy.verifyToolbarButtonEnabled("undo", false);
+	});
+});

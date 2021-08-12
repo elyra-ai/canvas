@@ -23,7 +23,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { isEmpty, has, forIn } from "lodash";
+import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -80,7 +80,6 @@ import {
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
 	INTERACTION_MOUSE,
-	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
@@ -113,7 +112,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "./constants/constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -163,12 +163,12 @@ class App extends React.Component {
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedSingleOutputPortDisplay: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -378,7 +378,7 @@ class App extends React.Component {
 		}
 
 		// Add these methods to the global document object so they can be called
-		// from the Chimp test cases.
+		// from the Cypress test cases.
 		document.setCanvasConfig = this.setCanvasConfig;
 		document.canvasController = this.canvasController;
 		document.canvasController2 = this.canvasController2;
@@ -392,7 +392,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
@@ -596,7 +596,7 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+			this.setBreadcrumbsDefinition();
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -698,8 +698,8 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
 	}
 
-	setBreadcrumbsDefinition(currentPipelineId) {
-		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+	setBreadcrumbsDefinition() {
+		const breadcrumbs = this.canvasController.getBreadcrumbs();
 		breadcrumbs[0].label = PRIMARY;
 		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
@@ -1039,7 +1039,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
-		this.setBreadcrumbsDefinition(pipelineId);
+		this.setBreadcrumbsDefinition();
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1373,7 +1373,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
+			this.setBreadcrumbsDefinition();
 			break;
 		}
 		case "createTestHarnessNode": {
@@ -1427,6 +1427,13 @@ class App extends React.Component {
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
 				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		case "undo":
+		case "redo": {
+			if (get(command, "data.editType") === "displaySubPipeline") {
+				this.setBreadcrumbsDefinition();
+			}
 			break;
 		}
 		default: {
@@ -1925,9 +1932,6 @@ class App extends React.Component {
 		let parentClass = "";
 		if (this.state.selectedNodeFormatType === "Vertical") {
 			parentClass = "classic-vertical";
-			if (this.state.selectedConnectionType === "Halo") {
-				parentClass = "classic-halo";
-			}
 		}
 
 		const commonCanvasConfig = {
@@ -1935,7 +1939,6 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
-			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
@@ -1969,6 +1972,7 @@ class App extends React.Component {
 			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
 			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
@@ -1977,7 +1981,6 @@ class App extends React.Component {
 		const editActionHandler = this.editActionHandler;
 
 		const commonCanvasConfig2 = {
-			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: parentClass,
@@ -2095,13 +2098,29 @@ class App extends React.Component {
 					{ divider: true }
 				]
 			};
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE) {
+			toolbarConfig = {
+				overrideAutoEnableDisable: true,
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: false },
+					{ action: "redo", label: "Redo", enable: false },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: false, tooltip: "Cut from clipboard" },
+					{ action: "copy", label: "Copy", enable: false, tooltip: "Copy from clipboard" },
+					{ action: "paste", label: "Paste", enable: false, tooltip: "Paste to canvas" },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: false },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: false }
+				]
+			};
 		}
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 

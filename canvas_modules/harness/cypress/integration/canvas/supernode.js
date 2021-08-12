@@ -261,7 +261,6 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 describe("Test create a supernode with link that does not have port info", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -289,7 +288,6 @@ describe("Test create a supernode with link that does not have port info", funct
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Update canvas config and expand supernode
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
 

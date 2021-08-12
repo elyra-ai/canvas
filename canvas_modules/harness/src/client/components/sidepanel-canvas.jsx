@@ -34,8 +34,6 @@ import {
 	LOCAL_FILE_OPTION,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
-	HALO_CONNECTION,
-	PORTS_CONNECTION,
 	INTERACTION_MOUSE,
 	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
@@ -75,7 +73,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -799,6 +798,17 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
+		var enableSingleOutputPortDisplay = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-single-output-port-display-toggle">
+				<Toggle
+					id="selectedSingleOutputPortDisplay" // Set ID to corresponding field in App.js state
+					labelText="Enable Single Output Port Display"
+					toggled={this.props.getStateValue("selectedSingleOutputPortDisplay")}
+					onToggle={this.setStateValue}
+				/>
+			</div>);
+
+
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
 				<Toggle
@@ -878,31 +888,9 @@ export default class SidePanelForms extends React.Component {
 			</FormGroup>
 		</div>);
 
-		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
-			<FormGroup
-				legendText="Connection Type"
-			>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedConnectionType" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedConnectionType")}
-				>
-					<RadioButton
-						value={PORTS_CONNECTION}
-						labelText={PORTS_CONNECTION}
-					/>
-					<RadioButton
-						value={HALO_CONNECTION}
-						labelText={HALO_CONNECTION}
-					/>
-				</RadioButtonGroup>
-			</FormGroup>
-		</div>);
-
 		var nodeFormatType = (<div className="harness-sidepanel-children">
 			<FormGroup
-				legendText="Node Format Type (for 'Ports')"
+				legendText="Node Format Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -924,7 +912,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-type">
 			<FormGroup
-				legendText="Link Type (for 'Ports')"
+				legendText="Link Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -950,7 +938,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
 			<FormGroup
-				legendText="Link Direction (for 'Ports')"
+				legendText="Link Direction"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -1113,6 +1101,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
 						labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE}
+						labelText={TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
@@ -1301,8 +1293,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{paletteInput}
 					{divider}
-					{connectionType}
-					{divider}
 					{nodeFormatType}
 					{divider}
 					{linkType}
@@ -1336,6 +1326,8 @@ export default class SidePanelForms extends React.Component {
 					{enableAssocLinkCreation}
 					{divider}
 					{assocLinkType}
+					{divider}
+					{enableSingleOutputPortDisplay}
 					{divider}
 					{enableRightFlyoutUnderToolbar}
 					{divider}

@@ -27,6 +27,11 @@ const nodesInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-grou
 const nodesInSubFlowInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group> .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 
 
+Cypress.Commands.add("verifyNumberOfBreadcrumbs", (noOfBreadcrumbs) => {
+	cy.get(".harness-pipeline-breadcrumbs-label")
+		.should("have.length", noOfBreadcrumbs);
+});
+
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
@@ -325,17 +330,7 @@ Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(dataLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(dataLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(dataLinkSelector).should("have.length", noOfLinks);
-				}
+				cy.get(dataLinkSelector).should("have.length", noOfLinks);
 			});
 		} else {
 			// No Port Data Links found on canvas
@@ -393,17 +388,7 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(commentLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(commentLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfCommentLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(commentLinkSelector).should("have.length", noOfCommentLinks);
-				}
+				cy.get(commentLinkSelector).should("have.length", noOfCommentLinks);
 			});
 		} else {
 			// No comment links found on canvas
@@ -421,17 +406,7 @@ Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) =>
 	cy.get("body").then(($body) => {
 		if ($body.find(assocLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(assocLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfAssociationLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(assocLinkSelector).should("have.length", noOfAssociationLinks);
-				}
+				cy.get(assocLinkSelector).should("have.length", noOfAssociationLinks);
 			});
 		} else {
 			// No comment links found on canvas
@@ -898,6 +873,16 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 					const itemsVisible = totalItemsLength - hiddenItemsLength;
 					expect(itemsVisible).to.equal(noOfItems);
 				});
+		});
+});
+
+Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
+	cy.get(".toolbar-div")
+		.find("." + action + "-action > button")
+		.then((buttons) => {
+			const classList = Array.from(buttons[0].classList);
+			const enabled = !classList.includes("bx--btn--disabled");
+			expect(enabled).to.equal(state);
 		});
 });
 

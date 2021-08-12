@@ -834,13 +834,13 @@ describe("ObjectModel API handle model OK", () => {
 		let primaryBreadCrumb = objectModel.getBreadcrumbs();
 		expect(primaryBreadCrumb).to.have.length(1);
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode3 });
+		objectModel.addBreadcrumb({ pipelineId: Supernode3 });
 		const supernode3BreadCrumbs = objectModel.getBreadcrumbs();
 		expect(supernode3BreadCrumbs).to.have.length(2);
 		expect(supernode3BreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
 		expect(supernode3BreadCrumbs[1].pipelineId).to.equal(Supernode3);
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode3A });
+		objectModel.addBreadcrumb({ pipelineId: Supernode3A });
 		const supernode3ABreadCrumbs = objectModel.getBreadcrumbs();
 		expect(supernode3ABreadCrumbs).to.have.length(3);
 		expect(supernode3ABreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
@@ -850,28 +850,28 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPreviousBreadcrumb();
 		expect(JSON.stringify(objectModel.getBreadcrumbs())).to.equal(JSON.stringify(supernode3BreadCrumbs));
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode3B });
+		objectModel.addBreadcrumb({ pipelineId: Supernode3B });
 		const supernode3BBreadCrumbs = objectModel.getBreadcrumbs();
 		expect(supernode3ABreadCrumbs).to.have.length(3);
 		expect(supernode3BBreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
 		expect(supernode3BBreadCrumbs[1].pipelineId).to.equal(Supernode3);
 		expect(supernode3BBreadCrumbs[2].pipelineId).to.equal(Supernode3B);
 
-		objectModel.addNewBreadcrumb({ pipelineId: primaryPipelineId });
+		objectModel.addBreadcrumb({ pipelineId: primaryPipelineId });
 		primaryBreadCrumb = objectModel.getBreadcrumbs();
 		expect(primaryBreadCrumb).to.have.length(1);
 		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode2B1 });
+		objectModel.addBreadcrumb({ pipelineId: Supernode2B1 });
 
 		objectModel.setPreviousBreadcrumb();
 		primaryBreadCrumb = objectModel.getBreadcrumbs();
 		expect(primaryBreadCrumb).to.have.length(1);
 		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode2 });
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode2A });
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode2B });
+		objectModel.addBreadcrumb({ pipelineId: Supernode2 });
+		objectModel.addBreadcrumb({ pipelineId: Supernode2A });
+		objectModel.addBreadcrumb({ pipelineId: Supernode2B });
 		let supernode2BreadCrumbs = objectModel.getBreadcrumbs();
 		expect(supernode2BreadCrumbs).to.have.length(4);
 		expect(supernode2BreadCrumbs[0].pipelineId).to.equal(primaryPipelineId);
@@ -886,10 +886,10 @@ describe("ObjectModel API handle model OK", () => {
 		expect(supernode2BreadCrumbs[1].pipelineId).to.equal(Supernode2);
 		expect(supernode2BreadCrumbs[2].pipelineId).to.equal(Supernode2A);
 
-		objectModel.addNewBreadcrumb({ pipelineId: Supernode1 });
+		objectModel.addBreadcrumb({ pipelineId: Supernode1 });
 		expect(objectModel.getBreadcrumbs()).to.have.length(4);
 
-		objectModel.addNewBreadcrumb({ pipelineId: primaryPipelineId });
+		objectModel.addBreadcrumb({ pipelineId: primaryPipelineId });
 		primaryBreadCrumb = objectModel.getBreadcrumbs();
 		expect(primaryBreadCrumb).to.have.length(1);
 		expect(primaryBreadCrumb[0].pipelineId).to.equal(primaryPipelineId);
@@ -975,7 +975,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlow(supernodeNestedCanvas);
 
 		// Add new breadcrumb for the sub-flow, to simulate the user viewing sub-flow full-screen
-		objectModel.addNewBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
+		objectModel.addBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
 
 		// Pass in the same pipeline flow to simulate the host app setting some property and giving us the same flow.
 		objectModel.setPipelineFlow(supernodeNestedCanvas);
@@ -989,7 +989,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlow(supernodeNestedCanvas);
 
 		// Add new breadcrumb for the sub-flow, to simulate the user viewing sub-flow full-screen
-		objectModel.addNewBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
+		objectModel.addBreadcrumb({ pipelineId: "8e671b0f-118c-4216-9cea-f522662410ec", pipelineFlowId: "153651d6-9b88-423c-b01b-861f12d01489" });
 
 		// Pass in the different pipeline flow to simulate the host app giving us a new flow.
 		objectModel.setPipelineFlow(startCanvas);

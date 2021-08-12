@@ -52,10 +52,6 @@ export default class BlueEllipsesCanvas extends React.Component {
 					ellipsisDisplay: true,
 					ellipsisPosX: 100,
 					ellipsisPosY: 20,
-					haloDisplay: false,
-					haloCenterX: 60,
-					haloCenterY: 30,
-					haloRadius: 30,
 					portPosY: 30
 				}
 		});

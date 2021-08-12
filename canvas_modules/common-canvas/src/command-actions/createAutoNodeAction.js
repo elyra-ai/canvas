@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-lonely-if: ["off"] */
+
 import Action from "../command-stack/action.js";
+import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, objectModel, autoLinkOnlyFromSelNodes) {
@@ -27,12 +30,10 @@ export default class CreateAutoNodeAction extends Action {
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
-		this.newPipeline = null;
-		if (this.newNode && this.newNode.open_with_tool === "shaper") {
-			this.newPipeline = this.objectModel.createEmptyPipeline();
-			this.newNode.subflow_ref = {
-				pipeline_id_ref: this.newPipeline.id
-			};
+		if (this.newNode.type === SUPER_NODE) {
+			const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(this.newNode);
+			this.subPipelines = subPipelines;
+			this.newNode = supernode;
 		}
 	}
 
@@ -42,27 +43,34 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.sourceNode = this.srcNode;
 		this.data.newNode = this.newNode;
 		this.data.newLink = this.newLink;
-		this.data.newPipeline = this.newPipeline;
+		this.data.subPipeline = this.subPipelines;
 		return this.data;
 	}
 
 	// Standard methods
 	do() {
 		if (this.newLink) {
-			this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
+			if (this.newNode.type === SUPER_NODE) {
+				this.apiPipeline.addSupernode(this.newNode, this.subPipelines, this.newLink);
+			} else {
+				this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
+			}
+
 		} else {
-			this.apiPipeline.addNode(this.newNode);
+			if (this.newNode.type === SUPER_NODE) {
+				this.apiPipeline.addSupernode(this.newNode, this.subPipelines);
+			} else {
+				this.apiPipeline.addNode(this.newNode);
+			}
 		}
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
-		if (this.newPipeline) {
-			this.objectModel.addPipeline(this.newPipeline);
-		}
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
-		if (this.newPipeline) {
-			this.objectModel.deletePipeline(this.newPipeline.id);
+		if (this.newNode.type === SUPER_NODE) {
+			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
+		} else {
+			this.apiPipeline.deleteNode(this.newNode.id);
 		}
 	}
 

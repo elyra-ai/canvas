@@ -35,7 +35,6 @@ export default class Explain2Canvas extends React.Component {
 		this.canvasController.setPipelineFlow(Explain2CanvasFlow);
 
 		this.config = Object.assign({}, props.config, {
-			enableConnectionType: "Ports",
 			enableParentClass: "explain2",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Elbow",

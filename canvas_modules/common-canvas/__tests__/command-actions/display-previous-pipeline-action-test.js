@@ -24,12 +24,14 @@ const objectModel = canvasController.getObjectModel();
 describe("DisplayPreviousPipeline action handles calls correctly", () => {
 	it("should handle calls, undo, and redo", () => {
 		expect(objectModel.getBreadcrumbs()).to.have.length(1);
-		objectModel.addNewBreadcrumb({ pipelineId: "test 1" });
+		objectModel.addBreadcrumb({ pipelineId: "test 1" });
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");
 		expect(objectModel.getBreadcrumbs()).to.have.length(2);
-		objectModel.addNewBreadcrumb({ pipelineId: "test 2" });
+
+		objectModel.addBreadcrumb({ pipelineId: "test 2" });
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
+
 		const displayPreviousPipeline = new DisplayPreviousPipeline({}, objectModel);
 		displayPreviousPipeline.do();
 

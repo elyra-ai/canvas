@@ -25,14 +25,22 @@ export default class PipelineInHandler {
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
 	// by extracting that info from the pipeline-flow provided.
 	static convertPipelineFlowToCanvasInfo(pipelineFlow, canvasLayout) {
+		const canvasInfoPipelines = this.convertPipelinesToCanvasInfoPipelines(pipelineFlow.pipelines, canvasLayout);
+		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
+		return newPipelineFlow;
+	}
+
+	// Returns an array of pipelines that conform to the internal 'canvas info'
+	// format based on the array of pipelines passed in that are expected to
+	// conform to the pipeline-flow format'.
+	static convertPipelinesToCanvasInfoPipelines(pipelines, canvasLayout) {
 		let canvasInfoPipelines = [];
-		if (pipelineFlow.pipelines) {
-			canvasInfoPipelines = pipelineFlow.pipelines.map((pFlowPipline) =>
+		if (pipelines) {
+			canvasInfoPipelines = pipelines.map((pFlowPipline) =>
 				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, canvasLayout)
 			);
 		}
-		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
-		return newPipelineFlow;
+		return canvasInfoPipelines;
 	}
 
 	// Returns the 'canvas info' pipeline, stored internally in the object model,

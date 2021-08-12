@@ -22,7 +22,6 @@
 // ---------------------------------------------------------------------------
 
 import dagre from "dagre/dist/dagre.min.js";
-import has from "lodash/has";
 
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
@@ -43,6 +42,14 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
+	getPipeline() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+	}
+
+	isPipelineExternal() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId).parentUrl;
+	}
+
 	setPipelineZoom(zoom, translate) {
 		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}
@@ -266,6 +273,8 @@ export default class APIPipeline {
 		return node;
 	}
 
+	// Returns a newly created supernode based on the parameters passed in. The
+	// externalUrl parameter indicates whether it is an external supernode or not.
 	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
 		const supernodeTemplate = {
 			description: description,
@@ -278,6 +287,10 @@ export default class APIPipeline {
 				pipeline_id_ref: subPipelineId
 			},
 		};
+
+		if (externalUrl) {
+			supernodeTemplate.subflow_ref.url = externalUrl;
+		}
 
 		const supernodeData = {
 			nodeTemplate: supernodeTemplate,
@@ -483,8 +496,18 @@ export default class APIPipeline {
 		}
 	}
 
-	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
-	addSupernode(newSupernode, newSubPipelines) {
+	addSupernodes(supernodesToAdd, pipelinesToAdd, extPipelineFlowsToAdd) {
+		this.store.dispatch({ type: "ADD_SUPERNODES", data: {
+			supernodesToAdd: supernodesToAdd,
+			pipelinesToAdd: pipelinesToAdd,
+			extPipelineFlowsToAdd: extPipelineFlowsToAdd,
+			pipelineId: this.pipelineId
+		} });
+	}
+
+	// Add the newSupernode to canvasInfo and an array of newSubPipelines that
+	// it references. Optionally, a link may also be added.
+	addSupernode(newSupernode, newSubPipelines, newLink) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
 		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
@@ -494,7 +517,14 @@ export default class APIPipeline {
 					...pipeline.nodes,
 					Object.assign({}, newSupernode)
 				];
-				return Object.assign({}, pipeline, { nodes: newNodes });
+				let newLinks = pipeline.links;
+				if (newLink) {
+					newLinks = [
+						...pipeline.links,
+						Object.assign({}, newLink)
+					];
+				}
+				return Object.assign({}, pipeline, { nodes: newNodes, links: newLinks });
 			}
 			return pipeline;
 		});
@@ -513,26 +543,27 @@ export default class APIPipeline {
 		this.deleteObject(id);
 	}
 
-	deleteSupernode(supernodeId, deletePipelines = true) {
-		let pipelineIds = [];
-		const supernode = this.getNode(supernodeId);
-		if (supernode) {
-			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				if (deletePipelines) {
-					pipelineIds = pipelineIds.concat(this.objectModel.getDescendantPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-				}
-			}
-			this.store.dispatch({
-				type: "DELETE_SUPERNODE",
-				data: {
-					id: supernode.id,
-					supernode: supernode,
-					pipelineIds: pipelineIds
-				},
+	// Deletes the supernodes passed in and also any descending pipelines. It
+	// makes sure it doesn't delete any external pipeline that is referenced by
+	// other supernodes in the canvas info.
+	deleteSupernodesAndDescPipelines(supernodes) {
+		const pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(supernodes, this.pipelineId);
+		const extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(pipelinesToDelete);
+		this.deleteSupernodes(supernodes, pipelinesToDelete, extPipelineFlowsToDelete);
+	}
+
+	// Deletes the supernodes passed in along with any pipelines and xternal flows.
+	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
+		this.store.dispatch({
+			type: "DELETE_SUPERNODES",
+			data: {
+				supernodesToDelete: supernodesToDelete,
+				pipelinesToDelete: pipelinesToDelete,
+				extPipelineFlowsToDelete: extPipelineFlowsToDelete,
 				pipelineId: this.pipelineId
-			});
-		}
+			}
+		});
 	}
 
 	getNodes() {
@@ -558,15 +589,8 @@ export default class APIPipeline {
 		});
 	}
 
-	getSupernodes(inNodes) {
-		const supernodes = [];
-		const listOfNodes = inNodes ? inNodes : this.getNodes();
-		listOfNodes.forEach((node) => {
-			if (node.type === SUPER_NODE) {
-				supernodes.push(node);
-			}
-		});
-		return supernodes;
+	getSupernodes() {
+		return CanvasUtils.filterSupernodes(this.getNodes());
 	}
 
 	isDataNode(objId) {

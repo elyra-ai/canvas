@@ -292,8 +292,8 @@
             "ui_data": {
               "label": "Model Node",
               "image": "/images/nodes/model.svg",
-              "x_pos": 543,
-              "y_pos": 182.99999237060547,
+              "x_pos": 607,
+              "y_pos": 162.99999237060547,
               "class_name": "canvas-node"
             }
           },
@@ -371,8 +371,8 @@
             "ui_data": {
               "label": "Binding (exit) node",
               "image": "/images/nodes/table.svg",
-              "x_pos": 544,
-              "y_pos": 359.99999237060547,
+              "x_pos": 609,
+              "y_pos": 368.99999237060547,
               "class_name": "canvas-node",
               "associations": [
                 {

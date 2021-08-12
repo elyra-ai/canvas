@@ -71,7 +71,6 @@ export default class SVGCanvasD3 {
 				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
 				this.config.enableAutoLayoutVerticalSpacing !== config.enableAutoLayoutVerticalSpacing ||
 				this.config.enableAutoLayoutHorizontalSpacing !== config.enableAutoLayoutHorizontalSpacing ||
-				this.config.enableConnectionType !== config.enableConnectionType ||
 				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
 				this.config.enableLinkType !== config.enableLinkType ||
 				this.config.enableLinkDirection !== config.enableLinkDirection ||
@@ -95,6 +94,7 @@ export default class SVGCanvasD3 {
 				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
 				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
 				this.config.enableAutoLinkOnlyFromSelNodes !== config.enableAutoLinkOnlyFromSelNodes ||
+				this.config.enableSingleOutputPortDisplay !== config.enableSingleOutputPortDisplay ||
 				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
 				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
 				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
@@ -123,12 +123,17 @@ export default class SVGCanvasD3 {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
 				this.renderer.displayCanvas();
 			} else {
+				const currentBreadcrumb = this.canvasController.getCurrentBreadcrumb();
 				this.renderer = new SVGCanvasRenderer(
-					this.canvasController.getCurrentBreadcrumb().pipelineId,
+					currentBreadcrumb.pipelineId,
 					this.canvasDiv,
 					this.canvasController,
 					this.canvasInfo,
-					config);
+					config,
+					{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
+						pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
+					}
+				);
 			}
 
 			this.logger.logEndTimer("Set Canvas Info", true);
