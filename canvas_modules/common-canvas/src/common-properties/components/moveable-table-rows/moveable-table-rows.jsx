@@ -186,14 +186,7 @@ class MoveableTableRows extends React.Component {
 		const staticRows = this.props.controller.getStaticRows(this.props.propertyId).sort();
 		for (var firstRow = selected[0]; firstRow > leastValue; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
-				if (staticRows.length > 0 && selected[0] > leastValue + 1) {
-					const selectedRow = selected.shift();
-					const tmpRow = controlValue[selectedRow - 1];
-					controlValue[selectedRow - 1] = controlValue[selectedRow];
-					controlValue[selectedRow] = tmpRow;
-					selected.push(selectedRow - 1);
-					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
-				} else if (staticRows.length === 0) {
+				if ((staticRows.length > 0 && selected[0] > leastValue + 1) || staticRows.length === 0) {
 					const selectedRow = selected.shift();
 					const tmpRow = controlValue[selectedRow - 1];
 					controlValue[selectedRow - 1] = controlValue[selectedRow];

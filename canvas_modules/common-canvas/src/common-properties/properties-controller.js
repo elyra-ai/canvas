@@ -1751,7 +1751,6 @@ export default class PropertiesController {
 	 * Freeze row move buttons for row indexes in given array
 	 * @param propertyId The unique property identifier
 	 * @param rowIndexes Array of row indexes
-	 *
 	 */
 
 	getStaticRows(inPropertyId) {
@@ -1775,8 +1774,8 @@ export default class PropertiesController {
 	}
 
 	/**
-	 * Validate if the array for freeze rows is correct. Should only have continuos value of row indexes
-	 * Must not contain first and last row index together in the array ever. you can only freeze either first row or the last row
+	 * Validate if the array for freeze rows is correct. Should only have continuous value of row indexes
+	 * Must not contain first and last row index together in the array ever. you can only freeze either first n row or the last n row
 	 * @param staticRows Array of rows you want to freeze
 	 * @param controlValue the property values for the property Id
 	 * @returns

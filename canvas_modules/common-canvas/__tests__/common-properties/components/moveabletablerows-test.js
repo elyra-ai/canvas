@@ -401,7 +401,6 @@ describe("MoveableTableRows renders correctly", () => {
 	});
 
 	it("should disable all move buttons when first row is static and selected", () => {
-		
 		setControlValues([0]);
 		let wrapper = mountWithIntl(
 			<MoveableTableRows
@@ -466,7 +465,6 @@ describe("MoveableTableRows renders correctly", () => {
 	});
 
 	it("should disable all move buttons when last row is static and selected", () => {
-		
 		setControlValues([rows.length - 1]);
 		let wrapper = mountWithIntl(
 			<MoveableTableRows
@@ -497,7 +495,6 @@ describe("MoveableTableRows renders correctly", () => {
 	});
 
 	it("should disable down move buttons when last row is static and second last row is selected", () => {
-		
 		setControlValues([rows.length - 2]);
 		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
 		if (isDisableRowMoveButtons === true) {
@@ -532,7 +529,6 @@ describe("MoveableTableRows renders correctly", () => {
 	});
 
 	it("should enable all move buttons when last row is static and third last row is selected", () => {
-		
 		setControlValues([rows.length - 3]);
 		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
 		if (isDisableRowMoveButtons === true) {
@@ -567,7 +563,6 @@ describe("MoveableTableRows renders correctly", () => {
 	});
 
 	it("should enable all move buttons when first row is static and third row is selected", () => {
-		
 		setControlValues([2]);
 		const isDisableRowMoveButtons = controller.isDisableRowMoveButtons(propertyId);
 		if (isDisableRowMoveButtons === true) {
