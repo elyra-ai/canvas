@@ -619,7 +619,7 @@ export default class SidePanelModal extends React.Component {
 			<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-indexes">
 				<TextInput
 					labelText="Set the indexes for static rows"
-					id="harness-propertyId-staticRows"
+					id="harness-indexes-staticRows"
 					placeholder="[0, 1]"
 					invalid={this.state.invalidSetStaticRowIndexes}
 					invalidText="Please enter valid array of row indexes"
