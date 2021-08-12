@@ -276,6 +276,9 @@ export default class CanvasController {
 		return this.objectModel.getPrimaryPipelineId();
 	}
 
+	// Returns the external pipeline flow for the url passed in. The external
+	// flow must have been loaded through some common canvas action for this
+	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
@@ -314,6 +317,15 @@ export default class CanvasController {
 	// Returns the pipeline object for the pipeline Id passed in.
 	getPipeline(pipelineId) {
 		return this.objectModel.getCanvasInfoPipeline(pipelineId);
+	}
+
+	// Returns the ID of the pipeline object which is currently on display
+	// in the canvas. Typically, this is the primary pipeline but will be
+	// different if the user has navigated into one or more supernodes; in
+	// which case it will be the ID of the pipeline at the level in the
+	// supernode hierarchy that is currently on display.
+	getCurrentPipelineId() {
+		return this.objectModel.getCurrentBreadcrumb().pipelineId;
 	}
 
 	// Returns truty if the pipeline is external (that is it is part of an
@@ -1199,10 +1211,16 @@ export default class CanvasController {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the current array of breadcrumbs. There will one breadcrumb object
+	// for each level of supernode that the user has navigated into. This array
+	// can be used to display breadcrumbs to the user to show where they are
+	// within the navigation hierarchy within common canvas.
 	getBreadcrumbs() {
 		return this.objectModel.getBreadcrumbs();
 	}
 
+	// Returns the last breadcrumb which represents the level with supernode
+	// hierarchy that the user has currently navigated to.
 	getCurrentBreadcrumb() {
 		return this.objectModel.getCurrentBreadcrumb();
 	}

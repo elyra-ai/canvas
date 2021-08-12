@@ -29,6 +29,21 @@ import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 
 describe("Test canvas controller methods", () => {
+	it("should get the current pipeline using: getCurretPipeline", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		const pipelineId1 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId1, "`~!@#$%^&*()_+=-{}][|:;<,>.9?/")).to.be.true;
+
+		canvasController.displaySubPipelineForSupernode("nodeIDSuperNodePE");
+		const pipelineId2 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId2, "modeler-sub-pipeline")).to.be.true;
+
+	});
+
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
