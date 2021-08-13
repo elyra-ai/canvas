@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -70,8 +70,7 @@ class ButtonAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
 				disable={disabled}
 			>

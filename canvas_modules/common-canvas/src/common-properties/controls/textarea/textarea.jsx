@@ -22,7 +22,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
+import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import classNames from "classnames";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
@@ -101,8 +101,7 @@ class TextareaControl extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
 				disable={disabled}
 			>

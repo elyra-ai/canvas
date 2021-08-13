@@ -931,6 +931,15 @@ Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
 		});
 });
 
+Cypress.Commands.add("verifyTipDoesNotShowForCategory", (nodeCategory) => {
+	cy.findCategory(nodeCategory)
+		.invoke("attr", "data-id")
+		.then((dataId) => {
+			cy.get(`div[data-id='paletteTip_${dataId}']`)
+				.should("have.attr", "aria-hidden", "true");
+		});
+});
+
 Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
 	// Verify the tip doesn't show for node in category
 	cy.get(".tip-palette-item")
