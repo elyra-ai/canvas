@@ -137,9 +137,10 @@ class ToolbarActionItem extends React.Component {
 			const actionName = this.generateActionName();
 			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
+			const enableTooltip = this.props.actionObj.enable ? this.props.actionObj.enable : false;
 
 			return (
-				<Tooltip id={tooltipId} tip={tipText} disable={false} className="icon-tooltip" >
+				<Tooltip id={tooltipId} tip={tipText} disable={!enableTooltip} className="icon-tooltip" >
 					{content}
 				</Tooltip>
 			);

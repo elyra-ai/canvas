@@ -322,21 +322,12 @@ class ToolTip extends React.Component {
 		}
 	}
 
-	showTooltipOnMouseOver(evt) {
-		// closest() method traverses the Element and its parents until it finds a node that matches the provided selector string.
-		// Will return itself or the matching ancestor. If no such element exists, it returns null.
-		const toolbarItem = event.target.closest(".toolbar-item-content");
-		if (!(toolbarItem !== null && toolbarItem.classList.contains("disabled"))) {
-			this.setTooltipVisible(true);
-		}
-	}
-
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
-			const mouseover = (evt) => this.showTooltipOnMouseOver(evt);
+			const mouseover = () => this.setTooltipVisible(true);
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
