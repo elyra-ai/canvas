@@ -1746,4 +1746,56 @@ export default class PropertiesController {
 	getAddRemoveRows(propertyId) {
 		return this.propertiesStore.getAddRemoveRows(propertyId);
 	}
+
+	/**
+	 * Freeze row move buttons for row indexes in given array
+	 * @param propertyId The unique property identifier
+	 * @param rowIndexes Array of row indexes
+	 */
+
+	getStaticRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		return this.propertiesStore.getStaticRows(propertyId);
+	}
+
+	updateStaticRows(inPropertyId, staticRowsArr) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		const controlValue = this.getPropertyValue(inPropertyId);
+		const staticRows = staticRowsArr.sort();
+		const isValidSlection = this.validateSelectionValues(staticRows, controlValue);
+		if (isValidSlection) {
+			this.propertiesStore.updateStaticRows(propertyId, staticRows);
+		}
+	}
+
+	clearStaticRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	 * Validate if the array for freeze rows is correct. Should only have continuous value of row indexes
+	 * Must not contain first and last row index together in the array ever. you can only freeze either first n row or the last n row
+	 * @param staticRows Array of rows you want to freeze
+	 * @param controlValue the property values for the property Id
+	 * @returns
+	 */
+	validateSelectionValues(staticRows, controlValue) {
+		let isValid = false;
+		if (staticRows && controlValue.length > 0) {
+			const consecutiveAry = staticRows.slice(1).map(function(n, i) {
+				return n - staticRows[i];
+			});
+			const isDifference = consecutiveAry.every((value) => value === 1);
+			if (isDifference && ((staticRows.includes(0) && !staticRows.includes(controlValue.length - 1)) ||
+			(!staticRows.includes(0) && staticRows.includes(controlValue.length - 1)))) {
+				isValid = true;
+			} else {
+				isValid = false;
+			}
+		} else {
+			isValid = false;
+		}
+		return isValid;
+	}
 }

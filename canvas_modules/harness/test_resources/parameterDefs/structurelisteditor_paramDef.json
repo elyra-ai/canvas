@@ -10,6 +10,34 @@
         "World",
         "string",
         "Readonly phrase"
+      ],
+      [
+        2,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
+      ],
+      [
+        3,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
+      ],
+      [
+        4,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
+      ],
+      [
+        5,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
       ]
     ],
     "inlineEditingTable": [

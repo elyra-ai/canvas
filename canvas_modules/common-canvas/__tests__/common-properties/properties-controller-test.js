@@ -1883,3 +1883,56 @@ describe("Properties Controller addRemoveRows", () => {
 		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
 	});
 });
+
+describe("Properties Controller staticRows", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should update static Rows Indexes for the start rows if valid", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 1];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+	});
+
+	it("should update static Rows Indexes for the end rows if valid", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [3, 4];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+	});
+
+	it("should not update static Rows Indexes for invalid row indexes", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 3];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
+	it("should not update static Rows Indexes if not first row or last row index", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [2, 3];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
+	it("reset static Rows Indexes for propertyId to empty", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 1];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+		controller.clearStaticRows(propertyId);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
+});
