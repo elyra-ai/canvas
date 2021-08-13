@@ -322,12 +322,21 @@ class ToolTip extends React.Component {
 		}
 	}
 
+	showTooltipOnMouseOver(evt) {
+		// closest() method traverses the Element and its parents until it finds a node that matches the provided selector string.
+		// Will return itself or the matching ancestor. If no such element exists, it returns null.
+		const toolbarItem = event.target.closest(".toolbar-item-content");
+		if (!(toolbarItem !== null && toolbarItem.classList.contains("disabled"))) {
+			this.setTooltipVisible(true);
+		}
+	}
+
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
-			const mouseover = () => this.setTooltipVisible(true);
+			const mouseover = (evt) => this.showTooltipOnMouseOver(evt);
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
@@ -337,15 +346,15 @@ class ToolTip extends React.Component {
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
-				tabIndex={0}
 				data-id={this.props.id + "-trigger"}
 				className="tooltip-trigger"
 				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
 				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
 				onClick={this.props.showToolTipOnClick ? click : null}
-				onFocus={onFocus} // When focused using keyboard
-				onBlur={onBlur}
+				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
+				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
