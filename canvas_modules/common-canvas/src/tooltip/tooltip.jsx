@@ -337,15 +337,15 @@ class ToolTip extends React.Component {
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
-				tabIndex={0}
 				data-id={this.props.id + "-trigger"}
 				className="tooltip-trigger"
 				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
 				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
 				onClick={this.props.showToolTipOnClick ? click : null}
-				onFocus={onFocus} // When focused using keyboard
-				onBlur={onBlur}
+				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
+				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
