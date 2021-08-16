@@ -215,7 +215,7 @@ describe("oneofselect renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-test-oneofselect']");
-		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
+		const messageWrapper = dropdownWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
@@ -306,7 +306,7 @@ describe("oneofselect filters work correctly", () => {
 		let dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.have.length(4);
 		// make sure there isn't warning on first open
-		expect(dropdownWrapper.find("div.properties-validation-message")).to.have.length(0);
+		expect(dropdownWrapper.find("div.bx--form-requirement")).to.have.length(0);
 		// checked the filter box
 		const checkboxWrapper = wrapper.find("div[data-id='properties-filter']");
 		const checkbox = checkboxWrapper.find("input");

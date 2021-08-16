@@ -370,7 +370,7 @@ describe("radioset works in table correctly", () => {
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("pig");
 		inlineRadioset = wrapper.find("div[data-id='properties-radioset_col1']");
 		// expect an error to appear
-		expect(inlineRadioset.find("div.error")).to.have.length(1);
+		expect(inlineRadioset.find("div.error")).to.have.length(2); // one for the control and 1 for the table message
 		// using fruit = strawberry will generate a warning
 		tableUtils.clickTableRows(tableDiv, [0]);
 		let onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
@@ -380,7 +380,7 @@ describe("radioset works in table correctly", () => {
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("strawberry");
 		onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
 		// expect warning to appear
-		expect(onPanelRadioset.find("div.warning")).to.have.length(1);
+		expect(onPanelRadioset.find("div.warning")).to.have.length(2); // one for the control and 1 for the table message
 		// using color = purple will generate an error
 		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		subpanelButton.simulate("click");
@@ -390,7 +390,7 @@ describe("radioset works in table correctly", () => {
 		subpanelRadios.at(3).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("purple");
 		subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		expect(subpanelRadioset.find("div.error")).to.have.length(1);
+		expect(subpanelRadioset.find("div.error")).to.have.length(2); // one for the control and 1 for the table message
 	});
 });
 

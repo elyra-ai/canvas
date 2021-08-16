@@ -141,7 +141,7 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-number']");
-		const messageWrapper = textWrapper.find("div.properties-validation-message");
+		const messageWrapper = textWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });

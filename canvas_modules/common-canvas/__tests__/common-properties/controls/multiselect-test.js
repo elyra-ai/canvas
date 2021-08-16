@@ -213,7 +213,7 @@ describe("multiselect renders correctly", () => {
 			/>
 		);
 		const multiselectWrapper = wrapper.find("div[data-id='properties-test-multiselect']");
-		const messageWrapper = multiselectWrapper.find("div.properties-validation-message");
+		const messageWrapper = multiselectWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });
