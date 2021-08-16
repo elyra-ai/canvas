@@ -55,14 +55,23 @@ class TextareaControl extends React.Component {
 		const truncated = joined.truncated;
 
 		let textArea = null;
+		let validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
+		let showValidationMessage = false;
+		// carbon textarea doesn't support warn yet
+		if (validationProps.warn) {
+			showValidationMessage = true;
+			validationProps = {};
+		}
 		if (truncated) { // A value is too long to show for editing, display as readonly
 			const errorMessage = {
 				text: formatMessage(this.reactIntl, MESSAGE_KEYS.TRUNCATE_LONG_STRING_ERROR, { truncate_limit: TRUNCATE_LIMIT }),
 				type: CONDITION_MESSAGE_TYPE.ERROR,
 				validation_id: this.props.control.name
 			};
+			validationProps = ControlUtils.getValidationProps(errorMessage, this.props.tableControl);
 			textArea = (<div>
 				<TextArea
+					{...validationProps}
 					id={this.id}
 					disabled
 					placeholder={this.props.control.additionalText}
@@ -71,10 +80,11 @@ class TextareaControl extends React.Component {
 					hideLabel={this.props.tableControl}
 					light={this.props.controller.getLight()}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
 			textArea = (<TextArea
+				{...validationProps}
 				id={this.id}
 				disabled={this.props.state === STATES.DISABLED}
 				placeholder={this.props.control.additionalText}
@@ -112,7 +122,7 @@ class TextareaControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{display}
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 
 		);

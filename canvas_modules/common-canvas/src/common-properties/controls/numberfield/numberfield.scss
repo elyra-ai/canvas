@@ -16,30 +16,29 @@
 
 
 .properties-numberfield {
-
 	.bx--form-item { // carbon overrides
 		margin-right: 0;
 		margin-bottom: 0;
-	}
-	.bx--number[data-invalid] { // carbon override to not display error
-		.bx--form-requirement { // carbon override to not display error
-			display: none;
-		}
-	}
-	&.error {
-		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-01;
-		}
-	}
-	&.warning {
-		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-03;
-		}
 	}
 }
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
+		.bx--number[data-invalid] { // carbon override to not display error
+			.bx--form-requirement { // carbon override to not display error
+				display: none;
+			}
+		}
+		&.error {
+			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
+				box-shadow: 0 2px 0 0 $support-01;
+			}
+		}
+		&.warning {
+			input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
+				box-shadow: 0 2px 0 0 $support-03;
+			}
+		}
 		input[type="number"] { //override styling from carbon
 			background-color: unset;
 			padding: 0;

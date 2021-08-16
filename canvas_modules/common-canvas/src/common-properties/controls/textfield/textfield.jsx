@@ -88,10 +88,13 @@ class TextfieldControl extends React.Component {
 					controller={this.props.controller}
 					tableControl={this.props.tableControl}
 				/>
+				// TODO this could conflict with the below ValidationMessage.
 				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
+			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 			textInput = (<TextInput
+				{...validationProps}
 				autoComplete={this.props.tableControl === true ? "off" : "on"}
 				id={this.id}
 				disabled={ this.props.state === STATES.DISABLED}
@@ -129,7 +132,7 @@ class TextfieldControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{display}
-				<ValidationMessage inTable={this.props.tableControl} state={ this.props.state} messageInfo={ this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}

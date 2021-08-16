@@ -140,10 +140,12 @@ class MultiSelectControl extends React.Component {
 		} else { // Display message for multiple options selected
 			label = this.props.controller.getResource(overrideOptionsSelectedLabelKey, defaultOptionsSelectedLabel);
 		}
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		let dropdownComponent = null;
 		if (this.props.control.filterable) {
 			dropdownComponent = (<MultiSelect.Filterable
+				{...validationProps}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect-filterable`}
 				disabled={this.props.state === STATES.DISABLED}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
@@ -156,6 +158,7 @@ class MultiSelectControl extends React.Component {
 			/>);
 		} else {
 			dropdownComponent = (<MultiSelect
+				{...validationProps}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect`}
 				disabled={this.props.state === STATES.DISABLED}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
@@ -173,7 +176,7 @@ class MultiSelectControl extends React.Component {
 				className={classNames("properties-dropdown", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{dropdownComponent}
-				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} tableOnly messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
 			</div>
 		);
 	}
