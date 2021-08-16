@@ -13,7 +13,7 @@
   "parameters": [
     {
       "id": "fromValue",
-      "type": "doubler",
+      "type": "double",
       "required": true
     },
     {
@@ -121,9 +121,10 @@
           {
             "id": "TableTwisty",
             "label": {
-              "default": "Table Twisty"
+              "default": "Table Twisty.  Should be open by default."
             },
             "type": "twistyPanel",
+            "open": true,
             "group_info": [
               {
                 "id": "Inline editing",

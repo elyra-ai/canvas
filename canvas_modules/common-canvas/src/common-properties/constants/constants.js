@@ -148,9 +148,6 @@ _defineConstant("ELLIPSIS_STRING", "...");
 
 _defineConstant("DISPLAY_CHARS_DEFAULT", 64);
 
-_defineConstant("TOOL_TIP_DELAY", 1000);
-_defineConstant("TOOL_TIP_DELAY_ICON", 500);
-
 _defineConstant("STATES", {
 	VISIBLE: "visible",
 	HIDDEN: "hidden",
@@ -177,7 +174,8 @@ _defineConstant("CONDITION_DEFINITION_INDEX", {
 
 _defineConstant("ACTIONS", {
 	SET_PROPERTIES: "SET_PROPERTIES",
-	UPDATE_PROPERTY: "UPDATE_PROPERTY"
+	UPDATE_PROPERTY: "UPDATE_PROPERTY",
+	PROPERTIES_LOADED: "PROPERTIES_LOADED"
 });
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);

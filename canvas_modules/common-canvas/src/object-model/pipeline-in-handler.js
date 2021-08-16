@@ -25,14 +25,22 @@ export default class PipelineInHandler {
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
 	// by extracting that info from the pipeline-flow provided.
 	static convertPipelineFlowToCanvasInfo(pipelineFlow, canvasLayout) {
+		const canvasInfoPipelines = this.convertPipelinesToCanvasInfoPipelines(pipelineFlow.pipelines, canvasLayout);
+		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
+		return newPipelineFlow;
+	}
+
+	// Returns an array of pipelines that conform to the internal 'canvas info'
+	// format based on the array of pipelines passed in that are expected to
+	// conform to the pipeline-flow format'.
+	static convertPipelinesToCanvasInfoPipelines(pipelines, canvasLayout) {
 		let canvasInfoPipelines = [];
-		if (pipelineFlow.pipelines) {
-			canvasInfoPipelines = pipelineFlow.pipelines.map((pFlowPipline) =>
+		if (pipelines) {
+			canvasInfoPipelines = pipelines.map((pFlowPipline) =>
 				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, canvasLayout)
 			);
 		}
-		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
-		return newPipelineFlow;
+		return canvasInfoPipelines;
 	}
 
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
@@ -80,7 +88,7 @@ export default class PipelineInHandler {
 			const obj = {
 				"id": node.id,
 				"type": node.type,
-				"outputs": this.convertOutputs(node.outputs),
+				"outputs": this.convertOutputs(node),
 				"inputs": this.convertInputs(node),
 				"label": this.convertLabel(node),
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
@@ -91,15 +99,6 @@ export default class PipelineInHandler {
 				"ui_parameters": has(node, "app_data.ui_data.ui_parameters") ? node.app_data.ui_data.ui_parameters : [],
 				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : []
 			};
-			// Exit binding nodes, by definition, do not have output ports, however
-			// an exit binding node can contain an alt_outputs property which contains
-			// array of alternative output port objects. Inside common-canvas we
-			// treat this as outputs for the node, making sure we never assume an exit
-			// binding node does not have output ports.
-			if (node.type === BINDING &&
-					node.alt_outputs) {
-				obj.outputs = this.convertOutputs(node.alt_outputs);
-			}
 
 			if (node.type === EXECUTION_NODE ||
 					node.type === BINDING ||
@@ -156,11 +155,11 @@ export default class PipelineInHandler {
 		return label;
 	}
 
-	static convertOutputs(outputs) {
-		if (outputs) {
-			return outputs.map((output) => this.convertPortObject(output));
+	static convertOutputs(node) {
+		if (node.outputs) {
+			return node.outputs.map((output) => this.convertPortObject(output));
 		}
-		return outputs; // Return undefined if no outputs property
+		return node.outputs; // Return undefined if no outputs property
 	}
 
 	static convertInputs(node) {

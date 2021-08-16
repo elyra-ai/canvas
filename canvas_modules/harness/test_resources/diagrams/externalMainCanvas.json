@@ -190,8 +190,8 @@
           "type": "super_node",
           "open_with_tool": "canvas",
           "subflow_ref": {
-            "url": "all-types-external-pipeline-flow-url",
-            "pipeline_id_ref": "extrnal-sub-flow-pipeline"
+            "pipeline_id_ref": "external-sub-flow-pipeline-1",
+            "url": "external-sub-flow-url-1"
           },
           "app_data": {
             "my_data": {

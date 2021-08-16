@@ -84,6 +84,32 @@ Cypress.Commands.add("verifyTipForLabelIsVisibleAtLocation", (label, tipLocation
 		});
 });
 
+/** Verify the tooltip over the given text is 'hidden'
+* @param label: label of the container shown in the UI
+* @param text: text shown in the tip
+*/
+Cypress.Commands.add("verifyTipForLabelIsHidden", (label, text) => {
+	cy.getControlContainerFromName(label)
+		.then((container) => {
+			cy.get(".common-canvas-tooltip")
+				.then((tips) => {
+					// Get the tip
+					let hiddenTip;
+					for (var idx = 0; idx < tips.length; idx++) {
+						if (tips[idx].textContent === text) {
+							hiddenTip = tips[idx];
+							break;
+						}
+					}
+
+					if (hiddenTip) {
+						// Verify tip is hidden
+						cy.wrap(hiddenTip).should("be.hidden");
+					}
+				});
+		});
+});
+
 /** Verify the tooltip over the given text in the summaryPanel is 'visible'
 * @param text: value displayed in summary panels
 * @param summaryName: name of summaryPanel

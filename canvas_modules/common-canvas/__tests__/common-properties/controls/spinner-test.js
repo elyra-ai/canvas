@@ -99,6 +99,19 @@ describe("spinner-control renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
+	it("spinner-control should have steppers", () => {
+		const wrapper = mount(
+			<SpinnerControl
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		expect(wrapper.find(".bx--number--nosteppers")).to.have.length(0);
+		expect(wrapper.find(".bx--number__controls")).to.have.length(1);
+	});
+
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {
 		const wrapper = mount(
 			<SpinnerControl

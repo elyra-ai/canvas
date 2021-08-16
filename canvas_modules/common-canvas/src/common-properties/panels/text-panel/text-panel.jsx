@@ -29,7 +29,13 @@ class TextPanel extends Component {
 			? (<div className="panel-description">{evaluateText(this.props.panel.description, this.props.controller)}</div>)
 			: null;
 		return (
-			<div className={classNames("properties-text-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-text-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+					className
+				)}
 				disabled={this.props.panelState === STATES.DISABLED}
 			>
 				{label}

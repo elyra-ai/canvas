@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
+import propertyUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
@@ -24,6 +25,7 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
+import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
 
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
@@ -786,7 +788,7 @@ describe("Properties Controller datasetMetadata", () => {
 describe("Properties Controller property messages", () => {
 	it("should set property messages correctly", () => {
 		reset();
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		expect(getCopy(errorMessages)).to.eql(actualValues);
 	});
 	it("should update a simple property message correctly", () => {
@@ -796,7 +798,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Testing error messages"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_int = {
 			validation_id: "param_int",
@@ -812,7 +814,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "warning in array"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_str_array = {};
 		expectedValues.param_str_array[2] = {
@@ -829,7 +831,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad cell value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_mix_table[2] = {};
 		expectedValues.param_mix_table[2][3] = {
@@ -849,7 +851,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad data value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.structureeditor = {
 			"1": {
@@ -957,7 +959,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "Pick a better value"
 		});
-		const actualValues = controller.getErrorMessages();
+		const actualValues = controller.getAllErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_complex[1] = {
 			validation_id: "param_complex",
@@ -1130,6 +1132,42 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener).to.have.property("callCount", 3);
 		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
 	});
+	it("should callback after all properties are loaded", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
+		expect(propertyListener.calledWith({ action: "PROPERTIES_LOADED" })).to.be.true;
+
+		// Verify values and messages are set after PROPERTIES_LOADED
+		const actualRequiredMessages = renderedObject.controller.getRequiredErrorMessages();
+		const expectedRequiredMessages = {
+			"number_undefined": {
+				"type": "error",
+				"text": "Required parameter 'Undefined' has no value.",
+				"validation_id": "required_number_undefined_272.9520234285945",
+				"propertyId": {
+					"name": "number_undefined"
+				},
+				"required": true,
+				"displayError": false
+			},
+			"number_null": {
+				"type": "error",
+				"text": "Required parameter 'Null' has no value.",
+				"validation_id": "required_number_null_401.11526920064296",
+				"propertyId": {
+					"name": "number_null"
+				},
+				"required": true,
+				"displayError": false
+			}
+		};
+		expect(expectedRequiredMessages).to.eql(actualRequiredMessages);
+		const expectedValues = Object.assign({}, numberfieldParamDef.current_parameters, {
+			"number_default": 3,
+			"number_zero_default": 0
+		});
+		const actualValues = renderedObject.controller.getPropertyValues();
+		expect(expectedValues).to.eql(actualValues);
+	});
 });
 
 describe("Properties Controller controls", () => {
@@ -1280,10 +1318,26 @@ describe("Properties Controller updatePropertyValue validation", () => {
 			{
 				type: "error",
 				text: "The checkpoint interval value must either be >= 1 or -1 to disable",
-				validation_id: "numberfieldCheckpointInterval"
+				validation_id: "numberfieldCheckpointInterval",
+				propertyId: { name: "numberfieldCheckpointInterval" },
+				required: false
 			}
 		};
-		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(errorMessage));
+		expect(JSON.stringify(controller.getAllErrorMessages())).to.equal(JSON.stringify(errorMessage));
+	});
+
+	it("should removePropertyValue if the value is undefined", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const propertyId = { name: "numberfieldImpurity" };
+		expect(controller.getPropertyValue(propertyId)).to.equal("entropy");
+
+		// updatePropertyValue with new value undefined
+		/* eslint no-undefined: "off" */
+		controller.updatePropertyValue(propertyId, undefined);
+
+		// Verify undefined property is removed
+		expect(controller.getPropertyValues()).to.not.have.own.property(propertyId.name);
 	});
 });
 
@@ -1577,4 +1631,308 @@ describe("Properties Controller getControlPropType", () => {
 		const propType2 = controller.getControlPropType({ name: "param_complex", col: 2 }); // subcontrol: "zoom_label"
 		expect(propType2).to.equal("string");
 	});
+});
+
+describe("Properties Controller getRequiredDefinitionIds", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct required definition IDs from required parameters", () => {
+		const renderedObject = testUtils.flyoutEditorForm(actionParamDef);
+		controller = renderedObject.controller;
+
+		const requiredIds = controller.getRequiredDefinitionIds();
+		expect(requiredIds).to.eql(["required_fields_294.69762842919897"]);
+	});
+});
+
+describe("Properties Controller getRequiredErrorMessages", () => {
+	const requiredErrors = {
+		"numberfieldMaxBins": {
+			"type": "error",
+			"text": "Required parameter 'Maximum number of bins' has no value.",
+			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
+			"required": true,
+			"propertyId": { "name": "numberfieldMaxBins" },
+			"displayError": false
+		},
+		"checkboxTypes": {
+			"type": "warning",
+			"text": "No data types are selected",
+			"validation_id": "checkboxTypes",
+			"required": false,
+			"propertyId": { "name": "checkboxTypes" },
+			"displayError": false
+		},
+		"textfieldName": {
+			"type": "warning",
+			"text": "password cannot contain name",
+			"validation_id": "textfieldtest3",
+			"required": true,
+			"propertyId": { "name": "textfieldName" },
+			"displayError": true
+		},
+		"textareaDescription": {
+			"type": "error",
+			"text": "Required parameter 'Description' has no value.",
+			"validation_id": "required_textareaDescription_708.576019526482",
+			"required": false,
+			"propertyId": { "name": "textareaDescription" },
+			"displayError": true
+		},
+		"field_types": {
+			"7": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": true,
+					"propertyId": { "name": "field_types", "row": 7, "col": 0 },
+					"displayError": true
+				}
+			},
+			"8": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": false,
+					"propertyId": { "name": "field_types", "row": 8, "col": 0 },
+					"displayError": false
+				}
+			},
+			"9": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": false,
+					"propertyId": { "name": "field_types", "row": 9, "col": 0 },
+					"displayError": true
+				}
+			},
+			"10": {
+				"0": {
+					"type": "warning",
+					"text": "Invalid Field, field not found in data set.",
+					"validation_id": "validField_field_types[0]_408.7341493615164",
+					"required": true,
+					"propertyId": { "name": "field_types", "row": 10, "col": 0 },
+					"displayError": false
+				}
+			}
+		}
+	};
+	beforeEach(() => {
+		reset();
+	});
+	it("should return correct required error messages", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualRequiredErrors = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors = {
+			"numberfieldMaxBins": requiredErrors.numberfieldMaxBins,
+			"textfieldName": requiredErrors.textfieldName,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors).to.eql(expectedRequiredErrors);
+	});
+
+	it("should return correct error messages with filterDisplayError = true", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualDisplayErrors = controller.getErrorMessages(false, false, false, true);
+		const expectedDisplayErrors = {
+			"textfieldName": requiredErrors.textfieldName,
+			"textareaDescription": requiredErrors.textareaDescription,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"9": {
+					"0": requiredErrors.field_types["9"]["0"]
+				}
+			}
+		};
+		expect(actualDisplayErrors).to.eql(expectedDisplayErrors);
+	});
+
+	it("should return all error messages with filterDisplayError = false", () => {
+		controller.setErrorMessages(requiredErrors);
+		const actualDisplayErrors = controller.getAllErrorMessages();
+		expect(actualDisplayErrors).to.eql(requiredErrors);
+	});
+
+	it("should return all required error messages with hidden/disabled errors removed", () => {
+		controller.setErrorMessages(requiredErrors);
+		controller.updateControlState(requiredErrors.textfieldName.propertyId, "hidden");
+		const actualRequiredErrors = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors = {
+			"numberfieldMaxBins": requiredErrors.numberfieldMaxBins,
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors).to.eql(expectedRequiredErrors);
+
+		controller.updateControlState(requiredErrors.numberfieldMaxBins.propertyId, "disabled");
+		const actualRequiredErrors2 = controller.getRequiredErrorMessages();
+		const expectedRequiredErrors2 = {
+			"field_types": {
+				"7": {
+					"0": requiredErrors.field_types["7"]["0"]
+				},
+				"10": {
+					"0": requiredErrors.field_types["10"]["0"]
+				}
+			}
+		};
+		expect(actualRequiredErrors2).to.eql(expectedRequiredErrors2);
+	});
+});
+
+describe("Properties Controller addRemoveRows", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should setInitialAddRemoveRows when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+
+		const parameters = Object.keys(structureListEditorParamDef.current_parameters);
+		parameters.forEach((parameterName) => {
+			if (parameterName === "inlineEditingTableNoButtons") { // 'add_remove_rows' is set to false in parameterDef
+				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.false;
+			} else {
+				expect(controller.getAddRemoveRows({ name: parameterName })).to.be.true;
+			}
+		});
+	});
+
+	it("structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { name: "structurelisteditorTableInput" };
+
+		// Verify buttons are visible when editor opens
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+
+		// Set the addRemoveRows to false for this control
+		controller.setAddRemoveRows(propertyId, false);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		// Set the addRemoveRows to true for this control
+		controller.setAddRemoveRows(propertyId, true);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "structurelisteditorTableInput-summary-panel");
+		expect(summaryPanel.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
+
+	it("nested structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { name: "nestedStructurelisteditor", row: 0, col: 3 };
+
+		// Verify buttons are visible when editor opens
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		const parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructurelisteditor']");
+		parentTable.find(".properties-subpanel-button").at(0)
+			.simulate("click");
+		let nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+
+		// Set the addRemoveRows to false for this control
+		controller.setAddRemoveRows(propertyId, false);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(0);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		// Set the addRemoveRows to true for this control
+		controller.setAddRemoveRows(propertyId, true);
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structurelisteditor-summary-panel");
+		nestedTable = wrapper.find("div[data-id='properties-nested_structure']");
+		expect(nestedTable.find(".properties-at-buttons-container")).to.have.length(1);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
+
+	it("deeply nested structure should not show buttoms if addRemoveRows is set to false", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+
+		const propertyId = { name: "nestedStructurelisteditor", row: 0, col: 3, propertyId: { row: 0, col: 1 } };
+		controller.setAddRemoveRows(propertyId, false);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.false;
+
+		controller.setAddRemoveRows(propertyId, true);
+		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
+	});
+});
+
+describe("Properties Controller staticRows", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should update static Rows Indexes for the start rows if valid", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 1];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+	});
+
+	it("should update static Rows Indexes for the end rows if valid", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [3, 4];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+	});
+
+	it("should not update static Rows Indexes for invalid row indexes", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 3];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
+	it("should not update static Rows Indexes if not first row or last row index", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [2, 3];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
+	it("reset static Rows Indexes for propertyId to empty", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureListEditorParamDef);
+		controller = renderedObject.controller;
+		const propertyId = { name: "structurelisteditorTableInput" };
+		const staticRowIndexes = [0, 1];
+		controller.updateStaticRows(propertyId, staticRowIndexes);
+		expect(controller.getStaticRows(propertyId)).to.equal(staticRowIndexes);
+		controller.clearStaticRows(propertyId);
+		expect(controller.getStaticRows(propertyId)).to.have.length(0);
+	});
+
 });

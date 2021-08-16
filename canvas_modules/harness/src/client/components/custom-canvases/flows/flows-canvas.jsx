@@ -41,7 +41,6 @@ export default class FlowsCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "flows",
 			enableNodeFormatType: "Vertical",
-			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",

@@ -54,7 +54,10 @@ export default class SidePanelModal extends React.Component {
 			commonProperties: "",
 			commonPropertiesFormsFiles: [],
 			commonPropertiesParamDefsFiles: [],
-			invalidPropertyId: false
+			invalidPropertyId: false,
+			invalidSetAddRemoveRowPropertyId: false,
+			invalidSetStaticRowPropertyId: true,
+			invalidSetStaticRowIndexes: true
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
@@ -63,6 +66,7 @@ export default class SidePanelModal extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
@@ -70,8 +74,14 @@ export default class SidePanelModal extends React.Component {
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
+		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
+		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
+		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
+		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
+		this.setStaticRows = this.setStaticRows.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -131,6 +141,54 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.setMaxLengthForSingleLineControls(maxLengthForSingleLineControls);
 	}
 
+	// Textfield to enter the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(evt) {
+		try {
+			const propertyId = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.setAddRemoveRowsPropertyId(propertyId);
+			this.setState({ invalidSetAddRemoveRowPropertyId: false });
+		} catch (ex) {
+			this.setState({ invalidSetAddRemoveRowPropertyId: true });
+		}
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.props.propertiesConfig.setAddRemoveRowsEnabled(enabled);
+	}
+
+	// Button to submit addRemoveRows data and call propertiesController
+	setAddRemoveRows(evt) {
+		this.props.propertiesConfig.setAddRemoveRows();
+	}
+
+	// Textfield to enter the propertyId for StaticRows
+	setStaticRowsPropertyId(evt) {
+		try {
+			const propertyId = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.setStaticRowsPropertyId(propertyId);
+			this.setState({ invalidSetStaticRowPropertyId: false });
+		} catch (ex) {
+			this.setState({ invalidSetStaticRowPropertyId: true });
+		}
+	}
+
+	// Textfield to set StaticRows indexes
+	setStaticRowsIndexes(evt) {
+		try {
+			const indexes = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.setStaticRowsIndexes(indexes);
+			this.setState({ invalidSetStaticRowIndexes: false });
+		} catch (ex) {
+			this.setState({ invalidSetStaticRowIndexes: true });
+		}
+	}
+
+	// Button to submit StaticRows data and call propertiesController
+	setStaticRows(evt) {
+		this.props.propertiesConfig.setStaticRows();
+	}
+
 	submitProperties() {
 		if (this.state.commonProperties.name) {
 			this.props.log("Submit common properties file", this.state.commonProperties.name);
@@ -177,6 +235,10 @@ export default class SidePanelModal extends React.Component {
 
 	useApplyOnBlur(checked) {
 		this.props.propertiesConfig.useApplyOnBlur(checked);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.props.propertiesConfig.useSaveButtonDisable(disabled);
 	}
 
 	useExpressionBuilder(checked) {
@@ -354,6 +416,16 @@ export default class SidePanelModal extends React.Component {
 				/>
 			</div>);
 
+		const setSaveButtonDisable = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="harness-sidepanel-setSaveButtonDisable-toggle"
+					labelText="Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true"
+					toggled={this.props.propertiesConfig.disableSaveOnRequiredErrors}
+					onToggle={this.useSaveButtonDisable}
+				/>
+			</div>);
+
 		const expressionBuilder = (
 			<div className="harness-sidepanel-children">
 				<Toggle
@@ -494,6 +566,78 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const setAddRemoveRowsPropertyId = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-add-remove-rows-propertyid">
+				<TextInput
+					labelText="Set the propertyId for enabling/disabling addRemoveRows"
+					id="harness-propertyId-addRemoveRows"
+					placeholder='{ "name": "parameterName" }'
+					invalid={this.state.invalidSetAddRemoveRowPropertyId}
+					invalidText="Please enter valid JSON"
+					onChange={ this.setAddRemoveRowsPropertyId }
+					helperText='PropertyId format: {"name": "unique_id_for_control"}'
+				/>
+			</div>
+		);
+
+		const setAddRemoveRowsEnabled = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-add-remove-rows-enabled">
+				<Toggle
+					id="harness-sidepanel-setAddRemoveRowsEnabled-toggle"
+					labelText="Set addRemoveRows enabled for the propertyId entered above"
+					labelA="disable"
+					labelB="enable"
+					toggled={this.props.propertiesConfig.addRemoveRowsEnabled}
+					onToggle={this.setAddRemoveRowsEnabled}
+				/>
+			</div>);
+
+		const submitAddRemoveRows = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-add-remove-rows-submit">
+			<Button size="small"
+				disabled={this.state.invalidSetAddRemoveRowPropertyId}
+				onClick={this.props.propertiesConfig.setAddRemoveRows}
+			>
+				Submit
+			</Button>
+		</div>);
+
+		const setStaticRowsPropertyId = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-propertyid">
+				<TextInput
+					labelText="Set the propertyId for setting static rows"
+					id="harness-propertyId-staticRows"
+					placeholder='{ "name": "parameterName" }'
+					invalid={this.state.invalidSetStaticRowPropertyId}
+					invalidText="Please enter valid JSON"
+					onChange={ this.setStaticRowsPropertyId }
+					helperText='PropertyId format: {"name": "unique_id_for_control"}'
+				/>
+			</div>
+		);
+
+		const setStaticRowsIndexes = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-indexes">
+				<TextInput
+					labelText="Set the indexes for static rows"
+					id="harness-indexes-staticRows"
+					placeholder="[0, 1]"
+					invalid={this.state.invalidSetStaticRowIndexes}
+					invalidText="Please enter valid array of row indexes"
+					onChange={ this.setStaticRowsIndexes }
+					helperText="Indexes format: [Array of row indexes]"
+				/>
+			</div>);
+
+		const submitStaticRows = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-submit">
+			<Button size="small"
+				disabled={this.state.invalidSetStaticRowIndexes}
+				disabled={this.state.invalidSetStaticRowPropertyId || this.state.invalidSetStaticRowIndexes}
+				onClick={this.props.propertiesConfig.setStaticRows}
+			>
+				Submit
+			</Button>
+		</div>);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -508,6 +652,8 @@ export default class SidePanelModal extends React.Component {
 				{applyPropertiesWithoutEdit}
 				{divider}
 				{applyOnBlur}
+				{divider}
+				{setSaveButtonDisable}
 				{divider}
 				{expressionBuilder}
 				{divider}
@@ -530,6 +676,14 @@ export default class SidePanelModal extends React.Component {
 				{setMaxLengthForMultiLineControls}
 				{divider}
 				{setMaxLengthForSingleLineControls}
+				{divider}
+				{setAddRemoveRowsPropertyId}
+				{setAddRemoveRowsEnabled}
+				{submitAddRemoveRows}
+				{divider}
+				{setStaticRowsPropertyId}
+				{setStaticRowsIndexes}
+				{submitStaticRows}
 			</div>
 		);
 	}
@@ -548,6 +702,8 @@ SidePanelModal.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		applyOnBlur: PropTypes.bool,
 		useApplyOnBlur: PropTypes.func,
+		disableSaveOnRequiredErrors: PropTypes.bool,
+		useSaveButtonDisable: PropTypes.func,
 		expressionBuilder: PropTypes.bool,
 		useExpressionBuilder: PropTypes.func,
 		displayAdditionalComponents: PropTypes.bool,
@@ -562,6 +718,14 @@ SidePanelModal.propTypes = {
 		useLightOption: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
+		addRemoveRowsEnabled: PropTypes.bool,
+		setAddRemoveRowsPropertyId: PropTypes.func,
+		setAddRemoveRowsEnabled: PropTypes.func,
+		setAddRemoveRows: PropTypes.func,
+		StaticRowsEnabled: PropTypes.bool,
+		setStaticRowsPropertyId: PropTypes.func,
+		setStaticRowsIndexes: PropTypes.func,
+		setStaticRows: PropTypes.func,
 		setMaxLengthForMultiLineControls: PropTypes.func,
 		setMaxLengthForSingleLineControls: PropTypes.func,
 		enablePropertiesSchemaValidation: PropTypes.func,

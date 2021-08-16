@@ -35,6 +35,10 @@ Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 	cy.get("#harness-action-bar-sidepanel-canvas").click();
 });
 
+Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
+	cy.get("#harness-action-bar-sidepanel-modal").click();
+});
+
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
 	cy.document().then((doc) => {
 		doc.setCanvasDropdownFile(canvasFileName);
@@ -266,4 +270,14 @@ Cypress.Commands.add("submitAPI", () => {
 	cy.get("#harness-sidepanel-api-submit")
 		.find("button")
 		.click();
+});
+
+Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
+	cy.get(".harness-pipeline-breadcrumbs-label")
+		.contains(breadCrumb)
+		.click();
+});
+
+Cypress.Commands.add("toggleApplyOnBlur", () => {
+	cy.get("label[for='harness-sidepanel-applyOnBlur-toggle']").click();
 });

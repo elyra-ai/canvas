@@ -618,7 +618,7 @@ export default class AbstractTable extends React.Component {
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
 
-		let topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
+		let topRightPanel = this.props.addRemoveRows
 			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
 			: <div />;
 		if (this.isReadonlyTable()) {
@@ -631,8 +631,13 @@ export default class AbstractTable extends React.Component {
 			delete this.scrollToRow;
 		}
 
-		const rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
+		// ReadonlyTable with single row selection is non-interactive. rowClickCallback should be undefined.
+		let rowClickCallback;
+		const singleRowSelectionReadonlyTable = this.isReadonlyTable() && this.props.control.rowSelection === ROW_SELECTION.SINGLE;
+		if (!singleRowSelectionReadonlyTable) {
+			rowClickCallback = this.props.control.rowSelection === ROW_SELECTION.SINGLE ? this.handleRowClick : this.updateRowSelections;
+		}
 
 		const table =	(
 			<FlexibleTable
@@ -780,5 +785,10 @@ AbstractTable.propTypes = {
 	openFieldPicker: PropTypes.func.isRequired,
 	rightFlyout: PropTypes.bool,
 	value: PropTypes.array, // pass in by redux
-	selectedRows: PropTypes.array // set by redux
+	selectedRows: PropTypes.array, // set by redux
+	addRemoveRows: PropTypes.bool // set by redux
+};
+
+AbstractTable.defaultProps = {
+	addRemoveRows: true
 };

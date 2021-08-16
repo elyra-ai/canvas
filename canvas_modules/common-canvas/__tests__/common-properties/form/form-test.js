@@ -50,6 +50,7 @@ describe("Correct form should be created", () => {
 						"panel": {
 							"id": "settings",
 							"panelType": "general",
+							"nestedPanel": false,
 							"uiItems": [
 								{
 									"itemType": "control",
@@ -75,7 +76,8 @@ describe("Correct form should be created", () => {
 										]
 									}
 								}
-							]
+							],
+							"open": false,
 						}
 					}
 				}

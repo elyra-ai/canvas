@@ -19,8 +19,12 @@ import PropTypes from "prop-types";
 import has from "lodash/has";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM, USE_DEFAULT_ICON } from "../common-canvas/constants/canvas-constants.js";
+import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
+	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	from "../common-canvas/constants/canvas-constants.js";
+
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
+import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 
 class PaletteDialogContentGridNode extends React.Component {
 	constructor(props) {
@@ -101,6 +105,8 @@ class PaletteDialogContentGridNode extends React.Component {
 
 			if (image === USE_DEFAULT_ICON) {
 				image = SUPERNODE_ICON;
+			} else if (image === USE_DEFAULT_EXT_ICON) {
+				image = SUPERNODE_EXT_ICON;
 			}
 
 			icon = image.endsWith(".svg")

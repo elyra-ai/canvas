@@ -15,7 +15,7 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+import { SUPER_NODE }
 	from "../../../common-canvas/constants/canvas-constants.js";
 import ports from "./ports.js";
 
@@ -25,7 +25,7 @@ export default (state = [], action) => {
 	case "ADD_AUTO_NODE": {
 		return [
 			...state,
-			action.data.newNode
+			Object.assign({}, action.data.newNode)
 		];
 	}
 
@@ -76,7 +76,15 @@ export default (state = [], action) => {
 			return node;
 		});
 
-	case "DELETE_SUPERNODE":
+	case "ADD_SUPERNODES":
+		return [...state, ...action.data.supernodesToAdd];
+
+	case "DELETE_SUPERNODES":
+		return state.filter((node) => {
+			const removeNode = action.data.supernodesToDelete.some((n) => n.id === node.id);
+			return !removeNode;
+		});
+
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found
@@ -286,25 +294,10 @@ export default (state = [], action) => {
 			return node;
 		});
 
-	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
+	case "REPLACE_SN_AND_PIPELINES": {
 		return state.map((node, index) => {
-			if (action.data.supernodeId === node.id) {
-				const newNode = Object.assign({}, node);
-				newNode.image = (newNode.image === USE_DEFAULT_EXT_ICON ? USE_DEFAULT_ICON : newNode.image);
-				delete newNode.subflow_ref.url;
-				return newNode;
-			}
-			return node;
-		});
-	}
-
-	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
-		return state.map((node, index) => {
-			if (action.data.supernodeId === node.id) {
-				const newNode = Object.assign({}, node);
-				newNode.image = (newNode.image === USE_DEFAULT_ICON ? USE_DEFAULT_EXT_ICON : newNode.image);
-				newNode.subflow_ref.url = action.data.externalFlowUrl;
-				return newNode;
+			if (node.id === action.data.topSupernode.id) {
+				return Object.assign({}, action.data.topSupernode);
 			}
 			return node;
 		});

@@ -261,7 +261,6 @@ describe("Test cut and copy supernode from first canvas to second canvas", funct
 describe("Test create a supernode with link that does not have port info", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -289,7 +288,6 @@ describe("Test create a supernode with link that does not have port info", funct
 		cy.clickOptionFromContextMenu("Create supernode");
 
 		// Update canvas config and expand supernode
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
 
@@ -355,20 +353,70 @@ describe("Test context menu for supernode canvas background doesn't deselect nod
 	});
 });
 
-describe("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
+describe("Test Select all in context menu for supernode canvas only selects non-binding nodes", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it("Test Select All in context menu for supernode canvas only selects non-binding nodes", function() {
+	it("Test Select all in context menu for supernode canvas only selects non-binding nodes", function() {
 		// Expand supernode and select all objects in supernode
 		cy.rightClickNode("Supernode");
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.rightClickExpandedCanvasBackgroundOfSupernode("Supernode");
-		cy.clickOptionFromContextMenu("Select All");
+		cy.clickOptionFromContextMenu("Select all");
 		cy.verifyNumberOfSelectedObjects(5);
 	});
+});
+
+describe("Test navigation in and out of a supernode", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+	});
+
+	it("Test clicking expansion icon and 'back to previous' button goes in and out of subflow", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfNodes(15);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.clickExpansionIconOfSupernode("Supernode");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfNodes(8);
+
+		// Click return to go back to main flow.
+		cy.clickReturnToPreviousButton();
+
+		// Check the main flow is dispayed by counting number of nodes
+		cy.verifyNumberOfNodes(15);
+
+	});
+
+	it("Test clicking expansion icon and 'primary' breadcrumb button goes in and out of subflow", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfNodes(15);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.clickExpansionIconOfSupernode("Supernode");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfNodes(8);
+
+		// Click return to go back to main flow.
+		cy.clickBreadcrumb("Primary");
+
+		// Check the main flow is dispayed by counting number of nodes
+		cy.verifyNumberOfNodes(15);
+
+	});
+
 });
 
 describe("Test all the nodes are correctly positioned", function() {

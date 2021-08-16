@@ -268,14 +268,14 @@
     },
     {
       "id": "structuretableReadonlyColumnDefaultIndex",
-      "type": "map[string,structuretableReadonlyColumnDefaultIndex]",
+      "type": "map[string, structuretableReadonlyColumnDefaultIndex]",
       "role": "column",
       "default": [],
       "required": true
     },
     {
       "id": "structuretable_filter",
-      "type": "map[string,structuretable_filter]",
+      "type": "map[string, structuretable_filter]",
       "role": "column",
       "default": []
     },
@@ -289,7 +289,7 @@
     },
     {
       "id": "structuretableSortableColumns",
-      "type": "map[string,structuretableSortableColumns]",
+      "type": "map[string, structuretableSortableColumns]",
       "role": "column",
       "default": [],
       "required": true
@@ -316,19 +316,19 @@
     },
     {
       "id": "structuretableRenameFields",
-      "type": "map[string,structuretableRenameFields]",
+      "type": "map[string, structuretableRenameFields]",
       "role": "column",
       "default": []
     },
     {
       "id": "dummy_types",
-      "type": "map[string,DummyEntry]",
+      "type": "map[string, DummyEntry]",
       "role": "column",
       "default": []
     },
     {
       "id": "ST_mse_table",
-      "type": "map[string,ST_mse_table]",
+      "type": "map[string, ST_mse_table]",
       "role": "column",
       "default": []
     },
@@ -340,7 +340,7 @@
     },
     {
       "id": "structuretableLongValue",
-      "type": "map[string,structuretableLongValue]",
+      "type": "map[string, structuretableLongValue]",
       "role": "column",
       "default": []
     },
@@ -370,7 +370,7 @@
     },
     {
       "id": "nestedStructureMap",
-      "type": "map[string,nestedStructureMaps]",
+      "type": "map[string, nestedStructureMaps]",
       "role": "column",
       "required": true
     },
@@ -1149,6 +1149,52 @@
           "placement": "on_panel"
         },
         "rows": -1
+      },
+      {
+        "id": "ST_mse_table",
+        "key_definition": {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        "parameters": [
+          {
+            "id": "override",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "dummy_entry_sport_name",
+            "enum": [
+              "Football",
+              "Soccer"
+            ],
+            "default": "Soccer"
+          },
+          {
+            "id": "dummy_entry_invisble",
+            "type": "string",
+            "default": "Don't show"
+          },
+          {
+            "id": "checkit",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "id": "sometext",
+            "type": "string",
+            "default": "Type something here..."
+          },
+          {
+            "id": "anArray",
+            "type": "array[string]",
+            "default": [
+              "One",
+              "Two"
+            ]
+          }
+        ]
       },
       {
         "parameter_ref": "structuretableObjectType",

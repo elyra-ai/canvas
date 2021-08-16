@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+// This reducer handles external pipeline flows. In this reducer pipeline flows
+// are the pipeline flows WITHOUT their pipelines. The pipelines are stored in
+// the pipelines array of the canvas info (handed by the canvasinfo reducer)
+// and are glued back into the pipeline flow whenever the host app makes a
+// getExternalPipelineFlow(url) call to the canvas controller API.
 
 export default (state = [], action) => {
 	switch (action.type) {
@@ -22,21 +27,34 @@ export default (state = [], action) => {
 	}
 
 	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
-		return state.filter((pf) => pf.id !== action.pipelineFlowId);
+		return state.filter((epf) => epf.url !== action.externalUrl);
 	}
 
-	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
-		return state.filter((pf) => pf.url !== action.data.externalFlowUrl);
+	case "REPLACE_SN_AND_PIPELINES": {
+		const subset = state.filter((epf) => {
+			const remove = action.data.extPipelineFlowsToDelete.some((efd) => efd.url === epf.url);
+			return !remove;
+		});
+
+		const newset = [...subset, ...action.data.extPipelineFlowsToAdd];
+		return newset;
 	}
 
-	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
-		delete action.data.externalPipelineFlow.pipelines;
-		return [...state, action.data.externalPipelineFlow];
+	case "ADD_SUPERNODES":
+		return [...state, ...action.data.extPipelineFlowsToAdd];
+
+	case "DELETE_SUPERNODES": {
+		return state.filter((epf) => {
+			const removePFlow = action.data.extPipelineFlowsToDelete.some((pf) => epf.url === pf.url);
+			return !removePFlow;
+		});
 	}
 
-	case "DELETE_SUPERNODE": {
-		if (action.data.supernode.subflow_ref.url) {
-			return state.filter((epf) => epf.url !== action.data.supernode.subflow_ref.url);
+	case "SET_CANVAS_INFO": {
+		// If we are handling new canvasInfo we need to clear out any old
+		// external pipeline flows.
+		if (action.canvasInfoIdChanged) {
+			return [];
 		}
 		return state;
 	}

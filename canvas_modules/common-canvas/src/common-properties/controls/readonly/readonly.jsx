@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
-import { STATES, TOOL_TIP_DELAY, DATA_TYPE } from "./../../constants/constants";
+import { STATES, DATA_TYPE } from "./../../constants/constants";
 import Tooltip from "./../../../tooltip/tooltip";
 import Icon from "./../../../icons/icon";
 import { v4 as uuid4 } from "uuid";
@@ -119,10 +119,10 @@ class ReadonlyControl extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
 				disable={disabled}
+				showToolTipIfTruncated
 			>
 				{content}
 			</Tooltip>);

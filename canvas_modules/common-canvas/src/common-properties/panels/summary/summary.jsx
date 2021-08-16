@@ -70,7 +70,7 @@ class SummaryPanel extends React.Component {
 		}
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValues = this.props.controller.getPropertyValues();
-		this.initialMessages = this.props.controller.getErrorMessages();
+		this.initialMessages = this.props.controller.getAllErrorMessages();
 		this.initialStates = this.props.controller.getControlStates();
 	}
 
@@ -139,7 +139,7 @@ class SummaryPanel extends React.Component {
 										style={{ width: colWidth }}
 										onMouseMove={this._onMouseMove.bind(this)}
 									>
-										<Tooltip id={uuid4()} tip={contentValue} mousePos={this.state.mousePos}>
+										<Tooltip id={uuid4()} tip={contentValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
 											<span id={"span_" + uuid4()}>{contentValue}</span>
 										</Tooltip>
 									</td>);
@@ -149,7 +149,7 @@ class SummaryPanel extends React.Component {
 						const displayValue = this._getSummaryDisplayValue(rowValue, propertyId);
 						rowData.push(
 							<td key={"summary-table-row-data-" + rowIdx} className={"properties-summary-row-data "}>
-								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos}>
+								<Tooltip id={uuid4()} tip={displayValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
 									<span id={"span_" + uuid4()}>{displayValue}</span>
 								</Tooltip>
 							</td>);
@@ -305,7 +305,13 @@ class SummaryPanel extends React.Component {
 			</div>
 		</WideFlyout>) : <div />;
 		const panelClassName = this.props.panel.className ? this.props.panel.className : "";
-		const className = classNames("properties-summary-panel", "properties-control-panel", { "hide": this.props.panelState === STATES.HIDDEN }, panelClassName);
+		const className = classNames(
+			"properties-summary-panel",
+			"properties-control-panel",
+			{ "hide": this.props.panelState === STATES.HIDDEN },
+			{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+			panelClassName
+		);
 		return (
 			<div className={className} disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}>
 				{flyout}

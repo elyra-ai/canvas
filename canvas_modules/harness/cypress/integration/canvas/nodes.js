@@ -18,7 +18,6 @@ import * as testUtils from "../../utils/eventlog-utils";
 describe("Test adding nodes from palette", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -118,7 +117,6 @@ describe("Test adding nodes from palette", function() {
 describe("Test selecting nodes open properties", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Halo" });
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
@@ -204,6 +202,10 @@ describe("Test changing node properties is reflected in canvas", function() {
 	});
 
 	it("Test changing node names is reflected in canvas", function() {
+		// Set applyOnBlur to true
+		cy.toggleCommonPropertiesSidePanel();
+		cy.toggleApplyOnBlur();
+
 		// Add nodes from Palette
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Import");
@@ -262,7 +264,6 @@ describe("Test changing node image is reflected in canvas", function() {
 describe("Test from loaded file", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("modelerCanvas.json");
 	});
 
@@ -277,7 +278,6 @@ describe("Test from loaded file", function() {
 describe("Test from loaded file in legacy format", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("x-modelerCanvas.json");
 	});
 

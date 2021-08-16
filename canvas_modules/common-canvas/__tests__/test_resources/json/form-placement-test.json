@@ -163,11 +163,11 @@
               "panel": {
                 "id": "settings",
                 "panelType": "columnSelection",
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "control",
                     "control": {
-                      "labelVisible": true,
                       "name": "cols",
                       "label": {
                         "text": "Distinct"
@@ -176,6 +176,7 @@
                         "text": "Only the first row for each value of the columns added below will be included in the data table. Duplicate rows with the same value will be discarded.",
                         "placement": "on_panel"
                       },
+                      "labelVisible": true,
                       "controlType": "selectcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -187,7 +188,8 @@
                       "required": true
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           }

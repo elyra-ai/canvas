@@ -268,7 +268,7 @@ class CommonCanvas extends React.Component {
 			that.tipOpening = true;
 			that.setState({ tipDef: tipDef });
 			that.tipOpening = false;
-		}, tipDef.delay ? tipDef.delay : 750);
+		}, 0);
 	}
 
 	closeTip() {

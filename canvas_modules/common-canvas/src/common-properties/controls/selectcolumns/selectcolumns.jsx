@@ -178,7 +178,8 @@ SelectColumns.propTypes = {
 	selectedRows: PropTypes.array, // set by redux
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	messageInfo: PropTypes.object, // pass in by redux
+	addRemoveRows: PropTypes.bool // set by redux
 };
 
 
@@ -186,7 +187,8 @@ const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
 	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
-	selectedRows: ownProps.controller.getSelectedRows(ownProps.propertyId)
+	selectedRows: ownProps.controller.getSelectedRows(ownProps.propertyId),
+	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(SelectColumns);

@@ -32,7 +32,9 @@ export default class DetachedCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 
 		// Add decorations to the links
 		const pId = this.canvasController.getPrimaryPipelineId();
@@ -49,7 +51,6 @@ export default class DetachedCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "detached-links",
 			enableNodeFormatType: "Vertical",
-			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
@@ -61,6 +62,7 @@ export default class DetachedCanvas extends React.Component {
 			enableHighlightUnavailableNodes: true,
 			enableDisplayFullLabelOnHover: true,
 			enableAutoLinkOnlyFromSelNodes: true,
+			enableSingleOutputPortDisplay: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
 			tipConfig: {
@@ -131,6 +133,17 @@ export default class DetachedCanvas extends React.Component {
 		return decs;
 	}
 
+	getNewPort(i) {
+		return {
+			"id": "outPort" + i,
+			"cardinality": {
+				"min": 0,
+				"max": 1
+			},
+			"label": "Output Port " + i
+		};
+	}
+
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
@@ -154,6 +167,28 @@ export default class DetachedCanvas extends React.Component {
 				command.supernode.id,
 				newNodeProps,
 				command.apiPipeline.pipelineId);
+		} else if (data.editType === "addPort") {
+			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
+			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
+			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+		}
+	}
+
+	contextMenuHandler(source, defaultMenu) {
+		if (source.selectedObjectIds.length === 1) {
+			return defaultMenu.concat([
+				{ divider: true }, { action: "addPort", label: "Add port" }
+			]);
+		}
+		return defaultMenu;
+	}
+
+	clickActionHandler(source) {
+		if (source.clickType === "DOUBLE_CLICK") {
+			const node = this.canvasController.getNode(source.id, source.pipelineId);
+			if (node && node.type === "super_node") {
+				this.canvasController.displaySubPipelineForSupernode(source.id, source.pipelineId);
+			}
 		}
 	}
 
@@ -170,6 +205,8 @@ export default class DetachedCanvas extends React.Component {
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
+				clickActionHandler={this.clickActionHandler}
+				contextMenuHandler={this.contextMenuHandler}
 				config={config}
 			/>
 		);

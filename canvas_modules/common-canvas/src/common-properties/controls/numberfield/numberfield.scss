@@ -40,9 +40,6 @@
 
 .properties-table-cell-control { // overrides when in a table cell
 	.properties-numberfield {
-		.bx--number__controls {
-			display: none; // TODO: Remove this code after carbon supports hiding -/+ buttons
-		}
 		input[type="number"] { //override styling from carbon
 			background-color: unset;
 			padding: 0;

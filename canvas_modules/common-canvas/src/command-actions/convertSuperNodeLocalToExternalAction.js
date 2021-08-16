@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Action from "../command-stack/action.js";
+import { USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	from "../common-canvas/constants/canvas-constants.js";
 
 export default class ConvertSuperNodeLocalToExternal extends Action {
 	constructor(data, objectModel) {
@@ -21,24 +24,55 @@ export default class ConvertSuperNodeLocalToExternal extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+
+		this.oldSupernode = this.apiPipeline.getNode(this.data.targetObject.id);
+
+		// Clone the supernode
+		this.newSupernode = Object.assign({}, this.oldSupernode, { subflow_ref: Object.assign({}, this.oldSupernode.subflow_ref) });
+		this.newSupernode.image =
+			this.newSupernode.image === USE_DEFAULT_ICON ? USE_DEFAULT_EXT_ICON : this.newSupernode.image;
+		this.newSupernode.subflow_ref.url = this.data.externalUrl;
+
+		const descPipelines = this.objectModel.getDescendantPipelinesForSupernode(this.oldSupernode);
+		this.oldPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipeleines
+
+		// Clone pipelines
+		this.newPipelines = this.objectModel.cloneSupernodeContents(this.newSupernode, this.oldPipelines);
+		this.newPipelines = this.newPipelines.map((p) => {
+			p.parentUrl = this.data.externalUrl;
+			return p;
+		});
+
+		this.newPipelineFlow =
+			this.objectModel.createExternalPipelineFlowTemplate(
+				this.data.pipelineFlowId, this.newSupernode.subflow_ref.pipeline_id_ref);
+		this.newPipelineFlow.pipelines = [];
+		this.newPipelineFlow.url = this.data.externalUrl;
 	}
 
 	do() {
-		this.objectModel.convertSuperNodeLocalToExternal(
-			{ subflowPipelineId: this.data.targetObject.subflow_ref.pipeline_id_ref,
-				externalFlowUrl: this.data.externalUrl,
-				externalPipelineFlowId: this.data.externalPipelineFlowId,
-				supernodeId: this.data.targetObject.id,
-				supernodePipelineId: this.data.pipelineId });
+		// Replace the supernode, pipelines and external pipeline flow
+		this.objectModel.replaceSupernodeAndPipelines({
+			pipelineId: this.data.pipelineId, // Used by canvasinfo reducer
+			topSupernode: this.newSupernode, // Used by nodes reducer
+			pipelinesToAdd: this.newPipelines, // Used by canvasinfo reducer
+			pipelinesToRemove: this.oldPipelines, // Used by canvasinfo reducer
+			extPipelineFlowsToAdd: [this.newPipelineFlow], // Used by externalpipelineflows reducer
+			extPipelineFlowsToDelete: [] // Used by externalpipelineflows reducer
+
+		});
 	}
 
 	undo() {
-		this.objectModel.convertSuperNodeExternalToLocal(
-			{ externalFlowUrl: this.data.externalUrl,
-				supernodeId: this.data.targetObject.id,
-				supernodeParentPipelineId: this.data.pipelineId,
-				supernodePipelineId: this.data.externalPipelineId,
-				supernodePipelineFlow: this.data.externalPipelineFlow });
+		// Replace the supernode, pipelines and external pipeline flow
+		this.objectModel.replaceSupernodeAndPipelines({
+			pipelineId: this.data.pipelineId, // Used by canvasinfo reducer
+			topSupernode: this.oldSupernode, // Used by nodes reducer
+			pipelinesToAdd: this.oldPipelines, // Used by canvasinfo reducer
+			pipelinesToRemove: this.newPipelines, // Used by canvasinfo reducer
+			extPipelineFlowsToAdd: [], // Used by externalpipelineflows reducer
+			extPipelineFlowsToDelete: [this.newPipelineFlow] // Used by externalpipelineflows reducer
+		});
 	}
 
 	redo() {

@@ -1,0 +1,1063 @@
+{
+  "titleDefinition": {
+    "title": "Nested Panels"
+  },
+  "current_parameters": {
+    "number": 11,
+    "field1_panel": "age",
+    "field2_panel": "BP",
+    "selectcolumn": "",
+    "selectcolumns": [],
+    "structuretable_summary1": [
+      [
+        1,
+        "BP"
+      ],
+      [
+        2,
+        "Age"
+      ]
+    ],
+    "structuretable_summary3": [
+      [
+        1,
+        "BP"
+      ],
+      [
+        2,
+        "Age"
+      ]
+    ],
+    "numberfield1": 1,
+    "numberfield2": 2,
+    "numberfield3": 3,
+    "textfield1": "1",
+    "textfield2": "2",
+    "moon_phase": "Full",
+    "textfield3": "3",
+    "disable_button_text": "this should be disabled when button is clicked",
+    "actionNumber": 0,
+    "col1_ctrl1": "blue",
+    "col1_ctrl2": 1,
+    "col2_ctrl1": "red",
+    "col2_ctrl2": 5,
+    "custom_toggle": true,
+    "text_field": ""
+  },
+  "parameters": [
+    {
+      "id": "number",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "field1_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field2_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumn",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "structuretable_summary1",
+      "type": "map[string,structuretable_summary1]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "structuretable_summary3",
+      "type": "map[string,structuretable_summary3]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "numberfield1",
+      "type": "integer"
+    },
+    {
+      "id": "numberfield2",
+      "type": "integer"
+    },
+    {
+      "id": "numberfield3",
+      "type": "integer"
+    },
+    {
+      "id": "textfield1",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "textfield2",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "moon_phase",
+      "type": "string"
+    },
+    {
+      "id": "textfield3",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "disable_button_text",
+      "type": "string"
+    },
+    {
+      "id": "actionNumber",
+      "type": "integer"
+    },
+    {
+      "id": "col1_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col1_ctrl2",
+      "type": "double"
+    },
+    {
+      "id": "col2_ctrl1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "col2_ctrl2",
+      "type": "double"
+    },
+    {
+      "id": "custom_toggle",
+      "type": "boolean"
+    },
+    {
+      "id": "text_field",
+      "type": "string"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretable_summary1",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "structuretable_summary3",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "panels",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Panels"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "number",
+        "label": {
+          "default": "number"
+        },
+        "description": {
+          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
+        }
+      },
+      {
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field2"
+        },
+        "text_before": {
+          "default": "Default columnSelection panel"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field1"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumn",
+        "label": {
+          "default": "Select Field"
+        },
+        "description": {
+          "default": "This is a nested columnSelection panel. To create a nested panel, set 'nested_panel: true' in group info attributes."
+        },
+        "text_before": {
+          "default": "Nested columnSelection panel"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns",
+        "label": {
+          "default": "Select Fields"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_summary1",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "description": {
+          "default": "Configure fields"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_summary3",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "description": {
+          "default": "Configure fields"
+        }
+      },
+      {
+        "parameter_ref": "numberfield1",
+        "label": {
+          "default": "numberfield1"
+        }
+      },
+      {
+        "parameter_ref": "numberfield2",
+        "label": {
+          "default": "numberfield2"
+        }
+      },
+      {
+        "parameter_ref": "numberfield3",
+        "label": {
+          "default": "numberfield3"
+        }
+      },
+      {
+        "parameter_ref": "textfield1",
+        "label": {
+          "default": "textfield1"
+        }
+      },
+      {
+        "parameter_ref": "textfield2",
+        "label": {
+          "default": "textfield2"
+        }
+      },
+      {
+        "parameter_ref": "moon_phase",
+        "label": {
+          "default": "Current moon phase"
+        },
+        "description": {
+          "default": "Try pressing the moon image"
+        },
+        "control": "readonly",
+        "action_ref": "moon"
+      },
+      {
+        "parameter_ref": "textfield3",
+        "label": {
+          "default": "textfield3"
+        }
+      },
+      {
+        "parameter_ref": "disable_button_text",
+        "label": {
+          "default": "Disable button text"
+        },
+        "description": {
+          "default": "Try pressing the button"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "actionNumber",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "Try pressing Increment or Descrement buttons"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "col1_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col1_ctrl2",
+        "label": {
+          "default": "number"
+        }
+      },
+      {
+        "parameter_ref": "col2_ctrl1",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "control": "oneofselect"
+      },
+      {
+        "parameter_ref": "col2_ctrl2",
+        "label": {
+          "default": "number"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretable_summary1",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretable_summary3",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      }
+    ],
+    "action_info": [
+      {
+        "id": "increment",
+        "label": {
+          "resource_key": "increment"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "actionNumber"
+        }
+      },
+      {
+        "id": "decrement",
+        "label": {
+          "resource_key": "decrement"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "actionNumber"
+        }
+      },
+      {
+        "id": "moon",
+        "label": {
+          "resource_key": "moon"
+        },
+        "control": "image",
+        "data": {
+          "parameter_ref": "moon_phase"
+        },
+        "image": {
+          "url": "/images/moon.jpg",
+          "placement": "right",
+          "size": {
+            "height": 20,
+            "width": 25
+          }
+        }
+      },
+      {
+        "id": "button_cond_disable",
+        "label": {
+          "default": "enable action"
+        },
+        "description": {
+          "default": "Test enable conditions."
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "disable_button_text"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "text-panels",
+        "label": {
+          "default": "Text Panels"
+        },
+        "type": "panels",
+        "class_name": "text-panels-group-panels-class",
+        "group_info": [
+          {
+            "id": "orange-panel",
+            "type": "textPanel",
+            "class_name": "default-textpanel-class",
+            "label": {
+              "default": "Default text panel"
+            },
+            "description": {
+              "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+            }
+          },
+          {
+            "id": "nestedTextPanel",
+            "type": "textPanel",
+            "class_name": "nested-textpanel-class",
+            "nested_panel": true,
+            "label": {
+              "default": "Nested text panel"
+            },
+            "description": {
+              "default": "This is a nested text panel. To create a nested panel, set 'nested_panel: true' in group info attributes."
+            }
+          }
+        ]
+      },
+      {
+        "id": "column-selections",
+        "label": {
+          "default": "Column Selection"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "type": "columnSelection",
+            "class_name": "default-columnselection-class",
+            "parameter_refs": [
+              "field1_panel",
+              "field2_panel"
+            ]
+          },
+          {
+            "id": "column-selection-panel",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "columnSelection",
+            "nested_panel": true,
+            "class_name": "nested-columnselection-class",
+            "parameter_refs": [
+              "selectcolumn",
+              "selectcolumns"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "summary_panel_category",
+        "type": "panels",
+        "label": {
+          "default": "Summary Panel"
+        },
+        "group_info": [
+          {
+            "id": "summary_info_default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default summary panel"
+            }
+          },
+          {
+            "id": "structuretable-summary-panel1",
+            "label": {
+              "default": "Configure Fields"
+            },
+            "type": "summaryPanel",
+            "class_name": "default-summarypanel-class",
+            "group_info": [
+              {
+                "id": "structuretable_summary1_panel",
+                "type": "columnSelection",
+                "class_name": "structuretable-summary1-panel-category-group-columnselection-class",
+                "parameter_refs": [
+                  "structuretable_summary1"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "summary_info_nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested summary panel"
+            }
+          },
+          {
+            "id": "structuretable-summary-panel2",
+            "label": {
+              "default": "Configure Fields"
+            },
+            "type": "summaryPanel",
+            "nested_panel": true,
+            "class_name": "nested-summarypanel-class",
+            "group_info": [
+              {
+                "id": "structuretable_summary3_panel",
+                "class_name": "structuretable-summary2-panel-category-group-controls-class",
+                "parameter_refs": [
+                  "structuretable_summary3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "twisty-panels",
+        "label": {
+          "default": "Twisty Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "twisty_info_default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default twisty panel"
+            }
+          },
+          {
+            "id": "twisty-panel1",
+            "type": "twistyPanel",
+            "class_name": "default-twistypanel-class",
+            "label": {
+              "default": "Twisty Panel1"
+            },
+            "group_info": [
+              {
+                "id": "twisty-panel1-controls",
+                "type": "controls",
+                "parameter_refs": [
+                  "numberfield1",
+                  "numberfield2"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "twisty_info_nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested twisty panel"
+            }
+          },
+          {
+            "id": "twisty-panel2",
+            "type": "twistyPanel",
+            "nested_panel": true,
+            "class_name": "nested-twistypanel-class",
+            "label": {
+              "default": "Twisty Panel2"
+            },
+            "group_info": [
+              {
+                "id": "twisty-panel2-controls",
+                "type": "controls",
+                "parameter_refs": [
+                  "numberfield3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panels-in-panels",
+        "label": {
+          "default": "Panels within Panels"
+        },
+        "type": "controls",
+        "parameter_refs": [],
+        "group_info": [
+          {
+            "id": "panels-in-panels-info-default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default panels within panels"
+            }
+          },
+          {
+            "id": "Level1",
+            "type": "textPanel",
+            "label": {
+              "default": "Level1 Group"
+            }
+          },
+          {
+            "id": "level1",
+            "type": "panels",
+            "class_name": "level1-group-panels-class",
+            "group_info": [
+              {
+                "id": "level2buttons",
+                "type": "controls",
+                "parameter_refs": [],
+                "group_info": [
+                  {
+                    "id": "Level2",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Level2 Group"
+                    }
+                  },
+                  {
+                    "id": "level2",
+                    "type": "panels",
+                    "group_info": [
+                      {
+                        "id": "level3buttons",
+                        "type": "controls",
+                        "parameter_refs": [
+                          "textfield1",
+                          "textfield2",
+                          "moon_phase"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "Level3",
+                            "type": "textPanel",
+                            "class_name": "level3-group-textpanel-class",
+                            "label": {
+                              "default": "Level3 Group"
+                            }
+                          },
+                          {
+                            "id": "level3",
+                            "type": "panels",
+                            "class_name": "level3-group-panels-class",
+                            "group_info": [
+                              {
+                                "id": "level3control",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "textfield3"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-action-panel",
+                                "type": "actionPanel",
+                                "class_name": "disable-button-action-panel-group-actionpanel-class",
+                                "action_refs": [
+                                  "button_cond_disable"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-control-panel",
+                                "type": "controls",
+                                "class_name": "disable-button-control-panel-group-controls-class",
+                                "parameter_refs": [
+                                  "disable_button_text"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "panels-in-panels-info-nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested panels within panels"
+            }
+          },
+          {
+            "id": "Level1Nested",
+            "type": "textPanel",
+            "nested_panel": true,
+            "label": {
+              "default": "Level1 Group"
+            }
+          },
+          {
+            "id": "level1Nested",
+            "type": "panels",
+            "nested_panel": true,
+            "class_name": "level1-group-panels-class",
+            "group_info": [
+              {
+                "id": "level2buttonsNested",
+                "type": "controls",
+                "parameter_refs": [],
+                "group_info": [
+                  {
+                    "id": "Level2Nested",
+                    "type": "textPanel",
+                    "nested_panel": true,
+                    "label": {
+                      "default": "Level2 Group"
+                    }
+                  },
+                  {
+                    "id": "level2Nested",
+                    "type": "panels",
+                    "nested_panel": true,
+                    "group_info": [
+                      {
+                        "id": "level3buttonsNested",
+                        "type": "controls",
+                        "parameter_refs": [
+                          "textfield1",
+                          "textfield2",
+                          "moon_phase"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "Level3Nested",
+                            "type": "textPanel",
+                            "nested_panel": true,
+                            "class_name": "level3-group-textpanel-class",
+                            "label": {
+                              "default": "Level3 Group"
+                            }
+                          },
+                          {
+                            "id": "level3Nested",
+                            "type": "panels",
+                            "nested_panel": true,
+                            "class_name": "level3-group-panels-class",
+                            "group_info": [
+                              {
+                                "id": "level3controlNested",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "textfield3"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-action-panel-nested",
+                                "type": "actionPanel",
+                                "class_name": "disable-button-action-panel-group-actionpanel-class",
+                                "action_refs": [
+                                  "button_cond_disable"
+                                ]
+                              },
+                              {
+                                "id": "disable_button-control-panel-nested",
+                                "type": "controls",
+                                "class_name": "disable-button-control-panel-group-controls-class",
+                                "parameter_refs": [
+                                  "disable_button_text"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "action-panels",
+        "label": {
+          "default": "Action Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "action_info_default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default action panel"
+            }
+          },
+          {
+            "id": "action-buttons-panel",
+            "type": "actionPanel",
+            "class_name": "default-actionpanel-class",
+            "action_refs": [
+              "increment",
+              "decrement"
+            ]
+          },
+          {
+            "id": "action_info_nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested action panel"
+            }
+          },
+          {
+            "id": "action-buttons-panel-nested",
+            "type": "actionPanel",
+            "nested_panel": true,
+            "class_name": "nested-actionpanel-class",
+            "action_refs": [
+              "increment",
+              "decrement"
+            ]
+          },
+          {
+            "id": "action-number-control",
+            "type": "controls",
+            "nested_panel": true,
+            "parameter_refs": [
+              "actionNumber"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "column-panels",
+        "label": {
+          "default": "Column Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "column_info_default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default column panel"
+            }
+          },
+          {
+            "id": "column-panels-cond",
+            "type": "columnPanel",
+            "class_name": "default-columnpanel-class",
+            "group_info": [
+              {
+                "id": "panel1-values",
+                "type": "controls",
+                "parameter_refs": [
+                  "col1_ctrl1",
+                  "col1_ctrl2"
+                ]
+              },
+              {
+                "id": "panel2-values",
+                "type": "controls",
+                "parameter_refs": [
+                  "col2_ctrl1",
+                  "col2_ctrl2"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "column_info_nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested column panel"
+            }
+          },
+          {
+            "id": "column-panels-cond-nested",
+            "type": "columnPanel",
+            "nested_panel": true,
+            "class_name": "nested-columnpanel-class",
+            "group_info": [
+              {
+                "id": "panel1-values-nested",
+                "type": "controls",
+                "parameter_refs": [
+                  "col1_ctrl1",
+                  "col1_ctrl2"
+                ]
+              },
+              {
+                "id": "panel2-values-nested",
+                "type": "controls",
+                "parameter_refs": [
+                  "col2_ctrl1",
+                  "col2_ctrl2"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "custom-panel",
+        "label": {
+          "default": "Custom Panel"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "custom_panel_info_default",
+            "type": "textPanel",
+            "label": {
+              "default": "Default custom panel"
+            }
+          },
+          {
+            "id": "harness-custom-toggle-panel",
+            "type": "customPanel",
+            "parameter_refs": [
+              "custom_toggle",
+              "text_field"
+            ]
+          },
+          {
+            "id": "custom_panel_info_nested",
+            "type": "textPanel",
+            "label": {
+              "default": "Nested custom panel"
+            }
+          },
+          {
+            "id": "harness-custom-toggle-panel",
+            "type": "customPanel",
+            "nested_panel": true,
+            "parameter_refs": [
+              "custom_toggle",
+              "text_field"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "increment": "Increment",
+    "decrement": "Decrement"
+  }
+}

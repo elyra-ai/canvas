@@ -50,9 +50,10 @@ export default class DeleteObjectsAction extends Action {
 
 		// Remember all the pipelines that are being deleted when any selected
 		// supernodes are being deleted.
-		this.supernodesToDelete = this.apiPipeline.getSupernodes(this.nodesToDelete);
-		this.supernodePipelinesToDelete = this.getPipelinesToDelete(this.supernodesToDelete);
-		this.extPipelineFlowsToDelete = this.getExternalPipelineFlowsToDelete(this.supernodesToDelete);
+		this.supernodesToDelete = CanvasUtils.filterSupernodes(this.nodesToDelete);
+		this.pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(this.supernodesToDelete, this.data.pipelineId);
+		this.extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(this.pipelinesToDelete);
 
 		// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
 		this.nodesToDelete = this.nodesToDelete.filter((node) => !this.isSupernodeToBeDeleted(node));
@@ -198,47 +199,16 @@ export default class DeleteObjectsAction extends Action {
 		return this.nodesToDelete.findIndex((nc) => nc.id === link.trgNodeId) !== -1;
 	}
 
-	getPipelinesToDelete(superNodes) {
-		const pipelinesToDelete = [];
-		this.supernodesToDelete.forEach((supernode) => {
-			pipelinesToDelete[supernode.id] = this.objectModel.getDescendentPipelines(supernode);
-		});
-		return pipelinesToDelete;
-	}
-
-	getExternalPipelineFlowsToDelete(superNodes) {
-		const extPipelineFlowsToDelete = [];
-		this.supernodesToDelete.forEach((supernode) => {
-			const extUrl = supernode.subflow_ref.url;
-			if (extUrl) {
-				extPipelineFlowsToDelete[extUrl] =
-					this.objectModel.getExternalPipelineFlow(extUrl);
-			}
-		});
-		return extPipelineFlowsToDelete;
-	}
-
 	// Standard methods
 	do() {
 		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
 		this.apiPipeline.deleteLinks(this.linksToDelete);
-
-		this.supernodesToDelete.forEach((supernode) => {
-			this.apiPipeline.deleteSupernode(supernode.id);
-		});
+		this.apiPipeline.deleteSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
 		this.apiPipeline.deleteObjects(this.data.selectedObjectIds);
 	}
 
 	undo() {
-		this.supernodesToDelete.forEach((supernode) => {
-			this.apiPipeline.addSupernode(supernode, this.supernodePipelinesToDelete[supernode.id]);
-
-			const extUrl = supernode.subflow_ref.url; // Url reference to the external pipeline flow.
-			if (extUrl) {
-				const extPF = this.extPipelineFlowsToDelete[extUrl];
-				this.objectModel.addExternalPipelineFlow(extPF, extUrl, false); // false indicates pipelines should not be added
-			}
-		});
+		this.apiPipeline.addSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
 
 		this.nodesToDelete.forEach((node) => {
 			this.apiPipeline.addNode(node);

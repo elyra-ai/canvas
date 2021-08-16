@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
@@ -37,8 +37,7 @@ export default class ValidationMessage extends React.Component {
 				<Tooltip
 					id={uuid4() + "-table-cell-msg-icon"}
 					tip={this.props.messageInfo.text}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
+					direction="bottom"
 					className="properties-tooltips"
 				>
 					{icon}

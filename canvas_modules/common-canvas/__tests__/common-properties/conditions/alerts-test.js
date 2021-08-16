@@ -63,8 +63,8 @@ describe("condition messages should add alerts tab", () => {
 		let valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values div
 		expect(valuesDiv).to.have.length(1);
 		const generator = valuesDiv.find("button.properties-number-generator");
-		expect(generator).to.have.length(1);
-		generator.simulate("click");
+		expect(generator).to.have.length(2);
+		generator.at(0).simulate("click");
 
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		alertButton = alertCategory.find("button.properties-category-title");

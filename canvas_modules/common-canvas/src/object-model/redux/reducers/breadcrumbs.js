@@ -22,26 +22,45 @@ export default (state = [], action) => {
 		// we're given a completely new canvas or the current breadcrumb does not
 		// reference a pipeline Id in the incoming pipelineFlow, which might happen
 		// if the pipeline has been removed.
-		if ((action.canvasInfo && action.currentCanvasInfo &&
-					action.canvasInfo.id !== action.currentCanvasInfo.id) ||
+		if (action.canvasInfoIdChanged ||
 				!isCurrentBreadcrumbInPipelineFlow(state, action.canvasInfo)) {
 			return [{ pipelineId: action.canvasInfo.primary_pipeline, pipelineFlowId: action.canvasInfo.id }];
 		}
 		return state;
 	}
 
-	case "ADD_NEW_BREADCRUMB":
+	case "SET_BREADCRUMBS":
+		return action.data.breadcrumbs.map((a) => Object.assign({}, a));
+
+	case "ADD_BREADCRUMB":
 		return [
 			...state,
-			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+			{
+				pipelineId: action.data.pipelineId,
+				supernodeId: action.data.supernodeId,
+				supernodeParentPipelineId: action.data.supernodeParentPipelineId,
+				externalUrl: action.data.externalUrl,
+				label: action.data.label
+			}
 		];
+
+	case "ADD_BREADCRUMBS":
+		return [
+			...state,
+			...action.data.addBreadcrumbs
+		];
+
+	case "SET_TO_INDEXED_BREADCRUMB":
+		return action.data.breadcrumbIndex >= 0 && action.data.breadcrumbIndex < state.length
+			? state.slice(0, action.data.breadcrumbIndex + 1)
+			: state;
 
 	case "SET_TO_PREVIOUS_BREADCRUMB":
 		return state.length > 1 ? state.slice(0, state.length - 1) : state;
 
 	case "RESET_BREADCRUMB":
 		return [
-			{ pipelineId: action.data.pipelineId, pipelineFlowId: action.data.pipelineFlowId }
+			{ pipelineId: action.data.pipelineId }
 		];
 
 	default:

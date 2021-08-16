@@ -50,6 +50,8 @@ describe("validating contains operator works correctly", () => {
 		expect(contains(wrap("sbeve"), wrap("be"), null, controller)).to.equal(true);
 		expect(contains(wrap(null), wrap(null), null, controller)).to.equal(false);
 		expect(contains(wrap([1, 2, 3]), wrap(2), null, controller)).to.equal(true);
+		expect(contains(wrap(["test 1", "test 2"]), wrap("test 1"), null, controller)).to.equal(true);
+		expect(contains(wrap(["test 1", "test 2"]), wrap("test"), null, controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
 		expect(contains(wrap(emptyFunc), wrap("string"), null, controller)).to.equal(true);
 	});
@@ -60,6 +62,8 @@ describe("validating contains operator works correctly", () => {
 		expect(contains(wrap("sbeve"), undefinedPlaceholder, "be", controller)).to.equal(true);
 		expect(contains(wrap(null), undefinedPlaceholder, null, controller)).to.equal(false);
 		expect(contains(wrap([1, 2, 3]), undefinedPlaceholder, 2, controller)).to.equal(true);
+		expect(contains(wrap(["test 1", "test 2"]), undefinedPlaceholder, "test 1", controller)).to.equal(true);
+		expect(contains(wrap(["test 1", "test 2"]), undefinedPlaceholder, "test", controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
 		expect(contains(wrap(emptyFunc), undefinedPlaceholder, "string", controller)).to.equal(true);
 	});

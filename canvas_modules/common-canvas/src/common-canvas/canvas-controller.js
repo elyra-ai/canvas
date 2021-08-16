@@ -50,7 +50,7 @@ import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import { get, has } from "lodash";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
+import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SUPER_NODE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -70,7 +70,6 @@ export default class CanvasController {
 
 		this.canvasConfig = {
 			enableInteractionType: "Mouse",
-			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
@@ -104,6 +103,7 @@ export default class CanvasController {
 			enableAutoLayoutHorizontalSpacing: null,
 			enableBoundingRectangles: false,
 			enableCanvasUnderlay: "None",
+			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			paletteInitialState: false,
 			emptyCanvasContent: null,
@@ -249,6 +249,10 @@ export default class CanvasController {
 	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
 		this.objectModel.setPipelineFlow(flow);
+		// When a pipeline flow is loaded it may have expanded supernodes which
+		// refer to external pipelines and these need to be loaded for the
+		// pipeline to display correctly.
+		this.ensureVisibleExpandedPipelinesAreLoaded();
 	}
 
 	// Clears the pipleine flow and displays an empty canvas.
@@ -272,6 +276,9 @@ export default class CanvasController {
 		return this.objectModel.getPrimaryPipelineId();
 	}
 
+	// Returns the external pipeline flow for the url passed in. The external
+	// flow must have been loaded through some common canvas action for this
+	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
@@ -306,6 +313,27 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
+
+	// Returns the pipeline object for the pipeline Id passed in.
+	getPipeline(pipelineId) {
+		return this.objectModel.getCanvasInfoPipeline(pipelineId);
+	}
+
+	// Returns the ID of the pipeline object which is currently on display
+	// in the canvas. Typically, this is the primary pipeline but will be
+	// different if the user has navigated into one or more supernodes; in
+	// which case it will be the ID of the pipeline at the level in the
+	// supernode hierarchy that is currently on display.
+	getCurrentPipelineId() {
+		return this.objectModel.getCurrentBreadcrumb().pipelineId;
+	}
+
+	// Returns truty if the pipeline is external (that is it is part of an
+	// external pipeline flow). Otherwise, return falsy to indicate the pipeline
+	// is local.
+	isPipelineExternal(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).isPipelineExternal();
+	}
 
 	// Returns the flow validation messages for the pipeline ID passed in.
 	getFlowMessages(pipelineId) {
@@ -1183,10 +1211,16 @@ export default class CanvasController {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the current array of breadcrumbs. There will one breadcrumb object
+	// for each level of supernode that the user has navigated into. This array
+	// can be used to display breadcrumbs to the user to show where they are
+	// within the navigation hierarchy within common canvas.
 	getBreadcrumbs() {
 		return this.objectModel.getBreadcrumbs();
 	}
 
+	// Returns the last breadcrumb which represents the level with supernode
+	// hierarchy that the user has currently navigated to.
 	getCurrentBreadcrumb() {
 		return this.objectModel.getCurrentBreadcrumb();
 	}
@@ -1339,9 +1373,64 @@ export default class CanvasController {
 		return false;
 	}
 
-	displaySubPipeline(node) {
-		const data = { editType: "displaySubPipeline", targetObject: node, editSource: "canvas" };
+	// Displays a pipeline (identified by the pipelineId passed in). This must be
+	// one of the pipelines referenced by the current set of breadcrumbs. It
+	// cannot be used to open a new pipeline outside the current set of breadcruumbs.
+	displaySubPipeline(pipelineId) {
+		const breadcrumbs = this.objectModel.getBreadcrumbs();
+		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineId);
+		if (index > -1) {
+			const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
+
+			const data = {
+				editType: "displaySubPipeline",
+				editSource: "canvas",
+				targetObject: supernode,
+				breadcrumbIndex: index
+			};
+			this.editActionHandler(data);
+		}
+	}
+
+	// Displays a pipeline for the supernode (identifid by the supernodeId
+	// parameter) in the pipeline (identifid by the pipelineId parameter). For
+	// correct breadcrumb generation this pipeline should be the one in the last
+	// of the current set of breadcumbs. That is, the pipeline currently shown
+	// "full page" in the canvas.
+	displaySubPipelineForSupernode(supernodeId, pipelineId) {
+		const sn = this.getNode(supernodeId, pipelineId);
+		if (sn && sn.type === SUPER_NODE) {
+			const currentBreadcrumb = this.objectModel.getCurrentBreadcrumb();
+			const bc = this.objectModel.createBreadcrumb(sn, currentBreadcrumb.pipelineId);
+			this.displaySubPipelineForBreadcrumbs([bc]);
+		}
+	}
+
+	// Adds the breadcrumbs provided to the current set of breadcrumbs and then
+	// displays "full page" the pipeline identified by the last of the additional
+	// set of breadcrumbs. This is a convenience function for the common-canvas.
+	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
+		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
+		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
+
+		const data = {
+			editType: "displaySubPipeline",
+			editSource: "canvas",
+			targetObject: supernode,
+			addBreadcrumbs: addBreadcrumbs
+		};
 		this.editActionHandler(data);
+	}
+
+	// Returns the supernode speified in the bradcrumb provided.
+	getSupernodeFromBreadcrumb(breadcrumb) {
+		if (breadcrumb.supernodeParentPipelineId) {
+			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
+			return apiPipeline.getNode(breadcrumb.supernodeId);
+		}
+		// breadcrumb.supernodeParentPipelineId might be missing when processing
+		// the breadcrumb for the primary pipeline.
+		return null;
 	}
 
 	displayPreviousPipeline() {
@@ -1763,25 +1852,38 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Supernode option
-		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
-			// Expand and Collapse supernode
-			// Expand
-			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
+		// Supernode options - only applicable with a single supernode selected
+		// which is opened by the "canvas" (default) editor.
+		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Collapse supernode
+			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
+					label: this.getLabel("node.collapseSupernodeInPlace") });
+			// Expand supernode
+			} else {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
 					label: this.getLabel("node.expandSupernode") });
 			}
-			// Collapse
-			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
-					label: this.getLabel("node.collapseSupernodeInPlace") }, { divider: true });
+
+			// Expand supernode to full page display
+			if (get(this, "contextMenuConfig.defaultMenuEntries.displaySupernodeFullPage")) {
+				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
+					label: this.getLabel("node.displaySupernodeFullPage") });
 			}
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Convert supernode
 			if (this.canvasConfig.enableExternalPipelineFlows) {
+				// Convert External to Local
 				if (source.targetObject.subflow_ref.url) {
-					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
-						label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					// Supernodes inside an external sub-flow cannot be made local.
+					if (!this.isPipelineExternal(source.pipelineId)) {
+						menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
+							label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					}
+				// Convert Local to External
 				} else {
 					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
 						label: this.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
@@ -1902,7 +2004,8 @@ export default class CanvasController {
 			data.externalPipelineFlowId = "";
 
 		// Pre-process for handling external pipeline flows.
-		} else if (data.editType === "expandSuperNodeInPlace" ||
+		} else if (data.editType === "loadPipelineFlow" ||
+				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
@@ -1970,6 +2073,10 @@ export default class CanvasController {
 		}
 		case "toggleNotificationPanel": {
 			this.toggleNotificationPanel();
+			break;
+		}
+		case "loadPipelineFlow": {
+			this.objectModel.ensurePipelineIsLoaded(data);
 			break;
 		}
 		default:
@@ -2220,32 +2327,54 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data, command);
 		}
+
+		// After executing the 'loadPipelineFlow' and 'expandSuperNodeInPlace'
+		// actions we need to check to see if there are any more expanded
+		// supernodes that refer to external pipelines. These need to be loaded
+		// for the pipeline to display correctly. If there is more than one expanded
+		// pipeline visible they will be loaded one by one when this check is
+		// encountered.
+		this.ensureVisibleExpandedPipelinesAreLoaded();
 	}
 
 	// Sets the appropriate values when handling an external pipleine flow
 	// when performing sub-flow actions.
 	preProcessForExternalPipelines(data) {
-		// If displaying SubPipeline include pipelineInfo for historical reasons.
-		if (data.editType === "displaySubPipeline") {
-			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
-		}
-
-		const pipelineId = get(data, "targetObject.subflow_ref.pipeline_id_ref");
-		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
-
 		data.externalPipelineFlowLoad = false;
-		// If there is a URL then we must be accessing an external pipeline flow.
-		if (externalPipelineFlowUrl) {
-			data.externalUrl = externalPipelineFlowUrl;
-			data.externalPipelineId = pipelineId;
-			// Try to retrieve the pipeline from our store. If it is not there then
-			// we'll need to load it from the host application so switch load flag on.
-			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
-			if (!data.externalPipelineFlow) {
-				data.externalPipelineFlowLoad = true;
+
+		// targetObject might be missing if we are handing display of the
+		// primary pipeline which will always be 'local' not 'external'.
+		if (data.targetObject) {
+			const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
+
+			// If there is a URL then we must be accessing an external pipeline flow.
+			if (externalPipelineFlowUrl) {
+				data.externalUrl = externalPipelineFlowUrl;
+
+				// Try to retrieve the pipeline from our store. If it is not there then
+				// we'll need to load it from the host application so switch load flag on.
+				data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+				if (!data.externalPipelineFlow) {
+					data.externalPipelineFlowLoad = true;
+				}
 			}
 		}
+
 		return data;
+	}
+
+	// Ensures that any external pipeline, associated with any visible expanded
+	// supernodes in the pipeline flow being displayed, are loaded. This method
+	// is called for one pipeline at a time until all needed pipeline flows are
+	// loaded. This allows the host app to serve up one pipeline flow at a time.
+	ensureVisibleExpandedPipelinesAreLoaded() {
+		const expandedSupernodes = this.objectModel.getVisibleExpandedExternalSupernodes();
+		if (expandedSupernodes && expandedSupernodes.length > 0) {
+			this.editActionHandler({
+				editType: "loadPipelineFlow",
+				targetObject: expandedSupernodes[0]
+			});
+		}
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

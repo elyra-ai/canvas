@@ -368,7 +368,7 @@
               ]
             }
           ],
-          "alt_outputs": [
+          "outputs": [
             {
               "id": "outPort",
               "app_data": {

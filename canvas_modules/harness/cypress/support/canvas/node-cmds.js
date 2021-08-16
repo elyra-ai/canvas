@@ -35,6 +35,17 @@ Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
 		})
 );
 
+Cypress.Commands.add("getFirstOutputPortIdForLabel", (nodeLabel) =>
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			if (node) {
+				return node[0].__data__.outputs[0].id;
+			}
+			return null;
+		})
+);
+
+
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > div > span")
@@ -130,17 +141,19 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-Cypress.Commands.add("clickNode", (nodeName) => {
-	cy.getNodeWithLabel(nodeName).click();
+// posX and posY parameters is optional
+Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
+	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
+// posX and posY parameters is optional
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, posX, posY) => {
 	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey().then((selectedKey) => {
 		cy.get("body")
 			.type(selectedKey, { release: false })
 			.getNodeWithLabel(nodeName)
-			.click();
+			.click(posX, posY);
 		// Cancel the command/ctrl key press -- the documentation doesn't say
 		// this needs to be done but if it isn't the command key stays pressed down
 		// causing problems with subsequent selections.
@@ -163,9 +176,10 @@ Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) 
 	});
 });
 
-Cypress.Commands.add("rightClickNode", (nodeName) => {
+// position parameter is optional
+Cypress.Commands.add("rightClickNode", (nodeName, position) => {
 	cy.getNodeWithLabel(nodeName)
-		.rightclick();
+		.rightclick(position);
 });
 
 Cypress.Commands.add("rightClickNodeInSupernode", (nodeName, supernodeName) => {
@@ -191,7 +205,7 @@ Cypress.Commands.add("hoverOverNode", (nodeName) => {
 
 Cypress.Commands.add("hoverOverNodeLabel", (nodeName) => {
 	cy.getNodeWithLabel(nodeName)
-		.find(".d3-node-label > span")
+		.find("> foreignObject > .d3-node-label > span")
 		.trigger("mouseenter");
 });
 
@@ -383,11 +397,42 @@ Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
 
 Cypress.Commands.add("clickEllipsisIconOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)
-		.find(".d3-node-ellipsis-group")
+		.find("> .d3-node-ellipsis-group")
 		.eq(0)
 		.click();
 });
 
+Cypress.Commands.add("clickEllipsisIconOfSupernodeInSupernode", (supernodeName1, supernodeName2) => {
+	cy.hoverOverNodeInSupernode(supernodeName1, supernodeName2);
+	cy.getNodeWithLabelInSupernode(supernodeName1, supernodeName2)
+		.find("> .d3-node-ellipsis-group")
+		.eq(0)
+		.click();
+});
+
+
+Cypress.Commands.add("clickExpansionIconOfSupernode", (supernodeName) => {
+	cy.hoverOverNode(supernodeName);
+	cy.getNodeWithLabel(supernodeName)
+		.find(".d3-node-super-expand-icon-group")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("clickExpansionIconOfSupernodeInsideSupernode", (supernodeName1, supernodeName2) => {
+	cy.hoverOverNodeInSupernode(supernodeName1, supernodeName2);
+	cy.getNodeWithLabelInSupernode(supernodeName1, supernodeName2)
+		.find(".d3-node-super-expand-icon-group")
+		.eq(0)
+		.click();
+});
+
+Cypress.Commands.add("clickReturnToPreviousButton", () => {
+	cy.get("#canvas-div-0")
+		.find(".d3-back-to-previous-flow-text")
+		.eq(0)
+		.click();
+});
 
 Cypress.Commands.add("clickExpandedCanvasBackgroundOfSupernode", (supernodeName) => {
 	cy.getNodeWithLabel(supernodeName)

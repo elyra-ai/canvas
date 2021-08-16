@@ -30,6 +30,7 @@ export class UIItem {
 		this.dependsOn = propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
 		this.action = propertyOf(elements)("action"); // when ACTION
 		this.className = propertyOf(elements)("className");
+		this.nestedPanel = propertyOf(elements)("nestedPanel"); // when SUB_TABS
 	}
 
 	static makePrimaryTabs(tabs) {
@@ -39,11 +40,12 @@ export class UIItem {
 		});
 	}
 
-	static makeSubTabs(tabs, className) {
+	static makeSubTabs(tabs, className, nestedPanel) {
 		return new UIItem({
 			itemType: ItemType.SUB_TABS,
 			tabs: tabs,
-			className: className
+			className: className,
+			nestedPanel: nestedPanel
 		});
 	}
 
@@ -101,14 +103,15 @@ export class UIItem {
 		});
 	}
 
-	static makeTextPanel(groupName, label, description, className) {
+	static makeTextPanel(groupName, label, description, className, nestedPanel) {
 		return new UIItem({
 			itemType: ItemType.TEXT_PANEL,
 			panel: {
 				id: groupName,
 				label: label,
 				description: description,
-				className: className
+				className: className,
+				nestedPanel: nestedPanel
 			}
 		});
 	}

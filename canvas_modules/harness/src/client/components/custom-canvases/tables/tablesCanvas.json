@@ -36,7 +36,7 @@
                   "class_name": "canvas-object-link",
                   "decorations": [
                     {
-                      "id": "assocDec1",
+                      "id": "assoc-dec-image",
                       "x_pos": -35,
                       "y_pos": -20,
                       "height": 40,
@@ -46,7 +46,7 @@
                       "hotspot": true
                     },
                     {
-                      "id": "assocDec2",
+                      "id": "assoc-dec-label",
                       "x_pos": 0,
                       "y_pos": -5,
                       "label": "2 Keys",

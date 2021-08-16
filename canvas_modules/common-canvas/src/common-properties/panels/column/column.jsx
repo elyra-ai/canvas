@@ -42,7 +42,13 @@ class ColumnPanel extends React.Component {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		// grid-template-columns
 		return (
-			<div className={classNames("properties-column-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-column-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+					className
+				)}
 				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 				style={this.style}
 			>

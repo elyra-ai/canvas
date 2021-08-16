@@ -20,10 +20,30 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import startCanvas from "../test_resources/json/startCanvas.json";
 import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
+import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
+
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas2.json";
+
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 
 describe("Test canvas controller methods", () => {
+	it("should get the current pipeline using: getCurretPipeline", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		const pipelineId1 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId1, "`~!@#$%^&*()_+=-{}][|:;<,>.9?/")).to.be.true;
+
+		canvasController.displaySubPipelineForSupernode("nodeIDSuperNodePE");
+		const pipelineId2 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId2, "modeler-sub-pipeline")).to.be.true;
+
+	});
+
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
@@ -357,4 +377,91 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(actualClassName0, testClassName)).to.be.true;
 		expect(isEqual(actualClassName1, testClassName)).to.be.true;
 	});
+
+	it("should test sub-pipeline display calls", () => {
+		const canvasController = new CanvasController();
+		canvasController.setHandlers({ beforeEditActionHandler: beforeEditActionHandler });
+
+		canvasController.setPipelineFlow(externalMainCanvasExpanded);
+
+		const breadcrumbs = [
+			{
+				"pipelineId": "external-sub-flow-pipeline-1",
+				"supernodeId": "nodeIDSuperNodePE",
+				"supernodeParentPipelineId": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+				"externalUrl": "external-sub-flow-url-1",
+				"label": "Super node"
+			},
+			{
+				"pipelineId": "external-sub-flow-pipeline-2",
+				"supernodeId": "8609fbcf-828a-49cc-8fee-c9d4593e3207",
+				"supernodeParentPipelineId": "external-sub-flow-pipeline-1",
+				"externalUrl": "external-sub-flow-url-2",
+				"label": "Supernode 2"
+			}
+		];
+
+		// Add some breadcrumbs to be added using: displaySubPipelineForBreadcrumbs
+		canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
+		const bcs = canvasController.getBreadcrumbs();
+		expect(bcs).to.have.length(3);
+
+		// Specify the middle pipeline to be displayed using: displaySubPipeline
+		canvasController.displaySubPipeline("external-sub-flow-pipeline-1");
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		// Specify the supernode to open the third breadcrumb using: displaySubPipelineForSupernode
+		canvasController.displaySubPipelineForSupernode("8609fbcf-828a-49cc-8fee-c9d4593e3207", "external-sub-flow-pipeline-1");
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		// Try undoing the three actions performd so far.
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(1);
+
+
+		// Try rdoing the three actions performd so far.
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+	});
+
 });
+
+const externalPipelineFlows = [];
+externalPipelineFlows["external-sub-flow-url-1"] = EXTERNAL_SUB_FLOW_CANVAS_1;
+externalPipelineFlows["external-sub-flow-url-2"] = EXTERNAL_SUB_FLOW_CANVAS_2;
+
+
+function beforeEditActionHandler(data) {
+	switch (data.editType) {
+
+	case "createSuperNodeExternal":
+	case "convertSuperNodeLocalToExternal": {
+		data.externalUrl = "external-flow-url-" + Date.now();
+		data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+		break;
+	}
+	case "loadPipelineFlow":
+	case "expandSuperNodeInPlace":
+	case "displaySubPipeline":
+	case "convertSuperNodeExternalToLocal": {
+		if (data.externalPipelineFlowLoad) {
+			data.externalPipelineFlow = externalPipelineFlows[data.externalUrl];
+		}
+		break;
+	}
+	default:
+	}
+	return data;
+}

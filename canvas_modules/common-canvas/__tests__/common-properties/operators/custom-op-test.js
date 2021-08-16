@@ -38,6 +38,10 @@ describe("validating custom operators work correctly", () => {
 		controller.updatePropertyValue(propertyId, 101);
 		actual = controller.getErrorMessage(propertyId);
 		const expected = {
+			propertyId: {
+				"name": "custom_op_num",
+			},
+			required: false,
 			validation_id: "custom_op_num",
 			type: "error",
 			text: "Value needs to be less than 100"

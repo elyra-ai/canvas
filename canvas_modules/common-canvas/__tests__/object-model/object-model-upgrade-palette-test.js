@@ -23,6 +23,7 @@ import ObjectModel from "../../src/object-model/object-model.js";
 import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
 import modelerPalette from "../../../harness/test_resources/palettes/modelerPalette.json";
 import sparkPalette from "../../../harness/test_resources/palettes/sparkPalette.json";
+import bindingWithOutputPalette from "../../../harness/test_resources/palettes/bindingWithOutputPalette.json";
 
 import commonPaletteV2 from "../../../harness/test_resources/palettes/v2-commonPalette.json";
 import modelerPaletteV2 from "../../../harness/test_resources/palettes/v2-modelerPalette.json";
@@ -55,6 +56,10 @@ describe("Upgrade palette test", () => {
 
 	it("should read in and write out the same file: sparkPalette", () => {
 		readWriteSameFile(sparkPalette);
+	});
+
+	it("should read in and write out the same file: bindingWithOutputPalette", () => {
+		readWriteSameFile(bindingWithOutputPalette);
 	});
 
 

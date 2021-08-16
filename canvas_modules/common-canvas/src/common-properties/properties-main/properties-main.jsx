@@ -18,13 +18,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
-import PropertiesButtons from "./../components/properties-buttons";
+import MainEditorPropertiesButtons from "./../components/main-editor-properties-buttons";
 import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
@@ -67,9 +67,14 @@ class PropertiesMain extends React.Component {
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
+		this.propertiesController.validatePropertiesValues(false);
 		if (props.propertiesInfo.messages) {
-			this.propertiesController.validatePropertiesValues();
-			this.previousErrorMessages = this.propertiesController.getErrorMessages();
+			this.propertiesController.validatePropertiesValues(true);
+			this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
+		}
+		// Callback after all values and messages are set
+		if (this.props.callbacks.propertyListener) {
+			this.props.callbacks.propertyListener({ action: ACTIONS.PROPERTIES_LOADED });
 		}
 		this.currentParameters = this.propertiesController.getPropertyValues();
 		const editorSize = this.getEditorSize();
@@ -109,7 +114,7 @@ class PropertiesMain extends React.Component {
 				this.previousErrorMessages = {};
 				if (newProps.propertiesInfo.messages) {
 					this.propertiesController.validatePropertiesValues();
-					this.previousErrorMessages = this.propertiesController.getErrorMessages();
+					this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 				}
 			}
 		}
@@ -155,7 +160,7 @@ class PropertiesMain extends React.Component {
 			this.initialValueInfo.additionalInfo.messages = cloneDeep(propertiesInfo.messages);
 		}
 		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
-		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
+		this.initialValueInfo.undoInfo.messages = this.propertiesController.getAllErrorMessages(); // used for undoing when node editor open
 		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
 	}
 
@@ -327,7 +332,7 @@ class PropertiesMain extends React.Component {
 	applyPropertiesEditing(closeProperties) {
 		// validate all the input values.
 		this.propertiesController.validatePropertiesValues();
-		const newErrorMessages = this.propertiesController.getErrorMessages();
+		const newErrorMessages = this.propertiesController.getAllErrorMessages();
 
 		// only save if title or parameters have changed or new error messages
 		if (this.originalTitle !== this.propertiesController.getTitle() ||
@@ -340,11 +345,11 @@ class PropertiesMain extends React.Component {
 			let valueInfo = { additionalInfo: {}, undoInfo: {} };
 			valueInfo = this._setValueInforProperties(valueInfo, { applyProperties: true });
 			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
-			const errorMessages = this.propertiesController.getErrorMessages(true, true, true);
+			const errorMessages = this.propertiesController.getErrorMessages(true, true, true, false);
 			if (errorMessages) {
 				valueInfo.additionalInfo.messages = errorMessages;
 			}
-			valueInfo.undoInfo.messages = this.propertiesController.getErrorMessages();
+			valueInfo.undoInfo.messages = this.propertiesController.getAllErrorMessages();
 			if (this.propertiesController.getTitle()) {
 				valueInfo.additionalInfo.title = this.propertiesController.getTitle();
 			}
@@ -357,7 +362,7 @@ class PropertiesMain extends React.Component {
 			this.currentParameters = this.propertiesController.getPropertyValues();
 			// reset undo values
 			this.initialValueInfo = cloneDeep(valueInfo);
-			this.previousErrorMessages = this.propertiesController.getErrorMessages();
+			this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 		}
 		if (closeProperties) {
 			this.cancelHandler(APPLY); // close property editor
@@ -421,12 +426,14 @@ class PropertiesMain extends React.Component {
 
 				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
 
-				buttonsContainer = (<PropertiesButtons
+				buttonsContainer = (<MainEditorPropertiesButtons
+					controller={this.propertiesController}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
+					disableSaveOnRequiredErrors={this.props.propertiesConfig.disableSaveOnRequiredErrors}
 				/>);
 				if (this._isResizeButtonRequired()) {
 					const resizeIcon = this._getResizeButton();
@@ -520,6 +527,7 @@ PropertiesMain.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
+		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,

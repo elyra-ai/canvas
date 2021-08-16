@@ -23,7 +23,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { isEmpty, has, forIn } from "lodash";
+import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -80,7 +80,6 @@ import {
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
 	INTERACTION_MOUSE,
-	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
@@ -113,10 +112,12 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "./constants/constants.js";
 
-import EXTERNAL_SUB_FLOW_CANVAS from "../../test_resources/diagrams/externalSubFlowCanvas.json";
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
 
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
@@ -162,12 +163,12 @@ class App extends React.Component {
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedSingleOutputPortDisplay: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -212,7 +213,12 @@ class App extends React.Component {
 			selectedPanel: null,
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
-			applyOnBlur: true,
+			applyOnBlur: false,
+			disableSaveOnRequiredErrors: true,
+			addRemoveRowsPropertyId: {},
+			addRemoveRowsEnabled: true,
+			staticRowsPropertyId: {},
+			staticRowsIndexes: [],
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -286,12 +292,19 @@ class App extends React.Component {
 		this.setStateValue = this.setStateValue.bind(this);
 		this.getStateValue = this.getStateValue.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
+		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
+		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
+		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
+		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
+		this.setStaticRows = this.setStaticRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
@@ -346,10 +359,11 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
-		// Array to handle external flows. It is initialized to contain a sub-flow
+		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
 		this.externalPipelineFlows = [];
-		this.externalPipelineFlows["all-types-external-pipeline-flow-url"] = EXTERNAL_SUB_FLOW_CANVAS;
+		this.externalPipelineFlows["external-sub-flow-url-1"] = EXTERNAL_SUB_FLOW_CANVAS_1;
+		this.externalPipelineFlows["external-sub-flow-url-2"] = EXTERNAL_SUB_FLOW_CANVAS_2;
 
 		this.setApiSelectedOperation = this.setApiSelectedOperation.bind(this);
 
@@ -364,7 +378,7 @@ class App extends React.Component {
 		}
 
 		// Add these methods to the global document object so they can be called
-		// from the Chimp test cases.
+		// from the Cypress test cases.
 		document.setCanvasConfig = this.setCanvasConfig;
 		document.canvasController = this.canvasController;
 		document.canvasController2 = this.canvasController2;
@@ -378,7 +392,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
@@ -582,7 +596,7 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+			this.setBreadcrumbsDefinition();
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -684,8 +698,8 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
 	}
 
-	setBreadcrumbsDefinition(currentPipelineId) {
-		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+	setBreadcrumbsDefinition() {
+		const breadcrumbs = this.canvasController.getBreadcrumbs();
 		breadcrumbs[0].label = PRIMARY;
 		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
@@ -807,6 +821,40 @@ class App extends React.Component {
 	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
 		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
 		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
+	}
+
+	// Textfield to set the propertyId for addRemoveRows
+	setAddRemoveRowsPropertyId(propertyId) {
+		this.setState({ addRemoveRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setAddRemoveRowsEnabled(enabled) {
+		this.setState({ addRemoveRowsEnabled: enabled });
+	}
+
+	// Button to call propertiesController to set addRemoveRows
+	setAddRemoveRows() {
+		if (this.propertiesController) {
+			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
+	}
+
+	// Textfield to set the propertyId for staticRows
+	setStaticRowsPropertyId(propertyId) {
+		this.setState({ staticRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set staticRows enabled or disabled
+	setStaticRowsIndexes(indexes) {
+		this.setState({ staticRowsIndexes: indexes });
+	}
+
+	// Button to call propertiesController to set staticRows
+	setStaticRows() {
+		if (this.propertiesController) {
+			this.propertiesController.updateStaticRows(this.state.staticRowsPropertyId, this.state.staticRowsIndexes);
+		}
 	}
 
 	initLocale() {
@@ -991,7 +1039,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
-		this.setBreadcrumbsDefinition(pipelineId);
+		this.setBreadcrumbsDefinition();
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1074,7 +1122,15 @@ class App extends React.Component {
 
 	useApplyOnBlur(enabled) {
 		this.setState({ applyOnBlur: enabled });
+		if (enabled) {
+			this.setState({ disableSaveOnRequiredErrors: false });
+		}
 		this.log("apply changes on blur", enabled);
+	}
+
+	useSaveButtonDisable(disabled) {
+		this.setState({ disableSaveOnRequiredErrors: disabled });
+		this.log("save button disabled", disabled);
 	}
 
 	useExpressionBuilder(enabled) {
@@ -1263,6 +1319,7 @@ class App extends React.Component {
 			data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
 			break;
 		}
+		case "loadPipelineFlow":
 		case "expandSuperNodeInPlace":
 		case "displaySubPipeline":
 		case "convertSuperNodeExternalToLocal": {
@@ -1316,7 +1373,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
+			this.setBreadcrumbsDefinition();
 			break;
 		}
 		case "createTestHarnessNode": {
@@ -1370,6 +1427,13 @@ class App extends React.Component {
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
 				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		case "undo":
+		case "redo": {
+			if (get(command, "data.editType") === "displaySubPipeline") {
+				this.setBreadcrumbsDefinition();
+			}
 			break;
 		}
 		default: {
@@ -1868,9 +1932,6 @@ class App extends React.Component {
 		let parentClass = "";
 		if (this.state.selectedNodeFormatType === "Vertical") {
 			parentClass = "classic-vertical";
-			if (this.state.selectedConnectionType === "Halo") {
-				parentClass = "classic-halo";
-			}
 		}
 
 		const commonCanvasConfig = {
@@ -1878,7 +1939,6 @@ class App extends React.Component {
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
-			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
@@ -1912,6 +1972,7 @@ class App extends React.Component {
 			emptyCanvasContent: emptyCanvasDiv,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
 			enableNodeLayout: this.state.selectedNodeLayout,
 			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
@@ -1920,7 +1981,6 @@ class App extends React.Component {
 		const editActionHandler = this.editActionHandler;
 
 		const commonCanvasConfig2 = {
-			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: parentClass,
@@ -2046,13 +2106,29 @@ class App extends React.Component {
 					{ divider: true }
 				]
 			};
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE) {
+			toolbarConfig = {
+				overrideAutoEnableDisable: true,
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: false },
+					{ action: "redo", label: "Redo", enable: false },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: false, tooltip: "Cut from clipboard" },
+					{ action: "copy", label: "Copy", enable: false, tooltip: "Copy from clipboard" },
+					{ action: "paste", label: "Paste", enable: false, tooltip: "Paste to canvas" },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: false },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: false }
+				]
+			};
 		}
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 
@@ -2069,6 +2145,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
@@ -2290,7 +2367,9 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
+			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
@@ -2301,6 +2380,14 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
+			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
+			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
+			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
+			setAddRemoveRows: this.setAddRemoveRows,
+			staticRowsIndexes: this.state.staticRowsIndexes,
+			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
+			setStaticRowsIndexes: this.setStaticRowsIndexes,
+			setStaticRows: this.setStaticRows,
 			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
 			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,

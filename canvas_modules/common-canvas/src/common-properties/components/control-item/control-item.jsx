@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
 import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -62,9 +62,9 @@ class ControlItem extends React.Component {
 					tooltip = (<Tooltip
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
-						direction="top"
-						delay={TOOL_TIP_DELAY_ICON}
+						direction="bottom"
 						disable={hidden || disabled}
+						showToolTipOnClick
 					>
 						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 					</Tooltip>);
@@ -82,7 +82,7 @@ class ControlItem extends React.Component {
 					disabled={disabled}
 					kind="ghost"
 				>
-					<span>{this.props.control.label.numberGenerator.label.default}</span>
+					<span>{this.props.control.label.numberGenerator.text}</span>
 				</Button>);
 			}
 			label = (
