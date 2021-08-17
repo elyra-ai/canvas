@@ -94,11 +94,28 @@ function truncateDisplayValue(value) {
 	return value;
 }
 
+function getValidationProps(messageInfo, inTable) {
+	const validationProps = {};
+	// inline in tables don't show carbon error/warn
+	if (!messageInfo || inTable) {
+		return validationProps;
+	}
+	if (messageInfo.type === "error") {
+		validationProps.invalid = true;
+		validationProps.invalidText = messageInfo.text;
+	} else if (messageInfo.type === "warning") {
+		validationProps.warn = true;
+		validationProps.warnText = messageInfo.text;
+	}
+	return validationProps;
+}
+
 export {
 	getCharLimit,
 	getControlId,
 	getDataId,
 	splitNewlines,
 	joinNewlines,
-	truncateDisplayValue
+	truncateDisplayValue,
+	getValidationProps
 };

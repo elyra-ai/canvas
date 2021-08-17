@@ -102,7 +102,7 @@ class CheckboxsetControl extends React.Component {
 					{this.props.controlItem}
 				</legend>
 				<div className={classNames("properties-checkboxset", { "hide": this.props.state === STATES.HIDDEN })} data-id={ControlUtils.getDataId(this.props.propertyId)} >
-					<div className="properties-checkboxset-container">
+					<div className={classNames("properties-checkboxset-container", this.props.messageInfo ? this.props.messageInfo.type : null)}>
 						{checkboxes}
 					</div>
 					<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />

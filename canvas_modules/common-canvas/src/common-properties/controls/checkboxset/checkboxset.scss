@@ -19,6 +19,14 @@
 		display: none;
 	}
 	.bx--checkbox-wrapper { //override carbon checkbox styling TODO currently doesn't override
-		margin-bottom: 0.5rem;
+		margin-bottom: $spacing-03;
+	}
+	.properties-checkboxset-container {
+		&.error:not([disabled]) {
+			padding-bottom: $spacing-02;
+		}
+		&.warning:not([disabled]) {
+			padding-bottom: $spacing-02;
+		}
 	}
 }

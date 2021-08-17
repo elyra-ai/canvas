@@ -90,7 +90,6 @@ describe("textfield renders correctly", () => {
 
 		const validationMsg = textWrapper.find("div.properties-validation-message");
 		expect(validationMsg).to.have.length(1);
-		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
 	});
 
 	it("textfield props should have been defined", () => {
@@ -264,7 +263,7 @@ describe("textfield renders correctly", () => {
 			/>
 		);
 		const textWrapper = wrapper.find("div[data-id='properties-test-text']");
-		const messageWrapper = textWrapper.find("div.properties-validation-message");
+		const messageWrapper = textWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });

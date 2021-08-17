@@ -15,14 +15,10 @@
  */
 
 .properties-validation-message {
-	margin-top: $spacing-03;
+	margin-top: $spacing-02;
 	display: flex;
 	.icon {
-		margin: 0 2px;
-		svg {
-			height: 10px;
-			width: 10px;
-		}
+		margin: 0 $spacing-01;
 		.properties-validation-icon-warning {
 			fill: $support-03;
 			[data-icon-path="inner-path"] { // exclamation mark
@@ -41,8 +37,13 @@
 		}
 	}
 	span {
-		@include carbon--type-style("label-01");
-		color: $text-02;
+		@include carbon--type-style("caption-01");
+		color: $text-01;
+	}
+	&.error {
+		span {
+			color: $text-error;
+		}
 	}
 	&.hide {
 		display: none;
@@ -52,8 +53,8 @@
 		position: absolute;
 		top: 0;
 		.icon svg {
-			height: 8px;
-			width: 8px;
+			height: $spacing-03;
+			width: $spacing-03;
 		}
 	}
 }

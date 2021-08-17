@@ -187,6 +187,7 @@ class DropDown extends React.Component {
 		};
 
 		let dropdownComponent = null;
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		if (this.props.tableControl) {
 			const options = [];
 			const selection = dropDown.selectedOption && dropDown.selectedOption.value ? dropDown.selectedOption.value : "";
@@ -211,6 +212,7 @@ class DropDown extends React.Component {
 			</Select>);
 		} else if (this.props.control.customValueAllowed) { // combobox dropdown not allowed in tables
 			dropdownComponent = (<ComboBox
+				{...validationProps}
 				ariaLabel={this.props.control.label ? this.props.control.label.text : ""}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 				disabled={this.props.state === STATES.DISABLED}
@@ -225,6 +227,7 @@ class DropDown extends React.Component {
 			/>);
 		} else {
 			dropdownComponent = (<Dropdown
+				{...validationProps}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
 				disabled={this.props.state === STATES.DISABLED}
 				type="default"
@@ -243,7 +246,7 @@ class DropDown extends React.Component {
 				className={classNames("properties-dropdown", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
 			>
 				{dropdownComponent}
-				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
+				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} tableOnly />
 			</div>
 		);
 	}
