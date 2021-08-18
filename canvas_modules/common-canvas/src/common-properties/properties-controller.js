@@ -50,6 +50,7 @@ export default class PropertiesController {
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
 		this.allowChangeDefinitions = {};
+		this.conditionalDefaultDefinitions = {};
 		this.panelTree = {};
 		this.controls = {};
 		this.actions = {};
@@ -153,6 +154,12 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
+			// For each control, check if Conditional default is present
+			controls.forEach((control) => {
+				const propertyId = { name: control.name };
+				const defaultValue = conditionsUtil.setConditionalDefaultValue(propertyId, this);
+			});
+
 			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
@@ -200,6 +207,7 @@ export default class PropertiesController {
 		this.filterDefinitions = { controls: {}, refs: {} };
 		this.filteredEnumDefinitions = { controls: {}, refs: {} };
 		this.allowChangeDefinitions = { controls: {}, refs: {} };
+		this.conditionalDefaultDefinitions = { controls: {}, refs: {} };
 
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
@@ -215,6 +223,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, CONDITION_TYPE.FILTEREDENUM);
 				} else if (condition.allow_change) {
 					UiConditionsParser.parseConditions(this.allowChangeDefinitions, condition, CONDITION_TYPE.ALLOWCHANGE);
+				} else if (condition.default_value) {
+					UiConditionsParser.parseConditions(this.conditionalDefaultDefinitions, condition, CONDITION_TYPE.CONDITIONALDEFAULT);
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -243,6 +253,9 @@ export default class PropertiesController {
 			break;
 		case CONDITION_TYPE.ALLOWCHANGE:
 			conditionDefinitions = this.allowChangeDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.CONDITIONALDEFAULT:
+			conditionDefinitions = this.conditionalDefaultDefinitions[dfnIndex];
 			break;
 		case CONDITION_TYPE.VALIDATION:
 			conditionDefinitions = this.validationDefinitions[dfnIndex];

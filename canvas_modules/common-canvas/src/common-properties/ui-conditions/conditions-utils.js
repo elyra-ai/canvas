@@ -331,6 +331,35 @@ function allowConditions(inPropertyId, controller) {
 }
 
 /**
+* Set default value for a field if conditions evaluate to true.
+*
+* @param {object} propertyId. required
+* @param {object} properties controller. required
+*/
+function setConditionalDefaultValue(inPropertyId, controller) {
+	let result = true;
+	const control = controller.getControl(inPropertyId);
+	if (!control) {
+		logger.warn("Control not found for " + inPropertyId.name);
+		return result;
+	}
+	const validations = controller.getDefinitions(inPropertyId, CONDITION_TYPE.CONDITIONALDEFAULT, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (validations.length > 0) {
+		try {
+			for (const validation of validations) {
+				result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
+				if (!result) {
+					return result;
+				}
+			}
+		} catch (error) {
+			logger.warn("Error thrown in validation: " + error);
+		}
+	}
+	return null;
+}
+
+/**
 * Filters the datamodel fields for the given parameter.
 *
 * @param {object} propertyId. required
@@ -1159,6 +1188,7 @@ export {
 	validateInput,
 	filterConditions,
 	allowConditions,
+	setConditionalDefaultValue,
 	updateState,
 	getParamRefPropertyId,
 	injectDefaultValidations,
