@@ -28,3 +28,7 @@
 		padding-bottom: 0; // Because there's 40px padding below .properties-control-panel
 	}
 }
+
+.properties-twisty-panel + .properties-control-panel {
+	padding-top: $spacing-05; // padding between the two classes
+}
