@@ -154,16 +154,27 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			// For each control, check if Conditional default is present
-			controls.forEach((control) => {
-				const propertyId = { name: control.name };
-				const defaultValue = conditionsUtil.setConditionalDefaultValue(propertyId, this);
-			});
 
 			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
+
+			// Evaluate conditional defaults based on current_parameters upon the loading of view
+			if (!isEmpty(propertyValues)) {
+				Object.keys(propertyValues).forEach((propertyName) => {
+					const propertyId = { name: propertyName };
+					const conditionalDefaultValue = conditionsUtil.getConditionalDefaultValue(propertyId, this);
+					if (
+						conditionalDefaultValue !== null &&
+						conditionalDefaultValue.result &&
+						!(conditionalDefaultValue.parameter_ref in this.form.data.currentParameters)
+					) {
+						this.propertiesStore.updatePropertyValue({ name: conditionalDefaultValue.parameter_ref }, conditionalDefaultValue.value);
+					}
+				});
+			}
+
 			this._addToControlValues();
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
@@ -1024,6 +1035,16 @@ export default class PropertiesController {
 			this.propertiesStore.updatePropertyValue(propertyId, initialValue);
 			return;
 		}
+		// evaluate conditional defaults upon each control input change
+		const conditionalDefaultValue = conditionsUtil.getConditionalDefaultValue(propertyId, this);
+		if (
+			conditionalDefaultValue !== null &&
+			// !conditionalDefaultValue.result &&
+			!(conditionalDefaultValue.parameter_ref in this.form.data.currentParameters)
+		) {
+			this.propertiesStore.updatePropertyValue({ name: conditionalDefaultValue.parameter_ref }, conditionalDefaultValue.value);
+		}
+
 		conditionsUtil.validateConditions(inPropertyId, this);
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this, true);

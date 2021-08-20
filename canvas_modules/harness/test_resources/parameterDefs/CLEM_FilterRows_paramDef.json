@@ -3,8 +3,7 @@
     "title": "Filter Rows"
   },
   "current_parameters": {
-    "mode": "Include",
-    "string_default": "current_parameters default"
+    "mode": "Include"
   },
   "parameters": [
     {
@@ -101,8 +100,9 @@
         "value": "Conditional default",
         "evaluate": {
           "condition": {
-            "parameter_ref": "conditionExpr",
-            "op": "isNotEmpty"
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
           }
         }
       }
