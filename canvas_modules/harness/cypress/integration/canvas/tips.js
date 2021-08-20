@@ -287,3 +287,35 @@ describe("Test to check if tips show up for a supernode and nodes inside the sup
 		// cy.verifyTipForNodeInSupernodeAtLocation("Define Types", "Supernode", "below");
 	});
 });
+
+describe("Test to check if tips show up for toolbar items", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Test to check if tips show up for toolbar items", function() {
+		cy.hoverOverToolbarItem(".togglePalette-action");
+		cy.verifyTipForToolbarItem(".togglePalette-action", "Palette");
+		cy.mouseoutToolbarItem(".togglePalette-action");
+
+		cy.hoverOverToolbarItem(".createAutoComment-action");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+		cy.mouseoutToolbarItem(".createAutoComment-action");
+
+		cy.hoverOverToolbarItem(".zoomIn-action");
+		cy.verifyTipForToolbarItem(".zoomIn-action", "Zoom in");
+		cy.mouseoutToolbarItem(".zoomIn-action");
+
+		cy.hoverOverToolbarItem(".zoomOut-action");
+		cy.verifyTipForToolbarItem(".zoomOut-action", "Zoom out");
+		cy.mouseoutToolbarItem(".zoomOut-action");
+
+		cy.hoverOverToolbarItem(".zoomToFit-action");
+		cy.verifyTipForToolbarItem(".zoomToFit-action", "Zoom to fit");
+		cy.mouseoutToolbarItem(".zoomToFit-action");
+
+		cy.hoverOverToolbarItem(".toggleNotificationPanel-action");
+		cy.verifyTipForToolbarItem(".toggleNotificationPanel-action", "Notifications");
+		cy.mouseoutToolbarItem(".toggleNotificationPanel-action");
+	});
+});
