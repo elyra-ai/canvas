@@ -338,10 +338,11 @@ function _makeStringControl(parameter, isSubControl) {
 			controlType = ControlType.TEXTAREA;
 			break;
 		case ParamRole.ENUM:
-			if (parameter.getValidValueCount() < 5) {
-				controlType = ControlType.RADIOSET;
-			} else {
+			// show oneofselect when inside a table cell
+			if (parameter.getValidValueCount() > 4 || (isSubControl && !_isEmbeddedOption(parameter))) {
 				controlType = ControlType.ONEOFSELECT;
+			} else {
+				controlType = ControlType.RADIOSET;
 			}
 			break;
 		case ParamRole.COLUMN:
@@ -654,9 +655,16 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata) {
  */
 function _isEmbeddedMultiOption(parameter) {
 	if (parameter.isList() || parameter.isMapValue()) {
-		return parameter.editStyle === "on_panel" || parameter.editStyle === "subpanel";
+		return _isEmbeddedOption(parameter);
 	}
 	return false;
+}
+
+/**
+ * Returns true if the given parameter is a multi-option type that can be embedded within a table cell.
+ */
+function _isEmbeddedOption(parameter) {
+	return parameter.editStyle === "on_panel" || parameter.editStyle === "subpanel";
 }
 
 /**
