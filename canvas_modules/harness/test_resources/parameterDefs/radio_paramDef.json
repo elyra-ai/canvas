@@ -272,7 +272,6 @@
         "description": {
           "default": "RadioSet with enum string type"
         },
-        "control": "radioset",
         "resource_key": "withradioString",
         "class_name": "radioset-control-class"
       },
@@ -509,14 +508,13 @@
           {
             "parameter_ref": "radioset_col1",
             "label": {
-              "default": "Pet inline"
+              "default": "Pet inline."
             },
             "description": {
-              "default": "Pet"
+              "default": "Should default to oneofselect when enum is inline."
             },
             "width": 10,
             "edit_style": "inline",
-            "control": "radioset",
             "class_name": "table-radioset-control-class"
           },
           {
@@ -529,7 +527,6 @@
             },
             "width": 10,
             "edit_style": "on_panel",
-            "control": "radioset",
             "class_name": "table-on-panel-radioset-control-class"
           },
           {
@@ -546,6 +543,7 @@
           },
           {
             "parameter_ref": "radioset_col3",
+            "control": "radioset",
             "label": {
               "default": "color"
             },
@@ -554,7 +552,6 @@
             },
             "width": 10,
             "edit_style": "subpanel",
-            "control": "radioset",
             "class_name": "table-subpanel-radioset-control-class"
           }
         ]
