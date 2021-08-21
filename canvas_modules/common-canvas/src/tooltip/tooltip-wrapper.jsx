@@ -134,6 +134,7 @@ export default class TooltipWrapper extends React.Component {
 			id={this.props.id}
 			targetObj={this.props.targetObj}
 			mousePos={this.props.mousePos}
+			className={[TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK].indexOf(this.props.type) > -1 ? "definition-tooltip" : null}
 		/>) : null;
 	}
 }

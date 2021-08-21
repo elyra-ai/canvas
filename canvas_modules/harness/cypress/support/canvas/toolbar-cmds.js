@@ -169,3 +169,13 @@ Cypress.Commands.add("getCanvasToolbar", () => {
 Cypress.Commands.add("getExtraCanvasToolbar", () => {
 	cy.get(".toolbar-div[instanceid=1]");
 });
+
+Cypress.Commands.add("hoverOverToolbarItem", (toolbarItem) => {
+	cy.getToolbarAction(toolbarItem)
+		.trigger("mouseover");
+});
+
+Cypress.Commands.add("mouseoutToolbarItem", (toolbarItem) => {
+	cy.getToolbarAction(toolbarItem)
+		.trigger("mouseout");
+});

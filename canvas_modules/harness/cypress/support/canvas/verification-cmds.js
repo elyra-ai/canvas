@@ -896,6 +896,29 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 		});
 });
 
+Cypress.Commands.add("verifyTipClass", (tip, className) => {
+	cy.wrap(tip).should("have.class", className);
+});
+
+Cypress.Commands.add("verifyTipForToolbarItem", (toolbarItem, tipText) => {
+	cy.getToolbarAction(toolbarItem)
+		.find(".tooltip-trigger")
+		.then((item) => {
+			const toolbarTipSelector = "[data-id='" + item[0].getAttribute("data-id").replace("tooltip-trigger", "tooltip") + "']";
+			cy.get(toolbarTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip label
+					cy.wrap(tip).should("have.text", tipText);
+
+					// Verify toolbar tip class
+					cy.verifyTipClass(tip, "icon-tooltip");
+				});
+		});
+});
+
 Cypress.Commands.add("verifyTipForCategory", (nodeCategory) => {
 	// Verify the tip shows next to given category
 	cy.get(".tip-palette-item")
@@ -968,6 +991,9 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 					cy.wrap(tip)
 						.find(".tip-node-label")
 						.should("have.text", nodeName);
+
+					// Verify node tip class
+					cy.verifyTipClass(tip, "definition-tooltip");
 				});
 		});
 });
@@ -1004,6 +1030,9 @@ Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, superno
 					cy.wrap(tip)
 						.find(".tip-node-label")
 						.should("have.text", nodeName);
+
+					// Verify node tip class
+					cy.verifyTipClass(tip, "definition-tooltip");
 				});
 		});
 });
@@ -1030,6 +1059,9 @@ Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, port
 							cy.wrap(tip)
 								.get(".tip-port")
 								.should("have.text", portName);
+
+							// Verify port tip class
+							cy.verifyTipClass(tip, "definition-tooltip");
 						});
 				});
 		});
@@ -1063,6 +1095,9 @@ Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, po
 							cy.wrap(tip)
 								.get(".tip-port")
 								.should("have.text", portName);
+
+							// Verify port tip class
+							cy.verifyTipClass(tip, "definition-tooltip");
 						});
 				});
 		});
@@ -1085,6 +1120,9 @@ Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, target
 			cy.wrap(tip)
 				.find("#tooltipContainer")
 				.should("have.text", linkLabel);
+
+			// Verify link tip class
+			cy.verifyTipClass(tip, "definition-tooltip");
 		});
 
 });
