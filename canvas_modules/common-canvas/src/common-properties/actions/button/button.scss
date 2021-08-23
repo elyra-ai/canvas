@@ -18,7 +18,7 @@
 * Fixed in new versions
 */
 .properties-action-button  {
-	padding: $spacing-03 $spacing-02 $spacing-03 0;
+	padding-right: $spacing-02;
 	&.hide {
 		display: none;
 	}
