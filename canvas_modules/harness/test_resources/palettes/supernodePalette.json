@@ -8,7 +8,7 @@
       "image": "data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyMCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM5NDkzOTQ7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5zb3VyY2VzX29wZW48L3RpdGxlPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEwLDMuNDRWMkgyVjE4SDIyVjMuNDRabTEwLjE3LDEzSDMuNzdWNS4xN0gyMC4xNFoiLz48L3N2Zz4=",
       "node_types": [
         {
-          "id": "",
+          "id": "Supernode-empty",
           "type": "super_node",
           "subflow_ref": {
             "pipeline_id_ref": "subflow1"
@@ -120,7 +120,7 @@
           }
         },
         {
-          "id": "",
+          "id": "Supernode-local",
           "type": "super_node",
           "subflow_ref": {
             "pipeline_id_ref": "6811e184-6e11-4c51-b769-40e68fd218e5"
@@ -287,7 +287,7 @@
           ]
         },
         {
-          "id": "",
+          "id": "Supernode-external",
           "type": "super_node",
           "open_with_tool": "canvas",
           "subflow_ref": {
@@ -302,9 +302,7 @@
               "y_pos": 0,
               "class_name": "canvas-node",
               "description": "An external supernode",
-              "is_expanded": true,
-              "expanded_width": 200,
-              "expanded_height": 200
+              "is_expanded": false
             },
             "pipeline_data": [
             ]
@@ -335,7 +333,7 @@
           ]
         },
         {
-          "id": "",
+          "id": "Supernode-empty-2-inputs",
           "type": "super_node",
           "open_with_tool": "canvas",
           "subflow_ref": {
@@ -350,9 +348,7 @@
               "y_pos": 0,
               "class_name": "canvas-node",
               "description": "An external supernode containing two nested external pipelines",
-              "is_expanded": true,
-              "expanded_width": 200,
-              "expanded_height": 200
+              "is_expanded": false
             },
             "pipeline_data": [
             ]
@@ -387,6 +383,54 @@
               "app_data": {
                 "ui_data": {
                   "label": "output1SuperNodePE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "Supernode-external-expanded",
+          "type": "super_node",
+          "open_with_tool": "canvas",
+          "subflow_ref": {
+            "pipeline_id_ref": "external-sub-flow-pipeline-2",
+            "url": "external-sub-flow-url-2"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "External Supernode Expanded",
+              "image": "useDefaultExtIcon",
+              "x_pos": 0,
+              "y_pos": 0,
+              "class_name": "canvas-node",
+              "description": "An external supernode which is already expanded in-place",
+              "is_expanded": true,
+              "expanded_width": 200,
+              "expanded_height": 200
+            },
+            "pipeline_data": [
+            ]
+          },
+          "inputs": [
+            {
+              "id": "input1",
+              "subflow_node_ref": "fd76acd2-16b8-4e31-8155-eb67eb83aeb7",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "input 1"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1",
+              "subflow_node_ref": "fe95cbc5-645a-4226-83b9-db894581436f",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "output 1"
                 }
               }
             }

@@ -21,10 +21,11 @@
 // and canvas-controller.
 // ---------------------------------------------------------------------------
 
-import dagre from "dagre/dist/dagre.min.js";
-
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+
+import dagre from "dagre/dist/dagre.min.js";
+import { get } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
@@ -409,7 +410,7 @@ export default class APIPipeline {
 				node.id = this.objectModel.getUUID();
 				node.x_pos = 0;
 				node.y_pos = 0;
-				node = PipelineOutHandler.createNode(node, []);
+				node = PipelineOutHandler.createSchemaNode(node, []);
 				if (node.type === SUPER_NODE) {
 					if (!node.app_data) {
 						node.app_data = {};
@@ -492,7 +493,11 @@ export default class APIPipeline {
 
 	addNode(newNode) {
 		if (newNode) {
-			this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			if (newNode.type === SUPER_NODE) {
+				this.addSupernode(newNode, get(newNode, "app_data.pipeline_data"));
+			} else {
+				this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			}
 		}
 	}
 
@@ -507,7 +512,7 @@ export default class APIPipeline {
 
 	// Add the newSupernode to canvasInfo and an array of newSubPipelines that
 	// it references. Optionally, a link may also be added.
-	addSupernode(newSupernode, newSubPipelines, newLink) {
+	addSupernode(newSupernode, newSubPipelines) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
 		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
@@ -515,16 +520,9 @@ export default class APIPipeline {
 			if (pipeline.id === this.pipelineId) {
 				const newNodes = [
 					...pipeline.nodes,
-					Object.assign({}, newSupernode)
+					this.cloneSupernodeRemovePipelineData(newSupernode)
 				];
-				let newLinks = pipeline.links;
-				if (newLink) {
-					newLinks = [
-						...pipeline.links,
-						Object.assign({}, newLink)
-					];
-				}
-				return Object.assign({}, pipeline, { nodes: newNodes, links: newLinks });
+				return Object.assign({}, pipeline, { nodes: newNodes });
 			}
 			return pipeline;
 		});
@@ -532,11 +530,13 @@ export default class APIPipeline {
 		this.objectModel.setCanvasInfo(newCanvasInfo);
 	}
 
-	addAutoNodeAndLink(newNode, newLink) {
-		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
-			newNode: newNode,
-			newLink: newLink },
-		pipelineId: this.pipelineId });
+	cloneSupernodeRemovePipelineData(supernode) {
+		const sn = Object.assign({}, supernode);
+		if (sn.app_data) {
+			sn.app_data = Object.assign({}, sn.app_data);
+			delete sn.app_data.pipeline_data;
+		}
+		return sn;
 	}
 
 	deleteNode(id) {
@@ -1206,8 +1206,12 @@ export default class APIPipeline {
 
 	addLinks(linkList) {
 		linkList.forEach((link) => {
-			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
+			this.addLink(link);
 		});
+	}
+
+	addLink(link) {
+		this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 	}
 
 	getLinks() {

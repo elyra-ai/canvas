@@ -16,7 +16,7 @@
 
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
-import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, SUPER_NODE }
+import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK }
 	from "../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/command-actions/locales/en.json";
 
@@ -477,12 +477,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.deleteSupernodes([this.supernode], [this.subPipeline], []);
 
 		this.subflowNodes.forEach((node) => {
-			if (node.type === SUPER_NODE) {
-				// No need to pass any pipelines because they will already exist.
-				this.apiPipeline.addSupernode(node, []);
-			} else {
-				this.apiPipeline.addNode(node);
-			}
+			this.apiPipeline.addNode(node);
 		});
 
 		this.subflowComments.forEach((comment) => {

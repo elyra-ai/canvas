@@ -761,8 +761,8 @@ export default class SVGCanvasRenderer {
 		const ghost = this.getGhostDimensions();
 		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
 		node.layout = this.canvasController.getObjectModel().getNodeLayout();
-		node.width = ghost.width;
-		node.height = ghost.height;
+		node.width = node.is_expanded ? node.expanded_width : ghost.width;
+		node.height = node.is_expanded ? node.expanded_height : ghost.height;
 
 		const nodeImage = this.getNodeImage(node);
 		const nodeImageType = this.getImageType(nodeImage);
@@ -796,8 +796,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-ghost-node")
 			.attr("x", 0)
 			.attr("y", 0)
-			.attr("width", ghost.width)
-			.attr("height", ghost.height);
+			.attr("width", node.width)
+			.attr("height", node.height);
 
 		ghostGrp
 			.append(nodeImageType)
@@ -2238,7 +2238,7 @@ export default class SVGCanvasRenderer {
 				}
 			}
 
-			// Switch of any drag highlighting
+			// Switch off any drag highlighting
 			this.unsetNodeTranslucentState();
 			this.unsetInsertNodeIntoLinkHighlighting();
 			this.unsetDetachedLinkHighlighting();

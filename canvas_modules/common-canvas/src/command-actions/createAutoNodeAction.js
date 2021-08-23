@@ -30,11 +30,6 @@ export default class CreateAutoNodeAction extends Action {
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
-		if (this.newNode.type === SUPER_NODE) {
-			const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(this.newNode);
-			this.subPipelines = subPipelines;
-			this.newNode = supernode;
-		}
 	}
 
 	// Return augmented command object which will be passed to the
@@ -49,20 +44,12 @@ export default class CreateAutoNodeAction extends Action {
 
 	// Standard methods
 	do() {
-		if (this.newLink) {
-			if (this.newNode.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(this.newNode, this.subPipelines, this.newLink);
-			} else {
-				this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
-			}
+		this.apiPipeline.addNode(this.newNode);
 
-		} else {
-			if (this.newNode.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(this.newNode, this.subPipelines);
-			} else {
-				this.apiPipeline.addNode(this.newNode);
-			}
+		if (this.newLink) {
+			this.apiPipeline.addLink(this.newLink);
 		}
+
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
 	}
 

@@ -461,6 +461,10 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	getPaletteNodeById(nodeId) {
+		return this.objectModel.getPaletteNodeById(nodeId);
+	}
+
 	// Returns the category of the palette node identified by the operator passed in
 	getCategoryForNode(nodeOpIdRef) {
 		return this.objectModel.getCategoryForNode(nodeOpIdRef);
@@ -1659,10 +1663,11 @@ export default class CanvasController {
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: newNodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};
 
