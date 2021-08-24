@@ -18,11 +18,17 @@
 * Fixed in new versions
 */
 .properties-action-button  {
-	padding-right: $spacing-02;
+	padding: $spacing-03 $spacing-02 $spacing-03 0;
 	&.hide {
 		display: none;
 	}
 	> button {
 		padding: 0 $spacing-03;
+	}
+}
+
+.properties-action-panel {
+	.properties-action-button {
+		padding-bottom: 0; // .properties-action-panel adds 8px bottom padding
 	}
 }
