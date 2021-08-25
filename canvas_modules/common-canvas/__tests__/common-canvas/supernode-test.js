@@ -1437,7 +1437,7 @@ describe("Create Supernode Action", () => {
 		expect(isEqual(JSON.stringify(test10ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 	});
 
-	it("Created supernode positiond at same place as node that contxt menu was clicked on.", () => {
+	it("Created supernode positioned at same place as node that context menu was clicked on.", () => {
 		const apiPipeline = objectModel.getAPIPipeline();
 		const selections = [
 			"nodeIDMultiPlotPE", // Multiplot

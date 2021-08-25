@@ -461,6 +461,7 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Returns the palette node identified by the node ID passed in.
 	getPaletteNodeById(nodeId) {
 		return this.objectModel.getPaletteNodeById(nodeId);
 	}
@@ -693,6 +694,18 @@ export default class CanvasController {
 	// Adds a new node into the pipeline specified by the pipelineId.
 	addNode(node, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
+	}
+
+	// Simulates the creation of a node by dragging a node from the palette
+	// to the canvas which will result in the command being added to the
+	// command stack (so the user can undo/redo the action). The nodeTemplate
+	// can be retrieved from the palette using with Canvas Controller
+	// methods: getPaletteNode or getPaletteNodeById.
+	// The new node will be created at position xOffset, yOffset. If pipelineId
+	// is omitted the node will be created in the current top-level pipeline.
+	simulateCreateNodeFromPalette(nodeTemplate, xOffset, yOffset, pipelineId) {
+		const pId = pipelineId || this.getCurrentPipelineId();
+		this.createNodeFromTemplateAt(nodeTemplate, { x: xOffset, y: yOffset }, pId);
 	}
 
 	// Deletes the node specified.
