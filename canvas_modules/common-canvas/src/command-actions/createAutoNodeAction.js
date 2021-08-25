@@ -16,7 +16,6 @@
 /* eslint no-lonely-if: ["off"] */
 
 import Action from "../command-stack/action.js";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, objectModel, autoLinkOnlyFromSelNodes) {
@@ -54,11 +53,7 @@ export default class CreateAutoNodeAction extends Action {
 	}
 
 	undo() {
-		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
-		} else {
-			this.apiPipeline.deleteNode(this.newNode.id);
-		}
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {

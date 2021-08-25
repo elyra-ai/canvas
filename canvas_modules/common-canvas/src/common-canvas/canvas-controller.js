@@ -631,6 +631,7 @@ export default class CanvasController {
 
 	// Deletes the object specified by the id in the pipleine specified by
 	// pipeline ID.
+	// @Deprecated Use deleteNode or deleteComment as appropriate instead.
 	deleteObject(id, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}

@@ -65,7 +65,7 @@ export default class CreateNodeOnLinkAction extends Action {
 	undo() {
 		this.apiPipeline.deleteLink({ id: this.firstLink.id });
 		this.apiPipeline.deleteLink({ id: this.secondLink.id });
-		this.apiPipeline.deleteNode(this.newNode.id);
+		this.apiPipeline.deleteNodes([this.newNode]);
 		this.apiPipeline.addLinks([this.data.link]);
 	}
 

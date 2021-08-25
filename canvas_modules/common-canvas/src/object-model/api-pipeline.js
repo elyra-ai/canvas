@@ -30,7 +30,7 @@ import { get } from "lodash";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	BINDING, SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
@@ -63,25 +63,36 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
 
+	// Deletes the object (which can be a node or a comment) identified
+	// by the objId passed in.
+	deleteObject(objId) {
+		this.deleteObjects([objId]);
+	}
+
+	// Deletes the objects (which can be a mix of nodes and comments) identified
+	// by the array of IDs passed in and calls the selection changed handler.
 	deleteObjects(objectIds) {
-		this.objectModel.executeWithSelectionChange((objIds) => {
-			objIds.forEach((id) => {
-				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
-			});
+		this.objectModel.executeWithSelectionChange((inObjectIds) => {
+			const { nodes, comments } = this.filterNodesAndComments(inObjectIds);
+			this.deleteNodesInternal(nodes);
+			this.deleteCommentsInternal(comments);
 		}, objectIds);
 	}
 
-	// Delete an array of objects that have ids.
-	deleteObjectsWithIds(objects) {
-		const objectIds = [];
-		objects.forEach((object) => {
-			objectIds.push(object.id);
+	// Returns an object containing and array of nodes and an array of comments
+	// that match the array of objectIds passed in.
+	filterNodesAndComments(objectIds) {
+		const nodes = [];
+		const comments = [];
+		objectIds.forEach((oId) => {
+			const comment = this.getComment(oId);
+			if (comment) {
+				comments.push(comment);
+			} else {
+				nodes.push(this.getNode(oId));
+			}
 		});
-		this.deleteObjects(objectIds);
-	}
-
-	deleteObject(id) {
-		this.objectModel.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
+		return { nodes, comments };
 	}
 
 	getObjectStyle(objId, temporary) {
@@ -272,34 +283,6 @@ export default class APIPipeline {
 		}
 
 		return node;
-	}
-
-	// Returns a newly created supernode based on the parameters passed in. The
-	// externalUrl parameter indicates whether it is an external supernode or not.
-	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
-		const supernodeTemplate = {
-			description: description,
-			image: externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
-			label: label,
-			inputs: inputPorts,
-			outputs: outputPorts,
-			type: SUPER_NODE,
-			subflow_ref: {
-				pipeline_id_ref: subPipelineId
-			},
-		};
-
-		if (externalUrl) {
-			supernodeTemplate.subflow_ref.url = externalUrl;
-		}
-
-		const supernodeData = {
-			nodeTemplate: supernodeTemplate,
-			offsetX: topLeftNodePosition.xPos,
-			offsetY: topLeftNodePosition.yPos
-		};
-
-		return this.createNode(supernodeData);
 	}
 
 	// Returns a source node for auto completion or null if no source node can be
@@ -539,8 +522,45 @@ export default class APIPipeline {
 		return sn;
 	}
 
-	deleteNode(id) {
-		this.deleteObject(id);
+	// Deletes the node identified by the nodeId. If the node is a Supernode, the
+	// relevant pipelines and external pipeline flows will be deleted.
+	deleteNode(nodeId) {
+		const node = this.getNode(nodeId);
+		if (node) {
+			this.deleteNodes([node]);
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It also calls the selection changed
+	// handler.
+	deleteNodes(nodes, removePipelines = true) {
+		if (nodes && nodes.length > 0) {
+			this.objectModel.executeWithSelectionChange((obj) => {
+				this.deleteNodesInternal(obj.nodes, obj.removePipelines);
+			}, { nodes, removePipelines });
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It does not call the selection
+	// changed handler.
+	deleteNodesInternal(nodes, removePipelines) {
+		// Handle regular nodes
+		const regularNodes = nodes.filter((n) => n.type !== SUPER_NODE);
+		regularNodes.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
+
+		// Handle supernodes
+		const supernodes = nodes.filter((n) => n.type === SUPER_NODE);
+		if (removePipelines) {
+			this.deleteSupernodesAndDescPipelines(supernodes);
+		} else {
+			this.deleteSupernodes(supernodes, [], []);
+		}
 	}
 
 	// Deletes the supernodes passed in and also any descending pipelines. It
@@ -553,7 +573,7 @@ export default class APIPipeline {
 		this.deleteSupernodes(supernodes, pipelinesToDelete, extPipelineFlowsToDelete);
 	}
 
-	// Deletes the supernodes passed in along with any pipelines and xternal flows.
+	// Deletes the supernodes passed in along with any pipelines and external flows.
 	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
 		this.store.dispatch({
 			type: "DELETE_SUPERNODES",
@@ -1003,8 +1023,30 @@ export default class APIPipeline {
 		return pos;
 	}
 
+	// Delete the comment with specified by the id passed in.
 	deleteComment(id) {
-		this.deleteObject(id);
+		const comment = this.getComment(id);
+		if (comment) {
+			this.deleteComment([comment]);
+		}
+	}
+
+	// Deletes the comments in the array passed in and calls the selection
+	// changed handler. It also calls the selection changed handler.
+	deleteComments(comments) {
+		if (comments && comments.length > 0) {
+			this.objectModel.executeWithSelectionChange((inComments) => {
+				this.deleteCommentsInternal(inComments);
+			}, comments);
+		}
+	}
+
+	// Deletes the comments in the array passed in and calls the selection
+	// changed handler. It does not call the selection changed handler.
+	deleteCommentsInternal(inComments) {
+		inComments.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
 	}
 
 	getComments() {

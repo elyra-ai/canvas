@@ -1977,13 +1977,6 @@ export default class ObjectModel {
 		return port;
 	}
 
-	// Pythagorean Theorem.
-	getDistanceFromPosition(x, y, node) {
-		const a = node.x_pos - x;
-		const b = node.y_pos - y;
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-	}
-
 	// ---------------------------------------------------------------------------
 	// Clipboard methods
 	// ---------------------------------------------------------------------------

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateNodeAction extends Action {
 	constructor(data, objectModel) {
@@ -39,11 +38,7 @@ export default class CreateNodeAction extends Action {
 	}
 
 	undo() {
-		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
-		} else {
-			this.apiPipeline.deleteNode(this.newNode.id);
-		}
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {
