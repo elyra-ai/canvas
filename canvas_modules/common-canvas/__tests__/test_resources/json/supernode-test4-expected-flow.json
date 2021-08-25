@@ -738,8 +738,8 @@
             "ui_data": {
               "label": "Supernode",
               "image": "useDefaultIcon",
-              "x_pos": 642,
-              "y_pos": 375.99999237060547,
+              "x_pos": 760,
+              "y_pos": 230.99999237060547,
               "description": "This supernode was created by common-canvas."
             }
           },

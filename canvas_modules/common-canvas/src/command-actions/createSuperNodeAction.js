@@ -31,6 +31,7 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.subflowNodes = this.objectModel.getSelectedNodes();
 		this.subflowComments = this.objectModel.getSelectedComments();
+		this.subflowRect = this.apiPipeline.getBoundingRectForNodes(this.subflowNodes);
 
 		this.subflowLinks = [];
 		this.linksToDelete = [];
@@ -176,14 +177,13 @@ export default class CreateSuperNodeAction extends Action {
 
 		// Determine relative position of the binding nodes in the subflow.
 		const boundingRectPadding = 80;
-		const subflowRect = this.apiPipeline.getBoundingRectForNodes(this.subflowNodes);
-		let entryBindingYPos = subflowRect.y - boundingRectPadding;
-		let exitBindingYPos = subflowRect.y - boundingRectPadding;
+		let entryBindingYPos = this.subflowRect.y - boundingRectPadding;
+		let exitBindingYPos = this.subflowRect.y - boundingRectPadding;
 
 		this.createBindingNodeData.forEach((bindingNodeData) => {
 			const bindingNodePort = Object.assign({}, bindingNodeData.port);
 			if (bindingNodeData.type === "entry") {
-				const pos = { x: subflowRect.x - (boundingRectPadding * 2), y: entryBindingYPos += boundingRectPadding };
+				const pos = { x: this.subflowRect.x - (boundingRectPadding * 2), y: entryBindingYPos += boundingRectPadding };
 				bindingNodePort.id = bindingNodePort.id ? "output_" + bindingNodePort.id : bindingNodePort.id;
 				const inputBindingNode = this.createBindingNode(bindingNodeData.link, { outputs: [bindingNodePort] }, pos);
 
@@ -194,7 +194,7 @@ export default class CreateSuperNodeAction extends Action {
 				inputBindingNode.isSupernodeInputBinding = true;
 				this.supernodeEntryBindingNodes.push(inputBindingNode);
 			} else {
-				const pos = { x: subflowRect.x + subflowRect.width + boundingRectPadding, y: exitBindingYPos += boundingRectPadding };
+				const pos = { x: this.subflowRect.x + this.subflowRect.width + boundingRectPadding, y: exitBindingYPos += boundingRectPadding };
 				bindingNodePort.id = bindingNodePort.id ? "input_" + bindingNodePort.id : bindingNodePort.id;
 				const outputBindingNode = this.createBindingNode(bindingNodeData.link, { inputs: [bindingNodePort] }, pos);
 				this.supernodeBindingNodesMappedToParentFlowData[outputBindingNode.id] = {
@@ -276,12 +276,15 @@ export default class CreateSuperNodeAction extends Action {
 			supernodeTemplate.subflow_ref.url = this.data.externalUrl;
 		}
 
-		// Place the new supernode at the same position as the object where the
-		// context menu was rquested.
+		const topLeftNode = this.getTopLeftNode(this.subflowNodes);
+
+		// Place the new supernode at the same position as the node which is
+		// closest to the top left corner of the rectangle surrounding the
+		// selected nodes.
 		const supernodeData = {
 			nodeTemplate: supernodeTemplate,
-			offsetX: this.data.targetObject.x_pos,
-			offsetY: this.data.targetObject.y_pos
+			offsetX: topLeftNode.x_pos,
+			offsetY: topLeftNode.y_pos
 		};
 
 		return this.apiPipeline.createNode(supernodeData);
@@ -339,6 +342,29 @@ export default class CreateSuperNodeAction extends Action {
 			return reorderedSupernodeLinks;
 		}
 		return links;
+	}
+
+	// Returns the node positioned closest to the top left corner of the
+	// bounding rectangle for all selected nodes.
+	getTopLeftNode(listOfNodes) {
+		let closestNode = listOfNodes[0];
+		let shortestDistance = this.getDistanceFromPosition(this.subflowRect.x, this.subflowRect.y, listOfNodes[0]);
+		listOfNodes.forEach((node) => {
+			const distance = this.getDistanceFromPosition(this.subflowRect.x, this.subflowRect.y, node);
+			if (distance < shortestDistance) {
+				shortestDistance = distance;
+				closestNode = node;
+			}
+		});
+
+		return closestNode;
+	}
+
+	// Pythagorean Theorem.
+	getDistanceFromPosition(x, y, node) {
+		const a = node.x_pos - x;
+		const b = node.y_pos - y;
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
 	createSupernodePorts(node, link, supernodePorts, type) {

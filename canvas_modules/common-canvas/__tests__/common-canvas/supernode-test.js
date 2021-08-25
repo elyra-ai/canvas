@@ -1109,7 +1109,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test2ExpectedFlow, null, 2));
 		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
@@ -1437,7 +1437,7 @@ describe("Create Supernode Action", () => {
 		expect(isEqual(JSON.stringify(test10ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
 	});
 
-	it("Created supernode positioned at same place as node that context menu was clicked on.", () => {
+	it("Create supernode in top left corner of rect, not the node order in the DOM", () => {
 		const apiPipeline = objectModel.getAPIPipeline();
 		const selections = [
 			"nodeIDMultiPlotPE", // Multiplot
@@ -1447,31 +1447,17 @@ describe("Create Supernode Action", () => {
 		];
 		canvasController.setSelections(selections);
 
-		// This node is where the context menu will be clicked.
-		const originNode = apiPipeline.getNode("id5KIRGGJ3FYT");
-		const sourceObject = {
-			"type": "node",
-			"targetObject": originNode,
-			"id": "id5KIRGGJ3FYT",
-			"cmPos": {
-				"x": 324,
-				"y": 185
-			},
-			"mousePos": {
-				"x": 324,
-				"y": 185
-			},
-			"selectedObjectIds": selections,
-			"zoom": 1
-		};
+		// This node is closest to the top left corner of the selected nodes bounding rect.
+		const topLeftNode = apiPipeline.getNode("7015d906-2eae-45c1-999e-fb888ed957e5");
 
-		canvasController.contextMenuHandler(sourceObject);
+		createSupernodeSourceObject1.selectedObjectIds = selections;
+		canvasController.contextMenuHandler(createSupernodeSourceObject1);
 		canvasController.contextMenuActionHandler("createSuperNode");
 
 		const supernodes = apiPipeline.getSupernodes();
 		expect(supernodes).to.have.length(1);
-		expect(supernodes[0].x_pos).to.equal(originNode.x_pos);
-		expect(supernodes[0].y_pos).to.equal(originNode.y_pos);
+		expect(supernodes[0].x_pos).to.equal(topLeftNode.x_pos);
+		expect(supernodes[0].y_pos).to.equal(topLeftNode.y_pos);
 	});
 });
 
