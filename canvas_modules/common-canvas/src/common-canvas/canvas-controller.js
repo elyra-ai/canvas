@@ -687,6 +687,9 @@ export default class CanvasController {
 	// nodeTemplate -  a node template from the palette. The nodeTemplate
 	//                 can be retrieved from the palette using with Canvas
 	//                 Controller methods: getPaletteNode or getPaletteNodeById.
+	//                 Prior to calling this method the template must be converted
+	//                 from pipeline flow format to internal format using the
+	//                 canvas controller convertNodeTemplate method.
 	// offsetX - the x coordinate of the new node
 	// offsetY - the y coordinate of the new node
 	//
