@@ -477,19 +477,22 @@ describe("Test canvas controller methods", () => {
 	});
 
 
-	it("should simulate the creation of a supernode on the canvas from a palette supernode", () => {
+	it("should execute a Command to create a supernode on the canvas from a palette supernode", () => {
 		const canvasController = new CanvasController();
 		canvasController.getObjectModel().setDefaultLayout();
 		canvasController.setPipelineFlowPalette(supernodePalette);
 
+		// Initially, there shouldn't be any commands to undo in the command stack.
+		expect(canvasController.getCommandStack().canUndo()).to.be.false;
+
 		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
-		canvasController.simulateCreateNodeFromPalette(snTemplate, 100, 50);
+		canvasController.createNodeCommand({ nodeTemplate: snTemplate, offsetX: 100, offsetY: 50 });
 
 		expect(canvasController.getNodes()).to.have.length(1);
 		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
 
-		// Simulating a drag and drop gesture results in an undoable command
-		// being added to the command stack.
+		// createNodeCommand should add a command to the command stack so there
+		// should now be a command to undo.
 		expect(canvasController.getCommandStack().canUndo()).to.be.true;
 	});
 });

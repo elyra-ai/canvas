@@ -683,10 +683,14 @@ export default class CanvasController {
 
 	// Returns a new node created from the object passed in which has the
 	// following properties:
-	// nodeTemplate - a node template from the palette
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
 	// offsetX - the x coordinate of the new node
 	// offsetY - the y coordinate of the new node
-	// pipelineId - the ID of the pipeline where the new node will exist
+	//
+	// pipelineId - the ID of the pipeline where the new node will be created.
 	createNode(data, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
@@ -696,16 +700,22 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
 	}
 
-	// Simulates the act of creating a node by dragging a node from the palette
-	// to the canvas which will result in the command being added to the
-	// command stack (so the user can undo/redo the action). The nodeTemplate
-	// can be retrieved from the palette using with Canvas Controller
-	// methods: getPaletteNode or getPaletteNodeById.
-	// The new node will be created at position xOffset, yOffset. If pipelineId
-	// is omitted the node will be created in the current top-level pipeline.
-	simulateCreateNodeFromPalette(nodeTemplate, xOffset, yOffset, pipelineId) {
+	// Creates a node using the data parameter provided in the pipeline specified
+	// by pipelineId and adds the command to the command stack (so the user can
+	// undo/redo the command). This will also cause the beforeEditActionHandler
+	// and editActionHandler callbacks to be called.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
+	// offsetX - the x coordinate of the new node
+	// offsetY - the y coordinate of the new node
+	//
+	// If pipelineId is omitted the node will be created in the current
+	// "top-level" pipeline.
+	createNodeCommand(data, pipelineId) {
 		const pId = pipelineId || this.getCurrentPipelineId();
-		this.createNodeFromTemplateAt(nodeTemplate, { x: xOffset, y: yOffset }, pId);
+		this.createNodeFromTemplateAt(data.nodeTemplate, { x: data.offsetX, y: data.offsetY }, pId);
 	}
 
 	// Deletes the node specified.
