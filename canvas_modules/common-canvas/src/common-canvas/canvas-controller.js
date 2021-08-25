@@ -696,7 +696,7 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
 	}
 
-	// Simulates the creation of a node by dragging a node from the palette
+	// Simulates the act of creating a node by dragging a node from the palette
 	// to the canvas which will result in the command being added to the
 	// command stack (so the user can undo/redo the action). The nodeTemplate
 	// can be retrieved from the palette using with Canvas Controller

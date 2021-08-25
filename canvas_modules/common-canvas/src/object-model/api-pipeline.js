@@ -564,7 +564,7 @@ export default class APIPipeline {
 	}
 
 	// Deletes the supernodes passed in and also any descending pipelines. It
-	// makes sure it doesn't delete any external pipeline that is referenced by
+	// makes sure it doesn't delete any external pipelines that are referenced by
 	// other supernodes in the canvas info.
 	deleteSupernodesAndDescPipelines(supernodes) {
 		const pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(supernodes, this.pipelineId);
@@ -1023,16 +1023,16 @@ export default class APIPipeline {
 		return pos;
 	}
 
-	// Delete the comment with specified by the id passed in.
+	// Deletes the comment specified by the id passed in.
 	deleteComment(id) {
 		const comment = this.getComment(id);
 		if (comment) {
-			this.deleteComment([comment]);
+			this.deleteComments([comment]);
 		}
 	}
 
 	// Deletes the comments in the array passed in and calls the selection
-	// changed handler. It also calls the selection changed handler.
+	// changed handler.
 	deleteComments(comments) {
 		if (comments && comments.length > 0) {
 			this.objectModel.executeWithSelectionChange((inComments) => {
@@ -1041,8 +1041,8 @@ export default class APIPipeline {
 		}
 	}
 
-	// Deletes the comments in the array passed in and calls the selection
-	// changed handler. It does not call the selection changed handler.
+	// Deletes the comments in the array passed in. It does not call the
+	// selection changed handler.
 	deleteCommentsInternal(inComments) {
 		inComments.forEach((n) => {
 			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
