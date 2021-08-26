@@ -151,7 +151,6 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 
 	case "ADD_NODE":
-	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
 	case "SIZE_AND_POSITION_OBJECTS":

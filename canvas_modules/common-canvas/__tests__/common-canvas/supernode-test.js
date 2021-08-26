@@ -1109,7 +1109,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test2ExpectedFlow, null, 2));
 		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
@@ -1513,6 +1513,10 @@ describe("Copy and Paste Supernode", () => {
 
 		// Undo the clone action.
 		canvasController.contextMenuActionHandler("undo");
+
+		// console.log(JSON.stringify(canvasInfoBefore, null, 2));
+		// console.log(JSON.stringify(objectModel.getPipelineFlow(), null, 2));
+
 		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 

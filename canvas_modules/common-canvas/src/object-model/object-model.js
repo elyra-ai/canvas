@@ -175,57 +175,37 @@ export default class ObjectModel {
 	// format) to a nodeTemplate compatible with the internal format stored in the
 	// object model.
 	convertNodeTemplate(nodeTemplate) {
+		let node = null;
 		if (nodeTemplate) {
-			// Clone the template so we cannot accidentally modify any of its fields.
-			const newNodeTemplate = JSON.parse(JSON.stringify(nodeTemplate));
+			node = PipelineInHandler.convertNode(nodeTemplate, this.getCanvasLayout());
 
-			if (newNodeTemplate.app_data) {
-				// Flatten app_data.ui_data fields into top level fields in the new template.
-				if (newNodeTemplate.app_data.ui_data) {
-					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
-					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
-					newNodeTemplate.description = nodeTemplate.app_data.ui_data.description;
-					newNodeTemplate.class_name = nodeTemplate.app_data.ui_data.class_name;
-					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
-					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
-
-					// We can remove the app_data.ui_data now its fields have been flattened.
-					delete newNodeTemplate.app_data.ui_data;
-				}
+			// PipelineInHandler will not handle the app_data.pipeline_data field of
+			// supernodes so...
+			if (node.type === SUPER_NODE) {
+				node = this.convertPipelineData(node);
 			}
-
-			if (nodeTemplate.inputs) {
-				newNodeTemplate.inputs = newNodeTemplate.inputs.map((port) => this.convertPort(port));
-			}
-
-			if (nodeTemplate.outputs) {
-				newNodeTemplate.outputs = newNodeTemplate.outputs.map((port) => this.convertPort(port));
-			}
-
-			return newNodeTemplate;
+			return node;
 		}
 		return null;
 	}
 
-	// Converts an incoming port (either input or output ) from a nodetemplate
-	// from the palette to an internal format port by flattening the app_data.ui_data
-	// fields into the port object itself.
-	convertPort(port) {
-		const newPort = Object.assign({}, port);
-		if (port.app_data && port.app_data.ui_data) {
-			if (port.app_data.ui_data.label) {
-				newPort.label = port.app_data.ui_data.label;
-			}
-			if (port.app_data.ui_data.cardinality) {
-				newPort.cardinality = port.app_data.ui_data.cardinality;
-			}
-			if (port.app_data.ui_data.class_name) {
-				newPort.class_name = port.app_data.ui_data.class_name;
-			}
-			// We can remove this now its fields have been flattened.
-			delete newPort.app_data.ui_data;
+	convertPipelineData(supernode) {
+		const pd = get(supernode, "app_data.pipeline_data");
+		let newPd;
+		if (pd) {
+			newPd = supernode.subflow_ref.url
+				? []
+				: PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pd, this.getCanvasLayout());
+			// Need to make sure pipeline IDs are unique.
+			newPd = this.cloneSupernodeContents(supernode, newPd);
+
+		} else {
+			const newPipeline = this.createEmptyPipeline();
+			newPd = [newPipeline];
+			set(supernode, "subflow_ref.pipeline_id_ref", newPipeline.id);
 		}
-		return newPort;
+		set(supernode, "app_data.pipeline_data", newPd);
+		return supernode;
 	}
 
 	getPaletteNode(nodeOpIdRef) {
@@ -234,6 +214,20 @@ export default class ObjectModel {
 			this.getPaletteData().categories.forEach((category) => {
 				category.node_types.forEach((nodeType) => {
 					if (nodeType.op === nodeOpIdRef) {
+						outNodeType = nodeType;
+					}
+				});
+			});
+		}
+		return outNodeType;
+	}
+
+	getPaletteNodeById(nodeId) {
+		let outNodeType = null;
+		if (!isEmpty(this.getPaletteData())) {
+			this.getPaletteData().categories.forEach((category) => {
+				category.node_types.forEach((nodeType) => {
+					if (nodeType.id === nodeId) {
 						outNodeType = nodeType;
 					}
 				});
@@ -1114,37 +1108,6 @@ export default class ObjectModel {
 		return false;
 	}
 
-	// Returns a modified supernode and cloned sub-pipelines for the supernode
-	// passed in. The pipelines are created from the app_data.pipeline_data field
-	// in the supernode which is an array of pipelines in the schema format
-	// (i.e. they comply with the pipeline flow schema.
-	createSubPipelinesFromData(supernode) {
-		let subPipelines = [];
-		const pipelineData = get(supernode, "app_data.pipeline_data");
-		if (pipelineData) {
-			const pipelines = this.convertSchemaPipelinesToCanvasInfo(pipelineData);
-			subPipelines = supernode.subflow_ref.url
-				? [] // If supernode references external pipeline there's nothing to clone.
-				: this.cloneSupernodeContents(supernode, pipelines);
-			delete supernode.app_data.pipeline_data; // Remove the pipeline_data so it doesn't get included in the pipelineFlow
-
-		} else {
-			const newPipeline = this.createEmptyPipeline();
-			supernode.subflow_ref = {
-				pipeline_id_ref: newPipeline.id
-			};
-			subPipelines.push(newPipeline);
-		}
-		return { supernode, subPipelines };
-	}
-
-	// Returns an array of pipelines that conform to the internal 'canvas info'
-	// format based on the array of pipelines passed in that are expected to
-	// conform to the 'schema format' (i.e. correspond to the pipelineFlow schema).
-	convertSchemaPipelinesToCanvasInfo(pipelines) {
-		return PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pipelines, this.getCanvasLayout());
-	}
-
 	// Clones the contents of the input node (which is expected to be a supernode
 	// with a reference to one of the pipelines passed in) and returns an array
 	// of cloned pipelines from the inPipelines array that correspond to
@@ -1181,9 +1144,7 @@ export default class ObjectModel {
 
 	createCanvasInfoPipeline(pipelineInfo) {
 		const newPipelineId = this.getUniqueId(CREATE_PIPELINE, { pipeline: pipelineInfo });
-		const newCanvasInfoPipeline = Object.assign({}, pipelineInfo);
-		newCanvasInfoPipeline.id = newPipelineId;
-		return newCanvasInfoPipeline;
+		return Object.assign({}, pipelineInfo, { id: newPipelineId });
 	}
 
 	getCanvasInfo() {
@@ -2014,13 +1975,6 @@ export default class ObjectModel {
 			});
 		}
 		return port;
-	}
-
-	// Pythagorean Theorem.
-	getDistanceFromPosition(x, y, node) {
-		const a = node.x_pos - x;
-		const b = node.y_pos - y;
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
 	// ---------------------------------------------------------------------------

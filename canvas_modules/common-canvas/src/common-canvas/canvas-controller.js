@@ -461,6 +461,11 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Returns the palette node identified by the node ID passed in.
+	getPaletteNodeById(nodeId) {
+		return this.objectModel.getPaletteNodeById(nodeId);
+	}
+
 	// Returns the category of the palette node identified by the operator passed in
 	getCategoryForNode(nodeOpIdRef) {
 		return this.objectModel.getCategoryForNode(nodeOpIdRef);
@@ -627,6 +632,7 @@ export default class CanvasController {
 
 	// Deletes the object specified by the id in the pipleine specified by
 	// pipeline ID.
+	// @Deprecated Use deleteNode or deleteComment as appropriate instead.
 	deleteObject(id, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}
@@ -675,12 +681,14 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
-	// Returns a new node created from the object passed in which has the
-	// following properties:
-	// nodeTemplate - a node template from the palette
+	// Returns a new node created from the data parameter in the pipeline
+	// identified by the pipelineId.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
 	// offsetX - the x coordinate of the new node
 	// offsetY - the y coordinate of the new node
-	// pipelineId - the ID of the pipeline where the new node will exist
 	createNode(data, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
@@ -688,6 +696,24 @@ export default class CanvasController {
 	// Adds a new node into the pipeline specified by the pipelineId.
 	addNode(node, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
+	}
+
+	// Creates a node using the data parameter provided in the pipeline specified
+	// by pipelineId and adds the command to the command stack (so the user can
+	// undo/redo the command). This will also cause the beforeEditActionHandler
+	// and editActionHandler callbacks to be called.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
+	// offsetX - the x coordinate of the new node
+	// offsetY - the y coordinate of the new node
+	//
+	// If pipelineId is omitted the node will be created in the current
+	// "top-level" pipeline.
+	createNodeCommand(data, pipelineId) {
+		const pId = pipelineId || this.getCurrentPipelineId();
+		this.createNodeFromTemplateAt(data.nodeTemplate, { x: data.offsetX, y: data.offsetY }, pId);
 	}
 
 	// Deletes the node specified.
@@ -1659,10 +1685,11 @@ export default class CanvasController {
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: newNodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};
 

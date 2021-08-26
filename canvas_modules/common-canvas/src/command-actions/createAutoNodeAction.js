@@ -16,7 +16,6 @@
 /* eslint no-lonely-if: ["off"] */
 
 import Action from "../command-stack/action.js";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateAutoNodeAction extends Action {
 	constructor(data, objectModel, autoLinkOnlyFromSelNodes) {
@@ -29,11 +28,6 @@ export default class CreateAutoNodeAction extends Action {
 		this.newLink = null;
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
-		}
-		if (this.newNode.type === SUPER_NODE) {
-			const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(this.newNode);
-			this.subPipelines = subPipelines;
-			this.newNode = supernode;
 		}
 	}
 
@@ -49,29 +43,17 @@ export default class CreateAutoNodeAction extends Action {
 
 	// Standard methods
 	do() {
-		if (this.newLink) {
-			if (this.newNode.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(this.newNode, this.subPipelines, this.newLink);
-			} else {
-				this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
-			}
+		this.apiPipeline.addNode(this.newNode);
 
-		} else {
-			if (this.newNode.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(this.newNode, this.subPipelines);
-			} else {
-				this.apiPipeline.addNode(this.newNode);
-			}
+		if (this.newLink) {
+			this.apiPipeline.addLink(this.newLink);
 		}
+
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
 	}
 
 	undo() {
-		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
-		} else {
-			this.apiPipeline.deleteNode(this.newNode.id);
-		}
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {

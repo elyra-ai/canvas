@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CreateNodeAction extends Action {
 	constructor(data, objectModel) {
@@ -23,11 +22,6 @@ export default class CreateNodeAction extends Action {
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.newNode = this.apiPipeline.createNode(data);
-		if (this.newNode.type === SUPER_NODE) {
-			const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(this.newNode);
-			this.subPipelines = subPipelines;
-			this.newNode = supernode;
-		}
 	}
 
 	// Return augmented command object which will be passed to the
@@ -40,19 +34,11 @@ export default class CreateNodeAction extends Action {
 
 	// Standard methods
 	do() {
-		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.addSupernode(this.newNode, this.subPipelines);
-		} else {
-			this.apiPipeline.addNode(this.newNode);
-		}
+		this.apiPipeline.addNode(this.newNode);
 	}
 
 	undo() {
-		if (this.newNode.type === SUPER_NODE) {
-			this.apiPipeline.deleteSupernodesAndDescPipelines([this.newNode]);
-		} else {
-			this.apiPipeline.deleteNode(this.newNode.id);
-		}
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {

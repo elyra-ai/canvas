@@ -204,7 +204,8 @@ export default class DeleteObjectsAction extends Action {
 		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
 		this.apiPipeline.deleteLinks(this.linksToDelete);
 		this.apiPipeline.deleteSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
-		this.apiPipeline.deleteObjects(this.data.selectedObjectIds);
+		this.apiPipeline.deleteNodes(this.nodesToDelete);
+		this.apiPipeline.deleteComments(this.commentsToDelete);
 	}
 
 	undo() {
