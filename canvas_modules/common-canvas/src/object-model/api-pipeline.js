@@ -25,7 +25,7 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 import dagre from "dagre/dist/dagre.min.js";
-import { get } from "lodash";
+import { get, has } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
@@ -268,7 +268,13 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 
 	createNode(data) {
-		const nodeTemplate = data.nodeTemplate;
+		let nodeTemplate = data.nodeTemplate;
+		// If the nodeTemplate has app_data.ui_data field then it will be a
+		// teamplate that conforms to the pipelineFlow schema and needs to be
+		// converted to the internal format for a node.
+		if (has(data.nodeTemplate, "app_data.ui_data")) {
+			nodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		}
 		let node = {};
 		if (nodeTemplate !== null) {
 			node = Object.assign({}, nodeTemplate, {

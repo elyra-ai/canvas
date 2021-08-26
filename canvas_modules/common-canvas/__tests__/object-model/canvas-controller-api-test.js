@@ -444,9 +444,8 @@ describe("Test canvas controller methods", () => {
 		canvasController.setPipelineFlowPalette(commonPalette);
 
 		const nodeTemplate = canvasController.getPaletteNode("com.ibm.commonicons.sources.varfile");
-		const nodeConvertedTemplate = canvasController.convertNodeTemplate(nodeTemplate);
 		const newNode = canvasController.createNode({
-			nodeTemplate: nodeConvertedTemplate,
+			nodeTemplate: nodeTemplate,
 			offsetX: 200,
 			offsetY: 400
 		});
@@ -463,9 +462,8 @@ describe("Test canvas controller methods", () => {
 		canvasController.setPipelineFlowPalette(supernodePalette);
 
 		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
-		const snConvertedTemplate = canvasController.convertNodeTemplate(snTemplate);
 		const newNode = canvasController.createNode({
-			nodeTemplate: snConvertedTemplate,
+			nodeTemplate: snTemplate,
 			offsetX: 200,
 			offsetY: 400
 		});
