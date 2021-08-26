@@ -18,6 +18,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding-bottom: $spacing-03;
+	&:last-child {
+		padding-bottom: $spacing-06; // (24px + 16px outer padding)
+	}
 	&[disabled] {
 		opacity: 0.5;
 		pointer-events: none;
@@ -25,4 +28,8 @@
 	&.hide {
 		display: none;
 	}
+}
+
+.properties-action-panel + .properties-control-panel {
+	padding-top: $spacing-03; // 8px + 8px from properties-action-panel
 }
