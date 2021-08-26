@@ -77,10 +77,11 @@ class NumberfieldControl extends React.Component {
 			controlValue = this.props.value;
 		}
 		const className = classNames("properties-numberfield", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
-
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<NumberInput
+					{...validationProps}
 					ref= { (ref) => (this.numberInput = ref)}
 					id={this.id}
 					onChange={this.handleChange.bind(this)}
@@ -94,7 +95,7 @@ class NumberfieldControl extends React.Component {
 					light={this.props.controller.getLight()}
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}

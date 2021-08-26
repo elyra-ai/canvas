@@ -26,3 +26,9 @@
 		padding: 0 $spacing-03;
 	}
 }
+
+.properties-action-panel {
+	.properties-action-button {
+		padding-bottom: 0; // .properties-action-panel adds 8px bottom padding
+	}
+}

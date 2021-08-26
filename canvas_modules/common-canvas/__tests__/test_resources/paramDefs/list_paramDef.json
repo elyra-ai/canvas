@@ -211,7 +211,7 @@
           "default": "list of double values"
         },
         "description": {
-          "default": "list will show warning if empty"
+          "default": "list will show warning when not empty"
         },
         "control": "list"
       },
@@ -465,13 +465,13 @@
           "type": "warning",
           "focus_parameter_ref": "list_double_warning",
           "message": {
-            "default": "List should not be empty"
+            "default": "List should be empty"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "list_double_warning",
-            "op": "isNotEmpty"
+            "op": "isEmpty"
           }
         }
       }
@@ -582,5 +582,8 @@
         }
       ]
     }
-  ]
+  ],
+  "resources": {
+    "list_long_disabled.empty.table.text": "This is a custom empty text for list."
+  }
 }

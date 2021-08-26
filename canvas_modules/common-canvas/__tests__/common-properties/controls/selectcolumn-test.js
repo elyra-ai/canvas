@@ -106,7 +106,7 @@ describe("selectcolumn control renders correctly", () => {
 	it("dropdown renders correctly in a table", () => {
 		// TODO:  Need to ad this test case
 	});
-	it("dropdown renders messages correctly", () => {
+	it("dropdown renders error messages correctly", () => {
 		controller.updateErrorMessage(propertyId, {
 			validation_id: propertyId.name,
 			type: "warning",
@@ -121,7 +121,7 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		const dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		const messageWrapper = dropdownWrapper.find("div.properties-validation-message");
+		const messageWrapper = dropdownWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 
@@ -402,7 +402,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		dropdownList = selectField.find("div.bx--list-box__menu-item");
 		dropdownList.at(0).simulate("click");
 		selectField = wrapper.find("div[data-id='properties-field_placeholder'] Dropdown");
-		const errorMsgDiv = selectField.find("div.properties-validation-message");
+		const errorMsgDiv = selectField.find("div.bx--form-requirement");
 		expect(errorMsgDiv).to.have.length(0);
 	});
 

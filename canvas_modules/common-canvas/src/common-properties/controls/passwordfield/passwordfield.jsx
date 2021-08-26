@@ -37,9 +37,11 @@ class PasswordControl extends React.Component {
 		const value = this.props.value ? this.props.value : "";
 		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<TextInput.PasswordInput
+					{...validationProps}
 					autoComplete="off"
 					id={this.id}
 					disabled={this.props.state === STATES.DISABLED}
@@ -50,7 +52,7 @@ class PasswordControl extends React.Component {
 					hideLabel={this.props.tableControl}
 					light={this.props.controller.getLight()}
 				/>
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
 	}
 }

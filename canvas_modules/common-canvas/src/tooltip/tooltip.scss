@@ -56,6 +56,10 @@
 	padding: $spacing-01 $spacing-05;
 }
 
+.definition-tooltip {
+	padding: $spacing-03 $spacing-05;
+}
+
 .common-canvas-tooltip #tipArrow {
 	position: absolute;
 	width: 10px;
@@ -121,7 +125,7 @@
 	width: 12px;
 	height: 12px;
 	right: $spacing-05;
-	top: $spacing-05;
+	top: $spacing-03;
 	&.warning {
 		fill: $support-03;
 	}

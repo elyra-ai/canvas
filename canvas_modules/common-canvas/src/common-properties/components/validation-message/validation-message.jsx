@@ -25,7 +25,8 @@ import { v4 as uuid4 } from "uuid";
 export default class ValidationMessage extends React.Component {
 
 	render() {
-		if (!this.props.messageInfo) {
+		// some controls use carbon's error/warnings instead of this component
+		if (!this.props.messageInfo || (this.props.tableOnly && !this.props.inTable)) {
 			return null;
 		}
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
@@ -43,8 +44,8 @@ export default class ValidationMessage extends React.Component {
 					{icon}
 				</Tooltip>
 			</div>)
-			: icon;
-		const className = classNames("properties-validation-message",
+			: null;
+		const className = classNames("properties-validation-message", this.props.messageInfo.type,
 			{ "hide": this.props.state === STATES.HIDDEN || this.props.state === STATES.DISABLED, "inTable": this.props.inTable });
 		return (
 			<div className={className}>
@@ -60,5 +61,6 @@ ValidationMessage.propTypes = {
 		type: PropTypes.string
 	}),
 	state: PropTypes.string,
-	inTable: PropTypes.bool
+	inTable: PropTypes.bool,
+	tableOnly: PropTypes.bool
 };
