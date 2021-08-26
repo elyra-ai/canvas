@@ -681,16 +681,14 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
-	// Returns a new node created from the object passed in which has the
-	// following properties:
+	// Returns a new node created from the data parameter in the pipeline
+	// identified by the pipelineId.
 	// The data parameter must contain:
 	// nodeTemplate -  a node template from the palette. The nodeTemplate
 	//                 can be retrieved from the palette using with Canvas
 	//                 Controller methods: getPaletteNode or getPaletteNodeById.
 	// offsetX - the x coordinate of the new node
 	// offsetY - the y coordinate of the new node
-	//
-	// pipelineId - the ID of the pipeline where the new node will be created.
 	createNode(data, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
