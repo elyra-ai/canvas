@@ -26,6 +26,7 @@ const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu marg
 const CONTEXT_MENU_LINK_HEIGHT = 30; // see context-menu.css .react-context-menu-item height
 const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // see context-menu.css .react-context-menu-item height
 const EXTRA_OFFSET = 5; // Extra offset for vertical menu positioning
+// test comment
 
 
 class CommonContextMenu extends React.Component {
