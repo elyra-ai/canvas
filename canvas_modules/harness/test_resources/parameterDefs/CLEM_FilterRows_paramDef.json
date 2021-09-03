@@ -12,7 +12,7 @@
         "Include",
         "Discard"
       ],
-      "default": "Discard"
+      "default": "Include"
     },
     {
       "id": "conditionExpr",
