@@ -34,7 +34,12 @@
     "columnStructureTableDefaultRow": [
       ["Age", ["Mean"]],
       ["BP", ["Mean", "Min", "Max"]]
-    ]
+    ],
+    "mode": "Include",
+    "current_parameters_default": "Value defined in current_parameters."
+  },
+  "current_ui_parameters": {
+    "current_ui_parameters_default": "Value defined in current_ui_parameters."
   },
   "complex_types": [
     {
@@ -250,6 +255,33 @@
       "id": "columnStructureTableDefaultRow",
       "type": "array[columnStructureTableDefaultRow]",
       "role": "column"
+    },
+    {
+      "id": "mode",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "default": "Discard"
+    },
+    {
+      "id": "conditional_default",
+      "type": "array[string]",
+      "default": ["default_value condition returned false. Showing value defined in parameters."]
+    },
+    {
+      "id": "current_parameters_default",
+      "type": "string",
+      "default": "parameter default"
+    },
+    {
+      "id": "parameters_default",
+      "type": "string",
+      "default": "Value defined in parameters."
+    },
+    {
+      "id": "no_default",
+      "type": "string"
     }
   ],
   "uihints": {
@@ -406,6 +438,23 @@
         ]
       }
     ],
+    "ui_parameters": [
+      {
+        "id": "ui_conditional_default",
+        "type": "array[string]",
+        "default": ["default_value condition returned false. Showing value defined in ui_parameters."]
+      },
+      {
+        "id": "current_ui_parameters_default",
+        "type": "string",
+        "default": "Value defined in ui_parameters."
+      },
+      {
+        "id": "ui_parameters_default",
+        "type": "string",
+        "default": "Value defined in ui_parameters."
+      }
+    ],
     "parameter_info": [
       {
         "parameter_ref": "default_num",
@@ -557,6 +606,79 @@
         "text_before": {
           "default": "The 'operations' column should default to 'Min, Max' for new rows added"
         }
+      },
+      {
+        "parameter_ref": "mode",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal"
+      },
+      {
+        "parameter_ref": "conditional_default",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "textarea using default value defined in default_value condition. Change the value of 'Mode' to 'Discard' and the value will be updated to the default value defined in parameters."
+        }
+      },
+      {
+        "parameter_ref": "ui_conditional_default",
+        "label": {
+          "default": "Ui field1"
+        },
+        "description": {
+          "default": "textarea using default value defined in default_value condition. Change the value of 'Mode' to 'Discard' and the value will be updated to the default value defined in ui_parameters."
+        }
+      },
+      {
+        "parameter_ref": "current_parameters_default",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "textfield has default value defined in current_parameters and default_value condition. Default value in current_parameters has highest preference."
+        }
+      },
+      {
+        "parameter_ref": "current_ui_parameters_default",
+        "label": {
+          "default": "Ui field2"
+        },
+        "description": {
+          "default": "Ui field has default value defined in current_ui_parameters and default_value condition. Default value in current_ui_parameters has highest preference."
+        }
+      },
+      {
+        "parameter_ref": "parameters_default",
+        "label": {
+          "default": "Field3"
+        },
+        "description": {
+          "default": "textfield using default value defined in parameters. Control uses paramter default value only when value is not defined in current_parameters and default_value condition."
+        }
+      },
+      {
+        "parameter_ref": "ui_parameters_default",
+        "label": {
+          "default": "Ui field3"
+        },
+        "description": {
+          "default": "textfield using default value defined in ui_parameters. Control uses ui_parameters default value only when value is not defined in current_ui_parameters and default_value condition."
+        }
+      },
+      {
+        "parameter_ref": "no_default",
+        "label": {
+          "default": "Field4: expected value empty"
+        },
+        "description": {
+          "default": "Default value is NOT defined in current_parameters, default_value condition and parameters."
+        }
       }
     ],
     "group_info": [
@@ -659,10 +781,93 @@
             ]
           }
         ]
+      },
+      {
+        "id": "conditional-default-values",
+        "label": {
+          "default": "Conditional defaults"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "mode",
+          "conditional_default",
+          "ui_conditional_default",
+          "current_parameters_default",
+          "current_ui_parameters_default",
+          "parameters_default",
+          "ui_parameters_default",
+          "no_default"
+        ]
       }
     ]
   },
-  "conditions": [],
+  "conditions": [
+    {
+      "default_value": {
+        "parameter_ref": "conditional_default",
+        "value": ["Value defined in default_value condition. You will see this sentence when mode equals Include."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "conditional_default",
+        "value": ["This is a second condition for conditional_default. You should never see this value."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "ui_conditional_default",
+        "value": ["Value defined in default_value condition. You will see this sentence when mode equals Include."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "current_parameters_default",
+        "value": "Value defined in default_value condition.",
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "current_ui_parameters_default",
+        "value": "Value defined in default_value condition.",
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": [
     {
       "fields": [

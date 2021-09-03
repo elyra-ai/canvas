@@ -15,11 +15,6 @@
       "default": "Discard"
     },
     {
-      "id": "string_default",
-      "type": "string",
-      "default": "parameter default"
-    },
-    {
       "id": "conditionExpr",
       "type": "string",
       "default": "is_real(salbegin) and  \ngender  = \"F\" or BP = 120\n",
@@ -42,15 +37,6 @@
         "orientation": "horizontal"
       },
       {
-        "parameter_ref": "string_default",
-        "label": {
-          "default": "Default"
-        },
-        "description": {
-          "default": "textfield using conditional default value"
-        }
-      },
-      {
         "parameter_ref": "conditionExpr",
         "language": "CLEM",
         "label": {
@@ -70,7 +56,6 @@
         "type": "controls",
         "parameter_refs": [
           "mode",
-          "string_default",
           "conditionExpr"
         ]
       }
@@ -90,19 +75,6 @@
           "condition": {
             "parameter_ref": "conditionExpr",
             "op": "isNotEmpty"
-          }
-        }
-      }
-    },
-    {
-      "default_value": {
-        "parameter_ref": "string_default",
-        "value": "Conditional default",
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "mode",
-            "op": "equals",
-            "value": "Include"
           }
         }
       }

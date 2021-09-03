@@ -332,11 +332,14 @@ function allowConditions(inPropertyId, controller) {
 
 /**
 * Set default value for a field if conditions evaluate to true.
+* This function sets parameter_ref and default value in conditionalDefaultValues object using pass-by-reference.
+* Return value is never used anywhere. Calling function works on the updated conditionalDefaultValues object.
 *
 * @param {object} propertyId. required
 * @param {object} properties controller. required
+* @param {object} conditionalDefaultValues. required
 */
-function getConditionalDefaultValue(inPropertyId, controller) {
+function setConditionalDefaultValue(inPropertyId, controller, conditionalDefaultValues) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -346,14 +349,19 @@ function getConditionalDefaultValue(inPropertyId, controller) {
 	if (validations.length > 0) {
 		try {
 			for (const validation of validations) {
-				const result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
-				if (result) {
-					// Condition evaluate to true
-					return { result: result, parameter_ref: validation.definition.default_value.parameter_ref, value: validation.definition.default_value.value };
+				const parameterRef = validation.definition.default_value.parameter_ref;
+				//  For a given parameter_ref, only the first default_value condition is used.
+				if (!(parameterRef in conditionalDefaultValues)) {
+					const result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
+					if (result) {
+						// Condition evaluate to true
+						conditionalDefaultValues[parameterRef] = { result: result, value: validation.definition.default_value.value };
+					} else {
+						// get the parameter default value
+						const parameterRefControl = controller.getControl({ name: parameterRef });
+						conditionalDefaultValues[parameterRef] = { result: result, value: parameterRefControl.valueDef.defaultValue };
+					}
 				}
-				// get the parameter default value
-				const control1 = controller.getControl({ name: validation.definition.default_value.parameter_ref });
-				return { result: result, parameter_ref: validation.definition.default_value.parameter_ref, value: control1.valueDef.defaultValue };
 			}
 		} catch (error) {
 			logger.warn("Error thrown in validation: " + error);
@@ -1191,7 +1199,7 @@ export {
 	validateInput,
 	filterConditions,
 	allowConditions,
-	getConditionalDefaultValue,
+	setConditionalDefaultValue,
 	updateState,
 	getParamRefPropertyId,
 	injectDefaultValidations,
