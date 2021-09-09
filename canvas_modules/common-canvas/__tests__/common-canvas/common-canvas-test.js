@@ -15,7 +15,7 @@
  */
 
 import CanvasController from "../../src/common-canvas/canvas-controller";
-import CanvasD3 from "../../src/common-canvas/cc-canvas-d3.jsx";
+import CanvasContents from "../../src/common-canvas/cc-contents.jsx";
 import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
@@ -31,10 +31,10 @@ describe("CommonCanvas renders correctly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it("should render one <CanvasD3/> component", () => {
+	it.only("should render one <CanvasContents/> component", () => {
 		const config = {};
 		const wrapper = createCommonCanvas(config, canvasController);
-		expect(wrapper.find(CanvasD3)).to.have.length(1);
+		expect(wrapper.find(CanvasContents)).to.have.length(1);
 	});
 
 	it("should render one <PaletteDialog/> component when enablePaletteLayout is set to Modal", () => {

@@ -19,7 +19,7 @@ import categories from "./categories.js";
 export default (state = {}, action) => {
 	switch (action.type) {
 	case "CLEAR_PALETTE_DATA":
-		return {};
+		return { content: {} };
 
 	case "SET_PALETTE_DATA": {
 		const newContent = Object.assign({}, action.data.content);
