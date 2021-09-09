@@ -1504,7 +1504,7 @@ export default class CanvasController {
 
 	getGhostNode(nodeTemplate) {
 		if (this.canvasContents) {
-			return this.getSVGCanvasD3().canvasD3.getGhostNode(nodeTemplate);
+			return this.getSVGCanvasD3().getGhostNode(nodeTemplate);
 		}
 		return null;
 	}
