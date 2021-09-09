@@ -333,12 +333,9 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		if (!this.canvasController.isTipOpening() && // No need to render if opening
-				!this.canvasController.isTipClosing()) { // or closing a tip
-			this.superRenderers.forEach((superRenderer) => {
-				superRenderer.setCanvasInfoRenderer(canvasInfo);
-			});
-		}
+		this.superRenderers.forEach((superRenderer) => {
+			superRenderer.setCanvasInfoRenderer(canvasInfo);
+		});
 
 		this.logger.logEndTimer("setCanvasInfoRenderer");
 	}
@@ -2356,7 +2353,7 @@ export default class SVGCanvasRenderer {
 		this.setPortPositionsAllNodes();
 
 		// For any of these activities we don't need to do anything to the nodes.
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
+		if (this.commentSizing) {
 			this.logger.logEndTimer("displayNodes " + this.getFlags());
 			return;
 
@@ -4866,7 +4863,7 @@ export default class SVGCanvasRenderer {
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.nodeSizing) {
+		if (this.nodeSizing) {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
@@ -5697,11 +5694,7 @@ export default class SVGCanvasRenderer {
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
-			this.logger.logEndTimer("displayLinks " + this.getFlags());
-			return;
-
-		} else if (this.selecting || this.regionSelect) {
+		if (this.selecting || this.regionSelect) {
 			this.displayLinksSelectionStatus();
 
 		} else {
@@ -6595,12 +6588,6 @@ export default class SVGCanvasRenderer {
 	// Returns a string that explains which flags are set to true.
 	getFlags() {
 		let str = "Flags:";
-		if (this.canvasController.isTipOpening()) {
-			str += " tipOpening = true";
-		}
-		if (this.canvasController.isTipClosing()) {
-			str += " tipClosing = true";
-		}
 		if (this.dragging) {
 			str += " dragging = true";
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { has } from "lodash";
 
-import LayoutDimensions from "../../layout-dimensions.js";
-
-
-export default (state = LayoutDimensions.getLayout(), action) => {
+export default (state = [], action) => {
 	switch (action.type) {
 	case "SET_CANVAS_CONFIG_INFO": {
-		const nodeLayout = Object.assign({}, state.nodeLayout, action.data.layoutInfo.nodeLayout);
-		const canvasLayout = Object.assign({}, state.canvasLayout, action.data.layoutInfo.canvasLayout);
+		const tipConfig = has(action, "data.canvasConfig.tipConfig")
+			? Object.assign({}, state.tipConfig, action.data.canvasConfig.tipConfig)
+			: state.tipConfig;
 
-		return Object.assign({}, state, { nodeLayout, canvasLayout });
+		return Object.assign({}, state, action.data.canvasConfig, { tipConfig: tipConfig });
 	}
 
 	default:

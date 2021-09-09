@@ -28,16 +28,19 @@ class PaletteFlyout extends React.Component {
 
 	render() {
 		let className = "palette-flyout-div";
-		// hide side panel
+
 		if (this.props.showPalette) {
 			className += " palette-flyout-div-open";
 		} else {
 			className += " palette-flyout-div-closed";
+			if (this.props.enableNarrowPalette) {
+				className += " palette-flyout-div-narrow";
+			}
 		}
 
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] })} role="navigation">
-				<div className={className} style={{ width: this.props.paletteWidth + "px" }}>
+				<div className={className}>
 					<PaletteFlyoutContent
 						paletteJSON={this.props.paletteJSON}
 						canvasController={this.props.canvasController}
@@ -53,8 +56,8 @@ PaletteFlyout.propTypes = {
 	intl: PropTypes.object.isRequired,
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
-	canvasController: PropTypes.object.isRequired,
-	paletteWidth: PropTypes.number.isRequired
+	enableNarrowPalette: PropTypes.bool.isRequired,
+	canvasController: PropTypes.object.isRequired
 };
 
 export default injectIntl(PaletteFlyout);

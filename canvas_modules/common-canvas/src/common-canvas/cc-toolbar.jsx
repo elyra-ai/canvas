@@ -16,13 +16,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
-import { ERROR, WARNING, SUCCESS, INFO,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
+import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
+	NOTIFICATION_ICON_CLASS, TOOLBAR_ACTIONS, TOOLBAR_LAYOUT_TOP } from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
@@ -30,7 +31,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		this.getLabel = this.getLabel.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
-		this.logger = new Logger(["CommonCanvasToolbar"]);
+		this.logger = new Logger("CommonCanvasToolbar");
 	}
 
 	getLabel(labelId) {
@@ -177,7 +178,7 @@ class CommonCanvasToolbar extends React.Component {
 		if (this.props.notificationConfig &&
 			typeof this.props.notificationConfig.action !== "undefined" &&
 			typeof this.props.notificationConfig.enable !== "undefined") {
-			const notificationCount = this.props.canvasController.getNotificationMessages().length;
+			const notificationCount = this.props.notificationMessages.length;
 			const notificationTools = [
 				{ divider: true },
 				{ action: TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
@@ -196,44 +197,18 @@ class CommonCanvasToolbar extends React.Component {
 		// We only set toolbar state with the internal object model. With the
 		// external object model the host app must set toolbar state through the
 		// toolbar config params.
-		if (!this.props.canvasController.isInternalObjectModelEnabled() ||
+		if (!this.props.enableInternalObjectModel ||
 				toolbarConfig.overrideAutoEnableDisable) {
 			return toolbarConfig;
 		}
 
 		if (typeof toolbarConfig !== "undefined") {
-			let undoState = true;
-			let redoState = true;
-			let cutState = true;
-			let copyState = true;
-			let pasteState = true;
-			let deleteState = true;
-
-			if (!this.props.canvasController.canUndo()) {
-				undoState = false;
-			}
-			if (!this.props.canvasController.canRedo()) {
-				redoState = false;
-			}
-			if (this.props.canvasController.getSelectedObjectIds().length === 0 ||
-					(this.props.canvasController.areAllSelectedObjectsLinks() &&
-						!this.props.canvasController.areDetachableLinksSupported())) {
-				cutState = false;
-				copyState = false;
-			}
-			if (this.props.canvasController.getSelectedObjectIds().length === 0) {
-				deleteState = false;
-			}
-			if (this.props.canvasController.isClipboardEmpty()) {
-				pasteState = false;
-			}
-
-			this.applyToolState("undo", toolbarConfig, undoState);
-			this.applyToolState("redo", toolbarConfig, redoState);
-			this.applyToolState("cut", toolbarConfig, cutState);
-			this.applyToolState("copy", toolbarConfig, copyState);
-			this.applyToolState("paste", toolbarConfig, pasteState);
-			this.applyToolState("deleteSelectedObjects", toolbarConfig, deleteState);
+			this.applyToolState("undo", toolbarConfig, this.props.canUndo);
+			this.applyToolState("redo", toolbarConfig, this.props.canRedo);
+			this.applyToolState("cut", toolbarConfig, this.props.canCutCopy);
+			this.applyToolState("copy", toolbarConfig, this.props.canCutCopy);
+			this.applyToolState("paste", toolbarConfig, this.props.canPaste);
+			this.applyToolState("deleteSelectedObjects", toolbarConfig, this.props.canDelete);
 		}
 		return toolbarConfig;
 	}
@@ -255,25 +230,36 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	render() {
+		this.logger.log("render");
+
 		let toolbarConfig = this.generateToolbarConfig();
 		toolbarConfig = this.configureToolbarButtonsState(toolbarConfig);
+		let canvasToolbar = null;
 
-		return (
-			<Toolbar
-				config={toolbarConfig}
-				instanceId={this.props.canvasController.getInstanceId()}
-				toolbarActionHandler={this.toolbarActionHandler}
-				additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
-				isAssociatedPanelOpen={this.props.isNotificationOpen}
-				associatedPanelAction={TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL}
-			/>
-		);
+		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
+			canvasToolbar = (
+				<Toolbar
+					config={toolbarConfig}
+					instanceId={this.props.canvasController.getInstanceId()}
+					toolbarActionHandler={this.toolbarActionHandler}
+					additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
+					isAssociatedPanelOpen={this.props.isNotificationOpen}
+					associatedPanelAction={TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL}
+				/>
+			);
+		}
+
+		return canvasToolbar;
 	}
 }
 
 CommonCanvasToolbar.propTypes = {
+	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+
+	// Provided by redux
+	enableToolbarLayout: PropTypes.string.isRequired,
 	config: PropTypes.oneOfType([
 		PropTypes.array.isRequired,
 		PropTypes.object.isRequired
@@ -281,7 +267,30 @@ CommonCanvasToolbar.propTypes = {
 	isPaletteEnabled: PropTypes.bool,
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
-	notificationConfig: PropTypes.object
+	notificationMessages: PropTypes.array,
+	notificationConfig: PropTypes.object,
+	enableInternalObjectModel: PropTypes.bool,
+	canUndo: PropTypes.bool,
+	canRedo: PropTypes.bool,
+	canCutCopy: PropTypes.bool,
+	canPaste: PropTypes.bool,
+	canDelete: PropTypes.bool,
 };
 
-export default injectIntl(CommonCanvasToolbar);
+const mapStateToProps = (state, ownProps) => ({
+	enableToolbarLayout: state.canvasconfig.enableToolbarLayout,
+	config: state.canvastoolbar.config,
+	isPaletteEnabled: state.canvasconfig.enablePaletteLayout !== PALETTE_LAYOUT_NONE,
+	isPaletteOpen: state.palette.isOpen,
+	isNotificationOpen: state.notificationpanel.isOpen,
+	notificationConfig: state.notificationpanel.config,
+	notificationMessages: state.notifications,
+	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
+	canUndo: ownProps.canvasController.canUndo(),
+	canRedo: ownProps.canvasController.canRedo(),
+	canCutCopy: ownProps.canvasController.canCutCopy(),
+	canPaste: ownProps.canvasController.canPaste(),
+	canDelete: ownProps.canvasController.canDelete()
+});
+
+export default connect(mapStateToProps)(injectIntl(CommonCanvasToolbar));

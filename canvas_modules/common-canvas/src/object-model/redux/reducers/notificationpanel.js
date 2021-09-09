@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import LayoutDimensions from "../../layout-dimensions.js";
-
-
-export default (state = LayoutDimensions.getLayout(), action) => {
+export default (state = {}, action) => {
 	switch (action.type) {
-	case "SET_CANVAS_CONFIG_INFO": {
-		const nodeLayout = Object.assign({}, state.nodeLayout, action.data.layoutInfo.nodeLayout);
-		const canvasLayout = Object.assign({}, state.canvasLayout, action.data.layoutInfo.canvasLayout);
-
-		return Object.assign({}, state, { nodeLayout, canvasLayout });
+	case "SET_NOTIFICATION_PANEL_CONFIG": {
+		let config;
+		if (action.data.notificationPanelConfig) {
+			config = Object.assign({}, state.config, action.data.notificationPanelConfig);
+		}
+		// If action.data.notificationPanelConfig is missing config will be undefined
+		return Object.assign({}, state, { config: config });
 	}
+
+	case "SET_NOTIFICATION_PANEL_OPEN_STATE":
+		return Object.assign({}, state, { isOpen: action.data.isOpen });
 
 	default:
 		return state;

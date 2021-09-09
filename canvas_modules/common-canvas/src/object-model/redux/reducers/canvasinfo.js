@@ -24,7 +24,7 @@ export default (state = {}, action) => {
 
 	case "SET_CANVAS_INFO": {
 		if (action.canvasInfo) {
-			return action.canvasInfo;
+			return Object.assign({}, action.canvasInfo);
 		}
 		return state;
 	}
@@ -36,7 +36,8 @@ export default (state = {}, action) => {
 
 	// Add pipelines from the external pipeline flow into the canvas info pipelines array
 	case "ADD_EXTERNAL_PIPELINE_FLOW": {
-		const canvasInfoPipelines = state.pipelines.concat(action.newPipelines);
+		const pipelines = action.newPipelines.map((p) => Object.assign({}, p));
+		const canvasInfoPipelines = state.pipelines.concat(pipelines);
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
@@ -106,8 +107,9 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "SET_LAYOUT_INFO": {
-		return Object.assign({}, state, { pipelines: action.pipelines });
+	case "SET_CANVAS_CONFIG_INFO": {
+		const pipelines = action.data.pipelines.map((p) => Object.assign({}, p));
+		return Object.assign({}, state, { pipelines: pipelines });
 	}
 
 	case "ADD_SUPERNODES": {

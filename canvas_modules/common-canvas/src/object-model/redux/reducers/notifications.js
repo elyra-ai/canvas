@@ -19,10 +19,26 @@ export default (state = [], action) => {
 	case "CLEAR_NOTIFICATION_MESSAGES":
 		return [];
 
-	case "SET_NOTIFICATION_MESSAGES":
-		return [...action.data];
+	case "SET_NOTIFICATION_MESSAGES": {
+		const newMessages = action.data.messages.map((msg) => convertMsgType(msg));
+		return newMessages;
+	}
+
+	case "DELETE_NOTIFICATION_MESSAGES": {
+		const filterIds = Array.isArray(action.data.ids) ? action.data.ids : [action.data.ids];
+		const messages = state.filter((message) => !filterIds.includes(message.id));
+		return messages;
+	}
 
 	default:
 		return state;
 	}
 };
+
+function convertMsgType(msg) {
+	const newMsg = Object.assign({}, msg);
+	if (newMsg.type === null || newMsg.type === "" || typeof newMsg.type === "undefined") {
+		newMsg.type = "unspecified";
+	}
+	return newMsg;
+}

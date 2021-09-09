@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-import LayoutDimensions from "../../layout-dimensions.js";
-
-
-export default (state = LayoutDimensions.getLayout(), action) => {
+export default (state = {}, action) => {
 	switch (action.type) {
-	case "SET_CANVAS_CONFIG_INFO": {
-		const nodeLayout = Object.assign({}, state.nodeLayout, action.data.layoutInfo.nodeLayout);
-		const canvasLayout = Object.assign({}, state.canvasLayout, action.data.layoutInfo.canvasLayout);
-
-		return Object.assign({}, state, { nodeLayout, canvasLayout });
+	case "SET_CONTEXT_MENU_DEF": {
+		const menuDef = action.data.menuDef.map((m) => Object.assign({}, m));
+		return Object.assign({}, state, { menuDef: menuDef });
 	}
 
 	default:

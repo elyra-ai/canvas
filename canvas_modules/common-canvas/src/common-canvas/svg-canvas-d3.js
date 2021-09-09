@@ -46,7 +46,7 @@ export default class SVGCanvasD3 {
 		this.logger.logStartTimer("Constructor");
 
 		this.canvasController = canvasController;
-		this.canvasInfo = canvasInfo;
+		this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
 		this.config = this.cloneConfig(config);
 
@@ -117,7 +117,8 @@ export default class SVGCanvasD3 {
 		} else {
 			this.logger.logStartTimer("Set Canvas Info");
 
-			this.canvasInfo = canvasInfo;
+			// Clone the canvasInfo
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 
 			if (this.renderer) {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
@@ -146,6 +147,10 @@ export default class SVGCanvasD3 {
 	// enableNodeLayout.
 	cloneConfig(config) {
 		return Object.assign({}, config);
+	}
+
+	cloneCanvasInfo(canvasInfo) {
+		return JSON.parse(JSON.stringify(canvasInfo));
 	}
 
 	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
@@ -306,7 +311,9 @@ export default class SVGCanvasD3 {
 	}
 
 	refreshOnSizeChange() {
-		this.renderer.refreshOnSizeChange();
+		if (this.renderer) {
+			this.renderer.refreshOnSizeChange();
+		}
 	}
 
 	getSvgViewportOffset() {

@@ -15,10 +15,11 @@
  */
 
 import React from "react";
+import { Provider } from "react-redux";
 import NotificationPanel from "./../../src/notification-panel/notification-panel";
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
-import { mountWithIntl } from "../_utils_/intl-utils";
+import { mount } from "enzyme";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -109,54 +110,69 @@ describe("notification panel renders correctly", () => {
 	});
 
 	it("props should have been defined", () => {
-		wrapper = mountWithIntl(
-			<NotificationPanel
-				notificationConfig={notificationConfigDefault}
-				isNotificationOpen
-				messages={notificationMessages}
-				canvasController={canvasController}
-			/>
+		canvasController.setNotificationPanelConfig(notificationConfigDefault);
+		canvasController.setNotificationMessages(notificationMessages);
+		canvasController.openNotificationPanel();
+
+		wrapper = mount(
+			<Provider store={canvasController.getStore()}>
+				<NotificationPanel
+					canvasController={canvasController}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.prop("notificationConfig")).to.equal(notificationConfigDefault);
-		expect(wrapper.prop("isNotificationOpen")).to.equal(true);
-		expect(wrapper.prop("messages")).to.equal(notificationMessages);
-		expect(wrapper.prop("canvasController")).to.equal(canvasController);
+
+		const notificationPanel = wrapper.find("NotificationPanel");
+		expect(JSON.stringify(notificationPanel.prop("notificationConfig"))).to.equal(JSON.stringify(notificationConfigDefault));
+		expect(notificationPanel.prop("isNotificationOpen")).to.equal(true);
+		expect(JSON.stringify(notificationPanel.prop("messages"))).to.equal(JSON.stringify(notificationMessages));
+		expect(notificationPanel.prop("canvasController")).to.equal(canvasController);
 	});
 
 	it("notification panel should be hidden if isNotificationOpen is false", () => {
-		wrapper = mountWithIntl(
-			<NotificationPanel
-				notificationConfig={notificationConfigDefault}
-				isNotificationOpen={false}
-				messages={[]}
-				canvasController={canvasController}
-			/>
+		canvasController.setNotificationPanelConfig(notificationConfigDefault);
+		canvasController.setNotificationMessages(notificationMessages);
+		canvasController.closeNotificationPanel();
+
+		wrapper = mount(
+			<Provider store={canvasController.getStore()}>
+				<NotificationPanel
+					canvasController={canvasController}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		const notificationPanel = wrapper.find("NotificationPanel");
+		expect(notificationPanel.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 	});
 
 	it("notification panel should have 4 types of messages", () => {
-		wrapper = mountWithIntl(
-			<NotificationPanel
-				notificationConfig={{
-					action: "notification",
-					label: "Notifications Panel",
-					enable: true,
-					notificationHeader: "Custom",
-					notificationSubtitle: "Custom subtitle",
-					emptyMessage: "custom empty message",
-					clearAllMessage: "Clear all"
-				}}
-				isNotificationOpen={false}
-				messages={notificationMessages}
-				canvasController={canvasController}
-			/>
+		const notificationConfig = {
+			action: "notification",
+			label: "Notifications Panel",
+			enable: true,
+			notificationHeader: "Custom",
+			notificationSubtitle: "Custom subtitle",
+			emptyMessage: "custom empty message",
+			clearAllMessage: "Clear all"
+		};
+
+		canvasController.setNotificationPanelConfig(notificationConfig);
+		canvasController.setNotificationMessages(notificationMessages);
+		canvasController.closeNotificationPanel();
+
+		wrapper = mount(
+			<Provider store={canvasController.getStore()}>
+				<NotificationPanel
+					canvasController={canvasController}
+				/>
+			</Provider>
 		);
 
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
-		const messages = wrapper.find(".notifications-button-container");
+		const notificationPanel = wrapper.find("NotificationPanel");
+		expect(notificationPanel.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		const messages = notificationPanel.find(".notifications-button-container");
 		expect(messages).to.have.length(4);
 
 		const message0 = messages.at(0);
@@ -183,21 +199,26 @@ describe("notification panel renders correctly", () => {
 	});
 
 	it("notification panel should have render extra messages if passed in", () => {
-		wrapper = mountWithIntl(
-			<NotificationPanel
-				notificationConfig={{
-					action: "notification",
-					label: "Notifications Panel",
-					enable: true,
-					notificationHeader: notificationHeaderString,
-					notificationSubtitle: "Custom subtitle",
-					emptyMessage: "Custom empty message",
-					clearAllMessage: "Clear all"
-				}}
-				isNotificationOpen={false}
-				messages={[]}
-				canvasController={canvasController}
-			/>
+		const notificationConfig = {
+			action: "notification",
+			label: "Notifications Panel",
+			enable: true,
+			notificationHeader: notificationHeaderString,
+			notificationSubtitle: "Custom subtitle",
+			emptyMessage: "Custom empty message",
+			clearAllMessage: "Clear all"
+		};
+
+		canvasController.setNotificationPanelConfig(notificationConfig);
+		canvasController.setNotificationMessages([]);
+		canvasController.closeNotificationPanel();
+
+		wrapper = mount(
+			<Provider store={canvasController.getStore()}>
+				<NotificationPanel
+					canvasController={canvasController}
+				/>
+			</Provider>
 		);
 
 		const subtitle = wrapper.find(".notification-panel-container .notification-panel-subtitle");
