@@ -60,20 +60,16 @@ describe("Condition default_value test cases", () => {
 
 	it(`If default value is NOT defined in current_parameters and default_value condition is defined,
  use default value from parameters if the condition evaluate to false`, () => {
-		// conditional_default has default value defined in default_value condition
-		// Change value of "mode" to "Discard"
-		const radioGroup = wrapper.find("div[data-id='properties-mode']");
-		const discardMode = radioGroup.find("input[value='Discard']");
-		discardMode.simulate("change", { target: { checked: true, value: "Discard" } });
-		// Verify "mode" is "Discard"
-		expect(controller.getPropertyValue({ name: "mode" })).to.equal("Discard");
+		// default_value condition for ui_conditional_default evaluate to false
+		// Verify "mode" is "Include"
+		expect(controller.getPropertyValue({ name: "mode" })).to.equal("Include");
 
-		// default_value condition evaluate to false when mode is Discard.
-		const field1 = wrapper.find("div[data-id='properties-conditional_default'] textarea");
-		expect(field1).to.have.length(1);
-		const parameterDefinition = defaultsParamDef.parameters.filter((param) => param.id === "conditional_default");
-		expect(field1.text()).to.equal(parameterDefinition[0].default.join());
-		expect(field1.text()).to.not.equal(defaultsParamDef.conditions[0].default_value.value.join());
+		// default_value condition evaluate to false because mode is NOT Discard
+		const uiField1 = wrapper.find("div[data-id='properties-ui_conditional_default'] textarea");
+		expect(uiField1).to.have.length(1);
+		const uiParameterDefinition = defaultsParamDef.uihints.ui_parameters.filter((param) => param.id === "ui_conditional_default");
+		expect(uiField1.text()).to.equal(uiParameterDefinition[0].default.join());
+		expect(uiField1.text()).to.not.equal(defaultsParamDef.conditions[0].default_value.value.join());
 	});
 
 	it("If default value is NOT defined in current_parameters and default_value condition, use default value from parameters", () => {

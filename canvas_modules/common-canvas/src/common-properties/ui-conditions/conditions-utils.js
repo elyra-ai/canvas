@@ -355,11 +355,7 @@ function setConditionalDefaultValue(inPropertyId, controller, conditionalDefault
 					const result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
 					if (result) {
 						// Condition evaluate to true
-						conditionalDefaultValues[parameterRef] = { result: result, value: validation.definition.default_value.value };
-					} else {
-						// get the parameter default value
-						const parameterRefControl = controller.getControl({ name: parameterRef });
-						conditionalDefaultValues[parameterRef] = { result: result, value: parameterRefControl.valueDef.defaultValue };
+						conditionalDefaultValues[parameterRef] = validation.definition.default_value.value;
 					}
 				}
 			}

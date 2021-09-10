@@ -170,11 +170,14 @@ export default class PropertiesController {
 				});
 				if (!isEmpty(conditionalDefaultValues)) {
 					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
-						if (
-							conditionalDefaultValues[parameterRef].result &&
-							!(parameterRef in propertyValues)
-						) {
-							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef].value);
+						if (!(parameterRef in propertyValues)) {
+							// convert values of type:object to the internal format array values
+							const control = this.getControl({ name: parameterRef });
+							if (PropertyUtils.isSubControlStructureObjectType(control)) {
+								conditionalDefaultValues[parameterRef] =
+								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+							}
+							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
 						}
 					});
 				}
@@ -1040,23 +1043,6 @@ export default class PropertiesController {
 			this.propertiesStore.updatePropertyValue(propertyId, initialValue);
 			return;
 		}
-		// evaluate conditional defaults upon each control input change
-		if (this.form) {
-			let propertyValues = {};
-			propertyValues = this.form.data.uiCurrentParameters ? assign({}, this.form.data.currentParameters, this.form.data.uiCurrentParameters)
-				: this.form.data.currentParameters;
-			const conditionalDefaultValues = {};
-			// Update conditionalDefaultValues object using pass-by-reference
-			conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
-			if (!isEmpty(conditionalDefaultValues)) {
-				Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
-					if (!(parameterRef in propertyValues)) {
-						this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef].value);
-					}
-				});
-			}
-		}
-
 		conditionsUtil.validateConditions(inPropertyId, this);
 		if (!skipValidateInput) {
 			conditionsUtil.validateInput(inPropertyId, this, true);

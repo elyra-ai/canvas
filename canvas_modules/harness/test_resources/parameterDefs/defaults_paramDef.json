@@ -623,7 +623,7 @@
           "default": "Field1"
         },
         "description": {
-          "default": "textarea using default value defined in default_value condition. Change the value of 'Mode' to 'Discard' and the value will be updated to the default value defined in parameters."
+          "default": "textarea using default value defined in default_value condition. Condition returns true because mode equals Include."
         }
       },
       {
@@ -632,7 +632,7 @@
           "default": "Ui field1"
         },
         "description": {
-          "default": "textarea using default value defined in default_value condition. Change the value of 'Mode' to 'Discard' and the value will be updated to the default value defined in ui_parameters."
+          "default": "textarea using default value defined in ui_parameters. default_value condition returns false because mode not equals Discard."
         }
       },
       {
@@ -805,7 +805,7 @@
     {
       "default_value": {
         "parameter_ref": "conditional_default",
-        "value": ["Value defined in default_value condition. You will see this sentence when mode equals Include."],
+        "value": ["Value defined in default_value condition. You will see this sentence when default value of mode equals Include."],
         "evaluate": {
           "condition": {
             "parameter_ref": "mode",
@@ -831,12 +831,12 @@
     {
       "default_value": {
         "parameter_ref": "ui_conditional_default",
-        "value": ["Value defined in default_value condition. You will see this sentence when mode equals Include."],
+        "value": ["Value defined in default_value condition. You will see this sentence when default value of mode equals Discard."],
         "evaluate": {
           "condition": {
             "parameter_ref": "mode",
             "op": "equals",
-            "value": "Include"
+            "value": "Discard"
           }
         }
       }
