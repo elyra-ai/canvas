@@ -164,7 +164,8 @@ export default class ObjectModel {
 	// Initializes the palette state based on paletteInitialState.
 	// TODO - Remove this when paletteInitialState is removed from common-canvas.
 	openPaletteIfNecessary(canvasConfig) {
-		if (typeof this.store.getPalette().isOpen === "undefined" &&
+		if (canvasConfig &&
+				typeof this.store.getPalette().isOpen === "undefined" &&
 				typeof canvasConfig.paletteInitialState !== "undefined") {
 			if (canvasConfig.paletteInitialState) {
 				this.openPalette();
