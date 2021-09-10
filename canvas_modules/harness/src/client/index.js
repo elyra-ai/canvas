@@ -21,8 +21,8 @@ import CommonPropertiesComponents from "./components/common-properties-component
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
 import "../styles/index.scss";
 import App from "./App";
-import AppSmall from "./App_small";
-import AppTiny from "./App_tiny";
+import AppSmall from "./app-small";
+import AppTiny from "./app-tiny";
 import { HashRouter, Route } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 
