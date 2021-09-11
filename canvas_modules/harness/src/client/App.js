@@ -149,8 +149,6 @@ class App extends React.Component {
 			canvasFileChooserVisible2: false,
 			paletteFileChooserVisible: false,
 			paletteFileChooserVisible2: false,
-			canvasDiagram: "",
-			canvasDiagram2: "",
 			selectedCanvasDropdownFile: "",
 			selectedCanvasDropdownFile2: "",
 			selectedPaletteDropdownFile: "",
@@ -426,7 +424,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile: selectedCanvasDropdownFile,
-				canvasDiagram: "",
 				canvasFileChooserVisible: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
@@ -448,7 +445,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile2: selectedCanvasDropdownFile2,
-				canvasDiagram2: "",
 				canvasFileChooserVisible2: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
@@ -536,6 +532,7 @@ class App extends React.Component {
 			});
 		}
 	}
+
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}

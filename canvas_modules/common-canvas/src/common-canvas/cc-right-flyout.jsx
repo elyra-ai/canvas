@@ -26,7 +26,7 @@ class CommonCanvasRightFlyout extends React.Component {
 	}
 
 	render() {
-		this.logger.log("render");
+		// window.console.log("Render Right Flyout");
 
 		let rightFlyout = (<div className="right-flyout-panel" />);
 

@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { has } from "lodash";
 
 export default (state = [], action) => {
 	switch (action.type) {
 	case "SET_CANVAS_CONFIG_INFO": {
-		const tipConfig = has(action, "data.canvasConfig.tipConfig")
-			? Object.assign({}, state.tipConfig, action.data.canvasConfig.tipConfig)
-			: state.tipConfig;
-
-		return Object.assign({}, state, action.data.canvasConfig, { tipConfig: tipConfig });
+		return action.data.canvasConfig;
 	}
 
 	default:

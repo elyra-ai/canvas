@@ -20,8 +20,8 @@ export default (state = [], action) => {
 		return [];
 
 	case "SET_NOTIFICATION_MESSAGES": {
-		const newMessages = action.data.messages.map((msg) => convertMsgType(msg));
-		return newMessages;
+		action.data.messages.forEach((msg) => convertMsgType(msg));
+		return action.data.messages;
 	}
 
 	case "DELETE_NOTIFICATION_MESSAGES": {
@@ -36,9 +36,8 @@ export default (state = [], action) => {
 };
 
 function convertMsgType(msg) {
-	const newMsg = Object.assign({}, msg);
-	if (newMsg.type === null || newMsg.type === "" || typeof newMsg.type === "undefined") {
-		newMsg.type = "unspecified";
+	if (msg.type === null || msg.type === "" || typeof msg.type === "undefined") {
+		msg.type = "unspecified";
 	}
-	return newMsg;
+	return msg;
 }

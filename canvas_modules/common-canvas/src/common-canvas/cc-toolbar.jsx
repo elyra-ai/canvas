@@ -230,7 +230,7 @@ class CommonCanvasToolbar extends React.Component {
 	}
 
 	render() {
-		this.logger.log("render");
+		// window.console.log("Render Toolbar");
 
 		let toolbarConfig = this.generateToolbarConfig();
 		toolbarConfig = this.configureToolbarButtonsState(toolbarConfig);

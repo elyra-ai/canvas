@@ -152,7 +152,7 @@ class NotificationPanel extends React.Component {
 	}
 
 	render() {
-		this.logger.log("render");
+		// window.console.log("Render Notification Panel");
 
 		if (!this.props.notificationConfig) {
 			return null;

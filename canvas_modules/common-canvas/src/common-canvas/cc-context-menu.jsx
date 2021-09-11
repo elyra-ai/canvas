@@ -28,7 +28,7 @@ class CommonCanvasContextMenu extends React.Component {
 	}
 
 	render() {
-		this.logger.log("render");
+		// window.console.log("Render Context Menu");
 
 		let contextMenu = null;
 		if (!isEmpty(this.props.contextMenuDef)) {

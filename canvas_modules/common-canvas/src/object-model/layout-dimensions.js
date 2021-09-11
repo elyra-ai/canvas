@@ -800,13 +800,13 @@ export default class LayoutDimensions {
 	}
 
 	static overrideNodeLayout(layout, config) {
-		layout.nodeLayout = Object.assign({}, layout.nodeLayout, config.enableNodeLayout);
+		layout.nodeLayout = Object.assign({}, layout.nodeLayout, config.enableNodeLayout || {});
 
 		return layout;
 	}
 
 	static overrideCanvasLayout(layout, config) {
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, config.enableCanvasLayout);
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, config.enableCanvasLayout || {});
 
 		return layout;
 	}

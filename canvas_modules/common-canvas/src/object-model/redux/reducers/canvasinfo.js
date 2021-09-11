@@ -29,9 +29,9 @@ export default (state = {}, action) => {
 		return state;
 	}
 
-	// Save incoming sub-pipeline to the pipeline flow pipelines array.
-	case "ADD_PIPELINE": {
-		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
+	case "SET_CANVAS_CONFIG_INFO":
+	case "REPLACE_PIPELINES": {
+		return Object.assign({}, state, { pipelines: action.data.pipelines });
 	}
 
 	// Add pipelines from the external pipeline flow into the canvas info pipelines array
@@ -105,11 +105,6 @@ export default (state = {}, action) => {
 			return pipeline;
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
-	}
-
-	case "SET_CANVAS_CONFIG_INFO": {
-		const pipelines = action.data.pipelines.map((p) => Object.assign({}, p));
-		return Object.assign({}, state, { pipelines: pipelines });
 	}
 
 	case "ADD_SUPERNODES": {

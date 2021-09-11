@@ -15,34 +15,33 @@
  */
 
 import { combineReducers, createStore } from "redux";
-import selectioninfo from "./reducers/selectioninfo.js";
-import layoutinfo from "./reducers/layoutinfo.js";
-import canvasinfo from "./reducers/canvasinfo.js";
-import canvasconfig from "./reducers/canvasconfig.js";
-import breadcrumbs from "./reducers/breadcrumbs.js";
-import palette from "./reducers/palette.js";
-import notifications from "./reducers/notifications.js";
-import notificationpanel from "./reducers/notificationpanel.js";
-import externalpipelineflows from "./reducers/externalpipelineflows.js";
+import { isEmpty } from "lodash";
+
+import ConfigUtils from "../config-utils.js";
+
 import tooltip from "./reducers/tooltip.js";
-import canvastoolbar from "./reducers/canvastoolbar.js";
+import palette from "./reducers/palette.js";
+import canvasinfo from "./reducers/canvasinfo.js";
 import contextmenu from "./reducers/contextmenu.js";
 import rightflyout from "./reducers/rightflyout.js";
-import LayoutDimensions from "../layout-dimensions.js";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../../common-canvas/constants/canvas-constants";
-
-import { isEmpty } from "lodash";
+import breadcrumbs from "./reducers/breadcrumbs.js";
+import canvasconfig from "./reducers/canvasconfig.js";
+import canvastoolbar from "./reducers/canvastoolbar.js";
+import notifications from "./reducers/notifications.js";
+import selectioninfo from "./reducers/selectioninfo.js";
+import notificationpanel from "./reducers/notificationpanel.js";
+import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
 export default class CanavasStore {
 	constructor(emptyCanvasInfo) {
 		// Put selectioninfo reducer first so selections are handled before
-		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
-		// because node heights and width are calculated based on layoutinfo.
+		// canvasinfo actions. Also, put canvasconfig reducer before canvasinfo
+		// because node heights and widths are calculated based on the node
+		// layout info contained in the canvas config object's enableNodeLayout field.
 		var combinedReducer = combineReducers({
 			selectioninfo,
-			layoutinfo,
-			canvasinfo,
 			canvasconfig,
+			canvasinfo,
 			breadcrumbs,
 			palette,
 			notifications,
@@ -56,9 +55,8 @@ export default class CanavasStore {
 
 		const initialState = {
 			selectioninfo: {},
-			layoutinfo: this.getDefaultLayoutInfo(),
 			canvasinfo: emptyCanvasInfo,
-			canvasconfig: this.getDefaultCanvasConfig(),
+			canvasconfig: ConfigUtils.getDefaultCanvasConfig(),
 			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
 			palette: { content: {} }, // Don't initialize isOpen here, it must be done in CanvasController.setCanvasConfig based on paletteInitialState
 			notifications: [],
@@ -108,10 +106,6 @@ export default class CanavasStore {
 		return this.copyData(this.store.getState().breadcrumbs);
 	}
 
-	getLayoutInfo() {
-		return this.copyData(this.store.getState().layoutinfo);
-	}
-
 	getCanvasConfig() {
 		// Canvas config cannot be copied because it may contain JSX objects
 		// so create copy using Object.assign.
@@ -119,11 +113,11 @@ export default class CanavasStore {
 	}
 
 	getNodeLayout() {
-		return this.copyData(this.store.getState().layoutinfo.nodeLayout);
+		return this.copyData(this.store.getState().canvasconfig.enableNodeLayout);
 	}
 
 	getCanvasLayout() {
-		return this.copyData(this.store.getState().layoutinfo.canvasLayout);
+		return this.copyData(this.store.getState().canvasconfig.enableCanvasLayout);
 	}
 
 	isTooltipOpen() {
@@ -178,65 +172,5 @@ export default class CanavasStore {
 
 	copyData(data) {
 		return JSON.parse(JSON.stringify(data));
-	}
-
-	getDefaultLayoutInfo() {
-		return Object.assign({}, LayoutDimensions.getLayout(this.getDefaultCanvasConfig()));
-	}
-
-	getDefaultCanvasConfig() {
-		return {
-			// Do not initialize paletteInitialState here. It needs to be undefined
-			// for openPaletteIfNecessary to work.
-			// TODO Remove this when paletteInitialState is removed from common-canvas.
-			// paletteInitialState: false,
-			enableInteractionType: "Mouse",
-			enableNodeFormatType: "Horizontal",
-			enableLinkType: "Curve",
-			enableLinkDirection: "LeftRight",
-			enableParentClass: "",
-			enableLinkSelection: LINK_SELECTION_NONE,
-			enableLinkReplaceOnNewConnection: false,
-			enableAssocLinkCreation: false,
-			enableAssocLinkType: ASSOC_STRAIGHT,
-			enableDragWithoutSelect: false,
-			enableInternalObjectModel: true,
-			enablePaletteLayout: "Flyout",
-			enableToolbarLayout: "Top",
-			enableInsertNodeDroppedOnLink: false,
-			enableHighlightNodeOnNewLinkDrag: false,
-			enableHighlightUnavailableNodes: false,
-			enablePositionNodeOnRightFlyoutOpen: false,
-			enableMoveNodesOnSupernodeResize: true,
-			enableExternalPipelineFlows: true,
-			enableDisplayFullLabelOnHover: false,
-			enableDropZoneOnExternalDrag: false,
-			enableRightFlyoutUnderToolbar: false,
-			enablePanIntoViewOnOpen: false,
-			enableZoomIntoSubFlows: false,
-			enableBrowserEditMenu: true,
-			enableAutoLinkOnlyFromSelNodes: false,
-			enableSaveZoom: "None",
-			enableSnapToGridType: "None",
-			enableSnapToGridX: null,
-			enableSnapToGridY: null,
-			enableAutoLayoutVerticalSpacing: null,
-			enableAutoLayoutHorizontalSpacing: null,
-			enableBoundingRectangles: false,
-			enableCanvasUnderlay: "None",
-			enableSingleOutputPortDisplay: false,
-			enableNarrowPalette: true,
-			emptyCanvasContent: null,
-			dropZoneCanvasContent: null,
-			schemaValidation: false,
-			enableCanvasLayout: {},
-			enableNodeLayout: {},
-			tipConfig: {
-				"palette": true,
-				"nodes": true,
-				"ports": true,
-				"links": true
-			}
-		};
 	}
 }

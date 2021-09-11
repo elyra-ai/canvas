@@ -345,7 +345,8 @@ class CanvasContents extends React.Component {
 	}
 
 	render() {
-		this.logger.log("Render CanvasD3");
+		this.logger.log("render");
+		// window.console.log("Render CanvasContents");
 
 		const emptyCanvas = this.getEmptyCanvas();
 		const contextMenu = this.getContextMenu();

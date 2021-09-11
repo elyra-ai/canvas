@@ -17,12 +17,8 @@
 export default (state = {}, action) => {
 	switch (action.type) {
 	case "SET_NOTIFICATION_PANEL_CONFIG": {
-		let config;
-		if (action.data.notificationPanelConfig) {
-			config = Object.assign({}, state.config, action.data.notificationPanelConfig);
-		}
 		// If action.data.notificationPanelConfig is missing config will be undefined
-		return Object.assign({}, state, { config: config });
+		return Object.assign({}, state, { config: action.data.notificationPanelConfig });
 	}
 
 	case "SET_NOTIFICATION_PANEL_OPEN_STATE":

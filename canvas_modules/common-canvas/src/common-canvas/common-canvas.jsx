@@ -61,7 +61,7 @@ class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
-		this.logger.log("initializeController");
+		// window.console.log("initializeController");
 
 		props.canvasController.setCanvasConfig(props.config);
 		props.canvasController.setContextMenuConfig(props.contextMenuConfig);
@@ -85,7 +85,7 @@ class CommonCanvas extends React.Component {
 	}
 
 	render() {
-		this.logger.log("render");
+		// window.console.log("Common Canvas render");
 
 		const tip = (<CommonCanvasTooltip canvasController={this.props.canvasController} />);
 		const palette = (<Palette canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
@@ -94,6 +94,13 @@ class CommonCanvas extends React.Component {
 		const notificationPanel = (<NotificationPanel canvasController={this.props.canvasController} />);
 		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 
+		// TODO -- Currently, enableRightFlyoutUnderToolbar is not supported, which
+		// is OK because no host app is currently using that option. If any dev team
+		//  wants to use it the code below will need to be moved in an intermediate
+		// React object so the Provider can be passed into it. This intermediate
+		// object will then be able to implement mapStateToProps to so when
+		// enableRightFlyoutUnderToolbar it causes a render to occur within that
+		// object.
 		let rightSideItems = null;
 		if (this.props.enableRightFlyoutUnderToolbar) {
 			rightSideItems = (
@@ -161,6 +168,7 @@ CommonCanvas.propTypes = {
 	showRightFlyout: PropTypes.bool,
 
 	// Provided by Redux
+	// See comment above in render() above the support for this.
 	enableRightFlyoutUnderToolbar: PropTypes.bool
 };
 

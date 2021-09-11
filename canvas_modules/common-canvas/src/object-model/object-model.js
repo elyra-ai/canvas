@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+import ConfigUtils from "./config-utils.js";
 import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
@@ -80,13 +80,11 @@ export default class ObjectModel {
 	}
 
 	setLayoutHandler(layoutHandler) {
-		this.layoutHandler = layoutHandler;
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout());
-		this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
-			canvasConfig: {},
-			layoutInfo: {},
-			pipelines: newPipelines
-		} });
+		if (layoutHandler !== this.layoutHandler) {
+			this.layoutHandler = layoutHandler;
+			const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout());
+			this.store.dispatch({ type: "REPLACE_PIPELINES", data: { pipelines: newPipelines } });
+		}
 	}
 
 	// Returns the redux store
@@ -1110,10 +1108,6 @@ export default class ObjectModel {
 		return this.getAPIPipeline(this.getPrimaryPipelineId()).isEmpty();
 	}
 
-	addPipeline(pipeline) {
-		this.store.dispatch({ type: "ADD_PIPELINE", data: pipeline });
-	}
-
 	deletePipeline(pipelineId) {
 		this.store.dispatch({ type: "DELETE_PIPELINE", data: { id: pipelineId } });
 	}
@@ -1281,15 +1275,18 @@ export default class ObjectModel {
 	// Config methods
 	// ---------------------------------------------------------------------------
 	setCanvasConfig(config) {
-		const config2 = Object.assign({}, this.getCanvasConfig(), config);
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(config2));
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
+		const oldConfig = this.getCanvasConfig();
+		const newConfig = ConfigUtils.mergeCanvasConfigs(oldConfig, config);
 
-		this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
-			canvasConfig: config,
-			layoutInfo: layoutInfo,
-			pipelines: newPipelines
-		} });
+		if (!ConfigUtils.compareCanvasConfigs(oldConfig, newConfig)) {
+			const newPipelines = this.prepareNodes(
+				this.getCanvasInfo().pipelines, newConfig.enableNodeLayout, newConfig.enableCanvasLayout);
+
+			this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
+				canvasConfig: newConfig,
+				pipelines: newPipelines
+			} });
+		}
 	}
 
 	setToolbarConfig(config) {
@@ -1308,10 +1305,6 @@ export default class ObjectModel {
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
 
-	getLayoutInfo() {
-		return this.store.getLayoutInfo();
-	}
-
 	getNodeLayout() {
 		return this.store.getNodeLayout();
 	}
@@ -1319,7 +1312,6 @@ export default class ObjectModel {
 	getCanvasLayout() {
 		return this.store.getCanvasLayout();
 	}
-
 
 	// ---------------------------------------------------------------------------
 	// Notification Messages methods
