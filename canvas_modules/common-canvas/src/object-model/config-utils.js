@@ -26,17 +26,19 @@ export default class CanvasUtils {
 	// Returns a config object which is the result of merging config into
 	// startConfig.
 	static mergeCanvasConfigs(startConfig, config) {
-		let newConfig = Object.assign({}, startConfig, config);
+		let newConfig = Object.assign({}, startConfig, config || {});
 
-		const newLayout = LayoutDimensions.getLayout(newConfig,
-			{ nodeLayout: config.enableNodeLayout, canvasLayout: config.enableCanvasLayout });
-		const newTipConfig = Object.assign({}, startConfig.tipConfig, config.tipConfig);
+		if (config) {
+			const newLayout = LayoutDimensions.getLayout(newConfig,
+				{ nodeLayout: config.enableNodeLayout, canvasLayout: config.enableCanvasLayout });
+			const newTipConfig = Object.assign({}, startConfig.tipConfig, config.tipConfig);
 
-		newConfig = Object.assign({}, newConfig, {
-			enableNodeLayout: newLayout.nodeLayout,
-			enableCanvasLayout: newLayout.canvasLayout,
-			tipConfig: newTipConfig
-		});
+			newConfig = Object.assign({}, newConfig, {
+				enableNodeLayout: newLayout.nodeLayout,
+				enableCanvasLayout: newLayout.canvasLayout,
+				tipConfig: newTipConfig
+			});
+		}
 
 		return newConfig;
 	}

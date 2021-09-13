@@ -389,7 +389,8 @@ class App extends React.Component {
 		this.locale = "en";
 		this.initLocale();
 
-		// Create the empty canvas div so we don't create a new objct on each render
+		// Create the empty canvas div so we don't create a new object on each render
+		// which would cause a refresh.
 		this.emptyCanvasDiv = (
 			<div>
 				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
@@ -405,7 +406,8 @@ class App extends React.Component {
 			</div>
 		);
 
-		// Create the drop zone canvas div so we don't create a new objct on each render
+		// Create the drop zone canvas div so we don't create a new object on each render
+		// which would cause a refresh.
 		this.dropZoneCanvasDiv = (
 			<div>
 				<div className="dropzone-canvas" />

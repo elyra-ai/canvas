@@ -38,10 +38,12 @@ class CommonCanvas extends React.Component {
 		this.containingDivId = "common-canvas-items-container-" + props.canvasController.getInstanceId();
 
 		props.canvasController.setIntl(props.intl);
+		// window.console.log("CommonCanvas - constructor() - initializeController");
 		this.initializeController(props);
 	}
 
 	componentDidUpdate() {
+		// window.console.log("CommonCanvas - componentDidUpdate() - initializeController");
 		this.initializeController(this.props);
 	}
 
@@ -61,8 +63,6 @@ class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
-		// window.console.log("initializeController");
-
 		props.canvasController.setCanvasConfig(props.config);
 		props.canvasController.setContextMenuConfig(props.contextMenuConfig);
 		props.canvasController.setKeyboardConfig(props.keyboardConfig);

@@ -82,6 +82,7 @@ class CanvasContents extends React.Component {
 	}
 
 	componentDidMount() {
+		// window.console.log("CanvasContents - componentDidMount()");
 		this.svgCanvasD3 =
 			new SVGCanvasD3(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
@@ -95,6 +96,7 @@ class CanvasContents extends React.Component {
 	}
 
 	componentDidUpdate() {
+		// window.console.log("CanvasContents - componentDidUpdate()");
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
 			this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
 			// Run the afterUpdateCallbacks.
@@ -401,7 +403,7 @@ CanvasContents.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
-	// These two fiels are included here so they will trigger a render.
+	// These two fields are included here so they will trigger a render.
 	// The renderer will retrieve the data for them by calling the canvas controller.
 	selectionInfo: state.selectioninfo,
 	breadcrumbs: state.breadcrumbs
