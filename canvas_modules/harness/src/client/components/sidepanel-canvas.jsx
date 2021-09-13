@@ -221,9 +221,9 @@ export default class SidePanelForms extends React.Component {
 			id = evt.target.id.slice(0, -1);
 			config = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = Object.assign({}, this.props.getStateValue(config));
 		notificationConfig[id] = evt.target.value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(config, notificationConfig);
 	}
 
 	notificationConfigToggle(value, control) {

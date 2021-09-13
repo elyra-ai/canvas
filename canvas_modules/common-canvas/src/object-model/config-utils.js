@@ -41,10 +41,6 @@ export default class CanvasUtils {
 		return newConfig;
 	}
 
-	static getDefaultLayoutInfo() {
-		return Object.assign({}, LayoutDimensions.getLayout(this.getDefaultCanvasConfig()));
-	}
-
 	// Returns the set of default config values.
 	static getDefaultCanvasConfig() {
 		const config = {
@@ -60,7 +56,6 @@ export default class CanvasUtils {
 			enableLinkReplaceOnNewConnection: false,
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
-			enableParentClass: "",
 			enableDragWithoutSelect: false,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
@@ -83,16 +78,17 @@ export default class CanvasUtils {
 			enableSnapToGridY: null,
 			enableAutoLayoutVerticalSpacing: null,
 			enableAutoLayoutHorizontalSpacing: null,
-			enableBoundingRectangles: false,
-			enableCanvasUnderlay: "None",
 			enableSingleOutputPortDisplay: false,
 			enableNarrowPalette: true,
 			schemaValidation: false,
+			enableBoundingRectangles: false, // Not documented
+			enableCanvasUnderlay: "None", // Not documented
+			enableParentClass: "", // Not documented
 			enablePositionNodeOnRightFlyoutOpen: false, // May also be an object: { x: 5, y: 5 }
 			emptyCanvasContent: null,
 			dropZoneCanvasContent: null,
-			enableCanvasLayout: {},
 			enableNodeLayout: {},
+			enableCanvasLayout: {}, // Not documented
 			tipConfig: {
 				"palette": true,
 				"nodes": true,
@@ -122,7 +118,6 @@ export default class CanvasUtils {
 				config1.enableLinkReplaceOnNewConnection !== config2.enableLinkReplaceOnNewConnection ||
 				config1.enableAssocLinkCreation !== config2.enableAssocLinkCreation ||
 				config1.enableAssocLinkType !== config2.enableAssocLinkType ||
-				config1.enableParentClass !== config2.enableParentClass ||
 				config1.enableDragWithoutSelect !== config2.enableDragWithoutSelect ||
 				config1.enableInternalObjectModel !== config2.enableInternalObjectModel ||
 				config1.enablePaletteLayout !== config2.enablePaletteLayout ||
@@ -145,11 +140,12 @@ export default class CanvasUtils {
 				config1.enableSnapToGridY !== config2.enableSnapToGridY ||
 				config1.enableAutoLayoutVerticalSpacing !== config2.enableAutoLayoutVerticalSpacing ||
 				config1.enableAutoLayoutHorizontalSpacing !== config2.enableAutoLayoutHorizontalSpacing ||
-				config1.enableBoundingRectangles !== config2.enableBoundingRectangles ||
-				config1.enableCanvasUnderlay !== config2.enableCanvasUnderlay ||
 				config1.enableSingleOutputPortDisplay !== config2.enableSingleOutputPortDisplay ||
 				config1.enableNarrowPalette !== config2.enableNarrowPalette ||
 				config1.schemaValidation !== config2.schemaValidation ||
+				config1.enableBoundingRectangles !== config2.enableBoundingRectangles ||
+				config1.enableCanvasUnderlay !== config2.enableCanvasUnderlay ||
+				config1.enableParentClass !== config2.enableParentClass ||
 				// We do not compare fields that contain JSX content here because they
 				// are generated each time.
 				// config1.emptyCanvasContent !== config2.emptyCanvasContent ||
