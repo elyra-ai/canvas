@@ -389,6 +389,31 @@ class App extends React.Component {
 		this.locale = "en";
 		this.initLocale();
 
+		// Create the empty canvas div so we don't create a new objct on each render
+		this.emptyCanvasDiv = (
+			<div>
+				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+				<span className="harness-empty-text">
+					<FormattedMessage
+						id={ "canvas.emptyText" }
+						values={{ br: <br /> }}
+					/>
+				</span>
+				<span className="harness-empty-link"
+					onClick={this.handleEmptyCanvasLinkClick}
+				><FormattedMessage id={ "canvas.emptyLink"} /></span>
+			</div>
+		);
+
+		// Create the drop zone canvas div so we don't create a new objct on each render
+		this.dropZoneCanvasDiv = (
+			<div>
+				<div className="dropzone-canvas" />
+				<div className="dropzone-canvas-rect" />
+				<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+			</div>
+		);
+
 		// Create messages here (not in the render) since that would cause
 		// unnecssary renders inside common-canvas and/or common-properties.
 		this.messages = getMessages(this.locale, [HarnessBundles,
@@ -1825,33 +1850,6 @@ class App extends React.Component {
 	}
 
 	getCanvasConfig() {
-		let emptyCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
-			emptyCanvasDiv = (
-				<div>
-					<Isvg src={BlankCanvasImage} className="harness-empty-image" />
-					<span className="harness-empty-text">
-						<FormattedMessage
-							id={ "canvas.emptyText" }
-							values={{ br: <br /> }}
-						/>
-					</span>
-					<span className="harness-empty-link"
-						onClick={this.handleEmptyCanvasLinkClick}
-					><FormattedMessage id={ "canvas.emptyLink"} /></span>
-				</div>);
-		}
-
-		let dropZoneCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedDropZoneContent) {
-			dropZoneCanvasDiv = (
-				<div>
-					<div className="dropzone-canvas" />
-					<div className="dropzone-canvas-rect" />
-					<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
-				</div>);
-		}
-
 		const canvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
@@ -1886,8 +1884,8 @@ class App extends React.Component {
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
-			dropZoneCanvasContent: dropZoneCanvasDiv,
-			emptyCanvasContent: emptyCanvasDiv,
+			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
+			emptyCanvasContent: this.state.selectedDisplayCustomizedEmptyCanvasContent ? this.emptyCanvasDiv : null,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,

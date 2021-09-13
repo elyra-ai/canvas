@@ -17,7 +17,7 @@
 // This class contains utility functions that may be used for working with
 // the canvas config object.
 
-import { isMatch } from "lodash";
+import { isMatch, isMatchWith } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
 
@@ -108,53 +108,31 @@ export default class CanvasUtils {
 	static compareCanvasConfigs(config1, config2) {
 		let state = false;
 
-		if (config1 && config2) {
-			state = !(
-				config1.enableInteractionType !== config2.enableInteractionType ||
-				config1.enableNodeFormatType !== config2.enableNodeFormatType ||
-				config1.enableLinkType !== config2.enableLinkType ||
-				config1.enableLinkDirection !== config2.enableLinkDirection ||
-				config1.enableLinkSelection !== config2.enableLinkSelection ||
-				config1.enableLinkReplaceOnNewConnection !== config2.enableLinkReplaceOnNewConnection ||
-				config1.enableAssocLinkCreation !== config2.enableAssocLinkCreation ||
-				config1.enableAssocLinkType !== config2.enableAssocLinkType ||
-				config1.enableDragWithoutSelect !== config2.enableDragWithoutSelect ||
-				config1.enableInternalObjectModel !== config2.enableInternalObjectModel ||
-				config1.enablePaletteLayout !== config2.enablePaletteLayout ||
-				config1.enableToolbarLayout !== config2.enableToolbarLayout ||
-				config1.enableInsertNodeDroppedOnLink !== config2.enableInsertNodeDroppedOnLink ||
-				config1.enableHighlightNodeOnNewLinkDrag !== config2.enableHighlightNodeOnNewLinkDrag ||
-				config1.enableHighlightUnavailableNodes !== config2.enableHighlightUnavailableNodes ||
-				config1.enableMoveNodesOnSupernodeResize !== config2.enableMoveNodesOnSupernodeResize ||
-				config1.enableExternalPipelineFlows !== config2.enableExternalPipelineFlows ||
-				config1.enableDisplayFullLabelOnHover !== config2.enableDisplayFullLabelOnHover ||
-				config1.enableDropZoneOnExternalDrag !== config2.enableDropZoneOnExternalDrag ||
-				config1.enableRightFlyoutUnderToolbar !== config2.enableRightFlyoutUnderToolbar ||
-				config1.enablePanIntoViewOnOpen !== config2.enablePanIntoViewOnOpen ||
-				config1.enableZoomIntoSubFlows !== config2.enableZoomIntoSubFlows ||
-				config1.enableBrowserEditMenu !== config2.enableBrowserEditMenu ||
-				config1.enableAutoLinkOnlyFromSelNodes !== config2.enableAutoLinkOnlyFromSelNodes ||
-				config1.enableSaveZoom !== config2.enableSaveZoom ||
-				config1.enableSnapToGridType !== config2.enableSnapToGridType ||
-				config1.enableSnapToGridX !== config2.enableSnapToGridX ||
-				config1.enableSnapToGridY !== config2.enableSnapToGridY ||
-				config1.enableAutoLayoutVerticalSpacing !== config2.enableAutoLayoutVerticalSpacing ||
-				config1.enableAutoLayoutHorizontalSpacing !== config2.enableAutoLayoutHorizontalSpacing ||
-				config1.enableSingleOutputPortDisplay !== config2.enableSingleOutputPortDisplay ||
-				config1.enableNarrowPalette !== config2.enableNarrowPalette ||
-				config1.schemaValidation !== config2.schemaValidation ||
-				config1.enableBoundingRectangles !== config2.enableBoundingRectangles ||
-				config1.enableCanvasUnderlay !== config2.enableCanvasUnderlay ||
-				config1.enableParentClass !== config2.enableParentClass ||
-				// We do not compare fields that contain JSX content here because they
-				// are generated each time.
-				// config1.emptyCanvasContent !== config2.emptyCanvasContent ||
-				// config1.dropZoneCanvasContent !== config2.dropZoneCanvasContent ||
-				!this.enableNodeRightFlyoutOpenExactlyMatches(config1.enablePositionNodeOnRightFlyoutOpen, config2.enablePositionNodeOnRightFlyoutOpen) ||
-				!this.enableCanvasLayoutExactlyMatches(config1.enableCanvasLayout, config2.enableCanvasLayout) ||
-				!this.enableNodeLayoutExactlyMatches(config1.enableNodeLayout, config2.enableNodeLayout) ||
-				!this.enableTipConfigExactlyMatches(config1.tipConfig, config2.tipConfig));
+		// Check the two objects have the same number of fields before comparing
+		// the details.
+		if (Object.keys(config1).length === Object.keys(config2).length) {
+			state = isMatchWith(config1, config2, (objValue, srcValue, key) => {
+				switch (key) {
+				case "enablePositionNodeOnRightFlyoutOpen": {
+					return this.enableNodeRightFlyoutOpenExactlyMatches(objValue, srcValue);
+				}
+				case "enableCanvasLayout": {
+					return this.enableCanvasLayoutExactlyMatches(objValue, srcValue);
+				}
+				case "enableNodeLayout": {
+					return this.enableNodeLayoutExactlyMatches(objValue, srcValue);
+				}
+				case "tipConfig": {
+					return this.enableTipConfigExactlyMatches(objValue, srcValue);
+				}
+				// All other config fields will be compared as values or object pointers
+				default: {
+					return objValue === srcValue;
+				}
+				}
+			});
 		}
+
 		return state;
 	}
 
@@ -181,9 +159,12 @@ export default class CanvasUtils {
 	static enableCanvasLayoutExactlyMatches(enableLayout1, enableLayout2) {
 		if (!enableLayout1 && !enableLayout2) {
 			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
+
+		} else if (this.compareFieldCount(enableLayout1, enableLayout2) &&
+								isMatch(enableLayout1, enableLayout2)) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -192,10 +173,13 @@ export default class CanvasUtils {
 	static enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
 		if (!enableLayout1 && !enableLayout2) {
 			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&
-			this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
+
+		} else if (this.compareFieldCount(enableLayout1, enableLayout2) &&
+								isMatch(enableLayout1, enableLayout2) &&
+								this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -233,6 +217,11 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		return (isMatch(tipConfig1, tipConfig2) && isMatch(tipConfig2, tipConfig1));
+		return (this.compareFieldCount(tipConfig1, tipConfig2) &&
+						isMatch(tipConfig1, tipConfig2));
+	}
+
+	static compareFieldCount(obj1, obj2) {
+		return Object.keys(obj1).length === Object.keys(obj2).length;
 	}
 }

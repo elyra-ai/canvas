@@ -216,26 +216,26 @@ export default class SidePanelForms extends React.Component {
 
 	notificationConfigChange(evt) {
 		let id = evt.target.id;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = evt.target.id.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = Object.assign({}, this.props.getStateValue(config));
+		const notificationConfig = Object.assign({}, this.props.getStateValue(fieldName));
 		notificationConfig[id] = evt.target.value;
-		this.props.setStateValue(config, notificationConfig);
+		this.props.setStateValue(fieldName, notificationConfig);
 	}
 
 	notificationConfigToggle(value, control) {
 		let id = control;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = control.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = this.props.getStateValue(fieldName);
 		notificationConfig[id] = value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(notificationConfig, fieldName);
 	}
 
 	exampleAppOptionChange(value) {
