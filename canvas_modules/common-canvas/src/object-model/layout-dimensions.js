@@ -776,11 +776,12 @@ const portsVerticalDefaultLayout = {
 
 
 export default class LayoutDimensions {
-	static getLayout(config) {
+	static getLayout(config, overlayLayout = {}) {
 		let newLayout = this.getDefaultLayout(config);
+
 		if (config) {
-			newLayout = this.overrideNodeLayout(newLayout, config); // Do this first because snap-to-grid depends on this.
-			newLayout = this.overrideCanvasLayout(newLayout, config);
+			newLayout = this.overrideNodeLayout(newLayout, overlayLayout); // Do this first because snap-to-grid depends on this.
+			newLayout = this.overrideCanvasLayout(newLayout, config, overlayLayout);
 			newLayout = this.overrideLinkType(newLayout, config);
 			newLayout = this.overrideSnapToGrid(newLayout, config);
 			newLayout = this.overrideAutoLayout(newLayout, config);
@@ -799,14 +800,14 @@ export default class LayoutDimensions {
 		return Object.assign({}, defaultLayout);
 	}
 
-	static overrideNodeLayout(layout, config) {
-		layout.nodeLayout = Object.assign({}, layout.nodeLayout, config.enableNodeLayout || {});
+	static overrideNodeLayout(layout, overlayLayout) {
+		layout.nodeLayout = Object.assign({}, layout.nodeLayout, overlayLayout.nodeLayout || {});
 
 		return layout;
 	}
 
-	static overrideCanvasLayout(layout, config) {
-		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, config.enableCanvasLayout || {});
+	static overrideCanvasLayout(layout, config, overlayLayout) {
+		layout.canvasLayout = Object.assign({}, layout.canvasLayout, { linkDirection: config.enableLinkDirection }, overlayLayout.canvasLayout || {});
 
 		return layout;
 	}
@@ -829,12 +830,12 @@ export default class LayoutDimensions {
 		// Snap to grid configuration. 25% for X and 20% for Y (of node width and
 		// height) by default. It can be overridden by the config which can be either
 		// a number or a percentage of the node width/height.
-		const snapToGridXStr = config.enableSnapToGridX || layout.canvasLayout.snapToGridX || "25%";
-		const snapToGridYStr = config.enableSnapToGridX || layout.canvasLayout.snapToGridY || "20%";
+		layout.canvasLayout.snapToGridX = config.enableSnapToGridX || layout.canvasLayout.snapToGridX || "25%";
+		layout.canvasLayout.snapToGridY = config.enableSnapToGridY || layout.canvasLayout.snapToGridY || "20%";
 
 		// Set the snap-to-grid sizes in pixels.
-		layout.canvasLayout.snapToGridX = this.getSnapToGridSize(snapToGridXStr, layout.nodeLayout.defaultNodeWidth);
-		layout.canvasLayout.snapToGridY = this.getSnapToGridSize(snapToGridYStr, layout.nodeLayout.defaultNodeHeight);
+		layout.canvasLayout.snapToGridXPx = this.getSnapToGridSize(layout.canvasLayout.snapToGridX, layout.nodeLayout.defaultNodeWidth);
+		layout.canvasLayout.snapToGridYPx = this.getSnapToGridSize(layout.canvasLayout.snapToGridY, layout.nodeLayout.defaultNodeHeight);
 
 		return layout;
 	}

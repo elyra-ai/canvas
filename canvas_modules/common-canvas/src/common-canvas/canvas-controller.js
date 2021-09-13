@@ -115,7 +115,7 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	setCanvasConfig(config) {
-		// // window.console.log("Setting Canvas Config");
+		// window.console.log("Setting Canvas Config");
 		const correctConfig = this.correctTypo(config);
 		this.objectModel.openPaletteIfNecessary(config);
 		this.objectModel.setCanvasConfig(correctConfig);

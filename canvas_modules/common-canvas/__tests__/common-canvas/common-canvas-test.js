@@ -31,7 +31,7 @@ describe("CommonCanvas renders correctly", () => {
 		canvasController = new CanvasController();
 	});
 
-	it.only("should render one <CanvasContents/> component", () => {
+	it("should render one <CanvasContents/> component", () => {
 		const config = {};
 		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(CanvasContents)).to.have.length(1);

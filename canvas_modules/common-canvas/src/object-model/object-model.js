@@ -694,8 +694,8 @@ export default class ObjectModel {
 		}
 		if (canvasLayout.snapToGridType === "During" ||
 				canvasLayout.snapToGridType === "After") {
-			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridX);
-			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridY);
+			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
+			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newNode;
 	}
@@ -706,8 +706,8 @@ export default class ObjectModel {
 		const newComment = Object.assign({}, comment);
 		if (canvasLayout.snapToGridType === "During" ||
 				canvasLayout.snapToGridType === "After") {
-			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridX);
-			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridY);
+			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
+			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newComment;
 	}

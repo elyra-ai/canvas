@@ -42,7 +42,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 	// a right bar with zoom in, zoom out, zoom to fit and notification icons.
 	it("should render <CommonCanvasToolbar/> with an empty config object", () => {
 		const toolbarConfig = {};
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
@@ -62,7 +65,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 	// bar with a palette icon and a right bar with zoom in, zoom out, zoom to fit and notification icons.
 	it("should render <CommonCanvasToolbar/> with an empty leftBar and an undefined rightBar in config object", () => {
 		const toolbarConfig = { leftBar: [] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
@@ -82,7 +88,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 	// left bar with a palette icon and a right bar with just a notification icon.
 	it("should render <CommonCanvasToolbar/> with an empty leftBar and rightBar in config object", () => {
 		const toolbarConfig = { leftBar: [], rightBar: [] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
@@ -107,7 +116,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			{ action: "copy", label: "Copy", enable: true },
 			{ action: "paste", label: "Paste", enable: true }
 		] };
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
@@ -144,7 +156,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 				{ action: "paste", label: "Paste", enable: true }
 			]
 		};
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
@@ -180,7 +195,9 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 		// false indicate palette not enabled
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: false, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: false, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
 
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
@@ -217,8 +234,8 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 
-		wrapper = createIntlCommonCanvasToolbar({
-			toolbarConfig: toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true,
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig: toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig: null, isNotificationOpen: true }, canvasController);
 
 		expect(wrapper.find(CommonCanvasToolbar)).to.have.length(1);
@@ -304,7 +321,10 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			]
 		};
 		// isNotificationOpen is set to true
-		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig, isPaletteEnabled: true, isPaletteOpen: true, notificationConfig, isNotificationOpen: true }, canvasController);
+		wrapper = createIntlCommonCanvasToolbar({ toolbarConfig,
+			isPaletteEnabled: true, isPaletteOpen: true,
+			notificationConfig, isNotificationOpen: true }, canvasController);
+
 		expect(wrapper.find(".toggleNotificationPanel-action.associated-panel-selected")).to.have.length(1);
 	});
 
