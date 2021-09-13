@@ -17,10 +17,11 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-// Note use from "@elyra/canvas" instead of "common-canvas" if you are importing from the NPM module.
-import { CommonCanvas, CanvasController } from "common-canvas";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
+// Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
+import { CommonCanvas, CanvasController } from "common-canvas";
+// This library is only needed if you want to use hot loading during development.
 import { hot } from "react-hot-loader/root";
 
 class App extends React.Component {
