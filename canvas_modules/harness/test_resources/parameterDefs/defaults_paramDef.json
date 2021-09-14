@@ -156,6 +156,31 @@
           "default": ["Min", "Max"]
         }
       ]
+    },
+    {
+      "id": "structuretableObjectType",
+      "type": "object",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_object_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_object_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "parameters": [
@@ -282,6 +307,12 @@
     {
       "id": "no_default",
       "type": "string"
+    },
+    {
+      "id": "structuretableObjectType",
+      "type": "array[structuretableObjectType]",
+      "role": "column",
+      "required": true
     }
   ],
   "uihints": {
@@ -434,6 +465,51 @@
             "edit_style": "subpanel",
             "control": "checkboxset",
             "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableObjectType",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableObjectType.field.label"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_object_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_object_sort_order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
           }
         ]
       }
@@ -679,6 +755,17 @@
         "description": {
           "default": "Default value is NOT defined in current_parameters, default_value condition and parameters."
         }
+      },
+      {
+        "parameter_ref": "structuretableObjectType",
+        "required": true,
+        "label": {
+          "default": "Structuretable"
+        },
+        "description": {
+          "default": "default_value condition returns true because mode equals Include. This control tests default value as array of objects are displayed correctly.",
+          "placement": "on_panel"
+        }
       }
     ],
     "group_info": [
@@ -796,7 +883,8 @@
           "current_ui_parameters_default",
           "parameters_default",
           "ui_parameters_default",
-          "no_default"
+          "no_default",
+          "structuretableObjectType"
         ]
       }
     ]
@@ -858,6 +946,33 @@
       "default_value": {
         "parameter_ref": "current_ui_parameters_default",
         "value": "Value defined in default_value condition.",
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "structuretableObjectType",
+        "value": [
+          {
+            "field": "Cholesterol",
+            "structuretable_object_readonly_int": 5,
+            "structuretable_object_sort_order": "Ascending"
+          },
+          {
+            "structuretable_object_readonly_int": 6
+          },
+          {
+            "field": null,
+            "structuretable_object_readonly_int": 7,
+            "structuretable_object_sort_order": null
+          }
+        ],
         "evaluate": {
           "condition": {
             "parameter_ref": "mode",
