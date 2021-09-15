@@ -331,6 +331,42 @@ function allowConditions(inPropertyId, controller) {
 }
 
 /**
+* Set default value for a field if conditions evaluate to true.
+* This function sets parameter_ref and default value in conditionalDefaultValues object using pass-by-reference.
+* Return value is never used anywhere. Calling function works on the updated conditionalDefaultValues object.
+*
+* @param {object} propertyId. required
+* @param {object} properties controller. required
+* @param {object} conditionalDefaultValues. required
+*/
+function setConditionalDefaultValue(inPropertyId, controller, conditionalDefaultValues) {
+	const control = controller.getControl(inPropertyId);
+	if (!control) {
+		logger.warn("Control not found for " + inPropertyId.name);
+		return null;
+	}
+	const validations = controller.getDefinitions(inPropertyId, CONDITION_TYPE.CONDITIONALDEFAULT, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (validations.length > 0) {
+		try {
+			for (const validation of validations) {
+				const parameterRef = validation.definition.default_value.parameter_ref;
+				//  For a given parameter_ref, only the first default_value condition is used.
+				if (!(parameterRef in conditionalDefaultValues)) {
+					const result = UiConditions.validateInput(validation.definition, inPropertyId, controller);
+					if (result) {
+						// Condition evaluate to true
+						conditionalDefaultValues[parameterRef] = validation.definition.default_value.value;
+					}
+				}
+			}
+		} catch (error) {
+			logger.warn("Error thrown in validation: " + error);
+		}
+	}
+	return null;
+}
+
+/**
 * Filters the datamodel fields for the given parameter.
 *
 * @param {object} propertyId. required
@@ -1159,6 +1195,7 @@ export {
 	validateInput,
 	filterConditions,
 	allowConditions,
+	setConditionalDefaultValue,
 	updateState,
 	getParamRefPropertyId,
 	injectDefaultValidations,
