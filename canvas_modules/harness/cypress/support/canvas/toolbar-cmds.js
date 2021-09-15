@@ -113,8 +113,6 @@ Cypress.Commands.add("clickToolbarNotifications", () => {
 });
 
 Cypress.Commands.add("dismissNotificationMessage", (index) => {
-	cy.getToolbarAction(".toggleNotificationPanel-action").click();
-
 	cy.get(".notifications-button-container .notifications")
 		.eq(index)
 		.find(".notification-message-close")

@@ -15,14 +15,15 @@
  */
 
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Tooltip from "./tooltip.jsx";
+import Tooltip from "../tooltip/tooltip.jsx";
 import Icon from "../icons/icon.jsx";
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from "lodash";
 import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK,
 	ERROR, WARNING } from "../common-canvas/constants/canvas-constants.js";
 
-export default class TooltipWrapper extends React.Component {
+class CommonCanvasTooltip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -139,15 +140,31 @@ export default class TooltipWrapper extends React.Component {
 	}
 }
 
-TooltipWrapper.propTypes = {
-	id: PropTypes.string.isRequired,
-	type: PropTypes.oneOf([TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK]).isRequired,
-	targetObj: PropTypes.object.isRequired,
+CommonCanvasTooltip.propTypes = {
+	// canvasController provided by common-canvas.jsx
+	canvasController: PropTypes.object.isRequired,
+	// The rest provided by redux
+	id: PropTypes.string,
+	type: PropTypes.oneOf([TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK]),
+	targetObj: PropTypes.object,
 	mousePos: PropTypes.object,
 	customContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	node: PropTypes.object,
 	port: PropTypes.object,
 	nodeTemplate: PropTypes.object,
-	category: PropTypes.object,
-	canvasController: PropTypes.object.isRequired
+	category: PropTypes.object
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	id: state.tooltip.id,
+	type: state.tooltip.type,
+	targetObj: state.tooltip.targetObj,
+	mousePos: state.tooltip.mousePos,
+	customContent: state.tooltip.customContent,
+	node: state.tooltip.node,
+	port: state.tooltip.port,
+	nodeTemplate: state.tooltip.nodeTemplate,
+	category: state.tooltip.category
+});
+
+export default connect(mapStateToProps)(CommonCanvasTooltip);

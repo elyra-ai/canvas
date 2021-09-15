@@ -440,7 +440,6 @@ describe("Test canvas controller methods", () => {
 
 	it("should create a regular node on the canvas from a palette node", () => {
 		const canvasController = new CanvasController();
-		canvasController.getObjectModel().setDefaultLayout();
 		canvasController.setPipelineFlowPalette(commonPalette);
 
 		const nodeTemplate = canvasController.getPaletteNode("com.ibm.commonicons.sources.varfile");
@@ -458,7 +457,6 @@ describe("Test canvas controller methods", () => {
 
 	it("should create a supernode on the canvas from a palette supernode", () => {
 		const canvasController = new CanvasController();
-		canvasController.getObjectModel().setDefaultLayout();
 		canvasController.setPipelineFlowPalette(supernodePalette);
 
 		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
@@ -477,7 +475,6 @@ describe("Test canvas controller methods", () => {
 
 	it("should execute a Command to create a supernode on the canvas from a palette supernode", () => {
 		const canvasController = new CanvasController();
-		canvasController.getObjectModel().setDefaultLayout();
 		canvasController.setPipelineFlowPalette(supernodePalette);
 
 		// Initially, there shouldn't be any commands to undo in the command stack.

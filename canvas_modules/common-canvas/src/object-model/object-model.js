@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint arrow-body-style: ["off"] */
 
-import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+import ConfigUtils from "./config-utils.js";
 import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
@@ -73,7 +72,7 @@ export default class ObjectModel {
 	}
 
 	setSchemaValidation(schemaValidation) {
-		this.schemaValidation = schemaValidation;
+		this.setCanvasConfig({ schemaValidation });
 	}
 
 	setSelectionChangeHandler(selectionChangeHandler) {
@@ -81,7 +80,16 @@ export default class ObjectModel {
 	}
 
 	setLayoutHandler(layoutHandler) {
-		this.layoutHandler = layoutHandler;
+		if (layoutHandler !== this.layoutHandler) {
+			this.layoutHandler = layoutHandler;
+			const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout());
+			this.store.dispatch({ type: "REPLACE_PIPELINES", data: { pipelines: newPipelines } });
+		}
+	}
+
+	// Returns the redux store
+	getStore() {
+		return this.store.getStore();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -121,7 +129,7 @@ export default class ObjectModel {
 
 	setPipelineFlowPalette(paletteData) {
 		if (!paletteData || isEmpty(paletteData)) {
-			this.store.dispatch({ type: "SET_PALETTE_DATA", data: {} });
+			this.clearPaletteData();
 			return;
 		}
 		// TODO - this method is called by App.js test harness. Remove this check and
@@ -132,11 +140,49 @@ export default class ObjectModel {
 		}
 
 		const newPalData = this.validateAndUpgradePalette(palData);
-		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
+		this.store.dispatch({ type: "SET_PALETTE_DATA", data: { content: newPalData } });
 	}
 
 	getPaletteData() {
 		return this.store.getPaletteData();
+	}
+
+	togglePalette() {
+		if (this.isPaletteOpen()) {
+			this.closePalette();
+		} else {
+			this.openPalette();
+		}
+	}
+
+	openPalette() {
+		this.store.dispatch({ type: "SET_PALETTE_OPEN_STATE", data: { isOpen: true } });
+	}
+
+	// Initializes the palette state based on paletteInitialState.
+	// TODO - Remove this when paletteInitialState is removed from common-canvas.
+	openPaletteIfNecessary(canvasConfig) {
+		if (canvasConfig &&
+				typeof this.store.getPalette().isOpen === "undefined" &&
+				typeof canvasConfig.paletteInitialState !== "undefined") {
+			if (canvasConfig.paletteInitialState) {
+				this.openPalette();
+			} else {
+				this.closePalette();
+			}
+		}
+	}
+
+	closePalette() {
+		this.store.dispatch({ type: "SET_PALETTE_OPEN_STATE", data: { isOpen: false } });
+	}
+
+	isPaletteOpen() {
+		// TODO - We can just return isOpen directly from here when
+		// paletteInitialState is removed from common-canvas and isOpen can be
+		// initialized correctly in canvas-store.
+		const isOpen = this.store.getPalette().isOpen;
+		return (typeof isOpen === "undefined" ? false : isOpen);
 	}
 
 	setCategoryLoadingText(categoryId, loadingText) {
@@ -162,7 +208,7 @@ export default class ObjectModel {
 
 		this.store.dispatch({ type: "ADD_NODE_TYPES_TO_PALETTE", data: nodeTypePaletteData });
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePaletteAgainstSchema(this.getPaletteData(), LATEST_PALETTE_VERSION);
 		}
 	}
@@ -254,14 +300,14 @@ export default class ObjectModel {
 
 		const version = extractPaletteVersion(pal);
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePaletteAgainstSchema(pal, version);
 		}
 
 		if (version !== LATEST_PALETTE_VERSION) {
 			pal = upgradePalette(pal);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePaletteAgainstSchema(pal, LATEST_PALETTE_VERSION);
 			}
 		}
@@ -335,12 +381,6 @@ export default class ObjectModel {
 		if (newPipelineFlow.objectData) { // Old canvas docs will have an 'objectData' field
 			this.setCanvas(newPipelineFlow);
 			return;
-		}
-
-		// If there's no current layout info then add some default layout before
-		// setting canvas info. This is mainly necessary for Jest testcases.
-		if (isEmpty(this.getLayoutInfo())) {
-			this.setDefaultLayout();
 		}
 
 		const canvasInfo = this.preparePipelineFlow(newPipelineFlow);
@@ -532,7 +572,7 @@ export default class ObjectModel {
 			pipelineFlow =
 				PipelineOutHandler.createPipelineFlow(pipelineFlow);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePipelineFlowAgainstSchema(pipelineFlow);
 			}
 
@@ -654,8 +694,8 @@ export default class ObjectModel {
 		}
 		if (canvasLayout.snapToGridType === "During" ||
 				canvasLayout.snapToGridType === "After") {
-			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridX);
-			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridY);
+			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
+			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newNode;
 	}
@@ -666,8 +706,8 @@ export default class ObjectModel {
 		const newComment = Object.assign({}, comment);
 		if (canvasLayout.snapToGridType === "During" ||
 				canvasLayout.snapToGridType === "After") {
-			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridX);
-			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridY);
+			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
+			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newComment;
 	}
@@ -759,14 +799,14 @@ export default class ObjectModel {
 
 		const version = extractVersion(pipelineFlow);
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow, version);
 		}
 
 		if (version !== LATEST_VERSION) {
 			pipelineFlow = upgradePipelineFlow(pipelineFlow);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePipelineFlowAgainstSchema(pipelineFlow, LATEST_VERSION);
 			}
 		}
@@ -785,9 +825,7 @@ export default class ObjectModel {
 			pId = this.getPrimaryPipelineId();
 		}
 
-		const pipeline = canvasInfo.pipelines.find((p) => {
-			return p.id === pId;
-		});
+		const pipeline = canvasInfo.pipelines.find((p) => p.id === pId);
 
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
@@ -1025,11 +1063,6 @@ export default class ObjectModel {
 	}
 
 	setCanvasInfo(inCanvasInfo) {
-		// If there's no current layout info then add some default layout before
-		// setting canvas info. This is mainly necessary for Jest testcases.
-		if (isEmpty(this.getLayoutInfo())) {
-			this.setDefaultLayout();
-		}
 		const canvasInfo = Object.assign({}, inCanvasInfo);
 		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo) });
@@ -1044,7 +1077,7 @@ export default class ObjectModel {
 		const pipelineFlow =
 			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow);
 		}
 
@@ -1073,10 +1106,6 @@ export default class ObjectModel {
 
 	isPrimaryPipelineEmpty() {
 		return this.getAPIPipeline(this.getPrimaryPipelineId()).isEmpty();
-	}
-
-	addPipeline(pipeline) {
-		this.store.dispatch({ type: "ADD_PIPELINE", data: pipeline });
 	}
 
 	deletePipeline(pipelineId) {
@@ -1166,14 +1195,10 @@ export default class ObjectModel {
 	}
 
 	findNode(nodeId, pipelineId, pipelines) {
-		const targetPipeline = pipelines.find((p) => {
-			return (p.id === pipelineId);
-		});
+		const targetPipeline = pipelines.find((p) => p.id === pipelineId);
 
 		if (targetPipeline && targetPipeline.nodes) {
-			return targetPipeline.nodes.find((node) => {
-				return (node.id === nodeId);
-			});
+			return targetPipeline.nodes.find((node) => node.id === nodeId);
 		}
 		return null;
 	}
@@ -1242,40 +1267,43 @@ export default class ObjectModel {
 	// Returns true if the pipelineId passed in is not the primary pipeline
 	// breadcrumb. In other words, we are showing a sub-flow full screen.
 	isInSubFlowBreadcrumb(pipelineId) {
-		const idx = this.getBreadcrumbs().findIndex((crumb) => {
-			return crumb.pipelineId === pipelineId;
-		});
+		const idx = this.getBreadcrumbs().findIndex((crumb) => crumb.pipelineId === pipelineId);
 		return (idx > 0); // Return true if index is not the parent
 	}
 
+	// ---------------------------------------------------------------------------
+	// Config methods
+	// ---------------------------------------------------------------------------
+	setCanvasConfig(config) {
+		const oldConfig = this.getCanvasConfig();
+		const newConfig = ConfigUtils.mergeCanvasConfigs(oldConfig, config);
+
+		if (!ConfigUtils.compareCanvasConfigs(oldConfig, newConfig)) {
+			const newPipelines = this.prepareNodes(
+				this.getCanvasInfo().pipelines, newConfig.enableNodeLayout, newConfig.enableCanvasLayout);
+
+			this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
+				canvasConfig: newConfig,
+				pipelines: newPipelines
+			} });
+		}
+	}
+
+	setToolbarConfig(config) {
+		this.store.dispatch({ type: "SET_TOOLBAR_CONFIG", data: { toolbarConfig: config } });
+	}
+
+	setNotificationPanelConfig(config) {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_CONFIG", data: { notificationPanelConfig: config } });
+	}
+
+	getCanvasConfig() {
+		return this.store.getCanvasConfig();
+	}
 
 	// ---------------------------------------------------------------------------
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
-
-	setLayoutType(config) {
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(config));
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
-
-		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: layoutInfo,
-			pipelines: newPipelines
-		});
-	}
-
-	setDefaultLayout() {
-		const layoutInfo = LayoutDimensions.getLayout();
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
-
-		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: layoutInfo,
-			pipelines: newPipelines
-		});
-	}
-
-	getLayoutInfo() {
-		return this.store.getLayoutInfo();
-	}
 
 	getNodeLayout() {
 		return this.store.getNodeLayout();
@@ -1284,7 +1312,6 @@ export default class ObjectModel {
 	getCanvasLayout() {
 		return this.store.getCanvasLayout();
 	}
-
 
 	// ---------------------------------------------------------------------------
 	// Notification Messages methods
@@ -1295,31 +1322,67 @@ export default class ObjectModel {
 	}
 
 	setNotificationMessages(messages) {
-		const newMessages = [];
-		messages.forEach((message) => {
-			const newMessageObj = Object.assign({}, message);
-			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
-				newMessageObj.type = "unspecified";
-			}
-			newMessages.push(newMessageObj);
-		});
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: { messages: messages } });
 	}
 
 	getNotificationMessages(messageType) {
 		const notificationMessages = this.store.getNotifications();
 		if (messageType) {
-			return notificationMessages.filter((message) => {
-				return message.type === messageType;
-			});
+			return notificationMessages.filter((message) => message.type === messageType);
 		}
 		return notificationMessages;
 	}
 
 	deleteNotificationMessages(ids) {
-		const filterIds = Array.isArray(ids) ? ids : [ids];
-		const newMessages = this.getNotificationMessages().filter((message) => !filterIds.includes(message.id));
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
+		this.store.dispatch({ type: "DELETE_NOTIFICATION_MESSAGES", data: { ids: ids } });
+	}
+
+	toggleNotificationPanel() {
+		if (this.isNotificationPanelOpen()) {
+			this.closeNotificationPanel();
+		} else {
+			this.openNotificationPanel();
+		}
+	}
+
+	openNotificationPanel() {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_OPEN_STATE", data: { isOpen: true } });
+	}
+
+	closeNotificationPanel() {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_OPEN_STATE", data: { isOpen: false } });
+	}
+
+	isNotificationPanelOpen() {
+		return this.store.isNotificationPanelOpen();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Context menu methods
+	// ---------------------------------------------------------------------------
+
+	openContextMenu(menuDef) {
+		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: menuDef } });
+	}
+
+	closeContextMenu() {
+		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: [] } });
+	}
+
+	isContextMenuDisplayed() {
+		return this.store.isContextMenuDisplayed();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Right flyout methods
+	// ---------------------------------------------------------------------------
+
+	setRightFlyoutConfig(config) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: config } });
+	}
+
+	isRightFlyoutOpen() {
+		return this.store.isRightFlyoutOpen();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1530,9 +1593,8 @@ export default class ObjectModel {
 	// Recursive function to add all connected nodes into the group.
 	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
 		if (connectedNodesIdsGroup.includes(nodeId)) {
-			const nodeLinks = apiPipeline.getLinksContainingId(nodeId).filter((link) => {
-				return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
-			});
+			const nodeLinks = apiPipeline.getLinksContainingId(nodeId)
+				.filter((link) => link.type === NODE_LINK || link.type === ASSOCIATION_LINK);
 
 			for (const link of nodeLinks) {
 				if (nodeIds.includes(link.trgNodeId) && nodeIds.includes(link.srcNodeId)) {
@@ -1632,9 +1694,7 @@ export default class ObjectModel {
 	hasErrorMessage(node) {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === ERROR;
-			}) !== "undefined");
+			return messages.some((msg) => msg.type === ERROR);
 		}
 		return false;
 	}
@@ -1642,9 +1702,7 @@ export default class ObjectModel {
 	hasWarningMessage(node) {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === WARNING;
-			}) !== "undefined");
+			return messages.some((msg) => msg.type === WARNING);
 		}
 		return false;
 	}
@@ -2080,5 +2138,16 @@ export default class ObjectModel {
 		}
 
 		return objects;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Tooltip methods
+	// ---------------------------------------------------------------------------
+	setTooltipDef(tipDef) {
+		this.store.dispatch({ type: "SET_TOOLTIP_DEF", data: { tooltipDef: tipDef } });
+	}
+
+	isTooltipOpen() {
+		return this.store.isTooltipOpen();
 	}
 }

@@ -17,6 +17,7 @@
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
+/* eslint react/sort-comp: "off" */
 
 import React from "react";
 import Isvg from "react-inlinesvg";
@@ -148,8 +149,6 @@ class App extends React.Component {
 			canvasFileChooserVisible2: false,
 			paletteFileChooserVisible: false,
 			paletteFileChooserVisible2: false,
-			canvasDiagram: "",
-			canvasDiagram2: "",
 			selectedCanvasDropdownFile: "",
 			selectedCanvasDropdownFile2: "",
 			selectedPaletteDropdownFile: "",
@@ -389,6 +388,38 @@ class App extends React.Component {
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 		this.locale = "en";
 		this.initLocale();
+
+		// Create the empty canvas div so we don't create a new object on each render
+		// which would cause a refresh.
+		this.emptyCanvasDiv = (
+			<div>
+				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+				<span className="harness-empty-text">
+					<FormattedMessage
+						id={ "canvas.emptyText" }
+						values={{ br: <br /> }}
+					/>
+				</span>
+				<span className="harness-empty-link"
+					onClick={this.handleEmptyCanvasLinkClick}
+				><FormattedMessage id={ "canvas.emptyLink"} /></span>
+			</div>
+		);
+
+		// Create the drop zone canvas div so we don't create a new object on each render
+		// which would cause a refresh.
+		this.dropZoneCanvasDiv = (
+			<div>
+				<div className="dropzone-canvas" />
+				<div className="dropzone-canvas-rect" />
+				<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+			</div>
+		);
+
+		// Create messages here (not in the render) since that would cause
+		// unnecssary renders inside common-canvas and/or common-properties.
+		this.messages = getMessages(this.locale, [HarnessBundles,
+			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
 	}
 
 	componentDidMount() {
@@ -420,7 +451,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile: selectedCanvasDropdownFile,
-				canvasDiagram: "",
 				canvasFileChooserVisible: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
@@ -442,7 +472,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile2: selectedCanvasDropdownFile2,
-				canvasDiagram2: "",
 				canvasFileChooserVisible2: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
@@ -530,6 +559,7 @@ class App extends React.Component {
 			});
 		}
 	}
+
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
@@ -1740,201 +1770,89 @@ class App extends React.Component {
 		this.log("propertyActionHandler() " + actionId);
 	}
 
-	runProgress() {
-		const nodeAnimation =
-			"animation-duration:1000ms; animation-name:wiggle2; " +
-			"animation-iteration-count:infinite; fill: skyblue;";
+	getCommonProperties() {
+		const propertiesConfig = this.getPropertiesConfig();
 
-		const nodeStyle = {
-			body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: "fill: blue" },
-			text: { default: "fill: white" }
+		const callbacks = {
+			controllerHandler: this.propertiesControllerHandler,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog,
+			helpClickHandler: this.helpClickHandler,
+			buttonHandler: this.buttonHandler
 		};
+		if (this.state.propertiesValidationHandler) {
+			callbacks.validationHandler = this.validationHandler;
+		}
 
-		const removeNodeStyle = {
-			body: { default: null, hover: null },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: null },
-			text: { default: null }
-		};
+		const commonProperties = (
+			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties = instance;
+				} }
+				propertiesInfo={this.state.propertiesInfo}
+				propertiesConfig={propertiesConfig}
+				customPanels={[CustomSliderPanel, CustomTogglePanel,
+					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
+					RandomEffectsPanel, CustomSubjectsPanel]}
+				callbacks={callbacks}
+				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				light={this.state.light}
+			/>);
 
-		// Note: The pipelineId uses special characters for testing purposes.
-		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
-
-		const bindingEntryNode = "id8I6RH2V91XW";
-		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
-		const superNode = "nodeIDSuperNodePE";
-		const modelNode = "id125TTEEIK7V";
-		const bindingExitNode = "id5KIRGGJ3FYT";
-
-		const objects1 = [];
-		const objects2 = [];
-		const objects3 = [];
-		const objects4 = [];
-
-		objects1[pipelineId] = [bindingEntryNode];
-		objects2[pipelineId] = [executionNode];
-		objects3[pipelineId] = [superNode];
-		objects4[pipelineId] = [modelNode, bindingExitNode];
-
-		const linkAnimation =
-			"animation-duration:1000ms; animation-name:blink; " +
-			"animation-iteration-count:infinite; animation-direction: alternate";
-
-		const linkStyle = {
-			line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
-		};
-
-		const removeLinkStyle = {
-			line: { default: null, hover: null }
-		};
-
-		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
-		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
-		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
-		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
-
-		const link1 = [];
-		const link2 = [];
-		const link3 = [];
-
-		link1[pipelineId] = [lnk1.id];
-		link2[pipelineId] = [lnk2.id];
-		link3[pipelineId] = [lnk3.id, lnk4.id];
-
-		const that = this;
-
-		that.canvasController.setObjectsStyle(objects1, nodeStyle, true);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link1, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects2, nodeStyle, true);
-		}, 2000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects1, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link1, removeLinkStyle, true);
-		}, 4000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link2, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, nodeStyle, true);
-		}, 6000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects2, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link2, removeLinkStyle, true);
-		}, 8000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects4, nodeStyle, true);
-		}, 10000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, removeLinkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, removeNodeStyle, true);
-		}, 12000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects4, removeNodeStyle, true);
-		}, 14000);
+		return commonProperties;
 	}
 
-	render() {
-		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
-		const breadcrumbs = (<Breadcrumbs
-			canvasController={this.canvasController}
-			breadcrumbsDef={this.state.breadcrumbsDef}
-			currentPipelineId={currentPipelineId}
-		/>);
-		const consoleLabel = "console";
-		const downloadFlowLabel = "Download pipeline flow";
-		const downloadPaletteLabel = "Download palette";
-		const apiLabel = "API";
-		const commonPropertiesModalLabel = "Common Properties Modal";
-		const commonCanvasLabel = "Common Canvas";
+	getCommonProperties2() {
+		const propertiesConfig = this.getPropertiesConfig();
 
-		const navBar = (<header aria-label="Common Canvas Header" role="banner">
-			<div className="harness-app-navbar">
-				<ul className="harness-app-navbar-items">
-					<li className="harness-navbar-li">
-						<span className="harness-title">Common Canvas</span>
-						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
-					</li>
-					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
-						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
-							<Isvg src={listview32} />
-						</a>
-					</li>
-					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
-						<a onClick={this.downloadPipelineFlow.bind(this) } aria-label={downloadFlowLabel}>
-							<Isvg src={download32} />
-						</a>
-					</li>
-					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
-						<a onClick={this.downloadPalette.bind(this) } aria-label={downloadPaletteLabel}>
-							<Isvg src={download32} />
-						</a>
-					</li>
-					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
-						{breadcrumbs}
-					</li>
-					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
-						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
-							<Isvg src={api32} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
-						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
-							<Isvg src={template32} />
-						</a>
-					</li>
-					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
-						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
-							<Isvg src={justify32} />
-						</a>
-					</li>
-				</ul>
-			</div>
-		</header>);
+		const callbacks2 = {
+			controllerHandler: this.propertiesControllerHandler2,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog2,
+			helpClickHandler: this.helpClickHandler
+		};
 
-		let emptyCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
-			emptyCanvasDiv = (
-				<div>
-					<Isvg src={BlankCanvasImage} className="harness-empty-image" />
-					<span className="harness-empty-text">
-						<FormattedMessage
-							id={ "canvas.emptyText" }
-							values={{ br: <br /> }}
-						/>
-					</span>
-					<span className="harness-empty-link"
-						onClick={this.handleEmptyCanvasLinkClick}
-					><FormattedMessage id={ "canvas.emptyLink"} /></span>
-				</div>);
-		}
+		const commonProperties2 = (
+			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties2 = instance;
+				} }
+				propertiesInfo={this.state.propertiesInfo2}
+				propertiesConfig={propertiesConfig}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
+					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
+				callbacks={callbacks2}
+				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
+				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				light={this.state.light}
+			/>);
 
-		let dropZoneCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedDropZoneContent) {
-			dropZoneCanvasDiv = (
-				<div>
-					<div className="dropzone-canvas" />
-					<div className="dropzone-canvas-rect" />
-					<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
-				</div>);
-		}
+		return commonProperties2;
+	}
 
-		let parentClass = "";
-		if (this.state.selectedNodeFormatType === "Vertical") {
-			parentClass = "classic-vertical";
-		}
+	getPropertiesConfig() {
+		return {
+			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
+			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
+			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
+			heading: this.state.heading,
+			schemaValidation: this.state.propertiesSchemaValidation,
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
+		};
+	}
 
-		const commonCanvasConfig = {
+	getCanvasConfig() {
+		const canvasConfig = {
 			enableInteractionType: this.state.selectedInteractionType,
 			enableSnapToGridType: this.state.selectedSnapToGridType,
 			enableSnapToGridX: this.state.enteredSnapToGridX,
@@ -1943,7 +1861,7 @@ class App extends React.Component {
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
-			enableParentClass: parentClass,
+			enableParentClass: this.getParentClass(),
 			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
 			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
 			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
@@ -1968,8 +1886,8 @@ class App extends React.Component {
 			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
 			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
 			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
-			dropZoneCanvasContent: dropZoneCanvasDiv,
-			emptyCanvasContent: emptyCanvasDiv,
+			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
+			emptyCanvasContent: this.state.selectedDisplayCustomizedEmptyCanvasContent ? this.emptyCanvasDiv : null,
 			enableSaveZoom: this.state.selectedSaveZoom,
 			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
 			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
@@ -1977,17 +1895,17 @@ class App extends React.Component {
 			enableCanvasLayout: this.state.selectedCanvasLayout
 		};
 
-		const decorationActionHandler = this.decorationActionHandler;
-		const editActionHandler = this.editActionHandler;
+		return canvasConfig;
+	}
 
-		const commonCanvasConfig2 = {
+	getCanvasConfig2() {
+		const canvasConfig2 = {
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
-			enableParentClass: parentClass,
+			enableParentClass: this.getParentClass(),
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
-			emptyCanvasContent: emptyCanvasDiv,
 			selectedMoveNodesOnSupernodeResize: true,
 			tipConfig: this.state.selectedTipConfig,
 			schemaValidation: this.state.selectedSchemaValidation,
@@ -1995,6 +1913,18 @@ class App extends React.Component {
 			enableNarrowPalette: this.state.selectedNarrowPalette
 		};
 
+		return canvasConfig2;
+	}
+
+	getParentClass() {
+		let parentClass = "";
+		if (this.state.selectedNodeFormatType === "Vertical") {
+			parentClass = "classic-vertical";
+		}
+		return parentClass;
+	}
+
+	getToolbarConfig() {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
 			toolbarConfig = null;
@@ -2115,6 +2045,178 @@ class App extends React.Component {
 			};
 		}
 
+		return toolbarConfig;
+	}
+
+	runProgress() {
+		const nodeAnimation =
+			"animation-duration:1000ms; animation-name:wiggle2; " +
+			"animation-iteration-count:infinite; fill: skyblue;";
+
+		const nodeStyle = {
+			body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
+			// selection_outline: { default: animation },
+			image: { default: null },
+			label: { default: "fill: blue" },
+			text: { default: "fill: white" }
+		};
+
+		const removeNodeStyle = {
+			body: { default: null, hover: null },
+			// selection_outline: { default: animation },
+			image: { default: null },
+			label: { default: null },
+			text: { default: null }
+		};
+
+		// Note: The pipelineId uses special characters for testing purposes.
+		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
+
+		const bindingEntryNode = "id8I6RH2V91XW";
+		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
+		const superNode = "nodeIDSuperNodePE";
+		const modelNode = "id125TTEEIK7V";
+		const bindingExitNode = "id5KIRGGJ3FYT";
+
+		const objects1 = [];
+		const objects2 = [];
+		const objects3 = [];
+		const objects4 = [];
+
+		objects1[pipelineId] = [bindingEntryNode];
+		objects2[pipelineId] = [executionNode];
+		objects3[pipelineId] = [superNode];
+		objects4[pipelineId] = [modelNode, bindingExitNode];
+
+		const linkAnimation =
+			"animation-duration:1000ms; animation-name:blink; " +
+			"animation-iteration-count:infinite; animation-direction: alternate";
+
+		const linkStyle = {
+			line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
+		};
+
+		const removeLinkStyle = {
+			line: { default: null, hover: null }
+		};
+
+		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
+		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
+		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
+		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
+
+		const link1 = [];
+		const link2 = [];
+		const link3 = [];
+
+		link1[pipelineId] = [lnk1.id];
+		link2[pipelineId] = [lnk2.id];
+		link3[pipelineId] = [lnk3.id, lnk4.id];
+
+		const that = this;
+
+		that.canvasController.setObjectsStyle(objects1, nodeStyle, true);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link1, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects2, nodeStyle, true);
+		}, 2000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects1, removeNodeStyle, true);
+			that.canvasController.setLinksStyle(link1, removeLinkStyle, true);
+		}, 4000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link2, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects3, nodeStyle, true);
+		}, 6000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects2, removeNodeStyle, true);
+			that.canvasController.setLinksStyle(link2, removeLinkStyle, true);
+		}, 8000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link3, linkStyle, true);
+			that.canvasController.setObjectsStyle(objects4, nodeStyle, true);
+		}, 10000);
+
+		setTimeout(() => {
+			that.canvasController.setLinksStyle(link3, removeLinkStyle, true);
+			that.canvasController.setObjectsStyle(objects3, removeNodeStyle, true);
+		}, 12000);
+
+		setTimeout(() => {
+			that.canvasController.setObjectsStyle(objects4, removeNodeStyle, true);
+		}, 14000);
+	}
+
+	render() {
+		// window.console.log("++++++++++++++++++++");
+		// window.console.log("Render Test Harness");
+
+		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
+		const breadcrumbs = (<Breadcrumbs
+			canvasController={this.canvasController}
+			breadcrumbsDef={this.state.breadcrumbsDef}
+			currentPipelineId={currentPipelineId}
+		/>);
+		const consoleLabel = "console";
+		const downloadFlowLabel = "Download pipeline flow";
+		const downloadPaletteLabel = "Download palette";
+		const apiLabel = "API";
+		const commonPropertiesModalLabel = "Common Properties Modal";
+		const commonCanvasLabel = "Common Canvas";
+
+		const navBar = (<header aria-label="Common Canvas Header" role="banner">
+			<div className="harness-app-navbar">
+				<ul className="harness-app-navbar-items">
+					<li className="harness-navbar-li">
+						<span className="harness-title">Common Canvas</span>
+						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
+					</li>
+					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
+						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
+							<Isvg src={listview32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
+						<a onClick={this.downloadPipelineFlow.bind(this) } aria-label={downloadFlowLabel}>
+							<Isvg src={download32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
+						<a onClick={this.downloadPalette.bind(this) } aria-label={downloadPaletteLabel}>
+							<Isvg src={download32} />
+						</a>
+					</li>
+					<li className="harness-navbar-li harness-pipeline-breadcrumbs-container">
+						{breadcrumbs}
+					</li>
+					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
+						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
+							<Isvg src={api32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
+						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
+							<Isvg src={template32} />
+						</a>
+					</li>
+					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
+						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
+							<Isvg src={justify32} />
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>);
+
+		const commonCanvasConfig = this.getCanvasConfig();
+		const commonCanvasConfig2 = this.getCanvasConfig2();
+		const toolbarConfig = this.getToolbarConfig();
+
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
@@ -2133,84 +2235,24 @@ class App extends React.Component {
 			}
 		};
 
-		const propertiesConfig = {
-			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
-			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur,
-			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			heading: this.state.heading,
-			schemaValidation: this.state.propertiesSchemaValidation,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
-			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
-			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
-			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
-		};
-		const callbacks = {
-			controllerHandler: this.propertiesControllerHandler,
-			propertyListener: this.propertyListener,
-			actionHandler: this.propertyActionHandler,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog,
-			helpClickHandler: this.helpClickHandler,
-			buttonHandler: this.buttonHandler
-		};
-		if (this.state.propertiesValidationHandler) {
-			callbacks.validationHandler = this.validationHandler;
-		}
-		const callbacks2 = {
-			controllerHandler: this.propertiesControllerHandler2,
-			propertyListener: this.propertyListener,
-			actionHandler: this.propertyActionHandler,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog2,
-			helpClickHandler: this.helpClickHandler
-		};
-		const commonProperties = (
-			<CommonProperties
-				ref={(instance) => {
-					this.CommonProperties = instance;
-				} }
-				propertiesInfo={this.state.propertiesInfo}
-				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel,
-					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
-					RandomEffectsPanel, CustomSubjectsPanel]}
-				callbacks={callbacks}
-				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
-				light={this.state.light}
-			/>);
-
-		const commonProperties2 = (
-			<CommonProperties
-				ref={(instance) => {
-					this.CommonProperties2 = instance;
-				} }
-				propertiesInfo={this.state.propertiesInfo2}
-				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
-					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
-				callbacks={callbacks2}
-				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
-				light={this.state.light}
-			/>);
-
 		let commonPropertiesContainer = null;
 		let rightFlyoutContent = null;
 		let rightFlyoutContent2 = null;
 		let showRightFlyoutProperties = false;
 		let showRightFlyoutProperties2 = false;
 		if (this.state.propertiesContainerType === PROPERTIES_FLYOUT) {
-			rightFlyoutContent = commonProperties;
-			rightFlyoutContent2 = commonProperties2;
 			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
 			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			if (showRightFlyoutProperties) {
+				rightFlyoutContent = this.getCommonProperties();
+			}
+			if (showRightFlyoutProperties2) {
+				rightFlyoutContent2 = this.getCommonProperties2();
+			}
 		} else {
 			commonPropertiesContainer = (
 				<div className="harness-common-properties">
-					{commonProperties}
+					{this.getCommonProperties()}
 				</div>);
 		}
 
@@ -2219,9 +2261,9 @@ class App extends React.Component {
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
 				beforeEditActionHandler= {this.beforeEditActionHandler}
-				editActionHandler= {editActionHandler}
+				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {decorationActionHandler}
+				decorationActionHandler= {this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
@@ -2447,9 +2489,7 @@ class App extends React.Component {
 		</div>);
 
 		return (
-			<IntlProvider locale={this.locale} defaultLocale="en" messages={getMessages(this.locale, [HarnessBundles,
-				CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles])}
-			>
+			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
 				<div>{mainView}</div>
 			</IntlProvider>
 		);

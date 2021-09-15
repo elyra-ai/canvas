@@ -16,9 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import Icon from "./../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
+import Logger from "../logging/canvas-logger.js";
 import { DEFAULT_NOTIFICATION_HEADER, NOTIFICATION_ICON_CLASS } from "./../common-canvas/constants/canvas-constants.js";
 
 
@@ -33,6 +35,7 @@ class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+		this.logger = new Logger("NotificationPanel");
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
 		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
 	}
@@ -111,13 +114,14 @@ class NotificationPanel extends React.Component {
 	}
 
 	handleNotificationPanelClickOutside(e) {
-		if (!this.props.notificationConfig.keepOpen) {
+		if (this.props.isNotificationOpen &&
+				this.props.notificationConfig &&
+				!this.props.notificationConfig.keepOpen) {
 			const notificationIcon = document.getElementsByClassName(NOTIFICATION_ICON_CLASS)[0];
 			const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
 			const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
 
-			if (this.props.isNotificationOpen &&
-					notificationIcon && !notificationIcon.contains(e.target) &&
+			if (notificationIcon && !notificationIcon.contains(e.target) &&
 					notificationHeader && !notificationHeader.contains(e.target) &&
 					notificationMessages && !notificationMessages.contains(e.target)) {
 				this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
@@ -148,15 +152,23 @@ class NotificationPanel extends React.Component {
 	}
 
 	render() {
+		// window.console.log("Render Notification Panel");
+
+		if (!this.props.notificationConfig) {
+			return null;
+		}
+
 		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
 		const notificationHeader = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
 			? this.props.notificationConfig.notificationHeader
 			: DEFAULT_NOTIFICATION_HEADER;
+
 		const notificationSubtitle = this.props.notificationConfig && this.props.notificationConfig.notificationSubtitle
 			? (<div className="notification-panel-subtitle">
 				{this.props.notificationConfig.notificationSubtitle}
 			</div>)
 			: null;
+
 		const notificationPanelMessages = this.props.messages.length > 0
 			? this.getNotifications()
 			: (<div className="notification-panel-empty-message-container">
@@ -164,6 +176,7 @@ class NotificationPanel extends React.Component {
 					{this.props.notificationConfig && this.props.notificationConfig.emptyMessage ? this.props.notificationConfig.emptyMessage : null}
 				</div>
 			</div>);
+
 		const clearAll = this.props.notificationConfig && this.props.notificationConfig.clearAllMessage
 			? (<div className="notification-panel-clear-all-container">
 				<Button
@@ -199,6 +212,10 @@ class NotificationPanel extends React.Component {
 }
 
 NotificationPanel.propTypes = {
+	// Provided by CommonCanvas
+	canvasController: PropTypes.object,
+
+	// Provided by Redux
 	notificationConfig: PropTypes.shape({
 		notificationHeader: PropTypes.oneOfType([
 			PropTypes.string,
@@ -220,8 +237,13 @@ NotificationPanel.propTypes = {
 		keepOpen: PropTypes.bool
 	}),
 	isNotificationOpen: PropTypes.bool,
-	messages: PropTypes.array,
-	canvasController: PropTypes.object
+	messages: PropTypes.array
 };
 
-export default NotificationPanel;
+const mapStateToProps = (state, ownProps) => ({
+	notificationConfig: state.notificationpanel.config,
+	isNotificationOpen: state.notificationpanel.isOpen,
+	messages: state.notifications
+});
+
+export default connect(mapStateToProps)(NotificationPanel);

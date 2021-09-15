@@ -37,7 +37,7 @@ $palette-border-color: $ui-03;
 
 .palette-flyout-div-open {
 	.palette-flyout-content {
-		width: 255px;
+		width: 256px;
 		transition: 0.2s ease-in-out;
 	}
 }
@@ -45,6 +45,11 @@ $palette-border-color: $ui-03;
 // Center search icon when narrow palette
 .palette-flyout-div-closed {
 	transition: 0.2s ease-in-out;
+	width: 0;
+}
+
+.palette-flyout-div-narrow {
+	width: 72px;
 }
 
 .palette-flyout-content {
@@ -282,7 +287,7 @@ $palette-border-color: $ui-03;
 		// Position the x icon button to the right (when it appears after the user
 		// enters text) so that it lines up with the carets in the category divs
 		// (although with the 'immediate' search feature the category caret's and
-		// the x icon are not visible at the same time).  
+		// the x icon are not visible at the same time).
 		// Getting rid of ::before allows the right side of the highlight rectangle
 		// on hover to appear.
 		button {

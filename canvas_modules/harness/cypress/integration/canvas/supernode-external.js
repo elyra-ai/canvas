@@ -85,9 +85,9 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickEllipsisIconOfSupernode("Supernode");
 		cy.clickOptionFromContextMenu("Convert external to local");
 
-		// The flow has 7 pipelines but now after converion to local only 2 of them
+		// The flow has 7 pipelines but now after conversion to local only 2 of them
 		// are external (which are the two that are in a different pipeline flow)
-		// in the original externalNestedCanvas was loaded.
+		// in the original externalNestedCanvas that was loaded.
 		cy.verifyNumberOfPipelines(7);
 		cy.verifyNumberOfExternalPipelines(2);
 
@@ -512,10 +512,10 @@ describe("Test copy and paste with external pipeline flows", function() {
 
 		testForExternalMainCanvasExpandedAfterConvertToLocal();
 
-		// (Need to click here to get the Ellipsis icon to be clickable in the
+		// Need to click here to get the Ellipsis icon to be clickable in the
 		// next step. I'm not sure why this is needed when the ellipsis icon
-		// work perfectly OK in prvious steps.
-		cy.getNodeWithLabel("Original").click("topLeft");
+		// work perfectly OK in previous steps!?
+		cy.getNodeWithLabel("Original").click("top");
 
 		// Convert Original supernode to Local
 		cy.hoverOverNode("Original");

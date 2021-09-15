@@ -4,16 +4,6 @@
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
-  "parameters": {
-    "props": [
-      {
-        "field1": "flow-param-val1"
-      },
-      {
-        "field2": "flow-param-val2"
-      }
-    ]
-  },
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
@@ -442,6 +432,16 @@
     }
   ],
   "schemas": [],
+	"parameters": {
+    "props": [
+      {
+        "field1": "flow-param-val1"
+      },
+      {
+        "field2": "flow-param-val2"
+      }
+    ]
+  },
   "runtimes": [
     {
       "id": "test_runtime",

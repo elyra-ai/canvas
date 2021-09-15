@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,11 @@
 
 export default (state = [], action) => {
 	switch (action.type) {
-	case "CLEAR_NOTIFICATION_MESSAGES":
-		return [];
-
-	case "SET_NOTIFICATION_MESSAGES": {
-		action.data.messages.forEach((msg) => convertMsgType(msg));
-		return action.data.messages;
-	}
-
-	case "DELETE_NOTIFICATION_MESSAGES": {
-		const filterIds = Array.isArray(action.data.ids) ? action.data.ids : [action.data.ids];
-		const messages = state.filter((message) => !filterIds.includes(message.id));
-		return messages;
+	case "SET_CANVAS_CONFIG_INFO": {
+		return action.data.canvasConfig;
 	}
 
 	default:
 		return state;
 	}
 };
-
-function convertMsgType(msg) {
-	if (msg.type === null || msg.type === "" || typeof msg.type === "undefined") {
-		msg.type = "unspecified";
-	}
-	return msg;
-}

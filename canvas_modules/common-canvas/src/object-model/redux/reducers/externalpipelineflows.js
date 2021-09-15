@@ -23,7 +23,8 @@
 export default (state = [], action) => {
 	switch (action.type) {
 	case "ADD_EXTERNAL_PIPELINE_FLOW": {
-		return [...state, action.newPipelineFlow];
+		const newPipelineFlow = Object.assign({}, action.newPipelineFlow);
+		return [...state, newPipelineFlow];
 	}
 
 	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
@@ -40,8 +41,9 @@ export default (state = [], action) => {
 		return newset;
 	}
 
-	case "ADD_SUPERNODES":
+	case "ADD_SUPERNODES": {
 		return [...state, ...action.data.extPipelineFlowsToAdd];
+	}
 
 	case "DELETE_SUPERNODES": {
 		return state.filter((epf) => {
