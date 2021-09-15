@@ -1112,19 +1112,27 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the current drag objects array has a single node which
-	// is 'insertable' into a data link between nodes on the canvas.
+	// is 'insertable' into a data link between nodes on the canvas.  Returns
+	// false otherwise, including if a single comment is being dragged.
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
+			this.isNode(this.dragObjects[0]) &&
 			this.isNonBindingNode(this.dragObjects[0]) &&
 			!this.nodeUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
 
+	// Returns true if the current drag objects array has a single node which
+	// is 'attachable' to any detached link on the canvas. Returns false otherwise,
+	// including if a single comment is being dragged.
 	isExistingNodeAttachableToDetachedLinks() {
 		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-			this.dragObjects.length === 1);
+			this.dragObjects.length === 1 &&
+			this.isNode(this.dragObjects[0]));
 	}
 
+	// Returns true if the current node template being dragged from the palette
+	// is 'attachable' to any detached link on the canvas. Returns false otherwise.
 	isNodeTemplateAttachableToDetachedLinks(nodeTemplate) {
 		return this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE;
 	}
@@ -1180,6 +1188,12 @@ export default class SVGCanvasRenderer {
 	getLink(linkId) {
 		const link = this.activePipeline.links.find((l) => l.id === linkId);
 		return (typeof link === "undefined") ? null : link;
+	}
+
+	// Returns truthy if the object passed in is a node (and not a comment).
+	// Comments don't have a type property.
+	isNode(obj) {
+		return obj.type;
 	}
 
 	getNode(nodeId) {
@@ -2203,6 +2217,7 @@ export default class SVGCanvasRenderer {
 					} else {
 						dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 					}
+
 					if (this.isExistingNodeInsertableIntoLink() &&
 							this.dragOverLink) {
 						this.canvasController.editActionHandler({
@@ -3622,8 +3637,11 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (port) => this.getPortArrowPathTransform(port));
 	}
 
-	isNonBindingNode(node) {
-		return (node.type !== "binding");
+	// Returns true if the object passed in is a non-binding node. There's a
+	// chance the object might be a comment so we make sure the object is a
+	// node before checking the type.
+	isNonBindingNode(obj) {
+		return (this.isNode(obj) && obj.type !== "binding");
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
