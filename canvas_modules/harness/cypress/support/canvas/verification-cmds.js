@@ -1132,6 +1132,27 @@ Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
 		.should("not.exist");
 });
 
+Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+		.then((tip) => {
+			// Verify tip is displayed on canvas
+			cy.wrap(tip).should("have.length", 1);
+
+			// Verify tip label
+			cy.wrap(tip)
+				.find(".tip-decoration")
+				.should("have.text", tipText);
+
+			// Verify node tip class
+			cy.verifyTipClass(tip, "definition-tooltip");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForDecoration", () => {
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyNotificationIconType", (type) => {
 	if (type) {
 		cy.get(".notificationCounterIcon").should("have.class", type);

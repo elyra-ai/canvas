@@ -54,7 +54,7 @@ Cypress.Commands.add("getLinkUsingId", (linkId) => {
 		});
 });
 
-Cypress.Commands.add("hoverOverLabelForLinkDec", (linkLabel, decId) => {
+Cypress.Commands.add("hoverOverLinkDecoration", (linkLabel, decId) => {
 	cy.getLinkWithLabel(linkLabel)
 		.find("[data-id='link_dec_group_0_" + decId + "']")
 		.trigger("mouseenter");

@@ -230,7 +230,7 @@ Cypress.Commands.add("hoverOverOutputPortOfNode", (nodeName, outputPortId) => {
 		});
 });
 
-Cypress.Commands.add("hoverOverLabelForNodeDec", (nodeName, decId) => {
+Cypress.Commands.add("hoverOverNodeDecoration", (nodeName, decId) => {
 	cy.getNodeWithLabel(nodeName)
 		.find("[data-id='node_dec_group_0_" + decId + "']")
 		.trigger("mouseenter");
