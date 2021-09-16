@@ -126,6 +126,7 @@ _defineConstant("OUTPUT_PORT", "outputPort");
 _defineConstant("TIP_PALETTE", "Palette");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
+_defineConstant("TIP_DECORATIONS", "Decorations");
 _defineConstant("TIP_LINKS", "Links");
 
 _defineConstant("NOTIFICATION_MESSAGE_TYPE", {

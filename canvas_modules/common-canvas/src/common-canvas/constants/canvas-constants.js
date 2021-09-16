@@ -65,7 +65,6 @@ _defineConstant("PALETTE_LAYOUT_MODAL", "Modal");
 _defineConstant("TOOLBAR_LAYOUT_NONE", "None");
 _defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
 
-
 // Values for enableAssocLinkType config parameter
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
@@ -100,6 +99,7 @@ _defineConstant("COMMENT_LINK", "commentLink");
 
 _defineConstant("TIP_TYPE_NODE", "tipTypeNode");
 _defineConstant("TIP_TYPE_PORT", "tipTypePort");
+_defineConstant("TIP_TYPE_DEC", "tipTypeDec");
 _defineConstant("TIP_TYPE_LINK", "tipTypeLink");
 _defineConstant("TIP_TYPE_PALETTE_ITEM", "tipTypePaletteItem");
 _defineConstant("TIP_TYPE_PALETTE_CATEGORY", "tipTypePaletteCategory");

@@ -1585,6 +1585,10 @@ export default class CanvasController {
 					data.node = tipConfig.node;
 					data.port = tipConfig.port;
 					break;
+				case constants.TIP_TYPE_DEC:
+					data.pipelineId = tipConfig.pipelineId;
+					data.decoration = tipConfig.decoration;
+					break;
 				case constants.TIP_TYPE_LINK:
 					data.pipelineId = tipConfig.pipelineId;
 					data.link = tipConfig.link;
@@ -1629,6 +1633,8 @@ export default class CanvasController {
 			return canvasConfig.tipConfig.nodes;
 		case constants.TIP_TYPE_PORT:
 			return canvasConfig.tipConfig.ports;
+		case constants.TIP_TYPE_DEC:
+			return canvasConfig.tipConfig.decorations;
 		case constants.TIP_TYPE_LINK:
 			return canvasConfig.tipConfig.links;
 		default:

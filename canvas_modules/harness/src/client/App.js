@@ -180,6 +180,7 @@ class App extends React.Component {
 				"palette": true,
 				"nodes": true,
 				"ports": true,
+				"decorations": true,
 				"links": true
 			},
 			selectedRightFlyoutUnderToolbar: false,

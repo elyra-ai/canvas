@@ -30,7 +30,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK,
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE }
@@ -3179,7 +3179,8 @@ export default class SVGCanvasRenderer {
 		const newDecGroups = enter
 			.append("g")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
-			.attr("class", decGrpClassName);
+			.attr("class", decGrpClassName)
+			.call(this.attachDecGroupListeners.bind(this));
 
 		return newDecGroups;
 	}
@@ -3292,6 +3293,25 @@ export default class SVGCanvasRenderer {
 					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
 					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, dec);
 				}
+			});
+	}
+
+	attachDecGroupListeners(decGrps) {
+		decGrps
+			.on("mouseenter", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC)) {
+					this.canvasController.closeTip(); // Ensure any existing tip is removed
+					this.canvasController.openTip({
+						id: this.getId("dec_tip", dec.id),
+						type: TIP_TYPE_DEC,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						decoration: dec
+					});
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				this.canvasController.closeTip();
 			});
 	}
 

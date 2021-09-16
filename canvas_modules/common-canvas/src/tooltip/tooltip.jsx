@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /*
-	This code is a modified version from portal-common-api for the common-canvas toolbar
+	This code is a modified version from portal-common-api for the Elyra canvas tooltips
 */
 
 import React from "react";

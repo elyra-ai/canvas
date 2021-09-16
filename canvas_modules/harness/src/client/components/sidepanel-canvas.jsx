@@ -65,6 +65,7 @@ import {
 	TIP_PALETTE,
 	TIP_NODES,
 	TIP_PORTS,
+	TIP_DECORATIONS,
 	TIP_LINKS,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP,
@@ -258,6 +259,9 @@ export default class SidePanelForms extends React.Component {
 			break;
 		case "tip_ports":
 			tipConf.ports = checked;
+			break;
+		case "tip_decorations":
+			tipConf.decorations = checked;
 			break;
 		case "tip_links":
 			tipConf.links = checked;
@@ -1130,6 +1134,12 @@ export default class SidePanelForms extends React.Component {
 					labelText={TIP_PORTS}
 					onChange={this.tipConfigChange}
 					checked={this.props.getStateValue("selectedTipConfig").ports}
+				/>
+				<Checkbox
+					id="tip_decorations"
+					labelText={TIP_DECORATIONS}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").decorations}
 				/>
 				<Checkbox
 					id="tip_links"
