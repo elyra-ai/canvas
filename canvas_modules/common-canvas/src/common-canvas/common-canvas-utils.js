@@ -18,7 +18,7 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
-import get from "lodash/get";
+import { get } from "lodash";
 import { ASSOCIATION_LINK, NODE_LINK, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 

@@ -24,17 +24,6 @@ $textinput-bottom-padding: 5px;
 		margin-right: 0;
 		margin-bottom: 0;
 	}
-
-	&.error {
-		input:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-01;
-		}
-	}
-	&.warning {
-		input:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-03;
-		}
-	}
 	input {
 		min-width: unset;
 	}
@@ -54,6 +43,16 @@ $textinput-bottom-padding: 5px;
 				border-top: 0;
 				border-right: 0;
 				border-left: 0;
+			}
+		}
+		&.error {
+			input:not([disabled]) {
+				box-shadow: 0 2px 0 0 $support-01;
+			}
+		}
+		&.warning {
+			input:not([disabled]) {
+				box-shadow: 0 2px 0 0 $support-03;
 			}
 		}
 	}

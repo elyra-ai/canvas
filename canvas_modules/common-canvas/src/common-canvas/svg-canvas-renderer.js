@@ -30,7 +30,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
-	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK,
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE }
@@ -333,12 +333,9 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		if (!this.canvasController.isTipOpening() && // No need to render if opening
-				!this.canvasController.isTipClosing()) { // or closing a tip
-			this.superRenderers.forEach((superRenderer) => {
-				superRenderer.setCanvasInfoRenderer(canvasInfo);
-			});
-		}
+		this.superRenderers.forEach((superRenderer) => {
+			superRenderer.setCanvasInfoRenderer(canvasInfo);
+		});
 
 		this.logger.logEndTimer("setCanvasInfoRenderer");
 	}
@@ -761,8 +758,8 @@ export default class SVGCanvasRenderer {
 		const ghost = this.getGhostDimensions();
 		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
 		node.layout = this.canvasController.getObjectModel().getNodeLayout();
-		node.width = ghost.width;
-		node.height = ghost.height;
+		node.width = node.is_expanded ? node.expanded_width : ghost.width;
+		node.height = node.is_expanded ? node.expanded_height : ghost.height;
 
 		const nodeImage = this.getNodeImage(node);
 		const nodeImageType = this.getImageType(nodeImage);
@@ -796,8 +793,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-ghost-node")
 			.attr("x", 0)
 			.attr("y", 0)
-			.attr("width", ghost.width)
-			.attr("height", ghost.height);
+			.attr("width", node.width)
+			.attr("height", node.height);
 
 		ghostGrp
 			.append(nodeImageType)
@@ -1115,19 +1112,27 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the current drag objects array has a single node which
-	// is 'insertable' into a data link between nodes on the canvas.
+	// is 'insertable' into a data link between nodes on the canvas.  Returns
+	// false otherwise, including if a single comment is being dragged.
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
+			this.isNode(this.dragObjects[0]) &&
 			this.isNonBindingNode(this.dragObjects[0]) &&
 			!this.nodeUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
 
+	// Returns true if the current drag objects array has a single node which
+	// is 'attachable' to any detached link on the canvas. Returns false otherwise,
+	// including if a single comment is being dragged.
 	isExistingNodeAttachableToDetachedLinks() {
 		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-			this.dragObjects.length === 1);
+			this.dragObjects.length === 1 &&
+			this.isNode(this.dragObjects[0]));
 	}
 
+	// Returns true if the current node template being dragged from the palette
+	// is 'attachable' to any detached link on the canvas. Returns false otherwise.
 	isNodeTemplateAttachableToDetachedLinks(nodeTemplate) {
 		return this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE;
 	}
@@ -1183,6 +1188,12 @@ export default class SVGCanvasRenderer {
 	getLink(linkId) {
 		const link = this.activePipeline.links.find((l) => l.id === linkId);
 		return (typeof link === "undefined") ? null : link;
+	}
+
+	// Returns truthy if the object passed in is a node (and not a comment).
+	// Comments don't have a type property.
+	isNode(obj) {
+		return obj.type;
 	}
 
 	getNode(nodeId) {
@@ -2206,6 +2217,7 @@ export default class SVGCanvasRenderer {
 					} else {
 						dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 					}
+
 					if (this.isExistingNodeInsertableIntoLink() &&
 							this.dragOverLink) {
 						this.canvasController.editActionHandler({
@@ -2238,7 +2250,7 @@ export default class SVGCanvasRenderer {
 				}
 			}
 
-			// Switch of any drag highlighting
+			// Switch off any drag highlighting
 			this.unsetNodeTranslucentState();
 			this.unsetInsertNodeIntoLinkHighlighting();
 			this.unsetDetachedLinkHighlighting();
@@ -2334,11 +2346,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns the snap-to-grid position of the object positioned at objPos.x
-	// and objPos.y. The grid that is snapped to is defined by this.snapToGridX
-	// and this.snapToGridY.
+	// and objPos.y. The grid that is snapped to is defined by this.snapToGridXPx
+	// and this.snapToGridYPx values which are pixel values.
 	snapToGridObject(objPos) {
-		const stgPosX = CanvasUtils.snapToGrid(objPos.x, this.canvasLayout.snapToGridX);
-		const stgPosY = CanvasUtils.snapToGrid(objPos.y, this.canvasLayout.snapToGridY);
+		const stgPosX = CanvasUtils.snapToGrid(objPos.x, this.canvasLayout.snapToGridXPx);
+		const stgPosY = CanvasUtils.snapToGrid(objPos.y, this.canvasLayout.snapToGridYPx);
 
 		return { x: stgPosX, y: stgPosY };
 	}
@@ -2356,7 +2368,7 @@ export default class SVGCanvasRenderer {
 		this.setPortPositionsAllNodes();
 
 		// For any of these activities we don't need to do anything to the nodes.
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.commentSizing) {
+		if (this.commentSizing) {
 			this.logger.logEndTimer("displayNodes " + this.getFlags());
 			return;
 
@@ -3167,7 +3179,8 @@ export default class SVGCanvasRenderer {
 		const newDecGroups = enter
 			.append("g")
 			.attr("data-id", (dec) => this.getId(`${objType}_dec_group`, dec.id)) // Used in tests
-			.attr("class", decGrpClassName);
+			.attr("class", decGrpClassName)
+			.call(this.attachDecGroupListeners.bind(this));
 
 		return newDecGroups;
 	}
@@ -3280,6 +3293,25 @@ export default class SVGCanvasRenderer {
 					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
 					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, dec);
 				}
+			});
+	}
+
+	attachDecGroupListeners(decGrps) {
+		decGrps
+			.on("mouseenter", (d3Event, dec) => {
+				if (this.canOpenTip(TIP_TYPE_DEC)) {
+					this.canvasController.closeTip(); // Ensure any existing tip is removed
+					this.canvasController.openTip({
+						id: this.getId("dec_tip", dec.id),
+						type: TIP_TYPE_DEC,
+						targetObj: d3Event.currentTarget,
+						pipelineId: this.activePipeline.id,
+						decoration: dec
+					});
+				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				this.canvasController.closeTip();
 			});
 	}
 
@@ -3625,8 +3657,11 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (port) => this.getPortArrowPathTransform(port));
 	}
 
-	isNonBindingNode(node) {
-		return (node.type !== "binding");
+	// Returns true if the object passed in is a non-binding node. There's a
+	// chance the object might be a comment so we make sure the object is a
+	// node before checking the type.
+	isNonBindingNode(obj) {
+		return (this.isNode(obj) && obj.type !== "binding");
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
@@ -4866,7 +4901,7 @@ export default class SVGCanvasRenderer {
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing() || this.nodeSizing) {
+		if (this.nodeSizing) {
 			this.logger.logEndTimer("displayComments " + this.getFlags());
 			return;
 
@@ -5597,10 +5632,10 @@ export default class SVGCanvasRenderer {
 			this.resizeObjWidth += incrementWidth;
 			this.resizeObjHeight += incrementHeight;
 
-			xPos = CanvasUtils.snapToGrid(this.resizeObjXPos, this.canvasLayout.snapToGridX);
-			yPos = CanvasUtils.snapToGrid(this.resizeObjYPos, this.canvasLayout.snapToGridY);
-			width = CanvasUtils.snapToGrid(this.resizeObjWidth, this.canvasLayout.snapToGridX);
-			height = CanvasUtils.snapToGrid(this.resizeObjHeight, this.canvasLayout.snapToGridY);
+			xPos = CanvasUtils.snapToGrid(this.resizeObjXPos, this.canvasLayout.snapToGridXPx);
+			yPos = CanvasUtils.snapToGrid(this.resizeObjYPos, this.canvasLayout.snapToGridYPx);
+			width = CanvasUtils.snapToGrid(this.resizeObjWidth, this.canvasLayout.snapToGridXPx);
+			height = CanvasUtils.snapToGrid(this.resizeObjHeight, this.canvasLayout.snapToGridYPx);
 
 		} else {
 			xPos = canvasObj.x_pos + incrementX;
@@ -5637,10 +5672,10 @@ export default class SVGCanvasRenderer {
 	endNodeSizing() {
 		if (this.config.enableSnapToGridType === "After") {
 			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
-			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridX);
-			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridY);
-			sizedNode.width = CanvasUtils.snapToGrid(sizedNode.width, this.snapToGridX);
-			sizedNode.height = CanvasUtils.snapToGrid(sizedNode.height, this.snapToGridY);
+			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridXPx);
+			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridYPx);
+			sizedNode.width = CanvasUtils.snapToGrid(sizedNode.width, this.snapToGridXPx);
+			sizedNode.height = CanvasUtils.snapToGrid(sizedNode.height, this.snapToGridYPx);
 		}
 		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
 			const data = {
@@ -5666,10 +5701,10 @@ export default class SVGCanvasRenderer {
 		let height = commentObj.height;
 
 		if (this.config.enableSnapToGridType === "After") {
-			xPos = CanvasUtils.snapToGrid(xPos, this.canvasLayout.snapToGridX);
-			yPos = CanvasUtils.snapToGrid(yPos, this.canvasLayout.snapToGridY);
-			width = CanvasUtils.snapToGrid(width, this.canvasLayout.snapToGridX);
-			height = CanvasUtils.snapToGrid(height, this.canvasLayout.snapToGridY);
+			xPos = CanvasUtils.snapToGrid(xPos, this.canvasLayout.snapToGridXPx);
+			yPos = CanvasUtils.snapToGrid(yPos, this.canvasLayout.snapToGridYPx);
+			width = CanvasUtils.snapToGrid(width, this.canvasLayout.snapToGridXPx);
+			height = CanvasUtils.snapToGrid(height, this.canvasLayout.snapToGridYPx);
 		}
 
 		// Update the object model comment if the new position or size is different
@@ -5697,11 +5732,7 @@ export default class SVGCanvasRenderer {
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
-		if (this.canvasController.isTipOpening() || this.canvasController.isTipClosing()) {
-			this.logger.logEndTimer("displayLinks " + this.getFlags());
-			return;
-
-		} else if (this.selecting || this.regionSelect) {
+		if (this.selecting || this.regionSelect) {
 			this.displayLinksSelectionStatus();
 
 		} else {
@@ -6595,12 +6626,6 @@ export default class SVGCanvasRenderer {
 	// Returns a string that explains which flags are set to true.
 	getFlags() {
 		let str = "Flags:";
-		if (this.canvasController.isTipOpening()) {
-			str += " tipOpening = true";
-		}
-		if (this.canvasController.isTipClosing()) {
-			str += " tipClosing = true";
-		}
 		if (this.dragging) {
 			str += " dragging = true";
 		}

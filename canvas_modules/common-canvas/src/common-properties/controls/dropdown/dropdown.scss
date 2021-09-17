@@ -18,20 +18,10 @@
 	.bx--list-box--expanded .bx--list-box__menu {
 		margin-bottom: 1px; // Show dropdown menu border above Save/Cancel buttons
 	}
-
 	&.hide {
 		display: none;
 	}
-	&.error {
-		.bx--list-box__field:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-01;
-		}
-	}
-	&.warning {
-		.bx--list-box__field:not([disabled]) {
-			box-shadow: 0 2px 0 0 $support-03;
-		}
-	}
+
 }
 .properties-table-cell-control {
 	>.properties-dropdown {

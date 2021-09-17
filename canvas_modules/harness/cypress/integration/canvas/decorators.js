@@ -108,7 +108,7 @@ describe("Test adding a decorator to a node", function() {
 				"label_max_characters": 12,
 				"x_pos": "20", "y_pos": "-20" }]
 		);
-		cy.hoverOverLabelForNodeDec("No Decorator", "123");
+		cy.hoverOverNodeDecoration("No Decorator", "123");
 		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
 		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
@@ -123,7 +123,7 @@ describe("Test adding a decorator to a node", function() {
 				"label_align": "center",
 				"x_pos": "20", "y_pos": "-20" }]
 		);
-		cy.hoverOverLabelForNodeDec("No Decorator", "123");
+		cy.hoverOverNodeDecoration("No Decorator", "123");
 		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
 		cy.enterLabelForNodeDec("No Decorator", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
@@ -236,7 +236,7 @@ describe("Test adding a decorator to a link", function() {
 				"label_max_characters": 12,
 				"x_pos": "20", "y_pos": "-20" }]
 		);
-		cy.hoverOverLabelForLinkDec("Bottom Left-Bottom Right", "123");
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
@@ -250,13 +250,30 @@ describe("Test adding a decorator to a link", function() {
 				"label_editable": true, "label_single_line": false, "height": 28,
 				"label_align": "center",
 				"x_pos": "20", "y_pos": "-20" }]);
-		cy.hoverOverLabelForLinkDec("Bottom Left-Bottom Right", "123");
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
 	});
 
+	// There are more tests for tips on decorations in the tips.js file
+	it("Test a tooltip appears on hover over decoration.", function() {
+		// Must switch off link tips here otherwise, in Cypress, the link tip
+		// appears when hovering over the decoration instead of the decoration tip
+		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+		// Add a decoration with a tooltip.
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "path": "M 0 0 L 0 -20 -10 -30 -20 -20 -20 0 Z",
+				"tooltip": "Inform - Educate - Entertain",
+				"x_pos": "40", "y_pos": "15" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.verifyTipForDecoration("Inform - Educate - Entertain");
+	});
 
 });
 

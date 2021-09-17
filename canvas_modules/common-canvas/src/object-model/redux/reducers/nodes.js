@@ -21,8 +21,7 @@ import ports from "./ports.js";
 
 export default (state = [], action) => {
 	switch (action.type) {
-	case "ADD_NODE":
-	case "ADD_AUTO_NODE": {
+	case "ADD_NODE": {
 		return [
 			...state,
 			Object.assign({}, action.data.newNode)

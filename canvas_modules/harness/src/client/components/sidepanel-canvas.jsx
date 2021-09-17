@@ -65,6 +65,7 @@ import {
 	TIP_PALETTE,
 	TIP_NODES,
 	TIP_PORTS,
+	TIP_DECORATIONS,
 	TIP_LINKS,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP,
@@ -216,26 +217,26 @@ export default class SidePanelForms extends React.Component {
 
 	notificationConfigChange(evt) {
 		let id = evt.target.id;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = evt.target.id.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = Object.assign({}, this.props.getStateValue(fieldName));
 		notificationConfig[id] = evt.target.value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(fieldName, notificationConfig);
 	}
 
 	notificationConfigToggle(value, control) {
 		let id = control;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = control.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = this.props.getStateValue(fieldName);
 		notificationConfig[id] = value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(notificationConfig, fieldName);
 	}
 
 	exampleAppOptionChange(value) {
@@ -258,6 +259,9 @@ export default class SidePanelForms extends React.Component {
 			break;
 		case "tip_ports":
 			tipConf.ports = checked;
+			break;
+		case "tip_decorations":
+			tipConf.decorations = checked;
 			break;
 		case "tip_links":
 			tipConf.links = checked;
@@ -1130,6 +1134,12 @@ export default class SidePanelForms extends React.Component {
 					labelText={TIP_PORTS}
 					onChange={this.tipConfigChange}
 					checked={this.props.getStateValue("selectedTipConfig").ports}
+				/>
+				<Checkbox
+					id="tip_decorations"
+					labelText={TIP_DECORATIONS}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").decorations}
 				/>
 				<Checkbox
 					id="tip_links"

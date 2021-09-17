@@ -35,13 +35,13 @@ export default class CloneMultipleObjectsAction extends Action {
 
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
-				const clonedNode = this.apiPipeline.cloneNode(node);
+				let clonedNode = this.apiPipeline.cloneNode(node);
+				// Pipelines in app_data.pipeline_data in supernodes will be in schema
+				// format (conforming to the pipeline flow schema) so they must be converted.
 				if (clonedNode.type === SUPER_NODE) {
-					const { supernode, subPipelines } = this.objectModel.createSubPipelinesFromData(clonedNode);
-					this.clonedNodesInfo.push({ originalId: node.id, node: supernode, pipelines: subPipelines });
-				} else {
-					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
+					clonedNode = this.objectModel.convertPipelineData(clonedNode);
 				}
+				this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
 			});
 		}
 
@@ -159,11 +159,7 @@ export default class CloneMultipleObjectsAction extends Action {
 		const addedObjectIds = [];
 
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			if (clonedNodeInfo.node.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(clonedNodeInfo.node, clonedNodeInfo.pipelines);
-			} else {
-				this.apiPipeline.addNode(clonedNodeInfo.node);
-			}
+			this.apiPipeline.addNode(clonedNodeInfo.node);
 			addedObjectIds.push(clonedNodeInfo.node.id);
 		});
 
@@ -182,16 +178,9 @@ export default class CloneMultipleObjectsAction extends Action {
 	}
 
 	undo() {
-		// Handle regular nodes
-		const nodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type !== SUPER_NODE);
-		nodeInfos.forEach((clonedNodeInfo) => {
-			this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
-		});
-
-		// Handle supernodes
-		const supernodeInfos = this.clonedNodesInfo.filter((cn) => cn.node.type === SUPER_NODE);
-		const supernodes = supernodeInfos.map((si) => si.node);
-		this.apiPipeline.deleteSupernodesAndDescPipelines(supernodes);
+		// Handle nodes
+		const nodes = this.clonedNodesInfo.map((n) => n.node);
+		this.apiPipeline.deleteNodes(nodes);
 
 		// Handle comments
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {

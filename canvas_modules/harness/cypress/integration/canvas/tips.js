@@ -57,6 +57,79 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.moveMouseToCoordinates(300, 100);
 		cy.verifyTipDoesNotShowForLink();
 	});
+
+	it("Test to check if tip show up for link image decoration.", function() {
+		// Must switch off link tips here otherwise, in Cypress, the link tip
+		// appears when hovering over the decoration insead of the decoration tip
+		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+		// Add a decoration with a tooltip.
+		cy.setLinkDecorations("Discard Fields-Define Types",
+			[{ "id": "123", "image": "/images/decorators/zoom-in_32.svg",
+				"tooltip": "Zoom zoom!",
+				"x_pos": "0", "y_pos": "0" }]);
+		cy.hoverOverLinkDecoration("Discard Fields-Define Types", "123");
+		cy.verifyTipForDecoration("Zoom zoom!");
+	});
+
+	it("Test to check if tip show up for node text decoration.", function() {
+		// Must switch off link tips here otherwise, in Cypress, the link tip
+		// appears when hovering over the decoration instead of the decoration tip
+		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+		// Add a decoration with a tooltip.
+		cy.setNodeDecorations("DRUG1n",
+			[{ "id": "123", "label": "A node label decoration",
+				"tooltip": "A tooltip for a label decoration!",
+				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.hoverOverNodeDecoration("DRUG1n", "123");
+		cy.verifyTipForDecoration("A tooltip for a label decoration!");
+	});
+
+	it("Test to check if tip does NOT show up for node text decoration when switchd off.", function() {
+		// Switch off decoration tips.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false,
+				"decorations": false, "links": false }
+		});
+
+		// Add a decoration with a tooltip.
+		cy.setNodeDecorations("DRUG1n",
+			[{ "id": "123", "label": "A node label decoration",
+				"tooltip": "A tooltip for a label decoration!",
+				"x_pos": "-20", "y_pos": "-20" }]);
+		cy.hoverOverNodeDecoration("DRUG1n", "123");
+		cy.verifyTipDoesNotShowForDecoration();
+	});
+
+
+	it("Test to check if tip show up for editable node text decoration.", function() {
+		// Must switch off node tips here otherwise, in Cypress, the node tip
+		// appears when hovering over the decoration instead of the decoration tip
+		// even though the decoration tip appears correctly in usual operation.
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": true, "nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+
+		// Add a decoration with a tooltip.
+		cy.setNodeDecorations("DRUG1n",
+			[{ "id": "123", "label": "A node label decoration",
+				"label_editable": true, "label_single_line": true, "height": 28, "width": 130,
+				"tooltip": "A tooltip for a label decoration!",
+				"x_pos": "-20", "y_pos": "-30" }]);
+
+		cy.hoverOverNodeDecoration("DRUG1n", "123");
+		cy.verifyTipForDecoration("A tooltip for a label decoration!");
+	});
+
+
 });
 
 describe("Test to check if tips don't show up for the palette, nodes, ports and links " +
@@ -285,5 +358,37 @@ describe("Test to check if tips show up for a supernode and nodes inside the sup
 		// Check the other node in the subflow shows a tip
 		// cy.hoverOverNodeInSupernode("Define Types", "Supernode");
 		// cy.verifyTipForNodeInSupernodeAtLocation("Define Types", "Supernode", "below");
+	});
+});
+
+describe("Test to check if tips show up for toolbar items", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Test to check if tips show up for toolbar items", function() {
+		cy.hoverOverToolbarItem(".togglePalette-action");
+		cy.verifyTipForToolbarItem(".togglePalette-action", "Palette");
+		cy.mouseoutToolbarItem(".togglePalette-action");
+
+		cy.hoverOverToolbarItem(".createAutoComment-action");
+		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
+		cy.mouseoutToolbarItem(".createAutoComment-action");
+
+		cy.hoverOverToolbarItem(".zoomIn-action");
+		cy.verifyTipForToolbarItem(".zoomIn-action", "Zoom in");
+		cy.mouseoutToolbarItem(".zoomIn-action");
+
+		cy.hoverOverToolbarItem(".zoomOut-action");
+		cy.verifyTipForToolbarItem(".zoomOut-action", "Zoom out");
+		cy.mouseoutToolbarItem(".zoomOut-action");
+
+		cy.hoverOverToolbarItem(".zoomToFit-action");
+		cy.verifyTipForToolbarItem(".zoomToFit-action", "Zoom to fit");
+		cy.mouseoutToolbarItem(".zoomToFit-action");
+
+		cy.hoverOverToolbarItem(".toggleNotificationPanel-action");
+		cy.verifyTipForToolbarItem(".toggleNotificationPanel-action", "Notifications");
+		cy.mouseoutToolbarItem(".toggleNotificationPanel-action");
 	});
 });

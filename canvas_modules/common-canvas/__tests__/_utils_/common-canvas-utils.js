@@ -15,11 +15,12 @@
  */
 
 import React from "react";
+import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
 import { mount } from "enzyme";
 
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
-import CommonCanvasToolbar from "../../src/common-canvas/common-canvas-toolbar.jsx";
+import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
 
 const locale = "en";
 const messages = {
@@ -75,21 +76,32 @@ export function createIntlCommonCanvas(
 	return wrapper;
 }
 
-export function createIntlCommonCanvasToolbar(toolbarConfig,
-	isPaletteEnabled, isPaletteOpen,
-	notificationConfig, isNotificationOpen, canvasController) {
+export function createIntlCommonCanvasToolbar(data, canvasController) {
+	canvasController.setToolbarConfig(data.toolbarConfig);
+	canvasController.setNotificationPanelConfig(data.notificationConfig);
+
+	if (data.isPaletteOpen) {
+		canvasController.openPalette();
+	} else {
+		canvasController.closePalette();
+	}
+	if (data.isPaletteEnabled) {
+		canvasController.setCanvasConfig({ enablePaletteLayout: "Flyout" });
+	} else {
+		canvasController.setCanvasConfig({ enablePaletteLayout: "None" });
+	}
+	if (data.isNotificationOpen) {
+		canvasController.openNotificationPanel();
+	} else {
+		canvasController.closeNotificationPanel();
+	}
 
 	const wrapper = mount(
-		<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
-			<CommonCanvasToolbar
-				config={toolbarConfig}
-				isPaletteEnabled={isPaletteEnabled}
-				isPaletteOpen={isPaletteOpen}
-				notificationConfig={notificationConfig}
-				isNotificationOpen={isNotificationOpen}
-				canvasController={canvasController}
-			/>
-		</IntlProvider>
+		<Provider store={canvasController.getStore()}>
+			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
+				<CommonCanvasToolbar canvasController={canvasController} />
+			</IntlProvider>
+		</Provider>
 	);
 
 	return wrapper;

@@ -43,7 +43,7 @@ export default class CreateNodeAttachLinksAction extends Action {
 
 	undo() {
 		this.apiPipeline.updateLinks(this.linksToUpdateInfo.oldLinks);
-		this.apiPipeline.deleteNode(this.newNode.id);
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {

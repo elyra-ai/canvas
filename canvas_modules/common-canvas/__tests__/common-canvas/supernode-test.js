@@ -379,6 +379,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
+
 		const config = { enableNodeFormatType: "Vertical" };
 		createCommonCanvas(config, canvasController);
 
@@ -1109,7 +1110,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test2ExpectedFlow, null, 2));
 		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
@@ -1513,6 +1514,10 @@ describe("Copy and Paste Supernode", () => {
 
 		// Undo the clone action.
 		canvasController.contextMenuActionHandler("undo");
+
+		// console.log(JSON.stringify(canvasInfoBefore, null, 2));
+		// console.log(JSON.stringify(objectModel.getPipelineFlow(), null, 2));
+
 		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
@@ -1761,8 +1766,13 @@ describe("Copy and Paste Supernode", () => {
 });
 
 describe("Subtypes enumerated for supernodes OK", () => {
-	const canvasController = new CanvasController();
-	canvasController.getObjectModel().setPipelineFlow(supernodeNestedCanvas);
+	let canvasController;
+
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeNestedCanvas);
+	});
+
 	it("should contain shaper, canvas, and non-enumerated subtype", () => {
 		deepFreeze(supernodeNestedCanvas);
 		canvasController.setPipelineFlow(supernodeNestedCanvas);
@@ -1841,8 +1851,8 @@ function compareNodePositions(expectedNodes, objectModel) {
 
 	expectedNodes.forEach((expectedNode) => {
 		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
-		// console.log("node " + expectedNode.label);
 
+		// console.log("node " + expectedNode.label);
 		// console.log("expectedNode.label = " + expectedNode.label);
 		// console.log("expectedNode.x_pos = " + expectedNode.x_pos + " omNode.x_pos " + omNode.x_pos);
 		// console.log("expectedNode.y_pos = " + expectedNode.y_pos + " omNode.y_pos " + omNode.y_pos);

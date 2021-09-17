@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import LayoutDimensions from "../../layout-dimensions.js";
-
-
-export default (state = LayoutDimensions.getLayout(), action) => {
+export default (state = {}, action) => {
 	switch (action.type) {
-	case "SET_LAYOUT_INFO":
-		return Object.assign({}, action.layoutinfo);
+	case "SET_TOOLTIP_DEF": {
+		if (action.data.tooltipDef) {
+			return action.data.tooltipDef;
+		}
+		return state;
+	}
 
 	default:
 		return state;

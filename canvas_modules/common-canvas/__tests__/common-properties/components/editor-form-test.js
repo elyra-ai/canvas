@@ -92,7 +92,7 @@ describe("controls should be rendered correctly when no uihints are provided", (
 		controller.updatePropertyValue({ name: "textfield" }, null);
 		wrapper.update();
 		// validate message is created
-		expect(wrapper.find(".properties-validation-message")).to.have.length(1);
+		expect(wrapper.find(".bx--form-requirement")).to.have.length(1);
 		// valide no catagories(tabs) are created
 		expect(wrapper.find(".properties-categories")).to.have.length(0);
 	});

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,57 @@
  */
 
 import { combineReducers, createStore } from "redux";
-import selectioninfo from "./reducers/selectioninfo.js";
-import layoutinfo from "./reducers/layoutinfo.js";
-import canvasinfo from "./reducers/canvasinfo.js";
-import breadcrumbs from "./reducers/breadcrumbs.js";
+import { isEmpty } from "lodash";
+
+import ConfigUtils from "../config-utils.js";
+
+import tooltip from "./reducers/tooltip.js";
 import palette from "./reducers/palette.js";
+import canvasinfo from "./reducers/canvasinfo.js";
+import contextmenu from "./reducers/contextmenu.js";
+import rightflyout from "./reducers/rightflyout.js";
+import breadcrumbs from "./reducers/breadcrumbs.js";
+import canvasconfig from "./reducers/canvasconfig.js";
+import canvastoolbar from "./reducers/canvastoolbar.js";
 import notifications from "./reducers/notifications.js";
+import selectioninfo from "./reducers/selectioninfo.js";
+import notificationpanel from "./reducers/notificationpanel.js";
 import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
 export default class CanavasStore {
 	constructor(emptyCanvasInfo) {
 		// Put selectioninfo reducer first so selections are handled before
-		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
-		// because node heights and width are calculated based on layoutinfo.
-		var combinedReducer = combineReducers({ selectioninfo, layoutinfo, canvasinfo, breadcrumbs, palette, notifications, externalpipelineflows });
+		// canvasinfo actions. Also, put canvasconfig reducer before canvasinfo
+		// because node heights and widths are calculated based on the node
+		// layout info contained in the canvas config object's enableNodeLayout field.
+		var combinedReducer = combineReducers({
+			selectioninfo,
+			canvasconfig,
+			canvasinfo,
+			breadcrumbs,
+			palette,
+			notifications,
+			notificationpanel,
+			externalpipelineflows,
+			tooltip,
+			canvastoolbar,
+			contextmenu,
+			rightflyout
+		});
 
 		const initialState = {
 			selectioninfo: {},
-			layoutinfo: {},
 			canvasinfo: emptyCanvasInfo,
+			canvasconfig: ConfigUtils.getDefaultCanvasConfig(),
 			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
-			palette: {},
+			palette: { content: {} }, // Don't initialize isOpen here, it must be done in CanvasController.setCanvasConfig based on paletteInitialState
 			notifications: [],
-			externalpipelineflows: []
+			notificationpanel: { isOpen: false, config: {} },
+			externalpipelineflows: [],
+			tooltip: {},
+			canvastoolbar: {},
+			contextmenu: { menuDef: [] },
+			rightflyout: {}
 		};
 
 		let enableDevTools = false;
@@ -57,8 +85,17 @@ export default class CanavasStore {
 		return this.store.subscribe(callback);
 	}
 
-	getPaletteData() {
+	// Returns the redux store
+	getStore() {
+		return this.store;
+	}
+
+	getPalette() {
 		return this.copyData(this.store.getState().palette);
+	}
+
+	getPaletteData() {
+		return this.copyData(this.store.getState().palette.content);
 	}
 
 	getCanvasInfo() {
@@ -69,22 +106,52 @@ export default class CanavasStore {
 		return this.copyData(this.store.getState().breadcrumbs);
 	}
 
-	getLayoutInfo() {
-		return this.copyData(this.store.getState()).layoutinfo;
+	getCanvasConfig() {
+		// Canvas config cannot be copied because it may contain JSX objects
+		// so create copy using Object.assign.
+		return Object.assign({}, this.store.getState().canvasconfig);
 	}
 
 	getNodeLayout() {
-		return this.copyData(this.store.getState().layoutinfo.nodeLayout);
+		return this.copyData(this.store.getState().canvasconfig.enableNodeLayout);
 	}
 
 	getCanvasLayout() {
-		return this.copyData(this.store.getState().layoutinfo.canvasLayout);
+		return this.copyData(this.store.getState().canvasconfig.enableCanvasLayout);
+	}
+
+	isTooltipOpen() {
+		return !isEmpty(this.store.getState().tooltip);
+	}
+
+	getTooltip() {
+		return this.copyData(this.store.getState().tooltip);
+	}
+
+	isRightFlyoutOpen() {
+		return this.store.getState().rightflyout.isOpen;
+	}
+
+	getNotificationPanel() {
+		return this.copyData(this.store.getState().notificationpanel);
 	}
 
 	getNotifications() {
 		// Notification messages may contain JSX objects and a callback function
 		// so create copy using Object.assign instead of this.copyData method.
 		return this.store.getState().notifications.map((n, i) => Object.assign({}, n));
+	}
+
+	isNotificationPanelOpen() {
+		return this.getNotificationPanel().isOpen;
+	}
+
+	getContextMenu() {
+		return this.copyData(this.store.getState().contextmenu);
+	}
+
+	isContextMenuDisplayed() {
+		return !isEmpty(this.store.getState().contextmenu.menuDef);
 	}
 
 	getSelectionInfo() {

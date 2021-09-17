@@ -172,7 +172,7 @@ describe("Passwordfield renders correctly", () => {
 			/>
 		);
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		const messageWrapper = passwordWrapper.find("div.properties-validation-message");
+		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
 });

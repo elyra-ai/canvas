@@ -39,16 +39,30 @@ describe("validation-message renders correctly", () => {
 				messageInfo={warningMessage}
 				state="hidden"
 				inTable
+				tableOnly
 			/>
 		);
 		expect(wrapper.prop("messageInfo")).to.equal(warningMessage);
 		expect(wrapper.prop("state")).to.equal("hidden");
 		expect(wrapper.prop("inTable")).to.equal(true);
+		expect(wrapper.prop("tableOnly")).to.equal(true);
 	});
 	it("validation-message renders error message correctly", () => {
 		const wrapper = mount(
 			<ValidationMessage
 				messageInfo={errorMessage}
+			/>
+		);
+		const messageWrapper = wrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-error")).to.have.length(0);
+		expect(messageWrapper.find("span").text()).to.equal(errorMessage.text);
+	});
+	it("validation-message renders error message correctly in table", () => {
+		const wrapper = mount(
+			<ValidationMessage
+				messageInfo={errorMessage}
+				inTable
 			/>
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
@@ -60,6 +74,19 @@ describe("validation-message renders correctly", () => {
 		const wrapper = mount(
 			<ValidationMessage
 				messageInfo={warningMessage}
+			/>
+		);
+		const messageWrapper = wrapper.find("div.properties-validation-message");
+		expect(messageWrapper).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-warning")).to.have.length(0);
+		expect(messageWrapper.find("span").text()).to.equal(warningMessage.text);
+
+	});
+	it("validation-message renders warning message correctly in table", () => {
+		const wrapper = mount(
+			<ValidationMessage
+				messageInfo={warningMessage}
+				inTable
 			/>
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
@@ -76,12 +103,18 @@ describe("validation-message renders correctly", () => {
 		);
 		const messageWrapper = wrapper.find("div.properties-validation-message");
 		expect(messageWrapper).to.have.length(1);
-		expect(messageWrapper.find("div.icon svg.canvas-state-icon-info")).to.have.length(1);
+		expect(messageWrapper.find("div.icon svg.canvas-state-icon-info")).to.have.length(0);
 		expect(messageWrapper.find("span").text()).to.equal(infoMessage.text);
 	});
 	it("validation-message renders correctly when no message set", () => {
 		const wrapper = mount(
 			<ValidationMessage />
+		);
+		expect(wrapper.find("div.properties-validation-message")).to.have.length(0);
+	});
+	it("validation-message renders correctly when tableOnly set", () => {
+		const wrapper = mount(
+			<ValidationMessage messageInfo={infoMessage} tableOnly />
 		);
 		expect(wrapper.find("div.properties-validation-message")).to.have.length(0);
 	});

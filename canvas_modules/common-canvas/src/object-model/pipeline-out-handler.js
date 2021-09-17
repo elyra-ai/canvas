@@ -70,11 +70,11 @@ export default class PipelineOutHandler {
 
 	static createNodes(canvasInfoPipeline) {
 		return canvasInfoPipeline.nodes.map((canvasInfoNode) =>
-			this.createNode(canvasInfoNode, canvasInfoPipeline.links)
+			this.createSchemaNode(canvasInfoNode, canvasInfoPipeline.links)
 		);
 	}
 
-	static createNode(ciNode, ciLinks) {
+	static createSchemaNode(ciNode, ciLinks) {
 		var newNode = {
 			id: ciNode.id,
 			type: ciNode.type

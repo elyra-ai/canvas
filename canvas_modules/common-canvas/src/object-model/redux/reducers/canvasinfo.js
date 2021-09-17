@@ -24,19 +24,20 @@ export default (state = {}, action) => {
 
 	case "SET_CANVAS_INFO": {
 		if (action.canvasInfo) {
-			return action.canvasInfo;
+			return Object.assign({}, action.canvasInfo);
 		}
 		return state;
 	}
 
-	// Save incoming sub-pipeline to the pipeline flow pipelines array.
-	case "ADD_PIPELINE": {
-		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
+	case "SET_CANVAS_CONFIG_INFO":
+	case "REPLACE_PIPELINES": {
+		return Object.assign({}, state, { pipelines: action.data.pipelines });
 	}
 
 	// Add pipelines from the external pipeline flow into the canvas info pipelines array
 	case "ADD_EXTERNAL_PIPELINE_FLOW": {
-		const canvasInfoPipelines = state.pipelines.concat(action.newPipelines);
+		const pipelines = action.newPipelines.map((p) => Object.assign({}, p));
+		const canvasInfoPipelines = state.pipelines.concat(pipelines);
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
@@ -106,10 +107,6 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "SET_LAYOUT_INFO": {
-		return Object.assign({}, state, { pipelines: action.pipelines });
-	}
-
 	case "ADD_SUPERNODES": {
 		let canvasInfoPipelines = [
 			...state.pipelines,
@@ -151,7 +148,6 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 
 	case "ADD_NODE":
-	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
 	case "SIZE_AND_POSITION_OBJECTS":

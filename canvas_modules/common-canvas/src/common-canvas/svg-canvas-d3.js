@@ -19,9 +19,9 @@
 
 // Import just the D3 modules that are needed.
 var d3 = Object.assign({}, require("d3-selection"));
-import isMatch from "lodash/isMatch";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import ConfigUtils from "../object-model/config-utils.js";
 import Logger from "../logging/canvas-logger.js";
 
 const BACKSPACE_KEY = 8;
@@ -46,7 +46,7 @@ export default class SVGCanvasD3 {
 		this.logger.logStartTimer("Constructor");
 
 		this.canvasController = canvasController;
-		this.canvasInfo = canvasInfo;
+		this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
 		this.config = this.cloneConfig(config);
 
@@ -65,39 +65,7 @@ export default class SVGCanvasD3 {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
 		if (canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
-				this.config.enableInteractionType !== config.enableInteractionType ||
-				this.config.enableSnapToGridType !== config.enableSnapToGridType ||
-				this.config.enableSnapToGridX !== config.enableSnapToGridX ||
-				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
-				this.config.enableAutoLayoutVerticalSpacing !== config.enableAutoLayoutVerticalSpacing ||
-				this.config.enableAutoLayoutHorizontalSpacing !== config.enableAutoLayoutHorizontalSpacing ||
-				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
-				this.config.enableLinkType !== config.enableLinkType ||
-				this.config.enableLinkDirection !== config.enableLinkDirection ||
-				this.config.enableLinkSelection !== config.enableLinkSelection ||
-				this.config.enableLinkReplaceOnNewConnection !== config.enableLinkReplaceOnNewConnection ||
-				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
-				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
-				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
-				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
-				this.config.enableExternalPipelineFlows !== config.enableExternalPipelineFlows ||
-				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
-				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
-				this.config.enableSaveZoom !== config.enableSaveZoom ||
-				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
-				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
-				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
-				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
-				this.config.enableParentClass !== config.enableParentClass ||
-				this.config.enableHighlightNodeOnNewLinkDrag !== config.enableHighlightNodeOnNewLinkDrag ||
-				this.config.enableHighlightUnavailableNodes !== config.enableHighlightUnavailableNodes ||
-				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
-				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
-				this.config.enableAutoLinkOnlyFromSelNodes !== config.enableAutoLinkOnlyFromSelNodes ||
-				this.config.enableSingleOutputPortDisplay !== config.enableSingleOutputPortDisplay ||
-				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
-				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
-				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
+				!ConfigUtils.compareCanvasConfigs(this.config, config)) {
 			this.logger.logStartTimer("Initializing Canvas");
 
 			this.canvasInfo = canvasInfo;
@@ -117,7 +85,8 @@ export default class SVGCanvasD3 {
 		} else {
 			this.logger.logStartTimer("Set Canvas Info");
 
-			this.canvasInfo = canvasInfo;
+			// Clone the canvasInfo
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 
 			if (this.renderer) {
 				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
@@ -148,68 +117,8 @@ export default class SVGCanvasD3 {
 		return Object.assign({}, config);
 	}
 
-	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
-	// exactly the same.
-	enableNodeRightFlyoutOpenExactlyMatches(enablePositionNode1, enablePositionNode2) {
-		if (typeof enablePositionNode1 === "boolean" &&
-				typeof enablePositionNode2 === "boolean") {
-			return enablePositionNode1 === enablePositionNode2;
-
-		} else if (typeof enablePositionNode1 === "object" &&
-								typeof enablePositionNode2 === "object") {
-			if (enablePositionNode1.x === enablePositionNode2.x &&
-					enablePositionNode1.y === enablePositionNode2.y) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	// Returns true if the contents of enableLayout1 and enableLayout2 are
-	// exactly the same.
-	enableCanvasLayoutExactlyMatches(enableLayout1, enableLayout2) {
-		if (!enableLayout1 && !enableLayout2) {
-			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
-			return true;
-		}
-		return false;
-	}
-
-	// Returns true if the contents of enableLayout1 and enableLayout2 including
-	// their decorations arrays are exactly the same.
-	enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
-		if (!enableLayout1 && !enableLayout2) {
-			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&
-			this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
-			return true;
-		}
-		return false;
-	}
-
-	// Returns true if two decorations arrays passed in are identical or false
-	// otherwise.
-	decorationsArraysExactlyMatches(decorations1, decorations2) {
-		if (!decorations1 && !decorations2) {
-			return true;
-		}
-		else if (!decorations1 || !decorations2) {
-			return false;
-		}
-		let state = true;
-		decorations1.forEach((dec1, i) => {
-			const dec2 = decorations2[i];
-			if (dec2) {
-				if (!isMatch(dec1, dec2) || !isMatch(dec2, dec1)) {
-					state = false;
-				}
-			} else {
-				state = false;
-			}
-		});
-		return state;
+	cloneCanvasInfo(canvasInfo) {
+		return JSON.parse(JSON.stringify(canvasInfo));
 	}
 
 	initializeCanvasDiv(canvasDivSelector) {
@@ -306,7 +215,9 @@ export default class SVGCanvasD3 {
 	}
 
 	refreshOnSizeChange() {
-		this.renderer.refreshOnSizeChange();
+		if (this.renderer) {
+			this.renderer.refreshOnSizeChange();
+		}
 	}
 
 	getSvgViewportOffset() {

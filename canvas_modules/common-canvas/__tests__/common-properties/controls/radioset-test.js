@@ -288,13 +288,10 @@ describe("radioset works in table correctly", () => {
 		wrapper.unmount();
 	});
 
-	it("Check basic use of inline radiosets in table flyout", () => {
-		const inlineRadioset = wrapper.find("div[data-id='properties-radioset_col1']");
-		const inlineRadios = inlineRadioset.find("input.bx--radio-button");
-		expect(inlineRadios).to.have.length(4);
+	it("Validation enum in table cell default to select control instead of radioset", () => {
+		const inlineEnum = wrapper.find("div[data-id='properties-radioset_table_error_0_0'].properties-dropdown");
+		expect(inlineEnum).to.have.length(1);
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("dog");
-		inlineRadios.at(1).simulate("change");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("cat");
 	});
 
 	it("Check basic use of onpanel radiosets in table flyout", () => {
@@ -345,11 +342,7 @@ describe("radioset works in table correctly", () => {
 		// confirm that "pear" is disabled and result defaults to first entry in set
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("apple");
 		// test subpanel disable
-		const inlineRadioset = wrapper.find("div[data-id='properties-radioset_col1']");
-		const inlineRadios = inlineRadioset.find("input.bx--radio-button");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("dog");
-		inlineRadios.at(1).simulate("change");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("cat");
+		renderedController.updatePropertyValue({ col: 0, row: 0, ...tableRadioPropertyId }, "cat");
 		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
 		subpanelButton.simulate("click");
 		const subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
@@ -359,38 +352,6 @@ describe("radioset works in table correctly", () => {
 		// selecting the disabled option should default to first radio in the list, red, instead of orange
 		subpanelRadios.at(4).simulate("change");
 		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("red");
-	});
-
-	it("Check error and warning throwing in table flyout", () => {
-		// using pet = pig will generate an error
-		let inlineRadioset = wrapper.find("div[data-id='properties-radioset_col1']");
-		const inlineRadios = inlineRadioset.find("input.bx--radio-button");
-		expect(inlineRadioset.find("div.error")).to.have.length(0);
-		inlineRadios.at(2).simulate("change");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][0]).to.equal("pig");
-		inlineRadioset = wrapper.find("div[data-id='properties-radioset_col1']");
-		// expect an error to appear
-		expect(inlineRadioset.find("div.error")).to.have.length(1);
-		// using fruit = strawberry will generate a warning
-		tableUtils.clickTableRows(tableDiv, [0]);
-		let onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		expect(onPanelRadioset.find("div.warning")).to.have.length(0);
-		const onPanelRadios = onPanelRadioset.find("input.bx--radio-button");
-		onPanelRadios.at(3).simulate("change");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][1]).to.equal("strawberry");
-		onPanelRadioset = wrapper.find("div[data-id='properties-radioset_col2']");
-		// expect warning to appear
-		expect(onPanelRadioset.find("div.warning")).to.have.length(1);
-		// using color = purple will generate an error
-		const subpanelButton = tableDiv.find(".properties-table-subcell").find("button.properties-subpanel-button");
-		subpanelButton.simulate("click");
-		let subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		const subpanelRadios = subpanelRadioset.find("input.bx--radio-button");
-		expect(subpanelRadioset.find("div.error")).to.have.length(0);
-		subpanelRadios.at(3).simulate("change");
-		expect(renderedController.getPropertyValue(tableRadioPropertyId)[0][3]).to.equal("purple");
-		subpanelRadioset = wrapper.find("div[data-id='properties-radioset_col3']");
-		expect(subpanelRadioset.find("div.error")).to.have.length(1);
 	});
 });
 

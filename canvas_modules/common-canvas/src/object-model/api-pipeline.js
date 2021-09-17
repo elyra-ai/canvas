@@ -21,15 +21,16 @@
 // and canvas-controller.
 // ---------------------------------------------------------------------------
 
-import dagre from "dagre/dist/dagre.min.js";
-
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+
+import dagre from "dagre/dist/dagre.min.js";
+import { get, has } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
 	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	BINDING, SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
@@ -62,25 +63,36 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
 
+	// Deletes the object (which can be a node or a comment) identified
+	// by the objId passed in.
+	deleteObject(objId) {
+		this.deleteObjects([objId]);
+	}
+
+	// Deletes the objects (which can be a mix of nodes and comments) identified
+	// by the array of IDs passed in and calls the selection changed handler.
 	deleteObjects(objectIds) {
-		this.objectModel.executeWithSelectionChange((objIds) => {
-			objIds.forEach((id) => {
-				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
-			});
+		this.objectModel.executeWithSelectionChange((inObjectIds) => {
+			const { nodes, comments } = this.filterNodesAndComments(inObjectIds);
+			this.deleteNodesInternal(nodes);
+			this.deleteCommentsInternal(comments);
 		}, objectIds);
 	}
 
-	// Delete an array of objects that have ids.
-	deleteObjectsWithIds(objects) {
-		const objectIds = [];
-		objects.forEach((object) => {
-			objectIds.push(object.id);
+	// Returns an object containing and array of nodes and an array of comments
+	// that match the array of objectIds passed in.
+	filterNodesAndComments(objectIds) {
+		const nodes = [];
+		const comments = [];
+		objectIds.forEach((oId) => {
+			const comment = this.getComment(oId);
+			if (comment) {
+				comments.push(comment);
+			} else {
+				nodes.push(this.getNode(oId));
+			}
 		});
-		this.deleteObjects(objectIds);
-	}
-
-	deleteObject(id) {
-		this.objectModel.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
+		return { nodes, comments };
 	}
 
 	getObjectStyle(objId, temporary) {
@@ -256,7 +268,13 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 
 	createNode(data) {
-		const nodeTemplate = data.nodeTemplate;
+		let nodeTemplate = data.nodeTemplate;
+		// If the nodeTemplate has app_data.ui_data field then it will be a
+		// teamplate that conforms to the pipelineFlow schema and needs to be
+		// converted to the internal format for a node.
+		if (has(data.nodeTemplate, "app_data.ui_data")) {
+			nodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		}
 		let node = {};
 		if (nodeTemplate !== null) {
 			node = Object.assign({}, nodeTemplate, {
@@ -271,34 +289,6 @@ export default class APIPipeline {
 		}
 
 		return node;
-	}
-
-	// Returns a newly created supernode based on the parameters passed in. The
-	// externalUrl parameter indicates whether it is an external supernode or not.
-	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
-		const supernodeTemplate = {
-			description: description,
-			image: externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
-			label: label,
-			inputs: inputPorts,
-			outputs: outputPorts,
-			type: SUPER_NODE,
-			subflow_ref: {
-				pipeline_id_ref: subPipelineId
-			},
-		};
-
-		if (externalUrl) {
-			supernodeTemplate.subflow_ref.url = externalUrl;
-		}
-
-		const supernodeData = {
-			nodeTemplate: supernodeTemplate,
-			offsetX: topLeftNodePosition.xPos,
-			offsetY: topLeftNodePosition.yPos
-		};
-
-		return this.createNode(supernodeData);
 	}
 
 	// Returns a source node for auto completion or null if no source node can be
@@ -409,7 +399,7 @@ export default class APIPipeline {
 				node.id = this.objectModel.getUUID();
 				node.x_pos = 0;
 				node.y_pos = 0;
-				node = PipelineOutHandler.createNode(node, []);
+				node = PipelineOutHandler.createSchemaNode(node, []);
 				if (node.type === SUPER_NODE) {
 					if (!node.app_data) {
 						node.app_data = {};
@@ -492,7 +482,11 @@ export default class APIPipeline {
 
 	addNode(newNode) {
 		if (newNode) {
-			this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			if (newNode.type === SUPER_NODE) {
+				this.addSupernode(newNode, get(newNode, "app_data.pipeline_data"));
+			} else {
+				this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			}
 		}
 	}
 
@@ -507,7 +501,7 @@ export default class APIPipeline {
 
 	// Add the newSupernode to canvasInfo and an array of newSubPipelines that
 	// it references. Optionally, a link may also be added.
-	addSupernode(newSupernode, newSubPipelines, newLink) {
+	addSupernode(newSupernode, newSubPipelines) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
 		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
@@ -515,16 +509,9 @@ export default class APIPipeline {
 			if (pipeline.id === this.pipelineId) {
 				const newNodes = [
 					...pipeline.nodes,
-					Object.assign({}, newSupernode)
+					this.cloneSupernodeRemovePipelineData(newSupernode)
 				];
-				let newLinks = pipeline.links;
-				if (newLink) {
-					newLinks = [
-						...pipeline.links,
-						Object.assign({}, newLink)
-					];
-				}
-				return Object.assign({}, pipeline, { nodes: newNodes, links: newLinks });
+				return Object.assign({}, pipeline, { nodes: newNodes });
 			}
 			return pipeline;
 		});
@@ -532,19 +519,58 @@ export default class APIPipeline {
 		this.objectModel.setCanvasInfo(newCanvasInfo);
 	}
 
-	addAutoNodeAndLink(newNode, newLink) {
-		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
-			newNode: newNode,
-			newLink: newLink },
-		pipelineId: this.pipelineId });
+	cloneSupernodeRemovePipelineData(supernode) {
+		const sn = Object.assign({}, supernode);
+		if (sn.app_data) {
+			sn.app_data = Object.assign({}, sn.app_data);
+			delete sn.app_data.pipeline_data;
+		}
+		return sn;
 	}
 
-	deleteNode(id) {
-		this.deleteObject(id);
+	// Deletes the node identified by the nodeId. If the node is a Supernode, the
+	// relevant pipelines and external pipeline flows will be deleted.
+	deleteNode(nodeId) {
+		const node = this.getNode(nodeId);
+		if (node) {
+			this.deleteNodes([node]);
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It also calls the selection changed
+	// handler.
+	deleteNodes(nodes, removePipelines = true) {
+		if (nodes && nodes.length > 0) {
+			this.objectModel.executeWithSelectionChange((obj) => {
+				this.deleteNodesInternal(obj.nodes, obj.removePipelines);
+			}, { nodes, removePipelines });
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It does not call the selection
+	// changed handler.
+	deleteNodesInternal(nodes, removePipelines) {
+		// Handle regular nodes
+		const regularNodes = nodes.filter((n) => n.type !== SUPER_NODE);
+		regularNodes.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
+
+		// Handle supernodes
+		const supernodes = nodes.filter((n) => n.type === SUPER_NODE);
+		if (removePipelines) {
+			this.deleteSupernodesAndDescPipelines(supernodes);
+		} else {
+			this.deleteSupernodes(supernodes, [], []);
+		}
 	}
 
 	// Deletes the supernodes passed in and also any descending pipelines. It
-	// makes sure it doesn't delete any external pipeline that is referenced by
+	// makes sure it doesn't delete any external pipelines that are referenced by
 	// other supernodes in the canvas info.
 	deleteSupernodesAndDescPipelines(supernodes) {
 		const pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(supernodes, this.pipelineId);
@@ -553,7 +579,7 @@ export default class APIPipeline {
 		this.deleteSupernodes(supernodes, pipelinesToDelete, extPipelineFlowsToDelete);
 	}
 
-	// Deletes the supernodes passed in along with any pipelines and xternal flows.
+	// Deletes the supernodes passed in along with any pipelines and external flows.
 	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
 		this.store.dispatch({
 			type: "DELETE_SUPERNODES",
@@ -1003,8 +1029,30 @@ export default class APIPipeline {
 		return pos;
 	}
 
+	// Deletes the comment specified by the id passed in.
 	deleteComment(id) {
-		this.deleteObject(id);
+		const comment = this.getComment(id);
+		if (comment) {
+			this.deleteComments([comment]);
+		}
+	}
+
+	// Deletes the comments in the array passed in and calls the selection
+	// changed handler.
+	deleteComments(comments) {
+		if (comments && comments.length > 0) {
+			this.objectModel.executeWithSelectionChange((inComments) => {
+				this.deleteCommentsInternal(inComments);
+			}, comments);
+		}
+	}
+
+	// Deletes the comments in the array passed in. It does not call the
+	// selection changed handler.
+	deleteCommentsInternal(inComments) {
+		inComments.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
 	}
 
 	getComments() {
@@ -1206,8 +1254,12 @@ export default class APIPipeline {
 
 	addLinks(linkList) {
 		linkList.forEach((link) => {
-			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
+			this.addLink(link);
 		});
+	}
+
+	addLink(link) {
+		this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 	}
 
 	getLinks() {

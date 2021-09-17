@@ -15,7 +15,7 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-export default (state = [], action) => {
+export default (state = {}, action) => {
 	switch (action.type) {
 	case "SET_CANVAS_INFO": {
 		// In some instances, with an external object model, the same canvas info may

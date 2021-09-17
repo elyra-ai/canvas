@@ -237,13 +237,6 @@ export default (state = [], action) => {
 		];
 	}
 
-	case "ADD_AUTO_NODE": {
-		return [
-			...state,
-			action.data.newLink
-		];
-	}
-
 	default:
 		return state;
 	}

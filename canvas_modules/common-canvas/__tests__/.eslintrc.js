@@ -18,7 +18,7 @@ module.exports = {
 		"eslint-config-canvas/react"
 	].map(require.resolve),
 	env: {
-		"browser": true,
+		"browser": true
 	},
 	rules: {
 		// Disable strict warning on ES6 Components

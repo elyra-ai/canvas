@@ -21,6 +21,8 @@ import isEqual from "lodash/isEqual";
 import startCanvas from "../test_resources/json/startCanvas.json";
 import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
 import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
+import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
+import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas2.json";
@@ -436,6 +438,58 @@ describe("Test canvas controller methods", () => {
 		expect(canvasController.getBreadcrumbs()).to.have.length(3);
 	});
 
+	it("should create a regular node on the canvas from a palette node", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(commonPalette);
+
+		const nodeTemplate = canvasController.getPaletteNode("com.ibm.commonicons.sources.varfile");
+		const newNode = canvasController.createNode({
+			nodeTemplate: nodeTemplate,
+			offsetX: 200,
+			offsetY: 400
+		});
+		canvasController.addNode(newNode);
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(1);
+
+	});
+
+	it("should create a supernode on the canvas from a palette supernode", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(supernodePalette);
+
+		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
+		const newNode = canvasController.createNode({
+			nodeTemplate: snTemplate,
+			offsetX: 200,
+			offsetY: 400
+		});
+		canvasController.addNode(newNode);
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
+
+	});
+
+
+	it("should execute a Command to create a supernode on the canvas from a palette supernode", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(supernodePalette);
+
+		// Initially, there shouldn't be any commands to undo in the command stack.
+		expect(canvasController.getCommandStack().canUndo()).to.be.false;
+
+		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
+		canvasController.createNodeCommand({ nodeTemplate: snTemplate, offsetX: 100, offsetY: 50 });
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
+
+		// createNodeCommand should add a command to the command stack so there
+		// should now be a command to undo.
+		expect(canvasController.getCommandStack().canUndo()).to.be.true;
+	});
 });
 
 const externalPipelineFlows = [];
