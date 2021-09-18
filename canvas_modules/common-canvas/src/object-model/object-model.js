@@ -2059,9 +2059,9 @@ export default class ObjectModel {
 		// selected, making sure we don't have any duplicates in the final
 		// links array.
 		if (areDetachableLinksInUse) {
-			const emanatingLinks = apiPipeline.getLinksContainingIds(nodes.map((n) => n.id));
-			links = this.addUniqueBasedOnId(emanatingLinks, links);
-			links = this.addUniqueBasedOnId(this.getSelectedLinks(), links);
+			const emanatingLinks = apiPipeline.getNodeDataLinksContainingIds(nodes.map((n) => n.id));
+			links = CanvasUtils.concatUniqueBasedOnId(emanatingLinks, links);
+			links = CanvasUtils.concatUniqueBasedOnId(this.getSelectedLinks(), links);
 		}
 
 		if (nodes.length === 0 && comments.length === 0 && links.length === 0) {
@@ -2117,18 +2117,6 @@ export default class ObjectModel {
 		LocalStorage.set("canvasClipboard", clipboardData);
 
 		return true;
-	}
-
-	// Returns a concatenation of the two input arrays making sure there are no
-	// duplicates (based on ID) in the returned array.
-	addUniqueBasedOnId(newLinks, currentLinks) {
-		const outLinks = currentLinks;
-		newLinks.forEach((nl) => {
-			if (!currentLinks.some((cl) => cl.id === nl.id)) {
-				outLinks.push(nl);
-			}
-		});
-		return outLinks;
 	}
 
 	isClipboardEmpty() {

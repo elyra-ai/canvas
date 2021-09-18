@@ -936,5 +936,15 @@ export default class CanvasUtils {
 		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
 
-
+	// Returns a concatenation of the two input arrays making sure there are no
+	// duplicates (based on ID) in the returned array.
+	static concatUniqueBasedOnId(newLinks, currentLinks) {
+		const outLinks = currentLinks;
+		newLinks.forEach((nl) => {
+			if (!currentLinks.some((cl) => cl.id === nl.id)) {
+				outLinks.push(nl);
+			}
+		});
+		return outLinks;
+	}
 }
