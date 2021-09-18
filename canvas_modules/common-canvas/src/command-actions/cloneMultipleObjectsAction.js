@@ -18,11 +18,12 @@ import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
 export default class CloneMultipleObjectsAction extends Action {
-	constructor(data, objectModel, viewportDimensions, areDetachableLinksSupported) {
+	constructor(data, objectModel, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
 		super(data);
 		this.data = data;
 		this.viewportDimensions = viewportDimensions;
-		this.areDetachableLinksSupported = areDetachableLinksSupported;
+		this.areDetachableLinksInUse = areDetachableLinksInUse;
+		this.isSnapToGridInUse = isSnapToGridInUse;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.clonedNodesInfo = [];
@@ -85,6 +86,7 @@ export default class CloneMultipleObjectsAction extends Action {
 				const xDelta = this.data.mousePos.x - pastedObjDimensions.left;
 				const yDelta = this.data.mousePos.y - pastedObjDimensions.top;
 				this.moveObjectsPositions(objects, xDelta, yDelta);
+
 			} else {
 				const transRect = this.viewportDimensions;
 				if (transRect.x < pastedObjDimensions.left &&
@@ -92,6 +94,7 @@ export default class CloneMultipleObjectsAction extends Action {
 						transRect.x + transRect.width > pastedObjDimensions.left &&
 						transRect.y + transRect.height > pastedObjDimensions.top) {
 					this.ensureNoOverlap(objects);
+
 				} else {
 					const xDelta = transRect.x + (transRect.width / 2) - (pastedObjDimensions.width / 2) - pastedObjDimensions.left;
 					const yDelta = transRect.y + (transRect.height / 2) - (pastedObjDimensions.height / 2) - pastedObjDimensions.top;
@@ -107,8 +110,15 @@ export default class CloneMultipleObjectsAction extends Action {
 	// Exact overlap can happen when pasting over the top of the canvas from
 	// which the canvas objects  were copied.
 	ensureNoOverlap(objects) {
+		let xInc = 10;
+		let yInc = 10;
+		if (this.isSnapToGridInUse) {
+			const canvasLayout = this.objectModel.getCanvasLayout();
+			xInc = canvasLayout.snapToGridXPx;
+			yInc = canvasLayout.snapToGridYPx;
+		}
 		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
-			this.moveObjectsPositions(objects, 10, 10);
+			this.moveObjectsPositions(objects, xInc, yInc);
 		}
 	}
 
@@ -170,7 +180,7 @@ export default class CloneMultipleObjectsAction extends Action {
 
 
 		this.apiPipeline.addLinks(this.clonedLinks);
-		if (this.areDetachableLinksSupported) {
+		if (this.areDetachableLinksInUse) {
 			this.clonedLinks.forEach((clonedLink) => addedObjectIds.push(clonedLink.id));
 		}
 

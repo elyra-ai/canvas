@@ -1298,28 +1298,12 @@ export default class APIPipeline {
 		return filteredLinks;
 	}
 
+	// Returns an array of cloned links that refer to the id passed in as either
+	// the source node or the target node.
 	getLinksContainingId(id) {
-		const linksList = this.getLinks();
-		const linksContaining = linksList.filter((link) => {
-			return (link.srcNodeId === id || link.trgNodeId === id);
-		});
-		const returnLinks = linksContaining.map((link) => {
-			var newLink = {};
-			newLink.id = link.id;
-			newLink.type = link.type;
-			newLink.srcNodeId = link.srcNodeId;
-			newLink.trgNodeId = link.trgNodeId;
-			newLink.class_name = link.class_name;
-			newLink.style = link.style;
-			newLink.style_temp = link.style_temp;
-			if (link.type === NODE_LINK) {
-				newLink.srcNodePortId = link.srcNodePortId;
-				newLink.trgNodePortId = link.trgNodePortId;
-				newLink.linkName = link.linkName;
-			}
-			return newLink;
-		});
-		return returnLinks;
+		return this.getLinks()
+			.filter((link) => link.srcNodeId === id || link.trgNodeId === id)
+			.map((link) => Object.assign({}, link));
 	}
 
 	// Takes in an array of objects and returns an array of links to those objects.

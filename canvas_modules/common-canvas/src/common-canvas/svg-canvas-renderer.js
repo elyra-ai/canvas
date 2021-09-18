@@ -33,7 +33,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
-	SUPER_NODE }
+	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -669,8 +669,8 @@ export default class SVGCanvasRenderer {
 	getMousePosSnapToGrid(mousePos) {
 		let transPos = mousePos;
 
-		if (this.config.enableSnapToGridType === "During" ||
-				this.config.enableSnapToGridType === "After") {
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+				this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			transPos = this.snapToGridObject(transPos);
 		}
 		return transPos;
@@ -2129,7 +2129,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let	increment = { x: 0, y: 0 };
 
-				if (this.config.enableSnapToGridType === "During") {
+				if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
 					const stgPos = this.snapToGridDraggedNode();
 
 					increment = {
@@ -2151,6 +2151,19 @@ export default class SVGCanvasRenderer {
 					d.x_pos += increment.x;
 					d.y_pos += increment.y;
 				});
+
+				if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+					this.getSelectedLinks().forEach((link) => {
+						if (link.srcPos) {
+							link.srcPos.x_pos += increment.x;
+							link.srcPos.y_pos += increment.y;
+						}
+						if (link.trgPos) {
+							link.trgPos.x_pos += increment.x;
+							link.trgPos.y_pos += increment.y;
+						}
+					});
+				}
 			}
 
 			this.displayCanvas();
@@ -2208,7 +2221,7 @@ export default class SVGCanvasRenderer {
 				if (this.dragRunningX !== 0 ||
 						this.dragRunningY !== 0) {
 					let dragFinalOffset = null;
-					if (this.config.enableSnapToGridType === "After") {
+					if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 						const stgPos = this.snapToGridDraggedNode();
 						dragFinalOffset = {
 							x: stgPos.x - this.dragStartX,
@@ -2243,6 +2256,7 @@ export default class SVGCanvasRenderer {
 							editType: "moveObjects",
 							editSource: "canvas",
 							nodes: this.dragObjects.map((o) => o.id),
+							links: this.getSelectedLinks().filter((l) => l.srcPos || l.trgPos), // Filter detached links
 							offsetX: dragFinalOffset.x,
 							offsetY: dragFinalOffset.y,
 							pipelineId: this.activePipeline.id });
@@ -5624,7 +5638,7 @@ export default class SVGCanvasRenderer {
 		let width = 0;
 		let height = 0;
 
-		if (this.config.enableSnapToGridType === "During") {
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
 			// Calculate where the object being resized would be and its size given
 			// current increments.
 			this.resizeObjXPos += incrementX;
@@ -5670,7 +5684,7 @@ export default class SVGCanvasRenderer {
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing() {
-		if (this.config.enableSnapToGridType === "After") {
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
 			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridXPx);
 			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridYPx);
@@ -5700,7 +5714,7 @@ export default class SVGCanvasRenderer {
 		let width = commentObj.width;
 		let height = commentObj.height;
 
-		if (this.config.enableSnapToGridType === "After") {
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			xPos = CanvasUtils.snapToGrid(xPos, this.canvasLayout.snapToGridXPx);
 			yPos = CanvasUtils.snapToGrid(yPos, this.canvasLayout.snapToGridYPx);
 			width = CanvasUtils.snapToGrid(width, this.canvasLayout.snapToGridXPx);

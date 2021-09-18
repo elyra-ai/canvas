@@ -103,12 +103,12 @@ export default class DeleteObjectsAction extends Action {
 					if (src) {
 						delete newLink.srcNodeId;
 						delete newLink.srcNodePortId;
-						newLink.srcPos = this.getSrcPos(link);
+						newLink.srcPos = CanvasUtils.getSrcPos(link, this.apiPipeline);
 					}
 					if (trg) {
 						delete newLink.trgNodeId;
 						delete newLink.trgNodePortId;
-						newLink.trgPos = this.getTrgPos(link);
+						newLink.trgPos = CanvasUtils.getTrgPos(link, this.apiPipeline);
 					}
 					newLinks.push(newLink);
 					oldLinks.push(link);
@@ -116,71 +116,6 @@ export default class DeleteObjectsAction extends Action {
 			}
 		});
 		return { newLinks, oldLinks };
-	}
-
-	getSrcPos(link) {
-		const srcNode = this.apiPipeline.getNode(link.srcNodeId);
-		let outerCenterX;
-		let outerCenterY;
-		if (link.trgNodeId) {
-			const trgNode = this.apiPipeline.getNode(link.trgNodeId);
-			outerCenterX = trgNode.x_pos + (trgNode.width / 2);
-			outerCenterY = trgNode.y_pos + (trgNode.height / 2);
-		} else {
-			outerCenterX = link.trgPos.x_pos;
-			outerCenterY = link.trgPos.y_pos;
-		}
-
-		let srcCenterX;
-		let srcCenterY;
-
-		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
-
-		} else {
-			srcCenterX = srcNode.width / 2;
-			srcCenterY = srcNode.height / 2;
-		}
-
-		const startPos = CanvasUtils.getOuterCoord(
-			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
-			srcCenterX, srcCenterY, outerCenterX, outerCenterY);
-
-		return { x_pos: startPos.x, y_pos: startPos.y };
-	}
-
-	getTrgPos(link) {
-		const trgNode = this.apiPipeline.getNode(link.trgNodeId);
-
-		let outerCenterX;
-		let outerCenterY;
-		if (link.srcNodeId) {
-			const srcNode = this.apiPipeline.getNode(link.srcNodeId);
-			outerCenterX = srcNode.x_pos + (srcNode.width / 2);
-			outerCenterY = srcNode.y_pos + (srcNode.height / 2);
-		} else {
-			outerCenterX = link.srcPos.x_pos;
-			outerCenterY = link.srcPos.y_pos;
-		}
-
-		let trgCenterX;
-		let trgCenterY;
-
-		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
-
-		} else {
-			trgCenterX = trgNode.width / 2;
-			trgCenterY = trgNode.height / 2;
-		}
-
-		const startPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
-			trgCenterX, trgCenterY, outerCenterX, outerCenterY);
-
-		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
 
 	isLinkToBeDeleted(link, linksToDelete) {

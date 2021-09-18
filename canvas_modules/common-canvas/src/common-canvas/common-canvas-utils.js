@@ -216,7 +216,7 @@ export default class CanvasUtils {
 	}
 
 	// Returns the coordinate position along the edge of a rectangle where a
-	// straight should be drawn from. The line's direction originates from a
+	// straight line should be drawn from. The line's direction originates from a
 	// point within the rectangle. The rectangle is described by the first four
 	// paramters, the origin of the line's direction is described by
 	// originX and originY which are an offset from the top left corener of
@@ -862,4 +862,79 @@ export default class CanvasUtils {
 	static filterSupernodes(inNodes) {
 		return inNodes.filter((n) => n.type === SUPER_NODE);
 	}
+
+	// Returns a source position object, with x_pos and y_pos fields, that
+	// decribes where a link line would be drawn from if the link's source node
+	// did not exist. This is useful when doing operations (such as delete or
+	// cut/copy) that cause semi-detached or fully detached links to be created.
+	static getSrcPos(link, apiPipeline) {
+		const srcNode = apiPipeline.getNode(link.srcNodeId);
+		let outerCenterX;
+		let outerCenterY;
+		if (link.trgNodeId) {
+			const trgNode = apiPipeline.getNode(link.trgNodeId);
+			outerCenterX = trgNode.x_pos + (trgNode.width / 2);
+			outerCenterY = trgNode.y_pos + (trgNode.height / 2);
+		} else {
+			outerCenterX = link.trgPos.x_pos;
+			outerCenterY = link.trgPos.y_pos;
+		}
+
+		let srcCenterX;
+		let srcCenterY;
+
+		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
+			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
+
+		} else {
+			srcCenterX = srcNode.width / 2;
+			srcCenterY = srcNode.height / 2;
+		}
+
+		const startPos = CanvasUtils.getOuterCoord(
+			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
+			srcCenterX, srcCenterY, outerCenterX, outerCenterY);
+
+		return { x_pos: startPos.x, y_pos: startPos.y };
+	}
+
+	// Returns a target position object, with x_pos and y_pos fields, that
+	// decribes where a link line would be drawn from if the link's target node
+	// did not exist. This is useful when doing operations (such as delete or
+	// cut/copy) that cause semi-detached or fully detached links to be created.
+	static getTrgPos(link, apiPipeline) {
+		const trgNode = apiPipeline.getNode(link.trgNodeId);
+
+		let outerCenterX;
+		let outerCenterY;
+		if (link.srcNodeId) {
+			const srcNode = apiPipeline.getNode(link.srcNodeId);
+			outerCenterX = srcNode.x_pos + (srcNode.width / 2);
+			outerCenterY = srcNode.y_pos + (srcNode.height / 2);
+		} else {
+			outerCenterX = link.srcPos.x_pos;
+			outerCenterY = link.srcPos.y_pos;
+		}
+
+		let trgCenterX;
+		let trgCenterY;
+
+		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
+			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
+			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
+
+		} else {
+			trgCenterX = trgNode.width / 2;
+			trgCenterY = trgNode.height / 2;
+		}
+
+		const startPos = CanvasUtils.getOuterCoord(
+			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
+			trgCenterX, trgCenterY, outerCenterX, outerCenterY);
+
+		return { x_pos: startPos.x, y_pos: startPos.y };
+	}
+
+
 }

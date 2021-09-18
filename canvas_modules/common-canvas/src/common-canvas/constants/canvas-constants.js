@@ -56,6 +56,11 @@ _defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
 _defineConstant("LINK_SELECTION_HANDLES", "Handles");
 _defineConstant("LINK_SELECTION_DETACHABLE", "Detachable");
 
+// Values for enableSnapToGridType config parameter
+_defineConstant("SNAP_TO_GRID_NONE", "None");
+_defineConstant("SNAP_TO_GRID_AFTER", "After");
+_defineConstant("SNAP_TO_GRID_DURING", "During");
+
 // Values for enablePaletteLayout config parameter
 _defineConstant("PALETTE_LAYOUT_NONE", "None");
 _defineConstant("PALETTE_LAYOUT_FLYOUT", "Flyout");

@@ -63,6 +63,25 @@ export default (state = [], action) => {
 		];
 	}
 
+	case "MOVE_OBJECTS":
+		return state.map((link) => {
+			if (action.data.links) {
+				const index = action.data.links.findIndex((l) => l.id === link.id);
+				if (index > -1) {
+					const newLink = Object.assign({}, link);
+					if (newLink.srcPos) {
+						newLink.srcPos.x_pos += action.data.offsetX;
+						newLink.srcPos.y_pos += action.data.offsetY;
+					}
+					if (newLink.trgPos) {
+						newLink.trgPos.x_pos += action.data.offsetX;
+						newLink.trgPos.y_pos += action.data.offsetY;
+					}
+				}
+			}
+			return link;
+		});
+
 	case "SET_LINK_PROPERTIES":
 		return state.map((link) => {
 			if (link.id === action.data.linkId) {
