@@ -135,10 +135,10 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.verifyNumberOfLinks(7);
 
 		// Objects should be pasted at content menu request position
-		cy.verifyCommentTransform(" comment 1", 140, 400);
-		cy.verifyNodeTransform("DRUG1n", 104, 516);
-		cy.verifyNodeTransform("Na_to_K", 226, 516);
-		cy.verifyNodeTransform("Discard Fields", 336, 516);
+		cy.verifyCommentTransform(" comment 1", 136, 400);
+		cy.verifyNodeTransform("DRUG1n", 100, 516);
+		cy.verifyNodeTransform("Na_to_K", 222, 516);
+		cy.verifyNodeTransform("Discard Fields", 332, 516);
 
 	});
 
