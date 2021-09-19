@@ -80,7 +80,7 @@ export default class CloneMultipleObjectsAction extends Action {
 	// not visible in the viewport, we paste them in the center of the viewport.
 	adjustObjectsPositions() {
 		const objects = this.data.objects;
-		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0);
+		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0, 0);
 		if (pastedObjDimensions) {
 			if (this.data.mousePos && this.data.mousePos.x && this.data.mousePos.y) {
 				const xDelta = this.data.mousePos.x - pastedObjDimensions.left;

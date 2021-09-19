@@ -737,8 +737,9 @@ export default class CanvasUtils {
 
 	// Returns an object containing the dimensions of an imaginary rectangle
 	// surrounding the nodes and comments and links passed in or null if
-	// no valid objects were provided.
-	static getCanvasDimensions(nodes, comments, links, commentHighlightGap) {
+	// no valid objects were provided. nodeHighlightGap may be 0 or undefined.
+	// If it is undefined we use the nodeHighlightGap in the node's layout.
+	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -749,10 +750,11 @@ export default class CanvasUtils {
 				if (this.isSuperBindingNode(d)) { // Always ignore Supernode binding nodes
 					return;
 				}
-				canvLeft = Math.min(canvLeft, d.x_pos - d.layout.nodeHighlightGap);
-				canvTop = Math.min(canvTop, d.y_pos - d.layout.nodeHighlightGap);
-				canvRight = Math.max(canvRight, d.x_pos + d.width + d.layout.nodeHighlightGap);
-				canvBottom = Math.max(canvBottom, d.y_pos + d.height + d.layout.nodeHighlightGap);
+				const nodeGap = nodeHighlightGap === 0 ? 0 : d.layout.nodeHighlightGap;
+				canvLeft = Math.min(canvLeft, d.x_pos - nodeGap);
+				canvTop = Math.min(canvTop, d.y_pos - nodeGap);
+				canvRight = Math.max(canvRight, d.x_pos + d.width + nodeGap);
+				canvBottom = Math.max(canvBottom, d.y_pos + d.height + nodeGap);
 			});
 		}
 
