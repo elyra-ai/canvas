@@ -4572,7 +4572,7 @@ export default class SVGCanvasRenderer {
 							pos.x <= xx + nodeWidthOffset + wd &&
 							pos.y >= yy &&
 							pos.y <= yy + ht) {
-						portId = this.getAttribute("data-port-id");
+						portId = portGrps[i].getAttribute("data-port-id");
 					}
 				} else { // Port must be a circle
 					const cx = node.x_pos + Number(portSel.attr("cx"));
@@ -4581,7 +4581,7 @@ export default class SVGCanvasRenderer {
 							pos.x <= cx + node.layout.portRadius &&
 							pos.y >= cy - node.layout.portRadius &&
 							pos.y <= cy + node.layout.portRadius) {
-						portId = this.getAttribute("data-port-id");
+						portId = portGrps[i].getAttribute("data-port-id");
 					}
 				}
 			});
