@@ -135,10 +135,10 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.verifyNumberOfLinks(7);
 
 		// Objects should be pasted at content menu request position
-		cy.verifyCommentTransform(" comment 1", 140, 400);
-		cy.verifyNodeTransform("DRUG1n", 104, 516);
-		cy.verifyNodeTransform("Na_to_K", 226, 516);
-		cy.verifyNodeTransform("Discard Fields", 336, 516);
+		cy.verifyCommentTransform(" comment 1", 136, 400);
+		cy.verifyNodeTransform("DRUG1n", 100, 516);
+		cy.verifyNodeTransform("Na_to_K", 222, 516);
+		cy.verifyNodeTransform("Discard Fields", 332, 516);
 
 	});
 
@@ -509,6 +509,9 @@ describe("Test clipboard with detachable links enabled", function() {
 	it("Test cutting node and semi-detached link using context menu", function() {
 		// Validate there are 11 links on the canvas
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link and node
@@ -524,6 +527,9 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
 		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfSelectedObjects(2);
 
@@ -531,6 +537,9 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
@@ -545,14 +554,22 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		// Total count of links stays at 13 because one of the comment links is
+		// deleted during the 'cut' but a node link is added when the node is pasted.
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
-		cy.verifyNumberOfSelectedObjects(2);
+		cy.verifyNumberOfSelectedObjects(3);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
@@ -567,14 +584,22 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(12); // Goes to 12 because one of the comment links is deleted during the 'cut'
+		// Total count of links stays at 13 because one of the comment links is
+		// deleted during the 'cut' but a node link is added when the node is pasted.
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfCommentLinks(3);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
-		cy.verifyNumberOfSelectedObjects(2);
+		cy.verifyNumberOfSelectedObjects(3);
 	});
 
 	it("Test copying node and semi-detached link using context menu", function() {
 		// Validate there are 11 links on the canvas
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link and node
@@ -590,12 +615,18 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
 		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
@@ -610,13 +641,19 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfLinks(15);
+		cy.verifyNumberOfPortDataLinks(10);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(7);
-		cy.verifyNumberOfSelectedObjects(2);
+		cy.verifyNumberOfSelectedObjects(3);
 
 		// Revert back to otriginal canvas
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(6);
 
 		// Select a semi-detached link
@@ -631,8 +668,56 @@ describe("Test clipboard with detachable links enabled", function() {
 		cy.rightClickToDisplayContextMenu(100, 400);
 		cy.clickOptionFromContextSubmenu("Edit", "Paste");
 
-		cy.verifyNumberOfLinks(14);
+		cy.verifyNumberOfLinks(15);
+		cy.verifyNumberOfPortDataLinks(10);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
 		cy.verifyNumberOfNodes(7);
-		cy.verifyNumberOfSelectedObjects(2);
+		cy.verifyNumberOfSelectedObjects(3);
 	});
+
+	it("Test copying/pasting a node also copies multiple emanating links using context menu", function() {
+		// Validate there are 11 links on the canvas
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+		cy.verifyNumberOfNodes(6);
+
+		// Select a node
+		cy.clickNode("Binding (exit) node");
+
+		// Copy using context menu
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+
+		// Paste using context menu
+		cy.rightClickToDisplayContextMenu(100, 400);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		cy.verifyNumberOfLinks(16);
+		cy.verifyNumberOfPortDataLinks(11);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+		cy.verifyNumberOfNodes(7);
+		cy.verifyNumberOfSelectedObjects(4);
+
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfLinks(13);
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+		cy.verifyNumberOfNodes(6);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfLinks(16);
+		cy.verifyNumberOfPortDataLinks(11);
+		cy.verifyNumberOfCommentLinks(4);
+		cy.verifyNumberOfAssociationLinks(1);
+		cy.verifyNumberOfNodes(7);
+		cy.verifyNumberOfSelectedObjects(4);
+	});
+
 });

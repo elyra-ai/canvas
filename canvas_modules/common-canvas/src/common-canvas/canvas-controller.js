@@ -50,7 +50,7 @@ import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
 import { get, has, isEmpty } from "lodash";
-import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SUPER_NODE } from "./constants/canvas-constants";
+import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SNAP_TO_GRID_NONE, SUPER_NODE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -528,8 +528,12 @@ export default class CanvasController {
 		return this.objectModel.areAllSelectedObjectsLinks();
 	}
 
-	areDetachableLinksSupported() {
+	areDetachableLinksInUse() {
 		return this.getCanvasConfig().enableLinkSelection === LINK_SELECTION_DETACHABLE;
+	}
+
+	isSnapToGridInUse() {
+		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1552,7 +1556,7 @@ export default class CanvasController {
 	canCutCopy() {
 		if (this.getSelectedObjectIds().length > 0) {
 			if (this.areAllSelectedObjectsLinks() &&
-					!this.areDetachableLinksSupported()) {
+					!this.areDetachableLinksInUse()) {
 				return false;
 			}
 			return true;
@@ -1824,7 +1828,7 @@ export default class CanvasController {
 		// Edit submenu (cut, copy, paste)
 		if (source.type === "node" ||
 				source.type === "comment" ||
-				(source.type === "link" && this.areDetachableLinksSupported()) ||
+				(source.type === "link" && this.areDetachableLinksInUse()) ||
 				source.type === "canvas") {
 			const editSubMenu = this.createEditMenu(source, source.type === "canvas");
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node.editMenu") });
@@ -2201,7 +2205,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksInUse());
 				this.commandStack.do(command);
 				break;
 			}
@@ -2267,13 +2271,13 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
-				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
+				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksInUse());
 				this.commandStack.do(command);
 				break;
 			}
 			case "copy": {
-				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
+				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
 				break;
 			}
 			case "paste": {
@@ -2281,7 +2285,7 @@ export default class CanvasController {
 				if (pasteObjects) {
 					data.objects = pasteObjects;
 					const vpDims = this.getSVGCanvasD3().getTransformedViewportDimensions();
-					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksSupported());
+					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
 					this.commandStack.do(command);
 					data = command.getData();
 				}

@@ -34,7 +34,8 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
-	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
+	HIGHLIGHT_DOWNSTREAM, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class ObjectModel {
 
@@ -692,8 +693,8 @@ export default class ObjectModel {
 		} else {
 			newNode = this.setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
 		}
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
 			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
 			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
 		}
@@ -704,8 +705,8 @@ export default class ObjectModel {
 	// returned comment has its position adjusted for snap to grid, if necessary.
 	setCommentAttributesWithLayout(comment, canvasLayout) {
 		const newComment = Object.assign({}, comment);
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
 			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
 			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
 		}
@@ -2042,7 +2043,7 @@ export default class ObjectModel {
 	// Copies the currently selected objects to the internal clipboard and
 	// returns true if successful. Returns false if there is nothing to copy to
 	// the clipboard.
-	copyToClipboard(areDetachableLinksSupported) {
+	copyToClipboard(areDetachableLinksInUse) {
 		var copyData = {};
 
 		const apiPipeline = this.getSelectionAPIPipeline();
@@ -2051,9 +2052,17 @@ export default class ObjectModel {
 		}
 		const nodes = this.getSelectedNodes();
 		const comments = this.getSelectedComments();
-		const links = areDetachableLinksSupported
-			? this.getSelectedLinks()
-			: apiPipeline.getLinksBetween(nodes, comments);
+		let links = apiPipeline.getLinksBetween(nodes, comments);
+
+		// If detachable links are in use, we need to also add any links that
+		// emanate from the selected nodes AND any links that are currently
+		// selected, making sure we don't have any duplicates in the final
+		// links array.
+		if (areDetachableLinksInUse) {
+			const emanatingLinks = apiPipeline.getNodeDataLinksContainingIds(nodes.map((n) => n.id));
+			links = CanvasUtils.concatUniqueBasedOnId(emanatingLinks, links);
+			links = CanvasUtils.concatUniqueBasedOnId(this.getSelectedLinks(), links);
+		}
 
 		if (nodes.length === 0 && comments.length === 0 && links.length === 0) {
 			return false;
@@ -2086,10 +2095,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.srcNodeId &&
 						nodes.findIndex((n) => n.id === link.srcNodeId) === -1) {
-					const srcNode = apiPipeline.getNode(link.srcNodeId);
 					delete newLink.srcNodeId;
 					delete newLink.srcNodePortId;
-					newLink.srcPos = { x_pos: srcNode.x_pos + srcNode.width, y_pos: srcNode.y_pos + (srcNode.height / 2) };
+					newLink.srcPos = CanvasUtils.getSrcPos(link, apiPipeline);
 				}
 				// If the link is a node-node data link and it is attached to a target
 				// node and that node is not to be clipboarded, set the trgPos
@@ -2097,10 +2105,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.trgNodeId &&
 						nodes.findIndex((n) => n.id === link.trgNodeId) === -1) {
-					const trgNode = apiPipeline.getNode(link.trgNodeId);
 					delete newLink.trgNodeId;
 					delete newLink.trgNodePortId;
-					newLink.trgPos = { x_pos: trgNode.x_pos, y_pos: trgNode.y_pos + (trgNode.height / 2) };
+					newLink.trgPos = CanvasUtils.getTrgPos(link, apiPipeline);
 				}
 				return newLink;
 			});

@@ -1298,40 +1298,34 @@ export default class APIPipeline {
 		return filteredLinks;
 	}
 
+	// Returns an array of cloned links that refer to the id passed in as either
+	// the source node or the target node.
 	getLinksContainingId(id) {
-		const linksList = this.getLinks();
-		const linksContaining = linksList.filter((link) => {
-			return (link.srcNodeId === id || link.trgNodeId === id);
-		});
-		const returnLinks = linksContaining.map((link) => {
-			var newLink = {};
-			newLink.id = link.id;
-			newLink.type = link.type;
-			newLink.srcNodeId = link.srcNodeId;
-			newLink.trgNodeId = link.trgNodeId;
-			newLink.class_name = link.class_name;
-			newLink.style = link.style;
-			newLink.style_temp = link.style_temp;
-			if (link.type === NODE_LINK) {
-				newLink.srcNodePortId = link.srcNodePortId;
-				newLink.trgNodePortId = link.trgNodePortId;
-				newLink.linkName = link.linkName;
-			}
-			return newLink;
-		});
-		return returnLinks;
+		return this.getLinks()
+			.filter((link) => link.srcNodeId === id || link.trgNodeId === id)
+			.map((link) => Object.assign({}, link));
 	}
 
-	// Takes in an array of objects and returns an array of links to those objects.
-	getLinksContainingIds(idArray) {
+	// Returns an array of cloned links that reference one of the objects (nodes
+	// and/or comments) identified by the array of object IDs passed in. The links
+	// returned may be of any type.
+	getLinksContainingIds(objIdArray) {
 		let linksArray = [];
-		idArray.forEach((objId) => {
+		objIdArray.forEach((objId) => {
 			const linksForId = this.getLinksContainingId(objId);
 			if (linksForId.length > 0) {
-				linksArray = linksArray.concat(linksForId);
+				linksArray = CanvasUtils.concatUniqueBasedOnId(linksForId, linksArray);
 			}
 		});
 		return linksArray;
+	}
+
+	// Returns an array of cloned node data links that reference one of the
+	// objects (nodes and/or comments) identified by the array of object IDs
+	// passed in. The links returned may be of any type.
+	getNodeDataLinksContainingIds(objIdArray) {
+		return this.getLinksContainingIds(objIdArray)
+			.filter((link) => link.type === NODE_LINK);
 	}
 
 	// Returns an array of fully-attached' links with id as the source ID.
