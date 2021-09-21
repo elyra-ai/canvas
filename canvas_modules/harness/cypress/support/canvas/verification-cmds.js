@@ -1221,6 +1221,14 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	}
 });
 
+Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue) => {
+	cy.findNodeInCategory(nodeLabel)
+		.invoke("attr", "data-id")
+		.then((dataId) => {
+			expect(dataId).to.equal(dataIdValue);
+		});
+});
+
 // Compares two pixel value to see if they are within the compareRange value or not.
 Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 	// value should be in the compare range of cssValue

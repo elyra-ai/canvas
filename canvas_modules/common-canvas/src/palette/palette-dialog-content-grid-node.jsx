@@ -128,6 +128,7 @@ class PaletteDialogContentGridNode extends React.Component {
 
 		return (
 			<div id={this.props.nodeTemplate.id}
+				data-id={this.props.nodeTemplate.op}
 				draggable={draggable}
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}

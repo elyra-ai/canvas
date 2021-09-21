@@ -143,6 +143,20 @@ describe("Palette renders correctly", () => {
 		});
 	});
 
+	it("Palette flyout nodes should have data-id attribute", () => {
+		const wrapper = createMountedPalette();
+		const importCat = findCategoryElement(wrapper, "Import");
+		importCat.simulate("click");
+		const outputsCat = findCategoryElement(wrapper, "Outputs");
+		outputsCat.simulate("click");
+		const ops = [];
+		testPalette2.categories.forEach((category) => category.node_types.forEach((node) => ops.push(node.op)));
+		const flyoutPaletteNodes = wrapper.find(".palette-list-item");
+		flyoutPaletteNodes.forEach((node, idx) => {
+			expect(node.props()).to.have.property("data-id", ops[idx]);
+		});
+	});
+
 	it("should show wide palette", () => {
 		const palette = createMountedPalette().find(".palette-flyout-div-open");
 		expect(palette).to.have.length(1);

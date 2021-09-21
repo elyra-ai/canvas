@@ -223,3 +223,53 @@ describe("Test aspect ratio of images is preserved", function() {
 		cy.verifyPaletteNodeImageCSS("Triangle", "height", "25px");
 	});
 });
+
+describe("Test nodes in Modal palette have data-id attribute", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Modal" });
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.clickToolbarPaletteOpen();
+	});
+
+	it("Nodes in Modal palette should have data-id attribute", function() {
+		cy.clickCategory("Import");
+		cy.verifyNodeHasDataId("Var. File", "variablefile");
+		cy.verifyNodeHasDataId("Database", "database");
+		cy.verifyNodeHasDataId("Object Store", "object_storage_import");
+
+		cy.clickCategory("Record Ops");
+		cy.verifyNodeHasDataId("User Input", "userinput");
+		cy.verifyNodeHasDataId("Select", "select");
+		cy.verifyNodeHasDataId("Sample", "sample");
+		cy.verifyNodeHasDataId("Merge", "merge");
+		cy.verifyNodeHasDataId("Sort", "sort");
+		cy.verifyNodeHasDataId("Aggregate", "aggregate");
+		cy.verifyNodeHasDataId("Balance", "balance");
+	});
+});
+
+describe("Test nodes in Flyout palette have data-id attribute", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedPaletteLayout": "Flyout" });
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.clickToolbarPaletteOpen();
+	});
+
+	it("Nodes in Flyout palette should have data-id attribute", function() {
+		cy.clickCategory("Import");
+		cy.verifyNodeHasDataId("Var. File", "variablefile");
+		cy.verifyNodeHasDataId("Database", "database");
+		cy.verifyNodeHasDataId("Object Store", "object_storage_import");
+
+		cy.clickCategory("Record Ops");
+		cy.verifyNodeHasDataId("User Input", "userinput");
+		cy.verifyNodeHasDataId("Select", "select");
+		cy.verifyNodeHasDataId("Sample", "sample");
+		cy.verifyNodeHasDataId("Merge", "merge");
+		cy.verifyNodeHasDataId("Sort", "sort");
+		cy.verifyNodeHasDataId("Aggregate", "aggregate");
+		cy.verifyNodeHasDataId("Balance", "balance");
+	});
+});
