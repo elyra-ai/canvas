@@ -373,6 +373,7 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController2 = new CanvasController();
+			// this.canvasController.setLoggingState(true);
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}

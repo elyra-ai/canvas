@@ -22,11 +22,11 @@ import Logger from "../logging/canvas-logger.js";
 class CommonCanvasRightFlyout extends React.Component {
 	constructor(props) {
 		super(props);
-		this.logger = new Logger("CommonCanvasRightFlyout");
+		this.logger = new Logger("CC-RightFlyout");
 	}
 
 	render() {
-		// window.console.log("Render Right Flyout");
+		this.logger.log("render");
 
 		let rightFlyout = (<div className="right-flyout-panel" />);
 

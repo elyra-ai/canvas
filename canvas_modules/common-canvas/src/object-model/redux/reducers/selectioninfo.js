@@ -49,6 +49,15 @@ export default (state = {}, action) => {
 		return state;
 	}
 
+	case "SET_BREADCRUMBS":
+	case "ADD_BREADCRUMB":
+	case "ADD_BREADCRUMBS":
+	case "SET_TO_INDEXED_BREADCRUMB":
+	case "SET_TO_PREVIOUS_BREADCRUMB":
+	case "RESET_BREADCRUMB": {
+		return {};
+	}
+
 	default:
 		return state;
 	}

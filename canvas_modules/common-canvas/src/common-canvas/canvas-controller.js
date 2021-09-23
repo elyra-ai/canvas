@@ -115,7 +115,7 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	setCanvasConfig(config) {
-		// window.console.log("Setting Canvas Config");
+		this.logger.log("Setting Canvas Config");
 		const correctConfig = this.correctTypo(config);
 		this.objectModel.openPaletteIfNecessary(config);
 		this.objectModel.setCanvasConfig(correctConfig);
@@ -142,27 +142,27 @@ export default class CanvasController {
 	}
 
 	setToolbarConfig(config) {
-		// window.console.log("Setting Toolbar Config");
+		this.logger.log("Setting Toolbar Config");
 		this.objectModel.setToolbarConfig(config);
 	}
 
 	setNotificationPanelConfig(config) {
-		// window.console.log("Setting Notif Panel Config");
+		this.logger.log("Setting Notif Panel Config");
 		this.objectModel.setNotificationPanelConfig(config);
 	}
 
 	setRightFlyoutConfig(config) {
-		// window.console.log("Setting Right Flyout Config");
+		this.logger.log("Setting Right Flyout Config");
 		this.objectModel.setRightFlyoutConfig(config);
 	}
 
 	setContextMenuConfig(contextMenuConfig) {
-		// window.console.log("Setting Context Menu Config");
+		this.logger.log("Setting Context Menu Config");
 		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
 	}
 
 	setKeyboardConfig(keyboardConfig) {
-		// window.console.log("Setting Keyboard Config");
+		this.logger.log("Setting Keyboard Config");
 		if (keyboardConfig && keyboardConfig.actions) {
 			this.keyboardConfig.actions = Object.assign({}, this.keyboardConfig.actions, keyboardConfig.actions);
 		}

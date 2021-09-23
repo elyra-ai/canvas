@@ -30,7 +30,8 @@ class PaletteDialogContentGrid extends React.Component {
 	render() {
 		var gridNodes = [];
 
-		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
+		if (this.props.category && this.props.category.node_types &&
+				this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			gridNodes.push(
 				<PaletteDialogContentGridNode key={"pal_grid_node_empty"}
 					category={this.props.category}
