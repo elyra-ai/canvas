@@ -59,7 +59,7 @@ class CommonCanvas extends React.Component {
 	}
 
 	initializeController(props) {
-		this.logger.log("initializeController");
+		this.logger.logStartTimer("initializeController");
 		props.canvasController.setCanvasConfig(props.config);
 		props.canvasController.setContextMenuConfig(props.contextMenuConfig);
 		props.canvasController.setKeyboardConfig(props.keyboardConfig);
@@ -79,6 +79,7 @@ class CommonCanvas extends React.Component {
 			idGeneratorHandler: props.idGeneratorHandler,
 			selectionChangeHandler: props.selectionChangeHandler
 		});
+		this.logger.logEndTimer("initializeController");
 	}
 
 	render() {

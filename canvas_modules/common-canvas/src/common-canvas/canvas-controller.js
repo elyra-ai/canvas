@@ -1295,6 +1295,11 @@ export default class CanvasController {
 		Logger.setLoggingState(state);
 	}
 
+	log(msg) {
+		const logger = new Logger("Host App");
+		logger.log(msg);
+	}
+
 	addAfterUpdateCallback(callback) {
 		if (this.canvasContents) {
 			this.canvasContents.addAfterUpdateCallback(callback);

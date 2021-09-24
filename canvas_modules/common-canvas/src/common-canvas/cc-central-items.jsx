@@ -42,7 +42,7 @@ class CommonCanvasCentralItems extends React.Component {
 			centralItems = (
 				<div className="common-canvas-right-side-items-under-toolbar">
 					{canvasToolbar}
-					<div id={this.containingDivId} className="common-canvas-items-container-under-toolbar">
+					<div id={this.props.containingDivId} className="common-canvas-items-container-under-toolbar">
 						{canvasContents}
 						{rightFlyout}
 						{notificationPanel}
@@ -53,7 +53,7 @@ class CommonCanvasCentralItems extends React.Component {
 		} else {
 			centralItems = (
 				<div className="common-canvas-right-side-items">
-					<div id={this.containingDivId} className="common-canvas-items-container">
+					<div id={this.props.containingDivId} className="common-canvas-items-container">
 						{canvasToolbar}
 						{canvasContents}
 						{notificationPanel}

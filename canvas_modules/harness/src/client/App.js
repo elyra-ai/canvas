@@ -1128,6 +1128,10 @@ class App extends React.Component {
 		// Add consoleoutput to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
 
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness logging");
+		this.canvasController.log("-------------------------------");
+
 		this.setState({ consoleout: this.consoleout });
 
 		if (this.state.consoleOpened) {
@@ -1202,6 +1206,10 @@ class App extends React.Component {
 	}
 
 	clickActionHandler(source) {
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness clickActionHandler");
+		this.canvasController.log("-------------------------------");
+
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
 		// in the middle of procssing an event. Preferably, common-canvas should be
@@ -2155,8 +2163,9 @@ class App extends React.Component {
 	}
 
 	render() {
-		// window.console.log("++++++++++++++++++++");
-		// window.console.log("Render Test Harness");
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness render");
+		this.canvasController.log("-------------------------------");
 
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
