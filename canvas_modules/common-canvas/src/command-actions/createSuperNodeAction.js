@@ -484,7 +484,7 @@ export default class CreateSuperNodeAction extends Action {
 		// header info and switch the parentUrls for descendant pipelines (including
 		// the newly created pipeline for the newly created supernode).
 		if (this.data.externalUrl) {
-			this.objectModel.addExternalPipelineFlow(this.newPipelineFlow, this.data.externalUrl, false);
+			this.objectModel.addExternalPipelineFlow(this.newPipelineFlow, this.data.externalUrl, null, false);
 			const pipelines = [this.subPipeline].concat(this.descPipelines);
 			this.objectModel.setParentUrl(pipelines, this.data.externalUrl);
 		}

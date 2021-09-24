@@ -423,7 +423,7 @@ export default class ObjectModel {
 				throw msg;
 			}
 
-			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
+			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, data.targetObject, true);
 			return true;
 		}
 		return false;
@@ -478,8 +478,8 @@ export default class ObjectModel {
 	// (except for the pipelines property) using the externalpipelineflows
 	// reducer. shouldAddPipelines is a boolean that controls whether pipelines
 	// are added or not.
-	addExternalPipelineFlow(externalPipelineFlow, url, shouldAddPipelines = true) {
-		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
+	addExternalPipelineFlow(externalPipelineFlow, url, supernode, shouldAddPipelines = true) {
+		const convertedPf = this.preparePipelineFlow(externalPipelineFlow, supernode);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
 		// Make a copy and remove the pipelines from the pipleine flow
@@ -593,22 +593,22 @@ export default class ObjectModel {
 	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
 	// involves flattening the pipleine flow hierarchy and adding layout info
 	// to the nodes in the pipelines.
-	preparePipelineFlow(newPipelineFlow) {
+	preparePipelineFlow(newPipelineFlow, supernode) {
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), supernode);
 		return canvasInfo;
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.
-	prepareNodes(pipelines, nodeLayout, canvasLayout) {
-		const newPipelines = this.setSupernodesBindingStatus(pipelines);
+	prepareNodes(pipelines, nodeLayout, canvasLayout, supernode) {
+		const newPipelines = this.setSupernodesBindingStatus(pipelines, supernode);
 		return newPipelines.map((pipeline) => this.setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout));
 	}
 
 	// Loops through all the pipelines and adds the appropriate supernode binding
 	// attribute to any binding nodes that are referenced by the ports of a supernode.
-	setSupernodesBindingStatus(pipelines) {
+	setSupernodesBindingStatus(pipelines, supernode) {
 		// First, clear all supernode binding statuses from nodes
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
@@ -618,37 +618,46 @@ export default class ObjectModel {
 				});
 			}
 		});
+
+		if (supernode) {
+			this.setSupernodesBindingStatusForNode(supernode, pipelines);
+		}
+
 		// Set the supernode binding statuses as appropriate.
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					const snPipelineId = this.getSupernodePipelineId(node);
-					if (snPipelineId) {
-						if (node.inputs) {
-							node.inputs.forEach((input) => {
-								if (input.subflow_node_ref) {
-									const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
-									if (subNode) {
-										subNode.isSupernodeInputBinding = true;
-									}
-								}
-							});
-						}
-						if (node.outputs) {
-							node.outputs.forEach((output) => {
-								if (output.subflow_node_ref) {
-									const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
-									if (subNode) {
-										subNode.isSupernodeOutputBinding = true;
-									}
-								}
-							});
-						}
-					}
+				CanvasUtils.filterSupernodes(pipeline.nodes).forEach((node) => {
+					this.setSupernodesBindingStatusForNode(node, pipelines);
 				});
 			}
 		});
 		return pipelines;
+	}
+
+	setSupernodesBindingStatusForNode(node, pipelines) {
+		const snPipelineId = this.getSupernodePipelineId(node);
+		if (snPipelineId) {
+			if (node.inputs) {
+				node.inputs.forEach((input) => {
+					if (input.subflow_node_ref) {
+						const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeInputBinding = true;
+						}
+					}
+				});
+			}
+			if (node.outputs) {
+				node.outputs.forEach((output) => {
+					if (output.subflow_node_ref) {
+						const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeOutputBinding = true;
+						}
+					}
+				});
+			}
+		}
 	}
 
 	setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout) {

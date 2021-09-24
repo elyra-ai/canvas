@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,9 +87,7 @@ export default class SVGCanvasD3 {
 			this.logger.logStartTimer("set canvas info");
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
-
 			this.renderer.setCanvasInfoRenderer(this.canvasInfo);
-			this.renderer.displayCanvas();
 
 			this.logger.logEndTimer("set canvas info", true);
 		}
