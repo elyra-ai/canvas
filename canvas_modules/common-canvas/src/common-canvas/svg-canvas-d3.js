@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,69 +43,53 @@ export default class SVGCanvasD3 {
 
 	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
-		this.logger.logStartTimer("Constructor");
+		this.logger.logStartTimer("constructor");
 
 		this.canvasController = canvasController;
-		this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
-		this.config = this.cloneConfig(config);
 
-		// Create a renderer object for the primary pipeline
-		this.renderer = new SVGCanvasRenderer(
-			this.canvasInfo.primary_pipeline,
-			this.canvasDiv,
-			this.canvasController,
-			this.canvasInfo,
-			this.config);
-
-		this.logger.logEndTimer("Constructor", true);
+		this.logger.logEndTimer("constructor", true);
 	}
 
 	setCanvasInfo(canvasInfo, config) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
-		if (canvasInfo.id !== this.canvasInfo.id ||
+		if (!this.config ||
+				!this.renderer ||
+				!this.canvasInfo ||
+				canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
 				!ConfigUtils.compareCanvasConfigs(this.config, config)) {
-			this.logger.logStartTimer("Initializing Canvas");
+			this.logger.logStartTimer("initializing");
 
-			this.canvasInfo = canvasInfo;
-
-			// Save the config
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 			this.config = this.cloneConfig(config);
 
-			// clearCanvas will result in the canvas being refreshed through
-			// updates to the object model so there is no need to call displayCanvas
-			// from here. Setting this.renderer to null causes a new SVGCanvasRenderer
-			// to be created when this method is called on the refresh.
-			this.renderer.clearCanvas();
-			this.renderer = null;
-
-			this.logger.logEndTimer("Initializing Canvas", true);
-
-		} else {
-			this.logger.logStartTimer("Set Canvas Info");
-
-			// Clone the canvasInfo
-			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
-
 			if (this.renderer) {
-				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
-				this.renderer.displayCanvas();
-			} else {
-				const currentBreadcrumb = this.canvasController.getCurrentBreadcrumb();
-				this.renderer = new SVGCanvasRenderer(
-					currentBreadcrumb.pipelineId,
-					this.canvasDiv,
-					this.canvasController,
-					this.canvasInfo,
-					config,
-					{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
-						pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
-					}
-				);
+				this.renderer.clearCanvas();
+				this.renderer = null;
 			}
 
-			this.logger.logEndTimer("Set Canvas Info", true);
+			const currentBreadcrumb = this.canvasController.getCurrentBreadcrumb();
+			this.renderer = new SVGCanvasRenderer(
+				currentBreadcrumb.pipelineId,
+				this.canvasDiv,
+				this.canvasController,
+				this.canvasInfo,
+				config,
+				{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
+					pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
+				}
+			);
+
+			this.logger.logEndTimer("initializing", true);
+
+		} else {
+			this.logger.logStartTimer("set canvas info");
+
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
+			this.renderer.setCanvasInfoRenderer(this.canvasInfo);
+
+			this.logger.logEndTimer("set canvas info", true);
 		}
 	}
 

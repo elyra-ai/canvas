@@ -68,7 +68,7 @@ const OUTPUT_TYPE = "output_type";
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
-		this.logger.logStartTimer("Constructor");
+		this.logger.logStartTimer("constructor" + pipelineId.substring(0, 5));
 		this.pipelineId = pipelineId;
 		this.supernodeInfo = supernodeInfo; // Contents will be undefined in case of primary pipeline renderer
 		this.canvasDiv = canvasDiv;
@@ -252,7 +252,7 @@ export default class SVGCanvasRenderer {
 			this.supernodeInfo.d3Selection.selectAll(".d3-node-port-output").raise();
 		}
 
-		this.logger.logEndTimer("Constructor");
+		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
 	isCanvasEmptyOrBindingsOnly() {
@@ -309,7 +309,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
-		this.logger.logStartTimer("setCanvasInfoRenderer");
+		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getActivePipeline(this.pipelineId);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
@@ -333,11 +333,18 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		this.superRenderers.forEach((superRenderer) => {
-			superRenderer.setCanvasInfoRenderer(canvasInfo);
-		});
+		// Display all objects in the canvas provided we are primary pipeline
+		// (no supernode) or our supernode is_expandd.
+		const supernode = this.getParentSupernodeDatum();
+		if (!supernode || supernode.is_expanded) {
+			this.displayCanvas();
 
-		this.logger.logEndTimer("setCanvasInfoRenderer");
+			this.superRenderers.forEach((superRenderer) => {
+				superRenderer.setCanvasInfoRenderer(canvasInfo);
+			});
+		}
+
+		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 	}
 
 	// Returns a subset of renderers, from the current set of super renderers,
@@ -363,7 +370,6 @@ export default class SVGCanvasRenderer {
 	}
 
 	clearCanvas() {
-		this.canvasController.clearSelections();
 		this.initializeZoomVariables();
 		this.canvasSVG.remove();
 	}
