@@ -35,6 +35,26 @@ controller.setAppData(appData);
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
 
+const titleChangeHandlerFunction = function(title) {
+	if (title.length > 15) {
+		return { type: "error", message: "Only 15 characters are allowed in title." };
+	} else if (title.length > 10 && title.length <= 15) {
+		return {
+			type: "warning",
+			message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
+		};
+	} else if (title === "Invalid") {
+		return { "abc": "xyz" };
+	}
+	// Title is valid
+	return null;
+};
+const titleChangeHandler = sinon.spy(titleChangeHandlerFunction);
+controller.setHandlers({
+	titleChangeHandler: titleChangeHandler
+});
+controller.setEditorSize("small");
+
 
 describe("title-editor renders correctly", () => {
 
@@ -131,6 +151,109 @@ describe("title-editor renders correctly", () => {
 		const input = wrapper.find("input");
 		input.simulate("change", { target: { value: "My new title" } });
 		expect("My new title").to.equal(controller.getTitle());
+	});
+	it("titleChangeHandler should be called after editing node title", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "My new title";
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+	});
+	it("Warning message returned by titleChangeHandler should be displayed correctly", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "Short title"; // Title length exceeds 10 characters. Show warning message.
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+		// Verify warning message is displayed
+		const warningMessage = "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages.";
+		expect(titleChangeHandler.returnValues[0]).to.eql({ type: "warning", message: warningMessage });
+		expect(wrapper.find(".bx--text-input__field-wrapper--warning")).to.have.length(1);
+		expect(wrapper.find(".bx--form-requirement").text()).to.equal(warningMessage);
+
+		// warning message is a multi-line message. Verify height is adjusted for long messages.
+		expect(wrapper.find(".properties-title-with-warning-error").props().style).to.have.property("height", "7.75rem");
+	});
+	it("Error message returned by titleChangeHandler should be displayed correctly", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "This is a long title."; // Title length exceeds 15 characters. Show error message.
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify error message is displayed
+		const errorMessage = "Only 15 characters are allowed in title.";
+		expect(titleChangeHandler.returnValues[0]).to.eql({ type: "error", message: errorMessage });
+		expect(wrapper.find(".bx--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
+		expect(wrapper.find(".bx--form-requirement").text()).to.equal(errorMessage);
+	});
+	it("Don't show any error/warning message when titleChangeHandler returns null", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "Test"; // Title length is less than 10. titleChangeHandler returns null
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify no message is displayed
+		expect(titleChangeHandler.returnValues[0]).to.eql(null);
+		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
+	});
+	it("Don't show any error/warning message when titleChangeHandler response is invalid", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		// For this title, titleChangeHandler returns { "abc": "xyz" }.
+		const newTitle = "Invalid";
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify no message is displayed
+		expect(titleChangeHandler.returnValues[0]).to.eql({ "abc": "xyz" });
+		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
 	});
 	it("test label is readonly", () => {
 		helpClickHandler.resetHistory();

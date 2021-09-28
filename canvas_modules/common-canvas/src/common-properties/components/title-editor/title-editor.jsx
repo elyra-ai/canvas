@@ -20,9 +20,10 @@ import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Icon from "./../../../icons/icon.jsx";
 import Isvg from "react-inlinesvg";
-
+import { get } from "lodash";
 import { TextInput, Button } from "carbon-components-react";
-import { MESSAGE_KEYS, CARBON_ICONS } from "./../../constants/constants";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { SingleLineLengthInSize } from "./../../constants/form-constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
 
@@ -31,7 +32,8 @@ class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			focused: false
+			focused: false,
+			titleValidation: null
 		};
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
@@ -42,7 +44,30 @@ class TitleEditor extends Component {
 		this.textInputOnFocus = this.textInputOnFocus.bind(this);
 		this.textInputOnBlur = this.textInputOnBlur.bind(this);
 		this.headingEnabled = this.props.showHeading && (this.props.heading || this.props.icon);
+		this.handleTitleChange = this.handleTitleChange.bind(this);
+		this.titleChangeHandler = this.props.controller.getHandlers().titleChangeHandler;
+	}
 
+	getHeightForMultiLineMessage() {
+		// Calculate height for multi-line error/warning message
+		let height;
+		let editorSize = "small"; // set small size by default.
+		if (typeof this.props.controller.getEditorSize() !== "undefined") {
+			editorSize = this.props.controller.getEditorSize();
+		} else {
+			editorSize = this.props.controller.getForm().editorSize;
+		}
+		const singleLineLength = SingleLineLengthInSize[editorSize];
+		const messageLength = this.state.titleValidation.message.length;
+		const numberOfLines = Math.ceil(messageLength / singleLineLength);
+		if (this.headingEnabled) {
+			// Following values should be consistent with values in title-editor.scss
+			// properties-title-heading-height, properties-title-heading-bottom-padding, properties-title-editor-input-height, properties-title-editor-top-bottom-padding
+			height = 1.5 + 0.25 + 2.5 + 0.25 + numberOfLines + 2;
+		} else {
+			height = 2.5 + 0.25 + numberOfLines + 2;
+		}
+		return height;
 	}
 
 	_handleKeyPress(e) {
@@ -71,9 +96,27 @@ class TitleEditor extends Component {
 		this.setState({ focused: false });
 	}
 
+	handleTitleChange(evt) {
+		const newTitle = evt.target.value;
+		if (this.titleChangeHandler && typeof this.titleChangeHandler === "function") {
+			const titleValidation = this.titleChangeHandler(newTitle);
+			if (titleValidation && (typeof titleValidation === "object") && titleValidation.type && titleValidation.message) {
+				this.setState({ titleValidation: titleValidation });
+			} else if (titleValidation === null) {
+				// titleChangeHandler returns null for valid title.
+				this.setState({ titleValidation: titleValidation });
+			} else {
+				// titleChangeHandler response is invalid. Don't show error/warning for title.
+				this.setState({ titleValidation: null });
+			}
+		}
+		this.props.setTitle(newTitle);
+	}
+
 	render() {
 		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
+		const titleValidationTypes = [CONDITION_MESSAGE_TYPE.ERROR, CONDITION_MESSAGE_TYPE.WARNING];
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
 			: (<Button kind="ghost" aria-label={propertiesTitleEditButtonLabel} className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
@@ -105,17 +148,33 @@ class TitleEditor extends Component {
 			}
 		}
 
+		// Calculate height for multi-line error/warning message
+		let heightStyle = {};
+		if (
+			titleValidationTypes.includes(get(this.state.titleValidation, "type")) &&
+			get(this.state.titleValidation, "message") &&
+			this.state.titleValidation.message.length > SingleLineLengthInSize.small
+		) {
+			const multiLineMessageHeight = this.getHeightForMultiLineMessage();
+			heightStyle = { height: multiLineMessageHeight + "rem" };
+		}
+
 		return (
-			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.headingEnabled })}
+			<div style={ heightStyle } className={classNames("properties-title-editor",
+				{ "properties-title-with-heading": this.headingEnabled },
+				{ "properties-title-with-warning-error": titleValidationTypes.includes(get(this.state.titleValidation, "type")) })}
 			>
 				{heading}
-				<div className={classNames("properties-title-editor-input", { "properties-title-editor-with-help": this.props.help && !this.headingEnabled })}>
+				<div className={classNames(
+					"properties-title-editor-input",
+					{ "properties-title-editor-with-help": this.props.help && !this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) }
+				)}
+				>
 					<TextInput
 						id={this.id}
 						ref={this.textInputRef}
 						value={this.props.title}
-						onChange={(e) => this.props.setTitle(e.target.value)}
+						onChange={this.handleTitleChange}
 						onKeyPress={(e) => this._handleKeyPress(e)}
 						readOnly={this.props.labelEditable === false}
 						labelText={this.labelText}
@@ -123,11 +182,15 @@ class TitleEditor extends Component {
 						onFocus={this.textInputOnFocus}
 						onBlur={this.textInputOnBlur}
 						light={this.props.controller.getLight()}
+						invalid={get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.ERROR}
+						invalidText={get(this.state.titleValidation, "message")}
+						warn={get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.WARNING}
+						warnText={get(this.state.titleValidation, "message")}
 						{... this.state.focused && { className: "properties-title-editor-focused" }}
 					/>
-					{propertiesTitleEdit}
+					{titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? null : propertiesTitleEdit}
 				</div>
-				{!this.headingEnabled ? helpButton : null}
+				{!this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) ? helpButton : null}
 			</div>
 		);
 	}
