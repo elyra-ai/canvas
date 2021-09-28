@@ -21,29 +21,29 @@ export default class SizeAndPositionObjectsAction extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.previousData = {};
-		this.previousData.objectsInfo = this.getPreviousNodesInfo(data);
+		this.previousObjectsInfo = this.getPreviousObjectsInfo(data);
+		this.previousLinksInfo = this.getPreviousLinksInfo(data);
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.sizeAndPositionObjects(this.data.objectsInfo);
+		this.apiPipeline.sizeAndPositionObjects(this.data.objectsInfo, this.data.linksInfo);
 	}
 
 	undo() {
-		this.apiPipeline.sizeAndPositionObjects(this.previousData.objectsInfo);
+		this.apiPipeline.sizeAndPositionObjects(this.previousObjectsInfo, this.previousLinksInfo);
 	}
 
 	redo() {
-		this.apiPipeline.sizeAndPositionObjects(this.data.objectsInfo);
+		this.do();
 	}
 
-	getPreviousNodesInfo(data) {
-		const previousNodesInfo = [];
-		Object.keys(data.objectsInfo).forEach((nodeId) => {
-			const obj = this.apiPipeline.getObject(nodeId);
+	getPreviousObjectsInfo(data) {
+		const previousObjectsInfo = [];
+		Object.keys(data.objectsInfo).forEach((objId) => {
+			const obj = this.apiPipeline.getObject(objId);
 			if (obj) {
-				previousNodesInfo[nodeId] = {
+				previousObjectsInfo[objId] = {
 					id: obj.id,
 					x_pos: obj.x_pos,
 					y_pos: obj.y_pos,
@@ -52,6 +52,32 @@ export default class SizeAndPositionObjectsAction extends Action {
 				};
 			}
 		});
-		return previousNodesInfo;
+		return previousObjectsInfo;
 	}
+
+	getPreviousLinksInfo(data) {
+		const previousLinksInfo = [];
+		Object.keys(data.linksInfo).forEach((linkId) => {
+			const obj = this.apiPipeline.getObject(linkId);
+			if (obj) {
+				if (obj.srcPos || obj.trgPos) {
+					previousLinksInfo[linkId] = {};
+					if (obj.srcPos) {
+						previousLinksInfo[linkId].srcPos = {
+							x_pos: obj.srcPos.x_pos,
+							y_pos: obj.srcPos.y_pos
+						};
+					}
+					if (obj.trgPos) {
+						previousLinksInfo[linkId].trgPos = {
+							x_pos: obj.trgPos.x_pos,
+							y_pos: obj.trgPos.y_pos
+						};
+					}
+				}
+			}
+		});
+		return previousLinksInfo;
+	}
+
 }

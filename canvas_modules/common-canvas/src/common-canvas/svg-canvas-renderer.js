@@ -107,13 +107,16 @@ export default class SVGCanvasRenderer {
 		this.commentSizingId = 0;
 		this.commentSizingDirection = "";
 
-		// Allows us to track the sizing behavior of supernodes
+		// Allows us to track the sizing behavior of nodes
+		this.resizeObj = null;
 		this.nodeSizing = false;
 		this.nodeSizingId = 0;
 		this.nodeSizingDirection = "";
-		this.nodeSizingMovedNodes = [];
+		this.nodeSizingObjectsInfo = [];
+		this.nodeSizingLinksInfo = [];
+		this.nodeSizingInitialInfo = [];
 
-		// General purpose variables to allow us to hanlde resize and snap to grid
+		// General purpose variables to allow us to handle resize and snap to grid
 		this.resizeObjXPos = 0;
 		this.resizeObjYPos = 0;
 		this.resizeObjWidth = 0;
@@ -2796,7 +2799,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				if (this.nodeUtils.isExpandedSupernode(d)) {
 					this.nodeSizing = true;
-					this.nodeSizingInitialSize = { width: d.width, height: d.height };
+					this.nodeSizingInitialInfo = { x_pos: d.x_pos, y_pos: d.y_pos, width: d.width, height: d.height };
 					this.nodeSizingId = d.id;
 					// Note - node resizing and finalization of size is handled by drag functions.
 					this.addTempCursorOverlay(this.nodeSizingCursor);
@@ -4921,11 +4924,7 @@ export default class SVGCanvasRenderer {
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		if (this.nodeSizing) {
-			this.logger.logEndTimer("displayComments " + this.getFlags());
-			return;
-
-		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
+		if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			this.displayMovedComments();
 
 		} else if (this.selecting || this.regionSelect) {
@@ -5579,24 +5578,35 @@ export default class SVGCanvasRenderer {
 		const oldSupernode = Object.assign({}, this.resizeObj);
 		const minSupernodeHeight = Math.max(this.resizeObj.inputPortsHeight, this.resizeObj.outputPortsHeight) +
 			this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
-		const delta = this.resizeObject(d3Event, this.resizeObj, this.nodeSizingDirection,
-			this.canvasLayout.supernodeMinWidth,
+		const delta = this.resizeObject(d3Event, this.resizeObj,
+			this.nodeSizingDirection, this.canvasLayout.supernodeMinWidth,
 			Math.max(this.canvasLayout.supernodeMinHeight, minSupernodeHeight));
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			CanvasUtils.addToNodeSizingArray(this.resizeObj, this.nodeSizingMovedNodes);
-
 			if (this.config.enableMoveNodesOnSupernodeResize) {
-				CanvasUtils.moveSurroundingNodes(
-					this.nodeSizingMovedNodes,
+				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
-					this.activePipeline.nodes,
+					this.activePipeline.nodes.concat(this.activePipeline.comments),
 					this.nodeSizingDirection,
 					this.resizeObj.width,
 					this.resizeObj.height,
-					true // Pass true to indicate that node positions should be updated.
+					true // Pass true to indicate that object positions should be updated.
 				);
+
+				const linksInfo = CanvasUtils.moveSurroundingDetachedLinks(
+					oldSupernode,
+					this.activePipeline.links,
+					this.nodeSizingDirection,
+					this.resizeObj.width,
+					this.resizeObj.height,
+					true // Pass true to indicate that link positions should be updated.
+				);
+
+				// Overwrite the object and link info with any new info.
+				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
+				this.nodeSizingLinksInfo = Object.assign(this.nodeSizingLinksInfo, linksInfo);
 			}
+			this.displayComments();
 			this.displayNodes();
 			this.displayLinks();
 			if (this.dispUtils.isDisplayingSubFlow()) {
@@ -5691,24 +5701,39 @@ export default class SVGCanvasRenderer {
 	// with an editNode action.
 	endNodeSizing() {
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
-			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridXPx);
-			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridYPx);
-			sizedNode.width = CanvasUtils.snapToGrid(sizedNode.width, this.snapToGridXPx);
-			sizedNode.height = CanvasUtils.snapToGrid(sizedNode.height, this.snapToGridYPx);
+			this.resizeObj.x_pos = CanvasUtils.snapToGrid(this.resizeObj.x_pos, this.snapToGridXPx);
+			this.resizeObj.y_pos = CanvasUtils.snapToGrid(this.resizeObj.y_pos, this.snapToGridYPx);
+			this.resizeObj.width = CanvasUtils.snapToGrid(this.resizeObj.width, this.snapToGridXPx);
+			this.resizeObj.height = CanvasUtils.snapToGrid(this.resizeObj.height, this.snapToGridYPx);
 		}
-		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
-			const data = {
+		// If the dimensions or position has changed, issue the command.
+		// Note: x_pos or y_pos might change on resize if the node is sized
+		// upwards or to the left.
+		if (this.nodeSizingInitialInfo.x_pos !== this.resizeObj.x_pos ||
+				this.nodeSizingInitialInfo.y_pos !== this.resizeObj.y_pos ||
+				this.nodeSizingInitialInfo.width !== this.resizeObj.width ||
+				this.nodeSizingInitialInfo.height !== this.resizeObj.height) {
+			// Add the dimensions of the object being resized to the array of object infos.
+			this.nodeSizingObjectsInfo[this.resizeObj.id] = {
+				width: this.resizeObj.width,
+				height: this.resizeObj.height,
+				x_pos: this.resizeObj.x_pos,
+				y_pos: this.resizeObj.y_pos
+			};
+
+			this.canvasController.editActionHandler({
 				editType: "resizeObjects",
 				editSource: "canvas",
-				objectsInfo: this.nodeSizingMovedNodes,
+				objectsInfo: this.nodeSizingObjectsInfo,
+				linksInfo: this.nodeSizingLinksInfo,
 				pipelineId: this.pipelineId
-			};
-			this.canvasController.editActionHandler(data);
+			});
 		}
-		this.nodeSizingMovedNodes = [];
+		this.resizeObj = null;
 		this.nodeSizing = false;
-		this.nodeSizingInitialSize = {};
+		this.nodeSizingObjectsInfo = [];
+		this.nodeSizingLinksInfo = [];
+		this.nodeSizingInitialInfo = {};
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler

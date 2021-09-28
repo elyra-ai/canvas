@@ -31,6 +31,7 @@ import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js
 import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
+import DeconstructSuperNodeAction from "../command-actions/deconstructSuperNodeAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.js";
@@ -1868,6 +1869,12 @@ export default class CanvasController {
 		// which is opened by the "canvas" (default) editor.
 		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Deconstruct supernode
+			menuDefinition = menuDefinition.concat({ action: "deconstructSuperNode",
+				label: this.getLabel("node.deconstructSupernode") });
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Collapse supernode
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
@@ -2019,6 +2026,7 @@ export default class CanvasController {
 		} else if (data.editType === "loadPipelineFlow" ||
 				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
+				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
 		}
@@ -2240,6 +2248,12 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "deconstructSuperNode": {
+				command = new DeconstructSuperNodeAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+
 			case "expandSuperNodeInPlace": {
 				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
