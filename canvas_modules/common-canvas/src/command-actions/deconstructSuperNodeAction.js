@@ -33,6 +33,8 @@ export default class DeconstructSuperNodeAction extends Action {
 		this.newLinkPositions = [];
 		this.targetApiPipeline = this.objectModel.getAPIPipeline(this.supernode.subflow_ref.pipeline_id_ref);
 
+		this.objectModel.ensurePipelineIsLoaded(this.data);
+
 		const linksToRemove = this.getLinksToRemove();
 		const bindingNodes = this.getBindingNodes();
 		const nodesToAdd = this.getNonBindingNodes(bindingNodes);

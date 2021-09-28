@@ -2041,6 +2041,9 @@ export default class CanvasController {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
+			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
+				return;
+			}
 			if (!data) {
 				return;
 			}
@@ -2401,6 +2404,21 @@ export default class CanvasController {
 				targetObject: expandedSupernodes[0]
 			});
 		}
+	}
+
+	// Returns false if the host application did not provided an external pipeline
+	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// boolean to true. Returns true otherwise which will be the case when no
+	// external pipeline was requested.
+	wasExtPipelineFlowLoadSuccessful(data) {
+		if (data.externalPipelineFlowLoad && !data.externalPipelineFlow) {
+			const msg = "The host app did not provide a pipeline flow when requested for action " +
+				data.editType + " in beforeEditActionHandler, for URL: " +
+				data.externalUrl;
+			this.logger.error(msg);
+			return false;
+		}
+		return true;
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not
