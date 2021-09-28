@@ -88,7 +88,7 @@ export default class DeconstructSuperNodeAction extends Action {
 
 		this.info = {
 			pipelineId: this.data.pipelineId,
-			supernodeToDelete: this.data.selectedObjects[0],
+			supernodeToDelete: this.supernode,
 			nodesToAdd: nodesToAdd,
 			linksToAdd: linksToAdd,
 			linksToRemove: linksToRemove,
@@ -110,14 +110,22 @@ export default class DeconstructSuperNodeAction extends Action {
 	getBindingNodes() {
 		const bindingNodes = [];
 
-		this.data.targetObject.inputs.forEach((input) => {
-			const bindingNode = this.targetApiPipeline.getNode(input.subflow_node_ref);
-			bindingNodes.push(bindingNode);
-		});
-		this.data.targetObject.outputs.forEach((output) => {
-			const bindingNode = this.targetApiPipeline.getNode(output.subflow_node_ref);
-			bindingNodes.push(bindingNode);
-		});
+		if (this.data.targetObject.inputs) {
+			this.data.targetObject.inputs.forEach((input) => {
+				const bindingNode = this.targetApiPipeline.getNode(input.subflow_node_ref);
+				if (bindingNode) {
+					bindingNodes.push(bindingNode);
+				}
+			});
+		}
+		if (this.data.targetObject.outputs) {
+			this.data.targetObject.outputs.forEach((output) => {
+				const bindingNode = this.targetApiPipeline.getNode(output.subflow_node_ref);
+				if (bindingNode) {
+					bindingNodes.push(bindingNode);
+				}
+			});
+		}
 		return bindingNodes;
 	}
 
@@ -151,13 +159,16 @@ export default class DeconstructSuperNodeAction extends Action {
 		let newLinks = [];
 		const supernodeDataLinks = linksToRemove.filter((link) => link.type === NODE_LINK);
 
-		this.supernode.inputs.forEach((input) => {
-			newLinks = newLinks.concat(this.getNewLinksForInput(input, supernodeDataLinks));
-		});
-
-		this.supernode.outputs.forEach((output) => {
-			newLinks = newLinks.concat(this.getNewLinksForOutput(output, supernodeDataLinks));
-		});
+		if (this.supernode.inputs) {
+			this.supernode.inputs.forEach((input) => {
+				newLinks = newLinks.concat(this.getNewLinksForInput(input, supernodeDataLinks));
+			});
+		}
+		if (this.supernode.outputs) {
+			this.supernode.outputs.forEach((output) => {
+				newLinks = newLinks.concat(this.getNewLinksForOutput(output, supernodeDataLinks));
+			});
+		}
 
 		return newLinks;
 	}
