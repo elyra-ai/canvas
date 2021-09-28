@@ -22,7 +22,7 @@
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
-import JavascriptFileDownload from 'js-file-download'
+import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
@@ -1149,7 +1149,6 @@ class App extends React.Component {
 		const canvas = JSON.stringify(pipelineFlow, null, 2);
 		JavascriptFileDownload(canvas, "canvas.json");
 	}
-	
 
 	downloadPalette() {
 		const paletteData = this.getPaletteData();
