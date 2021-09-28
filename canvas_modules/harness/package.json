@@ -21,7 +21,7 @@
     "express-session": "1.17.1",
     "isomorphic-fetch": "3.0.0",
     "istanbul-middleware": "0.2.2",
-    "js-file-download": "^0.4.12",
+    "js-file-download": "0.4.12",
     "lodash": "4.17.21",
     "log4js": "6.3.0",
     "nconf": "0.10.0"
