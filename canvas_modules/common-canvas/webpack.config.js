@@ -107,7 +107,7 @@ module.exports = {
 	plugins: plugins,
 	performance: {
 		hints: "error",
-		maxAssetSize: 2100000,
+		maxAssetSize: 2200000,
 		maxEntrypointSize: 2100000
 	},
 	externals: {
