@@ -40,7 +40,6 @@ describe("SizeAndPositionObjectsAction handles calls correctly", () => {
 	it("should handle calls, undo, and redo", () => {
 		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, objectModel);
 		const previousObjectsInfo = sizeAndPositionObjects.previousObjectsInfo;
-		// const previousLinksInfo = sizeAndPositionObjects.previousLinksInfo;
 		equalsObjectInfo(previousObjectsInfo, getNodesInfo(nodeIds));
 
 		sizeAndPositionObjects.do();

@@ -58,7 +58,7 @@ export default class SizeAndPositionObjectsAction extends Action {
 	getPreviousLinksInfo(data) {
 		const previousLinksInfo = [];
 		Object.keys(data.linksInfo).forEach((linkId) => {
-			const obj = this.apiPipeline.getObject(linkId);
+			const obj = this.apiPipeline.getLink(linkId);
 			if (obj) {
 				if (obj.srcPos || obj.trgPos) {
 					previousLinksInfo[linkId] = {};
