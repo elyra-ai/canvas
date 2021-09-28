@@ -1985,7 +1985,7 @@ export default class ObjectModel {
 
 				supernode.outputs.forEach((outputPort) => {
 					if (outputPort.subflow_node_ref === nodeId) {
-						const supernodeLinks = parentPipeline.getAtachedLinksContainingSourceId(supernode.id);
+						const supernodeLinks = parentPipeline.getAttachedLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
 								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];

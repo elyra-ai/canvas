@@ -676,7 +676,7 @@ describe("Expand and Collapse Supernode Action", () => {
 				"id": "nodeIDMultiPlotPE",
 				"label": "Multiplot",
 				"x_pos": 630,
-				"y_pos": 170
+				"y_pos": 295
 			},
 			{
 				"id": "id125TTEEIK7V",
@@ -705,13 +705,13 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
 				"label": "Sample",
-				"x_pos": 234,
+				"x_pos": 364,
 				"y_pos": 594.5
 			},
 			{
 				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
 				"label": "Aggregate",
-				"x_pos": 235,
+				"x_pos": 365,
 				"y_pos": 690.5
 			},
 			{
@@ -747,7 +747,7 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
 				"label": "Filler",
-				"x_pos": 235,
+				"x_pos": 365,
 				"y_pos": 496.5
 			}];
 
