@@ -1141,7 +1141,7 @@ describe("Properties Controller handlers", () => {
 		const expectedRequiredMessages = {
 			"number_undefined": {
 				"type": "error",
-				"text": "Required parameter 'Undefined' has no value.",
+				"text": "You must provide your Undefined.",
 				"validation_id": "required_number_undefined_272.9520234285945",
 				"propertyId": {
 					"name": "number_undefined"
@@ -1151,7 +1151,7 @@ describe("Properties Controller handlers", () => {
 			},
 			"number_null": {
 				"type": "error",
-				"text": "Required parameter 'Null' has no value.",
+				"text": "You must provide your Null.",
 				"validation_id": "required_number_null_401.11526920064296",
 				"propertyId": {
 					"name": "number_null"
@@ -1650,7 +1650,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 	const requiredErrors = {
 		"numberfieldMaxBins": {
 			"type": "error",
-			"text": "Required parameter 'Maximum number of bins' has no value.",
+			"text": "You must provide your Maximum number of bins.",
 			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
 			"required": true,
 			"propertyId": { "name": "numberfieldMaxBins" },
@@ -1674,7 +1674,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		},
 		"textareaDescription": {
 			"type": "error",
-			"text": "Required parameter 'Description' has no value.",
+			"text": "You must provide your Description.",
 			"validation_id": "required_textareaDescription_708.576019526482",
 			"required": false,
 			"propertyId": { "name": "textareaDescription" },
