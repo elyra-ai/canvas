@@ -2041,10 +2041,13 @@ export default class CanvasController {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
-			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
+			// If the host app returns null, it doesn't want the action to proceed.
+			if (!data) {
 				return;
 			}
-			if (!data) {
+			// If an external pipeline flow was requested, we need to make sure it
+			// was provided by the host app. We can't proceed if it was not.
+			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
 				return;
 			}
 		}
