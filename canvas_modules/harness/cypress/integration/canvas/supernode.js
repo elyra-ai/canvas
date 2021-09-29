@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Test the supernode expanded structure", function() {
+describe("Test the supernode expanded feature", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
@@ -42,6 +42,40 @@ describe("Test the supernode expanded structure", function() {
 		cy.verifyNodeElementWidth(
 			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "120px"
 		);
+	});
+});
+
+describe("Test the supernode deconstruct feature", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+	});
+
+	it("Test deconstructing the supernode works OK.", function() {
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodes(15);
+		cy.verifyNumberOfLinks(24);
+
+		// Expand supernode using context menu
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfNodes(19);
+		cy.verifyNumberOfLinks(28);
+
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodes(15);
+		cy.verifyNumberOfLinks(24);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfNodes(19);
+		cy.verifyNumberOfLinks(28);
 	});
 });
 

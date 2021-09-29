@@ -31,9 +31,13 @@ export default class DeconstructSuperNodeAction extends Action {
 		this.newObjectPositions = [];
 		this.oldLinkPositions = [];
 		this.newLinkPositions = [];
-		this.targetApiPipeline = this.objectModel.getAPIPipeline(this.supernode.subflow_ref.pipeline_id_ref);
 
 		this.objectModel.ensurePipelineIsLoaded(this.data);
+
+		this.targetApiPipeline = this.objectModel.getAPIPipeline(this.supernode.subflow_ref.pipeline_id_ref);
+		this.targetPipeline = this.targetApiPipeline.getPipeline();
+		this.extPipelineFlowToDelete = this.targetPipeline.parentUrl
+			? this.objectModel.getExternalPipelineFlow(this.targetPipeline.parentUrl) : [];
 
 		const linksToRemove = this.getLinksToRemove();
 		const bindingNodes = this.getBindingNodes();
@@ -97,7 +101,8 @@ export default class DeconstructSuperNodeAction extends Action {
 			newObjectPositions: this.newObjectPositions,
 			oldLinkPositions: this.oldLinkPositions,
 			newLinkPositions: this.newLinkPositions,
-			pipelineToDelete: this.targetApiPipeline.getPipeline()
+			pipelineToDelete: this.targetPipeline,
+			extPipelineFlowToDelete: this.extPipelineFlowToDelete
 		};
 	}
 
