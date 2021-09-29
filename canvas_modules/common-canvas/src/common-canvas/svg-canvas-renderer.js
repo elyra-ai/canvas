@@ -690,10 +690,10 @@ export default class SVGCanvasRenderer {
 	// the current grid dimensions.
 	snapToGridObject(inResizeObj) {
 		const resizeObj = inResizeObj;
-		resizeObj.x_pos = CanvasUtils.snapToGrid(resizeObj.x_pos, this.snapToGridXPx);
-		resizeObj.y_pos = CanvasUtils.snapToGrid(resizeObj.y_pos, this.snapToGridYPx);
-		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.snapToGridXPx);
-		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.snapToGridYPx);
+		resizeObj.x_pos = CanvasUtils.snapToGrid(resizeObj.x_pos, this.canvasLayout.snapToGridXPx);
+		resizeObj.y_pos = CanvasUtils.snapToGrid(resizeObj.y_pos, this.canvasLayout.snapToGridYPx);
+		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.canvasLayout.snapToGridXPx);
+		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.canvasLayout.snapToGridYPx);
 		return resizeObj;
 	}
 
