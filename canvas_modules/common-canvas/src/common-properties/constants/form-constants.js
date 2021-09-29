@@ -40,12 +40,6 @@ const Size = {
 	SMALL: "small"
 };
 
-const SingleLineLengthInSize = {
-	small: 54,
-	medium: 104,
-	large: 154
-};
-
 const GroupType = {
 	CONTROLS: "controls",
 	TABS: "tabs", // currently not used
@@ -151,4 +145,4 @@ function hasValue(Enum, value) {
 	return false;
 }
 
-export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, SingleLineLengthInSize, ItemType, Separator, ORIENTATIONS };
+export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType, Separator, ORIENTATIONS };

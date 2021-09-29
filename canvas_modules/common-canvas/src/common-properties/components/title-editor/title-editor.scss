@@ -94,7 +94,7 @@ $properties-title-with-warning-error-height: $spacing-02 + $spacing-05; // 4px p
 			}
 		}
 		.bx--form-requirement {
-			margin: $spacing-02 0 0 $spacing-05; // 4px padding above error/waning message
+			margin: $spacing-02 0 0 $spacing-05; // if left padding is updated, please update value '16' in messageWidth calculation in title-editor.jsx
 		}
 		.bx--text-input__field-wrapper--warning input {
 			border-bottom: 1px solid $ui-04;

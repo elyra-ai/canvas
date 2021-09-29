@@ -20,6 +20,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import sinon from "sinon";
 import { mountWithIntl } from "../../_utils_/intl-utils";
+import "jest-canvas-mock";
 
 const controller = new Controller();
 controller.setTitle("test title");
@@ -53,7 +54,6 @@ const titleChangeHandler = sinon.spy(titleChangeHandlerFunction);
 controller.setHandlers({
 	titleChangeHandler: titleChangeHandler
 });
-controller.setEditorSize("small");
 
 
 describe("title-editor renders correctly", () => {
@@ -188,9 +188,6 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.returnValues[0]).to.eql({ type: "warning", message: warningMessage });
 		expect(wrapper.find(".bx--text-input__field-wrapper--warning")).to.have.length(1);
 		expect(wrapper.find(".bx--form-requirement").text()).to.equal(warningMessage);
-
-		// warning message is a multi-line message. Verify height is adjusted for long messages.
-		expect(wrapper.find(".properties-title-with-warning-error").props().style).to.have.property("height", "7.75rem");
 	});
 	it("Error message returned by titleChangeHandler should be displayed correctly", () => {
 		controller.setTitle("test title");
