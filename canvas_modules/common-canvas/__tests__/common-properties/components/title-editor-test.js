@@ -35,19 +35,18 @@ controller.setAppData(appData);
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
 
-const titleChangeHandlerFunction = function(title) {
+const titleChangeHandlerFunction = function(title, callbackFunction) {
+	// If Title is valid. No need to send anything in callbackFunction
 	if (title.length > 15) {
-		return { type: "error", message: "Only 15 characters are allowed in title." };
+		callbackFunction({ type: "error", message: "Only 15 characters are allowed in title." });
 	} else if (title.length > 10 && title.length <= 15) {
-		return {
+		callbackFunction({
 			type: "warning",
 			message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
-		};
+		});
 	} else if (title === "Invalid") {
-		return { "abc": "xyz" };
+		callbackFunction({ "abc": "xyz" });
 	}
-	// Title is valid
-	return null;
 };
 const titleChangeHandler = sinon.spy(titleChangeHandlerFunction);
 controller.setHandlers({
@@ -184,7 +183,6 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 		// Verify warning message is displayed
 		const warningMessage = "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages.";
-		expect(titleChangeHandler.returnValues[0]).to.eql({ type: "warning", message: warningMessage });
 		expect(wrapper.find(".bx--text-input__field-wrapper--warning")).to.have.length(1);
 		expect(wrapper.find(".bx--form-requirement").text()).to.equal(warningMessage);
 	});
@@ -206,11 +204,10 @@ describe("title-editor renders correctly", () => {
 
 		// verify error message is displayed
 		const errorMessage = "Only 15 characters are allowed in title.";
-		expect(titleChangeHandler.returnValues[0]).to.eql({ type: "error", message: errorMessage });
 		expect(wrapper.find(".bx--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
 		expect(wrapper.find(".bx--form-requirement").text()).to.equal(errorMessage);
 	});
-	it("Don't show any error/warning message when titleChangeHandler returns null", () => {
+	it("Don't show any error/warning message when titleChangeHandler doesn't return anything", () => {
 		controller.setTitle("test title");
 		titleChangeHandler.resetHistory();
 		const wrapper = mountWithIntl(
@@ -221,13 +218,12 @@ describe("title-editor renders correctly", () => {
 			/>
 		);
 		const input = wrapper.find("input");
-		const newTitle = "Test"; // Title length is less than 10. titleChangeHandler returns null
+		const newTitle = "Test"; // Title length is less than 10. titleChangeHandler doesn't return anything when title is valid.
 		input.simulate("change", { target: { value: newTitle } });
 		expect(titleChangeHandler.calledOnce).to.equal(true);
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 
 		// verify no message is displayed
-		expect(titleChangeHandler.returnValues[0]).to.eql(null);
 		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
 	});
 	it("Don't show any error/warning message when titleChangeHandler response is invalid", () => {
@@ -248,7 +244,6 @@ describe("title-editor renders correctly", () => {
 		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
 
 		// verify no message is displayed
-		expect(titleChangeHandler.returnValues[0]).to.eql({ "abc": "xyz" });
 		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
 	});
 	it("test label is readonly", () => {

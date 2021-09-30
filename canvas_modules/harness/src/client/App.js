@@ -1305,17 +1305,16 @@ class App extends React.Component {
 		}, 2000);
 	}
 
-	titleChangeHandler(title) {
+	titleChangeHandler(title, callbackFunction) {
+		// If Title is valid. No need to send anything in callbackFunction
 		if (title.length > 15) {
-			return { type: "error", message: "Only 15 characters are allowed in title." };
+			callbackFunction({ type: "error", message: "Only 15 characters are allowed in title." });
 		} else if (title.length > 10 && title.length <= 15) {
-			return {
+			callbackFunction({
 				type: "warning",
 				message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
-			};
+			});
 		}
-		// Title is valid
-		return null;
 	}
 
 	helpClickHandler(nodeTypeId, helpData, appData) {

@@ -74,15 +74,20 @@ class TitleEditor extends Component {
 	}
 
 	handleTitleChange(evt) {
+		// Clear warning/error message on change.
+		if (this.state.titleValidation !== null) {
+			this.setState({ titleValidation: null });
+		}
 		const newTitle = evt.target.value;
 		if (typeof this.titleChangeHandler === "function") {
-			const titleValidation = this.titleChangeHandler(newTitle);
-			if (titleValidation && (typeof titleValidation === "object") && titleValidation.type && titleValidation.message) {
-				this.setState({ titleValidation: titleValidation });
-			} else {
-				// titleChangeHandler response is invalid or null. Don't show error/warning for title.
-				this.setState({ titleValidation: null });
-			}
+			this.titleChangeHandler(newTitle, (titleValidation) => {
+				if (titleValidation && (typeof titleValidation === "object") && titleValidation.type && titleValidation.message) {
+					this.setState({ titleValidation: titleValidation });
+				} else {
+					// titleChangeHandler response is invalid. Don't show error/warning for title.
+					this.setState({ titleValidation: null });
+				}
+			});
 		}
 		this.props.setTitle(newTitle);
 	}
