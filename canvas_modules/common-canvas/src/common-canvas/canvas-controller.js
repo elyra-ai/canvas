@@ -892,7 +892,7 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId, temporary);
 	}
 
-	// Returns the an array of nodes that are for the branch(es) that the nodes,
+	// Returns an array of nodes that are for the branch(es) that the nodes,
 	// identified by the node IDs passed in, are within.
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
@@ -901,7 +901,7 @@ export default class CanvasController {
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
 	}
 
-	// Returns the an array of nodes that are upstream from the nodes
+	// Returns an array of nodes that are upstream from the nodes
 	// identified by the node IDs passed in.
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
@@ -910,7 +910,7 @@ export default class CanvasController {
 		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
 	}
 
-	// Returns the an array of nodes that are downstream from the nodes
+	// Returns an array of nodes that are downstream from the nodes
 	// identified by the node IDs passed in.
 	// nodeIds - An array of node Ids
 	// pipelineId - The ID of the pipeline where the nodes exist
