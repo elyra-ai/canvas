@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-$properties-title-heading-bottom-padding: $spacing-02;
-
 .properties-title-editor {
 	padding: $spacing-05 0;
 	border-bottom: 1px $ui-03 solid;
 }
 
 .properties-title-heading {
-	padding: 0 $spacing-05 $properties-title-heading-bottom-padding;
+	padding: 0 $spacing-05 $spacing-02;
+	height: $spacing-06;
 	display: flex;
 	align-items: center;
 	.properties-title-heading-icon {
