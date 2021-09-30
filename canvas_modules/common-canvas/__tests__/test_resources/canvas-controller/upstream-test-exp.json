@@ -1,0 +1,42 @@
+{
+	"nodes": {
+		"153651d6-9b88-423c-b01b-861f12d01489": [
+			"id5KIRGGJ3FYT",
+			"nodeIDMultiPlotPE",
+			"idGWRVT47XDV",
+			"6f704d84-85be-4520-9d76-57fe2295b310",
+			"id8I6RH2V91XW",
+			"7015d906-2eae-45c1-999e-fb888ed957e5"
+		],
+		"babad275-1719-4224-8d65-b04d0804d95c": [
+			"813ddbfd-cabb-4037-833d-bc839e13e264",
+			"7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
+			"7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
+			"691e065f-8359-4b46-aad2-531702ef2a8e",
+			"d585f3c8-29d7-4daf-b808-f80a64634343",
+			"49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
+			"ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
+			"b82bb50c-edd4-44b5-9e14-f5db5eedddb8"
+		]
+	},
+	"links": {
+		"153651d6-9b88-423c-b01b-861f12d01489": [
+			"5d1aa563-0e3a-4bf0-8133-a413d24696cf",
+			"ec43a264-0e0d-4c29-872f-2cdca6574661",
+			"a26d21b3-5393-4111-8541-4ef51381f9ba",
+			"2ca62c11-a0ad-4a0e-ae32-30fa540b4a2d",
+			"b3b0f774-3d4f-4aa1-8aad-248430dcb58f",
+			"4a5588cf-d7bb-4842-9632-2a5c05a0d86c",
+			"01826524-c483-4376-a80f-bd79893fead4"
+		],
+		"babad275-1719-4224-8d65-b04d0804d95c": [
+			"ebcc93c3-4918-4e40-831c-532c93c845b9",
+			"78fb6f69-2cb8-40ad-8744-0f8a8e29bced",
+			"4907899d-d8ee-4373-93ec-179250b866ca",
+			"b47036ee-2fac-48da-a625-31e00fbd4811",
+			"4cc622b6-c754-4222-84fd-363bec53f2e4",
+			"1016e81f-c10d-41d6-beec-74d145d3ce5a",
+			"977c3627-c197-473c-aca5-240c047ba63c"
+		]
+	}
+}
