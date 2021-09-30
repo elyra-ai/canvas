@@ -2088,12 +2088,13 @@ export default class SVGCanvasRenderer {
 
 	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
+		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
-			this.resizeObj = d;
+			this.resizeObj = this.getComment(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else if (this.nodeSizing) {
-			this.resizeObj = d;
+			this.resizeObj = this.getNode(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else {
@@ -2125,7 +2126,6 @@ export default class SVGCanvasRenderer {
 				this.setNodeTranslucentState(this.dragObjects[0].id, true);
 			}
 		}
-		// Note: Comment and supernode resizing is started by the comment/supernode highlight rectangle.
 		this.logger.logEndTimer("dragStart", true);
 	}
 
