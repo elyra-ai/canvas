@@ -1877,7 +1877,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingTargetId(nodeId)
+			.getAttachedLinksContainingTargetId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1916,7 +1916,7 @@ export default class ObjectModel {
 
 			supernode.inputs.forEach((inputPort) => {
 				if (inputPort.subflow_node_ref === nodeId) {
-					const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
+					const supernodeLinks = parentPipeline.getAttachedLinksContainingTargetId(supernode.id);
 					supernodeLinks.forEach((supernodeLink) => {
 						if (supernodeLink.trgNodePortId === inputPort.id) {
 							highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
@@ -1950,7 +1950,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingSourceId(nodeId)
+			.getAttachedLinksContainingSourceId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1989,7 +1989,7 @@ export default class ObjectModel {
 
 				supernode.outputs.forEach((outputPort) => {
 					if (outputPort.subflow_node_ref === nodeId) {
-						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
+						const supernodeLinks = parentPipeline.getAttachedLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
 								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];

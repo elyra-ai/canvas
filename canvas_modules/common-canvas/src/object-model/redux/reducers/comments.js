@@ -31,10 +31,26 @@ export default (state = [], action) => {
 		}
 		return state;
 
+	case "SET_COMMENT_POSITIONS":
+		return state.map((comment, index) => {
+			if (action.data.commentPositions && typeof action.data.commentPositions[comment.id] !== "undefined") {
+				const newPosition = action.data.commentPositions[comment.id];
+				return Object.assign({}, comment, { x_pos: newPosition.x_pos, y_pos: newPosition.y_pos });
+			}
+			return comment;
+		});
+
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found
 		});
+
+	case "REMOVE_COMMENTS":
+		return state.filter((com) => {
+			const comFound = action.data.commentsToDelete.some((c) => c.id === com.id);
+			return !comFound;
+		});
+
 
 	case "ADD_COMMENT": {
 		const newComment = {
@@ -49,6 +65,13 @@ export default (state = [], action) => {
 		return [
 			...state,
 			newComment
+		];
+	}
+
+	case "ADD_COMMENTS": {
+		return [
+			...state,
+			...action.data.commentsToAdd
 		];
 	}
 

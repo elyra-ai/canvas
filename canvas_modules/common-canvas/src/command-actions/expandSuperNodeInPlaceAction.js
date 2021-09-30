@@ -22,29 +22,33 @@ export default class expandSuperNodeInPlaceAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.oldNodePositions = [];
-		this.newNodePositions = [];
+		this.oldObjectPositions = [];
+		this.newObjectPositions = [];
+		this.oldLinkPositions = [];
+		this.newLinkPositions = [];
 		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		if (this.enableMoveNodesOnSupernodeResize) {
 			this.supernode = this.apiPipeline.getNode(this.data.id);
+			this.oldObjectPositions = CanvasUtils.getObjectPositions(this.apiPipeline.getObjects());
+			this.oldLinkPositions = CanvasUtils.getLinkPositions(this.apiPipeline.getLinks());
 
-			this.apiPipeline.getNodes().forEach((node) => {
-				if (node.id === this.supernode.id) {
-					return; // Ignore the supernode
-				}
-				this.oldNodePositions[node.id] = { x_pos: node.x_pos, y_pos: node.y_pos };
-			});
-
-			CanvasUtils.moveSurroundingNodes(
-				this.newNodePositions,
+			this.newObjectPositions = CanvasUtils.moveSurroundingObjects(
 				this.supernode,
-				this.apiPipeline.getNodes(),
+				this.apiPipeline.getObjects(),
 				"se",
 				CanvasUtils.getSupernodeExpandedWidth(this.supernode, this.objectModel.getCanvasLayout()),
 				CanvasUtils.getSupernodeExpandedHeight(this.supernode, this.objectModel.getCanvasLayout()),
-				false); // Pass false to indicate that node positions should not be updated.
+				false); // Pass false to indicate that object positions should not be updated.
+
+			this.newLinkPositions = CanvasUtils.moveSurroundingDetachedLinks(
+				this.supernode,
+				this.apiPipeline.getLinks(),
+				"se",
+				CanvasUtils.getSupernodeExpandedWidth(this.supernode, this.objectModel.getCanvasLayout()),
+				CanvasUtils.getSupernodeExpandedHeight(this.supernode, this.objectModel.getCanvasLayout()),
+				false); // Pass false to indicate that link positions should not be updated.
 		}
 	}
 
@@ -52,11 +56,11 @@ export default class expandSuperNodeInPlaceAction extends Action {
 	do() {
 		// Make sure pipeline is loaded in case it is part of an external pipeline flow.
 		this.objectModel.ensurePipelineIsLoaded(this.data);
-		this.apiPipeline.expandSuperNodeInPlace(this.data.id, this.newNodePositions);
+		this.apiPipeline.expandSuperNodeInPlace(this.data.id, this.newObjectPositions, this.newLinkPositions);
 	}
 
 	undo() {
-		this.apiPipeline.collapseSuperNodeInPlace(this.data.id, this.oldNodePositions);
+		this.apiPipeline.collapseSuperNodeInPlace(this.data.id, this.oldObjectPositions, this.oldLinkPositions);
 	}
 
 	redo() {
