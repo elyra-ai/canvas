@@ -802,9 +802,10 @@ export default class CanvasUtils {
 	}
 
 	// Returns an object containing the dimensions of an imaginary rectangle
-	// surrounding the nodes and comments and links passed in or null if
-	// no valid objects were provided. nodeHighlightGap may be 0 or undefined.
-	// If it is undefined we use the nodeHighlightGap in the node's layout.
+	// surrounding the nodes and comments and links passed in or an object with
+	// all properties set to zero if no valid objects were provided.
+	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
+	// nodeHighlightGap in the node's layout.
 	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
@@ -855,7 +856,7 @@ export default class CanvasUtils {
 
 		if (canvLeft === Infinity || canvTop === Infinity ||
 				canvRight === -Infinity || canvBottom === -Infinity) {
-			return null;
+			return { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
 		}
 
 		return {
