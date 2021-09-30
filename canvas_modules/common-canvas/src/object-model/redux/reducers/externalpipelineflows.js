@@ -52,6 +52,14 @@ export default (state = [], action) => {
 		});
 	}
 
+	case "DECONSTRUCT_SUPERNODE": {
+		return state.filter((epf) => epf.id !== action.data.extPipelineFlowToDelete.id);
+	}
+
+	case "RECONSTRUCT_SUPERNODE": {
+		return [...state, action.data.extPipelineFlowToDelete];
+	}
+
 	case "SET_CANVAS_INFO": {
 		// If we are handling new canvasInfo we need to clear out any old
 		// external pipeline flows.

@@ -31,6 +31,7 @@ import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js
 import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
+import DeconstructSuperNodeAction from "../command-actions/deconstructSuperNodeAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.js";
@@ -1868,6 +1869,12 @@ export default class CanvasController {
 		// which is opened by the "canvas" (default) editor.
 		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Deconstruct supernode
+			menuDefinition = menuDefinition.concat({ action: "deconstructSuperNode",
+				label: this.getLabel("node.deconstructSupernode") });
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Collapse supernode
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
@@ -2019,6 +2026,7 @@ export default class CanvasController {
 		} else if (data.editType === "loadPipelineFlow" ||
 				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
+				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
 		}
@@ -2033,7 +2041,13 @@ export default class CanvasController {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
+			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
+				return;
+			}
+			// If an external pipeline flow was requested, we need to make sure it
+			// was provided by the host app. We can't proceed if it was not.
+			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
 				return;
 			}
 		}
@@ -2240,6 +2254,12 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "deconstructSuperNode": {
+				command = new DeconstructSuperNodeAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+
 			case "expandSuperNodeInPlace": {
 				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
@@ -2387,6 +2407,21 @@ export default class CanvasController {
 				targetObject: expandedSupernodes[0]
 			});
 		}
+	}
+
+	// Returns false if the host application did not provided an external pipeline
+	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// boolean to true. Returns true otherwise which will be the case when no
+	// external pipeline was requested.
+	wasExtPipelineFlowLoadSuccessful(data) {
+		if (data.externalPipelineFlowLoad && !data.externalPipelineFlow) {
+			const msg = "The host app did not provide a pipeline flow when requested for action " +
+				data.editType + " in beforeEditActionHandler, for URL: " +
+				data.externalUrl;
+			this.logger.error(msg);
+			return false;
+		}
+		return true;
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

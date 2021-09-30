@@ -1362,6 +1362,7 @@ class App extends React.Component {
 		case "loadPipelineFlow":
 		case "expandSuperNodeInPlace":
 		case "displaySubPipeline":
+		case "deconstructSuperNode":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
 				// This code simulates some asynchronous activity by the host app.
