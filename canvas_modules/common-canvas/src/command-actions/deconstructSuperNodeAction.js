@@ -182,27 +182,29 @@ export default class DeconstructSuperNodeAction extends Action {
 		const newLinks = [];
 		const inputLinks = this.getSupernodeInputLinks(this.supernode.id, input.id, supernodeDataLinks);
 		const inputBindingNode = this.getInputBindingNode(input);
-		const inputBindingLinks = this.getInputBindingLinks(inputBindingNode);
+		if (inputBindingNode) {
+			const inputBindingLinks = this.getInputBindingLinks(inputBindingNode);
 
-		inputLinks.forEach((inputLink) => {
-			inputBindingLinks.forEach((inputBindingLink) => {
-				const linkInfo = {};
-				if (inputLink.srcPos) {
-					linkInfo.srcPos = inputLink.srcPos;
-				} else {
-					linkInfo.srcNodeId = inputLink.srcNodeId;
-					linkInfo.srcNodePortId = inputLink.srcNodePortId;
-				}
-				if (inputBindingLink.trgPos) {
-					linkInfo.trgPos = inputBindingLink.trgPos;
-				} else {
-					linkInfo.trgNodeId = inputBindingLink.trgNodeId;
-					linkInfo.trgNodePortId = inputBindingLink.trgNodePortId;
-				}
-				const newLink = this.apiPipeline.createLinkFromInfo(linkInfo);
-				newLinks.push(newLink);
+			inputLinks.forEach((inputLink) => {
+				inputBindingLinks.forEach((inputBindingLink) => {
+					const linkInfo = {};
+					if (inputLink.srcPos) {
+						linkInfo.srcPos = inputLink.srcPos;
+					} else {
+						linkInfo.srcNodeId = inputLink.srcNodeId;
+						linkInfo.srcNodePortId = inputLink.srcNodePortId;
+					}
+					if (inputBindingLink.trgPos) {
+						linkInfo.trgPos = inputBindingLink.trgPos;
+					} else {
+						linkInfo.trgNodeId = inputBindingLink.trgNodeId;
+						linkInfo.trgNodePortId = inputBindingLink.trgNodePortId;
+					}
+					const newLink = this.apiPipeline.createLinkFromInfo(linkInfo);
+					newLinks.push(newLink);
+				});
 			});
-		});
+		}
 		return newLinks;
 	}
 
@@ -210,29 +212,31 @@ export default class DeconstructSuperNodeAction extends Action {
 		const newLinks = [];
 		const outputLinks = this.getSupernodeOutputLinks(this.supernode.id, output.id, supernodeDataLinks);
 		const outputBindingNode = this.getOutputBindingNode(output);
-		const outputBindingLinks = this.getOutputBindingLinks(outputBindingNode);
+		if (outputBindingNode) {
+			const outputBindingLinks = this.getOutputBindingLinks(outputBindingNode);
 
-		outputLinks.forEach((outputLink) => {
-			outputBindingLinks.forEach((outputBindingLink) => {
-				const linkInfo = {};
+			outputLinks.forEach((outputLink) => {
+				outputBindingLinks.forEach((outputBindingLink) => {
+					const linkInfo = {};
 
-				if (outputBindingLink.srcPos) {
-					linkInfo.srcPos = outputBindingLink.srcPos;
-				} else {
-					linkInfo.srcNodeId = outputBindingLink.srcNodeId;
-					linkInfo.srcNodePortId = outputBindingLink.srcNodePortId;
-				}
+					if (outputBindingLink.srcPos) {
+						linkInfo.srcPos = outputBindingLink.srcPos;
+					} else {
+						linkInfo.srcNodeId = outputBindingLink.srcNodeId;
+						linkInfo.srcNodePortId = outputBindingLink.srcNodePortId;
+					}
 
-				if (outputLink.trgPos) {
-					linkInfo.trgPos = outputLink.trgPos;
-				} else {
-					linkInfo.trgNodeId = outputLink.trgNodeId;
-					linkInfo.trgNodePortId = outputLink.trgNodePortId;
-				}
-				const newLink = this.apiPipeline.createLinkFromInfo(linkInfo);
-				newLinks.push(newLink);
+					if (outputLink.trgPos) {
+						linkInfo.trgPos = outputLink.trgPos;
+					} else {
+						linkInfo.trgNodeId = outputLink.trgNodeId;
+						linkInfo.trgNodePortId = outputLink.trgNodePortId;
+					}
+					const newLink = this.apiPipeline.createLinkFromInfo(linkInfo);
+					newLinks.push(newLink);
+				});
 			});
-		});
+		}
 		return newLinks;
 	}
 
