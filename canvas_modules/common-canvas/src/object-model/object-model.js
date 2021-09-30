@@ -1111,7 +1111,11 @@ export default class ObjectModel {
 	}
 
 	getCurrentPipeline() {
-		return this.getCanvasInfoPipeline(this.getCurrentBreadcrumb().pipelineId);
+		return this.getCanvasInfoPipeline(this.getCurrentPipelineId());
+	}
+
+	getCurrentPipelineId() {
+		return this.getCurrentBreadcrumb().pipelineId;
 	}
 
 	isPrimaryPipelineEmpty() {
