@@ -44,31 +44,7 @@ class TitleEditor extends Component {
 		this.textInputOnBlur = this.textInputOnBlur.bind(this);
 		this.headingEnabled = this.props.showHeading && (this.props.heading || this.props.icon);
 		this.handleTitleChange = this.handleTitleChange.bind(this);
-		this.getTextWidth = this.getTextWidth.bind(this);
 		this.titleChangeHandler = this.props.controller.getHandlers().titleChangeHandler;
-	}
-
-	getHeightForMultiLineMessage(rightFlyoutWidth, messageWidth) {
-		// Calculate height for multi-line error/warning message
-		let height;
-		const numberOfLines = Math.ceil(messageWidth / rightFlyoutWidth);
-		if (this.headingEnabled) {
-			// Following values should be consistent with values in title-editor.scss
-			// properties-title-heading-height, properties-title-heading-bottom-padding, properties-title-editor-input-height, properties-title-editor-top-bottom-padding
-			height = 1.5 + 0.25 + 2.5 + 0.25 + numberOfLines + 2;
-		} else {
-			height = 2.5 + 0.25 + numberOfLines + 2;
-		}
-		return height;
-	}
-
-	getTextWidth(text, font) {
-		// Calculate width of given text. Reference - https://stackoverflow.com/a/21015393
-		const canvas = document.createElement("canvas");
-		const context = canvas.getContext("2d");
-		context.font = font;
-		const metrics = context.measureText(text);
-		return metrics.width;
 	}
 
 	_handleKeyPress(e) {
@@ -99,15 +75,12 @@ class TitleEditor extends Component {
 
 	handleTitleChange(evt) {
 		const newTitle = evt.target.value;
-		if (this.titleChangeHandler && typeof this.titleChangeHandler === "function") {
+		if (typeof this.titleChangeHandler === "function") {
 			const titleValidation = this.titleChangeHandler(newTitle);
 			if (titleValidation && (typeof titleValidation === "object") && titleValidation.type && titleValidation.message) {
 				this.setState({ titleValidation: titleValidation });
-			} else if (titleValidation === null) {
-				// titleChangeHandler returns null for valid title.
-				this.setState({ titleValidation: titleValidation });
 			} else {
-				// titleChangeHandler response is invalid. Don't show error/warning for title.
+				// titleChangeHandler response is invalid or null. Don't show error/warning for title.
 				this.setState({ titleValidation: null });
 			}
 		}
@@ -149,28 +122,9 @@ class TitleEditor extends Component {
 			}
 		}
 
-		// Calculate height for multi-line error/warning message
-		let heightStyle = {};
-		if (
-			titleValidationTypes.includes(get(this.state.titleValidation, "type")) &&
-			get(this.state.titleValidation, "message")
-		) {
-			// Default rightFlyoutWidth is the width of "small" editorSize (320px)
-			const rightFlyoutWidth = document.querySelector(".properties-right-flyout") ? document.querySelector(".properties-right-flyout").offsetWidth : 320;
-			// At this point, div containing message is not created in DOM. So we can't use offsetWidth.
-			// Get the width of text message in px. 'font-size: 0.75rem' for .bx--form-requirement.
-			// Adding 16 because message has 16px left padding.
-			const messageWidth = Math.ceil(this.getTextWidth(this.state.titleValidation.message, "0.75rem arial")) + 16;
-			if (messageWidth > rightFlyoutWidth) {
-				const multiLineMessageHeight = this.getHeightForMultiLineMessage(rightFlyoutWidth, messageWidth);
-				heightStyle = { height: multiLineMessageHeight + "rem" };
-			}
-		}
-
 		return (
-			<div style={ heightStyle } className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.headingEnabled },
-				{ "properties-title-with-warning-error": titleValidationTypes.includes(get(this.state.titleValidation, "type")) })}
+			<div className={classNames("properties-title-editor",
+				{ "properties-title-with-heading": this.headingEnabled })}
 			>
 				{heading}
 				<div className={classNames(

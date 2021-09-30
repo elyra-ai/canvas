@@ -14,38 +14,15 @@
  * limitations under the License.
  */
 
-// After changing any of the following 5 values, please update value in getHeightForMultiLineMessage() in title-editor.jsx
-$properties-title-heading-height: $spacing-06;
 $properties-title-heading-bottom-padding: $spacing-02;
-$properties-title-editor-input-height: $spacing-08;
-$properties-title-editor-top-bottom-padding: $spacing-07; // 16px top + 16px bottom padding
-$properties-title-with-warning-error-height: $spacing-02 + $spacing-05; // 4px padding + 16px height of single line error/warning message
 
 .properties-title-editor {
-	display: block;
-	align-items: center;
 	padding: $spacing-05 0;
-	height: 72px;
 	border-bottom: 1px $ui-03 solid;
-	&.properties-title-with-heading {
-		height: $properties-title-heading-height + $properties-title-heading-bottom-padding + $properties-title-editor-input-height + $properties-title-editor-top-bottom-padding;
-	}
-	&.properties-title-with-warning-error {
-		// This is the height for single line error/warning message. For multi-line msgs, height is calculated in react class.
-		height: $properties-title-editor-input-height + $properties-title-with-warning-error-height + $properties-title-editor-top-bottom-padding;
-		.properties-title-editor-input {
-			display: block;
-		}
-	}
-	&.properties-title-with-heading.properties-title-with-warning-error {
-		// This is the height for single line error/warning message. For multi-line msgs, height is calculated in react class.
-		height: $properties-title-heading-height + $properties-title-heading-bottom-padding + $properties-title-editor-input-height + $properties-title-with-warning-error-height + $properties-title-editor-top-bottom-padding;
-	}
 }
 
 .properties-title-heading {
 	padding: 0 $spacing-05 $properties-title-heading-bottom-padding;
-	height: $properties-title-heading-height;
 	display: flex;
 	align-items: center;
 	.properties-title-heading-icon {
@@ -63,7 +40,6 @@ $properties-title-with-warning-error-height: $spacing-02 + $spacing-05; // 4px p
 	}
 }
 .properties-title-editor-input {
-	height: $properties-title-editor-input-height;
 	width: calc(100% - 2px); // subtract 2px for input active right border
 	top: 1px; // align input with bottom border
 	position: relative;
@@ -75,7 +51,6 @@ $properties-title-with-warning-error-height: $spacing-02 + $spacing-05; // 4px p
 	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
-		position: absolute;
 		width: 100%;
 
 		input { //override styling from carbon
@@ -94,7 +69,7 @@ $properties-title-with-warning-error-height: $spacing-02 + $spacing-05; // 4px p
 			}
 		}
 		.bx--form-requirement {
-			margin: $spacing-02 0 0 $spacing-05; // if left padding is updated, please update value '16' in messageWidth calculation in title-editor.jsx
+			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
 		}
 		.bx--text-input__field-wrapper--warning input {
 			border-bottom: 1px solid $ui-04;

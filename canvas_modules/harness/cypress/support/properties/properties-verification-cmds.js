@@ -54,11 +54,6 @@ Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => 
 	}
 });
 
-Cypress.Commands.add("verifyHeightOfMultiLineMessageInPropertiesTitleEditor", (height) => {
-	cy.get(".properties-title-editor")
-		.invoke("attr", "style", `height:${height}`);
-});
-
 Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
 	cy.get("#node-title-editor-right-flyout-panel")
 		.should("not.exist");

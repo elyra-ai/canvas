@@ -20,7 +20,6 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import sinon from "sinon";
 import { mountWithIntl } from "../../_utils_/intl-utils";
-import "jest-canvas-mock";
 
 const controller = new Controller();
 controller.setTitle("test title");

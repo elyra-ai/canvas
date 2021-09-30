@@ -31,7 +31,6 @@ describe("Properties title editor test", function() {
       " Height is adjusted for multi-line messages.",
 			"warning"
 		);
-		cy.verifyHeightOfMultiLineMessageInPropertiesTitleEditor("7.75rem");
 	});
 
 	it("Test single line error message", function() {
