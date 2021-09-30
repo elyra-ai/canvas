@@ -22,7 +22,7 @@
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
-import ReactFileDownload from "react-file-download";
+import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
@@ -1147,13 +1147,13 @@ class App extends React.Component {
 	downloadPipelineFlow() {
 		const pipelineFlow = this.getPipelineFlow();
 		const canvas = JSON.stringify(pipelineFlow, null, 2);
-		ReactFileDownload(canvas, "canvas.json");
+		JavascriptFileDownload(canvas, "canvas.json");
 	}
 
 	downloadPalette() {
 		const paletteData = this.getPaletteData();
 		const palette = JSON.stringify(paletteData, null, 2);
-		ReactFileDownload(palette, "palette.json");
+		JavascriptFileDownload(palette, "palette.json");
 	}
 
 	useApplyOnBlur(enabled) {

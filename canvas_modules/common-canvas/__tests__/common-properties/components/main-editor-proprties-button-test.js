@@ -123,7 +123,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		controller.setErrorMessages({
 			testcontrol: {
 				type: "error",
-				text: "Required parameter 'string with char limit' has no value.",
+				text: "You must provide your string with char limit.",
 				validation_id: "required_string_charLimit_713.1789411411248",
 				required: true
 			}
@@ -134,7 +134,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		controller.setErrorMessages({
 			testcontrol: {
 				type: "error",
-				text: "Required parameter 'string with char limit' has no value.",
+				text: "You must provide your string with char limit.",
 				validation_id: "required_string_charLimit_713.1789411411248",
 				required: false
 			}
@@ -151,7 +151,7 @@ describe("main-editor-properties-buttons renders correctly", () => {
 		const expectedErrors = {
 			"string_empty": {
 				"type": "error",
-				"text": "Required parameter 'Empty' has no value.",
+				"text": "You must provide your Empty.",
 				"validation_id": "required_string_empty_938.7063182960883",
 				"required": true,
 				"displayError": false,
