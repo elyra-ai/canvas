@@ -33,7 +33,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
-	SUPER_NODE }
+	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -68,7 +68,7 @@ const OUTPUT_TYPE = "output_type";
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, config, supernodeInfo = {}) {
 		this.logger = new Logger(["SVGCanvasRenderer", "PipeId", pipelineId]);
-		this.logger.logStartTimer("Constructor");
+		this.logger.logStartTimer("constructor" + pipelineId.substring(0, 5));
 		this.pipelineId = pipelineId;
 		this.supernodeInfo = supernodeInfo; // Contents will be undefined in case of primary pipeline renderer
 		this.canvasDiv = canvasDiv;
@@ -102,22 +102,26 @@ export default class SVGCanvasRenderer {
 		this.minScaleExtent = 0.2;
 		this.maxScaleExtent = 1.8;
 
+		// Allow us to keep track of the object (node or comment) being sized and
+		// its initial size and position at the start of the sizing event.
+		this.resizeObj = null;
+		this.resizeObjInitialInfo = null;
+
 		// Allows us to track the sizing behavior of comments
 		this.commentSizing = false;
-		this.commentSizingId = 0;
 		this.commentSizingDirection = "";
 
-		// Allows us to track the sizing behavior of supernodes
+		// Allows us to track the sizing behavior of nodes
 		this.nodeSizing = false;
-		this.nodeSizingId = 0;
 		this.nodeSizingDirection = "";
-		this.nodeSizingMovedNodes = [];
+		this.nodeSizingObjectsInfo = [];
+		this.nodeSizingLinksInfo = [];
 
-		// General purpose variables to allow us to hanlde resize and snap to grid
-		this.resizeObjXPos = 0;
-		this.resizeObjYPos = 0;
-		this.resizeObjWidth = 0;
-		this.resizeObjHeight = 0;
+		// General purpose variables to allow us to handle resize and snap to grid
+		this.notSnappedXPos = 0;
+		this.notSnappedYPos = 0;
+		this.notSnappedWidth = 0;
+		this.notSnappedHeight = 0;
 
 		// Allows us to track the editing of text (either comments or node labels)
 		this.editingText = false;
@@ -252,7 +256,7 @@ export default class SVGCanvasRenderer {
 			this.supernodeInfo.d3Selection.selectAll(".d3-node-port-output").raise();
 		}
 
-		this.logger.logEndTimer("Constructor");
+		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
 	isCanvasEmptyOrBindingsOnly() {
@@ -309,7 +313,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
-		this.logger.logStartTimer("setCanvasInfoRenderer");
+		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getActivePipeline(this.pipelineId);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
@@ -333,11 +337,18 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		this.superRenderers.forEach((superRenderer) => {
-			superRenderer.setCanvasInfoRenderer(canvasInfo);
-		});
+		// Display all objects in the canvas provided we are primary pipeline
+		// (no supernode) or our supernode is_expandd.
+		const supernode = this.getParentSupernodeDatum();
+		if (!supernode || supernode.is_expanded) {
+			this.displayCanvas();
 
-		this.logger.logEndTimer("setCanvasInfoRenderer");
+			this.superRenderers.forEach((superRenderer) => {
+				superRenderer.setCanvasInfoRenderer(canvasInfo);
+			});
+		}
+
+		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 	}
 
 	// Returns a subset of renderers, from the current set of super renderers,
@@ -363,7 +374,6 @@ export default class SVGCanvasRenderer {
 	}
 
 	clearCanvas() {
-		this.canvasController.clearSelections();
 		this.initializeZoomVariables();
 		this.canvasSVG.remove();
 	}
@@ -669,13 +679,23 @@ export default class SVGCanvasRenderer {
 	getMousePosSnapToGrid(mousePos) {
 		let transPos = mousePos;
 
-		if (this.config.enableSnapToGridType === "During" ||
-				this.config.enableSnapToGridType === "After") {
-			transPos = this.snapToGridObject(transPos);
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+				this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			transPos = this.snapToGridPosition(transPos);
 		}
 		return transPos;
 	}
 
+	// Returns the object passed in with its position and size snapped to
+	// the current grid dimensions.
+	snapToGridObject(inResizeObj) {
+		const resizeObj = inResizeObj;
+		resizeObj.x_pos = CanvasUtils.snapToGrid(resizeObj.x_pos, this.canvasLayout.snapToGridXPx);
+		resizeObj.y_pos = CanvasUtils.snapToGrid(resizeObj.y_pos, this.canvasLayout.snapToGridYPx);
+		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.canvasLayout.snapToGridXPx);
+		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.canvasLayout.snapToGridYPx);
+		return resizeObj;
+	}
 
 	// Returns the current mouse position transformed by the current zoom
 	// transformation amounts based on the local SVG -- that is, if we're
@@ -2039,14 +2059,16 @@ export default class SVGCanvasRenderer {
 		return { startX, startY, width, height };
 	}
 
-	// Records the initial starting position of the object being dragged so
+	// Records the initial starting position of the object being sized so
 	// that drag increments can be added to the original starting
-	// position to aide calculating the snap-to-grid position.
+	// position to aid calculating the snap-to-grid position.
 	initializeResizeVariables(resizeObj) {
-		this.resizeObjXPos = resizeObj.x_pos;
-		this.resizeObjYPos = resizeObj.y_pos;
-		this.resizeObjWidth = resizeObj.width;
-		this.resizeObjHeight = resizeObj.height;
+		this.resizeObjInitialInfo = {
+			x_pos: resizeObj.x_pos, y_pos: resizeObj.y_pos, width: resizeObj.width, height: resizeObj.height };
+		this.notSnappedXPos = resizeObj.x_pos;
+		this.notSnappedYPos = resizeObj.y_pos;
+		this.notSnappedWidth = resizeObj.width;
+		this.notSnappedHeight = resizeObj.height;
 	}
 
 	// Returns an array of objects to drag. If enableDragWithoutSelect is true,
@@ -2066,12 +2088,13 @@ export default class SVGCanvasRenderer {
 
 	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
+		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
-			this.resizeObj = this.getComment(this.commentSizingId);
+			this.resizeObj = this.getComment(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else if (this.nodeSizing) {
-			this.resizeObj = this.getNode(this.nodeSizingId);
+			this.resizeObj = this.getNode(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else {
@@ -2103,7 +2126,6 @@ export default class SVGCanvasRenderer {
 				this.setNodeTranslucentState(this.dragObjects[0].id, true);
 			}
 		}
-		// Note: Comment and supernode resizing is started by the comment/supernode highlight rectangle.
 		this.logger.logEndTimer("dragStart", true);
 	}
 
@@ -2129,7 +2151,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let	increment = { x: 0, y: 0 };
 
-				if (this.config.enableSnapToGridType === "During") {
+				if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
 					const stgPos = this.snapToGridDraggedNode();
 
 					increment = {
@@ -2151,6 +2173,19 @@ export default class SVGCanvasRenderer {
 					d.x_pos += increment.x;
 					d.y_pos += increment.y;
 				});
+
+				if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
+					this.getSelectedLinks().forEach((link) => {
+						if (link.srcPos) {
+							link.srcPos.x_pos += increment.x;
+							link.srcPos.y_pos += increment.y;
+						}
+						if (link.trgPos) {
+							link.trgPos.x_pos += increment.x;
+							link.trgPos.y_pos += increment.y;
+						}
+					});
+				}
 			}
 
 			this.displayCanvas();
@@ -2208,7 +2243,7 @@ export default class SVGCanvasRenderer {
 				if (this.dragRunningX !== 0 ||
 						this.dragRunningY !== 0) {
 					let dragFinalOffset = null;
-					if (this.config.enableSnapToGridType === "After") {
+					if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 						const stgPos = this.snapToGridDraggedNode();
 						dragFinalOffset = {
 							x: stgPos.x - this.dragStartX,
@@ -2243,6 +2278,7 @@ export default class SVGCanvasRenderer {
 							editType: "moveObjects",
 							editSource: "canvas",
 							nodes: this.dragObjects.map((o) => o.id),
+							links: this.getSelectedLinks().filter((l) => l.srcPos || l.trgPos), // Filter detached links
 							offsetX: dragFinalOffset.x,
 							offsetY: dragFinalOffset.y,
 							pipelineId: this.activePipeline.id });
@@ -2342,13 +2378,13 @@ export default class SVGCanvasRenderer {
 		const objPosX = this.dragStartX + this.dragOffsetX;
 		const objPosY = this.dragStartY + this.dragOffsetY;
 
-		return this.snapToGridObject({ x: objPosX, y: objPosY });
+		return this.snapToGridPosition({ x: objPosX, y: objPosY });
 	}
 
 	// Returns the snap-to-grid position of the object positioned at objPos.x
 	// and objPos.y. The grid that is snapped to is defined by this.snapToGridXPx
 	// and this.snapToGridYPx values which are pixel values.
-	snapToGridObject(objPos) {
+	snapToGridPosition(objPos) {
 		const stgPosX = CanvasUtils.snapToGrid(objPos.x, this.canvasLayout.snapToGridXPx);
 		const stgPosY = CanvasUtils.snapToGrid(objPos.y, this.canvasLayout.snapToGridYPx);
 
@@ -2776,8 +2812,6 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				if (this.nodeUtils.isExpandedSupernode(d)) {
 					this.nodeSizing = true;
-					this.nodeSizingInitialSize = { width: d.width, height: d.height };
-					this.nodeSizingId = d.id;
 					// Note - node resizing and finalization of size is handled by drag functions.
 					this.addTempCursorOverlay(this.nodeSizingCursor);
 				}
@@ -4558,7 +4592,7 @@ export default class SVGCanvasRenderer {
 							pos.x <= xx + nodeWidthOffset + wd &&
 							pos.y >= yy &&
 							pos.y <= yy + ht) {
-						portId = this.getAttribute("data-port-id");
+						portId = portGrps[i].getAttribute("data-port-id");
 					}
 				} else { // Port must be a circle
 					const cx = node.x_pos + Number(portSel.attr("cx"));
@@ -4567,7 +4601,7 @@ export default class SVGCanvasRenderer {
 							pos.x <= cx + node.layout.portRadius &&
 							pos.y >= cy - node.layout.portRadius &&
 							pos.y <= cy + node.layout.portRadius) {
-						portId = this.getAttribute("data-port-id");
+						portId = portGrps[i].getAttribute("data-port-id");
 					}
 				}
 			});
@@ -4901,11 +4935,7 @@ export default class SVGCanvasRenderer {
 	displayComments() {
 		this.logger.logStartTimer("displayComments " + this.getFlags());
 
-		if (this.nodeSizing) {
-			this.logger.logEndTimer("displayComments " + this.getFlags());
-			return;
-
-		} else if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
+		if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			this.displayMovedComments();
 
 		} else if (this.selecting || this.regionSelect) {
@@ -5079,7 +5109,6 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mousedown", (d3Event, d) => {
 				this.commentSizing = true;
-				this.commentSizingId = d.id;
 				// Note - comment resizing and finalization of size is handled by drag functions.
 				this.addTempCursorOverlay(this.commentSizingCursor);
 			})
@@ -5559,24 +5588,36 @@ export default class SVGCanvasRenderer {
 		const oldSupernode = Object.assign({}, this.resizeObj);
 		const minSupernodeHeight = Math.max(this.resizeObj.inputPortsHeight, this.resizeObj.outputPortsHeight) +
 			this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
-		const delta = this.resizeObject(d3Event, this.resizeObj, this.nodeSizingDirection,
-			this.canvasLayout.supernodeMinWidth,
+
+		const delta = this.resizeObject(d3Event, this.resizeObj,
+			this.nodeSizingDirection, this.canvasLayout.supernodeMinWidth,
 			Math.max(this.canvasLayout.supernodeMinHeight, minSupernodeHeight));
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			CanvasUtils.addToNodeSizingArray(this.resizeObj, this.nodeSizingMovedNodes);
-
 			if (this.config.enableMoveNodesOnSupernodeResize) {
-				CanvasUtils.moveSurroundingNodes(
-					this.nodeSizingMovedNodes,
+				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
-					this.activePipeline.nodes,
+					this.activePipeline.nodes.concat(this.activePipeline.comments),
 					this.nodeSizingDirection,
 					this.resizeObj.width,
 					this.resizeObj.height,
-					true // Pass true to indicate that node positions should be updated.
+					true // Pass true to indicate that object positions should be updated.
 				);
+
+				const linksInfo = CanvasUtils.moveSurroundingDetachedLinks(
+					oldSupernode,
+					this.activePipeline.links,
+					this.nodeSizingDirection,
+					this.resizeObj.width,
+					this.resizeObj.height,
+					true // Pass true to indicate that link positions should be updated.
+				);
+
+				// Overwrite the object and link info with any new info.
+				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
+				this.nodeSizingLinksInfo = Object.assign(this.nodeSizingLinksInfo, linksInfo);
 			}
+			this.displayComments();
 			this.displayNodes();
 			this.displayLinks();
 			if (this.dispUtils.isDisplayingSubFlow()) {
@@ -5624,18 +5665,18 @@ export default class SVGCanvasRenderer {
 		let width = 0;
 		let height = 0;
 
-		if (this.config.enableSnapToGridType === "During") {
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
 			// Calculate where the object being resized would be and its size given
 			// current increments.
-			this.resizeObjXPos += incrementX;
-			this.resizeObjYPos += incrementY;
-			this.resizeObjWidth += incrementWidth;
-			this.resizeObjHeight += incrementHeight;
+			this.notSnappedXPos += incrementX;
+			this.notSnappedYPos += incrementY;
+			this.notSnappedWidth += incrementWidth;
+			this.notSnappedHeight += incrementHeight;
 
-			xPos = CanvasUtils.snapToGrid(this.resizeObjXPos, this.canvasLayout.snapToGridXPx);
-			yPos = CanvasUtils.snapToGrid(this.resizeObjYPos, this.canvasLayout.snapToGridYPx);
-			width = CanvasUtils.snapToGrid(this.resizeObjWidth, this.canvasLayout.snapToGridXPx);
-			height = CanvasUtils.snapToGrid(this.resizeObjHeight, this.canvasLayout.snapToGridYPx);
+			xPos = CanvasUtils.snapToGrid(this.notSnappedXPos, this.canvasLayout.snapToGridXPx);
+			yPos = CanvasUtils.snapToGrid(this.notSnappedYPos, this.canvasLayout.snapToGridYPx);
+			width = CanvasUtils.snapToGrid(this.notSnappedWidth, this.canvasLayout.snapToGridXPx);
+			height = CanvasUtils.snapToGrid(this.notSnappedHeight, this.canvasLayout.snapToGridYPx);
 
 		} else {
 			xPos = canvasObj.x_pos + incrementX;
@@ -5670,58 +5711,62 @@ export default class SVGCanvasRenderer {
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing() {
-		if (this.config.enableSnapToGridType === "After") {
-			const sizedNode = this.nodeSizingMovedNodes[this.nodeSizingId];
-			sizedNode.x_pos = CanvasUtils.snapToGrid(sizedNode.x_pos, this.snapToGridXPx);
-			sizedNode.y_pos = CanvasUtils.snapToGrid(sizedNode.y_pos, this.snapToGridYPx);
-			sizedNode.width = CanvasUtils.snapToGrid(sizedNode.width, this.snapToGridXPx);
-			sizedNode.height = CanvasUtils.snapToGrid(sizedNode.height, this.snapToGridYPx);
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			this.resizeObj = this.snapToGridObject(this.resizeObj);
 		}
-		if (Object.keys(this.nodeSizingMovedNodes).length > 0) {
-			const data = {
+
+		// If the dimensions or position has changed, issue the command.
+		// Note: x_pos or y_pos might change on resize if the node is sized
+		// upwards or to the left.
+		if (this.resizeObjInitialInfo.x_pos !== this.resizeObj.x_pos ||
+				this.resizeObjInitialInfo.y_pos !== this.resizeObj.y_pos ||
+				this.resizeObjInitialInfo.width !== this.resizeObj.width ||
+				this.resizeObjInitialInfo.height !== this.resizeObj.height) {
+			// Add the dimensions of the object being resized to the array of object infos.
+			this.nodeSizingObjectsInfo[this.resizeObj.id] = {
+				width: this.resizeObj.width,
+				height: this.resizeObj.height,
+				x_pos: this.resizeObj.x_pos,
+				y_pos: this.resizeObj.y_pos
+			};
+
+			this.canvasController.editActionHandler({
 				editType: "resizeObjects",
 				editSource: "canvas",
-				objectsInfo: this.nodeSizingMovedNodes,
+				objectsInfo: this.nodeSizingObjectsInfo,
+				linksInfo: this.nodeSizingLinksInfo,
 				pipelineId: this.pipelineId
-			};
-			this.canvasController.editActionHandler(data);
+			});
 		}
-		this.nodeSizingMovedNodes = [];
+		this.resizeObj = null;
 		this.nodeSizing = false;
-		this.nodeSizingInitialSize = {};
+		this.nodeSizingObjectsInfo = [];
+		this.nodeSizingLinksInfo = [];
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing() {
-		const commentObj = this.getComment(this.commentSizingId);
-		let xPos = commentObj.x_pos;
-		let yPos = commentObj.y_pos;
-		let width = commentObj.width;
-		let height = commentObj.height;
-
-		if (this.config.enableSnapToGridType === "After") {
-			xPos = CanvasUtils.snapToGrid(xPos, this.canvasLayout.snapToGridXPx);
-			yPos = CanvasUtils.snapToGrid(yPos, this.canvasLayout.snapToGridYPx);
-			width = CanvasUtils.snapToGrid(width, this.canvasLayout.snapToGridXPx);
-			height = CanvasUtils.snapToGrid(height, this.canvasLayout.snapToGridYPx);
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			this.resizeObj = this.snapToGridObject(this.resizeObj);
 		}
 
-		// Update the object model comment if the new position or size is different
-		// from the comment's original position and size.
-		if (this.resizeObjXPos !== xPos ||
-				this.resizeObjYPos !== yPos ||
-				this.resizeObjWidth !== width ||
-				this.resizeObjHeight !== height) {
+		// If the dimensions or position has changed, issue the command.
+		// Note: x_pos or y_pos might change on resize if the node is sized
+		// upwards or to the left.
+		if (this.resizeObjInitialInfo.x_pos !== this.resizeObj.x_pos ||
+				this.resizeObjInitialInfo.y_pos !== this.resizeObj.y_pos ||
+				this.resizeObjInitialInfo.width !== this.resizeObj.width ||
+				this.resizeObjInitialInfo.height !== this.resizeObj.height) {
 			const data = {
 				editType: "editComment",
 				editSource: "canvas",
-				id: commentObj.id,
-				content: commentObj.content,
-				width: width,
-				height: height,
-				x_pos: xPos,
-				y_pos: yPos,
+				id: this.resizeObj.id,
+				content: this.resizeObj.content,
+				width: this.resizeObj.width,
+				height: this.resizeObj.height,
+				x_pos: this.resizeObj.x_pos,
+				y_pos: this.resizeObj.y_pos,
 				pipelineId: this.pipelineId
 			};
 			this.canvasController.editActionHandler(data);

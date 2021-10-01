@@ -29,7 +29,8 @@ class PaletteContentList extends React.Component {
 	render() {
 		var contentItems = [];
 
-		if (this.props.category && this.props.category.node_types.length === 0 && this.props.category.empty_text) {
+		if (this.props.category && this.props.category.node_types &&
+				this.props.category.node_types.length === 0 && this.props.category.empty_text) {
 			contentItems.push(
 				<div key={"item_empty"}>
 					<PaletteContentListItem

@@ -95,7 +95,6 @@ export default class DetachedCanvas extends React.Component {
 				portRadius: 10,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
-				outputPortRightPosY: 30,
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,

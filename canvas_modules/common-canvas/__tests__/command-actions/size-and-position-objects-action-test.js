@@ -25,7 +25,7 @@ const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const nodeIds = canvasController.getNodes().map((node) => node.id);
-const newObjectInfo = { objectsInfo: [] };
+const newObjectInfo = { objectsInfo: [], linksInfo: [] };
 for (let i = 0; i < nodeIds.length; i++) {
 	newObjectInfo.objectsInfo[nodeIds[i]] = {
 		id: nodeIds[i],
@@ -39,14 +39,14 @@ for (let i = 0; i < nodeIds.length; i++) {
 describe("SizeAndPositionObjectsAction handles calls correctly", () => {
 	it("should handle calls, undo, and redo", () => {
 		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, objectModel);
-		const previousData = sizeAndPositionObjects.previousData;
-		equalsObjectInfo(previousData.objectsInfo, getNodesInfo(nodeIds));
+		const previousObjectsInfo = sizeAndPositionObjects.previousObjectsInfo;
+		equalsObjectInfo(previousObjectsInfo, getNodesInfo(nodeIds));
 
 		sizeAndPositionObjects.do();
 		equalsObjectInfo(newObjectInfo.objectsInfo, getNodesInfo(nodeIds));
 
 		sizeAndPositionObjects.undo();
-		equalsObjectInfo(previousData.objectsInfo, getNodesInfo(nodeIds));
+		equalsObjectInfo(previousObjectsInfo, getNodesInfo(nodeIds));
 
 		sizeAndPositionObjects.redo();
 		equalsObjectInfo(newObjectInfo.objectsInfo, getNodesInfo(nodeIds));

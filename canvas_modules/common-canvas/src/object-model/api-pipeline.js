@@ -59,6 +59,15 @@ export default class APIPipeline {
 	// Node AND comment methods
 	// ---------------------------------------------------------------------------
 
+	getObjects() {
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.nodes.concat(pipeline.comments);
+		}
+		return [];
+
+	}
+
 	moveObjects(data) {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
@@ -592,6 +601,14 @@ export default class APIPipeline {
 		});
 	}
 
+	deconstructSupernode(data) {
+		this.store.dispatch({ type: "DECONSTRUCT_SUPERNODE", data: data });
+	}
+
+	reconstructSupernode(data) {
+		this.store.dispatch({ type: "RECONSTRUCT_SUPERNODE", data: data });
+	}
+
 	getNodes() {
 		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
 		if (pipeline) {
@@ -624,8 +641,9 @@ export default class APIPipeline {
 		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
 	}
 
-	sizeAndPositionObjects(objectsInfo) {
-		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: { objectsInfo: objectsInfo }, pipelineId: this.pipelineId });
+	sizeAndPositionObjects(objectsInfo, linksInfo) {
+		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS",
+			data: { objectsInfo, linksInfo }, pipelineId: this.pipelineId });
 	}
 
 	// Filters data node IDs from the list of IDs passed in and returns them
@@ -636,28 +654,22 @@ export default class APIPipeline {
 		});
 	}
 
-	expandSuperNodeInPlace(nodeId, nodePositions) {
+	expandSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: true });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
 
-	collapseSuperNodeInPlace(nodeId, nodePositions) {
+	collapseSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: false });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
@@ -1118,6 +1130,11 @@ export default class APIPipeline {
 		return newLink;
 	}
 
+	createLinkFromInfo(linkInfo) {
+		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNodeId": linkInfo.srcNodeId, "targetNodeId": linkInfo.trgNodeId });
+		return Object.assign({ id: linkId, type: NODE_LINK }, linkInfo);
+	}
+
 	deleteLink(link) {
 		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.pipelineId });
 	}
@@ -1298,51 +1315,61 @@ export default class APIPipeline {
 		return filteredLinks;
 	}
 
+	// Returns an array of cloned links that refer to the id passed in as either
+	// the source node or the target node.
 	getLinksContainingId(id) {
-		const linksList = this.getLinks();
-		const linksContaining = linksList.filter((link) => {
-			return (link.srcNodeId === id || link.trgNodeId === id);
-		});
-		const returnLinks = linksContaining.map((link) => {
-			var newLink = {};
-			newLink.id = link.id;
-			newLink.type = link.type;
-			newLink.srcNodeId = link.srcNodeId;
-			newLink.trgNodeId = link.trgNodeId;
-			newLink.class_name = link.class_name;
-			newLink.style = link.style;
-			newLink.style_temp = link.style_temp;
-			if (link.type === NODE_LINK) {
-				newLink.srcNodePortId = link.srcNodePortId;
-				newLink.trgNodePortId = link.trgNodePortId;
-				newLink.linkName = link.linkName;
-			}
-			return newLink;
-		});
-		return returnLinks;
+		return this.getLinks()
+			.filter((link) => link.srcNodeId === id || link.trgNodeId === id)
+			.map((link) => Object.assign({}, link));
 	}
 
-	// Takes in an array of objects and returns an array of links to those objects.
-	getLinksContainingIds(idArray) {
+	// Returns an array of cloned links that reference one of the objects (nodes
+	// and/or comments) identified by the array of object IDs passed in. The links
+	// returned may be of any type.
+	getLinksContainingIds(objIdArray) {
 		let linksArray = [];
-		idArray.forEach((objId) => {
+		objIdArray.forEach((objId) => {
 			const linksForId = this.getLinksContainingId(objId);
 			if (linksForId.length > 0) {
-				linksArray = linksArray.concat(linksForId);
+				linksArray = CanvasUtils.concatUniqueBasedOnId(linksForId, linksArray);
 			}
 		});
 		return linksArray;
 	}
 
-	// Returns an array of fully-attached' links with id as the source ID.
+	// Returns an array of cloned node data links that reference one of the
+	// objects (nodes and/or comments) identified by the array of object IDs
+	// passed in. The links returned may be of any type.
+	getNodeDataLinksContainingIds(objIdArray) {
+		return this.getLinksContainingIds(objIdArray)
+			.filter((link) => link.type === NODE_LINK);
+	}
+
+	// Returns an array of links with id as the source ID.
 	getLinksContainingSourceId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.srcNodeId === id);
+		});
+	}
+
+	// Returns an array of links with id as the target ID.
+	getLinksContainingTargetId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.trgNodeId === id);
+		});
+	}
+
+	// Returns an array of 'attached' links with id as the source ID.
+	// Note If the link has a srcNodeId and trgNodeId it is attached.
+	getAttachedLinksContainingSourceId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.srcNodeId === id && link.trgNodeId);
 		});
 	}
 
-	// Returns an array of fully-attached' links with id as the target ID.
-	getLinksContainingTargetId(id) {
+	// Returns an array of 'attached' links with id as the target ID.
+	// Note: If the link has a trgNodeId and srcNodeId it is attached.
+	getAttachedLinksContainingTargetId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.trgNodeId === id && link.srcNodeId);
 		});

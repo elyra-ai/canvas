@@ -33,7 +33,6 @@ class Palette extends React.Component {
 
 	render() {
 		this.logger.log("render");
-		// window.console.log("Render Palette");
 
 		let palette = null;
 

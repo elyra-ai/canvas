@@ -59,7 +59,7 @@ class PaletteDialogContent extends React.Component {
 	}
 
 	getSelectedCategory(categories) {
-		var out = null;
+		var out = {};
 
 		if (categories) {
 			for (var idx = 0; idx < categories.length; idx++) {
@@ -78,7 +78,7 @@ class PaletteDialogContent extends React.Component {
 	render() {
 		const cats = this.getUniqueCategories(this.props.paletteJSON.categories);
 		const category = this.getSelectedCategory(this.props.paletteJSON.categories);
-		const nodeTypes = category ? category.node_types : [];
+		const nodeTypes = category && category.node_types ? category.node_types : [];
 		const nodeTypeInfos = nodeTypes.map((nt) =>	({ nodeType: nt, category: category }));
 
 		return (

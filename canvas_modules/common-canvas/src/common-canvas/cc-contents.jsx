@@ -37,7 +37,7 @@ class CanvasContents extends React.Component {
 			isDropZoneDisplayed: false
 		};
 
-		this.logger = new Logger("DiagramCanvas");
+		this.logger = new Logger("CC-Contents");
 
 		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
@@ -82,12 +82,14 @@ class CanvasContents extends React.Component {
 	}
 
 	componentDidMount() {
-		// window.console.log("CanvasContents - componentDidMount()");
+		this.logger.log("componentDidMount");
 		this.svgCanvasD3 =
 			new SVGCanvasD3(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
 				this.props.canvasConfig,
 				this.props.canvasController);
+
+		this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
@@ -96,7 +98,7 @@ class CanvasContents extends React.Component {
 	}
 
 	componentDidUpdate() {
-		// window.console.log("CanvasContents - componentDidUpdate()");
+		this.logger.log("componentDidUpdate");
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
 			this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
 			// Run the afterUpdateCallbacks.
@@ -348,7 +350,6 @@ class CanvasContents extends React.Component {
 
 	render() {
 		this.logger.log("render");
-		// window.console.log("Render CanvasContents");
 
 		const emptyCanvas = this.getEmptyCanvas();
 		const contextMenu = this.getContextMenu();

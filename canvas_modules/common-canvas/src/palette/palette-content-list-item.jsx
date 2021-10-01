@@ -288,6 +288,7 @@ class PaletteContentListItem extends React.Component {
 
 		return (
 			<div id={this.props.nodeTypeInfo.nodeType.id}
+				data-id={this.props.nodeTypeInfo.nodeType.op}
 				draggable={draggable}
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}

@@ -20,6 +20,7 @@
   "node.expandSupernode": "Expand supernode",
   "node.displaySupernodeFullPage": "Display full page",
   "node.collapseSupernodeInPlace": "Collapse supernode",
+	"node.deconstructSupernode": "Deconstruct supernode",
   "node.convertSupernodeExternalToLocal": "Convert external to local",
   "node.convertSupernodeLocalToExternal": "Convert local to external",
   "canvas.validateFlow": "Validate Flow",

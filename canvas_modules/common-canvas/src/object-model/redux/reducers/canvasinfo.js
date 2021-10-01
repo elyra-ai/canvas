@@ -166,7 +166,6 @@ export default (state = {}, action) => {
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
-	case "SET_SUPERNODE_FLAG":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
@@ -193,6 +192,130 @@ export default (state = {}, action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
+
+	case "SET_SUPERNODE_EXPAND_STATE": {
+		const canvasInfoPipelines = state.pipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.pipelineId) {
+					// Add nodes, comments and links to main pipeline
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "SET_SUPERNODE_EXPAND_STATE", data: action.data });
+
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.objectPositions } });
+
+					const newComments = comments(pipeline.comments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.objectPositions } });
+
+					const newLinks = links(pipeline.links,
+						{ type: "SET_LINK_POSITIONS", data: action.data });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DECONSTRUCT_SUPERNODE": {
+		const canvasInfoPipelines = state.pipelines
+			// Filter out the pipeline to delete
+			.filter((p) => p.id !== action.data.pipelineToDelete.id)
+			// Modify the pipeline where the supernode exists
+			.map((pipeline) => {
+				if (pipeline.id === action.data.pipelineId) {
+					// Add nodes, comments and links to main pipeline
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "ADD_NODES", data: action.data });
+
+					let newComments = comments(pipeline.comments,
+						{ type: "ADD_COMMENTS", data: action.data });
+
+					let newLinks = links(pipeline.links,
+						{ type: "ADD_LINKS", data: action.data });
+
+					// Delete supernode
+					newNodes = nodes(newNodes,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					newLinks = links(newLinks,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					// Set object positions to their expanded positions
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.newObjectPositions } });
+
+					newComments = comments(newComments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.newObjectPositions } });
+
+					newLinks = links(newLinks,
+						{ type: "SET_LINK_POSITIONS", data: { linkPositions: action.data.newLinkPositions } });
+
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "RECONSTRUCT_SUPERNODE": {
+		// Add back the pipeline that was deleted.
+		let canvasInfoPipelines = [
+			...state.pipelines,
+			action.data.pipelineToDelete
+		];
+
+		canvasInfoPipelines = canvasInfoPipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.data.pipelineId) {
+					// Remove nodes, comments and links from main pipeline that were previosuly added
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "REMOVE_NODES", data: { nodesToDelete: action.data.nodesToAdd } });
+
+					let newComments = comments(pipeline.comments,
+						{ type: "REMOVE_COMMENTS", data: { commentsToDelete: action.data.commentsToAdd } });
+
+					let newLinks = links(pipeline.links,
+						{ type: "REMOVE_LINKS", data: { linksToDelete: action.data.linksToAdd } });
+
+					// Add back the supernode
+					newNodes = nodes(newNodes,
+						{ type: "ADD_SUPERNODES", data: { supernodesToAdd: [action.data.supernodeToDelete] } });
+
+					// Add back removed links
+					newLinks = links(newLinks,
+						{ type: "ADD_LINKS", data: { linksToAdd: action.data.linksToRemove } });
+
+					// newLinks = links(newLinks,
+					// 	{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					// Set object positions to their expanded positions
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.oldObjectPositions } });
+
+					newComments = comments(newComments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.oldObjectPositions } });
+
+					newLinks = links(newLinks,
+						{ type: "SET_LINK_POSITIONS", data: { linkPositions: action.data.oldLinkPositions } });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	case "SET_OBJECTS_STYLE":
 	case "SET_LINKS_STYLE": {
 		const pipelineIds = Object.keys(action.data.pipelineObjIds);
@@ -209,6 +332,7 @@ export default (state = {}, action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
+
 	case "SET_OBJECTS_MULTI_STYLE":
 	case "SET_LINKS_MULTI_STYLE": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
@@ -224,6 +348,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "SET_NODES_MULTI_DECORATIONS": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (action.data.pipelineNodeDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
@@ -238,6 +363,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "SET_LINKS_MULTI_DECORATIONS": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (action.data.pipelineLinkDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
@@ -252,6 +378,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "REMOVE_ALL_STYLES": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			return Object.assign({}, pipeline, {

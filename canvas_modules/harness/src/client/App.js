@@ -22,7 +22,7 @@
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
-import ReactFileDownload from "react-file-download";
+import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
@@ -373,6 +373,7 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController2 = new CanvasController();
+			// this.canvasController.setLoggingState(true);
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}
@@ -1127,6 +1128,10 @@ class App extends React.Component {
 		// Add consoleoutput to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
 
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness logging");
+		this.canvasController.log("-------------------------------");
+
 		this.setState({ consoleout: this.consoleout });
 
 		if (this.state.consoleOpened) {
@@ -1142,13 +1147,13 @@ class App extends React.Component {
 	downloadPipelineFlow() {
 		const pipelineFlow = this.getPipelineFlow();
 		const canvas = JSON.stringify(pipelineFlow, null, 2);
-		ReactFileDownload(canvas, "canvas.json");
+		JavascriptFileDownload(canvas, "canvas.json");
 	}
 
 	downloadPalette() {
 		const paletteData = this.getPaletteData();
 		const palette = JSON.stringify(paletteData, null, 2);
-		ReactFileDownload(palette, "palette.json");
+		JavascriptFileDownload(palette, "palette.json");
 	}
 
 	useApplyOnBlur(enabled) {
@@ -1201,6 +1206,10 @@ class App extends React.Component {
 	}
 
 	clickActionHandler(source) {
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness clickActionHandler");
+		this.canvasController.log("-------------------------------");
+
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
 		// in the middle of procssing an event. Preferably, common-canvas should be
@@ -1353,6 +1362,7 @@ class App extends React.Component {
 		case "loadPipelineFlow":
 		case "expandSuperNodeInPlace":
 		case "displaySubPipeline":
+		case "deconstructSuperNode":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
 				// This code simulates some asynchronous activity by the host app.
@@ -2162,8 +2172,9 @@ class App extends React.Component {
 	}
 
 	render() {
-		// window.console.log("++++++++++++++++++++");
-		// window.console.log("Render Test Harness");
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness render");
+		this.canvasController.log("-------------------------------");
 
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs

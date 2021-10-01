@@ -34,7 +34,8 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
-	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
+	HIGHLIGHT_DOWNSTREAM, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class ObjectModel {
 
@@ -422,7 +423,7 @@ export default class ObjectModel {
 				throw msg;
 			}
 
-			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, true);
+			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, data.targetObject, true);
 			return true;
 		}
 		return false;
@@ -477,8 +478,8 @@ export default class ObjectModel {
 	// (except for the pipelines property) using the externalpipelineflows
 	// reducer. shouldAddPipelines is a boolean that controls whether pipelines
 	// are added or not.
-	addExternalPipelineFlow(externalPipelineFlow, url, shouldAddPipelines = true) {
-		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
+	addExternalPipelineFlow(externalPipelineFlow, url, supernode, shouldAddPipelines = true) {
+		const convertedPf = this.preparePipelineFlow(externalPipelineFlow, supernode);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
 		// Make a copy and remove the pipelines from the pipleine flow
@@ -592,22 +593,22 @@ export default class ObjectModel {
 	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
 	// involves flattening the pipleine flow hierarchy and adding layout info
 	// to the nodes in the pipelines.
-	preparePipelineFlow(newPipelineFlow) {
+	preparePipelineFlow(newPipelineFlow, supernode) {
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), supernode);
 		return canvasInfo;
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.
-	prepareNodes(pipelines, nodeLayout, canvasLayout) {
-		const newPipelines = this.setSupernodesBindingStatus(pipelines);
+	prepareNodes(pipelines, nodeLayout, canvasLayout, supernode) {
+		const newPipelines = this.setSupernodesBindingStatus(pipelines, supernode);
 		return newPipelines.map((pipeline) => this.setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout));
 	}
 
 	// Loops through all the pipelines and adds the appropriate supernode binding
 	// attribute to any binding nodes that are referenced by the ports of a supernode.
-	setSupernodesBindingStatus(pipelines) {
+	setSupernodesBindingStatus(pipelines, supernode) {
 		// First, clear all supernode binding statuses from nodes
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
@@ -617,37 +618,46 @@ export default class ObjectModel {
 				});
 			}
 		});
+
+		if (supernode) {
+			this.setSupernodesBindingStatusForNode(supernode, pipelines);
+		}
+
 		// Set the supernode binding statuses as appropriate.
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					const snPipelineId = this.getSupernodePipelineId(node);
-					if (snPipelineId) {
-						if (node.inputs) {
-							node.inputs.forEach((input) => {
-								if (input.subflow_node_ref) {
-									const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
-									if (subNode) {
-										subNode.isSupernodeInputBinding = true;
-									}
-								}
-							});
-						}
-						if (node.outputs) {
-							node.outputs.forEach((output) => {
-								if (output.subflow_node_ref) {
-									const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
-									if (subNode) {
-										subNode.isSupernodeOutputBinding = true;
-									}
-								}
-							});
-						}
-					}
+				CanvasUtils.filterSupernodes(pipeline.nodes).forEach((node) => {
+					this.setSupernodesBindingStatusForNode(node, pipelines);
 				});
 			}
 		});
 		return pipelines;
+	}
+
+	setSupernodesBindingStatusForNode(node, pipelines) {
+		const snPipelineId = this.getSupernodePipelineId(node);
+		if (snPipelineId) {
+			if (node.inputs) {
+				node.inputs.forEach((input) => {
+					if (input.subflow_node_ref) {
+						const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeInputBinding = true;
+						}
+					}
+				});
+			}
+			if (node.outputs) {
+				node.outputs.forEach((output) => {
+					if (output.subflow_node_ref) {
+						const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeOutputBinding = true;
+						}
+					}
+				});
+			}
+		}
 	}
 
 	setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout) {
@@ -692,8 +702,8 @@ export default class ObjectModel {
 		} else {
 			newNode = this.setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
 		}
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
 			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
 			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
 		}
@@ -704,8 +714,8 @@ export default class ObjectModel {
 	// returned comment has its position adjusted for snap to grid, if necessary.
 	setCommentAttributesWithLayout(comment, canvasLayout) {
 		const newComment = Object.assign({}, comment);
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
 			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
 			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
 		}
@@ -1101,7 +1111,11 @@ export default class ObjectModel {
 	}
 
 	getCurrentPipeline() {
-		return this.getCanvasInfoPipeline(this.getCurrentBreadcrumb().pipelineId);
+		return this.getCanvasInfoPipeline(this.getCurrentPipelineId());
+	}
+
+	getCurrentPipelineId() {
+		return this.getCurrentBreadcrumb().pipelineId;
 	}
 
 	isPrimaryPipelineEmpty() {
@@ -1863,7 +1877,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingTargetId(nodeId)
+			.getAttachedLinksContainingTargetId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1902,7 +1916,7 @@ export default class ObjectModel {
 
 			supernode.inputs.forEach((inputPort) => {
 				if (inputPort.subflow_node_ref === nodeId) {
-					const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
+					const supernodeLinks = parentPipeline.getAttachedLinksContainingTargetId(supernode.id);
 					supernodeLinks.forEach((supernodeLink) => {
 						if (supernodeLink.trgNodePortId === inputPort.id) {
 							highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
@@ -1936,7 +1950,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingSourceId(nodeId)
+			.getAttachedLinksContainingSourceId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1975,7 +1989,7 @@ export default class ObjectModel {
 
 				supernode.outputs.forEach((outputPort) => {
 					if (outputPort.subflow_node_ref === nodeId) {
-						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
+						const supernodeLinks = parentPipeline.getAttachedLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
 								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
@@ -2042,7 +2056,7 @@ export default class ObjectModel {
 	// Copies the currently selected objects to the internal clipboard and
 	// returns true if successful. Returns false if there is nothing to copy to
 	// the clipboard.
-	copyToClipboard(areDetachableLinksSupported) {
+	copyToClipboard(areDetachableLinksInUse) {
 		var copyData = {};
 
 		const apiPipeline = this.getSelectionAPIPipeline();
@@ -2051,9 +2065,17 @@ export default class ObjectModel {
 		}
 		const nodes = this.getSelectedNodes();
 		const comments = this.getSelectedComments();
-		const links = areDetachableLinksSupported
-			? this.getSelectedLinks()
-			: apiPipeline.getLinksBetween(nodes, comments);
+		let links = apiPipeline.getLinksBetween(nodes, comments);
+
+		// If detachable links are in use, we need to also add any links that
+		// emanate from the selected nodes AND any links that are currently
+		// selected, making sure we don't have any duplicates in the final
+		// links array.
+		if (areDetachableLinksInUse) {
+			const emanatingLinks = apiPipeline.getNodeDataLinksContainingIds(nodes.map((n) => n.id));
+			links = CanvasUtils.concatUniqueBasedOnId(emanatingLinks, links);
+			links = CanvasUtils.concatUniqueBasedOnId(this.getSelectedLinks(), links);
+		}
 
 		if (nodes.length === 0 && comments.length === 0 && links.length === 0) {
 			return false;
@@ -2086,10 +2108,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.srcNodeId &&
 						nodes.findIndex((n) => n.id === link.srcNodeId) === -1) {
-					const srcNode = apiPipeline.getNode(link.srcNodeId);
 					delete newLink.srcNodeId;
 					delete newLink.srcNodePortId;
-					newLink.srcPos = { x_pos: srcNode.x_pos + srcNode.width, y_pos: srcNode.y_pos + (srcNode.height / 2) };
+					newLink.srcPos = CanvasUtils.getSrcPos(link, apiPipeline);
 				}
 				// If the link is a node-node data link and it is attached to a target
 				// node and that node is not to be clipboarded, set the trgPos
@@ -2097,10 +2118,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.trgNodeId &&
 						nodes.findIndex((n) => n.id === link.trgNodeId) === -1) {
-					const trgNode = apiPipeline.getNode(link.trgNodeId);
 					delete newLink.trgNodeId;
 					delete newLink.trgNodePortId;
-					newLink.trgPos = { x_pos: trgNode.x_pos, y_pos: trgNode.y_pos + (trgNode.height / 2) };
+					newLink.trgPos = CanvasUtils.getTrgPos(link, apiPipeline);
 				}
 				return newLink;
 			});

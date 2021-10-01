@@ -34,6 +34,13 @@ export default (state = [], action) => {
 				link.trgNodeId !== action.data.id);
 		});
 
+	case "REMOVE_LINKS":
+		return state.filter((link) => {
+			const linkFound = action.data.linksToDelete.some((l) => l.id === link.id);
+			return !linkFound;
+		});
+
+
 	case "ADD_LINK": {
 		const newLink = {
 			id: action.data.id,
@@ -62,6 +69,62 @@ export default (state = [], action) => {
 			newLink
 		];
 	}
+
+	case "ADD_LINKS": {
+		return [
+			...state,
+			...action.data.linksToAdd
+		];
+	}
+
+	case "MOVE_OBJECTS":
+		return state.map((link) => {
+			if (action.data.links) {
+				const index = action.data.links.findIndex((l) => l.id === link.id);
+				if (index > -1) {
+					const newLink = Object.assign({}, link);
+					if (newLink.srcPos) {
+						newLink.srcPos.x_pos += action.data.offsetX;
+						newLink.srcPos.y_pos += action.data.offsetY;
+					}
+					if (newLink.trgPos) {
+						newLink.trgPos.x_pos += action.data.offsetX;
+						newLink.trgPos.y_pos += action.data.offsetY;
+					}
+				}
+			}
+			return link;
+		});
+
+	case "SET_LINK_POSITIONS":
+		return state.map((link, index) => {
+			if (action.data.linkPositions && typeof action.data.linkPositions[link.id] !== "undefined") {
+				let newLink = Object.assign({}, link);
+				if (action.data.linkPositions[link.id].srcPos) {
+					newLink = Object.assign(newLink, { srcPos: action.data.linkPositions[link.id].srcPos });
+				}
+				if (action.data.linkPositions[link.id].trgPos) {
+					newLink = Object.assign(newLink, { trgPos: action.data.linkPositions[link.id].trgPos });
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SIZE_AND_POSITION_OBJECTS":
+		return state.map((link, index) => {
+			if (action.data.linksInfo && typeof action.data.linksInfo[link.id] !== "undefined") {
+				let newLink = Object.assign({}, link);
+				if (action.data.linksInfo[link.id].srcPos) {
+					newLink = Object.assign(newLink, { srcPos: action.data.linksInfo[link.id].srcPos });
+				}
+				if (action.data.linksInfo[link.id].trgPos) {
+					newLink = Object.assign(newLink, { trgPos: action.data.linksInfo[link.id].trgPos });
+				}
+				return newLink;
+			}
+			return link;
+		});
 
 	case "SET_LINK_PROPERTIES":
 		return state.map((link) => {

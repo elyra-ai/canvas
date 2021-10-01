@@ -508,10 +508,17 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel);
+			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
+				.contains(nodeLabel)
+				.parent()
+				.parent();
 		} else {
 			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span").contains(nodeLabel);
+			cy.get(".palette-list-item-text-div > span")
+				.contains(nodeLabel)
+				.parent()
+				.parent()
+				.parent();
 		}
 	});
 });

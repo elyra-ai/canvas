@@ -361,6 +361,10 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// A boolean that lets applications indicate they always want to display the
+		// 'back to parent flow' button in the top left corner of the canvas.
+		alwaysDisplayBackToParentFlow: false,
+
 		// The amount of padding added around the canvas objects when doing a
 		// zoomToFit on the primary canvas. This may be overriden by common-canvas
 		// when displaying sub-flows.
@@ -741,6 +745,10 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
+		// A boolean that lets applications indicate they always want to display the
+		// 'back to parent flow' button in the top left corner of the canvas.
+		alwaysDisplayBackToParentFlow: false,
+
 		// The amount of padding added around the canvas objects when doing a
 		// zoomToFit on the primary canvas. This may be overriden by common-canvas
 		// when displaying sub-flows.
