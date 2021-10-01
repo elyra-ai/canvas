@@ -180,7 +180,7 @@ export default class DeconstructSuperNodeAction extends Action {
 
 	getNewLinksForInput(input, supernodeDataLinks) {
 		const newLinks = [];
-		const inputLinks = this.getSupernodeInputLinks(this.supernode.id, input.id, supernodeDataLinks);
+		const inputLinks = this.getSupernodeInputLinks(this.supernode, input.id, supernodeDataLinks);
 		const inputBindingNode = this.getInputBindingNode(input);
 		if (inputBindingNode) {
 			const inputBindingLinks = this.getInputBindingLinks(inputBindingNode);
@@ -210,7 +210,7 @@ export default class DeconstructSuperNodeAction extends Action {
 
 	getNewLinksForOutput(output, supernodeDataLinks) {
 		const newLinks = [];
-		const outputLinks = this.getSupernodeOutputLinks(this.supernode.id, output.id, supernodeDataLinks);
+		const outputLinks = this.getSupernodeOutputLinks(this.supernode, output.id, supernodeDataLinks);
 		const outputBindingNode = this.getOutputBindingNode(output);
 		if (outputBindingNode) {
 			const outputBindingLinks = this.getOutputBindingLinks(outputBindingNode);
@@ -240,10 +240,11 @@ export default class DeconstructSuperNodeAction extends Action {
 		return newLinks;
 	}
 
-	getSupernodeInputLinks(nodeId, inputPortId, supernodeDataLinks) {
-		return supernodeDataLinks.filter((link) =>
-			(link.trgNodeId === nodeId && link.trgNodePortId === inputPortId)
-		);
+	getSupernodeInputLinks(node, inputPortId, supernodeDataLinks) {
+		return supernodeDataLinks.filter((link) => {
+			const trgNodePortId = link.trgNodePortId || CanvasUtils.getDefaultInputPortId(node);
+			return (link.trgNodeId === node.id && trgNodePortId === inputPortId);
+		});
 	}
 
 	getInputBindingNode(input) {
@@ -255,10 +256,11 @@ export default class DeconstructSuperNodeAction extends Action {
 			.filter((link) => link.type === NODE_LINK);
 	}
 
-	getSupernodeOutputLinks(nodeId, outputPortId, supernodeDataLinks) {
-		return supernodeDataLinks.filter((link) =>
-			(link.srcNodeId === nodeId && link.srcNodePortId === outputPortId)
-		);
+	getSupernodeOutputLinks(node, outputPortId, supernodeDataLinks) {
+		return supernodeDataLinks.filter((link) => {
+			const srcNodePortId = link.srcNodePortId || CanvasUtils.getDefaultOutputPortId(node);
+			return (link.srcNodeId === node.id && srcNodePortId === outputPortId);
+		});
 	}
 
 	getOutputBindingNode(output) {
