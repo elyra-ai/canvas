@@ -18,13 +18,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
-import Icon from "./../../../icons/icon.jsx";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
 import { TextInput, Button } from "carbon-components-react";
-import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
+import { Information16, Edit16 } from "@carbon/icons-react";
 
 
 class TitleEditor extends Component {
@@ -98,14 +98,28 @@ class TitleEditor extends Component {
 		const titleValidationTypes = [CONDITION_MESSAGE_TYPE.ERROR, CONDITION_MESSAGE_TYPE.WARNING];
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
-			: (<Button kind="ghost" aria-label={propertiesTitleEditButtonLabel} className="properties-title-editor-btn edit" data-id="edit" onClick={this.editTitleClickHandler}>
-				<Icon type={CARBON_ICONS.EDIT} />
-			</Button>);
+			: (<Button
+				kind="ghost"
+				className="properties-title-editor-btn edit"
+				data-id="edit"
+				onClick={this.editTitleClickHandler}
+				tooltipPosition="bottom"
+				renderIcon={Edit16}
+				iconDescription={propertiesTitleEditButtonLabel}
+				hasIconOnly
+			/>);
 
 		const helpButton = this.props.help
-			? (<Button kind="ghost" aria-label={helpButtonLabel} className="properties-title-editor-btn help" data-id="help" onClick={this.helpClickHandler}>
-				<Icon type={CARBON_ICONS.INFORMATION} />
-			</Button>)
+			? (<Button
+				kind="ghost"
+				className="properties-title-editor-btn help"
+				data-id="help"
+				onClick={this.helpClickHandler}
+				tooltipPosition="bottom"
+				renderIcon={Information16}
+				iconDescription={helpButtonLabel}
+				hasIconOnly
+			/>)
 			: null;
 
 		let heading = null;

@@ -63,9 +63,6 @@
 				box-shadow: unset;
 				cursor: default;
 			}
-			&:not(.properties-title-editor-focused) {
-				padding-right: $spacing-09; // avoid edit icon
-			}
 		}
 		.bx--form-requirement {
 			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
@@ -84,15 +81,15 @@
 
 .properties-title-editor-btn.help, .properties-title-editor-btn.edit {
 	fill: $icon-02;
-	padding: calc(#{$spacing-05} - 1px);
-	min-height: $spacing-05;
+	// edit & help buttons size - 40x40
+	width: $spacing-08;
+	min-height: $spacing-08;
+	padding-left: $spacing-04;
+	padding-right: $spacing-04;
 	&:hover {
 		background-color: $ui-03;
 	}
 	&:active {
 		background-color: $ui-03;
-	}
-	&.help {
-		padding: calc(#{$spacing-04} - 1px);
 	}
 }

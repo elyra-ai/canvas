@@ -306,26 +306,6 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
 		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
 	});
-	it("Edit title and Help buttons should have aria-label", () => {
-		controller.setTitle("test title");
-		helpClickHandler.resetHistory();
-		const wrapper = mountWithIntl(
-			<TitleEditor
-				store={controller.getStore()}
-				controller={controller}
-				labelEditable
-				help={help}
-			/>
-		);
-		// Edit title button
-		const editTitleButton = wrapper.find(".properties-title-editor-btn[data-id='edit']").hostNodes();
-		expect(editTitleButton.props()).to.have.property("aria-label", "edit title");
-
-		// Help button
-		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
-		expect(helpButton.props()).to.have.property("aria-label", "help");
-
-	});
 	it("If heading is enabled, help button should be added in the heading", () => {
 		controller.setTitle("test title");
 		helpClickHandler.resetHistory();
