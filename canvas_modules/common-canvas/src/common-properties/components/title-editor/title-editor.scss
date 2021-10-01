@@ -46,7 +46,7 @@
 	align-items: center;
 
 	&.properties-title-editor-with-help {
-		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
+		width: calc(100% - #{$spacing-08}); // subtract the size of the help button
 	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
@@ -64,7 +64,7 @@
 				cursor: default;
 			}
 			&:not(.properties-title-editor-focused) {
-				padding-right: $spacing-08; // avoid edit icon
+				padding-right: $spacing-09; // avoid edit icon
 			}
 		}
 		.bx--form-requirement {
@@ -84,7 +84,7 @@
 
 .properties-title-editor-btn.help, .properties-title-editor-btn.edit {
 	fill: $icon-02;
-	padding: calc(#{$spacing-03} - 1px);
+	padding: calc(#{$spacing-05} - 1px);
 	min-height: $spacing-05;
 	&:hover {
 		background-color: $ui-03;
@@ -93,9 +93,6 @@
 		background-color: $ui-03;
 	}
 	&.help {
-		margin: $spacing-02 0;
-	}
-	&.edit {
-		padding-right: $spacing-05; // 16px right padding for edit title button
+		padding: calc(#{$spacing-04} - 1px);
 	}
 }
