@@ -104,6 +104,7 @@ class TitleEditor extends Component {
 				data-id="edit"
 				onClick={this.editTitleClickHandler}
 				tooltipPosition="bottom"
+				tooltipAlignment="end"
 				renderIcon={Edit16}
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
