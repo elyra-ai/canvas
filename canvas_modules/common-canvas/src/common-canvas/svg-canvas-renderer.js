@@ -42,6 +42,7 @@ import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
+import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 
@@ -88,8 +89,9 @@ export default class SVGCanvasRenderer {
 		this.canvasLayout = this.objectModel.getCanvasLayout();
 
 		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId);
-		this.nodeUtils = new SvgCanvasNodes(this.config, this.canvasLayout);
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils);
+		this.nodeUtils = new SvgCanvasNodes(this.canvasLayout);
+		this.commentUtils = new SvgCanvasComments();
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 
 		this.dispUtils.setDisplayState();
