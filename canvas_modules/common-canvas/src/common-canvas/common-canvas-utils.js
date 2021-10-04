@@ -282,58 +282,66 @@ export default class CanvasUtils {
 	}
 
 	// Returns the coordinate position along the edge of a rectangle where a
-	// straight line should be drawn from. The line's direction originates from a
-	// point within the rectangle. The rectangle is described by the first four
-	// paramters, the origin of the line's direction is described by
-	// originX and originY which are an offset from the top left corener of
-	// the rectangle and the end point of the line is described by endX and endY.
-	static getOuterCoord(xPos, yPos, width, height, originX, originY, endX, endY) {
-		const topLeft = { x: xPos, y: yPos };
-		const topRight = { x: xPos + width, y: yPos };
-		const botLeft = { x: xPos, y: yPos + height };
-		const botRight = { x: xPos + width, y: yPos + height };
-		const center = { x: originX + xPos, y: originY + yPos };
+	// straight line should be drawn from. The line's direction originates from an
+	// arbitrary point (origin) within the rectangle and goes to an arbitrary
+	// point (end) outside the rectangle. The rectangle is described by the
+	// first four paramters. The gap is an additional spacing around the
+	// rectangle used to separate the start of the line from the
+	// rectangle/node boundary. The origin of the line's direction is described by
+	// originX and originY. The end point of the line is described by endX and endY.
+	static getOuterCoord(x, y, w, h, gap, originX, originY, endX, endY) {
+		const topEdge = y - gap;
+		const leftEdge = x - gap;
+		const rightEdge = x + w + gap;
+		const bottomEdge = y + h + gap;
+
+		// The origin may not be in the center of the node rectangle so offset left
+		// and right may be different and also top and bottom.
+		const originTopOffsetY = originY - topEdge;
+		const originLeftOffsetX = originX - leftEdge;
+		const originRightOffsetX = rightEdge - originX;
+		const originBottomOffsetY = bottomEdge - originY;
 
 		var startPointX;
 		var startPointY;
 
 		// End point is to the right of center
-		if (endX > center.x) {
-			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
-			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
-			const ratioRight = (center.y - endY) / (center.x - endX);
+		if (endX > originX) {
+			const topRightRatio = (originY - topEdge) / (originX - rightEdge);
+			const botRightRatio = (originY - bottomEdge) / (originX - rightEdge);
+			const ratioRight = (originY - endY) / (originX - endX);
 
 			// North
 			if (ratioRight < topRightRatio) {
-				startPointX = center.x - (originY / ratioRight);
-				startPointY = yPos;
+				startPointX = originX - (originTopOffsetY / ratioRight);
+				startPointY = topEdge;
 			// South
 			} else if (ratioRight > botRightRatio) {
-				startPointX = center.x + ((height - originY) / ratioRight);
-				startPointY = yPos + height;
+				startPointX = originX + (originBottomOffsetY / ratioRight);
+				startPointY = bottomEdge;
 			// East
 			} else {
-				startPointX = xPos + width;
-				startPointY = center.y + (originX * ratioRight);
+				startPointX = rightEdge;
+				startPointY = originY + (originRightOffsetX * ratioRight);
 			}
 		// End point is to the left of center
 		} else {
-			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
-			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
-			const ratioLeft = (center.y - endY) / (center.x - endX);
+			const topLeftRatio = (originY - topEdge) / (originX - leftEdge);
+			const botLeftRatio = (originY - bottomEdge) / (originX - leftEdge);
+			const ratioLeft = (originY - endY) / (originX - endX);
 
 			// North
 			if (ratioLeft > topLeftRatio) {
-				startPointX = center.x - (originY / ratioLeft);
-				startPointY = yPos;
+				startPointX = originX - (originTopOffsetY / ratioLeft);
+				startPointY = topEdge;
 			// South
 			} else if (ratioLeft < botLeftRatio) {
-				startPointX = center.x + ((height - originY) / ratioLeft);
-				startPointY = yPos + height;
+				startPointX = originX + (originBottomOffsetY / ratioLeft);
+				startPointY = bottomEdge;
 			// West
 			} else {
-				startPointX = xPos;
-				startPointY = center.y - (originX * ratioLeft);
+				startPointX = leftEdge;
+				startPointY = originY - (originLeftOffsetX * ratioLeft);
 			}
 		}
 
@@ -937,33 +945,33 @@ export default class CanvasUtils {
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getSrcPos(link, apiPipeline) {
-		const srcNode = apiPipeline.getNode(link.srcNodeId);
-		let outerCenterX;
-		let outerCenterY;
+		let trgCenterX;
+		let trgCenterY;
 		if (link.trgNodeId) {
 			const trgNode = apiPipeline.getNode(link.trgNodeId);
-			outerCenterX = trgNode.x_pos + (trgNode.width / 2);
-			outerCenterY = trgNode.y_pos + (trgNode.height / 2);
+			trgCenterX = trgNode.x_pos + (trgNode.width / 2);
+			trgCenterY = trgNode.y_pos + (trgNode.height / 2);
 		} else {
-			outerCenterX = link.trgPos.x_pos;
-			outerCenterY = link.trgPos.y_pos;
+			trgCenterX = link.trgPos.x_pos;
+			trgCenterY = link.trgPos.y_pos;
 		}
 
+		const srcNode = apiPipeline.getNode(link.srcNodeId);
 		let srcCenterX;
 		let srcCenterY;
 
 		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
+			srcCenterX = srcNode.x_pos + srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
+			srcCenterY = srcNode.y_pos + srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
 
 		} else {
-			srcCenterX = srcNode.width / 2;
-			srcCenterY = srcNode.height / 2;
+			srcCenterX = srcNode.x_pos + (srcNode.width / 2);
+			srcCenterY = srcNode.y_pos + (srcNode.height / 2);
 		}
 
-		const startPos = CanvasUtils.getOuterCoord(
-			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
-			srcCenterX, srcCenterY, outerCenterX, outerCenterY);
+		const startPos = this.getOuterCoord(
+			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height, 0,
+			srcCenterX, srcCenterY, trgCenterX, trgCenterY);
 
 		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
@@ -973,34 +981,33 @@ export default class CanvasUtils {
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getTrgPos(link, apiPipeline) {
-		const trgNode = apiPipeline.getNode(link.trgNodeId);
-
-		let outerCenterX;
-		let outerCenterY;
+		let srcCenterX;
+		let srcCenterY;
 		if (link.srcNodeId) {
 			const srcNode = apiPipeline.getNode(link.srcNodeId);
-			outerCenterX = srcNode.x_pos + (srcNode.width / 2);
-			outerCenterY = srcNode.y_pos + (srcNode.height / 2);
+			srcCenterX = srcNode.x_pos + (srcNode.width / 2);
+			srcCenterY = srcNode.y_pos + (srcNode.height / 2);
 		} else {
-			outerCenterX = link.srcPos.x_pos;
-			outerCenterY = link.srcPos.y_pos;
+			srcCenterX = link.srcPos.x_pos;
+			srcCenterY = link.srcPos.y_pos;
 		}
 
+		const trgNode = apiPipeline.getNode(link.trgNodeId);
 		let trgCenterX;
 		let trgCenterY;
 
 		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
+			trgCenterX = trgNode.x_pos + trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
+			trgCenterY = trgNode.y_pos + trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
 
 		} else {
-			trgCenterX = trgNode.width / 2;
-			trgCenterY = trgNode.height / 2;
+			trgCenterX = trgNode.x_pos + (trgNode.width / 2);
+			trgCenterY = trgNode.y_pos + (trgNode.height / 2);
 		}
 
-		const startPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
-			trgCenterX, trgCenterY, outerCenterX, outerCenterY);
+		const startPos = this.getOuterCoord(
+			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height, 0,
+			trgCenterX, trgCenterY, srcCenterX, srcCenterY);
 
 		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
