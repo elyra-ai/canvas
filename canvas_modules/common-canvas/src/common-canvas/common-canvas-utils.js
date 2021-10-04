@@ -594,7 +594,8 @@ export default class CanvasUtils {
 	// Returns true if the cardinality is maxed out for the source node and port
 	// passed in. This means any additional connection would not be allowed
 	// from this source node/port combination.
-	static isSrcCardinalityAtMax(srcPortId, srcNode, links) {
+	static isSrcCardinalityAtMax(portId, srcNode, links) {
+		const srcPortId = portId ? portId : this.getDefaultOutputPortId(srcNode);
 		var srcCount = 0;
 
 		links.forEach((link) => {
@@ -621,7 +622,8 @@ export default class CanvasUtils {
 	// Returns true if the cardinality is maxed out for the taget node and port
 	// passed in. This means any additional connection would not be allowed
 	// to this target node/port combination.
-	static isTrgCardinalityAtMax(trgPortId, trgNode, links) {
+	static isTrgCardinalityAtMax(portId, trgNode, links) {
+		const trgPortId = portId ? portId : this.getDefaultInputPortId(trgNode);
 		var trgCount = 0;
 
 		links.forEach((link) => {
