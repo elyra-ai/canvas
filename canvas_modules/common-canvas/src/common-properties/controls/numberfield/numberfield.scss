@@ -34,7 +34,10 @@
 		display: inline-flex;
 		align-items: flex-end;
 		&.error, &.warning {
-			align-items: center;
+			align-items: flex-start;
+			.properties-number-generator {
+				margin-top: $spacing-05 + $spacing-03;  // 1rem label + 0.5 rem spacing below label
+			}
 		}
 	}
 }
