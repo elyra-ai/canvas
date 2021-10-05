@@ -351,6 +351,7 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
+		this.titleChangeHandler = this.titleChangeHandler.bind(this);
 		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
@@ -1304,6 +1305,18 @@ class App extends React.Component {
 		}, 2000);
 	}
 
+	titleChangeHandler(title, callbackFunction) {
+		// If Title is valid. No need to send anything in callbackFunction
+		if (title.length > 15) {
+			callbackFunction({ type: "error", message: "Only 15 characters are allowed in title." });
+		} else if (title.length > 10 && title.length <= 15) {
+			callbackFunction({
+				type: "warning",
+				message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
+			});
+		}
+	}
+
 	helpClickHandler(nodeTypeId, helpData, appData) {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
@@ -1791,7 +1804,8 @@ class App extends React.Component {
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
-			buttonHandler: this.buttonHandler
+			buttonHandler: this.buttonHandler,
+			titleChangeHandler: this.titleChangeHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

@@ -15,18 +15,12 @@
  */
 
 .properties-title-editor {
-	display: block;
-	align-items: center;
 	padding: $spacing-05 0;
-	height: 72px;
 	border-bottom: 1px $ui-03 solid;
-	&.properties-title-with-heading {
-		height: 96px; // include heading with icon height
-	}
 }
 
 .properties-title-heading {
-	padding: 0 $spacing-05;
+	padding: 0 $spacing-05 $spacing-02;
 	height: $spacing-06;
 	display: flex;
 	align-items: center;
@@ -45,7 +39,6 @@
 	}
 }
 .properties-title-editor-input {
-	height: $spacing-08;
 	width: calc(100% - 2px); // subtract 2px for input active right border
 	top: 1px; // align input with bottom border
 	position: relative;
@@ -53,11 +46,10 @@
 	align-items: center;
 
 	&.properties-title-editor-with-help {
-		width: calc(100% - #{$spacing-07}); // subtract the size of the help button
+		width: calc(100% - #{$spacing-08}); // subtract the size of the help button
 	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
-		position: absolute;
 		width: 100%;
 
 		input { //override styling from carbon
@@ -71,9 +63,12 @@
 				box-shadow: unset;
 				cursor: default;
 			}
-			&:not(.properties-title-editor-focused) {
-				padding-right: $spacing-08; // avoid edit icon
-			}
+		}
+		.bx--form-requirement {
+			margin: $spacing-02 0 0 $spacing-05; // 4px top padding for error/warning message
+		}
+		.bx--text-input__field-wrapper--warning input {
+			border-bottom: 1px solid $ui-04;
 		}
 	}
 
@@ -86,15 +81,15 @@
 
 .properties-title-editor-btn.help, .properties-title-editor-btn.edit {
 	fill: $icon-02;
-	padding: calc(#{$spacing-03} - 1px);
-	min-height: $spacing-05;
+	// edit & help buttons size - 40x40
+	width: $spacing-08;
+	min-height: $spacing-08;
+	padding-left: $spacing-04;
+	padding-right: $spacing-04;
 	&:hover {
 		background-color: $ui-03;
 	}
 	&:active {
 		background-color: $ui-03;
-	}
-	&.help {
-		margin: $spacing-02 0;
 	}
 }
