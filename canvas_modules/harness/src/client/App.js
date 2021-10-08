@@ -183,6 +183,8 @@ class App extends React.Component {
 				"decorations": true,
 				"links": true
 			},
+			selectedShowBottomPanel: false,
+			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
@@ -1795,6 +1797,10 @@ class App extends React.Component {
 	}
 
 	getCommonProperties() {
+		if (isEmpty(this.state.propertiesInfo)) {
+			return null;
+		}
+
 		const propertiesConfig = this.getPropertiesConfig();
 
 		const callbacks = {
@@ -1831,6 +1837,10 @@ class App extends React.Component {
 	}
 
 	getCommonProperties2() {
+		if (isEmpty(this.state.propertiesInfo2)) {
+			return null;
+		}
+
 		const propertiesConfig = this.getPropertiesConfig();
 
 		const callbacks2 = {
@@ -2177,6 +2187,17 @@ class App extends React.Component {
 		}, 14000);
 	}
 
+	getTempContent() {
+		const text1 = "Common Canvas panel.";
+		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		return (
+			<div className="harness-panel-temp-content">
+				<div className="title">{text1}</div>
+				<div className="text">{text2}</div>
+			</div>
+		);
+	}
+
 	render() {
 		this.canvasController.log("-------------------------------");
 		this.canvasController.log("Test Harness render");
@@ -2262,18 +2283,18 @@ class App extends React.Component {
 		};
 
 		let commonPropertiesContainer = null;
-		let rightFlyoutContent = null;
-		let rightFlyoutContent2 = null;
+		let rightFlyoutContentProperties = null;
+		let rightFlyoutContentProperties2 = null;
 		let showRightFlyoutProperties = false;
 		let showRightFlyoutProperties2 = false;
 		if (this.state.propertiesContainerType === PROPERTIES_FLYOUT) {
-			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			showRightFlyoutProperties = (this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT) || this.state.selectedShowRightFlyout;
 			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
 			if (showRightFlyoutProperties) {
-				rightFlyoutContent = this.getCommonProperties();
+				rightFlyoutContentProperties = this.getCommonProperties();
 			}
 			if (showRightFlyoutProperties2) {
-				rightFlyoutContent2 = this.getCommonProperties2();
+				rightFlyoutContentProperties2 = this.getCommonProperties2();
 			}
 		} else {
 			commonPropertiesContainer = (
@@ -2281,6 +2302,12 @@ class App extends React.Component {
 					{this.getCommonProperties()}
 				</div>);
 		}
+
+		const bottomPanelContent = this.getTempContent();
+
+		const rightFlyoutContent = rightFlyoutContentProperties
+			? rightFlyoutContentProperties
+			: this.getTempContent();
 
 		var firstCanvas = (
 			<CommonCanvas
@@ -2298,7 +2325,9 @@ class App extends React.Component {
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				rightFlyoutContent={rightFlyoutContent}
-				showRightFlyout={showRightFlyoutProperties}
+				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
+				bottomPanelContent={bottomPanelContent}
+				showBottomPanel={this.state.selectedShowBottomPanel}
 				canvasController={this.canvasController}
 			/>);
 
@@ -2370,6 +2399,10 @@ class App extends React.Component {
 
 		let commonCanvas;
 		if (this.state.selectedExtraCanvasDisplayed === true) {
+			const rightFlyoutContent2 = rightFlyoutContentProperties2
+				? rightFlyoutContentProperties2
+				: this.getTempContent();
+
 			commonCanvas = (
 				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
 					<div className="harness-canvas-single">

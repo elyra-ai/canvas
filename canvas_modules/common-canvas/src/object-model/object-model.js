@@ -1400,6 +1400,18 @@ export default class ObjectModel {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Bottom panel methods
+	// ---------------------------------------------------------------------------
+
+	setBottomPanelConfig(config) {
+		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: config } });
+	}
+
+	isBottomPanelOpen() {
+		return this.store.isBottomPanelOpen();
+	}
+
+	// ---------------------------------------------------------------------------
 	// Selection methods
 	// ---------------------------------------------------------------------------
 

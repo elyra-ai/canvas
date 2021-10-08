@@ -16,6 +16,7 @@
 
 @import "carbon-components/scss/globals/scss/_vars";
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
+$bottom-panel-height: 200px;
 
 /* Default layout for common-canvas components where the canvas appears below
  * the toolbar and right-side flyout appears to the right of the toolbar and
@@ -50,6 +51,11 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	height: 100%;
 }
 
+.common-canvas-with-bottom-panel {
+	width: 100%;
+	position: relative;
+}
+
 .common-canvas-drop-div {
 	height: calc(100% - #{$toolbar-button-height});
 	width: 100%;
@@ -58,17 +64,38 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	cursor: default;
 	top: $toolbar-button-height;
 	overflow: hidden;
-}
 
-.common-canvas-drop-div.common-canvas-toolbar-none {
-	height: 100%;
-	top: 0;
+	&.common-canvas-bottom-panel-is-open {
+		height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
+	}
+
+	&.common-canvas-toolbar-none {
+		height: 100%;
+		top: 0;
+	}
+
+	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
+		height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
+		top: 0;
+	}
 }
 
 .right-flyout-panel {
 	height: 100%;
 	position: relative;
 	user-select: none; /* Prevent elements from being selectable */
+	background-color: $ui-01;
+	border-left: $palette-border-width solid $palette-border-color;
+}
+
+.bottom-panel {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: $bottom-panel-height;
+	user-select: none; /* Prevent elements from being selectable */
+	background-color: $ui-01;
+	border-top: $palette-border-width solid $palette-border-color;
 }
 
 /* Alternative layout for common-canvas components where canvas and right-side
@@ -173,4 +200,5 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	&.info > svg > .dot {
 		fill: $support-04;
 	}
+
 }

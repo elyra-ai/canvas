@@ -67,6 +67,8 @@ class CommonCanvas extends React.Component {
 		props.canvasController.setNotificationPanelConfig(props.notificationConfig);
 		props.canvasController.setRightFlyoutConfig(
 			{ content: props.rightFlyoutContent, isOpen: props.showRightFlyout });
+		props.canvasController.setBottomPanelConfig(
+			{ content: props.bottomPanelContent, isOpen: props.showBottomPanel });
 
 		props.canvasController.setHandlers({
 			contextMenuHandler: props.contextMenuHandler,
@@ -127,7 +129,9 @@ CommonCanvas.propTypes = {
 	idGeneratorHandler: PropTypes.func,
 	selectionChangeHandler: PropTypes.func,
 	rightFlyoutContent: PropTypes.object,
-	showRightFlyout: PropTypes.bool
+	showRightFlyout: PropTypes.bool,
+	bottomPanelContent: PropTypes.object,
+	showBottomPanel: PropTypes.bool
 };
 
 export default injectIntl(CommonCanvas);

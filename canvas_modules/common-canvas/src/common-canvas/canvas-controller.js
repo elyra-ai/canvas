@@ -157,6 +157,11 @@ export default class CanvasController {
 		this.objectModel.setRightFlyoutConfig(config);
 	}
 
+	setBottomPanelConfig(config) {
+		this.logger.log("Setting Bottom Panel Config");
+		this.objectModel.setBottomPanelConfig(config);
+	}
+
 	setContextMenuConfig(contextMenuConfig) {
 		this.logger.log("Setting Context Menu Config");
 		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
