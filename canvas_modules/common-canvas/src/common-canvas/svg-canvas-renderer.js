@@ -345,16 +345,8 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		// Display all objects in the canvas provided we are primary pipeline
-		// (no supernode) or our supernode is_expandd.
-		const supernode = this.getParentSupernodeDatum();
-		if (!supernode || supernode.is_expanded) {
-			this.displayCanvas();
-
-			this.superRenderers.forEach((superRenderer) => {
-				superRenderer.setCanvasInfoRenderer(canvasInfo);
-			});
-		}
+		// Display all objects in the canvas
+		this.displayCanvas();
 
 		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 	}
