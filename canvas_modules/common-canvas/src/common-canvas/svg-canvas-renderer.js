@@ -18,8 +18,14 @@
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
 
-// Import just the D3 modules that are needed.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
+// Import just the D3 modules that are needed and combine them as the 'd3' object.
+import * as d3Drag from "d3-drag";
+import * as d3Ease from "d3-ease";
+import * as d3Selection from "d3-selection";
+import * as d3Fetch from "d3-fetch";
+import * as d3Zoom from "./d3-zoom-extension/src";
+const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
+
 import { get, set } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
