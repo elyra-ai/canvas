@@ -596,6 +596,24 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enableShowRightFlyout = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowRightFlyout" // Set ID to corresponding field in App.js state
+				labelText="Open Right Flyout"
+				toggled={this.props.getStateValue("selectedShowRightFlyout")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableShowBottomPanel = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowBottomPanel" // Set ID to corresponding field in App.js state
+				labelText="Open Bottom Panel"
+				toggled={this.props.getStateValue("selectedShowBottomPanel")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
@@ -1313,10 +1331,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{snapToGrid}
 					{divider}
-					{enableCanvasUnderlay}
-					{divider}
-					{saveZoom}
-					{divider}
 					{paletteLayout}
 					{divider}
 					{toolbarLayout}
@@ -1325,23 +1339,31 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableLinkSelection}
 					{divider}
+					<div className="harness-side-panel-header">Nodes</div>
+					{divider}
+					{enableHighlightUnavailableNodes}
+					{divider}
+					{enableSingleOutputPortDisplay}
+					{divider}
+					{displayFullLabelOnHover}
+					{divider}
+					<div className="harness-side-panel-header">Links</div>
+					{divider}
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
-					{divider}
-					{enableHighlightUnavailableNodes}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}
+					{enableAutoLinkOnlyFromSelNodes}
+					{divider}
 					{assocLinkType}
 					{divider}
-					{enableSingleOutputPortDisplay}
+					<div className="harness-side-panel-header">Pan, Zoom and Select</div>
 					{divider}
-					{enableRightFlyoutUnderToolbar}
-					{divider}
-					{enablePositionNodeOnRightFlyoutOpen}
+					{saveZoom}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}
@@ -1349,9 +1371,11 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
-					{enableObjectModel}
+					<div className="harness-side-panel-header">Supernodes</div>
 					{divider}
-					{enableSaveToPalette}
+					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					<div className="harness-side-panel-header">Canvas Content</div>
 					{divider}
 					{enableDropZoneOnExternalDrag}
 					{divider}
@@ -1359,21 +1383,39 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDisplayCustomizedEmptyCanvasContent}
 					{divider}
+					{displayBoudingRectangles}
+					{divider}
+					{enableCanvasUnderlay}
+					{divider}
+					<div className="harness-side-panel-header">Right Flyout</div>
+					{divider}
+					{enableShowRightFlyout}
+					{divider}
+					{enableRightFlyoutUnderToolbar}
+					{divider}
+					{enablePositionNodeOnRightFlyoutOpen}
+					{divider}
+					<div className="harness-side-panel-header">Bottom Panel</div>
+					{divider}
+					{enableShowBottomPanel}
+					{divider}
+					<div className="harness-side-panel-header">Context Menu</div>
+					{divider}
+					{enableSaveToPalette}
+					{divider}
 					{enableCreateSupernodeNonContiguous}
 					{divider}
-					{enableMoveNodesOnSupernodeResize}
+					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableObjectModel}
 					{divider}
 					{enableExternalPipelineFlows}
 					{divider}
-					{enableAutoLinkOnlyFromSelNodes}
+					{schemaValidation}
 					{divider}
 					{enableBrowserEditMenu}
 					{divider}
-					{displayBoudingRectangles}
-					{divider}
-					{schemaValidation}
-					{divider}
-					{displayFullLabelOnHover}
+					<div className="harness-side-panel-header">Tip Config</div>
 					{divider}
 					{tipConfig}
 					{divider}

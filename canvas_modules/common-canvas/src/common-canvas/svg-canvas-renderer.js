@@ -18,8 +18,14 @@
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
 
-// Import just the D3 modules that are needed.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-fetch"), require("./d3-zoom-extension/src"));
+// Import just the D3 modules that are needed and combine them as the 'd3' object.
+import * as d3Drag from "d3-drag";
+import * as d3Ease from "d3-ease";
+import * as d3Selection from "d3-selection";
+import * as d3Fetch from "d3-fetch";
+import * as d3Zoom from "./d3-zoom-extension/src";
+const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
+
 import { get, set } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
@@ -42,6 +48,7 @@ import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
+import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 
@@ -88,8 +95,9 @@ export default class SVGCanvasRenderer {
 		this.canvasLayout = this.objectModel.getCanvasLayout();
 
 		this.dispUtils = new SvgCanvasDisplay(this.canvasController, this.supernodeInfo.d3Selection, this.pipelineId);
-		this.nodeUtils = new SvgCanvasNodes(this.config, this.canvasLayout);
-		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils);
+		this.nodeUtils = new SvgCanvasNodes(this.canvasLayout);
+		this.commentUtils = new SvgCanvasComments();
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
 
 		this.dispUtils.setDisplayState();
@@ -337,16 +345,10 @@ export default class SVGCanvasRenderer {
 		// object model we need to make sure the renderer is removed.
 		this.superRenderers = this.cleanUpSuperRenderers();
 
-		// Display all objects in the canvas provided we are primary pipeline
-		// (no supernode) or our supernode is_expandd.
-		const supernode = this.getParentSupernodeDatum();
-		if (!supernode || supernode.is_expanded) {
-			this.displayCanvas();
-
-			this.superRenderers.forEach((superRenderer) => {
-				superRenderer.setCanvasInfoRenderer(canvasInfo);
-			});
-		}
+		// Display all objects for this renderer's pipeline. When supernodes in
+		// this pipeline are rendered they will pass on the new canvasinfo to their
+		// associated renderer.
+		this.displayCanvas();
 
 		this.logger.logEndTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 	}
@@ -2563,25 +2565,15 @@ export default class SVGCanvasRenderer {
 		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
-		// Supernode sub-flow display
+		// Ports display; Supernode sub-flow display; Error marker display; and
+		// Decoration display.
 		joinedNodeGrps.each((d, index, grps) => {
 			const nodeGrp = d3.select(grps[index]);
 
 			this.displayPorts(nodeGrp, d);
 
 			if (this.nodeUtils.isSupernode(d)) {
-				let ren = this.getRendererForSupernode(d);
-
-				if (!ren && this.nodeUtils.isExpanded(d)) {
-					ren = this.createSupernodeRenderer(d, d3.select(grps[index]));
-				}
-				if (ren) {
-					if (this.nodeUtils.isExpanded(d)) {
-						ren.displayCanvas();
-					} else {
-						ren.hideCanvas(d);
-					}
-				}
+				this.displaySupernodeContents(d, d3.select(grps[index]));
 			}
 
 			if (!CanvasUtils.isSuperBindingNode(d)) {
@@ -2593,6 +2585,25 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
+	}
+
+	// Handles the display of a supernode sub-flow contents or hides the contents
+	// as necessary.
+	displaySupernodeContents(d, supernodeD3Object) {
+		let ren = this.getRendererForSupernode(d);
+
+		if (this.nodeUtils.isExpanded(d)) {
+			if (!ren) {
+				ren = this.createSupernodeRenderer(d, supernodeD3Object); // Create will call displayCanvas
+				this.superRenderers.push(ren);
+			} else {
+				ren.setCanvasInfoRenderer(this.canvasInfo); // Setting canvas info will call displayCanvas
+			}
+		} else {
+			if (ren) {
+				ren.hideCanvas(d);
+			}
+		}
 	}
 
 	displayPorts(nodeGrp, d) {
@@ -3725,7 +3736,6 @@ export default class SVGCanvasRenderer {
 					renderer: this, // Only provided for in-place sub-flow
 					d3Selection: supernodeD3Object // Only provided for in-place sub-flow
 				});
-			this.superRenderers.push(superRenderer);
 			return superRenderer;
 		}
 		return null;

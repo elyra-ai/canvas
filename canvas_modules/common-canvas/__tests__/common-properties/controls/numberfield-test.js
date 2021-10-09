@@ -232,7 +232,7 @@ describe("numberfield control works correctly", () => {
 		const numPropertyId = { name: "number_undefined" };
 		expect(controller.getPropertyValue(numPropertyId)).to.be.undefined;
 	});
-	it("should have displayed random generator link", () => {
+	it("should have displayed random generator button", () => {
 		const category = wrapper.find(".properties-category-content").at(0); // values category
 		const generator = category.find("button.properties-number-generator");
 		expect(generator).to.have.length(2);

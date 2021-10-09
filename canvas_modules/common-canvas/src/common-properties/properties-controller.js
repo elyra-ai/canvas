@@ -40,7 +40,8 @@ export default class PropertiesController {
 			propertyListener: null,
 			controllerHandler: null,
 			actionHandler: null,
-			buttonHandler: null
+			buttonHandler: null,
+			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};

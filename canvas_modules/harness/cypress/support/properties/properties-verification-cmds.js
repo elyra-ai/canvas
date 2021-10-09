@@ -38,6 +38,22 @@ Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
 		.should("have.value", givenTitle);
 });
 
+Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
+	cy.get(".properties-title-editor")
+		.find(".bx--form-requirement")
+		.should("have.text", message);
+
+	if (type === "warning") {
+		cy.get(".properties-title-editor")
+			.find(".bx--text-input__field-wrapper--warning")
+			.should("have.length", 1);
+	} else if (type === "error") {
+		cy.get(".properties-title-editor")
+			.find(".bx--text-input__field-wrapper")
+			.should("have.attr", "data-invalid", "true");
+	}
+});
+
 Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
 	cy.get("#node-title-editor-right-flyout-panel")
 		.should("not.exist");

@@ -368,6 +368,10 @@ class CanvasContents extends React.Component {
 			? dropDivClassName + " common-canvas-toolbar-none"
 			: dropDivClassName;
 
+		dropDivClassName = this.props.bottomPanelIsOpen
+			? dropDivClassName + " common-canvas-bottom-panel-is-open"
+			: dropDivClassName;
+
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
@@ -398,12 +402,14 @@ CanvasContents.propTypes = {
 
 	// Provided by Redux
 	canvasConfig: PropTypes.object.isRequired,
-	canvasInfo: PropTypes.object
+	canvasInfo: PropTypes.object,
+	bottomPanelIsOpen: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
+	bottomPanelIsOpen: state.bottompanel.isOpen,
 	// These two fields are included here so they will trigger a render.
 	// The renderer will retrieve the data for them by calling the canvas controller.
 	selectionInfo: state.selectioninfo,
