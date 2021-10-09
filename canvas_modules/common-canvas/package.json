@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.4.0",
+  "version": "12.5.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
