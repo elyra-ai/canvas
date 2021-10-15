@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import PropTypes from "prop-types";
 import CommonContextMenu from "./common-context-menu.jsx";
 
 const CONTEXT_MENU_BUTTON = 2;
-const CONTEXT_MENU_TOOLBAR_HEIGHT = 45; // Height of tooolbar
 
 export default class ContextMenuWrapper extends React.Component {
 	constructor(props) {
@@ -38,28 +37,21 @@ export default class ContextMenuWrapper extends React.Component {
 		document.removeEventListener("click", this.handleClickOutside, true);
 	}
 
+	// Returns an object that describes the dimensions of a rectangle for the
+	// canvas div with coordinates based on the top left corner of the div. This
+	// will match the coordinates for the mouse position where the user clicked,
+	// which is specified in this.props.contextMenuPos object.
 	getCanvasRect() {
 		const containingDiv = document.getElementById(this.props.containingDivId);
 		const clientRect = containingDiv.getBoundingClientRect();
 		const canvasRect = {
-			top: clientRect.top,
-			bottom: clientRect.bottom,
-			left: clientRect.left,
-			right: clientRect.right,
+			top: 0,
+			bottom: clientRect.bottom - clientRect.top,
+			left: 0,
+			right: clientRect.right - clientRect.left,
 			height: clientRect.height,
 			width: clientRect.width
 		};
-
-		// The commonCanvasRect height and top are relative to the bottom of the
-		// page banner while the context menu mouse position is relative to the
-		// SVG area which starts at the bottom of the toolbar. So we need to adjust
-		// the commonCanvasRect to be relative to the bottom of the toolbar.
-		canvasRect.top = 0;
-		canvasRect.bottom = canvasRect.height - CONTEXT_MENU_TOOLBAR_HEIGHT;
-		canvasRect.height -= CONTEXT_MENU_TOOLBAR_HEIGHT;
-
-		canvasRect.left = 0;
-		canvasRect.right = canvasRect.width;
 
 		return canvasRect;
 	}
