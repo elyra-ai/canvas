@@ -32,7 +32,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.hoverOverNodeInCategory("Var. File");
 		// cy.verifyTipForNodeInCategory("Var. File");
 
-		// TODO: cy.moveMouseToCoordinates() is not removing the tooltip
+		// TODO: cy.moveMouseOverToCoordinates() is not removing the tooltip
 		// after fixing this, uncomment cy.verifyTipDoesNotShowForNode() and cy.verifyTipDoesNotShowForInputPortId()
 		// and cy.verifyTipWithTextInSummaryPanel()
 		cy.moveMouseToCoordinates(300, 100);

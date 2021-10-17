@@ -1977,14 +1977,14 @@ export default class CanvasController {
 			pipelineId: this.objectModel.getSelectedPipelineId() });
 	}
 
-	keyboardActionHandler(action) {
+	keyboardActionHandler(action, mousePos) {
 		this.logger.log("keyboardActionHandler - action: " + action);
 
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getSelectedPipelineId()
-		});
+			pipelineId: this.objectModel.getSelectedPipelineId(),
+			mousePos: mousePos });
 	}
 
 	clickActionHandler(source) {

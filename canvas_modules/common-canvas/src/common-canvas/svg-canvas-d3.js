@@ -44,11 +44,14 @@ export default class SVGCanvasD3 {
 	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
 		this.logger.logStartTimer("constructor");
-
+		this.mousePos = {
+			x: 0,
+			y: 0
+		};
 		this.canvasController = canvasController;
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
-
 		this.logger.logEndTimer("constructor", true);
+		document.addEventListener("mousemove", this.onMouseUpdate.bind(this), true);
 	}
 
 	setCanvasInfo(canvasInfo, config) {
@@ -97,6 +100,7 @@ export default class SVGCanvasD3 {
 	// with new config objects that are provided reveal differences. This will
 	// not clone the contents of emptyCanvasContent, dropZoneCanvasContent nor
 	// enableNodeLayout.
+
 	cloneConfig(config) {
 		return Object.assign({}, config);
 	}
@@ -105,7 +109,18 @@ export default class SVGCanvasD3 {
 		return JSON.parse(JSON.stringify(canvasInfo));
 	}
 
+	onMouseUpdate(e) {
+		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
+			this.mousePos = {
+				x: e.clientX,
+				y: e.clientY };
+		}
+		else { this.mousePos = null; }
+	}
+
+
 	initializeCanvasDiv(canvasDivSelector) {
+
 		// Add a listener to canvas div to catch key presses. The containing
 		// canvas div must have tabindex set and the focus set on the div.
 		const canvasDiv = d3.select(canvasDivSelector)
@@ -114,9 +129,7 @@ export default class SVGCanvasD3 {
 				// will interfere with drawing of the canvas as the result of any
 				// keyboard action.
 				this.canvasController.closeTip();
-
 				const actions = this.canvasController.getKeyboardConfig().actions;
-
 				// Only catch key pressses when NOT editing because, while editing,
 				// the text area needs to receive key presses for undo, redo, delete etc.
 				if (!this.renderer.isEditingText()) {
@@ -147,8 +160,11 @@ export default class SVGCanvasD3 {
 
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("paste");
-
+						if (this.mousePos) { this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
+							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos); this.canvasController.keyboardActionHandler("paste", this.mousePos);
+						} else {
+							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos); this.canvasController.keyboardActionHandler("paste");
+						}
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						Logger.switchLoggingState(); // Switch the logging on and off

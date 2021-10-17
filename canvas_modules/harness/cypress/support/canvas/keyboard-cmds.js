@@ -74,3 +74,10 @@ Cypress.Commands.add("useShiftKey", () => "{shift}");
 
 // Press 'backspace' key on keyboard
 Cypress.Commands.add("useBackspaceKey", () => "{backspace}");
+
+
+// Press cmd+v key on keyboard to paste the nod
+Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
+	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
+});
+
