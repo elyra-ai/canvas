@@ -41,7 +41,7 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed upwards when user clicks near bottom of the page
 		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition("1000px", "335px");
+		cy.verifyContextMenuPosition("1000px", "339px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
 		cy.get("#canvas-div-0").click(1, 1);
@@ -76,7 +76,7 @@ describe("Test of context menu", function() {
 		cy.verifyNumberOfSelectedObjects(3);
 		cy.get("#canvas-div-0").click(1, 1);
 		// TODO: This assertion fails on travis build because context menu is open
-		// cy.verifyNumberOfSelectedObjects(0);
+		cy.verifyNumberOfSelectedObjects(0);
 	});
 
 	it("Test selecting multiple objects, and click anywhere on canvas should clear the selections", function() {
@@ -86,5 +86,13 @@ describe("Test of context menu", function() {
 		cy.verifyNumberOfSelectedObjects(3);
 		cy.get("#canvas-div-0").click(1, 1);
 		cy.verifyNumberOfSelectedObjects(0);
+	});
+
+	it("Test context menu position is moved correctly with bottom panl open", function() {
+		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
+
+		// Test the context menu postion is moved correctly
+		cy.rightClickToDisplayContextMenu(800, 140);
+		cy.verifyContextMenuPosition("800px", "0px");
 	});
 });
