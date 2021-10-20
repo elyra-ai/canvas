@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint brace-style: "off" */
-/* eslint no-lonely-if: "off" */
 
 // Import just the D3 modules that are needed.
 var d3 = Object.assign({}, require("d3-selection"));
@@ -100,7 +98,6 @@ export default class SVGCanvasD3 {
 	// with new config objects that are provided reveal differences. This will
 	// not clone the contents of emptyCanvasContent, dropZoneCanvasContent nor
 	// enableNodeLayout.
-
 	cloneConfig(config) {
 		return Object.assign({}, config);
 	}
@@ -109,15 +106,19 @@ export default class SVGCanvasD3 {
 		return JSON.parse(JSON.stringify(canvasInfo));
 	}
 
+	// Keeps tracking mouse positions only within canvasUI & constantly feeds the
+	// mousePos object with {x,y} values otherwise(mouse positions outside of canvasUI)
+	// mousePos will get null.
 	onMouseUpdate(e) {
 		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
 			this.mousePos = {
 				x: e.clientX,
-				y: e.clientY };
+				y: e.clientY
+			};
+		} else {
+			this.mousePos = null;
 		}
-		else { this.mousePos = null; }
 	}
-
 
 	initializeCanvasDiv(canvasDivSelector) {
 
@@ -160,10 +161,12 @@ export default class SVGCanvasD3 {
 
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						if (this.mousePos) { this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
-							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos); this.canvasController.keyboardActionHandler("paste", this.mousePos);
+						if (this.mousePos) {
+							this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
+							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos);
+							this.canvasController.keyboardActionHandler("paste", this.mousePos);
 						} else {
-							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos); this.canvasController.keyboardActionHandler("paste");
+							this.canvasController.keyboardActionHandler("paste");
 						}
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);

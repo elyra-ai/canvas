@@ -21,16 +21,15 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it("Test cut & paste in the right { x,y } positions when using keboard", function() {
-		// cmd+x cut the node into the clipboard
+	it("Test cut & paste in the right { x,y } positions when using keyboard", function() {
+		// Cut the node into the clipboard using keyboard (cmd+x)
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCut();
 
-		// move the mouse into {x,y} & cmd+v paste the node where the cursor is
+		// Move the mouse into {x,y} position & paste the node using (cmd+V) where the cursor is
 		cy.moveMouseToCoordinates(100, 100);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 100, 100);
-
 
 		cy.clickNode("Na_to_K");
 		cy.shortcutKeysCut();
@@ -39,122 +38,120 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("Na_to_K", 618, 519);
 
-
 		cy.clickNode("C5.0");
 		cy.shortcutKeysCut();
 
 		cy.moveMouseToCoordinates(300, 400);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("C5.0", 411, 400);
-
 	});
 
-	it("Test cut & paste in default {x,y} positions when mousing outside the canvas using keboard (cmd+v)", function() {
-		// cut the node into the clipboard
+	it("Test cut & paste in default {x,y} positions when mousing outside the canvas using keyboard cmd+v", function() {
+		// Cut the node into the clipboard
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCut();
 
-		// paste the node in default {x,y} positions
+		// Paste the node into default {x,y} positions
 		cy.moveMouseToCoordinates(0, 100);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 96, 219);
 
-
 		cy.clickNode("Na_to_K");
 		cy.shortcutKeysCut();
-
 
 		cy.moveMouseToCoordinates(0, 100);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("Na_to_K", 218, 219);
 	});
 
-	it("Test copy & paste in the right { x,y } positions  when using keboard", function() {
-		// copy the node into the clipboard
+	it("Test copy & paste in the right { x,y } positions  when using keyboard", function() {
+		// Copy the node into the clipboard
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCopy();
 
-		// make DRUG1n node editable & change it into DRUG2n
+		// Make DRUG1n node editable & change it into DRUG2n
 		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
 		cy.hoverOverNodeLabel("DRUG1n");
 		cy.clickNodeLabelEditIcon("DRUG1n");
 		cy.enterLabelForNode("DRUG1n", "DRUG2n");
 
-		// move the mouse into {x,y} & cmd+v paste the node where the cursor is
+		// Move the mouse into {x,y} positions & paste the node using (cmd+v) where the cursor is
 		cy.moveMouseToCoordinates(100, 100);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 100, 100);
 
-
 		cy.clickNode("Na_to_K");
 		cy.shortcutKeysCopy();
 
-		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
-		cy.hoverOverNodeLabel("Na_to_K");
-		cy.clickNodeLabelEditIcon("Na_to_K");
-		cy.enterLabelForNode("Na_to_K", "Na_to_K2");
-
 		cy.moveMouseToCoordinates(500, 400);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("Na_to_K", 618, 519);
-
+		cy.verifyNodeTransform("Na_to_K", 218, 219);
 
 		cy.clickNode("C5.0");
 		cy.shortcutKeysCopy();
 
-		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
-		cy.hoverOverNodeLabel("C5.0");
-		cy.clickNodeLabelEditIcon("C5.0");
-		cy.enterLabelForNode("C5.0", "C5.01");
-
 		cy.moveMouseToCoordinates(300, 400);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("C5.0", 411, 400);
+		cy.verifyNodeTransform("C5.0", 611, 151);
 	});
 
-	it("Test copy & paste in default {x,y} positions when mousing outside the canvas using keboard(cmd+v)", function() {
-		// copy the node into the clipboard
+	it("Test copy & paste in default {x,y} positions when mousing outside the canvas using keyboard cmd+v", function() {
+		// Copy the node into the clipboard
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCopy();
 
-		// make DRUG1n node editable & change it into DRUG2n
+		// Make DRUG1n node editable & change it into DRUG2n
 		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
 		cy.hoverOverNodeLabel("DRUG1n");
 		cy.clickNodeLabelEditIcon("DRUG1n");
 		cy.enterLabelForNode("DRUG1n", "DRUG2n");
 
-		// paste the node in default {x,y} positions
+		// Paste the node in default {x,y} positions
 		cy.moveMouseToCoordinates(0, 100);
 		cy.shortcutKeysPaste();
 		cy.verifyNodeTransform("DRUG1n", 106, 229);
 
-
 		cy.clickNode("C5.0");
 		cy.shortcutKeysCopy();
 
-		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
-		cy.hoverOverNodeLabel("C5.0");
-		cy.clickNodeLabelEditIcon("C5.0");
-		cy.enterLabelForNode("C5.0", "C5.2");
-
-
 		cy.moveMouseToCoordinates(0, 100);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("C5.0", 621, 161);
-
+		cy.verifyNodeTransform("C5.0", 611, 151);
 
 		cy.clickNode("Na_to_K");
 		cy.shortcutKeysCopy();
 
-		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
-		cy.hoverOverNodeLabel("Na_to_K");
-		cy.clickNodeLabelEditIcon("Na_to_K");
-		cy.enterLabelForNode("Na_to_K", "Na_to_K2");
-
-
 		cy.moveMouseToCoordinates(0, 100);
 		cy.shortcutKeysPaste();
-		cy.verifyNodeTransform("Na_to_K", 228, 229);
+		cy.verifyNodeTransform("Na_to_K", 218, 219);
+	});
+
+	it("Test cut & paste in default positions when using keyboard in zoomOut", function() {
+		// cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+
+		// Cut the node into the clipboard using keyboard
+		cy.clickNode("DRUG1n");
+		cy.shortcutKeysCut();
+
+		cy.moveMouseToPaletteArea(0, 100);
+		cy.shortcutKeysPaste();
+		cy.verifyNodeTransform("DRUG1n", 96, 219);
+
+		// cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+
+		// Cut the node into the clipboard using keyboard
+		cy.clickNode("DRUG1n");
+		cy.shortcutKeysCut();
+
+		cy.moveMouseToPaletteArea(0, 100);
+		cy.shortcutKeysPaste();
+		cy.verifyNodeTransform("DRUG1n", 96, 219);
 	});
 
 	it("Test cutting some nodes and a comment and paste to canvas using keyboard", function() {
