@@ -28,7 +28,7 @@ import dagre from "dagre/dist/dagre.min.js";
 import { get, has } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
-	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
+	DAGRE_VERTICAL, CREATE_NODE, CREATE_COMMENT, CLONE_COMMENT,
 	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
 	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
@@ -385,15 +385,6 @@ export default class APIPipeline {
 		return this.getNodes().map(function(node) {
 			return Object.assign({}, node);
 		});
-	}
-
-	cloneNode(inNode) {
-		let node = Object.assign({}, inNode, { id: this.objectModel.getUniqueId(CLONE_NODE, { "node": inNode }) });
-
-		// Add node height and width and, if appropriate, inputPortsHeight
-		// and outputPortsHeight
-		node = this.objectModel.setNodeAttributes(node);
-		return node;
 	}
 
 	// Returns an array of nodes (that are in a format that conforms to the
@@ -1013,13 +1004,6 @@ export default class APIPipeline {
 		return comment;
 	}
 
-	cloneComment(inComment) {
-		// Adjust for snap to grid, if necessary.
-		const comment = this.objectModel.setCommentAttributes(inComment);
-
-		return Object.assign({}, comment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
-	}
-
 	addComment(data) {
 		if (typeof data.selectedObjectIds === "undefined") {
 			data.selectedObjectIds = [];
@@ -1190,54 +1174,29 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns a clone of the link passed in using the source and target nodes
-	// passed in. If a semi-detached or fully-detached link is being cloned the
-	// srcNode and/or trgNode may be null.
-	cloneNodeLink(link, srcNode, trgNode) {
-		let clonedLink = {
-			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
-			type: link.type
-		};
-		clonedLink = this.copyCommonNodeLinkAttrs(clonedLink, link);
-
-		if (srcNode) {
-			clonedLink.srcNodeId = srcNode.id;
-			clonedLink.srcNodePortId = link.srcNodePortId;
-		} else {
-			clonedLink.srcPos = link.srcPos;
-		}
-		if (trgNode) {
-			clonedLink.trgNodeId = trgNode.id;
-			clonedLink.trgNodePortId = link.trgNodePortId;
-		} else {
-			clonedLink.trgPos = link.trgPos;
-		}
-		return clonedLink;
-	}
-
+	// Creates a new link objct which is attached to a source node but detached
+	// at the target end. The input data object may contain some or all of the
+	// link properties because they may be populatd by the host application
+	// in the beforeEditActionHandler.
 	createNodeLinkDetached(data) {
-		let link = {};
+		const link = {};
 		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
 		link.type = data.type;
 		link.srcNodeId = data.srcNodeId;
 		link.srcNodePortId = data.srcNodePortId;
 		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
-		link = this.copyCommonNodeLinkAttrs(link, data);
-		return link;
-	}
 
-	copyCommonNodeLinkAttrs(link, copyFrom) {
-		if (copyFrom.class_name) {
-			link.class_name = copyFrom.class_name;
+		if (data.class_name) {
+			link.class_name = data.class_name;
 		}
-		if (copyFrom.linkName) {
-			link.linkName = copyFrom.linkName;
+		if (data.linkName) {
+			link.linkName = data.linkName;
 		}
-		if (copyFrom.typeAttr) {
-			link.typeAttr = copyFrom.typeAttr;
+		if (data.typeAttr) {
+			link.typeAttr = data.typeAttr;
 		}
-		if (copyFrom.description) {
-			link.description = copyFrom.description;
+		if (data.description) {
+			link.description = data.description;
 		}
 		return link;
 	}
@@ -1257,16 +1216,6 @@ export default class APIPipeline {
 			});
 		});
 		return linkCommentList;
-	}
-
-	cloneCommentLink(link, srcNodeId, trgNodeId) {
-		return {
-			id: this.objectModel.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
-			type: link.type,
-			class_name: link.class_name,
-			srcNodeId: srcNodeId,
-			trgNodeId: trgNodeId
-		};
 	}
 
 	addLinks(linkList) {
