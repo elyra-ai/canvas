@@ -17,7 +17,7 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
-export default class CloneMultipleObjectsAction extends Action {
+export default class PasteAction extends Action {
 	constructor(data, objectModel, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
 		super(data);
 		this.data = data;
