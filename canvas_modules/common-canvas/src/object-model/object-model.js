@@ -33,8 +33,9 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 
 
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
-	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
-	HIGHLIGHT_DOWNSTREAM, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
+	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
+	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
+	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
 } from "../common-canvas/constants/canvas-constants.js";
 
 export default class ObjectModel {
@@ -1409,6 +1410,128 @@ export default class ObjectModel {
 
 	isBottomPanelOpen() {
 		return this.store.isBottomPanelOpen();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Clone methods
+	// ---------------------------------------------------------------------------
+	cloneObjectsToPaste(nodes, comments, links) {
+		const clonedNodesInfo = [];
+		const clonedCommentsInfo = [];
+		const clonedLinks = [];
+
+		if (nodes) {
+			nodes.forEach((node) => {
+				let clonedNode = this.cloneNode(node);
+				// Pipelines in app_data.pipeline_data in supernodes will be in schema
+				// format (conforming to the pipeline flow schema) so they must be converted.
+				if (clonedNode.type === SUPER_NODE) {
+					clonedNode = this.convertPipelineData(clonedNode);
+				}
+				clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
+			});
+		}
+
+		if (comments) {
+			comments.forEach((comment) => {
+				clonedCommentsInfo.push({ originalId: comment.id, comment: this.cloneComment(comment) });
+			});
+		}
+
+		if (links) {
+			links.forEach((link) => {
+				if (link.type === "nodeLink" || link.type === "associationLink") {
+					const srcClonedNode = this.findClonedNode(link.srcNodeId, clonedNodesInfo);
+					const trgClonedNode = this.findClonedNode(link.trgNodeId, clonedNodesInfo);
+					const newLink = this.cloneNodeLink(link, srcClonedNode, trgClonedNode);
+					clonedLinks.push(newLink);
+				} else {
+					const srcClonedComment = this.findClonedComment(link.srcNodeId, clonedCommentsInfo);
+					const trgClonedNode = this.findClonedNode(link.trgNodeId, clonedNodesInfo);
+					if (srcClonedComment && trgClonedNode) {
+						const newLink = this.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
+						clonedLinks.push(newLink);
+					}
+				}
+			});
+		}
+
+		const clonedNodes = clonedNodesInfo.map((cni) => cni.node);
+		const clonedComments = clonedCommentsInfo.map((cci) => cci.comment);
+
+		return { clonedNodes, clonedComments, clonedLinks };
+	}
+
+	// Returns the cloned node from the array of cloned nodes, identified
+	// by the node ID passed in which is the ID of the original node.
+	findClonedNode(nodeId, clonedNodesInfo) {
+		const clonedNodeInfo = clonedNodesInfo.find((cni) => cni.originalId === nodeId);
+		if (clonedNodeInfo) {
+			return clonedNodeInfo.node;
+		}
+		return null;
+	}
+
+	// Returns the cloned comment from the array of cloned comments, identified
+	// by the comment ID passed in which is the ID of the original comment.
+	findClonedComment(commentId, clonedCommentsInfo) {
+		const clonedCommentInfo = clonedCommentsInfo.find((cci) => cci.originalId === commentId);
+		if (clonedCommentInfo) {
+			return clonedCommentInfo.comment;
+		}
+		return null;
+	}
+
+	// Clone the node provided, with a new unique ID.
+	cloneNode(inNode) {
+		let node = Object.assign({}, inNode, { id: this.getUniqueId(CLONE_NODE, { "node": inNode }) });
+
+		// Add node height and width and, if appropriate, inputPortsHeight
+		// and outputPortsHeight
+		node = this.setNodeAttributes(node);
+		return node;
+	}
+
+	// Clone the comment provided, with a new unique ID.
+	cloneComment(inComment) {
+		// Adjust for snap to grid, if necessary.
+		const comment = this.setCommentAttributes(inComment);
+
+		return Object.assign({}, comment, { id: this.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
+	}
+
+	// Returns a clone of the link passed in using the source and target nodes
+	// passed in. If a semi-detached or fully-detached link is being cloned the
+	// srcNode and/or trgNode may be null.
+	cloneNodeLink(link, srcNode, trgNode) {
+		const id = this.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null });
+		const clonedLink = Object.assign({}, link, { id: id });
+
+		if (srcNode) {
+			clonedLink.srcNodeId = srcNode.id;
+			clonedLink.srcNodePortId = link.srcNodePortId;
+		} else {
+			clonedLink.srcPos = link.srcPos;
+		}
+		if (trgNode) {
+			clonedLink.trgNodeId = trgNode.id;
+			clonedLink.trgNodePortId = link.trgNodePortId;
+		} else {
+			clonedLink.trgPos = link.trgPos;
+		}
+		return clonedLink;
+	}
+
+	// Returns a clone of the link passed in with the source and targets set to
+	// the IDs passed in.
+	cloneCommentLink(link, srcNodeId, trgNodeId) {
+		return {
+			id: this.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
+			type: link.type,
+			class_name: link.class_name,
+			srcNodeId: srcNodeId,
+			trgNodeId: trgNodeId
+		};
 	}
 
 	// ---------------------------------------------------------------------------
