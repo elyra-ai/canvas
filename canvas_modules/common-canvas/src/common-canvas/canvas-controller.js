@@ -16,7 +16,6 @@
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
-import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
 import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
@@ -43,6 +42,7 @@ import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import PasteAction from "../command-actions/pasteAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
@@ -2342,7 +2342,7 @@ export default class CanvasController {
 				if (pasteObjects) {
 					data.objects = pasteObjects;
 					const vpDims = this.getSVGCanvasD3().getTransformedViewportDimensions();
-					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
+					command = new PasteAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
 					this.commandStack.do(command);
 					data = command.getData();
 				}
