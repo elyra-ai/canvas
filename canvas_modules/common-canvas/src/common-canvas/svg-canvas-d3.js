@@ -52,6 +52,10 @@ export default class SVGCanvasD3 {
 		document.addEventListener("mousemove", this.onMouseUpdate.bind(this), true);
 	}
 
+	close() {
+		document.removeEventListener();
+	}
+
 	setCanvasInfo(canvasInfo, config) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
 		if (!this.config ||

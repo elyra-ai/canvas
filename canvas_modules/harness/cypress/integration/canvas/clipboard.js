@@ -69,7 +69,8 @@ describe("Test clipboard with no link selection enabled", function() {
 		cy.clickNode("DRUG1n");
 		cy.shortcutKeysCopy();
 
-		// Make DRUG1n node editable & change it into DRUG2n
+		// Make DRUG1n node editable & change it into DRUG2n to make sure we have
+		// unique node labels on the canvas
 		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true, labelWidth: 200 } });
 		cy.hoverOverNodeLabel("DRUG1n");
 		cy.clickNodeLabelEditIcon("DRUG1n");

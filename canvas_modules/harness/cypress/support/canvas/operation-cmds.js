@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);
 });
+
 // Within ZoomIn or ZoomOut, move the mouse to the {x,y} position
 Cypress.Commands.add("moveMouseToPaletteArea", (x, y) => {
 	cy.get(".palette-flyout-categories").trigger("mousemove", x, y);
