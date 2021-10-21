@@ -381,12 +381,6 @@ export default class APIPipeline {
 		return newNode;
 	}
 
-	cloneNodes() {
-		return this.getNodes().map(function(node) {
-			return Object.assign({}, node);
-		});
-	}
-
 	cloneNode(inNode) {
 		let node = Object.assign({}, inNode, { id: this.objectModel.getUniqueId(CLONE_NODE, { "node": inNode }) });
 
