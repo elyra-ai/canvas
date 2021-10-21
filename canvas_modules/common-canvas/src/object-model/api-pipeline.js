@@ -27,9 +27,9 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import dagre from "dagre/dist/dagre.min.js";
 import { get, has } from "lodash";
 
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
-	DAGRE_VERTICAL, CREATE_NODE, CREATE_COMMENT, CLONE_COMMENT,
-	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
+	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+	CREATE_NODE, CREATE_COMMENT, CREATE_NODE_LINK, CREATE_COMMENT_LINK,
 	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
