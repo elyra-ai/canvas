@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -379,12 +379,6 @@ export default class APIPipeline {
 		}
 
 		return newNode;
-	}
-
-	cloneNodes() {
-		return this.getNodes().map(function(node) {
-			return Object.assign({}, node);
-		});
 	}
 
 	// Returns an array of nodes (that are in a format that conforms to the
