@@ -78,6 +78,7 @@ export default class CanavasStore {
 
 		this.store = createStore(combinedReducer, initialState, enableDevTools);
 		this.dispatch = this.dispatch.bind(this);
+		this.subscribe(() => this.clearCachedObjects());
 	}
 
 	dispatch(action) {
@@ -86,6 +87,13 @@ export default class CanavasStore {
 
 	subscribe(callback) {
 		return this.store.subscribe(callback);
+	}
+
+	clearCachedObjects() {
+		this.canvasInfo = null;
+		this.breadcrumbs = null;
+		this.nodeLayout = null;
+		this.canvasLayout = null;
 	}
 
 	// Returns the redux store
@@ -102,11 +110,17 @@ export default class CanavasStore {
 	}
 
 	getCanvasInfo() {
-		return this.copyData(this.store.getState().canvasinfo);
+		if (!this.canvasInfo) {
+			this.canvasInfo = this.copyData(this.store.getState().canvasinfo);
+		}
+		return this.canvasInfo;
 	}
 
 	getBreadcrumbs() {
-		return this.copyData(this.store.getState().breadcrumbs);
+		if (!this.breadcrumbs) {
+			this.breadcrumbs = this.copyData(this.store.getState().breadcrumbs);
+		}
+		return this.breadcrumbs;
 	}
 
 	getCanvasConfig() {
@@ -116,11 +130,17 @@ export default class CanavasStore {
 	}
 
 	getNodeLayout() {
-		return this.copyData(this.store.getState().canvasconfig.enableNodeLayout);
+		if (!this.nodeLayout) {
+			this.nodeLayout = this.copyData(this.store.getState().canvasconfig.enableNodeLayout);
+		}
+		return this.nodeLayout;
 	}
 
 	getCanvasLayout() {
-		return this.copyData(this.store.getState().canvasconfig.enableCanvasLayout);
+		if (!this.canvasLayout) {
+			this.canvasLayout = this.copyData(this.store.getState().canvasconfig.enableCanvasLayout);
+		}
+		return this.canvasLayout;
 	}
 
 	isTooltipOpen() {
