@@ -1642,7 +1642,17 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 		controller = renderedObject.controller;
 
 		const requiredIds = controller.getRequiredDefinitionIds();
-		expect(requiredIds).to.eql(["required_fields_294.69762842919897"]);
+		expect(requiredIds).to.eql([
+			"required_oneofselect_201.88122102593735",
+			"required_oneofselect_null_895.9146331341876",
+			"required_oneofselect_empty_string_963.6717964456162",
+			"required_oneofselect_custom_value_667.4461132689746",
+			"required_radioString_834.4741085201264",
+			"required_radioBooleanWithEnum_167.45387366555846",
+			"required_radioBooleanWithoutEnum_836.1233358606064",
+			"required_radioBooleanWithLabels_68.57624159959238",
+			"required_fields_294.69762842919897"
+		]);
 	});
 });
 
