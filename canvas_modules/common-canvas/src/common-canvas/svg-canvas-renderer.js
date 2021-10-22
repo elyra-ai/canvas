@@ -84,6 +84,7 @@ export default class SVGCanvasRenderer {
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
 		this.activePipeline = this.getActivePipeline(pipelineId); // Must come after line setting this.canvasInfo
+		this.activePipeline = CanvasUtils.preProcessPipeline(this.activePipeline);
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -324,6 +325,7 @@ export default class SVGCanvasRenderer {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
 		this.activePipeline = this.getActivePipeline(this.pipelineId);
+		this.activePipeline = CanvasUtils.preProcessPipeline(this.activePipeline);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
@@ -2626,7 +2628,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createInputPorts(enter, node)
 			)
-			.attr("connected", "no") // Display-links code will set this to "yes" if necessary.
+			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeInputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.call((joinedInputPortGrps) => this.updateInputPorts(joinedInputPortGrps, node));
 	}
@@ -2700,7 +2702,7 @@ export default class SVGCanvasRenderer {
 			.join(
 				(enter) => this.createOutputPorts(enter, node)
 			)
-			.attr("connected", "no") // Display-links code will set this to "yes" if necessary.
+			.attr("connected", (port) => (port.isConnected ? "yes" : "no"))
 			.attr("class", (port) => this.getNodeOutputPortClassName() + (port.class_name ? " " + port.class_name : ""))
 			.call((joinedOutputPortGrps) => this.updateOutputPorts(joinedOutputPortGrps, node));
 	}
@@ -3771,12 +3773,6 @@ export default class SVGCanvasRenderer {
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
 			zoom: this.zoomTransform.k });
-	}
-
-	setPortStatus(nodeId, portId, newStatus) {
-		this.getNodeGroupSelectionById(nodeId)
-			.selectChildren(`[data-port-id='${portId}']`)
-			.attr("connected", newStatus);
 	}
 
 	callDecoratorCallback(d3Event, node, dec) {
@@ -5829,25 +5825,6 @@ export default class SVGCanvasRenderer {
 				this.updateLinks(joinedLinkGrps, lineArray);
 			});
 
-		// Set connection status of output ports and input ports plus arrow.
-		const portInSelector = "." + this.getNodeInputPortClassName();
-		const portOutSelector = "." + this.getNodeOutputPortClassName();
-
-		const nodeGrps = this.getAllNodeGroupsSelection();
-		nodeGrps.selectChildren(portInSelector).attr("connected", "no");
-		nodeGrps.selectChildren(portOutSelector).attr("connected", "no");
-
-		lineArray.forEach((line) => {
-			if (line.type === NODE_LINK) {
-				if (line.trg) {
-					this.setPortStatus(line.trg.id, line.trgPortId, "yes");
-				}
-				if (line.src) {
-					this.setPortStatus(line.src.id, line.srcPortId, "yes");
-				}
-			}
-		});
-
 		var endTimeDrawingLines = Date.now();
 
 		if (showLinksTime) {
@@ -5956,7 +5933,9 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		this.setDisplayOrder(joinedLinkGrps);
+		if (!this.dragging) {
+			this.setDisplayOrder(joinedLinkGrps);
+		}
 	}
 
 	attachLinkGroupListeners(linkGrps) {
@@ -6238,17 +6217,15 @@ export default class SVGCanvasRenderer {
 		let lineArray = [];
 
 		this.activePipeline.links.forEach((link) => {
-			const trgNode = this.getNode(link.trgNodeId);
-			const srcObj = link.type === COMMENT_LINK ? this.getComment(link.srcNodeId) : this.getNode(link.srcNodeId);
 			let lineObj = null;
 
 			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES && this.isLinkBeingDragged(link)) ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
-					(!srcObj || !trgNode)) {
-				lineObj = this.getDetachedLineObj(link, srcObj, trgNode);
+					(!link.srcObj || !link.trgNode)) {
+				lineObj = this.getDetachedLineObj(link);
 
 			} else {
-				lineObj = this.getAttachedLineObj(link, srcObj, trgNode);
+				lineObj = this.getAttachedLineObj(link);
 			}
 
 			if (lineObj) {
@@ -6267,7 +6244,10 @@ export default class SVGCanvasRenderer {
 		return lineArray;
 	}
 
-	getAttachedLineObj(link, srcObj, trgNode) {
+	getAttachedLineObj(link) {
+		const srcObj = link.srcObj;
+		const trgNode = link.trgNode;
+
 		if (srcObj === null) {
 			this.logger.error(
 				"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
@@ -6316,33 +6296,36 @@ export default class SVGCanvasRenderer {
 	// passed in. This will only ever be called when either srcNode OR trgNode
 	// are null (indicating a semi-detached link) or when both are null indicating
 	// a fully-detached link.
-	getDetachedLineObj(link, srcNode, trgNode) {
+	getDetachedLineObj(link) {
+		const srcObj = link.srcObj;
+		const trgNode = link.trgNode;
+
 		let srcPortId = null;
 		let trgPortId = null;
 		const coords = {};
 
-		if (srcNode === null) {
+		if (!srcObj) {
 			coords.x1 = link.srcPos.x_pos;
 			coords.y1 = link.srcPos.y_pos;
 
 		} else {
 			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
-				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcNode, endPos);
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
 
 			} else {
-				srcPortId = this.getSourcePortId(link, srcNode);
-				const port = this.getOutputPort(srcNode, srcPortId);
+				srcPortId = this.getSourcePortId(link, srcObj);
+				const port = this.getOutputPort(srcObj, srcPortId);
 				if (port) {
-					coords.x1 = srcNode.x_pos + port.cx;
-					coords.y1 = srcNode.y_pos + port.cy;
+					coords.x1 = srcObj.x_pos + port.cx;
+					coords.y1 = srcObj.y_pos + port.cy;
 				}
 			}
 		}
 
-		if (trgNode === null) {
+		if (!trgNode) {
 			coords.x2 = link.trgPos.x_pos;
 			coords.y2 = link.trgPos.y_pos;
 
@@ -6370,7 +6353,7 @@ export default class SVGCanvasRenderer {
 			"style_temp": link.style_temp,
 			"type": link.type,
 			"decorations": link.decorations,
-			"src": srcNode,
+			"src": srcObj,
 			"srcPortId": srcPortId,
 			"trg": trgNode,
 			"trgPortId": trgPortId,
