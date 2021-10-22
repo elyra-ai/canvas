@@ -56,7 +56,7 @@ class ImageAction extends React.Component {
 			{ "disabled": disabled });
 
 		const image = (
-			<div className={className} data-id={this.props.action.name}>
+			<div data-id={this.props.action.name}>
 				<img
 					src={this.props.action.image.url}
 					onClick={this.applyAction}
@@ -87,7 +87,9 @@ class ImageAction extends React.Component {
 		}
 
 		return (
-			display
+			<div className={className}>
+				{display}
+			</div>
 		);
 	}
 }
