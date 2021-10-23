@@ -115,9 +115,7 @@ class CanvasContents extends React.Component {
 
 	componentWillUnmount() {
 		this.removeEventListeners();
-		if (this.svgCanvasD3) {
-			this.svgCanvasD3.close();
-		}
+		this.svgCanvasD3.close();
 	}
 
 	onCut(evt) {
