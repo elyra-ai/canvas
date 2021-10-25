@@ -103,7 +103,7 @@ class CommonContextMenu extends React.Component {
 		return disabledCount === itemCount;
 	}
 
-	buildMenu(menuDefinition, mousePos, menuSize, menuPos, canvasRect) {
+	buildMenu(menuDefinition, menuSize, menuPos, canvasRect) {
 		const customDivider = {
 			className: "contextmenu-divider"
 		};
@@ -121,14 +121,14 @@ class CommonContextMenu extends React.Component {
 				runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 
 			} else if (submenu) {
-				const submenuItems = this.buildMenu(menuDefinition[i].menu, mousePos, menuSize, menuPos, canvasRect);
+				const submenuItems = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
 				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
 				const submenuSize = this.calculateMenuSize(menuDefinition[i].menu);
 				let rtl = false;
 
 				// Ensure that the combined menu position, plus the menu width,
 				//  plus the submenu width, does not exceed the viewport bounds.
-				if (mousePos.x + menuSize.width + submenuSize.width > canvasRect.right) {
+				if (menuPos.x + menuSize.width + submenuSize.width > canvasRect.right) {
 					rtl = true;
 				}
 
@@ -178,7 +178,7 @@ class CommonContextMenu extends React.Component {
 			top: menuPos.y + "px"
 		};
 
-		const menuItems = this.buildMenu(this.props.menuDefinition, this.props.mousePos, menuSize, menuPos, this.props.canvasRect);
+		const menuItems = this.buildMenu(this.props.menuDefinition, menuSize, menuPos, this.props.canvasRect);
 
 		return (
 			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>

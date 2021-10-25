@@ -21,8 +21,8 @@ export default class ArrangeLayoutAction extends Action {
 		this.layoutDirection = layoutDirection;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline();
-		// Clone the nodes to remember their original positions.
-		this.existingNodes = this.apiPipeline.cloneNodes();
+		// Copy the nodes to remember their original positions.
+		this.existingNodes = this.apiPipeline.getNodes().map((n) => Object.assign({}, n));
 	}
 
 	// Standard methods
