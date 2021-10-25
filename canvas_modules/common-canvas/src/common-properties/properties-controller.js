@@ -1541,7 +1541,11 @@ export default class PropertiesController {
 	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
-				this.controls[control.name] = control;
+				// only add to map if control hasn't already been added or override if set to custom.
+				// This is needed if a parameter is referenced from multiple groups and one is a custom panel
+				if (!has(this.controls, control.name) || (has(this.controls, control.name) && control.controlType !== "custom")) {
+					this.controls[control.name] = control;
+				}
 			} else {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}
