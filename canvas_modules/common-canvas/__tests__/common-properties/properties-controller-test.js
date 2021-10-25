@@ -1266,6 +1266,42 @@ describe("Properties Controller controls", () => {
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
 	});
+	it("should save the correct control when duplicate controls exist in groups", () => {
+		const custom = {
+			"name": "priors",
+			"controlType": "custom",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors = {
+			"name": "priors",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors2 = {
+			"name": "priors2",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+
+		reset();
+		controller.saveControls([custom, priors]);
+		let foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// change array order
+		reset();
+		controller.saveControls([priors, custom]);
+		foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// validate custom controls get set when another control doesn't override it
+		reset();
+		controller.saveControls([priors2, custom]);
+		foundControl = controller.getControl({ name: custom.name });
+		expect(foundControl.controlType).to.equal(custom.controlType);
+		foundControl = controller.getControl({ name: priors2.name });
+		expect(foundControl.controlType).to.equal(priors2.controlType);
+	});
+
+
 });
 
 describe("Properties Controller getResource ", () => {
