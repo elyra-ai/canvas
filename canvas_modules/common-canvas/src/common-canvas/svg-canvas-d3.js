@@ -53,7 +53,7 @@ export default class SVGCanvasD3 {
 	}
 
 	close() {
-		document.removeEventListener("mousemove", this.onMouseUpdate);
+		document.removeEventListener("mousemove", this.onMouseUpdate, true);
 	}
 
 	setCanvasInfo(canvasInfo, config) {
