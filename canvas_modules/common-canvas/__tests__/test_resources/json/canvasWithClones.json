@@ -185,9 +185,9 @@
     },
     {
       "id": "myUniqueClonedCommentLinkId_myUniqueCommentLinkId_myUniqueClonedCommentId_myUniqueCommentId_myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "type": "commentLink",
       "srcNodeId": "myUniqueClonedCommentId_myUniqueCommentId",
-      "trgNodeId": "myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
-      "type": "commentLink"
+      "trgNodeId": "myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb"
     }
   ]
 }

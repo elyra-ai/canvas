@@ -751,7 +751,8 @@ describe("ObjectModel handle model OK", () => {
 			type: "ADD_LINK",
 			data: { id: "link3", class_name: "canvas-node-link",
 				type: "nodeLink", srcNodeId: "node2", trgNodeId: "node3",
-				srcNodePortId: "sourceport1", trgNodePortId: "targetport1" },
+				srcNodePortId: "sourceport1", trgNodePortId: "targetport1",
+				app_data: { params: { field1: "val1", field2: "val2" } } },
 			pipelineId: "123"
 		});
 
@@ -777,11 +778,12 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" },
-					{ id: "link3", class_name: "canvas-node-link",
-						srcNodeId: "node2", trgNodeId: "node3", type: "nodeLink",
-						srcNodePortId: "sourceport1", trgNodePortId: "targetport1" },
-					{ id: "link4", class_name: "canvas-comment-link",
-						srcNodeId: "comment1", trgNodeId: "node2", type: "commentLink" }
+					{ id: "link3", type: "nodeLink", class_name: "canvas-node-link",
+						srcNodeId: "node2", srcNodePortId: "sourceport1",
+						trgNodeId: "node3", trgNodePortId: "targetport1",
+						app_data: { params: { field1: "val1", field2: "val2" } } },
+					{ id: "link4", type: "commentLink", class_name: "canvas-comment-link",
+						srcNodeId: "comment1", trgNodeId: "node2" }
 				]
 			};
 
