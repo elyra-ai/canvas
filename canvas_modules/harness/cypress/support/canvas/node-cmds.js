@@ -575,7 +575,3 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 	});
 });
 
-Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
-	cy.get(".d3-svg-canvas-div")
-		.trigger("mouseover", x, y);
-});
