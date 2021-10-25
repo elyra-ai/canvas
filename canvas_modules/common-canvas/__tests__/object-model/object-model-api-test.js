@@ -683,9 +683,9 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedLinkId = uniqueNodeLink + "_" + sourceNodeId + "_b4f90b52-d198-42f0-85cc-31af3914dd4f";
 		const expectedNodeLink = {
 			"id": expectedLinkId,
+			"type": "nodeLink",
 			"srcNodeId": sourceNodeId,
 			"trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
-			"type": "nodeLink",
 			"linkName": "testLink1"
 		};
 

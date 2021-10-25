@@ -15,7 +15,7 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { NODE_LINK, COMMENT_LINK } from "../../../common-canvas/constants/canvas-constants.js";
+import { COMMENT_LINK } from "../../../common-canvas/constants/canvas-constants.js";
 
 export default (state = [], action) => {
 	switch (action.type) {
@@ -43,27 +43,24 @@ export default (state = [], action) => {
 
 	case "ADD_LINK": {
 		const newLink = {
-			id: action.data.id,
-			class_name: action.data.class_name,
-			srcNodeId: action.data.srcNodeId,
-			trgNodeId: action.data.trgNodeId,
-			type: action.data.type,
-			decorations: action.data.decorations,
-			style: action.data.style,
-			style_temp: action.data.style_temp
+			id: action.data.id
 		};
+		addAttr(newLink, "type", action.data.type);
+		addAttr(newLink, "class_name", action.data.class_name);
+		addAttr(newLink, "srcPos", action.data.srcPos);
+		addAttr(newLink, "srcNodeId", action.data.srcNodeId);
+		addAttr(newLink, "srcNodePortId", action.data.srcNodePortId);
+		addAttr(newLink, "trgPos", action.data.trgPos);
+		addAttr(newLink, "trgNodeId", action.data.trgNodeId);
+		addAttr(newLink, "trgNodePortId", action.data.trgNodePortId);
+		addAttr(newLink, "decorations", action.data.decorations);
+		addAttr(newLink, "style", action.data.style);
+		addAttr(newLink, "style_temp", action.data.style_temp);
+		addAttr(newLink, "linkName", action.data.linkName);
+		addAttr(newLink, "typeAttr", action.data.typeAttr);
+		addAttr(newLink, "description", action.data.description);
+		addAttr(newLink, "app_data", action.data.app_data);
 
-		if (action.data.type === NODE_LINK) {
-			Object.assign(newLink, {
-				"srcNodePortId": action.data.srcNodePortId,
-				"trgNodePortId": action.data.trgNodePortId,
-				"srcPos": action.data.srcPos,
-				"trgPos": action.data.trgPos,
-				"linkName": action.data.linkName,
-				"typeAttr": action.data.typeAttr,
-				"description": action.data.description
-			});
-		}
 		return [
 			...state,
 			newLink
@@ -304,3 +301,10 @@ export default (state = [], action) => {
 		return state;
 	}
 };
+
+// Assigns the value, if it is not undefined, to the object using the key.
+function addAttr(obj, key, value) {
+	if (typeof value !== "undefined") {
+		obj[key] = value;
+	}
+}
