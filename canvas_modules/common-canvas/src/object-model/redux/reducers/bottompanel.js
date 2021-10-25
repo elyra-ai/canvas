@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-/*
-* Fixed in new versions
-*/
-.properties-action-image  {
-	// 8px spacing between action image and the control beside image.
-	padding: 0 0 0 $spacing-03;
-	cursor: pointer;
-	align-self: flex-end;
-	&.left {
-		order: -1;
-		padding: 0 $spacing-03 0 0;
+export default (state = {}, action) => {
+	switch (action.type) {
+	case "SET_BOTTOM_PANEL_CONFIG": {
+		if (action.data.config) {
+			return {
+				content: action.data.config.content,
+				isOpen: action.data.config.isOpen };
+		}
+		return state;
 	}
-	&.hide {
-		display: none;
+
+	default:
+		return state;
 	}
-	&.disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
-	}
-}
+};

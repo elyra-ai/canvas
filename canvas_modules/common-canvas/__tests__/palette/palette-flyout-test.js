@@ -135,6 +135,9 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 	});
 
+	// WARNING: The data-id attribute is used by host application "walk-me"
+	// tours to identify palette elements. Therefore, the attribute name
+	// MUST NOT be removed or renamed.
 	it("Palette flyout categories should have data-id attribute", () => {
 		const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
 		const flyoutPaletteCategories = flyoutPaletteContent.find(".palette-flyout-category");
@@ -143,6 +146,9 @@ describe("Palette renders correctly", () => {
 		});
 	});
 
+	// WARNING: The data-id attribute is used by host application "walk-me"
+	// tours to identify palette elements. Therefore, the attribute name
+	// MUST NOT be removed or renamed.
 	it("Palette flyout nodes should have data-id attribute", () => {
 		const wrapper = createMountedPalette();
 		const importCat = findCategoryElement(wrapper, "Import");

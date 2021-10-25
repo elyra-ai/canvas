@@ -18,8 +18,16 @@
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
+
+// Imports from harness test resources
 import startCanvas from "../test_resources/json/startCanvas.json";
+import branchTestExpected from "../test_resources/canvas-controller/branch-test-exp.json";
+import upstreamTestExpected from "../test_resources/canvas-controller/upstream-test-exp.json";
+import downstreamTestExpected from "../test_resources/canvas-controller/downstream-test-exp.json";
+
+// Imports from common-canvas test resources
 import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
+import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
 import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
 import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
@@ -489,6 +497,36 @@ describe("Test canvas controller methods", () => {
 		// createNodeCommand should add a command to the command stack so there
 		// should now be a command to undo.
 		expect(canvasController.getCommandStack().canUndo()).to.be.true;
+	});
+
+	it("should return an array of nodes for the branch", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Supernode
+		const branchTestActual = canvasController.getBranchNodes(["7015d906-2eae-45c1-999e-fb888ed957e5"]);
+
+		expect(JSON.stringify(branchTestExpected)).to.equal(JSON.stringify(branchTestActual));
+	});
+
+	it("should return an array of nodes for the upstream", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Binding (exit) node
+		const upstreamTestActual = canvasController.getUpstreamNodes(["id5KIRGGJ3FYT"]);
+
+		expect(JSON.stringify(upstreamTestExpected)).to.equal(JSON.stringify(upstreamTestActual));
+	});
+
+	it("should return an array of nodes for the downstream", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Database node
+		const downstreamTestActual = canvasController.getDownstreamNodes(["f5373d9e-677d-4717-a9fd-3b57038ce0de"]);
+
+		expect(JSON.stringify(downstreamTestExpected)).to.equal(JSON.stringify(downstreamTestActual));
 	});
 });
 

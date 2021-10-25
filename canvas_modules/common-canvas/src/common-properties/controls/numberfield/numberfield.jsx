@@ -17,17 +17,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NumberInput } from "carbon-components-react";
+import { NumberInput, Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
+import { Shuffle16 } from "@carbon/icons-react";
+import { has } from "lodash";
 
 class NumberfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onDirection = this.onDirection.bind(this);
+		this.generateNumber = this.generateNumber.bind(this);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
 
@@ -71,12 +74,42 @@ class NumberfieldControl extends React.Component {
 		// TODO need to check for integer in validations
 	}
 
+	generateNumber() {
+		const generator = this.props.control.label.numberGenerator;
+		const min = generator.range && generator.range.min ? generator.range.min : 10000;
+		const max = generator.range && generator.range.max ? generator.range.max : 99999;
+		const newValue = Math.floor(Math.random() * (max - min + 1) + min);
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue);
+	}
+
 	render() {
 		let controlValue = ""; // Default to empty string to avoid '0' appearing when value is 'null'
 		if (this.props.value !== null && typeof this.props.value !== "undefined") {
 			controlValue = this.props.value;
 		}
-		const className = classNames("properties-numberfield", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
+
+		const disabled = this.props.state === STATES.DISABLED;
+		const hidden = this.props.state === STATES.HIDDEN;
+		let numberGenerator;
+		if (has(this.props.control, "label.numberGenerator")) {
+			numberGenerator = (<Button
+				className={classNames("properties-number-generator", { "hide": hidden })}
+				onClick={this.generateNumber}
+				disabled={disabled}
+				kind="tertiary"
+				renderIcon={Shuffle16}
+				tooltipPosition="bottom"
+				tooltipAlignment="end"
+				iconDescription={this.props.control.label.numberGenerator.text}
+				hasIconOnly
+			/>);
+		}
+		const className = classNames(
+			"properties-numberfield",
+			{ "numberfield-with-number-generator": has(this.props.control, "label.numberGenerator") ? this.props.control.label.numberGenerator : null },
+			{ "hide": hidden },
+			this.props.messageInfo ? this.props.messageInfo.type : null
+		);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
@@ -85,7 +118,7 @@ class NumberfieldControl extends React.Component {
 					ref= { (ref) => (this.numberInput = ref)}
 					id={this.id}
 					onChange={this.handleChange.bind(this)}
-					disabled={this.props.state === STATES.DISABLED}
+					disabled={disabled}
 					step={this.props.control.increment}
 					value={controlValue}
 					placeholder={this.props.control.additionalText}
@@ -95,6 +128,7 @@ class NumberfieldControl extends React.Component {
 					light={this.props.controller.getLight()}
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 				/>
+				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);

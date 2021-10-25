@@ -27,7 +27,7 @@ import * as PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { Type, ParamRole } from "./constants/form-constants";
+import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
@@ -40,7 +40,8 @@ export default class PropertiesController {
 			propertyListener: null,
 			controllerHandler: null,
 			actionHandler: null,
-			buttonHandler: null
+			buttonHandler: null,
+			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};
@@ -1540,7 +1541,11 @@ export default class PropertiesController {
 	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
-				this.controls[control.name] = control;
+				// only add to map if control hasn't already been added or override if set to custom.
+				// This is needed if a parameter is referenced from multiple groups and one is a custom panel
+				if (!has(this.controls, control.name) || (has(this.controls, control.name) && control.controlType !== ControlType.CUSTOM)) {
+					this.controls[control.name] = control;
+				}
 			} else {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}

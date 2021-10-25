@@ -28,6 +28,13 @@ export default (state = [], action) => {
 		];
 	}
 
+	case "ADD_NODES": {
+		return [
+			...state,
+			...action.data.nodesToAdd
+		];
+	}
+
 	case "REPLACE_NODES": {
 		return action.data;
 	}
@@ -75,6 +82,16 @@ export default (state = [], action) => {
 			return node;
 		});
 
+	case "SET_NODE_POSITIONS":
+		return state.map((node, index) => {
+			if (action.data.nodePositions && typeof action.data.nodePositions[node.id] !== "undefined") {
+				const newPosition = action.data.nodePositions[node.id];
+				return Object.assign({}, node, { x_pos: newPosition.x_pos, y_pos: newPosition.y_pos });
+			}
+			return node;
+		});
+
+
 	case "ADD_SUPERNODES":
 		return [...state, ...action.data.supernodesToAdd];
 
@@ -87,6 +104,12 @@ export default (state = [], action) => {
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found
+		});
+
+	case "REMOVE_NODES":
+		return state.filter((node) => {
+			const nodeFound = action.data.nodesToDelete.some((n) => n.id === node.id);
+			return !nodeFound;
 		});
 
 	case "SET_NODE_PROPERTIES":
@@ -280,15 +303,10 @@ export default (state = [], action) => {
 			return node;
 		});
 
-	case "SET_SUPERNODE_FLAG":
-		return state.map((node, index) => {
+	case "SET_SUPERNODE_EXPAND_STATE":
+		return state.map((node) => {
 			if (action.data.node.id === node.id) {
 				return action.data.node;
-			}
-
-			if (action.data.nodePositions && typeof action.data.nodePositions[node.id] !== "undefined") {
-				const newPosition = action.data.nodePositions[node.id];
-				return Object.assign({}, node, { x_pos: newPosition.x_pos, y_pos: newPosition.y_pos });
 			}
 			return node;
 		});

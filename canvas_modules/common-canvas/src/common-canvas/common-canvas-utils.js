@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,75 +18,141 @@
 // objects stored in redux and also the copy of canvas objects maintained by
 // the CanvasRender objects.
 
-import { get } from "lodash";
-import { ASSOCIATION_LINK, NODE_LINK, SUPER_NODE }
+import { get, set } from "lodash";
+import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 
 export default class CanvasUtils {
 
-	static moveSurroundingNodes(newNodePositions, supernode, nodes, nodeSizingDirection, newWidth, newHeight, updateNodePos) {
-		const oldWidth = supernode.width;
-		const oldHeight = supernode.height;
-		const deltaWidth = newWidth - oldWidth;
-		const deltaHeight = newHeight - oldHeight;
+	static getObjectPositions(objects) {
+		const objectPositions = [];
+		objects.forEach((obj) => {
+			objectPositions[obj.id] = { x_pos: obj.x_pos, y_pos: obj.y_pos };
+		});
+		return objectPositions;
+	}
 
-		let xDelta;
-		let yDelta;
+	static getLinkPositions(links) {
+		const positions = [];
+		links.forEach((l) => {
+			if (l.srcPos) {
+				set(positions[l.id], "srcPos.x_pos", l.srcPos.x_pos);
+				set(positions[l.id], "srcPos.y_pos", l.srcPos.y_pos);
+			}
+			if (l.trgPos) {
+				if (!positions[l.id]) {
+					positions[l.id] = {};
+				}
+				set(positions[l.id], "trgPos.x_pos", l.trgPos.x_pos);
+				set(positions[l.id], "trgPos.y_pos", l.trgPos.y_pos);
+			}
+		});
+		return positions;
+	}
 
-		nodes.forEach((node) => {
-			if (node.id === supernode.id) {
+	static moveSurroundingObjects(supernode, objects, nodeSizingDirection, newWidth, newHeight, updateNodePos) {
+		const newObjectPositions = [];
+		const incWidth = newWidth - supernode.width;
+		const incHeight = newHeight - supernode.height;
+		const superCenterX = supernode.x_pos + (supernode.width / 2);
+		const superCenterY = supernode.y_pos + (supernode.height / 2);
+
+		objects.forEach((obj) => {
+			if (obj.id === supernode.id) {
 				return; // Ignore the supernode
 			}
 
-			xDelta = 0;
-			yDelta = 0;
+			const deltas = this.getMoveDeltas(
+				obj.x_pos + (obj.width / 2), // Center of obj horizontally
+				obj.y_pos + (obj.height / 2), // Center of obj vertically
+				nodeSizingDirection, superCenterX, superCenterY, incWidth, incHeight);
 
-			if (nodeSizingDirection.indexOf("n") > -1 &&
-					node.y_pos < supernode.y_pos + (supernode.height / 2)) {
-				yDelta = -deltaHeight;
-
-			} else if (nodeSizingDirection.indexOf("s") > -1 &&
-									node.y_pos >= supernode.y_pos + (supernode.height / 2)) {
-				yDelta = deltaHeight;
-			}
-
-			if (nodeSizingDirection.indexOf("w") > -1 &&
-					node.x_pos < supernode.x_pos + (supernode.width / 2)) {
-				xDelta = -deltaWidth;
-
-			} else if (nodeSizingDirection.indexOf("e") > -1 &&
-									node.x_pos >= supernode.x_pos + (supernode.width / 2)) {
-				xDelta = deltaWidth;
-			}
-
-			if (xDelta !== 0 || yDelta !== 0) {
-				const nodeObj = {
-					id: node.id,
-					x_pos: node.x_pos + xDelta,
-					y_pos: node.y_pos + yDelta,
-					width: node.width,
-					height: node.height
+			if (deltas.xDelta !== 0 || deltas.yDelta !== 0) {
+				newObjectPositions[obj.id] = {
+					id: obj.id,
+					x_pos: obj.x_pos + deltas.xDelta,
+					y_pos: obj.y_pos + deltas.yDelta,
+					width: obj.width,
+					height: obj.height
 				};
 
-				this.addToNodeSizingArray(nodeObj, newNodePositions);
-
 				if (updateNodePos) {
-					node.x_pos += xDelta;
-					node.y_pos += yDelta;
+					obj.x_pos += deltas.xDelta;
+					obj.y_pos += deltas.yDelta;
 				}
 			}
 		});
+		return newObjectPositions;
 	}
 
-	static addToNodeSizingArray(nodeObj, newNodePositions) {
-		newNodePositions[nodeObj.id] = {
-			id: nodeObj.id,
-			x_pos: nodeObj.x_pos,
-			y_pos: nodeObj.y_pos,
-			width: nodeObj.width,
-			height: nodeObj.height
-		};
+	static moveSurroundingDetachedLinks(supernode, links, nodeSizingDirection, newWidth, newHeight, updateLinkPos) {
+		const newLinkPositions = [];
+		const incWidth = newWidth - supernode.width;
+		const incHeight = newHeight - supernode.height;
+		const superCenterX = supernode.x_pos + (supernode.width / 2);
+		const superCenterY = supernode.y_pos + (supernode.height / 2);
+
+		links.forEach((link) => {
+			// If link has 'srcPos' it is detached at source end.
+			if (link.srcPos) {
+				const deltas = this.getMoveDeltas(link.srcPos.x_pos, link.srcPos.y_pos,
+					nodeSizingDirection, superCenterX, superCenterY, incWidth, incHeight);
+
+				if (deltas.xDelta !== 0 || deltas.yDelta !== 0) {
+					if (!newLinkPositions[link.id]) {
+						newLinkPositions[link.id] = { id: link.id };
+					}
+					set(newLinkPositions[link.id], "srcPos.x_pos", link.srcPos.x_pos + deltas.xDelta);
+					set(newLinkPositions[link.id], "srcPos.y_pos", link.srcPos.y_pos + deltas.yDelta);
+
+					if (updateLinkPos) {
+						link.srcPos.x_pos += deltas.xDelta;
+						link.srcPos.y_pos += deltas.yDelta;
+					}
+				}
+			}
+
+			// If link has 'trgPos' it is detached at target end.
+			if (link.trgPos) {
+				const deltas = this.getMoveDeltas(link.trgPos.x_pos, link.trgPos.y_pos,
+					nodeSizingDirection, superCenterX, superCenterY, incWidth, incHeight);
+
+				if (deltas.xDelta !== 0 || deltas.yDelta !== 0) {
+					if (!newLinkPositions[link.id]) {
+						newLinkPositions[link.id] = { id: link.id };
+					}
+					set(newLinkPositions[link.id], "trgPos.x_pos", link.trgPos.x_pos + deltas.xDelta);
+					set(newLinkPositions[link.id], "trgPos.y_pos", link.trgPos.y_pos + deltas.yDelta);
+				}
+				if (updateLinkPos) {
+					link.trgPos.x_pos += deltas.xDelta;
+					link.trgPos.y_pos += deltas.yDelta;
+				}
+			}
+		});
+
+		return newLinkPositions;
+	}
+
+	static getMoveDeltas(xPos, yPos, nodeSizingDirection, superCenterX, superCenterY, incWidth, incHeight) {
+		let xDelta = 0;
+		let yDelta = 0;
+
+		if (nodeSizingDirection.indexOf("n") > -1 && yPos < superCenterY - 20) {
+			yDelta = -incHeight;
+
+		} else if (nodeSizingDirection.indexOf("s") > -1 && yPos > superCenterY + 20) {
+			yDelta = incHeight;
+		}
+
+		if (nodeSizingDirection.indexOf("w") > -1 && xPos < superCenterX - 20) {
+			xDelta = -incWidth;
+
+		} else if (nodeSizingDirection.indexOf("e") > -1 && xPos > superCenterX + 20) {
+			xDelta = incWidth;
+		}
+		return { xDelta, yDelta };
 	}
 
 	// Returns the expanded width for the supernode passed in. This might be
@@ -216,58 +282,66 @@ export default class CanvasUtils {
 	}
 
 	// Returns the coordinate position along the edge of a rectangle where a
-	// straight line should be drawn from. The line's direction originates from a
-	// point within the rectangle. The rectangle is described by the first four
-	// paramters, the origin of the line's direction is described by
-	// originX and originY which are an offset from the top left corener of
-	// the rectangle and the end point of the line is described by endX and endY.
-	static getOuterCoord(xPos, yPos, width, height, originX, originY, endX, endY) {
-		const topLeft = { x: xPos, y: yPos };
-		const topRight = { x: xPos + width, y: yPos };
-		const botLeft = { x: xPos, y: yPos + height };
-		const botRight = { x: xPos + width, y: yPos + height };
-		const center = { x: originX + xPos, y: originY + yPos };
+	// straight line should be drawn from. The line's direction originates from an
+	// arbitrary point (origin) within the rectangle and goes to an arbitrary
+	// point (end) outside the rectangle. The rectangle is described by the
+	// first four paramters. The gap is an additional spacing around the
+	// rectangle used to separate the start of the line from the
+	// rectangle/node boundary. The origin of the line's direction is described by
+	// originX and originY. The end point of the line is described by endX and endY.
+	static getOuterCoord(x, y, w, h, gap, originX, originY, endX, endY) {
+		const topEdge = y - gap;
+		const leftEdge = x - gap;
+		const rightEdge = x + w + gap;
+		const bottomEdge = y + h + gap;
+
+		// The origin may not be in the center of the node rectangle so offset left
+		// and right may be different and also top and bottom.
+		const originTopOffsetY = originY - topEdge;
+		const originLeftOffsetX = originX - leftEdge;
+		const originRightOffsetX = rightEdge - originX;
+		const originBottomOffsetY = bottomEdge - originY;
 
 		var startPointX;
 		var startPointY;
 
 		// End point is to the right of center
-		if (endX > center.x) {
-			const topRightRatio = (center.y - topRight.y) / (center.x - topRight.x);
-			const botRightRatio = (center.y - botRight.y) / (center.x - botRight.x);
-			const ratioRight = (center.y - endY) / (center.x - endX);
+		if (endX > originX) {
+			const topRightRatio = (originY - topEdge) / (originX - rightEdge);
+			const botRightRatio = (originY - bottomEdge) / (originX - rightEdge);
+			const ratioRight = (originY - endY) / (originX - endX);
 
 			// North
 			if (ratioRight < topRightRatio) {
-				startPointX = center.x - (originY / ratioRight);
-				startPointY = yPos;
+				startPointX = originX - (originTopOffsetY / ratioRight);
+				startPointY = topEdge;
 			// South
 			} else if (ratioRight > botRightRatio) {
-				startPointX = center.x + ((height - originY) / ratioRight);
-				startPointY = yPos + height;
+				startPointX = originX + (originBottomOffsetY / ratioRight);
+				startPointY = bottomEdge;
 			// East
 			} else {
-				startPointX = xPos + width;
-				startPointY = center.y + (originX * ratioRight);
+				startPointX = rightEdge;
+				startPointY = originY + (originRightOffsetX * ratioRight);
 			}
 		// End point is to the left of center
 		} else {
-			const topLeftRatio = (center.y - topLeft.y) / (center.x - topLeft.x);
-			const botLeftRatio = (center.y - botLeft.y) / (center.x - botLeft.x);
-			const ratioLeft = (center.y - endY) / (center.x - endX);
+			const topLeftRatio = (originY - topEdge) / (originX - leftEdge);
+			const botLeftRatio = (originY - bottomEdge) / (originX - leftEdge);
+			const ratioLeft = (originY - endY) / (originX - endX);
 
 			// North
 			if (ratioLeft > topLeftRatio) {
-				startPointX = center.x - (originY / ratioLeft);
-				startPointY = yPos;
+				startPointX = originX - (originTopOffsetY / ratioLeft);
+				startPointY = topEdge;
 			// South
 			} else if (ratioLeft < botLeftRatio) {
-				startPointX = center.x + ((height - originY) / ratioLeft);
-				startPointY = yPos + height;
+				startPointX = originX + (originBottomOffsetY / ratioLeft);
+				startPointY = bottomEdge;
 			// West
 			} else {
-				startPointX = xPos;
-				startPointY = center.y - (originX * ratioLeft);
+				startPointX = leftEdge;
+				startPointY = originY - (originLeftOffsetX * ratioLeft);
 			}
 		}
 
@@ -520,7 +594,8 @@ export default class CanvasUtils {
 	// Returns true if the cardinality is maxed out for the source node and port
 	// passed in. This means any additional connection would not be allowed
 	// from this source node/port combination.
-	static isSrcCardinalityAtMax(srcPortId, srcNode, links) {
+	static isSrcCardinalityAtMax(portId, srcNode, links) {
+		const srcPortId = portId ? portId : this.getDefaultOutputPortId(srcNode);
 		var srcCount = 0;
 
 		links.forEach((link) => {
@@ -547,7 +622,8 @@ export default class CanvasUtils {
 	// Returns true if the cardinality is maxed out for the taget node and port
 	// passed in. This means any additional connection would not be allowed
 	// to this target node/port combination.
-	static isTrgCardinalityAtMax(trgPortId, trgNode, links) {
+	static isTrgCardinalityAtMax(portId, trgNode, links) {
+		const trgPortId = portId ? portId : this.getDefaultInputPortId(trgNode);
 		var trgCount = 0;
 
 		links.forEach((link) => {
@@ -736,9 +812,10 @@ export default class CanvasUtils {
 	}
 
 	// Returns an object containing the dimensions of an imaginary rectangle
-	// surrounding the nodes and comments and links passed in or null if
-	// no valid objects were provided. nodeHighlightGap may be 0 or undefined.
-	// If it is undefined we use the nodeHighlightGap in the node's layout.
+	// surrounding the nodes and comments and links passed in or an object with
+	// all properties set to zero if no valid objects were provided.
+	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
+	// nodeHighlightGap in the node's layout.
 	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
@@ -789,7 +866,7 @@ export default class CanvasUtils {
 
 		if (canvLeft === Infinity || canvTop === Infinity ||
 				canvRight === -Infinity || canvBottom === -Infinity) {
-			return null;
+			return { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
 		}
 
 		return {
@@ -870,33 +947,33 @@ export default class CanvasUtils {
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getSrcPos(link, apiPipeline) {
-		const srcNode = apiPipeline.getNode(link.srcNodeId);
-		let outerCenterX;
-		let outerCenterY;
+		let trgCenterX;
+		let trgCenterY;
 		if (link.trgNodeId) {
 			const trgNode = apiPipeline.getNode(link.trgNodeId);
-			outerCenterX = trgNode.x_pos + (trgNode.width / 2);
-			outerCenterY = trgNode.y_pos + (trgNode.height / 2);
+			trgCenterX = trgNode.x_pos + (trgNode.width / 2);
+			trgCenterY = trgNode.y_pos + (trgNode.height / 2);
 		} else {
-			outerCenterX = link.trgPos.x_pos;
-			outerCenterY = link.trgPos.y_pos;
+			trgCenterX = link.trgPos.x_pos;
+			trgCenterY = link.trgPos.y_pos;
 		}
 
+		const srcNode = apiPipeline.getNode(link.srcNodeId);
 		let srcCenterX;
 		let srcCenterY;
 
 		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
+			srcCenterX = srcNode.x_pos + srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
+			srcCenterY = srcNode.y_pos + srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
 
 		} else {
-			srcCenterX = srcNode.width / 2;
-			srcCenterY = srcNode.height / 2;
+			srcCenterX = srcNode.x_pos + (srcNode.width / 2);
+			srcCenterY = srcNode.y_pos + (srcNode.height / 2);
 		}
 
-		const startPos = CanvasUtils.getOuterCoord(
-			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
-			srcCenterX, srcCenterY, outerCenterX, outerCenterY);
+		const startPos = this.getOuterCoord(
+			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height, 0,
+			srcCenterX, srcCenterY, trgCenterX, trgCenterY);
 
 		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
@@ -906,34 +983,33 @@ export default class CanvasUtils {
 	// did not exist. This is useful when doing operations (such as delete or
 	// cut/copy) that cause semi-detached or fully detached links to be created.
 	static getTrgPos(link, apiPipeline) {
-		const trgNode = apiPipeline.getNode(link.trgNodeId);
-
-		let outerCenterX;
-		let outerCenterY;
+		let srcCenterX;
+		let srcCenterY;
 		if (link.srcNodeId) {
 			const srcNode = apiPipeline.getNode(link.srcNodeId);
-			outerCenterX = srcNode.x_pos + (srcNode.width / 2);
-			outerCenterY = srcNode.y_pos + (srcNode.height / 2);
+			srcCenterX = srcNode.x_pos + (srcNode.width / 2);
+			srcCenterY = srcNode.y_pos + (srcNode.height / 2);
 		} else {
-			outerCenterX = link.srcPos.x_pos;
-			outerCenterY = link.srcPos.y_pos;
+			srcCenterX = link.srcPos.x_pos;
+			srcCenterY = link.srcPos.y_pos;
 		}
 
+		const trgNode = apiPipeline.getNode(link.trgNodeId);
 		let trgCenterX;
 		let trgCenterY;
 
 		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
+			trgCenterX = trgNode.x_pos + trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
+			trgCenterY = trgNode.y_pos + trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
 
 		} else {
-			trgCenterX = trgNode.width / 2;
-			trgCenterY = trgNode.height / 2;
+			trgCenterX = trgNode.x_pos + (trgNode.width / 2);
+			trgCenterY = trgNode.y_pos + (trgNode.height / 2);
 		}
 
-		const startPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
-			trgCenterX, trgCenterY, outerCenterX, outerCenterY);
+		const startPos = this.getOuterCoord(
+			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height, 0,
+			trgCenterX, trgCenterY, srcCenterX, srcCenterY);
 
 		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
@@ -948,5 +1024,78 @@ export default class CanvasUtils {
 			}
 		});
 		return outLinks;
+	}
+
+	// Preprocesses the pipeline to set the connected attribute of the ports
+	// for each node. This is used when rendering the connection satus of ports.
+	static preProcessPipeline(pipeline) {
+		this.setAllPortsDisconnected(pipeline);
+
+		pipeline.links.forEach((link) => {
+			if (link.type === COMMENT_LINK) {
+				link.srcObj = this.getComment(link.srcNodeId, pipeline);
+				link.trgNode = this.getNode(link.trgNodeId, pipeline);
+
+			} else {
+				link.srcObj = this.getNode(link.srcNodeId, pipeline);
+				link.trgNode = this.getNode(link.trgNodeId, pipeline);
+
+				if (link.srcObj) {
+					this.setOutputPortConnected(link.srcObj, link.srcNodePortId);
+				}
+				if (link.trgNode) {
+					this.setInputPortConnected(link.trgNode, link.trgNodePortId);
+				}
+			}
+		});
+		return pipeline;
+	}
+
+	// Returns the node, from the pipeline passed in, identfied by the node ID.
+	static getNode(nodeId, pipeline) {
+		return pipeline.nodes.find((nd) => nd.id === nodeId);
+	}
+
+	// Returns the comment, from the pipeline passed in, identfied by the comment ID.
+	static getComment(commentId, pipeline) {
+		return pipeline.comments.find((com) => com.id === commentId);
+	}
+
+	// Sets the isConnected property of all ports in the pipeline to fasle.
+	static setAllPortsDisconnected(pipeline) {
+		pipeline.nodes.forEach((n) => {
+			if (n.inputs) {
+				n.inputs.forEach((inp) => (inp.isConnected = false));
+			}
+			if (n.outputs) {
+				n.outputs.forEach((out) => (out.isConnected = false));
+			}
+		});
+	}
+
+	// Sets the isConnected property of the port, identified by inPortId,
+	// for the trgNode to true.
+	static setInputPortConnected(trgNode, inPortId) {
+		const portId = inPortId || this.getDefaultInputPortId(trgNode);
+		if (trgNode.inputs) {
+			trgNode.inputs.forEach((inp) => {
+				if (inp.id === portId) {
+					inp.isConnected = true;
+				}
+			});
+		}
+	}
+
+	// Sets the isConnected property of the port, identified by outPortId,
+	// for the srcNode to true.
+	static setOutputPortConnected(srcNode, outPortId) {
+		const portId = outPortId || this.getDefaultOutputPortId(srcNode);
+		if (srcNode.outputs) {
+			srcNode.outputs.forEach((out) => {
+				if (out.id === portId) {
+					out.isConnected = true;
+				}
+			});
+		}
 	}
 }

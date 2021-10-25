@@ -543,6 +543,79 @@ describe("Test copy and paste with external pipeline flows", function() {
 
 });
 
+describe("Test the supernode deconstruct feature for external pipelines", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("externalMainCanvas.json");
+	});
+
+	it("Test deconstructing a supernode works OK.", function() {
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(5);
+
+		// Expand supernode using context menu
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		cy.hoverOverNode("Supernode 2");
+		cy.clickEllipsisIconOfSupernode("Supernode 2");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		// On this Undo, common-canvas recreates the second pipeline (as an external
+		// pipeline flow).
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		// On this Undo, common-canvas recreates the first pipeline (as an external
+		// pipeline flow).
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(3);
+		cy.verifyNumberOfExternalPipelines(2);
+		cy.verifyNumberOfExternalPipelineFlows(2);
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(5);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+	});
+});
+
 function testForExternalMainCanvasExpandedBeforeConvertToLocal() {
 	cy.verifyNumberOfNodes(6);
 	cy.verifyNumberOfPortDataLinks(4);

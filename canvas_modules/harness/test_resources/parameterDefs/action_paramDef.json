@@ -480,6 +480,9 @@
         "label": {
           "resource_key": "moon"
         },
+        "description": {
+          "default": "This is a tooltip for action image."
+        },
         "control": "image",
         "data": {
           "parameter_ref": "moon_phase"

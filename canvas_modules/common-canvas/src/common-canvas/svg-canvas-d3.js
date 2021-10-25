@@ -16,7 +16,7 @@
 
 
 // Import just the D3 modules that are needed.
-var d3 = Object.assign({}, require("d3-selection"));
+import * as d3 from "d3-selection";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import ConfigUtils from "../object-model/config-utils.js";

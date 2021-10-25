@@ -36,9 +36,9 @@ Cypress.Commands.add("getCanvasDataForExtraCanvas", () => {
 });
 
 Cypress.Commands.add("getPipeline", () => {
-	cy.getCanvasData().then((canvasData) => {
-		const pipeline = canvasData.pipelines[0];
-		return pipeline;
+	cy.get(".svg-area").then((svgArea) => {
+		const pipelineId = svgArea[0].getAttribute("data-pipeline-id");
+		cy.getPipelineById(pipelineId).then((pipeline) => pipeline);
 	});
 });
 

@@ -24,6 +24,7 @@ import palette from "./reducers/palette.js";
 import canvasinfo from "./reducers/canvasinfo.js";
 import contextmenu from "./reducers/contextmenu.js";
 import rightflyout from "./reducers/rightflyout.js";
+import bottompanel from "./reducers/bottompanel.js";
 import breadcrumbs from "./reducers/breadcrumbs.js";
 import canvasconfig from "./reducers/canvasconfig.js";
 import canvastoolbar from "./reducers/canvastoolbar.js";
@@ -50,7 +51,8 @@ export default class CanavasStore {
 			tooltip,
 			canvastoolbar,
 			contextmenu,
-			rightflyout
+			rightflyout,
+			bottompanel
 		});
 
 		const initialState = {
@@ -65,7 +67,8 @@ export default class CanavasStore {
 			tooltip: {},
 			canvastoolbar: {},
 			contextmenu: { menuDef: [] },
-			rightflyout: {}
+			rightflyout: {},
+			bottompanel: {}
 		};
 
 		let enableDevTools = false;
@@ -130,6 +133,10 @@ export default class CanavasStore {
 
 	isRightFlyoutOpen() {
 		return this.store.getState().rightflyout.isOpen;
+	}
+
+	isBottomPanelOpen() {
+		return this.store.getState().bottompanel.isOpen;
 	}
 
 	getNotificationPanel() {

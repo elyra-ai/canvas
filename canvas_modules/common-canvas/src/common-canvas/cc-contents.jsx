@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ class CanvasContents extends React.Component {
 
 		this.logger = new Logger("CC-Contents");
 
+		this.mainCanvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
 
@@ -73,8 +74,6 @@ class CanvasContents extends React.Component {
 		// The host application may set one or more callback functions to execute their own
 		// code after an update has been performed caused by a redux update.
 		this.afterUpdateCallbacks = [];
-
-		this.canvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 
 		// Register ourself with the canvas controller so it can call this class
 		// when necessary, and also call the SVGCanvasD3 object.
@@ -180,7 +179,7 @@ class CanvasContents extends React.Component {
 		return (
 			<CommonCanvasContextMenu
 				canvasController={this.props.canvasController}
-				containingDivId={this.props.containingDivId}
+				containingDivId={this.mainCanvasDivId}
 			/>);
 	}
 
@@ -369,11 +368,15 @@ class CanvasContents extends React.Component {
 			? dropDivClassName + " common-canvas-toolbar-none"
 			: dropDivClassName;
 
+		dropDivClassName = this.props.bottomPanelIsOpen
+			? dropDivClassName + " common-canvas-bottom-panel-is-open"
+			: dropDivClassName;
+
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
-						id={this.canvasDivId}
+						id={this.mainCanvasDivId}
 						className={dropDivClassName}
 						onDrop={this.drop}
 						onDragOver={this.dragOver}
@@ -395,16 +398,17 @@ CanvasContents.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by Redux
 	canvasConfig: PropTypes.object.isRequired,
-	canvasInfo: PropTypes.object
+	canvasInfo: PropTypes.object,
+	bottomPanelIsOpen: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
+	bottomPanelIsOpen: state.bottompanel.isOpen,
 	// These two fields are included here so they will trigger a render.
 	// The renderer will retrieve the data for them by calling the canvas controller.
 	selectionInfo: state.selectioninfo,

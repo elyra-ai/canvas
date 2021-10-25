@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-/*
-* Fixed in new versions
-*/
-.properties-action-image  {
-	// 8px spacing between action image and the control beside image.
-	padding: 0 0 0 $spacing-03;
-	cursor: pointer;
-	align-self: flex-end;
-	&.left {
-		order: -1;
-		padding: 0 $spacing-03 0 0;
+export default class SvgCanvasUtilsComments {
+	// Returns the absolute x coordinate of the center of the comment
+	getCommentCenterPosX(com) {
+		return com.x_pos + (com.width / 2);
 	}
-	&.hide {
-		display: none;
-	}
-	&.disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
+
+	// Returns the absolute y coordinate of the center of the comment
+	getCommentCenterPosY(com) {
+		return com.y_pos + (com.height / 2);
 	}
 }

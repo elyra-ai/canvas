@@ -460,7 +460,10 @@ export default class CreateSuperNodeAction extends Action {
 		// Create new links to and from supernode in the main flow.
 		this.newLinks = [];
 		for (let idx = 0; idx < this.linkSrcDefs.length; idx++) {
-			this.newLinks.push(this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx], { type: NODE_LINK }));
+			const link = this.apiPipeline.createNodeLink(this.linkSrcDefs[idx], this.linkTrgDefs[idx], { type: NODE_LINK });
+			if (link) {
+				this.newLinks.push(link);
+			}
 		}
 		this.apiPipeline.addLinks(this.newLinks);
 

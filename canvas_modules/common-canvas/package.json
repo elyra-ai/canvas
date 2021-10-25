@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.3.1",
+  "version": "12.5.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
@@ -27,7 +27,7 @@
     "carbon-components-react": "7.37.0",
     "carbon-icons": "7.0.7",
     "codemirror": "5.58.2",
-    "d3": "6.7.0",
+    "d3": "7.1.1",
     "dagre": "0.8.5",
     "immutable": "4.0.0-rc.12",
     "immutable-undo": "2.0.0",
@@ -107,6 +107,9 @@
     "react-redux": "^7.0.0"
   },
   "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!d3-*)"
+    ],
     "moduleFileExtensions": [
       "js",
       "jsx",

@@ -22,39 +22,44 @@ export default class CollapseSuperNodeInPlaceAction extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.oldNodePositions = [];
-		this.newNodePositions = [];
+		this.oldObjectPositions = [];
+		this.newObjectPositions = [];
+		this.oldLinkPositions = [];
+		this.newLinkPositions = [];
 		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		if (this.enableMoveNodesOnSupernodeResize) {
 			this.supernode = this.apiPipeline.getNode(this.data.id);
 
-			this.apiPipeline.getNodes().forEach((node) => {
-				if (node.id === this.supernode.id) {
-					return; // Ignore the supernode
-				}
-				this.oldNodePositions[node.id] = { x_pos: node.x_pos, y_pos: node.y_pos };
-			});
+			this.oldObjectPositions = CanvasUtils.getObjectPositions(this.apiPipeline.getObjects());
+			this.oldLinkPositions = CanvasUtils.getLinkPositions(this.apiPipeline.getLinks());
 
-			CanvasUtils.moveSurroundingNodes(
-				this.newNodePositions,
+			this.newObjectPositions = CanvasUtils.moveSurroundingObjects(
 				this.supernode,
-				this.apiPipeline.getNodes(),
+				this.apiPipeline.getObjects(),
 				"se",
 				this.supernode.layout.defaultNodeWidth,
 				this.supernode.layout.defaultNodeHeight,
-				false); // Pass false to indicate that node positions should not be updated.
+				false); // Pass false to indicate that object positions should not be updated.
+
+			this.newLinkPositions = CanvasUtils.moveSurroundingDetachedLinks(
+				this.supernode,
+				this.apiPipeline.getLinks(),
+				"se",
+				this.supernode.layout.defaultNodeWidth,
+				this.supernode.layout.defaultNodeHeight,
+				false); // Pass false to indicate that link positions should not be updated.
 		}
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.collapseSuperNodeInPlace(this.data.id, this.newNodePositions);
+		this.apiPipeline.collapseSuperNodeInPlace(this.data.id, this.newObjectPositions, this.newLinkPositions);
 	}
 
 	undo() {
-		this.apiPipeline.expandSuperNodeInPlace(this.data.id, this.oldNodePositions);
+		this.apiPipeline.expandSuperNodeInPlace(this.data.id, this.oldObjectPositions, this.oldLinkPositions);
 	}
 
 	redo() {

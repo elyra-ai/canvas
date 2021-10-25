@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import dagre from "dagre/dist/dagre.min.js";
 import { get, has } from "lodash";
 
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
-	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
-	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
+	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+	CREATE_NODE, CREATE_COMMENT, CREATE_NODE_LINK, CREATE_COMMENT_LINK,
 	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -58,6 +58,15 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Node AND comment methods
 	// ---------------------------------------------------------------------------
+
+	getObjects() {
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.nodes.concat(pipeline.comments);
+		}
+		return [];
+
+	}
 
 	moveObjects(data) {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
@@ -372,21 +381,6 @@ export default class APIPipeline {
 		return newNode;
 	}
 
-	cloneNodes() {
-		return this.getNodes().map(function(node) {
-			return Object.assign({}, node);
-		});
-	}
-
-	cloneNode(inNode) {
-		let node = Object.assign({}, inNode, { id: this.objectModel.getUniqueId(CLONE_NODE, { "node": inNode }) });
-
-		// Add node height and width and, if appropriate, inputPortsHeight
-		// and outputPortsHeight
-		node = this.objectModel.setNodeAttributes(node);
-		return node;
-	}
-
 	// Returns an array of nodes (that are in a format that conforms to the
 	// schema) that can be added to a palette category. Each node is given
 	// a new ID to make it unique within the palette.
@@ -592,6 +586,14 @@ export default class APIPipeline {
 		});
 	}
 
+	deconstructSupernode(data) {
+		this.store.dispatch({ type: "DECONSTRUCT_SUPERNODE", data: data });
+	}
+
+	reconstructSupernode(data) {
+		this.store.dispatch({ type: "RECONSTRUCT_SUPERNODE", data: data });
+	}
+
 	getNodes() {
 		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
 		if (pipeline) {
@@ -624,8 +626,9 @@ export default class APIPipeline {
 		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
 	}
 
-	sizeAndPositionObjects(objectsInfo) {
-		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: { objectsInfo: objectsInfo }, pipelineId: this.pipelineId });
+	sizeAndPositionObjects(objectsInfo, linksInfo) {
+		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS",
+			data: { objectsInfo, linksInfo }, pipelineId: this.pipelineId });
 	}
 
 	// Filters data node IDs from the list of IDs passed in and returns them
@@ -636,28 +639,22 @@ export default class APIPipeline {
 		});
 	}
 
-	expandSuperNodeInPlace(nodeId, nodePositions) {
+	expandSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: true });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
 
-	collapseSuperNodeInPlace(nodeId, nodePositions) {
+	collapseSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: false });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
@@ -1001,13 +998,6 @@ export default class APIPipeline {
 		return comment;
 	}
 
-	cloneComment(inComment) {
-		// Adjust for snap to grid, if necessary.
-		const comment = this.objectModel.setCommentAttributes(inComment);
-
-		return Object.assign({}, comment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
-	}
-
 	addComment(data) {
 		if (typeof data.selectedObjectIds === "undefined") {
 			data.selectedObjectIds = [];
@@ -1118,6 +1108,11 @@ export default class APIPipeline {
 		return newLink;
 	}
 
+	createLinkFromInfo(linkInfo) {
+		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNodeId": linkInfo.srcNodeId, "targetNodeId": linkInfo.trgNodeId });
+		return Object.assign({ id: linkId, type: NODE_LINK }, linkInfo);
+	}
+
 	deleteLink(link) {
 		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.pipelineId });
 	}
@@ -1173,54 +1168,29 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns a clone of the link passed in using the source and target nodes
-	// passed in. If a semi-detached or fully-detached link is being cloned the
-	// srcNode and/or trgNode may be null.
-	cloneNodeLink(link, srcNode, trgNode) {
-		let clonedLink = {
-			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
-			type: link.type
-		};
-		clonedLink = this.copyCommonNodeLinkAttrs(clonedLink, link);
-
-		if (srcNode) {
-			clonedLink.srcNodeId = srcNode.id;
-			clonedLink.srcNodePortId = link.srcNodePortId;
-		} else {
-			clonedLink.srcPos = link.srcPos;
-		}
-		if (trgNode) {
-			clonedLink.trgNodeId = trgNode.id;
-			clonedLink.trgNodePortId = link.trgNodePortId;
-		} else {
-			clonedLink.trgPos = link.trgPos;
-		}
-		return clonedLink;
-	}
-
+	// Creates a new link objct which is attached to a source node but detached
+	// at the target end. The input data object may contain some or all of the
+	// link properties because they may be populatd by the host application
+	// in the beforeEditActionHandler.
 	createNodeLinkDetached(data) {
-		let link = {};
+		const link = {};
 		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
 		link.type = data.type;
 		link.srcNodeId = data.srcNodeId;
 		link.srcNodePortId = data.srcNodePortId;
 		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
-		link = this.copyCommonNodeLinkAttrs(link, data);
-		return link;
-	}
 
-	copyCommonNodeLinkAttrs(link, copyFrom) {
-		if (copyFrom.class_name) {
-			link.class_name = copyFrom.class_name;
+		if (data.class_name) {
+			link.class_name = data.class_name;
 		}
-		if (copyFrom.linkName) {
-			link.linkName = copyFrom.linkName;
+		if (data.linkName) {
+			link.linkName = data.linkName;
 		}
-		if (copyFrom.typeAttr) {
-			link.typeAttr = copyFrom.typeAttr;
+		if (data.typeAttr) {
+			link.typeAttr = data.typeAttr;
 		}
-		if (copyFrom.description) {
-			link.description = copyFrom.description;
+		if (data.description) {
+			link.description = data.description;
 		}
 		return link;
 	}
@@ -1240,16 +1210,6 @@ export default class APIPipeline {
 			});
 		});
 		return linkCommentList;
-	}
-
-	cloneCommentLink(link, srcNodeId, trgNodeId) {
-		return {
-			id: this.objectModel.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
-			type: link.type,
-			class_name: link.class_name,
-			srcNodeId: srcNodeId,
-			trgNodeId: trgNodeId
-		};
 	}
 
 	addLinks(linkList) {
@@ -1328,15 +1288,31 @@ export default class APIPipeline {
 			.filter((link) => link.type === NODE_LINK);
 	}
 
-	// Returns an array of fully-attached' links with id as the source ID.
+	// Returns an array of links with id as the source ID.
 	getLinksContainingSourceId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.srcNodeId === id);
+		});
+	}
+
+	// Returns an array of links with id as the target ID.
+	getLinksContainingTargetId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.trgNodeId === id);
+		});
+	}
+
+	// Returns an array of 'attached' links with id as the source ID.
+	// Note If the link has a srcNodeId and trgNodeId it is attached.
+	getAttachedLinksContainingSourceId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.srcNodeId === id && link.trgNodeId);
 		});
 	}
 
-	// Returns an array of fully-attached' links with id as the target ID.
-	getLinksContainingTargetId(id) {
+	// Returns an array of 'attached' links with id as the target ID.
+	// Note: If the link has a trgNodeId and srcNodeId it is attached.
+	getAttachedLinksContainingTargetId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.trgNodeId === id && link.srcNodeId);
 		});

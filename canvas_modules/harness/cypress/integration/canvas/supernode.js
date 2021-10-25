@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-describe("Test the supernode expanded structure", function() {
+describe("Test the supernode expanded feature", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("supernodeCanvas.json");
@@ -42,6 +42,40 @@ describe("Test the supernode expanded structure", function() {
 		cy.verifyNodeElementWidth(
 			"New Very Long Supernode Label To Test The Label Abbreviation", "label", "120px"
 		);
+	});
+});
+
+describe("Test the supernode deconstruct feature", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+	});
+
+	it("Test deconstructing the supernode works OK.", function() {
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodes(15);
+		cy.verifyNumberOfLinks(24);
+
+		// Expand supernode using context menu
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfNodes(19);
+		cy.verifyNumberOfLinks(28);
+
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfNodes(15);
+		cy.verifyNumberOfLinks(24);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfNodes(19);
+		cy.verifyNumberOfLinks(28);
 	});
 });
 
@@ -415,6 +449,66 @@ describe("Test navigation in and out of a supernode", function() {
 		// Check the main flow is dispayed by counting number of nodes
 		cy.verifyNumberOfNodes(15);
 
+	});
+
+});
+
+describe("Test changes in full-page sub-flow are made successfully", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("supernodeCanvas.json");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it("Test adding some nodes and a link in full-page sub-flow works OK", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfNodes(15);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Display full page");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfNodes(8);
+		cy.verifyNumberOfLinks(7);
+
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 300, 200);
+		cy.clickCategory("Field Ops");
+		cy.dragNodeToPosition("Derive", 400, 200);
+		cy.linkNodeOutputPortToNodeInputPort("Var. File", "outPort", "Derive", "inPort");
+
+
+		// Check the new nodes in the sub-flow are dispayed OK by counting number of nodes
+		cy.verifyNumberOfNodes(10);
+		cy.verifyNumberOfLinks(8);
+	});
+
+	it("Test adding a comment and comment link in full-page sub-flow works OK", function() {
+		// First chect the number of node on main canvas
+		cy.verifyNumberOfComments(3);
+		cy.verifyNumberOfCommentLinks(5);
+
+		// Expand supernode and click expansion icon to view sub-flow
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Display full page");
+
+		// Check the sub-flow is dispayed by counting number of nodes including
+		// binding nodes.
+		cy.verifyNumberOfComments(0);
+		cy.verifyNumberOfCommentLinks(0);
+
+		cy.clickNode("Partition");
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("New comment");
+		cy.editTextInComment("", "Hello Full-page Sub-flow!");
+		cy.verifyNumberOfComments(1);
+		cy.verifyNumberOfCommentLinks(1);
+
+		// Check the new comment in the sub-flow is dispayed OK
+		cy.verifyNumberOfComments(1);
 	});
 
 });

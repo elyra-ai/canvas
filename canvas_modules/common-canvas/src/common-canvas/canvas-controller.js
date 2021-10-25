@@ -16,7 +16,6 @@
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
-import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
 import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
@@ -31,6 +30,7 @@ import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js
 import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
+import DeconstructSuperNodeAction from "../command-actions/deconstructSuperNodeAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.js";
@@ -42,6 +42,7 @@ import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import PasteAction from "../command-actions/pasteAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
@@ -154,6 +155,11 @@ export default class CanvasController {
 	setRightFlyoutConfig(config) {
 		this.logger.log("Setting Right Flyout Config");
 		this.objectModel.setRightFlyoutConfig(config);
+	}
+
+	setBottomPanelConfig(config) {
+		this.logger.log("Setting Bottom Panel Config");
+		this.objectModel.setBottomPanelConfig(config);
 	}
 
 	setContextMenuConfig(contextMenuConfig) {
@@ -890,6 +896,33 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getNodeStyle(nodeId, temporary, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId, temporary);
+	}
+
+	// Returns an array of nodes that are for the branch(es) that the nodes,
+	// identified by the node IDs passed in, are within.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getBranchNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
+	}
+
+	// Returns an array of nodes that are upstream from the nodes
+	// identified by the node IDs passed in.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getUpstreamNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
+	}
+
+	// Returns an array of nodes that are downstream from the nodes
+	// identified by the node IDs passed in.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getDownstreamNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 	}
 
 	// Adds a custom attribute to the nodes.
@@ -1868,6 +1901,12 @@ export default class CanvasController {
 		// which is opened by the "canvas" (default) editor.
 		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Deconstruct supernode
+			menuDefinition = menuDefinition.concat({ action: "deconstructSuperNode",
+				label: this.getLabel("node.deconstructSupernode") });
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Collapse supernode
 			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
 				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
@@ -2019,6 +2058,7 @@ export default class CanvasController {
 		} else if (data.editType === "loadPipelineFlow" ||
 				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
+				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
 		}
@@ -2033,7 +2073,13 @@ export default class CanvasController {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
+			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
+				return;
+			}
+			// If an external pipeline flow was requested, we need to make sure it
+			// was provided by the host app. We can't proceed if it was not.
+			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
 				return;
 			}
 		}
@@ -2240,6 +2286,12 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "deconstructSuperNode": {
+				command = new DeconstructSuperNodeAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+
 			case "expandSuperNodeInPlace": {
 				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
@@ -2290,7 +2342,7 @@ export default class CanvasController {
 				if (pasteObjects) {
 					data.objects = pasteObjects;
 					const vpDims = this.getSVGCanvasD3().getTransformedViewportDimensions();
-					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
+					command = new PasteAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
 					this.commandStack.do(command);
 					data = command.getData();
 				}
@@ -2387,6 +2439,21 @@ export default class CanvasController {
 				targetObject: expandedSupernodes[0]
 			});
 		}
+	}
+
+	// Returns false if the host application did not provided an external pipeline
+	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// boolean to true. Returns true otherwise which will be the case when no
+	// external pipeline was requested.
+	wasExtPipelineFlowLoadSuccessful(data) {
+		if (data.externalPipelineFlowLoad && !data.externalPipelineFlow) {
+			const msg = "The host app did not provide a pipeline flow when requested for action " +
+				data.editType + " in beforeEditActionHandler, for URL: " +
+				data.externalUrl;
+			this.logger.error(msg);
+			return false;
+		}
+		return true;
 	}
 
 	// Pans the canvas to bring the newly added node into view if it is not

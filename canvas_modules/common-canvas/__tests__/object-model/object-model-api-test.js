@@ -38,7 +38,7 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CanvasUtils from "../../src/common-canvas/common-canvas-utils.js";
-import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
+import PasteAction from "../../src/command-actions/pasteAction.js";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
@@ -804,7 +804,7 @@ describe("ObjectModel API handle model OK", () => {
 		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
 
 		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
-		const cloneAction = new CloneMultipleObjectsAction(copyCloneData, objectModel, dummyViewportDimensions, false);
+		const cloneAction = new PasteAction(copyCloneData, objectModel, dummyViewportDimensions, false);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();
