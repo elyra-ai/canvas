@@ -28,6 +28,9 @@
 	&.horizontal {
 		display: inline-flex;
 		flex-wrap: wrap;
+		.properties-radioset-panel {
+			margin-bottom: 0;
+		}
 	}
 	.properties-radioset-panel {
 		margin-bottom: $spacing-02;
