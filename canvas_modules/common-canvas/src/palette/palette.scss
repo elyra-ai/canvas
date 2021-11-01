@@ -233,10 +233,9 @@ $palette-border-color: $ui-03;
 	display: flex;
 	width: 100%;
 	overflow-wrap: break-word;
-	margin-left: 16px;
 	line-height: 1.3;
-	font-weight: normal;
-}
+	margin-left: 16px;
+ }
 
 .palette-flyout-category-text-abbr {
 	line-height: 46px;  /* Must be same as containing div height */
