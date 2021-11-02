@@ -25,7 +25,7 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 import dagre from "dagre/dist/dagre.min.js";
-import { get, has } from "lodash";
+import { cloneDeep, get, has } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
 	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -389,7 +389,7 @@ export default class APIPipeline {
 		selectedObjectIds.forEach((selObjId) => {
 			let node = this.getNode(selObjId);
 			if (node) {
-				node = JSON.parse(JSON.stringify(node));
+				node = cloneDeep(node);
 				node.id = this.objectModel.getUUID();
 				node.x_pos = 0;
 				node.y_pos = 0;
