@@ -15,7 +15,7 @@
  */
 
 import { combineReducers, createStore } from "redux";
-import { isEmpty } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 
 import ConfigUtils from "../config-utils.js";
 
@@ -94,33 +94,33 @@ export default class CanavasStore {
 	}
 
 	getPalette() {
-		return this.copyData(this.store.getState().palette);
+		return cloneDeep(this.store.getState().palette);
 	}
 
 	getPaletteData() {
-		return this.copyData(this.store.getState().palette.content);
+		return cloneDeep(this.store.getState().palette.content);
 	}
 
 	getCanvasInfo() {
-		return this.copyData(this.store.getState().canvasinfo);
+		return cloneDeep(this.store.getState().canvasinfo);
 	}
 
 	getBreadcrumbs() {
-		return this.copyData(this.store.getState().breadcrumbs);
+		return cloneDeep(this.store.getState().breadcrumbs);
 	}
 
 	getCanvasConfig() {
-		// Canvas config cannot be copied because it may contain JSX objects
+		// Canvas config cannot be cloned because it may contain JSX objects
 		// so create copy using Object.assign.
 		return Object.assign({}, this.store.getState().canvasconfig);
 	}
 
 	getNodeLayout() {
-		return this.copyData(this.store.getState().canvasconfig.enableNodeLayout);
+		return this.cloneData(this.store.getState().canvasconfig.enableNodeLayout);
 	}
 
 	getCanvasLayout() {
-		return this.copyData(this.store.getState().canvasconfig.enableCanvasLayout);
+		return this.cloneData(this.store.getState().canvasconfig.enableCanvasLayout);
 	}
 
 	isTooltipOpen() {
@@ -128,7 +128,7 @@ export default class CanavasStore {
 	}
 
 	getTooltip() {
-		return this.copyData(this.store.getState().tooltip);
+		return this.cloneData(this.store.getState().tooltip);
 	}
 
 	isRightFlyoutOpen() {
@@ -140,12 +140,12 @@ export default class CanavasStore {
 	}
 
 	getNotificationPanel() {
-		return this.copyData(this.store.getState().notificationpanel);
+		return this.cloneData(this.store.getState().notificationpanel);
 	}
 
 	getNotifications() {
 		// Notification messages may contain JSX objects and a callback function
-		// so create copy using Object.assign instead of this.copyData method.
+		// so create copy using Object.assign instead of this.cloneData method.
 		return this.store.getState().notifications.map((n, i) => Object.assign({}, n));
 	}
 
@@ -154,7 +154,7 @@ export default class CanavasStore {
 	}
 
 	getContextMenu() {
-		return this.copyData(this.store.getState().contextmenu);
+		return this.cloneData(this.store.getState().contextmenu);
 	}
 
 	isContextMenuDisplayed() {
@@ -162,22 +162,22 @@ export default class CanavasStore {
 	}
 
 	getSelectionInfo() {
-		return this.copyData(this.store.getState().selectioninfo);
+		return this.cloneData(this.store.getState().selectioninfo);
 	}
 
 	getExternalPipelineFlows() {
-		return this.copyData(this.store.getState().externalpipelineflows);
+		return this.cloneData(this.store.getState().externalpipelineflows);
 	}
 
 	getExternalPipelineFlow(url) {
 		const epf = this.store.getState().externalpipelineflows.find((pf) => pf.url === url);
 		if (epf) {
-			return this.copyData(epf);
+			return this.cloneData(epf);
 		}
 		return null;
 	}
 
-	copyData(data) {
-		return JSON.parse(JSON.stringify(data));
+	cloneData(data) {
+		return cloneDeep(data);
 	}
 }

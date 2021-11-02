@@ -17,6 +17,7 @@
 
 // Import just the D3 modules that are needed.
 import * as d3 from "d3-selection";
+import { cloneDeep } from "lodash";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import ConfigUtils from "../object-model/config-utils.js";
@@ -106,8 +107,9 @@ export default class SVGCanvasD3 {
 		return Object.assign({}, config);
 	}
 
+	// Returns a clone of the canvas info passed in.
 	cloneCanvasInfo(canvasInfo) {
-		return JSON.parse(JSON.stringify(canvasInfo));
+		return cloneDeep(canvasInfo);
 	}
 
 	// Keeps tracking mouse positions only within canvasUI & constantly feeds the

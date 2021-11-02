@@ -25,7 +25,7 @@ import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
 import Logger from "../logging/canvas-logger.js";
 
-import { differenceWith, get, has, isEmpty, set, union } from "lodash";
+import { cloneDeep, differenceWith, get, has, isEmpty, set, union } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
@@ -298,7 +298,7 @@ export default class ObjectModel {
 
 	validateAndUpgradePalette(newPalette) {
 		// Clone the palette to ensure we don't modify the incoming parameter.
-		let pal = JSON.parse(JSON.stringify(newPalette));
+		let pal = cloneDeep(newPalette);
 
 		const version = extractPaletteVersion(pal);
 
@@ -806,7 +806,7 @@ export default class ObjectModel {
 
 	validateAndUpgrade(newPipelineFlow) {
 		// Clone the pipelineFlow to ensure we don't modify the incoming parameter.
-		let pipelineFlow = JSON.parse(JSON.stringify(newPipelineFlow));
+		let pipelineFlow = cloneDeep(newPipelineFlow);
 
 		const version = extractVersion(pipelineFlow);
 
@@ -1182,7 +1182,7 @@ export default class ObjectModel {
 
 	// Clone the pipeline and assigns it a new id.
 	clonePipelineWithNewId(pipeline) {
-		const clonedPipeline = JSON.parse(JSON.stringify(pipeline));
+		const clonedPipeline = cloneDeep(pipeline);
 		return Object.assign({}, clonedPipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": clonedPipeline }) });
 	}
 
