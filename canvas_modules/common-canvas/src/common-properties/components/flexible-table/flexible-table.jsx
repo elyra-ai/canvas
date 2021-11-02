@@ -465,6 +465,7 @@ class FlexibleTable extends React.Component {
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable
+									resizable
 									tableLabel={this.props.tableLabel}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}

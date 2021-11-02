@@ -66,6 +66,12 @@ $properties-vt-checkbox-width: 45px;
 				}
 			}
 		}
+
+		&:hover {
+			background-color: rgba($brand-02, 0.2);
+			border-right: 1px solid black;
+			cursor: col-resize;
+		}
 	}
 
 	.properties-vt-row-checkbox {
@@ -112,6 +118,15 @@ $properties-vt-checkbox-width: 45px;
 		.ReactVirtualized__Table__headerColumn {
 			margin-right: 0;
 			margin-left: $spacing-04;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+
+		.ReactVirtualized__Table__headerTruncatedText {
+			flex: auto;
 		}
 	}
 
@@ -157,5 +172,9 @@ $properties-vt-checkbox-width: 45px;
 		.bx--select--inline .bx--select-input[disabled] {
 			background-color: $ui-background;
 		}
+	}
+
+	.properties-ft-column-sort-icon {
+		flex: 0 0 16px;
 	}
 }

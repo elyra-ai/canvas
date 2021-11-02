@@ -15,7 +15,7 @@
  */
 
 import { Column, Table, AutoSizer } from "react-virtualized";
-
+import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -36,6 +36,9 @@ class VirtualizedTable extends React.Component {
 		if (nextProps.rowCount !== prevState.rowCount) {
 			return ({ rowCount: nextProps.rowCount });
 		}
+		if (nextProps.columns !== prevState.columns) {
+			return ({ columns: nextProps.columns });
+		}
 		return ({});
 	}
 
@@ -43,7 +46,8 @@ class VirtualizedTable extends React.Component {
 		super(props, context);
 
 		this.state = {
-			rowCount: this.props.rowCount
+			rowCount: this.props.rowCount,
+			columns: this.props.columns
 		};
 		this.virtualizedTableRef = React.createRef();
 
@@ -56,6 +60,7 @@ class VirtualizedTable extends React.Component {
 		this.headerColRenderer = this.headerColRenderer.bind(this);
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
+		this.resizeColumn = this.resizeColumn.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -101,11 +106,22 @@ class VirtualizedTable extends React.Component {
 		return 0;
 	}
 
+	getColumnIndex(columns, key) {
+		const index = columns.findIndex((column) => column.key === key);
+		return index;
+	}
+
 	isRowSelected(index) {
 		if (this.props.rowsSelected) {
 			return this.props.rowsSelected.indexOf(index) > -1;
 		}
 		return false;
+	}
+
+	isLastColumn(dataKey) {
+		const columnIndex = this.getColumnIndex(this.props.columns, dataKey);
+		const isLastColumn = (columnIndex === (this.props.columns.length - 1));
+		return isLastColumn;
 	}
 
 	selectAll(selected) {
@@ -161,12 +177,22 @@ class VirtualizedTable extends React.Component {
 	headerColRenderer({ columnData, dataKey, disableSort, label, sortBy, sortDirection }) {
 		let sortIcon = null;
 		if (typeof this.props.sortColumns[dataKey] !== "undefined") {
-			sortIcon = this.props.sortColumns[dataKey] === SORT_DIRECTION.ASC
-				? <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} disabled={this.props.tableState === STATES.DISABLED} />
-				: <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} disabled={this.props.tableState === STATES.DISABLED} />;
-			sortIcon = (<div className="properties-ft-column-sort-icon">
-				{sortIcon}
-			</div>);
+			let type = null;
+			switch (sortDirection) {
+			case SORT_DIRECTION.ASC:
+				type = CARBON_ICONS.ARROWS.UP;
+				break;
+			case SORT_DIRECTION.DESC:
+				type = CARBON_ICONS.ARROWS.DOWN;
+				break;
+			default:
+				type = CARBON_ICONS.ARROWS.VERTICAL;
+			}
+			sortIcon = (<span className="properties-ft-column-sort-icon">
+				<Icon type={dataKey === this.props.sortBy ? type : CARBON_ICONS.ARROWS.VERTICAL}
+					disabled={this.props.tableState === STATES.DISABLED}
+				/>
+			</span>);
 		}
 
 		let tooltip = null;
@@ -194,20 +220,57 @@ class VirtualizedTable extends React.Component {
 
 		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
-		return (<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
-			{ isEmpty(tooltip)
-				? label
-				: <Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-				>
-					{label}
-				</Tooltip>
-			}
-			{disableSort === false && sortIcon}
-		</div>);
+		const resizeElem = this.props.resizable && !this.isLastColumn(dataKey)
+			? (<Draggable
+				axis="x"
+				classNameDragging="ta-virtualized-table-header-resize-active"
+				onDrag={
+					(evt, { deltaX }) => {
+						evt.stopPropagation();
+						this.resizeColumn({ dataKey, deltaX });
+					}
+				}
+				position={{ x: 0 }}
+				zIndex={999}
+			>
+				<span className="ta-virtualized-table-header-icon-resize">|</span>
+			</Draggable>)
+			: "";
+
+		return (
+			<React.Fragment key={dataKey}>
+				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
+					{ isEmpty(tooltip)
+						? label
+						: <Tooltip
+							id={tooltipId}
+							tip={tooltip}
+							direction="bottom"
+							className="properties-tooltips"
+						>
+							{label}
+						</Tooltip>
+					}
+				</div>
+				{disableSort === false && sortIcon}
+				{ resizeElem }
+			</React.Fragment>
+		);
+	}
+
+	resizeColumn({ dataKey, deltaX }) {
+		this.setState((prevState) => {
+
+			const columns = prevState.columns;
+
+			const resizedColumn = this.getColumnIndex(columns, dataKey);
+			columns[resizedColumn].width += deltaX;
+			columns[resizedColumn + 1].width -= deltaX;
+
+			return {
+				columns: columns
+			};
+		});
 	}
 
 	overSelectOption(evt) {
@@ -353,7 +416,7 @@ class VirtualizedTable extends React.Component {
 								sortDirection={this.props.sortDirection}
 							>
 								{
-									this.props.columns.map((column) => (
+									this.state.columns.map((column) => (
 										<Column
 											key={column.key}
 											label={column.label}
@@ -383,6 +446,7 @@ VirtualizedTable.defaultProps = {
 VirtualizedTable.propTypes = {
 	tableLabel: PropTypes.string,
 	selectable: PropTypes.bool,
+	resizable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,
 	disableHeader: PropTypes.bool,
