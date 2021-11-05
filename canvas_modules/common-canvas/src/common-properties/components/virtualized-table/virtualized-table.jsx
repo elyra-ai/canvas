@@ -16,7 +16,7 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading } from "carbon-components-react";
+import { Checkbox, Loading, Button } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
@@ -36,7 +36,8 @@ class VirtualizedTable extends React.Component {
 		if (nextProps.rowCount !== prevState.rowCount) {
 			return ({ rowCount: nextProps.rowCount });
 		}
-		if (nextProps.columns !== prevState.columns) {
+		// Don't check following condition after column is resized
+		if (!prevState.columnResized && nextProps.columns !== prevState.columns) {
 			return ({ columns: nextProps.columns });
 		}
 		return ({});
@@ -47,7 +48,8 @@ class VirtualizedTable extends React.Component {
 
 		this.state = {
 			rowCount: this.props.rowCount,
-			columns: this.props.columns
+			columns: this.props.columns,
+			columnResized: false
 		};
 		this.virtualizedTableRef = React.createRef();
 
@@ -223,7 +225,8 @@ class VirtualizedTable extends React.Component {
 		const resizeElem = this.props.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
 				axis="x"
-				classNameDragging="ta-virtualized-table-header-resize-active"
+				defaultClassName="ta-lr-virtualized-table-header-resize"
+				defaultClassNameDragging="ta-lr-virtualized-table-header-resize-active"
 				onDrag={
 					(evt, { deltaX }) => {
 						evt.stopPropagation();
@@ -268,6 +271,7 @@ class VirtualizedTable extends React.Component {
 			columns[resizedColumn + 1].width -= deltaX;
 
 			return {
+				columnResized: true,
 				columns: columns
 			};
 		});

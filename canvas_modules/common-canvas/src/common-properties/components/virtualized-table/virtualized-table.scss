@@ -49,6 +49,19 @@ $properties-vt-checkbox-width: 45px;
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
 
+		.ta-lr-virtualized-table-header-resize {
+			flex: 0 0 4px;
+			z-index: 2;
+			cursor: col-resize;
+		}
+		.ta-lr-virtualized-table-header-resize:hover {
+			background-color: rgba($brand-02, 0.4);
+		}
+
+		.ta-lr-virtualized-table-header-resize-active {
+			z-index: 3;
+		}
+
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
@@ -69,7 +82,6 @@ $properties-vt-checkbox-width: 45px;
 
 		&:hover {
 			background-color: rgba($brand-02, 0.2);
-			border-right: 1px solid black;
 			cursor: col-resize;
 		}
 	}
