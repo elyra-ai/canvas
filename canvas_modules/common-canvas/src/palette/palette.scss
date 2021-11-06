@@ -181,7 +181,8 @@ $palette-border-color: $ui-03;
 .palette-flyout-category {
 	cursor: pointer;
 	border-width: 0 0 0 $palette-border-width;
-	height: 60px;
+	height: fit-content;
+	min-height: 46px;
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
@@ -203,7 +204,6 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-category-item {
-	height: 46px;
 	display: flex;
 	align-items: center;
 	/* Prevent elements from being selectable */
@@ -230,7 +230,7 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-category-text {
-	width: 150px;
+	width: 165px;
 	overflow-wrap: break-word;
 	line-height: 1.3;
 	margin-left: 16px;
