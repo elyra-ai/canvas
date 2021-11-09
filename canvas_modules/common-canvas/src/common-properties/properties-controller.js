@@ -1190,7 +1190,7 @@ export default class PropertiesController {
 			}
 		}
 
-		// Validate other conditions after evaluating conditional defaults (default_value condition)
+		// Validate other conditions after evaluating conditional defaults (default_value conditions)
 		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
