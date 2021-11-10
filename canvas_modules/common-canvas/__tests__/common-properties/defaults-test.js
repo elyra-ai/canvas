@@ -34,11 +34,19 @@ describe("default values renders correctly", () => {
 
 	it("should render number field with default value", () => {
 		const defaultField = wrapper.find("div[data-id='properties-default_num'] input");
+		console.log("Adding logger for defaultField");
+		console.log(wrapper.debug());
+		console.log(wrapper.find("div[data-id='properties-default_num']").debug());
+		console.log(defaultField.debug());
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal(25);
 	});
 	it("should render 0 number field with no default value", () => {
 		const defaultField = wrapper.find("div[data-id='properties-noDefault_num'] input");
+		console.log("Adding logger for defaultField part 2");
+		console.log(wrapper.debug());
+		console.log(wrapper.find("div[data-id='properties-noDefault_num']").debug());
+		console.log(defaultField.debug());
 		expect(defaultField).to.have.length(1);
 		expect(defaultField.prop("value")).to.equal(0);
 	});

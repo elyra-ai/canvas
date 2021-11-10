@@ -93,6 +93,10 @@ describe("Condition default_value test cases", () => {
 		const defaultValueConditions = defaultsParamDef.conditions.filter((cond) => cond.default_value.parameter_ref === "conditional_default");
 		expect(defaultValueConditions).to.have.length(2);
 		const field1 = wrapper.find("div[data-id='properties-conditional_default'] textarea");
+		console.log("Adding logger for field1");
+		console.log(wrapper.debug());
+		console.log(wrapper.find("div[data-id='properties-conditional_default']").debug());
+		console.log(field1.debug());
 		// Verify value from 1st condition is used
 		expect(field1.text()).to.equal(defaultValueConditions[0].default_value.value.join());
 		// Verify value from 2nd condition is NOT used
@@ -102,6 +106,10 @@ describe("Condition default_value test cases", () => {
 	it("If default value is NOT defined in current_parameters, default_value condition and parameters default, don't set any default value", () => {
 		// no_default doesn't have any default value
 		const field4 = wrapper.find("div[data-id='properties-no_default'] input");
+		console.log("Adding logger for field4");
+		console.log(wrapper.debug());
+		console.log(wrapper.find("div[data-id='properties-no_default']").debug());
+		console.log(field4.debug());
 		expect(field4).to.have.length(1);
 		expect(field4.prop("value")).to.equal("");
 	});
