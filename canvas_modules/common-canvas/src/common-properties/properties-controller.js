@@ -155,7 +155,7 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
@@ -1148,7 +1148,7 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values) {
+	setPropertyValues(values, isInitProps) {
 		const inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1166,27 +1166,29 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
-		// Evaluate conditional defaults based on current_parameters upon loading of view
-		// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
-		const conditionalDefaultValues = {};
-		if (!isEmpty(inValues)) {
-			Object.keys(inValues).forEach((propertyName) => {
-				const propertyId = { name: propertyName };
-				// Update conditionalDefaultValues object using pass-by-reference
-				conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
-			});
-			if (!isEmpty(conditionalDefaultValues)) {
-				Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
-					if (!(parameterRef in inValues)) {
-						// convert values of type:object to the internal format array values
-						const control = this.getControl({ name: parameterRef });
-						if (PropertyUtils.isSubControlStructureObjectType(control)) {
-							conditionalDefaultValues[parameterRef] =
-							PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
-						}
-						this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
-					}
+		if (isInitProps) {
+			// Evaluate conditional defaults based on current_parameters upon loading of view
+			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
+			const conditionalDefaultValues = {};
+			if (!isEmpty(inValues)) {
+				Object.keys(inValues).forEach((propertyName) => {
+					const propertyId = { name: propertyName };
+					// Update conditionalDefaultValues object using pass-by-reference
+					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
 				});
+				if (!isEmpty(conditionalDefaultValues)) {
+					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
+						if (!(parameterRef in inValues)) {
+							// convert values of type:object to the internal format array values
+							const control = this.getControl({ name: parameterRef });
+							if (PropertyUtils.isSubControlStructureObjectType(control)) {
+								conditionalDefaultValues[parameterRef] =
+								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+							}
+							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
+						}
+					});
+				}
 			}
 		}
 
