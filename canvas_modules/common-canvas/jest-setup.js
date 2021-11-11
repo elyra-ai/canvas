@@ -34,7 +34,7 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 function mockConsole(consoleMethod) {
 	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
 	return (message, ...args) => {
-		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message.includes(ignoredMessage));
+		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
 		}
