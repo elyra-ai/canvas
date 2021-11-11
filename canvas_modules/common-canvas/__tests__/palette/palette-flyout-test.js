@@ -26,9 +26,8 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 
 import imageTestPalette from "../test_resources/palettes/image-test-palette.json";
 import testPalette2 from "../test_resources/palettes/test-palette2.json";
+import testPalette3NoDesc from "../test_resources/palettes/test-palette3-no-desc.json";
 
-
-const canvasController = new CanvasController();
 
 // This describe() function needs to be positioned above the other describe()
 // function in this file otherwise the test within it fails. I wasn't able to
@@ -39,10 +38,6 @@ describe("Palette search renders correctly", () => {
 
 	beforeEach(() => {
 		jest.useFakeTimers("modern");
-	});
-
-	afterEach(() => {
-		jest.useRealTimers();
 	});
 
 	it("should filter nodes based on search text", () => {
@@ -74,6 +69,39 @@ describe("Palette search renders correctly", () => {
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
 
 	});
+
+	it("should filter nodes based on search text when no node descriptions are present", () => {
+		const config = {
+			showPalette: true,
+			palette: testPalette3NoDesc,
+			paletteWidth: 250
+		};
+		const wrapper = createMountedPalette(config);
+
+		// Simulate click on search input to open palette with search bar
+		const searchInput = wrapper.find("div.palette-flyout-search-container");
+		searchInput.simulate("click");
+
+		simulateSearchEntry(searchInput, "a");
+		wrapper.update();
+		const contentListItem = wrapper.find(PaletteContentListItem);
+		expect(contentListItem).to.have.length(3);
+
+		const exp = ["ImportVar. File", "OutputsTable", "OutputsData Audit"];
+		contentListItem.forEach((item, idx) => {
+			expect(item.text()).to.equal(exp[idx]);
+		});
+
+		simulateSearchEntry(searchInput, "ta");
+		wrapper.update();
+		const contentListItem2 = wrapper.find(PaletteContentListItem);
+		expect(contentListItem2).to.have.length(2);
+
+		const exp2 = ["OutputsTable", "OutputsData Audit"];
+		contentListItem2.forEach((item, idx) => {
+			expect(item.text()).to.equal(exp2[idx]);
+		});
+	});
 });
 
 function simulateSearchEntry(searchInput, searchString) {
@@ -87,7 +115,7 @@ function simulateSearchEntry(searchInput, searchString) {
 describe("Palette renders correctly", () => {
 
 	it("should use a `.palette-flyout-div` CSS class", () => {
-		const flyoutPalette = createPalette();
+		const flyoutPalette = createMountedPalette();
 		expect(flyoutPalette.find(".palette-flyout-div")).to.have.length(1);
 	});
 
@@ -97,7 +125,7 @@ describe("Palette renders correctly", () => {
 	});
 
 	it("should render 1 <PaletteFlyoutContent/> component", () => {
-		const flyoutPalette = createPalette();
+		const flyoutPalette = createMountedPalette();
 		expect(flyoutPalette.find(PaletteFlyoutContent)).to.have.length(1);
 	});
 
@@ -216,19 +244,8 @@ describe("Palette renders correctly", () => {
 	});
 });
 
-function createPalette() {
-	const popupPalette = mountWithIntl(
-		<PaletteFlyout
-			paletteJSON={testPalette2}
-			showPalette
-			canvasController={canvasController}
-			paletteWidth={64}
-		/>
-	);
-	return popupPalette;
-}
-
 function createMountedPalette(config) {
+	const canvasController = new CanvasController();
 	const showPalette = config ? config.showPalette : true;
 	const paletteWidth = config ? config.paletteWidth : 64;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
@@ -239,6 +256,7 @@ function createMountedPalette(config) {
 			showPalette={showPalette}
 			canvasController={canvasController}
 			paletteWidth={paletteWidth}
+			enableNarrowPalette
 		/>
 	);
 	return wrapper;
