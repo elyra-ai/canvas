@@ -49,10 +49,10 @@
 	}
 
 	.properties-vt-row-class {
-		background-color: rgba($hover-row, 0.3);
+		background-color: $selected-ui;
 		&:hover {
 			border: 1px solid transparent;
-			background-color: rgba($hover-row, 0.3);
+			background-color: $hover-selected-ui;
 		}
 	}
 }

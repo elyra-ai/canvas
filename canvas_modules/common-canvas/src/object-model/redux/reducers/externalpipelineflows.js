@@ -23,27 +23,41 @@
 export default (state = [], action) => {
 	switch (action.type) {
 	case "ADD_EXTERNAL_PIPELINE_FLOW": {
-		return [...state, action.newPipelineFlow];
+		const newPipelineFlow = Object.assign({}, action.newPipelineFlow);
+		return [...state, newPipelineFlow];
 	}
 
 	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
-		return state.filter((pf) => pf.id !== action.pipelineFlowId);
+		return state.filter((epf) => epf.url !== action.externalUrl);
 	}
 
-	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
-		return state.filter((pf) => pf.url !== action.data.externalFlowUrl);
+	case "REPLACE_SN_AND_PIPELINES": {
+		const subset = state.filter((epf) => {
+			const remove = action.data.extPipelineFlowsToDelete.some((efd) => efd.url === epf.url);
+			return !remove;
+		});
+
+		const newset = [...subset, ...action.data.extPipelineFlowsToAdd];
+		return newset;
 	}
 
-	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
-		delete action.data.externalPipelineFlow.pipelines;
-		return [...state, action.data.externalPipelineFlow];
+	case "ADD_SUPERNODES": {
+		return [...state, ...action.data.extPipelineFlowsToAdd];
 	}
 
-	case "DELETE_SUPERNODE": {
-		if (action.data.supernode.subflow_ref.url) {
-			return state.filter((epf) => epf.url !== action.data.supernode.subflow_ref.url);
-		}
-		return state;
+	case "DELETE_SUPERNODES": {
+		return state.filter((epf) => {
+			const removePFlow = action.data.extPipelineFlowsToDelete.some((pf) => epf.url === pf.url);
+			return !removePFlow;
+		});
+	}
+
+	case "DECONSTRUCT_SUPERNODE": {
+		return state.filter((epf) => epf.id !== action.data.extPipelineFlowToDelete.id);
+	}
+
+	case "RECONSTRUCT_SUPERNODE": {
+		return [...state, action.data.extPipelineFlowToDelete];
 	}
 
 	case "SET_CANVAS_INFO": {

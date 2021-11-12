@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
-import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import ReactResizeDetector from "react-resize-detector";
-import { FlowData16 } from "@carbon/icons-react";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
-import {
-	DND_DATA_TEXT
-} from "./constants/canvas-constants";
+import CommonCanvasContextMenu from "./cc-context-menu.jsx";
+import { FlowData16 } from "@carbon/icons-react";
+import { DND_DATA_TEXT } from "./constants/canvas-constants";
 
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
-class DiagramCanvas extends React.Component {
+class CanvasContents extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -37,8 +37,9 @@ class DiagramCanvas extends React.Component {
 			isDropZoneDisplayed: false
 		};
 
-		this.logger = new Logger("DiagramCanvas");
+		this.logger = new Logger("CC-Contents");
 
+		this.mainCanvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
 
@@ -70,28 +71,41 @@ class DiagramCanvas extends React.Component {
 		this.first = false;
 		this.second = false;
 
-		this.canvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
+		// The host application may set one or more callback functions to execute their own
+		// code after an update has been performed caused by a redux update.
+		this.afterUpdateCallbacks = [];
+
+		// Register ourself with the canvas controller so it can call this class
+		// when necessary, and also call the SVGCanvasD3 object.
+		props.canvasController.setCanvasContents(this);
 	}
 
 	componentDidMount() {
-		this.canvasD3Layout =
+		this.logger.log("componentDidMount");
+		this.svgCanvasD3 =
 			new SVGCanvasD3(this.props.canvasInfo,
 				this.svgCanvasDivSelector,
-				this.props.config,
+				this.props.canvasConfig,
 				this.props.canvasController);
 
-		if (this.props.config.enableBrowserEditMenu) {
+		this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
+
+		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
 		}
 		this.focusOnCanvas();
 	}
 
 	componentDidUpdate() {
-		if (this.canvasD3Layout && !this.isDropZoneDisplayed()) {
-			this.canvasD3Layout.setCanvasInfo(this.props.canvasInfo, this.props.config);
+		this.logger.log("componentDidUpdate");
+		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
+			this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
+			// Run the afterUpdateCallbacks.
+			this.afterUpdate();
 		}
+
 		// Manage the event browsers in case this config property changes.
-		if (this.props.config.enableBrowserEditMenu) {
+		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
 		} else {
 			this.removeEventListeners();
@@ -100,6 +114,7 @@ class DiagramCanvas extends React.Component {
 
 	componentWillUnmount() {
 		this.removeEventListeners();
+		this.svgCanvasD3.close();
 	}
 
 	onCut(evt) {
@@ -127,7 +142,6 @@ class DiagramCanvas extends React.Component {
 		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
-
 	getDNDJson(event) {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
@@ -137,24 +151,60 @@ class DiagramCanvas extends React.Component {
 		}
 	}
 
-	getSvgViewportOffset() {
-		return this.canvasD3Layout.getSvgViewportOffset();
+	getSVGCanvasD3() {
+		return this.svgCanvasD3;
 	}
 
-	getTransformedViewportDimensions() {
-		return this.canvasD3Layout.getTransformedViewportDimensions();
+	getEmptyCanvas() {
+		let emptyCanvas = null;
+		if (this.props.canvasController.isPrimaryPipelineEmpty()) {
+			if (this.props.canvasConfig.emptyCanvasContent) {
+				emptyCanvas = (
+					<div className="empty-canvas">
+						{this.props.canvasConfig.emptyCanvasContent}
+					</div>);
+			} else {
+				emptyCanvas = (
+					<div className="empty-canvas">
+						<div className="empty-canvas-image"><FlowData16 /></div>
+						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
+						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
+					</div>);
+			}
+		}
+		return emptyCanvas;
 	}
 
-	getZoomToReveal(objectIds, xPos, yPos) {
-		return this.canvasD3Layout.getZoomToReveal(objectIds, xPos, yPos);
+	getContextMenu() {
+		return (
+			<CommonCanvasContextMenu
+				canvasController={this.props.canvasController}
+				containingDivId={this.mainCanvasDivId}
+			/>);
 	}
 
-	getZoom() {
-		return this.canvasD3Layout.getZoom();
+	getDropZone() {
+		let dropZoneCanvas = null;
+		if (this.isDropZoneDisplayed()) {
+			if (this.props.canvasConfig.dropZoneCanvasContent) {
+				dropZoneCanvas = this.props.canvasConfig.dropZoneCanvasContent;
+			} else {
+				dropZoneCanvas = (
+					<div>
+						<div className="dropzone-canvas" />
+						<div className="dropzone-canvas-rect" />
+					</div>);
+			}
+		}
+		return dropZoneCanvas;
 	}
 
-	getGhostNode(nodeTemplate) {
-		return this.canvasD3Layout.getGhostNode(nodeTemplate);
+	getSVGCanvasDiv() {
+		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
+		// the div (which allows keyboard events to go there) and using -1 means
+		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
+		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
+		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
@@ -164,7 +214,7 @@ class DiagramCanvas extends React.Component {
 	}
 
 	isDropZoneDisplayed() {
-		return this.props.config.enableDropZoneOnExternalDrag && this.state.isDropZoneDisplayed;
+		return this.props.canvasConfig.enableDropZoneOnExternalDrag && this.state.isDropZoneDisplayed;
 	}
 
 	isDataTypeBeingDraggedFile(event) {
@@ -172,6 +222,24 @@ class DiagramCanvas extends React.Component {
 			return event.dataTransfer.types.includes("Files");
 		}
 		return false;
+	}
+
+	afterUpdate() {
+		this.afterUpdateCallbacks.forEach((callback) => callback());
+	}
+
+	addAfterUpdateCallback(callback) {
+		const pos = this.afterUpdateCallbacks.findIndex((cb) => cb === callback);
+		if (pos === -1) {
+			this.afterUpdateCallbacks.push(callback);
+		}
+	}
+
+	removeAfterUpdateCallback(callback) {
+		const pos = this.afterUpdateCallbacks.findIndex((cb) => cb === callback);
+		if (pos > -1) {
+			this.afterUpdateCallbacks.splice(pos, 1);
+		}
 	}
 
 	addEventListeners() {
@@ -192,14 +260,6 @@ class DiagramCanvas extends React.Component {
 		}
 	}
 
-	zoomTo(zoomObject) {
-		this.canvasD3Layout.zoomTo(zoomObject);
-	}
-
-	translateBy(x, y, animateTime) {
-		this.canvasD3Layout.translateBy(x, y, animateTime);
-	}
-
 	drop(event) {
 		event.preventDefault();
 		this.first = false;
@@ -208,7 +268,7 @@ class DiagramCanvas extends React.Component {
 
 		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
-			this.canvasD3Layout.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
+			this.svgCanvasD3.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
 
 		} else {
 			let dropData = this.getDNDJson(event);
@@ -224,7 +284,7 @@ class DiagramCanvas extends React.Component {
 					}
 				};
 			}
-			this.canvasD3Layout.externalObjectDropped(dropData, event.clientX, event.clientY);
+			this.svgCanvasD3.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
 
 		// Clear the drag template.
@@ -239,7 +299,7 @@ class DiagramCanvas extends React.Component {
 		if (nodeTemplate && (this.dragX !== event.clientX || this.dragY !== event.clientY)) {
 			this.dragX = event.clientX;
 			this.dragY = event.clientY;
-			this.canvasD3Layout.nodeTemplateDraggedOver(nodeTemplate, event.clientX, event.clientY);
+			this.svgCanvasD3.nodeTemplateDraggedOver(nodeTemplate, event.clientX, event.clientY);
 		}
 	}
 
@@ -278,84 +338,45 @@ class DiagramCanvas extends React.Component {
 		}
 	}
 
-	zoomIn() {
-		this.canvasD3Layout.zoomIn();
-	}
-
-	zoomOut() {
-		this.canvasD3Layout.zoomOut();
-	}
-
-	zoomToFit() {
-		this.canvasD3Layout.zoomToFit();
-	}
-
 	// Re-renders the diagram canvas when the canvas size changes. This refresh
 	// is needed because the output binding ports of sub-flows displayed full-page
 	// need to be rerendered as the canvas size changes. The canvas size might
 	// change when the right side panel is opened or the browser is resized.
 	refreshOnSizeChange() {
-		if (this.canvasD3Layout) {
-			this.canvasD3Layout.refreshOnSizeChange();
+		if (this.svgCanvasD3) {
+			this.svgCanvasD3.refreshOnSizeChange();
 		}
 	}
 
 	render() {
-		let emptyCanvas = null;
+		this.logger.log("render");
 
-		if (this.props.isCanvasEmpty) {
-			if (this.props.config.emptyCanvasContent) {
-				emptyCanvas = (
-					<div className="empty-canvas">
-						{this.props.config.emptyCanvasContent}
-					</div>);
-			} else {
-				emptyCanvas = (
-					<div className="empty-canvas">
-						<div className="empty-canvas-image"><FlowData16 /></div>
-						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
-						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
-					</div>);
-			}
-		}
+		const emptyCanvas = this.getEmptyCanvas();
+		const contextMenu = this.getContextMenu();
+		const dropZoneCanvas = this.getDropZone();
+		const svgCanvasDiv = this.getSVGCanvasDiv();
 
-		let dropZoneCanvas = null;
-
-		if (this.isDropZoneDisplayed()) {
-			if (this.props.config.dropZoneCanvasContent) {
-				dropZoneCanvas = this.props.config.dropZoneCanvasContent;
-			} else {
-				dropZoneCanvas = (
-					<div>
-						<div className="dropzone-canvas" />
-						<div className="dropzone-canvas-rect" />
-					</div>);
-			}
-		}
-
-		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
-		// the div (which allows keyboard events to go there) and using -1 means
-		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
-		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
-		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
-
-		const mainClassName = this.props.config.enableRightFlyoutUnderToolbar
+		const mainClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
 			? "common-canvas-main"
 			: null;
 
-		let dropDivClassName = this.props.config.enableRightFlyoutUnderToolbar
+		let dropDivClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
 			? "common-canvas-drop-div-under-toolbar"
 			: "common-canvas-drop-div";
 
-		dropDivClassName = this.props.config.enableToolbarLayout === "None"
+		dropDivClassName = this.props.canvasConfig.enableToolbarLayout === "None"
 			? dropDivClassName + " common-canvas-toolbar-none"
+			: dropDivClassName;
+
+		dropDivClassName = this.props.bottomPanelIsOpen
+			? dropDivClassName + " common-canvas-bottom-panel-is-open"
 			: dropDivClassName;
 
 		return (
 			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
-						id={this.canvasDivId}
+						id={this.mainCanvasDivId}
 						className={dropDivClassName}
 						onDrop={this.drop}
 						onDragOver={this.dragOver}
@@ -363,8 +384,8 @@ class DiagramCanvas extends React.Component {
 						onDragLeave={this.dragLeave}
 					>
 						{emptyCanvas}
-						{svgCanvas}
-						{this.props.children}
+						{svgCanvasDiv}
+						{contextMenu}
 						{dropZoneCanvas}
 					</div>
 				</ReactResizeDetector>
@@ -373,13 +394,25 @@ class DiagramCanvas extends React.Component {
 	}
 }
 
-DiagramCanvas.propTypes = {
+CanvasContents.propTypes = {
+	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
-	canvasInfo: PropTypes.object,
-	config: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	children: PropTypes.element,
-	isCanvasEmpty: PropTypes.bool
+
+	// Provided by Redux
+	canvasConfig: PropTypes.object.isRequired,
+	canvasInfo: PropTypes.object,
+	bottomPanelIsOpen: PropTypes.bool
 };
 
-export default injectIntl(DiagramCanvas, { forwardRef: true });
+const mapStateToProps = (state, ownProps) => ({
+	canvasInfo: state.canvasinfo,
+	canvasConfig: state.canvasconfig,
+	bottomPanelIsOpen: state.bottompanel.isOpen,
+	// These two fields are included here so they will trigger a render.
+	// The renderer will retrieve the data for them by calling the canvas controller.
+	selectionInfo: state.selectioninfo,
+	breadcrumbs: state.breadcrumbs
+});
+
+export default connect(mapStateToProps)(injectIntl(CanvasContents));

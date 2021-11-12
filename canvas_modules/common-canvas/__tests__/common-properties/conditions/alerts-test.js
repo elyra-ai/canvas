@@ -50,8 +50,8 @@ describe("condition messages should add alerts tab", () => {
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
-		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value.");
-		expect(alertList.at(1).text()).to.equal("Required parameter 'Random' has no value.");
+		expect(alertList.at(0).text()).to.equal("You must provide your Integer.");
+		expect(alertList.at(1).text()).to.equal("You must provide your Random.");
 
 		// go to Values tab by clicking on error message
 		alertList.at(0).find("a.properties-link-text")
@@ -63,8 +63,8 @@ describe("condition messages should add alerts tab", () => {
 		let valuesDiv = valuesCategory.find("div.properties-category-content.show"); // Values div
 		expect(valuesDiv).to.have.length(1);
 		const generator = valuesDiv.find("button.properties-number-generator");
-		expect(generator).to.have.length(1);
-		generator.simulate("click");
+		expect(generator).to.have.length(2);
+		generator.at(0).simulate("click");
 
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
 		alertButton = alertCategory.find("button.properties-category-title");
@@ -73,7 +73,7 @@ describe("condition messages should add alerts tab", () => {
 
 		alertList = alertCategory.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
-		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value.");
+		expect(alertList.at(0).text()).to.equal("You must provide your Integer.");
 		alertList.at(0).find("a.properties-link-text")
 			.simulate("click");
 
@@ -121,7 +121,7 @@ describe("condition messages should add alerts tab", () => {
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
-		expect(alertList.at(0).text()).to.equal("Required parameter 'Number Hidden' has no value.");
+		expect(alertList.at(0).text()).to.equal("You must provide your Number Hidden.");
 
 		// hide the number field
 		checkbox.getDOMNode().checked = true;

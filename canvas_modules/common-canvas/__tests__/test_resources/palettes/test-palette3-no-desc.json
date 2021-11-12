@@ -1,0 +1,73 @@
+{
+	"version": "3.0",
+	"categories": [
+		{
+			"id": "import",
+			"label": "Import",
+			"node_types": [
+				{
+					"id": "variablefile",
+					"type": "execution_node",
+					"op": "variablefile",
+					"app_data": {
+						"ui_data": {
+							"label": "Var. File",
+							"image": "data:image/svg+xml;base64,.."
+						}
+					}
+				},
+				{
+					"id": "userinput",
+					"type": "execution_node",
+					"op": "userinput",
+					"app_data": {
+						"ui_data": {
+							"label": "User Input",
+							"image": "data:image/svg+xml;base64,.."
+						}
+					}
+				},
+				{
+					"id": "object_storage_import",
+					"type": "execution_node",
+					"op": "object_storage_import",
+					"app_data": {
+						"ui_data": {
+							"label": "Object Store",
+							"image": "data:image/svg+xml;base64,.."
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "output",
+			"label": "Outputs",
+			"node_types":
+			[
+				{
+					"id": "table",
+					"type": "execution_node",
+					"op": "table",
+					"app_data": {
+						"ui_data": {
+							"label": "Table",
+							"image": "data:image/svg+xml;base64,..."
+						}
+					}
+				},
+				{
+					"id": "dataaudit",
+					"type": "execution_node",
+					"op": "dataaudit",
+					"app_data": {
+						"ui_data": {
+							"label": "Data Audit",
+							"image": "data:image/svg+xml;base64,..."
+						}
+					}
+				}
+			]
+		}
+	]
+}

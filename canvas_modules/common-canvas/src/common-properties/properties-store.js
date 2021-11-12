@@ -23,7 +23,7 @@ import { setPanelStates, updatePanelState } from "./actions";
 import { setActionStates, updateActionState } from "./actions";
 
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
-
+import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
@@ -34,6 +34,7 @@ import actionStatesReducer from "./reducers/action-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
+import rowFreezeReducer from "./reducers/row-static";
 import componentMetadataReducer from "./reducers/component-metadata";
 import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
 import saveButtonDisableReducer from "./reducers/save-button-disable";
@@ -47,7 +48,7 @@ export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
 			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer,
-			disableRowMoveButtonsReducer, actionStatesReducer, saveButtonDisableReducer, propertiesSettingsReducer });
+			disableRowMoveButtonsReducer, actionStatesReducer, saveButtonDisableReducer, propertiesSettingsReducer, rowFreezeReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -384,6 +385,29 @@ export default class PropertiesStore {
 
 	clearSelectedRows(propertyId) {
 		this.store.dispatch(clearSelectedRows({ propertyId: propertyId }));
+	}
+
+	getStaticRows(propertyId) {
+		if (typeof propertyId === "undefined") {
+			return [];
+		}
+		const state = this.store.getState();
+		let rowStatic = state.rowFreezeReducer[propertyId.name];
+		if (Number.isInteger(propertyId.row) && rowStatic) {
+			rowStatic = rowStatic[String(propertyId.row)]; // row selection
+			if (Number.isInteger(propertyId.col) && rowStatic) {
+				rowStatic = rowStatic[String(propertyId.col)]; // cell selection
+			}
+		}
+		return rowStatic && rowStatic.staticRows ? rowStatic.staticRows : [];
+	}
+
+	updateStaticRows(propertyId, staticRows) {
+		this.store.dispatch(updateStaticRows({ propertyId: propertyId, staticRows: staticRows }));
+	}
+
+	clearStaticRows(propertyId) {
+		this.store.dispatch(clearStaticRows({ propertyId: propertyId }));
 	}
 
 	/**

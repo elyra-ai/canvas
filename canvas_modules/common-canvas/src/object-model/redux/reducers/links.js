@@ -15,45 +15,113 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { NODE_LINK, COMMENT_LINK } from "../../../common-canvas/constants/canvas-constants.js";
+import { COMMENT_LINK } from "../../../common-canvas/constants/canvas-constants.js";
 
 export default (state = [], action) => {
 	switch (action.type) {
-	case "DELETE_SUPERNODE":
+	case "DELETE_SUPERNODES":
+		return state.filter((link) => {
+			const removeLink = action.data.supernodesToDelete.some((sn) => {
+				return (link.srcNodeId === sn.id || // If node being deleted is either source or target of link remove this link
+					link.trgNodeId === sn.id);
+			});
+			return !removeLink;
+		});
+
 	case "DELETE_OBJECT":
 		return state.filter((link) => {
 			return (link.srcNodeId !== action.data.id && // If node being deleted is either source or target of link remove this link
 				link.trgNodeId !== action.data.id);
 		});
 
+	case "REMOVE_LINKS":
+		return state.filter((link) => {
+			const linkFound = action.data.linksToDelete.some((l) => l.id === link.id);
+			return !linkFound;
+		});
+
+
 	case "ADD_LINK": {
 		const newLink = {
-			id: action.data.id,
-			class_name: action.data.class_name,
-			srcNodeId: action.data.srcNodeId,
-			trgNodeId: action.data.trgNodeId,
-			type: action.data.type,
-			decorations: action.data.decorations,
-			style: action.data.style,
-			style_temp: action.data.style_temp
+			id: action.data.id
 		};
+		addAttr(newLink, "type", action.data.type);
+		addAttr(newLink, "class_name", action.data.class_name);
+		addAttr(newLink, "srcPos", action.data.srcPos);
+		addAttr(newLink, "srcNodeId", action.data.srcNodeId);
+		addAttr(newLink, "srcNodePortId", action.data.srcNodePortId);
+		addAttr(newLink, "trgPos", action.data.trgPos);
+		addAttr(newLink, "trgNodeId", action.data.trgNodeId);
+		addAttr(newLink, "trgNodePortId", action.data.trgNodePortId);
+		addAttr(newLink, "decorations", action.data.decorations);
+		addAttr(newLink, "style", action.data.style);
+		addAttr(newLink, "style_temp", action.data.style_temp);
+		addAttr(newLink, "linkName", action.data.linkName);
+		addAttr(newLink, "typeAttr", action.data.typeAttr);
+		addAttr(newLink, "description", action.data.description);
+		addAttr(newLink, "app_data", action.data.app_data);
 
-		if (action.data.type === NODE_LINK) {
-			Object.assign(newLink, {
-				"srcNodePortId": action.data.srcNodePortId,
-				"trgNodePortId": action.data.trgNodePortId,
-				"srcPos": action.data.srcPos,
-				"trgPos": action.data.trgPos,
-				"linkName": action.data.linkName,
-				"typeAttr": action.data.typeAttr,
-				"description": action.data.description
-			});
-		}
 		return [
 			...state,
 			newLink
 		];
 	}
+
+	case "ADD_LINKS": {
+		return [
+			...state,
+			...action.data.linksToAdd
+		];
+	}
+
+	case "MOVE_OBJECTS":
+		return state.map((link) => {
+			if (action.data.links) {
+				const index = action.data.links.findIndex((l) => l.id === link.id);
+				if (index > -1) {
+					const newLink = Object.assign({}, link);
+					if (newLink.srcPos) {
+						newLink.srcPos.x_pos += action.data.offsetX;
+						newLink.srcPos.y_pos += action.data.offsetY;
+					}
+					if (newLink.trgPos) {
+						newLink.trgPos.x_pos += action.data.offsetX;
+						newLink.trgPos.y_pos += action.data.offsetY;
+					}
+				}
+			}
+			return link;
+		});
+
+	case "SET_LINK_POSITIONS":
+		return state.map((link, index) => {
+			if (action.data.linkPositions && typeof action.data.linkPositions[link.id] !== "undefined") {
+				let newLink = Object.assign({}, link);
+				if (action.data.linkPositions[link.id].srcPos) {
+					newLink = Object.assign(newLink, { srcPos: action.data.linkPositions[link.id].srcPos });
+				}
+				if (action.data.linkPositions[link.id].trgPos) {
+					newLink = Object.assign(newLink, { trgPos: action.data.linkPositions[link.id].trgPos });
+				}
+				return newLink;
+			}
+			return link;
+		});
+
+	case "SIZE_AND_POSITION_OBJECTS":
+		return state.map((link, index) => {
+			if (action.data.linksInfo && typeof action.data.linksInfo[link.id] !== "undefined") {
+				let newLink = Object.assign({}, link);
+				if (action.data.linksInfo[link.id].srcPos) {
+					newLink = Object.assign(newLink, { srcPos: action.data.linksInfo[link.id].srcPos });
+				}
+				if (action.data.linksInfo[link.id].trgPos) {
+					newLink = Object.assign(newLink, { trgPos: action.data.linksInfo[link.id].trgPos });
+				}
+				return newLink;
+			}
+			return link;
+		});
 
 	case "SET_LINK_PROPERTIES":
 		return state.map((link) => {
@@ -229,14 +297,14 @@ export default (state = [], action) => {
 		];
 	}
 
-	case "ADD_AUTO_NODE": {
-		return [
-			...state,
-			action.data.newLink
-		];
-	}
-
 	default:
 		return state;
 	}
 };
+
+// Assigns the value, if it is not undefined, to the object using the key.
+function addAttr(obj, key, value) {
+	if (typeof value !== "undefined") {
+		obj[key] = value;
+	}
+}

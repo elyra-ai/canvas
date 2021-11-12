@@ -37,7 +37,8 @@ function validateInput(definition, propertyId, controller) {
 		return filteredEnum(data.enum_filter, propertyId, controller);
 	} else if (data.allow_change) {
 		return allowChange(data.allow_change, propertyId, controller);
-
+	} else if (data.default_value) {
+		return conditionalDefault(data.default_value, propertyId, controller);
 	}
 	throw new Error("Invalid user input validation definition schema");
 }
@@ -114,6 +115,21 @@ function allowChange(data, propertyId, controller) {
 		return evaluate(data.evaluate, propertyId, controller);
 	}
 	throw new Error("Invalid allow change schema");
+}
+
+/**
+ * Set default value for a field if conditions evaluate to true.
+ *
+ * @param data conditional default definition
+ * @param propertyId Id of the control
+ * @param controller Properties controller
+ * @return {boolean} true if conditions are met.
+ */
+function conditionalDefault(data, propertyId, controller) {
+	if (data.parameter_ref && data.value && data.evaluate) {
+		return evaluate(data.evaluate, propertyId, controller);
+	}
+	throw new Error("Invalid conditional default schema");
 }
 
 /**

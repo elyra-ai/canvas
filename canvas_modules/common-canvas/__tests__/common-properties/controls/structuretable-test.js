@@ -1051,9 +1051,8 @@ describe("structuretable with long text input values should render as readonly",
 		const subpanelTable = tables.at(1); // second one is the textarea in subpanel flyout
 		expect(subpanelTable.find("textarea").prop("disabled")).to.equal(true);
 
-		const validationMsg = subpanelTable.find("div.properties-validation-message");
+		const validationMsg = subpanelTable.find("div.bx--form-requirement");
 		expect(validationMsg).to.have.length(1);
-		expect(validationMsg.find("svg.canvas-state-icon-error")).to.have.length(1);
 	});
 });
 

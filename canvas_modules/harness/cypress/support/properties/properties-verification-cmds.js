@@ -38,6 +38,22 @@ Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
 		.should("have.value", givenTitle);
 });
 
+Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
+	cy.get(".properties-title-editor")
+		.find(".bx--form-requirement")
+		.should("have.text", message);
+
+	if (type === "warning") {
+		cy.get(".properties-title-editor")
+			.find(".bx--text-input__field-wrapper--warning")
+			.should("have.length", 1);
+	} else if (type === "error") {
+		cy.get(".properties-title-editor")
+			.find(".bx--text-input__field-wrapper")
+			.should("have.attr", "data-invalid", "true");
+	}
+});
+
 Cypress.Commands.add("verifyPropertiesFlyoutDoesNotExist", () => {
 	cy.get("#node-title-editor-right-flyout-panel")
 		.should("not.exist");
@@ -79,6 +95,32 @@ Cypress.Commands.add("verifyTipForLabelIsVisibleAtLocation", (label, tipLocation
 						} else if (tipLocation === "right") {
 							expect(tipLeft).to.be.greaterThan(containerLeft);
 						}
+					}
+				});
+		});
+});
+
+/** Verify the tooltip over the given text is 'hidden'
+* @param label: label of the container shown in the UI
+* @param text: text shown in the tip
+*/
+Cypress.Commands.add("verifyTipForLabelIsHidden", (label, text) => {
+	cy.getControlContainerFromName(label)
+		.then((container) => {
+			cy.get(".common-canvas-tooltip")
+				.then((tips) => {
+					// Get the tip
+					let hiddenTip;
+					for (var idx = 0; idx < tips.length; idx++) {
+						if (tips[idx].textContent === text) {
+							hiddenTip = tips[idx];
+							break;
+						}
+					}
+
+					if (hiddenTip) {
+						// Verify tip is hidden
+						cy.wrap(hiddenTip).should("be.hidden");
 					}
 				});
 		});

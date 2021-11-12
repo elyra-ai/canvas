@@ -179,15 +179,13 @@ describe("Test that auto-nodes are added to an in-place expanded supernode", fun
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
-	it("Test number of nodes and links in Supernode", function() {
+	it("Test that two auto nodes are added to the sub-flow", function() {
 		// Verify Supernode pipeline has 8 nodes
 		cy.verifyNumberOfNodesInSupernode("Supernode", 8);
 
 		// Verify Supernode pipeline has 7 links
 		cy.verifyNumberOfLinksInSupernode("Supernode", 7);
-	});
 
-	it("Test that two auto nodes are added to the sub-flow", function() {
 		cy.getNodeWithLabel("Supernode").rightclick();
 		cy.clickOptionFromContextMenu("Expand supernode");
 		cy.getNodeWithLabelInSubFlow("Type").click();
@@ -205,3 +203,126 @@ describe("Test that auto-nodes are added to an in-place expanded supernode", fun
 		cy.verifyNumberOfLinksInSupernode("Supernode", 9);
 	});
 });
+
+describe("Test that supernodes are auto-added from the palette", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+		cy.openCanvasPalette("supernodePalette.json");
+	});
+
+	it("Test that local and external nodes are added correctly to the flow", function() {
+		cy.verifyNumberOfPipelines(1);
+
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Supernodes");
+
+		cy.doubleClickNodeInCategory("External Supernode");
+		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.doubleClickNodeInCategory("Local Supernode");
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 0, extFlows: 0 });
+
+		cy.getNodeWithLabel("External Supernode").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+
+		cy.getNodeWithLabel("Local Supernode").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 1, links: 0, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 0, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 0, extFlows: 0 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 3, extPipelines: 1, extFlows: 1 });
+	});
+
+	it("Test that external nodes that share pipelines are added correctly to the flow", function() {
+		cy.verifyNumberOfPipelines(1);
+
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Supernodes");
+
+		cy.doubleClickNodeInCategory("External Supernode");
+		cy.hoverOverNodeLabel("External Supernode");
+		cy.clickNodeLabelEditIcon("External Supernode");
+		cy.enterLabelForNode("External Supernode", "External 1");
+		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.doubleClickNodeInCategory("External Supernode");
+		cy.hoverOverNodeLabel("External Supernode");
+		cy.clickNodeLabelEditIcon("External Supernode");
+		cy.enterLabelForNode("External Supernode", "External 2");
+		verify({ nodes: 2, links: 1, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.getNodeWithLabel("External 1").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		cy.getNodeWithLabel("External 2").rightclick();
+		cy.clickOptionFromContextMenu("Expand supernode");
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarUndo();
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		// Do two undos - first is to undo node name change.
+		cy.clickToolbarUndo();
+		cy.clickToolbarUndo();
+		verify({ nodes: 1, links: 0, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		// Do two undos - first is to undo node name change.
+		cy.clickToolbarUndo();
+		cy.clickToolbarUndo();
+		verify({ nodes: 0, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		// Do two redos - first is to redo node name change.
+		cy.clickToolbarRedo();
+		cy.clickToolbarRedo();
+		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		// Do two redos - first is to redo node name change.
+		cy.clickToolbarRedo();
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 1, extPipelines: 0, extFlows: 0 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+
+		cy.clickToolbarRedo();
+		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 1, extFlows: 1 });
+	});
+
+});
+
+function verify(data) {
+	cy.verifyNumberOfNodes(data.nodes);
+	cy.verifyNumberOfPortDataLinks(data.links);
+	cy.verifyNumberOfPipelines(data.pipelines);
+	cy.verifyNumberOfExternalPipelines(data.extPipelines);
+	cy.verifyNumberOfExternalPipelineFlows(data.extFlows);
+}

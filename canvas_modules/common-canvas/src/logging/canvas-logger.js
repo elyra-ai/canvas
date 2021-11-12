@@ -56,7 +56,7 @@ export default class Logger {
 			const endMsg = this.getEndMessage("", msg);
 			console.timeEnd(endMsg);
 			if (displaySeparator) {
-				console.info("---------------------------------------------------------------------------");
+				console.info("--------------------------------------------------");
 			}
 		}
 	}

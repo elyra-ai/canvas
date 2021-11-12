@@ -50,9 +50,10 @@ export default class DeleteObjectsAction extends Action {
 
 		// Remember all the pipelines that are being deleted when any selected
 		// supernodes are being deleted.
-		this.supernodesToDelete = this.apiPipeline.getSupernodes(this.nodesToDelete);
-		this.supernodePipelinesToDelete = this.getPipelinesToDelete(this.supernodesToDelete);
-		this.extPipelineFlowsToDelete = this.getExternalPipelineFlowsToDelete(this.supernodesToDelete);
+		this.supernodesToDelete = CanvasUtils.filterSupernodes(this.nodesToDelete);
+		this.pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(this.supernodesToDelete, this.data.pipelineId);
+		this.extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(this.pipelinesToDelete);
 
 		// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
 		this.nodesToDelete = this.nodesToDelete.filter((node) => !this.isSupernodeToBeDeleted(node));
@@ -102,12 +103,12 @@ export default class DeleteObjectsAction extends Action {
 					if (src) {
 						delete newLink.srcNodeId;
 						delete newLink.srcNodePortId;
-						newLink.srcPos = this.getSrcPos(link);
+						newLink.srcPos = CanvasUtils.getSrcPos(link, this.apiPipeline);
 					}
 					if (trg) {
 						delete newLink.trgNodeId;
 						delete newLink.trgNodePortId;
-						newLink.trgPos = this.getTrgPos(link);
+						newLink.trgPos = CanvasUtils.getTrgPos(link, this.apiPipeline);
 					}
 					newLinks.push(newLink);
 					oldLinks.push(link);
@@ -115,71 +116,6 @@ export default class DeleteObjectsAction extends Action {
 			}
 		});
 		return { newLinks, oldLinks };
-	}
-
-	getSrcPos(link) {
-		const srcNode = this.apiPipeline.getNode(link.srcNodeId);
-		let outerCenterX;
-		let outerCenterY;
-		if (link.trgNodeId) {
-			const trgNode = this.apiPipeline.getNode(link.trgNodeId);
-			outerCenterX = trgNode.x_pos + (trgNode.width / 2);
-			outerCenterY = trgNode.y_pos + (trgNode.height / 2);
-		} else {
-			outerCenterX = link.trgPos.x_pos;
-			outerCenterY = link.trgPos.y_pos;
-		}
-
-		let srcCenterX;
-		let srcCenterY;
-
-		if (srcNode.layout && srcNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			srcCenterX = srcNode.layout.imagePosX + (srcNode.layout.imageWidth / 2);
-			srcCenterY = srcNode.layout.imagePosY + (srcNode.layout.imageHeight / 2);
-
-		} else {
-			srcCenterX = srcNode.width / 2;
-			srcCenterY = srcNode.height / 2;
-		}
-
-		const startPos = CanvasUtils.getOuterCoord(
-			srcNode.x_pos, srcNode.y_pos, srcNode.width, srcNode.height,
-			srcCenterX, srcCenterY, outerCenterX, outerCenterY);
-
-		return { x_pos: startPos.x, y_pos: startPos.y };
-	}
-
-	getTrgPos(link) {
-		const trgNode = this.apiPipeline.getNode(link.trgNodeId);
-
-		let outerCenterX;
-		let outerCenterY;
-		if (link.srcNodeId) {
-			const srcNode = this.apiPipeline.getNode(link.srcNodeId);
-			outerCenterX = srcNode.x_pos + (srcNode.width / 2);
-			outerCenterY = srcNode.y_pos + (srcNode.height / 2);
-		} else {
-			outerCenterX = link.srcPos.x_pos;
-			outerCenterY = link.srcPos.y_pos;
-		}
-
-		let trgCenterX;
-		let trgCenterY;
-
-		if (trgNode.layout && trgNode.layout.drawNodeLinkLineFromTo === "image_center") {
-			trgCenterX = trgNode.layout.imagePosX + (trgNode.layout.imageWidth / 2);
-			trgCenterY = trgNode.layout.imagePosY + (trgNode.layout.imageHeight / 2);
-
-		} else {
-			trgCenterX = trgNode.width / 2;
-			trgCenterY = trgNode.height / 2;
-		}
-
-		const startPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos, trgNode.y_pos, trgNode.width, trgNode.height,
-			trgCenterX, trgCenterY, outerCenterX, outerCenterY);
-
-		return { x_pos: startPos.x, y_pos: startPos.y };
 	}
 
 	isLinkToBeDeleted(link, linksToDelete) {
@@ -198,47 +134,17 @@ export default class DeleteObjectsAction extends Action {
 		return this.nodesToDelete.findIndex((nc) => nc.id === link.trgNodeId) !== -1;
 	}
 
-	getPipelinesToDelete(superNodes) {
-		const pipelinesToDelete = [];
-		this.supernodesToDelete.forEach((supernode) => {
-			pipelinesToDelete[supernode.id] = this.objectModel.getDescendentPipelines(supernode);
-		});
-		return pipelinesToDelete;
-	}
-
-	getExternalPipelineFlowsToDelete(superNodes) {
-		const extPipelineFlowsToDelete = [];
-		this.supernodesToDelete.forEach((supernode) => {
-			const extUrl = supernode.subflow_ref.url;
-			if (extUrl) {
-				extPipelineFlowsToDelete[extUrl] =
-					this.objectModel.getExternalPipelineFlow(extUrl);
-			}
-		});
-		return extPipelineFlowsToDelete;
-	}
-
 	// Standard methods
 	do() {
 		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
 		this.apiPipeline.deleteLinks(this.linksToDelete);
-
-		this.supernodesToDelete.forEach((supernode) => {
-			this.apiPipeline.deleteSupernode(supernode.id);
-		});
-		this.apiPipeline.deleteObjects(this.data.selectedObjectIds);
+		this.apiPipeline.deleteSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
+		this.apiPipeline.deleteNodes(this.nodesToDelete);
+		this.apiPipeline.deleteComments(this.commentsToDelete);
 	}
 
 	undo() {
-		this.supernodesToDelete.forEach((supernode) => {
-			this.apiPipeline.addSupernode(supernode, this.supernodePipelinesToDelete[supernode.id]);
-
-			const extUrl = supernode.subflow_ref.url; // Url reference to the external pipeline flow.
-			if (extUrl) {
-				const extPF = this.extPipelineFlowsToDelete[extUrl];
-				this.objectModel.addExternalPipelineFlow(extPF, extUrl, false); // false indicates pipelines should not be added
-			}
-		});
+		this.apiPipeline.addSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
 
 		this.nodesToDelete.forEach((node) => {
 			this.apiPipeline.addNode(node);

@@ -56,6 +56,20 @@ _defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
 _defineConstant("LINK_SELECTION_HANDLES", "Handles");
 _defineConstant("LINK_SELECTION_DETACHABLE", "Detachable");
 
+// Values for enableSnapToGridType config parameter
+_defineConstant("SNAP_TO_GRID_NONE", "None");
+_defineConstant("SNAP_TO_GRID_AFTER", "After");
+_defineConstant("SNAP_TO_GRID_DURING", "During");
+
+// Values for enablePaletteLayout config parameter
+_defineConstant("PALETTE_LAYOUT_NONE", "None");
+_defineConstant("PALETTE_LAYOUT_FLYOUT", "Flyout");
+_defineConstant("PALETTE_LAYOUT_MODAL", "Modal");
+
+// Values for enableToolbarLayout config parameter
+_defineConstant("TOOLBAR_LAYOUT_NONE", "None");
+_defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
+
 // Values for enableAssocLinkType config parameter
 _defineConstant("ASSOC_RIGHT_SIDE_CURVE", "RightSideCurve");
 _defineConstant("ASSOC_STRAIGHT", "Straight");
@@ -90,6 +104,7 @@ _defineConstant("COMMENT_LINK", "commentLink");
 
 _defineConstant("TIP_TYPE_NODE", "tipTypeNode");
 _defineConstant("TIP_TYPE_PORT", "tipTypePort");
+_defineConstant("TIP_TYPE_DEC", "tipTypeDec");
 _defineConstant("TIP_TYPE_LINK", "tipTypeLink");
 _defineConstant("TIP_TYPE_PALETTE_ITEM", "tipTypePaletteItem");
 _defineConstant("TIP_TYPE_PALETTE_CATEGORY", "tipTypePaletteCategory");
@@ -114,12 +129,6 @@ _defineConstant("HIGHLIGHT_FILL", "#bad8ff");
 _defineConstant("HIGHLIGHT_HOVER_FILL", "#a0c8fe");
 _defineConstant("HIGHLIGHT_STROKE", "#152935");
 _defineConstant("HIGHLIGHT_STROKE_WIDTH", "3px");
-
-_defineConstant("PALETTE", {
-	OPEN_WIDTH: 256,
-	CLOSED_WIDTH: 0,
-	NARROW_WIDTH: 72
-});
 
 _defineConstant("BINDING", "binding");
 _defineConstant("SUPER_NODE", "super_node");

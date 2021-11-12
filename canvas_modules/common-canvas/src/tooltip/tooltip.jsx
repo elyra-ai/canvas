@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /*
-	This code is a modified version from portal-common-api for the common-canvas toolbar
+	This code is a modified version from portal-common-api for the Elyra canvas tooltips
 */
 
 import React from "react";
@@ -25,23 +25,24 @@ class ToolTip extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showToolTip: false
+			isTooltipVisible: false
 		};
 
 		this.pendingTooltip = null;
+		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 	}
 
 	componentDidMount() {
+		window.addEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
+		window.addEventListener("resize", this.hideTooltipOnScrollAndResize, true);
 		if (this.props.targetObj) {
-			if (this.props.delay === 0) {
-				this.setTooltipVisible(true);
-			} else {
-				this.showTooltipWithDelay();
-			}
+			this.setTooltipVisible(true);
 		}
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener("scroll", this.hideTooltipOnScrollAndResize, true);
+		window.removeEventListener("resize", this.hideTooltipOnScrollAndResize, true);
 		if (this.pendingTooltip) {
 			clearTimeout(this.pendingTooltip);
 		}
@@ -53,7 +54,7 @@ class ToolTip extends React.Component {
 			clearTimeout(this.pendingTooltip);
 			this.pendingTooltip = null;
 			this.setState({
-				showToolTip: false
+				isTooltipVisible: false
 			});
 		}
 
@@ -62,7 +63,7 @@ class ToolTip extends React.Component {
 			const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
 			this.pendingTooltip = null;
 			this.setState({
-				showToolTip: visible
+				isTooltipVisible: visible
 			});
 			// updates the tooltip display
 			if (visible) {
@@ -302,21 +303,49 @@ class ToolTip extends React.Component {
 				((tooltipTop + tooltip.offsetHeight) > document.documentElement.clientHeight)); // to the bottom
 	}
 
+	toggleTooltipOnClick(evt) {
+		// 'blur' event occurs before 'click' event. Because of this, onBlur function is called which hides the tooltip.
+		// To prevent this default behavior, stopPropagation and preventDefault is used.
+		evt.stopPropagation();
+		evt.preventDefault();
+		if (this.state.isTooltipVisible) {
+			// Tooltip is visible and user clicks on trigger element again, hide tooltip
+			this.setTooltipVisible(false);
+		} else {
+			this.setTooltipVisible(true);
+		}
+	}
+
+	hideTooltipOnScrollAndResize(evt) {
+		if (this.state.isTooltipVisible) {
+			this.setTooltipVisible(false);
+		}
+	}
+
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
-			const mouseover = () => this.showTooltipWithDelay();
+			const mouseover = () => this.setTooltipVisible(true);
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
+			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
+			// Ref - https://stackoverflow.com/a/49512400
+			const onFocus = () => this.showTooltipWithDelay();
+			const onBlur = () => this.setTooltipVisible(false);
+			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
 				data-id={this.props.id + "-trigger"}
 				className="tooltip-trigger"
-				onMouseOver={mouseover}
-				onMouseLeave={mouseleave}
-				onMouseDown={mousedown}
+				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
+				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
+				onMouseDown={!this.props.showToolTipOnClick ? mousedown : null}
+				onClick={this.props.showToolTipOnClick ? click : null}
+				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
+				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
@@ -346,7 +375,7 @@ class ToolTip extends React.Component {
 			<div className="tooltip-container">
 				{triggerContent}
 				<Portal>
-					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
@@ -369,13 +398,15 @@ ToolTip.propTypes = {
 	mousePos: PropTypes.object,
 	disable: PropTypes.bool, // Tooltip will not show if disabled
 	showToolTipIfTruncated: PropTypes.bool, // Set to true to only display tooltip if full text does not fit in displayable width
-	delay: PropTypes.number
+	delay: PropTypes.number,
+	showToolTipOnClick: PropTypes.bool
 };
 
 ToolTip.defaultProps = {
-	delay: 1000,
+	delay: 200,
 	direction: "bottom",
-	showToolTipIfTruncated: false // False will always show Tooltip even when whole word can be displayed
+	showToolTipIfTruncated: false, // False will always show Tooltip even when whole word can be displayed
+	showToolTipOnClick: false
 };
 
 export default ToolTip;

@@ -44,14 +44,6 @@
 		@include carbon--type-style("label-01");
 		color: $text-02;
 	}
-	.properties-number-generator {
-		margin-left: $spacing-02;
-		padding: $spacing-01;
-		min-height: 30px;
-		span {
-			text-decoration: underline;
-		}
-	}
 	&.table-control {
 		label, .properties-required-indicator {
 			@include carbon--type-style("productive-heading-01");
@@ -65,7 +57,8 @@
 		display: flex;
 		width: 16px;
 		height: 16px;
-		margin-left: $spacing-02;
+		margin-left: $spacing-03;
+		cursor: pointer;
 	}
 }
 

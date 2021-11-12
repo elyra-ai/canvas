@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,60 @@
  */
 
 import { combineReducers, createStore } from "redux";
-import selectioninfo from "./reducers/selectioninfo.js";
-import layoutinfo from "./reducers/layoutinfo.js";
-import canvasinfo from "./reducers/canvasinfo.js";
-import breadcrumbs from "./reducers/breadcrumbs.js";
+import { cloneDeep, isEmpty } from "lodash";
+
+import ConfigUtils from "../config-utils.js";
+
+import tooltip from "./reducers/tooltip.js";
 import palette from "./reducers/palette.js";
+import canvasinfo from "./reducers/canvasinfo.js";
+import contextmenu from "./reducers/contextmenu.js";
+import rightflyout from "./reducers/rightflyout.js";
+import bottompanel from "./reducers/bottompanel.js";
+import breadcrumbs from "./reducers/breadcrumbs.js";
+import canvasconfig from "./reducers/canvasconfig.js";
+import canvastoolbar from "./reducers/canvastoolbar.js";
 import notifications from "./reducers/notifications.js";
+import selectioninfo from "./reducers/selectioninfo.js";
+import notificationpanel from "./reducers/notificationpanel.js";
 import externalpipelineflows from "./reducers/externalpipelineflows.js";
 
 export default class CanavasStore {
 	constructor(emptyCanvasInfo) {
 		// Put selectioninfo reducer first so selections are handled before
-		// canvasinfo actions. Also, put layoutinfo reducer before canvasinfo
-		// because node heights and width are calculated based on layoutinfo.
-		var combinedReducer = combineReducers({ selectioninfo, layoutinfo, canvasinfo, breadcrumbs, palette, notifications, externalpipelineflows });
+		// canvasinfo actions. Also, put canvasconfig reducer before canvasinfo
+		// because node heights and widths are calculated based on the node
+		// layout info contained in the canvas config object's enableNodeLayout field.
+		var combinedReducer = combineReducers({
+			selectioninfo,
+			canvasconfig,
+			canvasinfo,
+			breadcrumbs,
+			palette,
+			notifications,
+			notificationpanel,
+			externalpipelineflows,
+			tooltip,
+			canvastoolbar,
+			contextmenu,
+			rightflyout,
+			bottompanel
+		});
 
 		const initialState = {
 			selectioninfo: {},
-			layoutinfo: {},
 			canvasinfo: emptyCanvasInfo,
+			canvasconfig: ConfigUtils.getDefaultCanvasConfig(),
 			breadcrumbs: [{ pipelineId: emptyCanvasInfo.primary_pipeline, pipelineFlowId: emptyCanvasInfo.id }],
-			palette: {},
+			palette: { content: {} }, // Don't initialize isOpen here, it must be done in CanvasController.setCanvasConfig based on paletteInitialState
 			notifications: [],
-			externalpipelineflows: []
+			notificationpanel: { isOpen: false, config: {} },
+			externalpipelineflows: [],
+			tooltip: {},
+			canvastoolbar: {},
+			contextmenu: { menuDef: [] },
+			rightflyout: {},
+			bottompanel: {}
 		};
 
 		let enableDevTools = false;
@@ -57,53 +88,96 @@ export default class CanavasStore {
 		return this.store.subscribe(callback);
 	}
 
+	// Returns the redux store
+	getStore() {
+		return this.store;
+	}
+
+	getPalette() {
+		return cloneDeep(this.store.getState().palette);
+	}
+
 	getPaletteData() {
-		return this.copyData(this.store.getState().palette);
+		return cloneDeep(this.store.getState().palette.content);
 	}
 
 	getCanvasInfo() {
-		return this.copyData(this.store.getState().canvasinfo);
+		return cloneDeep(this.store.getState().canvasinfo);
 	}
 
 	getBreadcrumbs() {
-		return this.copyData(this.store.getState().breadcrumbs);
+		return cloneDeep(this.store.getState().breadcrumbs);
 	}
 
-	getLayoutInfo() {
-		return this.copyData(this.store.getState()).layoutinfo;
+	getCanvasConfig() {
+		// Canvas config cannot be cloned because it may contain JSX objects
+		// so create copy using Object.assign.
+		return Object.assign({}, this.store.getState().canvasconfig);
 	}
 
 	getNodeLayout() {
-		return this.copyData(this.store.getState().layoutinfo.nodeLayout);
+		return this.cloneData(this.store.getState().canvasconfig.enableNodeLayout);
 	}
 
 	getCanvasLayout() {
-		return this.copyData(this.store.getState().layoutinfo.canvasLayout);
+		return this.cloneData(this.store.getState().canvasconfig.enableCanvasLayout);
+	}
+
+	isTooltipOpen() {
+		return !isEmpty(this.store.getState().tooltip);
+	}
+
+	getTooltip() {
+		return this.cloneData(this.store.getState().tooltip);
+	}
+
+	isRightFlyoutOpen() {
+		return this.store.getState().rightflyout.isOpen;
+	}
+
+	isBottomPanelOpen() {
+		return this.store.getState().bottompanel.isOpen;
+	}
+
+	getNotificationPanel() {
+		return this.cloneData(this.store.getState().notificationpanel);
 	}
 
 	getNotifications() {
 		// Notification messages may contain JSX objects and a callback function
-		// so create copy using Object.assign instead of this.copyData method.
+		// so create copy using Object.assign instead of this.cloneData method.
 		return this.store.getState().notifications.map((n, i) => Object.assign({}, n));
 	}
 
+	isNotificationPanelOpen() {
+		return this.getNotificationPanel().isOpen;
+	}
+
+	getContextMenu() {
+		return this.cloneData(this.store.getState().contextmenu);
+	}
+
+	isContextMenuDisplayed() {
+		return !isEmpty(this.store.getState().contextmenu.menuDef);
+	}
+
 	getSelectionInfo() {
-		return this.copyData(this.store.getState().selectioninfo);
+		return this.cloneData(this.store.getState().selectioninfo);
 	}
 
 	getExternalPipelineFlows() {
-		return this.copyData(this.store.getState().externalpipelineflows);
+		return this.cloneData(this.store.getState().externalpipelineflows);
 	}
 
 	getExternalPipelineFlow(url) {
 		const epf = this.store.getState().externalpipelineflows.find((pf) => pf.url === url);
 		if (epf) {
-			return this.copyData(epf);
+			return this.cloneData(epf);
 		}
 		return null;
 	}
 
-	copyData(data) {
-		return JSON.parse(JSON.stringify(data));
+	cloneData(data) {
+		return cloneDeep(data);
 	}
 }

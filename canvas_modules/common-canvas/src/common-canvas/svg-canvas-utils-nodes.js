@@ -19,8 +19,7 @@ import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
 	SUPER_NODE, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
 export default class SvgCanvasNodes {
-	constructor(config, canvasLayout) {
-		this.config = config;
+	constructor(canvasLayout) {
 		this.canvasLayout = canvasLayout;
 	}
 
@@ -111,6 +110,42 @@ export default class SvgCanvasNodes {
 			break;
 		}
 		return labelClass;
+	}
+
+	// Returns the absolute x coordinate of the center of the node
+	getNodeCenterPosX(node) {
+		if (this.isExpandedSupernode(node)) {
+			return node.x_pos + (node.expanded_width / 2);
+		}
+		return node.x_pos + (node.width / 2);
+	}
+
+	// Returns the absolute y coordinate of the center of the node
+	getNodeCenterPosY(node) {
+		if (this.isExpandedSupernode(node)) {
+			return node.y_pos + (node.expanded_height / 2);
+		}
+		return node.y_pos + (node.height / 2);
+	}
+
+	// Returns the absolute x coordinate of the center of the node image
+	getNodeImageCenterPosX(node) {
+		if (this.isExpandedSupernode(node)) {
+			return node.x_pos + this.canvasLayout.supernodeImagePosX + (this.canvasLayout.supernodeImageWidth / 2);
+		}
+		return node.x_pos +
+			this.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition) +
+			(node.layout.imageWidth / 2);
+	}
+
+	// Returns the absolute y coordinate of the center of the node image
+	getNodeImageCenterPosY(node) {
+		if (this.isExpandedSupernode(node)) {
+			return node.y_pos + this.canvasLayout.supernodeImagePosY + (this.canvasLayout.supernodeImageHeight / 2);
+		}
+		return node.y_pos +
+			this.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition) +
+			(node.layout.imageHeight / 2);
 	}
 
 	getNodeImagePosX(node) {
@@ -286,7 +321,7 @@ export default class SvgCanvasNodes {
 		if (this.isExpandedSupernode(node)) {
 			return node.width + this.canvasLayout.supernodeErrorPosX;
 		}
-		return this.getElementPosY(node.width, node.layout.errorXPos, node.layout.errorPosition);
+		return this.getElementPosX(node.width, node.layout.errorXPos, node.layout.errorPosition);
 	}
 
 	getNodeErrorPosY(node) {

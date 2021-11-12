@@ -18,12 +18,42 @@
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
+
+// Imports from harness test resources
 import startCanvas from "../test_resources/json/startCanvas.json";
+import branchTestExpected from "../test_resources/canvas-controller/branch-test-exp.json";
+import upstreamTestExpected from "../test_resources/canvas-controller/upstream-test-exp.json";
+import downstreamTestExpected from "../test_resources/canvas-controller/downstream-test-exp.json";
+
+// Imports from common-canvas test resources
 import allTypesCanvas from "../../../harness/test_resources/diagrams/allTypesCanvas.json";
+import supernodeCanvas from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
+import externalMainCanvasExpanded from "../../../harness/test_resources/diagrams/externalMainCanvasExpanded.json";
+import commonPalette from "../../../harness/test_resources/palettes/commonPalette.json";
+import supernodePalette from "../../../harness/test_resources/palettes/supernodePalette.json";
+
+import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas1.json";
+import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../../harness/test_resources/diagrams/externalSubFlowCanvas2.json";
+
 
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 
 describe("Test canvas controller methods", () => {
+	it("should get the current pipeline using: getCurretPipeline", () => {
+		deepFreeze(startCanvas);
+
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(allTypesCanvas);
+
+		const pipelineId1 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId1, "`~!@#$%^&*()_+=-{}][|:;<,>.9?/")).to.be.true;
+
+		canvasController.displaySubPipelineForSupernode("nodeIDSuperNodePE");
+		const pipelineId2 = canvasController.getCurrentPipelineId();
+		expect(isEqual(pipelineId2, "modeler-sub-pipeline")).to.be.true;
+
+	});
+
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
@@ -357,4 +387,173 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(actualClassName0, testClassName)).to.be.true;
 		expect(isEqual(actualClassName1, testClassName)).to.be.true;
 	});
+
+	it("should test sub-pipeline display calls", () => {
+		const canvasController = new CanvasController();
+		canvasController.setHandlers({ beforeEditActionHandler: beforeEditActionHandler });
+
+		canvasController.setPipelineFlow(externalMainCanvasExpanded);
+
+		const breadcrumbs = [
+			{
+				"pipelineId": "external-sub-flow-pipeline-1",
+				"supernodeId": "nodeIDSuperNodePE",
+				"supernodeParentPipelineId": "`~!@#$%^&*()_+=-{}][|:;<,>.9?/",
+				"externalUrl": "external-sub-flow-url-1",
+				"label": "Super node"
+			},
+			{
+				"pipelineId": "external-sub-flow-pipeline-2",
+				"supernodeId": "8609fbcf-828a-49cc-8fee-c9d4593e3207",
+				"supernodeParentPipelineId": "external-sub-flow-pipeline-1",
+				"externalUrl": "external-sub-flow-url-2",
+				"label": "Supernode 2"
+			}
+		];
+
+		// Add some breadcrumbs to be added using: displaySubPipelineForBreadcrumbs
+		canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
+		const bcs = canvasController.getBreadcrumbs();
+		expect(bcs).to.have.length(3);
+
+		// Specify the middle pipeline to be displayed using: displaySubPipeline
+		canvasController.displaySubPipeline("external-sub-flow-pipeline-1");
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		// Specify the supernode to open the third breadcrumb using: displaySubPipelineForSupernode
+		canvasController.displaySubPipelineForSupernode("8609fbcf-828a-49cc-8fee-c9d4593e3207", "external-sub-flow-pipeline-1");
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		// Try undoing the three actions performd so far.
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		canvasController.getCommandStack().undo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(1);
+
+
+		// Try rdoing the three actions performd so far.
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(2);
+
+		canvasController.getCommandStack().redo();
+		expect(canvasController.getBreadcrumbs()).to.have.length(3);
+	});
+
+	it("should create a regular node on the canvas from a palette node", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(commonPalette);
+
+		const nodeTemplate = canvasController.getPaletteNode("com.ibm.commonicons.sources.varfile");
+		const newNode = canvasController.createNode({
+			nodeTemplate: nodeTemplate,
+			offsetX: 200,
+			offsetY: 400
+		});
+		canvasController.addNode(newNode);
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(1);
+
+	});
+
+	it("should create a supernode on the canvas from a palette supernode", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(supernodePalette);
+
+		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
+		const newNode = canvasController.createNode({
+			nodeTemplate: snTemplate,
+			offsetX: 200,
+			offsetY: 400
+		});
+		canvasController.addNode(newNode);
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
+
+	});
+
+
+	it("should execute a Command to create a supernode on the canvas from a palette supernode", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlowPalette(supernodePalette);
+
+		// Initially, there shouldn't be any commands to undo in the command stack.
+		expect(canvasController.getCommandStack().canUndo()).to.be.false;
+
+		const snTemplate = canvasController.getPaletteNodeById("Supernode-local");
+		canvasController.createNodeCommand({ nodeTemplate: snTemplate, offsetX: 100, offsetY: 50 });
+
+		expect(canvasController.getNodes()).to.have.length(1);
+		expect(canvasController.getPipelineFlow().pipelines).to.have.length(2);
+
+		// createNodeCommand should add a command to the command stack so there
+		// should now be a command to undo.
+		expect(canvasController.getCommandStack().canUndo()).to.be.true;
+	});
+
+	it("should return an array of nodes for the branch", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Supernode
+		const branchTestActual = canvasController.getBranchNodes(["7015d906-2eae-45c1-999e-fb888ed957e5"]);
+
+		expect(JSON.stringify(branchTestExpected)).to.equal(JSON.stringify(branchTestActual));
+	});
+
+	it("should return an array of nodes for the upstream", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Binding (exit) node
+		const upstreamTestActual = canvasController.getUpstreamNodes(["id5KIRGGJ3FYT"]);
+
+		expect(JSON.stringify(upstreamTestExpected)).to.equal(JSON.stringify(upstreamTestActual));
+	});
+
+	it("should return an array of nodes for the downstream", () => {
+		const canvasController = new CanvasController();
+		canvasController.setPipelineFlow(supernodeCanvas);
+
+		// Database node
+		const downstreamTestActual = canvasController.getDownstreamNodes(["f5373d9e-677d-4717-a9fd-3b57038ce0de"]);
+
+		expect(JSON.stringify(downstreamTestExpected)).to.equal(JSON.stringify(downstreamTestActual));
+	});
 });
+
+const externalPipelineFlows = [];
+externalPipelineFlows["external-sub-flow-url-1"] = EXTERNAL_SUB_FLOW_CANVAS_1;
+externalPipelineFlows["external-sub-flow-url-2"] = EXTERNAL_SUB_FLOW_CANVAS_2;
+
+
+function beforeEditActionHandler(data) {
+	switch (data.editType) {
+
+	case "createSuperNodeExternal":
+	case "convertSuperNodeLocalToExternal": {
+		data.externalUrl = "external-flow-url-" + Date.now();
+		data.externalPipelineFlowId = "external-pipeline-flow-id-" + Date.now();
+		break;
+	}
+	case "loadPipelineFlow":
+	case "expandSuperNodeInPlace":
+	case "displaySubPipeline":
+	case "convertSuperNodeExternalToLocal": {
+		if (data.externalPipelineFlowLoad) {
+			data.externalPipelineFlow = externalPipelineFlows[data.externalUrl];
+		}
+		break;
+	}
+	default:
+	}
+	return data;
+}

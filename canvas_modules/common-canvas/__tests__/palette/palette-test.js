@@ -40,10 +40,22 @@ describe("Palette renders correctly", () => {
 		const popupPalette = createPalette();
 		expect(popupPalette.find(PaletteDialogContent)).to.have.length(1);
 	});
+
+	// WARNING: The data-id attribute is used by host application "walk-me"
+	// tours to identify palette elements. Therefore, the attribute name
+	// MUST NOT be removed or renamed.
+	it("Palette modal categories should have data-id attribute", () => {
+		const popupPalette = createPalette();
+		const modalPaletteCategories = popupPalette.find(".palette-dialog-category-selected");
+		modalPaletteCategories.forEach((category, idx) => {
+			expect(category.props()).to.have.property("data-id", paletteSpec.categories[idx].id);
+		});
+	});
 });
 
 const paletteSpec = {
 	"categories": [{
+		"id": "import",
 		"category": "import",
 		"label": "Import",
 		"node_types": [{

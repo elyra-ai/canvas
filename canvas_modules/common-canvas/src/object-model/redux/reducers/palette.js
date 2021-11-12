@@ -19,18 +19,25 @@ import categories from "./categories.js";
 export default (state = {}, action) => {
 	switch (action.type) {
 	case "CLEAR_PALETTE_DATA":
-		return {};
+		return { content: {} };
 
-	case "SET_PALETTE_DATA":
-		return Object.assign({}, action.data);
+	case "SET_PALETTE_DATA": {
+		const newContent = Object.assign({}, action.data.content);
+		return Object.assign({}, state, { content: newContent });
+	}
 
 	case "ADD_NODE_TYPES_TO_PALETTE":
 	case "REMOVE_NODE_TYPES_FROM_PALETTE":
 	case "SET_CATEGORY_LOADING_TEXT":
 	case "SET_CATEGORY_EMPTY_TEXT": {
+		const newContent = Object.assign({}, state.content, { categories: categories(state.content.categories, action) });
 		// Save version for the palette in case this is the first action performed on an empty palette.
-		return Object.assign({}, state, { categories: categories(state.categories, action), version: "3.0" });
+		return Object.assign({}, state, { content: newContent, version: "3.0" });
 	}
+
+	case "SET_PALETTE_OPEN_STATE":
+		return Object.assign({}, state, { isOpen: action.data.isOpen });
+
 	default:
 		return state;
 	}

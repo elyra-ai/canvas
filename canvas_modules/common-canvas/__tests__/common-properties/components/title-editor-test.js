@@ -35,6 +35,24 @@ controller.setAppData(appData);
 const helpClickHandler = sinon.spy();
 const help = { data: "test-data" };
 
+const titleChangeHandlerFunction = function(title, callbackFunction) {
+	// If Title is valid. No need to send anything in callbackFunction
+	if (title.length > 15) {
+		callbackFunction({ type: "error", message: "Only 15 characters are allowed in title." });
+	} else if (title.length > 10 && title.length <= 15) {
+		callbackFunction({
+			type: "warning",
+			message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
+		});
+	} else if (title === "Invalid") {
+		callbackFunction({ "abc": "xyz" });
+	}
+};
+const titleChangeHandler = sinon.spy(titleChangeHandlerFunction);
+controller.setHandlers({
+	titleChangeHandler: titleChangeHandler
+});
+
 
 describe("title-editor renders correctly", () => {
 
@@ -132,6 +150,102 @@ describe("title-editor renders correctly", () => {
 		input.simulate("change", { target: { value: "My new title" } });
 		expect("My new title").to.equal(controller.getTitle());
 	});
+	it("titleChangeHandler should be called after editing node title", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "My new title";
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+	});
+	it("Warning message returned by titleChangeHandler should be displayed correctly", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "Short title"; // Title length exceeds 10 characters. Show warning message.
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+		// Verify warning message is displayed
+		const warningMessage = "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages.";
+		expect(wrapper.find(".bx--text-input__field-wrapper--warning")).to.have.length(1);
+		expect(wrapper.find(".bx--form-requirement").text()).to.equal(warningMessage);
+	});
+	it("Error message returned by titleChangeHandler should be displayed correctly", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "This is a long title."; // Title length exceeds 15 characters. Show error message.
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify error message is displayed
+		const errorMessage = "Only 15 characters are allowed in title.";
+		expect(wrapper.find(".bx--text-input__field-wrapper[data-invalid=true]")).to.have.length(1);
+		expect(wrapper.find(".bx--form-requirement").text()).to.equal(errorMessage);
+	});
+	it("Don't show any error/warning message when titleChangeHandler doesn't return anything", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		const newTitle = "Test"; // Title length is less than 10. titleChangeHandler doesn't return anything when title is valid.
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify no message is displayed
+		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
+	});
+	it("Don't show any error/warning message when titleChangeHandler response is invalid", () => {
+		controller.setTitle("test title");
+		titleChangeHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+			/>
+		);
+		const input = wrapper.find("input");
+		// For this title, titleChangeHandler returns { "abc": "xyz" }.
+		const newTitle = "Invalid";
+		input.simulate("change", { target: { value: newTitle } });
+		expect(titleChangeHandler.calledOnce).to.equal(true);
+		expect(titleChangeHandler.calledWith(newTitle)).to.be.true;
+
+		// verify no message is displayed
+		expect(wrapper.find(".bx--form-requirement")).to.have.length(0);
+	});
 	it("test label is readonly", () => {
 		helpClickHandler.resetHistory();
 		const wrapper = mountWithIntl(
@@ -191,26 +305,6 @@ describe("title-editor renders correctly", () => {
 		expect(wrapper.find(".properties-title-editor.properties-title-with-heading")).to.have.length(0);
 		expect(wrapper.find(".properties-title-heading-label")).to.have.length(0);
 		expect(wrapper.find("InlineSVG.properties-title-heading-icon")).to.have.length(0);
-	});
-	it("Edit title and Help buttons should have aria-label", () => {
-		controller.setTitle("test title");
-		helpClickHandler.resetHistory();
-		const wrapper = mountWithIntl(
-			<TitleEditor
-				store={controller.getStore()}
-				controller={controller}
-				labelEditable
-				help={help}
-			/>
-		);
-		// Edit title button
-		const editTitleButton = wrapper.find(".properties-title-editor-btn[data-id='edit']").hostNodes();
-		expect(editTitleButton.props()).to.have.property("aria-label", "edit title");
-
-		// Help button
-		const helpButton = wrapper.find(".properties-title-editor-btn[data-id='help']").hostNodes();
-		expect(helpButton.props()).to.have.property("aria-label", "help");
-
 	});
 	it("If heading is enabled, help button should be added in the heading", () => {
 		controller.setTitle("test title");

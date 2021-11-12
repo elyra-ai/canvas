@@ -32,8 +32,8 @@ class PaletteDialogContentCategories extends React.Component {
 		for (var idx = 0; idx < this.props.categories.length; idx++) {
 			catDivs.push(
 				<PaletteDialogContentCategory
-					key={this.props.categories[idx]}
-					categoryName={this.props.categories[idx]}
+					key={this.props.categories[idx].label}
+					category={this.props.categories[idx]}
 					selectedCategory={this.props.selectedCategory}
 					categorySelectedMethod={this.props.categorySelectedMethod}
 				/>

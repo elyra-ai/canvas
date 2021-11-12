@@ -215,7 +215,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		};
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.properties-validation-message");
+		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -223,7 +223,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
 		// Ensure the error message is no longer displayed.
-		messageWrapper = dateWrapper.find("div.properties-validation-message");
+		messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -250,7 +250,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const actual = controller.getErrorMessage({ name: "date_ymd" });
 
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.properties-validation-message");
+		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -258,7 +258,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd']");
-		messageWrapper = dateWrapper.find("div.properties-validation-message");
+		messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -277,11 +277,11 @@ describe("error messages renders correctly for datefield controls", () => {
 			"required": true,
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
-			"text": "Required parameter 'Required Date M-D-Y' has no value.",
+			"text": "You must provide your Required Date M-D-Y.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 		expect(datefieldErrorMessages).to.eql(actual);
-		let messageWrapper = dateWrapper.find("div.properties-validation-message");
+		let messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
@@ -289,7 +289,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure the error message is no longer displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_mdy']");
-		messageWrapper = dateWrapper.find("div.properties-validation-message");
+		messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 
@@ -301,7 +301,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Ensure an error message is not displayed.
 		dateWrapper = wrapper.find("div[data-id='properties-date_ymd_non_req']");
-		const messageWrapper = dateWrapper.find("div.properties-validation-message");
+		const messageWrapper = dateWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(0);
 	});
 

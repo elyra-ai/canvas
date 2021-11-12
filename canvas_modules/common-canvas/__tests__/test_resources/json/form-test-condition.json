@@ -89,6 +89,7 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "general",
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -124,7 +125,8 @@
                       "role": "expression"
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           }

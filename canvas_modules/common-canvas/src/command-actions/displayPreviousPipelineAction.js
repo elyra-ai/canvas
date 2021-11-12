@@ -20,7 +20,7 @@ export default class DisplayPreviousPipeline extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
-		this.oldPipelineInfo = this.objectModel.getCurrentBreadcrumb();
+		this.oldBreadcrumbs = this.objectModel.getBreadcrumbs();
 	}
 
 	// Standard methods
@@ -29,7 +29,7 @@ export default class DisplayPreviousPipeline extends Action {
 	}
 
 	undo() {
-		this.objectModel.addNewBreadcrumb(this.oldPipelineInfo);
+		this.objectModel.setBreadcrumbs(this.oldBreadcrumbs);
 	}
 
 	redo() {

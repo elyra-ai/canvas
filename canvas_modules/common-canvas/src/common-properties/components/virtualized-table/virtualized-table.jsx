@@ -20,7 +20,7 @@ import { Column, Table } from "react-virtualized/dist/commonjs/Table";
 import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { TOOL_TIP_DELAY, SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -201,8 +201,7 @@ class VirtualizedTable extends React.Component {
 				: <Tooltip
 					id={tooltipId}
 					tip={tooltip}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
+					direction="bottom"
 					className="properties-tooltips"
 				>
 					{label}

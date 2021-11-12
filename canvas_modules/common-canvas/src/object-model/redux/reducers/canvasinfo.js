@@ -15,8 +15,6 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-import { SUPER_NODE } from "../../../common-canvas/constants/canvas-constants.js";
-
 import nodes from "./nodes.js";
 import comments from "./comments.js";
 import links from "./links.js";
@@ -26,19 +24,21 @@ export default (state = {}, action) => {
 
 	case "SET_CANVAS_INFO": {
 		if (action.canvasInfo) {
-			return action.canvasInfo;
+			return Object.assign({}, action.canvasInfo);
 		}
 		return state;
 	}
 
-	// Save incoming sub-pipeline to the pipeline flow pipelines array.
-	case "ADD_PIPELINE": {
-		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.data) });
+	case "SET_CANVAS_CONFIG_INFO":
+	case "REPLACE_PIPELINES": {
+		return Object.assign({}, state, { pipelines: action.data.pipelines });
 	}
 
 	// Add pipelines from the external pipeline flow into the canvas info pipelines array
 	case "ADD_EXTERNAL_PIPELINE_FLOW": {
-		return Object.assign({}, state, { pipelines: state.pipelines.concat(action.newPipelines) });
+		const pipelines = action.newPipelines.map((p) => Object.assign({}, p));
+		const canvasInfoPipelines = state.pipelines.concat(pipelines);
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
 	case "REMOVE_EXTERNAL_PIPELINE_FLOW": {
@@ -51,66 +51,40 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "CONVERT_SN_EXTERNAL_TO_LOCAL": {
-		const supernode = getSupernode(action.data.supernodeId, action.data.pipelineId, state.pipelines);
-		const supernodesToConvert =
-			getSupernodesToConvert([supernode], action.data.pipelineId,
-				action.type, action.data.externalFlowUrl, state.pipelines);
-		const pipelineIdsToConvert = getPipelineIdsToConvert(supernodesToConvert);
-
-		let canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			let pLine = pipeline;
-
-			// We need to alter the supernodes so subflow_ref.url field is removed.
-			if (supernodesToConvert[pipeline.id] &&
-					supernodesToConvert[pipeline.id].length > 0) {
-				action.data.supernodesToConvert = supernodesToConvert[pipeline.id];
-				pLine = Object.assign({}, pLine, {
-					nodes: nodes(pipeline.nodes, action) });
-			}
-
-			// We need to add the parentUrl property to the subflow pipelines that
-			// are being made local.
-			if (pipelineIdsToConvert.some((pId) => pId === pipeline.id)) {
-				delete pLine.parentUrl;
-			}
-			return pLine;
+	case "REPLACE_SN_AND_PIPELINES": {
+		// First filter out all the old pipelines.
+		let canvasInfoPipelines = state.pipelines.filter((pipeline) => {
+			const removePipeline = action.data.pipelinesToRemove.some((p) => p.id === pipeline.id);
+			return !removePipeline;
 		});
 
-		// If the pipeline is not loaded we will be provided by one (or more new
-		// pipelines so we add them to the canvas info's pipelines.
-		// referencd by its supernodes.
-		if (action.data.newPipelines) {
-			canvasInfoPipelines = canvasInfoPipelines.concat(action.data.newPipelines);
-		}
+		// Next change the topSupernode because that will have been altered
+		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
+			if (pipeline.id === action.data.pipelineId) {
+				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
+			}
+			return pipeline;
+		});
 
+		// Then add the new pipelines
+		canvasInfoPipelines = canvasInfoPipelines.concat(action.data.pipelinesToAdd);
+
+		// Finally, add the pipelines into the canvas info.
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "CONVERT_SN_LOCAL_TO_EXTERNAL": {
-		const supernode = getSupernode(action.data.supernodeId, action.data.pipelineId, state.pipelines);
-		const supernodesToConvert =
-			getSupernodesToConvert([supernode], action.data.pipelineId,
-				action.type, "", state.pipelines);
-		const pipelineIdsToConvert = getPipelineIdsToConvert(supernodesToConvert);
-
+	case "SET_PIPELINE_PARENT_URL": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
-			let pLine = pipeline;
-
-			// We need to alter the supernodes so a subflow_ref.url field is added.
-			if (supernodesToConvert[pipeline.id] &&
-					supernodesToConvert[pipeline.id].length > 0) {
-				action.data.supernodesToConvert = supernodesToConvert[pipeline.id];
-				pLine = Object.assign({}, pLine, {
-					nodes: nodes(pipeline.nodes, action) });
+			if (action.data.pipelines.some((p) => p.id === pipeline.id)) {
+				const newPipeline = Object.assign({}, pipeline);
+				if (action.data.url) {
+					newPipeline.parentUrl = action.data.url;
+				} else {
+					delete newPipeline.parentUrl;
+				}
+				return newPipeline;
 			}
-
-			// We need to add the parentUrl property to the subflow pipelines that
-			// are being made external.
-			if (pipelineIdsToConvert.some((pId) => pId === pipeline.id)) {
-				pLine = Object.assign({}, pLine, { parentUrl: action.data.externalFlowUrl });
-			}
-			return pLine;
+			return pipeline;
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
@@ -133,22 +107,32 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
-	case "SET_LAYOUT_INFO": {
-		return Object.assign({}, state, { pipelines: action.pipelines });
-	}
+	case "ADD_SUPERNODES": {
+		let canvasInfoPipelines = [
+			...state.pipelines,
+			...action.data.pipelinesToAdd
+		];
 
-	case "DELETE_SUPERNODE": {
-		// Delete the supernode pipelines.
-		let canvasInfoPipelines = state.pipelines;
-		action.data.pipelineIds.forEach((pipelineId) => {
-			canvasInfoPipelines = canvasInfoPipelines.filter((pipeline) => {
-				return pipeline.id !== pipelineId;
-			});
+		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
+			if (pipeline.id === action.data.pipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action)
+				});
+			}
+			return pipeline;
 		});
 
-		// Delete the supernode.
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DELETE_SUPERNODES": {
+		let canvasInfoPipelines = state.pipelines.filter((pipeline) => {
+			const removePipeline = action.data.pipelinesToDelete.some((p) => p.id === pipeline.id);
+			return !removePipeline;
+		});
+
 		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
-			if (pipeline.id === action.pipelineId) {
+			if (pipeline.id === action.data.pipelineId) {
 				return Object.assign({}, pipeline, {
 					nodes: nodes(pipeline.nodes, action),
 					links: links(pipeline.links, action)
@@ -156,6 +140,7 @@ export default (state = {}, action) => {
 			}
 			return pipeline;
 		});
+
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
@@ -163,7 +148,6 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 
 	case "ADD_NODE":
-	case "ADD_AUTO_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":
 	case "SIZE_AND_POSITION_OBJECTS":
@@ -182,7 +166,6 @@ export default (state = {}, action) => {
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 	case "SET_OUTPUT_PORT_SUBFLOW_NODE_REF":
-	case "SET_SUPERNODE_FLAG":
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
@@ -209,6 +192,130 @@ export default (state = {}, action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
+
+	case "SET_SUPERNODE_EXPAND_STATE": {
+		const canvasInfoPipelines = state.pipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.pipelineId) {
+					// Add nodes, comments and links to main pipeline
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "SET_SUPERNODE_EXPAND_STATE", data: action.data });
+
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.objectPositions } });
+
+					const newComments = comments(pipeline.comments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.objectPositions } });
+
+					const newLinks = links(pipeline.links,
+						{ type: "SET_LINK_POSITIONS", data: action.data });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DECONSTRUCT_SUPERNODE": {
+		const canvasInfoPipelines = state.pipelines
+			// Filter out the pipeline to delete
+			.filter((p) => p.id !== action.data.pipelineToDelete.id)
+			// Modify the pipeline where the supernode exists
+			.map((pipeline) => {
+				if (pipeline.id === action.data.pipelineId) {
+					// Add nodes, comments and links to main pipeline
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "ADD_NODES", data: action.data });
+
+					let newComments = comments(pipeline.comments,
+						{ type: "ADD_COMMENTS", data: action.data });
+
+					let newLinks = links(pipeline.links,
+						{ type: "ADD_LINKS", data: action.data });
+
+					// Delete supernode
+					newNodes = nodes(newNodes,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					newLinks = links(newLinks,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					// Set object positions to their expanded positions
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.newObjectPositions } });
+
+					newComments = comments(newComments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.newObjectPositions } });
+
+					newLinks = links(newLinks,
+						{ type: "SET_LINK_POSITIONS", data: { linkPositions: action.data.newLinkPositions } });
+
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "RECONSTRUCT_SUPERNODE": {
+		// Add back the pipeline that was deleted.
+		let canvasInfoPipelines = [
+			...state.pipelines,
+			action.data.pipelineToDelete
+		];
+
+		canvasInfoPipelines = canvasInfoPipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.data.pipelineId) {
+					// Remove nodes, comments and links from main pipeline that were previosuly added
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "REMOVE_NODES", data: { nodesToDelete: action.data.nodesToAdd } });
+
+					let newComments = comments(pipeline.comments,
+						{ type: "REMOVE_COMMENTS", data: { commentsToDelete: action.data.commentsToAdd } });
+
+					let newLinks = links(pipeline.links,
+						{ type: "REMOVE_LINKS", data: { linksToDelete: action.data.linksToAdd } });
+
+					// Add back the supernode
+					newNodes = nodes(newNodes,
+						{ type: "ADD_SUPERNODES", data: { supernodesToAdd: [action.data.supernodeToDelete] } });
+
+					// Add back removed links
+					newLinks = links(newLinks,
+						{ type: "ADD_LINKS", data: { linksToAdd: action.data.linksToRemove } });
+
+					// newLinks = links(newLinks,
+					// 	{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: [action.data.supernodeToDelete] } });
+
+					// Set object positions to their expanded positions
+					newNodes = nodes(newNodes,
+						{ type: "SET_NODE_POSITIONS", data: { nodePositions: action.data.oldObjectPositions } });
+
+					newComments = comments(newComments,
+						{ type: "SET_COMMENT_POSITIONS", data: { commentPositions: action.data.oldObjectPositions } });
+
+					newLinks = links(newLinks,
+						{ type: "SET_LINK_POSITIONS", data: { linkPositions: action.data.oldLinkPositions } });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
 	case "SET_OBJECTS_STYLE":
 	case "SET_LINKS_STYLE": {
 		const pipelineIds = Object.keys(action.data.pipelineObjIds);
@@ -225,6 +332,7 @@ export default (state = {}, action) => {
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
+
 	case "SET_OBJECTS_MULTI_STYLE":
 	case "SET_LINKS_MULTI_STYLE": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
@@ -240,6 +348,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "SET_NODES_MULTI_DECORATIONS": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (action.data.pipelineNodeDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
@@ -254,6 +363,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "SET_LINKS_MULTI_DECORATIONS": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (action.data.pipelineLinkDecorations.findIndex((entry) => entry.pipelineId === pipeline.id) > -1) {
@@ -268,6 +378,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 
 	}
+
 	case "REMOVE_ALL_STYLES": {
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			return Object.assign({}, pipeline, {
@@ -281,59 +392,3 @@ export default (state = {}, action) => {
 		return state;
 	}
 };
-
-function getSupernode(supernodeId, pipelineId, pipelines) {
-	const pipeline = getPipeline(pipelineId, pipelines);
-	return pipeline.nodes.find((n) => n.id === supernodeId);
-}
-
-function getSupernodesToConvert(supernodes, supernodePipelineId, type, url, pipelines) {
-	let supernodesToConvert = {};
-	supernodesToConvert[supernodePipelineId] = [];
-
-	supernodes.forEach((sn) => {
-		if ((type === "CONVERT_SN_LOCAL_TO_EXTERNAL" && !sn.subflow_ref.url) ||
-				(type === "CONVERT_SN_EXTERNAL_TO_LOCAL" && sn.subflow_ref.url === url)) {
-			supernodesToConvert[supernodePipelineId].push(sn);
-			const sns = getChildSupernodes(sn, pipelines);
-			if (sns.length > 0) {
-				const res = getSupernodesToConvert(sns, sn.subflow_ref.pipeline_id_ref, type, url, pipelines);
-				supernodesToConvert = Object.assign(supernodesToConvert, res);
-			}
-		}
-	});
-	return supernodesToConvert;
-}
-
-// Returns an array of pipeline IDs to convert from the object containing
-// arrays of supernodes that are to be converted.
-function getPipelineIdsToConvert(supernodesToConvert) {
-	const pipelinesToConvert = [];
-
-	for (const key in supernodesToConvert) {
-		if (supernodesToConvert[key]) {
-			const sns = supernodesToConvert[key];
-			sns.forEach((sn) => {
-				pipelinesToConvert.push(sn.subflow_ref.pipeline_id_ref);
-			});
-		}
-	}
-
-	return pipelinesToConvert;
-}
-
-// Returns and array of supernodes containd within the pipeline referenced by
-// the parent supernode passed in, based on the set of existing pipelines
-// passed in.
-function getChildSupernodes(sn, pipelines) {
-	const snPipelineId = sn.subflow_ref.pipeline_id_ref;
-	const snPipeline = getPipeline(snPipelineId, pipelines);
-	if (snPipeline) {
-		return snPipeline.nodes.filter((n) => n.type === SUPER_NODE);
-	}
-	return [];
-}
-
-function getPipeline(id, pipelines) {
-	return pipelines.find((p) => p.id === id);
-}

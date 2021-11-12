@@ -96,9 +96,10 @@ Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
 		.type(newTitle);
 });
 
-Cypress.Commands.add("moveMouseToCoordinatesInCommonProperties", (x, y) => {
+Cypress.Commands.add("clickAtCoordinatesInCommonProperties", (x, y) => {
+	// common-properties tooltip will be displayed onclick
 	cy.get(".right-flyout-panel")
-		.trigger("mouseover", x, y);
+		.trigger("click", x, y);
 });
 
 Cypress.Commands.add("getControlContainerFromName", (givenName) => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-/* eslint brace-style: "off" */
-/* eslint no-lonely-if: "off" */
 
 // Import just the D3 modules that are needed.
-var d3 = Object.assign({}, require("d3-selection"));
-import isMatch from "lodash/isMatch";
+import * as d3 from "d3-selection";
+import { cloneDeep } from "lodash";
 import SVGCanvasRenderer from "./svg-canvas-renderer.js";
 import CanvasUtils from "./common-canvas-utils.js";
+import ConfigUtils from "../object-model/config-utils.js";
 import Logger from "../logging/canvas-logger.js";
 
 const BACKSPACE_KEY = 8;
@@ -43,95 +42,60 @@ export default class SVGCanvasD3 {
 
 	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
-		this.logger.logStartTimer("Constructor");
-
+		this.logger.logStartTimer("constructor");
+		this.mousePos = {
+			x: 0,
+			y: 0
+		};
 		this.canvasController = canvasController;
-		this.canvasInfo = canvasInfo;
 		this.canvasDiv = this.initializeCanvasDiv(canvasDivSelector);
-		this.config = this.cloneConfig(config);
+		this.logger.logEndTimer("constructor", true);
+		document.addEventListener("mousemove", this.onMouseUpdate.bind(this), true);
+	}
 
-		// Create a renderer object for the primary pipeline
-		this.renderer = new SVGCanvasRenderer(
-			this.canvasInfo.primary_pipeline,
-			this.canvasDiv,
-			this.canvasController,
-			this.canvasInfo,
-			this.config);
-
-		this.logger.logEndTimer("Constructor", true);
+	close() {
+		document.removeEventListener("mousemove", this.onMouseUpdate, true);
 	}
 
 	setCanvasInfo(canvasInfo, config) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
-		if (canvasInfo.id !== this.canvasInfo.id ||
+		if (!this.config ||
+				!this.renderer ||
+				!this.canvasInfo ||
+				canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
-				this.config.enableInteractionType !== config.enableInteractionType ||
-				this.config.enableSnapToGridType !== config.enableSnapToGridType ||
-				this.config.enableSnapToGridX !== config.enableSnapToGridX ||
-				this.config.enableSnapToGridY !== config.enableSnapToGridY ||
-				this.config.enableAutoLayoutVerticalSpacing !== config.enableAutoLayoutVerticalSpacing ||
-				this.config.enableAutoLayoutHorizontalSpacing !== config.enableAutoLayoutHorizontalSpacing ||
-				this.config.enableConnectionType !== config.enableConnectionType ||
-				this.config.enableNodeFormatType !== config.enableNodeFormatType ||
-				this.config.enableLinkType !== config.enableLinkType ||
-				this.config.enableLinkDirection !== config.enableLinkDirection ||
-				this.config.enableLinkSelection !== config.enableLinkSelection ||
-				this.config.enableLinkReplaceOnNewConnection !== config.enableLinkReplaceOnNewConnection ||
-				this.config.enableToolbarLayout !== config.enableToolbarLayout ||
-				this.config.enableDisplayFullLabelOnHover !== config.enableDisplayFullLabelOnHover ||
-				this.config.enableInsertNodeDroppedOnLink !== config.enableInsertNodeDroppedOnLink ||
-				this.config.enableMoveNodesOnSupernodeResize !== config.enableMoveNodesOnSupernodeResize ||
-				this.config.enableExternalPipelineFlows !== config.enableExternalPipelineFlows ||
-				this.config.enableBoundingRectangles !== config.enableBoundingRectangles ||
-				this.config.enableCanvasUnderlay !== config.enableCanvasUnderlay ||
-				this.config.enableSaveZoom !== config.enableSaveZoom ||
-				this.config.enableZoomIntoSubFlows !== config.enableZoomIntoSubFlows ||
-				this.config.enableAssocLinkCreation !== config.enableAssocLinkCreation ||
-				this.config.enableAssocLinkType !== config.enableAssocLinkType ||
-				this.config.enableDragWithoutSelect !== config.enableDragWithoutSelect ||
-				this.config.enableParentClass !== config.enableParentClass ||
-				this.config.enableHighlightNodeOnNewLinkDrag !== config.enableHighlightNodeOnNewLinkDrag ||
-				this.config.enableHighlightUnavailableNodes !== config.enableHighlightUnavailableNodes ||
-				this.config.enablePanIntoViewOnOpen !== config.enablePanIntoViewOnOpen ||
-				this.config.enableRightFlyoutUnderToolbar !== config.enableRightFlyoutUnderToolbar ||
-				this.config.enableAutoLinkOnlyFromSelNodes !== config.enableAutoLinkOnlyFromSelNodes ||
-				!this.enableNodeRightFlyoutOpenExactlyMatches(this.config.enablePositionNodeOnRightFlyoutOpen, config.enablePositionNodeOnRightFlyoutOpen) ||
-				!this.enableCanvasLayoutExactlyMatches(this.config.enableCanvasLayout, config.enableCanvasLayout) ||
-				!this.enableNodeLayoutExactlyMatches(this.config.enableNodeLayout, config.enableNodeLayout)) {
-			this.logger.logStartTimer("Initializing Canvas");
+				!ConfigUtils.compareCanvasConfigs(this.config, config)) {
+			this.logger.logStartTimer("initializing");
 
-			this.canvasInfo = canvasInfo;
-
-			// Save the config
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 			this.config = this.cloneConfig(config);
 
-			// clearCanvas will result in the canvas being refreshed through
-			// updates to the object model so there is no need to call displayCanvas
-			// from here. Setting this.renderer to null causes a new SVGCanvasRenderer
-			// to be created when this method is called on the refresh.
-			this.renderer.clearCanvas();
-			this.renderer = null;
-
-			this.logger.logEndTimer("Initializing Canvas", true);
-
-		} else {
-			this.logger.logStartTimer("Set Canvas Info");
-
-			this.canvasInfo = canvasInfo;
-
 			if (this.renderer) {
-				this.renderer.setCanvasInfoRenderer(this.canvasInfo);
-				this.renderer.displayCanvas();
-			} else {
-				this.renderer = new SVGCanvasRenderer(
-					this.canvasController.getCurrentBreadcrumb().pipelineId,
-					this.canvasDiv,
-					this.canvasController,
-					this.canvasInfo,
-					config);
+				this.renderer.clearCanvas();
+				this.renderer = null;
 			}
 
-			this.logger.logEndTimer("Set Canvas Info", true);
+			const currentBreadcrumb = this.canvasController.getCurrentBreadcrumb();
+			this.renderer = new SVGCanvasRenderer(
+				currentBreadcrumb.pipelineId,
+				this.canvasDiv,
+				this.canvasController,
+				this.canvasInfo,
+				config,
+				{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
+					pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
+				}
+			);
+
+			this.logger.logEndTimer("initializing", true);
+
+		} else {
+			this.logger.logStartTimer("set canvas info");
+
+			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
+			this.renderer.setCanvasInfoRenderer(this.canvasInfo);
+
+			this.logger.logEndTimer("set canvas info", true);
 		}
 	}
 
@@ -143,71 +107,27 @@ export default class SVGCanvasD3 {
 		return Object.assign({}, config);
 	}
 
-	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
-	// exactly the same.
-	enableNodeRightFlyoutOpenExactlyMatches(enablePositionNode1, enablePositionNode2) {
-		if (typeof enablePositionNode1 === "boolean" &&
-				typeof enablePositionNode2 === "boolean") {
-			return enablePositionNode1 === enablePositionNode2;
-
-		} else if (typeof enablePositionNode1 === "object" &&
-								typeof enablePositionNode2 === "object") {
-			if (enablePositionNode1.x === enablePositionNode2.x &&
-					enablePositionNode1.y === enablePositionNode2.y) {
-				return true;
-			}
-		}
-
-		return false;
+	// Returns a clone of the canvas info passed in.
+	cloneCanvasInfo(canvasInfo) {
+		return cloneDeep(canvasInfo);
 	}
 
-	// Returns true if the contents of enableLayout1 and enableLayout2 are
-	// exactly the same.
-	enableCanvasLayoutExactlyMatches(enableLayout1, enableLayout2) {
-		if (!enableLayout1 && !enableLayout2) {
-			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1)) {
-			return true;
+	// Keeps tracking mouse positions only within canvasUI & constantly feeds the
+	// mousePos object with {x,y} values otherwise(mouse positions outside of canvasUI)
+	// mousePos will get null.
+	onMouseUpdate(e) {
+		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
+			this.mousePos = {
+				x: e.clientX,
+				y: e.clientY
+			};
+		} else {
+			this.mousePos = null;
 		}
-		return false;
-	}
-
-	// Returns true if the contents of enableLayout1 and enableLayout2 including
-	// their decorations arrays are exactly the same.
-	enableNodeLayoutExactlyMatches(enableLayout1, enableLayout2) {
-		if (!enableLayout1 && !enableLayout2) {
-			return true;
-		} else if (isMatch(enableLayout1, enableLayout2) && isMatch(enableLayout2, enableLayout1) &&
-			this.decorationsArraysExactlyMatches(enableLayout1.decorations, enableLayout2.decorations)) {
-			return true;
-		}
-		return false;
-	}
-
-	// Returns true if two decorations arrays passed in are identical or false
-	// otherwise.
-	decorationsArraysExactlyMatches(decorations1, decorations2) {
-		if (!decorations1 && !decorations2) {
-			return true;
-		}
-		else if (!decorations1 || !decorations2) {
-			return false;
-		}
-		let state = true;
-		decorations1.forEach((dec1, i) => {
-			const dec2 = decorations2[i];
-			if (dec2) {
-				if (!isMatch(dec1, dec2) || !isMatch(dec2, dec1)) {
-					state = false;
-				}
-			} else {
-				state = false;
-			}
-		});
-		return state;
 	}
 
 	initializeCanvasDiv(canvasDivSelector) {
+
 		// Add a listener to canvas div to catch key presses. The containing
 		// canvas div must have tabindex set and the focus set on the div.
 		const canvasDiv = d3.select(canvasDivSelector)
@@ -216,9 +136,7 @@ export default class SVGCanvasD3 {
 				// will interfere with drawing of the canvas as the result of any
 				// keyboard action.
 				this.canvasController.closeTip();
-
 				const actions = this.canvasController.getKeyboardConfig().actions;
-
 				// Only catch key pressses when NOT editing because, while editing,
 				// the text area needs to receive key presses for undo, redo, delete etc.
 				if (!this.renderer.isEditingText()) {
@@ -249,8 +167,13 @@ export default class SVGCanvasD3 {
 
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("paste");
-
+						if (this.mousePos) {
+							this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
+							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos);
+							this.canvasController.keyboardActionHandler("paste", this.mousePos);
+						} else {
+							this.canvasController.keyboardActionHandler("paste");
+						}
 					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 						Logger.switchLoggingState(); // Switch the logging on and off
@@ -301,7 +224,9 @@ export default class SVGCanvasD3 {
 	}
 
 	refreshOnSizeChange() {
-		this.renderer.refreshOnSizeChange();
+		if (this.renderer) {
+			this.renderer.refreshOnSizeChange();
+		}
 	}
 
 	getSvgViewportOffset() {

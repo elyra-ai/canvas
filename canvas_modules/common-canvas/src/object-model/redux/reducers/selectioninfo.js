@@ -15,7 +15,7 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
-export default (state = [], action) => {
+export default (state = {}, action) => {
 	switch (action.type) {
 	case "SET_CANVAS_INFO": {
 		// In some instances, with an external object model, the same canvas info may
@@ -47,6 +47,15 @@ export default (state = [], action) => {
 			};
 		}
 		return state;
+	}
+
+	case "SET_BREADCRUMBS":
+	case "ADD_BREADCRUMB":
+	case "ADD_BREADCRUMBS":
+	case "SET_TO_INDEXED_BREADCRUMB":
+	case "SET_TO_PREVIOUS_BREADCRUMB":
+	case "RESET_BREADCRUMB": {
+		return {};
 	}
 
 	default:

@@ -57,9 +57,6 @@ _defineConstant("AFTER_DRAG", "After");
 _defineConstant("INTERACTION_MOUSE", "Mouse");
 _defineConstant("INTERACTION_TRACKPAD", "Trackpad");
 
-_defineConstant("PORTS_CONNECTION", "Ports");
-_defineConstant("HALO_CONNECTION", "Halo");
-
 _defineConstant("VERTICAL_FORMAT", "Vertical");
 _defineConstant("HORIZONTAL_FORMAT", "Horizontal");
 
@@ -107,6 +104,7 @@ _defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
 _defineConstant("TOOLBAR_TYPE_CARBON_BUTTONS", "CarbonButtons");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_ACTIONS", "CustomActions");
+_defineConstant("TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE", "OverrideAutoEnableDisable");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 
@@ -128,6 +126,7 @@ _defineConstant("OUTPUT_PORT", "outputPort");
 _defineConstant("TIP_PALETTE", "Palette");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
+_defineConstant("TIP_DECORATIONS", "Decorations");
 _defineConstant("TIP_LINKS", "Links");
 
 _defineConstant("NOTIFICATION_MESSAGE_TYPE", {

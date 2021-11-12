@@ -23,7 +23,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
-import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
+import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -88,10 +88,13 @@ class TextfieldControl extends React.Component {
 					controller={this.props.controller}
 					tableControl={this.props.tableControl}
 				/>
+				// TODO this could conflict with the below ValidationMessage.
 				<ValidationMessage inTable={this.props.tableControl} state={""} messageInfo={errorMessage} />
 			</div>);
 		} else {
+			const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 			textInput = (<TextInput
+				{...validationProps}
 				autoComplete={this.props.tableControl === true ? "off" : "on"}
 				id={this.id}
 				disabled={ this.props.state === STATES.DISABLED}
@@ -119,8 +122,7 @@ class TextfieldControl extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -130,7 +132,7 @@ class TextfieldControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				{display}
-				<ValidationMessage inTable={this.props.tableControl} state={ this.props.state} messageInfo={ this.props.messageInfo} />
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}

@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -56,7 +56,7 @@ class ImageAction extends React.Component {
 			{ "disabled": disabled });
 
 		const image = (
-			<div className={className} data-id={this.props.action.name}>
+			<div data-id={this.props.action.name}>
 				<img
 					src={this.props.action.image.url}
 					onClick={this.applyAction}
@@ -78,8 +78,7 @@ class ImageAction extends React.Component {
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -88,7 +87,9 @@ class ImageAction extends React.Component {
 		}
 
 		return (
-			display
+			<div className={className}>
+				{display}
+			</div>
 		);
 	}
 }

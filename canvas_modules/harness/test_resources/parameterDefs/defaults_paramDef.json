@@ -34,7 +34,12 @@
     "columnStructureTableDefaultRow": [
       ["Age", ["Mean"]],
       ["BP", ["Mean", "Min", "Max"]]
-    ]
+    ],
+    "mode": "Include",
+    "current_parameters_default": "Value defined in current_parameters."
+  },
+  "current_ui_parameters": {
+    "current_ui_parameters_default": "Value defined in current_ui_parameters."
   },
   "complex_types": [
     {
@@ -151,6 +156,31 @@
           "default": ["Min", "Max"]
         }
       ]
+    },
+    {
+      "id": "structuretableObjectType",
+      "type": "object",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_object_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_object_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "parameters": [
@@ -250,6 +280,39 @@
       "id": "columnStructureTableDefaultRow",
       "type": "array[columnStructureTableDefaultRow]",
       "role": "column"
+    },
+    {
+      "id": "mode",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "default": "Discard"
+    },
+    {
+      "id": "conditional_default",
+      "type": "array[string]",
+      "default": ["default_value condition returned false. Showing value defined in parameters."]
+    },
+    {
+      "id": "current_parameters_default",
+      "type": "string",
+      "default": "parameter default"
+    },
+    {
+      "id": "parameters_default",
+      "type": "string",
+      "default": "Value defined in parameters."
+    },
+    {
+      "id": "no_default",
+      "type": "string"
+    },
+    {
+      "id": "structuretableObjectType",
+      "type": "array[structuretableObjectType]",
+      "role": "column",
+      "required": true
     }
   ],
   "uihints": {
@@ -404,6 +467,68 @@
             "summary": true
           }
         ]
+      },
+      {
+        "complex_type_ref": "structuretableObjectType",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableObjectType.field.label"
+          },
+          "summary": true,
+          "dm_image": "invalid"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_object_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.structuretable_object_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_object_sort_order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableObjectType.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableObjectType.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      }
+    ],
+    "ui_parameters": [
+      {
+        "id": "ui_conditional_default",
+        "type": "array[string]",
+        "default": ["default_value condition returned false. Showing value defined in ui_parameters."]
+      },
+      {
+        "id": "current_ui_parameters_default",
+        "type": "string",
+        "default": "Value defined in ui_parameters."
+      },
+      {
+        "id": "ui_parameters_default",
+        "type": "string",
+        "default": "Value defined in ui_parameters."
       }
     ],
     "parameter_info": [
@@ -557,6 +682,90 @@
         "text_before": {
           "default": "The 'operations' column should default to 'Min, Max' for new rows added"
         }
+      },
+      {
+        "parameter_ref": "mode",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal"
+      },
+      {
+        "parameter_ref": "conditional_default",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "textarea using default value defined in default_value condition. Condition returns true because mode equals Include."
+        }
+      },
+      {
+        "parameter_ref": "ui_conditional_default",
+        "label": {
+          "default": "Ui field1"
+        },
+        "description": {
+          "default": "textarea using default value defined in ui_parameters. default_value condition returns false because mode not equals Discard."
+        }
+      },
+      {
+        "parameter_ref": "current_parameters_default",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "textfield has default value defined in current_parameters and default_value condition. Default value in current_parameters has highest preference."
+        }
+      },
+      {
+        "parameter_ref": "current_ui_parameters_default",
+        "label": {
+          "default": "Ui field2"
+        },
+        "description": {
+          "default": "Ui field has default value defined in current_ui_parameters and default_value condition. Default value in current_ui_parameters has highest preference."
+        }
+      },
+      {
+        "parameter_ref": "parameters_default",
+        "label": {
+          "default": "Field3"
+        },
+        "description": {
+          "default": "textfield using default value defined in parameters. Control uses paramter default value only when value is not defined in current_parameters and default_value condition."
+        }
+      },
+      {
+        "parameter_ref": "ui_parameters_default",
+        "label": {
+          "default": "Ui field3"
+        },
+        "description": {
+          "default": "textfield using default value defined in ui_parameters. Control uses ui_parameters default value only when value is not defined in current_ui_parameters and default_value condition."
+        }
+      },
+      {
+        "parameter_ref": "no_default",
+        "label": {
+          "default": "Field4: expected value empty"
+        },
+        "description": {
+          "default": "Default value is NOT defined in current_parameters, default_value condition and parameters."
+        }
+      },
+      {
+        "parameter_ref": "structuretableObjectType",
+        "required": true,
+        "label": {
+          "default": "Structuretable"
+        },
+        "description": {
+          "default": "default_value condition returns true because mode equals Include. This control tests default value as array of objects are displayed correctly.",
+          "placement": "on_panel"
+        }
       }
     ],
     "group_info": [
@@ -659,10 +868,121 @@
             ]
           }
         ]
+      },
+      {
+        "id": "conditional-default-values",
+        "label": {
+          "default": "Conditional defaults"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "mode",
+          "conditional_default",
+          "ui_conditional_default",
+          "current_parameters_default",
+          "current_ui_parameters_default",
+          "parameters_default",
+          "ui_parameters_default",
+          "no_default",
+          "structuretableObjectType"
+        ]
       }
     ]
   },
-  "conditions": [],
+  "conditions": [
+    {
+      "default_value": {
+        "parameter_ref": "conditional_default",
+        "value": ["Value defined in default_value condition. You will see this sentence when default value of mode equals Include."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "conditional_default",
+        "value": ["This is a second condition for conditional_default. You should never see this value."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "ui_conditional_default",
+        "value": ["Value defined in default_value condition. You will see this sentence when default value of mode equals Discard."],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Discard"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "current_parameters_default",
+        "value": "Value defined in default_value condition.",
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "current_ui_parameters_default",
+        "value": "Value defined in default_value condition.",
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    },
+    {
+      "default_value": {
+        "parameter_ref": "structuretableObjectType",
+        "value": [
+          {
+            "field": "Cholesterol",
+            "structuretable_object_readonly_int": 5,
+            "structuretable_object_sort_order": "Ascending"
+          },
+          {
+            "structuretable_object_readonly_int": 6
+          },
+          {
+            "field": null,
+            "structuretable_object_readonly_int": 7,
+            "structuretable_object_sort_order": null
+          }
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "mode",
+            "op": "equals",
+            "value": "Include"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": [
     {
       "fields": [

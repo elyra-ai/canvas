@@ -21,7 +21,7 @@ import { isEmpty } from "lodash";
 import { Checkbox } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { TOOL_TIP_DELAY, STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
@@ -51,9 +51,9 @@ class CheckboxControl extends React.Component {
 			<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="top"
-				delay={TOOL_TIP_DELAY}
+				direction="bottom"
 				className="properties-tooltips"
+				showToolTipOnClick
 			>
 				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 			</Tooltip>
@@ -61,7 +61,6 @@ class CheckboxControl extends React.Component {
 		const checkboxLabel = (
 			<span className="properties-checkbox-label">
 				{label}
-				{tooltipIcon}
 			</span>
 		);
 		return (
@@ -76,6 +75,7 @@ class CheckboxControl extends React.Component {
 					checked={Boolean(this.props.value)}
 					hideLabel={this.props.tableControl}
 				/>
+				{tooltipIcon}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
 			</div>
 		);

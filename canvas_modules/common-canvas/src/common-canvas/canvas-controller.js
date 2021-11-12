@@ -16,7 +16,6 @@
 
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.js";
-import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
 import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
@@ -31,6 +30,7 @@ import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js
 import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
+import DeconstructSuperNodeAction from "../command-actions/deconstructSuperNodeAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
 import DisconnectObjectsAction from "../command-actions/disconnectObjectsAction.js";
@@ -42,6 +42,7 @@ import SetNodeLabelAction from "../command-actions/setNodeLabelAction.js";
 import ExpandSuperNodeInPlaceAction from "../command-actions/expandSuperNodeInPlaceAction.js";
 import InsertNodeIntoLinkAction from "../command-actions/insertNodeIntoLinkAction.js";
 import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import PasteAction from "../command-actions/pasteAction.js";
 import SaveToPaletteAction from "../command-actions/saveToPaletteAction.js";
 import SetObjectsStyleAction from "../command-actions/setObjectsStyleAction.js";
 import SetLinksStyleAction from "../command-actions/setLinksStyleAction.js";
@@ -49,8 +50,8 @@ import UpdateLinkAction from "../command-actions/updateLinkAction.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import { get, has } from "lodash";
-import { ASSOC_STRAIGHT, LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE } from "./constants/canvas-constants";
+import { get, has, isEmpty } from "lodash";
+import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SNAP_TO_GRID_NONE, SUPER_NODE } from "./constants/canvas-constants";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 
 // Global instance ID counter
@@ -60,59 +61,6 @@ export default class CanvasController {
 
 	constructor() {
 		this.logger = new Logger("CanvasController");
-
-		this.defaultTipConfig = {
-			"palette": true,
-			"nodes": true,
-			"ports": true,
-			"links": true
-		};
-
-		this.canvasConfig = {
-			enableInteractionType: "Mouse",
-			enableConnectionType: "Ports",
-			enableNodeFormatType: "Horizontal",
-			enableLinkType: "Curve",
-			enableLinkDirection: "LeftRight",
-			enableParentClass: "",
-			enableLinkSelection: LINK_SELECTION_NONE,
-			enableLinkReplaceOnNewConnection: false,
-			enableAssocLinkCreation: false,
-			enableAssocLinkType: ASSOC_STRAIGHT,
-			enableDragWithoutSelect: false,
-			enableInternalObjectModel: true,
-			enablePaletteLayout: "Flyout",
-			enableToolbarLayout: "Top",
-			enableInsertNodeDroppedOnLink: false,
-			enableHighlightNodeOnNewLinkDrag: false,
-			enableHighlightUnavailableNodes: false,
-			enablePositionNodeOnRightFlyoutOpen: false,
-			enableMoveNodesOnSupernodeResize: true,
-			enableExternalPipelineFlows: true,
-			enableDisplayFullLabelOnHover: false,
-			enableDropZoneOnExternalDrag: false,
-			enableRightFlyoutUnderToolbar: false,
-			enablePanIntoViewOnOpen: false,
-			enableZoomIntoSubFlows: false,
-			enableBrowserEditMenu: true,
-			enableAutoLinkOnlyFromSelNodes: false,
-			enableSaveZoom: "None",
-			enableSnapToGridType: "None",
-			enableSnapToGridX: null,
-			enableSnapToGridY: null,
-			enableAutoLayoutVerticalSpacing: null,
-			enableAutoLayoutHorizontalSpacing: null,
-			enableBoundingRectangles: false,
-			enableCanvasUnderlay: "None",
-			enableNarrowPalette: true,
-			paletteInitialState: false,
-			emptyCanvasContent: null,
-			dropZoneCanvasContent: null,
-			schemaValidation: false,
-			tipConfig: this.defaultTipConfig,
-			enableCanvasLayout: {},
-			enableNodeLayout: {}
-		};
 
 		this.contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: false,
@@ -146,7 +94,6 @@ export default class CanvasController {
 			selectionChangeHandler: null
 		};
 
-		this.commonCanvas = null;
 		this.contextMenuSource = null;
 
 		this.objectModel = new ObjectModel();
@@ -169,10 +116,10 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	setCanvasConfig(config) {
-		this.canvasConfig = Object.assign(this.canvasConfig, config);
-		this.canvasConfig = this.correctTypo(this.canvasConfig);
-		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
-		this.objectModel.setLayoutType(config);
+		this.logger.log("Setting Canvas Config");
+		const correctConfig = this.correctTypo(config);
+		this.objectModel.openPaletteIfNecessary(config);
+		this.objectModel.setCanvasConfig(correctConfig);
 	}
 
 	// Converts the config option 'enableHightlightNodeOnNewLinkDrag' (which has
@@ -180,7 +127,7 @@ export default class CanvasController {
 	// name.
 	// TODO -- remove this at the next major version change.
 	correctTypo(config) {
-		if (typeof config.enableHightlightNodeOnNewLinkDrag === "boolean") {
+		if (!isEmpty(config) && typeof config.enableHightlightNodeOnNewLinkDrag === "boolean") {
 			config.enableHighlightNodeOnNewLinkDrag = config.enableHightlightNodeOnNewLinkDrag;
 			delete config.enableHightlightNodeOnNewLinkDrag; // Delete it so it doesn't cause debugging confusion
 		}
@@ -188,18 +135,40 @@ export default class CanvasController {
 	}
 
 	getCanvasConfig() {
-		return this.canvasConfig;
+		return this.objectModel.getCanvasConfig();
 	}
 
 	setIntl(intl) {
 		this.intl = intl;
 	}
 
+	setToolbarConfig(config) {
+		this.logger.log("Setting Toolbar Config");
+		this.objectModel.setToolbarConfig(config);
+	}
+
+	setNotificationPanelConfig(config) {
+		this.logger.log("Setting Notif Panel Config");
+		this.objectModel.setNotificationPanelConfig(config);
+	}
+
+	setRightFlyoutConfig(config) {
+		this.logger.log("Setting Right Flyout Config");
+		this.objectModel.setRightFlyoutConfig(config);
+	}
+
+	setBottomPanelConfig(config) {
+		this.logger.log("Setting Bottom Panel Config");
+		this.objectModel.setBottomPanelConfig(config);
+	}
+
 	setContextMenuConfig(contextMenuConfig) {
+		this.logger.log("Setting Context Menu Config");
 		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
 	}
 
 	setKeyboardConfig(keyboardConfig) {
+		this.logger.log("Setting Keyboard Config");
 		if (keyboardConfig && keyboardConfig.actions) {
 			this.keyboardConfig.actions = Object.assign({}, this.keyboardConfig.actions, keyboardConfig.actions);
 		}
@@ -210,14 +179,20 @@ export default class CanvasController {
 	}
 
 	setHandlers(inHandlers) {
+		this.logger.log("Setting Handlers");
 		this.handlers = Object.assign(this.handlers, inHandlers);
 		this.objectModel.setIdGeneratorHandler(inHandlers.idGeneratorHandler);
 		this.objectModel.setSelectionChangeHandler(inHandlers.selectionChangeHandler);
 		this.objectModel.setLayoutHandler(inHandlers.layoutHandler);
 	}
 
-	setCommonCanvas(comcan) {
-		this.commonCanvas = comcan;
+	setCanvasContents(canvasContents) {
+		this.canvasContents = canvasContents;
+	}
+
+	// Returns a reference to the 'top-level' D3 rendering object
+	getSVGCanvasD3() {
+		return this.canvasContents.getSVGCanvasD3();
 	}
 
 	// Allow application to set instanceId.  Needed for server side rendering to prevent
@@ -236,7 +211,12 @@ export default class CanvasController {
 	}
 
 	isInternalObjectModelEnabled() {
-		return this.canvasConfig.enableInternalObjectModel;
+		return this.getCanvasConfig().enableInternalObjectModel;
+	}
+
+	// Returns the redux store
+	getStore() {
+		return this.getObjectModel().getStore();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -276,6 +256,9 @@ export default class CanvasController {
 		return this.objectModel.getPrimaryPipelineId();
 	}
 
+	// Returns the external pipeline flow for the url passed in. The external
+	// flow must have been loaded through some common canvas action for this
+	// method to be able to return anything.
 	getExternalPipelineFlow(url) {
 		return this.objectModel.getExternalPipelineFlow(url);
 	}
@@ -310,6 +293,27 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
+
+	// Returns the pipeline object for the pipeline Id passed in.
+	getPipeline(pipelineId) {
+		return this.objectModel.getCanvasInfoPipeline(pipelineId);
+	}
+
+	// Returns the ID of the pipeline object which is currently on display
+	// in the canvas. Typically, this is the primary pipeline but will be
+	// different if the user has navigated into one or more supernodes; in
+	// which case it will be the ID of the pipeline at the level in the
+	// supernode hierarchy that is currently on display.
+	getCurrentPipelineId() {
+		return this.objectModel.getCurrentBreadcrumb().pipelineId;
+	}
+
+	// Returns truty if the pipeline is external (that is it is part of an
+	// external pipeline flow). Otherwise, return falsy to indicate the pipeline
+	// is local.
+	isPipelineExternal(pipelineId) {
+		return this.objectModel.getAPIPipeline(pipelineId).isPipelineExternal();
+	}
 
 	// Returns the flow validation messages for the pipeline ID passed in.
 	getFlowMessages(pipelineId) {
@@ -437,6 +441,11 @@ export default class CanvasController {
 		return this.objectModel.getPaletteNode(operatorId);
 	}
 
+	// Returns the palette node identified by the node ID passed in.
+	getPaletteNodeById(nodeId) {
+		return this.objectModel.getPaletteNodeById(nodeId);
+	}
+
 	// Returns the category of the palette node identified by the operator passed in
 	getCategoryForNode(nodeOpIdRef) {
 		return this.objectModel.getCategoryForNode(nodeOpIdRef);
@@ -470,7 +479,7 @@ export default class CanvasController {
 	// Selects all the objects on the canvas.
 	selectAll(pipelineId) {
 		// Include links in selectAll unless LinkSelection is "None"
-		const includeLinks = this.canvasConfig.enableLinkSelection !== LINK_SELECTION_NONE;
+		const includeLinks = this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE;
 		this.objectModel.selectAll(includeLinks, pipelineId);
 	}
 
@@ -525,8 +534,12 @@ export default class CanvasController {
 		return this.objectModel.areAllSelectedObjectsLinks();
 	}
 
-	areDetachableLinksSupported() {
-		return this.canvasConfig.enableLinkSelection === LINK_SELECTION_DETACHABLE;
+	areDetachableLinksInUse() {
+		return this.getCanvasConfig().enableLinkSelection === LINK_SELECTION_DETACHABLE;
+	}
+
+	isSnapToGridInUse() {
+		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -603,6 +616,7 @@ export default class CanvasController {
 
 	// Deletes the object specified by the id in the pipleine specified by
 	// pipeline ID.
+	// @Deprecated Use deleteNode or deleteComment as appropriate instead.
 	deleteObject(id, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).deleteObject(id);
 	}
@@ -651,12 +665,14 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodes();
 	}
 
-	// Returns a new node created from the object passed in which has the
-	// following properties:
-	// nodeTemplate - a node template from the palette
+	// Returns a new node created from the data parameter in the pipeline
+	// identified by the pipelineId.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
 	// offsetX - the x coordinate of the new node
 	// offsetY - the y coordinate of the new node
-	// pipelineId - the ID of the pipeline where the new node will exist
 	createNode(data, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).createNode(data);
 	}
@@ -664,6 +680,24 @@ export default class CanvasController {
 	// Adds a new node into the pipeline specified by the pipelineId.
 	addNode(node, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addNode(node);
+	}
+
+	// Creates a node using the data parameter provided in the pipeline specified
+	// by pipelineId and adds the command to the command stack (so the user can
+	// undo/redo the command). This will also cause the beforeEditActionHandler
+	// and editActionHandler callbacks to be called.
+	// The data parameter must contain:
+	// nodeTemplate -  a node template from the palette. The nodeTemplate
+	//                 can be retrieved from the palette using with Canvas
+	//                 Controller methods: getPaletteNode or getPaletteNodeById.
+	// offsetX - the x coordinate of the new node
+	// offsetY - the y coordinate of the new node
+	//
+	// If pipelineId is omitted the node will be created in the current
+	// "top-level" pipeline.
+	createNodeCommand(data, pipelineId) {
+		const pId = pipelineId || this.getCurrentPipelineId();
+		this.createNodeFromTemplateAt(data.nodeTemplate, { x: data.offsetX, y: data.offsetY }, pId);
 	}
 
 	// Deletes the node specified.
@@ -862,6 +896,33 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getNodeStyle(nodeId, temporary, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeStyle(nodeId, temporary);
+	}
+
+	// Returns an array of nodes that are for the branch(es) that the nodes,
+	// identified by the node IDs passed in, are within.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getBranchNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_BRANCH);
+	}
+
+	// Returns an array of nodes that are upstream from the nodes
+	// identified by the node IDs passed in.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getUpstreamNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
+	}
+
+	// Returns an array of nodes that are downstream from the nodes
+	// identified by the node IDs passed in.
+	// nodeIds - An array of node Ids
+	// pipelineId - The ID of the pipeline where the nodes exist
+	getDownstreamNodes(nodeIds, pipelineId) {
+		const pId = pipelineId ? pipelineId : this.objectModel.getCurrentPipelineId();
+		return this.objectModel.getHighlightObjectIds(pId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
 	}
 
 	// Adds a custom attribute to the nodes.
@@ -1187,10 +1248,16 @@ export default class CanvasController {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
+	// Returns the current array of breadcrumbs. There will one breadcrumb object
+	// for each level of supernode that the user has navigated into. This array
+	// can be used to display breadcrumbs to the user to show where they are
+	// within the navigation hierarchy within common canvas.
 	getBreadcrumbs() {
 		return this.objectModel.getBreadcrumbs();
 	}
 
+	// Returns the last breadcrumb which represents the level with supernode
+	// hierarchy that the user has currently navigated to.
 	getCurrentBreadcrumb() {
 		return this.objectModel.getCurrentBreadcrumb();
 	}
@@ -1261,97 +1328,125 @@ export default class CanvasController {
 		Logger.setLoggingState(state);
 	}
 
+	log(msg) {
+		const logger = new Logger("Host App");
+		logger.log(msg);
+	}
+
 	addAfterUpdateCallback(callback) {
-		if (this.commonCanvas) {
-			this.commonCanvas.addAfterUpdateCallback(callback);
+		if (this.canvasContents) {
+			this.canvasContents.addAfterUpdateCallback(callback);
 		}
 	}
 
 	removeAfterUpdateCallback(callback) {
-		if (this.commonCanvas) {
-			this.commonCanvas.removeAfterUpdateCallback(callback);
+		if (this.canvasContents) {
+			this.canvasContents.removeAfterUpdateCallback(callback);
 		}
 	}
 
 	togglePalette() {
-		if (this.commonCanvas) {
-			this.commonCanvas.togglePalette();
-		}
+		this.getObjectModel().togglePalette();
 	}
 
 	openPalette() {
-		if (this.commonCanvas) {
-			this.commonCanvas.openPalette();
-		}
+		this.getObjectModel().openPalette();
 	}
 
 	closePalette() {
-		if (this.commonCanvas) {
-			this.commonCanvas.closePalette();
-		}
+		this.getObjectModel().closePalette();
 	}
 
 	isPaletteOpen() {
-		if (this.commonCanvas) {
-			return this.commonCanvas.isPaletteOpen();
-		}
-		return false;
+		return this.getObjectModel().isPaletteOpen();
 	}
 
 	openContextMenu(menuDef) {
-		if (this.commonCanvas) {
-			this.commonCanvas.openContextMenu(menuDef);
-		}
+		this.objectModel.openContextMenu(menuDef);
 	}
 
 	closeContextMenu() {
-		this.contextMenuSource = null;
-		if (this.commonCanvas) {
-			this.commonCanvas.closeContextMenu();
-		}
+		this.objectModel.closeContextMenu();
 	}
 
 	isContextMenuDisplayed() {
-		if (this.commonCanvas) {
-			return this.commonCanvas.isContextMenuDisplayed();
-		}
-		return false;
+		return this.objectModel.isContextMenuDisplayed();
 	}
 
 	openNotificationPanel() {
-		if (this.commonCanvas) {
-			this.commonCanvas.openNotificationPanel();
-		}
+		this.objectModel.openNotificationPanel();
 	}
 
 	closeNotificationPanel() {
-		if (this.commonCanvas) {
-			this.commonCanvas.closeNotificationPanel();
-		}
+		this.objectModel.closeNotificationPanel();
 	}
 
 	toggleNotificationPanel() {
-		if (this.commonCanvas) {
-			this.commonCanvas.toggleNotificationPanel();
-		}
+		this.objectModel.toggleNotificationPanel();
 	}
 
 	isRightFlyoutOpen() {
-		if (this.commonCanvas) {
-			return this.commonCanvas.isRightFlyoutOpen();
+		return this.objectModel.isRightFlyoutOpen();
+	}
+
+	// Displays a pipeline (identified by the pipelineId passed in). This must be
+	// one of the pipelines referenced by the current set of breadcrumbs. It
+	// cannot be used to open a new pipeline outside the current set of breadcruumbs.
+	displaySubPipeline(pipelineId) {
+		const breadcrumbs = this.objectModel.getBreadcrumbs();
+		const index = breadcrumbs.findIndex((b) => b.pipelineId === pipelineId);
+		if (index > -1) {
+			const supernode = this.getSupernodeFromBreadcrumb(breadcrumbs[index]);
+
+			const data = {
+				editType: "displaySubPipeline",
+				editSource: "canvas",
+				targetObject: supernode,
+				breadcrumbIndex: index
+			};
+			this.editActionHandler(data);
 		}
-		return false;
 	}
 
-	displaySubPipeline(pipelineInfo) {
-		const targetObject = { subflow_ref: { pipeline_id_ref: pipelineInfo.pipelineId, url: pipelineInfo.url } };
-		const data = { editType: "displaySubPipeline", targetObject: targetObject, editSource: "canvas" };
+	// Displays a pipeline for the supernode (identifid by the supernodeId
+	// parameter) in the pipeline (identifid by the pipelineId parameter). For
+	// correct breadcrumb generation this pipeline should be the one in the last
+	// of the current set of breadcumbs. That is, the pipeline currently shown
+	// "full page" in the canvas.
+	displaySubPipelineForSupernode(supernodeId, pipelineId) {
+		const sn = this.getNode(supernodeId, pipelineId);
+		if (sn && sn.type === SUPER_NODE) {
+			const currentBreadcrumb = this.objectModel.getCurrentBreadcrumb();
+			const bc = this.objectModel.createBreadcrumb(sn, currentBreadcrumb.pipelineId);
+			this.displaySubPipelineForBreadcrumbs([bc]);
+		}
+	}
+
+	// Adds the breadcrumbs provided to the current set of breadcrumbs and then
+	// displays "full page" the pipeline identified by the last of the additional
+	// set of breadcrumbs. This is a convenience function for the common-canvas.
+	displaySubPipelineForBreadcrumbs(addBreadcrumbs) {
+		const lastBreadcrumb = addBreadcrumbs[addBreadcrumbs.length - 1];
+		const supernode = this.getSupernodeFromBreadcrumb(lastBreadcrumb);
+
+		const data = {
+			editType: "displaySubPipeline",
+			editSource: "canvas",
+			targetObject: supernode,
+			addBreadcrumbs: addBreadcrumbs
+		};
 		this.editActionHandler(data);
 	}
 
-	displaySubPipelineForNode(supernode) {
-		const data = { editType: "displaySubPipeline", targetObject: supernode, editSource: "canvas" };
-		this.editActionHandler(data);
+	// Returns the supernode speified in the bradcrumb provided.
+	getSupernodeFromBreadcrumb(breadcrumb) {
+		if (breadcrumb.supernodeParentPipelineId) {
+			const apiPipeline = this.objectModel.getAPIPipeline(breadcrumb.supernodeParentPipelineId);
+			return apiPipeline.getNode(breadcrumb.supernodeId);
+		}
+		// breadcrumb.supernodeParentPipelineId might be missing when processing
+		// the breadcrumb for the primary pipeline.
+		return null;
 	}
 
 	displayPreviousPipeline() {
@@ -1360,20 +1455,20 @@ export default class CanvasController {
 	}
 
 	zoomIn() {
-		if (this.commonCanvas) {
-			this.commonCanvas.zoomIn();
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().zoomIn();
 		}
 	}
 
 	zoomOut() {
-		if (this.commonCanvas) {
-			this.commonCanvas.zoomOut();
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().zoomOut();
 		}
 	}
 
 	zoomToFit() {
-		if (this.commonCanvas) {
-			this.commonCanvas.zoomToFit();
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().zoomToFit();
 		}
 	}
 
@@ -1386,8 +1481,8 @@ export default class CanvasController {
 	// k: is the scale amount which is a number greater than 0 where 1 is the
 	//    default scale size.
 	zoomTo(zoomObject) {
-		if (this.commonCanvas) {
-			this.commonCanvas.zoomTo(zoomObject);
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().zoomTo(zoomObject);
 		}
 	}
 
@@ -1396,14 +1491,14 @@ export default class CanvasController {
 	// movement of the canvas. It is a time for the animation in milliseconds.
 	// If omitted the movement happens immediately.
 	translateBy(x, y, animateTime) {
-		if (this.commonCanvas) {
-			this.commonCanvas.translateBy(x, y, animateTime);
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().translateBy(x, y, animateTime);
 		}
 	}
 
 	// Returns the current zoom object for the currently displayed canvas.
 	getZoom() {
-		return this.commonCanvas.getZoom();
+		return this.getSVGCanvasD3().getZoom();
 	}
 
 	// Returns a zoom object required to pan the objects (nodes and/or comments)
@@ -1431,8 +1526,8 @@ export default class CanvasController {
 	// xPos - Optional. Can be set to percentage offset of the viewport width.
 	// yPos - Optional. Can be set to percentage offset of the viewport height.
 	getZoomToReveal(objectIds, xPos, yPos) {
-		if (this.commonCanvas) {
-			return this.commonCanvas.getZoomToReveal(objectIds, xPos, yPos);
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getZoomToReveal(objectIds, xPos, yPos);
 		}
 		return null;
 	}
@@ -1450,8 +1545,8 @@ export default class CanvasController {
 	// ---------------------------------------------------------------------------
 
 	getGhostNode(nodeTemplate) {
-		if (this.commonCanvas) {
-			return this.commonCanvas.getGhostNode(nodeTemplate);
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getGhostNode(nodeTemplate);
 		}
 		return null;
 	}
@@ -1492,8 +1587,27 @@ export default class CanvasController {
 		return this.objectModel.isClipboardEmpty();
 	}
 
+	canPaste() {
+		return !this.isClipboardEmpty();
+	}
+
+	canCutCopy() {
+		if (this.getSelectedObjectIds().length > 0) {
+			if (this.areAllSelectedObjectsLinks() &&
+					!this.areDetachableLinksInUse()) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	canDelete() {
+		return this.getSelectedObjectIds().length > 0;
+	}
+
 	openTip(tipConfig) {
-		if (this.commonCanvas && !this.isTipOpen() && this.isTipEnabled(tipConfig.type)) {
+		if (!this.isTipOpen() && this.isTipEnabled(tipConfig.type)) {
 			if (this.handlers.tipHandler) {
 				const data = {};
 				// Copy only required fields from tipConfig to data object - ignore other fields in tipConfig
@@ -1513,6 +1627,10 @@ export default class CanvasController {
 					data.node = tipConfig.node;
 					data.port = tipConfig.port;
 					break;
+				case constants.TIP_TYPE_DEC:
+					data.pipelineId = tipConfig.pipelineId;
+					data.decoration = tipConfig.decoration;
+					break;
 				case constants.TIP_TYPE_LINK:
 					data.pipelineId = tipConfig.pipelineId;
 					data.link = tipConfig.link;
@@ -1523,39 +1641,44 @@ export default class CanvasController {
 				tipConfig.customContent = this.handlers.tipHandler(tipConfig.type, data);
 			}
 
-			this.commonCanvas.openTip(tipConfig);
+			const that = this;
+			if (this.pendingTooltip) {
+				clearTimeout(this.pendingTooltip);
+			}
+
+			this.pendingTooltip = setTimeout(function() {
+				that.objectModel.setTooltipDef(tipConfig);
+			}, tipConfig.delay ? tipConfig.delay : 200);
 		}
 	}
 
 	closeTip() {
-		if (this.commonCanvas) {
-			this.commonCanvas.closeTip();
+		if (this.pendingTooltip) {
+			clearTimeout(this.pendingTooltip);
+		}
+		if (this.isTipOpen()) {
+			this.objectModel.setTooltipDef({});
 		}
 	}
 
 	isTipOpen() {
-		return this.commonCanvas.isTipOpen();
-	}
-
-	isTipOpening() {
-		return this.commonCanvas.isTipOpening();
-	}
-
-	isTipClosing() {
-		return this.commonCanvas.isTipClosing();
+		return this.objectModel.isTooltipOpen();
 	}
 
 	isTipEnabled(tipType) {
+		const canvasConfig = this.getCanvasConfig();
 		switch (tipType) {
 		case constants.TIP_TYPE_PALETTE_ITEM:
 		case constants.TIP_TYPE_PALETTE_CATEGORY:
-			return (has(this.canvasConfig, "tipConfig.palette") ? this.canvasConfig.tipConfig.palette : this.defaultTipConfig.palette);
+			return canvasConfig.tipConfig.palette;
 		case constants.TIP_TYPE_NODE:
-			return (has(this.canvasConfig, "tipConfig.nodes") ? this.canvasConfig.tipConfig.nodes : this.defaultTipConfig.nodes);
+			return canvasConfig.tipConfig.nodes;
 		case constants.TIP_TYPE_PORT:
-			return (has(this.canvasConfig, "tipConfig.ports") ? this.canvasConfig.tipConfig.ports : this.defaultTipConfig.ports);
+			return canvasConfig.tipConfig.ports;
+		case constants.TIP_TYPE_DEC:
+			return canvasConfig.tipConfig.decorations;
 		case constants.TIP_TYPE_LINK:
-			return (has(this.canvasConfig, "tipConfig.links") ? this.canvasConfig.tipConfig.links : this.defaultTipConfig.links);
+			return canvasConfig.tipConfig.links;
 		default:
 			return false;
 		}
@@ -1580,10 +1703,11 @@ export default class CanvasController {
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
+		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: this.convertNodeTemplate(nodeTemplate),
+			nodeTemplate: newNodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};
 
@@ -1742,7 +1866,7 @@ export default class CanvasController {
 		// Edit submenu (cut, copy, paste)
 		if (source.type === "node" ||
 				source.type === "comment" ||
-				(source.type === "link" && this.areDetachableLinksSupported()) ||
+				(source.type === "link" && this.areDetachableLinksInUse()) ||
 				source.type === "canvas") {
 			const editSubMenu = this.createEditMenu(source, source.type === "canvas");
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: editSubMenu, label: this.getLabel("node.editMenu") });
@@ -1756,7 +1880,7 @@ export default class CanvasController {
 		}
 		// Delete objects
 		if (source.type === "node" || source.type === "comment" ||
-				(this.canvasConfig.enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
+				(this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
 			menuDefinition = menuDefinition.concat([{ action: "deleteSelectedObjects", label: this.getLabel("canvas.deleteObject") },
 				{ divider: true }]);
 		}
@@ -1767,31 +1891,50 @@ export default class CanvasController {
 						this.contextMenuConfig.enableCreateSupernodeNonContiguous) ||
 						this.areSelectedNodesContiguous())) {
 				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.getLabel("node.createSupernode") }]);
-				if (this.canvasConfig.enableExternalPipelineFlows) {
+				if (this.getCanvasConfig().enableExternalPipelineFlows) {
 					menuDefinition = menuDefinition.concat([{ action: "createSuperNodeExternal", label: this.getLabel("node.createSupernodeExternal") }]);
 				}
 				menuDefinition = menuDefinition.concat([{ divider: true }]);
 			}
 		}
-		// Supernode option
-		if ((source.type === "node") && (source.selectedObjectIds.length === 1 && source.targetObject.type === "super_node")) {
-			// Expand and Collapse supernode
-			// Expand
-			if ((!this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) &&
+		// Supernode options - only applicable with a single supernode selected
+		// which is opened by the "canvas" (default) editor.
+		if (source.type === "node" && source.selectedObjectIds.length === 1 && source.targetObject.type === SUPER_NODE &&
 				(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
+			// Deconstruct supernode
+			menuDefinition = menuDefinition.concat({ action: "deconstructSuperNode",
+				label: this.getLabel("node.deconstructSupernode") });
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
+			// Collapse supernode
+			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
+				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
+					label: this.getLabel("node.collapseSupernodeInPlace") });
+			// Expand supernode
+			} else {
 				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
 					label: this.getLabel("node.expandSupernode") });
 			}
-			// Collapse
-			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
-					label: this.getLabel("node.collapseSupernodeInPlace") }, { divider: true });
+
+			// Expand supernode to full page display
+			if (get(this, "contextMenuConfig.defaultMenuEntries.displaySupernodeFullPage")) {
+				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
+					label: this.getLabel("node.displaySupernodeFullPage") });
 			}
+
+			menuDefinition = menuDefinition.concat({ divider: true });
+
 			// Convert supernode
-			if (this.canvasConfig.enableExternalPipelineFlows) {
+			if (this.getCanvasConfig().enableExternalPipelineFlows) {
+				// Convert External to Local
 				if (source.targetObject.subflow_ref.url) {
-					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
-						label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					// Supernodes inside an external sub-flow cannot be made local.
+					if (!this.isPipelineExternal(source.pipelineId)) {
+						menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
+							label: this.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
+					}
+				// Convert Local to External
 				} else {
 					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
 						label: this.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
@@ -1800,7 +1943,7 @@ export default class CanvasController {
 		}
 
 		// Delete link
-		if (this.canvasConfig.enableLinkSelection === LINK_SELECTION_NONE &&
+		if (this.getCanvasConfig().enableLinkSelection === LINK_SELECTION_NONE &&
 				source.type === "link") {
 			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.getLabel("canvas.deleteObject") }]);
 		}
@@ -1861,7 +2004,7 @@ export default class CanvasController {
 		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 
-		this.commonCanvas.focusOnCanvas(); // Set focus on canvas so keybord events go there.
+		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		this.closeContextMenu();
 	}
 
@@ -1873,14 +2016,14 @@ export default class CanvasController {
 			pipelineId: this.objectModel.getSelectedPipelineId() });
 	}
 
-	keyboardActionHandler(action) {
+	keyboardActionHandler(action, mousePos) {
 		this.logger.log("keyboardActionHandler - action: " + action);
 
 		this.editActionHandler({
 			editType: action,
 			editSource: "keyboard",
-			pipelineId: this.objectModel.getSelectedPipelineId()
-		});
+			pipelineId: this.objectModel.getSelectedPipelineId(),
+			mousePos: mousePos });
 	}
 
 	clickActionHandler(source) {
@@ -1915,6 +2058,7 @@ export default class CanvasController {
 		} else if (data.editType === "loadPipelineFlow" ||
 				data.editType === "expandSuperNodeInPlace" ||
 				data.editType === "displaySubPipeline" ||
+				data.editType === "deconstructSuperNode" ||
 				data.editType === "convertSuperNodeExternalToLocal") {
 			data = this.preProcessForExternalPipelines(data);
 		}
@@ -1929,7 +2073,13 @@ export default class CanvasController {
 				cmnd = this.getCommandStack().getRedoCommand();
 			}
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
+			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
+				return;
+			}
+			// If an external pipeline flow was requested, we need to make sure it
+			// was provided by the host app. We can't proceed if it was not.
+			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
 				return;
 			}
 		}
@@ -1993,7 +2143,7 @@ export default class CanvasController {
 		// These commands are added to the command stack
 		let command = null;
 
-		if (this.canvasConfig.enableInternalObjectModel) {
+		if (this.getCanvasConfig().enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
 				command = new CreateNodeAction(data, this.objectModel);
@@ -2014,7 +2164,7 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoNode": {
-				command = new CreateAutoNodeAction(data, this.objectModel, this.canvasConfig.enableAutoLinkOnlyFromSelNodes);
+				command = new CreateAutoNodeAction(data, this.objectModel, this.getCanvasConfig().enableAutoLinkOnlyFromSelNodes);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
@@ -2026,7 +2176,7 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoComment": {
-				const svgPos = this.commonCanvas.getSvgViewportOffset();
+				const svgPos = this.getSVGCanvasD3().getSvgViewportOffset();
 				command = new CreateCommentAction(data, this.objectModel, svgPos);
 				this.commandStack.do(command);
 				data = command.getData();
@@ -2106,7 +2256,7 @@ export default class CanvasController {
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksInUse());
 				this.commandStack.do(command);
 				break;
 			}
@@ -2136,13 +2286,19 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				break;
 			}
+			case "deconstructSuperNode": {
+				command = new DeconstructSuperNodeAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				this.commandStack.do(command);
+				break;
+			}
+
 			case "expandSuperNodeInPlace": {
-				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}
 			case "collapseSuperNodeInPlace": {
-				command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.canvasConfig.enableMoveNodesOnSupernodeResize);
+				command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
 				this.commandStack.do(command);
 				break;
 			}
@@ -2172,21 +2328,21 @@ export default class CanvasController {
 				break;
 			}
 			case "cut": {
-				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
-				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksSupported());
+				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
+				command = new DeleteObjectsAction(data, this.objectModel, this.areDetachableLinksInUse());
 				this.commandStack.do(command);
 				break;
 			}
 			case "copy": {
-				this.objectModel.copyToClipboard(this.areDetachableLinksSupported());
+				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
 				break;
 			}
 			case "paste": {
 				const pasteObjects = this.objectModel.getObjectsToPaste();
 				if (pasteObjects) {
 					data.objects = pasteObjects;
-					const vpDims = this.commonCanvas.getTransformedViewportDimensions();
-					command = new CloneMultipleObjectsAction(data, this.objectModel, vpDims, this.areDetachableLinksSupported());
+					const vpDims = this.getSVGCanvasD3().getTransformedViewportDimensions();
+					command = new PasteAction(data, this.objectModel, vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
 					this.commandStack.do(command);
 					data = command.getData();
 				}
@@ -2223,10 +2379,10 @@ export default class CanvasController {
 				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
 				break;
 			case "openNotificationPanel":
-				this.commonCanvas.openNotificationPanel();
+				this.openNotificationPanel();
 				break;
 			case "closeNotificationPanel":
-				this.commonCanvas.closeNotificationPanel();
+				this.closeNotificationPanel();
 				break;
 			default:
 			}
@@ -2248,25 +2404,26 @@ export default class CanvasController {
 	// Sets the appropriate values when handling an external pipleine flow
 	// when performing sub-flow actions.
 	preProcessForExternalPipelines(data) {
-		// If displaying SubPipeline include pipelineInfo for historical reasons.
-		if (data.editType === "displaySubPipeline") {
-			data.pipelineInfo = { pipelineId: data.targetObject.subflow_ref.pipeline_id_ref };
-		}
-
-		const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
-
 		data.externalPipelineFlowLoad = false;
-		// If there is a URL then we must be accessing an external pipeline flow.
-		if (externalPipelineFlowUrl) {
-			data.externalUrl = externalPipelineFlowUrl;
 
-			// Try to retrieve the pipeline from our store. If it is not there then
-			// we'll need to load it from the host application so switch load flag on.
-			data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
-			if (!data.externalPipelineFlow) {
-				data.externalPipelineFlowLoad = true;
+		// targetObject might be missing if we are handing display of the
+		// primary pipeline which will always be 'local' not 'external'.
+		if (data.targetObject) {
+			const externalPipelineFlowUrl = get(data, "targetObject.subflow_ref.url");
+
+			// If there is a URL then we must be accessing an external pipeline flow.
+			if (externalPipelineFlowUrl) {
+				data.externalUrl = externalPipelineFlowUrl;
+
+				// Try to retrieve the pipeline from our store. If it is not there then
+				// we'll need to load it from the host application so switch load flag on.
+				data.externalPipelineFlow = this.objectModel.getExternalPipelineFlow(externalPipelineFlowUrl);
+				if (!data.externalPipelineFlow) {
+					data.externalPipelineFlowLoad = true;
+				}
 			}
 		}
+
 		return data;
 	}
 
@@ -2275,7 +2432,7 @@ export default class CanvasController {
 	// is called for one pipeline at a time until all needed pipeline flows are
 	// loaded. This allows the host app to serve up one pipeline flow at a time.
 	ensureVisibleExpandedPipelinesAreLoaded() {
-		const expandedSupernodes = this.objectModel.getVisibleExpandedSupernodes();
+		const expandedSupernodes = this.objectModel.getVisibleExpandedExternalSupernodes();
 		if (expandedSupernodes && expandedSupernodes.length > 0) {
 			this.editActionHandler({
 				editType: "loadPipelineFlow",
@@ -2284,12 +2441,27 @@ export default class CanvasController {
 		}
 	}
 
+	// Returns false if the host application did not provided an external pipeline
+	// flow when requested by common-canvas setting the externalPipelineFlowLoad
+	// boolean to true. Returns true otherwise which will be the case when no
+	// external pipeline was requested.
+	wasExtPipelineFlowLoadSuccessful(data) {
+		if (data.externalPipelineFlowLoad && !data.externalPipelineFlow) {
+			const msg = "The host app did not provide a pipeline flow when requested for action " +
+				data.editType + " in beforeEditActionHandler, for URL: " +
+				data.externalUrl;
+			this.logger.error(msg);
+			return false;
+		}
+		return true;
+	}
+
 	// Pans the canvas to bring the newly added node into view if it is not
 	// already visible. This needs to be done after the canvas has finished
 	// updating so we add the function as a callback to be called after update.
 	panToReveal(data) {
-	// Declare a function that will reposition the canvas to show the
-	// newly added node if it's outside the viewport.
+		// Declare a function that will reposition the canvas to show the
+		// newly added node if it's outside the viewport.
 		const moveCanvasToReveal = () => {
 			const zoomObject = this.getZoomToReveal([data.newNode.id]);
 			if (zoomObject) {

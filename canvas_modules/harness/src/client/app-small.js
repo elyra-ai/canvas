@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 
 import React from "react";
 import { IntlProvider } from "react-intl";
-import { CommonCanvas, CanvasController } from "common-canvas";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
-// import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+// Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
+import { CommonCanvas, CanvasController } from "common-canvas";
+// This library is only needed if you want to use hot loading during development.
 import { hot } from "react-hot-loader/root";
 
 class App extends React.Component {
@@ -101,7 +102,6 @@ class App extends React.Component {
 			// enableSnapToGridY: null,
 			// enableAutoLayoutVerticalSpacing: 50,
 			// enableAutoLayoutHorizontalSpacing: 50,
-			// enableConnectionType: "Ports",
 			// enableNodeFormatType: "Horizontal",
 			// enableLinkType: "Curve",
 			// enableNodeLayout: null,

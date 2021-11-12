@@ -47,13 +47,6 @@ $node-port-input-arrow-connected-fill-color: transparent;
 $node-port-input-connected-super-binding-stroke-color: $blue;
 $node-port-input-connected-super-binding-fill-color: $light-blue;
 
-.classic-halo {
-	.d3-node-body-outline {
-		stroke: transparent;
-		fill: transparent;
-	}
-}
-
 .classic-vertical {
 	.d3-node-body-outline {
 		stroke: $node-body-stroke;

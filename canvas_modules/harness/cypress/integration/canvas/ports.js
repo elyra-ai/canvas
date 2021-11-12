@@ -17,7 +17,6 @@
 describe("Test to check if a port to port link can be made with a new node", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
@@ -68,7 +67,6 @@ describe("Test to check if a port to port link can be made with a new node", fun
 describe("Test multiple ports operations", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({ "selectedConnectionType": "Ports" });
 		cy.openCanvasDefinition("multiPortsCanvas2.json");
 	});
 

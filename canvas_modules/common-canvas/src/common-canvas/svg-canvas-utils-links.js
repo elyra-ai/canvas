@@ -28,10 +28,11 @@ const ANTI_CLOCKWISE = true;
 const ONE_EIGHTY_DEGREES_IN_RADIANS = Math.PI;
 
 export default class SvgCanvasLinks {
-	constructor(config, canvasLayout, nodeUtils) {
+	constructor(config, canvasLayout, nodeUtils, commentUtils) {
 		this.canvasLayout = canvasLayout;
 		this.config = config;
 		this.nodeUtils = nodeUtils;
+		this.commentUtils = commentUtils;
 	}
 
 	// Returns an object containing the x and y coordinates of the start position
@@ -39,38 +40,40 @@ export default class SvgCanvasLinks {
 	// end position which is an x, y cordinate.
 	getNewStraightCommentLinkStartPos(srcComment, endPos) {
 		return CanvasUtils.getOuterCoord(
-			srcComment.x_pos - this.canvasLayout.linkGap,
-			srcComment.y_pos - this.canvasLayout.linkGap,
-			srcComment.width + (this.canvasLayout.linkGap * 2),
-			srcComment.height + (this.canvasLayout.linkGap * 2),
-			(srcComment.width / 2) + this.canvasLayout.linkGap,
-			(srcComment.height / 2) + this.canvasLayout.linkGap,
+			srcComment.x_pos,
+			srcComment.y_pos,
+			srcComment.width,
+			srcComment.height,
+			this.canvasLayout.linkGap,
+			this.commentUtils.getCommentCenterPosX(srcComment),
+			this.commentUtils.getCommentCenterPosY(srcComment),
 			endPos.x,
 			endPos.y);
 	}
 
 	// Returns an object containing the x and y coordinates of the start position
 	// of a straight line which extends from the node passed in to the
-	// end position which is also an x, y cordinate.
-	getNewStraightNodeLinkStartPos(node, endPos) {
-		let nodeCenterX;
-		let nodeCenterY;
+	// end position which is also an x, y coordinate.
+	getNewStraightNodeLinkStartPos(srcNode, endPos) {
+		let srcCenterX;
+		let srcCenterY;
 
-		if (node.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(node)) {
-			nodeCenterX = node.layout.imagePosX + (node.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			nodeCenterY = node.layout.imagePosY + (node.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(srcNode)) {
+			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
+			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
-			nodeCenterX = (node.width / 2) + this.canvasLayout.linkGap;
-			nodeCenterY = (node.height / 2) + this.canvasLayout.linkGap;
+			srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
+			srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
 		}
 
 		return CanvasUtils.getOuterCoord(
-			node.x_pos - this.canvasLayout.linkGap,
-			node.y_pos - this.canvasLayout.linkGap,
-			node.width + (this.canvasLayout.linkGap * 2),
-			node.height + (this.canvasLayout.linkGap * 2),
-			nodeCenterX,
-			nodeCenterY,
+			srcNode.x_pos,
+			srcNode.y_pos,
+			srcNode.width,
+			srcNode.height,
+			this.canvasLayout.linkGap,
+			srcCenterX,
+			srcCenterY,
 			endPos.x,
 			endPos.y);
 	}
@@ -94,8 +97,7 @@ export default class SvgCanvasLinks {
 				Math.abs(line.y1 - line.y2) < 20) {
 			return this.getStraightPath(line);
 
-		} else if (this.canvasLayout.connectionType === "ports" &&
-				line.type === NODE_LINK) {
+		} else if (line.type === NODE_LINK) {
 
 			if (this.canvasLayout.linkType === LINK_TYPE_CURVE ||
 					this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
@@ -159,40 +161,42 @@ export default class SvgCanvasLinks {
 		let trgCenterY;
 
 		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(srcNode)) {
-			srcCenterX = this.nodeUtils.getNodeImagePosX(srcNode) + (srcNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			srcCenterY = this.nodeUtils.getNodeImagePosY(srcNode) + (srcNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
+			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
-			srcCenterX = (srcNode.width / 2) + this.canvasLayout.linkGap;
-			srcCenterY = (srcNode.height / 2) + this.canvasLayout.linkGap;
+			srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
+			srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
 		}
 
 		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(trgNode)) {
-			trgCenterX = this.nodeUtils.getNodeImagePosX(trgNode) + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			trgCenterY = this.nodeUtils.getNodeImagePosY(trgNode) + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
+			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {
-			trgCenterX = (trgNode.width / 2) + this.canvasLayout.linkGap;
-			trgCenterY = (trgNode.height / 2) + this.canvasLayout.linkGap;
+			trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
+			trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
 		}
 
 		const startPos = CanvasUtils.getOuterCoord(
-			srcNode.x_pos - this.canvasLayout.linkGap,
-			srcNode.y_pos - this.canvasLayout.linkGap,
-			srcNode.width + (this.canvasLayout.linkGap * 2),
-			srcNode.height + (this.canvasLayout.linkGap * 2),
+			srcNode.x_pos,
+			srcNode.y_pos,
+			srcNode.width,
+			srcNode.height,
+			this.canvasLayout.linkGap,
 			srcCenterX,
 			srcCenterY,
-			trgNode.x_pos + (trgNode.width / 2),
-			trgNode.y_pos + (trgNode.height / 2));
+			trgCenterX,
+			trgCenterY);
 
 		const endPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos - this.canvasLayout.linkGap,
-			trgNode.y_pos - this.canvasLayout.linkGap,
-			trgNode.width + (this.canvasLayout.linkGap * 2),
-			trgNode.height + (this.canvasLayout.linkGap * 2),
+			trgNode.x_pos,
+			trgNode.y_pos,
+			trgNode.width,
+			trgNode.height,
+			this.canvasLayout.linkGap,
 			trgCenterX,
 			trgCenterY,
-			srcNode.x_pos + (srcNode.width / 2),
-			srcNode.y_pos + (srcNode.height / 2));
+			srcCenterX,
+			srcCenterY);
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
@@ -265,36 +269,40 @@ export default class SvgCanvasLinks {
 	}
 
 	getCommentLinkCoords(srcComment, trgNode) {
-		const startPos = CanvasUtils.getOuterCoord(
-			srcComment.x_pos - this.canvasLayout.linkGap,
-			srcComment.y_pos - this.canvasLayout.linkGap,
-			srcComment.width + (this.canvasLayout.linkGap * 2),
-			srcComment.height + (this.canvasLayout.linkGap * 2),
-			(srcComment.width / 2) + this.canvasLayout.linkGap,
-			(srcComment.height / 2) + this.canvasLayout.linkGap,
-			trgNode.x_pos + (trgNode.width / 2),
-			trgNode.y_pos + (trgNode.height / 2));
-
-		var centerX;
-		var centerY;
+		const srcCenterX = this.commentUtils.getCommentCenterPosX(srcComment);
+		const srcCenterY = this.commentUtils.getCommentCenterPosY(srcComment);
+		let trgCenterX;
+		let trgCenterY;
 
 		if (trgNode.layout.drawCommentLinkLineTo === "image_center") {
-			centerX = this.nodeUtils.getNodeImagePosX(trgNode) + (trgNode.layout.imageWidth / 2) + this.canvasLayout.linkGap;
-			centerY = this.nodeUtils.getNodeImagePosY(trgNode) + (trgNode.layout.imageHeight / 2) + this.canvasLayout.linkGap;
+			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
+			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {
-			centerX = (trgNode.width / 2) + this.canvasLayout.linkGap;
-			centerY = (trgNode.height / 2) + this.canvasLayout.linkGap;
+			trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
+			trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
 		}
 
+		const startPos = CanvasUtils.getOuterCoord(
+			srcComment.x_pos,
+			srcComment.y_pos,
+			srcComment.width,
+			srcComment.height,
+			this.canvasLayout.linkGap,
+			srcCenterX,
+			srcCenterY,
+			trgCenterX,
+			trgCenterY);
+
 		const endPos = CanvasUtils.getOuterCoord(
-			trgNode.x_pos - this.canvasLayout.linkGap,
-			trgNode.y_pos - this.canvasLayout.linkGap,
-			trgNode.width + (this.canvasLayout.linkGap * 2),
-			trgNode.height + (this.canvasLayout.linkGap * 2),
-			centerX,
-			centerY,
-			srcComment.x_pos + (srcComment.width / 2),
-			srcComment.y_pos + (srcComment.height / 2));
+			trgNode.x_pos,
+			trgNode.y_pos,
+			trgNode.width,
+			trgNode.height,
+			this.canvasLayout.linkGap,
+			trgCenterX,
+			trgCenterY,
+			srcCenterX,
+			srcCenterY);
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}

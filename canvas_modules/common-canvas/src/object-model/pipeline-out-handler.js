@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import isEmpty from "lodash/isEmpty";
-import set from "lodash/set";
+import { cloneDeep, isEmpty, set } from "lodash";
 import { BINDING, EXECUTION_NODE,
 	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
@@ -25,7 +24,7 @@ export default class PipelineOutHandler {
 	// Creates a new pipeline flow using the canvasInfo. The top level fields
 	// in the canvasInfo are the same as those for the pipelineFlow.
 	static createPipelineFlow(canvasInfo) {
-		const copyCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
+		const copyCanvasInfo = cloneDeep(canvasInfo);
 		delete copyCanvasInfo.subdueStyle;
 		const pipelineFlow = Object.assign({}, copyCanvasInfo,
 			{
@@ -70,11 +69,11 @@ export default class PipelineOutHandler {
 
 	static createNodes(canvasInfoPipeline) {
 		return canvasInfoPipeline.nodes.map((canvasInfoNode) =>
-			this.createNode(canvasInfoNode, canvasInfoPipeline.links)
+			this.createSchemaNode(canvasInfoNode, canvasInfoPipeline.links)
 		);
 	}
 
-	static createNode(ciNode, ciLinks) {
+	static createSchemaNode(ciNode, ciLinks) {
 		var newNode = {
 			id: ciNode.id,
 			type: ciNode.type

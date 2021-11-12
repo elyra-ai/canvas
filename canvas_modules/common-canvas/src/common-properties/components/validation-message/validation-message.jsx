@@ -18,14 +18,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { STATES, TOOL_TIP_DELAY } from "./../../constants/constants.js";
+import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
 export default class ValidationMessage extends React.Component {
 
 	render() {
-		if (!this.props.messageInfo) {
+		// some controls use carbon's error/warnings instead of this component
+		if (!this.props.messageInfo || (this.props.tableOnly && !this.props.inTable)) {
 			return null;
 		}
 		const msgText = this.props.inTable ? null : <span>{this.props.messageInfo.text}</span>;
@@ -37,15 +38,14 @@ export default class ValidationMessage extends React.Component {
 				<Tooltip
 					id={uuid4() + "-table-cell-msg-icon"}
 					tip={this.props.messageInfo.text}
-					direction="top"
-					delay={TOOL_TIP_DELAY}
+					direction="bottom"
 					className="properties-tooltips"
 				>
 					{icon}
 				</Tooltip>
 			</div>)
-			: icon;
-		const className = classNames("properties-validation-message",
+			: null;
+		const className = classNames("properties-validation-message", this.props.messageInfo.type,
 			{ "hide": this.props.state === STATES.HIDDEN || this.props.state === STATES.DISABLED, "inTable": this.props.inTable });
 		return (
 			<div className={className}>
@@ -61,5 +61,6 @@ ValidationMessage.propTypes = {
 		type: PropTypes.string
 	}),
 	state: PropTypes.string,
-	inTable: PropTypes.bool
+	inTable: PropTypes.bool,
+	tableOnly: PropTypes.bool
 };

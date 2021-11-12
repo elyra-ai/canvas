@@ -54,7 +54,7 @@ Cypress.Commands.add("getLinkUsingId", (linkId) => {
 		});
 });
 
-Cypress.Commands.add("hoverOverLabelForLinkDec", (linkLabel, decId) => {
+Cypress.Commands.add("hoverOverLinkDecoration", (linkLabel, decId) => {
 	cy.getLinkWithLabel(linkLabel)
 		.find("[data-id='link_dec_group_0_" + decId + "']")
 		.trigger("mouseenter");
@@ -163,13 +163,10 @@ Cypress.Commands.add("moveLinkHandleToPortByLinkId", (linkId, element, nodeName,
 });
 
 Cypress.Commands.add("linkNodes", (srcNodeName, trgNodeName) => {
-	// Link source node to target node
-	cy.getNodeWithLabel(srcNodeName)
-		.find(".d3-node-halo")
-		.trigger("mousedown", "right", { button: 0 }, { force: true });
-	cy.getNodeWithLabel(trgNodeName)
-		.trigger("mousemove", { force: true })
-		.trigger("mouseup", { force: true });
+	cy.getFirstOutputPortIdForLabel(srcNodeName)
+		.then((srcPortId) =>
+			cy.linkNodeOutputPortToNode(srcNodeName, srcPortId, trgNodeName)
+		);
 });
 
 Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortId, trgNodeName, trgPortId) => {

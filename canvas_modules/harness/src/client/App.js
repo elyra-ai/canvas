@@ -17,13 +17,14 @@
 /* eslint max-len: ["error", 200] */
 /* eslint max-depth: ["error", 5] */
 /* eslint no-alert: "off" */
+/* eslint react/sort-comp: "off" */
 
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
-import ReactFileDownload from "react-file-download";
+import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { isEmpty, has, forIn } from "lodash";
+import { forIn, get, has, isEmpty } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -80,7 +81,6 @@ import {
 	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
 	INTERACTION_MOUSE,
-	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
@@ -113,7 +113,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "./constants/constants.js";
 
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
@@ -148,8 +149,6 @@ class App extends React.Component {
 			canvasFileChooserVisible2: false,
 			paletteFileChooserVisible: false,
 			paletteFileChooserVisible2: false,
-			canvasDiagram: "",
-			canvasDiagram2: "",
 			selectedCanvasDropdownFile: "",
 			selectedCanvasDropdownFile2: "",
 			selectedPaletteDropdownFile: "",
@@ -163,12 +162,12 @@ class App extends React.Component {
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
 			selectedInteractionType: INTERACTION_MOUSE,
-			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
 			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
+			selectedSingleOutputPortDisplay: false,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -181,8 +180,11 @@ class App extends React.Component {
 				"palette": true,
 				"nodes": true,
 				"ports": true,
+				"decorations": true,
 				"links": true
 			},
+			selectedShowBottomPanel: false,
+			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
 			selectedExtraCanvasDisplayed: false,
@@ -217,6 +219,8 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
+			staticRowsPropertyId: {},
+			staticRowsIndexes: [],
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -300,6 +304,9 @@ class App extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
+		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
+		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
+		this.setStaticRows = this.setStaticRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 
@@ -346,6 +353,7 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
+		this.titleChangeHandler = this.titleChangeHandler.bind(this);
 		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
@@ -368,12 +376,13 @@ class App extends React.Component {
 		try {
 			this.canvasController = new CanvasController();
 			this.canvasController2 = new CanvasController();
+			// this.canvasController.setLoggingState(true);
 		} catch (err) {
 			console.error("Error setting up canvas controllers: " + err);
 		}
 
 		// Add these methods to the global document object so they can be called
-		// from the Chimp test cases.
+		// from the Cypress test cases.
 		document.setCanvasConfig = this.setCanvasConfig;
 		document.canvasController = this.canvasController;
 		document.canvasController2 = this.canvasController2;
@@ -384,10 +393,42 @@ class App extends React.Component {
 		document.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect;
 		this.locale = "en";
 		this.initLocale();
+
+		// Create the empty canvas div so we don't create a new object on each render
+		// which would cause a refresh.
+		this.emptyCanvasDiv = (
+			<div>
+				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
+				<span className="harness-empty-text">
+					<FormattedMessage
+						id={ "canvas.emptyText" }
+						values={{ br: <br /> }}
+					/>
+				</span>
+				<span className="harness-empty-link"
+					onClick={this.handleEmptyCanvasLinkClick}
+				><FormattedMessage id={ "canvas.emptyLink"} /></span>
+			</div>
+		);
+
+		// Create the drop zone canvas div so we don't create a new object on each render
+		// which would cause a refresh.
+		this.dropZoneCanvasDiv = (
+			<div>
+				<div className="dropzone-canvas" />
+				<div className="dropzone-canvas-rect" />
+				<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
+			</div>
+		);
+
+		// Create messages here (not in the render) since that would cause
+		// unnecssary renders inside common-canvas and/or common-properties.
+		this.messages = getMessages(this.locale, [HarnessBundles,
+			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
 	}
 
 	componentDidMount() {
-		this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+		this.setBreadcrumbsDefinition();
 		const that = this;
 		FormsService.getFiles(FORMS)
 			.then(function(res) {
@@ -415,7 +456,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile: selectedCanvasDropdownFile,
-				canvasDiagram: "",
 				canvasFileChooserVisible: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
@@ -437,7 +477,6 @@ class App extends React.Component {
 			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile2: selectedCanvasDropdownFile2,
-				canvasDiagram2: "",
 				canvasFileChooserVisible2: false
 			}, function() {
 				that.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
@@ -525,6 +564,7 @@ class App extends React.Component {
 			});
 		}
 	}
+
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
@@ -591,7 +631,7 @@ class App extends React.Component {
 		if (canvasJson) {
 			this.canvasController.setPipelineFlow(canvasJson);
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(this.canvasController.getPrimaryPipelineId());
+			this.setBreadcrumbsDefinition();
 			this.log("Canvas diagram set");
 		} else {
 			this.log("Canvas diagram cleared");
@@ -693,8 +733,8 @@ class App extends React.Component {
 		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
 	}
 
-	setBreadcrumbsDefinition(currentPipelineId) {
-		const breadcrumbs = this.canvasController.getAncestorPipelineIds(currentPipelineId);
+	setBreadcrumbsDefinition() {
+		const breadcrumbs = this.canvasController.getBreadcrumbs();
 		breadcrumbs[0].label = PRIMARY;
 		this.setState({ breadcrumbsDef: breadcrumbs });
 	}
@@ -832,6 +872,23 @@ class App extends React.Component {
 	setAddRemoveRows() {
 		if (this.propertiesController) {
 			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
+	}
+
+	// Textfield to set the propertyId for staticRows
+	setStaticRowsPropertyId(propertyId) {
+		this.setState({ staticRowsPropertyId: propertyId });
+	}
+
+	// Toggle to set staticRows enabled or disabled
+	setStaticRowsIndexes(indexes) {
+		this.setState({ staticRowsIndexes: indexes });
+	}
+
+	// Button to call propertiesController to set staticRows
+	setStaticRows() {
+		if (this.propertiesController) {
+			this.propertiesController.updateStaticRows(this.state.staticRowsPropertyId, this.state.staticRowsIndexes);
 		}
 	}
 
@@ -1017,7 +1074,7 @@ class App extends React.Component {
 	// Open the flow on notification message click
 	flowNotificationMessageCallback(pipelineId) {
 		this.canvasController.displaySubPipeline({ pipelineId: pipelineId });
-		this.setBreadcrumbsDefinition(pipelineId);
+		this.setBreadcrumbsDefinition();
 		this.canvasController.closeNotificationPanel();
 	}
 
@@ -1074,6 +1131,10 @@ class App extends React.Component {
 		// Add consoleoutput to the global document so the test harness can access it
 		document.eventLog = this.consoleout;
 
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness logging");
+		this.canvasController.log("-------------------------------");
+
 		this.setState({ consoleout: this.consoleout });
 
 		if (this.state.consoleOpened) {
@@ -1089,13 +1150,13 @@ class App extends React.Component {
 	downloadPipelineFlow() {
 		const pipelineFlow = this.getPipelineFlow();
 		const canvas = JSON.stringify(pipelineFlow, null, 2);
-		ReactFileDownload(canvas, "canvas.json");
+		JavascriptFileDownload(canvas, "canvas.json");
 	}
 
 	downloadPalette() {
 		const paletteData = this.getPaletteData();
 		const palette = JSON.stringify(paletteData, null, 2);
-		ReactFileDownload(palette, "palette.json");
+		JavascriptFileDownload(palette, "palette.json");
 	}
 
 	useApplyOnBlur(enabled) {
@@ -1148,6 +1209,10 @@ class App extends React.Component {
 	}
 
 	clickActionHandler(source) {
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness clickActionHandler");
+		this.canvasController.log("-------------------------------");
+
 		// TODO - Logging causes the entire canvas to be refreshed. This can cause
 		// problems if the click action handler is called while common-canvas is
 		// in the middle of procssing an event. Preferably, common-canvas should be
@@ -1242,6 +1307,18 @@ class App extends React.Component {
 		}, 2000);
 	}
 
+	titleChangeHandler(title, callbackFunction) {
+		// If Title is valid. No need to send anything in callbackFunction
+		if (title.length > 15) {
+			callbackFunction({ type: "error", message: "Only 15 characters are allowed in title." });
+		} else if (title.length > 10 && title.length <= 15) {
+			callbackFunction({
+				type: "warning",
+				message: "Title exceeds 10 characters. This is a warning message. There is no restriction on message length. Height is adjusted for multi-line messages."
+			});
+		}
+	}
+
 	helpClickHandler(nodeTypeId, helpData, appData) {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
@@ -1300,6 +1377,7 @@ class App extends React.Component {
 		case "loadPipelineFlow":
 		case "expandSuperNodeInPlace":
 		case "displaySubPipeline":
+		case "deconstructSuperNode":
 		case "convertSuperNodeExternalToLocal": {
 			if (data.externalPipelineFlowLoad) {
 				// This code simulates some asynchronous activity by the host app.
@@ -1351,7 +1429,7 @@ class App extends React.Component {
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
-			this.setBreadcrumbsDefinition(data.pipelineInfo.pipelineId);
+			this.setBreadcrumbsDefinition();
 			break;
 		}
 		case "createTestHarnessNode": {
@@ -1405,6 +1483,13 @@ class App extends React.Component {
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
 				this.canvasController.getExternalPipelineFlow(data.externalUrl);
+			break;
+		}
+		case "undo":
+		case "redo": {
+			if (get(command, "data.editType") === "displaySubPipeline") {
+				this.setBreadcrumbsDefinition();
+			}
 			break;
 		}
 		default: {
@@ -1711,6 +1796,293 @@ class App extends React.Component {
 		this.log("propertyActionHandler() " + actionId);
 	}
 
+	getCommonProperties() {
+		if (isEmpty(this.state.propertiesInfo)) {
+			return null;
+		}
+
+		const propertiesConfig = this.getPropertiesConfig();
+
+		const callbacks = {
+			controllerHandler: this.propertiesControllerHandler,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog,
+			helpClickHandler: this.helpClickHandler,
+			buttonHandler: this.buttonHandler,
+			titleChangeHandler: this.titleChangeHandler
+		};
+		if (this.state.propertiesValidationHandler) {
+			callbacks.validationHandler = this.validationHandler;
+		}
+
+		const commonProperties = (
+			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties = instance;
+				} }
+				propertiesInfo={this.state.propertiesInfo}
+				propertiesConfig={propertiesConfig}
+				customPanels={[CustomSliderPanel, CustomTogglePanel,
+					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
+					RandomEffectsPanel, CustomSubjectsPanel]}
+				callbacks={callbacks}
+				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				light={this.state.light}
+			/>);
+
+		return commonProperties;
+	}
+
+	getCommonProperties2() {
+		if (isEmpty(this.state.propertiesInfo2)) {
+			return null;
+		}
+
+		const propertiesConfig = this.getPropertiesConfig();
+
+		const callbacks2 = {
+			controllerHandler: this.propertiesControllerHandler2,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog2,
+			helpClickHandler: this.helpClickHandler
+		};
+
+		const commonProperties2 = (
+			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties2 = instance;
+				} }
+				propertiesInfo={this.state.propertiesInfo2}
+				propertiesConfig={propertiesConfig}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
+					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
+				callbacks={callbacks2}
+				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
+				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				light={this.state.light}
+			/>);
+
+		return commonProperties2;
+	}
+
+	getPropertiesConfig() {
+		return {
+			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
+			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
+			applyOnBlur: this.state.applyOnBlur,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
+			heading: this.state.heading,
+			schemaValidation: this.state.propertiesSchemaValidation,
+			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
+			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
+		};
+	}
+
+	getCanvasConfig() {
+		const canvasConfig = {
+			enableInteractionType: this.state.selectedInteractionType,
+			enableSnapToGridType: this.state.selectedSnapToGridType,
+			enableSnapToGridX: this.state.enteredSnapToGridX,
+			enableSnapToGridY: this.state.enteredSnapToGridY,
+			enableNodeFormatType: this.state.selectedNodeFormatType,
+			enableLinkType: this.state.selectedLinkType,
+			enableLinkDirection: this.state.selectedLinkDirection,
+			enableAssocLinkType: this.state.selectedAssocLinkType,
+			enableParentClass: this.getParentClass(),
+			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
+			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
+			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
+			enableInternalObjectModel: this.state.selectedInternalObjectModel,
+			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
+			enableLinkSelection: this.state.selectedLinkSelection,
+			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
+			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
+			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enableToolbarLayout: this.state.selectedToolbarLayout,
+			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
+			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
+			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
+			enableAutoLinkOnlyFromSelNodes: this.state.selectedAutoLinkOnlyFromSelNodes,
+			enableBrowserEditMenu: this.state.selectedBrowserEditMenu,
+			tipConfig: this.state.selectedTipConfig,
+			schemaValidation: this.state.selectedSchemaValidation,
+			enableNarrowPalette: this.state.selectedNarrowPalette,
+			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
+			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
+			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
+			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
+			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
+			dropZoneCanvasContent: this.state.selectedDisplayCustomizedDropZoneContent ? this.dropZoneCanvasDiv : null,
+			emptyCanvasContent: this.state.selectedDisplayCustomizedEmptyCanvasContent ? this.emptyCanvasDiv : null,
+			enableSaveZoom: this.state.selectedSaveZoom,
+			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
+			enableSingleOutputPortDisplay: this.state.selectedSingleOutputPortDisplay,
+			enableNodeLayout: this.state.selectedNodeLayout,
+			enableCanvasLayout: this.state.selectedCanvasLayout
+		};
+
+		return canvasConfig;
+	}
+
+	getCanvasConfig2() {
+		const canvasConfig2 = {
+			enableNodeFormatType: this.state.selectedNodeFormatType,
+			enableLinkType: this.state.selectedLinkType,
+			enableParentClass: this.getParentClass(),
+			enableInternalObjectModel: this.state.selectedInternalObjectModel,
+			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
+			enablePaletteLayout: this.state.selectedPaletteLayout,
+			selectedMoveNodesOnSupernodeResize: true,
+			tipConfig: this.state.selectedTipConfig,
+			schemaValidation: this.state.selectedSchemaValidation,
+			enableBoundingRectangles: this.state.selectedBoundingRectangles,
+			enableNarrowPalette: this.state.selectedNarrowPalette
+		};
+
+		return canvasConfig2;
+	}
+
+	getParentClass() {
+		let parentClass = "";
+		if (this.state.selectedNodeFormatType === "Vertical") {
+			parentClass = "classic-vertical";
+		}
+		return parentClass;
+	}
+
+	getToolbarConfig() {
+		let toolbarConfig = null;
+		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
+			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
+			toolbarConfig = [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
+				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
+				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+			];
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ divider: true },
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE) {
+			toolbarConfig = {
+				leftBar: [
+				],
+				rightBar: [
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: true },
+					{ action: "copy", label: "Copy", enable: true },
+					{ action: "paste", label: "Paste", enable: true },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
+			toolbarConfig = {
+				leftBar: [
+					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
+					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				],
+				rightBar: [
+					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
+					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
+					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
+					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
+				]
+			};
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
+			// This example shows how custom JSX can be provided to the toolbar in the
+			// jsx field to replace the content specified in the other fields. The JSX
+			// added can be customized using the host applications own CSS.
+			toolbarConfig = {
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true },
+					{ action: "custom-loading",
+						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+					{ divider: true },
+					{ action: "custom-checkbox",
+						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+					{ divider: true },
+					{ action: "custom-button",
+						tooltip: "A custom button of type primary!",
+						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+					{ divider: true }
+				]
+			};
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE) {
+			toolbarConfig = {
+				overrideAutoEnableDisable: true,
+				leftBar: [
+					{ action: "undo", label: "Undo", enable: false },
+					{ action: "redo", label: "Redo", enable: false },
+					{ divider: true },
+					{ action: "cut", label: "Cut", enable: false, tooltip: "Cut from clipboard" },
+					{ action: "copy", label: "Copy", enable: false, tooltip: "Copy from clipboard" },
+					{ action: "paste", label: "Paste", enable: false, tooltip: "Paste to canvas" },
+					{ divider: true },
+					{ action: "createAutoComment", label: "Add Comment", enable: false },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: false }
+				]
+			};
+		}
+
+		return toolbarConfig;
+	}
+
 	runProgress() {
 		const nodeAnimation =
 			"animation-duration:1000ms; animation-name:wiggle2; " +
@@ -1815,7 +2187,22 @@ class App extends React.Component {
 		}, 14000);
 	}
 
+	getTempContent() {
+		const text1 = "Common Canvas panel.";
+		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
+		return (
+			<div className="harness-panel-temp-content">
+				<div className="title">{text1}</div>
+				<div className="text">{text2}</div>
+			</div>
+		);
+	}
+
 	render() {
+		this.canvasController.log("-------------------------------");
+		this.canvasController.log("Test Harness render");
+		this.canvasController.log("-------------------------------");
+
 		const currentPipelineId = this.canvasController.getCurrentBreadcrumb().pipelineId;
 		const breadcrumbs = (<Breadcrumbs
 			canvasController={this.canvasController}
@@ -1873,213 +2260,16 @@ class App extends React.Component {
 			</div>
 		</header>);
 
-		let emptyCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedEmptyCanvasContent) {
-			emptyCanvasDiv = (
-				<div>
-					<Isvg src={BlankCanvasImage} className="harness-empty-image" />
-					<span className="harness-empty-text">
-						<FormattedMessage
-							id={ "canvas.emptyText" }
-							values={{ br: <br /> }}
-						/>
-					</span>
-					<span className="harness-empty-link"
-						onClick={this.handleEmptyCanvasLinkClick}
-					><FormattedMessage id={ "canvas.emptyLink"} /></span>
-				</div>);
-		}
-
-		let dropZoneCanvasDiv = null;
-		if (this.state.selectedDisplayCustomizedDropZoneContent) {
-			dropZoneCanvasDiv = (
-				<div>
-					<div className="dropzone-canvas" />
-					<div className="dropzone-canvas-rect" />
-					<span className="dropzone-canvas-text">Drop a data object here<br />to add to canvas.</span>
-				</div>);
-		}
-
-		let parentClass = "";
-		if (this.state.selectedNodeFormatType === "Vertical") {
-			parentClass = "classic-vertical";
-			if (this.state.selectedConnectionType === "Halo") {
-				parentClass = "classic-halo";
-			}
-		}
-
-		const commonCanvasConfig = {
-			enableInteractionType: this.state.selectedInteractionType,
-			enableSnapToGridType: this.state.selectedSnapToGridType,
-			enableSnapToGridX: this.state.enteredSnapToGridX,
-			enableSnapToGridY: this.state.enteredSnapToGridY,
-			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormatType,
-			enableLinkType: this.state.selectedLinkType,
-			enableLinkDirection: this.state.selectedLinkDirection,
-			enableAssocLinkType: this.state.selectedAssocLinkType,
-			enableParentClass: parentClass,
-			enableHighlightNodeOnNewLinkDrag: this.state.selectedHighlightNodeOnNewLinkDrag,
-			enableHighlightUnavailableNodes: this.state.selectedHighlightUnavailableNodes,
-			enableExternalPipelineFlows: this.state.selectedExternalPipelineFlows,
-			enableInternalObjectModel: this.state.selectedInternalObjectModel,
-			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
-			enableLinkSelection: this.state.selectedLinkSelection,
-			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
-			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
-			enablePaletteLayout: this.state.selectedPaletteLayout,
-			enableToolbarLayout: this.state.selectedToolbarLayout,
-			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
-			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
-			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
-			enableAutoLinkOnlyFromSelNodes: this.state.selectedAutoLinkOnlyFromSelNodes,
-			enableBrowserEditMenu: this.state.selectedBrowserEditMenu,
-			tipConfig: this.state.selectedTipConfig,
-			schemaValidation: this.state.selectedSchemaValidation,
-			enableNarrowPalette: this.state.selectedNarrowPalette,
-			enableDisplayFullLabelOnHover: this.state.selectedDisplayFullLabelOnHover,
-			enableBoundingRectangles: this.state.selectedBoundingRectangles,
-			enableCanvasUnderlay: this.state.selectedCanvasUnderlay,
-			enableDropZoneOnExternalDrag: this.state.selectedDropZoneOnExternalDrag,
-			enableRightFlyoutUnderToolbar: this.state.selectedRightFlyoutUnderToolbar,
-			enablePanIntoViewOnOpen: this.state.selectedPanIntoViewOnOpen,
-			dropZoneCanvasContent: dropZoneCanvasDiv,
-			emptyCanvasContent: emptyCanvasDiv,
-			enableSaveZoom: this.state.selectedSaveZoom,
-			enableZoomIntoSubFlows: this.state.selectedZoomIntoSubFlows,
-			enableNodeLayout: this.state.selectedNodeLayout,
-			enableCanvasLayout: this.state.selectedCanvasLayout
-		};
-
-		const decorationActionHandler = this.decorationActionHandler;
-		const editActionHandler = this.editActionHandler;
-
-		const commonCanvasConfig2 = {
-			enableConnectionType: this.state.selectedConnectionType,
-			enableNodeFormatType: this.state.selectedNodeFormatType,
-			enableLinkType: this.state.selectedLinkType,
-			enableParentClass: parentClass,
-			enableInternalObjectModel: this.state.selectedInternalObjectModel,
-			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
-			enablePaletteLayout: this.state.selectedPaletteLayout,
-			emptyCanvasContent: emptyCanvasDiv,
-			selectedMoveNodesOnSupernodeResize: true,
-			tipConfig: this.state.selectedTipConfig,
-			schemaValidation: this.state.selectedSchemaValidation,
-			enableBoundingRectangles: this.state.selectedBoundingRectangles,
-			enableNarrowPalette: this.state.selectedNarrowPalette
-		};
-
-		let toolbarConfig = null;
-		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
-			toolbarConfig = null;
-
-		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
-			toolbarConfig = [
-				{ action: "palette", label: "Palette", enable: true },
-				{ divider: true },
-				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
-				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
-				{ divider: true },
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "redo", label: "Redo", enable: true },
-				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
-				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
-				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
-				{ action: "createAutoComment", label: "Add Comment", enable: true },
-				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
-				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
-			];
-
-		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
-			toolbarConfig = {
-				leftBar: [
-					{ action: "before-enabled", incLabelWithIcon: "before", label: "Before - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "before-disabled", incLabelWithIcon: "before", label: "Before - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-enabled", incLabelWithIcon: "after", label: "After - enabled", enable: true, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-					{ action: "after-disabled", incLabelWithIcon: "after", label: "After - disbaled", enable: false, iconEnabled: (<Edit32 />), iconDisabled: (<Edit32 />) },
-				],
-				rightBar: [
-					{ divider: true },
-					{ divider: true },
-					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
-					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
-					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
-				]
-			};
-
-		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE) {
-			toolbarConfig = {
-				leftBar: [
-				],
-				rightBar: [
-					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
-					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
-					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
-					{ divider: true },
-					{ action: "undo", label: "Undo", enable: true },
-					{ action: "redo", label: "Redo", enable: true },
-					{ divider: true },
-					{ action: "cut", label: "Cut", enable: true },
-					{ action: "copy", label: "Copy", enable: true },
-					{ action: "paste", label: "Paste", enable: true },
-					{ divider: true },
-					{ action: "createAutoComment", label: "Add Comment", enable: true },
-					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
-					{ divider: true },
-					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
-				]
-			};
-
-		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CARBON_BUTTONS) {
-			toolbarConfig = {
-				leftBar: [
-					{ action: "primary", label: "Primary", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "danger", label: "Danger", enable: true, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "secondary", label: "Secondary", enable: true, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "tertiary", label: "Tertiary", enable: true, incLabelWithIcon: "before", kind: "tertiary", iconEnabled: (<Edit32 />) },
-					{ action: "ghost", label: "Ghost", enable: true, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "default", label: "Default", enable: true, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
-				],
-				rightBar: [
-					{ action: "dis-primary", label: "Primary", enable: false, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-danger", label: "Danger", enable: false, incLabelWithIcon: "before", kind: "danger", iconEnabled: (<Edit32 />) },
-					{ action: "dis-secondary", label: "Secondary", enable: false, incLabelWithIcon: "before", kind: "secondary", iconEnabled: (<Edit32 />) },
-					{ action: "dis-ghost", label: "Ghost", enable: false, incLabelWithIcon: "before", kind: "ghost", iconEnabled: (<Edit32 />) },
-					{ action: "dis-default", label: "Default", enable: false, incLabelWithIcon: "before", iconEnabled: (<Edit32 />) },
-				]
-			};
-
-		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_CUSTOM_ACTIONS) {
-			// This example shows how custom JSX can be provided to the toolbar in the
-			// jsx field to replace the content specified in the other fields. The JSX
-			// added can be customized using the host applications own CSS.
-			toolbarConfig = {
-				leftBar: [
-					{ action: "undo", label: "Undo", enable: true },
-					{ action: "redo", label: "Redo", enable: true },
-					{ divider: true },
-					{ action: "custom-loading",
-						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
-					{ divider: true },
-					{ action: "custom-checkbox",
-						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
-					{ divider: true },
-					{ action: "custom-button",
-						tooltip: "A custom button of type primary!",
-						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
-					{ divider: true }
-				]
-			};
-		}
+		const commonCanvasConfig = this.getCanvasConfig();
+		const commonCanvasConfig2 = this.getCanvasConfig2();
+		const toolbarConfig = this.getToolbarConfig();
 
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: this.state.selectedCreateSupernodeNonContiguous,
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 
@@ -2092,95 +2282,41 @@ class App extends React.Component {
 			}
 		};
 
-		const propertiesConfig = {
-			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
-			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur,
-			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			heading: this.state.heading,
-			schemaValidation: this.state.propertiesSchemaValidation,
-			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
-			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
-			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
-			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
-		};
-		const callbacks = {
-			controllerHandler: this.propertiesControllerHandler,
-			propertyListener: this.propertyListener,
-			actionHandler: this.propertyActionHandler,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog,
-			helpClickHandler: this.helpClickHandler,
-			buttonHandler: this.buttonHandler
-		};
-		if (this.state.propertiesValidationHandler) {
-			callbacks.validationHandler = this.validationHandler;
-		}
-		const callbacks2 = {
-			controllerHandler: this.propertiesControllerHandler2,
-			propertyListener: this.propertyListener,
-			actionHandler: this.propertyActionHandler,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog2,
-			helpClickHandler: this.helpClickHandler
-		};
-		const commonProperties = (
-			<CommonProperties
-				ref={(instance) => {
-					this.CommonProperties = instance;
-				} }
-				propertiesInfo={this.state.propertiesInfo}
-				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel,
-					CustomButtonPanel, CustomDatasetsPanel, EMMeansPanel, FixedEffectsPanel,
-					RandomEffectsPanel, CustomSubjectsPanel]}
-				callbacks={callbacks}
-				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
-				light={this.state.light}
-			/>);
-
-		const commonProperties2 = (
-			<CommonProperties
-				ref={(instance) => {
-					this.CommonProperties2 = instance;
-				} }
-				propertiesInfo={this.state.propertiesInfo2}
-				propertiesConfig={propertiesConfig}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
-					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
-				callbacks={callbacks2}
-				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
-				light={this.state.light}
-			/>);
-
 		let commonPropertiesContainer = null;
-		let rightFlyoutContent = null;
-		let rightFlyoutContent2 = null;
+		let rightFlyoutContentProperties = null;
+		let rightFlyoutContentProperties2 = null;
 		let showRightFlyoutProperties = false;
 		let showRightFlyoutProperties2 = false;
 		if (this.state.propertiesContainerType === PROPERTIES_FLYOUT) {
-			rightFlyoutContent = commonProperties;
-			rightFlyoutContent2 = commonProperties2;
-			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			showRightFlyoutProperties = (this.state.showPropertiesDialog && this.state.propertiesContainerType === PROPERTIES_FLYOUT) || this.state.selectedShowRightFlyout;
 			showRightFlyoutProperties2 = this.state.showPropertiesDialog2 && this.state.propertiesContainerType === PROPERTIES_FLYOUT;
+			if (showRightFlyoutProperties) {
+				rightFlyoutContentProperties = this.getCommonProperties();
+			}
+			if (showRightFlyoutProperties2) {
+				rightFlyoutContentProperties2 = this.getCommonProperties2();
+			}
 		} else {
 			commonPropertiesContainer = (
 				<div className="harness-common-properties">
-					{commonProperties}
+					{this.getCommonProperties()}
 				</div>);
 		}
+
+		const bottomPanelContent = this.getTempContent();
+
+		const rightFlyoutContent = rightFlyoutContentProperties
+			? rightFlyoutContentProperties
+			: this.getTempContent();
 
 		var firstCanvas = (
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
 				beforeEditActionHandler= {this.beforeEditActionHandler}
-				editActionHandler= {editActionHandler}
+				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {decorationActionHandler}
+				decorationActionHandler= {this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
@@ -2189,7 +2325,9 @@ class App extends React.Component {
 				contextMenuConfig={contextMenuConfig}
 				keyboardConfig={keyboardConfig}
 				rightFlyoutContent={rightFlyoutContent}
-				showRightFlyout={showRightFlyoutProperties}
+				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
+				bottomPanelContent={bottomPanelContent}
+				showBottomPanel={this.state.selectedShowBottomPanel}
 				canvasController={this.canvasController}
 			/>);
 
@@ -2261,6 +2399,10 @@ class App extends React.Component {
 
 		let commonCanvas;
 		if (this.state.selectedExtraCanvasDisplayed === true) {
+			const rightFlyoutContent2 = rightFlyoutContentProperties2
+				? rightFlyoutContentProperties2
+				: this.getTempContent();
+
 			commonCanvas = (
 				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
 					<div className="harness-canvas-single">
@@ -2335,6 +2477,10 @@ class App extends React.Component {
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
+			staticRowsIndexes: this.state.staticRowsIndexes,
+			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
+			setStaticRowsIndexes: this.setStaticRowsIndexes,
+			setStaticRows: this.setStaticRows,
 			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
 			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
@@ -2402,9 +2548,7 @@ class App extends React.Component {
 		</div>);
 
 		return (
-			<IntlProvider locale={this.locale} defaultLocale="en" messages={getMessages(this.locale, [HarnessBundles,
-				CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles])}
-			>
+			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
 				<div>{mainView}</div>
 			</IntlProvider>
 		);

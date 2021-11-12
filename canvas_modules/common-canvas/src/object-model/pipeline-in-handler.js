@@ -15,8 +15,7 @@
  */
 
 import has from "lodash/has";
-import isEmpty from "lodash/isEmpty";
-import isObject from "lodash/isObject";
+import { cloneDeep, isEmpty, isObject } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 
@@ -25,14 +24,22 @@ export default class PipelineInHandler {
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
 	// by extracting that info from the pipeline-flow provided.
 	static convertPipelineFlowToCanvasInfo(pipelineFlow, canvasLayout) {
+		const canvasInfoPipelines = this.convertPipelinesToCanvasInfoPipelines(pipelineFlow.pipelines, canvasLayout);
+		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
+		return newPipelineFlow;
+	}
+
+	// Returns an array of pipelines that conform to the internal 'canvas info'
+	// format based on the array of pipelines passed in that are expected to
+	// conform to the pipeline-flow format'.
+	static convertPipelinesToCanvasInfoPipelines(pipelines, canvasLayout) {
 		let canvasInfoPipelines = [];
-		if (pipelineFlow.pipelines) {
-			canvasInfoPipelines = pipelineFlow.pipelines.map((pFlowPipline) =>
+		if (pipelines) {
+			canvasInfoPipelines = pipelines.map((pFlowPipline) =>
 				this.convertPipelineToCanvasInfoPipeline(pFlowPipline, canvasLayout)
 			);
 		}
-		const newPipelineFlow = Object.assign({}, pipelineFlow, { pipelines: canvasInfoPipelines });
-		return newPipelineFlow;
+		return canvasInfoPipelines;
 	}
 
 	// Returns the 'canvas info' pipeline, stored internally in the object model,
@@ -76,66 +83,78 @@ export default class PipelineInHandler {
 	}
 
 	static convertNodes(nodes, canvasLayout) {
-		return nodes.map((node) => {
-			const obj = {
-				"id": node.id,
-				"type": node.type,
-				"outputs": this.convertOutputs(node),
-				"inputs": this.convertInputs(node),
-				"label": this.convertLabel(node),
-				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
-				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
-				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
-				"parameters": has(node, "parameters") ? node.parameters : [],
-				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
-				"ui_parameters": has(node, "app_data.ui_data.ui_parameters") ? node.app_data.ui_data.ui_parameters : [],
-				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : []
-			};
+		return nodes.map((node) => this.convertNode(node, canvasLayout));
+	}
 
-			if (node.type === EXECUTION_NODE ||
-					node.type === BINDING ||
-					node.type === MODEL_NODE) {
-				obj.op = node.op;
+	static convertNode(node, canvasLayout) {
+		const obj = {
+			"id": node.id,
+			"type": node.type,
+			"outputs": this.convertOutputs(node),
+			"inputs": this.convertInputs(node),
+			"label": this.convertLabel(node),
+			"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
+			"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
+			"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
+			"parameters": has(node, "parameters") ? node.parameters : [],
+			"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
+			"ui_parameters": has(node, "app_data.ui_data.ui_parameters") ? node.app_data.ui_data.ui_parameters : [],
+			"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : []
+		};
+
+		if (node.type === EXECUTION_NODE ||
+				node.type === BINDING ||
+				node.type === MODEL_NODE) {
+			obj.op = node.op;
+		}
+		if (node.type === SUPER_NODE) {
+			// Separate initialization needed to ensure field is only created when present.
+			if (has(node, "open_with_tool")) {
+				obj.open_with_tool = node.open_with_tool;
 			}
-			if (node.type === SUPER_NODE) {
-				// Separate initialization needed to ensure field is only created when present.
-				if (has(node, "open_with_tool")) {
-					obj.open_with_tool = node.open_with_tool;
-				}
-				obj.subflow_ref = has(node, "subflow_ref") ? node.subflow_ref : {};
-				obj.is_expanded = has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false;
-				obj.expanded_width = has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : canvasLayout.supernodeDefaultWidth;
-				obj.expanded_height = has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : canvasLayout.supernodeDefaultHeight;
-			}
-			if (node.type === MODEL_NODE) {
-				obj.model_ref = has(node, "model_ref") ? node.model_ref : "";
-			}
-			if (has(node, "app_data.ui_data.description")) {
-				obj.description = node.app_data.ui_data.description;
-			}
-			if (has(node, "app_data.ui_data.image")) {
-				obj.image = node.app_data.ui_data.image;
-			}
-			if (has(node, "app_data.ui_data.class_name")) {
-				obj.class_name = node.app_data.ui_data.class_name;
-			}
-			if (has(node, "app_data.ui_data.style")) {
-				obj.style = node.app_data.ui_data.style;
-			}
-			if (has(node, "isSupernodeInputBinding")) {
-				obj.isSupernodeInputBinding = true;
-			}
-			if (has(node, "isSupernodeOutputBinding")) {
-				obj.isSupernodeOutputBinding = true;
-			}
-			if (has(node, "connection")) {
-				obj.connection = node.connection;
-			}
-			if (has(node, "data_asset")) {
-				obj.data_asset = node.data_asset;
-			}
-			return obj;
-		});
+			obj.subflow_ref = has(node, "subflow_ref") ? this.convertSubFlowRef(node.subflow_ref) : {};
+			obj.is_expanded = has(node, "app_data.ui_data.is_expanded") ? node.app_data.ui_data.is_expanded : false;
+			obj.expanded_width = has(node, "app_data.ui_data.expanded_width") ? node.app_data.ui_data.expanded_width : canvasLayout.supernodeDefaultWidth;
+			obj.expanded_height = has(node, "app_data.ui_data.expanded_height") ? node.app_data.ui_data.expanded_height : canvasLayout.supernodeDefaultHeight;
+		}
+		if (node.type === MODEL_NODE) {
+			obj.model_ref = has(node, "model_ref") ? node.model_ref : "";
+		}
+		if (has(node, "app_data.ui_data.description")) {
+			obj.description = node.app_data.ui_data.description;
+		}
+		if (has(node, "app_data.ui_data.image")) {
+			obj.image = node.app_data.ui_data.image;
+		}
+		if (has(node, "app_data.ui_data.class_name")) {
+			obj.class_name = node.app_data.ui_data.class_name;
+		}
+		if (has(node, "app_data.ui_data.style")) {
+			obj.style = node.app_data.ui_data.style;
+		}
+		if (has(node, "isSupernodeInputBinding")) {
+			obj.isSupernodeInputBinding = true;
+		}
+		if (has(node, "isSupernodeOutputBinding")) {
+			obj.isSupernodeOutputBinding = true;
+		}
+		if (has(node, "connection")) {
+			obj.connection = node.connection;
+		}
+		if (has(node, "data_asset")) {
+			obj.data_asset = node.data_asset;
+		}
+		return obj;
+	}
+
+	static convertSubFlowRef(subFlowRef) {
+		const sfr = {
+			pipeline_id_ref: subFlowRef.pipeline_id_ref
+		};
+		if (subFlowRef.url) {
+			sfr.url = subFlowRef.url;
+		}
+		return sfr;
 	}
 
 	static convertLabel(obj) {
@@ -366,7 +385,7 @@ export default class PipelineInHandler {
 	static removeUiDataFromAppData(appData) {
 		let newAppData;
 		if (appData) {
-			newAppData = JSON.parse(JSON.stringify(appData));
+			newAppData = cloneDeep(appData);
 			delete newAppData.ui_data;
 		}
 		return newAppData;

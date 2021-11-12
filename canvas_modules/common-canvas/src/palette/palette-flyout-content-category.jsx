@@ -20,6 +20,7 @@ import { InlineLoading } from "carbon-components-react";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
+import { get } from "lodash";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -133,6 +134,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 		const content = (
 			<div className="palette-flyout-category"
+				data-id={get(this.props.category, "id", "")}
 				onClick={this.categorySelected}
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}

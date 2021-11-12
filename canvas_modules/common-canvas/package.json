@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.0.0",
+  "version": "12.5.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
@@ -22,12 +22,12 @@
   "dependencies": {
     "@carbon/icons-react": "10.33.0",
     "@carbon/themes": "10.36.0",
-    "@elyra/pipeline-schemas": "^3.0.42",
+    "@elyra/pipeline-schemas": "^3.0.45",
     "carbon-components": "10.37.0",
     "carbon-components-react": "7.37.0",
     "carbon-icons": "7.0.7",
     "codemirror": "5.58.2",
-    "d3": "6.7.0",
+    "d3": "7.1.1",
     "dagre": "0.8.5",
     "immutable": "4.0.0-rc.12",
     "immutable-undo": "2.0.0",
@@ -52,7 +52,7 @@
     "@babel/polyfill": "7.11.5",
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
-    "autoprefixer": "10.0.0",
+    "autoprefixer": "10.3.1",
     "babel-core": "6.26.3",
     "babel-jest": "26.3.0",
     "babel-loader": "8.1.0",
@@ -81,8 +81,8 @@
     "mini-css-extract-plugin": "0.11.2",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "path": "0.12.7",
-    "postcss": "8.0.9",
-    "postcss-loader": "4.0.2",
+    "postcss": "8.3.6",
+    "postcss-loader": "4.3.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-intl": "5.8.2",
@@ -95,7 +95,7 @@
     "sinon": "9.0.3",
     "source-map-loader": "1.1.0",
     "style-loader": "1.2.1",
-    "stylelint": "13.7.2",
+    "stylelint": "13.13.1",
     "url-loader": "4.1.0",
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "3.9.0"
@@ -107,6 +107,9 @@
     "react-redux": "^7.0.0"
   },
   "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!d3-*)"
+    ],
     "moduleFileExtensions": [
       "js",
       "jsx",

@@ -50,63 +50,71 @@ import test10ExpectedUndoFlow from "../test_resources/json/supernode-test10-expe
 const primaryPipelineId = "153651d6-9b88-423c-b01b-861f12d01489";
 const superNodeId = "7015d906-2eae-45c1-999e-fb888ed957e5";
 // Supernode.
-const expandCollapseSupenodeSourceObject = {
+const expandCollapseDeconstructSourceObject = {
 	"type": "node",
 	"targetObject": {
 		"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
 		"type": "super_node",
-		"output_ports": [
-			{
-				"id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
-				"label": "Output Port",
-				"cardinality": {
-					"min": 0,
-					"max": -1
-				},
-				"app_data": {}
-			}
-		],
-		"input_ports": [
-			{
-				"id": "691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
-				"label": "Input Port",
-				"cardinality": {
-					"min": 0,
-					"max": 1
-				},
-				"app_data": {
-					"my_data": {
-						"my_field": "Execution node -> Inputs -> My data -> My field -> My value"
-					}
+		"outputs": [{
+			"id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
+			"label": "Output Port",
+			"subflow_node_ref": "813ddbfd-cabb-4037-833d-bc839e13e264",
+			"cardinality": {
+				"min": 0,
+				"max": -1
+			},
+			"app_data": {},
+			"cx": 70,
+			"cy": 29
+		}],
+		"inputs": [{
+			"id": "691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
+			"label": "Input Port",
+			"subflow_node_ref": "d585f3c8-29d7-4daf-b808-f80a64634343",
+			"cardinality": {
+				"min": 0,
+				"max": 1
+			},
+			"app_data": {
+				"my_data": {
+					"my_field": "Execution node -> Inputs -> My data -> My field -> My value"
 				}
-			}, {
-				"id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
-				"label": "Input Port",
-				"cardinality": {
-					"min": 0,
-					"max": 1
-				},
-				"app_data": {}
-			}
-		],
+			},
+			"cx": 0,
+			"cy": 27.5
+		}, {
+			"id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
+			"label": "Input Port",
+			"subflow_node_ref": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
+			"cardinality": {
+				"min": 0,
+				"max": 1
+			},
+			"app_data": {},
+			"cx": 0,
+			"cy": 47.5
+		}],
 		"label": "Supernode",
-		"description": "supernode",
-		"image": "/graphics/7db53b94e6b92ab5505e010d14b6f2d6.svg",
 		"x_pos": 297,
 		"y_pos": 235,
-		"class_name": "",
 		"decorations": [],
 		"parameters": [],
 		"messages": [],
+		"ui_parameters": [],
 		"app_data": {},
 		"subflow_ref": {
 			"pipeline_id_ref": "babad275-1719-4224-8d65-b04d0804d95c"
 		},
-		"model_ref": "",
+		"is_expanded": false,
+		"expanded_width": 200,
+		"expanded_height": 200,
+		"description": "supernode",
+		"image": "useDefaultIcon",
+		"layout": {},
 		"inputPortsHeight": 40,
 		"outputPortsHeight": 20,
-		"expanded_height": 75,
-		"expanded_width": 70
+		"height": 75,
+		"width": 70
 	},
 	"id": "7015d906-2eae-45c1-999e-fb888ed957e5",
 	"pipelineId": "153651d6-9b88-423c-b01b-861f12d01489",
@@ -121,6 +129,7 @@ const expandCollapseSupenodeSourceObject = {
 	"selectedObjectIds": ["7015d906-2eae-45c1-999e-fb888ed957e5"],
 	"zoom": 1
 };
+
 // Execution Node.
 const createSupernodeSourceObject1 = {
 	"type": "node",
@@ -379,6 +388,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	beforeEach(() => {
 		canvasController = new CanvasController();
 		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
+
 		const config = { enableNodeFormatType: "Vertical" };
 		createCommonCanvas(config, canvasController);
 
@@ -386,17 +396,17 @@ describe("Expand and Collapse Supernode Action", () => {
 	});
 
 	it("Should set the is_expanded attribute correctly when expanded or collapsed", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
 	});
 
 	it("Should set the is_expanded attribute correctly with undo and redo", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -408,7 +418,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	});
 
 	it("Should save the expanded_width, expanded_height, and is_expanded attributes when the supernode is expanded in-place", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		let pipelineFlow = objectModel.getPipelineFlow();
 
@@ -416,7 +426,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.expanded_height).to.equal(200);
 		expect(pipelineFlow.pipelines[0].nodes[13].app_data.ui_data.is_expanded).to.be.true;
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
 		pipelineFlow = objectModel.getPipelineFlow();
 
@@ -428,7 +438,7 @@ describe("Expand and Collapse Supernode Action", () => {
 	it("Should move the surrounding nodes when supernode is expanded", () => {
 		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -533,11 +543,11 @@ describe("Expand and Collapse Supernode Action", () => {
 		const originalNodePositions = objectModel.getAPIPipeline().getNodes();
 
 		// Expand the supernode
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
 		// Collapse the supernode
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("collapseSuperNodeInPlace");
 
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.false;
@@ -548,7 +558,7 @@ describe("Expand and Collapse Supernode Action", () => {
 
 	it("Should move the surrounding nodes south when supernode is expanded and overlaps nodes", () => {
 		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -653,7 +663,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": -85, "offsetY": -90, "pipelineId": primaryPipelineId	};
 		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -675,7 +685,7 @@ describe("Expand and Collapse Supernode Action", () => {
 				"id": "nodeIDMultiPlotPE",
 				"label": "Multiplot",
 				"x_pos": 630,
-				"y_pos": 170
+				"y_pos": 295
 			},
 			{
 				"id": "id125TTEEIK7V",
@@ -704,13 +714,13 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
 				"label": "Sample",
-				"x_pos": 234,
+				"x_pos": 364,
 				"y_pos": 594.5
 			},
 			{
 				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
 				"label": "Aggregate",
-				"x_pos": 235,
+				"x_pos": 365,
 				"y_pos": 690.5
 			},
 			{
@@ -746,7 +756,7 @@ describe("Expand and Collapse Supernode Action", () => {
 			{
 				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
 				"label": "Filler",
-				"x_pos": 235,
+				"x_pos": 365,
 				"y_pos": 496.5
 			}];
 
@@ -758,7 +768,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
 		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -863,7 +873,7 @@ describe("Expand and Collapse Supernode Action", () => {
 		const moveSupernodeData = { "editType": "moveObjects", "nodes": [superNodeId], "offsetX": 263, "offsetY": 145, "pipelineId": primaryPipelineId	};
 		objectModel.getAPIPipeline().moveObjects(moveSupernodeData);
 
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 		expect(canvasController.getNode(superNodeId).is_expanded).to.be.true;
 
@@ -964,6 +974,161 @@ describe("Expand and Collapse Supernode Action", () => {
 
 });
 
+describe("Deconstruct Supernode Action", () => {
+	let canvasController;
+	let objectModel;
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeCanvas);
+
+		const config = { enableNodeFormatType: "Vertical" };
+		createCommonCanvas(config, canvasController);
+
+		objectModel = canvasController.getObjectModel();
+	});
+
+	it("Should add nodes to main pipeline when supernode is deconstructed", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+		// Before
+		expect(isEqual(canvasController.getNodes().length, 15)).to.be.true;
+		expect(isEqual(canvasController.getComments().length, 3)).to.be.true;
+		expect(isEqual(canvasController.getLinks().length, 24)).to.be.true;
+
+
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+		canvasController.contextMenuActionHandler("deconstructSuperNode");
+
+		// After
+		expect(isEqual(canvasController.getNodes().length, 19)).to.be.true;
+		expect(isEqual(canvasController.getComments().length, 3)).to.be.true;
+		expect(isEqual(canvasController.getLinks().length, 28)).to.be.true;
+	});
+
+	it("Should move the surrounding nodes when supernode is deconstructed", () => {
+		canvasController.setCanvasConfig({ enableMoveNodesOnSupernodeResize: true });
+
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
+		canvasController.contextMenuActionHandler("deconstructSuperNode");
+
+		const expectedNodePositions = [
+			{
+				"id": "id8I6RH2V91XW",
+				"label": "Binding (entry) node",
+				"x_pos": 89,
+				"y_pos": 99.5
+			},
+			{
+				"id": "idGWRVT47XDV",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 138.5
+			},
+			{
+				"id": "nodeIDMultiPlotPE",
+				"label": "Multiplot",
+				"x_pos": 831,
+				"y_pos": 170
+			},
+			{
+				"id": "id125TTEEIK7V",
+				"label": "Model Node",
+				"x_pos": 1091,
+				"y_pos": 230.99999237060547
+			},
+			{
+				"id": "id5KIRGGJ3FYT",
+				"label": "Binding (exit) node",
+				"x_pos": 973,
+				"y_pos": 526.9999923706055
+			},
+			{
+				"id": "6f704d84-85be-4520-9d76-57fe2295b310",
+				"label": "Select",
+				"x_pos": 135,
+				"y_pos": 455.5
+			},
+			{
+				"id": "f5373d9e-677d-4717-a9fd-3b57038ce0de",
+				"label": "Database",
+				"x_pos": 97,
+				"y_pos": 668.5
+			},
+			{
+				"id": "5db667dc-b2a9-4c35-bff0-136c4e7b6d26",
+				"label": "Sample",
+				"x_pos": 234,
+				"y_pos": 620.5,
+			},
+			{
+				"id": "2807a076-6468-4ad1-94d3-f253f99bc8e0",
+				"label": "Aggregate",
+				"x_pos": 235,
+				"y_pos": 716.5
+			},
+			{
+				"id": "fab835e0-29ad-45ae-b72a-2eb3fcce6871",
+				"label": "Merge",
+				"x_pos": 711,
+				"y_pos": 669.5
+			},
+			{
+				"id": "a723a31c-6c66-421e-b00a-e4d0b1faa265",
+				"label": "Table",
+				"x_pos": 861.7247240471117,
+				"y_pos": 670.1793095752446
+			},
+			{
+				"id": "353c4878-1db2-46c0-9370-3a55523dc07c",
+				"label": "C5.0",
+				"x_pos": 1006.6818052349669,
+				"y_pos": 622.5656356040878
+			},
+			{
+				"id": "bea1bbb7-ae00-404a-8380-bb65de1047cf",
+				"label": "Neural Net",
+				"x_pos": 1007.7398404208096,
+				"y_pos": 718.8509946880919
+			},
+			{
+				"id": "ac584be2-8a3c-474f-a046-e10a3665b875",
+				"label": "Filler",
+				"x_pos": 235,
+				"y_pos": 522.5
+			},
+			{
+				"id": "691e065f-8359-4b46-aad2-531702ef2a8e",
+				"label": "Execution node",
+				"x_pos": 297,
+				"y_pos": 235
+			},
+			{
+				"id": "49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
+				"label": "Type",
+				"x_pos": 509.294189453125,
+				"y_pos": 377.18524169921875
+			},
+			{
+				"id": "7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
+				"label": "Partition",
+				"x_pos": 451.4412536621094,
+				"y_pos": 263.12994384765625
+			},
+			{
+				"id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
+				"label": "Distribution",
+				"x_pos": 628,
+				"y_pos": 256
+			},
+			{
+				"id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
+				"label": "Balance",
+				"x_pos": 349,
+				"y_pos": 386
+			}];
+
+		compareNodePositions(expectedNodePositions, objectModel);
+	});
+});
 
 describe("Ensure no cross pipeline selection", () => {
 	let canvasController;
@@ -976,7 +1141,7 @@ describe("Ensure no cross pipeline selection", () => {
 
 
 	it("Should cancel parent flow selection when sub-flow selection is made", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
 		const selections = [
@@ -998,7 +1163,7 @@ describe("Ensure no cross pipeline selection", () => {
 	});
 
 	it("Should cancel sub-flow selection when parent flow selection is made", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
 		const subflowSelections = [
@@ -1109,7 +1274,7 @@ describe("Create Supernode Action", () => {
 		delete pipelineFlow.pipelines[2].nodes[4].id; // Delete new binding node id.
 		removeGeneratedLinkIds(pipelineFlow, supernodeCanvas);
 
-		// console.log("Exp = " + JSON.stringify(test1ExpectedFlow, null, 2));
+		// console.log("Exp = " + JSON.stringify(test2ExpectedFlow, null, 2));
 		// console.log("Act = " + JSON.stringify(pipelineFlow, null, 2));
 
 		expect(isEqual(JSON.stringify(test2ExpectedFlow), JSON.stringify(pipelineFlow))).to.be.true;
@@ -1513,6 +1678,10 @@ describe("Copy and Paste Supernode", () => {
 
 		// Undo the clone action.
 		canvasController.contextMenuActionHandler("undo");
+
+		// console.log(JSON.stringify(canvasInfoBefore, null, 2));
+		// console.log(JSON.stringify(objectModel.getPipelineFlow(), null, 2));
+
 		expect(isEqual(JSON.stringify(canvasInfoBefore), JSON.stringify(objectModel.getPipelineFlow()))).to.be.true;
 	});
 
@@ -1556,6 +1725,7 @@ describe("Copy and Paste Supernode", () => {
 		// Delete the unique ids before comparing.
 		deleteSupernodeUniqueIds(originalSupernode);
 		deleteSupernodeUniqueIds(clonedSupernode);
+		delete clonedSupernode.app_data;
 		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedSupernode))).to.be.true;
 
 		expect(pipelineFlow.pipelines).to.have.length(5);
@@ -1645,6 +1815,8 @@ describe("Copy and Paste Supernode", () => {
 		deleteSupernodeUniqueIds(newSupernode2);
 		deleteSupernodeUniqueIds(clonedOriginalSupernode);
 		deleteSupernodeUniqueIds(clonedNewSupernode2);
+		delete clonedOriginalSupernode.app_data;
+		delete clonedNewSupernode2.app_data;
 		expect(isEqual(JSON.stringify(originalSupernode), JSON.stringify(clonedOriginalSupernode))).to.be.true;
 		expect(isEqual(JSON.stringify(newSupernode2), JSON.stringify(clonedNewSupernode2))).to.be.true;
 
@@ -1712,7 +1884,7 @@ describe("Copy and Paste Supernode", () => {
 	});
 
 	it("Select in sub-flow should cancel selection in parent flow", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
 		const selections = [
@@ -1734,7 +1906,7 @@ describe("Copy and Paste Supernode", () => {
 	});
 
 	it("Select in parent flow should cancel selection in sub-flow", () => {
-		canvasController.contextMenuHandler(expandCollapseSupenodeSourceObject);
+		canvasController.contextMenuHandler(expandCollapseDeconstructSourceObject);
 		canvasController.contextMenuActionHandler("expandSuperNodeInPlace");
 
 		const subflowSelections = [
@@ -1758,8 +1930,13 @@ describe("Copy and Paste Supernode", () => {
 });
 
 describe("Subtypes enumerated for supernodes OK", () => {
-	const canvasController = new CanvasController();
-	canvasController.getObjectModel().setPipelineFlow(supernodeNestedCanvas);
+	let canvasController;
+
+	beforeEach(() => {
+		canvasController = new CanvasController();
+		canvasController.getObjectModel().setPipelineFlow(supernodeNestedCanvas);
+	});
+
 	it("should contain shaper, canvas, and non-enumerated subtype", () => {
 		deepFreeze(supernodeNestedCanvas);
 		canvasController.setPipelineFlow(supernodeNestedCanvas);
@@ -1838,8 +2015,8 @@ function compareNodePositions(expectedNodes, objectModel) {
 
 	expectedNodes.forEach((expectedNode) => {
 		const omNode = objectModel.getAPIPipeline().getNode(expectedNode.id);
-		// console.log("node " + expectedNode.label);
 
+		// console.log("node " + expectedNode.label);
 		// console.log("expectedNode.label = " + expectedNode.label);
 		// console.log("expectedNode.x_pos = " + expectedNode.x_pos + " omNode.x_pos " + omNode.x_pos);
 		// console.log("expectedNode.y_pos = " + expectedNode.y_pos + " omNode.y_pos " + omNode.y_pos);

@@ -22,7 +22,6 @@ import { CommonCanvas, CanvasController } from "common-canvas";
 import DetachedCanvasFlow from "./detachedCanvas.json";
 import DetachedPalette from "./detachedPalette.json";
 
-
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
 		super(props);
@@ -32,7 +31,9 @@ export default class DetachedCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 
 		// Add decorations to the links
 		const pId = this.canvasController.getPrimaryPipelineId();
@@ -49,7 +50,6 @@ export default class DetachedCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "detached-links",
 			enableNodeFormatType: "Vertical",
-			enableConnectionType: "Ports",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
@@ -61,6 +61,7 @@ export default class DetachedCanvas extends React.Component {
 			enableHighlightUnavailableNodes: true,
 			enableDisplayFullLabelOnHover: true,
 			enableAutoLinkOnlyFromSelNodes: true,
+			enableSingleOutputPortDisplay: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
 			tipConfig: {
@@ -94,7 +95,6 @@ export default class DetachedCanvas extends React.Component {
 				portRadius: 10,
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
-				outputPortRightPosY: 30,
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
@@ -123,12 +123,25 @@ export default class DetachedCanvas extends React.Component {
 	getDecorationsArray(linkLabel) {
 		const decs = [
 			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri", distance: 40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri", distance: -40, x_pos: -5, y_pos: -5, outline: false, temporary: true },
+			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri",
+				distance: 40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Up Triangle", temporary: true },
+			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
+				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
 			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
+	}
+
+	getNewPort(i) {
+		return {
+			"id": "outPort" + i,
+			"cardinality": {
+				"min": 0,
+				"max": 1
+			},
+			"label": "Output Port " + i
+		};
 	}
 
 	decorationActionHandler() {
@@ -154,6 +167,28 @@ export default class DetachedCanvas extends React.Component {
 				command.supernode.id,
 				newNodeProps,
 				command.apiPipeline.pipelineId);
+		} else if (data.editType === "addPort") {
+			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
+			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
+			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+		}
+	}
+
+	contextMenuHandler(source, defaultMenu) {
+		if (source.selectedObjectIds.length === 1) {
+			return defaultMenu.concat([
+				{ divider: true }, { action: "addPort", label: "Add port" }
+			]);
+		}
+		return defaultMenu;
+	}
+
+	clickActionHandler(source) {
+		if (source.clickType === "DOUBLE_CLICK") {
+			const node = this.canvasController.getNode(source.id, source.pipelineId);
+			if (node && node.type === "super_node") {
+				this.canvasController.displaySubPipelineForSupernode(source.id, source.pipelineId);
+			}
 		}
 	}
 
@@ -170,6 +205,8 @@ export default class DetachedCanvas extends React.Component {
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				editActionHandler={this.editActionHandler}
+				clickActionHandler={this.clickActionHandler}
+				contextMenuHandler={this.contextMenuHandler}
 				config={config}
 			/>
 		);

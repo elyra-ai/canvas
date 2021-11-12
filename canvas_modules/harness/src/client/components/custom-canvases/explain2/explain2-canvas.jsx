@@ -35,7 +35,6 @@ export default class Explain2Canvas extends React.Component {
 		this.canvasController.setPipelineFlow(Explain2CanvasFlow);
 
 		this.config = Object.assign({}, props.config, {
-			enableConnectionType: "Ports",
 			enableParentClass: "explain2",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Elbow",
@@ -140,6 +139,9 @@ export default class Explain2Canvas extends React.Component {
 	}
 
 	tipHandler(tipType, data) {
+		if (!data.node) {
+			return null;
+		}
 		const index = data.node.app_data.explain.index || "";
 		const labelTxt = data.node.label + " " + index;
 		const estCard = data.node.app_data.explain.estimated_cardinality || "xxxxxxxxx";

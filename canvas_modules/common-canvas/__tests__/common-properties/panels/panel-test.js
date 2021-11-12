@@ -22,6 +22,7 @@ import propertyUtils from "./../../_utils_/property-utils";
 import panelParamDef from "./../../test_resources/paramDefs/panel_paramDef.json";
 import customPanelParamDef from "./../../test_resources/paramDefs/CustomPanel_paramDef.json";
 import panelConditionsParamDef from "./../../test_resources/paramDefs/panelConditions_paramDef.json";
+import nestedPanelParamDef from "./../../test_resources/paramDefs/panelNested_paramDef.json";
 import AddtlCmptsTest from "./../../_utils_/custom-components/AddtlCmptsTest.jsx";
 
 
@@ -71,5 +72,77 @@ describe("group panel classNames applied correctly", () => {
 		expect(wrapper.find(".level1-group-panels-class")).to.have.length(1);
 		// deeply nested group panels
 		expect(wrapper.find(".level3-group-panels-class")).to.have.length(1);
+	});
+});
+
+describe("nested panels render correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(nestedPanelParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Text panels should be nested when nested_panel is set to true", () => {
+		// Default text panel
+		const defaultTextPanel = wrapper.find(".default-textpanel-class");
+		expect(defaultTextPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested text panel
+		const nestedTextPanel = wrapper.find(".nested-textpanel-class");
+		expect(nestedTextPanel.hasClass("properties-control-nested-panel")).to.equal(true);
+	});
+
+	it("Column selection panels should be nested when nested_panel is set to true", () => {
+		// Default columnSelection panel
+		const defaultColumnSelectionPanel = wrapper.find(".default-columnselection-class");
+		expect(defaultColumnSelectionPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested columnSelection panel
+		const nestedColumnSelectionPanel = wrapper.find(".nested-columnselection-class");
+		expect(nestedColumnSelectionPanel.hasClass("properties-control-nested-panel")).to.equal(true);
+	});
+
+	it("Summary panels should be nested when nested_panel is set to true", () => {
+		// Default summary panel
+		const defaultSummaryPanel = wrapper.find(".default-summarypanel-class");
+		expect(defaultSummaryPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested summary panel
+		const nestedSummaryPanel = wrapper.find(".nested-summarypanel-class");
+		expect(nestedSummaryPanel.hasClass("properties-control-nested-panel")).to.equal(true);
+	});
+
+	it("Twisty panels should be nested when nested_panel is set to true", () => {
+		// Default twisty panel
+		const defaultTwistyPanel = wrapper.find(".default-twistypanel-class");
+		expect(defaultTwistyPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested twisty panel
+		const nestedTwistyPanel = wrapper.find(".nested-twistypanel-class");
+		expect(nestedTwistyPanel.hasClass("properties-control-nested-panel")).to.equal(true);
+	});
+
+	it("Action panels should be nested when nested_panel is set to true", () => {
+		// Default action panel
+		const defaultActionPanel = wrapper.find(".default-actionpanel-class");
+		expect(defaultActionPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested action panel
+		const nestedActionPanel = wrapper.find(".nested-actionpanel-class");
+		expect(nestedActionPanel.hasClass("properties-control-nested-panel")).to.equal(true);
+	});
+
+	it("Column panels should be nested when nested_panel is set to true", () => {
+		// Default column panel
+		const defaultColumnPanel = wrapper.find(".default-columnpanel-class");
+		expect(defaultColumnPanel.hasClass("properties-control-nested-panel")).to.equal(false);
+
+		// Nested column panel
+		const nestedColumnPanel = wrapper.find(".nested-columnpanel-class");
+		expect(nestedColumnPanel.hasClass("properties-control-nested-panel")).to.equal(true);
 	});
 });

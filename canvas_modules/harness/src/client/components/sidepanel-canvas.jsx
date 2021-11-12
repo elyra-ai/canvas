@@ -34,8 +34,6 @@ import {
 	LOCAL_FILE_OPTION,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
-	HALO_CONNECTION,
-	PORTS_CONNECTION,
 	INTERACTION_MOUSE,
 	INTERACTION_TRACKPAD,
 	CURVE_LINKS,
@@ -67,6 +65,7 @@ import {
 	TIP_PALETTE,
 	TIP_NODES,
 	TIP_PORTS,
+	TIP_DECORATIONS,
 	TIP_LINKS,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP,
@@ -75,7 +74,8 @@ import {
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
-	TOOLBAR_TYPE_CUSTOM_ACTIONS
+	TOOLBAR_TYPE_CUSTOM_ACTIONS,
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -217,26 +217,26 @@ export default class SidePanelForms extends React.Component {
 
 	notificationConfigChange(evt) {
 		let id = evt.target.id;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = evt.target.id.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = Object.assign({}, this.props.getStateValue(fieldName));
 		notificationConfig[id] = evt.target.value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(fieldName, notificationConfig);
 	}
 
 	notificationConfigToggle(value, control) {
 		let id = control;
-		let config = "notificationConfig";
+		let fieldName = "notificationConfig";
 		if (id.slice(-1) === "2") {
 			id = control.slice(0, -1);
-			config = "notificationConfig2";
+			fieldName = "notificationConfig2";
 		}
-		const notificationConfig = this.props.getStateValue(config);
+		const notificationConfig = this.props.getStateValue(fieldName);
 		notificationConfig[id] = value;
-		this.props.setStateValue(notificationConfig, config);
+		this.props.setStateValue(notificationConfig, fieldName);
 	}
 
 	exampleAppOptionChange(value) {
@@ -259,6 +259,9 @@ export default class SidePanelForms extends React.Component {
 			break;
 		case "tip_ports":
 			tipConf.ports = checked;
+			break;
+		case "tip_decorations":
+			tipConf.decorations = checked;
 			break;
 		case "tip_links":
 			tipConf.links = checked;
@@ -593,6 +596,24 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var enableShowRightFlyout = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowRightFlyout" // Set ID to corresponding field in App.js state
+				labelText="Open Right Flyout"
+				toggled={this.props.getStateValue("selectedShowRightFlyout")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableShowBottomPanel = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowBottomPanel" // Set ID to corresponding field in App.js state
+				labelText="Open Bottom Panel"
+				toggled={this.props.getStateValue("selectedShowBottomPanel")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
@@ -799,6 +820,17 @@ export default class SidePanelForms extends React.Component {
 				/>
 			</div>);
 
+		var enableSingleOutputPortDisplay = (
+			<div className="harness-sidepanel-children" id="harness-sidepanel-single-output-port-display-toggle">
+				<Toggle
+					id="selectedSingleOutputPortDisplay" // Set ID to corresponding field in App.js state
+					labelText="Enable Single Output Port Display"
+					toggled={this.props.getStateValue("selectedSingleOutputPortDisplay")}
+					onToggle={this.setStateValue}
+				/>
+			</div>);
+
+
 		var enableDropZoneOnExternalDrag = (
 			<div className="harness-sidepanel-children" id="harness-sidepanel-drop-zone-on-external-drag-toggle">
 				<Toggle
@@ -878,31 +910,9 @@ export default class SidePanelForms extends React.Component {
 			</FormGroup>
 		</div>);
 
-		var connectionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-connection-type">
-			<FormGroup
-				legendText="Connection Type"
-			>
-				<RadioButtonGroup
-					className="harness-sidepanel-radio-group"
-					name="selectedConnectionType" // Set name to corresponding field name in App.js
-					onChange={this.setStateValue}
-					defaultSelected={this.props.getStateValue("selectedConnectionType")}
-				>
-					<RadioButton
-						value={PORTS_CONNECTION}
-						labelText={PORTS_CONNECTION}
-					/>
-					<RadioButton
-						value={HALO_CONNECTION}
-						labelText={HALO_CONNECTION}
-					/>
-				</RadioButtonGroup>
-			</FormGroup>
-		</div>);
-
 		var nodeFormatType = (<div className="harness-sidepanel-children">
 			<FormGroup
-				legendText="Node Format Type (for 'Ports')"
+				legendText="Node Format Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -924,7 +934,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkType = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-type">
 			<FormGroup
-				legendText="Link Type (for 'Ports')"
+				legendText="Link Type"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -950,7 +960,7 @@ export default class SidePanelForms extends React.Component {
 
 		var linkDirection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-direction">
 			<FormGroup
-				legendText="Link Direction (for 'Ports')"
+				legendText="Link Direction"
 			>
 				<RadioButtonGroup
 					className="harness-sidepanel-radio-group"
@@ -1114,6 +1124,10 @@ export default class SidePanelForms extends React.Component {
 						value={TOOLBAR_TYPE_CUSTOM_ACTIONS}
 						labelText={TOOLBAR_TYPE_CUSTOM_ACTIONS}
 					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE}
+						labelText={TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE}
+					/>
 				</RadioButtonGroup>
 			</FormGroup>
 		</div>);
@@ -1138,6 +1152,12 @@ export default class SidePanelForms extends React.Component {
 					labelText={TIP_PORTS}
 					onChange={this.tipConfigChange}
 					checked={this.props.getStateValue("selectedTipConfig").ports}
+				/>
+				<Checkbox
+					id="tip_decorations"
+					labelText={TIP_DECORATIONS}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").decorations}
 				/>
 				<Checkbox
 					id="tip_links"
@@ -1301,8 +1321,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{paletteInput}
 					{divider}
-					{connectionType}
-					{divider}
 					{nodeFormatType}
 					{divider}
 					{linkType}
@@ -1313,10 +1331,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{snapToGrid}
 					{divider}
-					{enableCanvasUnderlay}
-					{divider}
-					{saveZoom}
-					{divider}
 					{paletteLayout}
 					{divider}
 					{toolbarLayout}
@@ -1325,21 +1339,31 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableLinkSelection}
 					{divider}
+					<div className="harness-side-panel-header">Nodes</div>
+					{divider}
+					{enableHighlightUnavailableNodes}
+					{divider}
+					{enableSingleOutputPortDisplay}
+					{divider}
+					{displayFullLabelOnHover}
+					{divider}
+					<div className="harness-side-panel-header">Links</div>
+					{divider}
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
-					{divider}
-					{enableHighlightUnavailableNodes}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
 					{divider}
+					{enableAutoLinkOnlyFromSelNodes}
+					{divider}
 					{assocLinkType}
 					{divider}
-					{enableRightFlyoutUnderToolbar}
+					<div className="harness-side-panel-header">Pan, Zoom and Select</div>
 					{divider}
-					{enablePositionNodeOnRightFlyoutOpen}
+					{saveZoom}
 					{divider}
 					{enablePanIntoViewOnOpen}
 					{divider}
@@ -1347,9 +1371,11 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
-					{enableObjectModel}
+					<div className="harness-side-panel-header">Supernodes</div>
 					{divider}
-					{enableSaveToPalette}
+					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					<div className="harness-side-panel-header">Canvas Content</div>
 					{divider}
 					{enableDropZoneOnExternalDrag}
 					{divider}
@@ -1357,21 +1383,39 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDisplayCustomizedEmptyCanvasContent}
 					{divider}
+					{displayBoudingRectangles}
+					{divider}
+					{enableCanvasUnderlay}
+					{divider}
+					<div className="harness-side-panel-header">Right Flyout</div>
+					{divider}
+					{enableShowRightFlyout}
+					{divider}
+					{enableRightFlyoutUnderToolbar}
+					{divider}
+					{enablePositionNodeOnRightFlyoutOpen}
+					{divider}
+					<div className="harness-side-panel-header">Bottom Panel</div>
+					{divider}
+					{enableShowBottomPanel}
+					{divider}
+					<div className="harness-side-panel-header">Context Menu</div>
+					{divider}
+					{enableSaveToPalette}
+					{divider}
 					{enableCreateSupernodeNonContiguous}
 					{divider}
-					{enableMoveNodesOnSupernodeResize}
+					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableObjectModel}
 					{divider}
 					{enableExternalPipelineFlows}
 					{divider}
-					{enableAutoLinkOnlyFromSelNodes}
+					{schemaValidation}
 					{divider}
 					{enableBrowserEditMenu}
 					{divider}
-					{displayBoudingRectangles}
-					{divider}
-					{schemaValidation}
-					{divider}
-					{displayFullLabelOnHover}
+					<div className="harness-side-panel-header">Tip Config</div>
 					{divider}
 					{tipConfig}
 					{divider}

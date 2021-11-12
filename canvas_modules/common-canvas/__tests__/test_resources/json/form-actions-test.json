@@ -220,12 +220,14 @@
               "panel": {
                 "id": "action-tests",
                 "panelType": "general",
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "id": "increment-action-panel",
                       "panelType": "actionPanel",
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "action",
@@ -261,6 +263,7 @@
                     "panel": {
                       "id": "number-control",
                       "panelType": "general",
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -281,10 +284,12 @@
                             }
                           }
                         }
-                      ]
+                      ],
+                      "open": false
                     }
                   }
-                ]
+                ],
+                "open": false
               }
             }
           },
@@ -296,12 +301,14 @@
               "panel": {
                 "id": "summary-panel",
                 "panelType": "summary",
+                "nestedPanel": false,
                 "uiItems": [
                   {
                     "itemType": "panel",
                     "panel": {
                       "id": "dm-action-panel",
                       "panelType": "actionPanel",
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "action",
@@ -322,6 +329,7 @@
                     "panel": {
                       "id": "summary-controls",
                       "panelType": "general",
+                      "nestedPanel": false,
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -346,10 +354,12 @@
                             "required": true
                           }
                         }
-                      ]
+                      ],
+                      "open": false
                     }
                   }
                 ],
+                "open": false,
                 "label": "Summary Panel Actions"
               }
             }

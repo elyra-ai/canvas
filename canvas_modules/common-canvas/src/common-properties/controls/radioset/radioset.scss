@@ -19,7 +19,7 @@
 		display: none;
 	}
 	.bx--form-item {
-		margin-bottom: 4px;
+		margin-bottom: $spacing-02;
 	}
 }
 
@@ -28,10 +28,13 @@
 	&.horizontal {
 		display: inline-flex;
 		flex-wrap: wrap;
+		.properties-radioset-panel {
+			margin-bottom: 0;
+		}
 	}
 	.properties-radioset-panel {
-		margin-bottom: 4px;
-		margin-right: 12px;
+		margin-bottom: $spacing-02;
+		margin-right: $spacing-04;
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
 		}
@@ -41,11 +44,9 @@
 		}
 	}
 	&.error:not([disabled]) {
-		padding: 3px;
-		border-bottom: 2px solid $support-01;
+		padding-bottom: $spacing-02;
 	}
 	&.warning:not([disabled]) {
-		padding: 3px;
-		border-bottom: 2px solid $support-03;
+		padding-bottom: $spacing-02;
 	}
 }

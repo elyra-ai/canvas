@@ -85,9 +85,9 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickEllipsisIconOfSupernode("Supernode");
 		cy.clickOptionFromContextMenu("Convert external to local");
 
-		// The flow has 7 pipelines but now after converion to local only 2 of them
+		// The flow has 7 pipelines but now after conversion to local only 2 of them
 		// are external (which are the two that are in a different pipeline flow)
-		// in the original externalNestedCanvas was loaded.
+		// in the original externalNestedCanvas that was loaded.
 		cy.verifyNumberOfPipelines(7);
 		cy.verifyNumberOfExternalPipelines(2);
 
@@ -155,7 +155,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.clickNode("Super node");
 		cy.rightClickNode("Super node");
 		cy.clickOptionFromContextMenu("Expand supernode");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert from external to local
@@ -163,7 +163,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert external to local");
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert back to external
@@ -171,7 +171,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert local to external");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert from external to local
@@ -179,7 +179,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert external to local");
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Convert back to external
@@ -187,37 +187,37 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.hoverOverNode("Super node");
 		cy.clickEllipsisIconOfSupernode("Super node");
 		cy.clickOptionFromContextMenu("Convert local to external");
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Undo to local -> external -> local -> external
 		// -------------------------------------------------------------------------
 		cy.clickToolbarUndo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarUndo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		// -------------------------------------------------------------------------
 		// Redo to external -> local -> external
 		// -------------------------------------------------------------------------
 		cy.clickToolbarRedo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForLocalInPlace();
+		testForExternalMainCanvasLocalSupernodeExpandedInPlace();
 
 		cy.clickToolbarRedo();
-		testForExternalInPlace();
+		testForExternalMainCanvasSupernodeExpandedInPlace();
 
 	});
 
@@ -333,11 +333,392 @@ describe("Test the external supernode/sub-flows support", function() {
 		// pipelines.
 		cy.verifyNumberOfPipelines(3);
 		cy.verifyNumberOfExternalPipelines(2);
+		cy.verifyNumberOfExternalPipelineFlows(2);
+	});
+
+	it("Test deleting (and undo/redo) of an external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalMainCanvas.json");
+		testForExternalMainCanvas();
+
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalMainCanvasSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalMainCanvas();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasSupernodeDeleted();
+	});
+
+	it("Test deleting (and undo/redo) of an expanded external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+		testForExternalMainCanvasExpanded();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalMainCanvasExpandedSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpanded();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedSupernodeDeleted();
+	});
+
+	it("Test deleting (and undo/redo) of a supernode with nested external supernode", function() {
+		// Open a flow that referencs an external subflow
+		cy.openCanvasDefinition("externalNestedCanvas.json");
+		testForExternalNestedCanvas();
+
+		cy.hoverOverNode("Supernode-1");
+		cy.clickEllipsisIconOfSupernode("Supernode-1");
+		cy.clickOptionFromContextMenu("Delete");
+		testForExternalNestedCanvasSupernodeDeleted();
+
+		// Undo the delete
+		cy.clickToolbarUndo();
+		testForExternalNestedCanvas();
+
+		// Redo the delete
+		cy.clickToolbarRedo();
+		testForExternalNestedCanvasSupernodeDeleted();
+	});
+});
+
+describe("Test navigate into and out of an external sub-flow inside a sub-flow", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+	});
+
+	it("Test navigaton using the expansion icon for the inner sub-flow", function() {
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+		cy.clickExpansionIconOfSupernodeInsideSupernode("Supernode 2", "Super node");
+		testBreadcrumbNavigationForExternalMainCanvasExpanded();
+	});
+
+	it("Test navigaton using the ellipsis icon for the inner sub-flow", function() {
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfNodesInSubFlow(5);
+		cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+
+		cy.clickEllipsisIconOfSupernodeInSupernode("Supernode 2", "Super node");
+		cy.clickOptionFromContextMenu("Display full page");
+		testBreadcrumbNavigationForExternalMainCanvasExpanded();
+	});
+});
+
+describe("Test copy and paste with external pipeline flows", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+	});
+
+	it("Test copy and paste of external supernode]", function() {
+		cy.openCanvasDefinition("externalMainCanvas.json");
+		testForExternalMainCanvas();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+
+		cy.hoverOverNodeLabel("Super node");
+		cy.clickNodeLabelEditIcon("Super node");
+		cy.enterLabelForNode("Super node", "Supernode Original");
+
+		testForExternalMainCanvas();
+
+		// Paste a copy of the supernode
+		cy.rightClickToDisplayContextMenu(200, 450);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		testForExternalMainCanvasCopiedSupernode();
+
+		// Undo the paste
+		cy.clickToolbarUndo();
+		testForExternalMainCanvas();
+
+		// Redo the paste
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasCopiedSupernode();
+
+		// Expand the copied Supernode
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Expand supernode");
+		testForExternalMainCanvasCopiedSupernodExpanded();
+	});
+
+	it("Test copy and paste of expanded external supernode]", function() {
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+		testForExternalMainCanvasExpanded();
+
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+
+		cy.hoverOverNodeLabel("Super node");
+		cy.clickNodeLabelEditIcon("Super node");
+		cy.enterLabelForNode("Super node", "Supernode Original");
+
+		testForExternalMainCanvasExpanded();
+
+		// Paste a copy of the supernode
+		cy.rightClickToDisplayContextMenu(200, 450);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		testForExternalMainCanvasExpandedCopiedSupernode();
+
+		// Undo the paste
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpanded();
+
+		// Redo the paste
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedCopiedSupernode();
+	});
+
+	it("Test conversion to local of copied expanded external supernode]", function() {
+
+		// Thse steps same as tst case above so if that passed then these should be
+		// OK.
+		cy.openCanvasDefinition("externalMainCanvasExpanded.json");
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextSubmenu("Edit", "Copy");
+		cy.hoverOverNodeLabel("Super node");
+		cy.clickNodeLabelEditIcon("Super node");
+		cy.enterLabelForNode("Super node", "Original");
+		cy.rightClickToDisplayContextMenu(60, 450);
+		cy.clickOptionFromContextSubmenu("Edit", "Paste");
+
+		// Chck everything is OK before converting to local
+		testForExternalMainCanvasExpandedBeforeConvertToLocal();
+
+		// Convert copied Supernode to Local
+		cy.hoverOverNode("Super node");
+		cy.clickEllipsisIconOfSupernode("Super node");
+		cy.clickOptionFromContextMenu("Convert external to local");
+
+		testForExternalMainCanvasExpandedAfterConvertToLocal();
+
+		// Need to click here to get the Ellipsis icon to be clickable in the
+		// next step. I'm not sure why this is needed when the ellipsis icon
+		// work perfectly OK in previous steps!?
+		cy.getNodeWithLabel("Original").click("top");
+
+		// Convert Original supernode to Local
+		cy.hoverOverNode("Original");
+		cy.clickEllipsisIconOfSupernode("Original");
+		cy.clickOptionFromContextMenu("Convert external to local");
+
+		testForExternalMainCanvasExpandedAfterConvertToLocal2();
+
+		// Undo the conversion of Original supernode
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpandedAfterConvertToLocal();
+
+		// Undo the convertion of copied Supernode
+		cy.clickToolbarUndo();
+		testForExternalMainCanvasExpandedBeforeConvertToLocal();
+
+		// Redo the convertion of copied Supernode
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedAfterConvertToLocal();
+
+		// Redo the convertion of copied Supernode
+		cy.clickToolbarRedo();
+		testForExternalMainCanvasExpandedAfterConvertToLocal2();
 	});
 
 });
 
-function testForExternalInPlace() {
+describe("Test the supernode deconstruct feature for external pipelines", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("externalMainCanvas.json");
+	});
+
+	it("Test deconstructing a supernode works OK.", function() {
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(5);
+
+		// Expand supernode using context menu
+		cy.rightClickNode("Super node");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		cy.hoverOverNode("Supernode 2");
+		cy.clickEllipsisIconOfSupernode("Supernode 2");
+		cy.clickOptionFromContextMenu("Deconstruct supernode");
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		// On this Undo, common-canvas recreates the second pipeline (as an external
+		// pipeline flow).
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		// On this Undo, common-canvas recreates the first pipeline (as an external
+		// pipeline flow).
+		cy.clickToolbarUndo();
+
+		cy.verifyNumberOfPipelines(3);
+		cy.verifyNumberOfExternalPipelines(2);
+		cy.verifyNumberOfExternalPipelineFlows(2);
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(5);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(2);
+		cy.verifyNumberOfExternalPipelines(1);
+		cy.verifyNumberOfExternalPipelineFlows(1);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+		cy.clickToolbarRedo();
+
+		cy.verifyNumberOfPipelines(1);
+		cy.verifyNumberOfExternalPipelines(0);
+		cy.verifyNumberOfExternalPipelineFlows(0);
+		cy.verifyNumberOfNodes(6);
+		cy.verifyNumberOfLinks(6);
+
+	});
+});
+
+function testForExternalMainCanvasExpandedBeforeConvertToLocal() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasExpandedAfterConvertToLocal() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(4);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasExpandedAfterConvertToLocal2() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(4);
+	cy.verifyNumberOfExternalPipelines(1);
+	cy.verifyNumberOfExternalPipelineFlows(1);
+}
+
+function testBreadcrumbNavigationForExternalMainCanvasExpanded() {
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
+
+	cy.clickBreadcrumb("Super node");
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
+
+	cy.clickBreadcrumb("Primary");
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
+
+	cy.clickToolbarUndo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfBreadcrumbs(3);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(2);
+
+	cy.clickToolbarRedo();
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfBreadcrumbs(1);
+}
+
+function testForExternalMainCanvas() {
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
+}
+
+function testForExternalMainCanvasCopiedSupernode() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
+}
+
+function testForExternalMainCanvasCopiedSupernodExpanded() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasSupernodeDeleted() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+	cy.verifyNumberOfExternalPipelineFlows(0);
+}
+
+function testForExternalMainCanvasSupernodeExpandedInPlace() {
 	// There should now be 5 nodes and 4 links in the main flow.
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
@@ -356,7 +737,7 @@ function testForExternalInPlace() {
 	cy.verifyNumberOfExternalPipelineFlows(2);
 }
 
-function testForLocalInPlace() {
+function testForExternalMainCanvasLocalSupernodeExpandedInPlace() {
 	// There should now be 5 nodes and 4 links in the main flow.
 	cy.verifyNumberOfNodes(5);
 	cy.verifyNumberOfPortDataLinks(4);
@@ -373,6 +754,46 @@ function testForLocalInPlace() {
 	// The external flow should be gone!
 	cy.verifyNumberOfExternalPipelineFlows(1);
 }
+
+function testForExternalMainCanvasExpanded() {
+	cy.verifyNumberOfNodes(5);
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.verifyNumberOfPipelines(3);
+	cy.verifyNumberOfNodesInSubFlow(5);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(3);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasExpandedCopiedSupernode() {
+	cy.verifyNumberOfNodes(6);
+	cy.verifyNumberOfNodesInSubFlow(10);
+	cy.verifyNumberOfNodesInSubFlowInSubFlow(6);
+	cy.verifyNumberOfExternalPipelines(2);
+	cy.verifyNumberOfExternalPipelineFlows(2);
+}
+
+function testForExternalMainCanvasExpandedSupernodeDeleted() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
+function testForExternalNestedCanvas() {
+	cy.verifyNumberOfNodes(4);
+	cy.verifyNumberOfPortDataLinks(3);
+	cy.verifyNumberOfPipelines(6);
+	cy.verifyNumberOfExternalPipelines(2);
+}
+
+function testForExternalNestedCanvasSupernodeDeleted() {
+	cy.verifyNumberOfNodes(3);
+	cy.verifyNumberOfPortDataLinks(1);
+	cy.verifyNumberOfPipelines(1);
+	cy.verifyNumberOfExternalPipelines(0);
+}
+
 
 function testForExternalCollapse(pipelines, extFlows) {
 	// There should now be 5 nodes and 4 links in the main flow.

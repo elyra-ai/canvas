@@ -27,7 +27,7 @@ import * as PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { Type, ParamRole } from "./constants/form-constants";
+import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
@@ -40,7 +40,8 @@ export default class PropertiesController {
 			propertyListener: null,
 			controllerHandler: null,
 			actionHandler: null,
-			buttonHandler: null
+			buttonHandler: null,
+			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
 		this.visibleDefinitions = {};
@@ -50,6 +51,7 @@ export default class PropertiesController {
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
 		this.allowChangeDefinitions = {};
+		this.conditionalDefaultDefinitions = {};
 		this.panelTree = {};
 		this.controls = {};
 		this.actions = {};
@@ -153,7 +155,7 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
@@ -200,6 +202,7 @@ export default class PropertiesController {
 		this.filterDefinitions = { controls: {}, refs: {} };
 		this.filteredEnumDefinitions = { controls: {}, refs: {} };
 		this.allowChangeDefinitions = { controls: {}, refs: {} };
+		this.conditionalDefaultDefinitions = { controls: {}, refs: {} };
 
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
@@ -215,6 +218,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, CONDITION_TYPE.FILTEREDENUM);
 				} else if (condition.allow_change) {
 					UiConditionsParser.parseConditions(this.allowChangeDefinitions, condition, CONDITION_TYPE.ALLOWCHANGE);
+				} else if (condition.default_value) {
+					UiConditionsParser.parseConditions(this.conditionalDefaultDefinitions, condition, CONDITION_TYPE.CONDITIONALDEFAULT);
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -243,6 +248,9 @@ export default class PropertiesController {
 			break;
 		case CONDITION_TYPE.ALLOWCHANGE:
 			conditionDefinitions = this.allowChangeDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.CONDITIONALDEFAULT:
+			conditionDefinitions = this.conditionalDefaultDefinitions[dfnIndex];
 			break;
 		case CONDITION_TYPE.VALIDATION:
 			conditionDefinitions = this.validationDefinitions[dfnIndex];
@@ -1140,7 +1148,7 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values) {
+	setPropertyValues(values, isInitProps) {
 		const inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1158,6 +1166,33 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
+		if (isInitProps) {
+			// Evaluate conditional defaults based on current_parameters upon loading of view
+			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
+			const conditionalDefaultValues = {};
+			if (!isEmpty(inValues)) {
+				Object.keys(inValues).forEach((propertyName) => {
+					const propertyId = { name: propertyName };
+					// Update conditionalDefaultValues object using pass-by-reference
+					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
+				});
+				if (!isEmpty(conditionalDefaultValues)) {
+					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
+						if (!(parameterRef in inValues)) {
+							// convert values of type:object to the internal format array values
+							const control = this.getControl({ name: parameterRef });
+							if (PropertyUtils.isSubControlStructureObjectType(control)) {
+								conditionalDefaultValues[parameterRef] =
+								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+							}
+							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
+						}
+					});
+				}
+			}
+		}
+
+		// Validate other conditions after evaluating conditional defaults (default_value conditions)
 		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
@@ -1508,7 +1543,11 @@ export default class PropertiesController {
 	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
-				this.controls[control.name] = control;
+				// only add to map if control hasn't already been added or override if set to custom.
+				// This is needed if a parameter is referenced from multiple groups and one is a custom panel
+				if (!has(this.controls, control.name) || (has(this.controls, control.name) && control.controlType !== ControlType.CUSTOM)) {
+					this.controls[control.name] = control;
+				}
 			} else {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}
@@ -1745,5 +1784,57 @@ export default class PropertiesController {
 	*/
 	getAddRemoveRows(propertyId) {
 		return this.propertiesStore.getAddRemoveRows(propertyId);
+	}
+
+	/**
+	 * Freeze row move buttons for row indexes in given array
+	 * @param propertyId The unique property identifier
+	 * @param rowIndexes Array of row indexes
+	 */
+
+	getStaticRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		return this.propertiesStore.getStaticRows(propertyId);
+	}
+
+	updateStaticRows(inPropertyId, staticRowsArr) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		const controlValue = this.getPropertyValue(inPropertyId);
+		const staticRows = staticRowsArr.sort();
+		const isValidSlection = this.validateSelectionValues(staticRows, controlValue);
+		if (isValidSlection) {
+			this.propertiesStore.updateStaticRows(propertyId, staticRows);
+		}
+	}
+
+	clearStaticRows(inPropertyId) {
+		const propertyId = this.convertPropertyId(inPropertyId);
+		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	 * Validate if the array for freeze rows is correct. Should only have continuous value of row indexes
+	 * Must not contain first and last row index together in the array ever. you can only freeze either first n row or the last n row
+	 * @param staticRows Array of rows you want to freeze
+	 * @param controlValue the property values for the property Id
+	 * @returns
+	 */
+	validateSelectionValues(staticRows, controlValue) {
+		let isValid = false;
+		if (staticRows && controlValue.length > 0) {
+			const consecutiveAry = staticRows.slice(1).map(function(n, i) {
+				return n - staticRows[i];
+			});
+			const isDifference = consecutiveAry.every((value) => value === 1);
+			if (isDifference && ((staticRows.includes(0) && !staticRows.includes(controlValue.length - 1)) ||
+			(!staticRows.includes(0) && staticRows.includes(controlValue.length - 1)))) {
+				isValid = true;
+			} else {
+				isValid = false;
+			}
+		} else {
+			isValid = false;
+		}
+		return isValid;
 	}
 }

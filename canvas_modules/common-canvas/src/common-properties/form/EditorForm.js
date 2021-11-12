@@ -22,6 +22,7 @@ import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
+import { get } from "lodash";
 
 /**
  * The Editor is the primary container for the editing controls. It defines the tabs within the
@@ -67,10 +68,12 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, className, controls, label) {
+	constructor(id, panelType, className, nestedPanel, controls, label, copen = false) {
 		this.id = id;
 		this.panelType = panelType;
+		this.nestedPanel = nestedPanel;
 		this.uiItems = controls;
+		this.open = copen;
 		if (label) {
 			this.label = label;
 		}
@@ -81,9 +84,10 @@ class ControlPanel {
 }
 
 class ActionPanel {
-	constructor(id, panelType, className, actions) {
+	constructor(id, panelType, className, nestedPanel, actions) {
 		this.id = id;
 		this.panelType = panelType;
+		this.nestedPanel = nestedPanel;
 		this.uiItems = actions;
 		if (className) {
 			this.className = className;
@@ -92,13 +96,23 @@ class ActionPanel {
 }
 
 class CustomControlPanel {
-	constructor(id, panelType, className, parameters, data) {
+	constructor(id, panelType, className, nestedPanel, parameters, data) {
 		this.id = id;
 		this.panelType = panelType;
+		this.nestedPanel = nestedPanel;
 		this.parameters = parameters;
 		this.data = data;
 		if (className) {
 			this.className = className;
+		}
+	}
+}
+
+class NumberGenerator {
+	constructor(text, numberGenerator) {
+		this.text = text;
+		if (numberGenerator.range) {
+			this.range = numberGenerator.range;
 		}
 	}
 }
@@ -116,15 +130,16 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	let groupItem = null;
 	let groupLabel = null;
 	const groupClassName = group.className;
+	const nestedPanel = get(group, "nestedPanel", false);
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName,
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName,
+		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
@@ -140,7 +155,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			});
 		}
-		return UIItem.makeSubTabs(subTabItems, groupClassName);
+		return UIItem.makeSubTabs(subTabItems, groupClassName, nestedPanel);
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
@@ -155,7 +170,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel, panSubItems));
 	}
 	case GroupType.COLUMN_PANEL: {
 		const panSubItems = [];
@@ -165,10 +180,10 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, panSubItems));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_PANEL, groupClassName, nestedPanel, panSubItems));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, groupClassName, group.parameterNames(), group.data));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, groupClassName, nestedPanel, group.parameterNames(), group.data));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -179,16 +194,16 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, nestedPanel, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
-		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, groupClassName,
+		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, groupClassName, nestedPanel,
 			_makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
 		const groupDesc = l10nProvider.l10nResource(group.description);
-		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName);
+		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName, nestedPanel);
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -199,7 +214,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.open));
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
@@ -323,10 +338,11 @@ function _makeStringControl(parameter, isSubControl) {
 			controlType = ControlType.TEXTAREA;
 			break;
 		case ParamRole.ENUM:
-			if (parameter.getValidValueCount() < 5) {
-				controlType = ControlType.RADIOSET;
-			} else {
+			// show oneofselect when inside a table cell
+			if (parameter.getValidValueCount() > 4 || (isSubControl && !_isEmbeddedOption(parameter))) {
 				controlType = ControlType.ONEOFSELECT;
+			} else {
+				controlType = ControlType.RADIOSET;
 			}
 			break;
 		case ParamRole.COLUMN:
@@ -371,6 +387,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const required = parameter.required;
+	if (parameter.numberGenerator) {
+		parameter.numberGenerator = new NumberGenerator(l10nProvider.l10nLabel(parameter.numberGenerator, parameter.name), parameter.numberGenerator);
+	}
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name), parameter.numberGenerator);
 	let controlDesc;
 	if (parameter.description) {
@@ -607,6 +626,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider, structureMetadata) {
 		structureDef.name,
 		PanelType.GENERAL,
 		"properties-editstyle-sub-panel",
+		false,
 		_makeControls(structureDef.parameterMetadata,
 			structureDef.actionMetadata,
 			structureDef,
@@ -635,9 +655,16 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata) {
  */
 function _isEmbeddedMultiOption(parameter) {
 	if (parameter.isList() || parameter.isMapValue()) {
-		return parameter.editStyle === "on_panel" || parameter.editStyle === "subpanel";
+		return _isEmbeddedOption(parameter);
 	}
 	return false;
+}
+
+/**
+ * Returns true if the given parameter is a multi-option type that can be embedded within a table cell.
+ */
+function _isEmbeddedOption(parameter) {
+	return parameter.editStyle === "on_panel" || parameter.editStyle === "subpanel";
 }
 
 /**

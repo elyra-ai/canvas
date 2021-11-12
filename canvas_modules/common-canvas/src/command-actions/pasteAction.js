@@ -15,60 +15,25 @@
  */
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
-import { SUPER_NODE } from "../common-canvas/constants/canvas-constants.js";
 
-export default class CloneMultipleObjectsAction extends Action {
-	constructor(data, objectModel, viewportDimensions, areDetachableLinksSupported) {
+export default class PasteAction extends Action {
+	constructor(data, objectModel, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
 		super(data);
 		this.data = data;
 		this.viewportDimensions = viewportDimensions;
-		this.areDetachableLinksSupported = areDetachableLinksSupported;
+		this.areDetachableLinksInUse = areDetachableLinksInUse;
+		this.isSnapToGridInUse = isSnapToGridInUse;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.clonedNodesInfo = [];
-		this.clonedCommentsInfo = [];
-		this.clonedLinks = [];
-		this.clonedPipelines = []; // Map of original pipelineId to the new cloned pipeline.
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.
 		this.adjustObjectsPositions();
 
-		if (data.objects.nodes) {
-			data.objects.nodes.forEach((node) => {
-				const clonedNode = this.apiPipeline.cloneNode(node);
-				if (node.type === SUPER_NODE) {
-					const subPipelines = this.objectModel.cloneSuperNodeContents(clonedNode, data.objects.pipelines);
-					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode, pipelines: subPipelines });
-				} else {
-					this.clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
-				}
-			});
-		}
-
-		if (data.objects.comments) {
-			data.objects.comments.forEach((comment) => {
-				this.clonedCommentsInfo.push({ originalId: comment.id, comment: this.apiPipeline.cloneComment(comment) });
-			});
-		}
-
-		if (data.objects.links) {
-			data.objects.links.forEach((link) => {
-				if (link.type === "nodeLink" || link.type === "associationLink") {
-					const srcClonedNode = this.findClonedNode(link.srcNodeId);
-					const trgClonedNode = this.findClonedNode(link.trgNodeId);
-					const newLink = this.apiPipeline.cloneNodeLink(link, srcClonedNode, trgClonedNode);
-					this.clonedLinks.push(newLink);
-				} else {
-					const srcClonedComment = this.findClonedComment(link.srcNodeId);
-					const trgClonedNode = this.findClonedNode(link.trgNodeId);
-					if (srcClonedComment && trgClonedNode) {
-						const newLink = this.apiPipeline.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
-						this.clonedLinks.push(newLink);
-					}
-				}
-			});
-		}
+		// Clone the objects being pasted because we don't want any objects
+		// with IDs the same as those already on the canvas.
+		this.clones = this.objectModel.cloneObjectsToPaste(
+			data.objects.nodes, data.objects.comments, data.objects.links);
 	}
 
 	// Adjusts the positions of the cloned objects appropriately. If the data
@@ -80,12 +45,13 @@ export default class CloneMultipleObjectsAction extends Action {
 	// not visible in the viewport, we paste them in the center of the viewport.
 	adjustObjectsPositions() {
 		const objects = this.data.objects;
-		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0);
+		const pastedObjDimensions = CanvasUtils.getCanvasDimensions(objects.nodes, objects.comments, objects.links, 0, 0);
 		if (pastedObjDimensions) {
 			if (this.data.mousePos && this.data.mousePos.x && this.data.mousePos.y) {
 				const xDelta = this.data.mousePos.x - pastedObjDimensions.left;
 				const yDelta = this.data.mousePos.y - pastedObjDimensions.top;
 				this.moveObjectsPositions(objects, xDelta, yDelta);
+
 			} else {
 				const transRect = this.viewportDimensions;
 				if (transRect.x < pastedObjDimensions.left &&
@@ -93,6 +59,7 @@ export default class CloneMultipleObjectsAction extends Action {
 						transRect.x + transRect.width > pastedObjDimensions.left &&
 						transRect.y + transRect.height > pastedObjDimensions.top) {
 					this.ensureNoOverlap(objects);
+
 				} else {
 					const xDelta = transRect.x + (transRect.width / 2) - (pastedObjDimensions.width / 2) - pastedObjDimensions.left;
 					const yDelta = transRect.y + (transRect.height / 2) - (pastedObjDimensions.height / 2) - pastedObjDimensions.top;
@@ -108,8 +75,15 @@ export default class CloneMultipleObjectsAction extends Action {
 	// Exact overlap can happen when pasting over the top of the canvas from
 	// which the canvas objects  were copied.
 	ensureNoOverlap(objects) {
+		let xInc = 10;
+		let yInc = 10;
+		if (this.isSnapToGridInUse) {
+			const canvasLayout = this.objectModel.getCanvasLayout();
+			xInc = canvasLayout.snapToGridXPx;
+			yInc = canvasLayout.snapToGridYPx;
+		}
 		while (this.apiPipeline.exactlyOverlaps(objects.nodes, objects.comments, objects.links)) {
-			this.moveObjectsPositions(objects, 10, 10);
+			this.moveObjectsPositions(objects, xInc, yInc);
 		}
 	}
 
@@ -149,9 +123,9 @@ export default class CloneMultipleObjectsAction extends Action {
 	// Return augmented command object which will be passed to the
 	// client app.
 	getData() {
-		this.data.clonedNodesInfo = this.clonedNodesInfo;
-		this.data.clonedCommentsInfo = this.clonedCommentsInfo;
-		this.data.clonedLinks = this.clonedLinks;
+		this.data.clonedNodes = this.clones.clonedNodes;
+		this.data.clonedComments = this.clones.clonedComments;
+		this.data.clonedLinks = this.clones.clonedLinks;
 		return this.data;
 	}
 
@@ -159,68 +133,32 @@ export default class CloneMultipleObjectsAction extends Action {
 	do() {
 		const addedObjectIds = [];
 
-		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			if (clonedNodeInfo.node.type === SUPER_NODE) {
-				this.apiPipeline.addSupernode(clonedNodeInfo.node, clonedNodeInfo.pipelines);
-			} else {
-				this.apiPipeline.addNode(clonedNodeInfo.node);
-			}
-			addedObjectIds.push(clonedNodeInfo.node.id);
+		this.clones.clonedNodes.forEach((cn) => {
+			this.apiPipeline.addNode(cn);
+			addedObjectIds.push(cn.id);
 		});
 
-		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			this.apiPipeline.addComment(clonedCommentInfo.comment);
-			addedObjectIds.push(clonedCommentInfo.comment.id);
+		this.clones.clonedComments.forEach((cc) => {
+			this.apiPipeline.addComment(cc);
+			addedObjectIds.push(cc.id);
 		});
 
 
-		this.apiPipeline.addLinks(this.clonedLinks);
-		if (this.areDetachableLinksSupported) {
-			this.clonedLinks.forEach((clonedLink) => addedObjectIds.push(clonedLink.id));
+		this.apiPipeline.addLinks(this.clones.clonedLinks);
+		if (this.areDetachableLinksInUse) {
+			this.clones.clonedLinks.forEach((cl) => addedObjectIds.push(cl.id));
 		}
 
 		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.pipelineId);
 	}
 
 	undo() {
-		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			if (clonedNodeInfo.node.type === SUPER_NODE) {
-				this.apiPipeline.deleteSupernode(clonedNodeInfo.node.id);
-			} else {
-				this.apiPipeline.deleteNode(clonedNodeInfo.node.id);
-			}
-		});
-		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			this.apiPipeline.deleteComment(clonedCommentInfo.comment.id);
-		});
-		this.clonedLinks.forEach((clonedLink) => {
-			this.apiPipeline.deleteLink(clonedLink);
-		});
+		this.apiPipeline.deleteNodes(this.clones.clonedNodes);
+		this.apiPipeline.deleteComments(this.clones.clonedComments);
+		this.apiPipeline.deleteLinks(this.clones.clonedLinks);
 	}
 
 	redo() {
 		this.do();
-	}
-
-	// Returns the cloned node from the array of cloned nodes, identified
-	// by the node ID passed in which is the ID of the original node.
-	findClonedNode(nodeId) {
-		var clonedNodeInfo =
-			this.clonedNodesInfo.find((clnedNodeInf) => clnedNodeInf.originalId === nodeId);
-		if (clonedNodeInfo) {
-			return clonedNodeInfo.node;
-		}
-		return null;
-	}
-
-	// Returns the cloned comment from the array of cloned comments, identified
-	// by the comment ID passed in which is the ID of the original comment.
-	findClonedComment(commentId) {
-		var clonedCommentInfo =
-			this.clonedCommentsInfo.find((clnedCmntInf) => clnedCmntInf.originalId === commentId);
-		if (clonedCommentInfo) {
-			return clonedCommentInfo.comment;
-		}
-		return null;
 	}
 }

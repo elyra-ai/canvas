@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,16 +21,16 @@
 // and canvas-controller.
 // ---------------------------------------------------------------------------
 
-import dagre from "dagre/dist/dagre.min.js";
-import has from "lodash/has";
-
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
-import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL, DAGRE_HORIZONTAL,
-	DAGRE_VERTICAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT,
-	CREATE_NODE_LINK, CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK,
-	BINDING, SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
+import dagre from "dagre/dist/dagre.min.js";
+import { cloneDeep, get, has } from "lodash";
+
+import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
+	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+	CREATE_NODE, CREATE_COMMENT, CREATE_NODE_LINK, CREATE_COMMENT_LINK,
+	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class APIPipeline {
@@ -43,6 +43,14 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
+	getPipeline() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+	}
+
+	isPipelineExternal() {
+		return this.objectModel.getCanvasInfoPipeline(this.pipelineId).parentUrl;
+	}
+
 	setPipelineZoom(zoom, translate) {
 		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
 	}
@@ -51,29 +59,49 @@ export default class APIPipeline {
 	// Node AND comment methods
 	// ---------------------------------------------------------------------------
 
+	getObjects() {
+		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
+		if (pipeline) {
+			return pipeline.nodes.concat(pipeline.comments);
+		}
+		return [];
+
+	}
+
 	moveObjects(data) {
 		this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.pipelineId });
 	}
 
+	// Deletes the object (which can be a node or a comment) identified
+	// by the objId passed in.
+	deleteObject(objId) {
+		this.deleteObjects([objId]);
+	}
+
+	// Deletes the objects (which can be a mix of nodes and comments) identified
+	// by the array of IDs passed in and calls the selection changed handler.
 	deleteObjects(objectIds) {
-		this.objectModel.executeWithSelectionChange((objIds) => {
-			objIds.forEach((id) => {
-				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
-			});
+		this.objectModel.executeWithSelectionChange((inObjectIds) => {
+			const { nodes, comments } = this.filterNodesAndComments(inObjectIds);
+			this.deleteNodesInternal(nodes);
+			this.deleteCommentsInternal(comments);
 		}, objectIds);
 	}
 
-	// Delete an array of objects that have ids.
-	deleteObjectsWithIds(objects) {
-		const objectIds = [];
-		objects.forEach((object) => {
-			objectIds.push(object.id);
+	// Returns an object containing and array of nodes and an array of comments
+	// that match the array of objectIds passed in.
+	filterNodesAndComments(objectIds) {
+		const nodes = [];
+		const comments = [];
+		objectIds.forEach((oId) => {
+			const comment = this.getComment(oId);
+			if (comment) {
+				comments.push(comment);
+			} else {
+				nodes.push(this.getNode(oId));
+			}
 		});
-		this.deleteObjects(objectIds);
-	}
-
-	deleteObject(id) {
-		this.objectModel.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.pipelineId });
+		return { nodes, comments };
 	}
 
 	getObjectStyle(objId, temporary) {
@@ -249,7 +277,13 @@ export default class APIPipeline {
 	// ---------------------------------------------------------------------------
 
 	createNode(data) {
-		const nodeTemplate = data.nodeTemplate;
+		let nodeTemplate = data.nodeTemplate;
+		// If the nodeTemplate has app_data.ui_data field then it will be a
+		// teamplate that conforms to the pipelineFlow schema and needs to be
+		// converted to the internal format for a node.
+		if (has(data.nodeTemplate, "app_data.ui_data")) {
+			nodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);
+		}
 		let node = {};
 		if (nodeTemplate !== null) {
 			node = Object.assign({}, nodeTemplate, {
@@ -264,28 +298,6 @@ export default class APIPipeline {
 		}
 
 		return node;
-	}
-
-	createSupernode(label, description, subPipelineId, inputPorts, outputPorts, topLeftNodePosition, externalUrl) {
-		const supernodeTemplate = {
-			description: description,
-			image: externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
-			label: label,
-			inputs: inputPorts,
-			outputs: outputPorts,
-			type: SUPER_NODE,
-			subflow_ref: {
-				pipeline_id_ref: subPipelineId
-			},
-		};
-
-		const supernodeData = {
-			nodeTemplate: supernodeTemplate,
-			offsetX: topLeftNodePosition.xPos,
-			offsetY: topLeftNodePosition.yPos
-		};
-
-		return this.createNode(supernodeData);
 	}
 
 	// Returns a source node for auto completion or null if no source node can be
@@ -369,21 +381,6 @@ export default class APIPipeline {
 		return newNode;
 	}
 
-	cloneNodes() {
-		return this.getNodes().map(function(node) {
-			return Object.assign({}, node);
-		});
-	}
-
-	cloneNode(inNode) {
-		let node = Object.assign({}, inNode, { id: this.objectModel.getUniqueId(CLONE_NODE, { "node": inNode }) });
-
-		// Add node height and width and, if appropriate, inputPortsHeight
-		// and outputPortsHeight
-		node = this.objectModel.setNodeAttributes(node);
-		return node;
-	}
-
 	// Returns an array of nodes (that are in a format that conforms to the
 	// schema) that can be added to a palette category. Each node is given
 	// a new ID to make it unique within the palette.
@@ -392,16 +389,16 @@ export default class APIPipeline {
 		selectedObjectIds.forEach((selObjId) => {
 			let node = this.getNode(selObjId);
 			if (node) {
-				node = JSON.parse(JSON.stringify(node));
+				node = cloneDeep(node);
 				node.id = this.objectModel.getUUID();
 				node.x_pos = 0;
 				node.y_pos = 0;
-				node = PipelineOutHandler.createNode(node, []);
+				node = PipelineOutHandler.createSchemaNode(node, []);
 				if (node.type === SUPER_NODE) {
 					if (!node.app_data) {
 						node.app_data = {};
 					}
-					node.app_data.pipeline_data = this.objectModel.getSubPipelinesForSupernode(node);
+					node.app_data.pipeline_data = this.objectModel.getSchemaPipelinesForSupernode(node);
 				}
 				newNodes.push(node);
 			}
@@ -479,20 +476,34 @@ export default class APIPipeline {
 
 	addNode(newNode) {
 		if (newNode) {
-			this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			if (newNode.type === SUPER_NODE) {
+				this.addSupernode(newNode, get(newNode, "app_data.pipeline_data"));
+			} else {
+				this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
+			}
 		}
 	}
 
-	// Add the newSupernode to canvasInfo and an array of newSubPipelines that it references.
+	addSupernodes(supernodesToAdd, pipelinesToAdd, extPipelineFlowsToAdd) {
+		this.store.dispatch({ type: "ADD_SUPERNODES", data: {
+			supernodesToAdd: supernodesToAdd,
+			pipelinesToAdd: pipelinesToAdd,
+			extPipelineFlowsToAdd: extPipelineFlowsToAdd,
+			pipelineId: this.pipelineId
+		} });
+	}
+
+	// Add the newSupernode to canvasInfo and an array of newSubPipelines that
+	// it references. Optionally, a link may also be added.
 	addSupernode(newSupernode, newSubPipelines) {
 		const canvasInfo = this.objectModel.getCanvasInfo();
-		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines);
+		let canvasInfoPipelines = this.objectModel.getCanvasInfo().pipelines.concat(newSubPipelines || []);
 
 		canvasInfoPipelines = canvasInfoPipelines.map((pipeline) => {
 			if (pipeline.id === this.pipelineId) {
 				const newNodes = [
 					...pipeline.nodes,
-					Object.assign({}, newSupernode)
+					this.cloneSupernodeRemovePipelineData(newSupernode)
 				];
 				return Object.assign({}, pipeline, { nodes: newNodes });
 			}
@@ -502,37 +513,85 @@ export default class APIPipeline {
 		this.objectModel.setCanvasInfo(newCanvasInfo);
 	}
 
-	addAutoNodeAndLink(newNode, newLink) {
-		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
-			newNode: newNode,
-			newLink: newLink },
-		pipelineId: this.pipelineId });
-	}
-
-	deleteNode(id) {
-		this.deleteObject(id);
-	}
-
-	deleteSupernode(supernodeId, deletePipelines = true) {
-		let pipelineIds = [];
-		const supernode = this.getNode(supernodeId);
-		if (supernode) {
-			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-				pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				if (deletePipelines) {
-					pipelineIds = pipelineIds.concat(this.objectModel.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-				}
-			}
-			this.store.dispatch({
-				type: "DELETE_SUPERNODE",
-				data: {
-					id: supernode.id,
-					supernode: supernode,
-					pipelineIds: pipelineIds
-				},
-				pipelineId: this.pipelineId
-			});
+	cloneSupernodeRemovePipelineData(supernode) {
+		const sn = Object.assign({}, supernode);
+		if (sn.app_data) {
+			sn.app_data = Object.assign({}, sn.app_data);
+			delete sn.app_data.pipeline_data;
 		}
+		return sn;
+	}
+
+	// Deletes the node identified by the nodeId. If the node is a Supernode, the
+	// relevant pipelines and external pipeline flows will be deleted.
+	deleteNode(nodeId) {
+		const node = this.getNode(nodeId);
+		if (node) {
+			this.deleteNodes([node]);
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It also calls the selection changed
+	// handler.
+	deleteNodes(nodes, removePipelines = true) {
+		if (nodes && nodes.length > 0) {
+			this.objectModel.executeWithSelectionChange((obj) => {
+				this.deleteNodesInternal(obj.nodes, obj.removePipelines);
+			}, { nodes, removePipelines });
+		}
+	}
+
+	// Deletes the nodes identified by the nodes array. If any of the the nodes
+	// are supernodes, the relevant pipelines and external pipeline flows will
+	// be deleted if removePipelines is true. It does not call the selection
+	// changed handler.
+	deleteNodesInternal(nodes, removePipelines) {
+		// Handle regular nodes
+		const regularNodes = nodes.filter((n) => n.type !== SUPER_NODE);
+		regularNodes.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
+
+		// Handle supernodes
+		const supernodes = nodes.filter((n) => n.type === SUPER_NODE);
+		if (removePipelines) {
+			this.deleteSupernodesAndDescPipelines(supernodes);
+		} else {
+			this.deleteSupernodes(supernodes, [], []);
+		}
+	}
+
+	// Deletes the supernodes passed in and also any descending pipelines. It
+	// makes sure it doesn't delete any external pipelines that are referenced by
+	// other supernodes in the canvas info.
+	deleteSupernodesAndDescPipelines(supernodes) {
+		const pipelinesToDelete = this.objectModel.getDescPipelinesToDelete(supernodes, this.pipelineId);
+		const extPipelineFlowsToDelete =
+			this.objectModel.getExternalPipelineFlowsForPipelines(pipelinesToDelete);
+		this.deleteSupernodes(supernodes, pipelinesToDelete, extPipelineFlowsToDelete);
+	}
+
+	// Deletes the supernodes passed in along with any pipelines and external flows.
+	deleteSupernodes(supernodesToDelete, pipelinesToDelete, extPipelineFlowsToDelete) {
+		this.store.dispatch({
+			type: "DELETE_SUPERNODES",
+			data: {
+				supernodesToDelete: supernodesToDelete,
+				pipelinesToDelete: pipelinesToDelete,
+				extPipelineFlowsToDelete: extPipelineFlowsToDelete,
+				pipelineId: this.pipelineId
+			}
+		});
+	}
+
+	deconstructSupernode(data) {
+		this.store.dispatch({ type: "DECONSTRUCT_SUPERNODE", data: data });
+	}
+
+	reconstructSupernode(data) {
+		this.store.dispatch({ type: "RECONSTRUCT_SUPERNODE", data: data });
 	}
 
 	getNodes() {
@@ -558,15 +617,8 @@ export default class APIPipeline {
 		});
 	}
 
-	getSupernodes(inNodes) {
-		const supernodes = [];
-		const listOfNodes = inNodes ? inNodes : this.getNodes();
-		listOfNodes.forEach((node) => {
-			if (node.type === SUPER_NODE) {
-				supernodes.push(node);
-			}
-		});
-		return supernodes;
+	getSupernodes() {
+		return CanvasUtils.filterSupernodes(this.getNodes());
 	}
 
 	isDataNode(objId) {
@@ -574,8 +626,9 @@ export default class APIPipeline {
 		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
 	}
 
-	sizeAndPositionObjects(objectsInfo) {
-		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS", data: { objectsInfo: objectsInfo }, pipelineId: this.pipelineId });
+	sizeAndPositionObjects(objectsInfo, linksInfo) {
+		this.store.dispatch({ type: "SIZE_AND_POSITION_OBJECTS",
+			data: { objectsInfo, linksInfo }, pipelineId: this.pipelineId });
 	}
 
 	// Filters data node IDs from the list of IDs passed in and returns them
@@ -586,28 +639,22 @@ export default class APIPipeline {
 		});
 	}
 
-	expandSuperNodeInPlace(nodeId, nodePositions) {
+	expandSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: true });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
 
-	collapseSuperNodeInPlace(nodeId, nodePositions) {
+	collapseSuperNodeInPlace(nodeId, objectPositions, linkPositions) {
 		let node = Object.assign({}, this.getNode(nodeId), { is_expanded: false });
 		node = this.objectModel.setNodeAttributes(node);
 		this.store.dispatch({
-			type: "SET_SUPERNODE_FLAG",
-			data: {
-				node: node,
-				nodePositions: nodePositions
-			},
+			type: "SET_SUPERNODE_EXPAND_STATE",
+			data: { node, objectPositions, linkPositions },
 			pipelineId: this.pipelineId
 		});
 	}
@@ -951,13 +998,6 @@ export default class APIPipeline {
 		return comment;
 	}
 
-	cloneComment(inComment) {
-		// Adjust for snap to grid, if necessary.
-		const comment = this.objectModel.setCommentAttributes(inComment);
-
-		return Object.assign({}, comment, { id: this.objectModel.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
-	}
-
 	addComment(data) {
 		if (typeof data.selectedObjectIds === "undefined") {
 			data.selectedObjectIds = [];
@@ -979,8 +1019,30 @@ export default class APIPipeline {
 		return pos;
 	}
 
+	// Deletes the comment specified by the id passed in.
 	deleteComment(id) {
-		this.deleteObject(id);
+		const comment = this.getComment(id);
+		if (comment) {
+			this.deleteComments([comment]);
+		}
+	}
+
+	// Deletes the comments in the array passed in and calls the selection
+	// changed handler.
+	deleteComments(comments) {
+		if (comments && comments.length > 0) {
+			this.objectModel.executeWithSelectionChange((inComments) => {
+				this.deleteCommentsInternal(inComments);
+			}, comments);
+		}
+	}
+
+	// Deletes the comments in the array passed in. It does not call the
+	// selection changed handler.
+	deleteCommentsInternal(inComments) {
+		inComments.forEach((n) => {
+			this.store.dispatch({ type: "DELETE_OBJECT", data: { id: n.id }, pipelineId: this.pipelineId });
+		});
 	}
 
 	getComments() {
@@ -1046,6 +1108,11 @@ export default class APIPipeline {
 		return newLink;
 	}
 
+	createLinkFromInfo(linkInfo) {
+		const linkId = this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNodeId": linkInfo.srcNodeId, "targetNodeId": linkInfo.trgNodeId });
+		return Object.assign({ id: linkId, type: NODE_LINK }, linkInfo);
+	}
+
 	deleteLink(link) {
 		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.pipelineId });
 	}
@@ -1101,54 +1168,29 @@ export default class APIPipeline {
 		return null;
 	}
 
-	// Returns a clone of the link passed in using the source and target nodes
-	// passed in. If a semi-detached or fully-detached link is being cloned the
-	// srcNode and/or trgNode may be null.
-	cloneNodeLink(link, srcNode, trgNode) {
-		let clonedLink = {
-			id: this.objectModel.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null }),
-			type: link.type
-		};
-		clonedLink = this.copyCommonNodeLinkAttrs(clonedLink, link);
-
-		if (srcNode) {
-			clonedLink.srcNodeId = srcNode.id;
-			clonedLink.srcNodePortId = link.srcNodePortId;
-		} else {
-			clonedLink.srcPos = link.srcPos;
-		}
-		if (trgNode) {
-			clonedLink.trgNodeId = trgNode.id;
-			clonedLink.trgNodePortId = link.trgNodePortId;
-		} else {
-			clonedLink.trgPos = link.trgPos;
-		}
-		return clonedLink;
-	}
-
+	// Creates a new link objct which is attached to a source node but detached
+	// at the target end. The input data object may contain some or all of the
+	// link properties because they may be populatd by the host application
+	// in the beforeEditActionHandler.
 	createNodeLinkDetached(data) {
-		let link = {};
+		const link = {};
 		link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(data.srcNodeId) });
 		link.type = data.type;
 		link.srcNodeId = data.srcNodeId;
 		link.srcNodePortId = data.srcNodePortId;
 		link.trgPos = { x_pos: data.trgPos.x, y_pos: data.trgPos.y };
-		link = this.copyCommonNodeLinkAttrs(link, data);
-		return link;
-	}
 
-	copyCommonNodeLinkAttrs(link, copyFrom) {
-		if (copyFrom.class_name) {
-			link.class_name = copyFrom.class_name;
+		if (data.class_name) {
+			link.class_name = data.class_name;
 		}
-		if (copyFrom.linkName) {
-			link.linkName = copyFrom.linkName;
+		if (data.linkName) {
+			link.linkName = data.linkName;
 		}
-		if (copyFrom.typeAttr) {
-			link.typeAttr = copyFrom.typeAttr;
+		if (data.typeAttr) {
+			link.typeAttr = data.typeAttr;
 		}
-		if (copyFrom.description) {
-			link.description = copyFrom.description;
+		if (data.description) {
+			link.description = data.description;
 		}
 		return link;
 	}
@@ -1170,20 +1212,14 @@ export default class APIPipeline {
 		return linkCommentList;
 	}
 
-	cloneCommentLink(link, srcNodeId, trgNodeId) {
-		return {
-			id: this.objectModel.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
-			type: link.type,
-			class_name: link.class_name,
-			srcNodeId: srcNodeId,
-			trgNodeId: trgNodeId
-		};
-	}
-
 	addLinks(linkList) {
 		linkList.forEach((link) => {
-			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
+			this.addLink(link);
 		});
+	}
+
+	addLink(link) {
+		this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 	}
 
 	getLinks() {
@@ -1222,51 +1258,61 @@ export default class APIPipeline {
 		return filteredLinks;
 	}
 
+	// Returns an array of cloned links that refer to the id passed in as either
+	// the source node or the target node.
 	getLinksContainingId(id) {
-		const linksList = this.getLinks();
-		const linksContaining = linksList.filter((link) => {
-			return (link.srcNodeId === id || link.trgNodeId === id);
-		});
-		const returnLinks = linksContaining.map((link) => {
-			var newLink = {};
-			newLink.id = link.id;
-			newLink.type = link.type;
-			newLink.srcNodeId = link.srcNodeId;
-			newLink.trgNodeId = link.trgNodeId;
-			newLink.class_name = link.class_name;
-			newLink.style = link.style;
-			newLink.style_temp = link.style_temp;
-			if (link.type === NODE_LINK) {
-				newLink.srcNodePortId = link.srcNodePortId;
-				newLink.trgNodePortId = link.trgNodePortId;
-				newLink.linkName = link.linkName;
-			}
-			return newLink;
-		});
-		return returnLinks;
+		return this.getLinks()
+			.filter((link) => link.srcNodeId === id || link.trgNodeId === id)
+			.map((link) => Object.assign({}, link));
 	}
 
-	// Takes in an array of objects and returns an array of links to those objects.
-	getLinksContainingIds(idArray) {
+	// Returns an array of cloned links that reference one of the objects (nodes
+	// and/or comments) identified by the array of object IDs passed in. The links
+	// returned may be of any type.
+	getLinksContainingIds(objIdArray) {
 		let linksArray = [];
-		idArray.forEach((objId) => {
+		objIdArray.forEach((objId) => {
 			const linksForId = this.getLinksContainingId(objId);
 			if (linksForId.length > 0) {
-				linksArray = linksArray.concat(linksForId);
+				linksArray = CanvasUtils.concatUniqueBasedOnId(linksForId, linksArray);
 			}
 		});
 		return linksArray;
 	}
 
-	// Returns an array of fully-attached' links with id as the source ID.
+	// Returns an array of cloned node data links that reference one of the
+	// objects (nodes and/or comments) identified by the array of object IDs
+	// passed in. The links returned may be of any type.
+	getNodeDataLinksContainingIds(objIdArray) {
+		return this.getLinksContainingIds(objIdArray)
+			.filter((link) => link.type === NODE_LINK);
+	}
+
+	// Returns an array of links with id as the source ID.
 	getLinksContainingSourceId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.srcNodeId === id);
+		});
+	}
+
+	// Returns an array of links with id as the target ID.
+	getLinksContainingTargetId(id) {
+		return this.getLinks().filter((link) => {
+			return (link.trgNodeId === id);
+		});
+	}
+
+	// Returns an array of 'attached' links with id as the source ID.
+	// Note If the link has a srcNodeId and trgNodeId it is attached.
+	getAttachedLinksContainingSourceId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.srcNodeId === id && link.trgNodeId);
 		});
 	}
 
-	// Returns an array of fully-attached' links with id as the target ID.
-	getLinksContainingTargetId(id) {
+	// Returns an array of 'attached' links with id as the target ID.
+	// Note: If the link has a trgNodeId and srcNodeId it is attached.
+	getAttachedLinksContainingTargetId(id) {
 		return this.getLinks().filter((link) => {
 			return (link.trgNodeId === id && link.srcNodeId);
 		});

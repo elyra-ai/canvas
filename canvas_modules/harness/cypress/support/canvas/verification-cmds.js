@@ -27,6 +27,11 @@ const nodesInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-grou
 const nodesInSubFlowInSubFlowSelector = ".d3-svg-canvas-div > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group > .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group> .svg-area > .d3-canvas-group > .d3-nodes-links-group > .d3-node-group";
 
 
+Cypress.Commands.add("verifyNumberOfBreadcrumbs", (noOfBreadcrumbs) => {
+	cy.get(".harness-pipeline-breadcrumbs-label")
+		.should("have.length", noOfBreadcrumbs);
+});
+
 Cypress.Commands.add("verifyNodeTransform", (nodeLabel, x, y) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
@@ -325,17 +330,7 @@ Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(dataLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(dataLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(dataLinkSelector).should("have.length", noOfLinks);
-				}
+				cy.get(dataLinkSelector).should("have.length", noOfLinks);
 			});
 		} else {
 			// No Port Data Links found on canvas
@@ -393,17 +388,7 @@ Cypress.Commands.add("verifyNumberOfCommentLinks", (noOfCommentLinks) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(commentLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(commentLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfCommentLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(commentLinkSelector).should("have.length", noOfCommentLinks);
-				}
+				cy.get(commentLinkSelector).should("have.length", noOfCommentLinks);
 			});
 		} else {
 			// No comment links found on canvas
@@ -421,17 +406,7 @@ Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) =>
 	cy.get("body").then(($body) => {
 		if ($body.find(assocLinkSelector).length) {
 			cy.document().then((doc) => {
-				if (doc.canvasController.getCanvasConfig().enableConnectionType === "Halo") {
-					// Connection Type - Halo
-					cy.get(assocLinkSelector)
-						.its("length")
-						.then((canvasLinks) => {
-							expect(canvasLinks).to.equal(noOfAssociationLinks);
-						});
-				} else {
-					// Connection Type - Ports
-					cy.get(assocLinkSelector).should("have.length", noOfAssociationLinks);
-				}
+				cy.get(assocLinkSelector).should("have.length", noOfAssociationLinks);
 			});
 		} else {
 			// No comment links found on canvas
@@ -901,6 +876,16 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 		});
 });
 
+Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
+	cy.get(".toolbar-div")
+		.find("." + action + "-action > button")
+		.then((buttons) => {
+			const classList = Array.from(buttons[0].classList);
+			const enabled = !classList.includes("bx--btn--disabled");
+			expect(enabled).to.equal(state);
+		});
+});
+
 Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 	cy.getPipeline()
 		.then((pipeline) => {
@@ -908,6 +893,29 @@ Cypress.Commands.add("verifyPrimaryPipelineZoomInCanvasInfo", (x, y, k) => {
 			compareCloseTo(zoom.x, x);
 			compareCloseTo(zoom.y, y);
 			expect((Math.round(zoom.k * 100))).to.equal(k * 100);
+		});
+});
+
+Cypress.Commands.add("verifyTipClass", (tip, className) => {
+	cy.wrap(tip).should("have.class", className);
+});
+
+Cypress.Commands.add("verifyTipForToolbarItem", (toolbarItem, tipText) => {
+	cy.getToolbarAction(toolbarItem)
+		.find(".tooltip-trigger")
+		.then((item) => {
+			const toolbarTipSelector = "[data-id='" + item[0].getAttribute("data-id").replace("tooltip-trigger", "tooltip") + "']";
+			cy.get(toolbarTipSelector)
+				.then((tip) => {
+					// Verify tip is displayed on canvas
+					cy.wrap(tip).should("have.length", 1);
+
+					// Verify tip label
+					cy.wrap(tip).should("have.text", tipText);
+
+					// Verify toolbar tip class
+					cy.verifyTipClass(tip, "icon-tooltip");
+				});
 		});
 });
 
@@ -946,6 +954,15 @@ Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
 		});
 });
 
+Cypress.Commands.add("verifyTipDoesNotShowForCategory", (nodeCategory) => {
+	cy.findCategory(nodeCategory)
+		.invoke("attr", "data-id")
+		.then((dataId) => {
+			cy.get(`div[data-id='paletteTip_${dataId}']`)
+				.should("have.attr", "aria-hidden", "true");
+		});
+});
+
 Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
 	// Verify the tip doesn't show for node in category
 	cy.get(".tip-palette-item")
@@ -974,6 +991,9 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 					cy.wrap(tip)
 						.find(".tip-node-label")
 						.should("have.text", nodeName);
+
+					// Verify node tip class
+					cy.verifyTipClass(tip, "definition-tooltip");
 				});
 		});
 });
@@ -1010,6 +1030,9 @@ Cypress.Commands.add("verifyTipForNodeInSupernodeAtLocation", (nodeName, superno
 					cy.wrap(tip)
 						.find(".tip-node-label")
 						.should("have.text", nodeName);
+
+					// Verify node tip class
+					cy.verifyTipClass(tip, "definition-tooltip");
 				});
 		});
 });
@@ -1036,6 +1059,9 @@ Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, port
 							cy.wrap(tip)
 								.get(".tip-port")
 								.should("have.text", portName);
+
+							// Verify port tip class
+							cy.verifyTipClass(tip, "definition-tooltip");
 						});
 				});
 		});
@@ -1069,6 +1095,9 @@ Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, po
 							cy.wrap(tip)
 								.get(".tip-port")
 								.should("have.text", portName);
+
+							// Verify port tip class
+							cy.verifyTipClass(tip, "definition-tooltip");
 						});
 				});
 		});
@@ -1091,12 +1120,36 @@ Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, target
 			cy.wrap(tip)
 				.find("#tooltipContainer")
 				.should("have.text", linkLabel);
+
+			// Verify link tip class
+			cy.verifyTipClass(tip, "definition-tooltip");
 		});
 
 });
 
 Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
 	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+		.should("not.exist");
+});
+
+Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+		.then((tip) => {
+			// Verify tip is displayed on canvas
+			cy.wrap(tip).should("have.length", 1);
+
+			// Verify tip label
+			cy.wrap(tip)
+				.find(".tip-decoration")
+				.should("have.text", tipText);
+
+			// Verify node tip class
+			cy.verifyTipClass(tip, "definition-tooltip");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForDecoration", () => {
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
 		.should("not.exist");
 });
 
@@ -1166,6 +1219,14 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	} else {
 		cy.get(".notification-panel-" + id).should("not.exist");
 	}
+});
+
+Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue) => {
+	cy.findNodeInCategory(nodeLabel)
+		.invoke("attr", "data-id")
+		.then((dataId) => {
+			expect(dataId).to.equal(dataIdValue);
+		});
 });
 
 // Compares two pixel value to see if they are within the compareRange value or not.

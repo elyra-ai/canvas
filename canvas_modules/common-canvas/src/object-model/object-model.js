@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint arrow-body-style: ["off"] */
 
-import LayoutDimensions from "./layout-dimensions.js";
 import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
+import ConfigUtils from "./config-utils.js";
 import LocalStorage from "../common-canvas/local-storage.js";
 import APIPipeline from "./api-pipeline.js";
 import CanvasStore from "./redux/canvas-store.js";
 import Logger from "../logging/canvas-logger.js";
 
-import differenceWith from "lodash/differenceWith";
-import isEmpty from "lodash/isEmpty";
-import has from "lodash/has";
-import union from "lodash/union";
+import { cloneDeep, differenceWith, get, has, isEmpty, set, union } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "@elyra/pipeline-schemas";
@@ -37,8 +33,10 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 
 
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
-	CLONE_PIPELINE, SUPER_NODE, HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM,
-	HIGHLIGHT_DOWNSTREAM } from "../common-canvas/constants/canvas-constants.js";
+	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
+	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
+	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
+} from "../common-canvas/constants/canvas-constants.js";
 
 export default class ObjectModel {
 
@@ -76,7 +74,7 @@ export default class ObjectModel {
 	}
 
 	setSchemaValidation(schemaValidation) {
-		this.schemaValidation = schemaValidation;
+		this.setCanvasConfig({ schemaValidation });
 	}
 
 	setSelectionChangeHandler(selectionChangeHandler) {
@@ -84,7 +82,16 @@ export default class ObjectModel {
 	}
 
 	setLayoutHandler(layoutHandler) {
-		this.layoutHandler = layoutHandler;
+		if (layoutHandler !== this.layoutHandler) {
+			this.layoutHandler = layoutHandler;
+			const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, this.getNodeLayout(), this.getCanvasLayout());
+			this.store.dispatch({ type: "REPLACE_PIPELINES", data: { pipelines: newPipelines } });
+		}
+	}
+
+	// Returns the redux store
+	getStore() {
+		return this.store.getStore();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -124,7 +131,7 @@ export default class ObjectModel {
 
 	setPipelineFlowPalette(paletteData) {
 		if (!paletteData || isEmpty(paletteData)) {
-			this.store.dispatch({ type: "SET_PALETTE_DATA", data: {} });
+			this.clearPaletteData();
 			return;
 		}
 		// TODO - this method is called by App.js test harness. Remove this check and
@@ -135,11 +142,49 @@ export default class ObjectModel {
 		}
 
 		const newPalData = this.validateAndUpgradePalette(palData);
-		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
+		this.store.dispatch({ type: "SET_PALETTE_DATA", data: { content: newPalData } });
 	}
 
 	getPaletteData() {
 		return this.store.getPaletteData();
+	}
+
+	togglePalette() {
+		if (this.isPaletteOpen()) {
+			this.closePalette();
+		} else {
+			this.openPalette();
+		}
+	}
+
+	openPalette() {
+		this.store.dispatch({ type: "SET_PALETTE_OPEN_STATE", data: { isOpen: true } });
+	}
+
+	// Initializes the palette state based on paletteInitialState.
+	// TODO - Remove this when paletteInitialState is removed from common-canvas.
+	openPaletteIfNecessary(canvasConfig) {
+		if (canvasConfig &&
+				typeof this.store.getPalette().isOpen === "undefined" &&
+				typeof canvasConfig.paletteInitialState !== "undefined") {
+			if (canvasConfig.paletteInitialState) {
+				this.openPalette();
+			} else {
+				this.closePalette();
+			}
+		}
+	}
+
+	closePalette() {
+		this.store.dispatch({ type: "SET_PALETTE_OPEN_STATE", data: { isOpen: false } });
+	}
+
+	isPaletteOpen() {
+		// TODO - We can just return isOpen directly from here when
+		// paletteInitialState is removed from common-canvas and isOpen can be
+		// initialized correctly in canvas-store.
+		const isOpen = this.store.getPalette().isOpen;
+		return (typeof isOpen === "undefined" ? false : isOpen);
 	}
 
 	setCategoryLoadingText(categoryId, loadingText) {
@@ -165,7 +210,7 @@ export default class ObjectModel {
 
 		this.store.dispatch({ type: "ADD_NODE_TYPES_TO_PALETTE", data: nodeTypePaletteData });
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePaletteAgainstSchema(this.getPaletteData(), LATEST_PALETTE_VERSION);
 		}
 	}
@@ -178,65 +223,59 @@ export default class ObjectModel {
 	// format) to a nodeTemplate compatible with the internal format stored in the
 	// object model.
 	convertNodeTemplate(nodeTemplate) {
+		let node = null;
 		if (nodeTemplate) {
-			// Clone the template so we cannot accidentally modify any of its fields.
-			const newNodeTemplate = JSON.parse(JSON.stringify(nodeTemplate));
+			node = PipelineInHandler.convertNode(nodeTemplate, this.getCanvasLayout());
 
-			if (newNodeTemplate.app_data) {
-				// Flatten app_data.ui_data fields into top level fields in the new template.
-				if (newNodeTemplate.app_data.ui_data) {
-					newNodeTemplate.label = nodeTemplate.app_data.ui_data.label;
-					newNodeTemplate.image = nodeTemplate.app_data.ui_data.image;
-					newNodeTemplate.description = nodeTemplate.app_data.ui_data.description;
-					newNodeTemplate.class_name = nodeTemplate.app_data.ui_data.class_name;
-					newNodeTemplate.decorations = nodeTemplate.app_data.ui_data.decorations;
-					newNodeTemplate.messages = nodeTemplate.app_data.ui_data.messages;
-
-					// We can remove the app_data.ui_data now its fields have been flattened.
-					delete newNodeTemplate.app_data.ui_data;
-				}
+			// PipelineInHandler will not handle the app_data.pipeline_data field of
+			// supernodes so...
+			if (node.type === SUPER_NODE) {
+				node = this.convertPipelineData(node);
 			}
-
-			if (nodeTemplate.inputs) {
-				newNodeTemplate.inputs = newNodeTemplate.inputs.map((port) => this.convertPort(port));
-			}
-
-			if (nodeTemplate.outputs) {
-				newNodeTemplate.outputs = newNodeTemplate.outputs.map((port) => this.convertPort(port));
-			}
-
-			return newNodeTemplate;
+			return node;
 		}
 		return null;
 	}
 
-	// Converts an incoming port (either input or output ) from a nodetemplate
-	// from the palette to an internal format port by flattening the app_data.ui_data
-	// fields into the port object itself.
-	convertPort(port) {
-		const newPort = Object.assign({}, port);
-		if (port.app_data && port.app_data.ui_data) {
-			if (port.app_data.ui_data.label) {
-				newPort.label = port.app_data.ui_data.label;
-			}
-			if (port.app_data.ui_data.cardinality) {
-				newPort.cardinality = port.app_data.ui_data.cardinality;
-			}
-			if (port.app_data.ui_data.class_name) {
-				newPort.class_name = port.app_data.ui_data.class_name;
-			}
-			// We can remove this now its fields have been flattened.
-			delete newPort.app_data.ui_data;
+	convertPipelineData(supernode) {
+		const pd = get(supernode, "app_data.pipeline_data");
+		let newPd;
+		if (pd) {
+			newPd = supernode.subflow_ref.url
+				? []
+				: PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pd, this.getCanvasLayout());
+			// Need to make sure pipeline IDs are unique.
+			newPd = this.cloneSupernodeContents(supernode, newPd);
+
+		} else {
+			const newPipeline = this.createEmptyPipeline();
+			newPd = [newPipeline];
+			set(supernode, "subflow_ref.pipeline_id_ref", newPipeline.id);
 		}
-		return newPort;
+		set(supernode, "app_data.pipeline_data", newPd);
+		return supernode;
 	}
 
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
-		if (!isEmpty(this.getPaletteData())) {
+		if (nodeOpIdRef && !isEmpty(this.getPaletteData())) {
 			this.getPaletteData().categories.forEach((category) => {
 				category.node_types.forEach((nodeType) => {
 					if (nodeType.op === nodeOpIdRef) {
+						outNodeType = nodeType;
+					}
+				});
+			});
+		}
+		return outNodeType;
+	}
+
+	getPaletteNodeById(nodeId) {
+		let outNodeType = null;
+		if (!isEmpty(this.getPaletteData())) {
+			this.getPaletteData().categories.forEach((category) => {
+				category.node_types.forEach((nodeType) => {
+					if (nodeType.id === nodeId) {
 						outNodeType = nodeType;
 					}
 				});
@@ -259,18 +298,18 @@ export default class ObjectModel {
 
 	validateAndUpgradePalette(newPalette) {
 		// Clone the palette to ensure we don't modify the incoming parameter.
-		let pal = JSON.parse(JSON.stringify(newPalette));
+		let pal = cloneDeep(newPalette);
 
 		const version = extractPaletteVersion(pal);
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePaletteAgainstSchema(pal, version);
 		}
 
 		if (version !== LATEST_PALETTE_VERSION) {
 			pal = upgradePalette(pal);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePaletteAgainstSchema(pal, LATEST_PALETTE_VERSION);
 			}
 		}
@@ -346,12 +385,6 @@ export default class ObjectModel {
 			return;
 		}
 
-		// If there's no current layout info then add some default layout before
-		// setting canvas info. This is mainly necessary for Jest testcases.
-		if (isEmpty(this.getLayoutInfo())) {
-			this.setDefaultLayout();
-		}
-
 		const canvasInfo = this.preparePipelineFlow(newPipelineFlow);
 
 		this.executeWithSelectionChange(this.store.dispatch, {
@@ -362,32 +395,48 @@ export default class ObjectModel {
 	}
 
 	// Ensures the pipelines being handled is loaded in memory which might not
-	// be the case if it is an external pipeline.
+	// be the case if it is an external pipeline. The data parameter is expected
+	// to contain targetObject (which is the supernode) and externalPipelineFlow
+	// which is the pipeline flow referenced by the supernode's URL. Returns
+	// true if a pipeline flow was loaded and false if not.
 	ensurePipelineIsLoaded(data) {
-		const url = data.targetObject.subflow_ref.url;
-		const pipelineId = data.targetObject.subflow_ref.pipeline_id_ref;
+		const snPipelineUrl = this.getSupernodePipelineUrl(data.targetObject);
+		const snPipelineId = this.getSupernodePipelineId(data.targetObject);
 
 		// If the pipeline isn't loaded check to make sure the external pipeline
 		// flow provided contains the target pipeline and, if so, load the pipeline
 		// flow into memory.
-		if (!this.isPipelineLoaded(pipelineId, url)) {
-			if (this.flowContainsPipeline(data.externalPipelineFlow, pipelineId)) {
-				this.addExternalPipelineFlow(data.externalPipelineFlow, data.externalUrl, true);
-				return;
+		if (!this.isPipelineLoaded(snPipelineId, snPipelineUrl)) {
+			// If no pipeline flow is provided from beforeEditActionHandler we cannot
+			// continue otherwise an endless loop will occur. So throw and exception.
+			if (!data.externalPipelineFlow) {
+				const msg = "The external pipeline flow at '" + data.externalUrl +
+					"' was not provided. Make sure you have implemented beforeEditActionHandler to support external pipeline flows.";
+				this.logger.error(msg);
+				throw msg;
 			}
-			this.logger.error("The external pipeline flow '" + data.externalUrl + "' does not contain a pipeline with ID: " + pipelineId);
+
+			// If the flow doesn't contain the pipeline we're looking for.
+			if (!this.flowContainsPipeline(data.externalPipelineFlow, snPipelineId)) {
+				const msg = "The external pipeline flow '" + data.externalPipelineFlow.id +
+					"' does not contain a pipeline with ID: " + snPipelineId;
+				this.logger.error(msg);
+				throw msg;
+			}
+
+			this.addExternalPipelineFlow(data.externalPipelineFlow, snPipelineUrl, data.targetObject, true);
+			return true;
 		}
+		return false;
 	}
 
 	// Returns an array of 'visible' supernodes that refer to external pipelines
 	// which are not currently loaded into memory. 'Visible' in this context means
 	// they are either in the primary pipeline flow or are within the sub-flow
 	// of an expanded supernode.
-	getVisibleExpandedSupernodes() {
-		const canvasInfo = this.getCanvasInfo();
-		const topLevelPipelineId = this.getAPIPipeline().pipelineId;
-		const topLevelPipeline = canvasInfo.pipelines.find((p) => p.id === topLevelPipelineId);
-		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(topLevelPipeline, canvasInfo.pipelines);
+	getVisibleExpandedExternalSupernodes() {
+		const pipeline = this.getCurrentPipeline();
+		const supernodes = this.getVisibleExpandedExternalSupernodesForPipeline(pipeline, this.getPipelines());
 		return supernodes;
 	}
 
@@ -397,8 +446,7 @@ export default class ObjectModel {
 		let supernodes = [];
 		pipeline.nodes.forEach((n) => {
 			if (n.type === SUPER_NODE && n.is_expanded) {
-				// This might return falsey if the pipeline has not yet been loaded.
-				const subFlowPipeline = pipelines.find((p) => p.id === n.subflow_ref.pipeline_id_ref);
+				const subFlowPipeline = pipelines.find((p) => p.id === this.getSupernodePipelineId(n));
 
 				// If this expanded supernode refers to an external pipeline that is
 				// not yet loaded then save to our output.
@@ -427,10 +475,12 @@ export default class ObjectModel {
 
 	// Adds the external pipeline flow, which has been retrieved using the url,
 	// into memory. This means adding the pipelines into the standed set of
-	// pipelines in the canvas info and saving the non-pipelines properties from
-	// the pipeline flow with the externalpipelineflows reducer.
-	addExternalPipelineFlow(externalPipelineFlow, url, addPipelines) {
-		const convertedPf = this.preparePipelineFlow(externalPipelineFlow);
+	// pipelines in the canvas info and saving the pipeline flow properties
+	// (except for the pipelines property) using the externalpipelineflows
+	// reducer. shouldAddPipelines is a boolean that controls whether pipelines
+	// are added or not.
+	addExternalPipelineFlow(externalPipelineFlow, url, supernode, shouldAddPipelines = true) {
+		const convertedPf = this.preparePipelineFlow(externalPipelineFlow, supernode);
 		convertedPf.pipelines.forEach((p) => (p.parentUrl = url));
 
 		// Make a copy and remove the pipelines from the pipleine flow
@@ -441,56 +491,68 @@ export default class ObjectModel {
 		this.store.dispatch({
 			type: "ADD_EXTERNAL_PIPELINE_FLOW",
 			newPipelineFlow: newPipelineFlow,
-			newPipelines: addPipelines ? convertedPf.pipelines : []
+			newPipelines: shouldAddPipelines ? convertedPf.pipelines : []
 		});
 	}
 
-	removeExternalPipelineFlow(pipelineFlowId, url) {
+	// Removes the external pipeline flow specified by the url passed in.
+	removeExternalPipelineFlow(url) {
 		this.store.dispatch({
 			type: "REMOVE_EXTERNAL_PIPELINE_FLOW",
-			pipelineFlowId: pipelineFlowId,
 			externalUrl: url
 		});
 	}
 
-	// Create a pipeline flow artifact in the externalpipelineflows redux storage.
-	createExternalPipelineFlow(url, pipelineFlowId, pipelineId) {
-		const newPipelineFlow =
-			this.getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId);
-
-		this.store.dispatch({
-			type: "ADD_EXTERNAL_PIPELINE_FLOW",
-			newPipelineFlow: newPipelineFlow,
-			newPipelines: []
-		});
-	}
-
-	// Returns a new header object for the external pipeline flow. The pipelines
-	// will be added to the pipeline flow when it is retrieved using
+	// Returns a new header object for the external pipeline flow. A dummy
+	// pipeline will be added to the pipeline flow. This will be replaced by
+	// the actual pipelines when th epipeline flow  is retrieved using
 	// CommonCanvas.getExternalPipelineFlow.
-	getExternalPipelineFlowTemplate(url, pipelineFlowId, pipelineId) {
-		const newPipelineFlow = {
+	createExternalPipelineFlowTemplate(pipelineFlowId, pipelineId) {
+		return {
 			"doc_type": "pipeline",
 			"version": "3.0",
 			"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
 			"id": pipelineFlowId,
 			"primary_pipeline": pipelineId,
-			"pipelines": [],
+			"pipelines": [{ "id": "", "runtime_ref": "", "nodes": [] }],
 			"schemas": [],
 			"runtimes": []
 		};
-
-		// The url property is not part of the pipeline flow schema but it is
-		// needed to identify the pipeline flow in the external pipeline flows array
-		// with respect to the url it matches to.
-		newPipelineFlow.url = url;
-
-		return newPipelineFlow;
 	}
 
 	// Used by Cypress tests
 	getExternalPipelineFlows() {
 		return this.store.getExternalPipelineFlows();
+	}
+
+	// Returns a unique set of external pipeline flows corresponding
+	// to the the set of pipelines passed in.
+	getExternalPipelineFlowsForPipelines(pipelines) {
+		const urls = this.getUniqueUrls(pipelines);
+		return this.getExternalPipelineFlowsForUrls(urls);
+	}
+
+	// Returns a unique array of URLS from the array of pipelines passed in.
+	getUniqueUrls(pipelines) {
+		const urls = [];
+		pipelines.forEach((p) => {
+			if (p.parentUrl && !urls.includes(p.parentUrl)) {
+				urls.push(p.parentUrl);
+			}
+		});
+		return urls;
+	}
+
+	// Returns an array of external pipeline flows corresponding to the
+	// array of URLs passed in.
+	getExternalPipelineFlowsForUrls(urls) {
+		const extPipelineFlows = [];
+		urls.forEach((url) => {
+			const extFlow = this.getExternalPipelineFlow(url);
+			extFlow.url = url;
+			extPipelineFlows.push(extFlow);
+		});
+		return extPipelineFlows;
 	}
 
 	getExternalPipelineFlow(url) {
@@ -512,7 +574,7 @@ export default class ObjectModel {
 			pipelineFlow =
 				PipelineOutHandler.createPipelineFlow(pipelineFlow);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePipelineFlowAgainstSchema(pipelineFlow);
 			}
 
@@ -521,42 +583,33 @@ export default class ObjectModel {
 		return pipelineFlow;
 	}
 
-	convertSuperNodeExternalToLocal(data) {
-		if (has(data, "externalPipelineFlow.pipelines") &&
-				!this.isPipelineLoaded(data.supernodePipelineId, data.externalFlowUrl)) {
-			const preparedFlow = this.preparePipelineFlow(data.externalPipelineFlow);
-			data.newPipelines = preparedFlow.pipelines;
-		}
-
-		this.store.dispatch({ type: "CONVERT_SN_EXTERNAL_TO_LOCAL", data: data });
+	setParentUrl(pipelines, url) {
+		this.store.dispatch({ type: "SET_PIPELINE_PARENT_URL", data: { pipelines: pipelines, url: url } });
 	}
 
-	convertSuperNodeLocalToExternal(data) {
-		data.externalPipelineFlow =
-			this.getExternalPipelineFlowTemplate(
-				data.externalFlowUrl, data.externalPipelineFlowId, data.supernodePipelineId);
-		this.store.dispatch({ type: "CONVERT_SN_LOCAL_TO_EXTERNAL", data: data });
+	replaceSupernodeAndPipelines(data) {
+		this.store.dispatch({ type: "REPLACE_SN_AND_PIPELINES", data: data });
 	}
 
 	// Prepares a pipelineFlow to be loaded into memory in the canvas info. This
 	// involves flattening the pipleine flow hierarchy and adding layout info
 	// to the nodes in the pipelines.
-	preparePipelineFlow(newPipelineFlow) {
+	preparePipelineFlow(newPipelineFlow, supernode) {
 		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 		const canvasInfo = PipelineInHandler.convertPipelineFlowToCanvasInfo(pipelineFlow, this.getCanvasLayout());
-		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
+		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout(), supernode);
 		return canvasInfo;
 	}
 
 	// Does all preparation needed for nodes before they are saved into Redux.
-	prepareNodes(pipelines, nodeLayout, canvasLayout) {
-		const newPipelines = this.setSupernodesBindingStatus(pipelines);
+	prepareNodes(pipelines, nodeLayout, canvasLayout, supernode) {
+		const newPipelines = this.setSupernodesBindingStatus(pipelines, supernode);
 		return newPipelines.map((pipeline) => this.setPipelineObjectAttributes(pipeline, nodeLayout, canvasLayout));
 	}
 
 	// Loops through all the pipelines and adds the appropriate supernode binding
 	// attribute to any binding nodes that are referenced by the ports of a supernode.
-	setSupernodesBindingStatus(pipelines) {
+	setSupernodesBindingStatus(pipelines, supernode) {
 		// First, clear all supernode binding statuses from nodes
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
@@ -566,36 +619,46 @@ export default class ObjectModel {
 				});
 			}
 		});
+
+		if (supernode) {
+			this.setSupernodesBindingStatusForNode(supernode, pipelines);
+		}
+
 		// Set the supernode binding statuses as appropriate.
 		pipelines.forEach((pipeline) => {
 			if (pipeline.nodes) {
-				pipeline.nodes.forEach((node) => {
-					if (node.type === SUPER_NODE && node.subflow_ref && node.subflow_ref.pipeline_id_ref) {
-						if (node.inputs) {
-							node.inputs.forEach((input) => {
-								if (input.subflow_node_ref) {
-									const subNode = this.findNode(input.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
-									if (subNode) {
-										subNode.isSupernodeInputBinding = true;
-									}
-								}
-							});
-						}
-						if (node.outputs) {
-							node.outputs.forEach((output) => {
-								if (output.subflow_node_ref) {
-									const subNode = this.findNode(output.subflow_node_ref, node.subflow_ref.pipeline_id_ref, pipelines);
-									if (subNode) {
-										subNode.isSupernodeOutputBinding = true;
-									}
-								}
-							});
-						}
-					}
+				CanvasUtils.filterSupernodes(pipeline.nodes).forEach((node) => {
+					this.setSupernodesBindingStatusForNode(node, pipelines);
 				});
 			}
 		});
 		return pipelines;
+	}
+
+	setSupernodesBindingStatusForNode(node, pipelines) {
+		const snPipelineId = this.getSupernodePipelineId(node);
+		if (snPipelineId) {
+			if (node.inputs) {
+				node.inputs.forEach((input) => {
+					if (input.subflow_node_ref) {
+						const subNode = this.findNode(input.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeInputBinding = true;
+						}
+					}
+				});
+			}
+			if (node.outputs) {
+				node.outputs.forEach((output) => {
+					if (output.subflow_node_ref) {
+						const subNode = this.findNode(output.subflow_node_ref, snPipelineId, pipelines);
+						if (subNode) {
+							subNode.isSupernodeOutputBinding = true;
+						}
+					}
+				});
+			}
+		}
 	}
 
 	setPipelineObjectAttributes(inPipeline, nodeLayout, canvasLayout) {
@@ -640,10 +703,10 @@ export default class ObjectModel {
 		} else {
 			newNode = this.setNodeDimensionAttributesLeftRight(newNode, canvasLayout);
 		}
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
-			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridX);
-			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridY);
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
+			newNode.x_pos = CanvasUtils.snapToGrid(newNode.x_pos, canvasLayout.snapToGridXPx);
+			newNode.y_pos = CanvasUtils.snapToGrid(newNode.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newNode;
 	}
@@ -652,10 +715,10 @@ export default class ObjectModel {
 	// returned comment has its position adjusted for snap to grid, if necessary.
 	setCommentAttributesWithLayout(comment, canvasLayout) {
 		const newComment = Object.assign({}, comment);
-		if (canvasLayout.snapToGridType === "During" ||
-				canvasLayout.snapToGridType === "After") {
-			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridX);
-			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridY);
+		if (canvasLayout.snapToGridType === SNAP_TO_GRID_DURING ||
+				canvasLayout.snapToGridType === SNAP_TO_GRID_AFTER) {
+			newComment.x_pos = CanvasUtils.snapToGrid(newComment.x_pos, canvasLayout.snapToGridXPx);
+			newComment.y_pos = CanvasUtils.snapToGrid(newComment.y_pos, canvasLayout.snapToGridYPx);
 		}
 		return newComment;
 	}
@@ -681,29 +744,23 @@ export default class ObjectModel {
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
 	setNodeDimensionAttributesLeftRight(node, canvasLayout) {
-		if (canvasLayout.connectionType === "ports") {
-			node.inputPortsHeight = node.inputs
-				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.inputPortsHeight = node.inputs
+			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.outputPortsHeight = node.outputs
-				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.outputPortsHeight = node.outputs
+			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+		node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
 
-			if (node.type === SUPER_NODE && node.is_expanded) {
-				node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
-				// If an expanded height is provided make sure it is at least as big
-				// as the node height.
-				if (node.expanded_height) {
-					node.expanded_height = Math.max(node.expanded_height, node.height);
-				}
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
+			// If an expanded height is provided make sure it is at least as big
+			// as the node height.
+			if (node.expanded_height) {
+				node.expanded_height = Math.max(node.expanded_height, node.height);
 			}
-		} else { // 'halo' connection type
-			node.inputPortsHeight = 0;
-			node.outputPortsHeight = 0;
-			node.height = node.layout.defaultNodeHeight;
 		}
 		node.width = node.layout.defaultNodeWidth;
 
@@ -719,29 +776,23 @@ export default class ObjectModel {
 	// the height occupied by the input ports and output ports, based on the
 	// layout info passed in, as well as the node width.
 	setNodeDimensionAttributesVertical(node, canvasLayout) {
-		if (canvasLayout.connectionType === "ports") {
-			node.inputPortsWidth = node.inputs
-				? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.inputPortsWidth = node.inputs
+			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.outputPortsWidth = node.outputs
-				? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
-				: 0;
+		node.outputPortsWidth = node.outputs
+			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
+			: 0;
 
-			node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
+		node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
 
-			if (node.type === SUPER_NODE && node.is_expanded) {
-				node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
-				// If an expanded height is provided make sure it is at least as big
-				// as the node height.
-				if (node.expanded_width) {
-					node.expanded_width = Math.max(node.expanded_width, node.width);
-				}
+		if (node.type === SUPER_NODE && node.is_expanded) {
+			node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
+			// If an expanded height is provided make sure it is at least as big
+			// as the node height.
+			if (node.expanded_width) {
+				node.expanded_width = Math.max(node.expanded_width, node.width);
 			}
-		} else { // 'halo' connection type
-			node.inputPortsWidth = 0;
-			node.outputPortsWidth = 0;
-			node.width = node.layout.defaultNodeWidth;
 		}
 		node.height = node.layout.defaultNodeHeight;
 
@@ -755,48 +806,22 @@ export default class ObjectModel {
 
 	validateAndUpgrade(newPipelineFlow) {
 		// Clone the pipelineFlow to ensure we don't modify the incoming parameter.
-		let pipelineFlow = JSON.parse(JSON.stringify(newPipelineFlow));
+		let pipelineFlow = cloneDeep(newPipelineFlow);
 
 		const version = extractVersion(pipelineFlow);
 
-		if (this.schemaValidation) {
+		if (this.store.getCanvasConfig().schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow, version);
 		}
 
 		if (version !== LATEST_VERSION) {
 			pipelineFlow = upgradePipelineFlow(pipelineFlow);
 
-			if (this.schemaValidation) {
+			if (this.store.getCanvasConfig().schemaValidation) {
 				validatePipelineFlowAgainstSchema(pipelineFlow, LATEST_VERSION);
 			}
 		}
 		return pipelineFlow;
-	}
-
-	// Returns a pipeline flow based on the initial pipeline flow we were given
-	// with the changes to canvasinfo made by the user. We don't do this in the
-	// redux code because that would result is continuous update of the pipelineflow
-	// as the consuming app makes getPipelineFlow() calls which are difficult to
-	// handle when testing.
-	getPipelineFlow() {
-		const pipelineFlow =
-			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
-
-		if (this.schemaValidation) {
-			validatePipelineFlowAgainstSchema(pipelineFlow);
-		}
-
-		return pipelineFlow;
-	}
-
-	// Returns an array of pipelines based on the array of pipeline IDs
-	// passed in.
-	getPipelines(pipelineIds) {
-		const pipelines = [];
-		pipelineIds.forEach((pipelineId) => {
-			pipelines.push(this.getCanvasInfoPipeline(pipelineId));
-		});
-		return pipelines;
 	}
 
 	// Returns the pipeline for the ID passed or the primary pipeline if no
@@ -811,55 +836,178 @@ export default class ObjectModel {
 			pId = this.getPrimaryPipelineId();
 		}
 
-		const pipeline = canvasInfo.pipelines.find((p) => {
-			return p.id === pId;
-		});
+		const pipeline = canvasInfo.pipelines.find((p) => p.id === pId);
 
 		return (typeof pipeline === "undefined") ? null : pipeline;
 	}
 
-	// Returns an object with fields for supernode IDs with their values set
-	// to pipeline arrays for each supernode. The pipeline arrays are any
-	// descendent pipelines of the supernode being processed from the array
-	// of supernodes passed in.
-	getReferencedPipelines(supernodes) {
-		const pipelines = {};
-		supernodes.forEach((supernode) => {
-			if (has(supernode, "subflow_ref.pipeline_id_ref")) {
-				let pipelineIds = [supernode.subflow_ref.pipeline_id_ref];
-				pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-				pipelines[supernode.id] = this.getPipelines(pipelineIds);
-			}
-		});
-		return pipelines;
-	}
-
-	getDescendentPipelineIds(pipelineId) {
+	getDescendantPipelineIds(pipelineId) {
 		let pipelineIds = [];
 		this.getAPIPipeline(pipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const subPipelineId = this.getSupernodePipelineID(supernode);
-				if (subPipelineId) {
-					pipelineIds.push(subPipelineId);
-					pipelineIds = pipelineIds.concat(this.getDescendentPipelineIds(subPipelineId));
+				const snPipelineId = this.getSupernodePipelineId(supernode);
+				if (snPipelineId) {
+					pipelineIds.push(snPipelineId);
+					pipelineIds = pipelineIds.concat(this.getDescendantPipelineIds(snPipelineId));
 				}
 			});
 		return pipelineIds;
 	}
 
-	getDescendentPipelines(supernode) {
+	getDescendantPipelinesForSupernodes(supernodes) {
 		let pipelines = [];
-		const snPipelineId = this.getSupernodePipelineID(supernode);
+		supernodes.forEach((sn) => {
+			pipelines = pipelines.concat(this.getDescendantPipelinesForSupernode(sn));
+		});
+		return pipelines;
+	}
+
+	getDescendantPipelinesForSupernode(supernode) {
+		let pipelines = [];
+		const snPipelineId = this.getSupernodePipelineId(supernode);
 		if (snPipelineId) {
 			const subPipeline = this.getCanvasInfoPipeline(snPipelineId);
-			pipelines.push(subPipeline);
+			if (subPipeline) {
+				pipelines.push(subPipeline);
 
-			this.getAPIPipeline(snPipelineId).getSupernodes()
-				.forEach((supernode2) => {
-					pipelines = pipelines.concat(this.getDescendentPipelines(supernode2));
-				});
+				this.getAPIPipeline(snPipelineId).getSupernodes()
+					.forEach((supernode2) => {
+						pipelines = pipelines.concat(this.getDescendantPipelinesForSupernode(supernode2));
+					});
+			}
 		}
 		return pipelines;
+	}
+
+	// Returns an array of descendant pipelines, that conform to the schema, for
+	// the supernode passed in or an empty array if the supernode doesn't
+	// reference a pipeline. Only 'local' pipelines are returned not external
+	// ones.
+	getSchemaPipelinesForSupernode(supernode) {
+		const pipelines = this.getDescendantPipelinesForSupernode(supernode)
+			.filter((p) => !p.parentUrl);
+
+		return pipelines.map((p) => PipelineOutHandler.createPipeline(p));
+	}
+
+	// Returns an array of pipelines to delete if all the supernodes passed in
+	// were to be deleted.  That is the set of descendant pipelines referenced by
+	// the supernodes passed in, minus any external pipelines that are also
+	// referenced by other supernodes/pipelines outside of the array passed in.
+	// This situation may occur when two supernodes reference the same
+	// external pipeline and one is to be deleted but the other is to remain.
+	getDescPipelinesToDelete(supernodesToDel, parentPipelineId) {
+		const supernodeInfosToDel = this.getDescendantSupernodeInfos(supernodesToDel, parentPipelineId);
+		const otherSupernodeInfos = this.getOtherSupernodeInfos(supernodesToDel, parentPipelineId);
+
+		const pipelinesToDelete = [];
+		supernodeInfosToDel.forEach((sid) => {
+			if (this.shouldBeDeleted(sid, otherSupernodeInfos)) {
+				const p = this.getCanvasInfoPipeline(sid.pipelineId);
+				pipelinesToDelete.push(p);
+			}
+		});
+		return pipelinesToDelete;
+	}
+
+	// Returns true if the supernode info object indicates a pipeline that
+	// should be deleted because it is not referenced by any of the
+	// otherSupernodeInfos passed in.
+	shouldBeDeleted(supernodeInfo, otherSupernodeInfos) {
+		let state = true;
+		otherSupernodeInfos.forEach((osi) => {
+			if (osi.pipelineId === supernodeInfo.pipelineId) {
+				state = false;
+			}
+		});
+		return state;
+	}
+
+	// Returns an array of all pipelines from the entire canvas info, minus any
+	// pipelines that are descendants of the supernodes passed in (which all must
+	// be in the pipeline identified by parentPipelineId)
+	getOtherSupernodeInfos(supernodesToIgnore, parentPipelineId) {
+		const primaryPipelineId = this.getPrimaryPipelineId();
+		const primaryPipeline = this.getCanvasInfoPipeline(primaryPipelineId);
+		const supernodes = CanvasUtils.filterSupernodes(primaryPipeline.nodes);
+		return this.getDescendantSupernodeInfos(supernodes, primaryPipelineId,
+			{ supernodesToIgnore: supernodesToIgnore, parentPipelineId: parentPipelineId });
+	}
+
+	// Returns an array of pipelines that are the descendants of the array of
+	// supernodes passed in (which must all be in the pipeline identified by the
+	// parentPipelineId passed in) minus any descendant pipelines of the
+	// supernodes identified by the ignoreInfo object. This has these fields:
+	// supernodesToIgnore - an array of supernodes whose descendant pipelines
+	//                      should be ignored.
+	// parentPipelineId - the ID of the pipeline the supernodes are in.
+	getDescendantSupernodeInfos(supernodes, parentPipelineId, ignoreInfo) {
+		const outSupernodeInfos = [];
+		supernodes.forEach((sn) => {
+			const descInfo = this.getDescendantSupernodeInfosForSupernode(sn, parentPipelineId, ignoreInfo);
+			// Only insert new supernode infos into the array.
+			descInfo.forEach((di) => {
+				if (!this.isSupernodeInfoInArray(di, outSupernodeInfos)) {
+					outSupernodeInfos.push(di);
+				}
+			});
+		});
+		return outSupernodeInfos;
+	}
+
+	// Returns an array of pipelines that are the descendants of the
+	// supernode passed in (which must all be in the pipeline identified by the
+	// parentPipelineId passed in) minus any descendant pipelines of the
+	// supernodes identified by the ignoreInfo object. This has these fields:
+	// supernodesToIgnore - an array of supernodes whose descendant pipelines
+	//                      should be ignored.
+	// parentPipelineId - the ID of the pipeline the supernodes are in.
+	getDescendantSupernodeInfosForSupernode(supernode, parentPipelineId, ignoreInfo) {
+		let supernodeInfos = [];
+		if (this.continueNavigation(supernode, parentPipelineId, ignoreInfo)) {
+			const pipelineId = this.getSupernodePipelineId(supernode);
+			const pipeline = this.getCanvasInfoPipeline(pipelineId);
+			// An external pipeline might not be loaded if the supernode is collapsed.
+			if (pipeline) {
+				supernodeInfos.push({ pipelineId: pipelineId, supernode: supernode, parentPipelineId: parentPipelineId });
+				const supernodes = CanvasUtils.filterSupernodes(pipeline.nodes);
+				supernodes.forEach((sn) => {
+					supernodeInfos = supernodeInfos.concat(this.getDescendantSupernodeInfosForSupernode(sn, pipelineId, ignoreInfo));
+				});
+			}
+		}
+
+		return supernodeInfos;
+	}
+
+	// Returns true if the code should continue navigating down the supernode
+	// hierarchy from the supernode (in parentPipelineId) passed based on the
+	// ignoreInfo object.
+	continueNavigation(sn, parentPipelineId, ignoreInfo) {
+		if (ignoreInfo &&
+				ignoreInfo.parentPipelineId === parentPipelineId &&
+				ignoreInfo.supernodesToIgnore.some((sn2d) => sn2d.id === sn.id)) {
+			return false;
+		}
+		return true;
+	}
+
+	// Returns true if the supernode info object passed in is in the
+	// supernodeInfos array passed in.
+	isSupernodeInfoInArray(di, supernodeInfos) {
+		let found = false;
+		supernodeInfos.forEach((si) => {
+			if (this.isSupernodeInfoEqual(si, di)) {
+				found = true;
+			}
+		});
+		return found;
+	}
+
+	// Returns true if the two supernode info objects are the same.
+	isSupernodeInfoEqual(si1, si2) {
+		return si1.supernode.id === si2.supernode.id &&
+			si1.parentPipelineId === si2.parentPipelineId;
 	}
 
 	// Returns a list of the given pipelineId ancestors, from "oldest" to "youngest".
@@ -878,12 +1026,12 @@ export default class ObjectModel {
 		let ancestors = [];
 		this.getAPIPipeline(upperPipelineId).getSupernodes()
 			.forEach((supernode) => {
-				const subPipelineId = this.getSupernodePipelineID(supernode);
-				if (subPipelineId) {
-					if (this.isAncestorOfPipeline(subPipelineId, lowerPipelineId) || subPipelineId === lowerPipelineId) {
-						ancestors.push({ pipelineId: subPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
+				const snPipelineId = this.getSupernodePipelineId(supernode);
+				if (snPipelineId) {
+					if (this.isAncestorOfPipeline(snPipelineId, lowerPipelineId) || snPipelineId === lowerPipelineId) {
+						ancestors.push({ pipelineId: snPipelineId, label: supernode.label, supernodeId: supernode.id, parentPipelineId: upperPipelineId });
 					}
-					ancestors = ancestors.concat(this.getAncestorsBetween(subPipelineId, lowerPipelineId));
+					ancestors = ancestors.concat(this.getAncestorsBetween(snPipelineId, lowerPipelineId));
 				}
 			});
 		return ancestors;
@@ -891,16 +1039,21 @@ export default class ObjectModel {
 
 	// Returns true if ancestorId is an ancestor pipeline of pipelineId.
 	isAncestorOfPipeline(ancestorId, pipelineId) {
-		const decendents = this.getDescendentPipelineIds(ancestorId);
-		if (decendents.indexOf(pipelineId) > -1) {
-			return true;
-		}
-		return false;
+		return this.getDescendantPipelineIds(ancestorId).includes(pipelineId);
 	}
 
-	getSupernodePipelineID(supernode) {
-		if (has(supernode, "subflow_ref.pipeline_id_ref")) {
+	getSupernodePipelineId(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.pipeline_id_ref")) {
 			return supernode.subflow_ref.pipeline_id_ref;
+		}
+		return null;
+	}
+
+	getSupernodePipelineUrl(supernode) {
+		if (supernode.type === SUPER_NODE &&
+				has(supernode, "subflow_ref.url")) {
+			return supernode.subflow_ref.url;
 		}
 		return null;
 	}
@@ -911,7 +1064,7 @@ export default class ObjectModel {
 		let supernodeRef;
 		if (pipelineId === this.getPrimaryPipelineId()) {
 			const supernodes = this.getAPIPipeline(pipelineId).getSupernodes();
-			supernodeRef = supernodes.find((supernode) => has(supernode, "subflow_ref.pipeline_id_ref") && supernode.subflow_ref.pipeline_id_ref === pipelineId).id;
+			supernodeRef = supernodes.find((supernode) => this.getSupernodePipelineId(supernode) === pipelineId).id;
 		} else {
 			const ancestorPipelines = this.getAncestorPipelineIds(pipelineId);
 			const supernodePipelineObj = ancestorPipelines.find((pipelineObj) => pipelineObj.pipelineId === pipelineId && has(pipelineObj, "supernodeId"));
@@ -921,19 +1074,29 @@ export default class ObjectModel {
 	}
 
 	setCanvasInfo(inCanvasInfo) {
-		// If there's no current layout info then add some default layout before
-		// setting canvas info. This is mainly necessary for Jest testcases.
-		if (isEmpty(this.getLayoutInfo())) {
-			this.setDefaultLayout();
-		}
 		const canvasInfo = Object.assign({}, inCanvasInfo);
 		canvasInfo.pipelines = this.prepareNodes(canvasInfo.pipelines, this.getNodeLayout(), this.getCanvasLayout());
 		this.store.dispatch({ type: "SET_CANVAS_INFO", canvasInfo: canvasInfo, canvasInfoIdChanged: this.hasCanvasInfoIdChanged(canvasInfo) });
 	}
 
-	isPrimaryPipelineEmpty() {
-		const primaryPipeline = this.getAPIPipeline(this.getCanvasInfo().primary_pipeline);
-		return primaryPipeline.isEmpty();
+	// Returns a pipeline flow based on the initial pipeline flow we were given
+	// with the changes to canvasinfo made by the user. We don't do this in the
+	// redux code because that would result is continuous update of the pipelineflow
+	// as the consuming app makes getPipelineFlow() calls which are difficult to
+	// handle when testing.
+	getPipelineFlow() {
+		const pipelineFlow =
+			PipelineOutHandler.createPipelineFlow(this.getCanvasInfo());
+
+		if (this.store.getCanvasConfig().schemaValidation) {
+			validatePipelineFlowAgainstSchema(pipelineFlow);
+		}
+
+		return pipelineFlow;
+	}
+
+	getPipelines() {
+		return this.getCanvasInfo().pipelines;
 	}
 
 	getPipelineFlowId() {
@@ -944,8 +1107,20 @@ export default class ObjectModel {
 		return this.getCanvasInfo().primary_pipeline;
 	}
 
-	addPipeline(pipeline) {
-		this.store.dispatch({ type: "ADD_PIPELINE", data: pipeline });
+	getPrimaryPipeline() {
+		return this.getCanvasInfoPipeline(this.getPrimaryPipelineId());
+	}
+
+	getCurrentPipeline() {
+		return this.getCanvasInfoPipeline(this.getCurrentPipelineId());
+	}
+
+	getCurrentPipelineId() {
+		return this.getCurrentBreadcrumb().pipelineId;
+	}
+
+	isPrimaryPipelineEmpty() {
+		return this.getAPIPipeline(this.getPrimaryPipelineId()).isEmpty();
 	}
 
 	deletePipeline(pipelineId) {
@@ -977,62 +1152,43 @@ export default class ObjectModel {
 		return false;
 	}
 
-	// Clones the contents of the input node (which is expected to be a supernode)
-	// and returns an array of cloned pipelines from the inPipelines array that
-	// correspond to descendents of the supernode passed in. The returned
-	// pipelines are in the internal 'canvasinfo' format.
-	cloneSuperNodeContents(node, inPipelines) {
+	// Clones the contents of the input node (which is expected to be a supernode
+	// with a reference to one of the pipelines passed in) and returns an array
+	// of cloned pipelines from the inPipelines array that correspond to
+	// descendants of the supernode passed in.
+	cloneSupernodeContents(node, inPipelines) {
 		let subPipelines = [];
-		if (node.type === SUPER_NODE &&
-				has(node, "subflow_ref.pipeline_id_ref")) {
-			const targetPipeline = inPipelines.find((inPipeline) => inPipeline.id === node.subflow_ref.pipeline_id_ref);
-			const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
-			node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
-			const canvInfoPipeline =
-				PipelineInHandler.convertPipelineToCanvasInfoPipeline(clonedPipeline, this.getCanvasLayout());
+		const snPipelineId = this.getSupernodePipelineId(node);
+		if (snPipelineId) {
+			const targetPipeline = inPipelines.find((p) => p.id === snPipelineId);
+			// A target pipeline may not exist if the supernode is external. In which
+			// case, its pipelines will not be in the inPipelines array.
+			if (targetPipeline) {
+				const clonedPipeline = this.clonePipelineWithNewId(targetPipeline);
+				node.subflow_ref.pipeline_id_ref = clonedPipeline.id;
 
-			subPipelines.push(canvInfoPipeline);
+				subPipelines.push(clonedPipeline);
 
-			clonedPipeline.nodes.forEach((clonedNode) => {
-				if (clonedNode.type === SUPER_NODE) {
-					const extraPipelines = this.cloneSuperNodeContents(clonedNode, inPipelines);
-					subPipelines = subPipelines.concat(extraPipelines);
-				}
-			});
+				clonedPipeline.nodes.forEach((clonedNode) => {
+					if (clonedNode.type === SUPER_NODE) {
+						const extraPipelines = this.cloneSupernodeContents(clonedNode, inPipelines);
+						subPipelines = subPipelines.concat(extraPipelines);
+					}
+				});
+			}
 		}
 		return subPipelines;
 	}
 
 	// Clone the pipeline and assigns it a new id.
 	clonePipelineWithNewId(pipeline) {
-		const clonedPipeline = JSON.parse(JSON.stringify(pipeline));
+		const clonedPipeline = cloneDeep(pipeline);
 		return Object.assign({}, clonedPipeline, { id: this.getUniqueId(CLONE_PIPELINE, { "pipeline": clonedPipeline }) });
-	}
-
-	// Returns an array of pipelines, that conform to the schema, for the
-	// supernode passed in or an empty array if the supernode doesn't reference
-	// a pipeline.
-	getSubPipelinesForSupernode(supernode) {
-		const schemaPipelines = [];
-		if (supernode.type === SUPER_NODE &&
-				has(supernode, "subflow_ref.pipeline_id_ref")) {
-			let subPipelines = [supernode.subflow_ref.pipeline_id_ref];
-			subPipelines = subPipelines.concat(this.getDescendentPipelineIds(supernode.subflow_ref.pipeline_id_ref));
-
-			subPipelines.forEach((subPiplineId) => {
-				const canvInfoPipeline = this.getCanvasInfoPipeline(subPiplineId);
-				const schemaPipeline = PipelineOutHandler.createPipeline(canvInfoPipeline);
-				schemaPipelines.push(schemaPipeline);
-			});
-		}
-		return schemaPipelines;
 	}
 
 	createCanvasInfoPipeline(pipelineInfo) {
 		const newPipelineId = this.getUniqueId(CREATE_PIPELINE, { pipeline: pipelineInfo });
-		const newCanvasInfoPipeline = Object.assign({}, pipelineInfo);
-		newCanvasInfoPipeline.id = newPipelineId;
-		return newCanvasInfoPipeline;
+		return Object.assign({}, pipelineInfo, { id: newPipelineId });
 	}
 
 	getCanvasInfo() {
@@ -1054,14 +1210,10 @@ export default class ObjectModel {
 	}
 
 	findNode(nodeId, pipelineId, pipelines) {
-		const targetPipeline = pipelines.find((p) => {
-			return (p.id === pipelineId);
-		});
+		const targetPipeline = pipelines.find((p) => p.id === pipelineId);
 
 		if (targetPipeline && targetPipeline.nodes) {
-			return targetPipeline.nodes.find((node) => {
-				return (node.id === nodeId);
-			});
+			return targetPipeline.nodes.find((node) => node.id === nodeId);
 		}
 		return null;
 	}
@@ -1070,15 +1222,34 @@ export default class ObjectModel {
 	// Breadcrumbs methods
 	// ---------------------------------------------------------------------------
 
-	// Adds a new breadcrumb, for the pipelineInfo passed in, to the array of
-	// breadcrumbs, or reset the breadcrumbs to the primary pipeline if navigating
-	// to the primary pipeline.
-	addNewBreadcrumb(pipelineInfo) {
-		if (pipelineInfo && pipelineInfo.pipelineId !== this.getPrimaryPipelineId()) {
-			this.store.dispatch({ type: "ADD_NEW_BREADCRUMB", data: pipelineInfo });
+	createBreadcrumb(supernodeDatum, parentPipelineId) {
+		return {
+			pipelineId: supernodeDatum.subflow_ref.pipeline_id_ref,
+			supernodeId: supernodeDatum.id,
+			supernodeParentPipelineId: parentPipelineId,
+			externalUrl: supernodeDatum.subflow_ref.url,
+			label: supernodeDatum.label
+		};
+	}
+
+	addBreadcrumb(data) {
+		if (data && data.pipelineId !== this.getPrimaryPipelineId()) {
+			this.store.dispatch({ type: "ADD_BREADCRUMB", data: data });
 		} else {
 			this.resetBreadcrumb();
 		}
+	}
+
+	addBreadcrumbs(data) {
+		this.store.dispatch({ type: "ADD_BREADCRUMBS", data: data });
+	}
+
+	setIndexedBreadcrumb(data) {
+		this.store.dispatch({ type: "SET_TO_INDEXED_BREADCRUMB", data: data });
+	}
+
+	setBreadcrumbs(breadcrumbs) {
+		this.store.dispatch({ type: "SET_BREADCRUMBS", data: { breadcrumbs: breadcrumbs } });
 	}
 
 	// Sets the breadcrumbs to the previous breadcrumb in the breadcrumbs array.
@@ -1088,7 +1259,7 @@ export default class ObjectModel {
 
 	// Sets the breadcrumbs to the primary pipeline in the breadcrumbs array.
 	resetBreadcrumb() {
-		this.store.dispatch({ type: "RESET_BREADCRUMB", data: { pipelineId: this.getPrimaryPipelineId(), pipelineFlowId: this.getPipelineFlowId() } });
+		this.store.dispatch({ type: "RESET_BREADCRUMB", data: { pipelineId: this.getPrimaryPipelineId() } });
 	}
 
 	getBreadcrumbs() {
@@ -1111,40 +1282,43 @@ export default class ObjectModel {
 	// Returns true if the pipelineId passed in is not the primary pipeline
 	// breadcrumb. In other words, we are showing a sub-flow full screen.
 	isInSubFlowBreadcrumb(pipelineId) {
-		const idx = this.getBreadcrumbs().findIndex((crumb) => {
-			return crumb.pipelineId === pipelineId;
-		});
+		const idx = this.getBreadcrumbs().findIndex((crumb) => crumb.pipelineId === pipelineId);
 		return (idx > 0); // Return true if index is not the parent
 	}
 
+	// ---------------------------------------------------------------------------
+	// Config methods
+	// ---------------------------------------------------------------------------
+	setCanvasConfig(config) {
+		const oldConfig = this.getCanvasConfig();
+		const newConfig = ConfigUtils.mergeCanvasConfigs(oldConfig, config);
+
+		if (!ConfigUtils.compareCanvasConfigs(oldConfig, newConfig)) {
+			const newPipelines = this.prepareNodes(
+				this.getCanvasInfo().pipelines, newConfig.enableNodeLayout, newConfig.enableCanvasLayout);
+
+			this.store.dispatch({ type: "SET_CANVAS_CONFIG_INFO", data: {
+				canvasConfig: newConfig,
+				pipelines: newPipelines
+			} });
+		}
+	}
+
+	setToolbarConfig(config) {
+		this.store.dispatch({ type: "SET_TOOLBAR_CONFIG", data: { toolbarConfig: config } });
+	}
+
+	setNotificationPanelConfig(config) {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_CONFIG", data: { notificationPanelConfig: config } });
+	}
+
+	getCanvasConfig() {
+		return this.store.getCanvasConfig();
+	}
 
 	// ---------------------------------------------------------------------------
 	// Layout Info methods
 	// ---------------------------------------------------------------------------
-
-	setLayoutType(config) {
-		const layoutInfo = Object.assign({}, LayoutDimensions.getLayout(config));
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
-
-		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: layoutInfo,
-			pipelines: newPipelines
-		});
-	}
-
-	setDefaultLayout() {
-		const layoutInfo = LayoutDimensions.getLayout();
-		const newPipelines = this.prepareNodes(this.getCanvasInfo().pipelines, layoutInfo.nodeLayout, layoutInfo.canvasLayout);
-
-		this.store.dispatch({ type: "SET_LAYOUT_INFO",
-			layoutinfo: layoutInfo,
-			pipelines: newPipelines
-		});
-	}
-
-	getLayoutInfo() {
-		return this.store.getLayoutInfo();
-	}
 
 	getNodeLayout() {
 		return this.store.getNodeLayout();
@@ -1153,7 +1327,6 @@ export default class ObjectModel {
 	getCanvasLayout() {
 		return this.store.getCanvasLayout();
 	}
-
 
 	// ---------------------------------------------------------------------------
 	// Notification Messages methods
@@ -1164,31 +1337,201 @@ export default class ObjectModel {
 	}
 
 	setNotificationMessages(messages) {
-		const newMessages = [];
-		messages.forEach((message) => {
-			const newMessageObj = Object.assign({}, message);
-			if (newMessageObj.type === null || newMessageObj.type === "" || typeof newMessageObj.type === "undefined") {
-				newMessageObj.type = "unspecified";
-			}
-			newMessages.push(newMessageObj);
-		});
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
+		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: { messages: messages } });
 	}
 
 	getNotificationMessages(messageType) {
 		const notificationMessages = this.store.getNotifications();
 		if (messageType) {
-			return notificationMessages.filter((message) => {
-				return message.type === messageType;
-			});
+			return notificationMessages.filter((message) => message.type === messageType);
 		}
 		return notificationMessages;
 	}
 
 	deleteNotificationMessages(ids) {
-		const filterIds = Array.isArray(ids) ? ids : [ids];
-		const newMessages = this.getNotificationMessages().filter((message) => !filterIds.includes(message.id));
-		this.store.dispatch({ type: "SET_NOTIFICATION_MESSAGES", data: newMessages });
+		this.store.dispatch({ type: "DELETE_NOTIFICATION_MESSAGES", data: { ids: ids } });
+	}
+
+	toggleNotificationPanel() {
+		if (this.isNotificationPanelOpen()) {
+			this.closeNotificationPanel();
+		} else {
+			this.openNotificationPanel();
+		}
+	}
+
+	openNotificationPanel() {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_OPEN_STATE", data: { isOpen: true } });
+	}
+
+	closeNotificationPanel() {
+		this.store.dispatch({ type: "SET_NOTIFICATION_PANEL_OPEN_STATE", data: { isOpen: false } });
+	}
+
+	isNotificationPanelOpen() {
+		return this.store.isNotificationPanelOpen();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Context menu methods
+	// ---------------------------------------------------------------------------
+
+	openContextMenu(menuDef) {
+		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: menuDef } });
+	}
+
+	closeContextMenu() {
+		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: [] } });
+	}
+
+	isContextMenuDisplayed() {
+		return this.store.isContextMenuDisplayed();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Right flyout methods
+	// ---------------------------------------------------------------------------
+
+	setRightFlyoutConfig(config) {
+		this.store.dispatch({ type: "SET_RIGHT_FLYOUT_CONFIG", data: { config: config } });
+	}
+
+	isRightFlyoutOpen() {
+		return this.store.isRightFlyoutOpen();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Bottom panel methods
+	// ---------------------------------------------------------------------------
+
+	setBottomPanelConfig(config) {
+		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: config } });
+	}
+
+	isBottomPanelOpen() {
+		return this.store.isBottomPanelOpen();
+	}
+
+	// ---------------------------------------------------------------------------
+	// Clone methods
+	// ---------------------------------------------------------------------------
+	cloneObjectsToPaste(nodes, comments, links) {
+		const clonedNodesInfo = [];
+		const clonedCommentsInfo = [];
+		const clonedLinks = [];
+
+		if (nodes) {
+			nodes.forEach((node) => {
+				let clonedNode = this.cloneNode(node);
+				// Pipelines in app_data.pipeline_data in supernodes will be in schema
+				// format (conforming to the pipeline flow schema) so they must be converted.
+				if (clonedNode.type === SUPER_NODE) {
+					clonedNode = this.convertPipelineData(clonedNode);
+				}
+				clonedNodesInfo.push({ originalId: node.id, node: clonedNode });
+			});
+		}
+
+		if (comments) {
+			comments.forEach((comment) => {
+				clonedCommentsInfo.push({ originalId: comment.id, comment: this.cloneComment(comment) });
+			});
+		}
+
+		if (links) {
+			links.forEach((link) => {
+				if (link.type === "nodeLink" || link.type === "associationLink") {
+					const srcClonedNode = this.findClonedNode(link.srcNodeId, clonedNodesInfo);
+					const trgClonedNode = this.findClonedNode(link.trgNodeId, clonedNodesInfo);
+					const newLink = this.cloneNodeLink(link, srcClonedNode, trgClonedNode);
+					clonedLinks.push(newLink);
+				} else {
+					const srcClonedComment = this.findClonedComment(link.srcNodeId, clonedCommentsInfo);
+					const trgClonedNode = this.findClonedNode(link.trgNodeId, clonedNodesInfo);
+					if (srcClonedComment && trgClonedNode) {
+						const newLink = this.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
+						clonedLinks.push(newLink);
+					}
+				}
+			});
+		}
+
+		const clonedNodes = clonedNodesInfo.map((cni) => cni.node);
+		const clonedComments = clonedCommentsInfo.map((cci) => cci.comment);
+
+		return { clonedNodes, clonedComments, clonedLinks };
+	}
+
+	// Returns the cloned node from the array of cloned nodes, identified
+	// by the node ID passed in which is the ID of the original node.
+	findClonedNode(nodeId, clonedNodesInfo) {
+		const clonedNodeInfo = clonedNodesInfo.find((cni) => cni.originalId === nodeId);
+		if (clonedNodeInfo) {
+			return clonedNodeInfo.node;
+		}
+		return null;
+	}
+
+	// Returns the cloned comment from the array of cloned comments, identified
+	// by the comment ID passed in which is the ID of the original comment.
+	findClonedComment(commentId, clonedCommentsInfo) {
+		const clonedCommentInfo = clonedCommentsInfo.find((cci) => cci.originalId === commentId);
+		if (clonedCommentInfo) {
+			return clonedCommentInfo.comment;
+		}
+		return null;
+	}
+
+	// Clone the node provided, with a new unique ID.
+	cloneNode(inNode) {
+		let node = Object.assign({}, inNode, { id: this.getUniqueId(CLONE_NODE, { "node": inNode }) });
+
+		// Add node height and width and, if appropriate, inputPortsHeight
+		// and outputPortsHeight
+		node = this.setNodeAttributes(node);
+		return node;
+	}
+
+	// Clone the comment provided, with a new unique ID.
+	cloneComment(inComment) {
+		// Adjust for snap to grid, if necessary.
+		const comment = this.setCommentAttributes(inComment);
+
+		return Object.assign({}, comment, { id: this.getUniqueId(CLONE_COMMENT, { "comment": comment }) });
+	}
+
+	// Returns a clone of the link passed in using the source and target nodes
+	// passed in. If a semi-detached or fully-detached link is being cloned the
+	// srcNode and/or trgNode may be null.
+	cloneNodeLink(link, srcNode, trgNode) {
+		const id = this.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNode ? srcNode.id : null, "targetNodeId": trgNode ? trgNode.id : null });
+		const clonedLink = Object.assign({}, link, { id: id });
+
+		if (srcNode) {
+			clonedLink.srcNodeId = srcNode.id;
+			clonedLink.srcNodePortId = link.srcNodePortId;
+		} else {
+			clonedLink.srcPos = link.srcPos;
+		}
+		if (trgNode) {
+			clonedLink.trgNodeId = trgNode.id;
+			clonedLink.trgNodePortId = link.trgNodePortId;
+		} else {
+			clonedLink.trgPos = link.trgPos;
+		}
+		return clonedLink;
+	}
+
+	// Returns a clone of the link passed in with the source and targets set to
+	// the IDs passed in.
+	cloneCommentLink(link, srcNodeId, trgNodeId) {
+		return {
+			id: this.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
+			type: link.type,
+			class_name: link.class_name,
+			srcNodeId: srcNodeId,
+			trgNodeId: trgNodeId
+		};
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1399,9 +1742,8 @@ export default class ObjectModel {
 	// Recursive function to add all connected nodes into the group.
 	addConnectedNodeIdToGroup(nodeId, connectedNodesIdsGroup, nodeIds, apiPipeline) {
 		if (connectedNodesIdsGroup.includes(nodeId)) {
-			const nodeLinks = apiPipeline.getLinksContainingId(nodeId).filter((link) => {
-				return link.type === NODE_LINK || link.type === ASSOCIATION_LINK;
-			});
+			const nodeLinks = apiPipeline.getLinksContainingId(nodeId)
+				.filter((link) => link.type === NODE_LINK || link.type === ASSOCIATION_LINK);
 
 			for (const link of nodeLinks) {
 				if (nodeIds.includes(link.trgNodeId) && nodeIds.includes(link.srcNodeId)) {
@@ -1501,9 +1843,7 @@ export default class ObjectModel {
 	hasErrorMessage(node) {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === ERROR;
-			}) !== "undefined");
+			return messages.some((msg) => msg.type === ERROR);
 		}
 		return false;
 	}
@@ -1511,9 +1851,7 @@ export default class ObjectModel {
 	hasWarningMessage(node) {
 		const messages = this.getNodeMessages(node);
 		if (messages) {
-			return (typeof messages.find((msg) => {
-				return msg.type === WARNING;
-			}) !== "undefined");
+			return messages.some((msg) => msg.type === WARNING);
 		}
 		return false;
 	}
@@ -1646,23 +1984,23 @@ export default class ObjectModel {
 
 	// If nodeId and pipelineId specify a supernode, this method populates the
 	// highlightNodeIds and highlightLinkIds arrays with all the nodes and links
-	// that are in the supernode and any of its descendent supernodes.
+	// that are in the supernode and any of its descendant supernodes.
 	getSupernodeNodeIds(nodeId, pipelineId, highlightNodeIds, highlightLinkIds) {
 		const node = this.getAPIPipeline(pipelineId).getNode(nodeId);
 		if (node.type === SUPER_NODE) {
-			const supernodePipelineId = this.getSupernodePipelineID(node);
+			const snPipelineId = this.getSupernodePipelineId(node);
 
-			highlightNodeIds[supernodePipelineId] = highlightNodeIds[supernodePipelineId] || [];
-			highlightLinkIds[supernodePipelineId] = highlightLinkIds[supernodePipelineId] || [];
+			highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+			highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
 
-			const nodeIds = this.getAPIPipeline(supernodePipelineId).getNodeIds();
-			const linkIds = this.getAPIPipeline(supernodePipelineId).getLinkIds();
+			const nodeIds = this.getAPIPipeline(snPipelineId).getNodeIds();
+			const linkIds = this.getAPIPipeline(snPipelineId).getLinkIds();
 
-			highlightNodeIds[supernodePipelineId] = union(highlightNodeIds[supernodePipelineId], nodeIds);
-			highlightLinkIds[supernodePipelineId] = union(highlightLinkIds[supernodePipelineId], linkIds);
+			highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], nodeIds);
+			highlightLinkIds[snPipelineId] = union(highlightLinkIds[snPipelineId], linkIds);
 
 			nodeIds.forEach((nId) => {
-				this.getSupernodeNodeIds(nId, supernodePipelineId, highlightNodeIds, highlightLinkIds);
+				this.getSupernodeNodeIds(nId, snPipelineId, highlightNodeIds, highlightLinkIds);
 			});
 		}
 	}
@@ -1674,7 +2012,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingTargetId(nodeId)
+			.getAttachedLinksContainingTargetId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1689,15 +2027,15 @@ export default class ObjectModel {
 
 					const srcNodeOutputPort = this.getSupernodeOutputPortForLink(srcNode, link);
 					if (srcNodeOutputPort) {
-						const subflowPipelineId = srcNode.subflow_ref.pipeline_id_ref;
-						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
+						const snPipelineId = this.getSupernodePipelineId(srcNode);
+						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(srcNodeOutputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getUpstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getUpstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
 						}
 					} else {
 						this.getUpstreamObjIdsFrom(link.srcNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
@@ -1713,7 +2051,7 @@ export default class ObjectModel {
 
 			supernode.inputs.forEach((inputPort) => {
 				if (inputPort.subflow_node_ref === nodeId) {
-					const supernodeLinks = parentPipeline.getLinksContainingTargetId(supernode.id);
+					const supernodeLinks = parentPipeline.getAttachedLinksContainingTargetId(supernode.id);
 					supernodeLinks.forEach((supernodeLink) => {
 						if (supernodeLink.trgNodePortId === inputPort.id) {
 							highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
@@ -1728,7 +2066,7 @@ export default class ObjectModel {
 								const upstreamSupernodeOutputPort = this.getSupernodeOutputPortForLink(upstreamSupernode, supernodeLink);
 								if (upstreamSupernodeOutputPort) {
 									const bindingNodeId = upstreamSupernodeOutputPort.subflow_node_ref;
-									this.getUpstreamObjIdsFrom(bindingNodeId, upstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
+									this.getUpstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(upstreamSupernode), highlightNodeIds, highlightLinkIds);
 								}
 							} else {
 								this.getUpstreamObjIdsFrom(supernodeLink.srcNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -1747,7 +2085,7 @@ export default class ObjectModel {
 		const currentPipeline = this.getAPIPipeline(pipelineId);
 		const node = currentPipeline.getNode(nodeId);
 		const nodeLinks = currentPipeline
-			.getLinksContainingSourceId(nodeId)
+			.getAttachedLinksContainingSourceId(nodeId)
 			.filter((l) => l.type === NODE_LINK);
 
 		if (nodeLinks.length > 0) {
@@ -1762,15 +2100,15 @@ export default class ObjectModel {
 
 					const trgNodeInputPort = this.getSupernodeInputPortForLink(trgNode, link);
 					if (trgNodeInputPort) {
-						const subflowPipelineId = trgNode.subflow_ref.pipeline_id_ref;
-						const bindingNode = this.getAPIPipeline(subflowPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
+						const snPipelineId = this.getSupernodePipelineId(trgNode);
+						const bindingNode = this.getAPIPipeline(snPipelineId).getNode(trgNodeInputPort.subflow_node_ref);
 
 						if (bindingNode) {
-							highlightLinkIds[subflowPipelineId] = highlightLinkIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = highlightNodeIds[subflowPipelineId] || [];
-							highlightNodeIds[subflowPipelineId] = union(highlightNodeIds[subflowPipelineId], [bindingNode.id]);
+							highlightLinkIds[snPipelineId] = highlightLinkIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = highlightNodeIds[snPipelineId] || [];
+							highlightNodeIds[snPipelineId] = union(highlightNodeIds[snPipelineId], [bindingNode.id]);
 
-							this.getDownstreamObjIdsFrom(bindingNode.id, subflowPipelineId, highlightNodeIds, highlightLinkIds);
+							this.getDownstreamObjIdsFrom(bindingNode.id, snPipelineId, highlightNodeIds, highlightLinkIds);
 						}
 					} else {
 						this.getDownstreamObjIdsFrom(link.trgNodeId, pipelineId, highlightNodeIds, highlightLinkIds);
@@ -1786,7 +2124,7 @@ export default class ObjectModel {
 
 				supernode.outputs.forEach((outputPort) => {
 					if (outputPort.subflow_node_ref === nodeId) {
-						const supernodeLinks = parentPipeline.getLinksContainingSourceId(supernode.id);
+						const supernodeLinks = parentPipeline.getAttachedLinksContainingSourceId(supernode.id);
 						supernodeLinks.forEach((supernodeLink) => {
 							if (supernodeLink.srcNodePortId === outputPort.id) {
 								highlightNodeIds[parentPipelineId] = highlightNodeIds[parentPipelineId] || [];
@@ -1801,7 +2139,7 @@ export default class ObjectModel {
 									const downstreamSupernodeInputPort = this.getSupernodeInputPortForLink(downstreamSupernode, supernodeLink);
 									if (downstreamSupernodeInputPort) {
 										const bindingNodeId = downstreamSupernodeInputPort.subflow_node_ref;
-										this.getDownstreamObjIdsFrom(bindingNodeId, downstreamSupernode.subflow_ref.pipeline_id_ref, highlightNodeIds, highlightLinkIds);
+										this.getDownstreamObjIdsFrom(bindingNodeId, this.getSupernodePipelineId(downstreamSupernode), highlightNodeIds, highlightLinkIds);
 									}
 								} else {
 									this.getDownstreamObjIdsFrom(supernodeLink.trgNodeId, parentPipelineId, highlightNodeIds, highlightLinkIds);
@@ -1819,7 +2157,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's input ports.
 	getSupernodeInputPortForLink(trgNode, link) {
 		let port = null;
-		if (has(trgNode, "subflow_ref.pipeline_id_ref") && link.trgNodePortId) {
+		if (this.getSupernodePipelineId(trgNode) && link.trgNodePortId) {
 			trgNode.inputs.forEach((inputPort) => {
 				if (inputPort.id === link.trgNodePortId) {
 					port = inputPort;
@@ -1835,7 +2173,7 @@ export default class ObjectModel {
 	// does not have a reference to one of the node's output ports.
 	getSupernodeOutputPortForLink(srcNode, link) {
 		let port = null;
-		if (has(srcNode, "subflow_ref.pipeline_id_ref") && link.srcNodePortId) {
+		if (this.getSupernodePipelineId(srcNode) && link.srcNodePortId) {
 			srcNode.outputs.forEach((outputPort) => {
 				if (outputPort.id === link.srcNodePortId) {
 					port = outputPort;
@@ -1846,13 +2184,6 @@ export default class ObjectModel {
 		return port;
 	}
 
-	// Pythagorean Theorem.
-	getDistanceFromPosition(x, y, node) {
-		const a = node.x_pos - x;
-		const b = node.y_pos - y;
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-	}
-
 	// ---------------------------------------------------------------------------
 	// Clipboard methods
 	// ---------------------------------------------------------------------------
@@ -1860,7 +2191,7 @@ export default class ObjectModel {
 	// Copies the currently selected objects to the internal clipboard and
 	// returns true if successful. Returns false if there is nothing to copy to
 	// the clipboard.
-	copyToClipboard(areDetachableLinksSupported) {
+	copyToClipboard(areDetachableLinksInUse) {
 		var copyData = {};
 
 		const apiPipeline = this.getSelectionAPIPipeline();
@@ -1869,9 +2200,17 @@ export default class ObjectModel {
 		}
 		const nodes = this.getSelectedNodes();
 		const comments = this.getSelectedComments();
-		const links = areDetachableLinksSupported
-			? this.getSelectedLinks()
-			: apiPipeline.getLinksBetween(nodes, comments);
+		let links = apiPipeline.getLinksBetween(nodes, comments);
+
+		// If detachable links are in use, we need to also add any links that
+		// emanate from the selected nodes AND any links that are currently
+		// selected, making sure we don't have any duplicates in the final
+		// links array.
+		if (areDetachableLinksInUse) {
+			const emanatingLinks = apiPipeline.getNodeDataLinksContainingIds(nodes.map((n) => n.id));
+			links = CanvasUtils.concatUniqueBasedOnId(emanatingLinks, links);
+			links = CanvasUtils.concatUniqueBasedOnId(this.getSelectedLinks(), links);
+		}
 
 		if (nodes.length === 0 && comments.length === 0 && links.length === 0) {
 			return false;
@@ -1880,11 +2219,11 @@ export default class ObjectModel {
 		if (nodes && nodes.length > 0) {
 			copyData.nodes = nodes;
 			let pipelines = [];
-			const supernodes = apiPipeline.getSupernodes(nodes);
+			const supernodes = CanvasUtils.filterSupernodes(nodes);
 			supernodes.forEach((supernode) => {
-				pipelines = pipelines.concat(this.getSubPipelinesForSupernode(supernode));
+				pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
+				set(supernode, "app_data.pipeline_data", pipelines);
 			});
-			copyData.pipelines = pipelines;
 		}
 
 		if (comments && comments.length > 0) {
@@ -1904,10 +2243,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.srcNodeId &&
 						nodes.findIndex((n) => n.id === link.srcNodeId) === -1) {
-					const srcNode = apiPipeline.getNode(link.srcNodeId);
 					delete newLink.srcNodeId;
 					delete newLink.srcNodePortId;
-					newLink.srcPos = { x_pos: srcNode.x_pos + srcNode.width, y_pos: srcNode.y_pos + (srcNode.height / 2) };
+					newLink.srcPos = CanvasUtils.getSrcPos(link, apiPipeline);
 				}
 				// If the link is a node-node data link and it is attached to a target
 				// node and that node is not to be clipboarded, set the trgPos
@@ -1915,10 +2253,9 @@ export default class ObjectModel {
 				if (link.type === NODE_LINK &&
 						link.trgNodeId &&
 						nodes.findIndex((n) => n.id === link.trgNodeId) === -1) {
-					const trgNode = apiPipeline.getNode(link.trgNodeId);
 					delete newLink.trgNodeId;
 					delete newLink.trgNodePortId;
-					newLink.trgPos = { x_pos: trgNode.x_pos, y_pos: trgNode.y_pos + (trgNode.height / 2) };
+					newLink.trgPos = CanvasUtils.getTrgPos(link, apiPipeline);
 				}
 				return newLink;
 			});
@@ -1956,5 +2293,16 @@ export default class ObjectModel {
 		}
 
 		return objects;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Tooltip methods
+	// ---------------------------------------------------------------------------
+	setTooltipDef(tipDef) {
+		this.store.dispatch({ type: "SET_TOOLTIP_DEF", data: { tooltipDef: tipDef } });
+	}
+
+	isTooltipOpen() {
+		return this.store.isTooltipOpen();
 	}
 }

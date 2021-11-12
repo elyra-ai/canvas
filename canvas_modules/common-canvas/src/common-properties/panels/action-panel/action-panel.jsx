@@ -25,7 +25,13 @@ class ActionPanel extends Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
 		return (
-			<div className={classNames("properties-action-panel", { "hide": this.props.panelState === STATES.HIDDEN }, className)}
+			<div
+				className={classNames(
+					"properties-action-panel",
+					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+					className
+				)}
 				data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
 				disabled={this.props.panelState === STATES.DISABLED}
 			>

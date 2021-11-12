@@ -18,14 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, TOOL_TIP_DELAY_ICON, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
-import { Button } from "carbon-components-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import Icon from "./../../../icons/icon.jsx";
-
 import ActionFactory from "./../../actions/action-factory.js";
 
 class ControlItem extends React.Component {
@@ -41,14 +39,6 @@ class ControlItem extends React.Component {
 		}
 		const hidden = this.props.state === STATES.HIDDEN;
 		const disabled = this.props.state === STATES.DISABLED;
-		const that = this;
-		function generateNumber() {
-			const generator = that.props.control.label.numberGenerator;
-			const min = generator.range && generator.range.min ? generator.range.min : 10000;
-			const max = generator.range && generator.range.max ? generator.range.max : 99999;
-			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-			that.props.controller.updatePropertyValue(that.props.propertyId, newValue);
-		}
 
 		let label;
 		let description;
@@ -62,9 +52,9 @@ class ControlItem extends React.Component {
 					tooltip = (<Tooltip
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
-						direction="top"
-						delay={TOOL_TIP_DELAY_ICON}
+						direction="bottom"
 						disable={hidden || disabled}
+						showToolTipOnClick
 					>
 						<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 					</Tooltip>);
@@ -74,22 +64,10 @@ class ControlItem extends React.Component {
 			if (this.props.control.required) {
 				requiredIndicator = <span className="properties-required-indicator">*</span>;
 			}
-			let numberGenerator;
-			if (this.props.control.label.numberGenerator) {
-				numberGenerator = (<Button
-					className={classNames("properties-number-generator", { "hide": hidden })}
-					onClick={generateNumber}
-					disabled={disabled}
-					kind="ghost"
-				>
-					<span>{this.props.control.label.numberGenerator.label.default}</span>
-				</Button>);
-			}
 			label = (
 				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
 					{requiredIndicator}
-					{numberGenerator}
 					{tooltip}
 				</div>);
 		}

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-lonely-if: ["off"] */
+
 import Action from "../command-stack/action.js";
 
 export default class CreateAutoNodeAction extends Action {
@@ -27,13 +29,6 @@ export default class CreateAutoNodeAction extends Action {
 		if (this.apiPipeline.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
 			this.newLink = this.apiPipeline.createLink(this.newNode, this.srcNode);
 		}
-		this.newPipeline = null;
-		if (this.newNode && this.newNode.open_with_tool === "shaper") {
-			this.newPipeline = this.objectModel.createEmptyPipeline();
-			this.newNode.subflow_ref = {
-				pipeline_id_ref: this.newPipeline.id
-			};
-		}
 	}
 
 	// Return augmented command object which will be passed to the
@@ -42,28 +37,23 @@ export default class CreateAutoNodeAction extends Action {
 		this.data.sourceNode = this.srcNode;
 		this.data.newNode = this.newNode;
 		this.data.newLink = this.newLink;
-		this.data.newPipeline = this.newPipeline;
+		this.data.subPipeline = this.subPipelines;
 		return this.data;
 	}
 
 	// Standard methods
 	do() {
+		this.apiPipeline.addNode(this.newNode);
+
 		if (this.newLink) {
-			this.apiPipeline.addAutoNodeAndLink(this.newNode, this.newLink);
-		} else {
-			this.apiPipeline.addNode(this.newNode);
+			this.apiPipeline.addLink(this.newLink);
 		}
+
 		this.objectModel.setSelections([this.newNode.id], this.data.pipelineId);
-		if (this.newPipeline) {
-			this.objectModel.addPipeline(this.newPipeline);
-		}
 	}
 
 	undo() {
-		this.apiPipeline.deleteNode(this.newNode.id);
-		if (this.newPipeline) {
-			this.objectModel.deletePipeline(this.newPipeline.id);
-		}
+		this.apiPipeline.deleteNodes([this.newNode]);
 	}
 
 	redo() {
