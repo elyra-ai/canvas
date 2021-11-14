@@ -4177,11 +4177,13 @@ export default class SVGCanvasRenderer {
 			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
 			delete link.srcNodeId;
 			delete link.srcNodePortId;
+			delete link.srcObj;
 
 		} else {
 			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
 			delete link.trgNodeId;
 			delete link.trgNodePortId;
+			delete link.trgNode;
 		}
 
 		this.displayLinks();
