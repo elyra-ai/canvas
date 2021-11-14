@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { MultiSelect } from "carbon-components-react";
+import { MultiSelect, FilterableMultiSelect } from "carbon-components-react";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -144,7 +144,7 @@ class MultiSelectControl extends React.Component {
 
 		let dropdownComponent = null;
 		if (this.props.control.filterable) {
-			dropdownComponent = (<MultiSelect.Filterable
+			dropdownComponent = (<FilterableMultiSelect
 				{...validationProps}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-multiselect-filterable`}
 				disabled={this.props.state === STATES.DISABLED}
