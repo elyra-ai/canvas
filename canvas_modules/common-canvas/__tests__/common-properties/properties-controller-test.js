@@ -1266,6 +1266,42 @@ describe("Properties Controller controls", () => {
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
 	});
+	it("should save the correct control when duplicate controls exist in groups", () => {
+		const custom = {
+			"name": "priors",
+			"controlType": "custom",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors = {
+			"name": "priors",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors2 = {
+			"name": "priors2",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+
+		reset();
+		controller.saveControls([custom, priors]);
+		let foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// change array order
+		reset();
+		controller.saveControls([priors, custom]);
+		foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// validate custom controls get set when another control doesn't override it
+		reset();
+		controller.saveControls([priors2, custom]);
+		foundControl = controller.getControl({ name: custom.name });
+		expect(foundControl.controlType).to.equal(custom.controlType);
+		foundControl = controller.getControl({ name: priors2.name });
+		expect(foundControl.controlType).to.equal(priors2.controlType);
+	});
+
+
 });
 
 describe("Properties Controller getResource ", () => {
@@ -1642,7 +1678,17 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 		controller = renderedObject.controller;
 
 		const requiredIds = controller.getRequiredDefinitionIds();
-		expect(requiredIds).to.eql(["required_fields_294.69762842919897"]);
+		expect(requiredIds).to.eql([
+			"required_oneofselect_201.88122102593735",
+			"required_oneofselect_null_895.9146331341876",
+			"required_oneofselect_empty_string_963.6717964456162",
+			"required_oneofselect_custom_value_667.4461132689746",
+			"required_radioString_834.4741085201264",
+			"required_radioBooleanWithEnum_167.45387366555846",
+			"required_radioBooleanWithoutEnum_836.1233358606064",
+			"required_radioBooleanWithLabels_68.57624159959238",
+			"required_fields_294.69762842919897"
+		]);
 	});
 });
 

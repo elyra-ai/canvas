@@ -99,7 +99,7 @@ describe("checkboxset control tests", () => {
 			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset']");
-		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
+		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label");
 		expect(labels).to.have.length(control.valueLabels.length);
 		for (let i = 0; i < labels.length; ++i) {
 			expect(labels.at(i).text()).to.equal(control.valueLabels[i]);
@@ -117,7 +117,7 @@ describe("checkboxset control tests", () => {
 			</Provider>
 		);
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-test-checkboxset-number']");
-		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label > span");
+		const labels = checkboxsetWrapper.find(".properties-checkboxset-container label");
 		expect(labels).to.have.length(controlNumber.valueLabels.length);
 		for (let i = 0; i < labels.length; ++i) {
 			expect(labels.at(i).text()).to.equal(controlNumber.valueLabels[i]);

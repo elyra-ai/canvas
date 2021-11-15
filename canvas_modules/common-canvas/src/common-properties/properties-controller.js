@@ -27,7 +27,7 @@ import * as PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { Type, ParamRole } from "./constants/form-constants";
+import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
@@ -155,35 +155,10 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
-
-			// Evaluate conditional defaults based on current_parameters upon loading of view
-			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
-			const conditionalDefaultValues = {};
-			if (!isEmpty(propertyValues)) {
-				Object.keys(propertyValues).forEach((propertyName) => {
-					const propertyId = { name: propertyName };
-					// Update conditionalDefaultValues object using pass-by-reference
-					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
-				});
-				if (!isEmpty(conditionalDefaultValues)) {
-					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
-						if (!(parameterRef in propertyValues)) {
-							// convert values of type:object to the internal format array values
-							const control = this.getControl({ name: parameterRef });
-							if (PropertyUtils.isSubControlStructureObjectType(control)) {
-								conditionalDefaultValues[parameterRef] =
-								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
-							}
-							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
-						}
-					});
-				}
-			}
-
 			this._addToControlValues();
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
@@ -1173,7 +1148,7 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values) {
+	setPropertyValues(values, isInitProps) {
 		const inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1191,6 +1166,33 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
+		if (isInitProps) {
+			// Evaluate conditional defaults based on current_parameters upon loading of view
+			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
+			const conditionalDefaultValues = {};
+			if (!isEmpty(inValues)) {
+				Object.keys(inValues).forEach((propertyName) => {
+					const propertyId = { name: propertyName };
+					// Update conditionalDefaultValues object using pass-by-reference
+					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
+				});
+				if (!isEmpty(conditionalDefaultValues)) {
+					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
+						if (!(parameterRef in inValues)) {
+							// convert values of type:object to the internal format array values
+							const control = this.getControl({ name: parameterRef });
+							if (PropertyUtils.isSubControlStructureObjectType(control)) {
+								conditionalDefaultValues[parameterRef] =
+								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+							}
+							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
+						}
+					});
+				}
+			}
+		}
+
+		// Validate other conditions after evaluating conditional defaults (default_value conditions)
 		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
@@ -1541,7 +1543,11 @@ export default class PropertiesController {
 	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
-				this.controls[control.name] = control;
+				// only add to map if control hasn't already been added or override if set to custom.
+				// This is needed if a parameter is referenced from multiple groups and one is a custom panel
+				if (!has(this.controls, control.name) || (has(this.controls, control.name) && control.controlType !== ControlType.CUSTOM)) {
+					this.controls[control.name] = control;
+				}
 			} else {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}
