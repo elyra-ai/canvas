@@ -3825,7 +3825,8 @@ export default class SVGCanvasRenderer {
 					this.drawingNewLinkData.portType);
 		}
 
-		const pathInfo = this.linkUtils.getConnectorPathInfo(this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
+		const pathInfo = this.linkUtils.getConnectorPathInfo(
+			this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
 
 		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
 		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
@@ -4176,11 +4177,13 @@ export default class SVGCanvasRenderer {
 			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
 			delete link.srcNodeId;
 			delete link.srcNodePortId;
+			delete link.srcObj;
 
 		} else {
 			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
 			delete link.trgNodeId;
 			delete link.trgNodePortId;
+			delete link.trgNode;
 		}
 
 		this.displayLinks();
@@ -5810,11 +5813,11 @@ export default class SVGCanvasRenderer {
 		var startTimeDrawingLines = Date.now();
 
 		const timeAfterDelete = Date.now();
-		const lineArray = this.buildLineArray();
+		const linksArray = this.buildLinksArray();
 		const afterLineArray = Date.now();
 
 		this.getAllLinkGroupsSelection()
-			.data(lineArray, (line) => line.id)
+			.data(linksArray, (link) => link.id)
 			.join(
 				(enter) => this.createLinks(enter)
 			)
@@ -5822,7 +5825,7 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getLinkGrpStyle(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? true : null))
 			.call((joinedLinkGrps) => {
-				this.updateLinks(joinedLinkGrps, lineArray);
+				this.updateLinks(joinedLinkGrps, linksArray);
 			});
 
 		var endTimeDrawingLines = Date.now();
@@ -5831,10 +5834,6 @@ export default class SVGCanvasRenderer {
 			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
-	}
-
-	getBuildLineArrayData(id, lineArray) {
-		return lineArray.find((el) => el.id === id);
 	}
 
 	// Creates all newly created links specified in the enter selection.
@@ -5892,13 +5891,13 @@ export default class SVGCanvasRenderer {
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
-			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.datum((d) => this.getLink(d.id))
 			.attr("d", (d) => d.pathInfo.path);
 
 		// Update link line
 		joinedLinkGrps
 			.selectAll(".d3-link-line")
-			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.datum((d) => this.getLink(d.id))
 			.attr("d", (d) => d.pathInfo.path)
 			.attr("class", "d3-link-line")
 			.attr("style", (d) => CanvasUtils.getObjectStyle(d, "line", "default"));
@@ -5909,7 +5908,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.selectAll(".d3-link-line-arrow-head")
-			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.datum((d) => this.getLink(d.id))
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("transform", (d) => this.getArrowHeadTransform(d))
 			.attr("class", "d3-link-line-arrow-head")
@@ -6027,7 +6026,7 @@ export default class SVGCanvasRenderer {
 	updateHandles(handlesGrp, lineArray) {
 		handlesGrp
 			.selectAll(".d3-link-handle-start")
-			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.datum((d) => this.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
 				if (this.canvasLayout.linkStartHandleObject === "image") {
@@ -6048,7 +6047,7 @@ export default class SVGCanvasRenderer {
 
 		handlesGrp
 			.selectAll(".d3-link-handle-end")
-			.datum((d) => this.getBuildLineArrayData(d.id, lineArray))
+			.datum((d) => this.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
 				if (this.canvasLayout.linkEndHandleObject === "image") {
@@ -6213,51 +6212,50 @@ export default class SVGCanvasRenderer {
 		return this.draggingLinkData && this.draggingLinkData.link.id === link.id;
 	}
 
-	buildLineArray() {
-		let lineArray = [];
-
+	buildLinksArray() {
+		let linksArray = [];
 		this.activePipeline.links.forEach((link) => {
-			let lineObj = null;
+			let linkObj = null;
 
 			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES && this.isLinkBeingDragged(link)) ||
 						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
 					(!link.srcObj || !link.trgNode)) {
-				lineObj = this.getDetachedLineObj(link);
+				linkObj = this.getDetachedLineObj(link);
 
 			} else {
-				lineObj = this.getAttachedLineObj(link);
+				linkObj = this.getAttachedLineObj(link);
 			}
-
-			if (lineObj) {
-				lineArray.push(lineObj);
+			if (linkObj) {
+				linksArray.push(linkObj);
 			}
 		});
 
-		// Adjust the minInitialLine for elbow type connections to prevent overlapping
+		// Adjust the minInitialLineForElbow property for links when displaying
+		// the Elbow line type. This prevents overlapping at the links' first elbow.
 		if (this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
-			lineArray = this.addMinInitialLineForElbow(lineArray);
+			linksArray = this.addMinInitialLineForElbow(linksArray);
 		}
 
-		// Add conneciton path info to the line objects.
-		lineArray = this.linkUtils.addConnectionPaths(lineArray);
+		// Add connection path info to the links.
+		linksArray = this.linkUtils.addConnectionPaths(linksArray);
 
-		return lineArray;
+		return linksArray;
 	}
 
 	getAttachedLineObj(link) {
 		const srcObj = link.srcObj;
 		const trgNode = link.trgNode;
 
-		if (srcObj === null) {
+		if (!srcObj) {
 			this.logger.error(
-				"Common Canvas error trying to draw a link. A link was specified for source " + link.srcNodeId +
-				" in the Canvas data that does not have a valid source node/comment.");
+				"Common Canvas error trying to draw a link. A link was specified for source ID '" + link.srcNodeId +
+				"' in the Canvas data that does not have a valid source node/comment.");
 		}
 
-		if (trgNode === null) {
+		if (!trgNode) {
 			this.logger.error(
-				"Common Canvas error trying to draw a link. A link was specified for target " + link.trgNodeId +
-				" in the Canvas data that does not have a valid target node.");
+				"Common Canvas error trying to draw a link. A link was specified for target ID '" + link.trgNodeId +
+				"' in the Canvas data that does not have a valid target node.");
 		}
 
 		// Only proceed if we have a source and a target node/comment and the
@@ -6271,23 +6269,14 @@ export default class SVGCanvasRenderer {
 					: null;
 			const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
-			return {
-				"id": link.id,
-				"class_name": link.class_name,
-				"style": link.style,
-				"style_temp": link.style_temp,
-				"type": link.type,
-				"decorations": link.decorations,
-				"assocLinkVariation": assocLinkVariation,
-				"src": srcObj,
-				"srcPortId": srcPortId,
-				"trg": trgNode,
-				"trgPortId": trgPortId,
-				"x1": coords.x1,
-				"y1": coords.y1,
-				"x2": coords.x2,
-				"y2": coords.y2
-			};
+			link.assocLinkVariation = assocLinkVariation;
+			link.srcPortId = srcPortId;
+			link.trgPortId = trgPortId;
+			link.x1 = coords.x1;
+			link.y1 = coords.y1;
+			link.x2 = coords.x2;
+			link.y2 = coords.y2;
+			return link;
 		}
 		return null;
 	}
@@ -6346,22 +6335,14 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
-		return {
-			"id": link.id,
-			"class_name": link.class_name,
-			"style": link.style,
-			"style_temp": link.style_temp,
-			"type": link.type,
-			"decorations": link.decorations,
-			"src": srcObj,
-			"srcPortId": srcPortId,
-			"trg": trgNode,
-			"trgPortId": trgPortId,
-			"x1": coords.x1,
-			"y1": coords.y1,
-			"x2": coords.x2,
-			"y2": coords.y2
-		};
+		link.srcPortId = srcPortId;
+		link.trgPortId = trgPortId;
+		link.x1 = coords.x1;
+		link.y1 = coords.y1;
+		link.x2 = coords.x2;
+		link.y2 = coords.y2;
+
+		return link;
 	}
 
 	getOutputPort(srcNode, srcPortId) {
@@ -6440,46 +6421,49 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	// Loops through the current nodes and for each node that has multiple
+	// Returns an array of links where the minInitialLineForElbow property is
+	// set and incremented so that elbow links that emanate from a source node
+	// do not overlap when the first elbow bend occurs. To do this it
+	// loops through the current nodes and for each node that has multiple
 	// output ports:
-	// 1. Gets the line-data objects associated with those ports.
-	// 2. Sorts those line-data objects based on the vertical separation from
+	// 1. Gets the link objects associated with those ports.
+	// 2. Sorts those link objects based on the vertical separation from
 	//    the source to the target.
-	// 3. Applies ever increasing minInitialLine values to the line-data objects
-	//    based on their sort order.
-	// The result is that the elbow lines emantating the ports of the node do not
-	// overlap.
-	addMinInitialLineForElbow(lineArray) {
+	// 3. Applies ever increasing minInitialLineForElbow values to the link
+	//    objects based on their sort order.
+	// The result is that the elbow links, emantating from the ports of the node,
+	//  do not overlap.
+	addMinInitialLineForElbow(links) {
 		this.activePipeline.nodes.forEach((node) => {
 			if (node.outputs && node.outputs.length > 1) {
-				const nodeLineData = this.getNodeOutputLines(node, lineArray);
-				const sortedNodeLineData = this.sortNodeLineData(nodeLineData);
-				this.applyMinInitialLine(node, sortedNodeLineData);
+				const nodeLinks = this.getNodeOutputLinks(node, links);
+				const sortedNodeLinks = this.sortNodeOutputLinks(nodeLinks);
+				this.applyMinInitialLine(node, sortedNodeLinks);
 			}
 		});
-		return lineArray;
+		return links;
 	}
 
-	// Returns a new array of line-data objects that are for links that
-	// emenate from the output ports of the source node passed in.
-	getNodeOutputLines(srcNode, lineArray) {
+	// Returns an array of links where each link emanates from the
+	// output ports of the source node passed in.
+	getNodeOutputLinks(srcNode, links) {
 		const outArray = [];
-		lineArray.forEach((lineData) => {
-			if (lineData.src && lineData.src.id === srcNode.id) {
-				outArray.push(lineData);
+		links.forEach((link) => {
+			if (link.srcObj && link.srcObj.id === srcNode.id) {
+				outArray.push(link);
 			}
 		});
 		return outArray;
 	}
 
-	// Returns the input array of line-data objects sorted by the differences
+	// Returns the input array of link objects sorted by the differences
 	// between the absolute distance from the source port position to the
 	// target port position. This means the lines connecting source node ports
 	// to target node ports over the furthest distance (in the y direction with
 	// Left -> Right linkDirection) will be sorted first and the lines connecting
 	// source to target ports over the shortest y direction distance will be sorted last.
-	sortNodeLineData(nodeLineData) {
-		return nodeLineData.sort((nodeLineData1, nodeLineData2) => {
+	sortNodeOutputLinks(nodeLinks) {
+		return nodeLinks.sort((nodeLineData1, nodeLineData2) => {
 			let first;
 			let second;
 			if (this.canvasLayout.linkDirection === LINK_DIR_LEFT_RIGHT) {
@@ -6502,17 +6486,17 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
-	// Loops through the line-data objects associated with the output ports of
-	// the node passed in and applies an ever increasing minInitialLine value to
-	// each one. This means that, because the line data objects are sorted by
+	// Loops through the link objects associated with the output ports of
+	// the node passed in and applies an ever increasing minInitialLineForElbow
+	// value to each one. This means that, because the link objects are sorted by
 	// vertical separation, the line with greatest vertical separation will get
-	// the smallest minInitialLine and the line with the smallest vertical
-	// separation will get the biggest minInitialLine.
-	applyMinInitialLine(node, sortedNodeLineData) {
+	// the smallest minInitialLineForElbow and the line with the smallest vertical
+	// separation will get the biggest minInitialLineForElbow.
+	applyMinInitialLine(node, sortedNodeLinks) {
 		let runningInitialLine = node.layout.minInitialLine;
-		sortedNodeLineData.forEach((lineData) => {
+		sortedNodeLinks.forEach((lineData) => {
 			lineData.minInitialLineForElbow = runningInitialLine;
-			runningInitialLine += lineData.src.layout.minInitialLineIncrement;
+			runningInitialLine += lineData.srcObj.layout.minInitialLineIncrement;
 		});
 	}
 
