@@ -162,9 +162,29 @@ export default class FieldPicker extends React.Component {
 					</div>
 				);
 			}
+			const tooltipId = uuid4() + "-tooltip-fieldpicker";
+			const tooltip = (
+				<div className="properties-tooltips">
+					{String(field.origName)}
+				</div>
+			);
+			let disabled = true;
+			if (field.origName) {
+				disabled = false;
+			}
+			const fieldContentWithTooltip = (<Tooltip
+				id={tooltipId}
+				tip={tooltip}
+				direction="bottom"
+				className="properties-tooltips"
+				disable={disabled}
+				showToolTipIfTruncated
+			>
+				{fieldContent}
+			</Tooltip>);
 			columns.push({
 				column: "fieldName",
-				content: fieldContent,
+				content: fieldContentWithTooltip,
 				fieldName: field.origName
 			});
 			if (this.multiSchema) {
