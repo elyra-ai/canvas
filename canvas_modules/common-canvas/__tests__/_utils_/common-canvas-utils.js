@@ -46,7 +46,7 @@ export function createIntlCommonCanvas(
 	decorationActionHandler,
 	selectionChangeHandler,
 	tipHandler,
-
+	showBottomPanel,
 	toolbarConfig,
 	notificationConfig,
 	contextMenuConfig,
@@ -68,8 +68,9 @@ export function createIntlCommonCanvas(
 				toolbarConfig={toolbarConfig}
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
-				showRightFlyout={false}
+				showRightFlyout={showRightFlyout}
 				canvasController={canvasController}
+				showBottomPanel={showBottomPanel}
 			/>
 		</IntlProvider>
 	);
