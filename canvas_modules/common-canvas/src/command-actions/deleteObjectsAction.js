@@ -137,7 +137,7 @@ export default class DeleteObjectsAction extends Action {
 	// Standard methods
 	do() {
 		this.apiPipeline.deleteAndUpdateObjects({
-			linksToUpdate: this.linksToUpdateInfo.newLinks || [],
+			linksToUpdate: this.linksToUpdateInfo.newLinks,
 			linksToDelete: this.linksToDelete,
 			supernodesToDelete: this.supernodesToDelete,
 			pipelinesToDelete: this.pipelinesToDelete,
@@ -149,7 +149,7 @@ export default class DeleteObjectsAction extends Action {
 
 	undo() {
 		this.apiPipeline.addAndUpdateObjects({
-			linksToUpdate: this.linksToUpdateInfo.oldLinks || [],
+			linksToUpdate: this.linksToUpdateInfo.oldLinks,
 			linksToAdd: this.linksToDelete,
 			supernodesToAdd: this.supernodesToDelete,
 			pipelinesToAdd: this.pipelinesToDelete,

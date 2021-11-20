@@ -1134,9 +1134,7 @@ export default class APIPipeline {
 	}
 
 	updateLinks(links) {
-		if (links) {
-			this.store.dispatch({ type: "UPDATE_LINKS", data: { linkToUpdate: links }, pipelineId: this.pipelineId });
-		}
+		this.store.dispatch({ type: "UPDATE_LINKS", data: { linksToUpdate: links }, pipelineId: this.pipelineId });
 	}
 
 	updateLink(link) {

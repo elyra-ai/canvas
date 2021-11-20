@@ -175,30 +175,33 @@ export default (state = [], action) => {
 	}
 
 	case "UPDATE_LINKS": {
-		return state.map((link) => {
-			const linkToUpdate = action.data.linksToUpdate.find((l) => l.id === link.id);
-			if (linkToUpdate) {
-				const newLink = Object.assign({}, link, linkToUpdate);
-				// Each link can only have either srcNodeId/srcNodePortId or srcPos so
-				// ensure the one is deleted in the presence of the other.
-				if (linkToUpdate.srcPos) {
-					delete newLink.srcNodeId;
-					delete newLink.srcNodePortId;
-				} else if (linkToUpdate.srcNodeId) {
-					delete newLink.srcPos;
+		if (action.data.linksToUpdate) {
+			return state.map((link) => {
+				const linkToUpdate = action.data.linksToUpdate.find((l) => l.id === link.id);
+				if (linkToUpdate) {
+					const newLink = Object.assign({}, link, linkToUpdate);
+					// Each link can only have either srcNodeId/srcNodePortId or srcPos so
+					// ensure the one is deleted in the presence of the other.
+					if (linkToUpdate.srcPos) {
+						delete newLink.srcNodeId;
+						delete newLink.srcNodePortId;
+					} else if (linkToUpdate.srcNodeId) {
+						delete newLink.srcPos;
+					}
+					// Each link can only have either trgNodeId/trgNodePortId or trgPos so
+					// ensure the one is deleted in the presence of the other.
+					if (linkToUpdate.trgPos) {
+						delete newLink.trgNodeId;
+						delete newLink.trgNodePortId;
+					} else if (linkToUpdate.trgNodeId) {
+						delete newLink.trgPos;
+					}
+					return newLink;
 				}
-				// Each link can only have either trgNodeId/trgNodePortId or trgPos so
-				// ensure the one is deleted in the presence of the other.
-				if (linkToUpdate.trgPos) {
-					delete newLink.trgNodeId;
-					delete newLink.trgNodePortId;
-				} else if (linkToUpdate.trgNodeId) {
-					delete newLink.trgPos;
-				}
-				return newLink;
-			}
-			return link;
-		});
+				return link;
+			});
+		}
+		return state;
 	}
 
 	case "SET_LINKS_CLASS_NAME":

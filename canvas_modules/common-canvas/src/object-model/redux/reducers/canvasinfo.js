@@ -199,26 +199,26 @@ export default (state = {}, action) => {
 				if (pipeline.id === action.pipelineId) {
 					// Update Links
 					let newLinks = links(pipeline.links,
-						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate } });
+						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate || [] } });
 
 					// Delete Links
 					newLinks = links(newLinks,
-						{ type: "DELETE_LINKS", data: { linksToDelete: action.data.linksToDelete } });
+						{ type: "DELETE_LINKS", data: { linksToDelete: action.data.linksToDelete || [] } });
 
 					// Delete Supernodes
 					let newNodes = nodes(pipeline.nodes,
-						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete } });
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete || [] } });
 
 					newLinks = links(newLinks,
-						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete } });
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete || [] } });
 
 					// Delete Nodes
 					newNodes = nodes(newNodes,
-						{ type: "DELETE_NODES", data: { nodesToDelete: action.data.nodesToDelete } });
+						{ type: "DELETE_NODES", data: { nodesToDelete: action.data.nodesToDelete || [] } });
 
 					// Delete Comments
 					const newComments = comments(pipeline.comments,
-						{ type: "DELETE_COMMENTS", data: { commentsToDelete: action.data.commentsToDelete } });
+						{ type: "DELETE_COMMENTS", data: { commentsToDelete: action.data.commentsToDelete || [] } });
 
 					return Object.assign({}, pipeline, {
 						nodes: newNodes,
@@ -243,23 +243,23 @@ export default (state = {}, action) => {
 
 					// Add Supernodes
 					let newNodes = nodes(pipeline.nodes,
-						{ type: "ADD_SUPERNODES", data: { supernodesToAdd: action.data.supernodesToAdd } });
+						{ type: "ADD_SUPERNODES", data: { supernodesToAdd: action.data.supernodesToAdd || [] } });
 
 					// Add Nodes
 					newNodes = nodes(newNodes,
-						{ type: "ADD_NODES", data: { nodesToAdd: action.data.nodesToAdd } });
+						{ type: "ADD_NODES", data: { nodesToAdd: action.data.nodesToAdd || [] } });
 
 					// Add Comments
 					const newComments = comments(pipeline.comments,
-						{ type: "ADD_COMMENTS", data: { commentsToAdd: action.data.commentsToAdd } });
+						{ type: "ADD_COMMENTS", data: { commentsToAdd: action.data.commentsToAdd || [] } });
 
 					// Add Links
 					let newLinks = links(pipeline.links,
-						{ type: "ADD_LINKS", data: { linksToAdd: action.data.linksToAdd } });
+						{ type: "ADD_LINKS", data: { linksToAdd: action.data.linksToAdd || [] } });
 
 					// Update Links
 					newLinks = links(newLinks,
-						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate } });
+						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate || [] } });
 
 					return Object.assign({}, pipeline, {
 						nodes: newNodes,
