@@ -1805,7 +1805,7 @@ export default class ObjectModel {
 
 		if (this.selectionChangeHandler) {
 
-			// determine delta in selected nodes and comments
+			// Determine delta in selected nodes, comments and links
 			const selectedLinks = this.getSelectedLinks();
 			const selectedNodes = this.getSelectedNodes();
 			const selectedComments = this.getSelectedComments();

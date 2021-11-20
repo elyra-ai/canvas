@@ -88,6 +88,18 @@ export default class APIPipeline {
 		}, objectIds);
 	}
 
+	addAndUpdateObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "ADD_AND_UPDATE_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
+	deleteAndUpdateObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "DELETE_AND_UPDATE_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
 	// Returns an object containing and array of nodes and an array of comments
 	// that match the array of objectIds passed in.
 	filterNodesAndComments(objectIds) {
@@ -1123,12 +1135,12 @@ export default class APIPipeline {
 
 	updateLinks(links) {
 		if (links) {
-			links.forEach((l) => this.updateLink(l));
+			this.store.dispatch({ type: "UPDATE_LINKS", data: { linkToUpdate: links }, pipelineId: this.pipelineId });
 		}
 	}
 
 	updateLink(link) {
-		this.store.dispatch({ type: "UPDATE_LINK", data: { link: link }, pipelineId: this.pipelineId });
+		this.updateLinks([link]);
 	}
 
 	createNodeLinks(data) {

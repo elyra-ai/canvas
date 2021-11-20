@@ -41,10 +41,12 @@ export default (state = [], action) => {
 		return newset;
 	}
 
+	case "ADD_OBJECTS_AND_UPDATE":
 	case "ADD_SUPERNODES": {
 		return [...state, ...action.data.extPipelineFlowsToAdd];
 	}
 
+	case "DELETE_OBJECTS_AND_UPDATE":
 	case "DELETE_SUPERNODES": {
 		return state.filter((epf) => {
 			const removePFlow = action.data.extPipelineFlowsToDelete.some((pf) => epf.url === pf.url);
