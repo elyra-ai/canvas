@@ -141,7 +141,7 @@ export default class SVGCanvasD3 {
 				// 1. We are editng text, because the text area needs to receive key
 				//    presses for undo, redo, delete etc.
 				// 2. Dragging objects
-				if (this.renderer.isEditingText() &&
+				if (this.renderer.isEditingText() ||
 						this.renderer.isDragging()) {
 					return;
 				}
