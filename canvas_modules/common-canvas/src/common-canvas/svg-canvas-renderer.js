@@ -618,6 +618,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Returns true when we are editing text. Called by svg-canvas-d3.
 	isEditingText() {
 		if (this.editingText) {
 			return true;
@@ -629,6 +630,11 @@ export default class SVGCanvasRenderer {
 			}
 		});
 		return state;
+	}
+
+	// Returns true when we are dragging objects. Called by svg-canvas-d3.
+	isDragging() {
+		return this.dragging;
 	}
 
 	getAllNodeGroupsSelection() {
