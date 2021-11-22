@@ -112,9 +112,9 @@ export default class SVGCanvasD3 {
 		return cloneDeep(canvasInfo);
 	}
 
-	// Keeps tracking mouse positions only within canvasUI & constantly feeds the
-	// mousePos object with {x,y} values otherwise(mouse positions outside of canvasUI)
-	// mousePos will get null.
+	// Records in mousePos the mouse pointer position when the pointer is inside
+	// the boundaries of the canvas or sets the mousePos to null. This position
+	// info can be used with keyboard operations.
 	onMouseUpdate(e) {
 		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
 			this.mousePos = {
@@ -137,47 +137,53 @@ export default class SVGCanvasD3 {
 				// keyboard action.
 				this.canvasController.closeTip();
 				const actions = this.canvasController.getKeyboardConfig().actions;
-				// Only catch key pressses when NOT editing because, while editing,
-				// the text area needs to receive key presses for undo, redo, delete etc.
-				if (!this.renderer.isEditingText()) {
-					if ((d3Event.keyCode === BACKSPACE_KEY || d3Event.keyCode === DELETE_KEY) && actions.delete) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						this.canvasController.keyboardActionHandler("deleteSelectedObjects");
+				// We don't handle key presses when:
+				// 1. We are editng text, because the text area needs to receive key
+				//    presses for undo, redo, delete etc.
+				// 2. Dragging objects
+				if (this.renderer.isEditingText() &&
+						this.renderer.isDragging()) {
+					return;
+				}
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && !d3Event.shiftKey && d3Event.keyCode === Z_KEY && actions.undo) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("undo");
+				if ((d3Event.keyCode === BACKSPACE_KEY || d3Event.keyCode === DELETE_KEY) && actions.delete) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
+					this.canvasController.keyboardActionHandler("deleteSelectedObjects");
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) &&
-							((d3Event.shiftKey && d3Event.keyCode === Z_KEY) || d3Event.keyCode === Y_KEY && actions.redo)) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("redo");
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) &&
+						!d3Event.shiftKey && d3Event.keyCode === Z_KEY && actions.undo) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.canvasController.keyboardActionHandler("undo");
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === A_KEY && actions.selectAll) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("selectAll");
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) &&
+						((d3Event.shiftKey && d3Event.keyCode === Z_KEY) || d3Event.keyCode === Y_KEY && actions.redo)) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.canvasController.keyboardActionHandler("redo");
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === C_KEY && actions.copyToClipboard) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("copy");
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === A_KEY && actions.selectAll) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.canvasController.keyboardActionHandler("selectAll");
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === X_KEY && actions.cutToClipboard) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						this.canvasController.keyboardActionHandler("cut");
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === C_KEY && actions.copyToClipboard) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.canvasController.keyboardActionHandler("copy");
 
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						if (this.mousePos) {
-							this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
-							this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos);
-							this.canvasController.keyboardActionHandler("paste", this.mousePos);
-						} else {
-							this.canvasController.keyboardActionHandler("paste");
-						}
-					} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						Logger.switchLoggingState(); // Switch the logging on and off
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === X_KEY && actions.cutToClipboard) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					this.canvasController.keyboardActionHandler("cut");
+
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.keyCode === V_KEY && actions.pasteFromClipboard) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					if (this.mousePos) {
+						this.mousePos = this.renderer.convertPageCoordsToCanvasCoords(this.mousePos.x, this.mousePos.y);
+						this.mousePos = this.renderer.getMousePosSnapToGrid(this.mousePos);
+						this.canvasController.keyboardActionHandler("paste", this.mousePos);
+					} else {
+						this.canvasController.keyboardActionHandler("paste");
 					}
+				} else if (CanvasUtils.isCmndCtrlPressed(d3Event) && d3Event.shiftKey && d3Event.altKey && d3Event.keyCode === P_KEY) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					Logger.switchLoggingState(); // Switch the logging on and off
 				}
 			});
 		return canvasDiv;
