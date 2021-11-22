@@ -632,7 +632,7 @@ export default class SVGCanvasRenderer {
 		return state;
 	}
 
-	// Returns true when we are draging objects. Called by svg-canvas-d3.
+	// Returns true when we are dragging objects. Called by svg-canvas-d3.
 	isDragging() {
 		return this.dragging;
 	}
