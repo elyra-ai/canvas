@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,30 +174,34 @@ export default (state = [], action) => {
 		});
 	}
 
-	case "UPDATE_LINK": {
-		return state.map((link) => {
-			if (link.id === action.data.link.id) {
-				const newLink = Object.assign({}, link, action.data.link);
-				// Each link can only have either srcNodeId/srcNodePortId or srcPos so
-				// ensure the one is deleted in the presence of the other.
-				if (action.data.link.srcPos) {
-					delete newLink.srcNodeId;
-					delete newLink.srcNodePortId;
-				} else if (action.data.link.srcNodeId) {
-					delete newLink.srcPos;
+	case "UPDATE_LINKS": {
+		if (action.data.linksToUpdate) {
+			return state.map((link) => {
+				const linkToUpdate = action.data.linksToUpdate.find((l) => l.id === link.id);
+				if (linkToUpdate) {
+					const newLink = Object.assign({}, link, linkToUpdate);
+					// Each link can only have either srcNodeId/srcNodePortId or srcPos so
+					// ensure the one is deleted in the presence of the other.
+					if (linkToUpdate.srcPos) {
+						delete newLink.srcNodeId;
+						delete newLink.srcNodePortId;
+					} else if (linkToUpdate.srcNodeId) {
+						delete newLink.srcPos;
+					}
+					// Each link can only have either trgNodeId/trgNodePortId or trgPos so
+					// ensure the one is deleted in the presence of the other.
+					if (linkToUpdate.trgPos) {
+						delete newLink.trgNodeId;
+						delete newLink.trgNodePortId;
+					} else if (linkToUpdate.trgNodeId) {
+						delete newLink.trgPos;
+					}
+					return newLink;
 				}
-				// Each link can only have either trgNodeId/trgNodePortId or trgPos so
-				// ensure the one is deleted in the presence of the other.
-				if (action.data.link.trgPos) {
-					delete newLink.trgNodeId;
-					delete newLink.trgNodePortId;
-				} else if (action.data.link.trgNodeId) {
-					delete newLink.trgPos;
-				}
-				return newLink;
-			}
-			return link;
-		});
+				return link;
+			});
+		}
+		return state;
 	}
 
 	case "SET_LINKS_CLASS_NAME":

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,7 +175,7 @@ export default (state = {}, action) => {
 	case "SET_LINKS_CLASS_NAME":
 	case "DELETE_LINK":
 	case "DELETE_LINKS":
-	case "UPDATE_LINK":
+	case "UPDATE_LINKS":
 	case "ADD_COMMENT":
 	case "EDIT_COMMENT":
 	case "SET_COMMENT_PROPERTIES":
@@ -190,6 +190,90 @@ export default (state = {}, action) => {
 			}
 			return pipeline;
 		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DELETE_AND_UPDATE_OBJECTS": {
+		let canvasInfoPipelines = state.pipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.pipelineId) {
+					// Update Links
+					let newLinks = links(pipeline.links,
+						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate || [] } });
+
+					// Delete Links
+					newLinks = links(newLinks,
+						{ type: "DELETE_LINKS", data: { linksToDelete: action.data.linksToDelete || [] } });
+
+					// Delete Supernodes
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete || [] } });
+
+					newLinks = links(newLinks,
+						{ type: "DELETE_SUPERNODES", data: { supernodesToDelete: action.data.supernodesToDelete || [] } });
+
+					// Delete Nodes
+					newNodes = nodes(newNodes,
+						{ type: "DELETE_NODES", data: { nodesToDelete: action.data.nodesToDelete || [] } });
+
+					// Delete Comments
+					const newComments = comments(pipeline.comments,
+						{ type: "DELETE_COMMENTS", data: { commentsToDelete: action.data.commentsToDelete || [] } });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+
+		canvasInfoPipelines = canvasInfoPipelines.filter((pipeline) => {
+			const removePipeline = action.data.pipelinesToDelete.some((p) => p.id === pipeline.id);
+			return !removePipeline;
+		});
+
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "ADD_AND_UPDATE_OBJECTS": {
+		let canvasInfoPipelines = state.pipelines
+			.map((pipeline) => {
+				if (pipeline.id === action.pipelineId) {
+
+					// Add Supernodes
+					let newNodes = nodes(pipeline.nodes,
+						{ type: "ADD_SUPERNODES", data: { supernodesToAdd: action.data.supernodesToAdd || [] } });
+
+					// Add Nodes
+					newNodes = nodes(newNodes,
+						{ type: "ADD_NODES", data: { nodesToAdd: action.data.nodesToAdd || [] } });
+
+					// Add Comments
+					const newComments = comments(pipeline.comments,
+						{ type: "ADD_COMMENTS", data: { commentsToAdd: action.data.commentsToAdd || [] } });
+
+					// Add Links
+					let newLinks = links(pipeline.links,
+						{ type: "ADD_LINKS", data: { linksToAdd: action.data.linksToAdd || [] } });
+
+					// Update Links
+					newLinks = links(newLinks,
+						{ type: "UPDATE_LINKS", data: { linksToUpdate: action.data.linksToUpdate || [] } });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
+
+		canvasInfoPipelines = [
+			...canvasInfoPipelines,
+			...action.data.pipelinesToAdd
+		];
+
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
@@ -277,10 +361,10 @@ export default (state = {}, action) => {
 				if (pipeline.id === action.data.pipelineId) {
 					// Remove nodes, comments and links from main pipeline that were previosuly added
 					let newNodes = nodes(pipeline.nodes,
-						{ type: "REMOVE_NODES", data: { nodesToDelete: action.data.nodesToAdd } });
+						{ type: "DELETE_NODES", data: { nodesToDelete: action.data.nodesToAdd } });
 
 					let newComments = comments(pipeline.comments,
-						{ type: "REMOVE_COMMENTS", data: { commentsToDelete: action.data.commentsToAdd } });
+						{ type: "DELETE_COMMENTS", data: { commentsToDelete: action.data.commentsToAdd } });
 
 					let newLinks = links(pipeline.links,
 						{ type: "REMOVE_LINKS", data: { linksToDelete: action.data.linksToAdd } });
