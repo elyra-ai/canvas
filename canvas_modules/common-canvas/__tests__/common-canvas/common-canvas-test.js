@@ -35,90 +35,75 @@ describe("CommonCanvas renders correctly", () => {
 
 	it("should render one <CanvasBottomPanel/> component when showBottomPanel is true", () => {
 		const config = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, { showBottomPanel: true }, canvasRightPanelParams);
+		const canvasParams = { showBottomPanel: true };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CanvasBottomPanel)).to.have.length(1);
 		expect(canvasController.isBottomPanelOpen() === true).to.be.true;
 	});
 
-	it("should render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
+	it("should not render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
 		const config = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, { showBottomPanel: false }, canvasRightPanelParams);
+		const canvasParams = { showBottomPanel: false };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CanvasBottomPanel)).to.have.length(1);
 		expect(canvasController.isBottomPanelOpen() === false).to.be.true;
 	});
 
-	it("should render one <CommonCanvasRightFlyout/> component when showRightFlyout is false", () => {
+	it("should not render one <CommonCanvasRightFlyout/> component when showRightFlyout is false", () => {
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, { showRightFlyout: false });
+		const canvasParams = { showRightFlyout: false };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
-		expect(canvasController.isRightFlyoutOpen() === true).to.be.false;
+		expect(!canvasController.isRightFlyoutOpen()).to.be.true;
 	});
 
 	it("should render one <CommonCanvasRightFlyout/> component when showRightFlyout is true", () => {
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, { showRightFlyout: true });
+		const canvasParams = { showRightFlyout: true };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
-		expect(canvasController.isRightFlyoutOpen() === false).to.be.false;
 	});
 
 	it("should render one <CanvasContents/> component", () => {
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(CanvasContents)).to.have.length(1);
 	});
 
 	it("should render one <PaletteDialog/> component when enablePaletteLayout is set to Modal", () => {
 		const config = { enablePaletteLayout: "Modal" };
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteDialog)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
-		const canvasRightPanelParams = {};
-		const canvasBottomPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is set to Flyout", () => {
 		const config = { enablePaletteLayout: "Flyout" };
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should not render any <PaletteDialog/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(PaletteDialog)).to.have.length(0);
 	});
 
 	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {
 		const toolbarConfig = [];
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig);
+		const wrapper = createCommonCanvas(config, canvasController, toolbarConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
 	it("should render one <Toolbar/> component when there is no toolbarConfig", () => {
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams);
+		const wrapper = createCommonCanvas(config, canvasController);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
@@ -126,9 +111,7 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		const wrapper = createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig);
+		const wrapper = createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 		expect(wrapper.find(NotificationPanel)).to.have.length(1);
 	});
@@ -138,9 +121,7 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = { paletteInitialState: true };
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig);
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is true
 		// therefore the palette should be open initially.
@@ -151,9 +132,7 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = { paletteInitialState: false };
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig);
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is false
 		// therefore the palette should be closed initially.
@@ -165,9 +144,7 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig);
+		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig);
 
 		// The paletteInitialState config parameter is not provided when CommonCanvas
 		// is created therefore the palette should be closed initially.
@@ -185,12 +162,11 @@ describe("CommonCanvas renders correctly", () => {
 	it("should call editActionHandler when object model is being edited", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
 		const config = {};
+		const canvasParams = {};
 
 		const editActionHandler = sinon.spy();
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler });
 
 		canvasController.editActionHandler({ editType: "dummayFunction" });
@@ -202,12 +178,12 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
+		const canvasParams = {};
+
 
 		const beforeEditActionHandler = (data) => data; // Just return the data passd in
 		const editActionHandler = sinon.spy();
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
@@ -223,9 +199,8 @@ describe("CommonCanvas renders correctly", () => {
 
 		const beforeEditActionHandler = (data) => null; // Return null to stop command being executed
 		const editActionHandler = sinon.spy();
-		const canvasBottomPanelParams = {};
-		const canvasRightPanelParams = {};
-		createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig,
+		const canvasParams = {};
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
@@ -235,7 +210,7 @@ describe("CommonCanvas renders correctly", () => {
 	});
 });
 
-function createCommonCanvas(config, canvasController, canvasBottomPanelParams, canvasRightPanelParams, toolbarConfig, notificationConfig, handlers) {
+function createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig, handlers) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
@@ -254,8 +229,8 @@ function createCommonCanvas(config, canvasController, canvasBottomPanelParams, c
 		decorationActionHandler,
 		selectionChangeHandler,
 		tipHandler,
-		canvasBottomPanelParams.showBottomPanel,
-		canvasRightPanelParams.showRightFlyout,
+		canvasParams.showBottomPanel,
+		canvasParams.showRightFlyout,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
