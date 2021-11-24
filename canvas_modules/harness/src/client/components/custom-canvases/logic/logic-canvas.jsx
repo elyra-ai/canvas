@@ -39,11 +39,12 @@ export default class LogicCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "logic-canvas",
 			enableNodeFormatType: "Horizontal",
-			enableLinkType: "Elbow",
+			enableLinkType: "Straight",
 			enableLinkDirection: "TopBottom",
 			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
 			paletteInitialState: true,
+			enableInsertNodeDroppedOnLink: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
@@ -101,7 +102,7 @@ export default class LogicCanvas extends React.Component {
 			enableCanvasLayout: {
 				commentHighlightGap: 6,
 				nodeProximity: 50,
-				displayLinkOnOverlap: false,
+				displayLinkOnOverlap: true,
 
 				dataLinkArrowHead: true,
 				linkGap: 4,
