@@ -44,6 +44,7 @@ export default class LogicCanvas extends React.Component {
 			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
 			paletteInitialState: true,
+			enableInsertNodeDroppedOnLink: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
@@ -101,7 +102,7 @@ export default class LogicCanvas extends React.Component {
 			enableCanvasLayout: {
 				commentHighlightGap: 6,
 				nodeProximity: 50,
-				displayLinkOnOverlap: false,
+				displayLinkOnOverlap: true,
 
 				dataLinkArrowHead: true,
 				linkGap: 4,
