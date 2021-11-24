@@ -19,6 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import FlexibleTable from "./../flexible-table";
+import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import PropertiesButtons from "./../properties-buttons";
 import * as PropertyUtils from "./../../util/property-utils";
 
@@ -162,26 +163,18 @@ export default class FieldPicker extends React.Component {
 					</div>
 				);
 			}
-			const tooltipId = uuid4() + "-tooltip-fieldpicker";
-			const tooltip = (
-				<div className="properties-tooltips">
-					{String(field.origName)}
-				</div>
-			);
 			let disabled = true;
 			if (field.origName) {
 				disabled = false;
 			}
-			const fieldContentWithTooltip = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction="bottom"
-				className="properties-tooltips"
-				disable={disabled}
-				showToolTipIfTruncated
-			>
-				{fieldContent}
-			</Tooltip>);
+			const fieldContentWithTooltip = (
+				<TruncatedContentTooltip
+					uniqueIdentifier="tooltip-fieldpicker"
+					content={fieldContent}
+					tooltipText={field.origName}
+					disabled={disabled}
+				/>
+			);
 			columns.push({
 				column: "fieldName",
 				content: fieldContentWithTooltip,
