@@ -34,24 +34,21 @@ import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 
 
-// required for server side rendering.
-let cm = null;
-if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-	cm = require("codemirror");
-	require("codemirror/addon/hint/show-hint");
-	require("codemirror/addon/display/placeholder");
-	require("codemirror/addon/display/autorefresh");
-	require("codemirror/mode/javascript/javascript");
-	require("codemirror/addon/hint/javascript-hint");
-	require("codemirror/addon/hint/sql-hint");
-	require("codemirror/mode/sql/sql");
-	require("codemirror/mode/python/python");
-	require("codemirror/mode/r/r");
-	require("./languages/python-hint");
-	require("./languages/r-hint");
-	require("./languages/CLEM");
-	require("./languages/CLEM-hint");
-}
+import cm from "codemirror";
+import "codemirror/addon/hint/show-hint";
+import "codemirror/addon/display/placeholder";
+import "codemirror/addon/display/autorefresh";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/addon/hint/javascript-hint";
+import "codemirror/addon/hint/sql-hint";
+import "codemirror/mode/sql/sql";
+import "codemirror/mode/python/python";
+import "codemirror/mode/r/r";
+import "./languages/python-hint";
+import "./languages/r-hint";
+import "./languages/CLEM";
+import "./languages/CLEM-hint";
+
 
 const pxPerChar = 8.5;
 const pxPerLine = 26;
