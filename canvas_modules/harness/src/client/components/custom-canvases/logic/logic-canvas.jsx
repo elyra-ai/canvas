@@ -39,7 +39,7 @@ export default class LogicCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "logic-canvas",
 			enableNodeFormatType: "Horizontal",
-			enableLinkType: "Elbow",
+			enableLinkType: "Straight",
 			enableLinkDirection: "TopBottom",
 			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
