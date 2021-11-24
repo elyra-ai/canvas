@@ -2204,8 +2204,13 @@ export default class SVGCanvasRenderer {
 				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 				// Set highlighting when there is no link because this will turn
 				// current highlighting off. And only switch on highlighting when we are
-				// over a fully attached link (not a detached link).
-				if (!link || this.isLinkFullyAttached(link)) {
+				// over a fully attached link (not a detached link) and provided the
+				// link is not to/from the node being dragged (which is possible in
+				// some odd situations).
+				if (!link ||
+						(this.isLinkFullyAttached(link) &&
+							this.dragObjects[0].id !== link.srcNodeId &&
+							this.dragObjects[0].id !== link.trgNodeId)) {
 					this.setInsertNodeIntoLinkHighlighting(link);
 				}
 			}
