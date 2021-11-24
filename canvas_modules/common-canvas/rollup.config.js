@@ -14,69 +14,71 @@
  * limitations under the License.
  */
 
+import autoExternal from "rollup-plugin-auto-external";
 import babel from "rollup-plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
-import pkg from "./package.json";
 import resolve from "@rollup/plugin-node-resolve";
 import scss from "rollup-plugin-scss";
 import { terser } from "rollup-plugin-terser";
 import url from "@rollup/plugin-url";
 import { visualizer } from "rollup-plugin-visualizer";
 
-export default [
-	{
-		input: {
-			"lib/properties": "./src/common-properties/index.js",
-			"lib/properties/field-picker": "./src/common-properties/components/field-picker/index.js",
-			"lib/properties/flexible-table": "./src/common-properties/components/flexible-table/index.js",
-			"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
-			"lib/command-stack": "./src/command-stack/command-stack.js",
-			"lib/tooltip": "./src/tooltip/tooltip.jsx",
-			"lib/canvas": "./src/common-canvas/index.js",
-			"common-canvas": "./src/index.js"
+const bundleReport = process.env.BUNDLE_REPORT;
+
+export default ["es", "umd"].map((format) => ({
+	input: {
+		"lib/properties": "./src/common-properties/index.js",
+		"lib/properties/field-picker": "./src/common-properties/components/field-picker/index.js",
+		"lib/properties/flexible-table": "./src/common-properties/components/flexible-table/index.js",
+		"lib/context-menu": "./src/context-menu/context-menu-wrapper.jsx",
+		"lib/command-stack": "./src/command-stack/command-stack.js",
+		"lib/tooltip": "./src/tooltip/tooltip.jsx",
+		"lib/canvas": "./src/common-canvas/index.js",
+		"common-canvas": "./src/index.js"
+	},
+	output: [
+		{
+			entryFileNames: "[name].js",
+			dir: "./dist",
+			format: "cjs",
+			sourcemap: true,
+			exports: "auto"
 		},
-		output: [
+		{
+			entryFileNames: "[name].[format].js",
+			dir: "./dist",
+			format: "esm",
+			sourcemap: true
+		}
+	],
+	plugins: [
+		resolve(
 			{
-				entryFileNames: "[name].js",
-				dir: "./dist",
-				format: "cjs",
-				sourcemap: true,
-				exports: "auto"
-			},
-			{
-				entryFileNames: "[name].[format].js",
-				dir: "./dist",
-				format: "esm",
-				sourcemap: true
+				extensions: [".js", ".jsx", ".json"]
 			}
-		],
-		plugins: [
-			resolve(
-				{
-					extensions: [".js", ".jsx", ".json"]
-				}
-			),
-			babel({
-				exclude: "node_modules/**",
-				runtimeHelpers: true,
-				presets: [
-					"@babel/preset-react",
-					"@babel/env"
-				],
-				plugins: [
-					"lodash",
-					"@babel/plugin-proposal-class-properties",
-					"@babel/plugin-transform-runtime"
-				]
-			}),
-			commonjs(),
-			terser(),
-			json(),
-			url(),
-			scss({ output: false }),
-			visualizer({ open: true })
-		],
-		external: Object.keys(pkg.dependencies).concat(Object.keys(pkg.peerDependencies))
-	}
-];
+		),
+		babel({
+			exclude: "node_modules/**",
+			runtimeHelpers: true,
+			presets: [
+				"@babel/preset-react",
+				"@babel/env"
+			],
+			plugins: [
+				"lodash",
+				"@babel/plugin-proposal-class-properties",
+				"@babel/plugin-transform-runtime"
+			]
+		}),
+		autoExternal({
+			dependencies: format === "es",
+		}),
+		commonjs(),
+		terser(),
+		json(),
+		url(),
+		scss({ output: false }),
+		visualizer({ open: bundleReport })
+	]
+}));

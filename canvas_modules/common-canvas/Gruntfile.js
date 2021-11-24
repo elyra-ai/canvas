@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-/* eslint global-require: 0 */
 
-var codeCoverageDir = "reports/coverage";
+const codeCoverageDir = "reports/coverage";
+const autoprefixer = require("autoprefixer");
+// const stylelint = require("stylelint");
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -53,23 +54,40 @@ module.exports = function(grunt) {
 			},
 			build: {
 				src: ["dist"]
-			},
-			postBuild: {
-				src: ["dist/lib/*.css*", "dist/styles/*.js*", "dist/*.css*"]
 			}
 		},
-		webpack: {
-			client: require("./webpack.config")
+		sass: {
+			dist: {
+				options: {
+					loadPath: [".", "node_modules"],
+					style: "compressed",
+				},
+				files: {
+					"dist/styles/common-canvas.min.css": "src/index.scss"
+				}
+			}
+		},
+		postcss: {
+			options: {
+				processors: [
+					// stylelint(),
+					autoprefixer(), // add vendor prefixes
+				]
+			},
+			dist: {
+				src: "dist/styles/*.css"
+			}
 		}
 	});
 
 	grunt.loadNpmTasks("grunt-contrib-clean");
+	grunt.loadNpmTasks("grunt-contrib-sass");
+	grunt.loadNpmTasks("grunt-postcss");
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
-	grunt.loadNpmTasks("grunt-webpack");
 
-	const buildTasks = ["clean", "eslint", "jsonlint", "yamllint", "webpack", "clean:postBuild"];
+	const buildTasks = ["clean", "eslint", "jsonlint", "yamllint", "sass", "postcss"];
 
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);
