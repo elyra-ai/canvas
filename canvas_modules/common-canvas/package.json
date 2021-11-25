@@ -92,7 +92,7 @@
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-visualizer": "5.5.2",
     "sinon": "9.0.3",
-    "stylelint": "14.1.0"
+    "stylelint": "13.13.1"
   },
   "peerDependencies": {
     "carbon-components": "^10.48.0",
