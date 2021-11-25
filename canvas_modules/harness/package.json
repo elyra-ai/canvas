@@ -5,10 +5,11 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
+    "build": "npx stylelint '**/*.scss' && grunt",
     "test": "npx cypress open",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
     "start-prod": "NODE_ENV=production node index.js",
-    "build-prod": "NODE_ENV=production grunt"
+    "build-prod": "npx stylelint '**/*.scss' && NODE_ENV=production grunt"
   },
   "engines": {
     "node": "12.x",
@@ -86,7 +87,7 @@
     "sass-loader": "10.0.2",
     "source-map-loader": "1.1.0",
     "style-loader": "1.2.1",
-    "stylelint": "13.13.1",
+    "stylelint": "14.1.0",
     "webpack": "4.44.2",
     "webpack-bundle-analyzer": "3.9.0",
     "webpack-dev-middleware": "3.7.2",

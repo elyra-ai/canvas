@@ -15,7 +15,7 @@
  */
 
 import autoExternal from "rollup-plugin-auto-external";
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
@@ -26,7 +26,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 const bundleReport = process.env.BUNDLE_REPORT;
 
-export default ["es", "umd"].map((format) => ({
+export default {
 	input: {
 		"lib/properties": "./src/common-properties/index.js",
 		"lib/properties/field-picker": "./src/common-properties/components/field-picker/index.js",
@@ -71,9 +71,7 @@ export default ["es", "umd"].map((format) => ({
 				"@babel/plugin-transform-runtime"
 			]
 		}),
-		autoExternal({
-			dependencies: format === "es",
-		}),
+		autoExternal(),
 		commonjs(),
 		terser(),
 		json(),
@@ -81,4 +79,4 @@ export default ["es", "umd"].map((format) => ({
 		scss({ output: false }),
 		visualizer({ open: bundleReport })
 	]
-}));
+};

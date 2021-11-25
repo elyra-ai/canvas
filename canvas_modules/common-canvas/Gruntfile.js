@@ -17,7 +17,6 @@
 
 const codeCoverageDir = "reports/coverage";
 const autoprefixer = require("autoprefixer");
-// const stylelint = require("stylelint");
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -70,8 +69,7 @@ module.exports = function(grunt) {
 		postcss: {
 			options: {
 				processors: [
-					// stylelint(),
-					autoprefixer(), // add vendor prefixes
+					autoprefixer() // add vendor prefixes
 				]
 			},
 			dist: {
