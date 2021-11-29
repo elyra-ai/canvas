@@ -2098,6 +2098,9 @@ export default class SVGCanvasRenderer {
 
 	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
+
+		this.closeContextMenuIfOpen();
+
 		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
 			this.resizeObj = this.getComment(d.id);
@@ -2312,6 +2315,8 @@ export default class SVGCanvasRenderer {
 
 	dragStartLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartLinkHandle");
+
+		this.closeContextMenuIfOpen();
 
 		this.draggingLinkHandle = true;
 
@@ -3786,6 +3791,12 @@ export default class SVGCanvasRenderer {
 			zoom: this.zoomTransform.k });
 	}
 
+	closeContextMenuIfOpen() {
+		if (this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.closeContextMenu();
+		}
+	}
+
 	callDecoratorCallback(d3Event, node, dec) {
 		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
@@ -3794,6 +3805,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawNewLink(d3Event) {
+		this.closeContextMenuIfOpen();
+
 		const transPos = this.getTransformedMousePos(d3Event);
 
 		if (this.drawingNewLinkData.action === COMMENT_LINK) {
