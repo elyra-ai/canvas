@@ -3906,8 +3906,17 @@ export default class SVGCanvasRenderer {
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 			const adjacent = d.x2 - d.x1;
 			const opposite = d.y2 - d.y1;
-			angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-			angle = adjacent >= 0 ? angle : angle + 180;
+			if (adjacent === 0 && opposite === 0) {
+				angle = 0;
+			} else {
+				angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
+				angle = adjacent >= 0 ? angle : angle + 180;
+				if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+					angle -= 90;
+				} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+					angle += 90;
+				}
+			}
 			return `rotate(${angle},${d.x2},${d.y2})`;
 		}
 		return null;
