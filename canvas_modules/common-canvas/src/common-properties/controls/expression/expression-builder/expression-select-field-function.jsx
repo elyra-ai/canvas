@@ -227,29 +227,30 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	createContentObject(label) {
-		const contentObject = (
-			<div className="properties-table-cell-control">
-				<div className="properties-expr-table-cell">
-					<span>
-						{label}
-					</span>
-				</div>
-			</div>
-		);
 		let disabled = true;
 		if (label) {
 			disabled = false;
 		}
-		const contentObjectWithTooltip = (
+		const expressionTableCellContent = (
+			<span className="properties-expr-table-cell">
+				{label}
+			</span>
+		);
+		const expressionTableCellContentWithTooltip = (
 			<TruncatedContentTooltip
 				uniqueIdentifier="tooltip-expr-table-cell"
-				content={contentObject}
+				content={expressionTableCellContent}
 				tooltipText={label}
 				disabled={disabled}
 			/>
 		);
+		const contentObject = (
+			<div className="properties-table-cell-control">
+				{expressionTableCellContentWithTooltip}
+			</div>
+		);
 
-		return contentObjectWithTooltip;
+		return contentObject;
 	}
 
 	_makeDatasetFields(dataset, fieldDataset) {

@@ -51,6 +51,5 @@ TruncatedContentTooltip.propTypes = {
 		PropTypes.bool.isRequired,
 		PropTypes.array.isRequired
 	]),
-	// tooltipText: PropTypes.string.isRequired,
 	disabled: PropTypes.bool
 };
