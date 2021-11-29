@@ -22,6 +22,7 @@
     "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
+    "@babel/runtime": "^7.16.3",
     "@carbon/icons-react": "^10.43.0",
     "@carbon/themes": "^10.47.0",
     "@elyra/pipeline-schemas": "^3.0.45",
@@ -91,6 +92,7 @@
     "rollup-plugin-scss": "3.0.0",
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-visualizer": "5.5.2",
+    "sass": "1.43.5",
     "sinon": "9.0.3",
     "stylelint": "13.13.1"
   },

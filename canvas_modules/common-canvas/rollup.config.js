@@ -59,8 +59,8 @@ export default {
 			}
 		),
 		babel({
-			exclude: "node_modules/**",
-			runtimeHelpers: true,
+			babelHelpers: "runtime",
+			exclude: "**/node_modules/**",
 			presets: [
 				"@babel/preset-react",
 				"@babel/env"
