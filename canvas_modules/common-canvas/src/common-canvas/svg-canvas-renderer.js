@@ -2098,6 +2098,11 @@ export default class SVGCanvasRenderer {
 
 	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
+
+		if (this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.closeContextMenu();
+		}
+
 		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
 			this.resizeObj = this.getComment(d.id);
@@ -2312,6 +2317,10 @@ export default class SVGCanvasRenderer {
 
 	dragStartLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartLinkHandle");
+
+		if (this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.closeContextMenu();
+		}
 
 		this.draggingLinkHandle = true;
 
