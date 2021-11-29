@@ -302,14 +302,20 @@ export default class CanvasUtils {
 		const originRightOffsetX = rightEdge - originX;
 		const originBottomOffsetY = bottomEdge - originY;
 
+		const originToEndX = originX - endX;
+		const originToEndY = originY - endY;
+
 		var startPointX;
 		var startPointY;
 
-		// End point is to the right of center
-		if (endX > originX) {
-			const topRightRatio = (originY - topEdge) / (originX - rightEdge);
+		if (originToEndX === 0) {
+			startPointX = originX;
+			startPointY = (endY < originY) ? topEdge : bottomEdge;
+
+		} else if (endX > originX) {
+			const topRightRatio = originTopOffsetY / (originX - rightEdge);
 			const botRightRatio = (originY - bottomEdge) / (originX - rightEdge);
-			const ratioRight = (originY - endY) / (originX - endX);
+			const ratioRight = originToEndY / originToEndX;
 
 			// North
 			if (ratioRight < topRightRatio) {
@@ -326,9 +332,9 @@ export default class CanvasUtils {
 			}
 		// End point is to the left of center
 		} else {
-			const topLeftRatio = (originY - topEdge) / (originX - leftEdge);
-			const botLeftRatio = (originY - bottomEdge) / (originX - leftEdge);
-			const ratioLeft = (originY - endY) / (originX - endX);
+			const topLeftRatio = originTopOffsetY / originLeftOffsetX;
+			const botLeftRatio = (originY - bottomEdge) / originLeftOffsetX;
+			const ratioLeft = originToEndY / originToEndX;
 
 			// North
 			if (ratioLeft > topLeftRatio) {
@@ -344,7 +350,6 @@ export default class CanvasUtils {
 				startPointY = originY - (originLeftOffsetX * ratioLeft);
 			}
 		}
-
 		return { x: startPointX, y: startPointY };
 	}
 
