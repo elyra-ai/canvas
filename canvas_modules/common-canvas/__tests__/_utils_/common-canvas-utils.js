@@ -47,10 +47,11 @@ export function createIntlCommonCanvas(
 	selectionChangeHandler,
 	tipHandler,
 	showBottomPanel,
+	showRightFlyout,
 	toolbarConfig,
 	notificationConfig,
 	contextMenuConfig,
-	showRightFlyout,
+
 	canvasController) {
 
 

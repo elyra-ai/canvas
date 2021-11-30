@@ -54,7 +54,7 @@ describe("CommonCanvas renders correctly", () => {
 		const canvasParams = { showRightFlyout: false };
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
-		expect(!canvasController.isRightFlyoutOpen()).to.be.true;
+		expect(canvasController.isRightFlyoutOpen() === false).to.be.true;
 	});
 
 	it("should render one <CommonCanvasRightFlyout/> component when showRightFlyout is true", () => {
@@ -62,6 +62,7 @@ describe("CommonCanvas renders correctly", () => {
 		const canvasParams = { showRightFlyout: true };
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
+		expect(canvasController.isRightFlyoutOpen() === true).to.be.true;
 	});
 
 	it("should render one <CanvasContents/> component", () => {
