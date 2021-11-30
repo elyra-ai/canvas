@@ -67,31 +67,31 @@ describe("CommonCanvas renders correctly", () => {
 
 	it("should render one <CanvasContents/> component", () => {
 		const config = {};
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(CanvasContents)).to.have.length(1);
 	});
 
 	it("should render one <PaletteDialog/> component when enablePaletteLayout is set to Modal", () => {
 		const config = { enablePaletteLayout: "Modal" };
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(PaletteDialog)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should render one <PaletteFlyout/> component when enablePaletteLayout is set to Flyout", () => {
 		const config = { enablePaletteLayout: "Flyout" };
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should not render any <PaletteDialog/> component when enablePaletteLayout is not specified", () => {
 		const config = {};
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(PaletteDialog)).to.have.length(0);
 	});
 
@@ -104,7 +104,7 @@ describe("CommonCanvas renders correctly", () => {
 
 	it("should render one <Toolbar/> component when there is no toolbarConfig", () => {
 		const config = {};
-		const wrapper = createCommonCanvas(config, canvasController);
+		const wrapper = createCommonCanvas(config, canvasController, {});
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
