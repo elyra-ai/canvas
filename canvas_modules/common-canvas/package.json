@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.5.0",
+  "version": "12.7.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.com/elyra-ai/canvas",
@@ -20,11 +20,11 @@
     "debug": "NODE_ENV=test node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@carbon/icons-react": "10.33.0",
-    "@carbon/themes": "10.36.0",
+    "@carbon/icons-react": "10.43.0",
+    "@carbon/themes": "10.47.0",
     "@elyra/pipeline-schemas": "^3.0.45",
-    "carbon-components": "10.37.0",
-    "carbon-components-react": "7.37.0",
+    "carbon-components": "10.48.0",
+    "carbon-components-react": "7.48.0",
     "carbon-icons": "7.0.7",
     "codemirror": "5.58.2",
     "d3": "7.1.1",
@@ -89,7 +89,7 @@
     "react-redux": "7.2.1",
     "react-test-renderer": "16.13.1",
     "reactable": "1.1.0",
-    "sass": "1.32.2",
+    "sass": "1.42.1",
     "sass-lint": "1.13.1",
     "sass-loader": "10.0.2",
     "sinon": "9.0.3",

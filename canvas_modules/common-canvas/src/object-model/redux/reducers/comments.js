@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ export default (state = [], action) => {
 			return node.id !== action.data.id; // filter will return all objects NOT found
 		});
 
-	case "REMOVE_COMMENTS":
+	case "DELETE_COMMENTS":
 		return state.filter((com) => {
 			const comFound = action.data.commentsToDelete.some((c) => c.id === com.id);
 			return !comFound;

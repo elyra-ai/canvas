@@ -89,8 +89,7 @@ describe("Test for toolbar Create and Delete button", function() {
 		cy.getNodeWithLabel("Define Types").dblclick();
 
 		// Delete node using toolbar
-		cy.clickToolbarOverflow();
-		cy.clickToolbarDeleteInOverflowMenu();
+		cy.clickToolbarDelete();
 
 		// Verification steps
 		cy.verifyNodeIsDeleted("Define Types");

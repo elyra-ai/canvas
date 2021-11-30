@@ -178,7 +178,7 @@ describe("checkbox control tests", () => {
 		);
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxLabel']");
 		// isn't actually visible.  Visibility controlled by carbon component
-		expect(checkboxWrapper.find("label > span").text()).to.equal(controlWithLabel.label.text);
+		expect(checkboxWrapper.find("label").text()).to.equal(controlWithLabel.label.text);
 		expect(checkboxWrapper.find("div.properties-tooltips text")).to.have.length(0);
 	});
 	it("checkbox renders messages correctly", () => {

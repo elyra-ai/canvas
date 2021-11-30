@@ -113,19 +113,19 @@ class PaletteContentListItem extends React.Component {
 	getHighlightedDesc() {
 		const DISPLAY_LEN = 150; // Max number of characters for a description.
 		let desc = this.props.nodeTypeInfo.nodeType.app_data.ui_data.description;
-		let descOccurrences = this.props.nodeTypeInfo.occurrenceInfo.descOccurrences;
+		let nodeDescOccurrences = this.props.nodeTypeInfo.occurrenceInfo.nodeDescOccurrences;
 		let isLongDescription = false;
 
 		if (desc.length > DISPLAY_LEN) {
 			isLongDescription = true;
 			if (!this.state.showFullDescription) {
-				const { abbrDesc, occurrences } = this.getAbbreviatedDescription(desc, descOccurrences, DISPLAY_LEN);
+				const { abbrDesc, occurrences } = this.getAbbreviatedDescription(desc, nodeDescOccurrences, DISPLAY_LEN);
 				desc = abbrDesc;
-				descOccurrences = occurrences;
+				nodeDescOccurrences = occurrences;
 			}
 		}
 
-		const elements = this.getHighlightedText(desc, descOccurrences);
+		const elements = this.getHighlightedText(desc, nodeDescOccurrences);
 
 		// If it's a long description, we need to add either the 'Show more' or
 		// 'Show less' button depending on whether the full description is shown or not.
@@ -156,14 +156,14 @@ class PaletteContentListItem extends React.Component {
 	// This function also adjusts the occurencs of highlighted text in the
 	// description to account for any text that has been removed from the
 	// beginning of the description.
-	getAbbreviatedDescription(desc, descOccurrences, displayLen) {
+	getAbbreviatedDescription(desc, nodeDescOccurrences, displayLen) {
 		// Not all descriptions will have occurencs. If not, just abbreviate and return.
-		if (descOccurrences.length === 0) {
+		if (nodeDescOccurrences.length === 0) {
 			const abbr = desc.substring(0, displayLen) + " ...";
-			return { abbrDesc: abbr, occurrences: descOccurrences };
+			return { abbrDesc: abbr, occurrences: nodeDescOccurrences };
 		}
 
-		const firstOccurrenceStart = descOccurrences[0].start;
+		const firstOccurrenceStart = nodeDescOccurrences[0].start;
 		const remainder = desc.length - firstOccurrenceStart;
 		let abbrDesc = "";
 		let offset = 0;
@@ -183,7 +183,7 @@ class PaletteContentListItem extends React.Component {
 			offset -= 4; // Subtract 4 for the "... " string
 		}
 
-		const occurrences = descOccurrences.map((occ) => ({ start: occ.start - offset, end: occ.end - offset }));
+		const occurrences = nodeDescOccurrences.map((occ) => ({ start: occ.start - offset, end: occ.end - offset }));
 
 		return { abbrDesc, occurrences };
 	}

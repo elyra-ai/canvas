@@ -112,19 +112,15 @@ export default class SvgCanvasNodes {
 		return labelClass;
 	}
 
-	// Returns the absolute x coordinate of the center of the node
+	// Returns the absolute x coordinate of the center of the node. If node is
+	// an expanded supernode, its expanded width is in the 'width' field.
 	getNodeCenterPosX(node) {
-		if (this.isExpandedSupernode(node)) {
-			return node.x_pos + (node.expanded_width / 2);
-		}
 		return node.x_pos + (node.width / 2);
 	}
 
-	// Returns the absolute y coordinate of the center of the node
+	// Returns the absolute y coordinate of the center of the node.  If node is
+	// an expanded supernode, its expanded height is in the 'height' field.
 	getNodeCenterPosY(node) {
-		if (this.isExpandedSupernode(node)) {
-			return node.y_pos + (node.expanded_height / 2);
-		}
 		return node.y_pos + (node.height / 2);
 	}
 

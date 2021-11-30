@@ -32,7 +32,7 @@ export default class DeleteObjectsAction extends Action {
 
 		// Handle links to update when detachable links are enabled. These are links
 		// that will remain on the canvas as detached links when the nodes or
-		// comments they are connected to are deleted. They need to be updated to
+		// comments, they are connected to, are deleted. They need to be updated to
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
 		// indicate that the node is either partailly or fully detached.
@@ -136,26 +136,27 @@ export default class DeleteObjectsAction extends Action {
 
 	// Standard methods
 	do() {
-		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
-		this.apiPipeline.deleteLinks(this.linksToDelete);
-		this.apiPipeline.deleteSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
-		this.apiPipeline.deleteNodes(this.nodesToDelete);
-		this.apiPipeline.deleteComments(this.commentsToDelete);
+		this.apiPipeline.deleteAndUpdateObjects({
+			linksToUpdate: this.linksToUpdateInfo.newLinks,
+			linksToDelete: this.linksToDelete,
+			supernodesToDelete: this.supernodesToDelete,
+			pipelinesToDelete: this.pipelinesToDelete,
+			extPipelineFlowsToDelete: this.extPipelineFlowsToDelete,
+			nodesToDelete: this.nodesToDelete,
+			commentsToDelete: this.commentsToDelete
+		});
 	}
 
 	undo() {
-		this.apiPipeline.addSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
-
-		this.nodesToDelete.forEach((node) => {
-			this.apiPipeline.addNode(node);
+		this.apiPipeline.addAndUpdateObjects({
+			linksToUpdate: this.linksToUpdateInfo.oldLinks,
+			linksToAdd: this.linksToDelete,
+			supernodesToAdd: this.supernodesToDelete,
+			pipelinesToAdd: this.pipelinesToDelete,
+			extPipelineFlowsToAdd: this.extPipelineFlowsToDelete,
+			nodesToAdd: this.nodesToDelete,
+			commentsToAdd: this.commentsToDelete
 		});
-
-		this.commentsToDelete.forEach((comment) => {
-			this.apiPipeline.addComment(comment);
-		});
-
-		this.apiPipeline.addLinks(this.linksToDelete);
-		this.apiPipeline.updateLinks(this.linksToUpdateInfo.oldLinks);
 	}
 
 	redo() {
