@@ -2098,6 +2098,9 @@ export default class SVGCanvasRenderer {
 
 	dragStart(d3Event, d) {
 		this.logger.logStartTimer("dragStart");
+
+		this.closeContextMenuIfOpen();
+
 		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
 			this.resizeObj = this.getComment(d.id);
@@ -2204,8 +2207,13 @@ export default class SVGCanvasRenderer {
 				const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 				// Set highlighting when there is no link because this will turn
 				// current highlighting off. And only switch on highlighting when we are
-				// over a fully attached link (not a detached link).
-				if (!link || this.isLinkFullyAttached(link)) {
+				// over a fully attached link (not a detached link) and provided the
+				// link is not to/from the node being dragged (which is possible in
+				// some odd situations).
+				if (!link ||
+						(this.isLinkFullyAttached(link) &&
+							this.dragObjects[0].id !== link.srcNodeId &&
+							this.dragObjects[0].id !== link.trgNodeId)) {
 					this.setInsertNodeIntoLinkHighlighting(link);
 				}
 			}
@@ -2307,6 +2315,8 @@ export default class SVGCanvasRenderer {
 
 	dragStartLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartLinkHandle");
+
+		this.closeContextMenuIfOpen();
 
 		this.draggingLinkHandle = true;
 
@@ -3781,6 +3791,12 @@ export default class SVGCanvasRenderer {
 			zoom: this.zoomTransform.k });
 	}
 
+	closeContextMenuIfOpen() {
+		if (this.canvasController.isContextMenuDisplayed()) {
+			this.canvasController.closeContextMenu();
+		}
+	}
+
 	callDecoratorCallback(d3Event, node, dec) {
 		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
@@ -3789,6 +3805,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawNewLink(d3Event) {
+		this.closeContextMenuIfOpen();
+
 		const transPos = this.getTransformedMousePos(d3Event);
 
 		if (this.drawingNewLinkData.action === COMMENT_LINK) {
@@ -3901,8 +3919,17 @@ export default class SVGCanvasRenderer {
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 			const adjacent = d.x2 - d.x1;
 			const opposite = d.y2 - d.y1;
-			angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
-			angle = adjacent >= 0 ? angle : angle + 180;
+			if (adjacent === 0 && opposite === 0) {
+				angle = 0;
+			} else {
+				angle = Math.atan(opposite / adjacent) * (180 / Math.PI);
+				angle = adjacent >= 0 ? angle : angle + 180;
+				if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
+					angle -= 90;
+				} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
+					angle += 90;
+				}
+			}
 			return `rotate(${angle},${d.x2},${d.y2})`;
 		}
 		return null;
