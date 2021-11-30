@@ -27,7 +27,7 @@ cd $SCRIPT_DIR
 echo "npm install"
 npm install
 echo "npm run build"
-grunt build
+npm run build
 echo "Run jest tests"
 npm run test-coverage
 
