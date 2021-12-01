@@ -33,21 +33,27 @@ import { Calculator24 } from "@carbon/icons-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 
+import { register as registerPython } from "./languages/python-hint";
+import { register as registerR } from "./languages/r-hint";
+import { register as registerClem } from "./languages/CLEM-hint";
 
-import cm from "codemirror";
-import "codemirror/addon/hint/show-hint";
-import "codemirror/addon/display/placeholder";
-import "codemirror/addon/display/autorefresh";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/addon/hint/javascript-hint";
-import "codemirror/addon/hint/sql-hint";
-import "codemirror/mode/sql/sql";
-import "codemirror/mode/python/python";
-import "codemirror/mode/r/r";
-import "./languages/python-hint";
-import "./languages/r-hint";
-import "./languages/CLEM";
-import "./languages/CLEM-hint";
+// required for server side rendering.
+let cm = null;
+if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+	cm = require("codemirror");
+	require("codemirror/addon/hint/show-hint");
+	require("codemirror/addon/display/placeholder");
+	require("codemirror/addon/display/autorefresh");
+	require("codemirror/mode/javascript/javascript");
+	require("codemirror/addon/hint/javascript-hint");
+	require("codemirror/addon/hint/sql-hint");
+	require("codemirror/mode/sql/sql");
+	require("codemirror/mode/python/python");
+	require("codemirror/mode/r/r");
+	registerPython(cm);
+	registerR(cm);
+	registerClem(cm);
+}
 
 
 const pxPerChar = 8.5;
