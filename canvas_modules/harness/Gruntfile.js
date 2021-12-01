@@ -45,12 +45,6 @@ module.exports = function(grunt) {
 				"manifest.yml"
 			]
 		},
-		sasslint: {
-			options: {
-				configFile: ".sass-lint.yml"
-			},
-			target: ["./src/**/*.scss"]
-		},
 		clean: {
 			coverage: {
 				src: [
@@ -115,10 +109,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
-	grunt.loadNpmTasks("grunt-sass-lint");
 	grunt.loadNpmTasks("grunt-webpack");
 	grunt.loadNpmTasks("grunt-contrib-copy");
-	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
+	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
 	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {

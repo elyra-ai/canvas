@@ -35,7 +35,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas";
+import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";

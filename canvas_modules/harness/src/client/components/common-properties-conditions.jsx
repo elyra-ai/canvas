@@ -67,7 +67,7 @@ import {
 	TWISTY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_FLYOUT_PROPS_INFO
 } from "../constants/conditions-documentation-constants.js";
-import { CommonProperties } from "common-canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { Table } from "reactable";
 
 class CommonPropertiesComponents extends React.Component {

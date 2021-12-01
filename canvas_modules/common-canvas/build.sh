@@ -26,8 +26,8 @@ cd $SCRIPT_DIR
 # install require modules
 echo "npm install"
 npm install
-echo "grunt build"
-grunt build
+echo "npm run build"
+npm run build
 echo "Run jest tests"
 npm run test-coverage
 

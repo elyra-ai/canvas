@@ -86,7 +86,7 @@ import {
 	ACTION_PROPS_INFO,
 	ACTION_IMAGE_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
-import { CommonProperties } from "common-canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 class CommonPropertiesComponents extends React.Component {
 	constructor(props) {

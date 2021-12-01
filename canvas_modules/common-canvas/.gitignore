@@ -46,3 +46,6 @@ node_modules
 
 # Build directoy
 /dist
+
+# plugin-visualizer
+stats.html
