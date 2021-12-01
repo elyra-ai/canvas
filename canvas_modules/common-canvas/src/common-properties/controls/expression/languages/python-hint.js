@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import CodeMirror from "codemirror/lib/codemirror.js";
+let CodeMirror;
+function register(cm) {
+	CodeMirror = cm;
+	CodeMirror.registerHelper("hint", "python", pythonHint);
+}
+
 
 function forEach(arr, f) {
 	for (var e = arr.length, i = 0; i < e; ++i) {
@@ -63,7 +68,7 @@ function pythonHint(editor) {
 		return e.getTokenAt(cur);
 	});
 }
-CodeMirror.registerHelper("hint", "python", pythonHint);
+
 
 var pythonKeywords = "and del from not while as elif global or with assert else if pass yield" +
 "break except import print class exec in raise continue finally is return def for lambda try";
@@ -112,3 +117,7 @@ function getCompletions(token, context) {
 	}
 	return found;
 }
+
+export {
+	register
+};

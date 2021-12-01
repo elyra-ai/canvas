@@ -20,7 +20,7 @@ import { IntlProvider } from "react-intl";
 import AllTypesCanvas from "../../test_resources/diagrams/allTypesCanvas.json";
 import ModelerPalette from "../../test_resources/palettes/modelerPalette.json";
 // Note use "@elyra/canvas" instead of "common-canvas" here, if you are importing from the NPM module.
-import { CommonCanvas, CanvasController } from "common-canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 // This library is only needed if you want to use hot loading during development.
 import { hot } from "react-hot-loader/root";
 

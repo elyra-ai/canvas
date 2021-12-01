@@ -30,7 +30,8 @@ See [here](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness
 Clone elyra/canvas
 ```sh
 git clone git@github.com:elyra-ai/canvas.git
-
+# install global libraries for building
+npm install -g grunt-cli sass
 # Build common-canvas and common-properties
 ./<elyra/canvas>/canvas_modules/common-canvas/build.sh
 ```
