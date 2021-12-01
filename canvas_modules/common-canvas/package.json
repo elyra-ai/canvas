@@ -13,7 +13,7 @@
     "url": "https://github.com/elyra-ai/canvas/issues"
   },
   "license": "Apache-2.0",
-  "sideEffects": ["./src/common-properties/controls/expression/expression.jsx","./src/common-properties/controls/expression/languages/*.js"],
+  "sideEffects": false,
   "scripts": {
     "build": "npx stylelint '**/*.scss' && grunt && rollup -c",
     "test": "NODE_ENV=test jest",

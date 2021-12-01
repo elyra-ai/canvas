@@ -25,9 +25,6 @@ import url from "@rollup/plugin-url";
 import { visualizer } from "rollup-plugin-visualizer";
 
 const bundleReport = process.env.BUNDLE_REPORT;
-var window = {
-	navigator: {}
-};
 
 export default {
 	input: {
