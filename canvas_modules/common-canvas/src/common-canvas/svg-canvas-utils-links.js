@@ -124,7 +124,7 @@ export default class SvgCanvasLinks {
 			minInitialLine = 0;
 		} else if (link.minInitialLineForElbow) {
 			minInitialLine = link.minInitialLineForElbow;
-		} else if (link.src && link.srcObj.layout) {
+		} else if (link.srcObj && link.srcObj.layout) {
 			minInitialLine = link.srcObj.layout.minInitialLine;
 		} else if (drawingNewLinkMinInitialLine) {
 			minInitialLine = drawingNewLinkMinInitialLine;
