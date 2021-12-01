@@ -15,12 +15,23 @@
  */
 module.exports = {
 	extends: "eslint-config-canvas",
+	plugins: [
+		"import"
+	],
+	settings: {
+		"import/resolver": {
+			"node": {
+				"extensions": [".js", ".jsx", ".json"]
+			}
+		}
+	},
 	rules: {
 		// Allow snake_case, but only for object properties e.g. myObj.param_name
 		"camelcase": [
 			"error",
 			{ "properties": "never" }
 		],
+		"import/no-unresolved": [2, { commonjs: true, amd: true }],
 		"max-len": [2, 180, 4],
 		"id-length": ["error", { "min": 1 }]
 	},

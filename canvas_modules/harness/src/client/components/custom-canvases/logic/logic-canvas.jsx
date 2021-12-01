@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import LogicCanvasFlow from "./logicCanvas.json";
 import LogicPalette from "./logicPalette.json";

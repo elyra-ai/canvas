@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import DetachedCanvasFlow from "./detachedCanvas.json";
 import DetachedPalette from "./detachedPalette.json";
