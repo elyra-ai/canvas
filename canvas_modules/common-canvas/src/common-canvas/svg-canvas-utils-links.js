@@ -506,7 +506,7 @@ export default class SvgCanvasLinks {
 		// The minimum size of the line entering the target port. When
 		// dynamically drawing a new connection we will not have a target node
 		// so use a fixed value for this.
-		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
+		const minFinalLine = data.trgNode ? data.trgNode.layout.minFinalLine : 30;
 
 		// Initalize centerPoint which can be used by the link decorations
 		const centerPoint = { x: 0, y: 0 };
