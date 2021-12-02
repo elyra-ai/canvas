@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-.tooltip-trigger {
+.properties-readonly .tooltip-trigger,
+.properties-fp-field .tooltip-trigger,
+.properties-table-cell-control .tooltip-trigger {
 	width: inherit;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	span {
 		white-space: nowrap;
+		&[disabled] {
+			opacity: 0.5;
+		}
 	}
 }

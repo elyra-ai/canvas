@@ -30,7 +30,7 @@ export default class TruncatedContentTooltip extends React.Component {
 			</div>
 		);
 		return (<Tooltip
-			id={`${uuid4()}-${this.props.uniqueIdentifier}`}
+			id={`${uuid4()}-properties`}
 			tip={tooltip}
 			direction="bottom"
 			className="properties-tooltips"
@@ -43,7 +43,6 @@ export default class TruncatedContentTooltip extends React.Component {
 }
 
 TruncatedContentTooltip.propTypes = {
-	uniqueIdentifier: PropTypes.string.isRequired,
 	content: PropTypes.element.isRequired,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,

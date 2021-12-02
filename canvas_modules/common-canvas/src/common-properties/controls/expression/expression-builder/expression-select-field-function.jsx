@@ -238,7 +238,6 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		);
 		const expressionTableCellContentWithTooltip = (
 			<TruncatedContentTooltip
-				uniqueIdentifier="tooltip-expr-table-cell"
 				content={expressionTableCellContent}
 				tooltipText={label}
 				disabled={disabled}

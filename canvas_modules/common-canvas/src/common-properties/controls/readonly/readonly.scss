@@ -57,12 +57,4 @@
 			}
 		}
 	}
-	.tooltip-trigger {
-		span {
-			white-space: nowrap;
-			&[disabled] {
-				opacity: 0.5;
-			}
-		}
-	}
 }

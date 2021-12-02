@@ -111,7 +111,6 @@ class ReadonlyControl extends React.Component {
 			}
 			display = (
 				<TruncatedContentTooltip
-					uniqueIdentifier={"tooltip-column-" + this.props.propertyId.toString()}
 					content={content}
 					tooltipText={controlValue}
 					disabled={disabled}

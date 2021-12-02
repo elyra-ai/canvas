@@ -163,7 +163,6 @@ export default class FieldPicker extends React.Component {
 				);
 				const fieldNameWithTooltip = (
 					<TruncatedContentTooltip
-						uniqueIdentifier="tooltip-fieldpicker"
 						content={fpFieldName}
 						tooltipText={field.origName}
 						disabled={disabled}
