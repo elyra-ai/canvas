@@ -20,6 +20,8 @@ import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
+import CanvasBottomPanel from '../../src/common-canvas/cc-bottom-panel.jsx'
+import CommonCanvasRightFlyout from '../../src/common-canvas/cc-right-flyout.jsx'
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -29,6 +31,38 @@ describe("CommonCanvas renders correctly", () => {
 	let canvasController;
 	beforeEach(() => {
 		canvasController = new CanvasController();
+	});
+
+	it("should render one <CanvasBottomPanel/> component when showBottomPanel is true", () => {
+		const config = {};
+		const canvasParams = { showBottomPanel: true };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CanvasBottomPanel)).to.have.length(1);
+		expect(canvasController.isBottomPanelOpen() === true).to.be.true;
+	});
+
+  it("should not render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
+		const config = {};
+		const canvasParams = { showBottomPanel: false };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CanvasBottomPanel)).to.have.length(1);
+		expect(canvasController.isBottomPanelOpen() === false).to.be.true;
+	});
+
+  it("should not render one <CommonCanvasRightFlyout/> component when showRightFlyout is false", () => {
+		const config = {};
+		const canvasParams = { showRightFlyout: false };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
+		expect(canvasController.isRightFlyoutOpen() === false).to.be.true;
+	});
+
+	it("should render one <CommonCanvasRightFlyout/> component when showRightFlyout is true", () => {
+		const config = {};
+		const canvasParams = { showRightFlyout: true };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
+		expect(canvasController.isRightFlyoutOpen() === true).to.be.true;
 	});
 
 	it("should render one <CanvasContents/> component", () => {
@@ -175,7 +209,7 @@ describe("CommonCanvas renders correctly", () => {
 	});
 });
 
-function createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig, handlers) {
+function createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig, handlers) {
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
@@ -185,8 +219,8 @@ function createCommonCanvas(config, canvasController, toolbarConfig, notificatio
 	const selectionChangeHandler = sinon.spy();
 	const tipHandler = sinon.spy();
 	const contextMenuConfig = null;
-	const showRightFlyout = false;
-	const wrapper = createIntlCommonCanvas(
+	const canvasParameters = canvasParams || {};
+ 	const wrapper = createIntlCommonCanvas(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -195,12 +229,12 @@ function createCommonCanvas(config, canvasController, toolbarConfig, notificatio
 		decorationActionHandler,
 		selectionChangeHandler,
 		tipHandler,
-
+		canvasParameters.showBottomPanel,
+		canvasParameters.showRightFlyout,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
-		showRightFlyout,
-		canvasController
+ 		canvasController
 	);
 
 	return wrapper;
