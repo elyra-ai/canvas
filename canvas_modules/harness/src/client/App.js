@@ -37,6 +37,7 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties, PropertiesController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import structureTableParamDef from "../../test_resources/parameterDefs/structuretable_paramDef.json";
+import execModeAfterParamDef from "../../test_resources/parameterDefs/execModeAfter.json";
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
@@ -433,10 +434,14 @@ class App extends React.Component {
 		} catch (err) {
 			console.error("Error setting up properties controllers: " + err);
 		}
-		// Validator returns errors for structureTableParamDef
-		this.propertiesControllerTest.setParamDef(structureTableParamDef);
-		console.log(this.propertiesControllerTest.getParamDef());
-		console.log(this.propertiesControllerTest.getPropertyValues()); // empty object
+		// setPropertyValues of structureTableParamDef
+		this.propertiesControllerTest.setPropertyValues(structureTableParamDef.current_parameters);
+		// setParamDef - DataStage provided paramDef
+		this.propertiesControllerTest.setParamDef(execModeAfterParamDef);
+		console.log("Next line should print DataStage provided paramDef");
+		console.log(this.propertiesControllerTest.getParamDef()); // Should be equal to execModeAfterParamDef
+		console.log("Next line should print structureTableParamDef.current_parameters");
+		console.log(this.propertiesControllerTest.getPropertyValues()); // Should be equal to structureTableParamDef.current_parameters
 	}
 
 	componentDidMount() {
