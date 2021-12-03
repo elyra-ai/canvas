@@ -31,6 +31,7 @@ import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
 
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
+import { validateParameterDefAgainstSchema } from "./schema-validator/properties-schema-validator.js";
 
 export default class PropertiesController {
 
@@ -122,6 +123,15 @@ export default class PropertiesController {
 
 	getPropertiesConfig() {
 		return this.propertiesConfig;
+	}
+
+	setParamDef(paramDef) {
+		validateParameterDefAgainstSchema(paramDef); // Added this line only to show there's validation error. This can be removed?
+		this.paramDef = paramDef;
+	}
+
+	getParamDef(paramDef) {
+		return this.paramDef;
 	}
 
 	//

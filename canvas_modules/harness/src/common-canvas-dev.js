@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation }
+// Similar to DataStage code - Remove PropertiesController after testing.
+import { CommonCanvas, CanvasController, CommonProperties, PropertiesController, CommandStack, FlowValidation }
 	from "../../common-canvas/src/index";
 
 import "../../common-canvas/src/themes/light.scss";
 
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
+export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, CommandStack, FlowValidation };

@@ -35,7 +35,8 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, CommonProperties, PropertiesController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import structureTableParamDef from "../../test_resources/parameterDefs/structuretable_paramDef.json";
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
@@ -425,6 +426,17 @@ class App extends React.Component {
 		// unnecssary renders inside common-canvas and/or common-properties.
 		this.messages = getMessages(this.locale, [HarnessBundles,
 			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
+
+		// Similar to DataStage code - Remove after testing.
+		try {
+			this.propertiesControllerTest = new PropertiesController();
+		} catch (err) {
+			console.error("Error setting up properties controllers: " + err);
+		}
+		// Validator returns errors for structureTableParamDef
+		this.propertiesControllerTest.setParamDef(structureTableParamDef);
+		console.log(this.propertiesControllerTest.getParamDef());
+		console.log(this.propertiesControllerTest.getPropertyValues()); // empty object
 	}
 
 	componentDidMount() {

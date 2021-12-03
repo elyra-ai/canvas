@@ -23,6 +23,7 @@ import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
@@ -1981,4 +1982,13 @@ describe("Properties Controller staticRows", () => {
 		expect(controller.getStaticRows(propertyId)).to.have.length(0);
 	});
 
+});
+
+describe("Properties Controller paramDef methods", () => {
+	it("should set the paramDef in properties controller", () => {
+		reset();
+		// Using structureTableParamDef because it throws a validation error.
+		controller.setParamDef(structureTableParamDef);
+		expect(controller.getParamDef()).to.equal(structureTableParamDef);
+	});
 });
