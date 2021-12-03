@@ -20,8 +20,8 @@ import PaletteDialog from "../../src/palette/palette-dialog.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
-import CanvasBottomPanel from '../../src/common-canvas/cc-bottom-panel.jsx'
-import CommonCanvasRightFlyout from '../../src/common-canvas/cc-right-flyout.jsx'
+import CanvasBottomPanel from "../../src/common-canvas/cc-bottom-panel.jsx";
+import CommonCanvasRightFlyout from "../../src/common-canvas/cc-right-flyout.jsx";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -41,7 +41,7 @@ describe("CommonCanvas renders correctly", () => {
 		expect(canvasController.isBottomPanelOpen() === true).to.be.true;
 	});
 
-  it("should not render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
+	it("should not render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
 		const config = {};
 		const canvasParams = { showBottomPanel: false };
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
@@ -49,7 +49,7 @@ describe("CommonCanvas renders correctly", () => {
 		expect(canvasController.isBottomPanelOpen() === false).to.be.true;
 	});
 
-  it("should not render one <CommonCanvasRightFlyout/> component when showRightFlyout is false", () => {
+	it("should not render one <CommonCanvasRightFlyout/> component when showRightFlyout is false", () => {
 		const config = {};
 		const canvasParams = { showRightFlyout: false };
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
@@ -220,7 +220,7 @@ function createCommonCanvas(config, canvasController, canvasParams, toolbarConfi
 	const tipHandler = sinon.spy();
 	const contextMenuConfig = null;
 	const canvasParameters = canvasParams || {};
- 	const wrapper = createIntlCommonCanvas(
+	const wrapper = createIntlCommonCanvas(
 		config,
 		contextMenuHandler,
 		beforeEditActionHandler,
@@ -234,7 +234,7 @@ function createCommonCanvas(config, canvasController, canvasParams, toolbarConfi
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
- 		canvasController
+		canvasController
 	);
 
 	return wrapper;
