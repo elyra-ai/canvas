@@ -19,7 +19,7 @@
 // the CanvasRender objects.
 
 import { get, set } from "lodash";
-import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, SUPER_NODE }
+import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK, LINK_TYPE_STRAIGHT, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 
@@ -350,7 +350,46 @@ export default class CanvasUtils {
 				startPointY = originY - (originLeftOffsetX * ratioLeft);
 			}
 		}
+
 		return { x: startPointX, y: startPointY };
+	}
+
+	// Returns true if the line described by x1, y1, x2, y2 either intersects or
+	// is fully inside the rectangle described by rx1, ry1, rx2, ry2.
+	static lineIntersectRectangle(x1, y1, x2, y2, rx1, ry1, rx2, ry2) {
+		const insideLine = this.lineInside(x1, y1, x2, y2, rx1, ry1, rx2, ry2);
+		const intersectTop = this.linesIntersect(x1, y1, x2, y2, rx1, ry1, rx2, ry1);
+		const intersectLeft = this.linesIntersect(x1, y1, x2, y2, rx1, ry1, rx1, ry2);
+		const intersectRight = this.linesIntersect(x1, y1, x2, y2, rx2, ry1, rx2, ry2);
+		const intersectBottom = this.linesIntersect(x1, y1, x2, y2, rx1, ry2, rx2, ry2);
+
+		return insideLine || intersectTop || intersectLeft || intersectRight || intersectBottom;
+	}
+
+	// Returns true if the line described by x1, y1, x2, y2 is inside the
+	// rectangle described by rx1, ry1, rx2, ry2.
+	static lineInside(x1, y1, x2, y2, rx1, ry1, rx2, ry2) {
+		return x1 >= rx1 && x1 <= rx2 && y1 >= ry1 && y1 <= ry2 &&
+			x2 >= rx1 && x2 <= rx2 && y2 >= ry1 && y2 <= ry2;
+	}
+
+	// Returns an object containing x, y coordinate of the intersection point
+	// if the line described by x1, y1 to x2, y2 crosses the line described by
+	// x3, y3 to x4, y4.  Returns a null if the lines do not cross.
+	// See http://www.jeffreythompson.org/collision-detection/line-line.php
+	static linesIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+		// calculate the distance to intersection point
+		const a = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+		const b = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+
+		// If a and b are between 0-1, lines intersect, so return the intersection point.
+		if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
+			return {
+				x: x1 + (a * (x2 - x1)),
+				y: y1 + (a * (y2 - y1))
+			};
+		}
+		return null;
 	}
 
 	// Returns true if a link of type `type` can be created between the two
@@ -757,7 +796,7 @@ export default class CanvasUtils {
 	// Returns an array of selected object IDs for nodes, comments and links
 	// that are within the region provided. Links are only included if
 	// includeLinks is truthy.
-	static selectInRegion(region, pipeline, includeLinks) {
+	static selectInRegion(region, pipeline, includeLinks, linkType, enableAssocLinkType) {
 		var regionSelections = [];
 		for (const node of pipeline.nodes) {
 			if (!this.isSuperBindingNode(node) && // Don't include binding nodes in select
@@ -778,17 +817,24 @@ export default class CanvasUtils {
 		}
 		if (includeLinks) {
 			for (const link of pipeline.links) {
-				let srcInRegion = false;
-				if ((link.srcPos && this.isPosInArea(link.srcPos, region, 0)) ||
-						this.isSelected(link.srcNodeId, regionSelections)) {
-					srcInRegion = true;
-				}
-				let trgInRegion = false;
-				if ((link.trgPos && this.isPosInArea(link.trgPos, region, 0)) ||
-						this.isSelected(link.trgNodeId, regionSelections)) {
-					trgInRegion = true;
-				}
-				if (srcInRegion && trgInRegion) {
+				// For straight links we check to see if the link line intersects (or
+				// is fully inside) the selection region.
+				if ((link.type === NODE_LINK && linkType === LINK_TYPE_STRAIGHT) ||
+						link.type === COMMENT_LINK ||
+						(link.type === ASSOCIATION_LINK && enableAssocLinkType === ASSOC_STRAIGHT)) {
+					if (this.lineIntersectRectangle(link.x1, link.y1, link.x2, link.y2, region.x1, region.y1, region.x2, region.y2)) {
+						regionSelections.push(link.id);
+					}
+				// For elbow and curved lines we just check to see if the start or
+				// end coordinates of the lines are inside the selection region or not.
+				// TODO: This approach means any selection region that only touches the
+				// link line will not select the line if it is elbow or curve. If any
+				// host app wants more acurate collision detection between the line and
+				// the selection region with these line types, this would need to be
+				// improved, perhaps using a library like this:
+				// https://github.com/thelonious/kld-intersections
+				} else if (this.isPosInArea({ x_pos: link.x1, y_pos: link.y1 }, region, 0) ||
+										this.isPosInArea({ x_pos: link.x2, y_pos: link.y2 }, region, 0)) {
 					regionSelections.push(link.id);
 				}
 			}
