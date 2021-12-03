@@ -23,3 +23,18 @@ Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 Cypress.Commands.add("moveMouseToPaletteArea", (x, y) => {
 	cy.get(".palette-flyout-categories").trigger("mousemove", x, y);
 });
+
+// Selects a region on the canvas by 'pulling out' a rectangle over
+// the canvas background to encompass objects to be selected.
+Cypress.Commands.add("selectWithRegion", (x1, y1, x2, y2) => {
+	cy.window().then((win) => {
+		cy.getCanvasTranslateCoords()
+			.then((transform) => {
+				cy.get(".d3-svg-canvas-div")
+					.trigger("mousedown", x1 + transform.x, y1 + transform.y, { shiftKey: true, which: 1, view: win })
+					.trigger("mousemove", x2 + transform.x, y2 + transform.y, { view: win })
+					.trigger("mouseup", x2 + transform.x, y2 + transform.y, { which: 1, view: win });
+			});
+	});
+
+});

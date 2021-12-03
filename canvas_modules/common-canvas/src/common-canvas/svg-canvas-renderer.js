@@ -1887,9 +1887,19 @@ export default class SVGCanvasRenderer {
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
 				this.isSelecting = true;
+
+				// Ensure the link objects in the active pipeline have their coordinate
+				// positions set. The coords might be set if the last object model
+				// update was a change in selections or some other operation that does
+				// not redraw link lines.
+				this.buildLinksArray();
+
 				const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
 				const selections =
-					CanvasUtils.selectInRegion(region, this.activePipeline, this.config.enableLinkSelection !== LINK_SELECTION_NONE);
+					CanvasUtils.selectInRegion(region, this.activePipeline,
+						this.config.enableLinkSelection !== LINK_SELECTION_NONE,
+						this.config.enableLinkType,
+						this.config.enableAssocLinkType);
 				this.canvasController.setSelections(selections, this.activePipeline.id);
 			}
 			this.regionSelect = false;
