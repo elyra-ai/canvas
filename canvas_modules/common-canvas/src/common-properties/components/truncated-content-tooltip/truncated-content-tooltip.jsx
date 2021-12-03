@@ -29,16 +29,20 @@ export default class TruncatedContentTooltip extends React.Component {
 				{String(this.props.tooltipText)}
 			</div>
 		);
-		return (<Tooltip
-			id={`${uuid4()}-properties`}
-			tip={tooltip}
-			direction="bottom"
-			className="properties-tooltips"
-			disable={has(this.props, "disabled") ? this.props.disabled : true}
-			showToolTipIfTruncated
-		>
-			{this.props.content}
-		</Tooltip>);
+		return (
+			<div className="properties-truncated-tooltip">
+				<Tooltip
+					id={`${uuid4()}-properties`}
+					tip={tooltip}
+					direction="bottom"
+					className="properties-tooltips"
+					disable={has(this.props, "disabled") ? this.props.disabled : true}
+					showToolTipIfTruncated
+				>
+					{this.props.content}
+				</Tooltip>
+			</div>
+		);
 	}
 }
 
