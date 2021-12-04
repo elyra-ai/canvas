@@ -434,13 +434,12 @@ class App extends React.Component {
 		} catch (err) {
 			console.error("Error setting up properties controllers: " + err);
 		}
-		// setPropertyValues of structureTableParamDef
-		this.propertiesControllerTest.setPropertyValues(structureTableParamDef.current_parameters);
+
 		// setParamDef - DataStage provided paramDef
 		this.propertiesControllerTest.setParamDef(execModeAfterParamDef);
-		console.log("Next line should print DataStage provided paramDef");
+		console.log("Log getParamDef()");
 		console.log(this.propertiesControllerTest.getParamDef()); // Should be equal to execModeAfterParamDef
-		console.log("Next line should print structureTableParamDef.current_parameters");
+		console.log("Log getPropertyValues()");
 		console.log(this.propertiesControllerTest.getPropertyValues()); // Should be equal to structureTableParamDef.current_parameters
 	}
 

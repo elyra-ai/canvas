@@ -29,7 +29,7 @@ import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
-
+import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
@@ -126,6 +126,14 @@ export default class PropertiesController {
 
 	setParamDef(paramDef) {
 		this.paramDef = paramDef;
+		const rightFlyout = (typeof this.getPropertiesConfig().rightFlyout !== "undefined")
+			? this.getPropertiesConfig().rightFlyout
+			: true;
+		const formData = Form.makeForm(paramDef, !rightFlyout);
+		this.setForm(formData);
+		if (formData) {
+			this.setTitle(formData.label);
+		}
 	}
 
 	getParamDef(paramDef) {
