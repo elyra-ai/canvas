@@ -51,7 +51,7 @@ export function createIntlCommonCanvas(
 	toolbarConfig,
 	notificationConfig,
 	contextMenuConfig,
- 	canvasController) {
+	canvasController) {
 
 
 	const wrapper = mount(
@@ -69,7 +69,7 @@ export function createIntlCommonCanvas(
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				showRightFlyout={showRightFlyout}
-				showBottomPanel={showBottomPanel}
+				showBottomPanel={}
 				canvasController={canvasController}
 			/>
 		</IntlProvider>
