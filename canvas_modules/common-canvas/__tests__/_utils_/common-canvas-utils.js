@@ -69,7 +69,7 @@ export function createIntlCommonCanvas(
 				notificationConfig={notificationConfig}
 				contextMenuConfig={contextMenuConfig}
 				showRightFlyout={showRightFlyout}
-				showBottomPanel={}
+				showBottomPanel={showBottomPanel}
 				canvasController={canvasController}
 			/>
 		</IntlProvider>
