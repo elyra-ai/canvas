@@ -195,11 +195,11 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
-
+		const canvasParams = {};
 		const beforeEditActionHandler = (data) => null; // Return null to stop command being executed
 		const editActionHandler = sinon.spy();
 
-		createCommonCanvas(config, canvasController, {}, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
