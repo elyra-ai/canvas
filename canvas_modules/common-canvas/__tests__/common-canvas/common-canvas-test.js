@@ -164,9 +164,9 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
-
+		const canvasParams = {};
 		const editActionHandler = sinon.spy();
-		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler });
 
 		canvasController.editActionHandler({ editType: "dummayFunction" });
@@ -178,11 +178,11 @@ describe("CommonCanvas renders correctly", () => {
 		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 		const config = {};
-
+		const canvasParams = {};
 		const beforeEditActionHandler = (data) => data; // Just return the data passd in
 		const editActionHandler = sinon.spy();
 
-		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
@@ -199,7 +199,7 @@ describe("CommonCanvas renders correctly", () => {
 		const beforeEditActionHandler = (data) => null; // Return null to stop command being executed
 		const editActionHandler = sinon.spy();
 
-		createCommonCanvas(config, canvasController, toolbarConfig, notificationConfig,
+		createCommonCanvas(config, canvasController, {}, toolbarConfig, notificationConfig,
 			{ editActionHandler: editActionHandler,
 				beforeEditActionHandler: beforeEditActionHandler });
 
