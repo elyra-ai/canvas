@@ -37,7 +37,6 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties, PropertiesController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import structureTableParamDef from "../../test_resources/parameterDefs/structuretable_paramDef.json";
-import execModeAfterParamDef from "../../test_resources/parameterDefs/execModeAfter.json";
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
@@ -436,11 +435,11 @@ class App extends React.Component {
 		}
 
 		// setParamDef - DataStage provided paramDef
-		this.propertiesControllerTest.setParamDef(execModeAfterParamDef);
-		console.log("Log getParamDef()");
-		console.log(this.propertiesControllerTest.getParamDef()); // Should be equal to execModeAfterParamDef
-		console.log("Log getPropertyValues()");
-		console.log(this.propertiesControllerTest.getPropertyValues()); // Should be equal to structureTableParamDef.current_parameters
+		this.propertiesControllerTest.setParamDef(structureTableParamDef);
+		console.log("Log getParamDef()"); // eslint-disable-line no-console
+		console.log(this.propertiesControllerTest.getParamDef()); // eslint-disable-line no-console
+		console.log("Log getPropertyValues()"); // eslint-disable-line no-console
+		console.log(this.propertiesControllerTest.getPropertyValues()); // eslint-disable-line no-console
 	}
 
 	componentDidMount() {
