@@ -35,8 +35,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties, PropertiesController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import structureTableParamDef from "../../test_resources/parameterDefs/structuretable_paramDef.json";
+import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
@@ -426,20 +425,6 @@ class App extends React.Component {
 		// unnecssary renders inside common-canvas and/or common-properties.
 		this.messages = getMessages(this.locale, [HarnessBundles,
 			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
-
-		// Similar to DataStage code - Remove after testing.
-		try {
-			this.propertiesControllerTest = new PropertiesController();
-		} catch (err) {
-			console.error("Error setting up properties controllers: " + err);
-		}
-
-		// setParamDef - DataStage provided paramDef
-		this.propertiesControllerTest.setParamDef(structureTableParamDef);
-		console.log("Log getParamDef()"); // eslint-disable-line no-console
-		console.log(this.propertiesControllerTest.getParamDef()); // eslint-disable-line no-console
-		console.log("Log getPropertyValues()"); // eslint-disable-line no-console
-		console.log(this.propertiesControllerTest.getPropertyValues()); // eslint-disable-line no-console
 	}
 
 	componentDidMount() {

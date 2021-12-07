@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-// Similar to DataStage code - Remove PropertiesController after testing.
-import { CommonCanvas, CanvasController, CommonProperties, PropertiesController, CommandStack, FlowValidation } from "@elyra/canvas";
+import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation } from "@elyra/canvas";
 
-export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, CommandStack, FlowValidation };
+export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
