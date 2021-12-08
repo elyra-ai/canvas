@@ -1365,6 +1365,10 @@ export default class CanvasController {
 		this.objectModel.openContextMenu(menuDef);
 	}
 
+	isBottomPanelOpen() {
+		return this.getObjectModel().isBottomPanelOpen();
+	}
+
 	closeContextMenu() {
 		this.objectModel.closeContextMenu();
 	}

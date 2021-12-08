@@ -39,7 +39,7 @@ const decorationActionHandler = sinon.spy();
 const selectionChangeHandler = sinon.spy();
 const tipHandler = sinon.spy();
 
-const showRightFlyout = false;
+const canvasParameters = {};
 
 const notificationHeaderString = "Notifications Panel";
 
@@ -329,11 +329,11 @@ describe("toolbar notification icon state renders correctly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 
@@ -358,11 +358,11 @@ describe("toolbar notification icon state renders correctly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 
@@ -433,11 +433,11 @@ describe("notification counter and color updates correctly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 		let notificationIcon = wrapper.find(".toggleNotificationPanel-action");
@@ -478,11 +478,11 @@ describe("notification counter and color updates correctly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 
@@ -538,11 +538,11 @@ describe("notification center buttons work properly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 		// open the notification center
@@ -567,11 +567,11 @@ describe("notification center buttons work properly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 		// open the notification center
@@ -619,11 +619,11 @@ describe("notification center buttons work properly", () => {
 			decorationActionHandler,
 			selectionChangeHandler,
 			tipHandler,
-
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
 			toolbarConfig,
 			notificationConfig,
 			contextMenuConfig,
-			showRightFlyout,
 			canvasController
 		);
 		// open the notification center
