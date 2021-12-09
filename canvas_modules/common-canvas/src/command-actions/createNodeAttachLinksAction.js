@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class CreateNodeAttachLinksAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.newNode = this.apiPipeline.createNode(data);
 		this.linksToUpdateInfo = CanvasUtils.getDetachedLinksToUpdate(
@@ -48,5 +49,9 @@ export default class CreateNodeAttachLinksAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.createNodeAttachLinks", { node_label: this.newNode.label });
 	}
 }

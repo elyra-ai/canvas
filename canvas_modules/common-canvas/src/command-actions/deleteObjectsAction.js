@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, areDetachableLinksSupported) {
+	constructor(data, objectModel, labelUtil, areDetachableLinksSupported) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
+		this.areDetachableLinksSupported = areDetachableLinksSupported;
 		this.objectsInfo = [];
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.nodesToDelete = this.objectModel.getSelectedNodes();
@@ -57,6 +59,8 @@ export default class DeleteObjectsAction extends Action {
 
 		// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
 		this.nodesToDelete = this.nodesToDelete.filter((node) => !this.isSupernodeToBeDeleted(node));
+
+		this.actionLabel = this.createActionLabel();
 	}
 
 	// Returns an array of links to delete. This takes the current array of links
@@ -161,5 +165,23 @@ export default class DeleteObjectsAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.actionLabel;
+	}
+
+	createActionLabel() {
+		if (this.areDetachableLinksSupported) {
+			return this.labelUtil.getActionLabel(this, "action.deleteNodesCommentsLinks",
+				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
+					comments_count: this.commentsToDelete.length,
+					links_count: this.linksToDelete.length
+				});
+		}
+		return this.labelUtil.getActionLabel(this, "action.deleteNodesComments", {
+			nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
+			comments_count: this.commentsToDelete.length
+		});
 	}
 }

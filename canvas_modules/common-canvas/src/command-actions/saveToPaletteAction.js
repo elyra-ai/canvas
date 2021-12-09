@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,15 @@
 import Action from "../command-stack/action.js";
 import { SAVED_NODES_CATEGORY_ID, SAVED_NODES_FOLDER_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
-import defaultMessages from "../../locales/command-actions/locales/en.json";
-
 
 export default class SaveToPaletteAction extends Action {
-	constructor(data, objectModel, intl) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
-		this.intl = intl;
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.data.addedNodeTypes = this.apiPipeline.createNodesForPalette(this.data.selectedObjectIds);
-	}
-
-	getLabel(labelId) {
-		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
 	do() {
@@ -39,8 +33,8 @@ export default class SaveToPaletteAction extends Action {
 		this.objectModel.addNodeTypesToPalette(
 			this.data.addedNodeTypes,
 			SAVED_NODES_CATEGORY_ID,
-			this.getLabel("palette.saved.nodes.label"),
-			this.getLabel("palette.saved.nodes.description"),
+			this.labelUtil.getLabel("palette.saved.nodes.label"),
+			this.labelUtil.getLabel("palette.saved.nodes.description"),
 			SAVED_NODES_FOLDER_ICON);
 	}
 
@@ -51,5 +45,9 @@ export default class SaveToPaletteAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.saveToPalette");
 	}
 }
