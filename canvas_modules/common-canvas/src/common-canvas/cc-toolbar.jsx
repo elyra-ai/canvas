@@ -219,11 +219,15 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (undoLabel) {
 			const undoTool = this.findTool("undo", toolbarConfig);
-			undoTool.label += ": " + undoLabel;
+			if (undoTool) {
+				undoTool.label += ": " + undoLabel;
+			}
 		}
 		if (redoLabel) {
 			const redoTool = this.findTool("redo", toolbarConfig);
-			redoTool.label += ": " + redoLabel;
+			if (redoTool) {
+				redoTool.label += ": " + redoLabel;
+			}
 		}
 		return toolbarConfig;
 	}

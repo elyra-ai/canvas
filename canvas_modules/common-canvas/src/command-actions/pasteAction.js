@@ -74,7 +74,7 @@ export default class PasteAction extends Action {
 	// Offsets the positions of the canvas objects (nodes, comments and links)
 	// if they exactly overlap any existing nodes, comments and links.
 	// Exact overlap can happen when pasting over the top of the canvas from
-	// which the canvas objects  were copied.
+	// which the canvas objects were copied.
 	ensureNoOverlap(objects) {
 		let xInc = 10;
 		let yInc = 10;
