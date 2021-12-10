@@ -386,7 +386,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const tableRows = tableUtils.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(29);
 		// verify first and last row from each schema
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age", "0");
+		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
 		tableUtils.verifyFieldPickerRow(tableRows.at(5), "Time", "0");
 		tableUtils.verifyFieldPickerRow(tableRows.at(6), "Age", "data_1");
 		tableUtils.verifyFieldPickerRow(tableRows.at(11), "Timestamp", "data_1");
@@ -655,13 +655,13 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const tableRows = tableUtils.getTableRows(fieldpicker);
 		expect(tableRows.length).to.equal(5);
 
-		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age", "0");
+		tableUtils.verifyFieldPickerRow(tableRows.at(0), "Age - This is a long truncated label. You can see the entire label in a tooltip.", "0");
 		tableUtils.verifyFieldPickerRow(tableRows.at(1), "age", "0");
 		tableUtils.verifyFieldPickerRow(tableRows.at(2), "Age", "data_1");
 		tableUtils.verifyFieldPickerRow(tableRows.at(3), "Age", "3");
 		tableUtils.verifyFieldPickerRow(tableRows.at(4), "Age", "schema");
 
-		tableUtils.fieldPicker(wrapper.find("div.properties-fp-table"), ["0.Age", "0.age", "data_1.Age"]);
+		tableUtils.fieldPicker(wrapper.find("div.properties-fp-table"), ["0.age", "data_1.Age", "3.Age"]);
 
 		wrapper.find("button[data-id='properties-apply-button']")
 			.at(0)
@@ -679,9 +679,9 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 			"BADVAR",
 			"0.BADVAR",
 			"3.Cholesterol",
-			"0.Age",
 			"0.age",
-			"data_1.Age"
+			"data_1.Age",
+			"3.Age"
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {
@@ -798,7 +798,7 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		renderedController.setDatasetMetadata(datasetMetadata);
 		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields");
 		tableUtils.fieldPicker(fieldPicker, [],
-			["Age", "age", "Sex", "BP", "Cholesterol", "Time", "age5", "BP5", "Na5", "drug5",
+			["Age - This is a long truncated label. You can see the entire label in a tooltip.", "age", "Sex", "BP", "Cholesterol", "Time", "age5", "BP5", "Na5", "drug5",
 				"Age", "Na", "K", "Drug", "Time",
 				"Timestamp", "Drug", "drug", "drug2", "Time", "Timestamp", "Date", "Age", "BP",
 				"Na", "drug", "drug2", "drug3", "Age", "BP", "Na", "drug", "drugs"]

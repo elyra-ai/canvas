@@ -19,6 +19,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import FlexibleTable from "./../flexible-table";
+import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import PropertiesButtons from "./../properties-buttons";
 import * as PropertyUtils from "./../../util/property-utils";
 
@@ -151,14 +152,28 @@ export default class FieldPicker extends React.Component {
 				const dmIconType = PropertyUtils.getDMFieldIcon(metadata,
 					field.origName, this.props.dmIcon);
 				const dmIcon = dmIconType ? <Icon type={dmIconType} /> : null;
+				let disabled = true;
+				if (field.origName) {
+					disabled = false;
+				}
+				const fpFieldName = (
+					<span className="properties-fp-field-name">
+						{field.origName}
+					</span>
+				);
+				const fieldNameWithTooltip = (
+					<TruncatedContentTooltip
+						content={fpFieldName}
+						tooltipText={field.origName}
+						disabled={disabled}
+					/>
+				);
 				fieldContent = (
 					<div className="properties-fp-field">
 						<div className="properties-fp-field-type-icon">
 							{dmIcon}
 						</div>
-						<div className="properties-fp-field-name">
-							{field.origName}
-						</div>
+						{fieldNameWithTooltip}
 					</div>
 				);
 			}
