@@ -150,7 +150,6 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setForm(formData, this.props.intl);
 		if (formData) {
 			this.originalTitle = formData.label;
-			this.propertiesController.setTitle(formData.label);
 		}
 
 		// set initial values for undo
