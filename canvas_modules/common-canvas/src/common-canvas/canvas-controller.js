@@ -92,7 +92,7 @@ export default class CanvasController {
 			layoutHandler: null,
 			idGeneratorHandler: null,
 			selectionChangeHandler: null,
-			commandLabelHandler: null
+			actionLabelHandler: null
 		};
 
 		this.contextMenuSource = null;
@@ -140,7 +140,7 @@ export default class CanvasController {
 	}
 
 	setIntl(intl) {
-		this.labelUtil = new LabelUtil(intl, this.handlers.commandLabelHandler);
+		this.labelUtil = new LabelUtil(intl);
 	}
 
 	setToolbarConfig(config) {
@@ -185,6 +185,7 @@ export default class CanvasController {
 		this.objectModel.setIdGeneratorHandler(inHandlers.idGeneratorHandler);
 		this.objectModel.setSelectionChangeHandler(inHandlers.selectionChangeHandler);
 		this.objectModel.setLayoutHandler(inHandlers.layoutHandler);
+		this.labelUtil.setActionLabelHandler(inHandlers.actionLabelHandler);
 	}
 
 	setCanvasContents(canvasContents) {

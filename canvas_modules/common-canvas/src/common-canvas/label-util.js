@@ -18,15 +18,22 @@ import defaultMessages1 from "../../locales/common-canvas/locales/en.json";
 import defaultMessages2 from "../../locales/command-actions/locales/en.json";
 
 export default class LabelUtil {
-	constructor(intl, actionLabelHandler) {
+	constructor(intl) {
 		this.intl = intl;
-		this.actionLabelHandler = actionLabelHandler;
+		this.actionLabelHandler = null;
 		this.defaultMessages = { ...defaultMessages1, ...defaultMessages2 };
+	}
+
+	setActionLabelHandler(handler) {
+		this.actionLabelHandler = handler;
 	}
 
 	getActionLabel(action, key, substituteObj) {
 		if (this.actionLabelHandler) {
-			return this.actionLabelHandler(action);
+			const label = this.actionLabelHandler(action);
+			if (label) {
+				return label;
+			}
 		}
 		return this.getLabel(key, substituteObj);
 	}
