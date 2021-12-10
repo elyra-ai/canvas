@@ -27,7 +27,7 @@ import structureTableParamDef from "../test_resources/paramDefs/structuretable_p
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
-
+import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
 import testUtils from "../_utils_/property-utils";
@@ -1989,6 +1989,7 @@ describe("Properties Controller paramDef methods", () => {
 		reset();
 		// Using structureTableParamDef because it throws a validation error.
 		controller.setParamDef(structureTableParamDef);
-		expect(controller.getParamDef()).to.equal(structureTableParamDef);
+		const actualValues = controller.getPropertyValues();
+		expect(actualValues).to.eql(structuretablePropertyValues);
 	});
 });
