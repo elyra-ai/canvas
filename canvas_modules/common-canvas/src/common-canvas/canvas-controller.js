@@ -100,6 +100,10 @@ export default class CanvasController {
 		this.objectModel = new ObjectModel();
 		this.commandStack = new CommandStack();
 
+		// Cretae a util object to serve up translated messages when needed.
+		// The intl object will be provded to it when we get ot from common-canvas.jsx.
+		this.labelUtil = new LabelUtil();
+
 		// The following two functions must bind to this so that the correct canvas
 		// controller context can be accessed in context menu wrapper component.
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
@@ -140,7 +144,7 @@ export default class CanvasController {
 	}
 
 	setIntl(intl) {
-		this.labelUtil = new LabelUtil(intl);
+		this.labelUtil.setIntl(intl);
 	}
 
 	setToolbarConfig(config) {
