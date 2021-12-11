@@ -15,10 +15,6 @@
  */
 
 .properties-readonly {
-	width: inherit;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	&.hide {
 		display: none;
 	}
@@ -62,15 +58,8 @@
 		}
 	}
 	.tooltip-trigger {
-		width: inherit;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 		span {
 			white-space: nowrap;
-			&[disabled] {
-				opacity: 0.5;
-			}
 		}
 	}
 }

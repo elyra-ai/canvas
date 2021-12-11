@@ -28,8 +28,8 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
-
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
+import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
@@ -124,6 +124,12 @@ export default class PropertiesController {
 		return this.propertiesConfig;
 	}
 
+	setParamDef(paramDef) {
+		const rightFlyout = get(this.getPropertiesConfig(), "rightFlyout", true);
+		const formData = Form.makeForm(paramDef, !rightFlyout);
+		this.setForm(formData);
+	}
+
 	//
 	// Form and parsing Methods
 	//
@@ -173,6 +179,9 @@ export default class PropertiesController {
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
 				this.propertiesStore.setActiveTab(this.uiItems[0].tabs[0].group);
 			}
+
+			// set title
+			this.setTitle(this.form.label);
 		}
 	}
 

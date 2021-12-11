@@ -196,7 +196,7 @@
     {
       "fields": [
         {
-          "name": "Age",
+          "name": "Age - This is a long truncated label. You can see the entire label in a tooltip.",
           "type": "integer",
           "metadata": {
             "description": "",

@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Switch, ContentSwitcher, Dropdown } from "carbon-components-react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
+import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
 import { sortBy } from "lodash";
@@ -226,15 +227,29 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	createContentObject(label) {
-		return (
+		let disabled = true;
+		if (label) {
+			disabled = false;
+		}
+		const expressionTableCellContent = (
+			<span className="properties-expr-table-cell">
+				{label}
+			</span>
+		);
+		const expressionTableCellContentWithTooltip = (
+			<TruncatedContentTooltip
+				content={expressionTableCellContent}
+				tooltipText={label}
+				disabled={disabled}
+			/>
+		);
+		const contentObject = (
 			<div className="properties-table-cell-control">
-				<div className="properties-expr-table-cell">
-					<span>
-						{label}
-					</span>
-				</div>
+				{expressionTableCellContentWithTooltip}
 			</div>
 		);
+
+		return contentObject;
 	}
 
 	_makeDatasetFields(dataset, fieldDataset) {
