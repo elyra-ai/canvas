@@ -213,15 +213,27 @@ class CommonCanvasToolbar extends React.Component {
 		return toolbarConfig;
 	}
 
-	applyToolState(action, toolbarConfig, state) {
-		let tool = {};
-		if (toolbarConfig.leftBar) {
-			tool = toolbarConfig.leftBar.find((o) => o.action === action);
-		}
-		if (!tool && toolbarConfig.rightBar) {
-			tool = toolbarConfig.rightBar.find((o) => o.action === action);
-		}
+	addUndoRedoCommandLabels(toolbarConfig) {
+		const undoLabel = this.props.undoLabel;
+		const redoLabel = this.props.redoLabel;
 
+		if (undoLabel) {
+			const undoTool = this.findTool("undo", toolbarConfig);
+			if (undoTool) {
+				undoTool.label += ": " + undoLabel;
+			}
+		}
+		if (redoLabel) {
+			const redoTool = this.findTool("redo", toolbarConfig);
+			if (redoTool) {
+				redoTool.label += ": " + redoLabel;
+			}
+		}
+		return toolbarConfig;
+	}
+
+	applyToolState(action, toolbarConfig, state) {
+		const tool = this.findTool(action, toolbarConfig);
 		if (tool) {
 			tool.enable = state;
 		} else {
@@ -229,11 +241,23 @@ class CommonCanvasToolbar extends React.Component {
 		}
 	}
 
+	findTool(action, toolbarConfig) {
+		let tool = {};
+		if (toolbarConfig.leftBar) {
+			tool = toolbarConfig.leftBar.find((o) => o.action === action);
+		}
+		if (!tool && toolbarConfig.rightBar) {
+			tool = toolbarConfig.rightBar.find((o) => o.action === action);
+		}
+		return tool;
+	}
+
 	render() {
 		this.logger.log("render");
 
 		let toolbarConfig = this.generateToolbarConfig();
 		toolbarConfig = this.configureToolbarButtonsState(toolbarConfig);
+		toolbarConfig = this.addUndoRedoCommandLabels(toolbarConfig);
 		let canvasToolbar = null;
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
@@ -275,6 +299,8 @@ CommonCanvasToolbar.propTypes = {
 	canCutCopy: PropTypes.bool,
 	canPaste: PropTypes.bool,
 	canDelete: PropTypes.bool,
+	undoLabel: PropTypes.string,
+	redoLabel: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -290,7 +316,9 @@ const mapStateToProps = (state, ownProps) => ({
 	canRedo: ownProps.canvasController.canRedo(),
 	canCutCopy: ownProps.canvasController.canCutCopy(),
 	canPaste: ownProps.canvasController.canPaste(),
-	canDelete: ownProps.canvasController.canDelete()
+	canDelete: ownProps.canvasController.canDelete(),
+	undoLabel: ownProps.canvasController.getUndoLabel(),
+	redoLabel: ownProps.canvasController.getRedoLabel()
 });
 
 export default connect(mapStateToProps)(injectIntl(CommonCanvasToolbar));

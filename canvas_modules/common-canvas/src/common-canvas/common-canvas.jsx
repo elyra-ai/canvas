@@ -79,7 +79,8 @@ class CommonCanvas extends React.Component {
 			tipHandler: props.tipHandler,
 			layoutHandler: props.layoutHandler,
 			idGeneratorHandler: props.idGeneratorHandler,
-			selectionChangeHandler: props.selectionChangeHandler
+			selectionChangeHandler: props.selectionChangeHandler,
+			actionLabelHandler: props.actionLabelHandler
 		});
 		this.logger.logEndTimer("initializeController");
 	}

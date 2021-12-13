@@ -20,10 +20,11 @@ import { NODE_LINK }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class DeconstructSuperNodeAction extends Action {
-	constructor(data, objectModel, enableMoveNodesOnSupernodeResize) {
+	constructor(data, objectModel, labelUtil, enableMoveNodesOnSupernodeResize) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
 		this.supernode = this.data.targetObject;
@@ -283,5 +284,9 @@ export default class DeconstructSuperNodeAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.deconstructSuperNode", { node_label: this.supernode.label });
 	}
 }

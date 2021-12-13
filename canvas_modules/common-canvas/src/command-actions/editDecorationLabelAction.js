@@ -17,10 +17,11 @@ import Action from "../command-stack/action.js";
 import { DEC_LINK, DEC_NODE }	from "../common-canvas/constants/canvas-constants";
 
 export default class EditDecorationLabelAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(this.data.pipelineId);
 		if (this.data.objType === DEC_LINK) {
 			this.previousDecorations = this.apiPipeline.getLinkDecorations(this.data.objId) || [];
@@ -54,5 +55,12 @@ export default class EditDecorationLabelAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		if (this.data.objType === DEC_LINK) {
+			return this.labelUtil.getActionLabel(this, "action.editLinkDecorationLabel");
+		}
+		return this.labelUtil.getActionLabel(this, "action.editNodeDecorationLabel");
 	}
 }

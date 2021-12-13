@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,14 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class PasteAction extends Action {
-	constructor(data, objectModel, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
+	constructor(data, objectModel, labelUtil, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.viewportDimensions = viewportDimensions;
 		this.areDetachableLinksInUse = areDetachableLinksInUse;
 		this.isSnapToGridInUse = isSnapToGridInUse;
-		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		// Make sure objects to be pasted are in an appropriate position for them
@@ -73,7 +74,7 @@ export default class PasteAction extends Action {
 	// Offsets the positions of the canvas objects (nodes, comments and links)
 	// if they exactly overlap any existing nodes, comments and links.
 	// Exact overlap can happen when pasting over the top of the canvas from
-	// which the canvas objects  were copied.
+	// which the canvas objects were copied.
 	ensureNoOverlap(objects) {
 		let xInc = 10;
 		let yInc = 10;
@@ -160,5 +161,9 @@ export default class PasteAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.pasteObjects");
 	}
 }

@@ -335,6 +335,7 @@ class App extends React.Component {
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
+		this.actionLabelHandler = this.actionLabelHandler.bind(this);
 
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
@@ -1621,6 +1622,13 @@ class App extends React.Component {
 		return null;
 	}
 
+	actionLabelHandler(action) {
+		if (action.data.editType === "deleteSelectedObjects") {
+			return "Delete all objects";
+		}
+		return null;
+	}
+
 	refreshContent(streamId, diagramId) {
 		this.log("refreshContent()");
 	}
@@ -2320,6 +2328,7 @@ class App extends React.Component {
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
+				actionLabelHandler={this.actionLabelHandler}
 				toolbarConfig={toolbarConfig}
 				notificationConfig={this.state.notificationConfig}
 				contextMenuConfig={contextMenuConfig}

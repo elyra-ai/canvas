@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateAutoNodeAction extends Action {
-	constructor(data, objectModel, autoLinkOnlyFromSelNodes) {
+	constructor(data, objectModel, labelUtil, autoLinkOnlyFromSelNodes) {
 		super(data);
 		this.data = data;
+		this.labelUtil = labelUtil;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.srcNode = this.apiPipeline.getAutoSourceNode(autoLinkOnlyFromSelNodes);
@@ -58,5 +59,9 @@ export default class CreateAutoNodeAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.createNode", { node_label: this.newNode.label });
 	}
 }

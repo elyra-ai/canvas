@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2021 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,4 +37,9 @@ export default class CommonPropertiesAction extends Action {
 		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
 	}
 
+	// TODO - Implement this to get the command action label from translation
+	// file or call a getActionLabel callback.
+	getLabel() {
+		return "";
+	}
 }
