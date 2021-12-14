@@ -32,7 +32,6 @@ import Icon from "./../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { Provider } from "react-redux";
 import logger from "../../../utils/logger";
-
 import TitleEditor from "./../components/title-editor";
 import classNames from "classnames";
 
@@ -354,7 +353,7 @@ class PropertiesMain extends React.Component {
 				valueInfo.additionalInfo.title = this.propertiesController.getTitle();
 			}
 			const command = new CommonPropertiesAction(valueInfo, this.initialValueInfo,
-				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
+				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges, this.props.callbacks.propertiesActionLabelHandler, this.props.intl);
 			this.propertiesController.getCommandStack().do(command);
 
 			// if we don't close the dialog, set the currentParameters to the new parameters
@@ -554,7 +553,8 @@ PropertiesMain.propTypes = {
 		setPropertiesHasMounted: PropTypes.func,
 		buttonHandler: PropTypes.func,
 		validationHandler: PropTypes.func,
-		titleChangeHandler: PropTypes.func
+		titleChangeHandler: PropTypes.func,
+		propertiesActionLabelHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

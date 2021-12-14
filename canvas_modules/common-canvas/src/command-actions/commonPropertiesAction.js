@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import defaultMessages from "../../locales/command-actions/locales/en.json";
 
 export default class CommonPropertiesAction extends Action {
-	constructor(newValues, initialValues, appData, applyPropertyChanges) {
+	constructor(newValues, initialValues, appData, applyPropertyChanges, propertiesActionLabelHandler, intl) {
 		super(newValues);
 		this.newValues = newValues;
 		this.initialValues = initialValues;
 		this.appData = appData;
 		this.applyPropertyChanges = applyPropertyChanges;
+		this.propertiesActionLabelHandler = propertiesActionLabelHandler;
+		this.intl = intl;
+		this.defaultMessages = defaultMessages;
 	}
 
 	// Standard methods
@@ -37,9 +41,23 @@ export default class CommonPropertiesAction extends Action {
 		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
 	}
 
-	// TODO - Implement this to get the command action label from translation
-	// file or call a getActionLabel callback.
 	getLabel() {
-		return "";
+		if (this.propertiesActionLabelHandler) {
+			const label = this.propertiesActionLabelHandler();
+			if (label) {
+				return label;
+			}
+		}
+		return this.getDefaultLabel("action.commonProperties");
+	}
+
+	getDefaultLabel(key) {
+		let formattedMessage;
+		if (typeof this.intl !== "undefined" && this.intl !== null) {
+			formattedMessage = this.intl.formatMessage({ id: key, defaultMessage: this.defaultMessages[key] });
+		} else {
+			formattedMessage = this.defaultMessages[key];
+		}
+		return formattedMessage;
 	}
 }
