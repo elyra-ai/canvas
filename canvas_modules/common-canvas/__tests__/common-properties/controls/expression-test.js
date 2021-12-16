@@ -101,6 +101,36 @@ const dataModel = [{
 					"ldl bad"
 				]
 			}
+		},
+		{
+			"name": "Ag",
+			"type": "integer",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input",
+				"values": [
+					10,
+					20,
+					"30",
+					"40"
+				]
+			}
+		},
+		{
+			"name": "Na",
+			"type": "double",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input",
+				"values": [
+					1.23,
+					"10.23",
+					"100.23",
+					"1000px"
+				]
+			}
 		}
 	]
 }];
@@ -334,6 +364,67 @@ describe("expression-builder select from tables correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal(" \"female\"");
 	});
 
+	it("expression builder select a field value of type integer", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// "Ag" field has type integer and we're passing some values as strings for Ag
+		// Verify all the values are converted into numbers
+		const ag = controller.getDatasetMetadataFields().find((field) => field.name === "Ag");
+		const allValuesNumbers = ag.metadata.values.every((val) => typeof val === "number");
+		expect(allValuesNumbers).to.equal(true);
+
+		// select a field with integer values
+		const fieldTable = wrapper.find("div.properties-field-table-container");
+		tableUtils.clickTableRows(fieldTable, [4]);
+		// select any value from value table.
+		const valueTable = wrapper.find("div.properties-value-table-container");
+		tableUtils.dblClickTableRows(valueTable, [2]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 30");
+	});
+
+	it("expression builder select a field value of type double", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// "Na" field has type double and we're passing some values as strings and invalid number
+		// Verify valid numbers are converted into numbers
+		const na = controller.getDatasetMetadataFields().find((field) => field.name === "Na");
+		const validValuesNumbers = na.metadata.values.filter((val) => typeof val === "number");
+		expect(validValuesNumbers).to.have.length(3);
+		expect(validValuesNumbers).to.eql([1.23, 10.23, 100.23]);
+
+		// Verify invalid number is set as it is
+		const invalidNumber = na.metadata.values.filter((val) => typeof val !== "number");
+		expect(invalidNumber).to.have.length(1);
+		expect(invalidNumber).to.eql(["1000px"]);
+
+		// select a field with double values
+		const fieldTable = wrapper.find("div.properties-field-table-container");
+		tableUtils.clickTableRows(fieldTable, [5]);
+		// select any value from value table.
+		const valueTable = wrapper.find("div.properties-value-table-container");
+		tableUtils.dblClickTableRows(valueTable, [2]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 100.23");
+		// select invalid number which is displayed as string
+		tableUtils.dblClickTableRows(valueTable, [3]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(" 100.23 \"1000px\"");
+	});
+
 	it("expression builder select a function", () => {
 		reset();
 		const wrapper = mountWithIntl(
@@ -389,7 +480,7 @@ describe("expression-builder select from tables correctly", () => {
 		searchInput.simulate("change", { target: { value: "" } });
 		fieldTable = wrapper.find("div.properties-field-table-container");
 		rows = tableUtils.getTableRows(fieldTable);
-		expect(rows).to.have.length(4);
+		expect(rows).to.have.length(6);
 		firstRowClassName = rows.at(0).prop("className");
 		expect(firstRowClassName.indexOf("properties-vt-row-selected")).to.be.lessThan(0);
 		const fourthRowClassName = rows.at(3).prop("className");
@@ -574,7 +665,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		);
 		let fieldTable = wrapper.find("div.properties-field-table-container");
 		let rows = tableUtils.getTableRows(fieldTable);
-		expect(rows).to.have.length(4);
+		expect(rows).to.have.length(6);
 		expect(rows.at(1).text()).to.equal("Sexstring");
 		const searchInput = fieldTable.find("div.properties-ft-search-container input");
 		expect(searchInput).to.have.length(1);
@@ -654,17 +745,17 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		);
 		const fieldTable = wrapper.find("div.properties-field-table-container");
 		const rows = tableUtils.getTableRows(fieldTable);
-		expect(rows).to.have.length(4);
+		expect(rows).to.have.length(6);
 		expect(rows.at(1).text()).to.equal("Sexstring");
 
 		const sortHeaders = fieldTable.find(".ReactVirtualized__Table__sortableHeaderColumn");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtils.clickHeaderColumnSort(fieldTable, 0);
-		expect(rows.at(1).text()).to.equal("BPstring");
+		expect(rows.at(2).text()).to.equal("BPstring");
 
 		tableUtils.clickHeaderColumnSort(fieldTable, 0);
-		expect(rows.at(1).text()).to.equal("Cholesterolstring");
+		expect(rows.at(2).text()).to.equal("Cholesterolstring");
 	});
 	it("expression builder sorts value table", () => {
 		reset();
@@ -732,7 +823,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Fields");
 		let fieldRows = fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 
-		expect(fieldRows).to.have.length(4);
+		expect(fieldRows).to.have.length(6);
 		// navigate to Recently Used fields and check that it is empty
 		var dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
 		dropDown.simulate("click");

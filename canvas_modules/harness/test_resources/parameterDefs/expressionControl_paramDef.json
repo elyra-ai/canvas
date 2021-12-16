@@ -507,12 +507,14 @@
           "type": "integer",
           "metadata": {
             "description": "",
-            "measure": "range",
+            "measure": "discrete",
             "modeling_role": "input",
-            "range": {
-              "min": 18,
-              "max": 35
-            }
+            "values": [
+              10,
+              20,
+              "30",
+              "40"
+            ]
           }
         }
       ]
@@ -587,12 +589,14 @@
           "type": "double",
           "metadata": {
             "description": "",
-            "measure": "range",
+            "measure": "discrete",
             "modeling_role": "input",
-            "range": {
-              "min": -2,
-              "max": 1.5
-            }
+            "values": [
+              1.23,
+              "10.23",
+              "100.23",
+              "1000px"
+            ]
           }
         },
         {

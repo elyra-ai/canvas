@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { Switch, ContentSwitcher, Dropdown } from "carbon-components-react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
-import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
+import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION, DATA_TYPE } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
 import { sortBy } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -294,6 +294,10 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					}
 				]
 			};
+			// For integer or double fields, convert all the values into numbers. If number is invalid, display given value as it is.
+			if (field.metadata.values && (field.type === DATA_TYPE.INTEGER || field.type === DATA_TYPE.DOUBLE)) {
+				field.metadata.values = field.metadata.values.map((val) => (isNaN(Number(val)) ? val : Number(val)));
+			}
 			if (field.metadata.values) {
 				entry.values = [];
 				field.metadata.values.forEach((val) => {
