@@ -16,12 +16,13 @@
 import Action from "../command-stack/action.js";
 
 export default class CommonPropertiesAction extends Action {
-	constructor(newValues, initialValues, appData, applyPropertyChanges) {
+	constructor(newValues, initialValues, appData, applyPropertyChanges, propertiesActionLabel) {
 		super(newValues);
 		this.newValues = newValues;
 		this.initialValues = initialValues;
 		this.appData = appData;
 		this.applyPropertyChanges = applyPropertyChanges;
+		this.propertiesActionLabel = propertiesActionLabel;
 	}
 
 	// Standard methods
@@ -37,9 +38,7 @@ export default class CommonPropertiesAction extends Action {
 		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
 	}
 
-	// TODO - Implement this to get the command action label from translation
-	// file or call a getActionLabel callback.
 	getLabel() {
-		return "";
+		return this.propertiesActionLabel;
 	}
 }

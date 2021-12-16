@@ -336,6 +336,7 @@ class App extends React.Component {
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 		this.actionLabelHandler = this.actionLabelHandler.bind(this);
+		this.propertiesActionLabelHandler = this.propertiesActionLabelHandler.bind(this);
 
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
@@ -1629,6 +1630,11 @@ class App extends React.Component {
 		return null;
 	}
 
+	// Set custom label for "Save properties" action
+	propertiesActionLabelHandler() {
+		return "Save properties custom label";
+	}
+
 	refreshContent(streamId, diagramId) {
 		this.log("refreshContent()");
 	}
@@ -1819,7 +1825,8 @@ class App extends React.Component {
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
 			buttonHandler: this.buttonHandler,
-			titleChangeHandler: this.titleChangeHandler
+			titleChangeHandler: this.titleChangeHandler,
+			propertiesActionLabelHandler: this.propertiesActionLabelHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

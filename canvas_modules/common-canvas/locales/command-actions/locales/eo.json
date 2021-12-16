@@ -3,6 +3,7 @@
 	"action.arrangeLayout": "[Esperanto~Arrange layout~~~~~~~eo]",
 	"action.attachNodeToLinks": "[Esperanto~Attach {node_label} node to link~~~~~~~eo]",
 	"action.collapseSuperNodeInPlace": "[Esperanto~Collapse supernode~~~~~~~eo]",
+	"action.commonProperties": "[Esperanto~Save properties~~~~~~~eo]",
 	"action.convertSuperNodeExternalToLocal": "[Esperanto~Convert external supernode {node_label} to local~~~~~~~eo]",
 	"action.convertSuperNodeLocalToExternal": "[Esperanto~Convert local supernode {node_label} to external~~~~~~~eo]",
 	"action.createComment": "[Esperanto~Create comment~~~~~~~eo]",
