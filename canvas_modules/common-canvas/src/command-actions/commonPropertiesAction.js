@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import defaultMessages from "../../locales/command-actions/locales/en.json";
 
 export default class CommonPropertiesAction extends Action {
-	constructor(newValues, initialValues, appData, applyPropertyChanges, propertiesActionLabelHandler, intl) {
+	constructor(newValues, initialValues, appData, applyPropertyChanges, propertiesActionLabel) {
 		super(newValues);
 		this.newValues = newValues;
 		this.initialValues = initialValues;
 		this.appData = appData;
 		this.applyPropertyChanges = applyPropertyChanges;
-		this.propertiesActionLabelHandler = propertiesActionLabelHandler;
-		this.intl = intl;
-		this.defaultMessages = defaultMessages;
+		this.propertiesActionLabel = propertiesActionLabel;
 	}
 
 	// Standard methods
@@ -42,22 +39,6 @@ export default class CommonPropertiesAction extends Action {
 	}
 
 	getLabel() {
-		if (this.propertiesActionLabelHandler) {
-			const label = this.propertiesActionLabelHandler();
-			if (label) {
-				return label;
-			}
-		}
-		return this.getDefaultLabel("action.commonProperties");
-	}
-
-	getDefaultLabel(key) {
-		let formattedMessage;
-		if (typeof this.intl !== "undefined" && this.intl !== null) {
-			formattedMessage = this.intl.formatMessage({ id: key, defaultMessage: this.defaultMessages[key] });
-		} else {
-			formattedMessage = this.defaultMessages[key];
-		}
-		return formattedMessage;
+		return this.propertiesActionLabel;
 	}
 }

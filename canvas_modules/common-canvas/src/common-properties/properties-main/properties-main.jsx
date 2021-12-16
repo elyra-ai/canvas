@@ -181,6 +181,16 @@ class PropertiesMain extends React.Component {
 		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
 	}
 
+	getPropertiesActionLabel() {
+		if (this.props.callbacks.propertiesActionLabelHandler) {
+			const label = this.props.callbacks.propertiesActionLabelHandler();
+			if (label) {
+				return label;
+			}
+		}
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ACTION_LABEL);
+	}
+
 	getEditorSize() {
 		// Determine whether to persist initialEditorSize or set the defaultEditorSize in certain cases
 		const defaultEditorSize = this.propertiesController.getForm().editorSize;
@@ -352,8 +362,9 @@ class PropertiesMain extends React.Component {
 			if (this.propertiesController.getTitle()) {
 				valueInfo.additionalInfo.title = this.propertiesController.getTitle();
 			}
+			const propertiesActionLabel = this.getPropertiesActionLabel();
 			const command = new CommonPropertiesAction(valueInfo, this.initialValueInfo,
-				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges, this.props.callbacks.propertiesActionLabelHandler, this.props.intl);
+				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges, propertiesActionLabel);
 			this.propertiesController.getCommandStack().do(command);
 
 			// if we don't close the dialog, set the currentParameters to the new parameters
