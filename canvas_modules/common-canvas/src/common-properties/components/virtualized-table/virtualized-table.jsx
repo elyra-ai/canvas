@@ -16,7 +16,7 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading, Button } from "carbon-components-react";
+import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
@@ -236,7 +236,10 @@ class VirtualizedTable extends React.Component {
 				position={{ x: 0 }}
 				zIndex={999}
 			>
-				<span className="ta-virtualized-table-header-icon-resize">|</span>
+				<div
+					role="button" tabIndex="0"
+					aria-label="Resize column"
+				/>
 			</Draggable>)
 			: "";
 

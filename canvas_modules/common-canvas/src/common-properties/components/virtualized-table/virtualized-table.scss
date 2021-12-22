@@ -133,8 +133,8 @@ $properties-vt-checkbox-width: 45px;
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
-			align-items: center;
 			height: 100%;
+			cursor: pointer;
 		}
 
 		.ReactVirtualized__Table__headerTruncatedText {
