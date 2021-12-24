@@ -818,7 +818,6 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 			.find("div[role='columnheader']")
 			.at(1)
 			.text();
-		// Test failed - Expected: "Select all Field name", Received: "Select all Field name|"
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});
 

@@ -90,12 +90,6 @@ $row-left-padding: 4px;
 			&:focus {
 				outline: none;
 			}
-			// sort icon in header
-			svg {
-				margin-left: 3px;
-				width: 11px;
-				height: 11px;
-			}
 			// sort icon viewable when hover or sorted column
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
@@ -105,19 +99,17 @@ $row-left-padding: 4px;
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
 				display: inline;
-				stroke: $icon-01;
 			}
-			.sort-column-active
-			.properties-ft-column-sort-icon
+			.sort-column-active + .properties-ft-column-sort-icon
 			svg:not(:root) {
 				display: inline;
-				stroke: $icon-01;
 			}
 		}
 
 		.properties-tooltips-container {
 			display: inline-flex;
 			width: 100%;
+			align-self: center;
 		}
 		.tooltip-container {
 			overflow: hidden;

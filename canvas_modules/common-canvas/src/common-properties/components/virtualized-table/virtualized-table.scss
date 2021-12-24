@@ -188,5 +188,7 @@ $properties-vt-checkbox-width: 45px;
 
 	.properties-ft-column-sort-icon {
 		flex: 0 0 16px;
+		align-self: center;
+		height: $spacing-05;
 	}
 }
