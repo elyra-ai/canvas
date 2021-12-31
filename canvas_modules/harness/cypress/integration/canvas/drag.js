@@ -105,6 +105,55 @@ describe("Test to see if regular selection and drag behavior works " +
 		);
 		cy.clickToolbarUndo();
 	});
+
+	it("Test node cannot be dragged when enableDragToMoveSizeNodesComments is false", function() {
+
+		cy.setCanvasConfig({ "selectedDragToMoveSizeNodesComments": false });
+
+		// Verify initial positon of Execution Node
+		cy.verifyNodeTransform("Execution node", 297, 139);
+
+		// Verify initial translation of the canvas
+		cy.verifyZoomTransform(0, 0, 1);
+
+		// Try dragging the node
+		cy.moveNodeToPosition("Execution node", 400, 450);
+
+		// Verify Execution Node has not moved
+		cy.verifyNodeTransform("Execution node", 297, 139);
+
+		// Verify that the canvas has been dragged (instead of the node)
+		cy.verifyZoomTransform(103, 311, 1);
+	});
+
+	it("Test comment cannot be dragged when enableDragToMoveSizeNodesComments is false", function() {
+
+		cy.setCanvasConfig({ "selectedDragToMoveSizeNodesComments": false });
+
+		// Verify initial positon of Comment
+		cy.verifyCommentTransform(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links.", 20, 20
+		);
+
+		// Verify initial translation of the canvas
+		cy.verifyZoomTransform(0, 0, 1);
+
+		// Try dragging the comment
+		cy.moveCommentToPosition(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links.", 300, 350
+		);
+
+		// Verify Comment has not moved
+		cy.verifyCommentTransform(
+			"This canvas shows the 4 different node types and three link types: node links, " +
+			"association links and comments links.", 20, 20
+		);
+
+		// Verify that the canvas has been dragged (instead of the comment)
+		cy.verifyZoomTransform(280, 330, 1);
+	});
 });
 
 describe("Test to see if selection works with dragWithoutSelect set to true", function() {
