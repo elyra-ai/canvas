@@ -185,8 +185,8 @@ $link-highlight-color: $support-04;
 
 /* Node and comment styles */
 
-.d3-node-group,
-.d3-comment-group {
+.d3-node-group.d3-draggable,
+.d3-comment-group.d3-draggable {
 	cursor: pointer;
 }
 
