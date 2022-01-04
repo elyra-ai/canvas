@@ -411,6 +411,9 @@
         "label": {
           "resource_key": "winter"
         },
+        "description": {
+          "resource_key": "winter"
+        },
         "control": "image",
         "data": {
           "parameter_ref": "weather"
@@ -420,12 +423,16 @@
           "size": {
             "height": 60,
             "width": 60
-          }
+          },
+          "tooltipDirection": "left"
         }
       },
       {
         "id": "summer",
         "label": {
+          "resource_key": "summer"
+        },
+        "description": {
           "resource_key": "summer"
         },
         "control": "image",
@@ -437,12 +444,16 @@
           "size": {
             "height": 60,
             "width": 60
-          }
+          },
+          "tooltipDirection": "top"
         }
       },
       {
         "id": "fall",
         "label": {
+          "resource_key": "fall"
+        },
+        "description": {
           "resource_key": "fall"
         },
         "control": "image",
@@ -455,12 +466,16 @@
           "size": {
             "height": 60,
             "width": 60
-          }
+          },
+          "tooltipDirection": "bottom"
         }
       },
       {
         "id": "spring",
         "label": {
+          "resource_key": "spring"
+        },
+        "description": {
           "resource_key": "spring"
         },
         "control": "image",
@@ -472,7 +487,8 @@
           "size": {
             "height": 60,
             "width": 60
-          }
+          },
+          "tooltipDirection": "right"
         }
       },
       {
