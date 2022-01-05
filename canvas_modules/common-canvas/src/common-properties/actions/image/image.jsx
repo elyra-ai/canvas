@@ -75,8 +75,8 @@ class ImageAction extends React.Component {
 				</div>
 			);
 			const directions = ["left", "right", "top", "bottom"];
-			const tooltipDirection = this.props.action.image.tooltipDirection && directions.includes(this.props.action.image.tooltipDirection.toLowerCase())
-				? this.props.action.image.tooltipDirection.toLowerCase()
+			const tooltipDirection = this.props.action.image.tooltip_direction && directions.includes(this.props.action.image.tooltip_direction.toLowerCase())
+				? this.props.action.image.tooltip_direction.toLowerCase()
 				: "bottom";
 
 			display = (<Tooltip

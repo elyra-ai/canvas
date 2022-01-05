@@ -21,38 +21,38 @@ describe("Test of action image tooltip direction", function() {
 	});
 
 	it("action image tooltip direction left", function() {
-		// For "winter" image, tooltipDirection is set to "left" in paramDef
+		// For "winter" image, tooltip_direction is set to "left" in paramDef
 		cy.hoverOverActionImage("winter");
 		cy.verifyTipDirectionForAction("winter", "Winter", "left");
 	});
 
 	it("action image tooltip direction right", function() {
-		// For "spring" image, tooltipDirection is set to "right" in paramDef
+		// For "spring" image, tooltip_direction is set to "right" in paramDef
 		cy.hoverOverActionImage("spring");
 		cy.verifyTipDirectionForAction("spring", "Spring", "right");
 	});
 
 	it("action image tooltip direction top", function() {
-		// For "summer" image, tooltipDirection is set to "top" in paramDef
+		// For "summer" image, tooltip_direction is set to "top" in paramDef
 		cy.hoverOverActionImage("summer");
 		cy.verifyTipDirectionForAction("summer", "Summer", "top");
 	});
 
 	it("action image tooltip direction bottom", function() {
-		// For "fall" image, tooltipDirection is set to "bottom" in paramDef
+		// For "fall" image, tooltip_direction is set to "bottom" in paramDef
 		cy.hoverOverActionImage("fall");
 		cy.verifyTipDirectionForAction("fall", "Fall", "bottom");
 	});
 
-	it("When tooltipDirection is not specified, default direction is bottom", function() {
+	it("When tooltip_direction is not specified, default direction is bottom", function() {
 		// Click "Conditions" catgeory
 		cy.get(".properties-category-title").eq(1)
 			.click();
-		// For "image_cond_hide" image, tooltipDirection is not specified
+		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");
 		cy.verifyTipDirectionForAction("image_cond_hide", "Test visible image conditions.", "bottom");
 
-		// For "image_cond_disable" image, tooltipDirection is not specified
+		// For "image_cond_disable" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_disable");
 		cy.verifyTipDirectionForAction("image_cond_disable", "Test enable image conditions.", "bottom");
 	});

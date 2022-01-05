@@ -424,7 +424,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltipDirection": "left"
+          "tooltip_direction": "left"
         }
       },
       {
@@ -445,7 +445,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltipDirection": "top"
+          "tooltip_direction": "top"
         }
       },
       {
@@ -467,7 +467,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltipDirection": "bottom"
+          "tooltip_direction": "bottom"
         }
       },
       {
@@ -488,7 +488,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltipDirection": "right"
+          "tooltip_direction": "right"
         }
       },
       {
