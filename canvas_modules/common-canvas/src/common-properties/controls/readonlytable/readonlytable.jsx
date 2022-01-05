@@ -54,7 +54,8 @@ class ReadonlyTableControl extends AbstractTable {
 			label: buttonLabel
 		} : null;
 
-		const table = this.createTable(this.props.state, tableButtonConfig);
+		const customButtons = this.props.control && this.props.control.buttons;
+		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
 		const content = (
 			<div>
 				<div className="properties-rt properties-rt-buttons">

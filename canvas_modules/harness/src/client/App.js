@@ -354,6 +354,7 @@ class App extends React.Component {
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
+		this.buttonIconHandler = this.buttonIconHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
 		this.titleChangeHandler = this.titleChangeHandler.bind(this);
 		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
@@ -1291,6 +1292,15 @@ class App extends React.Component {
 		if (data.propertyId.name === "readonlyTableError") {
 			this.propertiesController.validateInput(data.propertyId);
 		}
+
+		console.log("!!! data " + JSON.stringify(data));
+	}
+
+	buttonIconHandler(data, callbackIcon) {
+		// handle custom buttons icon
+		if (data.type === "customButtonIcon") {
+			callbackIcon(Edit32);
+		}
 	}
 
 	validationHandler(controller, propertyId, value, appData, callback) {
@@ -1825,6 +1835,7 @@ class App extends React.Component {
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			helpClickHandler: this.helpClickHandler,
 			buttonHandler: this.buttonHandler,
+			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
 			propertiesActionLabelHandler: this.propertiesActionLabelHandler
 		};

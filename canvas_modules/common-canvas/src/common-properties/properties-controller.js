@@ -41,6 +41,7 @@ export default class PropertiesController {
 			controllerHandler: null,
 			actionHandler: null,
 			buttonHandler: null,
+			buttonIconHandler: null,
 			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
@@ -1819,6 +1820,26 @@ export default class PropertiesController {
 	clearStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	* Set the table button to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @param enabled boolean value to enable or disable the button
+	*/
+	setTableButtonEnabled(propertyId, buttonId, enabled) {
+		this.propertiesStore.setTableButtonEnabled(propertyId, buttonId, enabled);
+	}
+
+	/**
+	* Returns the true if the table button is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @return boolean
+	*/
+	getTableButtonEnabled(propertyId, buttonId) {
+		return this.propertiesStore.getTableButtonEnabled(propertyId, buttonId);
 	}
 
 	/**

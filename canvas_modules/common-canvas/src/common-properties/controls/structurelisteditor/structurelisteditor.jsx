@@ -48,7 +48,8 @@ class StructurelisteditorControl extends AbstractTable {
 			addButtonFunction: this.addRow
 		};
 
-		const table = this.createTable(this.props.state, tableButtonConfig);
+		const customButtons = this.props.control && this.props.control.buttons;
+		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
 
 		const tableContainer = (<div>
 			<div className="properties-sle properties-sle-buttons">

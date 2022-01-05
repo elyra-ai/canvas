@@ -255,6 +255,7 @@ CommonProperties.propTypes = {
 		applyPropertyChanges: PropTypes.func,
 		helpClickHandler: PropTypes.func,
 		buttonHandler: PropTypes.func,
+		buttonIconHandler: PropTypes.func,
 		validationHandler: PropTypes.func,
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func
