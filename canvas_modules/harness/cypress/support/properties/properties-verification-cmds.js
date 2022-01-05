@@ -206,6 +206,29 @@ Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId
 		});
 });
 
+Cypress.Commands.add("verifyTipDirectionForAction", (actionName, text, direction) => {
+	cy.get(".common-canvas-tooltip")
+		.then((tips) => {
+			// Get the visible tip
+			let visibleTip;
+			for (var idx = 0; idx < tips.length; idx++) {
+				if (tips[idx].textContent === text) {
+					visibleTip = tips[idx];
+					break;
+				}
+			}
+
+			if (visibleTip) {
+				// Verify tip is visible
+				cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
+				// Verify text in tip
+				cy.wrap(visibleTip).should("have.text", text);
+				// Verify tip direction
+				cy.wrap(visibleTip).should("have.attr", "direction", direction);
+			}
+		});
+});
+
 // Expression control verification commands
 Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, propertyId) => {
 	// Verify "is_real" is a "keyword" in ExpressionEditor
