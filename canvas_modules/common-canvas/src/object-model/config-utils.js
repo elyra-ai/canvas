@@ -59,6 +59,7 @@ export default class CanvasUtils {
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
+			enableDragToMoveSizeNodesComments: true,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableToolbarLayout: "Top",
