@@ -20,6 +20,21 @@
 		// Override default padding to show Remove and Add Columns buttons in same line
 		padding: 0 $spacing-04;
 	}
+
+	&.custom-buttons {
+		display: flex;
+
+		// Hide the Carbon button tooltip
+		button.properties-custom-table-button {
+			&::before {
+				display: none;
+			}
+
+			div.bx--assistive-text {
+				display: none;
+			}
+		}
+	}
 }
 
 .properties-table-cell-control {

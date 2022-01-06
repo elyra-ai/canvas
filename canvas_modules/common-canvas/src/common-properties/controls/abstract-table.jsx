@@ -17,9 +17,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "carbon-components-react";
-import { Button } from "carbon-components-react";
+import { Button, Checkbox } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
+import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
@@ -73,7 +73,6 @@ export default class AbstractTable extends React.Component {
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
 		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
 		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
-		this.customButtonIconCallback = this.customButtonIconCallback.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
@@ -540,113 +539,18 @@ export default class AbstractTable extends React.Component {
 		return editButton;
 	}
 
-	makeCustomButtonsPanel(tableState, customButtons = []) {
-		console.log("!!! tableState " + tableState);
-		// TODO: disable buttons if table is disabled or if button is disabled
-		// TODO: move to own class
-		const buttons = [];
-		customButtons.forEach((buttonConfig) => {
-			let customButton;
-			const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
-			if (buttonConfig.icon) {
-				let icon;
-				if (buttonConfig.icon.slice(buttonConfig.icon.length - 4) === ".svg") { // svg image
-					icon = <ISVG className="roperties-at-custom-button-icon bx--btn__icon" src={buttonConfig.icon} />;
-				} else {
-					icon = <img src={buttonConfig.icon} className="properties-at-custom-button-icon" />;
-				}
-
-				const label = buttonConfig.label ? buttonConfig.label.text : "";
-				customButton = (<Button
-					key={`properties-at-${buttonConfig.id}`}
-					className="properties-at-custom-button"
-					onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-					size="small"
-					kind="ghost"
-					iconDescription={buttonDescription}
-				>
-					{icon}
-					{label}
-				</Button>);
-			} else if (buttonConfig.carbonIcon) {
-				const carbonIcon = this.customButtonIconCallback(buttonConfig.id, buttonConfig.carbonIcon);
-				if (buttonConfig.label) {
-					customButton = (<Button
-						key={`properties-at-${buttonConfig.id}`}
-						className="properties-at-custom-button"
-						onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-						size="small"
-						kind="ghost"
-						renderIcon={carbonIcon}
-						iconDescription={buttonDescription}
-					>
-						{buttonConfig.label.text}
-					</Button>);
-				} else {
-					customButton = (<Button
-						key={`properties-at-${buttonConfig.id}`}
-						className="properties-at-custom-button"
-						onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-						size="small"
-						kind="ghost"
-						hasIconOnly
-						renderIcon={carbonIcon}
-						iconDescription={buttonDescription}
-					/>);
-				}
-			} else if (buttonConfig.label) {
-				customButton = (<Button
-					key={`properties-at-${buttonConfig.id}`}
-					className="properties-at-custom-button"
-					onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-					size="small"
-					kind="tertiary"
-					iconDescription={buttonDescription}
-				>
-					{buttonConfig.label.text}
-				</Button>);
-			} else {
-				// Invalid button
-			}
-
-			if (customButton) {
-				// if (buttonConfig.description) {
-				// 	// TODO: disable tooltip if button is disabled
-				// 	customButton = <Tooltip id={`${buttonConfig.id}-tooltip`} tip={buttonConfig.description.text} disable={false} className="properties-at-button-tooltip" />;
-				// }
-				buttons.push(customButton);
-			}
-		});
-		return (<div className="properties-at-buttons-container">
-			{buttons}
-		</div>);
-	}
-
-	customButtonIconCallback(buttonId, carbonIcon) {
-		const buttonIconHandler = this.props.controller.getHandlers().buttonIconHandler;
-		let icon;
-		if (buttonIconHandler) {
-			buttonIconHandler({
-				type: "customButtonIcon",
-				propertyId: this.props.propertyId,
-				buttonId: buttonId,
-				carbonIcon: carbonIcon
-			}, (appIcon) => {
-				icon = appIcon;
-			});
+	makeCustomButtonsPanel(tableState, customButtons) {
+		if (customButtons) {
+			return (<div className="properties-at-buttons-container custom-buttons">
+				<TableButtons
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					customButtons={customButtons}
+					tableState={tableState}
+				/>
+			</div>);
 		}
-		return icon;
-	}
-
-	customButtonOnClick(propertyId, buttonId) {
-		const buttonHandler = this.props.controller.getHandlers().buttonHandler;
-		if (buttonHandler) {
-			buttonHandler({
-				type: "custom_button",
-				propertyId: propertyId,
-				buttonId: buttonId
-			});
-		}
+		return null;
 	}
 
 	editOnClick(propertyId) {
