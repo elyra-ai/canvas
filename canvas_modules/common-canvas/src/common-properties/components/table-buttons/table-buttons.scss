@@ -15,8 +15,13 @@
  */
 
  .properties-custom-table-button {
-     .properties-custom-table-button-icon {
-         width: $spacing-05;
-         height: $spacing-05;
-     }
+    img.properties-custom-table-button-icon {
+        margin-left: $spacing-03;
+        width: $spacing-05;
+        height: $spacing-05;
+    }
  }
+
+ .properties-custom-table-button-divider {
+    border-right: 1px solid $ui-03;
+}

@@ -21,6 +21,9 @@ import { Button } from "carbon-components-react";
 import Tooltip from "../../../tooltip/tooltip.jsx";
 import ISVG from "react-inlinesvg";
 
+// TODO: remove comments
+// toolbar buttons are ghost or icon buttons only
+
 class TableButtons extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,106 +38,27 @@ class TableButtons extends React.Component {
 		const buttons = [];
 		customButtons.forEach((buttonConfig) => {
 			let customButton;
-			const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
 			if (buttonConfig.icon) {
-				let icon;
-				if (buttonConfig.icon.slice(buttonConfig.icon.length - 4) === ".svg") { // svg image
-					icon = <ISVG className="properties-custom-table-button-icon bx--btn__icon" src={buttonConfig.icon} />;
-				} else {
-					icon = <img src={buttonConfig.icon} className="properties-custom-table-button-icon" />;
-				}
-
-				const label = buttonConfig.label ? buttonConfig.label.text : "";
-				customButton = (<Button
-					key={`properties-custom-table-button-${buttonConfig.id}`}
-					className="properties-custom-table-button"
-					onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-					size="small"
-					kind="ghost"
-					iconDescription={buttonDescription}
-				>
-					{icon}
-					{label}
-				</Button>);
-
-				if (buttonConfig.description) {
-					customButton = (<Tooltip
-						id={`${buttonConfig.id}-tooltip`}
-						key={`properties-custom-table-button-${buttonConfig.id}-tooltip`}
-						tip={buttonConfig.description.text}
-						disable={false}
-						className="properties-custom-table-button-tooltip icon-tooltip"
-					>
-						{customButton}
-					</Tooltip>);
-				}
+				customButton = this.createCustomIconButton(buttonConfig);
 			} else if (buttonConfig.carbonIcon) {
-				const carbonIcon = this.customButtonIconCallback(buttonConfig.id, buttonConfig.carbonIcon);
-				if (buttonConfig.label) {
-					customButton = (<Button
-						key={`properties-custom-table-button-${buttonConfig.id}`}
-						className="properties-custom-table-button"
-						onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-						size="small"
-						kind="ghost"
-						renderIcon={carbonIcon}
-						iconDescription={buttonDescription}
-					>
-						{buttonConfig.label.text}
-					</Button>);
-				} else {
-					customButton = (<Button
-						key={`properties-custom-table-button-${buttonConfig.id}`}
-						className="properties-custom-table-button"
-						onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-						size="small"
-						kind="ghost"
-						hasIconOnly
-						renderIcon={carbonIcon}
-						iconDescription={buttonDescription}
-					/>);
-				}
-
-				if (buttonConfig.description) {
-					customButton = (<Tooltip
-						id={`${buttonConfig.id}-tooltip`}
-						key={`properties-custom-table-button-${buttonConfig.id}-tooltip`}
-						tip={buttonConfig.description.text}
-						disable={false}
-						className="properties-custom-table-button-tooltip icon-tooltip"
-					>
-						{customButton}
-					</Tooltip>);
-				}
+				customButton = this.createCarbonIconButton(buttonConfig);
 			} else if (buttonConfig.label) {
-				customButton = (<Button
-					key={`properties-custom-table-button-${buttonConfig.id}`}
-					className="properties-custom-table-button"
-					onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-					size="small"
-					kind="ghost"
-					iconDescription={buttonDescription}
-				>
-					{buttonConfig.label.text}
-				</Button>);
-
-				if (buttonConfig.description) {
-					customButton = (<Tooltip
-						id={`${buttonConfig.id}-tooltip`}
-						key={`properties-custom-table-button-${buttonConfig.id}-tooltip`}
-						tip={buttonConfig.description.text}
-						disable={false}
-						className="properties-custom-table-button-tooltip icon-tooltip"
-					>
-						{customButton}
-					</Tooltip>);
-				}
+				customButton = this.createLabelOnlyButton(buttonConfig);
 			} else {
 				// Invalid button
 			}
 
 			if (customButton) {
+				if (buttonConfig.description) {
+					customButton = this.createTooltipForButton(buttonConfig, customButton);
+				}
+				if (buttonConfig.divider && buttonConfig.divider === "before") {
+					buttons.push(<div className="properties-custom-table-button-divider" key={`${buttonConfig.id}-divider`} />);
+				}
 				buttons.push(customButton);
+				if (buttonConfig.divider && buttonConfig.divider === "after") {
+					buttons.push(<div className="properties-custom-table-button-divider" key={`${buttonConfig.id}-divider`} />);
+				}
 			}
 		});
 		return buttons;
@@ -165,6 +89,82 @@ class TableButtons extends React.Component {
 				buttonId: buttonId
 			});
 		}
+	}
+
+	createLabelOnlyButton(buttonConfig) {
+		return (<Button
+			key={`properties-custom-table-button-${buttonConfig.id}`}
+			className="properties-custom-table-button"
+			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
+			size="small"
+			kind="ghost"
+		>
+			{buttonConfig.label.text}
+		</Button>);
+	}
+
+	createCustomIconButton(buttonConfig) {
+		let icon;
+		if (buttonConfig.icon.slice(buttonConfig.icon.length - 4) === ".svg") { // svg image
+			icon = <ISVG className="properties-custom-table-button-icon bx--btn__icon" src={buttonConfig.icon} />;
+		} else {
+			icon = <img src={buttonConfig.icon} className="properties-custom-table-button-icon" />;
+		}
+
+		const label = buttonConfig.label ? buttonConfig.label.text : "";
+		const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
+		return (<Button
+			key={`properties-custom-table-button-${buttonConfig.id}`}
+			className="properties-custom-table-button custom-icon"
+			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
+			size="small"
+			kind="ghost"
+			hasIconOnly={label.length === 0}
+			iconDescription={buttonDescription}
+		>
+			{label}
+			{icon}
+		</Button>);
+	}
+
+	createCarbonIconButton(buttonConfig) {
+		const carbonIcon = this.customButtonIconCallback(buttonConfig.id, buttonConfig.carbonIcon);
+		const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
+		if (buttonConfig.label) {
+			return (<Button
+				key={`properties-custom-table-button-${buttonConfig.id}`}
+				className="properties-custom-table-button"
+				onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
+				size="small"
+				kind="ghost"
+				renderIcon={carbonIcon}
+				iconDescription={buttonDescription}
+			>
+				{buttonConfig.label.text}
+			</Button>);
+		}
+		return (<Button
+			key={`properties-custom-table-button-${buttonConfig.id}`}
+			className="properties-custom-table-button"
+			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
+			size="small"
+			kind="ghost"
+			hasIconOnly
+			renderIcon={carbonIcon}
+			iconDescription={buttonDescription}
+		/>);
+	}
+
+	createTooltipForButton(buttonConfig, button) {
+		return (<Tooltip
+			id={`${buttonConfig.id}-tooltip`}
+			key={`properties-custom-table-button-${buttonConfig.id}-tooltip`}
+			tip={buttonConfig.description.text}
+			disable={false}
+			className="properties-custom-table-button-tooltip icon-tooltip"
+		>
+			{button}
+		</Tooltip>);
 	}
 
 	render() {

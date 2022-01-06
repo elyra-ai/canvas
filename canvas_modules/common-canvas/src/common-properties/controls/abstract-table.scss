@@ -15,12 +15,6 @@
  */
 
 .properties-at-buttons-container {
-	float: right;
-	.bx--btn--ghost.bx--btn--sm {
-		// Override default padding to show Remove and Add Columns buttons in same line
-		padding: 0 $spacing-04;
-	}
-
 	&.custom-buttons {
 		display: flex;
 
