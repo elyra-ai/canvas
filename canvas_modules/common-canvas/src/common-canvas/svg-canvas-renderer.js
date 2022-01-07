@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2497,8 +2497,12 @@ export default class SVGCanvasRenderer {
 		const newNodeGroups = enter
 			.append("g")
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
-			.call(this.attachNodeGroupListeners.bind(this))
-			.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
+			.call(this.attachNodeGroupListeners.bind(this));
+
+		if (this.config.enableDragToMoveSizeNodesComments) {
+			newNodeGroups
+				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
+		}
 
 		// Node Sizing Area.
 		newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
@@ -2858,7 +2862,8 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.nodeUtils.isExpandedSupernode(d) &&
+				if (this.config.enableDragToMoveSizeNodesComments && // Only set cusror when we are able to move nodes
+						this.nodeUtils.isExpandedSupernode(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 					let cursorType = "pointer";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -4253,6 +4258,7 @@ export default class SVGCanvasRenderer {
 			this.setNewLinkOverNodeCancel();
 		}
 
+		this.unsetUnavailableNodesHighlighting();
 		this.stopDraggingLink();
 	}
 
@@ -5029,8 +5035,12 @@ export default class SVGCanvasRenderer {
 		const newCommentGroups = enter
 			.append("g")
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
-			.call(this.attachCommentGroupListeners.bind(this))
-			.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
+			.call(this.attachCommentGroupListeners.bind(this));
+
+		if (this.config.enableDragToMoveSizeNodesComments) {
+			newCommentGroups
+				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
+		}
 
 		// Comment Sizing Area
 		newCommentGroups
@@ -5167,7 +5177,8 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
+				if (this.config.enableDragToMoveSizeNodesComments && // Only set cusror when we are able to move comments
+					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 				{
 					let cursorType = "pointer";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -6173,9 +6184,14 @@ export default class SVGCanvasRenderer {
 				d.class_name !== "d3-comment-rect") {
 			customClass = " " + d.class_name;
 		}
+
+		const draggableClass = this.config.enableDragToMoveSizeNodesComments
+			? " d3-draggable"
+			: " d3-non-draggable";
+
 		// If the class name provided IS the default, or there is no classname,
 		// return the class name.
-		return "d3-comment-group" + customClass;
+		return "d3-comment-group" + draggableClass + customClass;
 	}
 
 	// Returns the class string to be appled to the node group object.
@@ -6193,9 +6209,11 @@ export default class SVGCanvasRenderer {
 			? " d3-node-supernode-expanded"
 			: "";
 
-		// If the class name provided IS the default, or there is no classname,
-		// return the class name.
-		return "d3-node-group" + supernodeClass + customClass;
+		const draggableClass = this.config.enableDragToMoveSizeNodesComments
+			? " d3-draggable"
+			: " d3-non-draggable";
+
+		return "d3-node-group" + supernodeClass + draggableClass + customClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below

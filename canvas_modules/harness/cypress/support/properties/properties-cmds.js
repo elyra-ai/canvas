@@ -262,3 +262,10 @@ Cypress.Commands.add("clickOnFieldPickerButton", (buttonType) => {
 		.find(`button[data-id='properties-${buttonType}-button']`)
 		.click();
 });
+
+// Action commands
+Cypress.Commands.add("hoverOverActionImage", (actionName) => {
+	cy.get(".properties-action-image")
+		.find(`div[data-id='${actionName}']`)
+		.trigger("mouseover");
+});

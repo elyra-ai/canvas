@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -656,6 +656,15 @@ export default class SidePanelForms extends React.Component {
 				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
 				labelText="Enable Drag Without Select"
 				toggled={this.props.getStateValue("selectedDragWithoutSelect")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableDragToMoveNodesAndComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedDragToMoveSizeNodesComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Drag To Move Nodes and Comments"
+				toggled={this.props.getStateValue("selectedDragToMoveSizeNodesComments")}
 				onToggle={this.setStateValue}
 			/>
 		</div>);
@@ -1341,8 +1350,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}
-					{enableHighlightUnavailableNodes}
-					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1353,6 +1360,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
 					{divider}
+					{enableHighlightUnavailableNodes}
+					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
@@ -1361,7 +1370,7 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{assocLinkType}
 					{divider}
-					<div className="harness-side-panel-header">Pan, Zoom and Select</div>
+					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
 					{saveZoom}
 					{divider}
@@ -1370,6 +1379,8 @@ export default class SidePanelForms extends React.Component {
 					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
+					{divider}
+					{enableDragToMoveNodesAndComments}
 					{divider}
 					<div className="harness-side-panel-header">Supernodes</div>
 					{divider}
