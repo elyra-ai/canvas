@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1350,8 +1350,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}
-					{enableHighlightUnavailableNodes}
-					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1361,6 +1359,8 @@ export default class SidePanelForms extends React.Component {
 					{enableInsertNodeDroppedOnLink}
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
+					{divider}
+					{enableHighlightUnavailableNodes}
 					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
