@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-.properties-at-buttons-container {
-	&.custom-buttons {
-		display: flex;
-
-		// Hide the Carbon button tooltip
-		button.properties-custom-table-button {
-			&::before {
-				display: none;
-			}
-
-			div.bx--assistive-text {
-				display: none;
-			}
-		}
-	}
-}
-
 .properties-table-cell-control {
 	>div>:first-child {
 		margin-left: $spacing-04;

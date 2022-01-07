@@ -189,7 +189,7 @@ ToolbarActionItem.propTypes = {
 		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
 		enable: PropTypes.bool,
 		iconEnabled: PropTypes.object,
-		iconDisabled: PropTypes.obect,
+		iconDisabled: PropTypes.object,
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		iconTypeOverride: PropTypes.string,

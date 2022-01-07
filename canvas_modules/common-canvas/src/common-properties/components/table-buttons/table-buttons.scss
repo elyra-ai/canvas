@@ -14,14 +14,36 @@
  * limitations under the License.
  */
 
- .properties-custom-table-button {
-    img.properties-custom-table-button-icon {
-        margin-left: $spacing-03;
-        width: $spacing-05;
-        height: $spacing-05;
-    }
- }
+.properties-at-buttons-container.custom-buttons {
+    .toolbar-div {
+        height: 32px;
 
- .properties-custom-table-button-divider {
-    border-right: 1px solid $ui-03;
+        .toolbar-left-bar {
+            padding-right: 0;
+
+            .toolbar-item button {
+                height: 32px;
+            }
+
+            .toolbar-item-content {
+                padding: 3px 7px;
+                height: 32px;
+                min-width: 32px;
+                align-items: center;
+            }
+
+            .toolbar-overflow-item button {
+                height: 32px;
+            }
+
+            .toolbar-popover-list {
+                top: 32px;
+                right: 0;
+            }
+        }
+
+        .toolbar-right-bar {
+            display: none;
+        }
+    }
 }

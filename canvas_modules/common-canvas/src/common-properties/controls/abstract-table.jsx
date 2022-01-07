@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 import { Button, Checkbox } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
+import Toolbar from "../../toolbar/toolbar.jsx";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";

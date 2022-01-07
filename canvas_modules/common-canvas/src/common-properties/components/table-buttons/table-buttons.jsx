@@ -17,51 +17,15 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
-import Tooltip from "../../../tooltip/tooltip.jsx";
-import ISVG from "react-inlinesvg";
-
-// TODO: remove comments
-// toolbar buttons are ghost or icon buttons only
+import Toolbar from "../../../toolbar/toolbar.jsx";
 
 class TableButtons extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
 		this.customButtonIconCallback = this.customButtonIconCallback.bind(this);
-	}
-
-	makeCustomButtonsPanel(tableState, customButtons = []) {
-		console.log("!!! tableState " + tableState);
-		// TODO: disable buttons if table is disabled or if button is disabled
-		const buttons = [];
-		customButtons.forEach((buttonConfig) => {
-			let customButton;
-			if (buttonConfig.icon) {
-				customButton = this.createCustomIconButton(buttonConfig);
-			} else if (buttonConfig.carbonIcon) {
-				customButton = this.createCarbonIconButton(buttonConfig);
-			} else if (buttonConfig.label) {
-				customButton = this.createLabelOnlyButton(buttonConfig);
-			} else {
-				// Invalid button
-			}
-
-			if (customButton) {
-				if (buttonConfig.description) {
-					customButton = this.createTooltipForButton(buttonConfig, customButton);
-				}
-				if (buttonConfig.divider && buttonConfig.divider === "before") {
-					buttons.push(<div className="properties-custom-table-button-divider" key={`${buttonConfig.id}-divider`} />);
-				}
-				buttons.push(customButton);
-				if (buttonConfig.divider && buttonConfig.divider === "after") {
-					buttons.push(<div className="properties-custom-table-button-divider" key={`${buttonConfig.id}-divider`} />);
-				}
-			}
-		});
-		return buttons;
+		this.customButtonOnClick = this.customButtonOnClick.bind(this);
+		this.convertToolbarConfig = this.convertToolbarConfig.bind(this);
 	}
 
 	customButtonIconCallback(buttonId, carbonIcon) {
@@ -80,95 +44,61 @@ class TableButtons extends React.Component {
 		return icon;
 	}
 
-	customButtonOnClick(propertyId, buttonId) {
+	customButtonOnClick(buttonId) {
 		const buttonHandler = this.props.controller.getHandlers().buttonHandler;
 		if (buttonHandler) {
 			buttonHandler({
 				type: "custom_button",
-				propertyId: propertyId,
+				propertyId: this.props.propertyId,
 				buttonId: buttonId
 			});
 		}
 	}
 
-	createLabelOnlyButton(buttonConfig) {
-		return (<Button
-			key={`properties-custom-table-button-${buttonConfig.id}`}
-			className="properties-custom-table-button"
-			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-			size="small"
-			kind="ghost"
-		>
-			{buttonConfig.label.text}
-		</Button>);
-	}
+	convertToolbarConfig(tableState, customButtons = []) {
+		// TODO if table disabled, all buttons disabled. Otherwise read from redux to see which button is disabled
+		const toolbarConfig = [];
+		customButtons.forEach((buttonConfig) => {
+			const buttonDef = {
+				action: buttonConfig.id,
+				enable: true
+			};
 
-	createCustomIconButton(buttonConfig) {
-		let icon;
-		if (buttonConfig.icon.slice(buttonConfig.icon.length - 4) === ".svg") { // svg image
-			icon = <ISVG className="properties-custom-table-button-icon bx--btn__icon" src={buttonConfig.icon} />;
-		} else {
-			icon = <img src={buttonConfig.icon} className="properties-custom-table-button-icon" />;
-		}
+			if (buttonConfig.icon) {
+				buttonDef.iconEnabled = buttonConfig.icon;
+			} else if (buttonConfig.carbonIcon) {
+				buttonDef.iconEnabled = this.customButtonIconCallback(buttonConfig.id, buttonConfig.carbonIcon);
+			}
 
-		const label = buttonConfig.label ? buttonConfig.label.text : "";
-		const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
-		return (<Button
-			key={`properties-custom-table-button-${buttonConfig.id}`}
-			className="properties-custom-table-button custom-icon"
-			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-			size="small"
-			kind="ghost"
-			hasIconOnly={label.length === 0}
-			iconDescription={buttonDescription}
-		>
-			{label}
-			{icon}
-		</Button>);
-	}
+			if (buttonConfig.label) {
+				buttonDef.label = buttonConfig.label.text;
+				buttonDef.incLabelWithIcon = "before";
+			}
 
-	createCarbonIconButton(buttonConfig) {
-		const carbonIcon = this.customButtonIconCallback(buttonConfig.id, buttonConfig.carbonIcon);
-		const buttonDescription = buttonConfig.description ? buttonConfig.description.text : "";
-		if (buttonConfig.label) {
-			return (<Button
-				key={`properties-custom-table-button-${buttonConfig.id}`}
-				className="properties-custom-table-button"
-				onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-				size="small"
-				kind="ghost"
-				renderIcon={carbonIcon}
-				iconDescription={buttonDescription}
-			>
-				{buttonConfig.label.text}
-			</Button>);
-		}
-		return (<Button
-			key={`properties-custom-table-button-${buttonConfig.id}`}
-			className="properties-custom-table-button"
-			onClick={this.customButtonOnClick.bind(this, this.props.propertyId, buttonConfig.id)}
-			size="small"
-			kind="ghost"
-			hasIconOnly
-			renderIcon={carbonIcon}
-			iconDescription={buttonDescription}
-		/>);
-	}
+			if (buttonConfig.description) {
+				buttonDef.tooltip = buttonConfig.description.text;
+			}
 
-	createTooltipForButton(buttonConfig, button) {
-		return (<Tooltip
-			id={`${buttonConfig.id}-tooltip`}
-			key={`properties-custom-table-button-${buttonConfig.id}-tooltip`}
-			tip={buttonConfig.description.text}
-			disable={false}
-			className="properties-custom-table-button-tooltip icon-tooltip"
-		>
-			{button}
-		</Tooltip>);
+			if (buttonConfig.divider && buttonConfig.divider === "before") {
+				toolbarConfig.push({ divider: true });
+			}
+			toolbarConfig.push(buttonDef);
+			if (buttonConfig.divider && buttonConfig.divider === "after") {
+				toolbarConfig.push({ divider: true });
+			}
+		});
+		return toolbarConfig;
 	}
 
 	render() {
-		return this.makeCustomButtonsPanel(this.props.tableState, this.props.customButtons);
+		const toolbarConfig = {
+			leftBar: this.convertToolbarConfig(this.props.tableState, this.props.customButtons)
+		};
+		return (<Toolbar
+			config={toolbarConfig}
+			instanceId={0}
+			toolbarActionHandler={this.customButtonOnClick}
+		/>);
 	}
 }
 
