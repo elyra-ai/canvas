@@ -225,3 +225,34 @@ $bottom-panel-height: 393px;
 		margin: 0 16px 0 10px;
 	}
 }
+
+.main-holder {
+	display: flex;
+	flex-direction: column;
+	height: 90vh;
+	position: fixed;
+	bottom: 0;
+}
+.top-pane {
+	display: flex;
+	flex: 0 0 50%;
+	flex-direction: row;
+
+}
+
+.drag-y {
+	background: transparent;
+	cursor: row-resize;
+	flex: 0 0 2px;
+	transition: all 0.2s ease-in;
+	&:hover {
+		background: $interactive-01;
+	}
+}
+
+.bottom-pane {
+	background: #FFFFFF;
+	flex: 1;
+	width: 1510px;
+	margin: auto;
+}

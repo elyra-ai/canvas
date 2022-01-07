@@ -36,14 +36,42 @@ class CanvasBottomPanel extends React.Component {
 		this.startResize = this.startResize.bind(this);
 		this.stopResize = this.stopResize.bind(this);
 		this.resize = this.resize.bind(this);
+		this.OnMouseUp = this.OnMouseUp.bind(this);
+		this.OnMouseDown = this.OnMouseDown.bind(this);
+		this.OnMouseMoveY = this.OnMouseMoveY.bind(this);
 	}
 
 	componentDidMount() {
 		// document.addEventListener("mouseup", this.stopResize, true);
+		document.addEventListener("mouseup", this.OnMouseUp, true);
+		document.addEventListener("mousedown", this.OnMouseDown, true);
+		document.removeEventListener("mousmove", this.OnMouseMoveY, true);
 	}
 
 	componentWillUnmount() {
 		// document.removeEventListener("mouseup", this.stopResize, true);
+		document.removeEventListener("mouseup", this.stopResize, true);
+		document.removeEventListener("mouseup", this.OnMouseUp, true);
+		document.removeEventListener("mousedown", this.OnMouseDown, true);
+	}
+
+	OnMouseDown(e) {
+		var target = e.target !== null ? e.target : e.srcElement;
+		if ((e.button === 1 && target !== null || e.button === 0) && target.className === "drag-y") {
+			document.onmousemove = this.OnMouseMoveY;
+		}
+	}
+
+	OnMouseUp(e) {
+		document.onmousemove = false;
+		document.onselectstart = false;
+	}
+
+
+	OnMouseMoveY(e) {
+		var _topPane = document.querySelector(".top-pane");
+		var _container = document.querySelector(".main-holder");
+		_topPane.style.flex = "0 0" + (e.clientY / (_container.clientHeight / 100)) + "%";
 	}
 
 	startResize(evt) {
@@ -72,8 +100,12 @@ class CanvasBottomPanel extends React.Component {
 
 		if (this.props.bottomPanelIsOpen) {
 			bottomPanel = (
-				<div className={"bottom-panel"} style={styleObj}>
-					{this.props.bottomPanelContent}
+				<div className="main-holder">
+					<div className="top-pane"> </div>
+					<div className="drag-y"> </div>
+					<div className="bottom-pane" style={styleObj}>
+						{this.props.bottomPanelContent}
+					</div>
 				</div>
 			);
 		}
