@@ -15,35 +15,35 @@
  */
 
 .properties-custom-table-buttons {
-    .toolbar-div {
-        height: 32px;
+	.toolbar-div {
+		height: 32px;
 
-        .toolbar-left-bar {
-            padding-right: 0;
+		.toolbar-left-bar {
+			padding-right: 0;
 
-            .toolbar-item button {
-                height: 32px;
-            }
+			.toolbar-item button {
+				height: 32px;
+			}
 
-            .toolbar-item-content {
-                padding: 3px 7px;
-                height: 32px;
-                min-width: 32px;
-                align-items: center;
-            }
+		.toolbar-item-content {
+				padding: 3px 7px;
+				height: 32px;
+				min-width: 32px;
+				align-items: center;
+			}
 
-            .toolbar-overflow-item button {
-                height: 32px;
-            }
+			.toolbar-overflow-item button {
+				height: 32px;
+			}
 
-            .toolbar-popover-list {
-                top: 32px;
-                right: 0;
-            }
-        }
+			.toolbar-popover-list {
+				top: 32px;
+				right: 0;
+			}
+		}
 
-        .toolbar-right-bar {
-            display: none;
-        }
-    }
+		.toolbar-right-bar {
+			display: none;
+		}
+	}
 }
