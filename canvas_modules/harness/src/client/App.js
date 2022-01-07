@@ -1299,7 +1299,7 @@ class App extends React.Component {
 	buttonIconHandler(data, callbackIcon) {
 		// handle custom buttons icon
 		if (data.type === "customButtonIcon") {
-			callbackIcon(Edit32);
+			callbackIcon(<Edit32 />);
 		}
 	}
 
