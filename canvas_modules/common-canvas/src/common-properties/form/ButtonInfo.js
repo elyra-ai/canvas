@@ -18,12 +18,13 @@
 import { ResourceDef } from "../util/L10nProvider";
 
 export class Button {
-	constructor(id, label, description, icon, carbonIcon, divider) {
+	constructor(id, label, description, icon, carbonIcon, enable, divider) {
 		this.id = id;
 		this.label = label;
 		this.description = description;
 		this.icon = icon;
 		this.carbonIcon = carbonIcon;
+		this.enable = enable;
 		this.divider = divider;
 	}
 }
@@ -37,6 +38,7 @@ class ButtonDef {
 			buttonDef.description = ResourceDef.make(button.description);
 			buttonDef.icon = button.icon;
 			buttonDef.carbonIcon = button.carbon_icon;
+			buttonDef.enable = button.enable;
 			buttonDef.divider = button.divider;
 			return buttonDef;
 		}

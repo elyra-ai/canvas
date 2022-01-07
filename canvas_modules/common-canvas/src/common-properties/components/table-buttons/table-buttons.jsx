@@ -19,13 +19,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import Toolbar from "../../../toolbar/toolbar.jsx";
 
+import { STATES } from "./../../constants/constants";
+
 class TableButtons extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.getCustomButtonEnabled = this.getCustomButtonEnabled.bind(this);
 		this.customButtonIconCallback = this.customButtonIconCallback.bind(this);
 		this.customButtonOnClick = this.customButtonOnClick.bind(this);
 		this.convertToolbarConfig = this.convertToolbarConfig.bind(this);
+	}
+
+	getCustomButtonEnabled(tableState, buttonConfig) {
+		const tableDisabled = typeof tableState !== "undefined" && tableState === STATES.DISABLED;
+		const buttonEnabled = this.props.customButtonsState && this.props.customButtonsState[buttonConfig.id]
+			? this.props.customButtonsState[buttonConfig.id] // set to true in redux if enabled, override the default from uihints
+			: buttonConfig.enable || false; // fallback to default value
+		return !tableDisabled && buttonEnabled;
 	}
 
 	customButtonIconCallback(buttonId, carbonIcon) {
@@ -56,12 +67,12 @@ class TableButtons extends React.Component {
 	}
 
 	convertToolbarConfig(tableState, customButtons = []) {
-		// TODO if table disabled, all buttons disabled. Otherwise read from redux to see which button is disabled
 		const toolbarConfig = [];
 		customButtons.forEach((buttonConfig) => {
+			const buttonEnabled = this.getCustomButtonEnabled(tableState, buttonConfig);
 			const buttonDef = {
 				action: buttonConfig.id,
-				enable: true
+				enable: buttonEnabled
 			};
 
 			if (buttonConfig.icon) {
@@ -94,11 +105,13 @@ class TableButtons extends React.Component {
 		const toolbarConfig = {
 			leftBar: this.convertToolbarConfig(this.props.tableState, this.props.customButtons)
 		};
-		return (<Toolbar
-			config={toolbarConfig}
-			instanceId={0}
-			toolbarActionHandler={this.customButtonOnClick}
-		/>);
+		return (<div className="properties-custom-table-buttons">
+			<Toolbar
+				config={toolbarConfig}
+				instanceId={0}
+				toolbarActionHandler={this.customButtonOnClick}
+			/>
+		</div>);
 	}
 }
 
@@ -106,7 +119,8 @@ TableButtons.propTypes = {
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	customButtons: PropTypes.array.isRequired,
-	tableState: PropTypes.string
+	tableState: PropTypes.string,
+	customButtonsState: PropTypes.object // set in by redux
 };
 
 export default TableButtons;

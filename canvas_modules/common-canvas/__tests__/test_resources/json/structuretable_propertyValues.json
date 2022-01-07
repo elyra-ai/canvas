@@ -113,6 +113,42 @@
     ]
   ],
   "showRenameFieldsTable": true,
+  "structuretableCustomIconButtons": [
+    [
+      0,
+      "Age",
+      "Age"
+    ],
+    [
+      1,
+      "BP",
+      "BP-1"
+    ]
+  ],
+  "structuretableCustomLabelButtons": [
+    [
+      0,
+      "Age",
+      "Age"
+    ],
+    [
+      1,
+      "BP",
+      "BP-1"
+    ]
+  ],
+  "structuretableCustomLabelIconButtons": [
+    [
+      0,
+      "Age",
+      "Age"
+    ],
+    [
+      1,
+      "BP",
+      "BP-1"
+    ]
+  ],
   "structuretableRenameFields": [
     [
       "Age",
@@ -181,9 +217,21 @@
     ]
   ],
   "structuretableObjectType": [
-    [ "Cholesterol", 1, "Ascending" ],
-    [ null, 6, null ],
-    [ null, null, null ]
+    [
+      "Cholesterol",
+      1,
+      "Ascending"
+    ],
+    [
+      null,
+      6,
+      null
+    ],
+    [
+      null,
+      null,
+      null
+    ]
   ],
   "structuretableLongValue": [
     [
@@ -197,15 +245,37 @@
     ]
   ],
   "nestedStructureObject": [
-    [ "Cholesterol", 5, "Ascending", [[ 1, "hi", "string" ]] ]
+    [
+      "Cholesterol",
+      5,
+      "Ascending",
+      [
+        [
+          1,
+          "hi",
+          "string"
+        ]
+      ]
+    ]
   ],
   "nestedStructureObjectArray": [
-    [ "Cholesterol", 5, "Ascending", [[ 1, "hi", "string" ]] ]
+    [
+      "Cholesterol",
+      5,
+      "Ascending",
+      [
+        [
+          1,
+          "hi",
+          "string"
+        ]
+      ]
+    ]
   ],
   "nestedStructureArrayArray": [
     [
       "Cholesterol",
-       5,
+      5,
       "Ascending",
       [
         [
@@ -219,10 +289,14 @@
   "nestedStructureArrayObject": [
     [
       "Cholesterol",
-       5,
+      5,
       "Ascending",
       [
-        [1, "hi", "string"]
+        [
+          1,
+          "hi",
+          "string"
+        ]
       ]
     ]
   ],
@@ -246,7 +320,9 @@
       [
         "Name",
         100,
-        ["some text"]
+        [
+          "some text"
+        ]
       ]
     ]
   ],

@@ -152,6 +152,42 @@
         "Canadian"
       ]
     ],
+    "structuretableCustomIconButtons": [
+      [
+        0,
+        "Age",
+        "Age"
+      ],
+      [
+        1,
+        "BP",
+        "BP-1"
+      ]
+    ],
+    "structuretableCustomLabelButtons": [
+      [
+        0,
+        "Age",
+        "Age"
+      ],
+      [
+        1,
+        "BP",
+        "BP-1"
+      ]
+    ],
+    "structuretableCustomLabelIconButtons": [
+      [
+        0,
+        "Age",
+        "Age"
+      ],
+      [
+        1,
+        "BP",
+        "BP-1"
+      ]
+    ],
     "structuretableObjectType": [
       {
         "field": "Cholesterol",
@@ -209,7 +245,7 @@
     "nestedStructureArrayArray": [
       [
         "Cholesterol",
-         5,
+        5,
         "Ascending",
         [
           [
@@ -223,7 +259,7 @@
     "nestedStructureArrayObject": [
       [
         "Cholesterol",
-         5,
+        5,
         "Ascending",
         [
           {
@@ -254,7 +290,9 @@
         [
           "Name",
           100,
-          ["some text"]
+          [
+            "some text"
+          ]
         ]
       ]
     ]
@@ -331,6 +369,27 @@
       "type": "map[string, ST_mse_table]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "structuretableCustomIconButtons",
+      "type": "map[string, structuretableCustomIconButtons]",
+      "role": "column",
+      "default": [],
+      "required": true
+    },
+    {
+      "id": "structuretableCustomLabelButtons",
+      "type": "map[string, structuretableCustomLabelButtons]",
+      "role": "column",
+      "default": [],
+      "required": true
+    },
+    {
+      "id": "structuretableCustomLabelIconButtons",
+      "type": "map[string, structuretableCustomLabelIconButtons]",
+      "role": "column",
+      "default": [],
+      "required": true
     },
     {
       "id": "structuretableObjectType",
@@ -692,6 +751,63 @@
             "One",
             "Two"
           ]
+        }
+      ]
+    },
+    {
+      "id": "structuretableCustomIconButtons",
+      "key_definition": {
+        "id": "structuretableCustomIconButtons_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        }
+      ]
+    },
+    {
+      "id": "structuretableCustomLabelButtons",
+      "key_definition": {
+        "id": "structuretableCustomLabelButtons_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        }
+      ]
+    },
+    {
+      "id": "structuretableCustomLabelIconButtons",
+      "key_definition": {
+        "id": "structuretableCustomLabelIconButtons_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
         }
       ]
     },
@@ -1151,50 +1267,34 @@
         "rows": -1
       },
       {
-        "id": "ST_mse_table",
-        "key_definition": {
-          "id": "field",
-          "type": "string",
-          "role": "column"
+        "parameter_ref": "structuretableCustomIconButtons",
+        "label": {
+          "default": "Custom table buttons - icons only"
         },
-        "parameters": [
-          {
-            "id": "override",
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "id": "dummy_entry_sport_name",
-            "enum": [
-              "Football",
-              "Soccer"
-            ],
-            "default": "Soccer"
-          },
-          {
-            "id": "dummy_entry_invisble",
-            "type": "string",
-            "default": "Don't show"
-          },
-          {
-            "id": "checkit",
-            "type": "boolean",
-            "default": false
-          },
-          {
-            "id": "sometext",
-            "type": "string",
-            "default": "Type something here..."
-          },
-          {
-            "id": "anArray",
-            "type": "array[string]",
-            "default": [
-              "One",
-              "Two"
-            ]
-          }
-        ]
+        "description": {
+          "placement": "on_panel",
+          "default": "Custom table icon only buttons. This includes custom svg images and custom Carbon icons."
+        }
+      },
+      {
+        "parameter_ref": "structuretableCustomLabelButtons",
+        "label": {
+          "default": "Custom table buttons - labels only"
+        },
+        "description": {
+          "placement": "on_panel",
+          "default": "Custom table label only buttons. This includes buttons with labels and labels + icons."
+        }
+      },
+      {
+        "parameter_ref": "structuretableCustomLabelIconButtons",
+        "label": {
+          "default": "Custom table buttons - overflow"
+        },
+        "description": {
+          "placement": "on_panel",
+          "default": "Custom table buttons where the toolbar button overflows into an overflow menu."
+        }
       },
       {
         "parameter_ref": "structuretableObjectType",
@@ -1345,7 +1445,6 @@
             "operation": "index"
           },
           "control": "readonly"
-
         },
         "parameters": [
           {
@@ -1355,7 +1454,7 @@
             },
             "width": 26,
             "summary": true,
-            "dm_image":"measure"
+            "dm_image": "measure"
           },
           {
             "parameter_ref": "new_name",
@@ -1442,7 +1541,7 @@
             "resource_key": "structuretableNoButtons.field.label"
           },
           "summary": true,
-          "dm_image":"measure"
+          "dm_image": "measure"
         },
         "parameters": [
           {
@@ -1818,6 +1917,244 @@
             "width": 12,
             "edit_style": "inline",
             "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableCustomIconButtons",
+        "label": {
+          "default": "Custom table buttons - icons"
+        },
+        "key_definition": {
+          "parameter_ref": "structuretableCustomIconButtons_readonly_int",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true,
+            "dm_image": "measure"
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "default": "Name"
+            },
+            "description": {
+              "default": "Description"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "filterable": true,
+            "summary": true
+          }
+        ],
+        "buttons": [
+          {
+            "id": "icon_button_1",
+            "icon": "/images/up-triangle.svg",
+            "description": {
+              "default": "Custom svg icon path. Disabled"
+            }
+          },
+          {
+            "id": "icon_button_2",
+            "icon": "/images/up-triangle.svg",
+            "enable": true,
+            "description": {
+              "default": "Custom svg icon path."
+            }
+          },
+          {
+            "id": "icon_button_3",
+            "carbon_icon": "Edit32",
+            "enable": false,
+            "description": {
+              "default": "Carbon icon disabled"
+            }
+          },
+          {
+            "id": "icon_button_4",
+            "carbon_icon": "Edit32",
+            "enable": true,
+            "description": {
+              "default": "Carbon icon"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableCustomLabelButtons",
+        "label": {
+          "default": "Custom table buttons - labels"
+        },
+        "key_definition": {
+          "parameter_ref": "structuretableCustomLabelButtons_readonly_int",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true,
+            "dm_image": "measure"
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "default": "Name"
+            },
+            "description": {
+              "default": "Description"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "filterable": true,
+            "summary": true
+          }
+        ],
+        "buttons": [
+          {
+            "id": "icon_button_11",
+            "label": {
+              "default": "Label btn"
+            },
+            "enable": true,
+            "description": {
+              "default": "Custom button label only."
+            }
+          },
+          {
+            "id": "icon_button_12",
+            "label": {
+              "default": "Label icon"
+            },
+            "carbon_icon": "Edit32",
+            "enable": true,
+            "description": {
+              "default": "Custom label button with Carbon icon"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableCustomLabelIconButtons",
+        "label": {
+          "default": "Custom table buttons - labels"
+        },
+        "key_definition": {
+          "parameter_ref": "structuretableCustomLabelIconButtons_readonly_int",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true,
+            "dm_image": "measure"
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "default": "Name"
+            },
+            "description": {
+              "default": "Description"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "filterable": true,
+            "summary": true
+          }
+        ],
+        "buttons": [
+          {
+            "id": "icon_button_21",
+            "label": {
+              "default": "Label btn"
+            },
+            "enable": true,
+            "description": {
+              "default": "Custom button label only."
+            }
+          },
+          {
+            "id": "icon_button_22",
+            "label": {
+              "default": "Disabled btn"
+            },
+            "description": {
+              "default": "Custom button disabled."
+            }
+          },
+          {
+            "id": "icon_button_23",
+            "label": {
+              "default": "Label btn"
+            },
+            "carbon_icon": "Edit32",
+            "enable": true,
+            "description": {
+              "default": "Custom label button with Carbon icon"
+            }
+          },
+          {
+            "id": "icon_button_24",
+            "carbon_icon": "Edit32",
+            "enable": true,
+            "description": {
+              "default": "Carbon icon inside overflow menu"
+            },
+            "divider": "after"
+          },
+          {
+            "id": "icon_button_25",
+            "label": {
+              "default": "Label btn no icon"
+            },
+            "enable": true
+          },
+          {
+            "id": "icon_button_26",
+            "label": {
+              "default": "Label icon"
+            },
+            "icon": "/images/up-triangle.svg",
+            "enable": true,
+            "description": {
+              "default": "Custom label button with svg icon"
+            }
           }
         ]
       },
@@ -2320,8 +2657,13 @@
       {
         "complex_type_ref": "userInfoTable",
         "layout": [
-          ["userName", "userAge"],
-          ["annotation"]
+          [
+            "userName",
+            "userAge"
+          ],
+          [
+            "annotation"
+          ]
         ],
         "parameters": [
           {
@@ -2464,6 +2806,27 @@
                 ]
               }
             ]
+          },
+          {
+            "id": "structuretableCustomIconButtons-summary-panel",
+            "label": {
+              "default": "Configure Custom Table Buttons"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableCustomIconButtonsGroup",
+                "label": {
+                  "default": "Tables"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "structuretableCustomIconButtons",
+                  "structuretableCustomLabelButtons",
+                  "structuretableCustomLabelIconButtons"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -2588,7 +2951,8 @@
                 },
                 "parameter_refs": [
                   "enableSortByTable",
-                  "structuretableSortOrder"
+                  "structuretableSortOrder",
+                  "structuretableCustomIconButtons"
                 ]
               }
             ]
@@ -2791,7 +3155,8 @@
     {
       "enabled": {
         "parameter_refs": [
-          "structuretableSortOrder"
+          "structuretableSortOrder",
+          "structuretableCustomIconButtons"
         ],
         "evaluate": {
           "condition": {

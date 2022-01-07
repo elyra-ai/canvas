@@ -15,7 +15,7 @@
  */
 
 import { createStore, combineReducers } from "redux";
-import { has, isEqual, cloneDeep } from "lodash";
+import { has, get, isEqual, cloneDeep } from "lodash";
 
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows } from "./actions";
+import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -457,27 +457,56 @@ export default class PropertiesStore {
 	*/
 	getAddRemoveRows(propertyId) {
 		const state = this.store.getState();
+		const defaultValue = true; // Default to true to show the addRemoveRows buttons
 		if (state.propertiesSettingsReducer[propertyId.name]) {
 			if (typeof propertyId.row !== "undefined") {
-				return getNestedAddRemoveRows(propertyId, state.propertiesSettingsReducer[propertyId.name]);
+				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "addRemoveRows", defaultValue);
 			}
 			return state.propertiesSettingsReducer[propertyId.name].addRemoveRows;
 		}
-		return true; // Default to true to show the addRemoveRows buttons
+		return defaultValue;
+	}
+
+	setTableButtonEnabled(propertyId, buttonId, enabled) {
+		this.store.dispatch(setTableButtonEnabled({ propertyId: propertyId, buttonId: buttonId, value: enabled }));
+	}
+
+	getTableButtons(propertyId) {
+		const state = this.store.getState();
+		const defaultValue = {}; // Disable button by default
+		if (state.propertiesSettingsReducer[propertyId.name]) {
+			if (typeof propertyId.row !== "undefined") {
+				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "tableButtons", defaultValue);
+			}
+			return state.propertiesSettingsReducer[propertyId.name].tableButtons || defaultValue;
+		}
+		return defaultValue;
+	}
+
+	getTableButtonEnabled(propertyId, buttonId) {
+		const state = this.store.getState();
+		const defaultValue = false; // Disable button by default
+		if (state.propertiesSettingsReducer[propertyId.name]) {
+			if (typeof propertyId.row !== "undefined") {
+				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], `tableButtons.${buttonId}`, defaultValue);
+			}
+			return state.propertiesSettingsReducer[propertyId.name].buttonId;
+		}
+		return defaultValue;
 	}
 }
 
-function getNestedAddRemoveRows(propertyId, state) {
+function getNestedPropertySetting(propertyId, state, setting, defaultValue) {
 	if (typeof propertyId.row !== "undefined" && state[propertyId.row]) {
 		if (typeof propertyId.col !== "undefined" && state[propertyId.row][propertyId.col]) {
 			if (typeof propertyId.propertyId !== "undefined") {
-				return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row][propertyId.col]);
+				return getNestedPropertySetting(propertyId.propertyId, state[propertyId.row][propertyId.col], setting, defaultValue);
 			}
-			return state[propertyId.row][propertyId.col].addRemoveRows;
+			return get(state[propertyId.row][propertyId.col], setting);
 		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
-			return getNestedAddRemoveRows(propertyId.propertyId, state[propertyId.row]);
+			return getNestedPropertySetting(propertyId.propertyId, state[propertyId.row], setting, defaultValue);
 		}
-		return state[propertyId.row].addRemoveRows;
+		return get(state[propertyId.row], setting);
 	}
-	return true; // Default to true to show the addRemoveRows buttons
+	return defaultValue;
 }

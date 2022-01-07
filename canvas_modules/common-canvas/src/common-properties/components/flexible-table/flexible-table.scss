@@ -18,6 +18,7 @@ $row-left-padding: 4px;
 
 .properties-ft-table-header {
 	display: flex;
+	justify-content: flex-end;
 	height: $spacing-07;
 
 	.properties-ft-search-container {

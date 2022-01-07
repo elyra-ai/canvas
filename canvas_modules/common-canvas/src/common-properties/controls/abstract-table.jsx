@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import { Button, Checkbox } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
 import TableButtons from "./../components/table-buttons";
-import Toolbar from "../../toolbar/toolbar.jsx";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
@@ -539,17 +538,19 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeCustomButtonsPanel(tableState, customButtons) {
+		let customTableButtons = null;
 		if (customButtons) {
-			return (<div className="properties-at-buttons-container custom-buttons">
+			customTableButtons = (<div className="properties-at-buttons-container">
 				<TableButtons
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
-					customButtons={customButtons}
 					tableState={tableState}
+					customButtons={customButtons}
+					customButtonsState={this.props.tableButtons}
 				/>
 			</div>);
 		}
-		return null;
+		return customTableButtons;
 	}
 
 	editOnClick(propertyId) {
@@ -802,7 +803,8 @@ AbstractTable.propTypes = {
 	rightFlyout: PropTypes.bool,
 	value: PropTypes.array, // pass in by redux
 	selectedRows: PropTypes.array, // set by redux
-	addRemoveRows: PropTypes.bool // set by redux
+	addRemoveRows: PropTypes.bool, // set by redux
+	tableButtons: PropTypes.object // set in by redux
 };
 
 AbstractTable.defaultProps = {

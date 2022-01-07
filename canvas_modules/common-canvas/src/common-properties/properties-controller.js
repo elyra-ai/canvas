@@ -1833,6 +1833,15 @@ export default class PropertiesController {
 	}
 
 	/**
+	* Returns the table button states for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getTableButtons(propertyId) {
+		return this.propertiesStore.getTableButtons(propertyId);
+	}
+
+	/**
 	* Returns the true if the table button is enabled for the given propertyID
 	* @param propertyId The unique property identifier
 	* @param buttonId The unique button identifier
