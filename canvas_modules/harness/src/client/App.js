@@ -220,6 +220,9 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
+			tableButtonEnabledPropertyId: {},
+			tableButtonEnabledButtonId: "",
+			tableButtonEnabled: true,
 			staticRowsPropertyId: {},
 			staticRowsIndexes: [],
 			expressionBuilder: true,
@@ -305,6 +308,10 @@ class App extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
+		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
+		this.setTableButtonId = this.setTableButtonId.bind(this);
+		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
+		this.setTableButtonEnabled = this.setTableButtonEnabled.bind(this);
 		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
 		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
@@ -879,6 +886,28 @@ class App extends React.Component {
 		}
 	}
 
+	// Textfield to enter the propertyId for custom table buttons
+	setTableButtonPropertyId(propertyId) {
+		this.setState({ tableButtonEnabledPropertyId: propertyId });
+	}
+
+	// Textfield to enter the buttonId for custom table buttons
+	setTableButtonId(buttonId) {
+		this.setState({ tableButtonEnabledButtonId: buttonId });
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setTableButtonIdEnabled(enable) {
+		this.setState({ tableButtonEnabled: enable });
+	}
+
+	// Button to call propertiesController to setTableButtonEnabled
+	setTableButtonEnabled() {
+		if (this.propertiesController) {
+			this.propertiesController.setTableButtonEnabled(this.state.tableButtonEnabledPropertyId, this.state.tableButtonEnabledButtonId, this.state.tableButtonEnabled);
+		}
+	}
+
 	// Textfield to set the propertyId for staticRows
 	setStaticRowsPropertyId(propertyId) {
 		this.setState({ staticRowsPropertyId: propertyId });
@@ -1294,7 +1323,12 @@ class App extends React.Component {
 			this.propertiesController.validateInput(data.propertyId);
 		}
 
-		console.log("!!! data " + JSON.stringify(data));
+		// Test custom table button in structureTable_paramDef
+		const propertyId = { "name": "structuretableCustomIconButtons" };
+		if (data.type === "custom_button" && data.propertyId.name === propertyId.name && data.buttonId === "icon_button_4") {
+			const testButtonEnabled = this.propertiesController.getTableButtonEnabled(propertyId, "icon_button_2") || false;
+			this.propertiesController.setTableButtonEnabled(propertyId, "icon_button_2", !testButtonEnabled);
+		}
 	}
 
 	buttonIconHandler(data, callbackIcon) {
@@ -2503,9 +2537,14 @@ class App extends React.Component {
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
+			tableButtonEnabled: this.state.tableButtonEnabled,
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
+			setTableButtonPropertyId: this.setTableButtonPropertyId,
+			setTableButtonId: this.setTableButtonId,
+			setTableButtonIdEnabled: this.setTableButtonIdEnabled,
+			setTableButtonEnabled: this.setTableButtonEnabled,
 			staticRowsIndexes: this.state.staticRowsIndexes,
 			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
 			setStaticRowsIndexes: this.setStaticRowsIndexes,

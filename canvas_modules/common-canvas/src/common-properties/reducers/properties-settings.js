@@ -49,13 +49,13 @@ function states(state = {}, action) {
 		}
 		const newState = state;
 		if (typeof newState[propertyId.name] === "undefined") {
-			newState[propertyId.name] = { tableButtons: {} };
+			newState[propertyId.name] = { };
 		}
 
 		if (typeof propertyId.row !== "undefined") {
 			updateNestedPropertySetting(propertyId, newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
 		} else {
-			newState[propertyId.name].tableButtons[action.info.buttonId] = action.info.value;
+			set(newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
 		}
 		return Object.assign({}, state, newState);
 	}

@@ -172,8 +172,9 @@ export default class PropertiesController {
 			// default value set in the above loop.
 			this._addToControlValues(true);
 
-			// set initial values for addRemoveRows in redux
+			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
+			this.setInitialTableButtonState();
 
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
@@ -1820,6 +1821,23 @@ export default class PropertiesController {
 	clearStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	* Set the initial values of table buttons for all table controls
+	*/
+	setInitialTableButtonState() {
+		const parameterNames = Object.keys(this.controls);
+		parameterNames.forEach((parameterName) => {
+			const control = this.controls[parameterName];
+			if (!isUndefined(control.buttons)) {
+				control.buttons.forEach((button) => {
+					const propertyId = { name: control.name };
+					this.setTableButtonEnabled(propertyId, button.id, button.enable);
+				});
+			}
+		});
+
 	}
 
 	/**

@@ -473,7 +473,7 @@ export default class PropertiesStore {
 
 	getTableButtons(propertyId) {
 		const state = this.store.getState();
-		const defaultValue = {}; // Disable button by default
+		const defaultValue = {};
 		if (state.propertiesSettingsReducer[propertyId.name]) {
 			if (typeof propertyId.row !== "undefined") {
 				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "tableButtons", defaultValue);
@@ -490,7 +490,7 @@ export default class PropertiesStore {
 			if (typeof propertyId.row !== "undefined") {
 				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], `tableButtons.${buttonId}`, defaultValue);
 			}
-			return state.propertiesSettingsReducer[propertyId.name].buttonId;
+			return state.propertiesSettingsReducer[propertyId.name].tableButtons[buttonId];
 		}
 		return defaultValue;
 	}
