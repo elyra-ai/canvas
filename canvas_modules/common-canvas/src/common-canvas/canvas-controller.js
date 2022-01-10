@@ -19,7 +19,7 @@ import AttachNodeToLinksAction from "../command-actions/attachNodeToLinksAction.
 import CommandStack from "../command-stack/command-stack.js";
 import ConvertSuperNodeExternalToLocal from "../command-actions/convertSuperNodeExternalToLocalAction.js";
 import ConvertSuperNodeLocalToExternal from "../command-actions/convertSuperNodeLocalToExternalAction.js";
-import constants from "./constants/canvas-constants";
+import * as constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
 import CreateCommentLinkAction from "../command-actions/createCommentLinkAction.js";
