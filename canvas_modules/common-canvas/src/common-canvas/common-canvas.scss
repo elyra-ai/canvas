@@ -87,16 +87,6 @@ $bottom-panel-height: 393px;
 	background-color: $ui-01;
 }
 
-.bottom-panel {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: $bottom-panel-height;
-	user-select: none; /* Prevent elements from being selectable */
-	background-color: $ui-01;
-	border-top: $palette-border-width solid $palette-border-color;
-}
-
 /* Alternative layout for common-canvas components where canvas and right-side
  * flyout appear under the toolbar and the right-side flyout does not compress
  * the toolbar when it is opened. These are used when the config field
@@ -233,11 +223,11 @@ $bottom-panel-height: 393px;
 	position: fixed;
 	bottom: 0;
 }
-.top-pane {
+
+.top-panel {
 	display: flex;
 	flex: 0 0 50%;
 	flex-direction: row;
-
 }
 
 .drag-y {
@@ -250,8 +240,8 @@ $bottom-panel-height: 393px;
 	}
 }
 
-.bottom-pane {
-	background: #FFFFFF;
+.bottom-panel {
+	background-color: #ffffff;
 	flex: 1;
 	width: 1510px;
 	margin: auto;
