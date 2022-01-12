@@ -1830,14 +1830,32 @@ export default class PropertiesController {
 		const parameterNames = Object.keys(this.controls);
 		parameterNames.forEach((parameterName) => {
 			const control = this.controls[parameterName];
+			const propertyId = { name: control.name };
 			if (!isUndefined(control.buttons)) {
 				control.buttons.forEach((button) => {
-					const propertyId = { name: control.name };
-					this.setTableButtonEnabled(propertyId, button.id, button.enable);
+					this.setTableButtonEnabled(propertyId, button.id, button.enable || false);
+				});
+			}
+			if (control.subControls) {
+				this.setInitialTableButtonSubControlState(propertyId, control.subControls);
+			}
+		});
+	}
+
+	// This only handles 1 level of nesting, will need to make this recusrive if there is a need for deeper nesting
+	setInitialTableButtonSubControlState(parentPropertyId, subControls) {
+		subControls.forEach((control) => {
+			const propertyValues = this.getPropertyValue(parentPropertyId);
+
+			if (!isUndefined(control.buttons)) {
+				propertyValues.forEach((value, valueIdx) => {
+					const propertyId = { name: parentPropertyId.name, row: valueIdx, col: control.columnIndex };
+					control.buttons.forEach((button) => {
+						this.setTableButtonEnabled(propertyId, button.id, button.enable || false);
+					});
 				});
 			}
 		});
-
 	}
 
 	/**

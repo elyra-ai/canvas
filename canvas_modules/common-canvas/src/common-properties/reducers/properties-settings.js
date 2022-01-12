@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,14 +33,11 @@ function states(state = {}, action) {
 			newState[propertyId.name] = {};
 		}
 
-		// console.log("!!! set state before " + JSON.stringify(action));
-		// console.log("!!! set state before " + JSON.stringify(newState[propertyId.name]));
 		if (typeof propertyId.row !== "undefined") {
 			updateNestedPropertySetting(propertyId, newState[propertyId.name], "addRemoveRows", action.info.value);
 		} else {
 			newState[propertyId.name].addRemoveRows = action.info.value;
 		}
-		// console.log("!!! set state after " + JSON.stringify(newState[propertyId.name]));
 		return Object.assign({}, state, newState);
 	}
 	case SET_TABLE_BUTTON_ENABLED: {
@@ -77,20 +74,12 @@ function updateNestedPropertySetting(propertyId, newState, setting, value) {
 			if (typeof propertyId.propertyId !== "undefined") {
 				updateNestedPropertySetting(propertyId.propertyId, newState[propertyId.row][propertyId.col], setting, value);
 			} else {
-				// console.log("!!! before set path col " + [propertyId.row, propertyId.col, setting]);
-				// console.log("!!! before set " + JSON.stringify(newState[propertyId.row][propertyId.col]));
 				set(newState[propertyId.row][propertyId.col], setting, value);
-				// set(newState, [propertyId.row, propertyId.col, setting], value);
-				// console.log("!!! after set " + JSON.stringify(newState[propertyId.row][propertyId.col]));
 			}
 		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
 			updateNestedPropertySetting(propertyId.propertyId, newState[propertyId.row], setting, value);
 		} else {
-			// console.log("!!! before set path row " + [propertyId.row, setting]);
-			// console.log("!!! before set " + JSON.stringify(newState[propertyId.row]));
 			set(newState[propertyId.row], setting, value);
-			// set(newState, [propertyId.row, setting], value);
-			// console.log("!!! after set " + JSON.stringify(newState[propertyId.row]));
 		}
 	}
 }
