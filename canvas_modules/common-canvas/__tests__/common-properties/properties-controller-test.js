@@ -35,7 +35,6 @@ import testUtils from "../_utils_/property-utils";
 import EqualsOverride from "../_utils_/custom-condition-ops/equals-override";
 import CustomInvalidOp from "../_utils_/custom-condition-ops/customInvalid";
 import CustomMax from "../_utils_/custom-condition-ops/customMax";
-import { property } from "lodash";
 
 const propValues = {
 	param_int: 5,
