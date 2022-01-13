@@ -42,20 +42,15 @@ class CanvasBottomPanel extends React.Component {
 	}
 
 	componentDidMount() {
-		document.addEventListener("mouseup", this.onmouseUp, true);
-		document.addEventListener("mousedown", this.onmouseDown, true);
-		document.removeEventListener("mousmove", this.onmouseMovey, true);
+		this.addEventListeners();
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("mouseup", this.stopResize, true);
-		document.removeEventListener("mouseup", this.onmouseUp, true);
-		document.removeEventListener("mousedown", this.onmouseDown, true);
+		this.removeEventListeners();
 	}
 
 	onmouseDown(e) {
-		const target = e.target !== null ? e.target : e.srcElement;
-		if ((e.button === 1 || e.button === 0 || target.className === "drag-y")) {
+		if ((e.button === 1 || e.button === 0)) {
 			document.onmousemove = this.onmouseMovey;
 		}
 	}
@@ -65,12 +60,24 @@ class CanvasBottomPanel extends React.Component {
 		document.onselectstart = false;
 	}
 
-
 	onmouseMovey(e) {
 		const topPanel = document.querySelector(".top-panel");
-		const panelContainer = document.querySelector(".main-holder");
-		topPanel.style.flex = "0 0" + (e.clientY / (panelContainer.clientHeight / 83)) + "%";
+		const panelContainer = document.querySelector(".bottom-panel");
+		topPanel.style.flex = "0 0" + (e.clientY / (panelContainer.clientHeight / 88)) + "%";
 	}
+
+	addEventListeners() {
+		document.addEventListener("mouseup", this.onmouseUp, true);
+		document.addEventListener("mousedown", this.onmouseDown, true);
+		document.addEventListener("mousmove", this.onmouseMovey, true);
+	}
+
+	removeEventListeners() {
+		document.removeEventListener("mouseup", this.onmouseUp, true);
+		document.removeEventListener("mousedown", this.onmouseDown, true);
+		document.removeEventListener("mousmove", this.onmouseMovey, true);
+	}
+
 
 	startResize(evt) {
 		this.resizing = true;
@@ -91,17 +98,12 @@ class CanvasBottomPanel extends React.Component {
 
 		let bottomPanel = null;
 
-		const styleObj = {
-			height: this.state.panelHeight + "px"
-			// transition: transitionVariable,
-		};
-
 		if (this.props.bottomPanelIsOpen) {
 			bottomPanel = (
-				<div className="main-holder">
+				<div className="bottom-panel">
 					<div className="top-panel"> </div>
-					<div className="drag-y"> </div>
-					<div className="bottom-panel" style={styleObj}>
+					<div className="bottom-panel-drag" onMouseDown={this.onmouseDown} onMouseUp={this.onmouseUp}> </div>
+					<div className="bottom-panel-contents" onMouseDown={this.onmouseDown} onMouseUp={this.onmouseUp}>
 						{this.props.bottomPanelContent}
 					</div>
 				</div>
