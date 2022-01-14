@@ -2016,7 +2016,7 @@ describe("Properties Controller custom table buttons", () => {
 		});
 	});
 
-	it("structure should render toolbar correctly when custom buttons are set to disable", () => {
+	it("structure should render toolbar correctly when custom buttons are set to disabled", () => {
 		const renderedObject = testUtils.flyoutEditorForm(structureTableParamDef);
 		controller = renderedObject.controller;
 		const wrapper = renderedObject.wrapper;

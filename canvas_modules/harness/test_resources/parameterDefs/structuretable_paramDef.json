@@ -2045,7 +2045,7 @@
 					{
 						"id": "icon_button_2",
 						"icon": "/images/up-triangle.svg",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom svg icon path."
 						}
@@ -2053,7 +2053,7 @@
 					{
 						"id": "icon_button_3",
 						"carbon_icon": "Edit32",
-						"enable": false,
+						"enabled": false,
 						"description": {
 							"default": "Carbon icon disabled"
 						}
@@ -2061,7 +2061,7 @@
 					{
 						"id": "icon_button_4",
 						"carbon_icon": "Edit32",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Carbon icon"
 						}
@@ -2114,7 +2114,7 @@
 						"label": {
 							"default": "Label btn"
 						},
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom button label only."
 						}
@@ -2125,7 +2125,7 @@
 							"default": "Label icon"
 						},
 						"carbon_icon": "Edit32",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom label button with Carbon icon"
 						}
@@ -2178,7 +2178,7 @@
 						"label": {
 							"default": "Label btn"
 						},
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom button label only."
 						}
@@ -2198,7 +2198,7 @@
 							"default": "Label btn"
 						},
 						"carbon_icon": "Edit32",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom label button with Carbon icon"
 						}
@@ -2206,7 +2206,7 @@
 					{
 						"id": "icon_button_24",
 						"carbon_icon": "Edit32",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Carbon icon inside overflow menu"
 						},
@@ -2217,7 +2217,7 @@
 						"label": {
 							"default": "Label btn no icon"
 						},
-						"enable": true
+						"enabled": true
 					},
 					{
 						"id": "icon_button_26",
@@ -2225,7 +2225,7 @@
 							"default": "Label icon"
 						},
 						"icon": "/images/up-triangle.svg",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom label button with svg icon"
 						}
@@ -2835,7 +2835,7 @@
 					{
 						"id": "nested_button_2",
 						"icon": "/images/up-triangle.svg",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Custom svg icon path."
 						}
@@ -2843,7 +2843,7 @@
 					{
 						"id": "nested_button_3",
 						"carbon_icon": "Edit32",
-						"enable": false,
+						"enabled": false,
 						"description": {
 							"default": "Carbon icon disabled"
 						}
@@ -2851,7 +2851,7 @@
 					{
 						"id": "nested_button_4",
 						"carbon_icon": "Edit32",
-						"enable": true,
+						"enabled": true,
 						"description": {
 							"default": "Carbon icon"
 						}

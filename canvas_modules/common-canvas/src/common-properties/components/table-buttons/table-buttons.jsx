@@ -35,7 +35,7 @@ class TableButtons extends React.Component {
 		const tableDisabled = typeof tableState !== "undefined" && tableState === STATES.DISABLED;
 		const buttonEnabled = this.props.customButtonsState && typeof this.props.customButtonsState[buttonConfig.id] !== "undefined"
 			? this.props.customButtonsState[buttonConfig.id] // set to true in redux if enabled, override the default from uihints
-			: buttonConfig.enable || false; // fallback to default value
+			: buttonConfig.enabled || false; // fallback to default value
 		return !tableDisabled && buttonEnabled;
 	}
 

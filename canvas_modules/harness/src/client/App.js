@@ -897,8 +897,8 @@ class App extends React.Component {
 	}
 
 	// Toggle to set addRemoveRows enabled or disabled
-	setTableButtonIdEnabled(enable) {
-		this.setState({ tableButtonEnabled: enable });
+	setTableButtonIdEnabled(enabled) {
+		this.setState({ tableButtonEnabled: enabled });
 	}
 
 	// Button to call propertiesController to setTableButtonEnabled

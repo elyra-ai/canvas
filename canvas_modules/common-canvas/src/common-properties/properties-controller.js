@@ -1833,7 +1833,7 @@ export default class PropertiesController {
 			const propertyId = { name: control.name };
 			if (!isUndefined(control.buttons)) {
 				control.buttons.forEach((button) => {
-					this.setTableButtonEnabled(propertyId, button.id, button.enable || false);
+					this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
 				});
 			}
 			if (control.subControls) {
@@ -1851,7 +1851,7 @@ export default class PropertiesController {
 				propertyValues.forEach((value, valueIdx) => {
 					const propertyId = { name: parentPropertyId.name, row: valueIdx, col: control.columnIndex };
 					control.buttons.forEach((button) => {
-						this.setTableButtonEnabled(propertyId, button.id, button.enable || false);
+						this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
 					});
 				});
 			}

@@ -41,7 +41,7 @@ const customButtons = [
 	{
 		"id": "button_2",
 		"icon": "/images/up-triangle.svg",
-		"enable": true,
+		"enabled": true,
 		"description": {
 			"text": "Custom svg icon path."
 		}
@@ -49,7 +49,7 @@ const customButtons = [
 	{
 		"id": "button_3",
 		"carbon_icon": "Edit32",
-		"enable": false,
+		"enabled": false,
 		"description": {
 			"text": "Carbon icon disabled"
 		},
@@ -58,7 +58,7 @@ const customButtons = [
 	{
 		"id": "button_4",
 		"carbon_icon": "Edit32",
-		"enable": true,
+		"enabled": true,
 		"description": {
 			"text": "Carbon icon"
 		},
@@ -79,7 +79,7 @@ const customButtons = [
 			"text": "Label icon"
 		},
 		"carbon_icon": "Edit32",
-		"enable": true,
+		"enabled": true,
 		"description": {
 			"text": "Custom label button with Carbon icon"
 		}
