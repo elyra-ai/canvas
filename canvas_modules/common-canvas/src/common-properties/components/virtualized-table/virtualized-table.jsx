@@ -265,14 +265,19 @@ class VirtualizedTable extends React.Component {
 	}
 
 	resizeColumn({ dataKey, deltaX }) {
+		let minColWidth = 50; // Test value. Get the actual value from design.
 		this.setState((prevState) => {
 
 			const columns = prevState.columns;
 
 			const resizedColumn = this.getColumnIndex(columns, dataKey);
-			columns[resizedColumn].width += deltaX;
-			columns[resizedColumn + 1].width -= deltaX;
-
+			console.log("Before resize width: " + columns[resizedColumn].width);
+			if ((columns[resizedColumn].width + deltaX) > minColWidth && (columns[resizedColumn + 1].width - deltaX) > minColWidth) {
+				columns[resizedColumn].width += deltaX;
+				columns[resizedColumn + 1].width -= deltaX;
+			}
+			console.log("After resize width: " + columns[resizedColumn].width);
+			console.log("After resize width of next column: " + columns[resizedColumn + 1].width);
 			return {
 				columnResized: true,
 				columns: columns
