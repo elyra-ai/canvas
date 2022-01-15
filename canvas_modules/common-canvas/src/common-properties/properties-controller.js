@@ -41,6 +41,7 @@ export default class PropertiesController {
 			controllerHandler: null,
 			actionHandler: null,
 			buttonHandler: null,
+			buttonIconHandler: null,
 			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
@@ -171,8 +172,9 @@ export default class PropertiesController {
 			// default value set in the above loop.
 			this._addToControlValues(true);
 
-			// set initial values for addRemoveRows in redux
+			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
+			this.setInitialTableButtonState();
 
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
@@ -1819,6 +1821,70 @@ export default class PropertiesController {
 	clearStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	* Set the initial values of table buttons for all table controls
+	*/
+	setInitialTableButtonState() {
+		const parameterNames = Object.keys(this.controls);
+		parameterNames.forEach((parameterName) => {
+			const control = this.controls[parameterName];
+			const propertyId = { name: control.name };
+			if (!isUndefined(control.buttons)) {
+				control.buttons.forEach((button) => {
+					this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
+				});
+			}
+			if (control.subControls) {
+				this.setInitialTableButtonSubControlState(propertyId, control.subControls);
+			}
+		});
+	}
+
+	// This only handles 1 level of nesting, will need to make this recusrive if there is a need for deeper nesting
+	setInitialTableButtonSubControlState(parentPropertyId, subControls) {
+		subControls.forEach((control) => {
+			const propertyValues = this.getPropertyValue(parentPropertyId);
+
+			if (!isUndefined(control.buttons)) {
+				propertyValues.forEach((value, valueIdx) => {
+					const propertyId = { name: parentPropertyId.name, row: valueIdx, col: control.columnIndex };
+					control.buttons.forEach((button) => {
+						this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
+					});
+				});
+			}
+		});
+	}
+
+	/**
+	* Set the table button to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @param enabled boolean value to enable or disable the button
+	*/
+	setTableButtonEnabled(propertyId, buttonId, enabled) {
+		this.propertiesStore.setTableButtonEnabled(propertyId, buttonId, enabled);
+	}
+
+	/**
+	* Returns the table button states for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getTableButtons(propertyId) {
+		return this.propertiesStore.getTableButtons(propertyId);
+	}
+
+	/**
+	* Returns the true if the table button is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @return boolean
+	*/
+	getTableButtonEnabled(propertyId, buttonId) {
+		return this.propertiesStore.getTableButtonEnabled(propertyId, buttonId);
 	}
 
 	/**

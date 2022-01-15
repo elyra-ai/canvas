@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { SET_ADD_REMOVE_ROWS } from "../actions";
+import { set } from "lodash";
+import { SET_ADD_REMOVE_ROWS, SET_TABLE_BUTTON_ENABLED } from "../actions";
 
 /*
 * Stores the state information for all controls.  States are stored as objects with keys being name, row, col.
@@ -33,9 +34,25 @@ function states(state = {}, action) {
 		}
 
 		if (typeof propertyId.row !== "undefined") {
-			updateNestedAddRemoveRows(propertyId, newState[propertyId.name], action.info.value);
+			updateNestedPropertySetting(propertyId, newState[propertyId.name], "addRemoveRows", action.info.value);
 		} else {
 			newState[propertyId.name].addRemoveRows = action.info.value;
+		}
+		return Object.assign({}, state, newState);
+	}
+	case SET_TABLE_BUTTON_ENABLED: {
+		if (propertyId === null) {
+			return state;
+		}
+		const newState = state;
+		if (typeof newState[propertyId.name] === "undefined") {
+			newState[propertyId.name] = { };
+		}
+
+		if (typeof propertyId.row !== "undefined") {
+			updateNestedPropertySetting(propertyId, newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
+		} else {
+			set(newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
 		}
 		return Object.assign({}, state, newState);
 	}
@@ -45,7 +62,7 @@ function states(state = {}, action) {
 	}
 }
 
-function updateNestedAddRemoveRows(propertyId, newState, value) {
+function updateNestedPropertySetting(propertyId, newState, setting, value) {
 	if (typeof propertyId.row !== "undefined") {
 		if (typeof newState[propertyId.row] === "undefined") {
 			newState[propertyId.row] = {};
@@ -55,14 +72,14 @@ function updateNestedAddRemoveRows(propertyId, newState, value) {
 				newState[propertyId.row][propertyId.col] = {};
 			}
 			if (typeof propertyId.propertyId !== "undefined") {
-				updateNestedAddRemoveRows(propertyId.propertyId, newState[propertyId.row][propertyId.col], value);
+				updateNestedPropertySetting(propertyId.propertyId, newState[propertyId.row][propertyId.col], setting, value);
 			} else {
-				newState[propertyId.row][propertyId.col].addRemoveRows = value;
+				set(newState[propertyId.row][propertyId.col], setting, value);
 			}
 		} else if (typeof propertyId.propertyId !== "undefined") { // nested structureeditor
-			updateNestedAddRemoveRows(propertyId.propertyId, newState[propertyId.row], value);
+			updateNestedPropertySetting(propertyId.propertyId, newState[propertyId.row], setting, value);
 		} else {
-			newState[propertyId.row].addRemoveRows = value;
+			set(newState[propertyId.row], setting, value);
 		}
 	}
 }

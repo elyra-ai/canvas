@@ -312,7 +312,8 @@ MoveableTableRows.propTypes = {
 	emptyTableButtonLabel: PropTypes.string,
 	emptyTableButtonClickHandler: PropTypes.func,
 	disableRowMoveButtons: PropTypes.bool, // set by redux
-	addRemoveRows: PropTypes.bool // set by redux
+	addRemoveRows: PropTypes.bool, // set by redux
+	tableButtons: PropTypes.object // set in by redux
 };
 
 MoveableTableRows.defaultProps = {
@@ -322,7 +323,8 @@ MoveableTableRows.defaultProps = {
 const mapStateToProps = (state, ownProps) => ({
 	// check if row move buttons should be disabled for given propertyId
 	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId),
-	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId)
+	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId),
+	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps)(MoveableTableRows);
