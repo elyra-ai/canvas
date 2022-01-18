@@ -1665,6 +1665,11 @@ export default class CanvasController {
 					data.pipelineId = tipConfig.pipelineId;
 					data.link = tipConfig.link;
 					break;
+				case constants.TIP_TYPE_STATE_TAG:
+					data.stateTagText = tipConfig.stateTagText;
+					data.stateTagType = tipConfig.stateTagType;
+					break;
+
 				default:
 				}
 
@@ -1709,6 +1714,8 @@ export default class CanvasController {
 			return canvasConfig.tipConfig.decorations;
 		case constants.TIP_TYPE_LINK:
 			return canvasConfig.tipConfig.links;
+		case constants.TIP_TYPE_STATE_TAG:
+			return canvasConfig.tipConfig.stateTag;
 		default:
 			return false;
 		}
