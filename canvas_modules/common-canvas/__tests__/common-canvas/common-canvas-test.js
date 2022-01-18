@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import Toolbar from "../../src/toolbar/toolbar.jsx";
 import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
 import CanvasBottomPanel from "../../src/common-canvas/cc-bottom-panel.jsx";
 import CommonCanvasRightFlyout from "../../src/common-canvas/cc-right-flyout.jsx";
+import CommonCanvasStateTag from "../../src/common-canvas/cc-state-tag.jsx";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -63,6 +64,29 @@ describe("CommonCanvas renders correctly", () => {
 		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
 		expect(wrapper.find(CommonCanvasRightFlyout)).to.have.length(1);
 		expect(canvasController.isRightFlyoutOpen() === true).to.be.true;
+	});
+
+	it("should NOT render one <CommonCanvasStateTag/> component when enableStateTag = None", () => {
+		const config = { enableStateTag: "None" };
+		const canvasParams = { };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CommonCanvasStateTag)).to.have.length(0);
+	});
+
+	it("should render one <CommonCanvasStateTag/> component when enableStateTag = Locked", () => {
+		const config = { enableStateTag: "Locked" };
+		const canvasParams = { };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CommonCanvasStateTag)).to.have.length(1);
+		expect(wrapper.find("div.state-tag").text()).to.equal("Locked");
+	});
+
+	it("should render one <CommonCanvasStateTag/> component when enableStateTag = ReadOnly", () => {
+		const config = { enableStateTag: "ReadOnly" };
+		const canvasParams = { };
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+		expect(wrapper.find(CommonCanvasStateTag)).to.have.length(1);
+		expect(wrapper.find("div.state-tag").text()).to.equal("Read-only");
 	});
 
 	it("should render one <CanvasContents/> component", () => {

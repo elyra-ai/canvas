@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -117,6 +117,8 @@ import {
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "./constants/constants.js";
 
+import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+
 import EXTERNAL_SUB_FLOW_CANVAS_1 from "../../test_resources/diagrams/externalSubFlowCanvas1.json";
 import EXTERNAL_SUB_FLOW_CANVAS_2 from "../../test_resources/diagrams/externalSubFlowCanvas2.json";
 
@@ -177,12 +179,14 @@ class App extends React.Component {
 			selectedCanvasUnderlay: UNDERLAY_NONE,
 			selectedExampleApp: EXAMPLE_APP_NONE,
 			selectedPaletteLayout: PALETTE_FLYOUT,
+			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
 				"palette": true,
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
-				"links": true
+				"links": true,
+				"stateTag": true
 			},
 			selectedShowBottomPanel: false,
 			selectedShowRightFlyout: false,
@@ -208,6 +212,7 @@ class App extends React.Component {
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
 			selectedCanvasLayout: null,
+			selectedStateTagTip: "",
 
 			// Common properties state variables
 			propertiesInfo: {},
@@ -1620,6 +1625,11 @@ class App extends React.Component {
 			}
 
 			return `Link from ${sourceString} to ${targetString}`;
+
+		} else if (tipType === "tipTypeStateTag") {
+			if (this.state.selectedStateTagTip) {
+				return this.state.selectedStateTagTip;
+			}
 		}
 		return null;
 	}
@@ -1923,6 +1933,7 @@ class App extends React.Component {
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
+			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
