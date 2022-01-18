@@ -61,6 +61,7 @@ class PropertiesMain extends React.Component {
 			propertyListener: props.callbacks.propertyListener,
 			actionHandler: props.callbacks.actionHandler,
 			buttonHandler: props.callbacks.buttonHandler,
+			buttonIconHandler: props.callbacks.buttonIconHandler,
 			validationHandler: props.callbacks.validationHandler,
 			titleChangeHandler: props.callbacks.titleChangeHandler
 		});
@@ -563,6 +564,7 @@ PropertiesMain.propTypes = {
 		helpClickHandler: PropTypes.func,
 		setPropertiesHasMounted: PropTypes.func,
 		buttonHandler: PropTypes.func,
+		buttonIconHandler: PropTypes.func,
 		validationHandler: PropTypes.func,
 		titleChangeHandler: PropTypes.func,
 		propertiesActionLabelHandler: PropTypes.func

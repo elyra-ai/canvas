@@ -17,9 +17,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "carbon-components-react";
-import { Button } from "carbon-components-react";
+import { Button, Checkbox } from "carbon-components-react";
 import FlexibleTable from "./../components/flexible-table";
+import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
@@ -70,6 +70,7 @@ export default class AbstractTable extends React.Component {
 		this.includeInFilter = this.includeInFilter.bind(this);
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
 		this.makeEditButtonPanel = this.makeEditButtonPanel.bind(this);
+		this.makeCustomButtonsPanel = this.makeCustomButtonsPanel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
@@ -124,7 +125,6 @@ export default class AbstractTable extends React.Component {
 			this.setCurrentControlValueSelected(controlValue, []);
 		}
 	}
-
 
 	getOnPanelContainer(selectedRows) {
 		if (this.onPanelContainer.length === 0 || selectedRows.length === 0 ||
@@ -466,7 +466,6 @@ export default class AbstractTable extends React.Component {
 		return null;
 	}
 
-
 	makeAddRemoveButtonPanel(tableState, tableButtonConfig) {
 		this.onFieldPickerCloseCallback = (tableButtonConfig && tableButtonConfig.fieldPickerCloseFunction)
 			? tableButtonConfig.fieldPickerCloseFunction.bind(this)
@@ -538,6 +537,22 @@ export default class AbstractTable extends React.Component {
 		return editButton;
 	}
 
+	makeCustomButtonsPanel(tableState, customButtons) {
+		let customTableButtons = null;
+		if (customButtons) {
+			customTableButtons = (<div className="properties-at-buttons-container">
+				<TableButtons
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					tableState={tableState}
+					customButtons={customButtons}
+					customButtonsState={this.props.tableButtons}
+				/>
+			</div>);
+		}
+		return customTableButtons;
+	}
+
 	editOnClick(propertyId) {
 		if (this.editOnClickCallback) {
 			this.editOnClickCallback(propertyId);
@@ -602,7 +617,7 @@ export default class AbstractTable extends React.Component {
 		return true;
 	}
 
-	createTable(tableState, tableButtonConfig) {
+	createTable(tableState, tableButtonConfig, customButtons) {
 		const rows = [];
 		const sortFields = [];
 		const filterFields = [];
@@ -618,11 +633,13 @@ export default class AbstractTable extends React.Component {
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
 
-		let topRightPanel = this.props.addRemoveRows
-			? this.makeAddRemoveButtonPanel(tableState, tableButtonConfig)
-			: <div />;
-		if (this.isReadonlyTable()) {
+		let topRightPanel = <div />;
+		if (customButtons) {
+			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
+		} else if (this.isReadonlyTable()) {
 			topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
+		} else if (this.props.addRemoveRows) {
+			topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
 		}
 
 		let rowToScrollTo;
@@ -786,7 +803,8 @@ AbstractTable.propTypes = {
 	rightFlyout: PropTypes.bool,
 	value: PropTypes.array, // pass in by redux
 	selectedRows: PropTypes.array, // set by redux
-	addRemoveRows: PropTypes.bool // set by redux
+	addRemoveRows: PropTypes.bool, // set by redux
+	tableButtons: PropTypes.object // set in by redux
 };
 
 AbstractTable.defaultProps = {

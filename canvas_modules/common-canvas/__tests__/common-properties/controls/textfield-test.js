@@ -307,7 +307,7 @@ describe("textfield list works correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.eql(["value 1", "value 2", "value 3"]);
 	});
 
-	it("textfield should set value to undefined when no default value is provided", () => {
+	it("textfield should set value to null when no default value is provided", () => {
 		const wrapper = mount(
 			<Textfield
 				store={controller.getStore()}
@@ -319,7 +319,7 @@ describe("textfield list works correctly", () => {
 		const textWrapper = wrapper.find("div[data-id='properties-test-text-list']");
 		const input = textWrapper.find("input");
 		input.simulate("change", { target: { value: "" } });
-		expect(controller.getPropertyValue(propertyId)).to.be.undefined;
+		expect(controller.getPropertyValue(propertyId)).to.be.null;
 	});
 
 	it("textfield should set value to default value when no value is entered", () => {
