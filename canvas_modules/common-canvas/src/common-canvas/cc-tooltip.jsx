@@ -20,7 +20,8 @@ import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import Icon from "../icons/icon.jsx";
 import { isEmpty } from "lodash";
-import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_DEC, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK,
+import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_DEC,
+	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG,
 	ERROR, WARNING } from "../common-canvas/constants/canvas-constants.js";
 
 class CommonCanvasTooltip extends React.Component {
@@ -55,6 +56,7 @@ class CommonCanvasTooltip extends React.Component {
 		case TIP_TYPE_PORT:
 		case TIP_TYPE_DEC:
 		case TIP_TYPE_LINK:
+		case TIP_TYPE_STATE_TAG:
 		default:
 			direction = "bottom";
 		}
@@ -131,6 +133,14 @@ class CommonCanvasTooltip extends React.Component {
 				break;
 
 			case TIP_TYPE_LINK:
+				break;
+
+			case TIP_TYPE_STATE_TAG:
+				content = isEmpty(this.props.stateTagText) ? null : (
+					<div className="tip-state-tag">{this.props.stateTagText}</div>
+				);
+				break;
+
 			default:
 				content = null;
 			}
@@ -152,7 +162,7 @@ CommonCanvasTooltip.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	// The rest provided by redux
 	id: PropTypes.string,
-	type: PropTypes.oneOf([TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK]),
+	type: PropTypes.oneOf([TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK, TIP_TYPE_STATE_TAG]),
 	targetObj: PropTypes.object,
 	mousePos: PropTypes.object,
 	customContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -160,7 +170,8 @@ CommonCanvasTooltip.propTypes = {
 	port: PropTypes.object,
 	decoration: PropTypes.object,
 	nodeTemplate: PropTypes.object,
-	category: PropTypes.object
+	category: PropTypes.object,
+	stateTagText: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -173,7 +184,8 @@ const mapStateToProps = (state, ownProps) => ({
 	port: state.tooltip.port,
 	decoration: state.tooltip.decoration,
 	nodeTemplate: state.tooltip.nodeTemplate,
-	category: state.tooltip.category
+	category: state.tooltip.category,
+	stateTagText: state.tooltip.stateTagText
 });
 
 export default connect(mapStateToProps)(CommonCanvasTooltip);

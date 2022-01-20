@@ -233,7 +233,7 @@ NotificationPanel.propTypes = {
 			PropTypes.string,
 			PropTypes.object
 		]),
-		clearAllCallback: PropTypes.function,
+		clearAllCallback: PropTypes.func,
 		keepOpen: PropTypes.bool
 	}),
 	isNotificationOpen: PropTypes.bool,

@@ -31,13 +31,16 @@ export const DEFAULT_NOTIFICATION_HEADER = "Notifications";
 // Used by both toolbar and notification panel.
 export const NOTIFICATION_ICON_CLASS = "notificationCounterIcon";
 
+// Values for enableInteractionType config parameter
 export const INTERACTION_MOUSE = "Mouse";
 export const INTERACTION_TRACKPAD = "Trackpad";
 
+// Values for enableLinkType config parameter
 export const LINK_TYPE_CURVE = "Curve";
 export const LINK_TYPE_ELBOW = "Elbow";
 export const LINK_TYPE_STRAIGHT = "Straight";
 
+// Values for enableLinkDirection config parameter
 export const LINK_DIR_LEFT_RIGHT = "LeftRight";
 export const LINK_DIR_TOP_BOTTOM = "TopBottom";
 export const LINK_DIR_BOTTOM_TOP = "BottomTop";
@@ -65,6 +68,11 @@ export const TOOLBAR_LAYOUT_TOP = "Top";
 // Values for enableAssocLinkType config parameter
 export const ASSOC_RIGHT_SIDE_CURVE = "RightSideCurve";
 export const ASSOC_STRAIGHT = "Straight";
+
+// Values for enableStateTag config parameter
+export const STATE_TAG_NONE = "None";
+export const STATE_TAG_LOCKED = "Locked";
+export const STATE_TAG_READ_ONLY = "ReadOnly";
 
 export const ERROR = "error";
 export const WARNING = "warning";
@@ -101,6 +109,7 @@ export const TIP_TYPE_LINK = "tipTypeLink";
 export const TIP_TYPE_PALETTE_ITEM = "tipTypePaletteItem";
 export const TIP_TYPE_PALETTE_CATEGORY = "tipTypePaletteCategory";
 export const TIP_TYPE_TOOLBAR_ITEM = "tipTypeToolbarItem";
+export const TIP_TYPE_STATE_TAG = "tipTypeStateTag";
 
 export const CREATE_NODE = "create_node";
 export const CLONE_NODE = "clone_node";

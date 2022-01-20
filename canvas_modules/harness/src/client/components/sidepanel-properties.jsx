@@ -55,7 +55,8 @@ export default class SidePanelModal extends React.Component {
 			commonPropertiesFormsFiles: [],
 			commonPropertiesParamDefsFiles: [],
 			invalidPropertyId: false,
-			invalidSetAddRemoveRowPropertyId: false,
+			invalidSetAddRemoveRowPropertyId: true,
+			invalidTableButtonPropertyId: true,
 			invalidSetStaticRowPropertyId: true,
 			invalidSetStaticRowIndexes: true
 		};
@@ -77,6 +78,10 @@ export default class SidePanelModal extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
+		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
+		this.setTableButtonId = this.setTableButtonId.bind(this);
+		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
+		this.setTableButtonEnabled = this.setTableButtonEnabled.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
 		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
@@ -160,6 +165,31 @@ export default class SidePanelModal extends React.Component {
 	// Button to submit addRemoveRows data and call propertiesController
 	setAddRemoveRows(evt) {
 		this.props.propertiesConfig.setAddRemoveRows();
+	}
+
+	// Textfield to enter the propertyId for custom table buttons
+	setTableButtonPropertyId(evt) {
+		try {
+			const propertyId = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.setTableButtonPropertyId(propertyId);
+			this.setState({ invalidTableButtonPropertyId: false });
+		} catch (ex) {
+			this.setState({ invalidTableButtonPropertyId: true });
+		}
+	}
+
+	// Textfield to enter the buttonId for custom table buttons
+	setTableButtonId(evt) {
+		this.props.propertiesConfig.setTableButtonId(evt.target.value);
+	}
+
+	// Toggle to set addRemoveRows enabled or disabled
+	setTableButtonIdEnabled(enabled) {
+		this.props.propertiesConfig.setTableButtonIdEnabled(enabled);
+	}
+
+	setTableButtonEnabled() {
+		this.props.propertiesConfig.setTableButtonEnabled();
 	}
 
 	// Textfield to enter the propertyId for StaticRows
@@ -601,6 +631,51 @@ export default class SidePanelModal extends React.Component {
 			</Button>
 		</div>);
 
+		const setTableButtonPropertyId = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-table-button-propertyid">
+				<TextInput
+					labelText="Set the propertyId for enabling/disabling a custom table button"
+					id="harness-propertyId-tableButton"
+					placeholder='{ "name": "parameterName" }'
+					invalid={this.state.invalidTableButtonPropertyId}
+					invalidText="Please enter valid JSON"
+					onChange={this.setTableButtonPropertyId}
+					helperText='PropertyId format: {"name": "unique_id_for_control"}'
+				/>
+			</div>
+		);
+
+		const setTableButtonId = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-table-buttonid">
+				<TextInput
+					labelText="Set the buttonId for the custom table button"
+					id="harness-buttonId-customTableButton"
+					placeholder="custom table button id"
+					onChange={this.setTableButtonId}
+				/>
+			</div>);
+
+		const setTableButtonIdEnabled = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-table-buttonid-enabled">
+				<Toggle
+					id="harness-sidepanel-setTableButtonEnabled-toggle"
+					labelText="Set custom table button enabled for the propertyId and buttonId entered above"
+					labelA="disable"
+					labelB="enable"
+					toggled={this.props.propertiesConfig.tableButtonEnabled}
+					onToggle={this.setTableButtonIdEnabled}
+				/>
+			</div>);
+
+		const submitTableButtonEnabled = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-table-button-submit">
+			<Button size="small"
+				disabled={this.state.invalidTableButtonPropertyId}
+				onClick={this.props.propertiesConfig.setTableButtonEnabled}
+			>
+				Submit
+			</Button>
+		</div>);
+
 		const setStaticRowsPropertyId = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-propertyid">
 				<TextInput
@@ -681,6 +756,11 @@ export default class SidePanelModal extends React.Component {
 				{setAddRemoveRowsEnabled}
 				{submitAddRemoveRows}
 				{divider}
+				{setTableButtonPropertyId}
+				{setTableButtonId}
+				{setTableButtonIdEnabled}
+				{submitTableButtonEnabled}
+				{divider}
 				{setStaticRowsPropertyId}
 				{setStaticRowsIndexes}
 				{submitStaticRows}
@@ -722,6 +802,11 @@ SidePanelModal.propTypes = {
 		setAddRemoveRowsPropertyId: PropTypes.func,
 		setAddRemoveRowsEnabled: PropTypes.func,
 		setAddRemoveRows: PropTypes.func,
+		tableButtonEnabled: PropTypes.bool,
+		setTableButtonPropertyId: PropTypes.func,
+		setTableButtonId: PropTypes.func,
+		setTableButtonIdEnabled: PropTypes.func,
+		setTableButtonEnabled: PropTypes.func,
 		StaticRowsEnabled: PropTypes.bool,
 		setStaticRowsPropertyId: PropTypes.func,
 		setStaticRowsIndexes: PropTypes.func,

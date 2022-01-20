@@ -23,8 +23,9 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import CommonCanvasContextMenu from "./cc-context-menu.jsx";
+import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import { FlowData16 } from "@carbon/icons-react";
-import { DND_DATA_TEXT } from "./constants/canvas-constants";
+import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
@@ -153,6 +154,21 @@ class CanvasContents extends React.Component {
 
 	getSVGCanvasD3() {
 		return this.svgCanvasD3;
+	}
+
+	getStateTag() {
+		let stateTag = null;
+
+		if (this.props.canvasConfig.enableStateTag === STATE_TAG_READ_ONLY ||
+				this.props.canvasConfig.enableStateTag === STATE_TAG_LOCKED) {
+			stateTag = (
+				<CommonCanvasStateTag
+					stateTagType={this.props.canvasConfig.enableStateTag}
+					canvasController={this.props.canvasController}
+				/>
+			);
+		}
+		return stateTag;
 	}
 
 	getEmptyCanvas() {
@@ -351,6 +367,7 @@ class CanvasContents extends React.Component {
 	render() {
 		this.logger.log("render");
 
+		const stateTag = this.getStateTag();
 		const emptyCanvas = this.getEmptyCanvas();
 		const contextMenu = this.getContextMenu();
 		const dropZoneCanvas = this.getDropZone();
@@ -387,6 +404,7 @@ class CanvasContents extends React.Component {
 						{svgCanvasDiv}
 						{contextMenu}
 						{dropZoneCanvas}
+						{stateTag}
 					</div>
 				</ReactResizeDetector>
 			</main>

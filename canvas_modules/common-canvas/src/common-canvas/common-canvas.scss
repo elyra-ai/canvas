@@ -199,5 +199,29 @@ $bottom-panel-height: 393px;
 	&.info > svg > .dot {
 		fill: $support-04;
 	}
+}
 
+.state-tag {
+	@include carbon--type-style("productive-heading-01");
+	color: $inverse-01;
+	background-color: $background-inverse;
+	height: 40px;
+	position: absolute;
+	left: 50%;
+	top: 16px;
+	transform: translate(-50%, 0%);
+	border-radius: 20px;
+	padding: 9px 0;
+	user-select: none; /* Prevent elements from being selectable */
+
+	svg {
+		color: $inverse-01;
+		position: relative;
+		top: 3px;
+		margin-left: 14px;
+	}
+
+	span {
+		margin: 0 16px 0 10px;
+	}
 }

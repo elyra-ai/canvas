@@ -97,7 +97,8 @@ export default class CanvasUtils {
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
-				"links": true
+				"links": true,
+				"stateTag": true
 			}
 		};
 
