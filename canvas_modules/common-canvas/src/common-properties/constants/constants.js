@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-function _defineConstant(key, value) {
-	Object.defineProperty(module.exports, key, {
-		value: value,
-		enumerable: true,
-		writable: false
-	});
-}
-
-_defineConstant("MESSAGE_KEYS", {
+export const MESSAGE_KEYS = {
 	SUBPANEL_BUTTON_TOOLTIP: "subPanel.button.tooltip",
 	STRUCTURELISTEDITOR_ADDBUTTON_LABEL: "structureListEditor.addButton.label",
 	STRUCTURELISTEDITOR_REMOVEBUTTON_LABEL: "structureListEditor.removeButton.label",
@@ -103,62 +95,63 @@ _defineConstant("MESSAGE_KEYS", {
 	DROPDOWN_TOOLTIP_CLEARSELECTION: "dropdown.tooltip.clear.selection",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
+	PROPERTIES_ACTION_LABEL: "action.commonProperties",
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
 	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
-});
+};
 
-_defineConstant("TRUNCATE_LIMIT", 10000);
+export const TRUNCATE_LIMIT = 10000;
 
-_defineConstant("CONDITION_ERROR_MESSAGE", {
+export const CONDITION_ERROR_MESSAGE = {
 	HIDDEN: "0px",
 	VISIBLE: "30px"
-});
+};
 
-_defineConstant("DEFAULT_VALIDATION_MESSAGE", {
+export const DEFAULT_VALIDATION_MESSAGE = {
 	type: "info",
 	text: ""
-});
+};
 
-_defineConstant("CONDITION_MESSAGE_TYPE", {
+export const CONDITION_MESSAGE_TYPE = {
 	INFO: "info",
 	ERROR: "error",
 	WARNING: "warning",
 	SUCCESS: "success"
-});
+};
 
-_defineConstant("SPINNER", "spinner");
+export const SPINNER = "spinner";
 
-_defineConstant("DATA_TYPE", {
+export const DATA_TYPE = {
 	INTEGER: "integer",
 	DOUBLE: "double",
 	STRING: "string",
 	DATE: "date",
 	TIME: "time",
 	TIMESTAMP: "timestamp"
-});
+};
 
-_defineConstant("DEFAULT_DATE_FORMAT", "YYYY-M-D");
+export const DEFAULT_DATE_FORMAT = "YYYY-M-D";
 
-_defineConstant("DEFAULT_TIME_FORMAT", "H:m:s");
+export const DEFAULT_TIME_FORMAT = "H:m:s";
 
-_defineConstant("ELLIPSIS_STRING", "...");
+export const ELLIPSIS_STRING = "...";
 
-_defineConstant("DISPLAY_CHARS_DEFAULT", 64);
+export const DISPLAY_CHARS_DEFAULT = 64;
 
-_defineConstant("STATES", {
+export const STATES = {
 	VISIBLE: "visible",
 	HIDDEN: "hidden",
 	ENABLED: "enabled",
 	DISABLED: "disabled"
-});
+};
 
-_defineConstant("PANEL_TREE_ROOT", "PanelTreeRoot");
+export const PANEL_TREE_ROOT = "PanelTreeRoot";
 
 
-_defineConstant("CONDITION_TYPE", {
+export const CONDITION_TYPE = {
 	VISIBLE: "visible",
 	ENABLED: "enabled",
 	FILTEREDENUM: "enum_filter",
@@ -166,44 +159,44 @@ _defineConstant("CONDITION_TYPE", {
 	FILTER: "filter",
 	VALIDATION: "validation",
 	CONDITIONALDEFAULT: "default_value"
-});
+};
 
-_defineConstant("CONDITION_DEFINITION_INDEX", {
+export const CONDITION_DEFINITION_INDEX = {
 	CONTROLS: "controls",
 	REFS: "refs"
-});
+};
 
-_defineConstant("ACTIONS", {
+export const ACTIONS = {
 	SET_PROPERTIES: "SET_PROPERTIES",
 	UPDATE_PROPERTY: "UPDATE_PROPERTY",
 	PROPERTIES_LOADED: "PROPERTIES_LOADED"
-});
+};
 
-_defineConstant("DEFAULT_LABEL_EDITABLE", true);
+export const DEFAULT_LABEL_EDITABLE = true;
 
-_defineConstant("ROW_HEIGHT", 32);
+export const ROW_HEIGHT = 32;
 
-_defineConstant("EXPRESSION_TABLE_ROWS", 7);
+export const EXPRESSION_TABLE_ROWS = 7;
 
-_defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
+export const TABLE_SUBPANEL_BUTTON_WIDTH = "36px";
 
-_defineConstant("CONDITION_RETURN_VALUE_HANDLING", {
+export const CONDITION_RETURN_VALUE_HANDLING = {
 	VALUE: "value",
 	NULL: "null"
-});
+};
 
-_defineConstant("SORT_DIRECTION", {
+export const SORT_DIRECTION = {
 	ASC: "ASC",
 	DESC: "DESC"
-});
+};
 
-_defineConstant("ROW_SELECTION", {
+export const ROW_SELECTION = {
 	SINGLE: "single",
 	MULTIPLE: "multiple-edit"
-});
+};
 
 
-_defineConstant("CARBON_ICONS", {
+export const CARBON_ICONS = {
 	CHEVRONARROWS: {
 		UP: "chevron-up",
 		DOWN: "chevron-down",
@@ -224,11 +217,11 @@ _defineConstant("CARBON_ICONS", {
 	},
 	INFORMATION: "informationHollow",
 	SETTINGS: "settings"
-});
+};
 
-_defineConstant("APPLY", "apply");
-_defineConstant("CANCEL", "cancel");
+export const APPLY = "apply";
+export const CANCEL = "cancel";
 
-_defineConstant("CARBON_MODAL_SIZE_XSMALL", "xs");
-_defineConstant("CARBON_MODAL_SIZE_SMALL", "sm");
-_defineConstant("CARBON_MODAL_SIZE_LARGE", "lg");
+export const CARBON_MODAL_SIZE_XSMALL = "xs";
+export const CARBON_MODAL_SIZE_SMALL = "sm";
+export const CARBON_MODAL_SIZE_LARGE = "lg";

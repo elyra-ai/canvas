@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,8 +89,7 @@ describe("Test for toolbar Create and Delete button", function() {
 		cy.getNodeWithLabel("Define Types").dblclick();
 
 		// Delete node using toolbar
-		cy.clickToolbarOverflow();
-		cy.clickToolbarDeleteInOverflowMenu();
+		cy.clickToolbarDelete();
 
 		// Verification steps
 		cy.verifyNodeIsDeleted("Define Types");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,7 @@
 @import "./properties-buttons/properties-buttons";
 @import "./editor-form/editor-form";
 @import "./flexible-table/flexible-table";
+@import "./truncated-content-tooltip/truncated-content-tooltip";
 @import "./virtualized-table/virtualized-table";
 @import "./empty-table/empty-table";
+@import "./table-buttons/table-buttons"

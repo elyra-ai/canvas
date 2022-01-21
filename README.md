@@ -1,6 +1,6 @@
 <!--
 {% comment %}
-Copyright 2017-2020 Elyra Authors
+Copyright 2017-2022 Elyra Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ See [here](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness
 Clone elyra/canvas
 ```sh
 git clone git@github.com:elyra-ai/canvas.git
-
+# install global libraries for building
+npm install -g grunt-cli sass
 # Build common-canvas and common-properties
 ./<elyra/canvas>/canvas_modules/common-canvas/build.sh
 ```

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
 import { cloneDeep } from "lodash";
 import { v4 as uuid4 } from "uuid";
-import defaultMessages from "../../../locales/common-properties/locales/en.json";
+import defaultMessages1 from "../../../locales/common-properties/locales/en.json";
+import defaultMessages2 from "../../../locales/command-actions/locales/en.json";
 
 /**
  * A better type identifier than a simple 'typeOf' call:
@@ -50,6 +51,7 @@ function copy(obj) {
 }
 
 function formatMessage(intl, key, substituteObj) {
+	const defaultMessages = { ...defaultMessages1, ...defaultMessages2 };
 	let formattedMessage;
 	if (typeof intl !== "undefined" && intl !== null) {
 		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessages[key] }, substituteObj);

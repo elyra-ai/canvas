@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,11 @@ import { USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
 
 export default class ConvertSuperNodeExternalToLocal extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		// To do a complete conversion of the supernode's contents to local, we need
@@ -80,5 +81,9 @@ export default class ConvertSuperNodeExternalToLocal extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.convertSuperNodeExternalToLocal", { node_label: this.oldSupernode.label });
 	}
 }

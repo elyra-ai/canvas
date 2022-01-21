@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { CommonCanvas, CanvasController } from "common-canvas";
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import LogicCanvasFlow from "./logicCanvas.json";
 import LogicPalette from "./logicPalette.json";
@@ -39,11 +39,12 @@ export default class LogicCanvas extends React.Component {
 		const config = Object.assign({}, this.props.config, {
 			enableParentClass: "logic-canvas",
 			enableNodeFormatType: "Horizontal",
-			enableLinkType: "Elbow",
+			enableLinkType: "Straight",
 			enableLinkDirection: "TopBottom",
 			enableSnapToGridType: "During",
 			enableLinkSelection: "LinkOnly",
 			paletteInitialState: true,
+			enableInsertNodeDroppedOnLink: true,
 			enableHighlightNodeOnNewLinkDrag: true,
 			tipConfig: {
 				palette: true,
@@ -101,7 +102,7 @@ export default class LogicCanvas extends React.Component {
 			enableCanvasLayout: {
 				commentHighlightGap: 6,
 				nodeProximity: 50,
-				displayLinkOnOverlap: false,
+				displayLinkOnOverlap: true,
 
 				dataLinkArrowHead: true,
 				linkGap: 4,

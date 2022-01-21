@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
 	from "carbon-components-react";
-
 
 import {
 	NONE_SAVE_ZOOM,
@@ -67,6 +66,7 @@ import {
 	TIP_PORTS,
 	TIP_DECORATIONS,
 	TIP_LINKS,
+	TIP_STATE_TAG,
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
@@ -77,6 +77,10 @@ import {
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
 } from "../constants/constants.js";
+
+import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
+	from "../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+
 import FormsService from "../services/FormsService";
 
 export default class SidePanelForms extends React.Component {
@@ -265,6 +269,9 @@ export default class SidePanelForms extends React.Component {
 			break;
 		case "tip_links":
 			tipConf.links = checked;
+			break;
+		case "tip_state_tag":
+			tipConf.stateTag = checked;
 			break;
 		default:
 			return;
@@ -656,6 +663,15 @@ export default class SidePanelForms extends React.Component {
 				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
 				labelText="Enable Drag Without Select"
 				toggled={this.props.getStateValue("selectedDragWithoutSelect")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableDragToMoveNodesAndComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedDragToMoveSizeNodesComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Drag To Move Nodes and Comments"
+				toggled={this.props.getStateValue("selectedDragToMoveSizeNodesComments")}
 				onToggle={this.setStateValue}
 			/>
 		</div>);
@@ -1068,6 +1084,40 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var stateTag = (<div className="harness-sidepanel-children" id="harness-sidepanel-state-tag">
+			<FormGroup
+				legendText="State Tag"
+			>
+				<RadioButtonGroup
+					name="selectedStateTag" // Set name to corresponding field name in App.js
+					className="harness-sidepanel-radio-group"
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedStateTag")}
+				>
+					<RadioButton
+						value={STATE_TAG_NONE}
+						labelText={STATE_TAG_NONE}
+					/>
+					<RadioButton
+						value={STATE_TAG_LOCKED}
+						labelText={STATE_TAG_LOCKED}
+					/>
+					<RadioButton
+						value={STATE_TAG_READ_ONLY}
+						labelText={STATE_TAG_READ_ONLY}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
+			<div className="harness-state-tag-tip-text">
+				<TextInput
+					id="selectedStateTagTip" // Set ID to corresponding field in App.js state
+					labelText="Tip text (will show default if empty)"
+					onChange={this.enteredStateValue}
+					value={this.props.getStateValue("selectedStateTagTip")}
+				/>
+			</div>
+		</div>);
+
 		var toolbarLayout = (<div className="harness-sidepanel-children" id="harness-sidepanel-toolbar-layout">
 			<FormGroup
 				legendText="Toolbar Layout"
@@ -1164,6 +1214,12 @@ export default class SidePanelForms extends React.Component {
 					labelText={TIP_LINKS}
 					onChange={this.tipConfigChange}
 					checked={this.props.getStateValue("selectedTipConfig").links}
+				/>
+				<Checkbox
+					id="tip_state_tag"
+					labelText={TIP_STATE_TAG}
+					onChange={this.tipConfigChange}
+					checked={this.props.getStateValue("selectedTipConfig").stateTag}
 				/>
 			</fieldset>
 		</div>);
@@ -1341,8 +1397,6 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}
-					{enableHighlightUnavailableNodes}
-					{divider}
 					{enableSingleOutputPortDisplay}
 					{divider}
 					{displayFullLabelOnHover}
@@ -1353,6 +1407,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableHighlightNodeOnNewLinkDrag}
 					{divider}
+					{enableHighlightUnavailableNodes}
+					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
@@ -1361,7 +1417,7 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{assocLinkType}
 					{divider}
-					<div className="harness-side-panel-header">Pan, Zoom and Select</div>
+					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}
 					{saveZoom}
 					{divider}
@@ -1371,11 +1427,15 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
+					{enableDragToMoveNodesAndComments}
+					{divider}
 					<div className="harness-side-panel-header">Supernodes</div>
 					{divider}
 					{enableMoveNodesOnSupernodeResize}
 					{divider}
 					<div className="harness-side-panel-header">Canvas Content</div>
+					{divider}
+					{stateTag}
 					{divider}
 					{enableDropZoneOnExternalDrag}
 					{divider}

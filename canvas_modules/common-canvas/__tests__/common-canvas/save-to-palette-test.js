@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ describe("Expand and Collapse Supernode Action", () => {
 });
 
 
-function createCommonCanvas(config, canvasController) {
+function createCommonCanvas(config, canvasController, canvasParams) {
 	const contextMenuHandler = sinon.spy();
 	const beforeEditActionHandler = null;
 	const editActionHandler = sinon.spy();
@@ -123,7 +123,7 @@ function createCommonCanvas(config, canvasController) {
 	const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
 	const notificationConfig = { action: "notification", label: "Notifications", enable: true };
 	const contextMenuConfig = null;
-	const showRightFlyout = false;
+	const canvasParameters = canvasParams || {};
 	const wrapper = createIntlCommonCanvas(
 		config,
 		contextMenuHandler,
@@ -133,11 +133,11 @@ function createCommonCanvas(config, canvasController) {
 		decorationActionHandler,
 		selectionChangeHandler,
 		tipHandler,
-
+		canvasParameters.showBottomPanel,
+		canvasParameters.showRightFlyout,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
-		showRightFlyout,
 		canvasController
 	);
 	return wrapper;

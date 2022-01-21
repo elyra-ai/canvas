@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const imageWrapper = wrapper.find("div[data-id='moon']");
+		const imageWrapper = wrapper.find(".properties-action-image");
 		expect(imageWrapper.hasClass("disabled")).to.equal(true);
 	});
 	it("action image renders when hidden", () => {
@@ -129,7 +129,7 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const imageWrapper = wrapper.find("div[data-id='moon']");
+		const imageWrapper = wrapper.find(".properties-action-image");
 		expect(imageWrapper.hasClass("hide")).to.equal(true);
 	});
 	it("action image renders tooltip", () => {
@@ -157,7 +157,7 @@ describe("actions using paramDef", () => {
 			expect(data.parameter_ref).to.equal("moon_phase");
 			done();
 		}
-		const image = wrapper.find("div[data-id='moon'] img");
+		const image = wrapper.find("div[data-id='properties-ctrl-moon_phase']").find("div[data-id='moon'] img");
 		image.simulate("click");
 	});
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,20 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 export default class expandSuperNodeInPlaceAction extends Action {
-	constructor(data, objectModel, enableMoveNodesOnSupernodeResize) {
+	constructor(data, objectModel, labelUtil, enableMoveNodesOnSupernodeResize) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.oldObjectPositions = [];
 		this.newObjectPositions = [];
 		this.oldLinkPositions = [];
 		this.newLinkPositions = [];
 		this.enableMoveNodesOnSupernodeResize = enableMoveNodesOnSupernodeResize;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.supernode = this.apiPipeline.getNode(this.data.id);
 
 		if (this.enableMoveNodesOnSupernodeResize) {
-			this.supernode = this.apiPipeline.getNode(this.data.id);
 			this.oldObjectPositions = CanvasUtils.getObjectPositions(this.apiPipeline.getObjects());
 			this.oldLinkPositions = CanvasUtils.getLinkPositions(this.apiPipeline.getLinks());
 
@@ -65,5 +66,9 @@ export default class expandSuperNodeInPlaceAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.expandSuperNodeInPlace", { node_label: this.supernode.label });
 	}
 }

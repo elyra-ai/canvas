@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,20 @@
  */
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
+import { ButtonMetadata } from "./ButtonInfo";
 import { propertyOf } from "lodash";
 import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllFields, layout, type) {
+		rowSelection, addRemoveRows, header, includeAllFields, layout, buttons, type) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 		this.moveableRows = moveableRows;
 		this.label = ResourceDef.make(label);
 		this.rowSelection = rowSelection;
+		this.buttons = buttons;
 		if (typeof addRemoveRows === "boolean") {
 			this.addRemoveRows = addRemoveRows;
 		} else {
@@ -105,6 +107,7 @@ export class StructureDef {
 				propertyOf(uihints)("header"),
 				propertyOf(uihints)("include_all_fields"),
 				propertyOf(uihints)("layout"),
+				ButtonMetadata.makeButtonMetadata(propertyOf(uihints)("buttons")),
 				propertyOf(structure)("type")
 			);
 		}

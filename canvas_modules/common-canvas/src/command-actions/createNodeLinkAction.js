@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateNodeLinkAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+		this.actionLabel = this.createActionLabel();
 	}
 
 	getData() {
@@ -46,7 +48,6 @@ export default class CreateNodeLinkAction extends Action {
 		if (this.data.replaceLink) {
 			this.apiPipeline.addLinks([this.data.replaceLink]);
 		}
-
 	}
 
 	redo() {
@@ -56,4 +57,26 @@ export default class CreateNodeLinkAction extends Action {
 		this.apiPipeline.addLinks(this.linkNodeList);
 	}
 
+	getLabel() {
+		return this.actionLabel;
+	}
+
+	createActionLabel() {
+		const targetNodeLabel = this.getTargetNodeLabel();
+		if (this.data.replaceLink) {
+			return this.labelUtil.getActionLabel(this, "action.replaceNodeLink", { node_label: targetNodeLabel });
+		}
+		return this.labelUtil.getActionLabel(this, "action.createNodeLink", { node_label: targetNodeLabel });
+	}
+
+	// Returns the target node label. It makes sure the target node is there just
+	// to be safe: it would be a bug if target node wasnt there. Also,
+	// although targetNodes is an array this is a historical artifact and in
+	// reality targetNodes will only even have one element.
+	getTargetNodeLabel() {
+		const targetNode = this.data.targetNodes && this.data.targetNodes.length > 0
+			? this.apiPipeline.getNode(this.data.targetNodes[0].id)
+			: {};
+		return targetNode.label;
+	}
 }

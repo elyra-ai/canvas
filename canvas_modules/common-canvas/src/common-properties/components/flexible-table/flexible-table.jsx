@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -455,9 +455,11 @@ class FlexibleTable extends React.Component {
 
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
-				{searchBar}
-				<div className="properties-ft-container-panel">
+				<div className="properties-ft-table-header">
+					{searchBar}
 					{this.props.topRightPanel}
+				</div>
+				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
 						<div className="properties-ft-container-wrapper" style={ heightStyle }>
 							<div className={messageClass}>

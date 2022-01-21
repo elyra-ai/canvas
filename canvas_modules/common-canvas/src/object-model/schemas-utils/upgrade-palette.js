@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { cloneDeep } from "lodash";
 
 // Globals -------------------------------------------------------------------->
 
@@ -173,7 +175,7 @@ function _readPorts(portsArray) {
  */
 function upgradePalette(palette) {
 	const baseVersion = Math.max(_extractPaletteVersion(palette), FIRST_PALETTE_VERSION);
-	let pal = JSON.parse(JSON.stringify(palette));
+	let pal = cloneDeep(palette);
 	for (let idx = baseVersion; idx < LATEST_PALETTE_VERSION; idx++) {
 		pal = updateFuncs[idx](pal);
 	}

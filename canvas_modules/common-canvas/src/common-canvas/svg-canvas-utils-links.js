@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,37 +79,37 @@ export default class SvgCanvasLinks {
 	}
 
 	// Returns the lineArray passed in with connection path info added to it.
-	addConnectionPaths(lineArray) {
-		lineArray.forEach((line) => {
-			line.pathInfo = this.getConnectorPathInfo(line);
+	addConnectionPaths(links) {
+		links.forEach((link) => {
+			link.pathInfo = this.getConnectorPathInfo(link);
 		});
-		return lineArray;
+		return links;
 	}
 
 	// Returns an SVG path string for the link (described by the line passed in)
 	// based on the connection and link type in the layout info.
-	getConnectorPathInfo(line, drawingNewLinkMinInitialLine) {
-		const minInitialLine = this.getMinInitialLine(line, drawingNewLinkMinInitialLine);
+	getConnectorPathInfo(link, drawingNewLinkMinInitialLine) {
+		const minInitialLine = this.getMinInitialLine(link, drawingNewLinkMinInitialLine);
 
 		// If its a very short line to be drawn just draw a straight line instead
 		// of zig-zagging in a very small space.
-		if (Math.abs(line.x1 - line.x2) < 20 &&
-				Math.abs(line.y1 - line.y2) < 20) {
-			return this.getStraightPath(line);
+		if (Math.abs(link.x1 - link.x2) < 20 &&
+				Math.abs(link.y1 - link.y2) < 20) {
+			return this.getStraightPath(link);
 
-		} else if (line.type === NODE_LINK) {
+		} else if (link.type === NODE_LINK) {
 
 			if (this.canvasLayout.linkType === LINK_TYPE_CURVE ||
 					this.canvasLayout.linkType === LINK_TYPE_ELBOW) {
-				return this.getPortLinkPath(line, minInitialLine);
+				return this.getPortLinkPath(link, minInitialLine);
 			}
 
-		} else if (line.type === ASSOCIATION_LINK &&
+		} else if (link.type === ASSOCIATION_LINK &&
 								this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
-			return this.getAssociationCurvePath(line, minInitialLine);
+			return this.getAssociationCurvePath(link, minInitialLine);
 		}
 
-		return this.getStraightPath(line);
+		return this.getStraightPath(link);
 	}
 
 	// Returns the minInitialLine layout variable that will be either zero for a
@@ -118,14 +118,14 @@ export default class SvgCanvasLinks {
 	// object (data.src) if we are drawing an existing connection or from
 	// this.drawingNewLinkData.minInitialLine if we are dynamically drawing
 	// a new link.
-	getMinInitialLine(line, drawingNewLinkMinInitialLine) {
+	getMinInitialLine(link, drawingNewLinkMinInitialLine) {
 		let minInitialLine;
-		if (line.type === COMMENT_LINK) {
+		if (link.type === COMMENT_LINK) {
 			minInitialLine = 0;
-		} else if (line.minInitialLineForElbow) {
-			minInitialLine = line.minInitialLineForElbow;
-		} else if (line.src && line.src.layout) {
-			minInitialLine = line.src.layout.minInitialLine;
+		} else if (link.minInitialLineForElbow) {
+			minInitialLine = link.minInitialLineForElbow;
+		} else if (link.srcObj && link.srcObj.layout) {
+			minInitialLine = link.srcObj.layout.minInitialLine;
 		} else if (drawingNewLinkMinInitialLine) {
 			minInitialLine = drawingNewLinkMinInitialLine;
 		} else {
@@ -318,56 +318,56 @@ export default class SvgCanvasLinks {
 	// The pathInfo returned contains:
 	// path - an SVG path string describing the curved/elbow line
 	// centerPoint - the center point of the line used for decoration placement
-	getPortLinkPath(data, minInitialLine) {
-		let newData = data;
+	getPortLinkPath(link, minInitialLine) {
 		let topSrc;
 		let topTrg;
 		let bottomSrc;
 		let bottomTrg;
 
 		// When drawing a link from node to node we will have src and trg nodes.
-		if (data.src && data.trg) {
+		if (link.srcObj && link.trgNode) {
 			if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-				topSrc = -(data.src.x_pos + data.src.width);
-				bottomSrc = -(data.src.x_pos);
-				topTrg = -(data.trg.x_pos + data.trg.width);
-				bottomTrg = -(data.trg.x_pos);
+				topSrc = -(link.srcObj.x_pos + link.srcObj.width);
+				bottomSrc = -(link.srcObj.x_pos);
+				topTrg = -(link.trgNode.x_pos + link.trgNode.width);
+				bottomTrg = -(link.trgNode.x_pos);
 
 			} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-				topSrc = data.src.x_pos;
-				bottomSrc = data.src.x_pos + data.src.width;
-				topTrg = data.trg.x_pos;
-				bottomTrg = data.trg.x_pos + data.trg.width;
+				topSrc = link.srcObj.x_pos;
+				bottomSrc = link.srcObj.x_pos + link.srcObj.width;
+				topTrg = link.trgNode.x_pos;
+				bottomTrg = link.trgNode.x_pos + link.trgNode.width;
 
 			} else {
-				topSrc = data.src.y_pos;
-				bottomSrc = data.src.y_pos + data.src.height;
-				topTrg = data.trg.y_pos;
-				bottomTrg = data.trg.y_pos + data.trg.height;
+				topSrc = link.srcObj.y_pos;
+				bottomSrc = link.srcObj.y_pos + link.srcObj.height;
+				topTrg = link.trgNode.y_pos;
+				bottomTrg = link.trgNode.y_pos + link.trgNode.height;
 			}
 		// When dragging out a new link we will not have src nor trg nodes so we
 		// make a best guess at the node dimensions.
 		} else {
 			if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
-				topSrc = -data.x1;
-				topTrg = -data.x2;
-				bottomSrc = -data.x1;
-				bottomTrg = -data.x2;
+				topSrc = -link.x1;
+				topTrg = -link.x2;
+				bottomSrc = -link.x1;
+				bottomTrg = -link.x2;
 
 			} else if (this.canvasLayout.linkDirection === LINK_DIR_BOTTOM_TOP) {
-				topSrc = data.x1;
-				topTrg = data.x2;
-				bottomSrc = data.x1;
-				bottomTrg = data.x2;
+				topSrc = link.x1;
+				topTrg = link.x2;
+				bottomSrc = link.x1;
+				bottomTrg = link.x2;
 
 			} else {
-				topSrc = data.y1;
-				topTrg = data.y2;
-				bottomSrc = data.y1;
-				bottomTrg = data.y2;
+				topSrc = link.y1;
+				topTrg = link.y2;
+				bottomSrc = link.y1;
+				bottomTrg = link.y2;
 			}
 		}
 
+		let newData = link;
 		// Rotate the input data for TB and BT link configurations to be Left->Right
 		if (this.canvasLayout.linkDirection === LINK_DIR_TOP_BOTTOM) {
 			newData = this.rotateData90Degrees(newData, ANTI_CLOCKWISE);
@@ -506,7 +506,7 @@ export default class SvgCanvasLinks {
 		// The minimum size of the line entering the target port. When
 		// dynamically drawing a new connection we will not have a target node
 		// so use a fixed value for this.
-		const minFinalLine = data.trg ? data.trg.layout.minFinalLine : 30;
+		const minFinalLine = data.trgNode ? data.trgNode.layout.minFinalLine : 30;
 
 		// Initalize centerPoint which can be used by the link decorations
 		const centerPoint = { x: 0, y: 0 };

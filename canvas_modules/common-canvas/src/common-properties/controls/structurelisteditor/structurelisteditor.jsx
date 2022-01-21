@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ class StructurelisteditorControl extends AbstractTable {
 			addButtonFunction: this.addRow
 		};
 
-		const table = this.createTable(this.props.state, tableButtonConfig);
+		const customButtons = this.props.control && this.props.control.buttons;
+		const table = this.createTable(this.props.state, tableButtonConfig, customButtons);
 
 		const tableContainer = (<div>
 			<div className="properties-sle properties-sle-buttons">
@@ -96,7 +97,8 @@ StructurelisteditorControl.propTypes = {
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
 	messageInfo: PropTypes.object, // pass in by redux
-	addRemoveRows: PropTypes.bool // set by redux
+	addRemoveRows: PropTypes.bool, // set by redux
+	tableButtons: PropTypes.object // set in by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -104,7 +106,8 @@ const mapStateToProps = (state, ownProps) => ({
 	state: ownProps.controller.getControlState(ownProps.propertyId),
 	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId),
 	selectedRows: ownProps.controller.getSelectedRows(ownProps.propertyId),
-	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId)
+	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId),
+	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(StructurelisteditorControl);

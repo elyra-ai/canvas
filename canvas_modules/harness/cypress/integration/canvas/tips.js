@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -390,5 +390,114 @@ describe("Test to check if tips show up for toolbar items", function() {
 		cy.hoverOverToolbarItem(".toggleNotificationPanel-action");
 		cy.verifyTipForToolbarItem(".toggleNotificationPanel-action", "Notifications");
 		cy.mouseoutToolbarItem(".toggleNotificationPanel-action");
+	});
+});
+
+describe("Test undo redo tooltips for different actions", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Test undo redo tooltips for common properties action", function() {
+		cy.openPropertyDefinition("readonly_paramDef.json");
+		// Save properties flyout
+		cy.saveFlyout();
+
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Save properties custom label");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Save properties custom label");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+	});
+
+	it("Test undo redo tooltips for common canvas actions", function() {
+		cy.openCanvasPalette("modelerPalette.json");
+		// Add a node on canvas
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Var. File", 300, 200);
+		// Verify undo/redo tooltip after adding node
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create Var. File node");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Create Var. File node");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+
+		// Add another node on canvas & link two nodes
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Select", 400, 200);
+		cy.linkNodes("Var. File", "Select");
+		// Verify undo/redo tooltip after linking nodes
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create link to Select node");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Create link to Select node");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+
+		// Add a comment for node
+		cy.clickNode("Select");
+		cy.clickToolbarAddComment();
+		// Verify undo/redo tooltip after adding comment
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Create comment");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Create comment");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+
+		// Edit comment
+		cy.editTextInComment("", "This is a select node");
+		// Verify undo/redo tooltip after editing comment
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Edit comment");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Edit comment");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+
+		// Delete a node
+		cy.clickNode("Var. File");
+		cy.clickToolbarDelete();
+		// Verify undo/redo tooltip after deleting node
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
+
+		// Delete a comment
+		cy.deleteCommentUsingToolbar("This is a select node");
+		// Verify undo/redo tooltip after deleting comment
+		cy.hoverOverToolbarItem(".undo-action");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
+		cy.mouseoutToolbarItem(".undo-action");
+		cy.clickToolbarUndo();
+
+		cy.hoverOverToolbarItem(".redo-action");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
+		cy.mouseoutToolbarItem(".redo-action");
+		cy.clickToolbarRedo();
 	});
 });

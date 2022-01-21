@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,6 +166,9 @@ export class Control {
 		}
 		if (settings.className) {
 			this.className = settings.className;
+		}
+		if (settings.buttons) {
+			this.buttons = settings.buttons;
 		}
 	}
 }

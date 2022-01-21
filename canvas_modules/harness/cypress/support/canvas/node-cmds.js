@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -575,7 +575,3 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 	});
 });
 
-Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
-	cy.get(".d3-svg-canvas-div")
-		.trigger("mouseover", x, y);
-});

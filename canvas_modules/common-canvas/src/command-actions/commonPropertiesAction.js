@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 import Action from "../command-stack/action.js";
 
 export default class CommonPropertiesAction extends Action {
-	constructor(newValues, initialValues, appData, applyPropertyChanges) {
+	constructor(newValues, initialValues, appData, applyPropertyChanges, propertiesActionLabel) {
 		super(newValues);
 		this.newValues = newValues;
 		this.initialValues = initialValues;
 		this.appData = appData;
 		this.applyPropertyChanges = applyPropertyChanges;
+		this.propertiesActionLabel = propertiesActionLabel;
 	}
 
 	// Standard methods
@@ -37,4 +38,7 @@ export default class CommonPropertiesAction extends Action {
 		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.additionalInfo, this.newValues.undoInfo, this.newValues.uiProperties);
 	}
 
+	getLabel() {
+		return this.propertiesActionLabel;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,22 @@ class ControlPanel extends React.Component {
 
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
-		return (
-			<div
-				className={classNames(
-					"properties-control-panel",
-					{ "hide": this.props.panelState === STATES.HIDDEN },
-					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
-					className
-				)}
-				disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
-			>
-				{this.props.children}
-			</div>
-		);
+		const controlPanel = this.props.children.length > 0
+			? (
+				<div
+					className={classNames(
+						"properties-control-panel",
+						{ "hide": this.props.panelState === STATES.HIDDEN },
+						{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+						className
+					)}
+					disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
+				>
+					{this.props.children}
+				</div>
+			)
+			: null;
+		return controlPanel;
 	}
 }
 

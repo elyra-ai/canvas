@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import "./canvas/test-harness-cmds";
 import "./canvas/toolbar-cmds";
 import "./canvas/utils-cmds";
 import "./canvas/verification-cmds";
+import "./canvas/operation-cmds";
 
 // turn off screenshots when running in headless mode.
 Cypress.Screenshot.defaults({

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -285,7 +285,8 @@ describe("create supernode renders correctly", () => {
 		const contextMenuConfig = {
 			enableCreateSupernodeNonContiguous: true
 		};
-		createCommonCanvas(config, canvasController, contextMenuConfig);
+		const canvasParams = {};
+		createCommonCanvas(config, canvasController, canvasParams, contextMenuConfig);
 		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
 		const isCreateSupernode = isCreateSupernodeThere(menuDef);
 		expect(isCreateSupernode).to.be.true;
@@ -351,7 +352,7 @@ function getNestedMenuDefinition() {
 	];
 }
 
-function createCommonCanvas(config, canvasController, contextMenuConfig) {
+function createCommonCanvas(config, canvasController, canvasParams, contextMenuConfig) {
 	const contextMenuHandler = sinon.spy();
 	const beforeEditActionHandler = null; // If sepcified, must return data
 	const editActionHandler = sinon.spy();
@@ -371,8 +372,7 @@ function createCommonCanvas(config, canvasController, contextMenuConfig) {
 		label: "Notifications",
 		enable: true
 	};
-
-	const showRightFlyout = false;
+	const canvasParameters = canvasParams || {};
 	const wrapper = createIntlCommonCanvas(
 		config,
 		contextMenuHandler,
@@ -381,12 +381,12 @@ function createCommonCanvas(config, canvasController, contextMenuConfig) {
 		clickActionHandler,
 		decorationActionHandler,
 		selectionChangeHandler,
-
 		tipHandler,
+		canvasParameters.showBottomPanel,
+		canvasParameters.showRightFlyout,
 		toolbarConfig,
 		notificationConfig,
 		contextMenuConfig,
-		showRightFlyout,
 		canvasController
 	);
 

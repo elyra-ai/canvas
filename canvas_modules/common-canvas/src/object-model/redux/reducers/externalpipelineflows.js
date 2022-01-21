@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,12 @@ export default (state = [], action) => {
 		return newset;
 	}
 
+	case "ADD_OBJECTS_AND_UPDATE":
 	case "ADD_SUPERNODES": {
 		return [...state, ...action.data.extPipelineFlowsToAdd];
 	}
 
+	case "DELETE_OBJECTS_AND_UPDATE":
 	case "DELETE_SUPERNODES": {
 		return state.filter((epf) => {
 			const removePFlow = action.data.extPipelineFlowsToDelete.some((pf) => epf.url === pf.url);

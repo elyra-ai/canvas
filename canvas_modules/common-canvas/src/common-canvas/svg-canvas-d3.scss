@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,8 +185,8 @@ $link-highlight-color: $support-04;
 
 /* Node and comment styles */
 
-.d3-node-group,
-.d3-comment-group {
+.d3-node-group.d3-draggable,
+.d3-comment-group.d3-draggable {
 	cursor: pointer;
 }
 
@@ -325,7 +325,7 @@ $link-highlight-color: $support-04;
 	// These three properties force a ... to be displayd at the end of the
 	// second line if the text is greater than two lines. -webkit-line-clamp
 	// can be overriden by the application to support more than 2 lines.
-	display: -webkit-box;
+	display: -webkit-box; // stylelint-disable-line value-no-vendor-prefix
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 

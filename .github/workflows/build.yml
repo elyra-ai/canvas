@@ -1,5 +1,5 @@
 #
-# Copyright 2017-2020 Elyra Authors
+# Copyright 2017-2022 Elyra Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - run: npm install -g grunt-cli
+    - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
     - run: ./canvas_modules/harness/build.sh
     - run: ./canvas_modules/harness/functional_test.sh

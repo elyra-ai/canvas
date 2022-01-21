@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,12 +44,6 @@ module.exports = function(grunt) {
 				".travis.yml",
 				"manifest.yml"
 			]
-		},
-		sasslint: {
-			options: {
-				configFile: ".sass-lint.yml"
-			},
-			target: ["./src/**/*.scss"]
 		},
 		clean: {
 			coverage: {
@@ -115,10 +109,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
-	grunt.loadNpmTasks("grunt-sass-lint");
 	grunt.loadNpmTasks("grunt-webpack");
 	grunt.loadNpmTasks("grunt-contrib-copy");
-	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
+	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
 	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,44 +47,52 @@ function getFilteredNodeTypeInfosByCategory(category, filterStrings) {
 }
 
 // Returns an object containing the label and description occurrences of the
-// stings in the filterString array passed based on the nodeType passed in.
-// The object also contains a ranking which can be used to rand the object
-// returned against other objects returned from this method.
+// stings in the filterString array passed in based on the nodeType and category
+// passed in. The returned object also contains a ranking which can be used
+// to rank the object returned against other objects returned from this method.
 function getOccurrences(nodeType, category, filterStrings) {
 	if (filterStrings.length > 0) {
-		let catLabelOccurrences = [];
-		let nodeLabelOccurrences = [];
-		let descOccurrences = [];
 
-		let catLabelHitCounts = [];
-		let nodeLabelHitCounts = [];
-		let descHitCounts = [];
+		const { catLabelOccurrences, catLabelHitCounts } = getCategoryLabelInfo(category, filterStrings);
+		const { nodeLabelOccurrences, nodeLabelHitCounts } = getNodeLabelInfo(nodeType, filterStrings);
+		const { nodeDescOccurrences, nodeDescHitCounts } = getNodeDescInfo(nodeType, filterStrings);
 
-		if (has(category, "label")) {
-			const catLabel = category.label.toLowerCase();
-			const { occurrences, hitCounts } = wordOccurrences(catLabel, filterStrings);
-			catLabelOccurrences = occurrences;
-			catLabelHitCounts = hitCounts;
-		}
-		if (has(nodeType, "app_data.ui_data.label")) {
-			const nodeLabel = nodeType.app_data.ui_data.label.toLowerCase();
-			const { occurrences, hitCounts } = wordOccurrences(nodeLabel, filterStrings);
-			nodeLabelOccurrences = occurrences;
-			nodeLabelHitCounts = hitCounts;
-		}
-		if (has(nodeType, "app_data.ui_data.description")) {
-			const desc = nodeType.app_data.ui_data.description.toLowerCase();
-			const { occurrences, hitCounts } = wordOccurrences(desc, filterStrings);
-			descOccurrences = occurrences;
-			descHitCounts = hitCounts;
-		}
-
-		if (catLabelOccurrences.length > 0 || nodeLabelOccurrences.length > 0 || descOccurrences.length > 0) {
-			const ranking = calcRanking(catLabelHitCounts, nodeLabelHitCounts, descHitCounts, filterStrings.length);
-			return { catLabelOccurrences, nodeLabelOccurrences, descOccurrences, ranking };
+		if (catLabelOccurrences.length > 0 || nodeLabelOccurrences.length > 0 || nodeDescOccurrences.length > 0) {
+			const ranking = calcRanking(catLabelHitCounts, nodeLabelHitCounts, nodeDescHitCounts, filterStrings.length);
+			return { catLabelOccurrences, nodeLabelOccurrences, nodeDescOccurrences, ranking };
 		}
 	}
 	return null;
+}
+
+// Returns the occurences and hit counts info for the label of the category
+// passed in based on the filterStrings.
+function getCategoryLabelInfo(category, filterStrings) {
+	const catLabel = has(category, "label")
+		? category.label.toLowerCase()
+		: "";
+	const { occurrences, hitCounts } = wordOccurrences(catLabel, filterStrings);
+	return { catLabelOccurrences: occurrences, catLabelHitCounts: hitCounts };
+}
+
+// Returns the occurences and hit counts info for the label of the node
+// passed in based on the filterStrings.
+function getNodeLabelInfo(nodeType, filterStrings) {
+	const nodeLabel = has(nodeType, "app_data.ui_data.label")
+		? nodeType.app_data.ui_data.label.toLowerCase()
+		: "";
+	const { occurrences, hitCounts } = wordOccurrences(nodeLabel, filterStrings);
+	return { nodeLabelOccurrences: occurrences, nodeLabelHitCounts: hitCounts };
+}
+
+// Returns the occurences and hit counts info for the description of the node
+// passed in based on the filterStrings.
+function getNodeDescInfo(nodeType, filterStrings) {
+	const desc = has(nodeType, "app_data.ui_data.description")
+		? nodeType.app_data.ui_data.description.toLowerCase()
+		: "";
+	const { occurrences, hitCounts } = wordOccurrences(desc, filterStrings);
+	return { nodeDescOccurrences: occurrences, nodeDescHitCounts: hitCounts };
 }
 
 // Calculates a ranking value for the node type info object being processed,
@@ -209,7 +217,7 @@ function wordOccurrencesByString(mainString, searchString) {
 	return occurrences;
 }
 
-// If we need to support a local specific search we can uncomment the code
+// If we need to support a locale specific search we can uncomment the code
 // below and use localeIndexOf inplace of <string>.indexOf() in the code above.
 
 // function localeIndexOf(mainString, searchString, fromIndex) {

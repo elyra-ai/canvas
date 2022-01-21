@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ import {
 	TWISTY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_FLYOUT_PROPS_INFO
 } from "../constants/conditions-documentation-constants.js";
-import { CommonProperties } from "common-canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import { Table } from "reactable";
 
 class CommonPropertiesComponents extends React.Component {

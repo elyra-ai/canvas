@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 import Action from "../command-stack/action.js";
 
 export default class SetNodeLabelAction extends Action {
-	constructor(data, objectModel) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.previousLabel = this.apiPipeline.getNode(data.nodeId).label;
 	}
@@ -37,4 +38,7 @@ export default class SetNodeLabelAction extends Action {
 		this.apiPipeline.setNodeLabel(this.data.nodeId, this.data.label);
 	}
 
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.setNodeLabel");
+	}
 }

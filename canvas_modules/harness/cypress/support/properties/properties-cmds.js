@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -261,4 +261,11 @@ Cypress.Commands.add("clickOnFieldPickerButton", (buttonType) => {
 	cy.get(".properties-fp-table")
 		.find(`button[data-id='properties-${buttonType}-button']`)
 		.click();
+});
+
+// Action commands
+Cypress.Commands.add("hoverOverActionImage", (actionName) => {
+	cy.get(".properties-action-image")
+		.find(`div[data-id='${actionName}']`)
+		.trigger("mouseover");
 });

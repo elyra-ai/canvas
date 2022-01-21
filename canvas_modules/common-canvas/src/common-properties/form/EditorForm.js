@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
+import { Button } from "./ButtonInfo";
 import { get } from "lodash";
 
 /**
@@ -411,6 +412,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	let header;
 	let includeAllFields;
 	let layout;
+	let buttons;
 	let structureType = parameter.structureType;
 
 	// The control type defines the basic UI element that should be used to edit the property
@@ -497,6 +499,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
 						header = structureDef.header;
+					}
+
+					if (structureDef.buttons) {
+						buttons = _makeButtons(structureDef.buttons, l10nProvider);
 					}
 				} else {
 					controlType = ControlType.STRUCTUREEDITOR;
@@ -586,6 +592,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.action = action;
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
+	settings.buttons = buttons;
 
 	if (isSubControl) {
 		settings.visible = parameter.visible;
@@ -689,6 +696,26 @@ function _makeAction(action, l10nProvider) {
 		actionDesc = new Description(l10nProvider.l10nDesc(action, action.id));
 	}
 	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image);
+}
+
+function _makeButtons(buttonMetadata, l10nProvider) {
+	const buttons = [];
+	buttonMetadata.buttonDefs.forEach((buttonDef) => {
+		buttons.push(_makeButton(buttonMetadata.getButton(buttonDef.id), l10nProvider));
+	});
+	return buttons;
+}
+
+function _makeButton(button, l10nProvider) {
+	let buttonLabel;
+	if (button.label) {
+		buttonLabel = new Label(l10nProvider.l10nLabel(button, button.id));
+	}
+	let buttonDescription;
+	if (button.description) {
+		buttonDescription = new Description(l10nProvider.l10nDesc(button, button.description));
+	}
+	return new Button(button.id, buttonLabel, buttonDescription, button.icon, button.carbonIcon, button.enabled, button.divider);
 }
 
 function _parameterValueLabels(parameter, l10nProvider) {

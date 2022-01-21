@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint arrow-body-style: ["off"] */
 
 export default (state = {}, action) => {
 	switch (action.type) {
@@ -38,9 +37,26 @@ export default (state = {}, action) => {
 
 	case "DELETE_OBJECT": {
 		if (state.selections) {
-			const newSelections = state.selections.filter((objId) => {
-				return action.data.id !== objId;
-			});
+			const newSelections = state.selections.filter((objId) => action.data.id !== objId);
+			return {
+				pipelineId: state.pipelineId,
+				selections: newSelections
+			};
+		}
+		return state;
+	}
+
+	case "DELETE_AND_UPDATE_OBJECTS": {
+		if (state.selections) {
+			const objsToDelete = [
+				...action.data.linksToDelete,
+				...action.data.supernodesToDelete,
+				...action.data.nodesToDelete,
+				...action.data.commentsToDelete
+			];
+			const newSelections = state.selections.filter((objId) =>
+				!objsToDelete.some((obj) => obj.id === objId));
+
 			return {
 				pipelineId: state.pipelineId,
 				selections: newSelections

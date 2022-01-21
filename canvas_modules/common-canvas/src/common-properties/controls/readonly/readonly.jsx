@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
+import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import { STATES, DATA_TYPE } from "./../../constants/constants";
-import Tooltip from "./../../../tooltip/tooltip";
 import Icon from "./../../../icons/icon";
-import { v4 as uuid4 } from "uuid";
 import moment from "moment";
 import { isEqual, intersection } from "lodash";
 
@@ -96,16 +95,10 @@ class ReadonlyControl extends React.Component {
 		const readOnly = <span className="properties-field-type" disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
 		let display = readOnly;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
 			let disabled = true;
 			if (controlValue) {
 				disabled = false;
 			}
-			const tooltip = (
-				<div className="properties-tooltips">
-					{String(controlValue)}
-				</div>
-			);
 			let content = readOnly;
 			if (this.props.control.icon) {
 				content = (
@@ -116,16 +109,13 @@ class ReadonlyControl extends React.Component {
 						{readOnly}
 					</div>);
 			}
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction="bottom"
-				className="properties-tooltips"
-				disable={disabled}
-				showToolTipIfTruncated
-			>
-				{content}
-			</Tooltip>);
+			display = (
+				<TruncatedContentTooltip
+					content={content}
+					tooltipText={controlValue}
+					disabled={disabled}
+				/>
+			);
 		}
 		return (
 			<div

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 
 .properties-readonly {
-	width: inherit;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	&.hide {
 		display: none;
 	}
@@ -62,15 +58,8 @@
 		}
 	}
 	.tooltip-trigger {
-		width: inherit;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 		span {
 			white-space: nowrap;
-			&[disabled] {
-				opacity: 0.5;
-			}
 		}
 	}
 }

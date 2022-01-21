@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CanvasUtils from "../../src/common-canvas/common-canvas-utils.js";
 import PasteAction from "../../src/command-actions/pasteAction.js";
+import LabelUtil from "../../src/common-canvas/label-util.js";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
@@ -683,9 +684,9 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedLinkId = uniqueNodeLink + "_" + sourceNodeId + "_b4f90b52-d198-42f0-85cc-31af3914dd4f";
 		const expectedNodeLink = {
 			"id": expectedLinkId,
+			"type": "nodeLink",
 			"srcNodeId": sourceNodeId,
 			"trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
-			"type": "nodeLink",
 			"linkName": "testLink1"
 		};
 
@@ -803,8 +804,9 @@ describe("ObjectModel API handle model OK", () => {
 		// Simulate the objects copying from the clipboard by making a copy of them.
 		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
 
+		const labelUtil = new LabelUtil();
 		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
-		const cloneAction = new PasteAction(copyCloneData, objectModel, dummyViewportDimensions, false);
+		const cloneAction = new PasteAction(copyCloneData, objectModel, labelUtil, dummyViewportDimensions, false);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();
@@ -813,7 +815,7 @@ describe("ObjectModel API handle model OK", () => {
 		actualCanvas.nodes.forEach((nd) => delete nd.layout);
 
 		// console.info("Expected Canvas = " + JSON.stringify(clonedCanvas, null, 2));
-		// console.info("Actual Canvas   = " + JSON.stringify(objectModel.getCanvasInfoPipeline(), null, 2));
+		// console.info("Actual Canvas = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(isEqual(JSON.stringify(actualCanvas), JSON.stringify(clonedCanvas))).to.be.true;
 	});

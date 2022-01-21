@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright 2017-2020 Elyra Authors
+# Copyright 2017-2022 Elyra Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ cd $SCRIPT_DIR
 # install require modules
 echo "npm install"
 npm install
-echo "grunt build"
-npm run build-prod > "$WORKING_DIR/grunt_logs.txt"
+echo "npm run build-prod"
+npm run build-prod
 echo "Prune production"
 npm prune --production
 

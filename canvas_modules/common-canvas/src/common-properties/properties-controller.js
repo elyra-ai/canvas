@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import * as PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { Type, ParamRole } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined } from "lodash";
-
+import { Type, ParamRole, ControlType } from "./constants/form-constants";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
+import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
@@ -41,6 +41,7 @@ export default class PropertiesController {
 			controllerHandler: null,
 			actionHandler: null,
 			buttonHandler: null,
+			buttonIconHandler: null,
 			titleChangeHandler: null
 		};
 		this.propertiesConfig = {};
@@ -124,6 +125,12 @@ export default class PropertiesController {
 		return this.propertiesConfig;
 	}
 
+	setParamDef(paramDef) {
+		const rightFlyout = get(this.getPropertiesConfig(), "rightFlyout", true);
+		const formData = Form.makeForm(paramDef, !rightFlyout);
+		this.setForm(formData);
+	}
+
 	//
 	// Form and parsing Methods
 	//
@@ -155,49 +162,28 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
-
-			// Evaluate conditional defaults based on current_parameters upon loading of view
-			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
-			const conditionalDefaultValues = {};
-			if (!isEmpty(propertyValues)) {
-				Object.keys(propertyValues).forEach((propertyName) => {
-					const propertyId = { name: propertyName };
-					// Update conditionalDefaultValues object using pass-by-reference
-					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
-				});
-				if (!isEmpty(conditionalDefaultValues)) {
-					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
-						if (!(parameterRef in propertyValues)) {
-							// convert values of type:object to the internal format array values
-							const control = this.getControl({ name: parameterRef });
-							if (PropertyUtils.isSubControlStructureObjectType(control)) {
-								conditionalDefaultValues[parameterRef] =
-								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
-							}
-							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
-						}
-					});
-				}
-			}
-
 			this._addToControlValues();
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
 			// default value set in the above loop.
 			this._addToControlValues(true);
 
-			// set initial values for addRemoveRows in redux
+			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
+			this.setInitialTableButtonState();
 
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
 				this.propertiesStore.setActiveTab(this.uiItems[0].tabs[0].group);
 			}
+
+			// set title
+			this.setTitle(this.form.label);
 		}
 	}
 
@@ -1173,7 +1159,7 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values) {
+	setPropertyValues(values, isInitProps) {
 		const inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1191,6 +1177,33 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
+		if (isInitProps) {
+			// Evaluate conditional defaults based on current_parameters upon loading of view
+			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
+			const conditionalDefaultValues = {};
+			if (!isEmpty(inValues)) {
+				Object.keys(inValues).forEach((propertyName) => {
+					const propertyId = { name: propertyName };
+					// Update conditionalDefaultValues object using pass-by-reference
+					conditionsUtil.setConditionalDefaultValue(propertyId, this, conditionalDefaultValues);
+				});
+				if (!isEmpty(conditionalDefaultValues)) {
+					Object.keys(conditionalDefaultValues).forEach((parameterRef) => {
+						if (!(parameterRef in inValues)) {
+							// convert values of type:object to the internal format array values
+							const control = this.getControl({ name: parameterRef });
+							if (PropertyUtils.isSubControlStructureObjectType(control)) {
+								conditionalDefaultValues[parameterRef] =
+								PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, conditionalDefaultValues[parameterRef]);
+							}
+							this.propertiesStore.updatePropertyValue({ name: parameterRef }, conditionalDefaultValues[parameterRef]);
+						}
+					});
+				}
+			}
+		}
+
+		// Validate other conditions after evaluating conditional defaults (default_value conditions)
 		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
@@ -1541,7 +1554,11 @@ export default class PropertiesController {
 	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
-				this.controls[control.name] = control;
+				// only add to map if control hasn't already been added or override if set to custom.
+				// This is needed if a parameter is referenced from multiple groups and one is a custom panel
+				if (!has(this.controls, control.name) || (has(this.controls, control.name) && control.controlType !== ControlType.CUSTOM)) {
+					this.controls[control.name] = control;
+				}
 			} else {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}
@@ -1804,6 +1821,70 @@ export default class PropertiesController {
 	clearStaticRows(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.clearStaticRows(propertyId);
+	}
+
+	/**
+	* Set the initial values of table buttons for all table controls
+	*/
+	setInitialTableButtonState() {
+		const parameterNames = Object.keys(this.controls);
+		parameterNames.forEach((parameterName) => {
+			const control = this.controls[parameterName];
+			const propertyId = { name: control.name };
+			if (!isUndefined(control.buttons)) {
+				control.buttons.forEach((button) => {
+					this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
+				});
+			}
+			if (control.subControls) {
+				this.setInitialTableButtonSubControlState(propertyId, control.subControls);
+			}
+		});
+	}
+
+	// This only handles 1 level of nesting, will need to make this recusrive if there is a need for deeper nesting
+	setInitialTableButtonSubControlState(parentPropertyId, subControls) {
+		subControls.forEach((control) => {
+			const propertyValues = this.getPropertyValue(parentPropertyId);
+
+			if (!isUndefined(control.buttons)) {
+				propertyValues.forEach((value, valueIdx) => {
+					const propertyId = { name: parentPropertyId.name, row: valueIdx, col: control.columnIndex };
+					control.buttons.forEach((button) => {
+						this.setTableButtonEnabled(propertyId, button.id, button.enabled || false);
+					});
+				});
+			}
+		});
+	}
+
+	/**
+	* Set the table button to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @param enabled boolean value to enable or disable the button
+	*/
+	setTableButtonEnabled(propertyId, buttonId, enabled) {
+		this.propertiesStore.setTableButtonEnabled(propertyId, buttonId, enabled);
+	}
+
+	/**
+	* Returns the table button states for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getTableButtons(propertyId) {
+		return this.propertiesStore.getTableButtons(propertyId);
+	}
+
+	/**
+	* Returns the true if the table button is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @param buttonId The unique button identifier
+	* @return boolean
+	*/
+	getTableButtonEnabled(propertyId, buttonId) {
+		return this.propertiesStore.getTableButtonEnabled(propertyId, buttonId);
 	}
 
 	/**

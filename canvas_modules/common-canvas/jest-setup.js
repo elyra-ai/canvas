@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 function mockConsole(consoleMethod) {
 	const ignoredMessages = ["test was not wrapped in act(...)", "Rendering components directly into document.body is discouraged"];
 	return (message, ...args) => {
-		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message.includes(ignoredMessage));
+		const hasIgnoredMessage = ignoredMessages.some((ignoredMessage) => message && typeof message === "string" && message.includes(ignoredMessage));
 		if (!hasIgnoredMessage) {
 			consoleMethod(message, ...args);
 		}

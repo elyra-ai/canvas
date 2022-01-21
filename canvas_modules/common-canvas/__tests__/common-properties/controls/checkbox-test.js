@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ describe("checkbox control tests", () => {
 		);
 		const checkboxWrapper = wrapper.find("div[data-id='properties-test-checkboxLabel']");
 		// isn't actually visible.  Visibility controlled by carbon component
-		expect(checkboxWrapper.find("label > span").text()).to.equal(controlWithLabel.label.text);
+		expect(checkboxWrapper.find("label").text()).to.equal(controlWithLabel.label.text);
 		expect(checkboxWrapper.find("div.properties-tooltips text")).to.have.length(0);
 	});
 	it("checkbox renders messages correctly", () => {

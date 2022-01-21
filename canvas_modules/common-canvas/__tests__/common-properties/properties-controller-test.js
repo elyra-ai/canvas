@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,11 @@ import Form from "../../src/common-properties/form/Form";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
+import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
-
+import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 
 import testUtils from "../_utils_/property-utils";
@@ -1266,6 +1267,42 @@ describe("Properties Controller controls", () => {
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
 	});
+	it("should save the correct control when duplicate controls exist in groups", () => {
+		const custom = {
+			"name": "priors",
+			"controlType": "custom",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors = {
+			"name": "priors",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+		const priors2 = {
+			"name": "priors2",
+			"controlType": "structurelisteditor",
+			"parentCategoryId": "priors-panel"
+		};
+
+		reset();
+		controller.saveControls([custom, priors]);
+		let foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// change array order
+		reset();
+		controller.saveControls([priors, custom]);
+		foundControl = controller.getControl({ name: priors.name });
+		expect(foundControl.controlType).to.equal(priors.controlType);
+		// validate custom controls get set when another control doesn't override it
+		reset();
+		controller.saveControls([priors2, custom]);
+		foundControl = controller.getControl({ name: custom.name });
+		expect(foundControl.controlType).to.equal(custom.controlType);
+		foundControl = controller.getControl({ name: priors2.name });
+		expect(foundControl.controlType).to.equal(priors2.controlType);
+	});
+
+
 });
 
 describe("Properties Controller getResource ", () => {
@@ -1642,7 +1679,17 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 		controller = renderedObject.controller;
 
 		const requiredIds = controller.getRequiredDefinitionIds();
-		expect(requiredIds).to.eql(["required_fields_294.69762842919897"]);
+		expect(requiredIds).to.eql([
+			"required_oneofselect_201.88122102593735",
+			"required_oneofselect_null_895.9146331341876",
+			"required_oneofselect_empty_string_963.6717964456162",
+			"required_oneofselect_custom_value_667.4461132689746",
+			"required_radioString_834.4741085201264",
+			"required_radioBooleanWithEnum_167.45387366555846",
+			"required_radioBooleanWithoutEnum_836.1233358606064",
+			"required_radioBooleanWithLabels_68.57624159959238",
+			"required_fields_294.69762842919897"
+		]);
 	});
 });
 
@@ -1935,4 +1982,128 @@ describe("Properties Controller staticRows", () => {
 		expect(controller.getStaticRows(propertyId)).to.have.length(0);
 	});
 
+});
+
+describe("Properties Controller paramDef methods", () => {
+	it("should set the paramDef in properties controller", () => {
+		reset();
+		// Using structureTableParamDef because it throws a validation error.
+		controller.setParamDef(structureTableParamDef);
+		const actualValues = controller.getPropertyValues();
+		expect(actualValues).to.eql(structuretablePropertyValues);
+	});
+});
+
+describe("Properties Controller custom table buttons", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should setInitialTableButtonState when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureTableParamDef);
+		controller = renderedObject.controller;
+
+		const parameters = Object.keys(structureTableParamDef.current_parameters);
+		parameters.forEach((parameterName) => {
+			let expectedState = {};
+			if (parameterName === "structuretableCustomIconButtons") {
+				expectedState = { "icon_button_1": false, "icon_button_2": true, "icon_button_3": false, "icon_button_4": true };
+			} else if (parameterName === "structuretableCustomLabelButtons") {
+				expectedState = { "icon_button_11": true, "icon_button_12": true };
+			} else if (parameterName === "structuretableCustomLabelIconButtons") {
+				expectedState = { "icon_button_21": true, "icon_button_22": false, "icon_button_23": true, "icon_button_24": true, "icon_button_25": true, "icon_button_26": true };
+			}
+			expect(controller.getTableButtons({ name: parameterName })).to.eql(expectedState);
+		});
+	});
+
+	it("structure should render toolbar correctly when custom buttons are set to disabled", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureTableParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { name: "structuretableCustomIconButtons" };
+
+		// Verify buttons are visible when editor opens
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "structuretableCustomIconButtons-summary-panel");
+		let firstTable = summaryPanel.find("div[data-id='properties-structuretableCustomIconButtons']");
+		let customButtonToolbar = firstTable.find(".properties-custom-table-buttons");
+		expect(customButtonToolbar).to.have.length(1);
+		expect(customButtonToolbar.find(".toolbar-item.default")).to.have.length(4);
+		let customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		expect(customButtons).to.have.length(4);
+
+		expect(customButtons.at(0).prop("disabled")).to.equal(true);
+		expect(customButtons.at(1).prop("disabled")).to.equal(false);
+		expect(customButtons.at(2).prop("disabled")).to.equal(true);
+		expect(customButtons.at(3).prop("disabled")).to.equal(false);
+
+		expect(controller.getTableButtonEnabled(propertyId, "icon_button_3")).to.equal(false);
+		expect(controller.getTableButtonEnabled(propertyId, "icon_button_4")).to.equal(true);
+
+		controller.setTableButtonEnabled(propertyId, "icon_button_3", true); // enable button
+		controller.setTableButtonEnabled(propertyId, "icon_button_4", false); // disable button
+
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "structuretableCustomIconButtons-summary-panel");
+		firstTable = summaryPanel.find("div[data-id='properties-structuretableCustomIconButtons']");
+		customButtonToolbar = firstTable.find(".properties-custom-table-buttons");
+		customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		expect(customButtons.at(0).prop("disabled")).to.equal(true);
+		expect(customButtons.at(1).prop("disabled")).to.equal(false);
+		expect(customButtons.at(2).prop("disabled")).to.equal(false);
+		expect(customButtons.at(3).prop("disabled")).to.equal(true);
+
+		expect(controller.getTableButtonEnabled(propertyId, "icon_button_3")).to.equal(true);
+		expect(controller.getTableButtonEnabled(propertyId, "icon_button_4")).to.equal(false);
+	});
+
+	it("should setInitialTableButtonState for nested structures when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureTableParamDef);
+		controller = renderedObject.controller;
+
+		const expectedState = { "nested_button_1": false, "nested_button_2": true, "nested_button_3": false, "nested_button_4": true };
+		expect(controller.getTableButtons({ "name": "nestedStructureCustomButtons", "row": 0, "col": 2 })).to.eql(expectedState);
+		expect(controller.getTableButtons({ "name": "nestedStructureCustomButtons", "row": 1, "col": 2 })).to.eql(expectedState);
+	});
+
+	it("nested structure custom table buttons", () => {
+		const renderedObject = testUtils.flyoutEditorForm(structureTableParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		const propertyId = { "name": "nestedStructureCustomButtons", "row": 0, "col": 2 };
+
+		let summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		let parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
+		parentTable.find(".properties-subpanel-button").at(0)
+			.simulate("click");
+		let nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
+		let customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
+		expect(customButtonToolbar).to.have.length(1);
+		expect(customButtonToolbar.find(".toolbar-item.default")).to.have.length(4);
+		let customButtons = customButtonToolbar.find(".toolbar-item.default button");
+		expect(customButtons).to.have.length(4);
+
+		expect(customButtons.at(0).prop("disabled")).to.equal(true);
+		expect(customButtons.at(1).prop("disabled")).to.equal(false);
+		expect(customButtons.at(2).prop("disabled")).to.equal(true);
+		expect(customButtons.at(3).prop("disabled")).to.equal(false);
+
+		controller.setTableButtonEnabled(propertyId, "nested_button_3", true); // enable button
+		controller.setTableButtonEnabled(propertyId, "nested_button_4", false); // disable button
+
+		const expected = { "nested_button_1": false, "nested_button_2": true, "nested_button_3": true, "nested_button_4": false };
+		expect(controller.getTableButtons(propertyId)).to.eql(expected);
+
+		// // Verify buttons are visible when editor opens
+		summaryPanel = testUtils.openSummaryPanel(wrapper, "nested-structuretable-summary-panel");
+		parentTable = summaryPanel.find("div[data-id='properties-ft-nestedStructureCustomButtons']");
+		parentTable.find(".properties-subpanel-button").at(0)
+			.simulate("click");
+		nestedTable = wrapper.find("div[data-id='properties-nestedStructureCustomButtons_table']");
+		customButtonToolbar = nestedTable.find(".properties-custom-table-buttons");
+		customButtons = customButtonToolbar.find(".toolbar-item.default button");
+
+		expect(customButtons.at(0).prop("disabled")).to.equal(true);
+		expect(customButtons.at(1).prop("disabled")).to.equal(false);
+		expect(customButtons.at(2).prop("disabled")).to.equal(false);
+		expect(customButtons.at(3).prop("disabled")).to.equal(true);
+	});
 });

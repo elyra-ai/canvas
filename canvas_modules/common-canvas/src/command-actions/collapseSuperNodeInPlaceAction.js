@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 export default class CollapseSuperNodeInPlaceAction extends Action {
-	constructor(data, objectModel, enableMoveNodesOnSupernodeResize) {
+	constructor(data, objectModel, labelUtil, enableMoveNodesOnSupernodeResize) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.oldObjectPositions = [];
 		this.newObjectPositions = [];
@@ -64,5 +65,9 @@ export default class CollapseSuperNodeInPlaceAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.collapseSuperNodeInPlace");
 	}
 }

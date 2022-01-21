@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -203,6 +203,29 @@ Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId
 						// expect(tipLeft).to.be.greaterThan(validationIconLeft);
 					}
 				});
+		});
+});
+
+Cypress.Commands.add("verifyTipDirectionForAction", (actionName, text, direction) => {
+	cy.get(".common-canvas-tooltip")
+		.then((tips) => {
+			// Get the visible tip
+			let visibleTip;
+			for (var idx = 0; idx < tips.length; idx++) {
+				if (tips[idx].textContent === text) {
+					visibleTip = tips[idx];
+					break;
+				}
+			}
+
+			if (visibleTip) {
+				// Verify tip is visible
+				cy.wrap(visibleTip).should("have.attr", "aria-hidden", "false");
+				// Verify text in tip
+				cy.wrap(visibleTip).should("have.text", text);
+				// Verify tip direction
+				cy.wrap(visibleTip).should("have.attr", "direction", direction);
+			}
 		});
 });
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,7 +158,7 @@ class TitleEditor extends Component {
 						value={this.props.title}
 						onChange={this.handleTitleChange}
 						onKeyPress={(e) => this._handleKeyPress(e)}
-						readOnly={this.props.labelEditable === false}
+						readOnly={this.props.labelEditable === false} // shows a non editable icon
 						labelText={this.labelText}
 						hideLabel
 						onFocus={this.textInputOnFocus}

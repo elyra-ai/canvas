@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,11 @@ import CanvasUtils from "../common-canvas/common-canvas-utils";
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	SUPER_NODE, USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON }
 	from "../common-canvas/constants/canvas-constants.js";
-import defaultMessages from "../../locales/command-actions/locales/en.json";
 
 export default class CreateSuperNodeAction extends Action {
-	constructor(data, objectModel, intl) {
+	constructor(data, objectModel, labelUtil) {
 		super(data);
-		this.intl = intl;
+		this.labelUtil = labelUtil;
 		this.data = data;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
@@ -261,8 +260,8 @@ export default class CreateSuperNodeAction extends Action {
 		});
 
 		const supernodeTemplate = {
-			label: this.getLabel("supernode.template.label"),
-			description: this.getLabel("supernode.template.description"),
+			label: this.labelUtil.getLabel("supernode.template.label"),
+			description: this.labelUtil.getLabel("supernode.template.description"),
 			image: this.data.externalUrl ? USE_DEFAULT_EXT_ICON : USE_DEFAULT_ICON,
 			inputs: supernodeInputPorts,
 			outputs: supernodeOutputPorts,
@@ -376,14 +375,14 @@ export default class CreateSuperNodeAction extends Action {
 				if (link[linkNodePortType] === port.id) {
 					const newPort = Object.assign({}, port);
 					newPort.id = port.id ? node.id + "_" + port.id : port.id;
-					newPort.label = this.getLabel("supernode.new.port.label");
+					newPort.label = this.labelUtil.getLabel("supernode.new.port.label");
 					this.addToCreateBindingNodeData(node.id, newPort, link, supernodePorts, type);
 				}
 			});
 		} else { // Add the first port.
 			const newPort = Object.assign({}, node[portType][0]);
 			newPort.id = newPort.id ? node.id + "_" + newPort.id : newPort.id;
-			newPort.label = this.getLabel("supernode.new.port.label");
+			newPort.label = this.labelUtil.getLabel("supernode.new.port.label");
 			this.addToCreateBindingNodeData(node.id, newPort, link, supernodePorts, type);
 		}
 	}
@@ -402,8 +401,8 @@ export default class CreateSuperNodeAction extends Action {
 
 	createBindingNode(link, bindingNodePort, pos) {
 		const bindingNodeTemplate = {
-			description: this.getLabel("supernode.binding.node.description"),
-			label: this.getLabel("supernode.binding.node.label"),
+			description: this.labelUtil.getLabel("supernode.binding.node.description"),
+			label: this.labelUtil.getLabel("supernode.binding.node.label"),
 			type: "binding"
 		};
 
@@ -415,10 +414,6 @@ export default class CreateSuperNodeAction extends Action {
 		};
 
 		return this.subAPIPipeline.createNode(bindingNodeData);
-	}
-
-	getLabel(labelId) {
-		return this.intl.formatMessage({ id: labelId, defaultMessage: defaultMessages[labelId] });
 	}
 
 	removeLinkFromSubflow(link, deleteLink) {
@@ -522,5 +517,9 @@ export default class CreateSuperNodeAction extends Action {
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.labelUtil.getActionLabel(this, "action.createSuperNode", { node_label: this.supernode.label });
 	}
 }

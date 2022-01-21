@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class ImageAction extends React.Component {
 			{ "disabled": disabled });
 
 		const image = (
-			<div className={className} data-id={this.props.action.name}>
+			<div data-id={this.props.action.name}>
 				<img
 					src={this.props.action.image.url}
 					onClick={this.applyAction}
@@ -74,11 +74,15 @@ class ImageAction extends React.Component {
 					{this.props.action.description.text}
 				</div>
 			);
+			const directions = ["left", "right", "top", "bottom"];
+			const tooltipDirection = this.props.action.image.tooltip_direction && directions.includes(this.props.action.image.tooltip_direction.toLowerCase())
+				? this.props.action.image.tooltip_direction.toLowerCase()
+				: "bottom";
 
 			display = (<Tooltip
 				id={tooltipId}
 				tip={tooltip}
-				direction="bottom"
+				direction={tooltipDirection}
 				className="properties-tooltips"
 				disable={disabled}
 			>
@@ -87,7 +91,9 @@ class ImageAction extends React.Component {
 		}
 
 		return (
-			display
+			<div className={className}>
+				{display}
+			</div>
 		);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@
 		}
 		.bx--select-input {
 			width: inherit; // Override carbon default width: auto
+			background-color: transparent; // Override carbon default background-color: #f4f4f4;
 			padding: 0 1.25rem 0 0;
 			box-shadow: 0 2px 0 0 $interactive-01;
 			&:hover {

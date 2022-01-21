@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@
 	}
 }
 
-.properties-control-panel:not(:empty) + .properties-control-panel:not(:empty) {
+.properties-control-panel + .properties-control-panel:not(:empty) {
 	// Total 40px spacing between two properties-control-panel classes
 	padding-top: $spacing-06;  // (24px + 16px from properties-ctrl-wrapper)
 }

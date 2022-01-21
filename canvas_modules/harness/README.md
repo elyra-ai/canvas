@@ -1,6 +1,6 @@
 <!--
 {% comment %}
-Copyright 2017-2020 Elyra Authors
+Copyright 2017-2022 Elyra Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ export NODE_ENV=development
 ./canvas_modules/common-canvas/build.sh
 cd canvas_modules/harness
 npm install
-grunt
+npm run build
 npm start
 ```
 
@@ -37,9 +37,8 @@ npm start
 ./canvas_modules/common-canvas/build.sh
 cd canvas_modules/harness
 npm install
-export NODE_ENV=production
-grunt
-npm start
+npm build-prod
+npm start-prod
 ```
 
 #### Connect to canvas:

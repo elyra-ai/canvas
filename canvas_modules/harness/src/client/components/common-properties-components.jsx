@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ import {
 	ACTION_PROPS_INFO,
 	ACTION_IMAGE_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
-import { CommonProperties } from "common-canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 class CommonPropertiesComponents extends React.Component {
 	constructor(props) {

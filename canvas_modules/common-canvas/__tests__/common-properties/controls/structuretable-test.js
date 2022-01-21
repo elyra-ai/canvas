@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -689,7 +689,7 @@ describe("structuretable control displays with no header and no button", () => {
 	it("should use dmDefault property values", () => {
 		// Open rename fields Summary Panel in structuretableParamDef
 		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
-		const container = table.find("div.properties-ft-container-panel");
+		const container = table.find("div.properties-at-buttons-container");
 		// Open field picker
 		const addColumnsButton = container.find("button.properties-add-fields-button");
 		addColumnsButton.simulate("click");
@@ -745,7 +745,7 @@ describe("structuretable multiselect edit works", () => {
 	it("mse table should render", () => {
 		// Open mse Summary Panel in structuretableParamDef
 		const table = propertyUtils.openSummaryPanel(wrapper, "ST_mse_table-summary-panel");
-		const container = table.find("div.properties-ft-container-panel");
+		const container = table.find("div.properties-at-buttons-container");
 
 		// Open field picker
 		const addColumnsButton = container.find("button.properties-add-fields-button");

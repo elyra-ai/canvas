@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import CodeMirror from "codemirror/lib/codemirror.js";
+let CodeMirror;
+function register(cm) {
+	CodeMirror = cm;
+	CodeMirror.registerHelper("hint", "r", rHint);
+}
 
 function forEach(arr, f) {
 	for (var e = arr.length, i = 0; i < e; ++i) {
@@ -63,7 +67,6 @@ function rHint(editor) {
 		return e.getTokenAt(cur);
 	});
 }
-CodeMirror.registerHelper("hint", "r", rHint);
 
 var rKeywords = "function|if|in|break|next|repeat|else|for" +
 	"|return|switch|while|try|tryCatch|stop|warning|require|library" +
@@ -147,3 +150,7 @@ function getCompletions(token, context) {
 	}
 	return found;
 }
+
+export {
+	register
+};

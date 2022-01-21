@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,8 @@ class CommonCanvas extends React.Component {
 			tipHandler: props.tipHandler,
 			layoutHandler: props.layoutHandler,
 			idGeneratorHandler: props.idGeneratorHandler,
-			selectionChangeHandler: props.selectionChangeHandler
+			selectionChangeHandler: props.selectionChangeHandler,
+			actionLabelHandler: props.actionLabelHandler
 		});
 		this.logger.logEndTimer("initializeController");
 	}

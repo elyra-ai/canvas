@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,6 +128,7 @@ _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_DECORATIONS", "Decorations");
 _defineConstant("TIP_LINKS", "Links");
+_defineConstant("TIP_STATE_TAG", "State Tag");
 
 _defineConstant("NOTIFICATION_MESSAGE_TYPE", {
 	INFO: "info",

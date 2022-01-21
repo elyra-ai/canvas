@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 import dagre from "dagre/dist/dagre.min.js";
-import { get, has } from "lodash";
+import { cloneDeep, get, has } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
 	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -86,6 +86,18 @@ export default class APIPipeline {
 			this.deleteNodesInternal(nodes);
 			this.deleteCommentsInternal(comments);
 		}, objectIds);
+	}
+
+	addAndUpdateObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "ADD_AND_UPDATE_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
+	deleteAndUpdateObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "DELETE_AND_UPDATE_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
 	}
 
 	// Returns an object containing and array of nodes and an array of comments
@@ -389,7 +401,7 @@ export default class APIPipeline {
 		selectedObjectIds.forEach((selObjId) => {
 			let node = this.getNode(selObjId);
 			if (node) {
-				node = JSON.parse(JSON.stringify(node));
+				node = cloneDeep(node);
 				node.id = this.objectModel.getUUID();
 				node.x_pos = 0;
 				node.y_pos = 0;
@@ -1122,13 +1134,11 @@ export default class APIPipeline {
 	}
 
 	updateLinks(links) {
-		if (links) {
-			links.forEach((l) => this.updateLink(l));
-		}
+		this.store.dispatch({ type: "UPDATE_LINKS", data: { linksToUpdate: links }, pipelineId: this.pipelineId });
 	}
 
 	updateLink(link) {
-		this.store.dispatch({ type: "UPDATE_LINK", data: { link: link }, pipelineId: this.pipelineId });
+		this.updateLinks([link]);
 	}
 
 	createNodeLinks(data) {

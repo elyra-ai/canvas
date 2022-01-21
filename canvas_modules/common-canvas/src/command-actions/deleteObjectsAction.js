@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data, objectModel, areDetachableLinksSupported) {
+	constructor(data, objectModel, labelUtil, areDetachableLinksSupported) {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.labelUtil = labelUtil;
+		this.areDetachableLinksSupported = areDetachableLinksSupported;
 		this.objectsInfo = [];
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.nodesToDelete = this.objectModel.getSelectedNodes();
@@ -32,7 +34,7 @@ export default class DeleteObjectsAction extends Action {
 
 		// Handle links to update when detachable links are enabled. These are links
 		// that will remain on the canvas as detached links when the nodes or
-		// comments they are connected to are deleted. They need to be updated to
+		// comments, they are connected to, are deleted. They need to be updated to
 		// have their source and target IDs removed (as appropriate based on
 		// whether the source and/or taget object is being deleted) which will
 		// indicate that the node is either partailly or fully detached.
@@ -57,6 +59,8 @@ export default class DeleteObjectsAction extends Action {
 
 		// Remove the supernode(s) from list of all nodes to avoid duplicating add/delete node.
 		this.nodesToDelete = this.nodesToDelete.filter((node) => !this.isSupernodeToBeDeleted(node));
+
+		this.actionLabel = this.createActionLabel();
 	}
 
 	// Returns an array of links to delete. This takes the current array of links
@@ -136,29 +140,48 @@ export default class DeleteObjectsAction extends Action {
 
 	// Standard methods
 	do() {
-		this.apiPipeline.updateLinks(this.linksToUpdateInfo.newLinks);
-		this.apiPipeline.deleteLinks(this.linksToDelete);
-		this.apiPipeline.deleteSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
-		this.apiPipeline.deleteNodes(this.nodesToDelete);
-		this.apiPipeline.deleteComments(this.commentsToDelete);
+		this.apiPipeline.deleteAndUpdateObjects({
+			linksToUpdate: this.linksToUpdateInfo.newLinks,
+			linksToDelete: this.linksToDelete,
+			supernodesToDelete: this.supernodesToDelete,
+			pipelinesToDelete: this.pipelinesToDelete,
+			extPipelineFlowsToDelete: this.extPipelineFlowsToDelete,
+			nodesToDelete: this.nodesToDelete,
+			commentsToDelete: this.commentsToDelete
+		});
 	}
 
 	undo() {
-		this.apiPipeline.addSupernodes(this.supernodesToDelete, this.pipelinesToDelete, this.extPipelineFlowsToDelete);
-
-		this.nodesToDelete.forEach((node) => {
-			this.apiPipeline.addNode(node);
+		this.apiPipeline.addAndUpdateObjects({
+			linksToUpdate: this.linksToUpdateInfo.oldLinks,
+			linksToAdd: this.linksToDelete,
+			supernodesToAdd: this.supernodesToDelete,
+			pipelinesToAdd: this.pipelinesToDelete,
+			extPipelineFlowsToAdd: this.extPipelineFlowsToDelete,
+			nodesToAdd: this.nodesToDelete,
+			commentsToAdd: this.commentsToDelete
 		});
-
-		this.commentsToDelete.forEach((comment) => {
-			this.apiPipeline.addComment(comment);
-		});
-
-		this.apiPipeline.addLinks(this.linksToDelete);
-		this.apiPipeline.updateLinks(this.linksToUpdateInfo.oldLinks);
 	}
 
 	redo() {
 		this.do();
+	}
+
+	getLabel() {
+		return this.actionLabel;
+	}
+
+	createActionLabel() {
+		if (this.areDetachableLinksSupported) {
+			return this.labelUtil.getActionLabel(this, "action.deleteNodesCommentsLinks",
+				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
+					comments_count: this.commentsToDelete.length,
+					links_count: this.linksToDelete.length
+				});
+		}
+		return this.labelUtil.getActionLabel(this, "action.deleteNodesComments", {
+			nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
+			comments_count: this.commentsToDelete.length
+		});
 	}
 }

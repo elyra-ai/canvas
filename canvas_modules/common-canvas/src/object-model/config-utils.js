@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ export default class CanvasUtils {
 			enableAssocLinkCreation: false,
 			enableAssocLinkType: ASSOC_STRAIGHT,
 			enableDragWithoutSelect: false,
+			enableDragToMoveSizeNodesComments: true,
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableToolbarLayout: "Top",
@@ -96,7 +97,8 @@ export default class CanvasUtils {
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
-				"links": true
+				"links": true,
+				"stateTag": true
 			}
 		};
 

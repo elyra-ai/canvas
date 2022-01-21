@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,9 @@ import { Calculator24 } from "@carbon/icons-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 
+import { register as registerPython } from "./languages/python-hint";
+import { register as registerR } from "./languages/r-hint";
+import { register as registerClem } from "./languages/CLEM-hint";
 
 // required for server side rendering.
 let cm = null;
@@ -47,11 +50,11 @@ if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
 	require("codemirror/mode/sql/sql");
 	require("codemirror/mode/python/python");
 	require("codemirror/mode/r/r");
-	require("./languages/python-hint");
-	require("./languages/r-hint");
-	require("./languages/CLEM");
-	require("./languages/CLEM-hint");
+	registerPython(cm);
+	registerR(cm);
+	registerClem(cm);
 }
+
 
 const pxPerChar = 8.5;
 const pxPerLine = 26;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 Elyra Authors
+ * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -312,7 +312,8 @@ MoveableTableRows.propTypes = {
 	emptyTableButtonLabel: PropTypes.string,
 	emptyTableButtonClickHandler: PropTypes.func,
 	disableRowMoveButtons: PropTypes.bool, // set by redux
-	addRemoveRows: PropTypes.bool // set by redux
+	addRemoveRows: PropTypes.bool, // set by redux
+	tableButtons: PropTypes.object // set in by redux
 };
 
 MoveableTableRows.defaultProps = {
@@ -322,7 +323,8 @@ MoveableTableRows.defaultProps = {
 const mapStateToProps = (state, ownProps) => ({
 	// check if row move buttons should be disabled for given propertyId
 	disableRowMoveButtons: ownProps.controller.isDisableRowMoveButtons(ownProps.propertyId),
-	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId)
+	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId),
+	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps)(MoveableTableRows);
