@@ -26,9 +26,8 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Zoom from "./d3-zoom-extension/src";
 const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
-import { get, set } from "lodash";
-import isEmpty from "lodash/isEmpty";
-import cloneDeep from "lodash/cloneDeep";
+import { cloneDeep, escape as escapeText, get, isEmpty, set,
+	unescape as unescapeText } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -2583,7 +2582,7 @@ export default class SVGCanvasRenderer {
 			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
 			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
 			.select("span")
-			.html((d) => d.label);
+			.html((d) => escapeText(d.label));
 
 		// Node Ellipsis Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
@@ -3338,7 +3337,7 @@ export default class SVGCanvasRenderer {
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
-				.html(dec.label);
+				.html(escapeText(dec.label));
 		} else {
 			labelSel.remove();
 		}
@@ -5113,7 +5112,7 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.select("div")
 			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
-			.html((c) => c.content);
+			.html((c) => escapeText(c.content));
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
@@ -5430,7 +5429,7 @@ export default class SVGCanvasRenderer {
 		const textArea = foreignObject
 			.append("xhtml:textarea")
 			.attr("class", data.className)
-			.text(data.text)
+			.text(unescapeText(data.text))
 			.on("keydown", function(d3Event) {
 				// Don't accept return key press when text is all on one line or
 				// if application doesn't want line feeds inserted in the label.
