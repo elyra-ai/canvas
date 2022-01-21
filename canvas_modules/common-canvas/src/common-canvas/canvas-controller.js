@@ -100,8 +100,9 @@ export default class CanvasController {
 		this.objectModel = new ObjectModel();
 		this.commandStack = new CommandStack();
 
-		// Cretae a util object to serve up translated messages when needed.
-		// The intl object will be provded to it when we get ot from common-canvas.jsx.
+		// Create a util object to serve up translated messages when needed.
+		// The intl object will be provided to labelUtil when we get it from
+		// common-canvas.jsx.
 		this.labelUtil = new LabelUtil();
 
 		// The following two functions must bind to this so that the correct canvas
