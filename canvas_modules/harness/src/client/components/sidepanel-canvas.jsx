@@ -904,6 +904,16 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableEditingActions = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedEditingActions" // Set ID to corresponding field in App.js state
+				labelText="Enable Editing Actions"
+				toggled={this.props.getStateValue("selectedEditingActions")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
 			<FormGroup
 				legendText="Interaction Type"
@@ -1466,6 +1476,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCreateSupernodeNonContiguous}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableEditingActions}
 					{divider}
 					{enableObjectModel}
 					{divider}

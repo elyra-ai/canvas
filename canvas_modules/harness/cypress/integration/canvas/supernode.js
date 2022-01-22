@@ -347,7 +347,7 @@ describe("Test selecting the canvas background of expanded supernodes", function
 		cy.verifyNumberOfSelectedObjects(2);
 
 		// Click on canvas to clear selection
-		cy.get("#canvas-div-0").click(100, 100);
+		cy.clickCanvasAt(100, 100);
 		cy.verifyNumberOfSelectedObjects(0);
 
 		// Select a node and ctrl/cmd click canvas background of expanded supernode

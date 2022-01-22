@@ -105,7 +105,7 @@ describe("Test basic undo/redo operations", function() {
 		verifyCommentIsNotMoved("This comment box should be edited.");
 
 		// Click somewhere on canvas to deselect comment
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.clickCanvasAt(1, 1);
 
 		// Delete node
 		cy.deleteNodeUsingToolbar("Var. File");

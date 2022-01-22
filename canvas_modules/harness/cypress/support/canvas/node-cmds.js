@@ -68,7 +68,6 @@ Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
-
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
 		.then((nodeId) => {
@@ -574,4 +573,3 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 		}
 	});
 });
-

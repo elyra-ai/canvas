@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+// Click the canvas at position {x,y}
+Cypress.Commands.add("clickCanvasAt", (x, y) => {
+	cy.get("#canvas-div-0").click(x, y);
+});
+
 // Move the mouse to the {x,y} position
 Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);

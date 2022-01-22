@@ -560,6 +560,10 @@ Cypress.Commands.add("verifyOptionInContextMenu", (optionName) => {
 	cy.getOptionFromContextMenu(optionName).should("have.length", 1);
 });
 
+Cypress.Commands.add("verifyOptionNotInContextMenu", (optionName) => {
+	cy.getOptionFromContextMenu(optionName).should("not.exist");
+});
+
 Cypress.Commands.add("verifyContextMenuPosition", (distFromLeft, distFromTop) => {
 	// first() returns context menu
 	cy.get(".context-menu-popover").first()
