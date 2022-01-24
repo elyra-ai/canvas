@@ -68,6 +68,7 @@ export default class CanvasUtils {
 			enableHighlightUnavailableNodes: false,
 			enableMoveNodesOnSupernodeResize: true,
 			enableExternalPipelineFlows: true,
+			enableEditingActions: true,
 			enableDisplayFullLabelOnHover: false,
 			enableDropZoneOnExternalDrag: false,
 			enableRightFlyoutUnderToolbar: false,

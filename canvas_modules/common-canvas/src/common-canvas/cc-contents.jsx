@@ -119,21 +119,24 @@ class CanvasContents extends React.Component {
 	}
 
 	onCut(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.cutToClipboard();
 		}
 	}
 
 	onCopy(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.copyToClipboard();
 		}
 	}
 
 	onPaste(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId) {
+		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.pasteFromClipboard();
 		}

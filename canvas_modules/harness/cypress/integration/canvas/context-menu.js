@@ -44,13 +44,13 @@ describe("Test of context menu", function() {
 		cy.verifyContextMenuPosition("1000px", "339px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.clickCanvasAt(1, 1);
 		cy.clickToolbarPaletteOpen();
 		cy.rightClickToDisplayContextMenu(940, 300);
 		cy.verifyContextMenuPosition("940px", "300px");
 
 		// Test the context menu is pushed to the left correctly when the palette is open AND the right flyout is open
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.clickCanvasAt(1, 1);
 		cy.getNodeWithLabel("Na_to_K").dblclick();
 		cy.rightClickToDisplayContextMenu(640, 300);
 		cy.verifyContextMenuPosition("640px", "300px");
@@ -64,17 +64,17 @@ describe("Test of context menu", function() {
 		cy.verifySubmenuPushedUpBy("91px");
 
 		// Test that, when a set of objects are selected, a click opening the context menu will not clear the selections
-		cy.get("#canvas-div-0").click(1, 1); // To close context menu
-		cy.get("#canvas-div-0").click(1, 1); // To remove selection on Neural Net node
+		cy.clickCanvasAt(1, 1); // To close context menu
+		cy.clickCanvasAt(1, 1); // To remove selection on Neural Net node
 		cy.ctrlOrCmdClickNode("C5.0");
 		cy.ctrlOrCmdClickNode("Neural Net");
 		cy.ctrlOrCmdClickNode("Define Types");
 		cy.verifyNumberOfSelectedObjects(3);
 		cy.rightClickToDisplayContextMenu(1000, 300);
 		cy.verifyNumberOfSelectedObjects(3);
-		cy.get("#canvas-div-0").click(1, 1); // Context menu is closed on localhost but not on travis build
+		cy.clickCanvasAt(1, 1); // Context menu is closed on localhost but not on travis build
 		cy.verifyNumberOfSelectedObjects(3);
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.clickCanvasAt(1, 1);
 		// TODO: This assertion fails on travis build because context menu is open
 		cy.verifyNumberOfSelectedObjects(0);
 	});
@@ -84,7 +84,7 @@ describe("Test of context menu", function() {
 		cy.ctrlOrCmdClickNode("Neural Net");
 		cy.ctrlOrCmdClickNode("Define Types");
 		cy.verifyNumberOfSelectedObjects(3);
-		cy.get("#canvas-div-0").click(1, 1);
+		cy.clickCanvasAt(1, 1);
 		cy.verifyNumberOfSelectedObjects(0);
 	});
 

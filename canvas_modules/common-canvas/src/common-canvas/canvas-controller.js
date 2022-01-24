@@ -1996,7 +1996,48 @@ export default class CanvasController {
 			menuDefinition = menuDefinition.concat({ divider: true },
 				{ action: "saveToPalette", label: this.labelUtil.getLabel("node.saveToPalette") });
 		}
-		return (menuDefinition);
+
+		// If we are NOT allowing editing actions (perhaps because we are showing a
+		// read-only canvas), remove any actions from the context menu that might
+		// alter the canvas objects.
+		if (this.getCanvasConfig().enableEditingActions === false) {
+			menuDefinition = this.filterOutEditingActions(menuDefinition);
+		}
+
+		return menuDefinition;
+	}
+
+	// Returns a new menu based, on the menu passed in, where all actions that
+	// might alter the canvas have been removed.
+	filterOutEditingActions(menuDefinition) {
+		const newMenuDefinition = [];
+		menuDefinition.forEach((menuEntry) => {
+			if (menuEntry.submenu) {
+				const newSubMenu = this.filterOutEditingActions(menuEntry.menu);
+				if (newSubMenu && newSubMenu.length > 0) {
+					menuEntry.menu = newSubMenu;
+					newMenuDefinition.push(menuEntry);
+				}
+
+			} else if (this.isNonEditingAction(menuEntry.action)) {
+				newMenuDefinition.push(menuEntry);
+			}
+		});
+		return newMenuDefinition;
+	}
+
+	// Returns true if the action string passed in is one of the actions
+	// that do not alter the canvas objects. This is useful for filtering
+	// out editing actions that should be unavailable with a read-only canvas.
+	isNonEditingAction(action) {
+		return (
+			action === "selectAll" ||
+			action === "displaySubPipeline" ||
+			action === "highlightBranch" ||
+			action === "highlightUpstream" ||
+			action === "highlightDownstream" ||
+			action === "unhighlight"
+		);
 	}
 
 	// Returns whether the 'Create Supernode' context menu option is required or
