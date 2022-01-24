@@ -203,12 +203,16 @@ class CommonCanvasToolbar extends React.Component {
 		}
 
 		if (typeof toolbarConfig !== "undefined") {
-			this.applyToolState("undo", toolbarConfig, this.props.canUndo);
-			this.applyToolState("redo", toolbarConfig, this.props.canRedo);
-			this.applyToolState("cut", toolbarConfig, this.props.canCutCopy);
-			this.applyToolState("copy", toolbarConfig, this.props.canCutCopy);
-			this.applyToolState("paste", toolbarConfig, this.props.canPaste);
-			this.applyToolState("deleteSelectedObjects", toolbarConfig, this.props.canDelete);
+			const editingAllowed = this.props.enableEditingActions;
+			this.applyToolState("undo", toolbarConfig, editingAllowed && this.props.canUndo);
+			this.applyToolState("redo", toolbarConfig, editingAllowed && this.props.canRedo);
+			this.applyToolState("cut", toolbarConfig, editingAllowed && this.props.canCutCopy);
+			this.applyToolState("copy", toolbarConfig, editingAllowed && this.props.canCutCopy);
+			this.applyToolState("paste", toolbarConfig, editingAllowed && this.props.canPaste);
+			this.applyToolState("deleteSelectedObjects", toolbarConfig, editingAllowed && this.props.canDelete);
+			this.applyToolState("createAutoComment", toolbarConfig, editingAllowed);
+			this.applyToolState("arrangeHorizontally", toolbarConfig, editingAllowed);
+			this.applyToolState("arrangeVertically", toolbarConfig, editingAllowed);
 		}
 		return toolbarConfig;
 	}
@@ -294,6 +298,7 @@ CommonCanvasToolbar.propTypes = {
 	notificationMessages: PropTypes.array,
 	notificationConfig: PropTypes.object,
 	enableInternalObjectModel: PropTypes.bool,
+	enableEditingActions: PropTypes.bool,
 	canUndo: PropTypes.bool,
 	canRedo: PropTypes.bool,
 	canCutCopy: PropTypes.bool,
@@ -312,6 +317,7 @@ const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
 	notificationMessages: state.notifications,
 	enableInternalObjectModel: state.canvasconfig.enableInternalObjectModel,
+	enableEditingActions: state.canvasconfig.enableEditingActions,
 	canUndo: ownProps.canvasController.canUndo(),
 	canRedo: ownProps.canvasController.canRedo(),
 	canCutCopy: ownProps.canvasController.canCutCopy(),

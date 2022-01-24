@@ -53,15 +53,25 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		cy.simulateClickInBrowsersEditMenu("cut");
 		cy.verifyNumberOfNodes(5);
 
+		// Do some setup so the toolbar buttons are all enabled
+		cy.clickNode("Binding (exit) node"); // Selecting an object will normally cause cut, copy & paste to be enabled
+
+		// Check that the default toolbar icons that edit the canvas are disabled.
+		cy.verifyToolbarButtonEnabled("undo", false);
+		cy.verifyToolbarButtonEnabled("redo", false);
+		cy.verifyToolbarButtonEnabled("cut", false);
+		cy.verifyToolbarButtonEnabled("copy", false);
+		cy.verifyToolbarButtonEnabled("paste", false);
+		cy.verifyToolbarButtonEnabled("createAutoComment", false);
 	});
 
 	it("Test actions can be performed when enableEditingActions = true", function() {
 		cy.setCanvasConfig({ "selectedEditingActions": true });
-		testWithEdittingActionsSet();
+		testWithEditingActionsSet();
 	});
 
 	it("Test actions can be performed when enableEditingActions is not set", function() {
-		testWithEdittingActionsSet();
+		testWithEditingActionsSet();
 	});
 });
 
@@ -69,7 +79,7 @@ describe("Test whether actions can be performed depending on enableEditingAction
 // This method tests varions functions to make sure they are possible either
 // when enableEditingActions is set to 'true' or when enableEditingActions is
 // not set in which case it should default to 'true'.
-function testWithEdittingActionsSet() {
+function testWithEditingActionsSet() {
 	// Display context menu for canvas. We should have both 'Select all'
 	// and 'New Comment'.
 	cy.rightClickToDisplayContextMenu(800, 25);
@@ -100,4 +110,17 @@ function testWithEdittingActionsSet() {
 	cy.clickNode("Binding (entry) node");
 	cy.simulateClickInBrowsersEditMenu("cut");
 	cy.verifyNumberOfNodes(3);
+
+
+	// Do some setup so the toolbar buttons are all enabled
+	cy.clickNode("Binding (exit) node"); // Selecting an object will normally cause cut, copy & paste to be enabled
+	cy.clickToolbarUndo(); // Clicking undo here will normally cause the redo button to be enabled
+
+	// Check that the default toolbar icons that edit the canvas are disabled.
+	cy.verifyToolbarButtonEnabled("undo", true);
+	cy.verifyToolbarButtonEnabled("redo", true);
+	cy.verifyToolbarButtonEnabled("cut", true);
+	cy.verifyToolbarButtonEnabled("copy", true);
+	cy.verifyToolbarButtonEnabled("paste", true);
+	cy.verifyToolbarButtonEnabled("createAutoComment", true);
 }
