@@ -23,7 +23,7 @@ import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../con
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
@@ -33,14 +33,16 @@ import React from "react";
 class VirtualizedTable extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
+		const updatedState = {};
 		if (nextProps.rowCount !== prevState.rowCount) {
-			return ({ rowCount: nextProps.rowCount });
+			updatedState.rowCount = nextProps.rowCount;
 		}
 		// Don't check following condition after column is resized
-		if (!prevState.columnResized && nextProps.columns !== prevState.columns) {
-			return ({ columns: nextProps.columns });
+		// if (!prevState.columnResized && !isEqual(nextProps.columns, prevState.columns)) { // fix this!!
+		if (!isEqual(nextProps.columns, prevState.columns)) {
+			updatedState.columns = nextProps.columns;
 		}
-		return ({});
+		return (updatedState);
 	}
 
 	constructor(props, context) {
@@ -222,14 +224,13 @@ class VirtualizedTable extends React.Component {
 
 		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
-		const resizeElem = this.props.resizable && !this.isLastColumn(dataKey)
+		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
 				axis="x"
 				defaultClassName="ta-lr-virtualized-table-header-resize"
 				defaultClassNameDragging="ta-lr-virtualized-table-header-resize-active"
 				onDrag={
 					(evt, { deltaX }) => {
-						evt.stopPropagation();
 						this.resizeColumn({ dataKey, deltaX });
 					}
 				}
@@ -265,19 +266,16 @@ class VirtualizedTable extends React.Component {
 	}
 
 	resizeColumn({ dataKey, deltaX }) {
-		let minColWidth = 50; // Test value. Get the actual value from design.
+		const minColWidth = 60; // Test value. Get the actual value from design.
 		this.setState((prevState) => {
 
 			const columns = prevState.columns;
 
 			const resizedColumn = this.getColumnIndex(columns, dataKey);
-			console.log("Before resize width: " + columns[resizedColumn].width);
 			if ((columns[resizedColumn].width + deltaX) > minColWidth && (columns[resizedColumn + 1].width - deltaX) > minColWidth) {
 				columns[resizedColumn].width += deltaX;
 				columns[resizedColumn + 1].width -= deltaX;
 			}
-			console.log("After resize width: " + columns[resizedColumn].width);
-			console.log("After resize width of next column: " + columns[resizedColumn + 1].width);
 			return {
 				columnResized: true,
 				columns: columns
@@ -458,7 +456,6 @@ VirtualizedTable.defaultProps = {
 VirtualizedTable.propTypes = {
 	tableLabel: PropTypes.string,
 	selectable: PropTypes.bool,
-	resizable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,
 	disableHeader: PropTypes.bool,

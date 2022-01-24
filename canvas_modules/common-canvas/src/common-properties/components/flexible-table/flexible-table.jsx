@@ -344,7 +344,8 @@ class FlexibleTable extends React.Component {
 	*     "key": string,
 	*     "label": string,
 	*     "width": integer or string if containts 'px',
-	*     "description": optional string
+	*     "description": optional string,
+	*     "resizable": optional string
 	*   }
 	* ]
 	* @param columnWidths
@@ -370,6 +371,7 @@ class FlexibleTable extends React.Component {
 				width: width,
 				description: columnDef.description,
 				headerLabel: headerLabel,
+				resizable: columnDef.resizable,
 				operation: columnDef.operation
 			});
 		}
@@ -465,7 +467,6 @@ class FlexibleTable extends React.Component {
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable
-									resizable
 									tableLabel={this.props.tableLabel}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}

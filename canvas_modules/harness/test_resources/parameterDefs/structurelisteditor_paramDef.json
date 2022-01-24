@@ -1207,7 +1207,8 @@
             },
             "width": 10,
             "edit_style": "inline",
-            "summary": true
+            "summary": true,
+            "resizable": true
           },
           {
             "parameter_ref": "doubleName",

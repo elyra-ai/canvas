@@ -366,7 +366,8 @@ export default class AbstractTable extends React.Component {
 			width: columnDef.width,
 			content: cellContent,
 			className: cellClassName,
-			value: this.props.controller.getPropertyValue(propertyId)
+			value: this.props.controller.getPropertyValue(propertyId),
+			resizable: columnDef.resizable
 		};
 	}
 	_getCustomCtrlContent(propertyId, columnDef, defaultContent, tableInfo) {
@@ -711,6 +712,7 @@ export default class AbstractTable extends React.Component {
 					"label": columnLabel,
 					"width": columnDef.width,
 					"description": (columnDef.description ? columnDef.description.text : null),
+					"resizable": columnDef.resizable ? columnDef.resizable : false,
 					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
