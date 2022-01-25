@@ -129,6 +129,7 @@ CommonCanvas.propTypes = {
 	layoutHandler: PropTypes.func,
 	idGeneratorHandler: PropTypes.func,
 	selectionChangeHandler: PropTypes.func,
+	actionLabelHandler: PropTypes.func,
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
 	bottomPanelContent: PropTypes.object,

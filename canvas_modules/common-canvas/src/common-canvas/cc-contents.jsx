@@ -281,6 +281,11 @@ class CanvasContents extends React.Component {
 
 	drop(event) {
 		event.preventDefault();
+
+		if (!this.props.canvasConfig.enableEditingActions) {
+			return;
+		}
+
 		this.first = false;
 		this.second = false;
 		this.setIsDropZoneDisplayed(false);

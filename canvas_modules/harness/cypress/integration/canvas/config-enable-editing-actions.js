@@ -17,6 +17,7 @@ describe("Test whether actions can be performed depending on enableEditingAction
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");
+		cy.openCanvasPalette("commonPalette.json");
 	});
 
 	it("Test actions CANNOT be performed when enableEditingActions = false", function() {
@@ -63,6 +64,13 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		cy.verifyToolbarButtonEnabled("copy", false);
 		cy.verifyToolbarButtonEnabled("paste", false);
 		cy.verifyToolbarButtonEnabled("createAutoComment", false);
+
+		// Check that when a node is dragged from the palette to the canvas
+		// a node is NOT created.
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("OPERATIONS");
+		cy.dragNodeToPosition("Append", 400, 400);
+		cy.verifyNumberOfNodes(5);
 	});
 
 	it("Test actions can be performed when enableEditingActions = true", function() {
@@ -115,6 +123,7 @@ function testWithEditingActionsSet() {
 	// Do some setup so the toolbar buttons are all enabled
 	cy.clickNode("Binding (exit) node"); // Selecting an object will normally cause cut, copy & paste to be enabled
 	cy.clickToolbarUndo(); // Clicking undo here will normally cause the redo button to be enabled
+	cy.verifyNumberOfNodes(4);
 
 	// Check that the default toolbar icons that edit the canvas are disabled.
 	cy.verifyToolbarButtonEnabled("undo", true);
@@ -123,4 +132,12 @@ function testWithEditingActionsSet() {
 	cy.verifyToolbarButtonEnabled("copy", true);
 	cy.verifyToolbarButtonEnabled("paste", true);
 	cy.verifyToolbarButtonEnabled("createAutoComment", true);
+
+	// Check that when a node is dragged from the palette to the canvas
+	// a node IS created.
+	cy.clickToolbarPaletteOpen();
+	cy.clickCategory("OPERATIONS");
+	cy.dragNodeToPosition("Append", 400, 400);
+	cy.verifyNumberOfNodes(5); // There were 4 before so now there should be 5
+
 }
