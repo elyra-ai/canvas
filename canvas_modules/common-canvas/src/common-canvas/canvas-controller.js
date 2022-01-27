@@ -2057,9 +2057,10 @@ export default class CanvasController {
 	}
 
 	contextMenuHandler(source) {
+		this.contextMenuSource = source;
 		const defMenu = this.createDefaultMenu(source);
 		let menuDefinition;
-		this.contextMenuSource = source;
+
 		if (typeof this.handlers.contextMenuHandler === "function") {
 			const menuCustom = this.handlers.contextMenuHandler(source, defMenu);
 			if (menuCustom && menuCustom.length > 0) {
@@ -2072,11 +2073,14 @@ export default class CanvasController {
 		// If we are NOT allowing editing actions (perhaps because we are showing a
 		// read-only canvas), remove any actions from the context menu that might
 		// alter the canvas objects.
-		if (this.getCanvasConfig().enableEditingActions === false) {
+		if (menuDefinition && menuDefinition.length > 0 &&
+				this.getCanvasConfig().enableEditingActions === false) {
 			menuDefinition = this.filterOutEditingActions(menuDefinition);
 		}
 
-		this.openContextMenu(menuDefinition);
+		if (menuDefinition && menuDefinition.length > 0) {
+			this.openContextMenu(menuDefinition);
+		}
 	}
 
 	getContextMenuPos() {
