@@ -1997,13 +1997,6 @@ export default class CanvasController {
 				{ action: "saveToPalette", label: this.labelUtil.getLabel("node.saveToPalette") });
 		}
 
-		// If we are NOT allowing editing actions (perhaps because we are showing a
-		// read-only canvas), remove any actions from the context menu that might
-		// alter the canvas objects.
-		if (this.getCanvasConfig().enableEditingActions === false) {
-			menuDefinition = this.filterOutEditingActions(menuDefinition);
-		}
-
 		return menuDefinition;
 	}
 
@@ -2019,7 +2012,7 @@ export default class CanvasController {
 					newMenuDefinition.push(menuEntry);
 				}
 
-			} else if (this.isNonEditingAction(menuEntry.action)) {
+			} else if (!this.isEditingAction(menuEntry.action)) {
 				newMenuDefinition.push(menuEntry);
 			}
 		});
@@ -2027,16 +2020,27 @@ export default class CanvasController {
 	}
 
 	// Returns true if the action string passed in is one of the actions
-	// that do not alter the canvas objects. This is useful for filtering
+	// that would alter the canvas objects. This is useful for filtering
 	// out editing actions that should be unavailable with a read-only canvas.
-	isNonEditingAction(action) {
+	isEditingAction(action) {
 		return (
-			action === "selectAll" ||
-			action === "displaySubPipeline" ||
-			action === "highlightBranch" ||
-			action === "highlightUpstream" ||
-			action === "highlightDownstream" ||
-			action === "unhighlight"
+			action === "createComment" ||
+			action === "disconnectNode" ||
+			action === "cut" ||
+			action === "copy" ||
+			action === "paste" ||
+			action === "undo" ||
+			action === "redo" ||
+			action === "deleteSelectedObjects" ||
+			action === "createSuperNode" ||
+			action === "createSuperNodeExternal" ||
+			action === "deconstructSuperNode" ||
+			action === "collapseSuperNodeInPlace" ||
+			action === "expandSuperNodeInPlace" ||
+			action === "convertSuperNodeExternalToLocal" ||
+			action === "convertSupernodeLocalToExternal" ||
+			action === "deleteLink" ||
+			action === "saveToPalette"
 		);
 	}
 
@@ -2054,15 +2058,25 @@ export default class CanvasController {
 
 	contextMenuHandler(source) {
 		const defMenu = this.createDefaultMenu(source);
+		let menuDefinition;
 		this.contextMenuSource = source;
 		if (typeof this.handlers.contextMenuHandler === "function") {
-			const menuDef = this.handlers.contextMenuHandler(source, defMenu);
-			if (menuDef && menuDef.length > 0) {
-				this.openContextMenu(menuDef);
+			const menuCustom = this.handlers.contextMenuHandler(source, defMenu);
+			if (menuCustom && menuCustom.length > 0) {
+				menuDefinition = menuCustom;
 			}
 		} else {
-			this.openContextMenu(defMenu);
+			menuDefinition = defMenu;
 		}
+
+		// If we are NOT allowing editing actions (perhaps because we are showing a
+		// read-only canvas), remove any actions from the context menu that might
+		// alter the canvas objects.
+		if (this.getCanvasConfig().enableEditingActions === false) {
+			menuDefinition = this.filterOutEditingActions(menuDefinition);
+		}
+
+		this.openContextMenu(menuDefinition);
 	}
 
 	getContextMenuPos() {
