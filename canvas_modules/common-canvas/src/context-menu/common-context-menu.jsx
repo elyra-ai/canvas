@@ -111,16 +111,24 @@ class CommonContextMenu extends React.Component {
 		const menuItems = [];
 
 		let runningYPos = 0;
+		// Records if we have just displayed a divider. This is useful because we
+		// only want to display one divider if there is a divider element
+		// immediately after another divider element in the menuDefintion array.
+		let previousDivider = false;
 
 		for (let i = 0; i < menuDefinition.length; ++i) {
 			const divider = menuDefinition[i].divider;
 			const submenu = menuDefinition[i].submenu;
 
 			if (divider) {
-				menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
-				runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
+				if (!previousDivider) {
+					menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
+					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
+					previousDivider = true;
+				}
 
 			} else if (submenu) {
+				previousDivider = false;
 				const submenuItems = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
 				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
 				const submenuSize = this.calculateMenuSize(menuDefinition[i].menu);
@@ -157,6 +165,7 @@ class CommonContextMenu extends React.Component {
 				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 
 			} else {
+				previousDivider = false;
 				const disabled = { disabled: menuDefinition[i].enable === false };
 				menuItems.push(
 					<MenuItem onClick={this.itemSelected.bind(null, menuDefinition[i].action)} key={i + 1} {...disabled}>
