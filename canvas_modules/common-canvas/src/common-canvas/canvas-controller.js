@@ -2078,9 +2078,17 @@ export default class CanvasController {
 			menuDefinition = this.filterOutEditingActions(menuDefinition);
 		}
 
-		if (menuDefinition && menuDefinition.length > 0) {
+		if (menuDefinition && menuDefinition.length > 0 &&
+				!this.allDividers(menuDefinition)) {
 			this.openContextMenu(menuDefinition);
 		}
+	}
+
+	// Returns true if the menu only contains dividers. This might happen if
+	// action items have been removed from a menu and left only dividers behind.
+	allDividers(menu) {
+		const dividers = menu.filter((m) => m.divider);
+		return menu.length === dividers.length;
 	}
 
 	getContextMenuPos() {
