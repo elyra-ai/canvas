@@ -24,9 +24,13 @@ import { has } from "lodash";
 export default class TruncatedContentTooltip extends React.Component {
 
 	render() {
+		let tooltipText = this.props.tooltipText;
+		if (typeof this.props.tooltipText !== "object") {
+			tooltipText = String(this.props.tooltipText);
+		}
 		const tooltip = (
 			<div className="properties-tooltips">
-				{String(this.props.tooltipText)}
+				{tooltipText}
 			</div>
 		);
 		return (
@@ -50,6 +54,7 @@ TruncatedContentTooltip.propTypes = {
 	content: PropTypes.element.isRequired,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,
+		PropTypes.object.isRequired,
 		PropTypes.number.isRequired,
 		PropTypes.bool.isRequired,
 		PropTypes.array.isRequired

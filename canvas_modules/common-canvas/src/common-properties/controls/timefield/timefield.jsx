@@ -18,55 +18,41 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { TextInput } from "carbon-components-react";
+import { parse, format, isValid } from "date-fns";
+import classNames from "classnames";
+
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import moment from "moment";
-import { DEFAULT_TIME_FORMAT, STATES } from "./../../constants/constants.js";
-import classNames from "classnames";
-import { formatMessage } from "./../../util/property-utils.js";
-
+import { DEFAULT_TIME_FORMAT, STATES } from "./../../constants/constants";
 
 class TimefieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(props.propertyId);
+		this.value = this.props.value;
+		if (typeof this.value !== "string") {
+			this.value = "";
+		}
 	}
 
 	handleChange(evt) {
-		let stringValue = null;
+		let formattedValue = null;
+		this.value = "";
 
 		if (evt.target.value) {
-			const format = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
-			const mom = moment.utc(evt.target.value, format, true);
-			if (mom.isValid()) {
-				stringValue = mom.format("HH:mm:ssZ"); // If moment is valid save as ISO format
+			this.value = evt.target.value;
+			const timeFormat = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
+			const time = parse(evt.target.value, timeFormat, new Date());
+			if (isValid(time)) {
+				formattedValue = format(time, "HH:mm:ss:xxx"); // If moment is valid save as ISO format
 			} else {
-				stringValue = evt.target.value; // Otherwise just save as invalid entered string
+				formattedValue = evt.target.value; // Otherwise just save as invalid entered string
 			}
-		} else {
-			stringValue = null;
 		}
-
-		this.props.controller.updatePropertyValue(this.props.propertyId, stringValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, formattedValue);
 	}
 
 	render() {
-
-		let displayValue = "";
-		if (this.props.value) {
-			const format = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
-			const mom = moment.utc(this.props.value, "HH:mm:ssZ", true);
-
-			if (mom.isValid()) {
-				try {
-					displayValue = mom.format(format);
-				} catch (err) { // This will only happen if the caller provides something other than a string as the format.
-					displayValue = formatMessage(this.props.controller.getReactIntl(), "datetimefield.format.error.message");
-				}
-			} else {
-				displayValue = this.props.value;
-			}
-		}
 		const className = classNames("properties-timefield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
@@ -79,7 +65,7 @@ class TimefieldControl extends React.Component {
 					disabled={this.props.state === STATES.DISABLED}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
-					value={displayValue}
+					value={this.value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					light={this.props.controller.getLight()}

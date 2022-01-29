@@ -17,75 +17,89 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
-import ValidationMessage from "./../../components/validation-message";
-import * as ControlUtils from "./../../util/control-utils";
-import moment from "moment";
-import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
+import { DatePicker, DatePickerInput } from "carbon-components-react";
 import classNames from "classnames";
-import { formatMessage } from "./../../util/property-utils.js";
+import { parse, format } from "date-fns";
 
+import * as ControlUtils from "./../../util/control-utils";
+import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants";
 
 class DatefieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
+		this.getDateFormat = this.getDateFormat.bind(this);
+		this.getDateFormat = this.getDateFormat.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(evt) {
-		let stringValue = null;
-
-		if (evt.target.value) {
-			const format = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-			const mom = moment.utc(evt.target.value, format, true);
-			// Catch large year numbers which are parsed OK in the specified format
-			// but cannot be parsed as the ISO format when being rendered.
-			if (mom.isValid() && mom.year() < 10000) {
-				stringValue = mom.format("YYYY-MM-DD"); // If moment is valid save as ISO format
-			} else {
-				stringValue = evt.target.value; // Otherwise just save as invalid entered string
-			}
-		} else {
-			stringValue = null;
+	/*
+	* flatpickr (used by carbon) date formats
+	*/
+	getCarbonDateFormat() {
+		let dateFormat = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
+		while ((dateFormat.match(/y/g) || []).length > 1) {
+			dateFormat = dateFormat.replace("y", "");
 		}
+		while ((dateFormat.match(/Y/g) || []).length > 1) {
+			dateFormat = dateFormat.replace("Y", "");
+		}
+		while ((dateFormat.match(/m/g) || []).length > 1) {
+			dateFormat = dateFormat.replace("m", "");
+		}
+		while ((dateFormat.match(/M/g) || []).length > 1) {
+			dateFormat = dateFormat.replace("M", "");
+		}
+		dateFormat = dateFormat.replaceAll("D", "d"); // never format to day of the week
+		while ((dateFormat.match(/d/g) || []).length > 1) {
+			dateFormat = dateFormat.replace("d", "");
+		}
+		return dateFormat;
+	}
 
+	/*
+	* date-fns date format
+	*/
+	getDateFormat() {
+		let dateFormat = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
+		dateFormat = dateFormat.replaceAll("Y", "y").replaceAll("D", "d");
+		return dateFormat;
+	}
+
+	handleChange(dateArray) {
+		let stringValue = null;
+		const date = dateArray[0];
+		if (date) {
+			stringValue = format(date, this.getDateFormat());
+		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, stringValue);
 	}
 
 	render() {
-		let displayValue = "";
-		if (this.props.value) {
-			const format = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-			const mom = moment.utc(this.props.value, moment.ISO_8601, true);
-
-			if (mom.isValid()) {
-				try {
-					displayValue = mom.format(format);
-				} catch (err) { // This will only happen if the caller provides something other than a string as the format.
-					displayValue = formatMessage(this.props.controller.getReactIntl(), "datetimefield.format.error.message");
-				}
-			} else {
-				displayValue = this.props.value;
-			}
+		let date = this.props.value;
+		if (date) {
+			date = parse(this.props.value, this.getDateFormat(), new Date());
 		}
-		const className = classNames("properties-datefield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
-			this.props.messageInfo ? this.props.messageInfo.type : null);
-		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
+		const className = classNames("properties-datefield", { "hide": this.props.state === STATES.HIDDEN });
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<TextInput
-					{...validationProps}
-					autoComplete="off"
-					id={this.id}
-					disabled={this.props.state === STATES.DISABLED}
-					placeholder={this.props.control.additionalText}
-					onChange={this.handleChange.bind(this)}
-					value={displayValue}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
+				<DatePicker
+					datePickerType="single"
+					dateFormat={this.getCarbonDateFormat()}
 					light={this.props.controller.getLight()}
-				/>
-				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
+					disabled={this.props.state === STATES.DISABLED}
+					locale={this.props.controller.getReactIntl().locale}
+					value={date}
+					onChange={this.handleChange.bind(this)}
+				>
+					<DatePickerInput
+						id={this.id}
+						labelText={this.props.controlItem}
+						hideLabel={this.props.tableControl}
+						disabled={this.props.state === STATES.DISABLED}
+						placeholder={this.props.control.additionalText}
+					/>
+				</DatePicker>
 			</div>
 		);
 	}
@@ -98,14 +112,12 @@ DatefieldControl.propTypes = {
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.string, // pass in by redux
-	messageInfo: PropTypes.object // pass in by redux
+	value: PropTypes.string // pass in by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
-	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	state: ownProps.controller.getControlState(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(DatefieldControl);

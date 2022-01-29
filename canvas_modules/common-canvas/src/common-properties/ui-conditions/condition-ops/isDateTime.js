@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import moment from "moment";
+import { isValid, parse } from "date-fns";
+import { DEFAULT_DATE_FORMAT } from "../../constants/constants";
 
 
 function op() {
@@ -23,9 +24,14 @@ function op() {
 
 function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.value) { // only check if there is a value.
-		const format = (value === "time") ? "HH:mm:ssZ" : moment.ISO_8601;
-		const mom = moment.utc(paramInfo.value, format, true);
-		return (mom.isValid());
+		// format for date-fns
+		let dateFormat = paramInfo.control.dateFormat || DEFAULT_DATE_FORMAT;
+		dateFormat = dateFormat.replaceAll("Y", "y");
+		dateFormat = dateFormat.replaceAll("D", "d");
+		// always use iso format for time
+		const timeDateFormat = (value === "time") ? "HH:mm:ss:xxx" : dateFormat;
+		const date = parse(paramInfo.value, timeDateFormat, new Date());
+		return isValid(date);
 	}
 	return true;
 }
