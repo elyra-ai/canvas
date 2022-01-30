@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import has from "lodash/has";
-import { cloneDeep, isEmpty, isObject } from "lodash";
+import { cloneDeep, isEmpty, isObject, has } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { BINDING, EXECUTION_NODE, SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 

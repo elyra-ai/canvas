@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import has from "lodash/has";
+import { has } from "lodash";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,

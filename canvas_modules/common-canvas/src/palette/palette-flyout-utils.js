@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import has from "lodash/has";
+import { has } from "lodash";
 
 // The entry point to this utils file.
 // Returns a filtered, ranked array of nodeTypeInfo objects for the nodeTypes

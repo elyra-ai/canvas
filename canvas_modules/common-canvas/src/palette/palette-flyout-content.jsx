@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import debounce from "lodash/debounce";
+import { debounce } from "lodash";
 import { getFilteredNodeTypeInfos } from "./palette-flyout-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
