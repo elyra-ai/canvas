@@ -133,7 +133,7 @@ export const DATA_TYPE = {
 	TIMESTAMP: "timestamp"
 };
 
-export const DEFAULT_DATE_FORMAT = "yyyy-M-d";
+export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
 
 export const DEFAULT_TIME_FORMAT = "H:m:s";
 

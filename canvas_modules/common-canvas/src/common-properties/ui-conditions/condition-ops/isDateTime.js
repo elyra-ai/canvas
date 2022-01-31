@@ -24,12 +24,8 @@ function op() {
 
 function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.value) { // only check if there is a value.
-		// format for date-fns
-		let dateFormat = paramInfo.control.dateFormat || DEFAULT_DATE_FORMAT;
-		dateFormat = dateFormat.replaceAll("Y", "y");
-		dateFormat = dateFormat.replaceAll("D", "d");
 		// always use iso format for time
-		const timeDateFormat = (value === "time") ? "HH:mm:ss:xxx" : dateFormat;
+		const timeDateFormat = (value === "time") ? "HH:mm:ss:xxx" : DEFAULT_DATE_FORMAT;
 		const date = parse(paramInfo.value, timeDateFormat, new Date());
 		return isValid(date);
 	}

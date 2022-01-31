@@ -17,44 +17,24 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { DatePicker, DatePickerInput } from "carbon-components-react";
-import classNames from "classnames";
-import { parse, format } from "date-fns";
-
+import { TextInput } from "carbon-components-react";
+import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants";
+import { parse, format, isValid } from "date-fns";
+import { DEFAULT_DATE_FORMAT, STATES } from "./../../constants/constants.js";
+import classNames from "classnames";
 
 class DatefieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.getDateFormat = this.getDateFormat.bind(this);
-		this.getDateFormat = this.getDateFormat.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-	}
 
-	/*
-	* flatpickr (used by carbon) date formats
-	*/
-	getCarbonDateFormat() {
-		let dateFormat = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-		while ((dateFormat.match(/y/g) || []).length > 1) {
-			dateFormat = dateFormat.replace("y", "");
+		this.value = this.props.value;
+		if (typeof this.value !== "string") {
+			this.value = "";
 		}
-		while ((dateFormat.match(/Y/g) || []).length > 1) {
-			dateFormat = dateFormat.replace("Y", "");
-		}
-		while ((dateFormat.match(/m/g) || []).length > 1) {
-			dateFormat = dateFormat.replace("m", "");
-		}
-		while ((dateFormat.match(/M/g) || []).length > 1) {
-			dateFormat = dateFormat.replace("M", "");
-		}
-		dateFormat = dateFormat.replaceAll("D", "d"); // never format to day of the week
-		while ((dateFormat.match(/d/g) || []).length > 1) {
-			dateFormat = dateFormat.replace("d", "");
-		}
-		return dateFormat;
 	}
 
 	/*
@@ -62,44 +42,45 @@ class DatefieldControl extends React.Component {
 	*/
 	getDateFormat() {
 		let dateFormat = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-		dateFormat = dateFormat.replaceAll("Y", "y").replaceAll("D", "d");
+		dateFormat = dateFormat.replace(/Y/g, "y").replace(/D/g, "d");
 		return dateFormat;
 	}
 
-	handleChange(dateArray) {
-		let stringValue = null;
-		const date = dateArray[0];
-		if (date) {
-			stringValue = format(date, this.getDateFormat());
+	handleChange(evt) {
+		let formattedValue = null;
+		this.value = "";
+
+		if (evt.target.value) {
+			this.value = evt.target.value;
+			const date = parse(evt.target.value, this.getDateFormat(), new Date());
+			if (isValid(date)) {
+				formattedValue = format(date, DEFAULT_DATE_FORMAT); // save as ISO format
+			} else {
+				formattedValue = evt.target.value; // Otherwise just save as invalid entered string
+			}
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, stringValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, formattedValue);
 	}
 
 	render() {
-		let date = this.props.value;
-		if (date) {
-			date = parse(this.props.value, this.getDateFormat(), new Date());
-		}
-		const className = classNames("properties-datefield", { "hide": this.props.state === STATES.HIDDEN });
+		const className = classNames("properties-datefield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+			this.props.messageInfo ? this.props.messageInfo.type : null);
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<DatePicker
-					datePickerType="single"
-					dateFormat={this.getCarbonDateFormat()}
-					light={this.props.controller.getLight()}
+				<TextInput
+					{...validationProps}
+					autoComplete="off"
+					id={this.id}
 					disabled={this.props.state === STATES.DISABLED}
-					locale={this.props.controller.getReactIntl().locale}
-					value={date}
+					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange.bind(this)}
-				>
-					<DatePickerInput
-						id={this.id}
-						labelText={this.props.controlItem}
-						hideLabel={this.props.tableControl}
-						disabled={this.props.state === STATES.DISABLED}
-						placeholder={this.props.control.additionalText}
-					/>
-				</DatePicker>
+					value={this.value}
+					labelText={this.props.controlItem}
+					hideLabel={this.props.tableControl}
+					light={this.props.controller.getLight()}
+				/>
+				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 		);
 	}
@@ -112,12 +93,14 @@ DatefieldControl.propTypes = {
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.string // pass in by redux
+	value: PropTypes.string, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
-	state: ownProps.controller.getControlState(ownProps.propertyId)
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(DatefieldControl);

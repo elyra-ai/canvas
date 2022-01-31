@@ -36,6 +36,7 @@ describe("datefield-control renders correctly", () => {
 			propType: "date"
 		}
 	};
+	const controlItem = <span>"Label"</span>;
 	propertyUtils.setControls(controller, [control]);
 	const propertyId = { name: "test-datefield" };
 
@@ -53,6 +54,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expect(wrapper.prop("control")).to.equal(control);
@@ -67,6 +69,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -81,6 +84,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -96,6 +100,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -118,6 +123,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -133,6 +139,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -147,6 +154,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -162,6 +170,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");
@@ -176,6 +185,7 @@ describe("datefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const dateWrapper = wrapper.find("div[data-id='properties-test-datefield']");

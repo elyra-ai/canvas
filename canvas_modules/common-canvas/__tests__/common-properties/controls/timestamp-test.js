@@ -17,7 +17,7 @@
 import React from "react";
 import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
-import { mount } from "enzyme";
+import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 import timestampParamDef from "../../test_resources/paramDefs/timestamp_paramDef.json";
@@ -38,7 +38,7 @@ describe("timestamp-control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": 1557250591087 }
 		);
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -55,7 +55,7 @@ describe("timestamp-control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": "invalid field" }
 		);
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
@@ -72,7 +72,7 @@ describe("timestamp-control renders correctly", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": null }
 		);
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<Readonly
 				store={controller.getStore()}
 				control={control}
