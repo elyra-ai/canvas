@@ -29,10 +29,24 @@ class TimefieldControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(props.propertyId);
-		this.value = this.props.value;
-		if (typeof this.value !== "string") {
+
+		this.value = props.value;
+		if (!this.value) {
 			this.value = "";
+		} else {
+			const date = parse(this.value, DEFAULT_TIME_FORMAT, new Date());
+			if (isValid(date)) {
+				this.value = format(date, this.getTimeFormat());
+			}
 		}
+
+		this.getTimeFormat = this.getTimeFormat.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+	}
+
+	getTimeFormat() {
+		const timeFormat = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
+		return timeFormat;
 	}
 
 	handleChange(evt) {
@@ -41,8 +55,7 @@ class TimefieldControl extends React.Component {
 
 		if (evt.target.value) {
 			this.value = evt.target.value;
-			const timeFormat = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
-			const time = parse(evt.target.value, timeFormat, new Date());
+			const time = parse(evt.target.value, this.getTimeFormat(), new Date());
 			if (isValid(time)) {
 				formattedValue = format(time, "HH:mm:ss:xxx"); // If moment is valid save as ISO format
 			} else {

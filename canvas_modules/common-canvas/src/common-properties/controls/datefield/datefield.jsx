@@ -31,9 +31,14 @@ class DatefieldControl extends React.Component {
 		this.getDateFormat = this.getDateFormat.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 
-		this.value = this.props.value;
-		if (typeof this.value !== "string") {
+		this.value = props.value;
+		if (!this.value) {
 			this.value = "";
+		} else {
+			const date = parse(this.value, DEFAULT_DATE_FORMAT, new Date());
+			if (isValid(date)) {
+				this.value = format(date, this.getDateFormat());
+			}
 		}
 	}
 
