@@ -114,6 +114,9 @@ $link-highlight-color: $support-04;
 	pointer-events: none;
 	// Allows the focus highlight to be visible on FF and Safari
 	overflow: visible;
+	.d3-comment-text{
+		user-select: none;
+	}
 }
 
 // Declare our own focus highlighting for text entry.

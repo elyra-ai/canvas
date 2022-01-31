@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-/* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
-
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { injectIntl } from "react-intl";
 import Logger from "../logging/canvas-logger.js";
 
 class CanvasBottomPanel extends React.Component {
@@ -30,80 +27,48 @@ class CanvasBottomPanel extends React.Component {
 			panelHeight: 393
 		};
 
-		this.resizing = false;
 		this.logger = new Logger("CC-Bottom-Panel");
 
-		this.startResize = this.startResize.bind(this);
-		this.stopResize = this.stopResize.bind(this);
-		this.resize = this.resize.bind(this);
-		this.onmouseUp = this.onmouseUp.bind(this);
-		this.onmouseDown = this.onmouseDown.bind(this);
-		this.onmouseMovey = this.onmouseMovey.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMoveY = this.onMouseMoveY.bind(this);
 	}
 
-	componentDidMount() {
-		this.addEventListeners();
-	}
 
-	componentWillUnmount() {
-		this.removeEventListeners();
-	}
-
-	onmouseDown(e) {
-		if ((e.button === 1 || e.button === 0)) {
-			document.onmousemove = this.onmouseMovey;
+	onMouseDown(e) {
+		if (e.button === 0) {
+			document.onmousemove = this.onMouseMoveY;
 		}
 	}
 
-	onmouseUp(e) {
+	onMouseUp(e) {
 		document.onmousemove = false;
 		document.onselectstart = false;
 	}
 
-	onmouseMovey(e) {
-		const topPanel = document.querySelector(".top-panel");
-		const panelContainer = document.querySelector(".bottom-panel");
-		topPanel.style.flex = "0 0" + (e.clientY / (panelContainer.clientHeight / 88)) + "%";
-	}
-
-	addEventListeners() {
-		document.addEventListener("mouseup", this.onmouseUp, true);
-		document.addEventListener("mousedown", this.onmouseDown, true);
-		document.addEventListener("mousmove", this.onmouseMovey, true);
-	}
-
-	removeEventListeners() {
-		document.removeEventListener("mouseup", this.onmouseUp, true);
-		document.removeEventListener("mousedown", this.onmouseDown, true);
-		document.removeEventListener("mousmove", this.onmouseMovey, true);
-	}
-
-
-	startResize(evt) {
-		this.resizing = true;
-	}
-
-	stopResize(evt) {
-		this.resizing = false;
-	}
-
-	resize(evt) {
-		if (this.resizing) {
-			this.setState({ "panelHeight": this.state.panelHeight + evt.movementY });
+	onMouseMoveY(e) {
+	// console.log("movements : " + e.movementY);
+		if (e.movementY) {
+			this.setState({
+				panelHeight: this.state.panelHeight - e.movementY
+			});
 		}
+
 	}
+
 
 	render() {
 		this.logger.log("render");
-
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
+			const style = {
+				height: this.state.panelHeight
+			};
 			bottomPanel = (
-				<div className="bottom-panel">
-					<div className="top-panel"> </div>
-					<div className="bottom-panel-drag" onMouseDown={this.onmouseDown} onMouseUp={this.onmouseUp}> </div>
-					<div className="bottom-panel-contents" onMouseDown={this.onmouseDown} onMouseUp={this.onmouseUp}>
+				<div className="bottom-panel" style={style}>
+					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} />
+					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
 					</div>
 				</div>
@@ -115,10 +80,6 @@ class CanvasBottomPanel extends React.Component {
 }
 
 CanvasBottomPanel.propTypes = {
-	// Provided by CommonCanvas
-	intl: PropTypes.object.isRequired,
-	canvasController: PropTypes.object.isRequired,
-
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,
 	bottomPanelContent: PropTypes.object
@@ -128,5 +89,4 @@ const mapStateToProps = (state, ownProps) => ({
 	bottomPanelIsOpen: state.bottompanel.isOpen,
 	bottomPanelContent: state.bottompanel.content
 });
-
-export default connect(mapStateToProps)(injectIntl(CanvasBottomPanel));
+export default connect(mapStateToProps)(CanvasBottomPanel);

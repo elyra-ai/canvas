@@ -64,18 +64,12 @@ $bottom-panel-height: 393px;
 	cursor: default;
 	top: $toolbar-button-height;
 	overflow: hidden;
-
-	&.common-canvas-bottom-panel-is-open {
-		height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
-	}
+	// &.common-canvas-bottom-panel-is-open {
+	// 	height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
+	// }
 
 	&.common-canvas-toolbar-none {
 		height: 100%;
-		top: 0;
-	}
-
-	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
-		height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
 		top: 0;
 	}
 }
@@ -219,7 +213,7 @@ $bottom-panel-height: 393px;
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	height: 90vh;
+	height: 50vh;
 	position: fixed;
 	bottom: 0;
 }
@@ -245,4 +239,13 @@ $bottom-panel-height: 393px;
 	flex: 1;
 	width: 1510px;
 	margin: auto;
+	user-select: none;
+}
+
+.drag-wrapper {
+	width: 200px;
+	cursor: move;
+	padding: 50px;
+	text-align: center;
+	background: #E5E5E5;
 }
