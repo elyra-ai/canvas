@@ -34,7 +34,7 @@ class TimefieldControl extends React.Component {
 		if (!this.value) {
 			this.value = "";
 		} else {
-			const date = parse(this.value, DEFAULT_TIME_FORMAT, new Date());
+			const date = parse(this.value, "HH:mm:ss:xxx", new Date());
 			if (isValid(date)) {
 				this.value = format(date, this.getTimeFormat());
 			}
