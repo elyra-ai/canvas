@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import has from "lodash/has";
+import { has } from "lodash";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/palette/locales/en.json";
 import Icon from "../icons/icon.jsx";

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import has from "lodash/has";
+import { has } from "lodash";
 import { BINDING, EXECUTION_NODE,
 	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
 

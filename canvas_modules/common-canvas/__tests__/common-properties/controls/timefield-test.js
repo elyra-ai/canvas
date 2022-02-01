@@ -20,9 +20,12 @@ import propertyUtils from "../../_utils_/property-utils";
 import TimefieldControl from "../../../src/common-properties/controls/timefield";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import { format } from "date-fns";
 import Controller from "../../../src/common-properties/properties-controller";
 
 import TIMEFIELD_PARAM_DEF from "../../test_resources/paramDefs/timefield_paramDef.json";
+
+const controlItem = <span>"Label"</span>;
 
 describe("timefield-control renders correctly", () => {
 	const controller = new Controller();
@@ -50,6 +53,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		expect(wrapper.prop("control")).to.equal(control);
@@ -64,6 +68,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
@@ -78,12 +83,14 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
 		const input = timeWrapper.find("input");
 		input.simulate("change", { target: { value: "10:06:21" } });
-		expect(controller.getPropertyValue(propertyId)).to.equal("10:06:21+00:00");
+		// use format to get GMT offset since these tests might run in different timezones
+		expect(controller.getPropertyValue(propertyId)).to.equal(`10:06:21:${format(new Date(), "xxx")}`);
 	});
 
 	it("should allow invalid format date to be entered in `TimefieldControl`", () => {
@@ -93,6 +100,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
@@ -114,6 +122,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
@@ -129,6 +138,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");
@@ -143,6 +153,7 @@ describe("timefield-control renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
+				controlItem={controlItem}
 			/>
 		);
 		const timeWrapper = wrapper.find("div[data-id='properties-test-timefield']");

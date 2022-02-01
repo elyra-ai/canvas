@@ -36,7 +36,7 @@ import Logger from "../../logging/canvas-logger.js";
 
 const logger = new Logger("SchemaValidator");
 
-var SchemaValidator = require("jsonschema").Validator;
+import { Validator as SchemaValidator } from "jsonschema";
 
 function validatePipelineFlowAgainstSchema(pipelineFlow, version) {
 	switch (version) {

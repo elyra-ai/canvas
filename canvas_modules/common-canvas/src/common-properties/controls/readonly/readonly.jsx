@@ -17,17 +17,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { FormattedDate } from "react-intl";
+import { isValid } from "date-fns";
+import { isEqual, intersection } from "lodash";
+import classNames from "classnames";
+
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import { STATES, DATA_TYPE } from "./../../constants/constants";
 import Icon from "./../../../icons/icon";
-import moment from "moment";
-import { isEqual, intersection } from "lodash";
 
 import { ControlType } from "./../../constants/form-constants";
-
-import classNames from "classnames";
 import { stringifyFieldValue } from "./../../util/property-utils";
 
 class ReadonlyControl extends React.Component {
@@ -85,9 +86,13 @@ class ReadonlyControl extends React.Component {
 			controlValue = this.props.controller.getCustomControl(this.props.propertyId, this.props.control, { table: true, editStyle: "summary" });
 		} else if (this.props.control.controlType === ControlType.TIMESTAMP ||
 			(this.props.control.valueDef && this.props.control.valueDef.propType === DATA_TYPE.TIMESTAMP)) {
-			const mom = moment(controlValue); // timestamp in ms
-			if (mom.isValid()) {
-				controlValue = mom.format("LLLL");
+			const date = new Date(controlValue);
+			if (isValid(date)) {
+				if (this.props.tableControl) {
+					controlValue = <FormattedDate value={date} day="numeric" month="long" year="numeric" hour="numeric" minute="numeric" />;
+				} else {
+					controlValue = <FormattedDate value={date} day="numeric" month="long" year="numeric" hour="numeric" minute="numeric" weekday="long" />;
+				}
 			} else {
 				controlValue = ""; // invalid timestamp
 			}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
-import forIn from "lodash/forIn";
+import { forIn } from "lodash";
 
 export default class SetLinksStyleAction extends Action {
 	constructor(data, objectModel, labelUtil) {

@@ -21,7 +21,7 @@ import conditionsV3Schema from "@elyra/pipeline-schemas/common-pipeline/operator
 import operatorsV3Schema from "@elyra/pipeline-schemas/common-pipeline/operators/operator-v3-schema.json";
 import dataRecordMetadataV3Schema from "@elyra/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v3-schema.json";
 
-var SchemaValidator = require("jsonschema").Validator;
+import { Validator as SchemaValidator } from "jsonschema";
 
 function validateParameterDefAgainstSchema(parameterDef) {
 	const validator = getValidator();
