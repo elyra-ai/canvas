@@ -5128,13 +5128,13 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				if (this.enableEditingActions) {
+				if (this.config.enableEditingActions) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
-				if (this.enableEditingActions) {
+				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
 				}
 			})
@@ -5152,7 +5152,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("dblclick", (d3Event, d) => {
 				this.logger.log("Comment Group - double click");
-				if (this.enableEditingActions) {
+				if (this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
 					this.displayCommentTextArea(d, d3Event.currentTarget);
