@@ -2498,7 +2498,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
-		if (this.config.enableDragToMoveSizeNodesComments) {
+		if (this.config.enableEditingActions) {
 			newNodeGroups
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 		}
@@ -2861,7 +2861,7 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.config.enableDragToMoveSizeNodesComments && // Only set cusror when we are able to move nodes
+				if (this.config.enableEditingActions && // Only set cursor when we are able to edit nodes
 						this.nodeUtils.isExpandedSupernode(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 					let cursorType = "pointer";
@@ -3815,6 +3815,10 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawNewLink(d3Event) {
+		if (this.config.enableEditingActions === false) {
+			return;
+		}
+
 		this.closeContextMenuIfOpen();
 
 		const transPos = this.getTransformedMousePos(d3Event);
@@ -4006,6 +4010,10 @@ export default class SVGCanvasRenderer {
 
 	// Handles the completion of a new link being drawn from a source node.
 	completeNewLink(d3Event) {
+		if (this.config.enableEditingActions === false) {
+			return;
+		}
+
 		if (this.config.enableHighlightUnavailableNodes) {
 			this.unsetUnavailableNodesHighlighting();
 		}
@@ -5036,7 +5044,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
-		if (this.config.enableDragToMoveSizeNodesComments) {
+		if (this.config.enableEditingActions) {
 			newCommentGroups
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 		}
@@ -5120,11 +5128,15 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				this.createCommentPort(d3Event.currentTarget, d);
+				if (this.enableEditingActions) {
+					this.createCommentPort(d3Event.currentTarget, d);
+				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
-				this.deleteCommentPort(d3Event.currentTarget);
+				if (this.enableEditingActions) {
+					this.deleteCommentPort(d3Event.currentTarget);
+				}
 			})
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
@@ -5140,16 +5152,18 @@ export default class SVGCanvasRenderer {
 			})
 			.on("dblclick", (d3Event, d) => {
 				this.logger.log("Comment Group - double click");
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				if (this.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
-				this.displayCommentTextArea(d, d3Event.currentTarget);
+					this.displayCommentTextArea(d, d3Event.currentTarget);
 
-				this.canvasController.clickActionHandler({
-					clickType: "DOUBLE_CLICK",
-					objectType: "comment",
-					id: d.id,
-					selectedObjectIds: this.objectModel.getSelectedObjectIds(),
-					pipelineId: this.activePipeline.id });
+					this.canvasController.clickActionHandler({
+						clickType: "DOUBLE_CLICK",
+						objectType: "comment",
+						id: d.id,
+						selectedObjectIds: this.objectModel.getSelectedObjectIds(),
+						pipelineId: this.activePipeline.id });
+				}
 			})
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Comment Group - context menu");
@@ -5176,7 +5190,7 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.config.enableDragToMoveSizeNodesComments && // Only set cusror when we are able to move comments
+				if (this.config.enableEditingActions && // Only set cursor when we are able to edit comments
 					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 				{
 					let cursorType = "pointer";
@@ -6044,7 +6058,7 @@ export default class SVGCanvasRenderer {
 	// Creates a new start handle and a new end handle for the link groups
 	// passed in.
 	createNewHandles(handlesGrp) {
-		handlesGrp
+		const startHandle = handlesGrp
 			.append(this.canvasLayout.linkStartHandleObject)
 			.attr("class", (d) => "d3-link-handle-start")
 			// Use mouse down instead of click because it gets called before drag start.
@@ -6054,10 +6068,13 @@ export default class SVGCanvasRenderer {
 					this.selectObjectD3Event(d3Event, d);
 				}
 				this.logger.log("Link end handle - finished mouse down");
-			})
-			.call(this.dragSelectionHandle);
+			});
 
-		handlesGrp
+		if (this.config.enableEditingActions) {
+			startHandle.call(this.dragSelectionHandle);
+		}
+
+		const endHandle = handlesGrp
 			.append(this.canvasLayout.linkEndHandleObject)
 			.attr("class", (d) => "d3-link-handle-end")
 			// Use mouse down instead of click because it gets called before drag start.
@@ -6067,8 +6084,11 @@ export default class SVGCanvasRenderer {
 					this.selectObjectD3Event(d3Event, d);
 				}
 				this.logger.log("Link end handle - finished mouse down");
-			})
-			.call(this.dragSelectionHandle);
+			});
+
+		if (this.config.enableEditingActions) {
+			endHandle.call(this.dragSelectionHandle);
+		}
 	}
 
 	// Updates the start and end link handles for the handle groups passed in.
@@ -6184,7 +6204,8 @@ export default class SVGCanvasRenderer {
 			customClass = " " + d.class_name;
 		}
 
-		const draggableClass = this.config.enableDragToMoveSizeNodesComments
+		// Set class to enable mouse cursor to be set appropriately.
+		const draggableClass = this.config.enableEditingActions
 			? " d3-draggable"
 			: " d3-non-draggable";
 
@@ -6208,7 +6229,8 @@ export default class SVGCanvasRenderer {
 			? " d3-node-supernode-expanded"
 			: "";
 
-		const draggableClass = this.config.enableDragToMoveSizeNodesComments
+		// Set class to enable mouse cursor to be set appropriately.
+		const draggableClass = this.config.enableEditingActions
 			? " d3-draggable"
 			: " d3-non-draggable";
 

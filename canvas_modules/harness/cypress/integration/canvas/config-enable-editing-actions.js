@@ -21,8 +21,14 @@ describe("Test whether actions can be performed depending on enableEditingAction
 	});
 
 	it("Test actions CANNOT be performed when enableEditingActions = false", function() {
-		cy.setCanvasConfig({ "selectedEditingActions": false });
+		cy.setCanvasConfig({
+			"selectedEditingActions": false,
+			"selectedLinkSelection": "Detachable"
+		});
 
+		// ---------------------------------------------------------------------- //
+		// Context menu.
+		// ---------------------------------------------------------------------- //
 		// Display context menu for canvas. We should have 'Select all' but NOT
 		// 'New comment'.
 		cy.rightClickToDisplayContextMenu(800, 25);
@@ -39,6 +45,10 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		// Close the context menu.
 		cy.clickCanvasAt(1, 1);
 
+
+		// ---------------------------------------------------------------------- //
+		// Keyboard.
+		// ---------------------------------------------------------------------- //
 		// Select a node and press keyboard. This should NOT delete the node.
 		cy.verifyNumberOfNodes(5);
 		cy.clickNode("Execution node");
@@ -54,6 +64,9 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		cy.simulateClickInBrowsersEditMenu("cut");
 		cy.verifyNumberOfNodes(5);
 
+		// ---------------------------------------------------------------------- //
+		// Toolbar.
+		// ---------------------------------------------------------------------- //
 		// Do some setup so the toolbar buttons are all enabled
 		cy.clickNode("Binding (exit) node"); // Selecting an object will normally cause cut, copy & paste to be enabled
 
@@ -71,14 +84,41 @@ describe("Test whether actions can be performed depending on enableEditingAction
 		cy.clickCategory("OPERATIONS");
 		cy.dragNodeToPosition("Append", 400, 400);
 		cy.verifyNumberOfNodes(5);
+
+		// ---------------------------------------------------------------------- //
+		// Create new link.
+		// ---------------------------------------------------------------------- //
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.linkNodeOutputPortToNodeInputPort("Execution node", "outPort", "Super node", "input1SuperNodePE");
+		// The links SHOULD NOT BE created.
+		cy.verifyNumberOfPortDataLinks(4);
+
+		// ---------------------------------------------------------------------- //
+		// Drag a link handle.
+		// ---------------------------------------------------------------------- //
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.moveLinkHandleToPos("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb", "endHandle", 300, 300);
+		// The link SHOULD NOT BE dragged so we still have the same number of port links.
+		cy.verifyNumberOfPortDataLinks(4);
+
+		// ---------------------------------------------------------------------- //
+		// Dragging nodes and comments
+		// ---------------------------------------------------------------------- //
+		// These actions are tested in the drag.js integration file
 	});
 
 	it("Test actions can be performed when enableEditingActions = true", function() {
-		cy.setCanvasConfig({ "selectedEditingActions": true });
+		cy.setCanvasConfig({
+			"selectedEditingActions": true,
+			"selectedLinkSelection": "Detachable"
+		});
 		testWithEditingActionsSet();
 	});
 
 	it("Test actions can be performed when enableEditingActions is not set", function() {
+		cy.setCanvasConfig({
+			"selectedLinkSelection": "Detachable"
+		});
 		testWithEditingActionsSet();
 	});
 });
@@ -88,6 +128,9 @@ describe("Test whether actions can be performed depending on enableEditingAction
 // when enableEditingActions is set to 'true' or when enableEditingActions is
 // not set in which case it should default to 'true'.
 function testWithEditingActionsSet() {
+	// ---------------------------------------------------------------------- //
+	// Context menu.
+	// ---------------------------------------------------------------------- //
 	// Display context menu for canvas. We should have both 'Select all'
 	// and 'New Comment'.
 	cy.rightClickToDisplayContextMenu(800, 25);
@@ -104,6 +147,9 @@ function testWithEditingActionsSet() {
 	// Close the context menu.
 	cy.clickCanvasAt(1, 1);
 
+	// ---------------------------------------------------------------------- //
+	// Keyboard.
+	// ---------------------------------------------------------------------- //
 	// Select a node and press keyboard. This should delete the node.
 	cy.verifyNumberOfNodes(5);
 	cy.clickNode("Execution node");
@@ -119,7 +165,9 @@ function testWithEditingActionsSet() {
 	cy.simulateClickInBrowsersEditMenu("cut");
 	cy.verifyNumberOfNodes(3);
 
-
+	// ---------------------------------------------------------------------- //
+	// Toolbar.
+	// ---------------------------------------------------------------------- //
 	// Do some setup so the toolbar buttons are all enabled
 	cy.clickNode("Binding (exit) node"); // Selecting an object will normally cause cut, copy & paste to be enabled
 	cy.clickToolbarUndo(); // Clicking undo here will normally cause the redo button to be enabled
@@ -140,4 +188,26 @@ function testWithEditingActionsSet() {
 	cy.dragNodeToPosition("Append", 400, 400);
 	cy.verifyNumberOfNodes(5); // There were 4 before so now there should be 5
 
+	// ---------------------------------------------------------------------- //
+	// Create new link.
+	// ---------------------------------------------------------------------- //
+	cy.clickToolbarUndo(); // Clicking undo here will normally cause the redo button to be enabled
+	cy.clickToolbarUndo(); // Clicking undo here will normally cause the redo button to be enabled
+	cy.verifyNumberOfPortDataLinks(4);
+	cy.linkNodeOutputPortToNodeInputPort("Execution node", "outPort", "Super node", "input1SuperNodePE");
+	// The link SHOULD BE created.
+	cy.verifyNumberOfPortDataLinks(5);
+
+	// ---------------------------------------------------------------------- //
+	// Drag a link handle.
+	// ---------------------------------------------------------------------- //
+	cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+	cy.moveLinkHandleToPos("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb", "endHandle", 300, 300);
+	// The link SHOULD BE dragged so we should have one less port link.
+	cy.verifyNumberOfPortDataLinks(5);
+
+	// ---------------------------------------------------------------------- //
+	// Dragging nodes and comments
+	// ---------------------------------------------------------------------- //
+	// These actions are tested in the drag.js integration file
 }
