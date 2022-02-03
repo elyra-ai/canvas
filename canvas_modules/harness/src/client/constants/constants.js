@@ -78,6 +78,7 @@ _defineConstant("ASSOC_STRAIGHT", "Straight");
 
 _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
+_defineConstant("EXAMPLE_READ_ONLY", "Read Only");
 _defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
 _defineConstant("EXAMPLE_APP_DETACHED", "Detached Links");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");

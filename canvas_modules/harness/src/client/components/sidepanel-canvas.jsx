@@ -58,6 +58,7 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
+	EXAMPLE_READ_ONLY,
 	PALETTE_FLYOUT,
 	PALETTE_MODAL,
 	PALETTE_NONE,
@@ -1017,6 +1018,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={EXAMPLE_APP_DETACHED}
 						labelText={EXAMPLE_APP_DETACHED}
+					/>
+					<RadioButton
+						value={EXAMPLE_READ_ONLY}
+						labelText={EXAMPLE_READ_ONLY}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_LOGIC}
