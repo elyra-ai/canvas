@@ -220,7 +220,7 @@ $bottom-panel-height: 393px;
 }
 
 .bottom-panel-drag {
-	background: transparent;
+	background: $palette-border-color;
 	cursor: row-resize;
 	flex: 0 0 2px;
 	transition: all 0.2s ease-in;

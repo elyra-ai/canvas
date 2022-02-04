@@ -52,9 +52,7 @@ class CanvasBottomPanel extends React.Component {
 				panelHeight: this.state.panelHeight - e.movementY
 			});
 		}
-
 	}
-
 
 	render() {
 		this.logger.log("render");
