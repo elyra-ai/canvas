@@ -18,7 +18,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-
+import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
+	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
+	from "../../../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
 import DetachedCanvasFlow from "./detachedCanvas.json";
 import DetachedPalette from "./detachedPalette.json";
 
@@ -29,7 +31,7 @@ export default class ReadOnlyCanvas extends React.Component {
 		super(props);
 
 		this.state = {
-			editState: "None"
+			editState: STATE_TAG_READ_ONLY
 		};
 
 		this.canvasController = new CanvasController();
@@ -63,9 +65,9 @@ export default class ReadOnlyCanvas extends React.Component {
 			{ action: "createAutoComment", label: "Add Comment" },
 			{ action: "deleteSelectedObjects", label: "Delete" },
 			{ divider: true },
-			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "None" },
-			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "ReadOnly" },
-			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "Locked" },
+			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true, isSelectable: true, isSelected: this.state.editState === STATE_TAG_NONE },
+			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true, isSelectable: true, isSelected: this.state.editState === STATE_TAG_READ_ONLY },
+			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true, isSelectable: true, isSelected: this.state.editState === STATE_TAG_LOCKED },
 			{ divider: true }
 		];
 
@@ -142,14 +144,14 @@ export default class ReadOnlyCanvas extends React.Component {
 			}
 		});
 
-		if (this.state.editState === "ReadOnly" ||
-				this.state.editState === "Locked") {
+		if (this.state.editState === STATE_TAG_READ_ONLY ||
+				this.state.editState === STATE_TAG_LOCKED) {
 			config.enableStateTag = this.state.editState;
-			config.enablePaletteLayout = "None";
+			config.enablePaletteLayout = PALETTE_LAYOUT_NONE;
 			config.enableEditingActions = false;
 			config.enableParentClass = "writable read-only";
 			config.enableNodeLayout.outputPortDisplay = false;
-			config.enableLinkSelection = "LinkOnly";
+			config.enableLinkSelection = LINK_SELECTION_LINK_ONLY;
 		}
 
 		return config;
@@ -207,13 +209,13 @@ export default class ReadOnlyCanvas extends React.Component {
 			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
 		} else if (data.editType === "readOnly") {
-			this.setState({ editState: "ReadOnly" });
+			this.setState({ editState: STATE_TAG_READ_ONLY });
 
 		} else if (data.editType === "locked") {
-			this.setState({ editState: "Locked" });
+			this.setState({ editState: STATE_TAG_LOCKED });
 
 		} else if (data.editType === "edit") {
-			this.setState({ editState: "None" });
+			this.setState({ editState: STATE_TAG_NONE });
 		}
 	}
 
