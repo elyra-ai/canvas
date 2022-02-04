@@ -738,8 +738,7 @@ $link-highlight-color: $support-04;
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line,
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line-arrow-head,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line,
-.d3-link-group[data-selected][data-drag-node-over].d3-data-link
-.d3-link-line-arrow-head {
+.d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line-arrow-head {
 	stroke: $link-highlight-color;
 	stroke-width: 5;
 }

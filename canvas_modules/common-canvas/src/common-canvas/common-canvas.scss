@@ -70,6 +70,10 @@ $bottom-panel-height: 393px;
 		height: 100%;
 		top: 0;
 	}
+
+	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
+ 		top: 0;
+	}
 }
 
 .right-flyout-panel {
@@ -77,6 +81,35 @@ $bottom-panel-height: 393px;
 	position: relative;
 	user-select: none; /* Prevent elements from being selectable */
 	background-color: $ui-01;
+}
+
+.bottom-panel {
+	display: flex;
+	flex-direction: column;
+	height: $bottom-panel-height;
+	position: absolute;
+	left:0;
+	right:0;
+	bottom: 0;
+	border-top: $palette-border-width solid $palette-border-color;
+}
+
+.bottom-panel-drag {
+	background: $palette-border-color;
+	cursor: row-resize;
+	flex: 0 0 2px;
+	transition: all 0.2s ease-in;
+	&:hover {
+		background: $interactive-01;
+	}
+}
+
+.bottom-panel-contents {
+	background-color: $ui-01;
+	width: 100%;
+	user-select: none;
+	height: 100%;
+
 }
 
 /* Alternative layout for common-canvas components where canvas and right-side
@@ -206,33 +239,4 @@ $bottom-panel-height: 393px;
 	span {
 		margin: 0 16px 0 10px;
 	}
-}
-
-.bottom-panel {
-	display: flex;
-	flex-direction: column;
-	height: $bottom-panel-height;
-	position: absolute;
-	left:0;
-	right:0;
-	bottom: 0;
-	border-top: $palette-border-width solid $palette-border-color;
-}
-
-.bottom-panel-drag {
-	background: $palette-border-color;
-	cursor: row-resize;
-	flex: 0 0 2px;
-	transition: all 0.2s ease-in;
-	&:hover {
-		background: $interactive-01;
-	}
-}
-
-.bottom-panel-contents {
-	background-color: $ui-01;
-	width: 100%;
-	user-select: none;
-	height: 100%;
-
 }
