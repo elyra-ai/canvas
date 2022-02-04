@@ -63,9 +63,9 @@ export default class ReadOnlyCanvas extends React.Component {
 			{ action: "createAutoComment", label: "Add Comment" },
 			{ action: "deleteSelectedObjects", label: "Delete" },
 			{ divider: true },
-			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true },
-			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true },
-			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true },
+			{ action: "edit", label: "Edit", iconEnabled: (<Edit16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "None" },
+			{ action: "readOnly", label: "Read-only", iconEnabled: (<EditOff16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "ReadOnly" },
+			{ action: "locked", label: "Locked", iconEnabled: (<Locked16 />), enable: true, isSelectable: true, isSelected: this.state.editState === "Locked" },
 			{ divider: true }
 		];
 
