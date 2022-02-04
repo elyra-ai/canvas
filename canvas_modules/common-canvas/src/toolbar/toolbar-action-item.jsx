@@ -167,7 +167,7 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item": !this.props.overflow && !actionObj.jsx,
 				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
 				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx,
-				"associated-panel-selected": actionObj.action === this.props.associatedPanelAction && this.props.isAssociatedPanelOpen },
+				"toolbar-item-selected": actionObj.isSelectable && actionObj.isSelected },
 			kindAsClass,
 			actionName);
 
@@ -199,6 +199,8 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		iconTypeOverride: PropTypes.string,
+		isSelectable: PropTypes.bool,
+		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		jsx: PropTypes.object,
 		tooltip: PropTypes.oneOfType([
@@ -209,9 +211,7 @@ ToolbarActionItem.propTypes = {
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
-	onFocus: PropTypes.func,
-	isAssociatedPanelOpen: PropTypes.bool,
-	associatedPanelAction: PropTypes.string
+	onFocus: PropTypes.func
 };
 
 export default ToolbarActionItem;

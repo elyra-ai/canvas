@@ -184,6 +184,8 @@ class CommonCanvasToolbar extends React.Component {
 				{ action: TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfig.label,
 					enable: true,
+					isSelectable: true,
+					isSelected: this.props.isNotificationOpen,
 					className: this.getNotificationClassName(),
 					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString()
 				}
@@ -271,8 +273,6 @@ class CommonCanvasToolbar extends React.Component {
 					instanceId={this.props.canvasController.getInstanceId()}
 					toolbarActionHandler={this.toolbarActionHandler}
 					additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
-					isAssociatedPanelOpen={this.props.isNotificationOpen}
-					associatedPanelAction={TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL}
 				/>
 			);
 		}
