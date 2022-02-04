@@ -106,9 +106,9 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.clickToolbarUndo();
 	});
 
-	it("Test node cannot be dragged when enableDragToMoveSizeNodesComments is false", function() {
+	it("Test node cannot be dragged when enableEditingActions is false", function() {
 
-		cy.setCanvasConfig({ "selectedDragToMoveSizeNodesComments": false });
+		cy.setCanvasConfig({ "selectedEditingActions": false });
 
 		// Verify initial positon of Execution Node
 		cy.verifyNodeTransform("Execution node", 297, 139);
@@ -126,9 +126,9 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyZoomTransform(103, 311, 1);
 	});
 
-	it("Test comment cannot be dragged when enableDragToMoveSizeNodesComments is false", function() {
+	it("Test comment cannot be dragged when enableEditingActions is false", function() {
 
-		cy.setCanvasConfig({ "selectedDragToMoveSizeNodesComments": false });
+		cy.setCanvasConfig({ "selectedEditingActions": false });
 
 		// Verify initial positon of Comment
 		cy.verifyCommentTransform(
