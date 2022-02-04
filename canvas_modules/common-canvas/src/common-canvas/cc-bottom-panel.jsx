@@ -47,7 +47,6 @@ class CanvasBottomPanel extends React.Component {
 	}
 
 	onMouseMoveY(e) {
-	// console.log("movements : " + e.movementY);
 		if (e.movementY) {
 			this.setState({
 				panelHeight: this.state.panelHeight - e.movementY

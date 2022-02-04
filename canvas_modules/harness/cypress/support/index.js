@@ -28,7 +28,6 @@ import "./canvas/toolbar-cmds";
 import "./canvas/utils-cmds";
 import "./canvas/verification-cmds";
 import "./canvas/operation-cmds";
-import "../integration/canvas/bottom-panel";
 
 // turn off screenshots when running in headless mode.
 Cypress.Screenshot.defaults({

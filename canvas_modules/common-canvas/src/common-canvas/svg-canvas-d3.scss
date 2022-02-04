@@ -114,9 +114,6 @@ $link-highlight-color: $support-04;
 	pointer-events: none;
 	// Allows the focus highlight to be visible on FF and Safari
 	overflow: visible;
-	.d3-comment-text{
-		user-select: none;
-	}
 }
 
 // Declare our own focus highlighting for text entry.
@@ -169,7 +166,8 @@ $link-highlight-color: $support-04;
 	fill: $back-to-previous-flow-box-color;
 }
 
-.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
+.d3-back-to-previous-flow-box,
+.d3-back-to-previous-flow-text {
 	cursor: pointer;
 }
 
@@ -256,7 +254,7 @@ $link-highlight-color: $support-04;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	line-height: 105%; /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
 }
 
@@ -295,7 +293,6 @@ $link-highlight-color: $support-04;
 		pointer-events: none;
 	}
 }
-
 
 /* Node styles - Error indication */
 
@@ -385,7 +382,7 @@ $link-highlight-color: $support-04;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	line-height: 105%; /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
 }
 
@@ -475,7 +472,6 @@ $link-highlight-color: $support-04;
 		}
 	}
 }
-
 
 /* Error indicator */
 .d3-error-circle {
@@ -645,7 +641,7 @@ $link-highlight-color: $support-04;
 	height: 100%;
 	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
 	overflow: hidden;
-	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	line-height: 105%; /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.15px; /* Keeps letter spacing the same as before changing comments to use foreignObject */
 	/* Format text display */
 	white-space: pre-wrap;
@@ -656,6 +652,7 @@ $link-highlight-color: $support-04;
 .d3-comment-text {
 	@include d3-comment-mixin;
 	border-width: $comment-text-display-border;
+	user-select: none;
 }
 
 /* Style for comment text entry when shown in an HTML textarea control. */
@@ -743,7 +740,8 @@ $link-highlight-color: $support-04;
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line,
 .d3-link-group[data-drag-node-over].d3-data-link .d3-link-line-arrow-head,
 .d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line,
-.d3-link-group[data-selected][data-drag-node-over].d3-data-link .d3-link-line-arrow-head {
+.d3-link-group[data-selected][data-drag-node-over].d3-data-link
+.d3-link-line-arrow-head {
 	stroke: $link-highlight-color;
 	stroke-width: 5;
 }

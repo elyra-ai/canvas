@@ -44,6 +44,7 @@ $bottom-panel-height: 393px;
 .common-canvas-right-side-items {
 	width: 100%;
 	display: flex;
+	position: relative;
 }
 
 .common-canvas-main {
@@ -64,9 +65,6 @@ $bottom-panel-height: 393px;
 	cursor: default;
 	top: $toolbar-button-height;
 	overflow: hidden;
-	// &.common-canvas-bottom-panel-is-open {
-	// 	height: calc(100% - #{$toolbar-button-height} - #{$bottom-panel-height});
-	// }
 
 	&.common-canvas-toolbar-none {
 		height: 100%;
@@ -213,15 +211,12 @@ $bottom-panel-height: 393px;
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	height: 50vh;
-	position: fixed;
+	height: 393px;
+	position: absolute;
+	left:0;
+	right:0;
 	bottom: 0;
-}
-
-.top-panel {
-	display: flex;
-	flex: 0 0 50%;
-	flex-direction: row;
+	border-top: $palette-border-width solid $palette-border-color;
 }
 
 .bottom-panel-drag {
@@ -235,17 +230,9 @@ $bottom-panel-height: 393px;
 }
 
 .bottom-panel-contents {
-	background-color: #FFFFFF;
-	flex: 1;
-	width: 1510px;
-	margin: auto;
+	background-color: $ui-01;
+	width: 100%;
 	user-select: none;
-}
+	height: 100%;
 
-.drag-wrapper {
-	width: 200px;
-	cursor: move;
-	padding: 50px;
-	text-align: center;
-	background: #E5E5E5;
 }

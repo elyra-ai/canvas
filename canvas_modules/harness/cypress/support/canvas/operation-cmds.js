@@ -45,7 +45,8 @@ Cypress.Commands.add("selectWithRegion", (x1, y1, x2, y2) => {
 });
 
 Cypress.Commands.add("moveBottomPanelDivider", (yOffset) => {
-// movementY needs to be passed in , because within cc-bottom-panel.jsx onMouseMoveY() is checking
+// movementY needs to be passed in , because within
+// cc-bottom-panel.jsx onMouseMoveY() is checking
 // on mouse movementY amount which is not passed by Cypress.
 	cy.window().then((win) => {
 		cy.get(".bottom-panel .bottom-panel-drag")

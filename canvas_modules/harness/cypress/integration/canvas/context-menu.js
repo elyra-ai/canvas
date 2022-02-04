@@ -88,7 +88,7 @@ describe("Test of context menu", function() {
 		cy.verifyNumberOfSelectedObjects(0);
 	});
 
-	it("Test context menu position is moved correctly with bottom panl open", function() {
+	it.only("Test context menu position is moved correctly with bottom panl open", function() {
 		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
 
 		// Test the context menu postion is moved correctly

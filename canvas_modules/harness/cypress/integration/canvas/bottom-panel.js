@@ -19,15 +19,18 @@ describe("Testing bottom panel", function() {
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it("Testing bottom pannel seizing", function() {
-	// Open right side menu & toggle bottomPanel
+	it("Testing bottom panel sizing", function() {
 		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
 
-		// Resize the bottom pannel & verify it's height
+		// Resize the bottom pannel & verify its height & width
 		cy.moveBottomPanelDivider(-150);
-		cy.verifyBoottomPanelHeight(243);
+		cy.verifyBottomPanelHeight(243);
+		cy.verifyBottomPanelWidth(1328);
+
+		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 
 		cy.moveBottomPanelDivider(300);
-		cy.verifyBoottomPanelHeight(543);
+		cy.verifyBottomPanelHeight(543);
+		cy.verifyBottomPanelWidth(807.4375);
 	});
 });

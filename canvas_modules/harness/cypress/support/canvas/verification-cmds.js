@@ -750,9 +750,15 @@ Cypress.Commands.add("verifyNodeDimensions", (nodeId, width, height) => {
 		});
 });
 
-Cypress.Commands.add("verifyBoottomPanelHeight", (height) => {
+Cypress.Commands.add("verifyBottomPanelHeight", (height) => {
 	cy.get(".bottom-panel").should((element) => {
 		expect(element).to.have.css("height", `${height}px`);
+	});
+});
+
+Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
+	cy.get(".bottom-panel").should((element) => {
+		expect(element).to.have.css("width", `${width}px`);
 	});
 });
 
