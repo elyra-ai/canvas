@@ -211,7 +211,7 @@ $bottom-panel-height: 393px;
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	height: 393px;
+	height: $bottom-panel-height;
 	position: absolute;
 	left:0;
 	right:0;
