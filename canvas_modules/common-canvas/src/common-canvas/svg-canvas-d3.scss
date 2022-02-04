@@ -166,8 +166,7 @@ $link-highlight-color: $support-04;
 	fill: $back-to-previous-flow-box-color;
 }
 
-.d3-back-to-previous-flow-box,
-.d3-back-to-previous-flow-text {
+.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
 	cursor: pointer;
 }
 
@@ -254,7 +253,7 @@ $link-highlight-color: $support-04;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	line-height: 105%; /* Set so that entry text is displayed the same as display text */
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
 }
 
@@ -382,7 +381,7 @@ $link-highlight-color: $support-04;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
-	line-height: 105%; /* Set so that entry text is displayed the same as display text */
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.16px; /* Keeps letter spacing the same as before changing labels to use foreignObject */
 }
 
@@ -641,7 +640,7 @@ $link-highlight-color: $support-04;
 	height: 100%;
 	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
 	overflow: hidden;
-	line-height: 105%; /* Set so that entry text is displayed the same as display text */
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.15px; /* Keeps letter spacing the same as before changing comments to use foreignObject */
 	/* Format text display */
 	white-space: pre-wrap;
@@ -723,8 +722,7 @@ $link-highlight-color: $support-04;
 }
 
 // When pointer hovers over the link this style will be applied.
-.d3-link-group:hover .d3-link-line,
-.d3-link-group:hover .d3-link-line-arrow-head {
+.d3-link-group:hover .d3-link-line, .d3-link-group:hover .d3-link-line-arrow-head {
 	stroke: $link-highlight-color;
 	stroke-width: 2;
 }
