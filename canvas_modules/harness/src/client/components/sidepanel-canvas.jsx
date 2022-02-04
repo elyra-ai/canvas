@@ -657,21 +657,11 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
-
 		var enableDragWithoutSelect = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedDragWithoutSelect" // Set ID to corresponding field in App.js state
 				labelText="Enable Drag Without Select"
 				toggled={this.props.getStateValue("selectedDragWithoutSelect")}
-				onToggle={this.setStateValue}
-			/>
-		</div>);
-
-		var enableDragToMoveNodesAndComments = (<div className="harness-sidepanel-children">
-			<Toggle
-				id="selectedDragToMoveSizeNodesComments" // Set ID to corresponding field in App.js state
-				labelText="Enable Drag To Move Nodes and Comments"
-				toggled={this.props.getStateValue("selectedDragToMoveSizeNodesComments")}
 				onToggle={this.setStateValue}
 			/>
 		</div>);
@@ -1436,8 +1426,6 @@ export default class SidePanelForms extends React.Component {
 					{enableZoomIntoSubFlows}
 					{divider}
 					{enableDragWithoutSelect}
-					{divider}
-					{enableDragToMoveNodesAndComments}
 					{divider}
 					<div className="harness-side-panel-header">Supernodes</div>
 					{divider}
