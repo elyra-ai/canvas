@@ -44,7 +44,6 @@ $bottom-panel-height: 393px;
 .common-canvas-right-side-items {
 	width: 100%;
 	display: flex;
-	position: relative;
 }
 
 .common-canvas-main {
@@ -72,7 +71,7 @@ $bottom-panel-height: 393px;
 	}
 
 	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
- 		top: 0;
+		top: 0;
 	}
 }
 
