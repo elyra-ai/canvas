@@ -86,6 +86,7 @@ class PaletteFlyoutContent extends React.Component {
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 						isLastCategory={isLastCategory}
+						isEditingEnabled={this.props.isEditingEnabled}
 					/>);
 			}
 
@@ -185,7 +186,8 @@ class PaletteFlyoutContent extends React.Component {
 PaletteFlyoutContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired
 };
 
 export default PaletteFlyoutContent;
