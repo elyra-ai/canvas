@@ -152,6 +152,7 @@ export default class ReadOnlyCanvas extends React.Component {
 			config.enableParentClass = "writable read-only";
 			config.enableNodeLayout.outputPortDisplay = false;
 			config.enableLinkSelection = LINK_SELECTION_LINK_ONLY;
+			config.enableDropZoneOnExternalDrag = false;
 		}
 
 		return config;
