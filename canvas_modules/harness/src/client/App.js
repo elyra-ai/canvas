@@ -2056,8 +2056,8 @@ class App extends React.Component {
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true },
-				{ action: "mouse", iconEnabled: (<SelectWindow32 />), label: "Mouse", enable: true, isSelectable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
-				{ action: "trackpad", iconEnabled: (<TouchInteraction32 />), label: "Trackpad", enable: true, isSelectable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ action: "mouse", iconEnabled: (<SelectWindow32 />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
+				{ action: "trackpad", iconEnabled: (<TouchInteraction32 />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
 				{ divider: true }
 			];
 
