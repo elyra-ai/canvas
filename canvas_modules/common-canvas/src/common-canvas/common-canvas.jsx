@@ -90,7 +90,7 @@ class CommonCanvas extends React.Component {
 
 		className += (
 			this.props.config && !this.props.config.enableEditingActions
-				? " editing-actions-false"
+				? "config-editing-actions-false"
 				: "");
 
 		className += (
