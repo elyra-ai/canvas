@@ -244,6 +244,13 @@ export default class ReadOnlyCanvas extends React.Component {
 		this.canvasController.setLinkDecorations(linkId, decs);
 	}
 
+	tipHandler(tipType, data) {
+		if (tipType === "tipTypeStateTag") {
+			return "This sample application displays a canvas which cannot be edited. (This tooltip text was provided by the sample app code.)";
+		}
+		return null;
+	}
+
 	render() {
 		const config = this.getConfig();
 		const toolbarConfig = this.getToolbarConfig();
@@ -254,6 +261,7 @@ export default class ReadOnlyCanvas extends React.Component {
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
+				tipHandler={this.tipHandler}
 				config={config}
 				toolbarConfig={toolbarConfig}
 			/>
