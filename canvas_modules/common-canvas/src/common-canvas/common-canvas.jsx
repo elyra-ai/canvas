@@ -86,16 +86,19 @@ class CommonCanvas extends React.Component {
 	}
 
 	generateClass() {
+		// We must retrieve canvas config from the controller to get the full set
+		// of config options, including the defaults.
+		const canvasConfig = this.props.canvasController.getCanvasConfig();
 		let className = "common-canvas";
 
 		className += (
-			this.props.config && !this.props.config.enableEditingActions
-				? "config-editing-actions-false"
+			canvasConfig && !canvasConfig.enableEditingActions
+				? " config-editing-actions-false"
 				: "");
 
 		className += (
-			this.props.config && this.props.config.enableParentClass
-				? " " + this.props.config.enableParentClass
+			canvasConfig && canvasConfig.enableParentClass
+				? " " + canvasConfig.enableParentClass
 				: "");
 
 		return className;
