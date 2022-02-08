@@ -149,7 +149,6 @@ export default class ReadOnlyCanvas extends React.Component {
 			config.enableStateTag = this.state.editState;
 			config.enablePaletteLayout = PALETTE_LAYOUT_NONE;
 			config.enableEditingActions = false;
-			config.enableParentClass = "writable read-only";
 			config.enableNodeLayout.outputPortDisplay = false;
 			config.enableLinkSelection = LINK_SELECTION_LINK_ONLY;
 			config.enableDropZoneOnExternalDrag = false;
