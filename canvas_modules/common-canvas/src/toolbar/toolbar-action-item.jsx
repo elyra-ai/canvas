@@ -167,7 +167,7 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item": !this.props.overflow && !actionObj.jsx,
 				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
 				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx,
-				"toolbar-item-selected": actionObj.isSelectable && actionObj.isSelected },
+				"toolbar-item-selected": actionObj.isSelected },
 			kindAsClass,
 			actionName);
 
@@ -199,7 +199,6 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		iconTypeOverride: PropTypes.string,
-		isSelectable: PropTypes.bool,
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		jsx: PropTypes.object,
