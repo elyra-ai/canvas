@@ -45,6 +45,7 @@ class PaletteFlyout extends React.Component {
 						paletteJSON={this.props.paletteJSON}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.showPalette}
+						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				</div>
 			</nav>
@@ -57,7 +58,8 @@ PaletteFlyout.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
 	enableNarrowPalette: PropTypes.bool.isRequired,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired
 };
 
 export default injectIntl(PaletteFlyout);

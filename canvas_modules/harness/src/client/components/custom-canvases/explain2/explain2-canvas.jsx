@@ -40,6 +40,8 @@ export default class Explain2Canvas extends React.Component {
 			enableLinkType: "Elbow",
 			enableLinkDirection: "BottomTop",
 			enableSnapToGridType: "During",
+			enablePaletteLayout: "None",
+			enableEditingActions: false,
 			enableNodeLayout:
 			{
 				defaultNodeWidth: DEFAULT_WIDTH,

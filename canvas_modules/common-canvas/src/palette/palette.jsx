@@ -42,6 +42,7 @@ class Palette extends React.Component {
 				paletteJSON={this.props.paletteJSON}
 				showPalette={this.props.showPalette}
 				canvasController={this.props.canvasController}
+				isEditingEnabled={this.props.isEditingEnabled}
 			/>);
 		} else if (this.props.enablePaletteLayout === PALETTE_LAYOUT_MODAL) {
 			palette = (<PaletteDialog
@@ -49,6 +50,7 @@ class Palette extends React.Component {
 				showPalette={this.props.showPalette}
 				parentDivId={this.props.containingDivId}
 				canvasController={this.props.canvasController}
+				isEditingEnabled={this.props.isEditingEnabled}
 			/>);
 		}
 
@@ -65,12 +67,14 @@ Palette.propTypes = {
 	enablePaletteLayout: PropTypes.string,
 	enableNarrowPalette: PropTypes.bool,
 	paletteJSON: PropTypes.object,
-	showPalette: PropTypes.bool
+	showPalette: PropTypes.bool,
+	isEditingEnabled: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	enablePaletteLayout: state.canvasconfig.enablePaletteLayout,
 	enableNarrowPalette: state.canvasconfig.enableNarrowPalette,
+	isEditingEnabled: state.canvasconfig.enableEditingActions,
 	paletteJSON: state.palette.content,
 	// TODO - No need to do this when paletteInitialState is removed
 	showPalette: typeof state.palette.isOpen === "undefined" ? false : state.palette.isOpen

@@ -2900,7 +2900,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("dblclick", (d3Event, d) => {
 				this.logger.log("Node Label - double click");
-				if (d.layout.labelEditable) {
+				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.displayNodeLabelTextArea(d, d3Event.currentTarget.parentNode);
 				}
@@ -2910,12 +2910,12 @@ export default class SVGCanvasRenderer {
 	attachNodeLabelSpanListeners(nodeLabelSpans) {
 		nodeLabelSpans
 			.on("mouseenter", (d3Event, d) => {
-				if (d.layout.labelEditable) {
+				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					this.displayNodeLabelEditIcon(d3Event.currentTarget, d);
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				if (d.layout.labelEditable) {
+				if (d.layout.labelEditable && this.config.enableEditingActions) {
 					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
 					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, d);
 				}
@@ -3347,7 +3347,7 @@ export default class SVGCanvasRenderer {
 		decLabels
 			.on("dblclick", (d3Event, dec) => {
 				this.logger.log("Decoration Label - double click");
-				if (dec.label_editable) {
+				if (dec.label_editable && this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.displayDecLabelTextArea(dec, obj, objType, d3Event.currentTarget.parentNode);
 				}
@@ -3357,12 +3357,12 @@ export default class SVGCanvasRenderer {
 	attachDecLabelSpanListeners(obj, objType, decLabelSpans) {
 		decLabelSpans
 			.on("mouseenter", (d3Event, dec) => {
-				if (dec.label_editable) {
+				if (dec.label_editable && this.config.enableEditingActions) {
 					this.displayDecLabelEditIcon(d3Event.currentTarget, dec, obj, objType);
 				}
 			})
 			.on("mouseleave", (d3Event, dec) => {
-				if (dec.label_editable) {
+				if (dec.label_editable && this.config.enableEditingActions) {
 					// Wait half a sec to let the user get the pointer into the edit icon, otherwise it is closed immediately.
 					this.hideEditIconPending = setTimeout(this.hideEditIcon.bind(this), 500, d3Event.currentTarget, dec);
 				}

@@ -232,7 +232,7 @@ class PaletteContentListItem extends React.Component {
 
 	render() {
 		let itemText = null;
-		let draggable = "true";
+		let draggable = this.props.isEditingEnabled ? "true" : "false";
 		let icon = null;
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
@@ -290,12 +290,12 @@ class PaletteContentListItem extends React.Component {
 			<div id={this.props.nodeTypeInfo.nodeType.id}
 				data-id={this.props.nodeTypeInfo.nodeType.op}
 				draggable={draggable}
-				onDragStart={this.onDragStart}
-				onDoubleClick={this.onDoubleClick}
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				onMouseDown={this.onMouseDown}
+				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
+				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
+				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
 				<div className="palette-list-item-icon-and-text">
@@ -314,6 +314,7 @@ PaletteContentListItem.propTypes = {
 	nodeTypeInfo: PropTypes.object.isRequired,
 	isDisplaySearchResult: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	isShowRanking: PropTypes.bool
 };

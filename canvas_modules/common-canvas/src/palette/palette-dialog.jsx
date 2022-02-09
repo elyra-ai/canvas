@@ -545,6 +545,7 @@ class PaletteDialog extends React.Component {
 					<PaletteDialogContent paletteJSON={this.props.paletteJSON}
 						showGrid={this.state.showGrid}
 						canvasController={this.props.canvasController}
+						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				</div>
 			</nav>
@@ -557,7 +558,8 @@ PaletteDialog.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
 	parentDivId: PropTypes.string.isRequired,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired
 };
 
 export default injectIntl(PaletteDialog);

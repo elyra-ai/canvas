@@ -52,6 +52,7 @@ class PaletteContentList extends React.Component {
 							isDisplaySearchResult={false}
 							canvasController={this.props.canvasController}
 							isPaletteOpen={this.props.isPaletteOpen}
+							isEditingEnabled={this.props.isEditingEnabled}
 						/>
 					</div>
 				);
@@ -78,7 +79,8 @@ PaletteContentList.propTypes = {
 	show: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
-	isLastCategory: PropTypes.bool.isRequired
+	isLastCategory: PropTypes.bool.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired
 };
 
 export default PaletteContentList;

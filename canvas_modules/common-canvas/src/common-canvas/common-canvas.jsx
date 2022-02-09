@@ -85,6 +85,28 @@ class CommonCanvas extends React.Component {
 		this.logger.logEndTimer("initializeController");
 	}
 
+	generateClass() {
+		let className = "common-canvas";
+
+		className += (
+			!this.isEditingAllowed()
+				? " config-editing-actions-false"
+				: "");
+
+		className += (
+			this.props.config && this.props.config.enableParentClass
+				? " " + this.props.config.enableParentClass
+				: "");
+
+		return className;
+	}
+
+	isEditingAllowed() {
+		return this.props.config &&
+			(typeof this.props.config.enableEditingActions === "undefined" ||
+				this.props.config.enableEditingActions === true);
+	}
+
 	render() {
 		this.logger.log("render");
 
@@ -92,10 +114,7 @@ class CommonCanvas extends React.Component {
 		const palette = (<Palette canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 		const centralItems = (<CommonCanvasCentralItems canvasController={this.props.canvasController} containingDivId={this.containingDivId} />);
 
-		const className = "common-canvas" + (
-			this.props.config && this.props.config.enableParentClass
-				? " " + this.props.config.enableParentClass
-				: "");
+		const className = this.generateClass();
 
 		return (
 			<Provider store={this.props.canvasController.getStore()}>

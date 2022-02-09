@@ -149,9 +149,9 @@ export default class ReadOnlyCanvas extends React.Component {
 			config.enableStateTag = this.state.editState;
 			config.enablePaletteLayout = PALETTE_LAYOUT_NONE;
 			config.enableEditingActions = false;
-			config.enableParentClass = "writable read-only";
 			config.enableNodeLayout.outputPortDisplay = false;
 			config.enableLinkSelection = LINK_SELECTION_LINK_ONLY;
+			config.enableDropZoneOnExternalDrag = false;
 		}
 
 		return config;
@@ -220,7 +220,10 @@ export default class ReadOnlyCanvas extends React.Component {
 	}
 
 	contextMenuHandler(source, defaultMenu) {
-		if (source.selectedObjectIds.length === 1) {
+		// Only add the 'Add Port' option if just one object is selctd AND
+		// we are showing an editable canvas.
+		if (source.selectedObjectIds.length === 1 &&
+				(this.state.editState === STATE_TAG_NONE)) {
 			return defaultMenu.concat([
 				{ divider: true }, { action: "addPort", label: "Add port" }
 			]);
@@ -243,6 +246,13 @@ export default class ReadOnlyCanvas extends React.Component {
 		this.canvasController.setLinkDecorations(linkId, decs);
 	}
 
+	tipHandler(tipType, data) {
+		if (tipType === "tipTypeStateTag") {
+			return "This sample application displays a canvas which cannot be edited. (This tooltip text was provided by the sample app code.)";
+		}
+		return null;
+	}
+
 	render() {
 		const config = this.getConfig();
 		const toolbarConfig = this.getToolbarConfig();
@@ -253,6 +263,7 @@ export default class ReadOnlyCanvas extends React.Component {
 				editActionHandler={this.editActionHandler}
 				clickActionHandler={this.clickActionHandler}
 				contextMenuHandler={this.contextMenuHandler}
+				tipHandler={this.tipHandler}
 				config={config}
 				toolbarConfig={toolbarConfig}
 			/>

@@ -66,7 +66,8 @@ export default class CanvasController {
 			enableCreateSupernodeNonContiguous: false,
 			defaultMenuEntries: {
 				saveToPalette: false,
-				createSupernode: true
+				createSupernode: true,
+				displaySupernodeFullPage: true
 			}
 		};
 
@@ -2038,7 +2039,7 @@ export default class CanvasController {
 			action === "collapseSuperNodeInPlace" ||
 			action === "expandSuperNodeInPlace" ||
 			action === "convertSuperNodeExternalToLocal" ||
-			action === "convertSupernodeLocalToExternal" ||
+			action === "convertSuperNodeLocalToExternal" ||
 			action === "deleteLink" ||
 			action === "saveToPalette"
 		);
