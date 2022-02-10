@@ -71,7 +71,7 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
+import { Edit32, Play32, PlayOutline32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button } from "carbon-components-react";
 
@@ -2044,7 +2044,9 @@ class App extends React.Component {
 				{ action: "palette", label: "Palette", enable: true },
 				{ divider: true },
 				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
-				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
+				{ action: "runSelection", label: "Run Selection", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<PlayOutline32 />) },
+				{ divider: true },
+				{ action: "run", label: "Run", enable: true, kind: "primary", iconEnabled: (<Play32 />) },
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
