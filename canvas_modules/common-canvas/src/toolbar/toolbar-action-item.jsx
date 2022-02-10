@@ -133,7 +133,7 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	wrapInTooltip(content) {
-		if (!this.props.overflow && (this.props.actionObj.label || this.props.actionObj.tooltip)) {
+		if (!this.props.overflow && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const actionName = this.generateActionName();
 			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
@@ -146,6 +146,21 @@ class ToolbarActionItem extends React.Component {
 			);
 		}
 		return content;
+	}
+
+	// Returns true if the label should be shown as a tooltip or false if not.
+	// We do not show the label as a tooltip if it is already shown in the
+	// toolbar next to the icon (i.e. incLabelWithIcon is set to something).
+	showLabelAsTip(actionObj) {
+		if (actionObj.label) {
+			if (typeof actionObj.label === "string" &&
+					(actionObj.incLabelWithIcon === "before" ||
+						actionObj.incLabelWithIcon === "after")) {
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	render() {
