@@ -153,9 +153,8 @@ class ToolbarActionItem extends React.Component {
 	// toolbar next to the icon (i.e. incLabelWithIcon is set to something).
 	showLabelAsTip(actionObj) {
 		if (actionObj.label) {
-			if (typeof actionObj.label === "string" &&
-					(actionObj.incLabelWithIcon === "before" ||
-						actionObj.incLabelWithIcon === "after")) {
+			if (actionObj.incLabelWithIcon === "before" ||
+					actionObj.incLabelWithIcon === "after") {
 				return false;
 			}
 			return true;
