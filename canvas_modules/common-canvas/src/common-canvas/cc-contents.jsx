@@ -394,7 +394,7 @@ class CanvasContents extends React.Component {
 			: dropDivClassName;
 
 		dropDivClassName = this.props.bottomPanelIsOpen
-			? dropDivClassName + " common-canvas-bottom-panel-is-open"
+			? dropDivClassName + " common-canvas-bottom-panel-is-open align-harness-empty-image-in-center"
 			: dropDivClassName;
 
 		return (

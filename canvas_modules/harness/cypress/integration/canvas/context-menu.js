@@ -92,7 +92,7 @@ describe("Test of context menu", function() {
 		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
 
 		// Test the context menu postion is moved correctly
-		cy.rightClickToDisplayContextMenu(800, 140);
+		cy.rightClickToDisplayContextMenu(800, 0);
 		cy.verifyContextMenuPosition("800px", "0px");
 	});
 });

@@ -65,6 +65,10 @@ $bottom-panel-height: 393px;
 	top: $toolbar-button-height;
 	overflow: hidden;
 
+	&.align-harness-empty-image-in-center {
+		height: 60vh;
+	}
+
 	&.common-canvas-toolbar-none {
 		height: 100%;
 		top: 0;
