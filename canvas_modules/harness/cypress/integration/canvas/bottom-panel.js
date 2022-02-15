@@ -24,13 +24,13 @@ describe("Testing bottom panel", function() {
 
 		// Resize the bottom pannel & verify its height & width
 		cy.moveBottomPanelDivider(-150);
-		cy.verifyBottomPanelHeight(243);
+		cy.verifyBottomPanelHeight(509);
 		cy.verifyBottomPanelWidth(1328);
 
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 
-		cy.moveBottomPanelDivider(300);
-		cy.verifyBottomPanelHeight(543);
+		cy.moveBottomPanelDivider(100);
+		cy.verifyBottomPanelHeight(509);
 		cy.verifyBottomPanelWidth(807.4375);
 	});
 });

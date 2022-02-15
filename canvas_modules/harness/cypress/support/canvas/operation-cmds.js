@@ -52,7 +52,7 @@ Cypress.Commands.add("moveBottomPanelDivider", (yOffset) => {
 		cy.get(".bottom-panel .bottom-panel-drag")
 			.trigger("mousedown", "center", { view: win, button: 0 });
 		cy.get("#canvas-div-0")
-			.trigger("mousemove", 200, 200, { view: win, movementY: -yOffset })
+			.trigger("mousemove", 200, 200, { view: win, movementY: yOffset, force: true })
 			.trigger("mouseup", 200, 200, { view: win, force: true });
 	});
 });
