@@ -24,7 +24,7 @@
     "istanbul-middleware": "0.2.2",
     "js-file-download": "0.4.12",
     "lodash": "4.17.21",
-    "log4js": "6.3.0",
+    "log4js": "6.4.1",
     "nconf": "0.10.0"
   },
   "devDependencies": {
