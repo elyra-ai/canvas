@@ -35,12 +35,6 @@ class CanvasBottomPanel extends React.Component {
 		this.onMouseMoveY = this.onMouseMoveY.bind(this);
 	}
 
-	// componentWillUnmount() {
-	// 	document.removeEventListener("mousemove", this.onMouseMoveY, true);
-	// 	document.removeEventListener("mouseup", this.onMouseUp, true);
-	// 	document.removeEventListener("mousedown", this.onMouseDown, true);
-	// }
-
 	onMouseDown(e) {
 		if (e.button === 0) {
 			document.addEventListener("mousemove", this.onMouseMoveY);
