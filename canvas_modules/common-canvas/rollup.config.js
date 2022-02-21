@@ -35,6 +35,7 @@ export default {
 		"lib/command-stack": "./src/command-stack/command-stack.js",
 		"lib/tooltip": "./src/tooltip/tooltip.jsx",
 		"lib/canvas": "./src/common-canvas/index.js",
+		"lib/canvas-controller": "./src/common-canvas/canvas-controller.js",
 		"common-canvas": "./src/index.js"
 	},
 	output: [
@@ -53,6 +54,10 @@ export default {
 		}
 	],
 	plugins: [
+		autoExternal(),
+		json(),
+		url(),
+		scss({ output: false }),
 		resolve(
 			{
 				extensions: [".js", ".jsx", ".json"]
@@ -63,20 +68,18 @@ export default {
 			exclude: "**/node_modules/**",
 			presets: [
 				"@babel/preset-react",
-				"@babel/env"
+				["@babel/env", { modules: false }]
 			],
 			plugins: [
 				"lodash",
 				"@babel/plugin-proposal-class-properties",
-				"@babel/plugin-transform-runtime"
+				"@babel/plugin-transform-runtime",
+				"@babel/plugin-proposal-export-default-from",
+				["transform-react-remove-prop-types", { removeImport: true }]
 			]
 		}),
-		autoExternal(),
-		commonjs(),
 		terser(),
-		json(),
-		url(),
-		scss({ output: false }),
+		commonjs(),
 		visualizer({ open: bundleReport })
 	]
 };
