@@ -281,14 +281,14 @@ class CanvasContents extends React.Component {
 
 	drop(event) {
 		event.preventDefault();
+		this.setIsDropZoneDisplayed(false);
+
+		this.first = false;
+		this.second = false;
 
 		if (!this.props.canvasConfig.enableEditingActions) {
 			return;
 		}
-
-		this.first = false;
-		this.second = false;
-		this.setIsDropZoneDisplayed(false);
 
 		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
@@ -394,7 +394,7 @@ class CanvasContents extends React.Component {
 			: dropDivClassName;
 
 		dropDivClassName = this.props.bottomPanelIsOpen
-			? dropDivClassName + " common-canvas-bottom-panel-is-open align-harness-empty-image-in-center"
+			? dropDivClassName + " common-canvas-bottom-panel-is-open"
 			: dropDivClassName;
 
 		return (
