@@ -27,6 +27,7 @@ import CanvasController from "../../src/common-canvas/canvas-controller";
 import imageTestPalette from "../test_resources/palettes/image-test-palette.json";
 import testPalette2 from "../test_resources/palettes/test-palette2.json";
 import testPalette3NoDesc from "../test_resources/palettes/test-palette3-no-desc.json";
+import paletteMissingFields from "../test_resources/palettes/test-missing-fields.json";
 
 
 // This describe() function needs to be positioned above the other describe()
@@ -67,6 +68,24 @@ describe("Palette search renders correctly", () => {
 		simulateSearchEntry(searchInput, "import data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+
+	});
+
+	it("should filter nodes based on search text when fields are missing", () => {
+
+		const wrapper = createMountedPalette({ palette: paletteMissingFields });
+
+		// Simulate click on search input to open palette with search bar
+		const searchInput = wrapper.find("div.palette-flyout-search-container");
+		searchInput.simulate("click");
+
+		simulateSearchEntry(searchInput, "t");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+
+		simulateSearchEntry(searchInput, "test");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
 
 	});
 
