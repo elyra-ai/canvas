@@ -1,0 +1,24 @@
+{
+	"version": "3.0",
+  "categories": [
+    {
+			"category": "import",
+      "label": "Import",
+      "description": "This category defines data importers",
+      "image": "/canvas/flowassets/spss-modeler/images/palette-import.svg",
+      "node_types": [
+        {
+          "typeId": "dataassetimport",
+          "image": "/canvas/flowassets/spss-modeler/images/dataassetimport.svg",
+          "outputPorts": [
+            {
+              "name": "outPort",
+              "label": "Output Port",
+              "cardinality": "0:-1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
