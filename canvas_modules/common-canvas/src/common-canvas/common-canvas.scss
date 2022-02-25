@@ -64,7 +64,7 @@ $bottom-panel-height: 393px;
 	cursor: default;
 	top: $toolbar-button-height;
 	overflow: hidden;
-	
+
 	&.common-canvas-toolbar-none {
 		height: 100%;
 		top: 0;
@@ -91,6 +91,7 @@ $bottom-panel-height: 393px;
 	right:0;
 	bottom: 0;
 	border-top: $palette-border-width solid $palette-border-color;
+	min-height: 75px;
 }
 
 .bottom-panel-drag {
@@ -108,7 +109,6 @@ $bottom-panel-height: 393px;
 	width: 100%;
 	user-select: none;
 	height: 100%;
-
 }
 
 /* Alternative layout for common-canvas components where canvas and right-side
