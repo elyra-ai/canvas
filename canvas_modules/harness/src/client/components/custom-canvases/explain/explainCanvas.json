@@ -15,7 +15,7 @@
           "app_data": {
             "ui_data": {
               "label": "TBSCAN",
-              "x_pos": 360,
+              "x_pos": 660,
               "y_pos": 132,
               "class_name": "light_brown",
               "description": "Scans the data",
@@ -86,7 +86,7 @@
           "app_data": {
             "ui_data": {
               "label": "RETURN",
-              "x_pos": 360,
+              "x_pos": 660,
               "y_pos": 24,
               "class_name": "light_purple",
               "decorations": [
@@ -156,7 +156,7 @@
           "app_data": {
             "ui_data": {
               "label": "SORT",
-              "x_pos": 360,
+              "x_pos": 660,
               "y_pos": 252,
               "class_name": "pink",
               "description": "Sorts the data",
@@ -227,7 +227,7 @@
           "app_data": {
             "ui_data": {
               "label": "NLJOIN",
-              "x_pos": 360,
+              "x_pos": 660,
               "y_pos": 360,
               "class_name": "dark_purple",
               "description": "Joins data",
@@ -298,7 +298,7 @@
           "app_data": {
             "ui_data": {
               "label": "NLJOIN",
-              "x_pos": 150,
+              "x_pos": 450,
               "y_pos": 444,
               "class_name": "dark_purple",
               "description": "Joins data",
@@ -377,7 +377,7 @@
           "app_data": {
             "ui_data": {
               "label": "NLJOIN",
-              "x_pos": -60,
+              "x_pos": 240,
               "y_pos": 516,
               "class_name": "dark_purple",
               "description": "Joins data",
@@ -456,7 +456,7 @@
           "app_data": {
             "ui_data": {
               "label": "TBSCAN",
-              "x_pos": -210,
+              "x_pos": 90,
               "y_pos": 600,
               "class_name": "light_brown",
               "description": "Scanns the data",
@@ -527,7 +527,7 @@
           "app_data": {
             "ui_data": {
               "label": "FETCH",
-              "x_pos": 120,
+              "x_pos": 420,
               "y_pos": 612,
               "description": "Fetches the data",
               "decorations": [
@@ -597,7 +597,7 @@
           "app_data": {
             "ui_data": {
               "label": "IXSCAN",
-              "x_pos": 120,
+              "x_pos": 420,
               "y_pos": 720,
               "description": "Fetches the data",
               "decorations": [
@@ -667,7 +667,7 @@
           "app_data": {
             "ui_data": {
               "label": "FETCH",
-              "x_pos": 420,
+              "x_pos": 720,
               "y_pos": 528,
               "description": "Fetches the data",
               "decorations": [
@@ -727,7 +727,7 @@
           "app_data": {
             "ui_data": {
               "label": "TEMP",
-              "x_pos": -210,
+              "x_pos": 90,
               "y_pos": 708,
               "class_name": "gray",
               "description": "Does some temporary stuff",
@@ -798,7 +798,7 @@
           "app_data": {
             "ui_data": {
               "label": "GRBY",
-              "x_pos": -210,
+              "x_pos": 90,
               "y_pos": 828,
               "class_name": "light_green",
               "description": "Green, Red, Blue and Yellow",
@@ -859,7 +859,7 @@
           "app_data": {
             "ui_data": {
               "label": "SQL180105160757660-1234567890-1234556768900",
-              "x_pos": 69.64634704589844,
+              "x_pos": 370,
               "y_pos": 840,
               "description": "SQL Table",
               "decorations": [

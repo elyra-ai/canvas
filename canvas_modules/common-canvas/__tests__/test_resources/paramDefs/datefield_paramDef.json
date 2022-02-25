@@ -3,17 +3,17 @@
     "title": "Date Fields"
   },
   "current_parameters": {
-    "date_mdy": "2018-11-05",
+    "date_mdy": "11-05-2018",
     "date_ymd": "2018-01-07",
     "date_ymd_non_req": "2018-01-08",
     "date_ymd_null": null,
     "date_ymd_placeholder": null,
-    "date_ymd_slash_sep": "2018-01-07",
+    "date_ymd_slash_sep": "01/07/2018",
     "date_without_a_ui_hint": "2018-01-07",
     "hide_date_field": true,
-    "hidden_date": "2018-07-18",
+    "hidden_date": "07/18/2018",
     "disable_date_field": true,
-    "disabled_date": "2018-07-18",
+    "disabled_date": "07/18/2018",
     "date_table": [
       []
     ]

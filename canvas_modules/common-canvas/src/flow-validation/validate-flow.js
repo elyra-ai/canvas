@@ -17,7 +17,7 @@ import Form from "../common-properties/form/Form";
 import { convertInputDataModel } from "../common-properties/util/property-utils";
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
-import isEqual from "lodash/isEqual";
+import { isEqual } from "lodash";
 
 /* eslint max-depth: ["error", 7] */
 

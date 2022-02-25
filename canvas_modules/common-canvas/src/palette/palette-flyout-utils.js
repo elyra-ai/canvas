@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import has from "lodash/has";
+import { has } from "lodash";
 
 // The entry point to this utils file.
 // Returns a filtered, ranked array of nodeTypeInfo objects for the nodeTypes
@@ -68,7 +68,7 @@ function getOccurrences(nodeType, category, filterStrings) {
 // Returns the occurences and hit counts info for the label of the category
 // passed in based on the filterStrings.
 function getCategoryLabelInfo(category, filterStrings) {
-	const catLabel = has(category, "label")
+	const catLabel = has(category, "label") && category.label
 		? category.label.toLowerCase()
 		: "";
 	const { occurrences, hitCounts } = wordOccurrences(catLabel, filterStrings);
@@ -78,7 +78,7 @@ function getCategoryLabelInfo(category, filterStrings) {
 // Returns the occurences and hit counts info for the label of the node
 // passed in based on the filterStrings.
 function getNodeLabelInfo(nodeType, filterStrings) {
-	const nodeLabel = has(nodeType, "app_data.ui_data.label")
+	const nodeLabel = has(nodeType, "app_data.ui_data.label") && nodeType.app_data.ui_data.label
 		? nodeType.app_data.ui_data.label.toLowerCase()
 		: "";
 	const { occurrences, hitCounts } = wordOccurrences(nodeLabel, filterStrings);
@@ -88,7 +88,7 @@ function getNodeLabelInfo(nodeType, filterStrings) {
 // Returns the occurences and hit counts info for the description of the node
 // passed in based on the filterStrings.
 function getNodeDescInfo(nodeType, filterStrings) {
-	const desc = has(nodeType, "app_data.ui_data.description")
+	const desc = has(nodeType, "app_data.ui_data.description") && nodeType.app_data.ui_data.description
 		? nodeType.app_data.ui_data.description.toLowerCase()
 		: "";
 	const { occurrences, hitCounts } = wordOccurrences(desc, filterStrings);

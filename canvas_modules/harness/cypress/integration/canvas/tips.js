@@ -391,6 +391,21 @@ describe("Test to check if tips show up for toolbar items", function() {
 		cy.verifyTipForToolbarItem(".toggleNotificationPanel-action", "Notifications");
 		cy.mouseoutToolbarItem(".toggleNotificationPanel-action");
 	});
+
+	it("Test to check if tip DOES NOT show when label is shown next to the icon in the button", function() {
+		cy.setCanvasConfig({ selectedToolbarType: "SingleLeftBarArray" });
+
+		// The Run Selection tool tip should not be displayed becuase the label
+		// is already displayed next to the icon in the tool button.
+		cy.hoverOverToolbarItem(".runSelection-action");
+		cy.verifyTipForToolbarItemNotDisplayed(".runSelection-action");
+		cy.mouseoutToolbarItem(".runSelection-action");
+
+		// This tooltip should show because there is no text in the button.
+		cy.hoverOverToolbarItem(".run-action");
+		cy.verifyTipForToolbarItem(".run-action", "Run");
+		cy.mouseoutToolbarItem(".run-action");
+	});
 });
 
 describe("Test undo redo tooltips for different actions", function() {

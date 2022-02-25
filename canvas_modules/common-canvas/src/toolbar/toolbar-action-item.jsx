@@ -133,7 +133,7 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	wrapInTooltip(content) {
-		if (!this.props.overflow && (this.props.actionObj.label || this.props.actionObj.tooltip)) {
+		if (!this.props.overflow && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const actionName = this.generateActionName();
 			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
@@ -146,6 +146,20 @@ class ToolbarActionItem extends React.Component {
 			);
 		}
 		return content;
+	}
+
+	// Returns true if the label should be shown as a tooltip or false if not.
+	// We do not show the label as a tooltip if it is already shown in the
+	// toolbar next to the icon (i.e. incLabelWithIcon is set to something).
+	showLabelAsTip(actionObj) {
+		if (actionObj.label) {
+			if (actionObj.incLabelWithIcon === "before" ||
+					actionObj.incLabelWithIcon === "after") {
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	render() {
@@ -167,7 +181,7 @@ class ToolbarActionItem extends React.Component {
 				"toolbar-item": !this.props.overflow && !actionObj.jsx,
 				"toolbar-jsx-item": !this.props.overflow && actionObj.jsx,
 				"toolbar-overflow-jsx-item": this.props.overflow && actionObj.jsx,
-				"associated-panel-selected": actionObj.action === this.props.associatedPanelAction && this.props.isAssociatedPanelOpen },
+				"toolbar-item-selected": actionObj.isSelected },
 			kindAsClass,
 			actionName);
 
@@ -199,6 +213,7 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		iconTypeOverride: PropTypes.string,
+		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		jsx: PropTypes.object,
 		tooltip: PropTypes.oneOfType([
@@ -209,9 +224,7 @@ ToolbarActionItem.propTypes = {
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
-	onFocus: PropTypes.func,
-	isAssociatedPanelOpen: PropTypes.bool,
-	associatedPanelAction: PropTypes.string
+	onFocus: PropTypes.func
 };
 
 export default ToolbarActionItem;

@@ -37,6 +37,7 @@ class PaletteDialogContentGrid extends React.Component {
 					category={this.props.category}
 					nodeTemplate={ {} }
 					canvasController={this.props.canvasController}
+					isEditingEnabled={this.props.isEditingEnabled}
 				/>
 			);
 		} else {
@@ -46,6 +47,7 @@ class PaletteDialogContentGrid extends React.Component {
 						category={this.props.category}
 						nodeTemplate={this.props.nodeTypes[idx]}
 						canvasController={this.props.canvasController}
+						isEditingEnabled={this.props.isEditingEnabled}
 					/>
 				);
 			}
@@ -67,6 +69,7 @@ PaletteDialogContentGrid.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTypes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };
 

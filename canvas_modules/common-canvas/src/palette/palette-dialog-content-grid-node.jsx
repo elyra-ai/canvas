@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import has from "lodash/has";
+import { has } from "lodash";
 import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
 import { CANVAS_CARBON_ICONS, DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM,
@@ -114,7 +114,7 @@ class PaletteDialogContentGridNode extends React.Component {
 				: <img src={image} className="node-icon" alt={label} />;
 		}
 
-		let draggable = "true";
+		let draggable = this.props.isEditingEnabled ? "true" : "false";
 		let txtClassName = "palette-dialog-grid-node-text";
 
 		// Special case for when there are no nodes in the category so we show
@@ -130,11 +130,11 @@ class PaletteDialogContentGridNode extends React.Component {
 			<div id={this.props.nodeTemplate.id}
 				data-id={this.props.nodeTemplate.op}
 				draggable={draggable}
-				onDragStart={this.onDragStart}
-				onDoubleClick={this.onDoubleClick}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				onMouseDown={this.onMouseDown}
+				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
+				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
+				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 				className="palette-dialog-grid-node-outer"
 			>
 				<div className="palette-dialog-grid-node-inner">
@@ -153,7 +153,8 @@ class PaletteDialogContentGridNode extends React.Component {
 PaletteDialogContentGridNode.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTemplate: PropTypes.object.isRequired,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired
 };
 
 export default PaletteDialogContentGridNode;

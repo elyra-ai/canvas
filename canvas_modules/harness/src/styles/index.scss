@@ -35,6 +35,7 @@ $carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
 @import "../client/components/custom-canvases/flows/flows.scss";
 @import "../client/components/custom-canvases/streams/streams.scss";
 @import "../client/components/custom-canvases/logic/logic.scss";
+@import "../client/components/custom-canvases/read-only/read-only.scss";
 @import "./canvas-customization.scss";
 @import "./sidepanel.scss";
 @import "./App.scss";

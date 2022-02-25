@@ -3,16 +3,16 @@
     "title": "Time Fields"
   },
   "current_parameters": {
-    "time_hms": "05:45:09Z",
-    "time_HHmmss": "05:45:09Z",
-    "time_hms_non_req": "06:30:00Z",
+    "time_hms": "05:45:09",
+    "time_HHmmss": "05:45:09",
+    "time_hms_non_req": "06:30:00",
     "time_hms_null": null,
     "time_hms_placeholder": null,
-    "time_without_a_ui_hint": "06:30:00Z",
+    "time_without_a_ui_hint": "06:30:00",
     "hide_time_field": true,
-    "hidden_time": "06:30:00Z",
+    "hidden_time": "06:30:00",
     "disable_time_field": true,
-    "disabled_time": "06:30:00Z",
+    "disabled_time": "06:30:00",
     "time_table": [
       []
     ]

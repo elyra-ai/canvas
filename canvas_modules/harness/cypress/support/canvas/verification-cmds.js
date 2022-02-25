@@ -935,6 +935,12 @@ Cypress.Commands.add("verifyTipForToolbarItem", (toolbarItem, tipText) => {
 		});
 });
 
+Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
+	cy.getToolbarAction(toolbarItem)
+		.find(".tooltip-trigger")
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyTipForCategory", (nodeCategory) => {
 	// Verify the tip shows next to given category
 	cy.get(".tip-palette-item")

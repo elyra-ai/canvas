@@ -42,6 +42,7 @@ import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
 import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
+import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -70,7 +71,7 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, StopFilledAlt32 } from "@carbon/icons-react";
+import { Edit32, Play32, PlayOutline32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button } from "carbon-components-react";
 
@@ -97,6 +98,7 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
+	EXAMPLE_READ_ONLY,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -159,7 +161,6 @@ class App extends React.Component {
 			canvasPalette2: "",
 			selectedInternalObjectModel: true,
 			selectedDragWithoutSelect: false,
-			selectedDragToMoveSizeNodesComments: true,
 			selectedAssocLinkCreation: false,
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
@@ -1975,7 +1976,6 @@ class App extends React.Component {
 			enableEditingActions: this.state.selectedEditingActions,
 			enableInternalObjectModel: this.state.selectedInternalObjectModel,
 			enableDragWithoutSelect: this.state.selectedDragWithoutSelect,
-			enableDragToMoveSizeNodesComments: this.state.selectedDragToMoveSizeNodesComments,
 			enableLinkSelection: this.state.selectedLinkSelection,
 			enableLinkReplaceOnNewConnection: this.state.selectedLinkReplaceOnNewConnection,
 			enableAssocLinkCreation: this.state.selectedAssocLinkCreation,
@@ -2044,7 +2044,9 @@ class App extends React.Component {
 				{ action: "palette", label: "Palette", enable: true },
 				{ divider: true },
 				{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
-				{ action: "runit", label: "Run", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<Play32 />) },
+				{ action: "runSelection", label: "Run Selection", enable: true, incLabelWithIcon: "before", kind: "primary", iconEnabled: (<PlayOutline32 />) },
+				{ divider: true },
+				{ action: "run", label: "Run", enable: true, kind: "primary", iconEnabled: (<Play32 />) },
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
@@ -2054,7 +2056,11 @@ class App extends React.Component {
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+				{ divider: true },
+				{ action: "mouse", iconEnabled: (<SelectWindow32 />), label: "Mouse", enable: true, isSelected: this.state.selectedInteractionType === "Mouse" },
+				{ action: "trackpad", iconEnabled: (<TouchInteraction32 />), label: "Trackpad", enable: true, isSelected: this.state.selectedInteractionType === "Trackpad" },
+				{ divider: true }
 			];
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_BEFORE_AFTER) {
@@ -2437,6 +2443,13 @@ class App extends React.Component {
 		} else if (this.state.selectedExampleApp === EXAMPLE_APP_LOGIC) {
 			firstCanvas = (
 				<LogicCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_READ_ONLY) {
+			firstCanvas = (
+				<ReadOnlyCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

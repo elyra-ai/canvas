@@ -30,6 +30,8 @@ export default class ExplainCanvas extends React.Component {
 		this.config = Object.assign({}, props.config, {
 			enableParentClass: "explain",
 			enableLinkType: "Straight",
+			enablePaletteLayout: "None",
+			enableEditingActions: false,
 			enableNodeLayout:
 			{
 				defaultNodeWidth: 120,

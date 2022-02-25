@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
-import { Column, Table } from "react-virtualized/dist/commonjs/Table";
+import { Column, Table, AutoSizer } from "react-virtualized";
 
 import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
