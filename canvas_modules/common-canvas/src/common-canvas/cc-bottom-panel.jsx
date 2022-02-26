@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-/* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
-
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { injectIntl } from "react-intl";
 import Logger from "../logging/canvas-logger.js";
 
 class CanvasBottomPanel extends React.Component {
@@ -30,50 +27,49 @@ class CanvasBottomPanel extends React.Component {
 			panelHeight: 393
 		};
 
-		this.resizing = false;
+
 		this.logger = new Logger("CC-Bottom-Panel");
 
-		this.startResize = this.startResize.bind(this);
-		this.stopResize = this.stopResize.bind(this);
-		this.resize = this.resize.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseMoveY = this.onMouseMoveY.bind(this);
 	}
 
-	componentDidMount() {
-		// document.addEventListener("mouseup", this.stopResize, true);
+	onMouseDown(e) {
+		if (e.button === 0) {
+			document.addEventListener("mousemove", this.onMouseMoveY);
+			this.poseY = e.clientY;
+		}
 	}
 
-	componentWillUnmount() {
-		// document.removeEventListener("mouseup", this.stopResize, true);
+	onMouseUp(e) {
+		document.removeEventListener("mousemove", this.onMouseMoveY);
 	}
 
-	startResize(evt) {
-		this.resizing = true;
-	}
-
-	stopResize(evt) {
-		this.resizing = false;
-	}
-
-	resize(evt) {
-		if (this.resizing) {
-			this.setState({ "panelHeight": this.state.panelHeight + evt.movementY });
+	onMouseMoveY(e) {
+		if (e.clientY) {
+			const diff = e.clientY - this.poseY;
+			this.setState({
+				panelHeight: this.state.panelHeight - diff
+			});
+			this.poseY = e.clientY;
 		}
 	}
 
 	render() {
 		this.logger.log("render");
-
 		let bottomPanel = null;
 
-		const styleObj = {
-			height: this.state.panelHeight + "px"
-			// transition: transitionVariable,
-		};
-
 		if (this.props.bottomPanelIsOpen) {
+			const style = {
+				height: this.state.panelHeight
+			};
 			bottomPanel = (
-				<div className={"bottom-panel"} style={styleObj}>
-					{this.props.bottomPanelContent}
+				<div className="bottom-panel" style={style} >
+					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} />
+					<div className="bottom-panel-contents">
+						{this.props.bottomPanelContent}
+					</div>
 				</div>
 			);
 		}
@@ -83,10 +79,6 @@ class CanvasBottomPanel extends React.Component {
 }
 
 CanvasBottomPanel.propTypes = {
-	// Provided by CommonCanvas
-	intl: PropTypes.object.isRequired,
-	canvasController: PropTypes.object.isRequired,
-
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,
 	bottomPanelContent: PropTypes.object
@@ -96,5 +88,4 @@ const mapStateToProps = (state, ownProps) => ({
 	bottomPanelIsOpen: state.bottompanel.isOpen,
 	bottomPanelContent: state.bottompanel.content
 });
-
-export default connect(mapStateToProps)(injectIntl(CanvasBottomPanel));
+export default connect(mapStateToProps)(CanvasBottomPanel);
