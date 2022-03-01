@@ -174,14 +174,14 @@ export default class DeleteObjectsAction extends Action {
 	createActionLabel() {
 		if (this.areDetachableLinksSupported) {
 			return this.labelUtil.getActionLabel(this, "action.deleteNodesCommentsLinks",
-				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
-					comments_count: this.commentsToDelete.length,
+				{ nodes_count: (this.nodesToDelete.length + this.supernodesToDelete.length) === 0 ? "{}" : this.nodesToDelete.length + this.supernodesToDelete.length,
+					comments_count: this.commentsToDelete.length === 0 ? "{}" : this.commentsToDelete.length,
 					links_count: this.linksToDelete.length
 				});
 		}
 		return this.labelUtil.getActionLabel(this, "action.deleteNodesComments", {
-			nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
-			comments_count: this.commentsToDelete.length
+			nodes_count: (this.nodesToDelete.length + this.supernodesToDelete.length) === 0 ? "{}" : this.nodesToDelete.length + this.supernodesToDelete.length,
+			comments_count: this.commentsToDelete.length === 0 ? "{}" : this.commentsToDelete.length
 		});
 	}
 }
