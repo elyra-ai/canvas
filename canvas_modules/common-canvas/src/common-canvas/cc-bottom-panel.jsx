@@ -62,7 +62,7 @@ class CanvasBottomPanel extends React.Component {
 
 		if (this.props.bottomPanelIsOpen) {
 			const style = {
-				height: this.state.panelHeight
+				height: this.state.panelHeight > 800 ? 800 : this.state.panelHeight
 			};
 			bottomPanel = (
 				<div className="bottom-panel" style={style} >
