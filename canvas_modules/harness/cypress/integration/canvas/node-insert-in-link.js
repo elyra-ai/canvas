@@ -71,6 +71,30 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 			"Binding (entry) node", "outPort", "Execution node", "inPort", 0);
 	});
 
+	it.only("Tests for drag node over link", function() {
+		// Open the palette and drag a node onto the canvas.
+		// This will be the node we move to the link.
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Record Ops");
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.dragNodeToPosition("Select", 490, 240);
+		// There should now be one extra link because, on inserting the node, we
+		// removed the old link and added two new ones.
+		cy.verifyNumberOfPortDataLinks(5);
+
+		cy.clickToolbarUndo();
+		cy.clickToolbarUndo();
+
+		// Now we do the same test expect we drag the node
+		// from within the canvas UI not palette
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.dragNodeToPosition("Select", 490, 340);
+		cy.moveNodeToPosition("Select", 490, 240);
+		// There should now be one extra link because, on inserting the node, we
+		// removed the old link and added two new ones.
+		cy.verifyNumberOfPortDataLinks(5);
+	});
+
 	it("Drag a node from the canvas onto a link", function() {
 		// Open the palette and drag a node onto the canvas.
 		// This will be the node we move to the link.
