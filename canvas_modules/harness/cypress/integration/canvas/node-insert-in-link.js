@@ -71,7 +71,7 @@ describe("Test dropping a node on a link with enableInsertNodeDroppedOnLink opti
 			"Binding (entry) node", "outPort", "Execution node", "inPort", 0);
 	});
 
-	it("Tests for drag node over link", function() {
+	it("Drag a node from the palette onto a link AND the canvas onto a link", function() {
 		// Open the palette and drag a node onto the canvas.
 		// This will be the node we move to the link.
 		cy.clickToolbarPaletteOpen();
