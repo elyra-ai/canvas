@@ -607,26 +607,16 @@ export default class APIPipeline {
 	}
 
 	getNodes() {
-		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		if (pipeline) {
-			return pipeline.nodes;
-		}
-		return [];
+		return this.store.getNodes(this.pipelineId);
 	}
 
 	// Returns the IDs of all nodes in the pipeline.
 	getNodeIds() {
-		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		if (pipeline) {
-			return pipeline.nodes.map((node) => node.id);
-		}
-		return [];
+		return this.getNodes().map((n) => n.id);
 	}
 
 	getNode(nodeId) {
-		return this.getNodes().find((node) => {
-			return (node.id === nodeId);
-		});
+		return this.store.getNode(nodeId, this.pipelineId);
 	}
 
 	getSupernodes() {
@@ -1058,18 +1048,11 @@ export default class APIPipeline {
 	}
 
 	getComments() {
-		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		if (pipeline) {
-			return pipeline.comments;
-		}
-		return [];
-
+		return this.store.getComments(this.pipelineId);
 	}
 
 	getComment(commentId) {
-		return this.getComments().find((comment) => {
-			return (comment.id === commentId);
-		});
+		return this.store.getComment(commentId, this.pipelineId);
 	}
 
 	editComment(data) {
@@ -1233,21 +1216,12 @@ export default class APIPipeline {
 	}
 
 	getLinks() {
-		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		if (pipeline) {
-			return pipeline.links;
-		}
-		return [];
-
+		return this.store.getLinks(this.pipelineId);
 	}
 
 	// Returns the IDs of all links in the pipeline.
 	getLinkIds() {
-		const pipeline = this.objectModel.getCanvasInfoPipeline(this.pipelineId);
-		if (pipeline) {
-			return pipeline.links.map((link) => link.id);
-		}
-		return [];
+		return this.getLinks().map((l) => l.id);
 	}
 
 	// Returns an array of links from canvas info links which link
@@ -1419,9 +1393,7 @@ export default class APIPipeline {
 	}
 
 	getLink(linkId) {
-		return this.getLinks().find((link) => {
-			return (link.id === linkId);
-		});
+		return this.store.getLink(linkId, this.pipelineId);
 	}
 
 	setLinkProperties(linkId, linkProperties) {
