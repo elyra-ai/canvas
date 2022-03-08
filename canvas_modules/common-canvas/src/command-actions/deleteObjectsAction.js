@@ -173,22 +173,30 @@ export default class DeleteObjectsAction extends Action {
 
 	createActionLabel() {
 		if (this.areDetachableLinksSupported) {
-			return this.labelUtil.getActionLabel(this, "action.deleteNodesCommentsLinks",
+			const stringList1 = [
+				{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
+				{ label: "Comments", val: this.commentsToDelete.length },
+				{ label: "Links", val: this.linksToDelete.length }
+			];
+			const dynamicStringKey1 = "action.delete" + stringList1
+				.filter((v) => v.val).map((o) => o.label)
+				.join("");
+			return this.labelUtil.getActionLabel(this, "action.delete" + dynamicStringKey1,
 				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
 					comments_count: this.commentsToDelete.length,
 					links_count: this.linksToDelete.length
 				});
 		}
 
-		const countsArray = [
+		const stringList2 = [
 			{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
 			{ label: "Comments", val: this.commentsToDelete.length },
 			{ label: "Links", val: this.linksToDelete.length }
 		];
-		const dynamicStringKey = "action.delete" + countsArray
+		const dynamicStringKey2 = "action.delete" + stringList2
 			.filter((v) => v.val).map((o) => o.label)
 			.join("");
-		return this.labelUtil.getActionLabel(this, dynamicStringKey,
+		return this.labelUtil.getActionLabel(this, dynamicStringKey2,
 			{
 				nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
 				comments_count: this.commentsToDelete.length,
