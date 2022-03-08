@@ -172,31 +172,25 @@ export default class DeleteObjectsAction extends Action {
 	}
 
 	createActionLabel() {
+
+		const stringList = [
+			{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
+			{ label: "Comments", val: this.commentsToDelete.length },
+			{ label: "Links", val: this.linksToDelete.length }
+		];
+		const dynamicStringKey = "action.delete" + stringList
+			.filter((v) => v.val).map((o) => o.label)
+			.join("");
+
 		if (this.areDetachableLinksSupported) {
-			const stringList1 = [
-				{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
-				{ label: "Comments", val: this.commentsToDelete.length },
-				{ label: "Links", val: this.linksToDelete.length }
-			];
-			const dynamicStringKey1 = "action.delete" + stringList1
-				.filter((v) => v.val).map((o) => o.label)
-				.join("");
-			return this.labelUtil.getActionLabel(this, "action.delete" + dynamicStringKey1,
+			return this.labelUtil.getActionLabel(this, "action.delete" + dynamicStringKey,
 				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
 					comments_count: this.commentsToDelete.length,
 					links_count: this.linksToDelete.length
 				});
 		}
 
-		const stringList2 = [
-			{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
-			{ label: "Comments", val: this.commentsToDelete.length },
-			{ label: "Links", val: this.linksToDelete.length }
-		];
-		const dynamicStringKey2 = "action.delete" + stringList2
-			.filter((v) => v.val).map((o) => o.label)
-			.join("");
-		return this.labelUtil.getActionLabel(this, dynamicStringKey2,
+		return this.labelUtil.getActionLabel(this, dynamicStringKey,
 			{
 				nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
 				comments_count: this.commentsToDelete.length,
