@@ -172,23 +172,15 @@ export default class DeleteObjectsAction extends Action {
 	}
 
 	createActionLabel() {
-
-		const stringList = [
+		const stringsList = [
 			{ label: "Nodes", val: this.nodesToDelete.length + this.supernodesToDelete.length },
 			{ label: "Comments", val: this.commentsToDelete.length },
 			{ label: "Links", val: this.linksToDelete.length }
 		];
-		const dynamicStringKey = "action.delete" + stringList
-			.filter((v) => v.val).map((o) => o.label)
+		const dynamicStringKey = "action.delete" + stringsList
+			.filter((v) => v.val)
+			.map((o) => o.label)
 			.join("");
-
-		if (this.areDetachableLinksSupported) {
-			return this.labelUtil.getActionLabel(this, "action.delete" + dynamicStringKey,
-				{ nodes_count: this.nodesToDelete.length + this.supernodesToDelete.length,
-					comments_count: this.commentsToDelete.length,
-					links_count: this.linksToDelete.length
-				});
-		}
 
 		return this.labelUtil.getActionLabel(this, dynamicStringKey,
 			{

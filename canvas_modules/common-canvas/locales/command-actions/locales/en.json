@@ -22,7 +22,7 @@
  	"action.deleteCommentsLinks":"Delete {comments_count} comments and {links_count} links",
 	"action.deleteNodesLinks":"Delete {nodes_count} nodes and {links_count} links",
 	"action.deleteNodesCommentsLinks": "Delete {nodes_count} nodes, {comments_count} comments and {links_count} links",
-	"action.deleteNodesComments": "Delete {nodes_count} nodes, {comments_count} comments",
+	"action.deleteNodesComments": "Delete {nodes_count} nodes and {comments_count} comments",
 	"action.disconnectObjects": "Disconnect objects",
 	"action.displayPreviousPipeline": "Display previous pipline",
 	"action.displaySubPipeline": "Display supernode full page",
