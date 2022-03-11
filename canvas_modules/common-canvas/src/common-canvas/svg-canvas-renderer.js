@@ -881,9 +881,9 @@ export default class SVGCanvasRenderer {
 			fObjectDiv.attr("width", labelDisplayLength);
 		}
 
-		// Calculate the zoom amount if the browser itself is zoomed.
-		// At the time of writing this value is not returned correctly by Safari.
-		const browserZoom = window.devicePixelRatio / 2;
+		// Get the amount the actual browser page is 'zoomed'. This is differet
+		// to the zoom amount for the canvas objects.
+		const browserZoom = this.getBrowserZoom();
 
 		// Calculate the center of the node area for positioning the mouse pointer
 		// on the image when it is being dragged.
@@ -895,6 +895,29 @@ export default class SVGCanvasRenderer {
 			centerX: centerX,
 			centerY: centerY
 		};
+	}
+
+	// Returns the amount the actual browser page is 'zoomed'. This is differet
+	// to the zoom amount for the canvas objects. Unfortunately, this value is not
+	// returned the same for each type of browser so we have to calculate it based
+	// on the type of browser.
+	getBrowserZoom() {
+		let browserZoom = window.devicePixelRatio;
+
+		// Make sure we search for browser idntifiers in this order because with
+		// the Chrome browser userAgent contains the words "Chrome and "Safari"!
+		// However, with the Safari browser, userAgent only contains the word "Safari".
+		if (navigator.userAgent.includes("Chrome")) {
+			browserZoom = window.devicePixelRatio; // This works for Chrome
+
+		} else if (navigator.userAgent.includes("Safari")) {
+			browserZoom = (window.outerWidth - 8) / window.innerWidth; // This works for Safari
+
+		} else if (navigator.userAgent.includes("Firefox")) {
+			browserZoom = window.devicePixelRatio / 2; // This works for Firefox
+		}
+
+		return browserZoom;
 	}
 
 	// Returns an object containing the dimensions of the ghost node that hovers
