@@ -366,7 +366,7 @@ describe("Test changing how tooltip message is changed in toolbar ", function() 
 		cy.visit("/");
 	});
 
-	it.only("Verify undo/redo tooltip messages upon delete action", function() {
+	it("Verify undo/redo tooltip messages upon delete action", function() {
 		// Open a Palette
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("commentColorCanvas.json");
@@ -416,7 +416,7 @@ describe("Test changing how tooltip message is changed in toolbar ", function() 
 		cy.clickToolbarUndo();
 	});
 
-	it.only("Verify undo/redo tooltip messages upon delete action with selectedLinkSelection =`Detachable` ", function() {
+	it("Verify undo/redo tooltip messages upon delete action with selectedLinkSelection =`Detachable` ", function() {
 		// Open a different allTypesCanvas diagram
 		cy.openCanvasDefinition("allTypesCanvas.json");
 		// Enable Detachable links option
