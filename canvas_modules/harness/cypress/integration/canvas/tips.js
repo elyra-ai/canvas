@@ -361,6 +361,74 @@ describe("Test to check if tips show up for a supernode and nodes inside the sup
 	});
 });
 
+describe("Test changing how tooltip message is changed in toolbar ", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it.only("Verify undo/redo tooltip messages upon delete action", function() {
+		// Open a Palette
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.clickToolbarPaletteOpen();
+
+		// Open Record Ops category
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Sort", 500, 600);
+
+		// Case 1: delete nodes
+		cy.clickNode("Sort");
+		cy.deleteNodeUsingKeyboard("Sort");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes");
+		cy.clickToolbarUndo();
+
+		// Case 2: delete comments
+		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
+		cy.deleteCommentUsingContextMenu(" comment 3 sample comment text");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments");
+		cy.clickToolbarUndo();
+
+		// Case 3: Delete nodes and comments
+		cy.clickNode("Sort");
+		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 comments");
+		cy.clickToolbarUndo();
+
+		// Case 4: Delete nodes and links
+		cy.ctrlOrCmdClickNode("C5.0");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 links");
+		cy.clickToolbarUndo();
+
+		// Case 5: Delete comments and links
+		cy.ctrlOrCmdClickComment(" comment 1");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 1 links");
+		cy.clickToolbarUndo();
+
+		// Case 6: delete  nodes, comments and links
+		cy.clickNode("Sort");
+		cy.ctrlOrCmdClickComment(" comment 1");
+		cy.ctrlOrCmdClickNode("C5.0");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 2 nodes, 1 comments and 2 links");
+		cy.clickToolbarUndo();
+	});
+
+	it.only("Verify undo/redo tooltip messages upon delete action with selectedLinkSelection =`Detachable` ", function() {
+		// Open a different allTypesCanvas diagram
+		cy.openCanvasDefinition("allTypesCanvas.json");
+		// Enable Detachable links option
+		cy.setCanvasConfig({ "selectedLinkSelection": "Detachable" });
+
+		// Case 7: delete links
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 links");
+	});
+});
+
 describe("Test to check if tips show up for toolbar items", function() {
 	beforeEach(() => {
 		cy.visit("/");
