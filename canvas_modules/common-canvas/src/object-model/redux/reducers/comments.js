@@ -139,6 +139,20 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "SET_OBJECTS_COLOR_CLASS_NAME":
+		return state.map((comment) => {
+			const idx = action.data.objIds.indexOf(comment.id);
+			if (idx > -1) {
+				const newColorClass =
+					Array.isArray(action.data.newColorClass) ? (action.data.newColorClass[idx] || null) : action.data.newColorClass;
+				const className = replaceColorClass(comment.class_name, newColorClass);
+				const newComment = Object.assign({}, comment, { class_name: className });
+				return newComment;
+			}
+			return comment;
+		});
+
+
 	case "SET_OBJECTS_CLASS_NAME":
 		return state.map((comment) => {
 			const idx = action.data.objIds.indexOf(comment.id);
@@ -201,3 +215,41 @@ export default (state = [], action) => {
 		return state;
 	}
 };
+
+function replaceColorClass(className, newColorClass) {
+	let cn = "";
+	if (className) {
+		cn = removeCurrentColorClass(className);
+		cn = addNewColorClass(cn, newColorClass);
+	} else {
+		cn = newColorClass;
+	}
+	return cn;
+}
+
+function removeCurrentColorClass(className) {
+	const cn = className
+		.split(" ")
+		.filter((tok) => !isColorClass(tok))
+		.join(" ");
+	return cn;
+}
+
+function addNewColorClass(className, newColorClass) {
+	return className ? className + " " + newColorClass : newColorClass;
+}
+
+function isColorClass(className) {
+	return className === "white0" ||
+		className === "yellow20" ||
+		className === "gray20" ||
+		className === "green20" ||
+		className === "teal20" ||
+		className === "cyan20" ||
+		className === "red50" ||
+		className === "orange40" ||
+		className === "gray50" ||
+		className === "green50" ||
+		className === "teal50" ||
+		className === "cyan50";
+}

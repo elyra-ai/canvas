@@ -603,7 +603,7 @@ $link-highlight-color: $support-04;
 
 /* Comment styles */
 
-/* Style for comment background rectangle */
+/* Style for default comment background rectangle */
 .d3-comment-rect {
 	fill: $comment-fill-color;
 	stroke: $comment-outline-color;
@@ -612,6 +612,120 @@ $link-highlight-color: $support-04;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly. */
 	user-select: none;
+}
+
+/* Styles for comments colored by the user */
+// We add g. at the front of each selector below to override any color set
+// by a class provided for the comment by the host application. The
+// assumption is, the user would prefer the color they set in the UI to
+// override any color provided by the host app.
+g.white0 {
+	.d3-comment-rect {
+		fill: $white-0;
+		// stroke: $white-0;
+	}
+	.d3-comment-entry {
+		background-color: $white-0;
+	}
+}
+g.yellow20 {
+	.d3-comment-rect {
+		fill: $yellow-20;
+		// stroke: $yellow-20;
+	}
+	.d3-comment-entry {
+		background-color: $yellow-20;
+	}
+}
+g.gray20 {
+	.d3-comment-rect {
+		fill: $gray-20;
+		// stroke: $gray-20;
+	}
+	.d3-comment-entry {
+		background-color: $gray-20;
+	}
+}
+g.green20 {
+	.d3-comment-rect {
+		fill: $green-20;
+		// stroke: $green-20;
+	}
+	.d3-comment-entry {
+		background-color: $green-20;
+	}
+}
+g.teal20 {
+	.d3-comment-rect {
+		fill: $teal-20;
+		// stroke: $teal-20;
+	}
+	.d3-comment-entry {
+		background-color: $teal-20;
+	}
+}
+g.cyan20 {
+	.d3-comment-rect {
+		fill: $cyan-20;
+		// stroke: $cyan-20;
+	}
+	.d3-comment-entry {
+		background-color: $cyan-20;
+	}
+}
+g.red50 {
+	.d3-comment-rect {
+		fill: $red-50;
+		// stroke: $red-50;
+	}
+	.d3-comment-entry {
+		background-color: $red-50;
+	}
+}
+g.orange40 {
+	.d3-comment-rect {
+		fill: $orange-40;
+		// stroke: $orange-40
+	}
+	.d3-comment-entry {
+		background-color: $orange-40;
+	}
+}
+g.gray50 {
+	.d3-comment-rect {
+		fill: $gray-50;
+		// stroke: $gray-50;
+	}
+	.d3-comment-entry {
+		background-color: $gray-50;
+	}
+}
+g.green50 {
+	.d3-comment-rect {
+		fill: $green-50;
+		// stroke: $green-50;
+	}
+	.d3-comment-entry {
+		background-color: $green-50;
+	}
+}
+g.teal50 {
+	.d3-comment-rect {
+		fill: $teal-50;
+		// stroke: $teal-50;
+	}
+	.d3-comment-entry {
+		background-color: $teal-50;
+	}
+}
+g.cyan50 {
+	.d3-comment-rect {
+		fill: $cyan-50;
+		// stroke: $cyan-50;
+	}
+	.d3-comment-entry {
+		background-color: $cyan-50;
+	}
 }
 
 .d3-comment-selection-highlight {
@@ -630,6 +744,7 @@ $link-highlight-color: $support-04;
 
 @mixin d3-comment-mixin {
 	color: $comment-text-color;
+	background-color: transparent;
 	font-size: $comment-text-font-size;
 	font-weight: $comment-text-font-weight;
 	font-family: $comment-text-font-family;
@@ -657,7 +772,6 @@ $link-highlight-color: $support-04;
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
 	@include d3-comment-mixin;
-	background-color: $field-01;
 	border-width: $comment-text-entry-border;
 
 	&:focus {
