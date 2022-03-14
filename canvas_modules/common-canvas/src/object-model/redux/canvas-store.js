@@ -105,6 +105,74 @@ export default class CanavasStore {
 		return cloneDeep(this.store.getState().canvasinfo);
 	}
 
+	// This is a service method for retrieving the internal pipeline. It does NOT
+	// clone the pipeline therefore it should NOT be called from outside this
+	// class because we don't want to surface the intenal data in redux to
+	// the outside world.
+	getNonClonedPipeline(pipelineId) {
+		return this.store.getState().canvasinfo.pipelines.find((p) => p.id === pipelineId);
+	}
+
+	getNodes(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		if (pipeline && pipeline.nodes) {
+			return cloneDeep(pipeline.nodes);
+		}
+		return [];
+	}
+
+	getNode(nodeId, pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		let node = null;
+		if (pipeline && pipeline.nodes) {
+			const internalNode = pipeline.nodes.find((n) => (n.id === nodeId));
+			if (internalNode) {
+				node = cloneDeep(internalNode);
+			}
+		}
+		return node;
+	}
+
+	getComments(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		if (pipeline && pipeline.comments) {
+			return cloneDeep(pipeline.comments);
+		}
+		return [];
+	}
+
+	getComment(commentId, pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		let com = null;
+		if (pipeline && pipeline.comments) {
+			const internalCom = pipeline.comments.find((c) => (c.id === commentId));
+			if (internalCom) {
+				com = cloneDeep(internalCom);
+			}
+		}
+		return com;
+	}
+
+	getLinks(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		if (pipeline && pipeline.links) {
+			return cloneDeep(pipeline.links);
+		}
+		return [];
+	}
+
+	getLink(linkId, pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+		let link = null;
+		if (pipeline && pipeline.links) {
+			const internalLink = pipeline.links.find((l) => (l.id === linkId));
+			if (internalLink) {
+				link = cloneDeep(internalLink);
+			}
+		}
+		return link;
+	}
+
 	getBreadcrumbs() {
 		return cloneDeep(this.store.getState().breadcrumbs);
 	}
