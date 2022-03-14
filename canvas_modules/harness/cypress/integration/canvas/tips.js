@@ -579,30 +579,31 @@ describe("Test undo redo tooltips for different actions", function() {
 	});
 
 	it("Test undo redo tooltips are displayed when returned from the actionLabelHandler", function() {
+		cy.openCanvasDefinition("allTypesCanvas.json");
 		// Delete a node
-		cy.clickNode("Var. File");
+		cy.clickNode("Model Node");
 		cy.clickToolbarDelete();
 		// Verify undo/redo tooltip after deleting node
 		cy.hoverOverToolbarItem(".undo-action");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 3 links");
 		cy.mouseoutToolbarItem(".undo-action");
 		cy.clickToolbarUndo();
 
 		cy.hoverOverToolbarItem(".redo-action");
-		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 nodes and 3 links");
 		cy.mouseoutToolbarItem(".redo-action");
 		cy.clickToolbarRedo();
 
 		// Delete a comment
-		cy.deleteCommentUsingToolbar("This is a select node");
+		cy.deleteCommentUsingToolbar("The 4 different node types");
 		// Verify undo/redo tooltip after deleting comment
 		cy.hoverOverToolbarItem(".undo-action");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 3 links");
 		cy.mouseoutToolbarItem(".undo-action");
 		cy.clickToolbarUndo();
 
 		cy.hoverOverToolbarItem(".redo-action");
-		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
+		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 comments and 3 links");
 		cy.mouseoutToolbarItem(".redo-action");
 		cy.clickToolbarRedo();
 	});
