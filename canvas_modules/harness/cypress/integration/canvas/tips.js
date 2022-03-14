@@ -416,6 +416,27 @@ describe("Test changing how tooltip message is changed in toolbar ", function() 
 		cy.clickToolbarUndo();
 	});
 
+	it("Verify undo/redo tooltip messages upon cutting in 3 ways,it must say 'Cut selected objects` ", function() {
+		// Open a different commentColorCanvas diagram
+		cy.openCanvasDefinition("commentColorCanvas.json");
+
+		cy.clickNode("DRUG1n");
+		cy.shortcutKeysCut();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+
+		cy.clickNode("DRUG1n");
+		cy.clickToolbarCut();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+
+		cy.clickNode("DRUG1n");
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextSubmenu("Edit", "Cut");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+	});
+
 	it("Verify undo/redo tooltip messages upon delete action with selectedLinkSelection =`Detachable` ", function() {
 		// Open a different allTypesCanvas diagram
 		cy.openCanvasDefinition("allTypesCanvas.json");
@@ -555,7 +576,9 @@ describe("Test undo redo tooltips for different actions", function() {
 		cy.verifyTipForToolbarItem(".redo-action", "Redo: Edit comment");
 		cy.mouseoutToolbarItem(".redo-action");
 		cy.clickToolbarRedo();
+	});
 
+	it("Test undo redo tooltips are displayed when returned from the actionLabelHandler", function() {
 		// Delete a node
 		cy.clickNode("Var. File");
 		cy.clickToolbarDelete();
