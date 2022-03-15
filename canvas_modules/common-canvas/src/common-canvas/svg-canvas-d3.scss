@@ -722,6 +722,7 @@ g.cyan50 {
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
 	@include d3-comment-mixin;
+	background-color: $field-01;
 	border-width: $comment-text-entry-border;
 
 	&:focus {
