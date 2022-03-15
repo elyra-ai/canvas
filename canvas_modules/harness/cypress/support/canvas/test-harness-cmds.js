@@ -39,15 +39,19 @@ Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
 	cy.get("#harness-action-bar-sidepanel-modal").click();
 });
 
-Cypress.Commands.add("openCanvasDefinition", (canvasFileName) => {
+Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
 	cy.document().then((doc) => {
 		doc.setCanvasDropdownFile(canvasFileName);
 	});
-	// Wait until we can get a node from the canvas before proceeding. This
+	// Wait until we can get a node or comment from the canvas before proceeding. This
 	// allows the canvas to load and display before any more test case steps
 	// are executed. Note: this won't work if the testcase selects a second
 	// canvas while an existing canvas with nodes is displayed.
-	cy.get(".d3-node-group");
+	if (checkForComment) {
+		cy.get(".d3-comment-group");
+	} else {
+		cy.get(".d3-node-group");
+	}
 });
 
 Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
