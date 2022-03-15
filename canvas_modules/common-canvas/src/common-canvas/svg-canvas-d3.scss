@@ -79,7 +79,8 @@ $node-port-input-arrow-connected-stroke-color: $inverse-02;
 $node-port-input-arrow-connected-fill-color: transparent;
 
 // Comment colors
-$comment-outline-color: $ui-04;
+$comment-outline-color: $active-light-ui;
+$comment-outline-hover-color: $inverse-hover-ui;
 $comment-fill-color: $ui-01;
 $comment-text-color: $text-02;
 
@@ -603,6 +604,13 @@ $link-highlight-color: $support-04;
 
 /* Comment styles */
 
+.d3-comment-group:hover {
+	.d3-comment-rect {
+		stroke: $comment-outline-hover-color
+	}
+}
+
+
 /* Style for default comment background rectangle */
 .d3-comment-rect {
 	fill: $comment-fill-color;
@@ -614,118 +622,60 @@ $link-highlight-color: $support-04;
 	user-select: none;
 }
 
+@mixin comment-color-overrides($background-color) {
+	.d3-comment-rect {
+		fill: $background-color;
+	}
+	.d3-comment-text {
+		color: $gray-100;
+	}
+	.d3-comment-entry {
+		background-color: $background-color;
+		color: $gray-100;
+	}
+
+}
+
 /* Styles for comments colored by the user */
 // We add g. at the front of each selector below to override any color set
 // by a class provided for the comment by the host application. The
 // assumption is, the user would prefer the color they set in the UI to
 // override any color provided by the host app.
 g.white0 {
-	.d3-comment-rect {
-		fill: $white-0;
-		// stroke: $white-0;
-	}
-	.d3-comment-entry {
-		background-color: $white-0;
-	}
+	@include comment-color-overrides($white-0);
 }
 g.yellow20 {
-	.d3-comment-rect {
-		fill: $yellow-20;
-		// stroke: $yellow-20;
-	}
-	.d3-comment-entry {
-		background-color: $yellow-20;
-	}
+	@include comment-color-overrides($yellow-20);
 }
 g.gray20 {
-	.d3-comment-rect {
-		fill: $gray-20;
-		// stroke: $gray-20;
-	}
-	.d3-comment-entry {
-		background-color: $gray-20;
-	}
+	@include comment-color-overrides($gray-20);
 }
 g.green20 {
-	.d3-comment-rect {
-		fill: $green-20;
-		// stroke: $green-20;
-	}
-	.d3-comment-entry {
-		background-color: $green-20;
-	}
+	@include comment-color-overrides($green-20);
 }
 g.teal20 {
-	.d3-comment-rect {
-		fill: $teal-20;
-		// stroke: $teal-20;
-	}
-	.d3-comment-entry {
-		background-color: $teal-20;
-	}
+	@include comment-color-overrides($teal-20);
 }
 g.cyan20 {
-	.d3-comment-rect {
-		fill: $cyan-20;
-		// stroke: $cyan-20;
-	}
-	.d3-comment-entry {
-		background-color: $cyan-20;
-	}
+	@include comment-color-overrides($cyan-20);
 }
 g.red50 {
-	.d3-comment-rect {
-		fill: $red-50;
-		// stroke: $red-50;
-	}
-	.d3-comment-entry {
-		background-color: $red-50;
-	}
+	@include comment-color-overrides($red-50);
 }
 g.orange40 {
-	.d3-comment-rect {
-		fill: $orange-40;
-		// stroke: $orange-40
-	}
-	.d3-comment-entry {
-		background-color: $orange-40;
-	}
+	@include comment-color-overrides($orange-40);
 }
 g.gray50 {
-	.d3-comment-rect {
-		fill: $gray-50;
-		// stroke: $gray-50;
-	}
-	.d3-comment-entry {
-		background-color: $gray-50;
-	}
+	@include comment-color-overrides($gray-50);
 }
 g.green50 {
-	.d3-comment-rect {
-		fill: $green-50;
-		// stroke: $green-50;
-	}
-	.d3-comment-entry {
-		background-color: $green-50;
-	}
+	@include comment-color-overrides($green-50);
 }
 g.teal50 {
-	.d3-comment-rect {
-		fill: $teal-50;
-		// stroke: $teal-50;
-	}
-	.d3-comment-entry {
-		background-color: $teal-50;
-	}
+	@include comment-color-overrides($teal-50);
 }
 g.cyan50 {
-	.d3-comment-rect {
-		fill: $cyan-50;
-		// stroke: $cyan-50;
-	}
-	.d3-comment-entry {
-		background-color: $cyan-50;
-	}
+	@include comment-color-overrides($cyan-50);
 }
 
 .d3-comment-selection-highlight {

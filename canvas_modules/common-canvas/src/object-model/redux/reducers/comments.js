@@ -55,13 +55,15 @@ export default (state = [], action) => {
 	case "ADD_COMMENT": {
 		const newComment = {
 			id: action.data.id,
-			class_name: action.data.class_name,
 			content: action.data.content,
 			height: action.data.height,
 			width: action.data.width,
 			x_pos: action.data.x_pos,
 			y_pos: action.data.y_pos
 		};
+		if (typeof action.data.class_name !== "undefined") {
+			newComment.class_name = action.data.class_name;
+		}
 		return [
 			...state,
 			newComment
