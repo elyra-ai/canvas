@@ -19,7 +19,7 @@ import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
 import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -38,8 +38,7 @@ class VirtualizedTable extends React.Component {
 			updatedState.rowCount = nextProps.rowCount;
 		}
 		// Don't check following condition after column is resized
-		// if (!prevState.columnResized && !isEqual(nextProps.columns, prevState.columns)) { // fix this!!
-		if (!isEqual(nextProps.columns, prevState.columns)) {
+		if (!prevState.columnResized && !isEqual(nextProps.columns, prevState.columns)) { // TODO: fix this!! Error in Expression control
 			updatedState.columns = nextProps.columns;
 		}
 		return (updatedState);
@@ -227,8 +226,8 @@ class VirtualizedTable extends React.Component {
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
 				axis="x"
-				defaultClassName="ta-lr-virtualized-table-header-resize"
-				defaultClassNameDragging="ta-lr-virtualized-table-header-resize-active"
+				defaultClassName="properties-vt-header-resize"
+				defaultClassNameDragging="properties-vt-header-resize-active"
 				onDrag={
 					(evt, { deltaX }) => {
 						this.resizeColumn({ dataKey, deltaX });
@@ -258,23 +257,44 @@ class VirtualizedTable extends React.Component {
 							{label}
 						</Tooltip>
 					}
+					{disableSort === false && sortIcon}
 				</div>
-				{disableSort === false && sortIcon}
 				{ resizeElem }
 			</React.Fragment>
 		);
 	}
 
+	/* Columns are not resizable by default. Host application specifies resizable columns in parameter definition.
+	* When a column is resized, width of ALL the columns to the right of resized column is adjusted.
+	* Example: If a column width is reduced by 10px and there are 5 columns on the right of resized column. Each of the 5 columns width is increased by 2px (10px/number of columns)
+	* When any column's width reaches MINIMUM_COLUMN_WIDTH (56px), resizing is stopped.
+	* Special case - For columns without labels, when their width reaches MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL (32px), resizing is stopped.
+	*/
 	resizeColumn({ dataKey, deltaX }) {
-		const minColWidth = 60; // Test value. Get the actual value from design.
 		this.setState((prevState) => {
 
 			const columns = prevState.columns;
+			// Calculate number of columns on the right of resized column
+			const resizedColumnIndex = this.getColumnIndex(columns, dataKey);
+			const numberOfColumnsOnTheRight = columns.length - 1 - resizedColumnIndex;
+			const rightColumnsDelta = deltaX / numberOfColumnsOnTheRight;
 
-			const resizedColumn = this.getColumnIndex(columns, dataKey);
-			if ((columns[resizedColumn].width + deltaX) > minColWidth && (columns[resizedColumn + 1].width - deltaX) > minColWidth) {
-				columns[resizedColumn].width += deltaX;
-				columns[resizedColumn + 1].width -= deltaX;
+			// Verify adjusted width of every column on the right is greater than minimum width
+			const everyColumnGreaterThanMinWidth = columns.slice(resizedColumnIndex + 1).every((col) => {
+				if (col.headerLabel.length > 0) {
+					// Column with label has min width 56px
+					return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH);
+				}
+				// Column without label has min width 32px
+				return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL);
+			});
+
+			if ((columns[resizedColumnIndex].width + deltaX) > MINIMUM_COLUMN_WIDTH && everyColumnGreaterThanMinWidth) {
+				columns[resizedColumnIndex].width += deltaX;
+				// Adjust width of all columns on the right
+				for (let i = resizedColumnIndex + 1; i < columns.length; i++) {
+					columns[i].width -= rightColumnsDelta;
+				}
 			}
 			return {
 				columnResized: true,

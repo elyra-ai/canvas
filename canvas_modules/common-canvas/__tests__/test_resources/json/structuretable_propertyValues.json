@@ -98,6 +98,24 @@
 			"12:00:00Z"
 		]
 	],
+	"structuretableResizableColumns": [
+		[
+			0,
+			"Age",
+			"Age",
+			"",
+			"string",
+			"01:13:45Z"
+		],
+		[
+			1,
+			"BP",
+			"BP-1",
+			"blood pressure plus additional characters to test display_chars and the set limit of the number of characters.",
+			"",
+			"12:00:00Z"
+		]
+	],
 	"structuretableErrors": [
 		[
 			"Cholesterol",
