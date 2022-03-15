@@ -24,8 +24,7 @@ class CanvasBottomPanel extends React.Component {
 		super(props);
 
 		this.state = {
-			panelHeight: 393,
-			diff: 0
+			panelHeight: 393
 		};
 
 
