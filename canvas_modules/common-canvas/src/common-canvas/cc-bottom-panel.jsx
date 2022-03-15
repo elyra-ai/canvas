@@ -24,7 +24,8 @@ class CanvasBottomPanel extends React.Component {
 		super(props);
 
 		this.state = {
-			panelHeight: 393
+			panelHeight: 393,
+			diff: 0
 		};
 
 
@@ -34,6 +35,7 @@ class CanvasBottomPanel extends React.Component {
 		this.onMouseDown = this.onMouseDown.bind(this);
 		this.onMouseMoveY = this.onMouseMoveY.bind(this);
 	}
+
 
 	onMouseDown(e) {
 		if (e.button === 0) {
@@ -61,8 +63,14 @@ class CanvasBottomPanel extends React.Component {
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
+			const canvasContainer = document.querySelector(".d3-svg-canvas-div");
+			const rectCanvasContainer = canvasContainer.getBoundingClientRect();
+			const maringTop = 120;
+
 			const style = {
-				height: this.state.panelHeight
+				height: this.state.panelHeight >= (rectCanvasContainer.bottom - maringTop)
+					? (rectCanvasContainer.bottom - maringTop)
+					: this.state.panelHeight
 			};
 			bottomPanel = (
 				<div className="bottom-panel" style={style} >
