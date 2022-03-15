@@ -22,17 +22,18 @@ export default class ColorSelectedObjectsAction extends Action {
 		this.objectModel = objectModel;
 		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-		this.oldColors = this.data.selectedObjects.map((o) => this.getObjectColorClass(o));
+		this.oldIds = this.data.selectedObjects.map((o) => o.id); // Copy the IDs
+		this.oldColors = this.getOldColors();
 		this.actionLabel = this.createActionLabel();
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.setObjectsColorClassName(this.data.selectedObjectIds, this.data.editParam.color);
+		this.apiPipeline.setObjectsColorClassName(this.oldIds, this.data.editParam.color);
 	}
 
 	undo() {
-		this.apiPipeline.setObjectsColorClassName(this.data.selectedObjectIds, this.oldColors);
+		this.apiPipeline.setObjectsColorClassName(this.oldIds, this.oldColors);
 	}
 
 	redo() {
@@ -49,6 +50,14 @@ export default class ColorSelectedObjectsAction extends Action {
 		});
 	}
 
+	getOldColors() {
+		const oldColors = [];
+		this.data.selectedObjects.forEach((o) => {
+			oldColors.push(this.getObjectColorClass(o));
+		});
+		return oldColors;
+	}
+
 	getObjectColorClass(o) {
 		if (o.class_name) {
 			const classes = o.class_name.split(" ");
@@ -57,7 +66,7 @@ export default class ColorSelectedObjectsAction extends Action {
 				return colorClass;
 			}
 		}
-		return null;
+		return "";
 	}
 
 	getColorClass(className) {
