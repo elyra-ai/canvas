@@ -458,6 +458,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 				controlType = ControlType.TIMEFIELD;
 			}
 			break;
+		case Type.TIMESTAMP:
+			controlType = ControlType.TIMESTAMP;
+			break;
 		case Type.STRUCTURE: {
 			const structureDef = isSubControl ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
 
