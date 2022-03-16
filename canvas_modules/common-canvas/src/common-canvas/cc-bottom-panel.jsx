@@ -26,7 +26,6 @@ class CanvasBottomPanel extends React.Component {
 		this.state = {
 			panelHeight: 393
 		};
-		this.rectCanvasContainer = {};
 
 		this.logger = new Logger("CC-Bottom-Panel");
 
@@ -62,18 +61,17 @@ class CanvasBottomPanel extends React.Component {
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const canvasContainer = document.querySelector(".d3-svg-background");
-			setTimeout(() => {
-				this.rectCanvasContainer = canvasContainer.getBoundingClientRect();
-			}, 0);
-			const maringTop = 120;
-			const style = {
-				height: this.state.panelHeight >= (this.rectCanvasContainer.bottom - maringTop)
-					? (this.rectCanvasContainer.bottom - maringTop)
-					: this.state.panelHeight
-			};
+			const canvasContainer = document.querySelector(".common-canvas-drop-div");
+			const rectHeight = canvasContainer
+				? canvasContainer.getBoundingClientRect().height
+				: 0;
+			const marginTop = 60;
+			const height = this.state.panelHeight >= (rectHeight - marginTop)
+				? (rectHeight - marginTop)
+				: this.state.panelHeight;
+
 			bottomPanel = (
-				<div className="bottom-panel" style={style} >
+				<div className="bottom-panel" style={{ height }} >
 					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
