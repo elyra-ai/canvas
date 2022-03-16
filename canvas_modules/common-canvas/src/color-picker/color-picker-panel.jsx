@@ -32,10 +32,6 @@ class ColorPickerPanel extends React.Component {
 		this.props.clickActionHandler(color);
 	}
 
-	closeMenu() {
-		//
-	}
-
 	render() {
 		this.logger.log("render");
 		return (
