@@ -26,7 +26,7 @@ class CanvasBottomPanel extends React.Component {
 		this.state = {
 			panelHeight: 393
 		};
-
+		this.rectCanvasContainer = {};
 
 		this.logger = new Logger("CC-Bottom-Panel");
 
@@ -63,12 +63,13 @@ class CanvasBottomPanel extends React.Component {
 
 		if (this.props.bottomPanelIsOpen) {
 			const canvasContainer = document.querySelector(".d3-svg-background");
-			const rectCanvasContainer = canvasContainer.getBoundingClientRect();
+			setTimeout(() => {
+				this.rectCanvasContainer = canvasContainer.getBoundingClientRect();
+			}, 5);
 			const maringTop = 120;
-
 			const style = {
-				height: this.state.panelHeight >= (rectCanvasContainer.bottom - maringTop)
-					? (rectCanvasContainer.bottom - maringTop)
+				height: this.state.panelHeight >= (this.rectCanvasContainer.bottom - maringTop)
+					? (this.rectCanvasContainer.bottom - maringTop)
 					: this.state.panelHeight
 			};
 			bottomPanel = (
