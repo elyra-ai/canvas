@@ -122,6 +122,7 @@ const Type = {
 	PASSWORD: "password",
 	DATE: "date",
 	TIME: "time",
+	TIMESTAMP: "timestamp",
 	STRUCTURE: "structure",
 	OBJECT: "object"
 };
