@@ -68,7 +68,8 @@ export default class CanvasController {
 			defaultMenuEntries: {
 				saveToPalette: false,
 				createSupernode: true,
-				displaySupernodeFullPage: true
+				displaySupernodeFullPage: true,
+				colorBackground: true
 			}
 		};
 
@@ -172,7 +173,8 @@ export default class CanvasController {
 
 	setContextMenuConfig(contextMenuConfig) {
 		this.logger.log("Setting Context Menu Config");
-		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
+		const defaultMenuEntries = Object.assign(this.contextMenuConfig.defaultMenuEntries, contextMenuConfig.defaultMenuEntries);
+		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig, { defaultMenuEntries });
 	}
 
 	setKeyboardConfig(keyboardConfig) {
@@ -1899,8 +1901,8 @@ export default class CanvasController {
 			}
 		}
 		// Color objects
-		// if (source.type === "node" || source.type === "comment") {
-		if (source.type === "comment") {
+		if (source.type === "comment" &&
+				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
 			menuDefinition = menuDefinition.concat({ submenu: true, menu: "colorPicker", label: this.labelUtil.getLabel("comment.colorBackground") });
 			menuDefinition = menuDefinition.concat({ divider: true });
 		}
