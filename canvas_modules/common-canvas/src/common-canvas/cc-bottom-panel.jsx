@@ -65,7 +65,7 @@ class CanvasBottomPanel extends React.Component {
 			const canvasContainer = document.querySelector(".d3-svg-background");
 			setTimeout(() => {
 				this.rectCanvasContainer = canvasContainer.getBoundingClientRect();
-			}, 5);
+			}, 0);
 			const maringTop = 120;
 			const style = {
 				height: this.state.panelHeight >= (this.rectCanvasContainer.bottom - maringTop)
