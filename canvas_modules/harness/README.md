@@ -19,7 +19,7 @@ limitations under the License.
 # Test Harness
 
 ## Environment setup
-- Nodejs `node 12.x`
+- Nodejs `node 14.x`
 
 #### Development setup
 ```sh
