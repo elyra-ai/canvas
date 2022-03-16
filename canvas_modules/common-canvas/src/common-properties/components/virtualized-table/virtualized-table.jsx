@@ -23,7 +23,7 @@ import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS, MINIMUM_COLUMN_WID
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-import { isEmpty, isEqual } from "lodash";
+import { isEmpty, differenceBy } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
@@ -37,8 +37,9 @@ class VirtualizedTable extends React.Component {
 		if (nextProps.rowCount !== prevState.rowCount) {
 			updatedState.rowCount = nextProps.rowCount;
 		}
-		// Don't check following condition after column is resized
-		if (!prevState.columnResized && !isEqual(nextProps.columns, prevState.columns)) { // TODO: fix this!! Error in Expression control
+		// Only get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+		// We're not comparing all properties in columns object because width can be different after resizing.
+		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel"))) {
 			updatedState.columns = nextProps.columns;
 		}
 		return (updatedState);

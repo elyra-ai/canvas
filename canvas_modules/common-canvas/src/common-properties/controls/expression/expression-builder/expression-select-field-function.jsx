@@ -572,7 +572,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_RETURN_COLUMN);
 
 
-		headers.push({ key: "function", label: functionColumn, width: 73 });
+		headers.push({ key: "function", label: functionColumn, width: 73, resizable: true });
 		headers.push({ key: "return", label: returnColumn, width: 27 });
 		const table = this._buildFunctionTable(this.state.functionCategory);
 
