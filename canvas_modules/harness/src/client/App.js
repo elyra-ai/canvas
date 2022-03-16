@@ -2350,8 +2350,7 @@ class App extends React.Component {
 			defaultMenuEntries: {
 				saveToPalette: this.state.selectedSaveToPalette,
 				createSupernode: true,
-				displaySupernodeFullPage: true,
-				colorBackground: false
+				displaySupernodeFullPage: true
 			}
 		};
 
