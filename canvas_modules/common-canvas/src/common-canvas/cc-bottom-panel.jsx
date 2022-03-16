@@ -62,7 +62,7 @@ class CanvasBottomPanel extends React.Component {
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const canvasContainer = document.querySelector(".d3-svg-canvas-div");
+			const canvasContainer = document.querySelector(".d3-svg-background");
 			const rectCanvasContainer = canvasContainer.getBoundingClientRect();
 			const maringTop = 120;
 
