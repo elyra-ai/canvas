@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import Icon from "../icons/icon.jsx";
 import { CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
+import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
@@ -33,6 +34,7 @@ class CommonContextMenu extends React.Component {
 		super(props);
 		this.state = {};
 		this.itemSelected = this.itemSelected.bind(this);
+		this.colorClicked = this.colorClicked.bind(this);
 	}
 
 	onContextMenu(e) {
@@ -46,6 +48,10 @@ class CommonContextMenu extends React.Component {
 		if (selectedEvent) {
 			selectedEvent.stopPropagation();
 		}
+	}
+
+	colorClicked(color) {
+		this.props.contextHandler("colorSelectedObjects", { color });
 	}
 
 	calculateMenuSize(menu) {
@@ -129,40 +135,28 @@ class CommonContextMenu extends React.Component {
 
 			} else if (submenu) {
 				previousDivider = false;
-				const submenuItems = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
-				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
-				const submenuSize = this.calculateMenuSize(menuDefinition[i].menu);
-				let rtl = false;
+				if (menuDefinition[i].menu === "colorPicker") {
+					const disabled = false;
+					const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
+					const subMenuContent = this.buildColorPickerPanel();
 
-				// Ensure that the combined menu position, plus the menu width,
-				//  plus the submenu width, does not exceed the viewport bounds.
-				if (menuPos.x + menuSize.width + submenuSize.width > canvasRect.right) {
-					rtl = true;
+					const subMenu = this.buildSubMenu(
+						menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+					menuItems.push(subMenu);
+
+					runningYPos += CONTEXT_MENU_LINK_HEIGHT;
+
+				} else {
+					const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
+					const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
+					const subMenuContent = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
+
+					const subMenu = this.buildSubMenu(
+						menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+					menuItems.push(subMenu);
+
+					runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 				}
-
-				// Does the submenu go below the bottom of the viewport?
-				const y = canvasRect.bottom - (menuPos.y + runningYPos + submenuSize.height);
-
-				// If submenu is not below the viewport bottom set offset to 0 so the
-				// submenu will not be moved. Otherwise, y will be used to move the
-				// submenu up fully into the view port.
-				const offset = (y > 0) ? 0 : y - EXTRA_OFFSET;
-
-				const subMenuPosStyle = {
-					top: offset + "px" // Use negative to push the menu up
-				};
-
-				const icon = <Icon type={CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT} disabled={false} className={"react-contextmenu-submenu-icon"} />;
-				const menuItem = <div>{menuDefinition[i].label}{icon} </div>;
-
-				menuItems.push(
-					<SubMenu title={menuItem} key={i + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
-						<div key={i + 1} style={subMenuPosStyle} className="context-menu-popover">
-							{submenuItems}
-						</div>
-					</SubMenu>
-				);
-				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 
 			} else {
 				previousDivider = false;
@@ -176,6 +170,57 @@ class CommonContextMenu extends React.Component {
 			}
 		}
 		return menuItems;
+	}
+
+	buildColorPickerPanel() {
+		return (
+			<ColorPickerPanel clickActionHandler={this.colorPickHandler} clickActionHandler={this.colorClicked} />
+		);
+	}
+
+	buildSubMenu(menuDefinition, index, subMenuContent, runningYPos, menuPos,
+		menuSize, subMenuSize, canvasRect, disabled) {
+		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);
+		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect);
+
+		const icon = <Icon type={CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT} disabled={false} className={"react-contextmenu-submenu-icon"} />;
+		const menuItem = <div>{menuDefinition[index].label}{icon} </div>;
+
+		return (
+			<SubMenu title={menuItem} key={index + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
+				<div key={index + 1} style={subMenuPosStyle} className="context-menu-popover">
+					{subMenuContent}
+				</div>
+			</SubMenu>
+		);
+	}
+
+	// Returns a boolean to indicate whether the submenu should appear on the
+	// right of the context menu (rtl === false) or on the left of the context
+	// menu (rtl === true).
+	buildRtlState(menuPos, menuSize, subMenuSize, canvasRect) {
+		// Ensure that the combined menu position, plus the menu width,
+		//  plus the submenu width, does not exceed the viewport bounds.
+		return (menuPos.x + menuSize.width + subMenuSize.width > canvasRect.right);
+
+	}
+
+	// Returns a style object that can be applied to the sub-menu to adjust
+	// its vertical (y) position. This may be necessary if the submenu is tall
+	// enough that it would be displayed off the bottom of the canvas area.
+	buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect) {
+		// Does the submenu go below the bottom of the viewport?
+		const y = canvasRect.bottom - (menuPos.y + runningYPos + subMenuSize.height);
+
+		// If submenu is not below the viewport bottom set offset to 0 so the
+		// submenu will not be moved. Otherwise, y will be used to move the
+		// submenu up fully into the view port.
+		const offset = (y > 0) ? 0 : y - EXTRA_OFFSET;
+
+		const subMenuPosStyle = {
+			top: offset + "px" // Use negative to push the menu up
+		};
+		return subMenuPosStyle;
 	}
 
 	render() {

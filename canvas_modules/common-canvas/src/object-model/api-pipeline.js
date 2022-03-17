@@ -128,6 +128,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, newClassName: newClassName }, pipelineId: this.pipelineId });
 	}
 
+	setObjectsColorClassName(objectIds, newColorClass) {
+		this.store.dispatch({ type: "SET_OBJECTS_COLOR_CLASS_NAME", data: { objIds: objectIds, newColorClass: newColorClass }, pipelineId: this.pipelineId });
+	}
+
 	disconnectObjects(objectIds) {
 		let linksToDelete = [];
 		objectIds.forEach((id) => {
@@ -977,7 +981,6 @@ export default class APIPipeline {
 	createComment(source) {
 		let comment = {
 			id: this.objectModel.getUniqueId(CREATE_COMMENT),
-			class_name: "d3-comment-rect",
 			content: "",
 			height: 42,
 			width: 175,

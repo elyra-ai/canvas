@@ -134,3 +134,55 @@ describe("Test creating comment from toolbar and editing them within supernodes"
 		cy.editTextInCommentInSubFlowNested("Inner node", "New Inner node text");
 	});
 });
+
+describe("Test coloring comments", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Create a comment and color it", function() {
+		cy.rightClickToDisplayContextMenu(400, 100);
+		cy.clickOptionFromContextMenu("New comment");
+		cy.editTextInComment("", "Hello Canvas!");
+
+		cy.getCommentWithText("Hello Canvas!")
+			.rightclick();
+		cy.clickColorFromContextSubmenu("Color background", "teal-50");
+		cy.verifyCommentColor("Hello Canvas!", "teal50");
+	});
+
+	it("Color multiple colored comments and undo", function() {
+		cy.openCanvasDefinition("commentNewColorsCanvas.json", true);
+
+		cy.getCommentWithText("Default").click();
+		cy.ctrlOrCmdClickComment("White 0");
+		cy.ctrlOrCmdClickComment("Yellow 20");
+		cy.ctrlOrCmdClickComment("Red 50");
+		cy.ctrlOrCmdClickComment("Orange 40");
+
+		cy.getCommentWithText("Orange 40").rightclick();
+		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
+
+		cy.verifyCommentColor("Default", "cyan20");
+		cy.verifyCommentColor("White 0", "cyan20");
+		cy.verifyCommentColor("Yellow 20", "cyan20");
+		cy.verifyCommentColor("Red 50", "cyan20");
+		cy.verifyCommentColor("Orange 40", "cyan20");
+
+		cy.clickToolbarUndo();
+
+		cy.verifyCommentColor("Default", "");
+		cy.verifyCommentColor("White 0", "white0");
+		cy.verifyCommentColor("Yellow 20", "yellow20");
+		cy.verifyCommentColor("Red 50", "red50");
+		cy.verifyCommentColor("Orange 40", "orange40");
+
+		cy.clickToolbarRedo();
+
+		cy.verifyCommentColor("Default", "cyan20");
+		cy.verifyCommentColor("White 0", "cyan20");
+		cy.verifyCommentColor("Yellow 20", "cyan20");
+		cy.verifyCommentColor("Red 50", "cyan20");
+		cy.verifyCommentColor("Orange 40", "cyan20");
+	});
+});
