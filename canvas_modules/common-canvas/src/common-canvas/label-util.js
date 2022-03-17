@@ -34,7 +34,7 @@ export default class LabelUtil {
 
 	getActionLabel(action, key, substituteObj) {
 		if (this.actionLabelHandler) {
-			const label = this.actionLabelHandler(action);
+			const label = this.actionLabelHandler(action, substituteObj);
 			if (label) {
 				return label;
 			}
