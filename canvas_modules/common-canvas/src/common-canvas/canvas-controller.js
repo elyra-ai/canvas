@@ -173,8 +173,10 @@ export default class CanvasController {
 
 	setContextMenuConfig(contextMenuConfig) {
 		this.logger.log("Setting Context Menu Config");
-		const defaultMenuEntries = Object.assign(this.contextMenuConfig.defaultMenuEntries, contextMenuConfig.defaultMenuEntries);
-		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig, { defaultMenuEntries });
+		if (contextMenuConfig) {
+			const defaultMenuEntries = Object.assign(this.contextMenuConfig.defaultMenuEntries, contextMenuConfig.defaultMenuEntries);
+			this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig, { defaultMenuEntries });
+		}
 	}
 
 	setKeyboardConfig(keyboardConfig) {
