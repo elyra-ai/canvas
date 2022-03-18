@@ -40,7 +40,7 @@ export default class SVGCanvasPipeline {
 		this.mappedLinks = this.getMappedLinks(this.pipeline);
 		// preProcessPipeline uses the mapped objects so this needs to be done
 		// after they have been created.
-		this.pipeline = this.this.preProcessPipeline(this.pipeline);
+		this.pipeline = this.preProcessPipeline(this.pipeline);
 		this.logger.logStartTimer("Mapping data");
 	}
 
