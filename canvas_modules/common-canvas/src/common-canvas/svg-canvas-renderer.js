@@ -3176,7 +3176,7 @@ export default class SVGCanvasRenderer {
 		// to be a timing issue since the same problem is not evident with the
 		// similar code for the node group object.
 		// TODO - Issue 2465 - Find out why this problem occurs.
-		const objectTypeName = this.ativePipeline.getObjectTypeName(d);
+		const objectTypeName = this.activePipeline.getObjectTypeName(d);
 		if (objectTypeName === "node" || objectTypeName === "link") {
 			this.canvasController.clickActionHandler({
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
