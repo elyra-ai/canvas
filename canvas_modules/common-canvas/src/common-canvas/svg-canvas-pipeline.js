@@ -25,9 +25,9 @@ export default class SVGCanvasPipeline {
 	constructor(pipelineId, canvasInfo) {
 		this.logger = new Logger("SVGCanvasActivePipeline");
 		this.canvasInfo = canvasInfo;
-		this.pipeline = SVGCanvasPipeline.getPipeline(pipelineId, canvasInfo);
+		this.pipeline = this.getPipeline(pipelineId, canvasInfo);
 
-		// Accessed directly by svg-canvas-renderer
+		// These variables are accessed directly by svg-canvas-renderer
 		this.id = this.pipeline.id;
 		this.zoom = this.pipeline.zoom;
 		this.nodes = this.pipeline.nodes;
@@ -35,9 +35,12 @@ export default class SVGCanvasPipeline {
 		this.links = this.pipeline.links;
 
 		this.logger.logStartTimer("Mapping data");
-		this.mappedNodes = SVGCanvasPipeline.getMappedNodes(this.pipeline);
-		this.mappedComments = SVGCanvasPipeline.getMappedComments(this.pipeline);
-		this.mappedLinks = SVGCanvasPipeline.getMappedLinks(this.pipeline);
+		this.mappedNodes = this.getMappedNodes(this.pipeline);
+		this.mappedComments = this.getMappedComments(this.pipeline);
+		this.mappedLinks = this.getMappedLinks(this.pipeline);
+		// preProcessPipeline uses the mapped objects so this needs to be done
+		// after they have been created.
+		this.pipeline = this.this.preProcessPipeline(this.pipeline);
 		this.logger.logStartTimer("Mapping data");
 	}
 
@@ -115,31 +118,27 @@ export default class SVGCanvasPipeline {
 		this.pipeline.links.splice(index, 1, oldLink);
 	}
 
-	/* ----------------------------------------------------------- */
-	/* Static methods below help to initialize the active pipeline */
-	/* ----------------------------------------------------------- */
-
-	static getPipeline(pipelineId, canvasInfo) {
+	getPipeline(pipelineId, canvasInfo) {
 		const pipeline = canvasInfo.pipelines.find((p) => p.id === pipelineId);
 		if (pipeline) {
-			return this.preProcessPipeline(pipeline);
+			return pipeline;
 		}
 		return { id: pipelineId, nodes: [], comments: [], links: [] };
 	}
 
 	// Preprocesses the pipeline to set the connected attribute of the ports
 	// for each node. This is used when rendering the connection satus of ports.
-	static preProcessPipeline(pipeline) {
+	preProcessPipeline(pipeline) {
 		this.setAllPortsDisconnected(pipeline);
 
 		pipeline.links.forEach((link) => {
 			if (link.type === COMMENT_LINK) {
-				link.srcObj = this.getComment(link.srcNodeId, pipeline);
-				link.trgNode = this.getNode(link.trgNodeId, pipeline);
+				link.srcObj = this.getComment(link.srcNodeId);
+				link.trgNode = this.getNode(link.trgNodeId);
 
 			} else {
-				link.srcObj = this.getNode(link.srcNodeId, pipeline);
-				link.trgNode = this.getNode(link.trgNodeId, pipeline);
+				link.srcObj = this.getNode(link.srcNodeId);
+				link.trgNode = this.getNode(link.trgNodeId);
 
 				if (link.srcObj) {
 					this.setOutputPortConnected(link.srcObj, link.srcNodePortId);
@@ -153,7 +152,7 @@ export default class SVGCanvasPipeline {
 	}
 
 	// Sets the isConnected property of all ports in the pipeline to false.
-	static setAllPortsDisconnected(pipeline) {
+	setAllPortsDisconnected(pipeline) {
 		pipeline.nodes.forEach((n) => {
 			if (n.inputs) {
 				n.inputs.forEach((inp) => (inp.isConnected = false));
@@ -166,7 +165,7 @@ export default class SVGCanvasPipeline {
 
 	// Sets the isConnected property of the port, identified by inPortId,
 	// for the trgNode to true.
-	static setInputPortConnected(trgNode, inPortId) {
+	setInputPortConnected(trgNode, inPortId) {
 		const portId = inPortId || CanvasUtils.getDefaultInputPortId(trgNode);
 		if (trgNode.inputs) {
 			trgNode.inputs.forEach((inp) => {
@@ -179,7 +178,7 @@ export default class SVGCanvasPipeline {
 
 	// Sets the isConnected property of the port, identified by outPortId,
 	// for the srcNode to true.
-	static setOutputPortConnected(srcNode, outPortId) {
+	setOutputPortConnected(srcNode, outPortId) {
 		const portId = outPortId || CanvasUtils.getDefaultOutputPortId(srcNode);
 		if (srcNode.outputs) {
 			srcNode.outputs.forEach((out) => {
@@ -190,31 +189,21 @@ export default class SVGCanvasPipeline {
 		}
 	}
 
-	static getMappedNodes(pipeline) {
+	getMappedNodes(pipeline) {
 		const mappedNodes = {};
 		pipeline.nodes.forEach((n) => { mappedNodes[n.id] = n; });
 		return mappedNodes;
 	}
 
-	static getMappedComments(pipeline) {
+	getMappedComments(pipeline) {
 		const mappedComments = {};
 		pipeline.comments.forEach((c) => { mappedComments[c.id] = c; });
 		return mappedComments;
 	}
 
-	static getMappedLinks(pipeline) {
+	getMappedLinks(pipeline) {
 		const mappedLinks = {};
 		pipeline.links.forEach((l) => { mappedLinks[l.id] = l; });
 		return mappedLinks;
-	}
-
-	// Returns the node, from the pipeline passed in, identfied by the node ID.
-	static getNode(nodeId, pipeline) {
-		return pipeline.nodes.find((nd) => nd.id === nodeId);
-	}
-
-	// Returns the comment, from the pipeline passed in, identfied by the comment ID.
-	static getComment(commentId, pipeline) {
-		return pipeline.comments.find((com) => com.id === commentId);
 	}
 }
