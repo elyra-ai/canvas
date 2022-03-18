@@ -100,7 +100,7 @@ $row-left-padding: 4px;
 			svg:not(:root) {
 				display: inline;
 			}
-			.sort-column-active + .properties-ft-column-sort-icon
+			.sort-column-active > .properties-ft-column-sort-icon
 			svg:not(:root) {
 				display: inline;
 			}

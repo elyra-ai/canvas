@@ -31,7 +31,6 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
 import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16, Information16,
 	ChevronDown16, ChevronUp16, ChevronLeft16, ChevronRight16,
-	ArrowUp16, ArrowDown16, ArrowsVertical16,
 	OverflowMenuVertical16,
 	AddAlt16,
 	Settings16,
@@ -91,12 +90,6 @@ export default class Icon extends React.Component {
 			return <ChevronLeft16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.CHEVRONARROWS.RIGHT):
 			return <ChevronRight16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.ARROWS.UP):
-			return <ArrowUp16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.ARROWS.DOWN):
-			return <ArrowDown16 className={className} disabled={this.props.disabled} />;
-		case (CARBON_ICONS.ARROWS.VERTICAL):
-			return <ArrowsVertical16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.ADD):
 			return <AddAlt16 className={className} disabled={this.props.disabled} />;
 		case (CARBON_ICONS.SETTINGS):

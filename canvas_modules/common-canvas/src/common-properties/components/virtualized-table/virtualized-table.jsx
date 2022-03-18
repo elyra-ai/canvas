@@ -17,9 +17,9 @@
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
-import Icon from "./../../../icons/icon.jsx";
+import { ArrowUp16, ArrowDown16, ArrowsVertical16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -184,18 +184,16 @@ class VirtualizedTable extends React.Component {
 			let type = null;
 			switch (sortDirection) {
 			case SORT_DIRECTION.ASC:
-				type = CARBON_ICONS.ARROWS.UP;
+				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			case SORT_DIRECTION.DESC:
-				type = CARBON_ICONS.ARROWS.DOWN;
+				type = <ArrowDown16 disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			default:
-				type = CARBON_ICONS.ARROWS.VERTICAL;
+				type = <ArrowsVertical16 disabled={this.props.tableState === STATES.DISABLED} />;
 			}
 			sortIcon = (<span className="properties-ft-column-sort-icon">
-				<Icon type={dataKey === this.props.sortBy ? type : CARBON_ICONS.ARROWS.VERTICAL}
-					disabled={this.props.tableState === STATES.DISABLED}
-				/>
+				{type}
 			</span>);
 		}
 

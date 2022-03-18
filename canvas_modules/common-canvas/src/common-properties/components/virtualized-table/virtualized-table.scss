@@ -50,12 +50,12 @@ $properties-vt-checkbox-width: 45px;
 		text-transform: none;
 
 		.properties-vt-header-resize {
-			flex: 0 0 4px;
+			flex: 0 0 $spacing-02;
 			z-index: 2;
 			cursor: col-resize;
 		}
 		.properties-vt-header-resize:hover {
-			background-color: rgba($brand-02, 0.4);
+			background-color: $active-secondary;
 		}
 
 		.properties-vt-header-resize-active {
@@ -81,9 +81,9 @@ $properties-vt-checkbox-width: 45px;
 		}
 
 		&:hover {
-			background-color: rgba($brand-02, 0.2);
+			background-color: $active-ui;
 			.properties-vt-header-resize {
-				background-color: rgba($brand-02, 0.4);
+				background-color: $active-secondary;
 			}
 		}
 	}
@@ -192,7 +192,7 @@ $properties-vt-checkbox-width: 45px;
 	}
 
 	.properties-ft-column-sort-icon {
-		flex: 0 0 16px;
+		flex: 0 0 $spacing-05;
 		align-self: center;
 		height: $spacing-05;
 	}

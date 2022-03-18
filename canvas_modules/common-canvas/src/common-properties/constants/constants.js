@@ -203,11 +203,6 @@ export const CARBON_ICONS = {
 		LEFT: "chevron-left",
 		RIGHT: "chevron-right"
 	},
-	ARROWS: {
-		UP: "arrow-up",
-		DOWN: "arrow-down",
-		VERTICAL: "arrows-vertical"
-	},
 	CALCULATOR: "calculator",
 	ADD: "add",
 	REMOVE: "remove",
