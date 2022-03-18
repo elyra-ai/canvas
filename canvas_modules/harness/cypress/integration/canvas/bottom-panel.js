@@ -24,13 +24,21 @@ describe("Testing bottom panel", function() {
 
 		// Resize the bottom pannel & verify its height & width
 		cy.moveBottomPanelDivider(-150);
-		cy.verifyBottomPanelHeight(509);
+		cy.verifyBottomPanelHeight(393);
 		cy.verifyBottomPanelWidth(1328);
 
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 
 		cy.moveBottomPanelDivider(100);
-		cy.verifyBottomPanelHeight(509);
+		cy.verifyBottomPanelHeight(393);
 		cy.verifyBottomPanelWidth(807.4375);
+	});
+
+	it("Testing bottom panel max height", function() {
+		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
+
+		// Resize the bottom pannel & verify its max height 647px
+		cy.moveBottomPanelDivider(0, 50, 50);
+		cy.verifyBottomPanelHeight(647);
 	});
 });
