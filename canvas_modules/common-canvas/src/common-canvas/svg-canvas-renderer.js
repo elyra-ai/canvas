@@ -4219,7 +4219,7 @@ export default class SVGCanvasRenderer {
 				newLink: newLink,
 				pipelineId: this.pipelineId });
 		} else {
-			this.replaceLink(this.draggingLinkData.oldLink);
+			this.activePipeline.replaceLink(this.draggingLinkData.oldLink);
 			this.displayLinks();
 		}
 

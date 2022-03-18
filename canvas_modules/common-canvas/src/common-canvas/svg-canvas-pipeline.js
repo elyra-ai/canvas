@@ -24,6 +24,7 @@ import { COMMENT_LINK } from "./constants/canvas-constants";
 export default class SVGCanvasPipeline {
 	constructor(pipelineId, canvasInfo) {
 		this.logger = new Logger("SVGCanvasActivePipeline");
+		this.logger.logStartTimer("constructor");
 		this.canvasInfo = canvasInfo;
 		this.pipeline = this.getPipeline(pipelineId, canvasInfo);
 
@@ -34,14 +35,16 @@ export default class SVGCanvasPipeline {
 		this.comments = this.pipeline.comments;
 		this.links = this.pipeline.links;
 
-		this.logger.logStartTimer("Mapping data");
-		this.mappedNodes = this.getMappedNodes(this.pipeline);
-		this.mappedComments = this.getMappedComments(this.pipeline);
-		this.mappedLinks = this.getMappedLinks(this.pipeline);
+		// We create mapped arrays for quick lookup
+		this.mappedNodes = this.getMappedArray(this.pipeline.nodes);
+		this.mappedComments = this.getMappedArray(this.pipeline.comments);
+		this.mappedLinks = this.getMappedArray(this.pipeline.links);
+
 		// preProcessPipeline uses the mapped objects so this needs to be done
 		// after they have been created.
 		this.pipeline = this.preProcessPipeline(this.pipeline);
-		this.logger.logStartTimer("Mapping data");
+
+		this.logger.logEndTimer("constructor");
 	}
 
 	getCanvasDimensions(gap) {
@@ -116,6 +119,7 @@ export default class SVGCanvasPipeline {
 	replaceLink(oldLink) {
 		const index = this.pipeline.links.findIndex((l) => l.id === oldLink.id);
 		this.pipeline.links.splice(index, 1, oldLink);
+		this.mappedLinks = this.getMappedArray(this.pipeline.links);
 	}
 
 	getPipeline(pipelineId, canvasInfo) {
@@ -189,21 +193,9 @@ export default class SVGCanvasPipeline {
 		}
 	}
 
-	getMappedNodes(pipeline) {
-		const mappedNodes = {};
-		pipeline.nodes.forEach((n) => { mappedNodes[n.id] = n; });
-		return mappedNodes;
-	}
-
-	getMappedComments(pipeline) {
-		const mappedComments = {};
-		pipeline.comments.forEach((c) => { mappedComments[c.id] = c; });
-		return mappedComments;
-	}
-
-	getMappedLinks(pipeline) {
-		const mappedLinks = {};
-		pipeline.links.forEach((l) => { mappedLinks[l.id] = l; });
-		return mappedLinks;
+	// Returns an object where each element in the array provided is indexed by
+	// the id property of the element.
+	getMappedArray(array) {
+		return array.reduce((map, o) => { map[o.id] = o; return map; }, {});
 	}
 }
