@@ -45,15 +45,12 @@ Cypress.Commands.add("selectWithRegion", (x1, y1, x2, y2) => {
 });
 
 
-Cypress.Commands.add("moveBottomPanelDivider", (yOffset, x = 200, y = 748) => {
-	// movementY needs to be passed in , because within
-	// cc-bottom-panel.jsx onMouseMoveY() is checking
-	// on mouse movementY amount which is not passed by Cypress.
+Cypress.Commands.add("moveBottomPanelDivider", (y) => {
 	cy.window().then((win) => {
 		cy.get(".bottom-panel .bottom-panel-drag")
 			.trigger("mousedown", "center", { view: win, button: 0 });
 		cy.get("#canvas-div-0")
-			.trigger("mousemove", x, y, { view: win, movementY: yOffset, force: true })
-			.trigger("mouseup", x, y, { view: win, force: true });
+			.trigger("mousemove", 200, y, { view: win, force: true })
+			.trigger("mouseup", 200, y, { view: win, force: true });
 	});
 });
