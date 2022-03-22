@@ -108,6 +108,7 @@ $row-left-padding: 4px;
 
 		.properties-tooltips-container {
 			display: inline-flex;
+			justify-content: space-between; // Adding space between column label and sort icon
 			width: 100%;
 			align-self: center;
 			padding: 0 $spacing-05;
