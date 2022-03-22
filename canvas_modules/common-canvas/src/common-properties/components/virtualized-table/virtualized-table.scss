@@ -48,20 +48,6 @@ $properties-vt-checkbox-width: 45px;
 	.properties-autosized-vt-header {
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
-
-		.properties-vt-header-resize {
-			flex: 0 0 $spacing-02;
-			z-index: 2;
-			cursor: col-resize;
-		}
-		.properties-vt-header-resize:hover {
-			background-color: $active-secondary;
-		}
-
-		.properties-vt-header-resize-active {
-			z-index: 3;
-		}
-
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
@@ -79,17 +65,32 @@ $properties-vt-checkbox-width: 45px;
 				}
 			}
 		}
+	}
 
+	.properties-vt-column-with-resize, .properties-vt-column-without-resize {
+		display: inline-flex;
+		width: 100%;
+	}
+
+	.properties-vt-column-with-resize {
+		.properties-vt-header-resize {
+			flex: 0 0 $spacing-02;
+			z-index: 2;
+			cursor: col-resize;
+		}
+		.properties-vt-header-resize:hover {
+			background-color: $active-secondary;
+		}
+
+		.properties-vt-header-resize-active {
+			z-index: 3;
+		}
 		&:hover {
+			background-color: $active-ui;
 			.properties-vt-header-resize {
 				background-color: $active-secondary;
 			}
 		}
-	}
-
-	// Add background color for column header
-	.resize-btn-hovered {
-		background-color: $active-ui;
 	}
 
 	.properties-vt-row-checkbox {

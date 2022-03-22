@@ -51,8 +51,7 @@ class VirtualizedTable extends React.Component {
 		this.state = {
 			rowCount: this.props.rowCount,
 			columns: this.props.columns,
-			columnResized: false,
-			resizeButtonHoverForColumn: ""
+			columnResized: false
 		};
 		this.virtualizedTableRef = React.createRef();
 
@@ -66,7 +65,6 @@ class VirtualizedTable extends React.Component {
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
 		this.resizeColumn = this.resizeColumn.bind(this);
-		this.resizeButtonHover = this.resizeButtonHover.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -240,29 +238,29 @@ class VirtualizedTable extends React.Component {
 				<div
 					role="button" tabIndex="0"
 					aria-label="Resize column"
-					onMouseEnter={(ele) => this.resizeButtonHover(ele, columnData.key)}
-					onMouseLeave={(ele) => this.resizeButtonHover(ele, columnData.key)}
 				/>
 			</Draggable>)
 			: "";
 
 		return (
 			<React.Fragment key={dataKey}>
-				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
-					{ isEmpty(tooltip)
-						? label
-						: <Tooltip
-							id={tooltipId}
-							tip={tooltip}
-							direction="bottom"
-							className="properties-tooltips"
-						>
-							{label}
-						</Tooltip>
-					}
-					{disableSort === false && sortIcon}
+				<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
+					<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
+						{ isEmpty(tooltip)
+							? label
+							: <Tooltip
+								id={tooltipId}
+								tip={tooltip}
+								direction="bottom"
+								className="properties-tooltips"
+							>
+								{label}
+							</Tooltip>
+						}
+						{disableSort === false && sortIcon}
+					</div>
+					{ resizeElem }
 				</div>
-				{ resizeElem }
 			</React.Fragment>
 		);
 	}
@@ -304,16 +302,6 @@ class VirtualizedTable extends React.Component {
 				columns: columns
 			};
 		});
-	}
-
-	resizeButtonHover(element, dataKey) {
-		if (this.state.resizeButtonHoverForColumn === dataKey) {
-			element.target.parentNode.classList.remove("resize-btn-hovered");
-			this.setState({ resizeButtonHoverForColumn: "" });
-		} else {
-			element.target.parentNode.classList.add("resize-btn-hovered");
-			this.setState({ resizeButtonHoverForColumn: dataKey });
-		}
 	}
 
 	overSelectOption(evt) {
