@@ -88,6 +88,9 @@ export class ParameterDef {
 		if (toType(settings.filterable) === "boolean") {
 			this.filterable = settings.filterable;
 		}
+		if (toType(settings.resizable) === "boolean") {
+			this.resizable = settings.resizable;
+		}
 		if (settings.editStyle) {
 			this.editStyle = settings.editStyle;
 		}
@@ -329,6 +332,7 @@ export class ParameterDef {
 				"valueIcons": propertyOf(uihint)("value_icons"),
 				"sortable": propertyOf(uihint)("sortable"),
 				"filterable": propertyOf(uihint)("filterable"),
+				"resizable": propertyOf(uihint)("resizable"),
 				"editStyle": propertyOf(uihint)("edit_style"),
 				"required": propertyOf(param)("required"),
 				"numberGenerator": propertyOf(uihint)("number_generator"),

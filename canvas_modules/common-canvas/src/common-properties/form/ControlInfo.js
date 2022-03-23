@@ -59,6 +59,9 @@ export class Control {
 		if (typeof settings.filterable === "boolean") {
 			this.filterable = settings.filterable;
 		}
+		if (typeof settings.resizable === "boolean") {
+			this.resizable = settings.resizable;
+		}
 		if (settings.language) {
 			this.language = settings.language;
 		}

@@ -568,6 +568,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.valueIcons = parameter.valueIcons;
 	settings.sortable = parameter.sortable;
 	settings.filterable = parameter.filterable;
+	settings.resizable = parameter.resizable;
 	settings.charLimit = parameter.charLimit;
 	settings.subControls = subControls;
 	settings.keyIndex = keyIndex;
