@@ -243,25 +243,23 @@ class VirtualizedTable extends React.Component {
 			: "";
 
 		return (
-			<React.Fragment key={dataKey}>
-				<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
-					<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
-						{ isEmpty(tooltip)
-							? label
-							: <Tooltip
-								id={tooltipId}
-								tip={tooltip}
-								direction="bottom"
-								className="properties-tooltips"
-							>
-								{label}
-							</Tooltip>
-						}
-						{disableSort === false && sortIcon}
-					</div>
-					{ resizeElem }
+			<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
+				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
+					{ isEmpty(tooltip)
+						? label
+						: <Tooltip
+							id={tooltipId}
+							tip={tooltip}
+							direction="bottom"
+							className="properties-tooltips"
+						>
+							{label}
+						</Tooltip>
+					}
+					{disableSort === false && sortIcon}
 				</div>
-			</React.Fragment>
+				{ resizeElem }
+			</div>
 		);
 	}
 
