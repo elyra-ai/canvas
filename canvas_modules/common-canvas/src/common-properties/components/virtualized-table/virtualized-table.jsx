@@ -182,7 +182,7 @@ class VirtualizedTable extends React.Component {
 		let sortIcon = null;
 		if (typeof this.props.sortColumns[dataKey] !== "undefined") {
 			let type = null;
-			switch (sortDirection) {
+			switch (this.props.sortColumns[dataKey]) {
 			case SORT_DIRECTION.ASC:
 				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
 				break;

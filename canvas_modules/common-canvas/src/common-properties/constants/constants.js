@@ -187,7 +187,8 @@ export const CONDITION_RETURN_VALUE_HANDLING = {
 
 export const SORT_DIRECTION = {
 	ASC: "ASC",
-	DESC: "DESC"
+	DESC: "DESC",
+	NOT_SORTED: "not-sorted"
 };
 
 export const ROW_SELECTION = {
