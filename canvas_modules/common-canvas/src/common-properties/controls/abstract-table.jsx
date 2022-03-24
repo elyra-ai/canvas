@@ -23,14 +23,11 @@ import TableButtons from "./../components/table-buttons";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
-import Icon from "./../../icons/icon.jsx";
 import classNames from "classnames";
 import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
-import { MESSAGE_KEYS, STATES,
-	TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION,
-	ROW_SELECTION, CARBON_ICONS } from "./../constants/constants";
+import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
 
@@ -773,7 +770,6 @@ export default class AbstractTable extends React.Component {
 		}
 
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
-		const settingsIcon = <Icon type={CARBON_ICONS.SETTINGS} />;
 		// Hack to decompose the button into our own in-table link
 		const subCell = (
 			<div className="properties-table-subcell">
@@ -781,7 +777,6 @@ export default class AbstractTable extends React.Component {
 					label={subItemButton.props.label}
 					title={subItemButton.props.title}
 					panel={subItemButton.props.panel}
-					buttonIcon={settingsIcon}
 					disabled={tableState === STATES.DISABLED}
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}

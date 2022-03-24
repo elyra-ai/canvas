@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-$properties-vt-checkbox-width: 45px;
 
 .properties-vt {
 	width: 100%;
@@ -41,13 +40,13 @@ $properties-vt-checkbox-width: 45px;
 		height: $spacing-07;
 		display: flex;
 		align-items: center;
-		flex: 0 1 $properties-vt-checkbox-width;
-		margin-left: $spacing-05;
+		margin: 0 $spacing-05;
 	}
 
 	.properties-autosized-vt-header {
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
+		margin-left: 0;
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
@@ -95,8 +94,7 @@ $properties-vt-checkbox-width: 45px;
 
 	.properties-vt-row-checkbox {
 		height: $spacing-07;
-		margin-left: $spacing-05;
-		flex: 0 1 $properties-vt-checkbox-width;
+		margin: 0 $spacing-05;
 	}
 
 	.properties-vt-double-click:first-of-type {
@@ -144,6 +142,7 @@ $properties-vt-checkbox-width: 45px;
 
 		.ReactVirtualized__Table__rowColumn {
 			margin-right: 0; // Align cell text with header label
+			margin-left: 0;
 		}
 
 		// Override padding for sortable columns to show space between column label and sort icon
@@ -173,7 +172,7 @@ $properties-vt-checkbox-width: 45px;
 	.properties-vt-single-selection {
 		// Table header
 		div[data-role="properties-header-row"] {
-			padding-left: 9px;
+			padding-left: 3px;
 		}
 
 		// Table rows
