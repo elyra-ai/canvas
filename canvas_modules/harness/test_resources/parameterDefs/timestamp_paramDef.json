@@ -4,11 +4,14 @@
   },
   "current_parameters": {
     "timestamp_field": -1847548800000,
+    "timestamp_field_timestamp": -1847548800000,
     "timestamp_field_invalid": "invalid field",
     "timestamp_field_null": "",
     "timestamp_table": [
       [
-        "2021-01-01T13:13:21-08:00", "2021-01-02T13:13:21-08:00", "2021-01-03T13:13:21-08:00"
+        "2021-01-01T13:13:21-08:00",
+        "2021-01-02T13:13:21-08:00",
+        "2021-01-03T13:13:21-08:00"
       ]
     ]
   },
@@ -16,6 +19,10 @@
     {
       "id": "timestamp_field",
       "type": "double"
+    },
+    {
+      "id": "timestamp_field_timestamp",
+      "type": "timestamp"
     },
     {
       "id": "timestamp_field_invalid",
@@ -66,6 +73,13 @@
         },
         "control": "timestampfield",
         "class_name": "timestampfield-control-class"
+      },
+      {
+        "parameter_ref": "timestamp_field_timestamp",
+        "label": {
+          "default": "Timestamp with timestamp type"
+        },
+        "control": "readonly"
       },
       {
         "parameter_ref": "timestamp_field_invalid",
@@ -144,9 +158,9 @@
         },
         "parameter_refs": [
           "timestamp_field",
+          "timestamp_field_timestamp",
           "timestamp_field_invalid",
           "timestamp_field_null"
-
         ]
       },
       {

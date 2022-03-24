@@ -187,7 +187,8 @@ export const CONDITION_RETURN_VALUE_HANDLING = {
 
 export const SORT_DIRECTION = {
 	ASC: "ASC",
-	DESC: "DESC"
+	DESC: "DESC",
+	NOT_SORTED: "not-sorted"
 };
 
 export const ROW_SELECTION = {
@@ -225,3 +226,6 @@ export const CANCEL = "cancel";
 export const CARBON_MODAL_SIZE_XSMALL = "xs";
 export const CARBON_MODAL_SIZE_SMALL = "sm";
 export const CARBON_MODAL_SIZE_LARGE = "lg";
+
+export const MINIMUM_COLUMN_WIDTH = 56; // 16px padding on both sides + 24px label
+export const MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL = 32; // 16px padding on both sides

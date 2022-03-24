@@ -37,7 +37,7 @@ class FlexibleTable extends React.Component {
 		if (typeof this.props.sortable !== "undefined") {
 			for (var i = 0; i < this.props.sortable.length; i++) {
 				const sortCol = this.props.sortable[i];
-				sortDirs[sortCol] = SORT_DIRECTION.DESC;
+				sortDirs[sortCol] = SORT_DIRECTION.NOT_SORTED;
 			}
 		}
 		this.state = {
@@ -281,6 +281,13 @@ class FlexibleTable extends React.Component {
 	sortHeaderClick({ dataKey }) {
 		const colSortDir = this.state.columnSortDir;
 		if (typeof colSortDir[dataKey] !== "undefined") {
+			// At a time only 1 column will be shown as sorted. Revert other columns to not sorted.
+			Object.keys(colSortDir).forEach((key) => {
+				if (key !== dataKey) {
+					colSortDir[key] = SORT_DIRECTION.NOT_SORTED;
+				}
+			});
+			// Only dataKey column will be sorted
 			colSortDir[dataKey] = (colSortDir[dataKey] === SORT_DIRECTION.ASC) ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
 			this.setState({
 				columnSortDir: colSortDir,
@@ -344,7 +351,8 @@ class FlexibleTable extends React.Component {
 	*     "key": string,
 	*     "label": string,
 	*     "width": integer or string if containts 'px',
-	*     "description": optional string
+	*     "description": optional string,
+	*     "resizable": optional string
 	*   }
 	* ]
 	* @param columnWidths
@@ -370,6 +378,7 @@ class FlexibleTable extends React.Component {
 				width: width,
 				description: columnDef.description,
 				headerLabel: headerLabel,
+				resizable: columnDef.resizable,
 				operation: columnDef.operation
 			});
 		}

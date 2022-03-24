@@ -147,7 +147,6 @@
   "comments": [
     {
       "id": "myUniqueCommentId",
-      "class_name": "d3-comment-rect",
       "content": "",
       "height": 42,
       "width": 175,
@@ -156,7 +155,6 @@
     },
     {
       "id": "myUniqueClonedCommentId_myUniqueCommentId",
-      "class_name": "d3-comment-rect",
       "content": "",
       "height": 42,
       "width": 175,

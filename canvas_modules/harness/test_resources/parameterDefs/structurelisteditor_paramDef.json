@@ -145,6 +145,15 @@
         "cat"
       ]
     ],
+    "structurelisteditorResizableColumns": [
+      [
+        1,
+        1.234,
+        "Age >= 55",
+        "dog",
+        "apple"
+      ]
+    ],
     "structurelisteditorObjectType": [
       {
         "readonly_numbered_column_index": 1,
@@ -242,6 +251,11 @@
     {
       "id": "SLE_mse_table",
       "type": "array[SLE_mse_table]",
+      "default": []
+    },
+    {
+      "id": "structurelisteditorResizableColumns",
+      "type": "array[structurelisteditorResizableColumns]",
       "default": []
     },
     {
@@ -542,6 +556,45 @@
       ]
     },
     {
+      "id": "structurelisteditorResizableColumns",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": "1",
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": "1.2",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        },
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "yellow"
+        },
+        {
+          "id": "textfield",
+          "type": "string",
+          "default": "",
+          "role": "new_column"
+        }
+      ]
+    },
+    {
       "id": "structurelisteditorObjectType",
       "type": "object",
       "parameters": [
@@ -816,6 +869,16 @@
           "default": "When 'Animals' has a value of 'horse' the order cannot be changed to 'Descending'"
         },
         "rows": -1
+      },
+      {
+        "parameter_ref": "structurelisteditorResizableColumns",
+        "label": {
+          "default": "Resizable columns"
+        },
+        "description": {
+          "default": "integer Field and Animals columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. When any column's width reaches 56px, resizing is stopped.",
+          "placement": "on_panel"
+        }
       },
       {
         "parameter_ref": "structurelisteditorObjectType",
@@ -1332,6 +1395,78 @@
         ]
       },
       {
+        "complex_type_ref": "structurelisteditorResizableColumns",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true,
+            "resizable": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "visible": false,
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          },
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "resource_key": "dropdown.label"
+            },
+            "description": {
+              "resource_key": "dropdown.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "resizable": true
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "resource_key": "textfield.label"
+            },
+            "description": {
+              "resource_key": "textfield.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
         "complex_type_ref": "structurelisteditorObjectType",
         "parameters": [
           {
@@ -1668,6 +1803,21 @@
                 "id": "SLE_mse_table",
                 "parameter_refs": [
                   "SLE_mse_table"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structurelisteditorResizableColumns-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Resizable Columns"
+            },
+            "group_info": [
+              {
+                "id": "structurelisteditorResizableColumns",
+                "parameter_refs": [
+                  "structurelisteditorResizableColumns"
                 ]
               }
             ]

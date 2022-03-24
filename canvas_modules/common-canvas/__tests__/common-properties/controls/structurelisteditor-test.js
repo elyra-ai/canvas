@@ -975,3 +975,26 @@ describe("structurelisteditor classnames appear correctly", () => {
 		expect(wrapper.find(".double-nested-subpanel-structurelisteditor-control-class")).to.have.length(1);
 	});
 });
+
+describe("structurelisteditor columns resize correctly", () => {
+	it("resize button should be available for specified columns", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		const wrapper = renderedObject.wrapper;
+		// open the summary panel
+		propertyUtils.openSummaryPanel(wrapper, "structurelisteditorResizableColumns-summary-panel");
+		// Verify table content is rendered
+		const tableWrapper = wrapper.find("div[data-id='properties-ci-structurelisteditorResizableColumns']");
+		expect(tableWrapper).to.have.length(1);
+
+		const headerRow = tableWrapper.find("div[data-role='properties-header-row']");
+		expect(headerRow).to.have.length(1);
+		// Verify 2 columns in header are resizable
+		expect(headerRow.find(".properties-vt-header-resize")).to.have.length(2);
+		// Verify "integer Field" column can be resized
+		const integerFieldColumn = tableWrapper.find("div[aria-label='integer Field']");
+		expect(integerFieldColumn.find(".properties-vt-header-resize")).to.have.length(1);
+		// Verify "Animals" column can be resized
+		const animalsColumn = tableWrapper.find("div[aria-label='Animals']");
+		expect(animalsColumn.find(".properties-vt-header-resize")).to.have.length(1);
+	});
+});

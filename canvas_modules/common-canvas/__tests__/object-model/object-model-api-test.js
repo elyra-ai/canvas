@@ -725,7 +725,6 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedComment = {
 			"id": uniqueCommentId,
-			"class_name": "d3-comment-rect",
 			"content": "",
 			"height": 42,
 			"width": 175,

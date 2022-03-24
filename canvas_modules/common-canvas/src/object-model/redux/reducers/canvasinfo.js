@@ -162,6 +162,7 @@ export default (state = {}, action) => {
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
 	case "SET_OBJECTS_CLASS_NAME":
+	case "SET_OBJECTS_COLOR_CLASS_NAME":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":

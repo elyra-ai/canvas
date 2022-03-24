@@ -999,6 +999,29 @@ describe("structuretable columns sort correctly", () => {
 	});
 });
 
+describe("structuretable columns resize correctly", () => {
+	it("resize button should be available for specified columns", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const wrapper = renderedObject.wrapper;
+		// open the summary panel
+		propertyUtils.openSummaryPanel(wrapper, "structuretableResizableColumns-summary-panel");
+		// Verify table content is rendered
+		const tableWrapper = wrapper.find("div[data-id='properties-ci-structuretableResizableColumns']");
+		expect(tableWrapper).to.have.length(1);
+
+		const headerRow = tableWrapper.find("div[data-role='properties-header-row']");
+		expect(headerRow).to.have.length(1);
+		// Verify 2 columns in header are resizable
+		expect(headerRow.find(".properties-vt-header-resize")).to.have.length(2);
+		// Verify "Name" column can be resized
+		const nameColumn = tableWrapper.find("div[aria-label='Name']");
+		expect(nameColumn.find(".properties-vt-header-resize")).to.have.length(1);
+		// Verify "Type" column can be resized
+		const typeColumn = tableWrapper.find("div[aria-label='Type']");
+		expect(typeColumn.find(".properties-vt-header-resize")).to.have.length(1);
+	});
+});
+
 describe("measurement icons should be rendered correctly in structuretable", () => {
 	var wrapper;
 	beforeEach(() => {

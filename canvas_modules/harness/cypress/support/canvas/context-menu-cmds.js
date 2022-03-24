@@ -53,6 +53,24 @@ Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) 
 		});
 });
 
+Cypress.Commands.add("clickColorFromContextSubmenu", (submenuName, optionName) => {
+	cy.get(".context-menu-popover").find(".react-contextmenu-submenu:not(.contextmenu-divider)")
+		.then((contextMenuOptions) => {
+			contextMenuOptions.each((idx) => {
+				if (contextMenuOptions[idx].outerText === submenuName) {
+					cy.wrap(contextMenuOptions[idx]).click();
+					cy.get(".color-picker-item")
+						.then((colorOptions) => {
+							colorOptions.each((index) => {
+								if (colorOptions[index].className === "color-picker-item " + optionName) {
+									colorOptions[index].click();
+								}
+							});
+						});
+				}
+			});
+		});
+});
 
 Cypress.Commands.add("simulateClickInBrowsersEditMenu", (type) => {
 	cy.get("#canvas-div-0").trigger(type);

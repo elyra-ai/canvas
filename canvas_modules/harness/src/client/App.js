@@ -1681,8 +1681,9 @@ class App extends React.Component {
 	}
 
 	actionLabelHandler(action) {
-		if (action.data.editType === "deleteSelectedObjects") {
-			return "Delete all objects";
+		// Override undo/redo tooltip message for cut operations.
+		if (action.data.editType === "cut") {
+			return "Cut selected objects";
 		}
 		return null;
 	}

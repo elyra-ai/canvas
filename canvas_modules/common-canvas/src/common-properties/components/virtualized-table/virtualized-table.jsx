@@ -15,15 +15,15 @@
  */
 
 import { Column, Table, AutoSizer } from "react-virtualized";
-
+import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
-import Icon from "./../../../icons/icon.jsx";
+import { ArrowUp16, ArrowDown16, ArrowsVertical16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, CARBON_ICONS } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-import { isEmpty } from "lodash";
+import { isEmpty, differenceBy } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
@@ -33,17 +33,25 @@ import React from "react";
 class VirtualizedTable extends React.Component {
 
 	static getDerivedStateFromProps(nextProps, prevState) {
+		const updatedState = {};
 		if (nextProps.rowCount !== prevState.rowCount) {
-			return ({ rowCount: nextProps.rowCount });
+			updatedState.rowCount = nextProps.rowCount;
 		}
-		return ({});
+		// Only get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+		// We're not comparing all properties in columns object because width can be different after resizing.
+		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel"))) {
+			updatedState.columns = nextProps.columns;
+		}
+		return (updatedState);
 	}
 
 	constructor(props, context) {
 		super(props, context);
 
 		this.state = {
-			rowCount: this.props.rowCount
+			rowCount: this.props.rowCount,
+			columns: this.props.columns,
+			columnResized: false
 		};
 		this.virtualizedTableRef = React.createRef();
 
@@ -56,6 +64,7 @@ class VirtualizedTable extends React.Component {
 		this.headerColRenderer = this.headerColRenderer.bind(this);
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
+		this.resizeColumn = this.resizeColumn.bind(this);
 	}
 
 	componentDidUpdate() {
@@ -101,11 +110,22 @@ class VirtualizedTable extends React.Component {
 		return 0;
 	}
 
+	getColumnIndex(columns, key) {
+		const index = columns.findIndex((column) => column.key === key);
+		return index;
+	}
+
 	isRowSelected(index) {
 		if (this.props.rowsSelected) {
 			return this.props.rowsSelected.indexOf(index) > -1;
 		}
 		return false;
+	}
+
+	isLastColumn(dataKey) {
+		const columnIndex = this.getColumnIndex(this.props.columns, dataKey);
+		const isLastColumn = (columnIndex === (this.props.columns.length - 1));
+		return isLastColumn;
 	}
 
 	selectAll(selected) {
@@ -161,12 +181,20 @@ class VirtualizedTable extends React.Component {
 	headerColRenderer({ columnData, dataKey, disableSort, label, sortBy, sortDirection }) {
 		let sortIcon = null;
 		if (typeof this.props.sortColumns[dataKey] !== "undefined") {
-			sortIcon = this.props.sortColumns[dataKey] === SORT_DIRECTION.ASC
-				? <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} disabled={this.props.tableState === STATES.DISABLED} />
-				: <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} disabled={this.props.tableState === STATES.DISABLED} />;
-			sortIcon = (<div className="properties-ft-column-sort-icon">
-				{sortIcon}
-			</div>);
+			let type = null;
+			switch (this.props.sortColumns[dataKey]) {
+			case SORT_DIRECTION.ASC:
+				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
+				break;
+			case SORT_DIRECTION.DESC:
+				type = <ArrowDown16 disabled={this.props.tableState === STATES.DISABLED} />;
+				break;
+			default:
+				type = <ArrowsVertical16 disabled={this.props.tableState === STATES.DISABLED} />;
+			}
+			sortIcon = (<span className="properties-ft-column-sort-icon">
+				{type}
+			</span>);
 		}
 
 		let tooltip = null;
@@ -194,20 +222,84 @@ class VirtualizedTable extends React.Component {
 
 		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
-		return (<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
-			{ isEmpty(tooltip)
-				? label
-				: <Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-				>
-					{label}
-				</Tooltip>
+		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
+			? (<Draggable
+				axis="x"
+				defaultClassName="properties-vt-header-resize"
+				defaultClassNameDragging="properties-vt-header-resize-active"
+				onDrag={
+					(evt, { deltaX }) => {
+						this.resizeColumn({ dataKey, deltaX });
+					}
+				}
+				position={{ x: 0 }}
+				zIndex={999}
+			>
+				<div
+					role="button" tabIndex="0"
+					aria-label="Resize column"
+				/>
+			</Draggable>)
+			: "";
+
+		return (
+			<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
+				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
+					{ isEmpty(tooltip)
+						? label
+						: <Tooltip
+							id={tooltipId}
+							tip={tooltip}
+							direction="bottom"
+							className="properties-tooltips"
+						>
+							{label}
+						</Tooltip>
+					}
+					{disableSort === false && sortIcon}
+				</div>
+				{ resizeElem }
+			</div>
+		);
+	}
+
+	/* Columns are not resizable by default. Host application specifies resizable columns in parameter definition.
+	* When a column is resized, width of ALL the columns to the right of resized column is adjusted.
+	* Example: If a column width is reduced by 10px and there are 5 columns on the right of resized column. Each of the 5 columns width is increased by 2px (10px/number of columns)
+	* When any column's width reaches MINIMUM_COLUMN_WIDTH (56px), resizing is stopped.
+	* Special case - For columns without labels, when their width reaches MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL (32px), resizing is stopped.
+	*/
+	resizeColumn({ dataKey, deltaX }) {
+		this.setState((prevState) => {
+
+			const columns = prevState.columns;
+			// Calculate number of columns on the right of resized column
+			const resizedColumnIndex = this.getColumnIndex(columns, dataKey);
+			const numberOfColumnsOnTheRight = columns.length - 1 - resizedColumnIndex;
+			const rightColumnsDelta = deltaX / numberOfColumnsOnTheRight;
+
+			// Verify adjusted width of every column on the right is greater than minimum width
+			const everyColumnGreaterThanMinWidth = columns.slice(resizedColumnIndex + 1).every((col) => {
+				if (col.headerLabel.length > 0) {
+					// Column with label has min width 56px
+					return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH);
+				}
+				// Column without label has min width 32px
+				return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL);
+			});
+
+			if ((columns[resizedColumnIndex].width + deltaX) > MINIMUM_COLUMN_WIDTH && everyColumnGreaterThanMinWidth) {
+				columns[resizedColumnIndex].width += deltaX;
+				// Adjust width of all columns on the right
+				for (let i = resizedColumnIndex + 1; i < columns.length; i++) {
+					columns[i].width -= rightColumnsDelta;
+				}
 			}
-			{disableSort === false && sortIcon}
-		</div>);
+			return {
+				columnResized: true,
+				columns: columns
+			};
+		});
 	}
 
 	overSelectOption(evt) {
@@ -353,7 +445,7 @@ class VirtualizedTable extends React.Component {
 								sortDirection={this.props.sortDirection}
 							>
 								{
-									this.props.columns.map((column) => (
+									this.state.columns.map((column) => (
 										<Column
 											key={column.key}
 											label={column.label}
