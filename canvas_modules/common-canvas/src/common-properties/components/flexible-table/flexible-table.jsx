@@ -249,29 +249,6 @@ class FlexibleTable extends React.Component {
 			newHeight = (rowHeight * rows + headerHeight);
 		} else if (rows === 0) { // only display header
 			newHeight = headerHeight;
-		} else {
-			// A -1 row count indicates a desire to use the entire available vertical space
-			const rootElement = document.getElementById("root");
-			let container = rootElement ? rootElement.getElementsByClassName("properties-wf-children") : [];
-			if (rootElement && container.length === 0) {
-				container = rootElement.getElementsByClassName("bx--modal-content");
-			}
-			if (container.length > 0) {
-				const parentElement = container[container.length - 1]; // Adjust height to the latest wide flyout opened
-				const tableElements =	parentElement.getElementsByClassName("properties-ft-container-wrapper");
-				const tableElement = tableElements.length > 0 ? tableElements[tableElements.length - 1] : null;
-				if (tableElement) {
-					const style = window.getComputedStyle(tableElement, null).getPropertyValue("font-size");
-					const fontSize = parseFloat(style);
-					// this is to adjust for multiple-select edit.
-					// There is one additional row and header to account for.
-					const minHeight = (rowHeight + headerHeight);
-					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight;
-					newHeight = Math.max(newHeight, minHeight);
-				} else {
-					newHeight = (rowHeight * 4 + headerHeight);
-				}
-			}
 		}
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight });
@@ -458,7 +435,11 @@ class FlexibleTable extends React.Component {
 			scrollIndex = this.props.scrollToRow;
 		}
 
-		const heightStyle = (this.props.noAutoSize || tableHeight === 0) ? {} : { height: tableHeight + "em" };
+		let heightStyle = {};
+		if (!this.props.noAutoSize && tableHeight !== 0) {
+			heightStyle = this.props.rows === -1 ? { height: "100%" } : { height: tableHeight + "em" };
+		}
+
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 

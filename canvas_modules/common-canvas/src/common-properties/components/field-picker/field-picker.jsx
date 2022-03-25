@@ -462,14 +462,14 @@ export default class FieldPicker extends React.Component {
 		const table = this._genTable();
 
 		if (this.props.rightFlyout) {
-			return (<div>
+			return (<React.Fragment>
 				<div className="properties-fp-top-row">
 					{filterTypes}
 					{resetButton}
 				</div>
 				{table}
 				{backButton}
-			</div>);
+			</React.Fragment>);
 		}
 
 		return (<div>
