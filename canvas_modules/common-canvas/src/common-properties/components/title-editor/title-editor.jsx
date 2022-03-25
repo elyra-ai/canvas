@@ -24,7 +24,7 @@ import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
-import { Information16, Edit16 } from "@carbon/icons-react";
+import { Information16, Edit16, Close16 } from "@carbon/icons-react";
 
 
 class TitleEditor extends Component {
@@ -95,6 +95,7 @@ class TitleEditor extends Component {
 	render() {
 		const propertiesTitleEditButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_LABEL);
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
+		const closeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 		const titleValidationTypes = [CONDITION_MESSAGE_TYPE.ERROR, CONDITION_MESSAGE_TYPE.WARNING];
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
@@ -123,6 +124,21 @@ class TitleEditor extends Component {
 			/>)
 			: null;
 
+		const closeButton = this.props.closeHandler
+			? (<div className="properties-close-button">
+				<Button
+					kind="ghost"
+					size="small"
+					data-id="close"
+					onClick={this.props.closeHandler}
+					tooltipPosition="left"
+					renderIcon={Close16}
+					iconDescription={closeButtonLabel}
+					hasIconOnly
+				/>
+			</div>)
+			: null;
+
 		let heading = null;
 		if (this.headingEnabled) {
 			const label = this.props.heading
@@ -146,6 +162,7 @@ class TitleEditor extends Component {
 			<div className={classNames("properties-title-editor",
 				{ "properties-title-with-heading": this.headingEnabled })}
 			>
+				{closeButton}
 				{heading}
 				<div className={classNames(
 					"properties-title-editor-input",
@@ -180,6 +197,7 @@ class TitleEditor extends Component {
 
 TitleEditor.propTypes = {
 	helpClickHandler: PropTypes.func,
+	closeHandler: PropTypes.func,
 	controller: PropTypes.object.isRequired,
 	labelEditable: PropTypes.bool,
 	help: PropTypes.object,

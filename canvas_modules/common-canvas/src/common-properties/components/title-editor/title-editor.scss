@@ -93,3 +93,34 @@
 		background-color: $ui-03;
 	}
 }
+
+// Option 1 -
+// Close button CSS without heading
+// .properties-close-button {
+// 	position: relative;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: flex-end;
+// 	padding-right: $spacing-03;
+// }
+//
+// // Close button CSS with heading
+// .properties-title-with-heading > .properties-close-button {
+// 	position: absolute;
+// 	top: $spacing-03;
+// 	right: $spacing-03;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	padding: 0;
+// }
+
+// Option 2 - With heading OK. Without heading - overlap with edit icon
+.properties-close-button {
+	position: absolute;
+	top: $spacing-03;
+	right: $spacing-03;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

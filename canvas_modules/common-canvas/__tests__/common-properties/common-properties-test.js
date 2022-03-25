@@ -172,11 +172,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper.unmount();
 	});
 
-	it("When applyOnBlur=true only the `Close` button should be rendered", () => {
+	it("When applyOnBlur=true, `X` icon in properties title should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
 		wrapper = renderedObject.wrapper;
+		const closeIcon = wrapper.find("div.properties-close-button").find("button");
+		expect(closeIcon).to.have.length(1);
+		// Verify modal buttons are not rendered
 		const buttonWrapper = wrapper.find("div.properties-modal-buttons");
-		expect(buttonWrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Close");
+		expect(buttonWrapper.find("button[data-id='properties-apply-button']")).to.have.length(0);
 		expect(buttonWrapper.find("button[data-id='properties-cancel-button']")).to.have.length(0);
 	});
 
@@ -584,15 +587,15 @@ describe("CommonProperties validates on close in flyout", () => {
 		wrapper.unmount();
 	});
 
-	it("Validate input when applyOnBlur=true the `Close` button pressed", () => {
+	it("Validate input when applyOnBlur=true and `X` icon pressed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource); // default is applyOnBlur=true
 		wrapper = renderedObject.wrapper;
 		const controller = renderedObject.controller;
 		// should not have any messages to start
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
-		// click close and expect validation error messsages
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
+		// click close icon and expect validation error messsages
+		wrapper.find("div.properties-close-button")
+			.find("button")
 			.simulate("click");
 		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 	});
@@ -645,8 +648,8 @@ describe("CommonProperties validates on close in flyout", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "value" },
 			{ applyPropertyChanges: myApplyPropertyChanges });
 		wrapper = renderedObject.wrapper;
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
+		wrapper.find("div.properties-close-button")
+			.find("button")
 			.simulate("click");
 	});
 
@@ -658,8 +661,8 @@ describe("CommonProperties validates on close in flyout", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, null,
 			{ applyPropertyChanges: myApplyPropertyChanges });
 		wrapper = renderedObject.wrapper;
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
+		wrapper.find("div.properties-close-button")
+			.find("button")
 			.simulate("click");
 	});
 
@@ -671,8 +674,8 @@ describe("CommonProperties validates on close in flyout", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "null" },
 			{ applyPropertyChanges: myApplyPropertyChanges });
 		wrapper = renderedObject.wrapper;
-		wrapper.find("button[data-id='properties-apply-button']")
-			.at(0)
+		wrapper.find("div.properties-close-button")
+			.find("button")
 			.simulate("click");
 	});
 
@@ -747,8 +750,8 @@ describe("New error messages of a control should be detected and applyPropertyCh
 		const renderedObject = propertyUtils.flyoutEditorForm(expressionTestResource); // default is applyOnBlur=true
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		renderedObject.wrapper.find("CommonProperties").find("button[data-id='properties-apply-button']")
-			.at(0)
+		renderedObject.wrapper.find("CommonProperties").find("div.properties-close-button")
+			.find("button")
 			.simulate("click");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 1);
@@ -842,6 +845,9 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const wrapper = renderedObject.wrapper;
 		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
 		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("Cancel");
+		// Verify "X" icon in properties title is not rendered
+		const closeIcon = wrapper.find("div.properties-close-button");
+		expect(closeIcon).to.have.length(0);
 	});
 	it("properties buttons should use a custom label if provided in propertiesConfig", () => {
 		const propertiesConfig = {
@@ -879,17 +885,6 @@ describe("PropertiesButtons should render with the correct labels", () => {
 		const wrapper = renderedObject.wrapper;
 		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("Save");
 		expect(wrapper.find("button[data-id='properties-cancel-button']").text()).to.equal("test reject");
-	});
-	it("apply button should use a custom reject label if applyOnBlur", () => {
-		const propertiesConfig = {
-			buttonLabels: {
-				primary: "test apply",
-				secondary: "test reject"
-			}
-		};
-		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
-		const wrapper = renderedObject.wrapper;
-		expect(wrapper.find("button[data-id='properties-apply-button']").text()).to.equal("test apply");
 	});
 });
 

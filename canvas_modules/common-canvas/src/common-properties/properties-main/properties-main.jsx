@@ -168,10 +168,6 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesConfig.buttonLabels && this.props.propertiesConfig.buttonLabels.primary) {
 			return this.props.propertiesConfig.buttonLabels.primary;
 		}
-		// Update apply button text to `Close` when applyOnBlur
-		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
-			return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
-		}
 		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
 	}
 
@@ -430,6 +426,7 @@ class PropertiesMain extends React.Component {
 					help={formData.help}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
+					closeHandler={this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
@@ -439,7 +436,7 @@ class PropertiesMain extends React.Component {
 
 				buttonsContainer = (<MainEditorPropertiesButtons
 					controller={this.propertiesController}
-					okHandler={this.applyPropertiesEditing.bind(this, true)}
+					okHandler={!this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
 					cancelHandler={cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}

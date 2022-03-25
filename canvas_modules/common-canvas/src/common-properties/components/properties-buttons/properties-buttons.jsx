@@ -47,18 +47,21 @@ class PropertiesButtons extends Component {
 				</Button>
 			);
 		}
-		const applyButton = (
-			<Button
-				data-id="properties-apply-button"
-				className="properties-apply-button"
-				type="button"
-				size="small"
-				onClick={this.props.okHandler}
-				disabled={!this.props.applyButtonEnabled}
-			>
-				{applyButtonLabel}
-			</Button>
-		);
+		let applyButton;
+		if (this.props.okHandler) {
+			applyButton = (
+				<Button
+					data-id="properties-apply-button"
+					className="properties-apply-button"
+					type="button"
+					size="small"
+					onClick={this.props.okHandler}
+					disabled={!this.props.applyButtonEnabled}
+				>
+					{applyButtonLabel}
+				</Button>
+			);
+		}
 
 		return (
 			<div
