@@ -48,7 +48,6 @@ $properties-vt-checkbox-width: 45px;
 	.properties-autosized-vt-header {
 		// Override text-transform: uppercase from .ReactVirtualized__Table__headerRow
 		text-transform: none;
-
 		.properties-vt-column .bx--checkbox-wrapper {
 			margin-top: 0;
 			margin-bottom: 0;
@@ -64,6 +63,32 @@ $properties-vt-checkbox-width: 45px;
 					width: 100%;
 					line-height: unset;
 				}
+			}
+		}
+	}
+
+	.properties-vt-column-with-resize, .properties-vt-column-without-resize {
+		display: inline-flex;
+		width: 100%;
+	}
+
+	.properties-vt-column-with-resize {
+		.properties-vt-header-resize {
+			flex: 0 0 $spacing-02;
+			z-index: 2;
+			cursor: col-resize;
+		}
+		.properties-vt-header-resize:hover {
+			background-color: $active-secondary;
+		}
+
+		.properties-vt-header-resize-active {
+			z-index: 3;
+		}
+		&:hover {
+			background-color: $active-ui;
+			.properties-vt-header-resize {
+				background-color: $active-secondary;
 			}
 		}
 	}
@@ -111,7 +136,29 @@ $properties-vt-checkbox-width: 45px;
 		// Required to position the warning/error icons correctly within react-virtualized table cell
 		.ReactVirtualized__Table__headerColumn {
 			margin-right: 0;
-			margin-left: $spacing-04;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			height: 100%;
+		}
+
+		.ReactVirtualized__Table__rowColumn {
+			margin-right: 0; // Align cell text with header label
+		}
+
+		// Override padding for sortable columns to show space between column label and sort icon
+		.ReactVirtualized__Table__sortableHeaderColumn {
+			.properties-tooltips-container {
+				padding: 0;
+				padding-left: $spacing-05;
+			}
+			&:hover {
+				background-color: $active-ui;
+			}
+		}
+
+		.ReactVirtualized__Table__headerTruncatedText {
+			flex: auto;
 		}
 	}
 
@@ -157,5 +204,12 @@ $properties-vt-checkbox-width: 45px;
 		.bx--select--inline .bx--select-input[disabled] {
 			background-color: $ui-background;
 		}
+	}
+
+	.properties-ft-column-sort-icon {
+		flex: 0 0 $spacing-05;
+		align-self: center;
+		height: $spacing-05;
+		margin-right: $spacing-03; // spacing between sort icon and end of column
 	}
 }

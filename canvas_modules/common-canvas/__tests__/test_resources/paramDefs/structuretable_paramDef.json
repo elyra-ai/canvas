@@ -70,6 +70,24 @@
 				"12:00:00Z"
 			]
 		],
+		"structuretableResizableColumns": [
+			[
+				0,
+				"Age",
+				"Age",
+				"",
+				"string",
+				"01:13:45Z"
+			],
+			[
+				1,
+				"BP",
+				"BP-1",
+				"blood pressure plus additional characters to test display_chars and the set limit of the number of characters.",
+				"",
+				"12:00:00Z"
+			]
+		],
 		"structuretableErrors": [
 			[
 				"Cholesterol",
@@ -355,6 +373,13 @@
 			"required": true
 		},
 		{
+			"id": "structuretableResizableColumns",
+			"type": "map[string, structuretableResizableColumns]",
+			"role": "column",
+			"default": [],
+			"required": true
+		},
+		{
 			"id": "structuretableErrors",
 			"type": "array[structuretableErrors]",
 			"role": "column",
@@ -591,6 +616,45 @@
 			"id": "structuretableSortableColumns",
 			"key_definition": {
 				"id": "structuretableSortableColumns_readonly_int",
+				"type": "integer"
+			},
+			"parameters": [
+				{
+					"id": "field",
+					"type": "string",
+					"role": "column"
+				},
+				{
+					"id": "new_name",
+					"type": "string",
+					"role": "new_column"
+				},
+				{
+					"id": "new_label",
+					"type": "string",
+					"default": ""
+				},
+				{
+					"id": "new_type",
+					"enum": [
+						"string",
+						"number",
+						"boolean",
+						"time",
+						"date"
+					],
+					"default": "string"
+				},
+				{
+					"id": "time_type",
+					"type": "time"
+				}
+			]
+		},
+		{
+			"id": "structuretableResizableColumns",
+			"key_definition": {
+				"id": "structuretableResizableColumns_readonly_int",
 				"type": "integer"
 			},
 			"parameters": [
@@ -1258,6 +1322,16 @@
 				}
 			},
 			{
+				"parameter_ref": "structuretableResizableColumns",
+				"label": {
+					"default": "Resizable columns"
+				},
+				"description": {
+					"default": "Name and Type columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. When any column's width reaches 56px, resizing is stopped.",
+					"placement": "on_panel"
+				}
+			},
+			{
 				"parameter_ref": "structuretableErrors",
 				"required": true,
 				"label": {
@@ -1726,6 +1800,84 @@
 						"width": 26,
 						"edit_style": "inline",
 						"sortable": true
+					},
+					{
+						"parameter_ref": "time_type",
+						"label": {
+							"default": "Time"
+						},
+						"description": {
+							"default": "Enter a time in H:M:S"
+						},
+						"width": 30,
+						"edit_style": "inline"
+					}
+				]
+			},
+			{
+				"complex_type_ref": "structuretableResizableColumns",
+				"label": {
+					"default": "Resizable columns"
+				},
+				"key_definition": {
+					"parameter_ref": "structuretableResizableColumns_readonly_int",
+					"label": {
+						"resource_key": "structuretableResizableColumns.structuretableResizableColumns_readonly_int.label"
+					},
+					"width": 15,
+					"generated_values": {
+						"operation": "index"
+					},
+					"control": "readonly"
+				},
+				"parameters": [
+					{
+						"parameter_ref": "field",
+						"label": {
+							"resource_key": "structuretableSortableColumns.field.label"
+						},
+						"width": 26,
+						"summary": true,
+						"sortable": true,
+						"dm_image": "measure",
+						"resizable": true
+					},
+					{
+						"parameter_ref": "new_name",
+						"label": {
+							"resource_key": "structuretableSortableColumns.new_name.label"
+						},
+						"description": {
+							"resource_key": "structuretableSortableColumns.new_name.desc"
+						},
+						"width": 26,
+						"edit_style": "inline",
+						"filterable": true,
+						"summary": true,
+						"sortable": true
+					},
+					{
+						"parameter_ref": "new_label",
+						"label": {
+							"default": "Label"
+						},
+						"width": 26,
+						"display_chars": 10,
+						"edit_style": "subpanel",
+						"sortable": true
+					},
+					{
+						"parameter_ref": "new_type",
+						"label": {
+							"default": "Type"
+						},
+						"description": {
+							"default": "Select data type"
+						},
+						"width": 26,
+						"edit_style": "inline",
+						"sortable": true,
+						"resizable": true
 					},
 					{
 						"parameter_ref": "time_type",
@@ -2960,6 +3112,25 @@
 						]
 					},
 					{
+						"id": "structuretableResizableColumns-summary-panel",
+						"label": {
+							"default": "Configure Resizable Columns"
+						},
+						"type": "summaryPanel",
+						"group_info": [
+							{
+								"id": "structuretableResizableColumns",
+								"label": {
+									"default": "Tables"
+								},
+								"type": "columnSelection",
+								"parameter_refs": [
+									"structuretableResizableColumns"
+								]
+							}
+						]
+					},
+					{
 						"id": "ST_mse_table-summary-panel",
 						"label": {
 							"default": "MSE Structure Table"
@@ -3546,6 +3717,7 @@
 		"structuretableSortableColumns.new_name.label": "Output name",
 		"structuretableSortableColumns.new_name.desc": "New field name",
 		"structuretableSortableColumns.structuretableRenameFields_readonly_int.label": "Index",
+		"structuretableResizableColumns.structuretableResizableColumns_readonly_int.label": "Index",
 		"structuretableErrors.label": "ErorTable",
 		"structuretableErrors.field.label": "Field",
 		"structuretableErrors.sort_order.label": "Order",
