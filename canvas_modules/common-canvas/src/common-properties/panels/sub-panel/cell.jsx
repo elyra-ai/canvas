@@ -79,7 +79,7 @@ export default class SubPanelCell extends React.Component {
 						renderIcon={Settings16}
 						onClick={this.showSubPanel}
 						disabled={disabled}
-						iconDescription=""
+						iconDescription={subPanelToolTip}
 						hasIconOnly
 					/>
 				</Tooltip>

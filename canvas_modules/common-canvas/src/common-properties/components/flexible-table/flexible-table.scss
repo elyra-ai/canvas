@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$flexible-table-header-row-height: 32px;
-$row-left-padding: 4px;
+$flexible-table-header-row-height: $spacing-07;
+$row-left-padding: $spacing-02;
 
 .properties-ft-table-header {
 	display: flex;
@@ -69,9 +69,6 @@ $row-left-padding: 4px;
 	}
 	&.warning {
 		border: 1px solid $support-03;
-	}
-	.row-checkbox {
-		padding-left: 12px;
 	}
 }
 
