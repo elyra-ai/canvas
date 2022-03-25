@@ -219,7 +219,7 @@ describe("Test changing node properties is reflected in canvas", function() {
 		// Edit the name of properties flyout
 		cy.clickPropertiesFlyoutTitleEditIcon();
 		cy.enterNewPropertiesFlyoutTitle("Var File2");
-		cy.saveFlyout();
+		cy.closeFlyout();
 
 		// Verify name is updated in console
 		verifyNewPropertiesFlyoutTitleEntryInConsole("Var File2");
