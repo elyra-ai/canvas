@@ -445,7 +445,7 @@ export default class FieldPicker extends React.Component {
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
-				rows={-1}
+				noAutoSize
 				tableLabel={this.props.title ? this.props.title : ""}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}

@@ -242,17 +242,43 @@ class FlexibleTable extends React.Component {
 			return;
 		}
 		let newHeight = this.state.tableHeight;
-		const rowHeight = 2.25; // in em
-		const headerHeight = 2.5; // in em
+		const rowHeight = 2; // in rem
+		const headerHeight = 2; // in rem
 		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 4;
-		if (rows > 0) {
-			newHeight = (rowHeight * rows + headerHeight);
+		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
+			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
+		} else if (rows > 0) {
+			newHeight = (rowHeight * rows + headerHeight) + "rem";
 		} else if (rows === 0) { // only display header
-			newHeight = headerHeight;
+			newHeight = headerHeight + "rem";
+		} else if (rows === -1) {
+			if (this.flexibleTable) {
+				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
+				const ftHeaderHeight = ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height;
+				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
+				if (flyoutHeight === 0) {
+					newHeight = "100vh"; // set full window height if flyout height not found
+				} else {
+					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
+				}
+			}
 		}
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight });
 		}
+	}
+
+	findPropertyNodeHeight(node, className) {
+		if (node && node.parentNode && node.parentNode.className && node.parentNode.className.includes(className)) {
+			const foundNode = ReactDOM.findDOMNode(node.parentNode).getBoundingClientRect();
+			if (foundNode) {
+				return foundNode.height;
+			}
+			return 0;
+		} else if (node && node.parentNode) {
+			return this.findPropertyNodeHeight(node.parentNode, className);
+		}
+		return 0;
 	}
 
 	sortHeaderClick({ dataKey }) {
@@ -395,7 +421,6 @@ class FlexibleTable extends React.Component {
 
 	render() {
 		const tableWidth = this.state.tableWidth;
-		const tableHeight = this.state.tableHeight; // subtract 2 px for the borders
 		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
 
@@ -436,16 +461,16 @@ class FlexibleTable extends React.Component {
 		}
 
 		let heightStyle = {};
-		if (!this.props.noAutoSize && tableHeight !== 0) {
-			heightStyle = this.props.rows === -1 ? { height: "100%" } : { height: tableHeight + "em" };
+		if (!this.props.noAutoSize) {
+			heightStyle = { height: this.state.tableHeight };
 		}
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 
 		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
-				<div className="properties-ft-table-header">
+			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
+				<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 					{searchBar}
 					{this.props.topRightPanel}
 				</div>
