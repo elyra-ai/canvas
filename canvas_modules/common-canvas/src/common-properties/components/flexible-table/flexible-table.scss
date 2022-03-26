@@ -88,9 +88,7 @@ $row-left-padding: $spacing-02;
 
 	div[data-role="properties-header-row"] {
 		width: inherit;
-		background-color: $ui-03;
 		display: inline-flex;
-		height: 2.5em;
 		.properties-autosized-vt-header {
 			&:focus {
 				outline: none;
