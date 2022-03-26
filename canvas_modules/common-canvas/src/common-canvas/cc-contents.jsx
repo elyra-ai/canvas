@@ -24,11 +24,28 @@ import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import CommonCanvasContextMenu from "./cc-context-menu.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
+import CanvasUtils from "./common-canvas-utils.js";
 import { FlowData16 } from "@carbon/icons-react";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
+
+const BACKSPACE_KEY = 8;
+const DELETE_KEY = 46;
+const A_KEY = 65;
+const C_KEY = 67;
+const P_KEY = 80;
+const V_KEY = 86;
+const X_KEY = 88;
+const Y_KEY = 89;
+const Z_KEY = 90;
+
+// TODO - Implement nudge behavior for moving nodes and comments
+// const LEFT_ARROW_KEY = 37;
+// const UP_ARROW_KEY = 38;
+// const RIGHT_ARROW_KEY = 39;
+// const DOWN_ARROW_KEY = 40;
 
 class CanvasContents extends React.Component {
 	constructor(props) {
@@ -53,6 +70,10 @@ class CanvasContents extends React.Component {
 		// Record whether we added the event listeners or not.
 		this.eventListenersAdded = false;
 
+		// Keeps track of mouse position to enable us to paste at mouse position
+		// using keyboard.
+		this.mousePos = { x: 0, y: 0 };
+
 		this.drop = this.drop.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
 		this.setIsDropZoneDisplayed = this.setIsDropZoneDisplayed.bind(this);
@@ -65,6 +86,8 @@ class CanvasContents extends React.Component {
 		this.onCut = this.onCut.bind(this);
 		this.onCopy = this.onCopy.bind(this);
 		this.onPaste = this.onPaste.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -115,7 +138,6 @@ class CanvasContents extends React.Component {
 
 	componentWillUnmount() {
 		this.removeEventListeners();
-		this.svgCanvasD3.close();
 	}
 
 	onCut(evt) {
@@ -139,6 +161,82 @@ class CanvasContents extends React.Component {
 				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.pasteFromClipboard();
+		}
+	}
+
+	onKeyDown(evt) {
+		// Make sure no tip is displayed, because having one displayed
+		// will interfere with drawing of the canvas as the result of any
+		// keyboard action.
+		this.props.canvasController.closeTip();
+		const actions = this.props.canvasController.getKeyboardConfig().actions;
+		// We don't handle key presses when:
+		// 1. We are editng text, because the text area needs to receive key
+		//    presses for undo, redo, delete etc.
+		// 2. Dragging objects
+		if (this.svgCanvasD3.isEditingText() ||
+				this.svgCanvasD3.isDragging()) {
+			return;
+		}
+
+		// These actions alter the canvas objects so we need to check
+		// this.config.enableEditingActions before calling them.
+		if (this.props.canvasConfig.enableEditingActions) {
+			if ((evt.keyCode === BACKSPACE_KEY || evt.keyCode === DELETE_KEY) && actions.delete) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
+				this.props.canvasController.keyboardActionHandler("deleteSelectedObjects");
+
+			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
+					!evt.shiftKey && evt.keyCode === Z_KEY && actions.undo) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				this.props.canvasController.keyboardActionHandler("undo");
+
+			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
+					((evt.shiftKey && evt.keyCode === Z_KEY) || evt.keyCode === Y_KEY && actions.redo)) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				this.props.canvasController.keyboardActionHandler("redo");
+
+			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				this.props.canvasController.keyboardActionHandler("copy");
+
+			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === X_KEY && actions.cutToClipboard) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				this.props.canvasController.keyboardActionHandler("cut");
+
+			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === V_KEY && actions.pasteFromClipboard) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				if (this.mousePos) {
+					const mousePos = this.svgCanvasD3.convertPageCoordsToSnappedCanvasCoords(this.mousePos);
+					this.props.canvasController.keyboardActionHandler("paste", mousePos);
+				} else {
+					this.props.canvasController.keyboardActionHandler("paste");
+				}
+			}
+		}
+		// These last two keyboard actions do not alter the canvas objects so we
+		// do not need to check this.config.enableEditingActions before calling them.
+		if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === A_KEY && actions.selectAll) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.props.canvasController.keyboardActionHandler("selectAll");
+
+		} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.shiftKey && evt.altKey && evt.keyCode === P_KEY) {
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			Logger.switchLoggingState(); // Switch the logging on and off
+		}
+	}
+
+	// Records in mousePos the mouse pointer position when the pointer is inside
+	// the boundaries of the canvas or sets the mousePos to null. This position
+	// info can be used with keyboard operations.
+	onMouseMove(e) {
+		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
+			this.mousePos = {
+				x: e.clientX,
+				y: e.clientY
+			};
+		} else {
+			this.mousePos = null;
 		}
 	}
 
@@ -223,7 +321,7 @@ class CanvasContents extends React.Component {
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
-		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} />);
+		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} onKeyDown={this.onKeyDown} />);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
@@ -266,6 +364,7 @@ class CanvasContents extends React.Component {
 			document.addEventListener("cut", this.onCut, true);
 			document.addEventListener("copy", this.onCopy, true);
 			document.addEventListener("paste", this.onPaste, true);
+			document.addEventListener("mousemove", this.onMouseMove, true);
 			this.eventListenersAdded = true;
 		}
 	}
@@ -275,6 +374,7 @@ class CanvasContents extends React.Component {
 			document.removeEventListener("cut", this.onCut, true);
 			document.removeEventListener("copy", this.onCopy, true);
 			document.removeEventListener("paste", this.onPaste, true);
+			document.removeEventListener("mousemove", this.onMouseMove, true);
 			this.eventListenersAdded = false;
 		}
 	}

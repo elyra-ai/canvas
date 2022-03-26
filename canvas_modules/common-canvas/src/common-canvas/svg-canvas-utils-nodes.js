@@ -16,7 +16,7 @@
 
 import CanvasUtils from "./common-canvas-utils.js";
 import { ERROR, WARNING, NODE_ERROR_ICON, NODE_WARNING_ICON,
-	SUPER_NODE, TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
+	TEXT_AREA_BORDER_ADJUSTMENT } from "./constants/canvas-constants";
 
 export default class SvgCanvasNodes {
 	constructor(canvasLayout) {
@@ -33,7 +33,7 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelClass(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
 		}
 		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
@@ -42,7 +42,7 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelTextAreaClass(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label-entry d3-label-single-line";
 		}
 		const lineTypeClass = node.layout.labelSingleLine ? " d3-label-single-line" : " d3-label-multi-line";
@@ -126,7 +126,7 @@ export default class SvgCanvasNodes {
 
 	// Returns the absolute x coordinate of the center of the node image
 	getNodeImageCenterPosX(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.x_pos + this.canvasLayout.supernodeImagePosX + (this.canvasLayout.supernodeImageWidth / 2);
 		}
 		return node.x_pos +
@@ -136,7 +136,7 @@ export default class SvgCanvasNodes {
 
 	// Returns the absolute y coordinate of the center of the node image
 	getNodeImageCenterPosY(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.y_pos + this.canvasLayout.supernodeImagePosY + (this.canvasLayout.supernodeImageHeight / 2);
 		}
 		return node.y_pos +
@@ -145,35 +145,35 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeImagePosX(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImagePosX;
 		}
 		return this.getElementPosX(node.width, node.layout.imagePosX, node.layout.imagePosition);
 	}
 
 	getNodeImagePosY(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImagePosY;
 		}
 		return this.getElementPosY(node.height, node.layout.imagePosY, node.layout.imagePosition);
 	}
 
 	getNodeImageWidth(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImageWidth;
 		}
 		return node.layout.imageWidth;
 	}
 
 	getNodeImageHeight(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeImageHeight;
 		}
 		return node.layout.imageHeight;
 	}
 
 	getNodeLabelPosX(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeLabelPosX;
 		}
 		const x = this.getElementPosX(node.width, node.layout.labelPosX, node.layout.labelPosition);
@@ -181,21 +181,21 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeLabelPosY(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeLabelPosY;
 		}
 		return this.getElementPosY(node.height, node.layout.labelPosY, node.layout.labelPosition);
 	}
 
 	getNodeLabelWidth(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.width - this.canvasLayout.supernodeLabelPosX + this.canvasLayout.supernodeErrorPosX;
 		}
 		return node.layout.labelWidth;
 	}
 
 	getNodeLabelHeight(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeLabelHeight;
 		}
 		return node.layout.labelHeight;
@@ -210,7 +210,7 @@ export default class SvgCanvasNodes {
 		const posX = fullLabelOnHover ? this.getNodeLabelHoverPosX(node) : this.getNodeLabelPosX(node);
 		const spanWidth = spanObj.getBoundingClientRect().width;
 
-		if (node.layout.labelAlign === "center" && !this.isExpandedSupernode(node)) {
+		if (node.layout.labelAlign === "center" && !CanvasUtils.isExpandedSupernode(node)) {
 			const halfLabelWidth = labelWidth / 2;
 			const xCenterPosition = posX + halfLabelWidth;
 			const xOffsetFromCenter = Math.min(halfLabelWidth, ((spanWidth / zoomScale) / 2));
@@ -271,14 +271,14 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeEllipsisWidth(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeEllipsisWidth;
 		}
 		return node.layout.ellipsisWidth;
 	}
 
 	getNodeEllipsisHeight(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeEllipsisHeight;
 		}
 		return node.layout.ellipsisHeight;
@@ -293,7 +293,7 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeEllipsisPosX(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.width + this.canvasLayout.supernodeEllipsisPosX;
 		}
 
@@ -301,7 +301,7 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeEllipsisPosY(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeEllipsisPosY;
 		}
 
@@ -314,28 +314,28 @@ export default class SvgCanvasNodes {
 	}
 
 	getNodeErrorPosX(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return node.width + this.canvasLayout.supernodeErrorPosX;
 		}
 		return this.getElementPosX(node.width, node.layout.errorXPos, node.layout.errorPosition);
 	}
 
 	getNodeErrorPosY(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeErrorPosY;
 		}
 		return this.getElementPosY(node.height, node.layout.errorYPos, node.layout.errorPosition);
 	}
 
 	getNodeErrorWidth(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeErrorWidth;
 		}
 		return node.layout.errorWidth;
 	}
 
 	getNodeErrorHeight(node) {
-		if (this.isExpandedSupernode(node)) {
+		if (CanvasUtils.isExpandedSupernode(node)) {
 			return this.canvasLayout.supernodeErrorHeight;
 		}
 		return node.layout.errorHeight;
@@ -361,18 +361,6 @@ export default class SvgCanvasNodes {
 			y += height;
 		}
 		return y + Number(yOffset);
-	}
-
-	isExpandedSupernode(node) {
-		return this.isSupernode(node) && this.isExpanded(node);
-	}
-
-	isExpanded(node) {
-		return node.is_expanded === true;
-	}
-
-	isSupernode(node) {
-		return node.type === SUPER_NODE;
 	}
 
 	// Returns true if either the cardinality of the default input port or

@@ -247,12 +247,13 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if either the Command Key on Mac or Control key on Windows
-	// is pressed.
-	static isCmndCtrlPressed(d3Event) {
+	// is pressed. evnt can be either a regular event object OR the
+	// d3event object provided by d3.
+	static isCmndCtrlPressed(evnt) {
 		if (this.isMacintosh()) {
-			return d3Event.metaKey;
+			return evnt.metaKey;
 		}
-		return d3Event.ctrlKey;
+		return evnt.ctrlKey;
 	}
 
 	// Returns whether user platform is Mac.
@@ -261,10 +262,11 @@ export default class CanvasUtils {
 	}
 
 	// Stops propagation of events and prevents any default behavior from
-	// being executed.
-	static stopPropagationAndPreventDefault(d3Event) {
-		d3Event.stopPropagation();
-		d3Event.preventDefault();
+	// being executed. evnt can be either a regular event object OR the
+	// d3event object provided by d3.
+	static stopPropagationAndPreventDefault(evnt) {
+		evnt.stopPropagation();
+		evnt.preventDefault();
 	}
 
 	// Returns a snap-to-grid value for the value passed in based on a grid
@@ -856,6 +858,18 @@ export default class CanvasUtils {
 			pos.y_pos < area.y2 + pad;
 	}
 
+	static isSupernode(node) {
+		return node.type === SUPER_NODE;
+	}
+
+	static isExpanded(node) {
+		return node.is_expanded === true;
+	}
+
+	static isExpandedSupernode(node) {
+		return this.isSupernode(node) && this.isExpanded(node);
+	}
+
 	// Returns true if the node passed in is a binding node in a subflow
 	// for a supernode.
 	static isSuperBindingNode(d) {
@@ -1075,78 +1089,5 @@ export default class CanvasUtils {
 			}
 		});
 		return outLinks;
-	}
-
-	// Preprocesses the pipeline to set the connected attribute of the ports
-	// for each node. This is used when rendering the connection satus of ports.
-	static preProcessPipeline(pipeline) {
-		this.setAllPortsDisconnected(pipeline);
-
-		pipeline.links.forEach((link) => {
-			if (link.type === COMMENT_LINK) {
-				link.srcObj = this.getComment(link.srcNodeId, pipeline);
-				link.trgNode = this.getNode(link.trgNodeId, pipeline);
-
-			} else {
-				link.srcObj = this.getNode(link.srcNodeId, pipeline);
-				link.trgNode = this.getNode(link.trgNodeId, pipeline);
-
-				if (link.srcObj) {
-					this.setOutputPortConnected(link.srcObj, link.srcNodePortId);
-				}
-				if (link.trgNode) {
-					this.setInputPortConnected(link.trgNode, link.trgNodePortId);
-				}
-			}
-		});
-		return pipeline;
-	}
-
-	// Returns the node, from the pipeline passed in, identfied by the node ID.
-	static getNode(nodeId, pipeline) {
-		return pipeline.nodes.find((nd) => nd.id === nodeId);
-	}
-
-	// Returns the comment, from the pipeline passed in, identfied by the comment ID.
-	static getComment(commentId, pipeline) {
-		return pipeline.comments.find((com) => com.id === commentId);
-	}
-
-	// Sets the isConnected property of all ports in the pipeline to fasle.
-	static setAllPortsDisconnected(pipeline) {
-		pipeline.nodes.forEach((n) => {
-			if (n.inputs) {
-				n.inputs.forEach((inp) => (inp.isConnected = false));
-			}
-			if (n.outputs) {
-				n.outputs.forEach((out) => (out.isConnected = false));
-			}
-		});
-	}
-
-	// Sets the isConnected property of the port, identified by inPortId,
-	// for the trgNode to true.
-	static setInputPortConnected(trgNode, inPortId) {
-		const portId = inPortId || this.getDefaultInputPortId(trgNode);
-		if (trgNode.inputs) {
-			trgNode.inputs.forEach((inp) => {
-				if (inp.id === portId) {
-					inp.isConnected = true;
-				}
-			});
-		}
-	}
-
-	// Sets the isConnected property of the port, identified by outPortId,
-	// for the srcNode to true.
-	static setOutputPortConnected(srcNode, outPortId) {
-		const portId = outPortId || this.getDefaultOutputPortId(srcNode);
-		if (srcNode.outputs) {
-			srcNode.outputs.forEach((out) => {
-				if (out.id === portId) {
-					out.isConnected = true;
-				}
-			});
-		}
 	}
 }
