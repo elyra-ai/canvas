@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$flexible-table-header-row-height: 32px;
-$row-left-padding: 4px;
+$flexible-table-header-row-height: $spacing-07;
+$row-left-padding: $spacing-02;
 
 .properties-ft-table-header {
 	display: flex;
@@ -37,6 +37,14 @@ $row-left-padding: 4px;
 			opacity: 0.5;
 		}
 	}
+}
+
+.properties-ft-container-panel {
+	height: calc(100% - $spacing-07); // adjust height for table header
+}
+
+.properties-ft-control-container {
+	height: 100%;
 }
 
 .properties-ft-container-wrapper {
@@ -62,9 +70,6 @@ $row-left-padding: 4px;
 	&.warning {
 		border: 1px solid $support-03;
 	}
-	.row-checkbox {
-		padding-left: 12px;
-	}
 }
 
 .properties-ft-container-absolute {
@@ -83,9 +88,7 @@ $row-left-padding: 4px;
 
 	div[data-role="properties-header-row"] {
 		width: inherit;
-		background-color: $ui-03;
 		display: inline-flex;
-		height: 2.5em;
 		.properties-autosized-vt-header {
 			&:focus {
 				outline: none;

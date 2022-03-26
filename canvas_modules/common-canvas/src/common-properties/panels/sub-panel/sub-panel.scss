@@ -15,27 +15,10 @@
  */
 
 button.properties-subpanel-button {
-	cursor: pointer;
-	height: 100%;
-	align-items: center;
+	padding: 0; // override carbon
+	min-height: 2rem; // override carbon
+	height: 2rem;
+	width: 2rem;
 	display: flex;
-	border: 0;
-	border-style: none;
-	padding: 0;
-	background: unset;
-	> svg {
-		width: 18px;
-		height: 18px;
-		fill: $interactive-01;
-	}
-	&:hover:not([disabled]) > svg {
-		fill: $hover-primary;
-	}
-	&[disabled] {
-		cursor: default;
-		background: unset;
-	}
-	&:focus, &:hover  {
-		background-color: transparent;
-	}
+	justify-content: center;
 }

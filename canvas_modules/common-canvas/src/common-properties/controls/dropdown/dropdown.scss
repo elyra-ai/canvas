@@ -31,6 +31,9 @@
 			.bx--select-input--inline__wrapper {
 				width: 100%;
 			}
+			svg {
+				right: 0;
+			}
 		}
 		.bx--select-input {
 			width: inherit; // Override carbon default width: auto
@@ -43,6 +46,7 @@
 			&:focus {
 				outline: unset;
 			}
+
 		}
 		&.error {
 			.bx--select-input {

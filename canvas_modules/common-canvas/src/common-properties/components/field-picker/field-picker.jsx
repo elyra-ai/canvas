@@ -140,43 +140,40 @@ export default class FieldPicker extends React.Component {
 		for (let i = 0; i < fields.length; i++) {
 			const field = fields[i];
 			const columns = [];
-			let fieldContent = (
+			let dmIcon = null;
+			if (this.props.dmIcon && this.props.dmIcon !== "type") {
+				const metadata = this.props.controller.getDatasetMetadataFields();
+				const dmIconType = PropertyUtils.getDMFieldIcon(metadata, field.origName, this.props.dmIcon);
+				const icon = dmIconType ? <Icon type={dmIconType} /> : null;
+				// don't show icon for type since it's already being displayed
+				if (icon) {
+					dmIcon = (
+						<div className="properties-fp-field-type-icon">
+							{icon}
+						</div>
+					);
+				}
+			}
+			const fpFieldName = (
+				<span className="properties-fp-field-name">
+					{field.origName}
+				</span>
+			);
+
+			const fieldNameWithTooltip = (
+				<TruncatedContentTooltip
+					content={fpFieldName}
+					tooltipText={field.origName}
+					disabled={false}
+				/>
+			);
+			const fieldContent = (
 				<div className="properties-fp-field">
-					<div className="properties-fp-field-name">
-						{field.origName}
-					</div>
+					{dmIcon}
+					{fieldNameWithTooltip}
 				</div>
 			);
-			if (this.props.dmIcon) {
-				const metadata = this.props.controller.getDatasetMetadataFields();
-				const dmIconType = PropertyUtils.getDMFieldIcon(metadata,
-					field.origName, this.props.dmIcon);
-				const dmIcon = dmIconType ? <Icon type={dmIconType} /> : null;
-				let disabled = true;
-				if (field.origName) {
-					disabled = false;
-				}
-				const fpFieldName = (
-					<span className="properties-fp-field-name">
-						{field.origName}
-					</span>
-				);
-				const fieldNameWithTooltip = (
-					<TruncatedContentTooltip
-						content={fpFieldName}
-						tooltipText={field.origName}
-						disabled={disabled}
-					/>
-				);
-				fieldContent = (
-					<div className="properties-fp-field">
-						<div className="properties-fp-field-type-icon">
-							{dmIcon}
-						</div>
-						{fieldNameWithTooltip}
-					</div>
-				);
-			}
+
 			columns.push({
 				column: "fieldName",
 				content: fieldContent,
@@ -448,7 +445,7 @@ export default class FieldPicker extends React.Component {
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
 				scrollKey="field-picker"
-				rows={-1}
+				noAutoSize
 				tableLabel={this.props.title ? this.props.title : ""}
 				selectedRows={this.selectedRowsIndex}
 				updateRowSelections={this.updateFieldSelections}
@@ -465,14 +462,14 @@ export default class FieldPicker extends React.Component {
 		const table = this._genTable();
 
 		if (this.props.rightFlyout) {
-			return (<div>
+			return (<React.Fragment>
 				<div className="properties-fp-top-row">
 					{filterTypes}
 					{resetButton}
 				</div>
 				{table}
 				{backButton}
-			</div>);
+			</React.Fragment>);
 		}
 
 		return (<div>
