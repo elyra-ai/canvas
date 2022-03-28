@@ -107,6 +107,7 @@ class TitleEditor extends Component {
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
 				renderIcon={Edit16}
+				size="small"
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
@@ -119,6 +120,7 @@ class TitleEditor extends Component {
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
 				renderIcon={Information16}
+				size="small"
 				iconDescription={helpButtonLabel}
 				hasIconOnly
 			/>)
@@ -178,6 +180,7 @@ class TitleEditor extends Component {
 						readOnly={this.props.labelEditable === false} // shows a non editable icon
 						labelText={this.labelText}
 						hideLabel
+						size="sm"
 						onFocus={this.textInputOnFocus}
 						onBlur={this.textInputOnBlur}
 						light={this.props.controller.getLight()}
