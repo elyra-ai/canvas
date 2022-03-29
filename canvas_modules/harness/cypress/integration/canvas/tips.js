@@ -268,10 +268,10 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 	});
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
-		cy.clickAtCoordinatesInCommonProperties(65, 100);
+		cy.clickAtCoordinatesInCommonProperties(65, 108);
 		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "bottom", "Include or discard rows");
 
-		cy.clickAtCoordinatesInCommonProperties(245, 160);
+		cy.clickAtCoordinatesInCommonProperties(245, 168);
 		cy.verifyTipForLabelIsVisibleAtLocation(
 			"Modeler CLEM Condition Expression", "bottom", "Enter a boolean expression to use for filtering rows"
 		);
