@@ -134,6 +134,7 @@ describe("Table buttons renders correctly", () => {
 				"enable": false,
 				"label": "Label btn",
 				"incLabelWithIcon": "before",
+				"kind": "ghost",
 				"tooltip": "Custom button label only."
 			},
 			{
@@ -141,6 +142,7 @@ describe("Table buttons renders correctly", () => {
 				"enable": true,
 				"label": "Label icon",
 				"incLabelWithIcon": "before",
+				"kind": "ghost",
 				"tooltip": "Custom label button with Carbon icon"
 			}
 		];
@@ -195,6 +197,7 @@ describe("Table buttons renders correctly", () => {
 				"enable": false,
 				"label": "Label btn",
 				"incLabelWithIcon": "before",
+				"kind": "ghost",
 				"tooltip": "Custom button label only."
 			},
 			{
@@ -202,6 +205,7 @@ describe("Table buttons renders correctly", () => {
 				"enable": false,
 				"label": "Label icon",
 				"incLabelWithIcon": "before",
+				"kind": "ghost",
 				"tooltip": "Custom label button with Carbon icon"
 			}
 		];

@@ -16,28 +16,28 @@
 
 .properties-custom-table-buttons {
 	.toolbar-div {
-		height: 32px;
+		height: $spacing-07;
 
 		.toolbar-left-bar {
 			padding-right: 0;
 
 			.toolbar-item button {
-				height: 32px;
+				height: $spacing-07;
 			}
 
 			.toolbar-item-content {
-				padding: 3px 7px;
-				height: 32px;
-				min-width: 32px;
+				padding: $spacing-02 $spacing-03;
+				height: $spacing-07;
+				min-width: $spacing-07;
 				align-items: center;
 			}
 
 			.toolbar-overflow-item button {
-				height: 32px;
+				height: $spacing-07;
 			}
 
 			.toolbar-popover-list {
-				top: 32px;
+				top: $spacing-07;
 				right: 0;
 			}
 		}

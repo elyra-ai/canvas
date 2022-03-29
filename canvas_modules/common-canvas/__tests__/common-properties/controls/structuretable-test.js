@@ -808,10 +808,10 @@ describe("structuretable multiselect edit works", () => {
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find(".properties-vt-row-checkbox");
 		expect(selectedEditRow).to.have.length(1);
 
-		// verify the select header row is 2.5em in height
+		// verify the select header row is 2rem in height
 		const selectHeaderTable = wrapper.find("div.properties-at-selectedEditRows").find("div.properties-ft-container-wrapper");
 		const heightStyle = selectHeaderTable.prop("style");
-		expect(heightStyle).to.eql({ "height": "2.5em" });
+		expect(heightStyle).to.eql({ "height": "2rem" });
 	});
 });
 
@@ -996,6 +996,29 @@ describe("structuretable columns sort correctly", () => {
 		expect(tableRows[0][0]).to.equal("Sex");
 		expect(tableRows[5][0]).to.equal("Age");
 
+	});
+});
+
+describe("structuretable columns resize correctly", () => {
+	it("resize button should be available for specified columns", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const wrapper = renderedObject.wrapper;
+		// open the summary panel
+		propertyUtils.openSummaryPanel(wrapper, "structuretableResizableColumns-summary-panel");
+		// Verify table content is rendered
+		const tableWrapper = wrapper.find("div[data-id='properties-ci-structuretableResizableColumns']");
+		expect(tableWrapper).to.have.length(1);
+
+		const headerRow = tableWrapper.find("div[data-role='properties-header-row']");
+		expect(headerRow).to.have.length(1);
+		// Verify 2 columns in header are resizable
+		expect(headerRow.find(".properties-vt-header-resize")).to.have.length(2);
+		// Verify "Name" column can be resized
+		const nameColumn = tableWrapper.find("div[aria-label='Name']");
+		expect(nameColumn.find(".properties-vt-header-resize")).to.have.length(1);
+		// Verify "Type" column can be resized
+		const typeColumn = tableWrapper.find("div[aria-label='Type']");
+		expect(typeColumn.find(".properties-vt-header-resize")).to.have.length(1);
 	});
 });
 

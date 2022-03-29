@@ -37,7 +37,7 @@ class FlexibleTable extends React.Component {
 		if (typeof this.props.sortable !== "undefined") {
 			for (var i = 0; i < this.props.sortable.length; i++) {
 				const sortCol = this.props.sortable[i];
-				sortDirs[sortCol] = SORT_DIRECTION.DESC;
+				sortDirs[sortCol] = SORT_DIRECTION.NOT_SORTED;
 			}
 		}
 		this.state = {
@@ -242,34 +242,24 @@ class FlexibleTable extends React.Component {
 			return;
 		}
 		let newHeight = this.state.tableHeight;
-		const rowHeight = 2.25; // in em
-		const headerHeight = 2.5; // in em
+		const rowHeight = 2; // in rem
+		const headerHeight = 2; // in rem
 		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 4;
-		if (rows > 0) {
-			newHeight = (rowHeight * rows + headerHeight);
+		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
+			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
+		} else if (rows > 0) {
+			newHeight = (rowHeight * rows + headerHeight) + "rem";
 		} else if (rows === 0) { // only display header
-			newHeight = headerHeight;
-		} else {
-			// A -1 row count indicates a desire to use the entire available vertical space
-			const rootElement = document.getElementById("root");
-			let container = rootElement ? rootElement.getElementsByClassName("properties-wf-children") : [];
-			if (rootElement && container.length === 0) {
-				container = rootElement.getElementsByClassName("bx--modal-content");
-			}
-			if (container.length > 0) {
-				const parentElement = container[container.length - 1]; // Adjust height to the latest wide flyout opened
-				const tableElements =	parentElement.getElementsByClassName("properties-ft-container-wrapper");
-				const tableElement = tableElements.length > 0 ? tableElements[tableElements.length - 1] : null;
-				if (tableElement) {
-					const style = window.getComputedStyle(tableElement, null).getPropertyValue("font-size");
-					const fontSize = parseFloat(style);
-					// this is to adjust for multiple-select edit.
-					// There is one additional row and header to account for.
-					const minHeight = (rowHeight + headerHeight);
-					newHeight = (parentElement.offsetHeight - tableElement.offsetTop) / fontSize + headerHeight;
-					newHeight = Math.max(newHeight, minHeight);
+			newHeight = headerHeight + "rem";
+		} else if (rows === -1) {
+			if (this.flexibleTable) {
+				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
+				const ftHeaderHeight = ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height;
+				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
+				if (flyoutHeight === 0) {
+					newHeight = "100vh"; // set full window height if flyout height not found
 				} else {
-					newHeight = (rowHeight * 4 + headerHeight);
+					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
 				}
 			}
 		}
@@ -278,9 +268,29 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
+	findPropertyNodeHeight(node, className) {
+		if (node && node.parentNode && node.parentNode.className && node.parentNode.className.includes(className)) {
+			const foundNode = ReactDOM.findDOMNode(node.parentNode).getBoundingClientRect();
+			if (foundNode) {
+				return foundNode.height;
+			}
+			return 0;
+		} else if (node && node.parentNode) {
+			return this.findPropertyNodeHeight(node.parentNode, className);
+		}
+		return 0;
+	}
+
 	sortHeaderClick({ dataKey }) {
 		const colSortDir = this.state.columnSortDir;
 		if (typeof colSortDir[dataKey] !== "undefined") {
+			// At a time only 1 column will be shown as sorted. Revert other columns to not sorted.
+			Object.keys(colSortDir).forEach((key) => {
+				if (key !== dataKey) {
+					colSortDir[key] = SORT_DIRECTION.NOT_SORTED;
+				}
+			});
+			// Only dataKey column will be sorted
 			colSortDir[dataKey] = (colSortDir[dataKey] === SORT_DIRECTION.ASC) ? SORT_DIRECTION.DESC : SORT_DIRECTION.ASC;
 			this.setState({
 				columnSortDir: colSortDir,
@@ -344,7 +354,8 @@ class FlexibleTable extends React.Component {
 	*     "key": string,
 	*     "label": string,
 	*     "width": integer or string if containts 'px',
-	*     "description": optional string
+	*     "description": optional string,
+	*     "resizable": optional string
 	*   }
 	* ]
 	* @param columnWidths
@@ -370,6 +381,7 @@ class FlexibleTable extends React.Component {
 				width: width,
 				description: columnDef.description,
 				headerLabel: headerLabel,
+				resizable: columnDef.resizable,
 				operation: columnDef.operation
 			});
 		}
@@ -409,7 +421,6 @@ class FlexibleTable extends React.Component {
 
 	render() {
 		const tableWidth = this.state.tableWidth;
-		const tableHeight = this.state.tableHeight; // subtract 2 px for the borders
 		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
 
@@ -449,13 +460,17 @@ class FlexibleTable extends React.Component {
 			scrollIndex = this.props.scrollToRow;
 		}
 
-		const heightStyle = (this.props.noAutoSize || tableHeight === 0) ? {} : { height: tableHeight + "em" };
+		let heightStyle = {};
+		if (!this.props.noAutoSize) {
+			heightStyle = { height: this.state.tableHeight };
+		}
+
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
 
 		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container">
-				<div className="properties-ft-table-header">
+			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
+				<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 					{searchBar}
 					{this.props.topRightPanel}
 				</div>

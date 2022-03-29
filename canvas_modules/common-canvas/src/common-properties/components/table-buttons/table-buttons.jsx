@@ -17,7 +17,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Toolbar from "../../../toolbar/toolbar.jsx";
+
+import Toolbar from "../../../toolbar/toolbar";
 
 import { STATES } from "./../../constants/constants";
 
@@ -84,6 +85,7 @@ class TableButtons extends React.Component {
 			if (buttonConfig.label) {
 				buttonDef.label = buttonConfig.label.text;
 				buttonDef.incLabelWithIcon = "before";
+				buttonDef.kind = "ghost";
 			}
 
 			if (buttonConfig.description) {

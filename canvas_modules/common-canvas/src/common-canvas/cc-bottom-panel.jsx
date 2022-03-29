@@ -27,7 +27,6 @@ class CanvasBottomPanel extends React.Component {
 			panelHeight: 393
 		};
 
-
 		this.logger = new Logger("CC-Bottom-Panel");
 
 		this.onMouseUp = this.onMouseUp.bind(this);
@@ -37,13 +36,15 @@ class CanvasBottomPanel extends React.Component {
 
 	onMouseDown(e) {
 		if (e.button === 0) {
-			document.addEventListener("mousemove", this.onMouseMoveY);
+			document.addEventListener("mousemove", this.onMouseMoveY, true);
+			document.addEventListener("mouseup", this.onMouseUp, true);
 			this.poseY = e.clientY;
 		}
 	}
 
 	onMouseUp(e) {
-		document.removeEventListener("mousemove", this.onMouseMoveY);
+		document.removeEventListener("mousemove", this.onMouseMoveY, true);
+		document.removeEventListener("mouseup", this.onMouseUp, true);
 	}
 
 	onMouseMoveY(e) {
@@ -55,18 +56,23 @@ class CanvasBottomPanel extends React.Component {
 			this.poseY = e.clientY;
 		}
 	}
-
 	render() {
 		this.logger.log("render");
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const style = {
-				height: this.state.panelHeight
-			};
+			const canvasContainer = document.querySelector(".common-canvas-drop-div");
+			const rectHeight = canvasContainer
+				? canvasContainer.getBoundingClientRect().height
+				: 0;
+			const marginTop = 60;
+			const height = this.state.panelHeight >= (rectHeight - marginTop)
+				? (rectHeight - marginTop)
+				: this.state.panelHeight;
+
 			bottomPanel = (
-				<div className="bottom-panel" style={style} >
-					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} />
+				<div className="bottom-panel" style={{ height }} >
+					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
 					</div>
