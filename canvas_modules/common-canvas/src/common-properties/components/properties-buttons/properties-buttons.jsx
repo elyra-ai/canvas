@@ -63,15 +63,19 @@ class PropertiesButtons extends Component {
 			);
 		}
 
-		return (
-			<div
-				className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
-					!this.props.showPropertiesButtons) })}
-			>
-				{rejectButton}
-				{applyButton}
-			</div>
-		);
+		const propertiesModalButtons = this.props.okHandler || this.props.cancelHandler
+			? (
+				<div
+					className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
+						!this.props.showPropertiesButtons) })}
+				>
+					{rejectButton}
+					{applyButton}
+				</div>
+			)
+			: null;
+
+		return propertiesModalButtons;
 	}
 }
 

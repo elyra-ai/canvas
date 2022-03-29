@@ -404,9 +404,10 @@ class PropertiesMain extends React.Component {
 	}
 
 	render() {
+		const applyOnBlurEnabled = this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout;
 		let cancelHandler = this.cancelHandler.bind(this, CANCEL);
 		// when onBlur cancel shouldn't be rendered.
-		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
+		if (applyOnBlurEnabled) {
 			cancelHandler = null;
 		}
 		const applyLabel = this.getApplyButtonLabel();
@@ -426,7 +427,7 @@ class PropertiesMain extends React.Component {
 					help={formData.help}
 					controller={this.propertiesController}
 					helpClickHandler={this.props.callbacks.helpClickHandler}
-					closeHandler={this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
+					closeHandler={applyOnBlurEnabled ? this.applyPropertiesEditing.bind(this, true) : null}
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
@@ -436,7 +437,7 @@ class PropertiesMain extends React.Component {
 
 				buttonsContainer = (<MainEditorPropertiesButtons
 					controller={this.propertiesController}
-					okHandler={!this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
+					okHandler={!applyOnBlurEnabled ? this.applyPropertiesEditing.bind(this, true) : null}
 					cancelHandler={cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
@@ -479,9 +480,17 @@ class PropertiesMain extends React.Component {
 					{editorForm}
 				</PropertiesEditor>);
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
-				propertiesDialog = (<div className={classNames("properties-custom-container", { "properties-custom-container-with-heading": hasHeading })}>
-					{editorForm}
-				</div>);
+				propertiesDialog = (
+					<div className={classNames("properties-custom-container",
+						{
+							"properties-custom-container-with-heading": !applyOnBlurEnabled && hasHeading,
+							"properties-custom-container-applyOnBlur": applyOnBlurEnabled && !hasHeading,
+							"properties-custom-container-applyOnBlur-with-heading": applyOnBlurEnabled && hasHeading
+						}
+					)}
+					>
+						{editorForm}
+					</div>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}

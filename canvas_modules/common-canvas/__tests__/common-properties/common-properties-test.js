@@ -431,7 +431,8 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(wrapper.find("aside.properties-wrapper")).to.have.length(1);
 		expect(wrapper.find("div.properties-title-editor")).to.have.length(1);
 		expect(wrapper.find("div.properties-custom-container")).to.have.length(1);
-		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(1);
+		expect(wrapper.find("div.properties-modal-buttons")).to.have.length(0);
+		expect(wrapper.find("div.properties-close-button")).to.have.length(1);
 	});
 
 	it("should set editorSize to initialEditorSize when defaultEditorSize='small' and initialEditorSize='medium'", () => {
