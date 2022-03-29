@@ -97,6 +97,8 @@ class TitleEditor extends Component {
 		const helpButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.TITLE_EDITOR_HELPBUTTON_LABEL);
 		const closeButtonLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
 		const titleValidationTypes = [CONDITION_MESSAGE_TYPE.ERROR, CONDITION_MESSAGE_TYPE.WARNING];
+		const titleWithWarning = get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.WARNING;
+		const titleWithErrror = get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.ERROR;
 
 		const propertiesTitleEdit = this.props.labelEditable === false || this.state.focused ? <div />
 			: (<Button
@@ -168,7 +170,11 @@ class TitleEditor extends Component {
 				{heading}
 				<div className={classNames(
 					"properties-title-editor-input",
-					{ "properties-title-editor-with-help": this.props.help && !this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")) }
+					{
+						"properties-title-editor-with-help": this.props.help && !this.headingEnabled && !titleValidationTypes.includes(get(this.state.titleValidation, "type")),
+						"properties-title-editor-with-warning": titleWithWarning,
+						"properties-title-editor-with-error": titleWithErrror
+					}
 				)}
 				>
 					<TextInput
@@ -184,9 +190,9 @@ class TitleEditor extends Component {
 						onFocus={this.textInputOnFocus}
 						onBlur={this.textInputOnBlur}
 						light={this.props.controller.getLight()}
-						invalid={get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.ERROR}
+						invalid={titleWithErrror}
 						invalidText={get(this.state.titleValidation, "message")}
-						warn={get(this.state.titleValidation, "type", null) === CONDITION_MESSAGE_TYPE.WARNING}
+						warn={titleWithWarning}
 						warnText={get(this.state.titleValidation, "message")}
 						{... this.state.focused && { className: "properties-title-editor-focused" }}
 					/>
