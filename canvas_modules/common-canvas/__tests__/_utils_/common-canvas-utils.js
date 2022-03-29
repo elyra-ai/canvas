@@ -18,6 +18,8 @@ import React from "react";
 import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
 import { mount } from "enzyme";
+import sinon from "sinon";
+
 
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
@@ -36,6 +38,36 @@ const messages = {
 	"toolbar.zoomToFit": "Zoom To Fit"
 };
 
+export function createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig, handlers) {
+	canvasController.getObjectModel().setPipelineFlowPalette({});
+	const contextMenuHandler = sinon.spy();
+	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
+	const editActionHandler = handlers && handlers.editActionHandler ? handlers.editActionHandler : sinon.spy();
+	const clickActionHandler = sinon.spy();
+	const decorationActionHandler = sinon.spy();
+	const selectionChangeHandler = sinon.spy();
+	const tipHandler = sinon.spy();
+	const contextMenuConfig = null;
+	const canvasParameters = canvasParams || {};
+	const wrapper = createIntlCommonCanvas(
+		config,
+		contextMenuHandler,
+		beforeEditActionHandler,
+		editActionHandler,
+		clickActionHandler,
+		decorationActionHandler,
+		selectionChangeHandler,
+		tipHandler,
+		canvasParameters.showBottomPanel,
+		canvasParameters.showRightFlyout,
+		toolbarConfig,
+		notificationConfig,
+		contextMenuConfig,
+		canvasController
+	);
+
+	return wrapper;
+}
 
 export function createIntlCommonCanvas(
 	config,
