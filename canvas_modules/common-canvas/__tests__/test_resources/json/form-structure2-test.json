@@ -277,6 +277,7 @@
                       ],
                       "moveableRows": true,
                       "addRemoveRows": true,
+                      "disableEditButton": false,
                       "header": true,
                       "editStyle": "inline"
                     }

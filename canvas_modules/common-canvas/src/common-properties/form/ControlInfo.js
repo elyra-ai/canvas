@@ -131,6 +131,11 @@ export class Control {
 		if (typeof settings.addRemoveRows === "boolean") {
 			this.addRemoveRows = settings.addRemoveRows;
 		}
+
+		if (typeof settings.disableEditButton === "boolean") {
+			this.disableEditButton = settings.disableEditButton;
+		}
+
 		if (typeof settings.header === "boolean") {
 			this.header = settings.header;
 		}

@@ -29,6 +29,7 @@ import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
+import rejectLinkParamDe from "../test_resources/paramDefs/rejectLink_paramDef.json";
 
 import testUtils from "../_utils_/property-utils";
 
@@ -1929,6 +1930,35 @@ describe("Properties Controller addRemoveRows", () => {
 		controller.setAddRemoveRows(propertyId, true);
 		expect(controller.getAddRemoveRows(propertyId)).to.be.true;
 	});
+});
+
+describe("Properties Controller disableEditButton", () => {
+	beforeEach(() => {
+		reset();
+	});
+
+	it("should setInitialDisableEditButton when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(rejectLinkParamDe);
+		controller = renderedObject.controller;
+		const propertyId = { name: "outputcolSubProperties" };
+		expect(controller.getDisableEditButton(propertyId)).to.be.false;
+	});
+
+
+	it("disableEditButton attribute can reflect latest setted value", () => {
+		const renderedObject = testUtils.flyoutEditorForm(rejectLinkParamDe);
+		controller = renderedObject.controller;
+		const propertyId = { name: "outputcolSubProperties" };
+
+		// Verify disableEditButton parameter can be setup correctly
+		controller.setDisableEditButton(propertyId, true);
+		expect(controller.getDisableEditButton(propertyId)).to.be.true;
+		controller.setDisableEditButton(propertyId, false);
+		expect(controller.getDisableEditButton(propertyId)).to.be.false;
+
+	});
+
+
 });
 
 describe("Properties Controller staticRows", () => {

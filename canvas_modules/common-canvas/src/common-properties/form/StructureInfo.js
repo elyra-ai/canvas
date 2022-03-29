@@ -21,7 +21,7 @@ import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllFields, layout, buttons, type) {
+		rowSelection, addRemoveRows, header, includeAllFields, layout, buttons, type, disableEditButton) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
@@ -33,6 +33,12 @@ export class StructureDef {
 			this.addRemoveRows = addRemoveRows;
 		} else {
 			this.addRemoveRows = true; // set the default value
+		}
+
+		if (typeof disableEditButton === "boolean") {
+			this.disableEditButton = disableEditButton;
+		} else {
+			this.disableEditButton = false;
 		}
 		if (typeof header === "boolean") {
 			this.header = header;
@@ -108,7 +114,8 @@ export class StructureDef {
 				propertyOf(uihints)("include_all_fields"),
 				propertyOf(uihints)("layout"),
 				ButtonMetadata.makeButtonMetadata(propertyOf(uihints)("buttons")),
-				propertyOf(structure)("type")
+				propertyOf(structure)("type"),
+				propertyOf(uihints)("disableEditButton")
 			);
 		}
 		return null;

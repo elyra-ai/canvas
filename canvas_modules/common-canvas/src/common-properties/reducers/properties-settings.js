@@ -15,7 +15,7 @@
  */
 
 import { set } from "lodash";
-import { SET_ADD_REMOVE_ROWS, SET_TABLE_BUTTON_ENABLED } from "../actions";
+import { SET_ADD_REMOVE_ROWS, SET_TABLE_BUTTON_ENABLED, SET_DISABLE_EDIT_BUTTON } from "../actions";
 
 /*
 * Stores the state information for all controls.  States are stored as objects with keys being name, row, col.
@@ -53,6 +53,22 @@ function states(state = {}, action) {
 			updateNestedPropertySetting(propertyId, newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
 		} else {
 			set(newState[propertyId.name], `tableButtons.${action.info.buttonId}`, action.info.value);
+		}
+		return Object.assign({}, state, newState);
+	}
+	case SET_DISABLE_EDIT_BUTTON: {
+		if (propertyId === null) {
+			return state;
+		}
+		const newState = state;
+		if (typeof newState[propertyId.name] === "undefined") {
+			newState[propertyId.name] = {};
+		}
+
+		if (typeof propertyId.row !== "undefined") {
+			updateNestedPropertySetting(propertyId, newState[propertyId.name], "disableEditButton", action.info.value);
+		} else {
+			newState[propertyId.name].disableEditButton = action.info.value;
 		}
 		return Object.assign({}, state, newState);
 	}
