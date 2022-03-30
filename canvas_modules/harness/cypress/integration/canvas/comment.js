@@ -148,7 +148,7 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Hello Canvas!")
 			.rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "teal-50");
-		cy.verifyCommentColor("Hello Canvas!", "teal50");
+		cy.verifyCommentColor("Hello Canvas!", "teal-50");
 	});
 
 	it("Color multiple colored comments and undo", function() {
@@ -163,26 +163,26 @@ describe("Test coloring comments", function() {
 		cy.getCommentWithText("Orange 40").rightclick();
 		cy.clickColorFromContextSubmenu("Color background", "cyan-20");
 
-		cy.verifyCommentColor("Default", "cyan20");
-		cy.verifyCommentColor("White 0", "cyan20");
-		cy.verifyCommentColor("Yellow 20", "cyan20");
-		cy.verifyCommentColor("Red 50", "cyan20");
-		cy.verifyCommentColor("Orange 40", "cyan20");
+		cy.verifyCommentColor("Default", "cyan-20");
+		cy.verifyCommentColor("White 0", "cyan-20");
+		cy.verifyCommentColor("Yellow 20", "cyan-20");
+		cy.verifyCommentColor("Red 50", "cyan-20");
+		cy.verifyCommentColor("Orange 40", "cyan-20");
 
 		cy.clickToolbarUndo();
 
 		cy.verifyCommentColor("Default", "");
-		cy.verifyCommentColor("White 0", "white0");
-		cy.verifyCommentColor("Yellow 20", "yellow20");
-		cy.verifyCommentColor("Red 50", "red50");
-		cy.verifyCommentColor("Orange 40", "orange40");
+		cy.verifyCommentColor("White 0", "white-0");
+		cy.verifyCommentColor("Yellow 20", "yellow-20");
+		cy.verifyCommentColor("Red 50", "red-50");
+		cy.verifyCommentColor("Orange 40", "orange-40");
 
 		cy.clickToolbarRedo();
 
-		cy.verifyCommentColor("Default", "cyan20");
-		cy.verifyCommentColor("White 0", "cyan20");
-		cy.verifyCommentColor("Yellow 20", "cyan20");
-		cy.verifyCommentColor("Red 50", "cyan20");
-		cy.verifyCommentColor("Orange 40", "cyan20");
+		cy.verifyCommentColor("Default", "cyan-20");
+		cy.verifyCommentColor("White 0", "cyan-20");
+		cy.verifyCommentColor("Yellow 20", "cyan-20");
+		cy.verifyCommentColor("Red 50", "cyan-20");
+		cy.verifyCommentColor("Orange 40", "cyan-20");
 	});
 });
