@@ -47,28 +47,35 @@ class PropertiesButtons extends Component {
 				</Button>
 			);
 		}
-		const applyButton = (
-			<Button
-				data-id="properties-apply-button"
-				className="properties-apply-button"
-				type="button"
-				size="small"
-				onClick={this.props.okHandler}
-				disabled={!this.props.applyButtonEnabled}
-			>
-				{applyButtonLabel}
-			</Button>
-		);
+		let applyButton;
+		if (this.props.okHandler) {
+			applyButton = (
+				<Button
+					data-id="properties-apply-button"
+					className="properties-apply-button"
+					type="button"
+					size="small"
+					onClick={this.props.okHandler}
+					disabled={!this.props.applyButtonEnabled}
+				>
+					{applyButtonLabel}
+				</Button>
+			);
+		}
 
-		return (
-			<div
-				className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
-					!this.props.showPropertiesButtons) })}
-			>
-				{rejectButton}
-				{applyButton}
-			</div>
-		);
+		const propertiesModalButtons = this.props.okHandler || this.props.cancelHandler
+			? (
+				<div
+					className={classNames("properties-modal-buttons", { "hide": (typeof (this.props.showPropertiesButtons) !== "undefined" &&
+						!this.props.showPropertiesButtons) })}
+				>
+					{rejectButton}
+					{applyButton}
+				</div>
+			)
+			: null;
+
+		return propertiesModalButtons;
 	}
 }
 

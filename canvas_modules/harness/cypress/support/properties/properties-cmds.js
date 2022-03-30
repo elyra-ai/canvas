@@ -29,6 +29,10 @@ Cypress.Commands.add("saveFlyout", () => {
 	cy.get(".properties-modal-buttons button[data-id='properties-apply-button']").click();
 });
 
+Cypress.Commands.add("closeFlyout", () => {
+	// When applyOnBlur set to true, show Close icon in properties title
+	cy.get(".properties-close-button > button").click({ force: true });
+});
 
 Cypress.Commands.add("openSubPanel", (title) => {
 	cy.get(".properties-summary-link-button").contains(title)

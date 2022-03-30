@@ -39,14 +39,14 @@
 	}
 }
 .properties-title-editor-input {
-	width: calc(100% - 2px); // subtract 2px for input active right border
+	width: calc(100% - #{$spacing-03}); // subtract 8px to align with Close icon when applyOnBlur is set
 	top: 1px; // align input with bottom border
 	position: relative;
 	display: inline-flex;
 	align-items: center;
 
 	&.properties-title-editor-with-help {
-		width: calc(100% - #{$spacing-08}); // subtract the size of the help button
+		width: calc(100% - #{$spacing-07} - #{$spacing-03}); // subtract the size of the help button and 8px to align with Close icon when applyOnBlur is set
 	}
 	.bx--form-item.bx--text-input-wrapper {
 		// allow edit icon to be at the end of text input
@@ -79,11 +79,16 @@
 	}
 }
 
+// warning and invalid icons should be aligned with close icon. And input field should stretch full width
+.properties-title-editor-with-warning, .properties-title-editor-with-error {
+	width: calc(100% - 2px); // subtract 2px for input active right border
+}
+
 .properties-title-editor-btn.help, .properties-title-editor-btn.edit {
 	fill: $icon-02;
-	// edit & help buttons size - 40x40
-	width: $spacing-08;
-	min-height: $spacing-08;
+	// edit & help buttons size - 32x32
+	width: $spacing-07;
+	min-height: $spacing-07;
 	padding-left: $spacing-04;
 	padding-right: $spacing-04;
 	&:hover {
@@ -92,4 +97,24 @@
 	&:active {
 		background-color: $ui-03;
 	}
+}
+
+// Close icon without heading
+.properties-close-button {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding-right: $spacing-03;
+}
+
+// Close icon with heading
+.properties-title-with-heading > .properties-close-button {
+	position: absolute;
+	top: $spacing-03;
+	right: $spacing-03;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
 }
