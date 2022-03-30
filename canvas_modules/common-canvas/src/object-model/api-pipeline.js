@@ -100,6 +100,18 @@ export default class APIPipeline {
 		}, data);
 	}
 
+	addPastedObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "ADD_PASTED_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
+	deletePastedObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "DELETE_PASTED_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
 	// Returns an object containing and array of nodes and an array of comments
 	// that match the array of objectIds passed in.
 	filterNodesAndComments(objectIds) {
