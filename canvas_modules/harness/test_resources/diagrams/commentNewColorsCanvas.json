@@ -26,7 +26,7 @@
               "y_pos": 133,
               "width": 175,
               "height": 42,
-              "class_name": "white0",
+              "class_name": "bkg-col-white-0",
               "content": "White 0",
               "associated_id_refs": []
             },
@@ -36,7 +36,7 @@
               "y_pos": 133,
               "width": 175,
               "height": 42,
-              "class_name": "yellow20",
+              "class_name": "bkg-col-yellow-20",
               "content": "Yellow 20",
               "associated_id_refs": []
             },
@@ -46,7 +46,7 @@
               "y_pos": 132,
               "width": 175,
               "height": 42,
-              "class_name": "gray20",
+              "class_name": "bkg-col-gray-20",
               "content": "Gray 20",
               "associated_id_refs": []
             },
@@ -56,7 +56,7 @@
               "y_pos": 132,
               "width": 175,
               "height": 42,
-              "class_name": "green20",
+              "class_name": "bkg-col-green-20",
               "content": "Green 20",
               "associated_id_refs": []
             },
@@ -66,7 +66,7 @@
               "y_pos": 134,
               "width": 175,
               "height": 42,
-              "class_name": "teal20",
+              "class_name": "bkg-col-teal-20",
               "content": "Teal 20",
               "associated_id_refs": []
             },
@@ -76,7 +76,7 @@
               "y_pos": 134,
               "width": 175,
               "height": 42,
-              "class_name": "cyan20",
+              "class_name": "bkg-col-cyan-20",
               "content": "Cyan 20",
               "associated_id_refs": []
             },
@@ -86,7 +86,7 @@
               "y_pos": 242,
               "width": 175,
               "height": 42,
-              "class_name": "red50",
+              "class_name": "bkg-col-red-50",
               "content": "Red 50",
               "associated_id_refs": []
             },
@@ -96,7 +96,7 @@
               "y_pos": 242,
               "width": 175,
               "height": 42,
-              "class_name": "orange40",
+              "class_name": "bkg-col-orange-40",
               "content": "Orange 40",
               "associated_id_refs": []
             },
@@ -106,7 +106,7 @@
               "y_pos": 241,
               "width": 175,
               "height": 42,
-              "class_name": "gray50",
+              "class_name": "bkg-col-gray-50",
               "content": "Gray 50",
               "associated_id_refs": []
             },
@@ -116,7 +116,7 @@
               "y_pos": 241,
               "width": 175,
               "height": 42,
-              "class_name": "green50",
+              "class_name": "bkg-col-green-50",
               "content": "Green 50",
               "associated_id_refs": []
             },
@@ -126,7 +126,7 @@
               "y_pos": 243,
               "width": 175,
               "height": 42,
-              "class_name": "teal50",
+              "class_name": "bkg-col-teal-50",
               "content": "Teal 50",
               "associated_id_refs": []
             },
@@ -136,7 +136,7 @@
               "y_pos": 243,
               "width": 175,
               "height": 42,
-              "class_name": "cyan50",
+              "class_name": "bkg-col-cyan-50",
               "content": "Cyan 50",
               "associated_id_refs": []
             }
