@@ -83,31 +83,22 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedZoom2, actualZoom2)).to.be.true;
 	});
 
-	it("should check off screen node into specified positions within the canvas", () => {
+	it("should test zoomTo function sets the appropriate zoom object", () => {
 		const config = {};
-
 		const expectedZoomXY = {
-			x: 2315.4267361645375,
-			y: 811.2203308688752,
+			x: 0,
+			y: 0,
+			k: 1
 		};
 
 		const canvasController = new CanvasController();
 
-		canvasController.setPipelineFlow(bigCanvas);
+		canvasController.setPipelineFlow(allTypesCanvas);
 		createCommonCanvas(config, canvasController);
-		const pipelineID = canvasController.getPrimaryPipelineId();
 
-		const actualZoom = canvasController.getZoomToReveal(["3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e"], 50, 50);
-		canvasController.zoomTo(actualZoom);
-		const nodeData = canvasController.getNodes(pipelineID);
+		canvasController.zoomTo(expectedZoomXY);
 
-		const x = nodeData.filter((node) => node.id === "3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e")[0].x_pos;
-		const y = nodeData.filter((node) => node.id === "3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e")[0].y_pos;
-
-		const actualZoomXY = {
-			x,
-			y
-		};
+		const actualZoomXY = canvasController.getZoom();
 
 		expect(isEqual(actualZoomXY, expectedZoomXY)).to.be.true;
 	});
