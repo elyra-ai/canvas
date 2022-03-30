@@ -15,6 +15,9 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
+
+import CanvasUtils from "../../../common-canvas/common-canvas-utils.js";
+
 export default (state = [], action) => {
 	switch (action.type) {
 	case "MOVE_OBJECTS":
@@ -232,26 +235,11 @@ function replaceColorClass(className, newColorClass) {
 function removeCurrentColorClass(className) {
 	const cn = className
 		.split(" ")
-		.filter((tok) => !isColorClass(tok))
+		.filter((tok) => !CanvasUtils.getBkgColorClass(tok))
 		.join(" ");
 	return cn;
 }
 
 function addNewColorClass(className, newColorClass) {
 	return className ? className + " " + newColorClass : newColorClass;
-}
-
-function isColorClass(className) {
-	return className === "white0" ||
-		className === "yellow20" ||
-		className === "gray20" ||
-		className === "green20" ||
-		className === "teal20" ||
-		className === "cyan20" ||
-		className === "red50" ||
-		className === "orange40" ||
-		className === "gray50" ||
-		className === "green50" ||
-		className === "teal50" ||
-		className === "cyan50";
 }

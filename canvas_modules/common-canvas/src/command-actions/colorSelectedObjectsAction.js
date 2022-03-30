@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Action from "../command-stack/action.js";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class ColorSelectedObjectsAction extends Action {
 	constructor(data, objectModel, labelUtil) {
@@ -62,28 +63,10 @@ export default class ColorSelectedObjectsAction extends Action {
 		if (o.class_name) {
 			const classes = o.class_name.split(" ");
 			if (classes) {
-				const colorClass = classes.find((c) => this.getColorClass(c));
+				const colorClass = classes.find((c) => CanvasUtils.getBkgColorClass(c));
 				return colorClass;
 			}
 		}
 		return "";
-	}
-
-	getColorClass(className) {
-		if (className === "white0" ||
-				className === "yellow20" ||
-				className === "gray20" ||
-				className === "green20" ||
-				className === "teal20" ||
-				className === "cyan20" ||
-				className === "red50" ||
-				className === "orange40" ||
-				className === "gray50" ||
-				className === "green50" ||
-				className === "teal50" ||
-				className === "cyan50") {
-			return className;
-		}
-		return null;
 	}
 }
