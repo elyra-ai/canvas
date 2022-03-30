@@ -166,7 +166,6 @@ export default class PasteAction extends Action {
 			pipelinesToAdd: this.pipelines,
 			selections: this.selectionIds
 		});
-
 	}
 
 	undo() {

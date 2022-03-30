@@ -640,8 +640,7 @@ export default class APIPipeline {
 	}
 
 	isDataNode(objId) {
-		const node = this.getNode(objId);
-		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
+		return this.getNode(objId);
 	}
 
 	sizeAndPositionObjects(objectsInfo, linksInfo) {
@@ -1016,9 +1015,6 @@ export default class APIPipeline {
 	}
 
 	addComment(data) {
-		if (typeof data.selectedObjectIds === "undefined") {
-			data.selectedObjectIds = [];
-		}
 		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
 	}
 

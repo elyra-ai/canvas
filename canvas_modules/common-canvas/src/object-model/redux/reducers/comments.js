@@ -53,17 +53,7 @@ export default (state = [], action) => {
 
 
 	case "ADD_COMMENT": {
-		const newComment = {
-			id: action.data.id,
-			content: action.data.content,
-			height: action.data.height,
-			width: action.data.width,
-			x_pos: action.data.x_pos,
-			y_pos: action.data.y_pos
-		};
-		if (typeof action.data.class_name !== "undefined") {
-			newComment.class_name = action.data.class_name;
-		}
+		const newComment = getCommentFromData(action.data);
 		return [
 			...state,
 			newComment
@@ -71,9 +61,10 @@ export default (state = [], action) => {
 	}
 
 	case "ADD_COMMENTS": {
+		const comments = action.data.commentsToAdd.map((cd) => getCommentFromData(cd));
 		return [
 			...state,
-			...action.data.commentsToAdd
+			...comments
 		];
 	}
 
@@ -254,4 +245,19 @@ function isColorClass(className) {
 		className === "green50" ||
 		className === "teal50" ||
 		className === "cyan50";
+}
+
+function getCommentFromData(data) {
+	const newComment = {
+		id: data.id,
+		content: data.content,
+		height: data.height,
+		width: data.width,
+		x_pos: data.x_pos,
+		y_pos: data.y_pos
+	};
+	if (typeof data.class_name !== "undefined") {
+		newComment.class_name = data.class_name;
+	}
+	return newComment;
 }
