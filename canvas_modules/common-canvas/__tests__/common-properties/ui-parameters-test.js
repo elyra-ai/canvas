@@ -67,8 +67,8 @@ describe("Ui parameters are returned correctly", () => {
 		const input = uiParamDiv.find("input");
 		input.simulate("change", { target: { value: "My new value" } });
 		// close the common properties edit
-		const buttons = wrapper.find("div.properties-modal-buttons");
-		buttons.find("button.properties-apply-button").simulate("click");
+		const closeIcon = wrapper.find("div.properties-close-button").find("button");
+		closeIcon.simulate("click");
 		// validation is in the applyPropertiesChanges function above
 	});
 });
