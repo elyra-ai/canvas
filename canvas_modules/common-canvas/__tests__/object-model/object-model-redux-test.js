@@ -1062,7 +1062,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["comment1", "node3"] }
+			data: { selections: ["comment1", "node3"] },
+			pipelineId: "123"
 		});
 
 
@@ -1101,7 +1102,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node3"] }
+			data: { selections: ["node3"] },
+			pipelineId: "123"
 		});
 
 		objectModel.toggleSelection("comment1", true, "123");
@@ -1139,7 +1141,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["comment1", "node3"] }
+			data: { selections: ["comment1", "node3"] },
+			pipelineId: "123"
 		});
 
 		objectModel.toggleSelection("node3", true, "123");
@@ -1178,7 +1181,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["comment1"] }
+			data: { selections: ["comment1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.toggleSelection("node3", true, "123");
@@ -1219,7 +1223,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node2"] }
+			data: { selections: ["node2"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node4", "123");
@@ -1260,7 +1265,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node1"] }
+			data: { selections: ["node1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node4", "123");
@@ -1301,7 +1307,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node1"] }
+			data: { selections: ["node1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node4", "123");
@@ -1344,7 +1351,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node2"] }
+			data: { selections: ["node2"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node4", "123");
@@ -1407,7 +1415,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node1"] }
+			data: { selections: ["node1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node13", "123");
@@ -1471,7 +1480,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node1"] }
+			data: { selections: ["node1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node12", "123");
@@ -1535,7 +1545,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["node8"] }
+			data: { selections: ["node8"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node11", "123");
@@ -1598,7 +1609,8 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: { pipelineId: "123", selections: ["comment1"] }
+			data: { selections: ["comment1"] },
+			pipelineId: "123"
 		});
 
 		objectModel.selectSubGraph("node13", "123");

@@ -287,14 +287,16 @@ export default (state = [], action) => {
 	// to each of the selected nodes.
 	case "ADD_COMMENT": {
 		const createdLinks = [];
-		action.data.selectedObjectIds.forEach((objId, i) => {
-			createdLinks.push({
-				id: action.data.linkIds[i],
-				srcNodeId: action.data.id,
-				trgNodeId: action.data.selectedObjectIds[i],
-				type: COMMENT_LINK
+		if (action.data.selectedObjectIds) {
+			action.data.selectedObjectIds.forEach((objId, i) => {
+				createdLinks.push({
+					id: action.data.linkIds[i],
+					srcNodeId: action.data.id,
+					trgNodeId: action.data.selectedObjectIds[i],
+					type: COMMENT_LINK
+				});
 			});
-		});
+		}
 		return [
 			...state,
 			...createdLinks

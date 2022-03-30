@@ -46,6 +46,7 @@ export default (state = [], action) => {
 		return [...state, ...action.data.extPipelineFlowsToAdd];
 	}
 
+	case "DELETE_PASTED_OBJECTS":
 	case "DELETE_OBJECTS_AND_UPDATE":
 	case "DELETE_SUPERNODES": {
 		return state.filter((epf) => {
