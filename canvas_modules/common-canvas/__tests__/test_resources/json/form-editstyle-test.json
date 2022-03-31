@@ -339,7 +339,6 @@
                               ""
                             ],
                             "addRemoveRows": true,
-                            "hideEditButton": false,
                             "header": true,
                             "editStyle": "inline"
                           }
