@@ -409,7 +409,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	let moveableRows = parameter.moveableRows;
 	let rowSelection;
 	let addRemoveRows;
-	let hideEditButton;
 	let header;
 	let includeAllFields;
 	let layout;
@@ -495,7 +494,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
-						hideEditButton = structureDef.hideEditButton;
 						header = structureDef.header;
 						includeAllFields = structureDef.includeAllFields;
 					} else {
@@ -503,7 +501,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
-						hideEditButton = structureDef.hideEditButton;
 						header = structureDef.header;
 					}
 
@@ -585,7 +582,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.rowSelection = rowSelection;
 	settings.generatedValues = parameter.generatedValues;
 	settings.addRemoveRows = addRemoveRows;
-	settings.hideEditButton = hideEditButton;
 	settings.dateFormat = parameter.dateFormat;
 	settings.timeFormat = parameter.timeFormat;
 	settings.customControlId = parameter.customControlId;

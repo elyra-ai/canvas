@@ -21,7 +21,7 @@ import { ResourceDef } from "../util/L10nProvider";
 
 export class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label,
-		rowSelection, addRemoveRows, header, includeAllFields, layout, buttons, type, hideEditButton) {
+		rowSelection, addRemoveRows, header, includeAllFields, layout, buttons, type) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;

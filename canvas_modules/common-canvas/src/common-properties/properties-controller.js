@@ -175,7 +175,6 @@ export default class PropertiesController {
 			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
 			this.setInitialTableButtonState();
-			this.setInitialHideEditButton();
 
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
@@ -1775,21 +1774,6 @@ export default class PropertiesController {
 			if (control.valueDef && control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.addRemoveRows)) {
 				const propertyId = { name: control.name };
 				this.setAddRemoveRows(propertyId, control.addRemoveRows);
-			}
-		});
-
-	}
-
-	/**
-	* Set the initial values of hideEditButton for all structure controls
-	*/
-	setInitialHideEditButton() {
-		const parameterNames = Object.keys(this.controls);
-		parameterNames.forEach((parameterName) => {
-			const control = this.controls[parameterName];
-			if (control.valueDef && control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.hideEditButton)) {
-				const propertyId = { name: control.name };
-				this.setHideEditButton(propertyId, control.hideEditButton);
 			}
 		});
 
