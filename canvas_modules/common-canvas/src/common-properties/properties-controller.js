@@ -175,7 +175,7 @@ export default class PropertiesController {
 			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
 			this.setInitialTableButtonState();
-			this.setInitialDisableEditButton();
+			this.setInitialHideEditButton();
 
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
@@ -1781,15 +1781,15 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Set the initial values of disableEditButton for all structure controls
+	* Set the initial values of hideEditButton for all structure controls
 	*/
-	setInitialDisableEditButton() {
+	setInitialHideEditButton() {
 		const parameterNames = Object.keys(this.controls);
 		parameterNames.forEach((parameterName) => {
 			const control = this.controls[parameterName];
-			if (control.valueDef && control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.disableEditButton)) {
+			if (control.valueDef && control.valueDef.propType === Type.STRUCTURE && !isUndefined(control.hideEditButton)) {
 				const propertyId = { name: control.name };
-				this.setDisableEditButton(propertyId, control.disableEditButton);
+				this.setHideEditButton(propertyId, control.hideEditButton);
 			}
 		});
 
@@ -1814,21 +1814,21 @@ export default class PropertiesController {
 	}
 
 	/**
-	* Set the disableEditButton attribute to 'enabled' for the given propertyId
+	* Set the hideEditButton attribute to 'enabled' for the given propertyId
 	* @param propertyId The unique property identifier
-	* @param enabled boolean value to enable or disable disableEditButton
+	* @param enabled boolean value to enable or disable hideditButton
 	*/
-	setDisableEditButton(propertyId, enabled) {
-		this.propertiesStore.setDisableEditButton(propertyId, enabled);
+	setHideEditButton(propertyId, enabled) {
+		this.propertiesStore.setHideEditButton(propertyId, enabled);
 	}
 
 	/**
-	* Returns the true if disableEditButton is enabled for the given propertyID
+	* Returns the true if hideEditButton is enabled for the given propertyID
 	* @param propertyId The unique property identifier
 	* @return boolean
 	*/
-	getDisableEditButton(propertyId) {
-		return this.propertiesStore.getDisableEditButton(propertyId);
+	getHideEditButton(propertyId) {
+		return this.propertiesStore.getHideEditButton(propertyId);
 	}
 
 	/**

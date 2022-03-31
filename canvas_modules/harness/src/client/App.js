@@ -227,8 +227,8 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
-			disableEditButtonPropertyId: {},
-			disableEditButton: false,
+			hideEditButtonPropertyId: {},
+			hideEditButton: false,
 			tableButtonEnabledPropertyId: {},
 			tableButtonEnabledButtonId: "",
 			tableButtonEnabled: true,
@@ -317,9 +317,9 @@ class App extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
-		this.setDisableEditButton = this.setDisableEditButton.bind(this);
-		this.setDisableEditButtonDisabled = this.setDisableEditButtonDisabled.bind(this);
-		this.setDisableEditButtonPropertyId = this.setDisableEditButtonPropertyId.bind(this);
+		this.setHideEditButton = this.setHideEditButton.bind(this);
+		this.setHideEditButtonDisabled = this.setHideEditButtonDisabled.bind(this);
+		this.setHideEditButtonPropertyId = this.setHideEditButtonPropertyId.bind(this);
 		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
 		this.setTableButtonId = this.setTableButtonId.bind(this);
 		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
@@ -898,17 +898,17 @@ class App extends React.Component {
 		}
 	}
 
-	setDisableEditButtonPropertyId(propertyId) {
-		this.setState({ disableEditButtonPropertyId: propertyId });
+	setHideEditButtonPropertyId(propertyId) {
+		this.setState({ hideEditButtonPropertyId: propertyId });
 	}
 
-	setDisableEditButtonDisabled(disabled) {
-		this.setState({ disableEditButton: disabled });
+	setHideEditButtonDisabled(disabled) {
+		this.setState({ hideEditButton: disabled });
 	}
 
-	setDisableEditButton() {
+	setHideEditButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setDisableEditButton(this.state.disableEditButtonPropertyId, this.state.disableEditButton);
+			this.propertiesController.setHideEditButton(this.state.hideEditButtonPropertyId, this.state.hideEditButton);
 		}
 	}
 
@@ -2583,14 +2583,14 @@ class App extends React.Component {
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
-			disableEditButtonEnabled: this.state.disableEditButton,
+			hideEditButtonEnabled: this.state.hideEditButton,
 			tableButtonEnabled: this.state.tableButtonEnabled,
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
-			setDisableEditButtonEnabled: this.setDisableEditButtonDisabled,
-			setDisableEditButton: this.setDisableEditButton,
-			setDisableEditButtonPropertyId: this.setDisableEditButtonPropertyId,
+			setHideEditButtonEnabled: this.setHideEditButtonDisabled,
+			setHideEditButton: this.setHideEditButton,
+			setHideEditButtonPropertyId: this.setHideEditButtonPropertyId,
 			setTableButtonPropertyId: this.setTableButtonPropertyId,
 			setTableButtonId: this.setTableButtonId,
 			setTableButtonIdEnabled: this.setTableButtonIdEnabled,

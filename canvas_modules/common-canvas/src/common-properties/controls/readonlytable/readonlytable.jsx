@@ -101,7 +101,7 @@ ReadonlyTableControl.propTypes = {
 	messageInfo: PropTypes.object, // pass in by redux
 	addRemoveRows: PropTypes.bool, // set by redux
 	tableButtons: PropTypes.object, // set in by redux
-	disableEditButton: PropTypes.bool // set by redux
+	hideEditButton: PropTypes.bool // set by redux
 };
 
 
@@ -112,7 +112,7 @@ const mapStateToProps = (state, ownProps) => ({
 	selectedRows: ownProps.controller.getSelectedRows(ownProps.propertyId),
 	addRemoveRows: ownProps.controller.getAddRemoveRows(ownProps.propertyId),
 	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId),
-	disableEditButton: ownProps.controller.getDisableEditButton(ownProps.propertyId)
+	hideEditButton: ownProps.controller.getHideEditButton(ownProps.propertyId)
 });
 
 export default connect(mapStateToProps, null)(ReadonlyTableControl);

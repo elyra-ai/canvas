@@ -56,7 +56,7 @@ export default class SidePanelModal extends React.Component {
 			commonPropertiesParamDefsFiles: [],
 			invalidPropertyId: false,
 			invalidSetAddRemoveRowPropertyId: true,
-			invalidSetDisableEditButtonPropertyId: true,
+			invalidSetHideEditButtonPropertyId: true,
 			invalidTableButtonPropertyId: true,
 			invalidSetStaticRowPropertyId: true,
 			invalidSetStaticRowIndexes: true
@@ -79,9 +79,9 @@ export default class SidePanelModal extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
-		this.setDisableEditButtonEnabled = this.setDisableEditButtonEnabled.bind(this);
-		this.setDisableEditButton = this.setDisableEditButton.bind(this);
-		this.setDisableEditButtonPropertyId = this.setDisableEditButtonPropertyId.bind(this);
+		this.setHideEditButtonEnabled = this.setHideEditButtonEnabled.bind(this);
+		this.setHideEditButton = this.setHideEditButton.bind(this);
+		this.setHideEditButtonPropertyId = this.setHideEditButtonPropertyId.bind(this);
 		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
 		this.setTableButtonId = this.setTableButtonId.bind(this);
 		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
@@ -171,25 +171,25 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.setAddRemoveRows();
 	}
 
-	// Textfield to enter the propertyId for disableEditButton
-	setDisableEditButtonPropertyId(evt) {
+	// Textfield to enter the propertyId for hideEditButton
+	setHideEditButtonPropertyId(evt) {
 		try {
 			const propertyId = JSON.parse(evt.target.value);
-			this.props.propertiesConfig.setDisableEditButtonPropertyId(propertyId);
-			this.setState({ invalidSetDisableEditButtonPropertyId: false });
+			this.props.propertiesConfig.setHideEditButtonPropertyId(propertyId);
+			this.setState({ invalidSetHideEditButtonPropertyId: false });
 		} catch (ex) {
-			this.setState({ invalidSetDisableEditButtonPropertyId: true });
+			this.setState({ invalidSetHideEditButtonPropertyId: true });
 		}
 	}
 
-	// Toggle to set disableEditButton enabled or disabled
-	setDisableEditButtonEnabled(enabled) {
-		this.props.propertiesConfig.setDisableEditButtonEnabled(enabled);
+	// Toggle to set hideEditButton enabled or disabled
+	setHideEditButtonEnabled(enabled) {
+		this.props.propertiesConfig.setHideEditButtonEnabled(enabled);
 	}
 
-	// Button to submit disableEditButton data and call propertiesController
-	setDisableEditButton(evt) {
-		this.props.propertiesConfig.setDisableEditButton();
+	// Button to submit hideEditButton data and call propertiesController
+	setHideEditButton(evt) {
+		this.props.propertiesConfig.setHideEditButton();
 	}
 
 	// Textfield to enter the propertyId for custom table buttons
@@ -656,36 +656,36 @@ export default class SidePanelModal extends React.Component {
 			</Button>
 		</div>);
 
-		const setDisableEditButtonPropertyId = (
+		const setHideEditButtonPropertyId = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-propertyid">
 				<TextInput
-					labelText="Set the propertyId for enabling/disabling disableEditButton"
-					id="harness-propertyId-disableEditButton"
+					labelText="Set the propertyId for enabling/disabling hideEditButton"
+					id="harness-propertyId-hideEditButton"
 					placeholder='{ "name": "parameterName" }'
-					invalid={this.state.invalidSetDisableEditButtonPropertyId}
+					invalid={this.state.invalidSetHideEditButtonPropertyId}
 					invalidText="Please enter valid JSON"
-					onChange={ this.setDisableEditButtonPropertyId }
+					onChange={ this.setHideEditButtonPropertyId }
 					helperText='PropertyId format: {"name": "unique_id_for_control"}'
 				/>
 			</div>
 		);
 
-		const setDisableEditButtonEnabled = (
+		const setHideEditButtonEnabled = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-disabled">
 				<Toggle
-					id="harness-sidepanel-setDisableEditButtonEnabled-toggle"
-					labelText="Set disableEditButton disabled for the propertyId entered above"
+					id="harness-sidepanel-setHideEditButtonEnabled-toggle"
+					labelText="Set hideEditButton disabled for the propertyId entered above"
 					labelA="disable"
 					labelB="enable"
-					toggled={this.props.propertiesConfig.disableEditButtonEnabled}
-					onToggle={this.setDisableEditButtonEnabled}
+					toggled={this.props.propertiesConfig.hideEditButtonEnabled}
+					onToggle={this.setHideEditButtonEnabled}
 				/>
 			</div>);
 
-		const submitDisableEditButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-submit">
+		const submitHideEditButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-submit">
 			<Button size="small"
-				disabled={this.state.invalidSetDisableEditButtonPropertyId}
-				onClick={this.props.propertiesConfig.setDisableEditButton}
+				disabled={this.state.invalidSetHideEditButtonPropertyId}
+				onClick={this.props.propertiesConfig.setHideEditButton}
 			>
 		Submit
 			</Button>
@@ -816,9 +816,9 @@ export default class SidePanelModal extends React.Component {
 				{setAddRemoveRowsEnabled}
 				{submitAddRemoveRows}
 				{divider}
-				{setDisableEditButtonPropertyId}
-				{setDisableEditButtonEnabled}
-				{submitDisableEditButton}
+				{setHideEditButtonPropertyId}
+				{setHideEditButtonEnabled}
+				{submitHideEditButton}
 				{divider}
 				{setTableButtonPropertyId}
 				{setTableButtonId}
@@ -866,10 +866,10 @@ SidePanelModal.propTypes = {
 		setAddRemoveRowsPropertyId: PropTypes.func,
 		setAddRemoveRowsEnabled: PropTypes.func,
 		setAddRemoveRows: PropTypes.func,
-		disableEditButtonEnabled: PropTypes.bool,
-		setDisableEditButtonPropertyId: PropTypes.func,
-		setDisableEditButtonEnabled: PropTypes.func,
-		setDisableEditButton: PropTypes.func,
+		hideEditButtonEnabled: PropTypes.bool,
+		setHideEditButtonPropertyId: PropTypes.func,
+		setHideEditButtonEnabled: PropTypes.func,
+		setHideEditButton: PropTypes.func,
 		tableButtonEnabled: PropTypes.bool,
 		setTableButtonPropertyId: PropTypes.func,
 		setTableButtonId: PropTypes.func,

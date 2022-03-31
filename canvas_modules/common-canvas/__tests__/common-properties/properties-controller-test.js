@@ -29,7 +29,7 @@ import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
-import rejectLinkParamDe from "../test_resources/paramDefs/rejectLink_paramDef.json";
+import readonlyTableParamDef from "../test_resources/paramDefs/readonlyTable_paramDef.json";
 
 import testUtils from "../_utils_/property-utils";
 
@@ -1932,29 +1932,29 @@ describe("Properties Controller addRemoveRows", () => {
 	});
 });
 
-describe("Properties Controller disableEditButton", () => {
+describe("Properties Controller hideEditButton", () => {
 	beforeEach(() => {
 		reset();
 	});
 
-	it("should setInitialDisableEditButton when setting form", () => {
-		const renderedObject = testUtils.flyoutEditorForm(rejectLinkParamDe);
+	it("should setInitialHideEditButton when setting form", () => {
+		const renderedObject = testUtils.flyoutEditorForm(readonlyTableParamDef);
 		controller = renderedObject.controller;
-		const propertyId = { name: "outputcolSubProperties" };
-		expect(controller.getDisableEditButton(propertyId)).to.be.false;
+		const propertyId = { name: "outputcolProperties" };
+		expect(controller.getHideEditButton(propertyId)).to.be.false;
 	});
 
 
-	it("disableEditButton attribute can reflect latest setted value", () => {
-		const renderedObject = testUtils.flyoutEditorForm(rejectLinkParamDe);
+	it("hideEditButton attribute can reflect latest setted value", () => {
+		const renderedObject = testUtils.flyoutEditorForm(readonlyTableParamDef);
 		controller = renderedObject.controller;
-		const propertyId = { name: "outputcolSubProperties" };
+		const propertyId = { name: "outputcolProperties" };
 
-		// Verify disableEditButton parameter can be setup correctly
-		controller.setDisableEditButton(propertyId, true);
-		expect(controller.getDisableEditButton(propertyId)).to.be.true;
-		controller.setDisableEditButton(propertyId, false);
-		expect(controller.getDisableEditButton(propertyId)).to.be.false;
+		// Verify hideEditButton parameter can be setup correctly
+		controller.setHideEditButton(propertyId, true);
+		expect(controller.getHideEditButton(propertyId)).to.be.true;
+		controller.setHideEditButton(propertyId, false);
+		expect(controller.getHideEditButton(propertyId)).to.be.false;
 
 	});
 

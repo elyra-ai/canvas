@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled, setDisableEditButton } from "./actions";
+import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled, setHideEditButton } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -496,27 +496,27 @@ export default class PropertiesStore {
 	}
 
 	/**
-	* Set the disableEditButton attribute to 'true' for the given propertyId
+	* Set the hideEditButton attribute to 'true' for the given propertyId
 	* @param propertyId The unique property identifier
-	* @param enabled boolean value for disable or enable edit button by state disableEditButton
+	* @param enabled boolean value for disable or enable edit button by state hideEditButton
 	*/
-	setDisableEditButton(propertyId, enabled) {
-		this.store.dispatch(setDisableEditButton({ propertyId: propertyId, value: enabled }));
+	setHideEditButton(propertyId, enabled) {
+		this.store.dispatch(setHideEditButton({ propertyId: propertyId, value: enabled }));
 	}
 
 	/**
-	* Returns true if disableEditButton is true for the given propertyID
+	* Returns true if hideEditButton is true for the given propertyID
 	* @param propertyId The unique property identifier
 	* @return boolean
 	*/
-	getDisableEditButton(propertyId) {
+	getHideEditButton(propertyId) {
 		const state = this.store.getState();
 		const defaultValue = false; // Default to false to show disable edit buttons
 		if (state.propertiesSettingsReducer[propertyId.name]) {
 			if (typeof propertyId.row !== "undefined") {
-				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "disableEditButton", defaultValue);
+				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "hideEditButton", defaultValue);
 			}
-			return state.propertiesSettingsReducer[propertyId.name].disableEditButton;
+			return state.propertiesSettingsReducer[propertyId.name].hideEditButton;
 		}
 		return defaultValue;
 	}
