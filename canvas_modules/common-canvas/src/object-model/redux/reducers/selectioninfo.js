@@ -29,9 +29,10 @@ export default (state = {}, action) => {
 	case "CLEAR_SELECTIONS":
 		return {};
 
+	case "ADD_PASTED_OBJECTS":
 	case "SET_SELECTIONS":
 		return {
-			pipelineId: action.data.pipelineId,
+			pipelineId: action.pipelineId,
 			selections: [...action.data.selections]
 		};
 

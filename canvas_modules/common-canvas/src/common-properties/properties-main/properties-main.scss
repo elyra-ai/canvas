@@ -15,6 +15,7 @@
  */
 
 @import "./properties-main-widths.scss";
+$properties-modal-buttons-height: $spacing-10;
 
 .properties-right-flyout {
 	// Set the font explicitly to 14px to shrink them across the entire properties editor
@@ -67,11 +68,17 @@
 
 
 .properties-right-flyout > .properties-custom-container {
-	height: calc(100% - 136px);
+	height: calc(100% - 65px - #{$properties-modal-buttons-height}); // Properties title - 65px
 	overflow-y: auto;
 	transform: translateZ(0); // https://github.com/elyra-ai/canvas/issues/160
 	&.properties-custom-container-with-heading {
-		height: calc(100% - 160px);
+		height: calc(100% - 89px - #{$properties-modal-buttons-height}); // Properties title - 89px
+	}
+	&.properties-custom-container-applyOnBlur {
+		height: calc(100% - #{$spacing-12}); // Properties title - 97px
+	}
+	&.properties-custom-container-applyOnBlur-with-heading {
+		height: calc(100% - 89px); // Properties title - 89px
 	}
 }
 

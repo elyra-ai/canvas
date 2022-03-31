@@ -58,7 +58,7 @@ Cypress.Commands.add("verifyCommentColor", (commentText, color) => {
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
 			const classVal = comment[0].className.baseVal;
-			const col = color ? " " + color : "";
+			const col = color ? " bkg-col-" + color : "";
 			expect(classVal).to.equal("d3-comment-group d3-draggable" + col);
 		});
 });
