@@ -26,14 +26,19 @@ describe("Icon renders correctly", () => {
 		const icon = shallow(<Icon type="unknown" />);
 		expect(icon.find("div")).to.have.length(1);
 	});
-
 	it("should render a svg when type known", () => {
-		const icon = mount(<Icon type="date" />);
-		expect(icon.find("svg.properties-icon")).to.have.length(1);
-	});
+		const icon = mount(<Icon type="stop" />);
 
+		// should not have "canvas-icon" class if icon is in carbon library
+		expect(icon.find("svg.canvas-icon")).to.have.length(0);
+		expect(icon.find("svg")).to.have.length(1);
+	});
 	it("should render a svg with class name", () => {
-		const icon = mount(<Icon type="double" className="svg-test-class" />);
+		const icon = mount(<Icon type="stop" className="svg-test-class" />);
 		expect(icon.find("svg.svg-test-class")).to.have.length(1);
+	});
+	it("should render a svg with class 'canvas-icon' if not in carbon", () => {
+		const icon = mount(<Icon type="toggleNotificationPanel" className="svg-test-class" />);
+		expect(icon.find("svg.canvas-icon")).to.have.length(1);
 	});
 });
