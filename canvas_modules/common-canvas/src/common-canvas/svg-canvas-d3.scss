@@ -81,8 +81,8 @@ $node-port-input-arrow-connected-fill-color: transparent;
 // Comment colors
 $comment-outline-color: $active-light-ui;
 $comment-outline-hover-color: $inverse-hover-ui;
-$comment-fill-color: $ui-01;
-$comment-text-color: $text-02;
+$comment-fill-color: $white-0;
+$comment-text-color: $gray-100;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -626,9 +626,6 @@ $link-highlight-color: $support-04;
 	.d3-comment-rect {
 		fill: $background-color;
 	}
-	.d3-comment-text {
-		color: $gray-100;
-	}
 	.d3-comment-entry {
 		background-color: $background-color;
 		color: $gray-100;
@@ -641,40 +638,40 @@ $link-highlight-color: $support-04;
 // by a class provided for the comment by the host application. The
 // assumption is, the user would prefer the color they set in the UI to
 // override any color provided by the host app.
-g.white0 {
+g.bkg-col-white-0 {
 	@include comment-color-overrides($white-0);
 }
-g.yellow20 {
+g.bkg-col-yellow-20 {
 	@include comment-color-overrides($yellow-20);
 }
-g.gray20 {
+g.bkg-col-gray-20 {
 	@include comment-color-overrides($gray-20);
 }
-g.green20 {
+g.bkg-col-green-20 {
 	@include comment-color-overrides($green-20);
 }
-g.teal20 {
+g.bkg-col-teal-20 {
 	@include comment-color-overrides($teal-20);
 }
-g.cyan20 {
+g.bkg-col-cyan-20 {
 	@include comment-color-overrides($cyan-20);
 }
-g.red50 {
+g.bkg-col-red-50 {
 	@include comment-color-overrides($red-50);
 }
-g.orange40 {
+g.bkg-col-orange-40 {
 	@include comment-color-overrides($orange-40);
 }
-g.gray50 {
+g.bkg-col-gray-50 {
 	@include comment-color-overrides($gray-50);
 }
-g.green50 {
+g.bkg-col-green-50 {
 	@include comment-color-overrides($green-50);
 }
-g.teal50 {
+g.bkg-col-teal-50 {
 	@include comment-color-overrides($teal-50);
 }
-g.cyan50 {
+g.bkg-col-cyan-50 {
 	@include comment-color-overrides($cyan-50);
 }
 

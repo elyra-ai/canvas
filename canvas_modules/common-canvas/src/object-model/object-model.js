@@ -246,6 +246,7 @@ export default class ObjectModel {
 				: PipelineInHandler.convertPipelinesToCanvasInfoPipelines(pd, this.getCanvasLayout());
 			// Need to make sure pipeline IDs are unique.
 			newPd = this.cloneSupernodeContents(supernode, newPd);
+			newPd = this.prepareNodes(newPd, this.getNodeLayout(), this.getCanvasLayout(), supernode);
 
 		} else {
 			const newPipeline = this.createEmptyPipeline();
@@ -254,6 +255,28 @@ export default class ObjectModel {
 		}
 		set(supernode, "app_data.pipeline_data", newPd);
 		return supernode;
+	}
+
+	// Returns an object containing nodes and pipelines. The nodes are the
+	// same as the array of nodes passed in except that, any supernodes within
+	// the array will have their app_data.pipeline_data fields removed. The
+	// pipelines returned will be any pipelines that were contained within the
+	// app_data.pipeline_data fields.
+	extractAddDataPipelines(inNodes) {
+		const pipelines = [];
+		const nodes = [];
+		inNodes.forEach((n) => {
+			if (CanvasUtils.isSupernode(n)) {
+				const pDataArray = get(n, "app_data.pipeline_data");
+				if (pDataArray) {
+					pipelines.push(...pDataArray);
+					delete n.app_data.pipeline_data;
+				}
+			}
+			nodes.push(n);
+		});
+
+		return { nodes, pipelines };
 	}
 
 	getPaletteNode(nodeOpIdRef) {
@@ -1636,7 +1659,9 @@ export default class ObjectModel {
 	setSelections(newSelections, pipelineId) {
 		// This will return the default API pipeline if a pipelineId is not provided.
 		const selPipelineId = this.getAPIPipeline(pipelineId).pipelineId;
-		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: { pipelineId: selPipelineId, selections: newSelections } });
+		this.executeWithSelectionChange(
+			this.store.dispatch, { type: "SET_SELECTIONS", data: { selections: newSelections }, pipelineId: selPipelineId }
+		);
 	}
 
 	deleteSelectedObjects() {
@@ -1732,11 +1757,10 @@ export default class ObjectModel {
 		return connectedNodesIdsGroup.length === nodeIds.length;
 	}
 
-	// Returns true if all the selected objcts are links.
+	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		const nonLinkIndex = this.getSelectedObjects().findIndex((selObj) => !this.isLink(selObj));
 		return nonLinkIndex === -1;
-
 	}
 
 	// Recursive function to add all connected nodes into the group.
