@@ -23,7 +23,8 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import { ERROR, WARNING, SUCCESS, INFO, PALETTE_LAYOUT_NONE,
-	NOTIFICATION_ICON_CLASS, TOOLBAR_ACTIONS, TOOLBAR_LAYOUT_TOP } from "../common-canvas/constants/canvas-constants";
+	NOTIFICATION_ICON_CLASS, TOOLBAR_TOGGLE_NOTIFICATION_PANEL, TOOLBAR_LAYOUT_TOP }
+	from "../common-canvas/constants/canvas-constants";
 
 class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
@@ -181,7 +182,7 @@ class CommonCanvasToolbar extends React.Component {
 			const notificationCount = this.props.notificationMessages.length;
 			const notificationTools = [
 				{ divider: true },
-				{ action: TOOLBAR_ACTIONS.TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfig.label,
 					enable: true,
 					isSelected: this.props.isNotificationOpen,
