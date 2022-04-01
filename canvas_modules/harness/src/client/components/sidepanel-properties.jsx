@@ -657,9 +657,9 @@ export default class SidePanelModal extends React.Component {
 		</div>);
 
 		const setHideEditButtonPropertyId = (
-			<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-propertyid">
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-hide-edit-button-propertyid">
 				<TextInput
-					labelText="Set the propertyId for enabling/disabling hideEditButton"
+					labelText="Set the propertyId for hide/show hideEditButton"
 					id="harness-propertyId-hideEditButton"
 					placeholder='{ "name": "parameterName" }'
 					invalid={this.state.invalidSetHideEditButtonPropertyId}
@@ -671,18 +671,18 @@ export default class SidePanelModal extends React.Component {
 		);
 
 		const setHideEditButtonEnabled = (
-			<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-disabled">
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-hide-edit-button-disabled">
 				<Toggle
 					id="harness-sidepanel-setHideEditButtonEnabled-toggle"
-					labelText="Set hideEditButton disabled for the propertyId entered above"
-					labelA="disable"
-					labelB="enable"
+					labelText="Set hideEditButton show for the propertyId entered above"
+					labelA="show"
+					labelB="hide"
 					toggled={this.props.propertiesConfig.hideEditButtonEnabled}
 					onToggle={this.setHideEditButtonEnabled}
 				/>
 			</div>);
 
-		const submitHideEditButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-disable-edit-button-submit">
+		const submitHideEditButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-hide-edit-button-submit">
 			<Button size="small"
 				disabled={this.state.invalidSetHideEditButtonPropertyId}
 				onClick={this.props.propertiesConfig.setHideEditButton}
