@@ -130,11 +130,14 @@ class ToolbarActionItem extends React.Component {
 
 		const customClassname = actionObj.className ? actionObj.className : "";
 		const iconClassName = "toolbar-icon " + customClassname;
-		return (
-			<div className={iconClassName}>
-				{icon}
-			</div>
-		);
+		if (icon) {
+			return (
+				<div className={iconClassName}>
+					{icon}
+				</div>
+			);
+		}
+		return null;
 	}
 
 	actionClickHandler() {

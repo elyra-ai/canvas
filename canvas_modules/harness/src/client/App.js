@@ -71,7 +71,7 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, PlayOutline32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
+import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button } from "carbon-components-react";
 
