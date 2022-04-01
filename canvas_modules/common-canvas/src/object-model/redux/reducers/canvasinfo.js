@@ -162,6 +162,7 @@ export default (state = {}, action) => {
 	case "REMOVE_NODE_ATTR":
 	case "SET_NODE_LABEL":
 	case "SET_OBJECTS_CLASS_NAME":
+	case "SET_OBJECTS_COLOR_CLASS_NAME":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
@@ -236,6 +237,7 @@ export default (state = {}, action) => {
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
 
+	case "ADD_PASTED_OBJECTS":
 	case "ADD_AND_UPDATE_OBJECTS": {
 		let canvasInfoPipelines = state.pipelines
 			.map((pipeline) => {
@@ -273,6 +275,36 @@ export default (state = {}, action) => {
 			...canvasInfoPipelines,
 			...action.data.pipelinesToAdd
 		];
+
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "DELETE_PASTED_OBJECTS": {
+		const canvasInfoPipelines = state.pipelines
+			// Filter out the pipelines to delete
+			.filter((pipeline) => (!isPipelineToDelete(pipeline, action.data.pipelinesToDelete)))
+			// Modify the pipeline to remove nodes, comments and links
+			.map((pipeline) => {
+				if (pipeline.id === action.pipelineId) {
+					// Remove pasted nodes
+					const newNodes = nodes(pipeline.nodes,
+						{ type: "DELETE_NODES", data: action.data });
+
+					// Remove pasted comments
+					const newComments = comments(pipeline.comments,
+						{ type: "DELETE_COMMENTS", data: action.data });
+
+					// Remove pasted links
+					const newLinks = links(pipeline.links,
+						{ type: "REMOVE_LINKS", data: action.data });
+
+					return Object.assign({}, pipeline, {
+						nodes: newNodes,
+						comments: newComments,
+						links: newLinks });
+				}
+				return pipeline;
+			});
 
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}
@@ -476,3 +508,7 @@ export default (state = {}, action) => {
 		return state;
 	}
 };
+
+function isPipelineToDelete(pipeline, pipelinesToDelete) {
+	return (pipelinesToDelete.some((p) => p.id === pipeline.id));
+}

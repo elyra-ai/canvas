@@ -15,6 +15,9 @@
  */
 /* eslint arrow-body-style: ["off"] */
 
+
+import CanvasUtils from "../../../common-canvas/common-canvas-utils.js";
+
 export default (state = [], action) => {
 	switch (action.type) {
 	case "MOVE_OBJECTS":
@@ -53,15 +56,7 @@ export default (state = [], action) => {
 
 
 	case "ADD_COMMENT": {
-		const newComment = {
-			id: action.data.id,
-			class_name: action.data.class_name,
-			content: action.data.content,
-			height: action.data.height,
-			width: action.data.width,
-			x_pos: action.data.x_pos,
-			y_pos: action.data.y_pos
-		};
+		const newComment = getCommentFromData(action.data);
 		return [
 			...state,
 			newComment
@@ -69,9 +64,10 @@ export default (state = [], action) => {
 	}
 
 	case "ADD_COMMENTS": {
+		const comments = action.data.commentsToAdd.map((cd) => getCommentFromData(cd));
 		return [
 			...state,
-			...action.data.commentsToAdd
+			...comments
 		];
 	}
 
@@ -139,6 +135,20 @@ export default (state = [], action) => {
 			return comment;
 		});
 
+	case "SET_OBJECTS_COLOR_CLASS_NAME":
+		return state.map((comment) => {
+			const idx = action.data.objIds.indexOf(comment.id);
+			if (idx > -1) {
+				const newColorClass =
+					Array.isArray(action.data.newColorClass) ? (action.data.newColorClass[idx] || null) : action.data.newColorClass;
+				const className = replaceColorClass(comment.class_name, newColorClass);
+				const newComment = Object.assign({}, comment, { class_name: className });
+				return newComment;
+			}
+			return comment;
+		});
+
+
 	case "SET_OBJECTS_CLASS_NAME":
 		return state.map((comment) => {
 			const idx = action.data.objIds.indexOf(comment.id);
@@ -201,3 +211,41 @@ export default (state = [], action) => {
 		return state;
 	}
 };
+
+function replaceColorClass(className, newColorClass) {
+	let cn = "";
+	if (className) {
+		cn = removeCurrentColorClass(className);
+		cn = addNewColorClass(cn, newColorClass);
+	} else {
+		cn = newColorClass;
+	}
+	return cn;
+}
+
+function removeCurrentColorClass(className) {
+	const cn = className
+		.split(" ")
+		.filter((tok) => !CanvasUtils.getBkgColorClass(tok))
+		.join(" ");
+	return cn;
+}
+
+function addNewColorClass(className, newColorClass) {
+	return className ? className + " " + newColorClass : newColorClass;
+}
+
+function getCommentFromData(data) {
+	const newComment = {
+		id: data.id,
+		content: data.content,
+		height: data.height,
+		width: data.width,
+		x_pos: data.x_pos,
+		y_pos: data.y_pos
+	};
+	if (typeof data.class_name !== "undefined") {
+		newComment.class_name = data.class_name;
+	}
+	return newComment;
+}

@@ -30,6 +30,7 @@ import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js
 import CreateNodeAttachLinksAction from "../command-actions/createNodeAttachLinksAction.js";
 import CreateSuperNodeAction from "../command-actions/createSuperNodeAction.js";
 import CollapseSuperNodeInPlaceAction from "../command-actions/collapseSuperNodeInPlaceAction.js";
+import ColorSelectedObjectsAction from "../command-actions/colorSelectedObjectsAction.js";
 import DeconstructSuperNodeAction from "../command-actions/deconstructSuperNodeAction.js";
 import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
@@ -67,7 +68,8 @@ export default class CanvasController {
 			defaultMenuEntries: {
 				saveToPalette: false,
 				createSupernode: true,
-				displaySupernodeFullPage: true
+				displaySupernodeFullPage: true,
+				colorBackground: true
 			}
 		};
 
@@ -171,7 +173,10 @@ export default class CanvasController {
 
 	setContextMenuConfig(contextMenuConfig) {
 		this.logger.log("Setting Context Menu Config");
-		this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig);
+		if (contextMenuConfig) {
+			const defaultMenuEntries = Object.assign(this.contextMenuConfig.defaultMenuEntries, contextMenuConfig.defaultMenuEntries);
+			this.contextMenuConfig = Object.assign(this.contextMenuConfig, contextMenuConfig, { defaultMenuEntries });
+		}
 	}
 
 	setKeyboardConfig(keyboardConfig) {
@@ -1897,6 +1902,12 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat({ divider: true });
 			}
 		}
+		// Color objects
+		if (source.type === "comment" &&
+				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
+			menuDefinition = menuDefinition.concat({ submenu: true, menu: "colorPicker", label: this.labelUtil.getLabel("comment.colorBackground") });
+			menuDefinition = menuDefinition.concat({ divider: true });
+		}
 		// Edit submenu (cut, copy, paste)
 		if (source.type === "node" ||
 				source.type === "comment" ||
@@ -2099,10 +2110,10 @@ export default class CanvasController {
 		return { x: 0, y: 0 };
 	}
 
-	contextMenuActionHandler(action) {
+	contextMenuActionHandler(action, editParam) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
-		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editSource": "contextmenu" });
+		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 
 		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
@@ -2355,6 +2366,11 @@ export default class CanvasController {
 				command = new CreateNodeLinkDetachedAction(data, this.objectModel, this.labelUtil);
 				this.commandStack.do(command);
 				data = command.getData();
+				break;
+			}
+			case "colorSelectedObjects": {
+				command = new ColorSelectedObjectsAction(data, this.objectModel, this.labelUtil);
+				this.commandStack.do(command);
 				break;
 			}
 			case "deleteSelectedObjects": {

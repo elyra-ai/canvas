@@ -26,7 +26,7 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Zoom from "./d3-zoom-extension/src";
 const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
-import { cloneDeep, escape as escapeText, get, isEmpty, set,
+import { cloneDeep, escape as escapeText, get, set,
 	unescape as unescapeText } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
@@ -50,6 +50,7 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
+import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
 const showLinksTime = false;
 
@@ -82,8 +83,7 @@ export default class SVGCanvasRenderer {
 		this.config = config;
 		this.canvasController = canvasController;
 		this.objectModel = this.canvasController.getObjectModel();
-		this.activePipeline = this.getActivePipeline(pipelineId); // Must come after line setting this.canvasInfo
-		this.activePipeline = CanvasUtils.preProcessPipeline(this.activePipeline);
+		this.activePipeline = new SVGCanvasPipeline(pipelineId, canvasInfo);
 
 		// An array of renderers for the supernodes on the canvas.
 		this.superRenderers = [];
@@ -267,15 +267,6 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
-	isCanvasEmptyOrBindingsOnly() {
-		return (isEmpty(this.activePipeline.nodes) || this.containsOnlyBindingNodes(this.activePipeline)) &&
-						isEmpty(this.activePipeline.comments);
-	}
-
-	containsOnlyBindingNodes(pipeline) {
-		return !pipeline.nodes.find((node) => !CanvasUtils.isSuperBindingNode(node));
-	}
-
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
 	// looking through the overall canvas info objects.
@@ -289,15 +280,11 @@ export default class SVGCanvasRenderer {
 				if (!node) {
 					node =
 						pipeline.nodes.find((n) =>
-							this.nodeUtils.isSupernode(n) && n.id === this.supernodeInfo.id);
+							CanvasUtils.isSupernode(n) && n.id === this.supernodeInfo.id);
 				}
 			}
 		});
 		return node;
-	}
-
-	getSupernodes(pipeline) {
-		return pipeline.nodes.filter((node) => this.nodeUtils.isSupernode(node));
 	}
 
 	getZoomTransform() {
@@ -312,19 +299,10 @@ export default class SVGCanvasRenderer {
 		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
 	}
 
-	getActivePipeline(pipelineId) {
-		const pipeline = this.canvasInfo.pipelines.find((p) => p.id === pipelineId);
-		if (pipeline) {
-			return pipeline;
-		}
-		return { id: pipelineId, nodes: [], comments: [], links: [] };
-	}
-
 	setCanvasInfoRenderer(canvasInfo) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
-		this.activePipeline = this.getActivePipeline(this.pipelineId);
-		this.activePipeline = CanvasUtils.preProcessPipeline(this.activePipeline);
+		this.activePipeline = new SVGCanvasPipeline(this.pipelineId, canvasInfo);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
@@ -361,7 +339,7 @@ export default class SVGCanvasRenderer {
 	// undo action.
 	cleanUpSuperRenderers() {
 		const newSuperRenderers = [];
-		const supernodes = this.getSupernodes(this.activePipeline);
+		const supernodes = this.activePipeline.getSupernodes();
 
 		supernodes.forEach((supernode) => {
 			const ren = this.getRendererForSupernode(supernode);
@@ -530,7 +508,7 @@ export default class SVGCanvasRenderer {
 			// dimensions accordingly.
 			let topAreaHeight;
 			let svgHt;
-			if (this.nodeUtils.isExpanded(supernodeDatum)) {
+			if (CanvasUtils.isExpanded(supernodeDatum)) {
 				topAreaHeight = this.canvasLayout.supernodeTopAreaHeight;
 				svgHt = supernodeDatum.height - (this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding);
 			} else {
@@ -1237,35 +1215,14 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	getLink(linkId) {
-		const link = this.activePipeline.links.find((l) => l.id === linkId);
-		return (typeof link === "undefined") ? null : link;
-	}
-
 	// Returns truthy if the object passed in is a node (and not a comment).
 	// Comments don't have a type property.
 	isNode(obj) {
 		return obj.type;
 	}
 
-	getNode(nodeId) {
-		const node = this.activePipeline.nodes.find((nd) => nd.id === nodeId);
-		return (typeof node === "undefined") ? null : node;
-	}
-
-	getNodes(nodeIds) {
-		const nodes = [];
-		nodeIds.forEach((nId) => {
-			const n = this.getNode(nId);
-			if (n) {
-				nodes.push(n);
-			}
-		});
-		return nodes;
-	}
-
 	getNodePort(nodeId, portId, type) {
-		const node = this.activePipeline.nodes.find((nd) => nd.id === nodeId);
+		const node = this.activePipeline.getNode(nodeId);
 		if (node) {
 			let ports;
 			if (type === "input") {
@@ -1277,19 +1234,6 @@ export default class SVGCanvasRenderer {
 			return (typeof port === "undefined") ? null : port;
 		}
 		return null;
-	}
-
-	getComment(commentId) {
-		const comment = this.activePipeline.comments.find((com) => com.id === commentId);
-		return (typeof comment === "undefined") ? null : comment;
-	}
-
-	getNodeOrComment(id) {
-		let obj = this.getNode(id);
-		if (obj === null) {
-			obj = this.getComment(id);
-		}
-		return obj;
 	}
 
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
@@ -1398,7 +1342,7 @@ export default class SVGCanvasRenderer {
 		// to the SVG area. We only attach the zoom behaviour to the top most SVG
 		// area i.e. when we are displaying either the primary pipeline full page
 		// or a sub-pipeline full page.
-		if (!this.isCanvasEmptyOrBindingsOnly() &&
+		if (!this.activePipeline.isEmptyOrBindingsOnly() &&
 				this.dispUtils.isDisplayingFullPage()) {
 			this.canvasSVG
 				.call(this.zoom);
@@ -1477,7 +1421,7 @@ export default class SVGCanvasRenderer {
 	getCanvasCursor() {
 		if (this.dispUtils.isDisplayingFullPage()) {
 			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
-					this.isCanvasEmptyOrBindingsOnly()) {
+					this.activePipeline.isEmptyOrBindingsOnly()) {
 				return "default";
 			}
 			return "grab";
@@ -1730,7 +1674,7 @@ export default class SVGCanvasRenderer {
 
 	getZoomToReveal(nodeIDs, xPos, yPos) {
 		const transformedSVGRect = this.getTransformedViewportDimensions();
-		const nodes = this.getNodes(nodeIDs);
+		const nodes = this.activePipeline.getNodes(nodeIDs);
 		const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, [], [], 0);
 		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
 		const xPosInt = parseInt(xPos, 10);
@@ -2034,9 +1978,8 @@ export default class SVGCanvasRenderer {
 	// a sub-flow that map to a port in the containing supernode. The dimensions
 	// are scaled by k and padded by pad (if provided).
 	getCanvasDimensionsAdjustedForScale(k, pad) {
-		const canvasDimensions = CanvasUtils.getCanvasDimensions(
-			this.activePipeline.nodes, this.activePipeline.comments,
-			this.activePipeline.links, this.canvasLayout.commentHighlightGap);
+		const gap = this.canvasLayout.commentHighlightGap;
+		const canvasDimensions = this.activePipeline.getCanvasDimensions(gap);
 		return this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, k, pad);
 	}
 
@@ -2131,11 +2074,11 @@ export default class SVGCanvasRenderer {
 
 		// Note: Comment and Node resizing is started by the comment/supernode highlight rectangle.
 		if (this.commentSizing) {
-			this.resizeObj = this.getComment(d.id);
+			this.resizeObj = this.activePipeline.getComment(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else if (this.nodeSizing) {
-			this.resizeObj = this.getNode(d.id);
+			this.resizeObj = this.activePipeline.getNode(d.id);
 			this.initializeResizeVariables(this.resizeObj);
 
 		} else {
@@ -2349,7 +2292,7 @@ export default class SVGCanvasRenderer {
 		this.draggingLinkHandle = true;
 
 		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
-		const link = this.getLink(d.id);
+		const link = this.activePipeline.getLink(d.id);
 		const oldLink = cloneDeep(link);
 
 		const linkGrpSelector = this.getLinkGroupSelectionById(d.id);
@@ -2372,14 +2315,14 @@ export default class SVGCanvasRenderer {
 			if (this.draggingLinkData.endBeingDragged === "end") {
 				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
 				this.setUnavailableTargetNodesHighlighting(
-					this.getNode(this.draggingLinkData.link.srcNodeId),
+					this.activePipeline.getNode(this.draggingLinkData.link.srcNodeId),
 					this.draggingLinkData.link.srcNodePortId,
 					links
 				);
 			} else if (this.draggingLinkData.endBeingDragged === "start") {
 				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
 				this.setUnavailableSourceNodesHighlighting(
-					this.getNode(this.draggingLinkData.oldLink.trgNodeId),
+					this.activePipeline.getNode(this.draggingLinkData.oldLink.trgNodeId),
 					this.draggingLinkData.link.trgNodePortId,
 					links
 				);
@@ -2472,7 +2415,7 @@ export default class SVGCanvasRenderer {
 		const nodeGroupSel = this.getAllNodeGroupsSelection();
 
 		nodeGroupSel
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`);
 
 		if (this.dispUtils.isDisplayingSubFlow()) {
@@ -2516,6 +2459,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	createNodes(enter) {
+		this.logger.logStartTimer("createNodes");
+
 		const newNodeGroups = enter
 			.append("g")
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
@@ -2527,7 +2472,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Node Sizing Area.
-		newNodeGroups.filter((d) => this.nodeUtils.isSupernode(d))
+		newNodeGroups.filter((d) => CanvasUtils.isSupernode(d))
 			.append("path")
 			.attr("class", "d3-node-sizing")
 			.call(this.attachNodeSizingListeners.bind(this));
@@ -2561,31 +2506,46 @@ export default class SVGCanvasRenderer {
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
 			.call(this.attachNodeLabelSpanListeners.bind(this));
 
+		this.logger.logEndTimer("createNodes");
+
 		return newNodeGroups;
 	}
 
 	updateNodes(joinedNodeGrps) {
+		this.logger.logStartTimer("updateNodes");
+
+		this.logger.logStartTimer("d3-node-sizing");
+
 		// Node Sizing Area
 		joinedNodeGrps.selectChildren(".d3-node-sizing")
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
+
+		this.logger.logEndTimer("d3-node-sizing");
+		this.logger.logStartTimer("d3-node-selection-highlight");
 
 		// Node Selection Highlighting Outline.
 		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeSelectionOutline(d))
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
+		this.logger.logEndTimer("d3-node-selection-highlight");
+		this.logger.logStartTimer("d3-node-body-outline");
+
 		// Node Body
 		joinedNodeGrps.selectChildren(".d3-node-body-outline")
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
+		this.logger.logEndTimer("d3-node-body-outline");
+		this.logger.logStartTimer("d3-node-image");
+
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.each((d, i, nodeGrps) => this.setNodeImageContent(nodeGrps[i], d))
 			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
@@ -2593,9 +2553,12 @@ export default class SVGCanvasRenderer {
 			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
+		this.logger.logEndTimer("d3-node-image");
+		this.logger.logStartTimer("d3-foreign-object");
+
 		// Node Label
 		joinedNodeGrps.selectChildren(".d3-foreign-object")
-			.datum((d) => this.getNode(d.id))
+			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
@@ -2607,14 +2570,22 @@ export default class SVGCanvasRenderer {
 			.select("span")
 			.html((d) => escapeText(d.label));
 
+		this.logger.logEndTimer("d3-foreign-object");
+		this.logger.logStartTimer("d3-node-ellipsis-group");
+
 		// Node Ellipsis Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
+
+		this.logger.logEndTimer("d3-node-ellipsis-group");
+		this.logger.logStartTimer("d3-node-super-expand-icon-group");
 
 		// Node (Supernode) Expansion Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
+		this.logger.logEndTimer("d3-node-super-expand-icon-group");
+		this.logger.logStartTimer("each");
 		// Ports display; Supernode sub-flow display; Error marker display; and
 		// Decoration display.
 		joinedNodeGrps.each((d, index, grps) => {
@@ -2622,7 +2593,7 @@ export default class SVGCanvasRenderer {
 
 			this.displayPorts(nodeGrp, d);
 
-			if (this.nodeUtils.isSupernode(d)) {
+			if (CanvasUtils.isSupernode(d)) {
 				this.displaySupernodeContents(d, d3.select(grps[index]));
 			}
 
@@ -2635,6 +2606,8 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
+		this.logger.logEndTimer("each");
+		this.logger.logEndTimer("updateNodes");
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -2642,7 +2615,7 @@ export default class SVGCanvasRenderer {
 	displaySupernodeContents(d, supernodeD3Object) {
 		let ren = this.getRendererForSupernode(d);
 
-		if (this.nodeUtils.isExpanded(d)) {
+		if (CanvasUtils.isExpanded(d)) {
 			if (!ren) {
 				ren = this.createSupernodeRenderer(d, supernodeD3Object); // Create will call displayCanvas
 				this.superRenderers.push(ren);
@@ -2871,7 +2844,7 @@ export default class SVGCanvasRenderer {
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
 			.on("mousedown", (d3Event, d) => {
-				if (this.nodeUtils.isExpandedSupernode(d)) {
+				if (CanvasUtils.isExpandedSupernode(d)) {
 					this.nodeSizing = true;
 					// Note - node resizing and finalization of size is handled by drag functions.
 					this.addTempCursorOverlay(this.nodeSizingCursor);
@@ -2885,7 +2858,7 @@ export default class SVGCanvasRenderer {
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
 				if (this.config.enableEditingActions && // Only set cursor when we are able to edit nodes
-						this.nodeUtils.isExpandedSupernode(d) &&
+						CanvasUtils.isExpandedSupernode(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 					let cursorType = "pointer";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -2902,7 +2875,7 @@ export default class SVGCanvasRenderer {
 		nodeLabels
 			.on("mouseenter", (d3Event, d) => {
 				const labelSel = d3.select(d3Event.currentTarget);
-				if (this.config.enableDisplayFullLabelOnHover && !this.nodeUtils.isExpandedSupernode(d)) {
+				if (this.config.enableDisplayFullLabelOnHover && !CanvasUtils.isExpandedSupernode(d)) {
 					const spanSel = labelSel.selectAll("span");
 					labelSel
 						.attr("x", this.nodeUtils.getNodeLabelHoverPosX(d))
@@ -2913,7 +2886,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("mouseleave", (d3Event, d) => {
 				const labelSel = d3.select(d3Event.currentTarget);
-				if (this.config.enableDisplayFullLabelOnHover && !this.nodeUtils.isExpandedSupernode(d)) {
+				if (this.config.enableDisplayFullLabelOnHover && !CanvasUtils.isExpandedSupernode(d)) {
 					labelSel
 						.attr("x", this.nodeUtils.getNodeLabelPosX(d))
 						.attr("width", this.nodeUtils.getNodeLabelWidth(d))
@@ -2952,7 +2925,7 @@ export default class SVGCanvasRenderer {
 					// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 					if (d3Event.button === 0) {
 						CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-						const srcNode = this.getNode(node.id);
+						const srcNode = this.activePipeline.getNode(node.id);
 						this.drawingNewLinkData = {
 							srcObjId: node.id,
 							srcPortId: port.id,
@@ -3010,7 +2983,7 @@ export default class SVGCanvasRenderer {
 				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 				if (d3Event.button === 0) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
-					const srcNode = this.getNode(node.id);
+					const srcNode = this.activePipeline.getNode(node.id);
 					if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
 						this.drawingNewLinkData = {
 							srcObjId: node.id,
@@ -3226,7 +3199,7 @@ export default class SVGCanvasRenderer {
 		// to be a timing issue since the same problem is not evident with the
 		// similar code for the node group object.
 		// TODO - Issue 2465 - Find out why this problem occurs.
-		const objectTypeName = this.getObjectTypeName(d);
+		const objectTypeName = this.activePipeline.getObjectTypeName(d);
 		if (objectTypeName === "node" || objectTypeName === "link") {
 			this.canvasController.clickActionHandler({
 				clickType: d3EventType === "contextmenu" || this.ellipsisClicked ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
@@ -3236,16 +3209,6 @@ export default class SVGCanvasRenderer {
 				pipelineId: this.activePipeline.id });
 			this.ellipsisClicked = false;
 		}
-	}
-
-	// Returns the name of the type of object d.
-	getObjectTypeName(d) {
-		if (this.getComment(d.id)) {
-			return "comment";
-		} else if (this.getNode(d.id)) {
-			return "node";
-		}
-		return "link";
 	}
 
 	// Displays a set of decorations on either a node or link object.
@@ -3482,11 +3445,11 @@ export default class SVGCanvasRenderer {
 		if (!d.image) {
 			return null;
 		} else if (d.image === USE_DEFAULT_ICON) {
-			if (this.nodeUtils.isSupernode(d)) {
+			if (CanvasUtils.isSupernode(d)) {
 				return SUPERNODE_ICON;
 			}
 		} else if (d.image === USE_DEFAULT_EXT_ICON) {
-			if (this.nodeUtils.isSupernode(d)) {
+			if (CanvasUtils.isSupernode(d)) {
 				return SUPERNODE_EXT_ICON;
 			}
 		}
@@ -3561,14 +3524,14 @@ export default class SVGCanvasRenderer {
 
 	doesExpandedSupernodeHaveStyledNodes(d) {
 		let expandedSupernodeHaveStyledNodes = false;
-		if (this.nodeUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
-			const subflow = this.getActivePipeline(d.subflow_ref.pipeline_id_ref);
+		if (CanvasUtils.isExpandedSupernode(d) && d.subflow_ref && d.subflow_ref.pipeline_id_ref) {
+			const subflow = new SVGCanvasPipeline(d.subflow_ref.pipeline_id_ref, this.canvasInfo);
 			const nodeGrp = subflow.nodes;
 			nodeGrp.forEach((node) => {
 				if (node.style || node.style_temp) {
 					expandedSupernodeHaveStyledNodes = true;
 					return;
-				} else if (!expandedSupernodeHaveStyledNodes && this.nodeUtils.isExpandedSupernode(node)) {
+				} else if (!expandedSupernodeHaveStyledNodes && CanvasUtils.isExpandedSupernode(node)) {
 					expandedSupernodeHaveStyledNodes = this.doesExpandedSupernodeHaveStyledNodes(node);
 				}
 			});
@@ -3666,7 +3629,7 @@ export default class SVGCanvasRenderer {
 
 
 			// Add Supernode expansion icon and background for expanded supernodes
-			if (this.nodeUtils.isExpandedSupernode(d)) {
+			if (CanvasUtils.isExpandedSupernode(d)) {
 				const expGrp = nodeGrp
 					.append("g")
 					.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
@@ -3974,7 +3937,7 @@ export default class SVGCanvasRenderer {
 
 	drawNewCommentLinkForPorts(transPos) {
 		const that = this;
-		const srcComment = this.getComment(this.drawingNewLinkData.srcObjId);
+		const srcComment = this.activePipeline.getComment(this.drawingNewLinkData.srcObjId);
 		const startPos = this.linkUtils.getNewStraightCommentLinkStartPos(srcComment, transPos);
 		const linkType = COMMENT_LINK;
 
@@ -4067,7 +4030,7 @@ export default class SVGCanvasRenderer {
 		if (trgNode !== null) {
 			const type = this.drawingNewLinkData.action;
 			if (type === NODE_LINK) {
-				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
+				const srcNode = this.activePipeline.getNode(this.drawingNewLinkData.srcObjId);
 				const srcPortId = this.drawingNewLinkData.srcPortId;
 				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
 
@@ -4100,7 +4063,7 @@ export default class SVGCanvasRenderer {
 				}
 
 			} else if (type === ASSOCIATION_LINK) {
-				const srcNode = this.getNode(this.drawingNewLinkData.srcObjId);
+				const srcNode = this.activePipeline.getNode(this.drawingNewLinkData.srcObjId);
 
 				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links)) {
 					this.canvasController.editActionHandler({
@@ -4279,7 +4242,7 @@ export default class SVGCanvasRenderer {
 				newLink: newLink,
 				pipelineId: this.pipelineId });
 		} else {
-			this.restoreLink(this.draggingLinkData.oldLink);
+			this.activePipeline.replaceLink(this.draggingLinkData.oldLink);
 			this.displayLinks();
 		}
 
@@ -4349,17 +4312,11 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
-	// Restores the link in the links array with the one passd in.
-	restoreLink(oldLink) {
-		const index = this.activePipeline.links.findIndex((l) => l.id === oldLink.id);
-		this.activePipeline.links.splice(index, 1, oldLink);
-	}
-
 	// Returns true if the update command for a dragged link can be executed.
 	// It might be prevented from executing if either the course
 	canExecuteUpdateLinkCommand(newLink, oldLink) {
-		const srcNode = this.getNode(newLink.srcNodeId);
-		const trgNode = this.getNode(newLink.trgNodeId);
+		const srcNode = this.activePipeline.getNode(newLink.srcNodeId);
+		const trgNode = this.activePipeline.getNode(newLink.trgNodeId);
 		const linkSrcChanged = this.hasLinkSrcChanged(newLink, oldLink);
 		const linkTrgChanged = this.hasLinkTrgChanged(newLink, oldLink);
 		const links = this.activePipeline.links;
@@ -4462,7 +4419,7 @@ export default class SVGCanvasRenderer {
 		if (element) {
 			const datum = d3.select(element).datum();
 			if (datum) {
-				var foundLink = this.getLink(datum.id, this.pipelineId);
+				var foundLink = this.activePipeline.getLink(datum.id);
 				if (foundLink && foundLink.type === NODE_LINK) {
 					return foundLink;
 				}
@@ -4586,7 +4543,7 @@ export default class SVGCanvasRenderer {
 		if (element && element.nodeName === "g") {
 			const datum = d3.select(element).datum();
 			if (datum) {
-				return this.getNode(datum.id);
+				return this.activePipeline.getNode(datum.id);
 			}
 		}
 		return null;
@@ -4702,7 +4659,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a path string that will draw the selection outline shape of the node.
 	getNodeSelectionOutline(data) {
-		if (data.layout.selectionPath && !this.nodeUtils.isExpanded(data)) {
+		if (data.layout.selectionPath && !CanvasUtils.isExpanded(data)) {
 			return data.layout.selectionPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -4714,7 +4671,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
-		if (data.layout.bodyPath && !this.nodeUtils.isExpanded(data)) {
+		if (data.layout.bodyPath && !CanvasUtils.isExpanded(data)) {
 			return data.layout.bodyPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -4916,7 +4873,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				let xPosition = 0;
 
-				if (this.nodeUtils.isExpandedSupernode(data)) {
+				if (CanvasUtils.isExpandedSupernode(data)) {
 					const widthSvgArea = data.width - (2 * this.canvasLayout.supernodeSVGAreaPadding);
 					const remainingSpace = widthSvgArea - portsWidth;
 					xPosition = (2 * this.canvasLayout.supernodeSVGAreaPadding) + (remainingSpace / 2);
@@ -4970,7 +4927,7 @@ export default class SVGCanvasRenderer {
 	setPortPositionsLeftRightAllPorts(data, ports, portsHeight, xPos, yPos) {
 		let yPosition = 0;
 
-		if (this.nodeUtils.isExpandedSupernode(data)) {
+		if (CanvasUtils.isExpandedSupernode(data)) {
 			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 			const remainingSpace = heightSvgArea - portsHeight;
 			yPosition = this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding + (remainingSpace / 2);
@@ -5002,7 +4959,7 @@ export default class SVGCanvasRenderer {
 	// regular nodes or expanded supernodes.
 	setPortPositionsLeftRightSinglePort(data, ports, xPos, yPos) {
 		let yPosition = 0;
-		if (this.nodeUtils.isExpandedSupernode(data)) {
+		if (CanvasUtils.isExpandedSupernode(data)) {
 			const heightSvgArea = data.height - this.canvasLayout.supernodeTopAreaHeight - this.canvasLayout.supernodeSVGAreaPadding;
 			yPosition = this.canvasLayout.supernodeTopAreaHeight + (heightSvgArea / 2);
 
@@ -5035,7 +4992,7 @@ export default class SVGCanvasRenderer {
 	displayMovedComments() {
 		this.getAllCommentGroupsSelection()
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
-			.datum((d) => this.getComment(d.id));
+			.datum((d) => this.activePipeline.getComment(d.id));
 	}
 
 	displayCommentsSelectionStatus() {
@@ -5111,7 +5068,7 @@ export default class SVGCanvasRenderer {
 
 		// Comment Sizing Area
 		joinedCommentGrps.selectChildren(".d3-comment-sizing")
-			.datum((c) => this.getComment(c.id))
+			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentSizingArea)
 			.attr("y", -this.canvasLayout.commentSizingArea)
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
@@ -5120,7 +5077,7 @@ export default class SVGCanvasRenderer {
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
-			.datum((c) => this.getComment(c.id))
+			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("x", -this.canvasLayout.commentHighlightGap)
 			.attr("y", -this.canvasLayout.commentHighlightGap)
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentHighlightGap))
@@ -5130,7 +5087,7 @@ export default class SVGCanvasRenderer {
 
 		// Comment Body
 		joinedCommentGrps.selectChildren(".d3-comment-rect")
-			.datum((c) => this.getComment(c.id))
+			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("height", (c) => c.height)
 			.attr("width", (c) => c.width)
 			.attr("class", "d3-comment-rect")
@@ -5138,7 +5095,7 @@ export default class SVGCanvasRenderer {
 
 		// Comment Text
 		joinedCommentGrps.selectChildren(".d3-foreign-object")
-			.datum((c) => this.getComment(c.id))
+			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
 			.select("div")
@@ -5322,14 +5279,14 @@ export default class SVGCanvasRenderer {
 		if (this.textAreaHeight < scrollHeight) {
 			this.textAreaHeight = scrollHeight;
 			foreignObject.style("height", this.textAreaHeight + "px");
-			this.getComment(data.id).height = this.textAreaHeight;
+			this.activePipeline.getComment(data.id).height = this.textAreaHeight;
 			this.displayComments();
 			this.displayLinks();
 		}
 	}
 
 	saveCommentChanges(id, newText, newHeight) {
-		const comment = this.getComment(id);
+		const comment = this.activePipeline.getComment(id);
 		const data = {
 			editType: "editComment",
 			editSource: "canvas",
@@ -5692,7 +5649,7 @@ export default class SVGCanvasRenderer {
 			if (this.config.enableMoveNodesOnSupernodeResize) {
 				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
-					this.activePipeline.nodes.concat(this.activePipeline.comments),
+					this.activePipeline.getNodesAndComments(),
 					this.nodeSizingDirection,
 					this.resizeObj.width,
 					this.resizeObj.height,
@@ -5977,13 +5934,13 @@ export default class SVGCanvasRenderer {
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
-			.datum((d) => this.getLink(d.id))
+			.datum((d) => this.activePipeline.getLink(d.id))
 			.attr("d", (d) => d.pathInfo.path);
 
 		// Update link line
 		joinedLinkGrps
 			.selectAll(".d3-link-line")
-			.datum((d) => this.getLink(d.id))
+			.datum((d) => this.activePipeline.getLink(d.id))
 			.attr("d", (d) => d.pathInfo.path)
 			.attr("class", "d3-link-line")
 			.attr("style", (d) => CanvasUtils.getObjectStyle(d, "line", "default"));
@@ -5994,7 +5951,7 @@ export default class SVGCanvasRenderer {
 											(d.type === COMMENT_LINK && this.canvasLayout.commentLinkArrowHead) ||
 											(d.type === NODE_LINK && this.canvasLayout.linkType === LINK_TYPE_STRAIGHT))
 			.selectAll(".d3-link-line-arrow-head")
-			.datum((d) => this.getLink(d.id))
+			.datum((d) => this.activePipeline.getLink(d.id))
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("transform", (d) => this.getArrowHeadTransform(d))
 			.attr("class", "d3-link-line-arrow-head")
@@ -6118,7 +6075,7 @@ export default class SVGCanvasRenderer {
 	updateHandles(handlesGrp, lineArray) {
 		handlesGrp
 			.selectAll(".d3-link-handle-start")
-			.datum((d) => this.getLink(d.id))
+			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
 				if (this.canvasLayout.linkStartHandleObject === "image") {
@@ -6139,7 +6096,7 @@ export default class SVGCanvasRenderer {
 
 		handlesGrp
 			.selectAll(".d3-link-handle-end")
-			.datum((d) => this.getLink(d.id))
+			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
 				const obj = d3.select(linkHandles[index]);
 				if (this.canvasLayout.linkEndHandleObject === "image") {
@@ -6248,7 +6205,7 @@ export default class SVGCanvasRenderer {
 			customClass = " " + d.class_name;
 		}
 
-		const supernodeClass = this.nodeUtils.isSupernode(d) && this.nodeUtils.isExpanded(d)
+		const supernodeClass = CanvasUtils.isExpandedSupernode(d)
 			? " d3-node-supernode-expanded"
 			: "";
 

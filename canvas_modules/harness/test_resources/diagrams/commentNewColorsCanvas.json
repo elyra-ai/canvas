@@ -1,0 +1,150 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "93b2a5f1-f00a-4b92-b0c0-75eb1c783699",
+  "primary_pipeline": "47fea699-442f-4580-9433-fcfbf6f926d2",
+  "pipelines": [
+    {
+      "id": "47fea699-442f-4580-9433-fcfbf6f926d2",
+      "nodes": [],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "f2c3d6c0-ddd5-4a7c-ba6d-04921e7cc1c0",
+              "x_pos": 28,
+              "y_pos": 46,
+              "width": 175,
+              "height": 42,
+              "content": "Default",
+              "associated_id_refs": []
+            },
+            {
+              "id": "8d1d49a3-9464-41d2-9c87-c43d852b924e",
+              "x_pos": 25,
+              "y_pos": 133,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-white-0",
+              "content": "White 0",
+              "associated_id_refs": []
+            },
+            {
+              "id": "8a1da6d4-b011-4d17-a92b-f663150e5c66",
+              "x_pos": 223,
+              "y_pos": 133,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-yellow-20",
+              "content": "Yellow 20",
+              "associated_id_refs": []
+            },
+            {
+              "id": "56da5ca1-b0db-4b90-b815-0d939cd0d7f1",
+              "x_pos": 419,
+              "y_pos": 132,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-gray-20",
+              "content": "Gray 20",
+              "associated_id_refs": []
+            },
+            {
+              "id": "f4580a90-ec0f-4c9a-a33b-d546ecb76a58",
+              "x_pos": 613,
+              "y_pos": 132,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-green-20",
+              "content": "Green 20",
+              "associated_id_refs": []
+            },
+            {
+              "id": "2cb3948a-2f5b-419e-94b2-92b1177de6a8",
+              "x_pos": 808,
+              "y_pos": 134,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-teal-20",
+              "content": "Teal 20",
+              "associated_id_refs": []
+            },
+            {
+              "id": "f7a319e5-0788-49d5-bafd-54d6b9e527b2",
+              "x_pos": 1005,
+              "y_pos": 134,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-cyan-20",
+              "content": "Cyan 20",
+              "associated_id_refs": []
+            },
+            {
+              "id": "a8e766ec-c4ed-473b-96e0-a0c9462dd7ac",
+              "x_pos": 25,
+              "y_pos": 242,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-red-50",
+              "content": "Red 50",
+              "associated_id_refs": []
+            },
+            {
+              "id": "304f8445-cb90-44a8-b84a-853be164b4db",
+              "x_pos": 223,
+              "y_pos": 242,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-orange-40",
+              "content": "Orange 40",
+              "associated_id_refs": []
+            },
+            {
+              "id": "79427cdd-e618-4fcc-a64d-f58c2f4de4a6",
+              "x_pos": 419,
+              "y_pos": 241,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-gray-50",
+              "content": "Gray 50",
+              "associated_id_refs": []
+            },
+            {
+              "id": "9a7b068f-7379-40a5-bb87-1b47355bbafd",
+              "x_pos": 613,
+              "y_pos": 241,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-green-50",
+              "content": "Green 50",
+              "associated_id_refs": []
+            },
+            {
+              "id": "1c41dfa0-577d-4c97-8aaa-2f6897007bcc",
+              "x_pos": 808,
+              "y_pos": 243,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-teal-50",
+              "content": "Teal 50",
+              "associated_id_refs": []
+            },
+            {
+              "id": "ae9f39d3-b55b-4dec-9cbb-fc36e177e035",
+              "x_pos": 1005,
+              "y_pos": 243,
+              "width": 175,
+              "height": 42,
+              "class_name": "bkg-col-cyan-50",
+              "content": "Cyan 50",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

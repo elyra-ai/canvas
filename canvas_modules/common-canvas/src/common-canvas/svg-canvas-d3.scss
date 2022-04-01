@@ -79,9 +79,10 @@ $node-port-input-arrow-connected-stroke-color: $inverse-02;
 $node-port-input-arrow-connected-fill-color: transparent;
 
 // Comment colors
-$comment-outline-color: $ui-04;
-$comment-fill-color: $ui-01;
-$comment-text-color: $text-02;
+$comment-outline-color: $active-light-ui;
+$comment-outline-hover-color: $inverse-hover-ui;
+$comment-fill-color: $white-0;
+$comment-text-color: $gray-100;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -603,7 +604,14 @@ $link-highlight-color: $support-04;
 
 /* Comment styles */
 
-/* Style for comment background rectangle */
+.d3-comment-group:hover {
+	.d3-comment-rect {
+		stroke: $comment-outline-hover-color
+	}
+}
+
+
+/* Style for default comment background rectangle */
 .d3-comment-rect {
 	fill: $comment-fill-color;
 	stroke: $comment-outline-color;
@@ -612,6 +620,59 @@ $link-highlight-color: $support-04;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly. */
 	user-select: none;
+}
+
+@mixin comment-color-overrides($background-color) {
+	.d3-comment-rect {
+		fill: $background-color;
+	}
+	.d3-comment-entry {
+		background-color: $background-color;
+		color: $gray-100;
+	}
+
+}
+
+/* Styles for comments colored by the user */
+// We add g. at the front of each selector below to override any color set
+// by a class provided for the comment by the host application. The
+// assumption is, the user would prefer the color they set in the UI to
+// override any color provided by the host app.
+g.bkg-col-white-0 {
+	@include comment-color-overrides($white-0);
+}
+g.bkg-col-yellow-20 {
+	@include comment-color-overrides($yellow-20);
+}
+g.bkg-col-gray-20 {
+	@include comment-color-overrides($gray-20);
+}
+g.bkg-col-green-20 {
+	@include comment-color-overrides($green-20);
+}
+g.bkg-col-teal-20 {
+	@include comment-color-overrides($teal-20);
+}
+g.bkg-col-cyan-20 {
+	@include comment-color-overrides($cyan-20);
+}
+g.bkg-col-red-50 {
+	@include comment-color-overrides($red-50);
+}
+g.bkg-col-orange-40 {
+	@include comment-color-overrides($orange-40);
+}
+g.bkg-col-gray-50 {
+	@include comment-color-overrides($gray-50);
+}
+g.bkg-col-green-50 {
+	@include comment-color-overrides($green-50);
+}
+g.bkg-col-teal-50 {
+	@include comment-color-overrides($teal-50);
+}
+g.bkg-col-cyan-50 {
+	@include comment-color-overrides($cyan-50);
 }
 
 .d3-comment-selection-highlight {
@@ -630,6 +691,7 @@ $link-highlight-color: $support-04;
 
 @mixin d3-comment-mixin {
 	color: $comment-text-color;
+	background-color: transparent;
 	font-size: $comment-text-font-size;
 	font-weight: $comment-text-font-weight;
 	font-family: $comment-text-font-family;

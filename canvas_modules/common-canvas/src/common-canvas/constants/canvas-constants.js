@@ -148,7 +148,6 @@ export const CANVAS_CARBON_ICONS = {
 		UP: "chevron-up",
 		DOWN: "chevron-down"
 	},
-	OVERFLOWMENU: "overflow-menu",
 	SEARCH: "search",
 	WARNING_UNFILLED: "warning16"
 };
@@ -159,21 +158,23 @@ export const CONTEXT_MENU_CARBON_ICONS = {
 	}
 };
 
-export const TOOLBAR_ACTIONS = {
-	TOOLBAR_STOP: "stop",
-	TOOLBAR_RUN: "run",
-	TOOLBAR_UNDO: "undo",
-	TOOLBAR_REDO: "redo",
-	TOOLBAR_CUT: "cut",
-	TOOLBAR_COPY: "copy",
-	TOOLBAR_PASTE: "paste",
-	TOOLBAR_CREATE_AUTO_COMMENT: "createAutoComment",
-	TOOLBAR_DELETE_SELECTED_OBJECTS: "deleteSelectedObjects",
-	TOOLBAR_ZOOM_IN: "zoomIn",
-	TOOLBAR_ZOOM_OUT: "zoomOut",
-	TOOLBAR_ZOOM_FIT: "zoomToFit",
-	TOOLBAR_TOGGLE_NOTIFICATION_PANEL: "toggleNotificationPanel"
-};
+export const TOOLBAR_STOP = "stop";
+export const TOOLBAR_RUN = "run";
+export const TOOLBAR_UNDO = "undo";
+export const TOOLBAR_REDO = "redo";
+export const TOOLBAR_CUT = "cut";
+export const TOOLBAR_COPY = "copy";
+export const TOOLBAR_PASTE = "paste";
+export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
+export const TOOLBAR_DELETE_SELECTED_OBJECTS = "deleteSelectedObjects";
+export const TOOLBAR_ZOOM_IN = "zoomIn";
+export const TOOLBAR_ZOOM_OUT = "zoomOut";
+export const TOOLBAR_ZOOM_FIT = "zoomToFit";
+export const TOOLBAR_ARRANGE_HORIZONALLY = "arrangeHorizontally";
+export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
+export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
+export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
+export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
 
 export const EDIT_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +

@@ -17,20 +17,36 @@ describe("Testing bottom panel", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
 	});
 
 	it("Testing bottom panel sizing", function() {
-		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
+		// Test bottom panel is reduced in size successfully
+		cy.moveBottomPanelDivider(500);
+		cy.verifyBottomPanelHeight(209);
+		cy.verifyBottomPanelWidth(1328);
 
-		// Resize the bottom pannel & verify its height & width
-		cy.moveBottomPanelDivider(-150);
+		// Test bottom panel is increased in size successfully
+		cy.moveBottomPanelDivider(200);
 		cy.verifyBottomPanelHeight(509);
 		cy.verifyBottomPanelWidth(1328);
 
+		// Test bottom panel is increased in size successfully with right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
-
-		cy.moveBottomPanelDivider(100);
+		cy.moveBottomPanelDivider(200);
 		cy.verifyBottomPanelHeight(509);
+		cy.verifyBottomPanelWidth(807.4375);
+	});
+
+	it("Testing bottom panel max height", function() {
+		// Test bottom panel does not exceed max-size successfully
+		cy.moveBottomPanelDivider(50);
+		cy.verifyBottomPanelHeight(647);
+
+		// Test bottom panel does not exceed max-size successfully with right flyout open
+		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
+		cy.moveBottomPanelDivider(50);
+		cy.verifyBottomPanelHeight(647);
 		cy.verifyBottomPanelWidth(807.4375);
 	});
 });

@@ -143,7 +143,8 @@ describe("main-editor-properties-buttons renders correctly", () => {
 	});
 
 	it("main-editor-properties-buttons should be disabled if required fields are not filled", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef, { disableSaveOnRequiredErrors: true });
+		// disableSaveOnRequiredErrors should be enabled only if 'applyOnBlur' is set to false
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef, { applyOnBlur: false, disableSaveOnRequiredErrors: true });
 		const wrapper = renderedObject.wrapper;
 		const rcontroller = renderedObject.controller;
 

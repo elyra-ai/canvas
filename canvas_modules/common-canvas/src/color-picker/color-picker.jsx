@@ -14,36 +14,24 @@
  * limitations under the License.
  */
 
-.properties-custom-table-buttons {
-	.toolbar-div {
-		height: $spacing-07;
+import React from "react";
+import PropTypes from "prop-types";
+import { OverflowMenu } from "carbon-components-react";
+import { ColorPalette32 } from "@carbon/icons-react";
+import ColorPickerPanel from "./color-picker-panel";
 
-		.toolbar-left-bar {
-			padding-right: 0;
-
-			.toolbar-item button {
-				height: $spacing-07;
-			}
-
-			.toolbar-item-content {
-				padding: $spacing-02 $spacing-03;
-				height: $spacing-07;
-				min-width: $spacing-07;
-				align-items: center;
-			}
-
-			.toolbar-overflow-item button {
-				height: $spacing-07;
-			}
-
-			.toolbar-popover-list {
-				top: $spacing-07;
-				right: 0;
-			}
-		}
-
-		.toolbar-right-bar {
-			display: none;
-		}
+class ColorPicker extends React.Component {
+	render() {
+		return (
+			<OverflowMenu renderIcon={ColorPalette32} className="color-menu">
+				<ColorPickerPanel clickActionHandler={this.props.clickActionHandler} />
+			</OverflowMenu>
+		);
 	}
 }
+
+ColorPicker.propTypes = {
+	clickActionHandler: PropTypes.func.isRequired
+};
+
+export default ColorPicker;

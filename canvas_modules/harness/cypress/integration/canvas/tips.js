@@ -268,10 +268,10 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 	});
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
-		cy.clickAtCoordinatesInCommonProperties(65, 100);
+		cy.clickAtCoordinatesInCommonProperties(65, 92);
 		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "bottom", "Include or discard rows");
 
-		cy.clickAtCoordinatesInCommonProperties(245, 160);
+		cy.clickAtCoordinatesInCommonProperties(245, 152);
 		cy.verifyTipForLabelIsVisibleAtLocation(
 			"Modeler CLEM Condition Expression", "bottom", "Enter a boolean expression to use for filtering rows"
 		);
@@ -358,6 +358,95 @@ describe("Test to check if tips show up for a supernode and nodes inside the sup
 		// Check the other node in the subflow shows a tip
 		// cy.hoverOverNodeInSupernode("Define Types", "Supernode");
 		// cy.verifyTipForNodeInSupernodeAtLocation("Define Types", "Supernode", "below");
+	});
+});
+
+describe("Test generated tooltips for undo/redo actions", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Verify undo/redo tooltip messages upon delete action", function() {
+		// Open a Palette
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.clickToolbarPaletteOpen();
+
+		// Open Record Ops category
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Sort", 500, 600);
+
+		// Case 1: delete nodes
+		cy.clickNode("Sort");
+		cy.deleteNodeUsingKeyboard("Sort");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes");
+		cy.clickToolbarUndo();
+
+		// Case 2: delete comments
+		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
+		cy.deleteCommentUsingContextMenu(" comment 3 sample comment text");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments");
+		cy.clickToolbarUndo();
+
+		// Case 3: Delete nodes and comments
+		cy.clickNode("Sort");
+		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 comments");
+		cy.clickToolbarUndo();
+
+		// Case 4: Delete nodes and links
+		cy.ctrlOrCmdClickNode("C5.0");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 links");
+		cy.clickToolbarUndo();
+
+		// Case 5: Delete comments and links
+		cy.ctrlOrCmdClickComment(" comment 1");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 1 links");
+		cy.clickToolbarUndo();
+
+		// Case 6: delete  nodes, comments and links
+		cy.clickNode("Sort");
+		cy.ctrlOrCmdClickComment(" comment 1");
+		cy.ctrlOrCmdClickNode("C5.0");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 2 nodes, 1 comments and 2 links");
+		cy.clickToolbarUndo();
+	});
+
+	it("Test undo/redo tooltips are displayed when returned from the actionLabelHandler", function() {
+		// Open a different commentColorCanvas diagram
+		cy.openCanvasDefinition("commentColorCanvas.json");
+
+		cy.clickNode("DRUG1n");
+		cy.shortcutKeysCut();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+
+		cy.clickNode("DRUG1n");
+		cy.clickToolbarCut();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+
+		cy.clickNode("DRUG1n");
+		cy.rightClickToDisplayContextMenu(300, 10);
+		cy.clickOptionFromContextSubmenu("Edit", "Cut");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Cut selected objects");
+		cy.clickToolbarUndo();
+	});
+
+	it("Verify undo/redo tooltip messages upon delete action with selectedLinkSelection =`Detachable` ", function() {
+		// Open a different allTypesCanvas diagram
+		cy.openCanvasDefinition("allTypesCanvas.json");
+		// Enable Detachable links option
+		cy.setCanvasConfig({ "selectedLinkSelection": "Detachable" });
+
+		// Case 7: Delete links
+		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
+		cy.shortcutKeysDelete();
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 links");
 	});
 });
 
@@ -487,32 +576,37 @@ describe("Test undo redo tooltips for different actions", function() {
 		cy.verifyTipForToolbarItem(".redo-action", "Redo: Edit comment");
 		cy.mouseoutToolbarItem(".redo-action");
 		cy.clickToolbarRedo();
-
-		// Delete a node
-		cy.clickNode("Var. File");
-		cy.clickToolbarDelete();
-		// Verify undo/redo tooltip after deleting node
-		cy.hoverOverToolbarItem(".undo-action");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
-		cy.mouseoutToolbarItem(".undo-action");
-		cy.clickToolbarUndo();
-
-		cy.hoverOverToolbarItem(".redo-action");
-		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
-		cy.mouseoutToolbarItem(".redo-action");
-		cy.clickToolbarRedo();
-
-		// Delete a comment
-		cy.deleteCommentUsingToolbar("This is a select node");
-		// Verify undo/redo tooltip after deleting comment
-		cy.hoverOverToolbarItem(".undo-action");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete all objects");
-		cy.mouseoutToolbarItem(".undo-action");
-		cy.clickToolbarUndo();
-
-		cy.hoverOverToolbarItem(".redo-action");
-		cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete all objects");
-		cy.mouseoutToolbarItem(".redo-action");
-		cy.clickToolbarRedo();
 	});
+
+	it("Test undo/redo tooltips are generated correctly for different delete actions:context menu,toolbar and keyboard",
+		function() {
+			// Open a different allTypesCanvas diagram
+			cy.openCanvasDefinition("allTypesCanvas.json");
+			// Delete a node
+			cy.clickNode("Model Node");
+			cy.clickToolbarDelete();
+			// Verify undo/redo tooltip after deleting node
+			cy.hoverOverToolbarItem(".undo-action");
+			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 3 links");
+			cy.mouseoutToolbarItem(".undo-action");
+			cy.clickToolbarUndo();
+
+			cy.hoverOverToolbarItem(".redo-action");
+			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 nodes and 3 links");
+			cy.mouseoutToolbarItem(".redo-action");
+			cy.clickToolbarRedo();
+
+			// Delete a comment
+			cy.deleteCommentUsingToolbar("The 4 different node types");
+			// Verify undo/redo tooltip after deleting comment
+			cy.hoverOverToolbarItem(".undo-action");
+			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 3 links");
+			cy.mouseoutToolbarItem(".undo-action");
+			cy.clickToolbarUndo();
+
+			cy.hoverOverToolbarItem(".redo-action");
+			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 comments and 3 links");
+			cy.mouseoutToolbarItem(".redo-action");
+			cy.clickToolbarRedo();
+		});
 });

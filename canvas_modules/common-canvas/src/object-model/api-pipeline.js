@@ -100,6 +100,18 @@ export default class APIPipeline {
 		}, data);
 	}
 
+	addPastedObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "ADD_PASTED_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
+	deletePastedObjects(data) {
+		this.objectModel.executeWithSelectionChange((inData) => {
+			this.store.dispatch({ type: "DELETE_PASTED_OBJECTS", data: inData, pipelineId: this.pipelineId });
+		}, data);
+	}
+
 	// Returns an object containing and array of nodes and an array of comments
 	// that match the array of objectIds passed in.
 	filterNodesAndComments(objectIds) {
@@ -126,6 +138,10 @@ export default class APIPipeline {
 
 	setObjectsClassName(objectIds, newClassName) {
 		this.store.dispatch({ type: "SET_OBJECTS_CLASS_NAME", data: { objIds: objectIds, newClassName: newClassName }, pipelineId: this.pipelineId });
+	}
+
+	setObjectsColorClassName(objectIds, newColorClass) {
+		this.store.dispatch({ type: "SET_OBJECTS_COLOR_CLASS_NAME", data: { objIds: objectIds, newColorClass: newColorClass }, pipelineId: this.pipelineId });
 	}
 
 	disconnectObjects(objectIds) {
@@ -624,8 +640,7 @@ export default class APIPipeline {
 	}
 
 	isDataNode(objId) {
-		const node = this.getNode(objId);
-		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
+		return this.getNode(objId);
 	}
 
 	sizeAndPositionObjects(objectsInfo, linksInfo) {
@@ -977,7 +992,6 @@ export default class APIPipeline {
 	createComment(source) {
 		let comment = {
 			id: this.objectModel.getUniqueId(CREATE_COMMENT),
-			class_name: "d3-comment-rect",
 			content: "",
 			height: 42,
 			width: 175,
@@ -1001,9 +1015,6 @@ export default class APIPipeline {
 	}
 
 	addComment(data) {
-		if (typeof data.selectedObjectIds === "undefined") {
-			data.selectedObjectIds = [];
-		}
 		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
 	}
 

@@ -58,7 +58,7 @@ export default class SvgCanvasLinks {
 		let srcCenterX;
 		let srcCenterY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(srcNode)) {
+		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(srcNode)) {
 			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
 			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
@@ -160,7 +160,7 @@ export default class SvgCanvasLinks {
 		let trgCenterX;
 		let trgCenterY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(srcNode)) {
+		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(srcNode)) {
 			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
 			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
@@ -168,7 +168,7 @@ export default class SvgCanvasLinks {
 			srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
 		}
 
-		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" && !this.nodeUtils.isExpanded(trgNode)) {
+		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(trgNode)) {
 			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
 			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {

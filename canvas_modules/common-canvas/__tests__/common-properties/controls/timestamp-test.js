@@ -27,13 +27,23 @@ const control = {
 	name: "test-timestamp",
 	controlType: "timestampfield"
 };
+
+const controlReadonly = {
+	name: "test-timestamp",
+	controlType: "readonly",
+	valueDef: {
+		propType: "timestamp"
+	}
+};
 const propertyId = { name: "test-timestamp" };
 
 describe("timestamp-control renders correctly", () => {
+
 	beforeEach(() => {
 		controller.setErrorMessages({});
 		controller.setControlStates({});
 	});
+
 	it("timestamp should render if valid timestamp is passed in", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": 1557250591087 }
@@ -51,6 +61,25 @@ describe("timestamp-control renders correctly", () => {
 		expect(text).to.have.length(1);
 		expect(text.text()).to.contain("Tuesday, May 7, 2019");
 	});
+
+	it("timestamp should render if valid timestamp is passed in and control type readonly", () => {
+		controller.setPropertyValues(
+			{ "test-timestamp": 1557250591087 }
+		);
+		const wrapper = mountWithIntl(
+			<Readonly
+				store={controller.getStore()}
+				control={controlReadonly}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const readonlyWrapper = wrapper.find("div[data-id='properties-test-timestamp']");
+		const text = readonlyWrapper.find("span");
+		expect(text).to.have.length(1);
+		expect(text.text()).to.contain("Tuesday, May 7, 2019");
+	});
+
 	it("readonly should render nothing when invalid timestamp is passed in", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": "invalid field" }
@@ -68,6 +97,7 @@ describe("timestamp-control renders correctly", () => {
 		expect(text).to.have.length(1);
 		expect(text.text()).to.equal("");
 	});
+
 	it("readonly renders nothing when null timestamp is passed in", () => {
 		controller.setPropertyValues(
 			{ "test-timestamp": null }
@@ -96,6 +126,12 @@ describe("timestamp classnames appear correctly", () => {
 
 	it("timestamp should have custom classname defined", () => {
 		expect(wrapper.find(".timestampfield-control-class")).to.have.length(1);
+	});
+
+	it("timestamp should display correctly", () => {
+		const readonlyWrapper = wrapper.find("div[data-id='properties-timestamp_field_timestamp']");
+		const text = readonlyWrapper.find("span");
+		expect(text.text()).to.contain("Friday, June 16, 1911");
 	});
 
 	it("timestamp should have custom classname defined in table cells", () => {

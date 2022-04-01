@@ -16,7 +16,7 @@
 
 .properties-table-cell-control {
 	>div>:first-child {
-		margin-left: $spacing-04;
+		padding: 0 $spacing-05;
 	}
 }
 
@@ -35,9 +35,13 @@
 		color: $ui-01;
 	}
 
+	.properties-ft-table-header {
+		display: none;
+	}
+
 	// align summaryTable row
 	.properties-vt-row-checkbox {
-		margin-left: 0;
+		width: 1.25rem;
 	}
 
 	.properties-vt-row-class {

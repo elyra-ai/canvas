@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled } from "./actions";
+import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled, setHideEditButton } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -491,6 +491,32 @@ export default class PropertiesStore {
 				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], `tableButtons.${buttonId}`, defaultValue);
 			}
 			return state.propertiesSettingsReducer[propertyId.name].tableButtons[buttonId];
+		}
+		return defaultValue;
+	}
+
+	/**
+	* Set the hideEditButton attribute to 'true' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param enabled boolean value for disable or enable edit button by state hideEditButton
+	*/
+	setHideEditButton(propertyId, enabled) {
+		this.store.dispatch(setHideEditButton({ propertyId: propertyId, value: enabled }));
+	}
+
+	/**
+	* Returns true if hideEditButton is true for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getHideEditButton(propertyId) {
+		const state = this.store.getState();
+		const defaultValue = false; // Default to false to show disable edit buttons
+		if (state.propertiesSettingsReducer[propertyId.name]) {
+			if (typeof propertyId.row !== "undefined") {
+				return getNestedPropertySetting(propertyId, state.propertiesSettingsReducer[propertyId.name], "hideEditButton", defaultValue);
+			}
+			return state.propertiesSettingsReducer[propertyId.name].hideEditButton;
 		}
 		return defaultValue;
 	}

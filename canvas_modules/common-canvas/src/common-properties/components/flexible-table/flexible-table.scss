@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$flexible-table-header-row-height: 32px;
-$row-left-padding: 4px;
+$flexible-table-header-row-height: $spacing-07;
+$row-left-padding: $spacing-02;
 
 .properties-ft-table-header {
 	display: flex;
@@ -37,6 +37,14 @@ $row-left-padding: 4px;
 			opacity: 0.5;
 		}
 	}
+}
+
+.properties-ft-container-panel {
+	height: calc(100% - $spacing-07); // adjust height for table header
+}
+
+.properties-ft-control-container {
+	height: 100%;
 }
 
 .properties-ft-container-wrapper {
@@ -62,9 +70,6 @@ $row-left-padding: 4px;
 	&.warning {
 		border: 1px solid $support-03;
 	}
-	.row-checkbox {
-		padding-left: 12px;
-	}
 }
 
 .properties-ft-container-absolute {
@@ -83,18 +88,10 @@ $row-left-padding: 4px;
 
 	div[data-role="properties-header-row"] {
 		width: inherit;
-		background-color: $ui-03;
 		display: inline-flex;
-		height: 2.5em;
 		.properties-autosized-vt-header {
 			&:focus {
 				outline: none;
-			}
-			// sort icon in header
-			svg {
-				margin-left: 3px;
-				width: 11px;
-				height: 11px;
 			}
 			// sort icon viewable when hover or sorted column
 			.properties-ft-column-sort-icon
@@ -105,19 +102,19 @@ $row-left-padding: 4px;
 			.properties-ft-column-sort-icon
 			svg:not(:root) {
 				display: inline;
-				stroke: $icon-01;
 			}
-			.sort-column-active
-			.properties-ft-column-sort-icon
+			.sort-column-active > .properties-ft-column-sort-icon
 			svg:not(:root) {
 				display: inline;
-				stroke: $icon-01;
 			}
 		}
 
 		.properties-tooltips-container {
 			display: inline-flex;
+			justify-content: space-between; // Adding space between column label and sort icon
 			width: 100%;
+			align-self: center;
+			padding: 0 $spacing-05;
 		}
 		.tooltip-container {
 			overflow: hidden;

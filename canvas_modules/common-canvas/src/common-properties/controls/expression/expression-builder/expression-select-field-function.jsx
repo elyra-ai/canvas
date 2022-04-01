@@ -366,7 +366,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 
 		if (categoryInfo) {
-			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel });
+			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel, resizable: true });
 			valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
 			if (categoryInfo.field_columns.additional_column_info) {
 				for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
@@ -572,7 +572,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			MESSAGE_KEYS.EXPRESSION_RETURN_COLUMN);
 
 
-		headers.push({ key: "function", label: functionColumn, width: 73 });
+		headers.push({ key: "function", label: functionColumn, width: 73, resizable: true });
 		headers.push({ key: "return", label: returnColumn, width: 27 });
 		const table = this._buildFunctionTable(this.state.functionCategory);
 

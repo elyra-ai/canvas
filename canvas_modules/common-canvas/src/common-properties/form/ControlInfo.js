@@ -59,6 +59,9 @@ export class Control {
 		if (typeof settings.filterable === "boolean") {
 			this.filterable = settings.filterable;
 		}
+		if (typeof settings.resizable === "boolean") {
+			this.resizable = settings.resizable;
+		}
 		if (settings.language) {
 			this.language = settings.language;
 		}
@@ -131,6 +134,11 @@ export class Control {
 		if (typeof settings.addRemoveRows === "boolean") {
 			this.addRemoveRows = settings.addRemoveRows;
 		}
+
+		if (typeof settings.hideEditButton === "boolean") {
+			this.hideEditButton = settings.hideEditButton;
+		}
+
 		if (typeof settings.header === "boolean") {
 			this.header = settings.header;
 		}
