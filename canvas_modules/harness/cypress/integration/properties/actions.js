@@ -21,9 +21,13 @@ describe("Test of action image tooltip direction", function() {
 	});
 
 	it("action image tooltip direction left", function() {
-		// For "winter" image, tooltip_direction is set to "left" in paramDef
-		cy.hoverOverActionImage("winter");
-		cy.verifyTipDirectionForAction("winter", "Winter", "left");
+		// For "fall" image, tooltip_direction is set to "left" in paramDef
+		cy.hoverOverActionImage("fall");
+		cy.verifyTipDirectionForAction(
+			"fall",
+			"This is a long tooltip for action image. Adding this line makes it a multi-line tooltip.",
+			"left"
+		);
 	});
 
 	it("action image tooltip direction right", function() {
@@ -39,9 +43,9 @@ describe("Test of action image tooltip direction", function() {
 	});
 
 	it("action image tooltip direction bottom", function() {
-		// For "fall" image, tooltip_direction is set to "bottom" in paramDef
-		cy.hoverOverActionImage("fall");
-		cy.verifyTipDirectionForAction("fall", "Fall", "bottom");
+		// For "winter" image, tooltip_direction is set to "bottom" in paramDef
+		cy.hoverOverActionImage("winter");
+		cy.verifyTipDirectionForAction("winter", "Winter", "bottom");
 	});
 
 	it("When tooltip_direction is not specified, default direction is bottom", function() {

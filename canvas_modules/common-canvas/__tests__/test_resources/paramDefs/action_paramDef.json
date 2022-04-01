@@ -424,7 +424,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltip_direction": "left"
+          "tooltip_direction": "bottom"
         }
       },
       {
@@ -454,7 +454,7 @@
           "resource_key": "fall"
         },
         "description": {
-          "resource_key": "fall"
+          "resource_key": "This is a long tooltip for action image. Adding this line makes it a multi-line tooltip."
         },
         "control": "image",
         "data": {
@@ -467,7 +467,7 @@
             "height": 60,
             "width": 60
           },
-          "tooltip_direction": "bottom"
+          "tooltip_direction": "left"
         }
       },
       {
