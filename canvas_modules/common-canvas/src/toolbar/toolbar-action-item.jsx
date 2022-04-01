@@ -18,16 +18,79 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Tooltip from "../tooltip/tooltip.jsx";
-import Icon from "../icons/icon.jsx";
+import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
+import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
+import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
+import PaletteClose from "./../../assets/images/palette/palette_close.svg";
+import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
+import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
+
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
+import { StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16,
+	AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
+import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO, TOOLBAR_CUT,
+	TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CREATE_AUTO_COMMENT,
+	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
+	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY, TOOLBAR_OPEN_PALETTE,
+	TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL }
+	from "../common-canvas/constants/canvas-constants.js";
 
 class ToolbarActionItem extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.actionClickHandler = this.actionClickHandler.bind(this);
+	}
+
+	// Returns a default icon, if there is one, for the action passed in. The
+	// icon may be overridden by the iconTypeOverride field if it is provided.
+	// It also may be set to disabled state.
+	getDefaultIcon(actionObj) {
+		const iconType = actionObj.iconTypeOverride ? actionObj.iconTypeOverride : actionObj.action;
+		const disabled = !actionObj.enable;
+
+		switch (iconType) {
+		case (TOOLBAR_STOP):
+			return <StopFilledAlt16 disabled={disabled} />;
+		case (TOOLBAR_RUN):
+			return <Play16 disabled={disabled} />;
+		case (TOOLBAR_UNDO):
+			return <Undo16 disabled={disabled} />;
+		case (TOOLBAR_REDO):
+			return <Redo16 disabled={disabled} />;
+		case (TOOLBAR_CUT):
+			return <Cut16 disabled={disabled} />;
+		case (TOOLBAR_COPY):
+			return <Copy16 disabled={disabled} />;
+		case (TOOLBAR_PASTE):
+			return <Paste16 disabled={disabled} />;
+		case (TOOLBAR_CREATE_AUTO_COMMENT):
+			return <AddComment16 disabled={disabled} />;
+		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
+			return <TrashCan16 disabled={disabled} />;
+		case (TOOLBAR_ZOOM_IN):
+			return <ZoomIn16 disabled={disabled} />;
+		case (TOOLBAR_ZOOM_OUT):
+			return <ZoomOut16 disabled={disabled} />;
+
+		case (TOOLBAR_ZOOM_FIT):
+			return <SVG src={ZoomToFit} disabled={disabled} />;
+		case (TOOLBAR_ARRANGE_HORIZONALLY):
+			return <SVG src={ArrangeVertically} disabled={disabled} />;
+		case (TOOLBAR_ARRANGE_VERTICALLY):
+			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
+		case (TOOLBAR_OPEN_PALETTE):
+			return <SVG src={PaletteOpen} disabled={disabled} />;
+		case (TOOLBAR_CLOSE_PALETTE):
+			return <SVG src={PaletteClose} disabled={disabled} />;
+		case (TOOLBAR_TOGGLE_NOTIFICATION_PANEL):
+			return <SVG src={ToggleNotificationPanel} disabled={disabled} />;
+
+		default:
+			return null;
+		}
 	}
 
 	generateLabel(label, disable, overflow, incLabelWithIcon) {
@@ -49,10 +112,9 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	generateIcon(actionObj) {
-		const iconType = actionObj.iconTypeOverride ? actionObj.iconTypeOverride : actionObj.action;
-		let icon = <Icon type={iconType} disabled={!actionObj.enable} noAddedClasses />;
+		let icon = this.getDefaultIcon(actionObj);
 
-		// Host application provided icon.
+		// Host application provided icon. This will override any default icon.
 		if (actionObj.iconEnabled) {
 			const iconEnabled = actionObj.iconEnabled;
 			const iconDisabled = actionObj.iconDisabled || actionObj.iconEnabled;

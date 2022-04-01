@@ -19,30 +19,21 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import SVG from "react-inlinesvg";
 
-import ArrangeHorizontally from "./../../assets/images/arrange_horizontally.svg";
-import ArrangeVertically from "./../../assets/images/arrange_vertically.svg";
 import Double from "./../../assets/images/double.svg";
 import Integer from "./../../assets/images/integer.svg";
 import StringIcon from "./../../assets/images/string.svg";
-import ToggleNotificationPanel from "./../../assets/images/notification_counter_icon.svg";
-import PaletteClose from "./../../assets/images/palette/palette_close.svg";
-import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
-import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
 import { WarningFilled16, ErrorFilled16, CheckmarkFilled16, InformationFilled16, Information16,
 	ChevronDown16, ChevronUp16, ChevronLeft16, ChevronRight16,
-	OverflowMenuVertical16,
 	AddAlt16,
 	Settings16,
 	Search16,
 	Warning16,
 	Edit16,
-	StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16, AddComment16, TrashCan16,
-	ZoomIn16, ZoomOut16,
 	CircleDash16, RulerAlt16, ListNumbered16, ListBulleted16, Flag16, ChartVennDiagram16,
 	Calendar16, Time16, EventSchedule16 } from "@carbon/icons-react";
 
-import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, CONTEXT_MENU_CARBON_ICONS, TOOLBAR_ACTIONS } from "../common-canvas/constants/canvas-constants";
+import { ERROR, WARNING, INFO, SUCCESS, CANVAS_CARBON_ICONS, CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
 import { CONDITION_MESSAGE_TYPE, CARBON_ICONS, DATA_TYPE } from "../common-properties/constants/constants";
 
 const iconClassName = "properties-icon";
@@ -51,15 +42,9 @@ export default class Icon extends React.Component {
 	constructor() {
 		super();
 		this.canvasIcons = {
-			arrangeHorizontally: ArrangeHorizontally,
-			arrangeVertically: ArrangeVertically,
 			double: Double,
 			integer: Integer,
-			string: StringIcon,
-			toggleNotificationPanel: ToggleNotificationPanel,
-			paletteClose: PaletteClose,
-			paletteOpen: PaletteOpen,
-			zoomToFit: ZoomToFit
+			string: StringIcon
 		};
 	}
 
@@ -97,8 +82,6 @@ export default class Icon extends React.Component {
 		case (CARBON_ICONS.EDIT):
 			return <Edit16 className={className} disabled={this.props.disabled} />;
 
-		case (CANVAS_CARBON_ICONS.OVERFLOWMENU):
-			return <OverflowMenuVertical16 className={className} disabled={this.props.disabled} />;
 		case (CANVAS_CARBON_ICONS.SEARCH):
 			return <Search16 className={className} disabled={this.props.disabled} />;
 		case (CANVAS_CARBON_ICONS.WARNING_UNFILLED):
@@ -106,29 +89,6 @@ export default class Icon extends React.Component {
 
 		case (CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT):
 			return <ChevronRight16 className={className} disabled={this.props.disabled} />;
-
-		case (TOOLBAR_ACTIONS.TOOLBAR_STOP):
-			return <StopFilledAlt16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_RUN):
-			return <Play16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_UNDO):
-			return <Undo16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_REDO):
-			return <Redo16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_CUT):
-			return <Cut16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_COPY):
-			return <Copy16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_PASTE):
-			return <Paste16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_CREATE_AUTO_COMMENT):
-			return <AddComment16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <TrashCan16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_IN):
-			return <ZoomIn16 className={className} disabled={this.props.disabled} />;
-		case (TOOLBAR_ACTIONS.TOOLBAR_ZOOM_OUT):
-			return <ZoomOut16 className={className} disabled={this.props.disabled} />;
 
 		case (CARBON_ICONS.MEASUREMENTS.EMPTY):
 			return <CircleDash16 className={className} disabled={this.props.disabled} />;

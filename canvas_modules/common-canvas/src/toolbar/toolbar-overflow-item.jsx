@@ -17,9 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Icon from "../icons/icon.jsx";
 import { Button } from "carbon-components-react";
-import { CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
+import { OverflowMenuVertical16 } from "@carbon/icons-react";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
@@ -56,7 +55,7 @@ class ToolbarOverflowItem extends React.Component {
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
-								<Icon type={CANVAS_CARBON_ICONS.OVERFLOWMENU} noAddedClasses />
+								<OverflowMenuVertical16 />
 							</div>
 						</div>
 					</Button>
