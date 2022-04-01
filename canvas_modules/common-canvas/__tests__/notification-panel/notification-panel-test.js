@@ -370,39 +370,39 @@ describe("toolbar notification icon state renders correctly", () => {
 		wrapper.update();
 		let notificationIcon = wrapper.find(".toggleNotificationPanel-action");
 		expect(notificationIcon).to.have.length(1);
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.info")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.info")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.success")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.success")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.warning")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.warning")).to.have.length(1);
 
 		canvasController.setNotificationMessages(notificationMessages);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.error")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.error")).to.have.length(1);
 
 		expect(canvasController.getNotificationMessages().length).to.equal(4);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.warning")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.warning")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.success")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.success")).to.have.length(1);
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.info")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.info")).to.have.length(1);
 		canvasController.setNotificationMessages([]);
 		wrapper.update();
 		// TODO need to fix
@@ -441,30 +441,30 @@ describe("notification counter and color updates correctly", () => {
 			canvasController
 		);
 		let notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		let notificationCounter = notificationIcon.find(".toolbar-icon.notificationCounterIcon + .toolbar-text-content");
+		let notificationCounter = notificationIcon.find(".toolbar-item-content.notificationCounterIcon > .toolbar-text-content");
 		expect(notificationCounter.text()).to.equal(" 0 ");
 		canvasController.setNotificationMessages([notificationMessage0]);
 
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		notificationCounter = notificationIcon.find(".toolbar-icon.notificationCounterIcon + .toolbar-text-content");
+		notificationCounter = notificationIcon.find(".toolbar-item-content.notificationCounterIcon > .toolbar-text-content");
 		expect(notificationIcon).to.have.length(1);
 		expect(notificationCounter.text()).to.equal(" 1 ");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.info")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.info")).to.have.length(1);
 		canvasController.setNotificationMessages(Array(9).fill(notificationMessage0));
 
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		notificationCounter = notificationIcon.find(".toolbar-icon.notificationCounterIcon + .toolbar-text-content");
+		notificationCounter = notificationIcon.find(".toolbar-item-content.notificationCounterIcon > .toolbar-text-content");
 		expect(notificationCounter.text()).to.equal(" 9 ");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.info")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.info")).to.have.length(1);
 		canvasController.setNotificationMessages(Array(10).fill(notificationMessage0));
 
 		wrapper.update();
 		notificationIcon = wrapper.find(".toggleNotificationPanel-action");
-		notificationCounter = notificationIcon.find(".toolbar-icon.notificationCounterIcon + .toolbar-text-content");
+		notificationCounter = notificationIcon.find(".toolbar-item-content.notificationCounterIcon > .toolbar-text-content");
 		expect(notificationCounter.text()).to.equal(" 9+ ");
-		expect(notificationIcon.find(".toolbar-icon.notificationCounterIcon.info")).to.have.length(1);
+		expect(notificationIcon.find(".toolbar-item-content.notificationCounterIcon.info")).to.have.length(1);
 	});
 
 	it("notification dot updates to indicate the correct message type", () => {
@@ -486,33 +486,33 @@ describe("notification counter and color updates correctly", () => {
 			canvasController
 		);
 
-		let notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-icon");
+		let notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-item-content");
 		let indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("toolbar-icon notificationCounterIcon");
+		expect(indicatorClasses).to.equal("toolbar-item-content notificationCounterIcon default");
 
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
-		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-icon");
+		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-item-content");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("toolbar-icon notificationCounterIcon info");
+		expect(indicatorClasses).to.equal("toolbar-item-content notificationCounterIcon info default");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1]);
 		wrapper.update();
-		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-icon");
+		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-item-content");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("toolbar-icon notificationCounterIcon success");
+		expect(indicatorClasses).to.equal("toolbar-item-content notificationCounterIcon success default");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2]);
 		wrapper.update();
-		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-icon");
+		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-item-content");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("toolbar-icon notificationCounterIcon warning");
+		expect(indicatorClasses).to.equal("toolbar-item-content notificationCounterIcon warning default");
 
 		canvasController.setNotificationMessages([notificationMessage0, notificationMessage1, notificationMessage2, notificationMessage3]);
 		wrapper.update();
-		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-icon");
+		notificationIcon = wrapper.find(".toggleNotificationPanel-action .toolbar-item-content");
 		indicatorClasses = notificationIcon.prop("className");
-		expect(indicatorClasses).to.equal("toolbar-icon notificationCounterIcon error");
+		expect(indicatorClasses).to.equal("toolbar-item-content notificationCounterIcon error default");
 	});
 });
 
