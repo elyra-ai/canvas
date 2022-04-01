@@ -227,6 +227,8 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
+			hideEditButtonPropertyId: {},
+			hideEditButton: false,
 			tableButtonEnabledPropertyId: {},
 			tableButtonEnabledButtonId: "",
 			tableButtonEnabled: true,
@@ -315,6 +317,9 @@ class App extends React.Component {
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
+		this.setHideEditButton = this.setHideEditButton.bind(this);
+		this.setHideEditButtonDisabled = this.setHideEditButtonDisabled.bind(this);
+		this.setHideEditButtonPropertyId = this.setHideEditButtonPropertyId.bind(this);
 		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
 		this.setTableButtonId = this.setTableButtonId.bind(this);
 		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
@@ -890,6 +895,20 @@ class App extends React.Component {
 	setAddRemoveRows() {
 		if (this.propertiesController) {
 			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+		}
+	}
+
+	setHideEditButtonPropertyId(propertyId) {
+		this.setState({ hideEditButtonPropertyId: propertyId });
+	}
+
+	setHideEditButtonDisabled(disabled) {
+		this.setState({ hideEditButton: disabled });
+	}
+
+	setHideEditButton() {
+		if (this.propertiesController) {
+			this.propertiesController.setHideEditButton(this.state.hideEditButtonPropertyId, this.state.hideEditButton);
 		}
 	}
 
@@ -2564,10 +2583,14 @@ class App extends React.Component {
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
+			hideEditButtonEnabled: this.state.hideEditButton,
 			tableButtonEnabled: this.state.tableButtonEnabled,
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
+			setHideEditButtonEnabled: this.setHideEditButtonDisabled,
+			setHideEditButton: this.setHideEditButton,
+			setHideEditButtonPropertyId: this.setHideEditButtonPropertyId,
 			setTableButtonPropertyId: this.setTableButtonPropertyId,
 			setTableButtonId: this.setTableButtonId,
 			setTableButtonIdEnabled: this.setTableButtonIdEnabled,

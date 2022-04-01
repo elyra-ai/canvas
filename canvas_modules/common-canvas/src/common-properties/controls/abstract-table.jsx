@@ -630,12 +630,14 @@ export default class AbstractTable extends React.Component {
 		const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
-
 		let topRightPanel = <div />;
 		if (customButtons) {
 			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
 		} else if (this.isReadonlyTable()) {
-			topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
+			if (!this.props.hideEditButton) {
+				topRightPanel = this.makeEditButtonPanel(tableState, tableButtonConfig);
+			}
+
 		} else if (this.props.addRemoveRows) {
 			topRightPanel = this.makeAddRemoveButtonPanel(tableState, tableButtonConfig);
 		}
@@ -801,9 +803,11 @@ AbstractTable.propTypes = {
 	value: PropTypes.array, // pass in by redux
 	selectedRows: PropTypes.array, // set by redux
 	addRemoveRows: PropTypes.bool, // set by redux
-	tableButtons: PropTypes.object // set in by redux
+	tableButtons: PropTypes.object, // set in by redux
+	hideEditButton: PropTypes.bool // set by redux
 };
 
 AbstractTable.defaultProps = {
-	addRemoveRows: true
+	addRemoveRows: true,
+	hideEditButton: false,
 };
