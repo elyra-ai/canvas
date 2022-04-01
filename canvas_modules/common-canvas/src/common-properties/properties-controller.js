@@ -1799,7 +1799,7 @@ export default class PropertiesController {
 
 	/**
 	* Set the hideEditButton attribute to 'enabled' for the given propertyId
-	* @param propertyId The unique property identifier
+	* @param propertyId The unique property identifier 
 	* @param enabled boolean value to enable or disable hideditButton
 	*/
 	setHideEditButton(propertyId, enabled) {
