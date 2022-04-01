@@ -128,11 +128,9 @@ class ToolbarActionItem extends React.Component {
 			}
 		}
 
-		const customClassname = actionObj.className ? actionObj.className : "";
-		const iconClassName = "toolbar-icon " + customClassname;
 		if (icon) {
 			return (
-				<div className={iconClassName}>
+				<div className={"toolbar-icon"}>
 					{icon}
 				</div>
 			);
@@ -163,6 +161,7 @@ class ToolbarActionItem extends React.Component {
 
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
+			actionObj.className ? actionObj.className : null,
 			{ "overflow": this.props.overflow, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
