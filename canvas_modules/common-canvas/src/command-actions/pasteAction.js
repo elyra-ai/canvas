@@ -35,6 +35,14 @@ export default class PasteAction extends Action {
 		// with IDs the same as those already on the canvas.
 		this.clones = this.objectModel.cloneObjectsToPaste(
 			data.objects.nodes, data.objects.comments, data.objects.links);
+
+		const { nodes, pipelines } = this.objectModel.extractAddDataPipelines(this.clones.clonedNodes);
+		this.clones.clonedNodes = nodes;
+		this.pipelines = pipelines;
+
+		// Get the IDs of the objects to be selected after they are pasted. We
+		// automatically select pasted objects so they are easy to move by the user.
+		this.selectionIds = this.getSelectionIds(this.clones);
 	}
 
 	// Adjusts the positions of the cloned objects appropriately. If the data
@@ -121,6 +129,25 @@ export default class PasteAction extends Action {
 		}
 	}
 
+	// Return the IDs of the cloned objects to be selected after the
+	// paste is complete.
+	getSelectionIds(clones) {
+		const selectionIds = [];
+
+		clones.clonedNodes.forEach((cn) => {
+			selectionIds.push(cn.id);
+		});
+
+		clones.clonedComments.forEach((cc) => {
+			selectionIds.push(cc.id);
+		});
+
+		if (this.areDetachableLinksInUse) {
+			clones.clonedLinks.forEach((cl) => selectionIds.push(cl.id));
+		}
+		return selectionIds;
+	}
+
 	// Return augmented command object which will be passed to the
 	// client app.
 	getData() {
@@ -132,31 +159,33 @@ export default class PasteAction extends Action {
 
 	// Standard methods
 	do() {
-		const addedObjectIds = [];
-
-		this.clones.clonedNodes.forEach((cn) => {
-			this.apiPipeline.addNode(cn);
-			addedObjectIds.push(cn.id);
+		this.apiPipeline.addPastedObjects({
+			nodesToAdd: this.clones.clonedNodes,
+			commentsToAdd: this.clones.clonedComments,
+			linksToAdd: this.clones.clonedLinks,
+			pipelinesToAdd: this.pipelines,
+			selections: this.selectionIds
 		});
-
-		this.clones.clonedComments.forEach((cc) => {
-			this.apiPipeline.addComment(cc);
-			addedObjectIds.push(cc.id);
-		});
-
-
-		this.apiPipeline.addLinks(this.clones.clonedLinks);
-		if (this.areDetachableLinksInUse) {
-			this.clones.clonedLinks.forEach((cl) => addedObjectIds.push(cl.id));
-		}
-
-		this.objectModel.setSelections(addedObjectIds, this.apiPipeline.pipelineId);
 	}
 
 	undo() {
-		this.apiPipeline.deleteNodes(this.clones.clonedNodes);
-		this.apiPipeline.deleteComments(this.clones.clonedComments);
-		this.apiPipeline.deleteLinks(this.clones.clonedLinks);
+		// External pipelines may have been loaded in the do() function so we
+		// retrieve a full set of pipelines to delete from the object model.
+		const supernodes = CanvasUtils.filterSupernodes(this.clones.clonedNodes);
+		const pipelines = this.objectModel.getDescPipelinesToDelete(supernodes, this.data.pipelineId);
+
+		// We can also retrieve any external pipeline flows that might have been
+		// loaded while executing the do() method.
+		const oldExtPipelineFlows =
+			this.objectModel.getExternalPipelineFlowsForPipelines(pipelines);
+
+		this.apiPipeline.deletePastedObjects({
+			nodesToDelete: this.clones.clonedNodes,
+			commentsToDelete: this.clones.clonedComments,
+			linksToDelete: this.clones.clonedLinks,
+			pipelinesToDelete: pipelines,
+			extPipelineFlowsToDelete: oldExtPipelineFlows
+		});
 	}
 
 	redo() {

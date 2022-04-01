@@ -1090,4 +1090,24 @@ export default class CanvasUtils {
 		});
 		return outLinks;
 	}
+
+	// Returns the color class in the className parameter, if one is found,
+	// otherwise returns null.
+	static getBkgColorClass(className) {
+		if (className === "bkg-col-white-0" ||
+				className === "bkg-col-yellow-20" ||
+				className === "bkg-col-gray-20" ||
+				className === "bkg-col-green-20" ||
+				className === "bkg-col-teal-20" ||
+				className === "bkg-col-cyan-20" ||
+				className === "bkg-col-red-50" ||
+				className === "bkg-col-orange-40" ||
+				className === "bkg-col-gray-50" ||
+				className === "bkg-col-green-50" ||
+				className === "bkg-col-teal-50" ||
+				className === "bkg-col-cyan-50") {
+			return className;
+		}
+		return null;
+	}
 }

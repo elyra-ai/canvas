@@ -41,11 +41,15 @@ export const SET_ADD_REMOVE_ROWS = "SET_ADD_REMOVE_ROWS";
 export const UPDATE_STATIC_ROWS = "UPDATE_STATIC_ROWS";
 export const CLEAR_STATIC_ROWS = "CLEAR_STATIC_ROWS";
 export const SET_TABLE_BUTTON_ENABLED = "SET_TABLE_BUTTON_ENABLED";
+export const SET_HIDE_EDIT_BUTTON = "SET_HIDE_EDIT_BUTTON";
 
 
 /*
  * action creators
  */
+export function setHideEditButton(disableState) {
+	return { type: SET_HIDE_EDIT_BUTTON, info: disableState };
+}
 
 export function setPropertyValues(properties) {
 	return { type: SET_PROPERTY_VALUES, properties };

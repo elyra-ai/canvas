@@ -1798,6 +1798,24 @@ export default class PropertiesController {
 	}
 
 	/**
+	* Set the hideEditButton attribute to 'enabled' for the given propertyId
+	* @param propertyId The unique property identifier
+	* @param enabled boolean value to enable or disable hideditButton
+	*/
+	setHideEditButton(propertyId, enabled) {
+		this.propertiesStore.setHideEditButton(propertyId, enabled);
+	}
+
+	/**
+	* Returns the true if hideEditButton is enabled for the given propertyID
+	* @param propertyId The unique property identifier
+	* @return boolean
+	*/
+	getHideEditButton(propertyId) {
+		return this.propertiesStore.getHideEditButton(propertyId);
+	}
+
+	/**
 	 * Freeze row move buttons for row indexes in given array
 	 * @param propertyId The unique property identifier
 	 * @param rowIndexes Array of row indexes

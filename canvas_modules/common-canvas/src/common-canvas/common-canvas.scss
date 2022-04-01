@@ -200,17 +200,17 @@ $bottom-panel-height: 393px;
 	border-width: 2px;
 }
 
-.toolbar-icon.notificationCounterIcon {
-	&.error > svg > .dot {
+.toolbar-item-content.notificationCounterIcon {
+	&.error > div > svg > .dot {
 		fill: $support-01;
 	}
-	&.warning > svg > .dot {
+	&.warning > div > svg > .dot {
 		fill: $support-03;
 	}
-	&.success > svg > .dot {
+	&.success > div > svg > .dot {
 		fill: $support-02;
 	}
-	&.info > svg > .dot {
+	&.info > div > svg > .dot {
 		fill: $support-04;
 	}
 }
