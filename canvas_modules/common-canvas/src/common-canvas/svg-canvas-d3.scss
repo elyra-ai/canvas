@@ -82,7 +82,7 @@ $node-port-input-arrow-connected-fill-color: transparent;
 $comment-outline-color: $active-light-ui;
 $comment-outline-hover-color: $inverse-hover-ui;
 $comment-fill-color: $white-0;
-$comment-text-color: $text-02;
+$comment-text-color: $gray-100;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -625,9 +625,6 @@ $link-highlight-color: $support-04;
 @mixin comment-color-overrides($background-color) {
 	.d3-comment-rect {
 		fill: $background-color;
-	}
-	.d3-comment-text {
-		color: $gray-100;
 	}
 	.d3-comment-entry {
 		background-color: $background-color;

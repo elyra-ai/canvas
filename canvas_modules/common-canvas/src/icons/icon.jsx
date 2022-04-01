@@ -64,7 +64,7 @@ export default class Icon extends React.Component {
 	}
 
 	getCarbonIcon(type, customClassName) {
-		const className = this.props.noAddedClasses ? null : iconClassName + " " + customClassName;
+		const className = iconClassName + " " + customClassName;
 
 		switch (type) {
 		case (ERROR):
@@ -163,7 +163,7 @@ export default class Icon extends React.Component {
 		if (!icon) {
 			icon = this.getCanvasIcon(this.props.type);
 			if (typeof icon !== "undefined") {
-				const className = this.props.noAddedClasses ? null : classNames("canvas-icon", iconClassName, this.props.className);
+				const className = classNames("canvas-icon", iconClassName, this.props.className);
 				icon = <SVG src={icon} className={className} disabled={this.props.disabled} />;
 			} else {
 				icon = <div />;
@@ -181,6 +181,5 @@ Icon.defaultProps = {
 Icon.propTypes = {
 	type: PropTypes.string.isRequired,
 	className: PropTypes.string,
-	disabled: PropTypes.bool,
-	noAddedClasses: PropTypes.bool
+	disabled: PropTypes.bool
 };
