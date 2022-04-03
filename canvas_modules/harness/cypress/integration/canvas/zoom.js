@@ -93,7 +93,7 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 		cy.verifyCanvasTransform("translate(-1182.853139155291,-473.00452370563005) scale(1)");
 	});
 
-	it("Test ZoomTo function with x,y parameters after zooming out", function() {
+	it.only("Test ZoomTo function with x,y parameters after zooming out", function() {
 		cy.verifyCanvasTransform(undefined);
 		// Zooming the canvas.
 		cy.clickToolbarZoomOut();
@@ -103,7 +103,7 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 		cy.setXPercentOffset(70);
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
-		cy.verifyCanvasTransform("translate(-1019.6531391552912,-437.6545237056301) scale(1)");
+		cy.verifyCanvasTransform("translate(-857.7210355957193,-359.30411245966366) scale(0.9090909090909091)");
 	});
 });
 
