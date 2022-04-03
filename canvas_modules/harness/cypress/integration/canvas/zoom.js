@@ -93,7 +93,7 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 		cy.verifyCanvasTransform("translate(-1182.853139155291,-473.00452370563005) scale(1)");
 	});
 
-	it.only("Test ZoomTo function with x,y parameters after zooming out", function() {
+	it("Test ZoomTo function with x,y parameters after zooming out", function() {
 		cy.verifyCanvasTransform(undefined);
 		// Zooming the canvas.
 		cy.clickToolbarZoomOut();
