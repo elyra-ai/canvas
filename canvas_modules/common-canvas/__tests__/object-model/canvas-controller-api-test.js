@@ -83,26 +83,6 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedZoom2, actualZoom2)).to.be.true;
 	});
 
-	it("should test zoomTo function sets the appropriate zoom object", () => {
-		const config = {};
-		const expectedZoomXY = {
-			x: 0,
-			y: 0,
-			k: 1
-		};
-
-		const canvasController = new CanvasController();
-
-		canvasController.setPipelineFlow(allTypesCanvas);
-		createCommonCanvas(config, canvasController);
-
-		canvasController.zoomTo(expectedZoomXY);
-
-		const actualZoomXY = canvasController.getZoom();
-
-		expect(isEqual(actualZoomXY, expectedZoomXY)).to.be.true;
-	});
-
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint no-undefined: "off" */
 
 describe("Test of zoom operations", function() {
 	beforeEach(() => {
@@ -60,6 +61,49 @@ describe("Test of zoom operations", function() {
 		cy.clickToolbarZoomOut();
 		cy.clickToolbarZoomOut();
 		cy.verifyZoomTransform(200, 90, 0.68);
+	});
+});
+
+describe("should test zoomTo function sets the appropriate zoom object", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("bigCanvas.json");
+		cy.openCanvasAPI("Zoom Canvas To Reveal");
+	});
+
+	it("Test ZoomTo function with x,y parameters", function() {
+		cy.verifyCanvasTransform(undefined);
+		cy.selectNodeFromDropdown("Histogram");
+		cy.setXPercentOffset(25);
+		cy.setYPercentOffset(25);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-1509.2531391552911,-685.1045237056301) scale(1)");
+	});
+
+	it("Test ZoomTo function with x,y parameters after panning the canvas", function() {
+		cy.verifyCanvasTransform(undefined);
+		// Panning the canvas.
+		cy.movecCanvasToPosition("#canvas-div-0", 350, 200);
+		cy.verifyCanvasTransform("translate(350,200) scale(1)");
+		// Test get Zoom to reveal & ZoomTo
+		cy.selectNodeFromDropdown("Histogram");
+		cy.setXPercentOffset(55);
+		cy.setYPercentOffset(55);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-1182.853139155291,-473.00452370563005) scale(1)");
+	});
+
+	it("Test ZoomTo function with x,y parameters after zooming out", function() {
+		cy.verifyCanvasTransform(undefined);
+		// Zooming the canvas.
+		cy.clickToolbarZoomOut();
+		cy.verifyCanvasTransform("translate(49.454545454545496,32.136363636363626) scale(0.9090909090909091)");
+		// Test get Zoom to reveal & ZoomTo
+		cy.selectNodeFromDropdown("Histogram");
+		cy.setXPercentOffset(70);
+		cy.setYPercentOffset(60);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-1019.6531391552912,-437.6545237056301) scale(1)");
 	});
 });
 

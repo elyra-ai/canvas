@@ -1193,6 +1193,12 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 	}
 });
 
+Cypress.Commands.add("verifyCanvasTransform", (movString) => {
+	cy.get("#canvas-div-0 .d3-canvas-group")
+		.invoke("attr", "transform")
+		.should("eq", movString);
+});
+
 Cypress.Commands.add("verifyNotificationCounter", (count) => {
 	cy.get(".toggleNotificationPanel-action .toolbar-text-content").should("have.text", " " + count + " ");
 });
