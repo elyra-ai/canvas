@@ -1,0 +1,10 @@
+{
+  "palette.flyout.search.placeholder": "팔레트 노드 찾기",
+  "palette.flyout.search.noresults": "결과를 찾을 수 없습니다.",
+  "palette.flyout.search.adjustsearch": "찾고 있는 내용을 찾기 위해 검색을 조정하십시오.",
+  "palette.flyout.search.resultsrestricted": "결과는 10개의 노드로 제한됩니다. 검색을 세분화하십시오.",
+  "palette.flyout.search.more": "자세히 표시",
+  "palette.flyout.search.less": "간략히 보기",
+  "palette.flyout.label": "플라이아웃 팔레트",
+  "palette.dialog.label": "대화 상자 팔레트"
+}
