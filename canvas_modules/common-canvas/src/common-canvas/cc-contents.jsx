@@ -393,6 +393,7 @@ class CanvasContents extends React.Component {
 		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
 			this.svgCanvasD3.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
+			this.props.canvasController.nodeTemplateDragEnd();
 
 		} else {
 			let dropData = this.getDNDJson(event);
@@ -423,7 +424,7 @@ class CanvasContents extends React.Component {
 			this.dragY = event.clientY;
 			const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 			if (nodeTemplate) {
-				this.svgCanvasD3.nodeTemplateDraggedOver(nodeTemplate, event.clientX, event.clientY);
+				this.svgCanvasD3.nodeTemplateDragOver(nodeTemplate, event.clientX, event.clientY);
 			}
 		}
 	}

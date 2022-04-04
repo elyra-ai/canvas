@@ -926,7 +926,7 @@ export default class SVGCanvasRenderer {
 	// Highlights any data link, that an 'insertable' nodeTemplate from the
 	// palette, is dragged over. The x and y passed in are in page coordinates
 	// based on the top left corner of the page.
-	nodeTemplateDraggedOver(nodeTemplate, x, y) {
+	nodeTemplateDragOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
 			// Set highlighting when there is no link because this will turn

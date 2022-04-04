@@ -1588,20 +1588,19 @@ export default class CanvasController {
 		return null;
 	}
 
-	nodeTemplateDragStart() {
+	nodeTemplateDragStart(nodeTemplate) {
+		CanvasController.dragNodeTemplate = nodeTemplate;
+
 		if (this.canvasContents) {
 			this.getSVGCanvasD3().nodeTemplateDragStart(CanvasController.dragNodeTemplate);
 		}
 	}
 
 	nodeTemplateDragEnd() {
-		if (this.canvasContents) {
+		if (this.canvasContents && CanvasController.dragNodeTemplate) {
 			this.getSVGCanvasD3().nodeTemplateDragEnd(CanvasController.dragNodeTemplate);
 		}
-	}
-
-	setDragNodeTemplate(nodeTemplate) {
-		CanvasController.dragNodeTemplate = nodeTemplate;
+		CanvasController.dragNodeTemplate = null;
 	}
 
 	getDragNodeTemplate() {
