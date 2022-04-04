@@ -1588,6 +1588,18 @@ export default class CanvasController {
 		return null;
 	}
 
+	nodeTemplateDragStart() {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().nodeTemplateDragStart(CanvasController.dragNodeTemplate);
+		}
+	}
+
+	nodeTemplateDragEnd() {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().nodeTemplateDragEnd(CanvasController.dragNodeTemplate);
+		}
+	}
+
 	setDragNodeTemplate(nodeTemplate) {
 		CanvasController.dragNodeTemplate = nodeTemplate;
 	}

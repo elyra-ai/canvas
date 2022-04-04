@@ -36,6 +36,7 @@ class PaletteDialogContentGridNode extends React.Component {
 		this.ghostData = null;
 
 		this.onDragStart = this.onDragStart.bind(this);
+		this.onDragEnd = this.onDragEnd.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -56,6 +57,7 @@ class PaletteDialogContentGridNode extends React.Component {
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
 		this.props.canvasController.setDragNodeTemplate(this.props.nodeTemplate);
+		this.props.canvasController.nodeTemplateDragStart();
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -64,6 +66,10 @@ class PaletteDialogContentGridNode extends React.Component {
 		if (this.ghostData) {
 			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.centerX, this.ghostData.centerY);
 		}
+	}
+
+	onDragEnd() {
+		this.props.canvasController.nodeTemplateDragEnd();
 	}
 
 	onDoubleClick() {
@@ -134,6 +140,7 @@ class PaletteDialogContentGridNode extends React.Component {
 				onMouseLeave={this.onMouseLeave}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
+				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 				className="palette-dialog-grid-node-outer"
 			>

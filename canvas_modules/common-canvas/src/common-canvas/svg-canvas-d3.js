@@ -101,8 +101,16 @@ export default class SVGCanvasD3 {
 		return positon;
 	}
 
+	nodeTemplateDragStart(nodeTemplate) {
+		this.renderer.nodeTemplateDragStart(nodeTemplate);
+	}
+
 	nodeTemplateDraggedOver(nodeTemplate, x, y) {
 		this.renderer.nodeTemplateDraggedOver(nodeTemplate, x, y);
+	}
+
+	nodeTemplateDragEnd(nodeTemplate) {
+		this.renderer.nodeTemplateDragEnd(nodeTemplate);
 	}
 
 	nodeTemplateDropped(nodeTemplate, x, y) {
