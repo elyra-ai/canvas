@@ -109,7 +109,7 @@ Cypress.Commands.add("setCanvasConfig", (config) => {
 	});
 });
 
-Cypress.Commands.add("selectNodeForDecoration", (nodeName) => {
+Cypress.Commands.add("selectNodeFromDropdown", (nodeName) => {
 	cy.dropdownSelect("#harness-sidepanel-api-nodeSelection", nodeName);
 });
 
@@ -142,6 +142,18 @@ Cypress.Commands.add("setCategoryId", (categoryId) => {
 	cy.get("#harness-categoryId")
 		.clear()
 		.type(categoryId);
+});
+
+Cypress.Commands.add("setXPercentOffset", (xOffSet) => {
+	cy.get("#harness-zoom-canvas-x-position")
+		.clear()
+		.type(xOffSet);
+});
+
+Cypress.Commands.add("setYPercentOffset", (yOffSet) => {
+	cy.get("#harness-zoom-canvas-y-position")
+		.clear()
+		.type(yOffSet);
 });
 
 Cypress.Commands.add("setCategoryName", (categoryName) => {

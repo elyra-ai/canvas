@@ -23,7 +23,7 @@ import NotificationPanel from "../../src/notification-panel/notification-panel.j
 import CanvasBottomPanel from "../../src/common-canvas/cc-bottom-panel.jsx";
 import CommonCanvasRightFlyout from "../../src/common-canvas/cc-right-flyout.jsx";
 import CommonCanvasStateTag from "../../src/common-canvas/cc-state-tag.jsx";
-import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
+import { createCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 
@@ -232,34 +232,3 @@ describe("CommonCanvas renders correctly", () => {
 		expect(editActionHandler.called).to.be.false;
 	});
 });
-
-function createCommonCanvas(config, canvasController, canvasParams, toolbarConfig, notificationConfig, handlers) {
-	canvasController.getObjectModel().setPipelineFlowPalette({});
-	const contextMenuHandler = sinon.spy();
-	const beforeEditActionHandler = handlers && handlers.beforeEditActionHandler ? handlers.beforeEditActionHandler : null;
-	const editActionHandler = handlers && handlers.editActionHandler ? handlers.editActionHandler : sinon.spy();
-	const clickActionHandler = sinon.spy();
-	const decorationActionHandler = sinon.spy();
-	const selectionChangeHandler = sinon.spy();
-	const tipHandler = sinon.spy();
-	const contextMenuConfig = null;
-	const canvasParameters = canvasParams || {};
-	const wrapper = createIntlCommonCanvas(
-		config,
-		contextMenuHandler,
-		beforeEditActionHandler,
-		editActionHandler,
-		clickActionHandler,
-		decorationActionHandler,
-		selectionChangeHandler,
-		tipHandler,
-		canvasParameters.showBottomPanel,
-		canvasParameters.showRightFlyout,
-		toolbarConfig,
-		notificationConfig,
-		contextMenuConfig,
-		canvasController
-	);
-
-	return wrapper;
-}
