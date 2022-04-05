@@ -9,21 +9,9 @@
     ],
     "checkboxset_null": null,
     "error": false,
-    "checkbox_error": [
-      "apple"
-    ],
     "warning": false,
-    "checkbox_warning": [
-      "orange"
-    ],
     "disable": true,
-    "checkbox_disabled": [
-      "pear"
-    ],
     "hide": true,
-    "checkbox_hidden": [
-      "pear"
-    ],
     "disable_and_hide": false,
     "checkboxset_disable_and_hide": [
       "pear"

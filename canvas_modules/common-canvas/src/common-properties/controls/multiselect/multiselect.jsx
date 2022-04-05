@@ -72,7 +72,7 @@ class MultiSelectControl extends React.Component {
 		const selectedOptions = [];
 		if (values) {
 			values.forEach((value) => selectedOptions.push(options.find(function(option) {
-				return option.value === value;
+				return option.id === value;
 			})));
 		}
 		return selectedOptions;
@@ -82,7 +82,7 @@ class MultiSelectControl extends React.Component {
 		const options = [];
 		for (let j = 0; j < this.props.controlOpts.values.length; j++) {
 			options.push({
-				value: this.props.controlOpts.values[j],
+				id: this.props.controlOpts.values[j],
 				label: this.props.controlOpts.valueLabels[j]
 			});
 		}
@@ -110,7 +110,7 @@ class MultiSelectControl extends React.Component {
 	handleOnChange(evt) {
 		const controlValues = [];
 		for (let i = 0; i < evt.selectedItems.length; i++) {
-			controlValues.push(evt.selectedItems[i].value);
+			controlValues.push(evt.selectedItems[i].id);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
 	}
@@ -163,7 +163,7 @@ class MultiSelectControl extends React.Component {
 				disabled={this.props.state === STATES.DISABLED}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				items={multiSelectDropdown.options}
-				initialSelectedItems={multiSelectDropdown.selectedOptions}
+				selectedItems={multiSelectDropdown.selectedOptions}
 				onChange={this.handleOnChange}
 				label={label}
 				titleText={this.props.tableControl ? null : this.props.controlItem}

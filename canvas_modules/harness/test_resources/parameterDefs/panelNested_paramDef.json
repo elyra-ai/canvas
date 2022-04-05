@@ -3,7 +3,6 @@
     "title": "Nested Panels"
   },
   "current_parameters": {
-    "number": 11,
     "field1_panel": "age",
     "field2_panel": "BP",
     "selectcolumn": "",
@@ -45,11 +44,6 @@
     "text_field": ""
   },
   "parameters": [
-    {
-      "id": "number",
-      "type": "double",
-      "required": true
-    },
     {
       "id": "field1_panel",
       "type": "string",
@@ -195,15 +189,6 @@
       "default": "Panels"
     },
     "parameter_info": [
-      {
-        "parameter_ref": "number",
-        "label": {
-          "default": "number"
-        },
-        "description": {
-          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
-        }
-      },
       {
         "parameter_ref": "field1_panel",
         "label": {
