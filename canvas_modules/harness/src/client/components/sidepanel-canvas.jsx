@@ -1380,33 +1380,17 @@ export default class SidePanelForms extends React.Component {
 				<div style={disabledStyle}>
 					{canvasInput}
 					{divider}
+					<div className="harness-side-panel-header">Palette</div>
+					{divider}
 					{paletteInput}
-					{divider}
-					{nodeFormatType}
-					{divider}
-					{linkType}
-					{divider}
-					{linkDirection}
-					{divider}
-					{interactionType}
-					{divider}
-					{snapToGrid}
 					{divider}
 					{paletteLayout}
 					{divider}
-					{toolbarLayout}
-					{divider}
-					{toolbarType}
-					{divider}
-					{enableLinkSelection}
+					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}
-					{enableSingleOutputPortDisplay}
-					{divider}
-					{displayFullLabelOnHover}
-					{divider}
-					<div className="harness-side-panel-header">Links</div>
+					{nodeFormatType}
 					{divider}
 					{enableInsertNodeDroppedOnLink}
 					{divider}
@@ -1414,11 +1398,25 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableHighlightUnavailableNodes}
 					{divider}
+					{enableSingleOutputPortDisplay}
+					{divider}
+					{displayFullLabelOnHover}
+					{divider}
+					<div className="harness-side-panel-header">Supernodes</div>
+					{divider}
+					{enableMoveNodesOnSupernodeResize}
+					{divider}
+					<div className="harness-side-panel-header">Links</div>
+					{divider}
+					{linkType}
+					{divider}
+					{linkDirection}
+					{divider}
+					{enableLinkSelection}
+					{divider}
 					{enableLinkReplaceOnNewConnection}
 					{divider}
 					{enableAssocLinkCreation}
-					{divider}
-					{enableAutoLinkOnlyFromSelNodes}
 					{divider}
 					{assocLinkType}
 					{divider}
@@ -1432,23 +1430,11 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableDragWithoutSelect}
 					{divider}
-					<div className="harness-side-panel-header">Supernodes</div>
+					<div className="harness-side-panel-header">Toolbar</div>
 					{divider}
-					{enableMoveNodesOnSupernodeResize}
+					{toolbarLayout}
 					{divider}
-					<div className="harness-side-panel-header">Canvas Content</div>
-					{divider}
-					{stateTag}
-					{divider}
-					{enableDropZoneOnExternalDrag}
-					{divider}
-					{enableDisplayCustomizedDropZoneContent}
-					{divider}
-					{enableDisplayCustomizedEmptyCanvasContent}
-					{divider}
-					{displayBoudingRectangles}
-					{divider}
-					{enableCanvasUnderlay}
+					{toolbarType}
 					{divider}
 					<div className="harness-side-panel-header">Right Flyout</div>
 					{divider}
@@ -1468,6 +1454,24 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{enableCreateSupernodeNonContiguous}
 					{divider}
+					<div className="harness-side-panel-header">Canvas Content</div>
+					{divider}
+					{interactionType}
+					{divider}
+					{snapToGrid}
+					{divider}
+					{stateTag}
+					{divider}
+					{enableDropZoneOnExternalDrag}
+					{divider}
+					{enableDisplayCustomizedDropZoneContent}
+					{divider}
+					{enableDisplayCustomizedEmptyCanvasContent}
+					{divider}
+					{displayBoudingRectangles}
+					{divider}
+					{enableCanvasUnderlay}
+					{divider}
 					<div className="harness-side-panel-header">Operational</div>
 					{divider}
 					{enableEditingActions}
@@ -1484,9 +1488,15 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					{tipConfig}
 					{divider}
+					<div className="harness-side-panel-header">Draggable node</div>
+					{divider}
 					{nodeDraggable}
 					{divider}
+					<div className="harness-side-panel-header">Notifications</div>
+					{divider}
 					{configureNotificationCenter}
+					{divider}
+					<div className="harness-side-panel-header">Extra Canvas</div>
 					{divider}
 					{extraCanvas}
 					{canvasInput2}
