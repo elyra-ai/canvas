@@ -2163,7 +2163,7 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Performs the dragging action for canvas objects (nods and comments).
+	// Performs the dragging action for canvas objects (nodes and comments).
 	dragObjectsAction(d3Event) {
 		this.dragOffsetX += d3Event.dx;
 		this.dragOffsetY += d3Event.dy;
