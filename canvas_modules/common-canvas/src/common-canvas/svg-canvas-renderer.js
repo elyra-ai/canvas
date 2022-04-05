@@ -1122,7 +1122,7 @@ export default class SVGCanvasRenderer {
 	transformMousePosForNode(x, y) {
 		const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
 
-		// Offset mousePos so new node appers in center of mouse location.
+		// Offset mousePos so new node appears in center of mouse location.
 		const ghost = this.getGhostDimensions();
 		mousePos.x -= ghost.width / 2;
 		mousePos.y -= ghost.height / 2;
@@ -2514,15 +2514,10 @@ export default class SVGCanvasRenderer {
 	updateNodes(joinedNodeGrps) {
 		this.logger.logStartTimer("updateNodes");
 
-		this.logger.logStartTimer("d3-node-sizing");
-
 		// Node Sizing Area
 		joinedNodeGrps.selectChildren(".d3-node-sizing")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
-
-		this.logger.logEndTimer("d3-node-sizing");
-		this.logger.logStartTimer("d3-node-selection-highlight");
 
 		// Node Selection Highlighting Outline.
 		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
@@ -2531,17 +2526,11 @@ export default class SVGCanvasRenderer {
 			.attr("data-selected", (d) => (this.objectModel.isSelected(d.id, this.activePipeline.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-		this.logger.logEndTimer("d3-node-selection-highlight");
-		this.logger.logStartTimer("d3-node-body-outline");
-
 		// Node Body
 		joinedNodeGrps.selectChildren(".d3-node-body-outline")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
-
-		this.logger.logEndTimer("d3-node-body-outline");
-		this.logger.logStartTimer("d3-node-image");
 
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
@@ -2552,9 +2541,6 @@ export default class SVGCanvasRenderer {
 			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
-
-		this.logger.logEndTimer("d3-node-image");
-		this.logger.logStartTimer("d3-foreign-object");
 
 		// Node Label
 		joinedNodeGrps.selectChildren(".d3-foreign-object")
@@ -2570,22 +2556,14 @@ export default class SVGCanvasRenderer {
 			.select("span")
 			.html((d) => escapeText(d.label));
 
-		this.logger.logEndTimer("d3-foreign-object");
-		this.logger.logStartTimer("d3-node-ellipsis-group");
-
 		// Node Ellipsis Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
-
-		this.logger.logEndTimer("d3-node-ellipsis-group");
-		this.logger.logStartTimer("d3-node-super-expand-icon-group");
 
 		// Node (Supernode) Expansion Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
-		this.logger.logEndTimer("d3-node-super-expand-icon-group");
-		this.logger.logStartTimer("each");
 		// Ports display; Supernode sub-flow display; Error marker display; and
 		// Decoration display.
 		joinedNodeGrps.each((d, index, grps) => {
@@ -2606,7 +2584,6 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
-		this.logger.logEndTimer("each");
 		this.logger.logEndTimer("updateNodes");
 	}
 
@@ -6725,7 +6702,7 @@ export default class SVGCanvasRenderer {
 			str += " regionSelect = true";
 		}
 		if (str === "Flags:") {
-			str += " None set to true";
+			str += " None";
 		}
 		return str;
 	}
