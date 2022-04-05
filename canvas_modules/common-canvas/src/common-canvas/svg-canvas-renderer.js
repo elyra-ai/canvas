@@ -17,6 +17,7 @@
 /* eslint no-invalid-this: "off" */
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
+/* eslint max-depth: "off" */
 
 // Import just the D3 modules that are needed and combine them as the 'd3' object.
 import * as d3Drag from "d3-drag";
@@ -910,10 +911,22 @@ export default class SVGCanvasRenderer {
 		};
 	}
 
+	nodeTemplateDragStart(nodeTemplate) {
+		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
+			this.setDataLinkSelectionAreaWider(true);
+		}
+	}
+
+	nodeTemplateDragEnd(nodeTemplate) {
+		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
+			this.setDataLinkSelectionAreaWider(false);
+		}
+	}
+
 	// Highlights any data link, that an 'insertable' nodeTemplate from the
 	// palette, is dragged over. The x and y passed in are in page coordinates
 	// based on the top left corner of the page.
-	nodeTemplateDraggedOver(nodeTemplate, x, y) {
+	nodeTemplateDragOver(nodeTemplate, x, y) {
 		if (this.isNodeTemplateInsertableIntoLink(nodeTemplate)) {
 			const link = this.getLinkAtMousePos(x, y);
 			// Set highlighting when there is no link because this will turn
@@ -2097,6 +2110,7 @@ export default class SVGCanvasRenderer {
 			// that, when it is dragged over a link line, the highlightd line can be seen OK.
 			if (this.isExistingNodeInsertableIntoLink()) {
 				this.setNodeTranslucentState(this.dragObjects[0].id, true);
+				this.setDataLinkSelectionAreaWider(true);
 			}
 
 			// If we are dragging an 'attachable' node, set it to be translucent so
@@ -2242,16 +2256,18 @@ export default class SVGCanvasRenderer {
 						dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 					}
 
-					if (this.isExistingNodeInsertableIntoLink() &&
-							this.dragOverLink) {
-						this.canvasController.editActionHandler({
-							editType: "insertNodeIntoLink",
-							editSource: "canvas",
-							node: this.dragObjects[0],
-							link: this.dragOverLink,
-							offsetX: dragFinalOffset.x,
-							offsetY: dragFinalOffset.y,
-							pipelineId: this.activePipeline.id });
+					if (this.isExistingNodeInsertableIntoLink()) {
+						this.setDataLinkSelectionAreaWider(false);
+						if (this.dragOverLink) {
+							this.canvasController.editActionHandler({
+								editType: "insertNodeIntoLink",
+								editSource: "canvas",
+								node: this.dragObjects[0],
+								link: this.dragOverLink,
+								offsetX: dragFinalOffset.x,
+								offsetY: dragFinalOffset.y,
+								pipelineId: this.activePipeline.id });
+						}
 					} else if (this.isExistingNodeAttachableToDetachedLinks() &&
 											this.dragOverDetachedLinks.length > 0) {
 						this.canvasController.editActionHandler({
@@ -4398,18 +4414,9 @@ export default class SVGCanvasRenderer {
 	// Returns a link, if one can be found, at the position indicated by x and y
 	// coordinates.
 	getLinkAtMousePos(x, y) {
-		const element = this.getLinkElementAtMousePos(x, y);
+		const element = this.getElementWithClassAtPosition(x, y, "d3-data-link");
 		const link = this.getNodeLinkForElement(element);
 		return link;
-	}
-
-	// Returns a link DOM element, if one can be found, at the
-	// position indicated by x and y coordinates.
-	getLinkElementAtMousePos(x, y) {
-		this.setDataLinkSelectionAreaWider(true);
-		const element = this.getElementWithClassAtPosition(x, y, "d3-data-link");
-		this.setDataLinkSelectionAreaWider(false);
-		return element;
 	}
 
 	// Returns the node link object from the canvasInfo corresponding to the
@@ -4428,6 +4435,10 @@ export default class SVGCanvasRenderer {
 		return null;
 	}
 
+	// Switches the link selection area to be wider (when state is true) and
+	// regular size (when state is false).  The wider width assists detection
+	// of a node being dragged over the link - for when the 'insert node into link'
+	// feature is active.
 	setDataLinkSelectionAreaWider(state) {
 		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
