@@ -70,6 +70,7 @@ export default class PropertiesController {
 		this.expressionRecentlyUsed = [];
 		this.expressionFieldsRecentlyUsed = [];
 		this.selectionListeners = {};
+		this.tooltipLinks = [];
 	}
 
 	getStore() {
@@ -115,6 +116,16 @@ export default class PropertiesController {
 
 	getLight() {
 		return this.light;
+	}
+
+	setTooltipLinks(tooltipLinks) {
+		this.tooltipLinks = tooltipLinks;
+	}
+
+	// Get the tooltipLink for given propertyId
+	getTooltipLink(propertyId) {
+		const tooltipLink = this.tooltipLinks.find((link) => isEqual(link.propertyId, propertyId));
+		return tooltipLink;
 	}
 
 	setPropertiesConfig(config) {

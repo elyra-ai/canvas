@@ -20,6 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
+import { Link } from "carbon-components-react";
 
 class ToolTip extends React.Component {
 	constructor(props) {
@@ -30,6 +31,7 @@ class ToolTip extends React.Component {
 
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.tooltipLinkOnClick = this.tooltipLinkOnClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -325,6 +327,12 @@ class ToolTip extends React.Component {
 		}
 	}
 
+	tooltipLinkOnClick() {
+		if (this.props.link.url) {
+			window.open(this.props.link.url, "_blank", "noopener");
+		}
+	}
+
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
@@ -336,7 +344,13 @@ class ToolTip extends React.Component {
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
 			const onFocus = () => this.showTooltipWithDelay();
-			const onBlur = () => this.setTooltipVisible(false);
+			const onBlur = (evt) => {
+				// Keep tooltip visible when clicked on a link.
+				// Since link is an anchor tag without "href" attribute, it has relatedTarget=null
+				if (evt.relatedTarget !== null) {
+					this.setTooltipVisible(false);
+				}
+			};
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
@@ -374,6 +388,16 @@ class ToolTip extends React.Component {
 			tipClass += " " + this.props.className;
 		}
 
+		const link = (typeof this.props.link === "object" && this.props.link.text)
+			? (<Link
+				className="tooltip-link"
+				data-id="link"
+				onClick={this.tooltipLinkOnClick}
+			>
+				{this.props.link.text}
+			</Link>)
+			: null;
+
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
@@ -384,6 +408,7 @@ class ToolTip extends React.Component {
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
 						</svg>
 						{tooltipContent}
+						{link}
 					</div>
 				</Portal>
 			</div>
@@ -393,6 +418,7 @@ class ToolTip extends React.Component {
 
 ToolTip.propTypes = {
 	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+	link: PropTypes.object,
 	direction: PropTypes.oneOf(["left", "right", "top", "bottom"]),
 	children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	targetObj: PropTypes.object,

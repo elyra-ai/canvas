@@ -384,6 +384,7 @@ class App extends React.Component {
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -1396,6 +1397,15 @@ class App extends React.Component {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
 
+	// To show link in tooltip for given propertyIds
+	tooltipLinkHandler() {
+		const tooltipLinks = [
+			{ propertyId: { name: "number" }, text: "Learn more", url: "https://www.google.com/" },
+			{ propertyId: { name: "weather" }, text: "More info", url: "https://w3.ibm.com/" }
+		];
+		return tooltipLinks;
+	}
+
 	contextMenuHandler(source, defaultMenu) {
 		let defMenu = defaultMenu;
 		// Add custom menu items at proper positions: open, preview & execute
@@ -1904,7 +1914,8 @@ class App extends React.Component {
 			buttonHandler: this.buttonHandler,
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
-			propertiesActionLabelHandler: this.propertiesActionLabelHandler
+			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
+			tooltipLinkHandler: this.tooltipLinkHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;
