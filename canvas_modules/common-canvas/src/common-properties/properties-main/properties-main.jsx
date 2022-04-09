@@ -51,10 +51,6 @@ class PropertiesMain extends React.Component {
 		if (this.props.propertiesInfo.initialEditorSize) {
 			this.propertiesController.setEditorSize(this.props.propertiesInfo.initialEditorSize);
 		}
-		// Set tooltip links
-		if (props.callbacks.tooltipLinkHandler) {
-			this.propertiesController.setTooltipLinks(props.callbacks.tooltipLinkHandler());
-		}
 		this.propertiesController.setCustomControls(props.customControls);
 		this.propertiesController.setConditionOps(props.customConditionOps);
 		this.propertiesController.setLight(props.light);
@@ -67,7 +63,8 @@ class PropertiesMain extends React.Component {
 			buttonHandler: props.callbacks.buttonHandler,
 			buttonIconHandler: props.callbacks.buttonIconHandler,
 			validationHandler: props.callbacks.validationHandler,
-			titleChangeHandler: props.callbacks.titleChangeHandler
+			titleChangeHandler: props.callbacks.titleChangeHandler,
+			tooltipLinkHandler: props.callbacks.tooltipLinkHandler
 		});
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};

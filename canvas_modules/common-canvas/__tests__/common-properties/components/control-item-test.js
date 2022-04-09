@@ -20,6 +20,8 @@ import Controller from "../../../src/common-properties/properties-controller";
 import { expect } from "chai";
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { ControlType } from "../../../src/common-properties/constants/form-constants";
+import sinon from "sinon";
+import { isEqual } from "lodash";
 
 const controller = new Controller();
 const controlObj = <div className="dummy_control">"Dummy control"</div>;
@@ -30,7 +32,13 @@ const control = {
 		text: "Control Label"
 	},
 	description: {
-		text: "Control Description"
+		text: "Control Description",
+		link: {
+			id: "link-id",
+			data: {
+				something: "sampleData"
+			}
+		}
 	}
 };
 
@@ -39,6 +47,17 @@ const propertyId = {
 };
 
 const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN];
+
+const tooltipLinkHandlerFunction = function(propId, linkId, data) {
+	if (linkId && isEqual(propId, propertyId)) {
+		return { url: "https://www.google.com/", label: "More info" };
+	}
+	return {};
+};
+const tooltipLinkHandler = sinon.spy(tooltipLinkHandlerFunction);
+controller.setHandlers({
+	tooltipLinkHandler: tooltipLinkHandler
+});
 
 describe("control-item renders correctly", () => {
 
@@ -107,6 +126,87 @@ describe("control-item renders correctly", () => {
 		expect(tooltip.find("svg.canvas-state-icon-information-hollow")).to.have.length(1);
 		// tooltip text
 		expect(tooltip.find("div.common-canvas-tooltip span").text()).to.equal(control.description.text);
+	});
+
+	it("should create a link in the tooltip", () => {
+		const wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={control}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				state={"enabled"}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		expect(wrapper.find("label.properties-control-label").text()).to.equal(control.label.text);
+		const tooltipTrigger = wrapper.find("div.tooltip-trigger");
+		tooltipTrigger.simulate("click");
+		expect(tooltipLinkHandler.calledOnce).to.equal(true);
+		expect(tooltipLinkHandler.calledWith(propertyId, control.description.link.id, control.description.link.data)).to.be.true;
+
+		const tooltip = wrapper.find("div.common-canvas-tooltip");
+		// verify text in tooltip
+		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		// verify link in tooltip
+		expect(tooltip.find("Link")).to.have.length(1);
+		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(propertyId, control.description.link.id, control.description.link.data).label);
+	});
+
+	it("should not create a link when tooltipLinkHandler returns an empty/invalid object", () => {
+		tooltipLinkHandler.resetHistory();
+		const dummyPropertyId = { name: "some-random-id" };
+		const wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={control}
+				propertyId={dummyPropertyId}
+				controller={controller}
+				controlObj={controlObj}
+				state={"enabled"}
+				accessibleControls={accessibleControls}
+			/>
+		);
+
+		const tooltipTrigger = wrapper.find("div.tooltip-trigger");
+		tooltipTrigger.simulate("click");
+		expect(tooltipLinkHandler.calledOnce).to.equal(true);
+		expect(tooltipLinkHandler.calledWith(dummyPropertyId, control.description.link.id, control.description.link.data)).to.be.true;
+
+		// tooltipLinkHandler returned an empty object because we passed dummyPropertyId
+		// verify link does not exist in tooltip
+		const tooltip = wrapper.find("div.common-canvas-tooltip");
+		expect(tooltip.find("Link")).to.have.length(0);
+	});
+
+	it("should not call tooltipLinkHandler when description doesn't contain link object", () => {
+		tooltipLinkHandler.resetHistory();
+		// Remove link object from description
+		control.description = {
+			text: "This description doesn't have link object"
+		};
+		const wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={control}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				state={"enabled"}
+				accessibleControls={accessibleControls}
+			/>
+		);
+
+		const tooltipTrigger = wrapper.find("div.tooltip-trigger");
+		tooltipTrigger.simulate("click");
+		expect(tooltipLinkHandler.calledOnce).to.equal(false);
+
+		const tooltip = wrapper.find("div.common-canvas-tooltip");
+		// verify text in tooltip
+		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		// verify link does not exist in tooltip
+		expect(tooltip.find("Link")).to.have.length(0);
 	});
 
 	it("should hide label when labelVisible=false", () => {

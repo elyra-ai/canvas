@@ -30,6 +30,7 @@ class ToolTip extends React.Component {
 		};
 
 		this.pendingTooltip = null;
+		this.linkInformation = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 		this.tooltipLinkOnClick = this.tooltipLinkOnClick.bind(this);
 	}
@@ -328,8 +329,8 @@ class ToolTip extends React.Component {
 	}
 
 	tooltipLinkOnClick() {
-		if (this.props.link.url) {
-			window.open(this.props.link.url, "_blank", "noopener");
+		if (this.linkInformation.url) {
+			window.open(this.linkInformation.url, "_blank", "noopener");
 		}
 	}
 
@@ -388,15 +389,24 @@ class ToolTip extends React.Component {
 			tipClass += " " + this.props.className;
 		}
 
-		const link = (typeof this.props.link === "object" && this.props.link.text)
-			? (<Link
-				className="tooltip-link"
-				data-id="link"
-				onClick={this.tooltipLinkOnClick}
-			>
-				{this.props.link.text}
-			</Link>)
-			: null;
+		let link = null;
+		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link && this.props.propertyId) {
+			this.linkInformation = this.props.tooltipLinkHandler(
+				this.props.propertyId,
+				this.props.link.id,
+				this.props.link.data
+			);
+
+			if (typeof this.linkInformation === "object" && this.linkInformation.label && this.linkInformation.url) {
+				link = (<Link
+					className="tooltip-link"
+					data-id="link"
+					onClick={this.tooltipLinkOnClick}
+				>
+					{this.linkInformation.label}
+				</Link>);
+			}
+		}
 
 		return (
 			<div className="tooltip-container">
@@ -419,6 +429,8 @@ class ToolTip extends React.Component {
 ToolTip.propTypes = {
 	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
 	link: PropTypes.object,
+	tooltipLinkHandler: PropTypes.func,
+	propertyId: PropTypes.object,
 	direction: PropTypes.oneOf(["left", "right", "top", "bottom"]),
 	children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	targetObj: PropTypes.object,

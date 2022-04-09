@@ -24,7 +24,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { forIn, get, has, isEmpty } from "lodash";
+import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -1398,12 +1398,13 @@ class App extends React.Component {
 	}
 
 	// To show link in tooltip for given propertyIds
-	tooltipLinkHandler() {
-		const tooltipLinks = [
-			{ propertyId: { name: "number" }, text: "Learn more", url: "https://www.google.com/" },
-			{ propertyId: { name: "weather" }, text: "More info", url: "https://w3.ibm.com/" }
-		];
-		return tooltipLinks;
+	tooltipLinkHandler(propertyId, linkId, data) {
+		if (linkId && isEqual(propertyId, { name: "number" })) {
+			return { url: "https://www.google.com/", label: "More info" };
+		} else if (linkId && isEqual(propertyId, { name: "weather" })) {
+			return { url: "https://w3.ibm.com/#/", label: "Learn more" };
+		}
+		return {};
 	}
 
 	contextMenuHandler(source, defaultMenu) {
