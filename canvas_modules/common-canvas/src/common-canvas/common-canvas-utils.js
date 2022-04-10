@@ -874,6 +874,12 @@ export default class CanvasUtils {
 			pos.y_pos < area.y2 + pad;
 	}
 
+	// Returns truthy if the object passed in is a node (and not a comment).
+	// Comments don't have a type property.
+	static isNode(obj) {
+		return obj.type;
+	}
+
 	static isSupernode(node) {
 		return node.type === SUPER_NODE;
 	}

@@ -1160,7 +1160,7 @@ export default class SVGCanvasRenderer {
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
-			this.isNode(this.dragObjects[0]) &&
+			CanvasUtils.isNode(this.dragObjects[0]) &&
 			CanvasUtils.hasInputAndOutputPorts(this.dragObjects[0]) &&
 			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
@@ -1171,7 +1171,7 @@ export default class SVGCanvasRenderer {
 	isExistingNodeAttachableToDetachedLinks() {
 		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
 			this.dragObjects.length === 1 &&
-			this.isNode(this.dragObjects[0]));
+			CanvasUtils.isNode(this.dragObjects[0]));
 	}
 
 	// Returns true if the current node template being dragged from the palette
@@ -1226,12 +1226,6 @@ export default class SVGCanvasRenderer {
 			return typeof link.srcNodeId !== "undefined" && typeof link.trgNodeId !== "undefined";
 		}
 		return false;
-	}
-
-	// Returns truthy if the object passed in is a node (and not a comment).
-	// Comments don't have a type property.
-	isNode(obj) {
-		return obj.type;
 	}
 
 	getNodePort(nodeId, portId, type) {
