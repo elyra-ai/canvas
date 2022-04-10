@@ -2289,22 +2289,19 @@ export default class SVGCanvasRenderer {
 					dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 				}
 
-				if (this.existingNodeInsertableIntoLink) {
-					this.setDataLinkSelectionAreaWider(false);
-					if (this.dragOverLink) {
-						this.canvasController.editActionHandler({
-							editType: "insertNodeIntoLink",
-							editSource: "canvas",
-							node: this.dragObjects[0],
-							link: this.dragOverLink,
-							offsetX: dragFinalOffset.x,
-							offsetY: dragFinalOffset.y,
-							pipelineId: this.activePipeline.id });
-					}
-				}
+				if (this.existingNodeInsertableIntoLink &&
+						this.dragOverLink) {
+					this.canvasController.editActionHandler({
+						editType: "insertNodeIntoLink",
+						editSource: "canvas",
+						node: this.dragObjects[0],
+						link: this.dragOverLink,
+						offsetX: dragFinalOffset.x,
+						offsetY: dragFinalOffset.y,
+						pipelineId: this.activePipeline.id });
 
-				if (this.existingNodeAttachableToDetachedLinks &&
-						this.dragOverDetachedLinks.length > 0) {
+				} else if (this.existingNodeAttachableToDetachedLinks &&
+										this.dragOverDetachedLinks.length > 0) {
 					this.canvasController.editActionHandler({
 						editType: "attachNodeToLinks",
 						editSource: "canvas",
@@ -2313,6 +2310,7 @@ export default class SVGCanvasRenderer {
 						offsetX: dragFinalOffset.x,
 						offsetY: dragFinalOffset.y,
 						pipelineId: this.activePipeline.id });
+
 				} else {
 					this.canvasController.editActionHandler({
 						editType: "moveObjects",
@@ -2327,6 +2325,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Switch off any drag highlighting
+		this.setDataLinkSelectionAreaWider(false);
 		this.unsetNodeTranslucentState();
 		this.unsetInsertNodeIntoLinkHighlighting();
 		this.unsetDetachedLinkHighlighting();
@@ -4449,7 +4448,7 @@ export default class SVGCanvasRenderer {
 	// of a node being dragged over the link - for when the 'insert node into link'
 	// feature is active.
 	setDataLinkSelectionAreaWider(state) {
-		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
+		this.nodesLinksGrp.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
 	// Returns a node, if one can be found, at the position indicated by
