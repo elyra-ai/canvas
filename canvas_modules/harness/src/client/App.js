@@ -1403,6 +1403,8 @@ class App extends React.Component {
 			return { url: "https://www.google.com/", label: "More info" };
 		} else if (linkId && isEqual(propertyId, { name: "weather" })) {
 			return { url: "https://w3.ibm.com/#/", label: "Learn more" };
+		} else if (linkId && isEqual(propertyId, { name: "checkbox" })) {
+			return { url: "https://www.google.com/", label: "Link in checkbox" };
 		}
 		return {};
 	}
