@@ -165,6 +165,15 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
+
+		// Flag to indicate if the current drag operation is for a node that can
+		// be inserted into a link. Such a node would need input and output ports.
+		this.existingNodeInsertableIntoLink = false;
+
+		// Flag to indicate if the current drag operation is for a node that can
+		// be attachd to a a detachd link.
+		this.existingNodeAttachableToDetachedLinks = false;
+
 		// Allow us to track when a selection is being made so there is
 		// no need to re-render whole canvas
 		this.selecting = false;
@@ -2127,6 +2136,10 @@ export default class SVGCanvasRenderer {
 
 	// Starts the dragging action for canvas objects (nodes and comments).
 	dragObjectsStart(d3Event, d) {
+		// Ensure flags are false before staring a new drag.
+		this.existingNodeInsertableIntoLink = false;
+		this.existingNodeAttachableToDetachedLinks = false;
+
 		this.dragging = true;
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
@@ -2141,6 +2154,7 @@ export default class SVGCanvasRenderer {
 		// If we are dragging an 'insertable' node, set it to be translucent so
 		// that, when it is dragged over a link line, the highlightd line can be seen OK.
 		if (this.isExistingNodeInsertableIntoLink()) {
+			this.existingNodeInsertableIntoLink = true;
 			this.setNodeTranslucentState(this.dragObjects[0].id, true);
 			this.setDataLinkSelectionAreaWider(true);
 		}
@@ -2148,6 +2162,7 @@ export default class SVGCanvasRenderer {
 		// If we are dragging an 'attachable' node, set it to be translucent so
 		// that, when it is dragged over link lines, the highlightd lines can be seen OK.
 		if (this.isExistingNodeAttachableToDetachedLinks()) {
+			this.existingNodeAttachableToDetachedLinks = true;
 			const mousePos = this.getTransformedMousePos(d3Event);
 			this.dragPointerOffsetInNode = {
 				x: mousePos.x - this.dragObjects[0].x_pos,
@@ -2213,7 +2228,7 @@ export default class SVGCanvasRenderer {
 
 		this.displayCanvas();
 
-		if (this.isExistingNodeInsertableIntoLink()) {
+		if (this.existingNodeInsertableIntoLink) {
 			const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
 			// Set highlighting when there is no link because this will turn
 			// current highlighting off. And only switch on highlighting when we are
@@ -2228,7 +2243,7 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
-		if (this.isExistingNodeAttachableToDetachedLinks()) {
+		if (this.existingNodeAttachableToDetachedLinks) {
 			const mousePos = this.getTransformedMousePos(d3Event);
 			const node = this.dragObjects[0];
 			const ghostArea = {
@@ -2268,19 +2283,18 @@ export default class SVGCanvasRenderer {
 					dragFinalOffset = { x: this.dragRunningX, y: this.dragRunningY };
 				}
 
-				if (this.isExistingNodeInsertableIntoLink()) {
-					this.setDataLinkSelectionAreaWider(false);
-					if (this.dragOverLink) {
-						this.canvasController.editActionHandler({
-							editType: "insertNodeIntoLink",
-							editSource: "canvas",
-							node: this.dragObjects[0],
-							link: this.dragOverLink,
-							offsetX: dragFinalOffset.x,
-							offsetY: dragFinalOffset.y,
-							pipelineId: this.activePipeline.id });
-					}
-				} else if (this.isExistingNodeAttachableToDetachedLinks() &&
+				if (this.existingNodeInsertableIntoLink &&
+						this.dragOverLink) {
+					this.canvasController.editActionHandler({
+						editType: "insertNodeIntoLink",
+						editSource: "canvas",
+						node: this.dragObjects[0],
+						link: this.dragOverLink,
+						offsetX: dragFinalOffset.x,
+						offsetY: dragFinalOffset.y,
+						pipelineId: this.activePipeline.id });
+
+				} else if (this.existingNodeAttachableToDetachedLinks &&
 										this.dragOverDetachedLinks.length > 0) {
 					this.canvasController.editActionHandler({
 						editType: "attachNodeToLinks",
@@ -2290,6 +2304,7 @@ export default class SVGCanvasRenderer {
 						offsetX: dragFinalOffset.x,
 						offsetY: dragFinalOffset.y,
 						pipelineId: this.activePipeline.id });
+
 				} else {
 					this.canvasController.editActionHandler({
 						editType: "moveObjects",
@@ -2304,6 +2319,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Switch off any drag highlighting
+		this.setDataLinkSelectionAreaWider(false);
 		this.unsetNodeTranslucentState();
 		this.unsetInsertNodeIntoLinkHighlighting();
 		this.unsetDetachedLinkHighlighting();
@@ -4419,7 +4435,7 @@ export default class SVGCanvasRenderer {
 	// of a node being dragged over the link - for when the 'insert node into link'
 	// feature is active.
 	setDataLinkSelectionAreaWider(state) {
-		this.canvasSVG.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
+		this.nodesLinksGrp.selectAll(".d3-data-link-selection-area").classed("d3-extra-width", state);
 	}
 
 	// Returns a node, if one can be found, at the position indicated by
