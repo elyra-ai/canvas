@@ -5824,6 +5824,7 @@ export default class SVGCanvasRenderer {
 			// If the node has been resized set the resize properties appropriately.
 			if (this.resizeObjInitialInfo.width !== this.resizeObj.width ||
 					this.resizeObjInitialInfo.height !== this.resizeObj.height) {
+				this.nodeSizingObjectsInfo[this.resizeObj.id].isResized = true;
 				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeWidth = this.resizeObj.width;
 				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeHeight = this.resizeObj.height;
 			}

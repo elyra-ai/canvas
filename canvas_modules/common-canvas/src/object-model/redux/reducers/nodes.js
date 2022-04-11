@@ -72,7 +72,8 @@ export default (state = [], action) => {
 					y_pos: nodeObj.y_pos
 				});
 
-				if (nodeObj.resizeWidth || nodeObj.resizeHeight) {
+				if (nodeObj.isResized) {
+					newNode.isResized = nodeObj.isResized;
 					newNode.resizeWidth = nodeObj.resizeWidth;
 					newNode.resizeHeight = nodeObj.resizeHeight;
 				}
