@@ -30,9 +30,7 @@ class ToolTip extends React.Component {
 		};
 
 		this.pendingTooltip = null;
-		this.linkInformation = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
-		this.tooltipLinkOnClick = this.tooltipLinkOnClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -328,10 +326,8 @@ class ToolTip extends React.Component {
 		}
 	}
 
-	tooltipLinkOnClick() {
-		if (this.linkInformation.url) {
-			window.open(this.linkInformation.url, "_blank", "noopener");
-		}
+	tooltipLinkOnClick(url) {
+		window.open(url, "_blank", "noopener");
 	}
 
 	render() {
@@ -390,20 +386,20 @@ class ToolTip extends React.Component {
 		}
 
 		let link = null;
-		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link && this.props.propertyId) {
-			this.linkInformation = this.props.tooltipLinkHandler(
-				this.props.propertyId,
+		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
+			const linkInformation = this.props.tooltipLinkHandler(
+				this.props.link.propertyId,
 				this.props.link.id,
 				this.props.link.data
 			);
-
-			if (typeof this.linkInformation === "object" && this.linkInformation.label && this.linkInformation.url) {
+			// Verify tooltipLinkHandler returns object in correct format
+			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
 				link = (<Link
 					className="tooltip-link"
-					data-id="link"
-					onClick={this.tooltipLinkOnClick}
+					id={this.props.link.id}
+					onClick={this.tooltipLinkOnClick.bind(this, linkInformation.url)}
 				>
-					{this.linkInformation.label}
+					{linkInformation.label}
 				</Link>);
 			}
 		}
@@ -430,7 +426,6 @@ ToolTip.propTypes = {
 	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
 	link: PropTypes.object,
 	tooltipLinkHandler: PropTypes.func,
-	propertyId: PropTypes.object,
 	direction: PropTypes.oneOf(["left", "right", "top", "bottom"]),
 	children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	targetObj: PropTypes.object,

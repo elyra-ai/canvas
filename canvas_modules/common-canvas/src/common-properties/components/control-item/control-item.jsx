@@ -46,15 +46,18 @@ class ControlItem extends React.Component {
 			let tooltip;
 			if (this.props.control.description && !isEmpty(this.props.control.description.text)) {
 				if (this.props.control.description.placement === "on_panel") {
-					description = <div className="properties-control-description">{this.props.control.description.text}</div>; // add link here???
+					description = <div className="properties-control-description">{this.props.control.description.text}</div>;
 				// only show tooltip when control enabled and visible
 				} else {
+					// If tooltip has a link, add propertyId in the link object
+					if (this.props.control.description.link) {
+						this.props.control.description.link.propertyId = this.props.propertyId;
+					}
 					tooltip = (<Tooltip
 						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
 						link={this.props.control.description.link ? this.props.control.description.link : null}
 						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-						propertyId={this.props.propertyId} // is there a better way to handle this w/o passing propertyId to the tooltip??
 						direction="bottom"
 						disable={hidden || disabled}
 						showToolTipOnClick
