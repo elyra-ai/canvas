@@ -527,8 +527,8 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		// We don't check if the association link alrady exists because it makes
-		// sense for some applications that multiple connctions bewteen nodes are
+		// We don't check if the association link already exists because it makes
+		// sense, for some applications, that multiple connections bewteen nodes are
 		// allowed. Uncomment this code if we decide to add a config variable
 		// to allow this in the future.
 		// if (this.assocLinkAlreadyExists(srcNode, trgNode, links)) {
@@ -568,7 +568,7 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		if (this.isSrcNodePortsCardinalityAtMax(srcNode, links)) {
+		if (this.areAllSrcNodePortsCardinalityAtMax(srcNode, links)) {
 			return false;
 		}
 
@@ -588,7 +588,7 @@ export default class CanvasUtils {
 			return false;
 		}
 
-		if (this.isTrgNodePortsCardinalityAtMax(trgNode, links)) {
+		if (this.areAllTrgNodePortsCardinalityAtMax(trgNode, links)) {
 			return false;
 		}
 
@@ -612,8 +612,8 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if all the ports of the source node are at maximum cardinality.
-	static isSrcNodePortsCardinalityAtMax(srcNode, links) {
-		if (srcNode) {
+	static areAllSrcNodePortsCardinalityAtMax(srcNode, links) {
+		if (srcNode && srcNode.outputs) {
 			const index = srcNode.outputs.findIndex((output) => !this.isSrcCardinalityAtMax(output.id, srcNode, links));
 			return index === -1;
 		}
@@ -621,12 +621,25 @@ export default class CanvasUtils {
 	}
 
 	// Returns true if all the ports of the target node are at maximum cardinality.
-	static isTrgNodePortsCardinalityAtMax(trgNode, links) {
-		if (trgNode) {
+	static areAllTrgNodePortsCardinalityAtMax(trgNode, links) {
+		if (trgNode && trgNode.inputs) {
 			const index = trgNode.inputs.findIndex((input) => !this.isTrgCardinalityAtMax(input.id, trgNode, links));
 			return index === -1;
 		}
 		return false;
+	}
+
+	// Returns true if the object passed in is a node which has at least one
+	// input port and one output port.
+	static hasInputAndOutputPorts(obj) {
+		return (this.isNode(obj) && obj.inputs && obj.inputs.length > 0 && obj.outputs && obj.outputs.length > 0);
+	}
+
+	// Returns true if either the cardinality of the default input port or
+	// the default output port of the node passed in is maxed out based on
+	// the array of links passed in.
+	static isNodeDefaultPortsCardinalityAtMax(node, links) {
+		return this.isCardinalityAtMax(null, null, node, node, links);
 	}
 
 	// Returns true if the cardinality is maxed out for the source and target
@@ -704,12 +717,15 @@ export default class CanvasUtils {
 		return false;
 	}
 
-	// Returns the port from the port array indicated by the portId.
+	// Returns the port from the port array indicated by the portId or null
+	// if no port can be found.
 	static getPort(portId, portArray) {
-		const index = portArray.findIndex((port) => port.id === portId);
+		if (portArray && portArray.length > 0) {
+			const index = portArray.findIndex((port) => port.id === portId);
 
-		if (index > -1) {
-			return portArray[index];
+			if (index > -1) {
+				return portArray[index];
+			}
 		}
 		return null;
 	}
@@ -856,6 +872,12 @@ export default class CanvasUtils {
 			pos.x_pos < area.x2 + pad &&
 			pos.y_pos > area.y1 - pad &&
 			pos.y_pos < area.y2 + pad;
+	}
+
+	// Returns truthy if the object passed in is a node (and not a comment).
+	// Comments don't have a type property.
+	static isNode(obj) {
+		return obj.type;
 	}
 
 	static isSupernode(node) {

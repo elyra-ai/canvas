@@ -363,16 +363,6 @@ export default class SvgCanvasNodes {
 		return y + Number(yOffset);
 	}
 
-	// Returns true if either the cardinality of the default input port or
-	// the default output port of the node passed in is maxed out based on
-	// the array of links passed in.
-	isNodeDefaultPortsCardinalityAtMax(node, links) {
-		const defInputPort = CanvasUtils.getDefaultInputPortId(node);
-		const defOutputPort = CanvasUtils.getDefaultOutputPortId(node);
-		return CanvasUtils.isSrcCardinalityAtMax(defOutputPort, node, links) ||
-			CanvasUtils.isTrgCardinalityAtMax(defInputPort, node, links);
-	}
-
 	// Returns the X offset for the port which references the nodeId passed in
 	// based on the precalculated X coordinate of the port.
 	getSupernodePortXOffset(nodeId, ports) {
