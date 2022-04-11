@@ -153,6 +153,11 @@ export default class PipelineOutHandler {
 			uiData.is_expanded = ciNode.is_expanded;
 			uiData.expanded_width = ciNode.expanded_width;
 			uiData.expanded_height = ciNode.expanded_height;
+
+		} else if (ciNode.height && ciNode.height !== ciNode.layout.defaultNodeHeight ||
+								ciNode.width && ciNode.width !== ciNode.layout.defaultNodeWidth) {
+			uiData.resize_width = ciNode.width;
+			uiData.resize_height = ciNode.height;
 		}
 
 		if (ciNode.messages && !isEmpty(ciNode.messages)) {

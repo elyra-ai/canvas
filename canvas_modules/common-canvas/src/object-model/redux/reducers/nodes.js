@@ -72,6 +72,11 @@ export default (state = [], action) => {
 					y_pos: nodeObj.y_pos
 				});
 
+				if (nodeObj.resizeWidth || nodeObj.resizeHeight) {
+					newNode.resizeWidth = nodeObj.resizeWidth;
+					newNode.resizeHeight = nodeObj.resizeHeight;
+				}
+
 				if (newNode.type === SUPER_NODE && newNode.is_expanded) {
 					newNode.expanded_width = nodeObj.width;
 					newNode.expanded_height = nodeObj.height;

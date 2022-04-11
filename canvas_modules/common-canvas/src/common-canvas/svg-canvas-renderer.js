@@ -17,7 +17,6 @@
 /* eslint no-invalid-this: "off" */
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
-/* eslint max-depth: "off" */
 
 // Import just the D3 modules that are needed and combine them as the 'd3' object.
 import * as d3Drag from "d3-drag";
@@ -622,6 +621,14 @@ export default class SVGCanvasRenderer {
 	// Returns true when we are dragging objects. Called by svg-canvas-d3.
 	isDragging() {
 		return this.dragging;
+	}
+
+
+	// Returns true if the node should be resizeable. Expanded supernodes are
+	// always resizabele and all other nodes are resizeable when
+	// enableResizableNodes is switched on.
+	isNodeResizable(node) {
+		return CanvasUtils.isExpandedSupernode(node) || this.config.enableResizableNodes;
 	}
 
 	getAllNodeGroupsSelection() {
@@ -2513,7 +2520,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Node Sizing Area.
-		newNodeGroups.filter((d) => CanvasUtils.isSupernode(d))
+		newNodeGroups.filter((d) => this.isNodeResizable(d))
 			.append("path")
 			.attr("class", "d3-node-sizing")
 			.call(this.attachNodeSizingListeners.bind(this));
@@ -2862,7 +2869,7 @@ export default class SVGCanvasRenderer {
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
 			.on("mousedown", (d3Event, d) => {
-				if (CanvasUtils.isExpandedSupernode(d)) {
+				if (this.isNodeResizable(d)) {
 					this.nodeSizing = true;
 					// Note - node resizing and finalization of size is handled by drag functions.
 					this.addTempCursorOverlay(this.nodeSizingCursor);
@@ -2876,7 +2883,7 @@ export default class SVGCanvasRenderer {
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
 				if (this.config.enableEditingActions && // Only set cursor when we are able to edit nodes
-						CanvasUtils.isExpandedSupernode(d) &&
+						this.isNodeResizable(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 					let cursorType = "pointer";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -4688,7 +4695,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns a path that will draw the shape for the rectangle node
-	// display. This is draw as a path rather than an SVG rectangle to make the
+	// display. This is drawn as a path rather than an SVG rectangle to make the
 	// calling code more generic.
 	getRectangleNodeShapePath(data, highlightGap) {
 		const gap = highlightGap ? highlightGap : 0;
@@ -5638,21 +5645,43 @@ export default class SVGCanvasRenderer {
 		return cursorType;
 	}
 
+	// Returns the minimum allowed height for the node passed in. For supernodes
+	// this means combining the bigger of the space for the inputs and output ports
+	// with some space for the top of the display frame and the padding at the
+	// bottom of the frame. Then the bigger of that height versus the default
+	// supernode minimum height is retunred.
+	getMinHeight(node) {
+		if (CanvasUtils.isSupernode(node)) {
+			const minHt = Math.max(node.inputPortsHeight, node.outputPortsHeight) +
+				this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
+			return Math.max(this.canvasLayout.supernodeMinHeight, minHt);
+		}
+		return node.layout.defaultNodeHeight;
+	}
+
+	// Returns the minimum allowed width for the node passed in.
+	getMinWidth(node) {
+		if (CanvasUtils.isSupernode(node)) {
+			return this.canvasLayout.supernodeMinWidth;
+		}
+		return node.layout.defaultNodeWidth;
+	}
+
 	// Sets the size and position of the node in the canvasInfo.nodes
 	// array based on the position of the pointer during the resize action
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
 	resizeNode(d3Event) {
 		const oldSupernode = Object.assign({}, this.resizeObj);
-		const minSupernodeHeight = Math.max(this.resizeObj.inputPortsHeight, this.resizeObj.outputPortsHeight) +
-			this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
+		const minHeight = this.getMinHeight(this.resizeObj);
+		const minWidth = this.getMinWidth(this.resizeObj);
 
 		const delta = this.resizeObject(d3Event, this.resizeObj,
-			this.nodeSizingDirection, this.canvasLayout.supernodeMinWidth,
-			Math.max(this.canvasLayout.supernodeMinHeight, minSupernodeHeight));
+			this.nodeSizingDirection, minWidth, minHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			if (this.config.enableMoveNodesOnSupernodeResize) {
+			if (CanvasUtils.isSupernode(this.resizeObj) &&
+					this.config.enableMoveNodesOnSupernodeResize) {
 				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
 					this.activePipeline.getNodesAndComments(),
@@ -5675,13 +5704,17 @@ export default class SVGCanvasRenderer {
 				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
 				this.nodeSizingLinksInfo = Object.assign(this.nodeSizingLinksInfo, linksInfo);
 			}
+
 			this.displayComments();
 			this.displayNodes();
 			this.displayLinks();
-			if (this.dispUtils.isDisplayingSubFlow()) {
-				this.displayBindingNodesToFitSVG();
+
+			if (CanvasUtils.isSupernode(this.resizeObj)) {
+				if (this.dispUtils.isDisplayingSubFlow()) {
+					this.displayBindingNodesToFitSVG();
+				}
+				this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
 			}
-			this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
 		}
 	}
 
@@ -5787,6 +5820,13 @@ export default class SVGCanvasRenderer {
 				x_pos: this.resizeObj.x_pos,
 				y_pos: this.resizeObj.y_pos
 			};
+
+			// If the node has been resized set the resize properties appropriately.
+			if (this.resizeObjInitialInfo.width !== this.resizeObj.width ||
+					this.resizeObjInitialInfo.height !== this.resizeObj.height) {
+				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeWidth = this.resizeObj.width;
+				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeHeight = this.resizeObj.height;
+			}
 
 			this.canvasController.editActionHandler({
 				editType: "resizeObjects",

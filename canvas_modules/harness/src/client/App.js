@@ -205,6 +205,7 @@ class App extends React.Component {
 			selectedExternalPipelineFlows: true,
 			selectedEditingActions: true,
 			selectedMoveNodesOnSupernodeResize: true,
+			selectedResizableNodes: false,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
 			selectedNarrowPalette: true,
@@ -213,6 +214,13 @@ class App extends React.Component {
 			selectedBrowserEditMenu: true,
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
+			// Use these settings when enableResizableNodes is tested (these
+			// settings only work with vertical node format).
+			// selectedNodeLayout: {
+			// 	imagePosition: "middleCenter", imagePosX: -24, imagePosY: -30,
+			// 	labelPosition: "middleCenter", labelPosX: 0, labelPosY: 20,
+			// 	ellipsisPosition: "middleCenter", ellipsisPosX: 22, ellipsisPosY: -36
+			// },
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
 
@@ -2002,6 +2010,7 @@ class App extends React.Component {
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			enableStateTag: this.state.selectedStateTag,
 			enableToolbarLayout: this.state.selectedToolbarLayout,
+			enableResizableNodes: this.state.selectedResizableNodes,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
 			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
