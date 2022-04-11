@@ -1149,7 +1149,7 @@ export default class SVGCanvasRenderer {
 	// is not explicitely set to zero (which some crazy apps want to do!).
 	isNodeTemplateInsertableIntoLink(nodeTemplate) {
 		return this.config.enableInsertNodeDroppedOnLink &&
-			this.isNonBindingNode(nodeTemplate) &&
+			CanvasUtils.hasInputAndOutputPorts(nodeTemplate) &&
 			!this.isPortMaxCardinalityZero(nodeTemplate.inputs[0]) &&
 			!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]);
 	}
@@ -1160,9 +1160,9 @@ export default class SVGCanvasRenderer {
 	isExistingNodeInsertableIntoLink() {
 		return (this.config.enableInsertNodeDroppedOnLink &&
 			this.dragObjects.length === 1 &&
-			this.isNode(this.dragObjects[0]) &&
-			this.isNonBindingNode(this.dragObjects[0]) &&
-			!this.nodeUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
+			CanvasUtils.isNode(this.dragObjects[0]) &&
+			CanvasUtils.hasInputAndOutputPorts(this.dragObjects[0]) &&
+			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.dragObjects[0], this.activePipeline.links));
 	}
 
 	// Returns true if the current drag objects array has a single node which
@@ -1171,7 +1171,7 @@ export default class SVGCanvasRenderer {
 	isExistingNodeAttachableToDetachedLinks() {
 		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
 			this.dragObjects.length === 1 &&
-			this.isNode(this.dragObjects[0]));
+			CanvasUtils.isNode(this.dragObjects[0]));
 	}
 
 	// Returns true if the current node template being dragged from the palette
@@ -1226,12 +1226,6 @@ export default class SVGCanvasRenderer {
 			return typeof link.srcNodeId !== "undefined" && typeof link.trgNodeId !== "undefined";
 		}
 		return false;
-	}
-
-	// Returns truthy if the object passed in is a node (and not a comment).
-	// Comments don't have a type property.
-	isNode(obj) {
-		return obj.type;
 	}
 
 	getNodePort(nodeId, portId, type) {
@@ -3722,13 +3716,6 @@ export default class SVGCanvasRenderer {
 		nodeGrp.selectAll("." + portArrowClassName)
 			.attr("d", (port) => this.getPortArrowPath(port))
 			.attr("transform", (port) => this.getPortArrowPathTransform(port));
-	}
-
-	// Returns true if the object passed in is a non-binding node. There's a
-	// chance the object might be a comment so we make sure the object is a
-	// node before checking the type.
-	isNonBindingNode(obj) {
-		return (this.isNode(obj) && obj.type !== "binding");
 	}
 
 	// Returns true if the port (from a node template) passed in has a max
