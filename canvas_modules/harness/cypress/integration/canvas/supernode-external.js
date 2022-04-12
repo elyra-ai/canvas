@@ -303,7 +303,7 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.wait(1000);
 
 		cy.clickNode("Super node");
-		cy.rightClickNode("Super node", "topLeft");
+		cy.rightClickNode("Super node");
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// There should now be 5 nodes and 4 links in the main flow.
