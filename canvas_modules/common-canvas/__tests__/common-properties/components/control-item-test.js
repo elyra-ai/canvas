@@ -48,8 +48,8 @@ const propertyId = {
 
 const accessibleControls = [ControlType.CHECKBOXSET, ControlType.HIDDEN];
 
-const tooltipLinkHandlerFunction = function(propId, linkId, data) {
-	if (linkId && isEqual(propId, propertyId)) {
+const tooltipLinkHandlerFunction = function(link) {
+	if (link.id && isEqual(link.propertyId, propertyId)) {
 		return { url: "https://www.google.com/", label: "More info" };
 	}
 	return {};
@@ -144,14 +144,14 @@ describe("control-item renders correctly", () => {
 		const tooltipTrigger = wrapper.find("div.tooltip-trigger");
 		tooltipTrigger.simulate("click");
 		expect(tooltipLinkHandler.calledOnce).to.equal(true);
-		expect(tooltipLinkHandler.calledWith(propertyId, control.description.link.id, control.description.link.data)).to.be.true;
+		expect(tooltipLinkHandler.calledWith(control.description.link)).to.be.true;
 
 		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
 		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
 		// verify link in tooltip
 		expect(tooltip.find("Link")).to.have.length(1);
-		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(propertyId, control.description.link.id, control.description.link.data).label);
+		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(control.description.link).label);
 	});
 
 	it("should not create a link when tooltipLinkHandler returns an empty/invalid object", () => {
@@ -172,7 +172,7 @@ describe("control-item renders correctly", () => {
 		const tooltipTrigger = wrapper.find("div.tooltip-trigger");
 		tooltipTrigger.simulate("click");
 		expect(tooltipLinkHandler.calledOnce).to.equal(true);
-		expect(tooltipLinkHandler.calledWith(dummyPropertyId, control.description.link.id, control.description.link.data)).to.be.true;
+		expect(tooltipLinkHandler.calledWith(control.description.link)).to.be.true;
 
 		// tooltipLinkHandler returned an empty object because we passed dummyPropertyId
 		// verify link does not exist in tooltip

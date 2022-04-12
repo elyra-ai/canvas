@@ -387,11 +387,7 @@ class ToolTip extends React.Component {
 
 		let link = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
-			const linkInformation = this.props.tooltipLinkHandler(
-				this.props.link.propertyId,
-				this.props.link.id,
-				this.props.link.data
-			);
+			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
 				link = (<Link

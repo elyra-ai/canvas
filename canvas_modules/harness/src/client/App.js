@@ -1397,13 +1397,13 @@ class App extends React.Component {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
 
-	// To show link in tooltip for given propertyIds
-	tooltipLinkHandler(propertyId, linkId, data) {
-		if (linkId && isEqual(propertyId, { name: "number" })) {
+	// To show link in tooltip
+	tooltipLinkHandler(link) {
+		if (link.id && isEqual(link.propertyId, { name: "number" })) {
 			return { url: "https://www.google.com/", label: "More info" };
-		} else if (linkId && isEqual(propertyId, { name: "weather" })) {
+		} else if (link.id && isEqual(link.propertyId, { name: "weather" })) {
 			return { url: "https://w3.ibm.com/#/", label: "Learn more" };
-		} else if (linkId && isEqual(propertyId, { name: "checkbox" })) {
+		} else if (link.id && isEqual(link.propertyId, { name: "checkbox" })) {
 			return { url: "https://www.google.com/", label: "Link in checkbox" };
 		}
 		return {};
