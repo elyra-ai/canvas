@@ -12,6 +12,8 @@
   "canvas.selectAll": "Select all",
   "canvas.undo": "Undo",
   "canvas.redo": "Redo",
+  "canvas.undoCommand": "Undo: {undo_command}",
+  "canvas.redoCommand": "Redo: {redo_command}",
   "canvas.deleteObject": "Delete",
   "canvas.flowIsEmpty": "Your flow is empty.",
   "canvas.addNodeToStart": "Get started by adding a node.",
