@@ -446,7 +446,7 @@ describe("Test generated tooltips for undo/redo actions", function() {
 		// Case 7: Delete links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 links");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 link");
 	});
 });
 
