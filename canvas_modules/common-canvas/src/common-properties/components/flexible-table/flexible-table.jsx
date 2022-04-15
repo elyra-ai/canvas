@@ -62,6 +62,7 @@ class FlexibleTable extends React.Component {
 		this._adjustTableHeight = this._adjustTableHeight.bind(this);
 		this.handleCheckedRow = this.handleCheckedRow.bind(this);
 		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
+		this.handleCheckedMultipleRows = this.handleCheckedMultipleRows.bind(this);
 	}
 
 	componentDidMount() {
@@ -320,6 +321,30 @@ class FlexibleTable extends React.Component {
 		this.setState({ checkedAllRows: checked });
 	}
 
+	/**
+	* This method is called when user wants to select multiple rows using shift key
+	* Select/deselect all rows between lastCheckedRow and existingRow
+	* @param lastCheckedRow (integer) - originalRowIndex of last selected row
+	* @param existingRow (integer) - originalRowIndex of row where shift key is clicked
+	* @param checked (boolean) - rows are to be selected or deselected
+	*/
+	handleCheckedMultipleRows(lastCheckedRow, existingRow, checked) {
+		let selectedRows = this.props.selectedRows ? this.props.selectedRows : [];
+		// Calculate rows between lastChecked row and existingRow
+		let inBetweenRows;
+		if (lastCheckedRow < existingRow) {
+			inBetweenRows = Array.from({ length: (existingRow - lastCheckedRow) + 1 }, (_, i) => lastCheckedRow + i);
+		} else {
+			inBetweenRows = Array.from({ length: (lastCheckedRow - existingRow) + 1 }, (_, i) => existingRow + i);
+		}
+		// if selectedRows already has inBetweenRows, remove them first
+		selectedRows = selectedRows.filter((row) => !inBetweenRows.includes(row)); // Deselecting inBetweenRows using shift key
+		if (checked) {
+			selectedRows = selectedRows.concat(inBetweenRows); 	// Selecting inBetweenRows using shift key
+		}
+		return selectedRows;
+	}
+
 	handleCheckedRow(data, evt) {
 		const dataRowIndex = data.originalRowIndex; // Use the originalRowIndex for selection in case rows are filtered.
 		const displayedRowIndex = data.index;
@@ -329,10 +354,13 @@ class FlexibleTable extends React.Component {
 		if (!this.props.data[displayedRowIndex].disabled) {
 			if (overSelectOption) { // Checkbox is clicked
 				let current = this.props.selectedRows ? this.props.selectedRows : [];
-				if (checked) {
+				if (data.selectMultipleRows) { // multiple rows selected/deselected using shift key
+					current = this.handleCheckedMultipleRows(data.lastCheckedRow, displayedRowIndex, checked); // displayedRowIndex or dataRowIndex???
+					this.setCheckedAll(current);
+				} else if (checked) { // single row selected
 					current = current.concat(dataRowIndex);
 					this.setCheckedAll(current);
-				} else if (current) {
+				} else if (current) { // single row  deselected
 					current = current.filter(function(element) {
 						return element !== dataRowIndex;
 					});
