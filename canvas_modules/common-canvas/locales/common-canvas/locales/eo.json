@@ -12,6 +12,8 @@
 	"canvas.selectAll": "[Esperanto~Select all~~~~~~eo]",
 	"canvas.undo": "[Esperanto~Undo~eo]",
 	"canvas.redo": "[Esperanto~Redo~eo]",
+	"canvas.undoCommand": "[Esperanto~Undo: {undo_command}~~eo]",
+	"canvas.redoCommand": "[Esperanto~Redo: {redo_command}~~eo]",
 	"canvas.deleteObject": "[Esperanto~Delete~eo]",
 	"canvas.flowIsEmpty": "[Esperanto~Your flow is empty.~~~~~eo]",
 	"canvas.addNodeToStart": "[Esperanto~Get started by adding a node.~~~~~~~~~eo]",

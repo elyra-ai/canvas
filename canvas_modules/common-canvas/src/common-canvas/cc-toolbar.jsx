@@ -35,9 +35,9 @@ class CommonCanvasToolbar extends React.Component {
 		this.logger = new Logger("CC-Toolbar");
 	}
 
-	getLabel(labelId) {
+	getLabel(labelId, substituteObj) {
 		const defaultMessage = defaultMessages[labelId] ? defaultMessages[labelId] : defaultToolbarMessages[labelId];
-		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessage });
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessage }, substituteObj);
 	}
 
 	// Returns the default toolbar which is shown if the user does not specify
@@ -226,13 +226,13 @@ class CommonCanvasToolbar extends React.Component {
 		if (undoLabel) {
 			const undoTool = this.findTool("undo", toolbarConfig);
 			if (undoTool) {
-				undoTool.label += ": " + undoLabel;
+				undoTool.label = this.getLabel("canvas.undoCommand", { undo_command: undoLabel });
 			}
 		}
 		if (redoLabel) {
 			const redoTool = this.findTool("redo", toolbarConfig);
 			if (redoTool) {
-				redoTool.label += ": " + redoLabel;
+				redoTool.label = this.getLabel("canvas.redoCommand", { redo_command: redoLabel });
 			}
 		}
 		return toolbarConfig;
