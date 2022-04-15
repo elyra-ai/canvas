@@ -142,13 +142,15 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	onValueTableDblClick(evt, rowKey, index) {
 		if (this.props.onChange) {
 			const field = this.state.currentFieldDataset[this.state.fieldSelected];
+			const quote = "\"";
 			if (field.values) {
-				const quote = "\"";
 				const value = field.values[rowKey].value;
 				const fieldValue = (typeof value === "string") ? quote + value + quote : value;
 				this.props.onChange(fieldValue);
 			} else if (field.range) {
-				this.props.onChange(rowKey === 0 ? field.range.min.value : field.range.max.value);
+				const minValue = (typeof field.range.min.value === "string") ? (quote + field.range.min.value + quote) : field.range.min.value;
+				const maxValue = (typeof field.range.max.value === "string") ? (quote + field.range.max.value + quote) : field.range.max.value;
+				this.props.onChange(rowKey === 0 ? minValue : maxValue);
 			}
 		}
 		this.setState({
