@@ -162,8 +162,8 @@ describe("add rows in tables with correct default values", () => {
 
 		const expectedRows = [
 			["Age", "Mean"],
-			["BP", "Mean, Min, Max"],
-			["Sex", "Min, Max"]
+			["Sex", "Min, Max"],
+			["BP", "Mean, Min, Max"]
 		];
 
 		for (let idx = 0; idx < tableRows.length; idx++) {

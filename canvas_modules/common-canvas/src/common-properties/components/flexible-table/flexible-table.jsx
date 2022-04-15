@@ -366,6 +366,8 @@ class FlexibleTable extends React.Component {
 					});
 					this.setState({ checkedAllRows: false });
 				}
+				// Sort ascending because we want to add selected rows in the same order as they're displayed in the table
+				current.sort((a, b) => a - b);
 				this.props.updateRowSelections(current);
 			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && typeof this.props.updateRowSelections !== "undefined") { // Table row is clicked
 				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);

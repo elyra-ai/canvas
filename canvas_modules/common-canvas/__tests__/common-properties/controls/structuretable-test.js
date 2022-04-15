@@ -650,9 +650,9 @@ describe("structuretable control with multi input schemas renders correctly", ()
 		expect(summaryRows).to.have.length(5);
 
 		const expectedSummary = [
-			"0.Cholesterol",
 			"0.Age",
 			"0.BP",
+			"0.Cholesterol",
 			"data.BP",
 			"2.BP"
 		];

@@ -905,4 +905,30 @@ describe("field-picker control multiple rows selection", () => {
 		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(29);
 	});
 
+	it("should add rows as per their row number in the table irrespective of the user selection order", () => {
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
+		const tableRows = tableUtils.getTableRows(fieldPicker);
+		const fieldNames = fieldPicker.find(".properties-fp-field-name");
+		const schemaNames = fieldPicker.find(".properties-fp-schema");
+		expect(tableRows.length).to.equal(29);
+
+		// Verify no rows are selected
+		const selected = tableUtils.validateSelectedRowNum(tableRows);
+		expect(selected).to.have.length(0);
+
+		// select row number in random order
+		tableUtils.selectCheckboxes(tableRows, [1, 15, 10, 12, 9]);
+		fieldPicker.find("button[data-id='properties-apply-button']").simulate("click");
+
+		const renameFieldTable = wrapper.find("div[data-id='properties-ft-structuretableMultiInputSchema']");
+		const secondColumn = renameFieldTable.find(".properties-field-type-icon + .properties-field-type");
+
+		// Even though we selected [1, 15, 10, 12, 9], they should be displayed as [1, 9, 10, 12, 15]
+		expect(secondColumn.at(3).text()).to.equal(schemaNames.at(1).text() + "." + fieldNames.at(1).text());
+		expect(secondColumn.at(4).text()).to.equal(schemaNames.at(9).text() + "." + fieldNames.at(9).text());
+		expect(secondColumn.at(5).text()).to.equal(schemaNames.at(10).text() + "." + fieldNames.at(10).text());
+		expect(secondColumn.at(6).text()).to.equal(schemaNames.at(12).text() + "." + fieldNames.at(12).text());
+		expect(secondColumn.at(7).text()).to.equal(schemaNames.at(15).text() + "." + fieldNames.at(15).text());
+	});
+
 });
