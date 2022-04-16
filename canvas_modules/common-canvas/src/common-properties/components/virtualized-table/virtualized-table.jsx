@@ -54,7 +54,7 @@ class VirtualizedTable extends React.Component {
 			columnResized: false
 		};
 		this.virtualizedTableRef = React.createRef();
-		this.lastChecked = null;
+		this.lastChecked = isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop();
 
 		this.isOverSelectOption = false;
 		this.mouseEventCalled = false;
