@@ -1,0 +1,10 @@
+{
+  "palette.flyout.search.placeholder": "查找选用板节点",
+  "palette.flyout.search.noresults": "未找到结果。",
+  "palette.flyout.search.adjustsearch": "请尝试调整搜索，以找到您所查找的内容。",
+  "palette.flyout.search.resultsrestricted": "结果限制为 10 个节点。请尝试优化搜索。",
+  "palette.flyout.search.more": "扩大显示范围",
+  "palette.flyout.search.less": "缩小显示范围",
+  "palette.flyout.label": "弹窗选用板",
+  "palette.dialog.label": "对话框选用板"
+}

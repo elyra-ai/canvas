@@ -1,8 +1,8 @@
 {
-	"toolbar.label": "Symbolleiste für erstellungsbereich",
-	"toolbar.overflowMenu": "Überlaufmenü",
-	"toolbar.palette": "Palette",
-	"toolbar.zoomIn": "Vergrößern",
-	"toolbar.zoomOut": "Verkleinern",
-	"toolbar.zoomToFit": "Automatisch zoomen"
+  "toolbar.palette": "Palette",
+  "toolbar.zoomIn": "Vergrößern",
+  "toolbar.zoomOut": "Verkleinern",
+  "toolbar.zoomToFit": "Automatisch zoomen",
+  "toolbar.overflowMenu": "Überlaufmenü",
+  "toolbar.label": "Symbolleiste für Erstellungsbereich"
 }

@@ -1,9 +1,0 @@
-{
-	"palette.saved.nodes.description": "先前已從流程儲存此種類中的節點。",
-	"palette.saved.nodes.label": "已存節點",
-	"supernode.binding.node.description": "超級節點連結節點",
-	"supernode.binding.node.label": "連結",
-	"supernode.new.port.label": "超級節點的連結埠",
-	"supernode.template.description": "此超級節點由一般畫布建立。",
-	"supernode.template.label": "超級節點"
-}

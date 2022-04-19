@@ -1,10 +1,10 @@
 {
   "palette.flyout.search.placeholder": "Find palette nodes",
-	"palette.flyout.search.noresults": "No results found.",
-	"palette.flyout.search.adjustsearch": "Try adjusting your search to find what you're looking for.",
-	"palette.flyout.search.resultsrestricted": "Results restricted to 10 nodes. Try refining your search.",
-	"palette.flyout.search.more": "Show more",
-	"palette.flyout.search.less": "Show less",
+  "palette.flyout.search.noresults": "No results found.",
+  "palette.flyout.search.adjustsearch": "Try adjusting your search to find what you're looking for.",
+  "palette.flyout.search.resultsrestricted": "Results restricted to 10 nodes. Try refining your search.",
+  "palette.flyout.search.more": "Show more",
+  "palette.flyout.search.less": "Show less",
   "palette.flyout.label": "Flyout Palette",
   "palette.dialog.label": "Dialog Palette"
 }
