@@ -162,7 +162,13 @@
           "default": "Integer"
         },
         "description": {
-          "default": "Try pressing Increment or Descrement buttons"
+          "default": "Try pressing Increment or Decrement buttons",
+          "link": {
+            "id": "link_for_number",
+            "data": {
+              "something": "option data"
+            }
+          }
         },
         "control": "readonly"
       },
@@ -182,7 +188,13 @@
           "default": "Current weather"
         },
         "description": {
-          "default": "Try pressing the above images"
+          "default": "Try pressing the above images",
+          "link": {
+            "id": "link_for_weather",
+            "data": {
+              "something": "option data"
+            }
+          }
         },
         "control": "readonly"
       },
