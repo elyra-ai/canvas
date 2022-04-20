@@ -60,10 +60,13 @@ class Label {
 }
 
 class Description {
-	constructor(text, placement) {
+	constructor(text, placement, link) {
 		this.text = text;
 		if (placement) {
 			this.placement = placement;
+		}
+		if (link) {
+			this.link = link;
 		}
 	}
 }
@@ -395,7 +398,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	let controlDesc;
 	if (parameter.description) {
 		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
-			parameter.description ? parameter.description.placement : null);
+			parameter.description ? parameter.description.placement : null,
+			parameter.description ? parameter.description.link : null);
 	}
 
 	// The role is used to modify the behaviour of certain controls
