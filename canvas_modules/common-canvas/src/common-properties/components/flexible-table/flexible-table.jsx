@@ -324,8 +324,8 @@ class FlexibleTable extends React.Component {
 	/**
 	* This method is called when user wants to select multiple rows using shift key
 	* Select/deselect all rows between lastCheckedRow and existingRow
-	* @param lastCheckedRow (integer) - originalRowIndex of last selected row
-	* @param existingRow (integer) - originalRowIndex of row where shift key is clicked
+	* @param lastCheckedRow (integer) - index of last selected row
+	* @param existingRow (integer) - index of row where shift key is clicked
 	* @param checked (boolean) - rows are to be selected or deselected
 	*/
 	handleCheckedMultipleRows(lastCheckedRow, existingRow, checked) {
@@ -355,7 +355,7 @@ class FlexibleTable extends React.Component {
 			if (overSelectOption) { // Checkbox is clicked
 				let current = this.props.selectedRows ? this.props.selectedRows : [];
 				if (data.selectMultipleRows) { // multiple rows selected/deselected using shift key
-					current = this.handleCheckedMultipleRows(data.lastCheckedRow, displayedRowIndex, checked); // displayedRowIndex or dataRowIndex???
+					current = this.handleCheckedMultipleRows(data.lastCheckedRow, displayedRowIndex, checked);
 					this.setCheckedAll(current);
 				} else if (checked) { // single row selected
 					current = current.concat(dataRowIndex);

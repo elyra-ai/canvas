@@ -94,7 +94,7 @@ class VirtualizedTable extends React.Component {
 					"lastCheckedRow": this.lastChecked === null ? 0 : this.lastChecked }, evt);
 
 				// Track lastChecked row for shift key selection
-				this.lastChecked = rowData.index; // originalRowIndex or index??
+				this.lastChecked = rowData.index;
 			}
 		}
 	}
