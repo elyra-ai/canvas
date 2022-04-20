@@ -20,7 +20,8 @@ import CanvasUtils from "./common-canvas-utils.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_LEFT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
-	LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP }
+	LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
+	NORTH, SOUTH, EAST, WEST }
 	from "./constants/canvas-constants";
 
 const CLOCKWISE = false;
@@ -53,27 +54,32 @@ export default class SvgCanvasLinks {
 
 	// Returns an object containing the x and y coordinates of the start position
 	// of a straight line which extends from the node passed in to the
-	// end position which is also an x, y coordinate.
-	getNewStraightNodeLinkStartPos(srcNode, endPos) {
-		let srcCenterX;
-		let srcCenterY;
+	// end position which is also an x, y coordinate. If an originInfo object is
+	// passed in we use it to offset the origin position for the line.
+	getNewStraightNodeLinkStartPos(node, endPos, originInfo) {
+		let originX;
+		let originY;
 
-		if (srcNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(srcNode)) {
-			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
-			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
+		if (node.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(node)) {
+			originX = this.nodeUtils.getNodeImageCenterPosX(node);
+			originY = this.nodeUtils.getNodeImageCenterPosY(node);
 		} else {
-			srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
-			srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
+			if (originInfo) {
+				({ x: originX, y: originY } = this.getCenterOffset(node, originInfo));
+			} else {
+				originX = this.nodeUtils.getNodeCenterPosX(node);
+				originY = this.nodeUtils.getNodeCenterPosY(node);
+			}
 		}
 
 		return CanvasUtils.getOuterCoord(
-			srcNode.x_pos,
-			srcNode.y_pos,
-			srcNode.width,
-			srcNode.height,
+			node.x_pos,
+			node.y_pos,
+			node.width,
+			node.height,
 			this.canvasLayout.linkGap,
-			srcCenterX,
-			srcCenterY,
+			originX,
+			originY,
 			endPos.x,
 			endPos.y);
 	}
@@ -134,15 +140,15 @@ export default class SvgCanvasLinks {
 		return minInitialLine;
 	}
 
-	getLinkCoords(linkType, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation) {
+	getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation) {
 		let coords = null;
-		if (linkType === NODE_LINK) {
+		if (link.type === NODE_LINK) {
 			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-				coords = this.getNodeLinkCoordsForStraightLine(srcObj, trgNode);
+				coords = this.getNodeLinkCoordsForStraightLine(srcObj, trgNode, link);
 			} else {
 				coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
 			}
-		} else if (linkType === ASSOCIATION_LINK) {
+		} else if (link.type === ASSOCIATION_LINK) {
 			if (this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE) {
 				coords = this.getAssociationCurveLinkCoords(srcObj, trgNode, assocLinkVariation);
 			} else {
@@ -154,7 +160,7 @@ export default class SvgCanvasLinks {
 		return coords;
 	}
 
-	getNodeLinkCoordsForStraightLine(srcNode, trgNode) {
+	getNodeLinkCoordsForStraightLine(srcNode, trgNode, link) {
 		let srcCenterX;
 		let srcCenterY;
 		let trgCenterX;
@@ -164,16 +170,24 @@ export default class SvgCanvasLinks {
 			srcCenterX = this.nodeUtils.getNodeImageCenterPosX(srcNode);
 			srcCenterY = this.nodeUtils.getNodeImageCenterPosY(srcNode);
 		} else {
-			srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
-			srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
+			if (link && link.srcOriginInfo) {
+				({ x: srcCenterX, y: srcCenterY } = this.getCenterOffset(srcNode, link.srcOriginInfo));
+			} else {
+				srcCenterX = this.nodeUtils.getNodeCenterPosX(srcNode);
+				srcCenterY = this.nodeUtils.getNodeCenterPosY(srcNode);
+			}
 		}
 
 		if (trgNode.layout.drawNodeLinkLineFromTo === "image_center" && !CanvasUtils.isExpanded(trgNode)) {
 			trgCenterX = this.nodeUtils.getNodeImageCenterPosX(trgNode);
 			trgCenterY = this.nodeUtils.getNodeImageCenterPosY(trgNode);
 		} else {
-			trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
-			trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
+			if (link && link.trgOriginInfo) {
+				({ x: trgCenterX, y: trgCenterY } = this.getCenterOffset(trgNode, link.trgOriginInfo));
+			} else {
+				trgCenterX = this.nodeUtils.getNodeCenterPosX(trgNode);
+				trgCenterY = this.nodeUtils.getNodeCenterPosY(trgNode);
+			}
 		}
 
 		const startPos = CanvasUtils.getOuterCoord(
@@ -199,6 +213,32 @@ export default class SvgCanvasLinks {
 			srcCenterY);
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
+	}
+
+	getCenterOffset(node, originInfo) {
+		let x = 0;
+		let y = 0;
+		const parts = originInfo.len + 1;
+		const index = originInfo.idx + 1;
+		switch (originInfo.dir) {
+		case NORTH:
+		case SOUTH: {
+			x = node.x_pos + ((node.width / parts) * index);
+			y = this.nodeUtils.getNodeCenterPosY(node);
+			break;
+		}
+		case EAST:
+		case WEST: {
+			x = this.nodeUtils.getNodeCenterPosX(node);
+			y = node.y_pos + ((node.height / parts) * index);
+			break;
+		}
+		default: {
+			x = 0;
+			y = 0;
+		}
+		}
+		return { x, y };
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {

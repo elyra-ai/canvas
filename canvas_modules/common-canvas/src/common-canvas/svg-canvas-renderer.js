@@ -26,7 +26,7 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Zoom from "./d3-zoom-extension/src";
 const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
-import { cloneDeep, escape as escapeText, get, set,
+import { cloneDeep, escape as escapeText, forOwn, get, set,
 	unescape as unescapeText } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
@@ -38,7 +38,8 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
-	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING }
+	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
+	NORTH, SOUTH, EAST, WEST }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
@@ -6319,6 +6320,11 @@ export default class SVGCanvasRenderer {
 
 	buildLinksArray() {
 		let linksArray = [];
+
+		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
+			this.updateLinksForNodes();
+		}
+
 		this.activePipeline.links.forEach((link) => {
 			let linkObj = null;
 
@@ -6372,7 +6378,7 @@ export default class SVGCanvasRenderer {
 				link.type === ASSOCIATION_LINK && this.config.enableAssocLinkType === ASSOC_RIGHT_SIDE_CURVE
 					? this.getAssocLinkVariation(srcObj, trgNode)
 					: null;
-			const coords = this.linkUtils.getLinkCoords(link.type, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
+			const coords = this.linkUtils.getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
 			link.assocLinkVariation = assocLinkVariation;
 			link.srcPortId = srcPortId;
@@ -6405,7 +6411,7 @@ export default class SVGCanvasRenderer {
 		} else {
 			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 				const endPos = { x: link.trgPos.x_pos, y: link.trgPos.y_pos };
-				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos);
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
 
@@ -6426,7 +6432,7 @@ export default class SVGCanvasRenderer {
 		} else {
 			if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
 				const endPos = { x: link.srcPos.x_pos, y: link.srcPos.y_pos };
-				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos);
+				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(trgNode, endPos, link.trgOriginInfo);
 				coords.x2 = startPos.x;
 				coords.y2 = startPos.y;
 
@@ -6602,6 +6608,182 @@ export default class SVGCanvasRenderer {
 		sortedNodeLinks.forEach((lineData) => {
 			lineData.minInitialLineForElbow = runningInitialLine;
 			runningInitialLine += lineData.srcObj.layout.minInitialLineIncrement;
+		});
+	}
+
+	// Updates the links with up to two new fields (called srcOriginInfo and
+	// trgOriginInfo) based on the location of the nodes the links go
+	// from and to. The info in these fields is used to calculate the starting
+	// and ending position of straight line links. This ensures that input and
+	// output links that go in a certain direction (n, s, e, w) are grouped
+	// together so they can be separated out when straight lines are drawn
+	// between nodes.
+	updateLinksForNodes() {
+		this.activePipeline.nodes.forEach((n) => this.updateLinksForNode(n));
+	}
+
+	// Updates the links going into and out of the node passed in with up to
+	// two new fields (called srcOriginInfo and trgOriginInfo).
+	updateLinksForNode(node) {
+		const linksInfo = {};
+		linksInfo.n = [];
+		linksInfo.s = [];
+		linksInfo.e = [];
+		linksInfo.w = [];
+
+		// Update the linksInfo arrays for each direction: n, s, e and w.
+		this.activePipeline.links.forEach((link) => {
+			if (link.trgNode && link.trgNode.id === node.id) {
+				if (link.srcObj) {
+					const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
+					linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
+
+				} else if (link.srcPos) {
+					const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
+					linksInfo[dir].push({ type: "in", x: link.srcPos.x_pos, y: link.srcPos.y_pos, link });
+				}
+
+			} else if (link.srcObj && link.srcObj.id === node.id) {
+				if (link.trgNode) {
+					const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
+					linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
+
+				} else if (link.trgPos) {
+					const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
+					linksInfo[dir].push({ type: "out", x: link.trgPos.x_pos, y: link.trgPos.y_pos, link });
+				}
+			}
+		});
+
+		linksInfo.n = this.sortLinksInfo(linksInfo.n, NORTH);
+		linksInfo.s = this.sortLinksInfo(linksInfo.s, SOUTH);
+		linksInfo.e = this.sortLinksInfo(linksInfo.e, EAST);
+		linksInfo.w = this.sortLinksInfo(linksInfo.w, WEST);
+
+		this.updateLinksInfo(linksInfo.n, NORTH);
+		this.updateLinksInfo(linksInfo.s, SOUTH);
+		this.updateLinksInfo(linksInfo.e, EAST);
+		this.updateLinksInfo(linksInfo.w, WEST);
+	}
+
+	// Returns the direction of a link from the start node to the end node
+	// as either NORTH, SOUTH, EAST or WEST. Some direction combinations
+	// have to be overriden to prevent link lines overlapping.
+	getDirAdjusted(startNode, endNode) {
+		let dir = this.getDirToNode(startNode, endNode);
+
+		// When start -> end is SOUTH and end -> start is WEST the returned direction
+		// becomes EAST instead of SOUTH to prevent link lines overlapping.
+		if (dir === SOUTH) {
+			const dir2 = this.getDirToNode(endNode, startNode);
+			if (dir2 === WEST) {
+				dir = EAST;
+			}
+
+		// When start -> end is NORTH and end -> start is EAST the returned direction
+		// becomes WEST instead of NORTH to prevent link lines overlapping.
+		} else if (dir === NORTH) {
+			const dir2 = this.getDirToNode(endNode, startNode);
+			if (dir2 === EAST) {
+				dir = WEST;
+			}
+		}
+		return dir;
+	}
+
+	// Returns the direction (NORTH, SOUTH, EAST or WEST) from the start node
+	// to the end node.
+	getDirToNode(startNode, endNode) {
+		const endX = this.nodeUtils.getNodeCenterPosX(endNode);
+		const endY = this.nodeUtils.getNodeCenterPosY(endNode);
+		return this.getDirToEndPos(startNode, endX, endY);
+	}
+
+	// Returns the direction (NORTH, SOUTH, EAST or WEST) from the start node
+	// to the end position endX, endY.
+	getDirToEndPos(startNode, endX, endY) {
+		const originX = this.nodeUtils.getNodeCenterPosX(startNode);
+		const originY = this.nodeUtils.getNodeCenterPosY(startNode);
+
+		const x = startNode.x_pos;
+		const y = startNode.y_pos;
+		const w = startNode.width;
+		const h = startNode.height;
+
+		return CanvasUtils.getDir(x, y, w, h, originX, originY, endX, endY);
+	}
+
+	// Returns the linksDirArray passed in with the linkInfo objects in the
+	// array ordered by the position of the end of each link line, depending on
+	// the direction (dir) of the lines. This is achieved by spliting the links
+	// into groups where links in the same group go to/from the same node.
+	sortLinksInfo(linksDirArrayIn, dir) {
+		let linksDirArray = linksDirArrayIn;
+		if (linksDirArray.length > 1) {
+			const groups = this.getLinkInfoGroups(linksDirArray);
+
+			forOwn(groups, (group) => {
+				group.forEach((li, i) => {
+					const node = li.endNode;
+					const parts = group.length + 1;
+
+					if (dir === NORTH || dir === SOUTH) {
+						li.x = node.x_pos + ((node.width / parts) * (i + 1));
+						li.y = this.nodeUtils.getNodeCenterPosY(node);
+					} else {
+						li.x = this.nodeUtils.getNodeCenterPosX(node);
+						li.y = node.y_pos + ((node.height / parts) * (i + 1));
+					}
+				});
+			});
+
+			// For NORTH and SOUTH links we sort linksDirArray by the x co-ordinate
+			// of the end of each link. For EAST and WEST we sort by the y
+			// co-ordinate.
+			if (dir === NORTH || dir === SOUTH) {
+				linksDirArray = linksDirArray.sort((a, b) => (a.x > b.x ? 1 : -1));
+			} else {
+				linksDirArray = linksDirArray.sort((a, b) => (a.y > b.y ? 1 : -1));
+			}
+		}
+		return linksDirArray;
+	}
+
+	// Returns a 'groups' object where each field is index by a node ID and
+	// contains an array of linkInfo objects that go to/from the node.
+	getLinkInfoGroups(linksDirArray) {
+		const groups = {};
+		linksDirArray.forEach((li) => {
+			// Only create groups for attached links.
+			if (li.endNode) {
+				if (!groups[li.endNode.id]) {
+					groups[li.endNode.id] = [];
+				}
+				groups[li.endNode.id].push(li);
+			}
+		});
+		return groups;
+	}
+
+	// Updates the link objects referenced by the linkInfo objects in the
+	// linksDirArray with info to specify the link direction (n, s, e or w),
+	// plus the index and number of connections. This is used when
+	// drawing straight lines to/from nodes to spread out the lines.
+	updateLinksInfo(linksDirArray, dir) {
+		linksDirArray.forEach((li, i) => {
+			if (li.type === "out") {
+				li.link.srcOriginInfo = {
+					dir: dir,
+					idx: i,
+					len: linksDirArray.length
+				};
+			} else {
+				li.link.trgOriginInfo = {
+					dir: dir,
+					idx: i,
+					len: linksDirArray.length
+				};
+			}
 		});
 	}
 
