@@ -17,10 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { InlineLoading } from "carbon-components-react";
-import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
+import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
+import { AccordionItem } from "carbon-components-react";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -82,17 +82,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	getRenderCategory() {
-		let caretClassName = "palette-flyout-category-caret";
-		if (!this.props.isPaletteOpen) {
-			caretClassName += " palette-flyout-category-caret-closed"; // When palette is closed extra style
-		}
-
-		let caretImage = null;
-		if (this.props.itemCount > 0 || this.props.category.empty_text) {
-			caretImage = this.props.isCategorySelected
-				? <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />
-				: <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
-		}
 
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
@@ -133,7 +122,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		}
 
 		const content = (
-			<div className="palette-flyout-category"
+			<AccordionItem title={itemText} className="palette-flyout-category"
 				data-id={get(this.props.category, "id", "")}
 				onClick={this.categorySelected}
 				value={this.props.category.label}
@@ -142,10 +131,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 			>
 				<div className="palette-flyout-category-item">
 					{itemImage}
-					{itemText}
 				</div>
-				{caretImage}
-			</div>
+			</AccordionItem>
 		);
 		return content;
 	}

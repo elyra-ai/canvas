@@ -23,6 +23,7 @@ import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 import PaletteFlyoutContentFilteredList from "./palette-flyout-content-filtered-list.jsx";
 import Logger from "../logging/canvas-logger.js";
+import { Accordion } from "carbon-components-react";
 
 const logger = new Logger("PaletteFlyoutContent");
 
@@ -91,7 +92,7 @@ class PaletteFlyoutContent extends React.Component {
 			}
 
 			contentDivs.push(
-				<div key={category.label + "-container"}>
+				<Accordion key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
@@ -102,7 +103,7 @@ class PaletteFlyoutContent extends React.Component {
 						isPaletteOpen={this.props.isPaletteOpen}
 					/>
 					{content}
-				</div>
+				</Accordion>
 			);
 		}
 		return contentDivs;
