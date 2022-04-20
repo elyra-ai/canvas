@@ -1402,7 +1402,7 @@ class App extends React.Component {
 		if (link.id && isEqual(link.propertyId, { name: "number" })) {
 			return { url: "https://www.google.com/", label: "More info" };
 		} else if (link.id && isEqual(link.propertyId, { name: "weather" })) {
-			return { url: "https://w3.ibm.com/#/", label: "Learn more" };
+			return { url: "https://www.yahoo.com/", label: "Learn more" };
 		} else if (link.id && isEqual(link.propertyId, { name: "checkbox" })) {
 			return { url: "https://www.google.com/", label: "Link in checkbox" };
 		}
