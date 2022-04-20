@@ -307,7 +307,7 @@ export default class APIPipeline {
 	createNode(data) {
 		let nodeTemplate = data.nodeTemplate;
 		// If the nodeTemplate has app_data.ui_data field then it will be a
-		// teamplate that conforms to the pipelineFlow schema and needs to be
+		// template that conforms to the pipelineFlow schema and needs to be
 		// converted to the internal format for a node.
 		if (has(data.nodeTemplate, "app_data.ui_data")) {
 			nodeTemplate = this.objectModel.convertNodeTemplate(nodeTemplate);

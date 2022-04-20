@@ -436,19 +436,24 @@ describe("Test enableLinkSelection = 'Handles' configuration option", function()
 });
 
 describe("Test selectedLinkSelection = 'Detachable' configuration option", function() {
+	// Note: Problems can occur when selectedInsertNodeDroppedOnLink is set to true with
+	// "Detachable" links, so we switch it to true here even though it is not strictly
+	// needed for these tests.
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({
 			"selectedLinkSelection": "Detachable",
-			"selectedLinkType": "Straight" });
+			"selectedLinkType": "Straight",
+			"selectedInsertNodeDroppedOnLink": true });
 		cy.openCanvasDefinition("detachedLinksCanvas.json");
+		cy.openCanvasPalette("modelerPalette.json");
 	});
 
 	it("Test a detached link can be created and undone", function() {
 		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfLinks(13);
 
-		// Create detached node
+		// Create detached link
 		cy.linkNodeOutputPortToPointOnCanvas("Binding (entry) node", "outPort", 200, 500);
 		cy.verifyNumberOfPortDataLinks(9); // One new data link should be created.
 		cy.verifyNumberOfLinks(14);
@@ -610,4 +615,34 @@ describe("Test selectedLinkSelection = 'Detachable' configuration option", funct
 		cy.verifyNumberOfSelectedObjects(0);
 	});
 
+	it("Test a new node can be dragged to the end of a detached link from palette", function() {
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfLinks(13);
+
+		// Drag node from palette
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Sample", 500, 450);
+
+		// Verify the two detachd links got attached to the new node
+		cy.verifyLinkBetweenNodes("Binding (entry) node", "Sample", 13);
+		cy.verifyLinkBetweenNodes("Sample", "Execution node", 13);
+	});
+
+	it("Test an existing node can be dragged to the end of a detached link from canvas", function() {
+		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfLinks(13);
+
+		// First create a new node on the canvas.
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Record Ops");
+		cy.dragNodeToPosition("Sample", 300, 450);
+
+		// Drag the node from the canvas to the detached links
+		cy.moveNodeToPosition("Sample", 200, 350);
+
+		// Verify the two detachd links got attached to the new node
+		cy.verifyLinkBetweenNodes("Binding (entry) node", "Sample", 13);
+		cy.verifyLinkBetweenNodes("Sample", "Execution node", 13);
+	});
 });

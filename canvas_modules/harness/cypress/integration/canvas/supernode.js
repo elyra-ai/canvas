@@ -310,8 +310,10 @@ describe("Test create a supernode with link that does not have port info", funct
 		// Link nodes
 		cy.linkNodes("Filler", "Type");
 		cy.verifyLinkBetweenNodes("Filler", "Type", 1);
+		cy.verifyLinkNodesActionOccurred("Filler", "Type");
 		cy.linkNodes("Filler", "Filter");
 		cy.verifyLinkBetweenNodes("Filler", "Filter", 2);
+		cy.verifyLinkNodesActionOccurred("Filler", "Filter");
 
 		// Verify number of nodes and links in pipeline
 		cy.verifyNumberOfNodesInPipeline(3);

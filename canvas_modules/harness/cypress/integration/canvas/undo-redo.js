@@ -41,6 +41,7 @@ describe("Test basic undo/redo operations", function() {
 		// link nodes
 		cy.linkNodes("Var. File", "Select");
 		cy.verifyLinkBetweenNodes("Var. File", "Select", 1);
+		cy.verifyLinkNodesActionOccurred("Var. File", "Select");
 		// Undo using shortcut keys
 		cy.shortcutKeysUndo();
 		cy.verifyNumberOfPortDataLinks(0);
@@ -401,6 +402,7 @@ describe("Test for Multiple undo/redo operations", function() {
 		// Link nodes
 		cy.linkNodes("Filter", "Neural Net");
 		cy.verifyLinkBetweenNodes("Filter", "Neural Net", 21);
+		cy.verifyLinkNodesActionOccurred("Filter", "Neural Net");
 
 		// Drag 2 nodes from palette to canvas
 		cy.clickToolbarPaletteOpen();
@@ -412,6 +414,7 @@ describe("Test for Multiple undo/redo operations", function() {
 		// Link nodes
 		cy.linkNodes("Select", "Sort");
 		cy.verifyLinkBetweenNodes("Select", "Sort", 22);
+		cy.verifyLinkNodesActionOccurred("Select", "Sort");
 
 		// Undo/redo link nodes and drag nodes
 		cy.clickToolbarUndo();

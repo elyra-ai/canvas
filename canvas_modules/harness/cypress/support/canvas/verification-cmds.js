@@ -810,6 +810,9 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 	cy.getCountLinksBetweenNodes(srcNodeName, trgNodeName)
 		.then((noOfLinks) => expect(noOfLinks).to.equal(1));
 
+});
+
+Cypress.Commands.add("verifyLinkNodesActionOccurred", (srcNodeName, trgNodeName) => {
 	// verify that an event for a new link is in the external object model event log
 	cy.getNodeIdForLabel(srcNodeName)
 		.then((srcNodeId) => {
@@ -820,7 +823,8 @@ Cypress.Commands.add("verifyLinkBetweenNodes", (srcNodeName, trgNodeName, linkCo
 		});
 });
 
-function verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId) {
+
+function verifyEditActionHandlerLinkNodesEntryInConsole(srcNodeId, trgNodeId, action) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect(lastEventLog.event).to.equal("editActionHandler(): linkNodes");
@@ -1191,6 +1195,12 @@ Cypress.Commands.add("verifyNotificationIconType", (type) => {
 	} else {
 		cy.get(".notificationCounterIcon").should("not.have.any.keys", ["info", "success", "warning", "error"]);
 	}
+});
+
+Cypress.Commands.add("verifyCanvasTransform", (movString) => {
+	cy.get("#canvas-div-0 .d3-canvas-group")
+		.invoke("attr", "transform")
+		.should("eq", movString);
 });
 
 Cypress.Commands.add("verifyNotificationCounter", (count) => {

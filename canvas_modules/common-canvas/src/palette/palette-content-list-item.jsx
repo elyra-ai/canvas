@@ -42,6 +42,7 @@ class PaletteContentListItem extends React.Component {
 		this.showShortDescription = this.showShortDescription.bind(this);
 
 		this.onDragStart = this.onDragStart.bind(this);
+		this.onDragEnd = this.onDragEnd.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -61,7 +62,7 @@ class PaletteContentListItem extends React.Component {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
-		this.props.canvasController.setDragNodeTemplate(this.props.nodeTypeInfo.nodeType);
+		this.props.canvasController.nodeTemplateDragStart(this.props.nodeTypeInfo.nodeType);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -70,6 +71,11 @@ class PaletteContentListItem extends React.Component {
 		if (this.ghostData) {
 			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.centerX, this.ghostData.centerY);
 		}
+	}
+
+	// This is needed in-case the drag ends somewhere other than the canvas area.
+	onDragEnd() {
+		this.props.canvasController.nodeTemplateDragEnd();
 	}
 
 	onDoubleClick() {
@@ -295,6 +301,7 @@ class PaletteContentListItem extends React.Component {
 				onMouseLeave={this.onMouseLeave}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
+				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}

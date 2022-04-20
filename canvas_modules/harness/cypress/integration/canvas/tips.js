@@ -379,32 +379,32 @@ describe("Test generated tooltips for undo/redo actions", function() {
 		// Case 1: delete nodes
 		cy.clickNode("Sort");
 		cy.deleteNodeUsingKeyboard("Sort");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 node");
 		cy.clickToolbarUndo();
 
 		// Case 2: delete comments
 		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
 		cy.deleteCommentUsingContextMenu(" comment 3 sample comment text");
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comment");
 		cy.clickToolbarUndo();
 
 		// Case 3: Delete nodes and comments
 		cy.clickNode("Sort");
 		cy.ctrlOrCmdClickComment(" comment 3 sample comment text");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 comments");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 node and 1 comment");
 		cy.clickToolbarUndo();
 
 		// Case 4: Delete nodes and links
 		cy.ctrlOrCmdClickNode("C5.0");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 1 links");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 node and 1 link");
 		cy.clickToolbarUndo();
 
 		// Case 5: Delete comments and links
 		cy.ctrlOrCmdClickComment(" comment 1");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 1 links");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comment and 1 link");
 		cy.clickToolbarUndo();
 
 		// Case 6: delete  nodes, comments and links
@@ -412,7 +412,7 @@ describe("Test generated tooltips for undo/redo actions", function() {
 		cy.ctrlOrCmdClickComment(" comment 1");
 		cy.ctrlOrCmdClickNode("C5.0");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 2 nodes, 1 comments and 2 links");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 2 nodes, 1 comment and 2 links");
 		cy.clickToolbarUndo();
 	});
 
@@ -446,7 +446,7 @@ describe("Test generated tooltips for undo/redo actions", function() {
 		// Case 7: Delete links
 		cy.clickLink("ba2a3402-c34d-4d7e-a8fa-fea0ac34b5fb");
 		cy.shortcutKeysDelete();
-		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 links");
+		cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 link");
 	});
 });
 
@@ -587,12 +587,12 @@ describe("Test undo redo tooltips for different actions", function() {
 			cy.clickToolbarDelete();
 			// Verify undo/redo tooltip after deleting node
 			cy.hoverOverToolbarItem(".undo-action");
-			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 nodes and 3 links");
+			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 node and 3 links");
 			cy.mouseoutToolbarItem(".undo-action");
 			cy.clickToolbarUndo();
 
 			cy.hoverOverToolbarItem(".redo-action");
-			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 nodes and 3 links");
+			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 node and 3 links");
 			cy.mouseoutToolbarItem(".redo-action");
 			cy.clickToolbarRedo();
 
@@ -600,12 +600,12 @@ describe("Test undo redo tooltips for different actions", function() {
 			cy.deleteCommentUsingToolbar("The 4 different node types");
 			// Verify undo/redo tooltip after deleting comment
 			cy.hoverOverToolbarItem(".undo-action");
-			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comments and 3 links");
+			cy.verifyTipForToolbarItem(".undo-action", "Undo: Delete 1 comment and 3 links");
 			cy.mouseoutToolbarItem(".undo-action");
 			cy.clickToolbarUndo();
 
 			cy.hoverOverToolbarItem(".redo-action");
-			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 comments and 3 links");
+			cy.verifyTipForToolbarItem(".redo-action", "Redo: Delete 1 comment and 3 links");
 			cy.mouseoutToolbarItem(".redo-action");
 			cy.clickToolbarRedo();
 		});

@@ -31,6 +31,7 @@ describe("Test adding nodes from palette", function() {
 		cy.dragNodeToPosition("Derive", 400, 200);
 		cy.linkNodes("Var. File", "Derive");
 		cy.verifyLinkBetweenNodes("Var. File", "Derive", 1);
+		cy.verifyLinkNodesActionOccurred("Var. File", "Derive");
 		cy.clickToolbarPaletteClose();
 
 		// Link comment to node
@@ -44,17 +45,21 @@ describe("Test adding nodes from palette", function() {
 		cy.dragNodeToPosition("Filter", 500, 200);
 		cy.linkNodes("Derive", "Filter");
 		cy.verifyLinkBetweenNodes("Derive", "Filter", 3);
+		cy.verifyLinkNodesActionOccurred("Derive", "Filter");
 		cy.dragNodeToPosition("Type", 600, 200);
 		cy.linkNodes("Filter", "Type");
 		cy.verifyLinkBetweenNodes("Filter", "Type", 4);
+		cy.verifyLinkNodesActionOccurred("Filter", "Type");
 		cy.clickCategory("Modeling");
 		cy.dragNodeToPosition("C5.0", 700, 100);
 		cy.dragNodeToPosition("Neural Net", 800, 300);
 		cy.clickToolbarPaletteClose();
 		cy.linkNodes("Type", "C5.0");
 		cy.verifyLinkBetweenNodes("Type", "C5.0", 5);
+		cy.verifyLinkNodesActionOccurred("Type", "C5.0");
 		cy.linkNodes("Type", "Neural Net");
 		cy.verifyLinkBetweenNodes("Type", "Neural Net", 6);
+		cy.verifyLinkNodesActionOccurred("Type", "Neural Net");
 
 		// Link comment to node
 		cy.getNodeWithLabel("Type").click();

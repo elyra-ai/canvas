@@ -230,7 +230,12 @@ class CanvasContents extends React.Component {
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
 	onMouseMove(e) {
-		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
+		if (e.target &&
+			e.target.className &&
+			(
+				e.target.className.baseVal === "svg-area" ||
+				e.target.className.baseVal === "d3-svg-background"
+			)) {
 			this.mousePos = {
 				x: e.clientX,
 				y: e.clientY
@@ -393,6 +398,7 @@ class CanvasContents extends React.Component {
 		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
 		if (nodeTemplate) {
 			this.svgCanvasD3.nodeTemplateDropped(nodeTemplate, event.clientX, event.clientY);
+			this.props.canvasController.nodeTemplateDragEnd();
 
 		} else {
 			let dropData = this.getDNDJson(event);
@@ -411,19 +417,20 @@ class CanvasContents extends React.Component {
 			this.svgCanvasD3.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
 
-		// Clear the drag template.
-		this.props.canvasController.setDragNodeTemplate(null);
-
 		// Also clear dataTransfer data for when we get external objects.
 		event.dataTransfer.clearData();
 	}
 
 	dragOver(event) {
-		const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
-		if (nodeTemplate && (this.dragX !== event.clientX || this.dragY !== event.clientY)) {
+		// Drag over is continually fired so only pass on the event when the mouse
+		// cursor moves a reasonable distance.
+		if (Math.abs(this.dragX - event.clientX) > 5 || Math.abs(this.dragY - event.clientY) > 5) {
 			this.dragX = event.clientX;
 			this.dragY = event.clientY;
-			this.svgCanvasD3.nodeTemplateDraggedOver(nodeTemplate, event.clientX, event.clientY);
+			const nodeTemplate = this.props.canvasController.getDragNodeTemplate();
+			if (nodeTemplate) {
+				this.svgCanvasD3.nodeTemplateDragOver(nodeTemplate, event.clientX, event.clientY);
+			}
 		}
 	}
 
