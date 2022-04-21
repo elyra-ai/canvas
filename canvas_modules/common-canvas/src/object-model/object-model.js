@@ -790,8 +790,8 @@ export default class ObjectModel {
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
 
 		} else {
-			node.height = Math.max(node.height, node.resizeHeight || 0);
-			node.width = Math.max(node.width, node.resizeWidth || 0);
+			node.height = node.resizeHeight ? node.resizeHeight : node.height;
+			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
 
 		return node;
@@ -824,8 +824,8 @@ export default class ObjectModel {
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
 
 		} else {
-			node.height = Math.max(node.height, node.resizeHeight || 0);
-			node.width = Math.max(node.width, node.resizeWidth || 0);
+			node.height = node.resizeHeight ? node.resizeHeight : node.height;
+			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
 
 		return node;

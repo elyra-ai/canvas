@@ -783,9 +783,16 @@ export default class SVGCanvasRenderer {
 		const ghost = this.getGhostDimensions();
 		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
 		node.layout = this.canvasController.getObjectModel().getNodeLayout();
-		node.width = node.is_expanded ? node.expanded_width : ghost.width;
-		node.height = node.is_expanded ? node.expanded_height : ghost.height;
-
+		if (node.is_expanded) {
+			node.width = node.expanded_width;
+			node.height = node.expanded_height;
+		} else if (node.isResized) {
+			node.width = node.resizeWidth;
+			node.height = node.resizeHeight;
+		} else {
+			node.width = ghost.width;
+			node.height = ghost.height;
+		}
 		const nodeImage = this.getNodeImage(node);
 		const nodeImageType = this.getImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();

@@ -47,6 +47,7 @@ import uiParametersCanvas from "../../../harness/test_resources/diagrams/uiParam
 import titanicFlowCanvas from "../../../harness/test_resources/diagrams/titanicFlowCanvas.json";
 import stylesCanvas from "../../../harness/test_resources/diagrams/stylesCanvas.json";
 import editableDecLabelsCanvas from "../../../harness/test_resources/diagrams/editableDecLabelsCanvas.json";
+import resizedNodesCanvas from "../../../harness/test_resources/diagrams/resizedNodesCanvas.json";
 
 import allNodesV2 from "../../../harness/test_resources/diagrams/v2-allNodes.json";
 import allTypesCanvasV2 from "../../../harness/test_resources/diagrams/v2-allTypesCanvas.json";
@@ -197,6 +198,10 @@ describe("ObjectModel files handling test", () => {
 
 	it("should read in and write out the same file: editableDecLabelsCanvas", () => {
 		readWriteSameFile(editableDecLabelsCanvas);
+	});
+
+	it("should read in and write out the same file: editableDecLabelsCanvas", () => {
+		readWriteSameFile(resizedNodesCanvas);
 	});
 
 	// --------------------------------------------------------------------------
