@@ -15,6 +15,61 @@
  */
 
 
+Cypress.Commands.add("resizeObjectToDimensions", (srcBodySelector, srcSizingSelector, corner, newWidth, newHeight) => {
+	cy.getObjectDimensions(srcBodySelector).then((dimensions) => {
+		const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
+		const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
+		let canvasX;
+		let canvasY;
+		let startPosition;
+
+		if (corner === "north-west") {
+			canvasX = dimensions.x_pos - (newWidth - dimensions.width) - subtractOffsetForSizingArea;
+			canvasY = dimensions.y_pos - (newHeight - dimensions.height) - subtractOffsetForSizingArea;
+			startPosition = "topLeft";
+
+		} else if (corner === "north-east") {
+			canvasX = dimensions.x_pos + newWidth + addOffsetForSizingArea;
+			canvasY = dimensions.y_pos - (newHeight - dimensions.height) - subtractOffsetForSizingArea;
+			startPosition = "topRight";
+
+		} else if (corner === "south-west") {
+			canvasX = dimensions.x_pos - (newWidth - dimensions.width) - subtractOffsetForSizingArea;
+			canvasY = dimensions.y_pos + newHeight + addOffsetForSizingArea;
+			startPosition = "bottomLeft";
+
+		} else { // "south-east"
+			canvasX = dimensions.x_pos + newWidth + addOffsetForSizingArea;
+			canvasY = dimensions.y_pos + newHeight + addOffsetForSizingArea;
+			startPosition = "bottomRight";
+		}
+
+		cy.window().then((win) => {
+			cy.getCanvasTranslateCoords()
+				.then((transform) => {
+					cy.get(srcSizingSelector)
+						.trigger("mouseenter", startPosition, { view: win })
+						.trigger("mousedown", startPosition, { view: win });
+					cy.get("#canvas-div-0")
+						.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+						.trigger("mouseup", canvasX + transform.x, canvasY + transform.y, { view: win });
+				});
+		});
+	});
+});
+
+Cypress.Commands.add("getObjectDimensions", (objSelector) => {
+	cy.get(objSelector).then((obj) => {
+		const dimensions = {
+			x_pos: Math.round(obj[0].__data__.x_pos),
+			y_pos: Math.round(obj[0].__data__.y_pos),
+			width: obj[0].__data__.width,
+			height: obj[0].__data__.height
+		};
+		return dimensions;
+	});
+});
+
 Cypress.Commands.add("getCanvasTranslateCoords", () => {
 	cy.get(`div#canvas-div-${document.instanceId} > div > .svg-area > g`)
 		.then((g) => {

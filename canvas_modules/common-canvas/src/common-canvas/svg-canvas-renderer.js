@@ -6611,13 +6611,13 @@ export default class SVGCanvasRenderer {
 		});
 	}
 
-	// Updates the links with up to two new fields (called srcOriginInfo and
-	// trgOriginInfo) based on the location of the nodes the links go
-	// from and to. The info in these fields is used to calculate the starting
-	// and ending position of straight line links. This ensures that input and
-	// output links that go in a certain direction (n, s, e, w) are grouped
-	// together so they can be separated out when straight lines are drawn
-	// between nodes.
+	// Updates the data links for all the nodes with two optional fields
+	// (called srcOriginInfo and trgOriginInfo) based on the location of the
+	// nodes the links go from and to. The info in these fields is used to
+	// calculate the starting and ending position of straight line links.
+	// This ensures that input and output links that go in a certain direction
+	// (NORTH, SOUTH, EAST or WEST) are grouped together so they can be
+	// separated out when straight lines are drawn between nodes.
 	updateLinksForNodes() {
 		this.activePipeline.nodes.forEach((n) => this.updateLinksForNode(n));
 	}
@@ -6633,24 +6633,26 @@ export default class SVGCanvasRenderer {
 
 		// Update the linksInfo arrays for each direction: n, s, e and w.
 		this.activePipeline.links.forEach((link) => {
-			if (link.trgNode && link.trgNode.id === node.id) {
-				if (link.srcObj) {
-					const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
-					linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
+			if (link.type === NODE_LINK) {
+				if (link.trgNode && link.trgNode.id === node.id) {
+					if (link.srcObj) {
+						const dir = this.getDirAdjusted(link.trgNode, link.srcObj);
+						linksInfo[dir].push({ type: "in", endNode: link.srcObj, link });
 
-				} else if (link.srcPos) {
-					const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
-					linksInfo[dir].push({ type: "in", x: link.srcPos.x_pos, y: link.srcPos.y_pos, link });
-				}
+					} else if (link.srcPos) {
+						const dir = this.getDirToEndPos(link.trgNode, link.srcPos.x_pos, link.srcPos.y_pos);
+						linksInfo[dir].push({ type: "in", x: link.srcPos.x_pos, y: link.srcPos.y_pos, link });
+					}
 
-			} else if (link.srcObj && link.srcObj.id === node.id) {
-				if (link.trgNode) {
-					const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
-					linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
+				} else if (link.srcObj && link.srcObj.id === node.id) {
+					if (link.trgNode) {
+						const dir = this.getDirAdjusted(link.srcObj, link.trgNode);
+						linksInfo[dir].push({ type: "out", endNode: link.trgNode, link });
 
-				} else if (link.trgPos) {
-					const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
-					linksInfo[dir].push({ type: "out", x: link.trgPos.x_pos, y: link.trgPos.y_pos, link });
+					} else if (link.trgPos) {
+						const dir = this.getDirToEndPos(link.srcObj, link.trgPos.x_pos, link.trgPos.y_pos);
+						linksInfo[dir].push({ type: "out", x: link.trgPos.x_pos, y: link.trgPos.y_pos, link });
+					}
 				}
 			}
 		});

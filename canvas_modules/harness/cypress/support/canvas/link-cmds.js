@@ -298,6 +298,55 @@ Cypress.Commands.add("getPortLinks", (pipeline, srcNodeName, srcPortId, trgNodeN
 		});
 });
 
+Cypress.Commands.add("getDetachedPortLinksFromSource", (pipeline, srcNodeName, srcPortId) => {
+	const links = pipeline.links;
+	cy.getNodeIdForLabel(srcNodeName)
+		.then((srcNodeId) => {
+			var outLinks = [];
+			links.forEach(function(link) {
+				// In the rare case an old canvas document (x-****) is loaded,
+				// the ports will be undefined so just compare node IDs in that case.
+				if (!link.srcNodePortId) {
+					if (link.srcNodeId === srcNodeId &&
+							link.trgPos) {
+						outLinks.push(link);
+					}
+
+				} else if (link.srcNodeId === srcNodeId &&
+						link.srcNodePortId === srcPortId &&
+						link.trgPos) {
+					outLinks.push(link);
+				}
+			});
+			return outLinks;
+		});
+});
+
+Cypress.Commands.add("getDetachedPortLinksToTarget", (pipeline, trgNodeName, trgPortId) => {
+	const links = pipeline.links;
+	cy.getNodeIdForLabel(trgNodeName)
+		.then((trgNodeId) => {
+			var outLinks = [];
+			links.forEach(function(link) {
+				// In the rare case an old canvas document (x-****) is loaded,
+				// the ports will be undefined so just compare node IDs in that case.
+				if (!link.trgNodePortId) {
+					if (link.trgNodeId === trgNodeId &&
+							link.srcPos) {
+						outLinks.push(link);
+					}
+
+				} else if (link.trgNodeId === trgNodeId &&
+						link.trgNodePortId === trgPortId &&
+						link.srcPos) {
+					outLinks.push(link);
+				}
+			});
+			return outLinks;
+		});
+});
+
+
 Cypress.Commands.add("deleteLinkAt", (linkX, linkY) => {
 	// Delete link using context menu
 	cy.get(".d3-svg-canvas-div")
