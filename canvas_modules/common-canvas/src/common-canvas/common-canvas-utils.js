@@ -382,13 +382,10 @@ export default class CanvasUtils {
 			const botRightRatio = (originY - bottomEdge) / (originX - rightEdge);
 			const ratioRight = originToEndY / originToEndX;
 
-			// North
 			if (ratioRight < topRightRatio) {
 				dir = NORTH;
-			// South
 			} else if (ratioRight > botRightRatio) {
 				dir = SOUTH;
-			// East
 			} else {
 				dir = EAST;
 			}
@@ -398,13 +395,10 @@ export default class CanvasUtils {
 			const botLeftRatio = (originY - bottomEdge) / originLeftOffsetX;
 			const ratioLeft = originToEndY / originToEndX;
 
-			// North
 			if (ratioLeft > topLeftRatio) {
 				dir = NORTH;
-			// South
 			} else if (ratioLeft < botLeftRatio) {
 				dir = SOUTH;
-			// West
 			} else {
 				dir = WEST;
 			}

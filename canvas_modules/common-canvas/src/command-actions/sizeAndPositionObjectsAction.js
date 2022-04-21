@@ -53,7 +53,10 @@ export default class SizeAndPositionObjectsAction extends Action {
 					x_pos: obj.x_pos,
 					y_pos: obj.y_pos,
 					width: obj.width,
-					height: obj.height
+					height: obj.height,
+					isResized: obj.isResized,
+					resizeWidth: obj.resizeWidth,
+					resizeHeight: obj.resizeHeight
 				};
 			}
 		});

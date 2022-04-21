@@ -2521,7 +2521,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Node Sizing Area.
-		newNodeGroups.filter((d) => this.isNodeResizable(d))
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 			.append("path")
 			.attr("class", "d3-node-sizing")
 			.call(this.attachNodeSizingListeners.bind(this));
