@@ -943,6 +943,9 @@ export default class CanvasUtils {
 		return this.isSupernode(node) && this.isExpanded(node);
 	}
 
+	static isCollapsedSupernode(node) {
+		return this.isSupernode(node) && !this.isExpanded(node);
+	}
 	// Returns true if the node passed in is a binding node in a subflow
 	// for a supernode.
 	static isSuperBindingNode(d) {

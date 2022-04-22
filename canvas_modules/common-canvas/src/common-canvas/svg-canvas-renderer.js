@@ -624,12 +624,25 @@ export default class SVGCanvasRenderer {
 		return this.dragging;
 	}
 
-
 	// Returns true if the node should be resizeable. Expanded supernodes are
-	// always resizabele and all other nodes are resizeable when
-	// enableResizableNodes is switched on.
+	// always resizabele and all other nodes, except collapsed supernodes, are
+	// resizeable when enableResizableNodes is switched on.
 	isNodeResizable(node) {
-		return CanvasUtils.isExpandedSupernode(node) || this.config.enableResizableNodes;
+		if (!this.config.enableEditingActions ||
+				CanvasUtils.isSuperBindingNode(node) ||
+				CanvasUtils.isCollapsedSupernode(node) ||
+				(!this.config.enableResizableNodes && !CanvasUtils.isExpandedSupernode(node))) {
+			return false;
+		}
+		return true;
+	}
+
+	// Returns true if the node should have a resizing area. We should display
+	// a sizing area even for collapsed supernodes so it is available if/when
+	// the supernode is expanded
+	shouldDisplayNodeSizingArea(node) {
+		return !CanvasUtils.isSuperBindingNode(node) &&
+			(CanvasUtils.isSupernode(node) || this.config.enableResizableNodes);
 	}
 
 	getAllNodeGroupsSelection() {
@@ -2528,7 +2541,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		// Node Sizing Area.
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+		newNodeGroups.filter((d) => this.shouldDisplayNodeSizingArea(d))
 			.append("path")
 			.attr("class", "d3-node-sizing")
 			.call(this.attachNodeSizingListeners.bind(this));
@@ -2890,8 +2903,7 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.config.enableEditingActions && // Only set cursor when we are able to edit nodes
-						this.isNodeResizable(d) &&
+				if (this.isNodeResizable(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
 					let cursorType = "pointer";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
@@ -2901,6 +2913,9 @@ export default class SVGCanvasRenderer {
 					}
 					d3.select(d3Event.currentTarget).style("cursor", cursorType);
 				}
+			})
+			.on("mouseleave", (d3Event, d) => {
+				d3.select(d3Event.currentTarget).style("cursor", "pointer");
 			});
 	}
 
