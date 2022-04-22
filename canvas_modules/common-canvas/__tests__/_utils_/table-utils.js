@@ -159,6 +159,20 @@ function selectCheckboxesUsingKeyboard(wrapper, rows) {
 	}
 }
 
+
+/*
+* Select/deselect multiple rows by shift + selecting row number
+* @param wrapper
+* @param rows - single row number.
+*/
+function shiftSelectCheckbox(wrapper, rowNumber) {
+	const checkboxes = getTableRows(wrapper).find(".properties-vt-row-checkbox");
+	// row index start from 0 instead of 1 so subtract 1 from rowNumber
+	checkboxes.at(rowNumber - 1).simulate("mouseEnter");
+	checkboxes.at(rowNumber - 1).simulate("mouseDown", { shiftKey: true });
+	checkboxes.at(rowNumber - 1).simulate("mouseLeave");
+}
+
 /*
 * Select the checkbox from the table header that is the `Select row` column
 *  This is usually the first column
@@ -215,6 +229,7 @@ module.exports = {
 	selectHeaderCheckbox: selectHeaderCheckbox,
 	selectCheckboxes: selectCheckboxes,
 	selectCheckboxesUsingKeyboard: selectCheckboxesUsingKeyboard,
+	shiftSelectCheckbox: shiftSelectCheckbox,
 	selectHeaderColumnCheckbox: selectHeaderColumnCheckbox,
 	selectFieldPickerHeaderCheckbox: selectFieldPickerHeaderCheckbox,
 	validateSelectedRowNum: validateSelectedRowNum

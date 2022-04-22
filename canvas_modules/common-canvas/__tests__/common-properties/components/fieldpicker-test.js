@@ -835,3 +835,100 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 	});
 
 });
+
+describe("field-picker control multiple rows selection", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		wrapper = renderedObject.wrapper;
+		propertyUtils.openSummaryPanel(wrapper, "structuretableMultiInputSchema-summary-panel");
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should select/deselect multiple rows in fieldPicker table using shift key", () => {
+		let fieldPicker;
+		let tableRows;
+		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		expect(tableRows.length).to.equal(29);
+
+		// Verify no rows are selected
+		const selected = tableUtils.validateSelectedRowNum(tableRows);
+		expect(selected).to.have.length(0);
+
+		// Shift + select 8th row
+		tableUtils.shiftSelectCheckbox(tableRows, 8);
+		// Update wrapper
+		wrapper.update();
+		fieldPicker = wrapper.find("div.properties-fp-table");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		// Verify 1-8 rows are selected
+		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(8);
+
+		// shift + select 15th row
+		tableUtils.shiftSelectCheckbox(tableRows, 15);
+		// Update wrapper
+		wrapper.update();
+		fieldPicker = wrapper.find("div.properties-fp-table");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		// Verify 1-15 rows are selected
+		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(15);
+
+		// shift + select 5th row -- this will deselect 5-15 rows.
+		tableUtils.shiftSelectCheckbox(tableRows, 5);
+		// Update wrapper
+		wrapper.update();
+		fieldPicker = wrapper.find("div.properties-fp-table");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		// 5-15 rows will be deselected. And 1-4 rows will remain selected
+		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(4);
+
+		// shift + select 1st row -- this will deselect all rows
+		tableUtils.shiftSelectCheckbox(tableRows, 1);
+		// Update wrapper
+		wrapper.update();
+		fieldPicker = wrapper.find("div.properties-fp-table");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		// Verify all rows are deselected
+		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(0);
+
+		// shift + select 29th row -- this will select all rows
+		tableUtils.shiftSelectCheckbox(tableRows, 29);
+		// Update wrapper
+		wrapper.update();
+		fieldPicker = wrapper.find("div.properties-fp-table");
+		tableRows = tableUtils.getTableRows(fieldPicker);
+		// Verify all rows are selected
+		expect(tableUtils.validateSelectedRowNum(tableRows)).to.have.length(29);
+	});
+
+	it("should add rows as per their row number in the table irrespective of the user selection order", () => {
+		const fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-structuretableMultiInputSchema");
+		const tableRows = tableUtils.getTableRows(fieldPicker);
+		const fieldNames = fieldPicker.find(".properties-fp-field-name");
+		const schemaNames = fieldPicker.find(".properties-fp-schema");
+		expect(tableRows.length).to.equal(29);
+
+		// Verify no rows are selected
+		const selected = tableUtils.validateSelectedRowNum(tableRows);
+		expect(selected).to.have.length(0);
+
+		// select row number in random order
+		tableUtils.selectCheckboxes(tableRows, [1, 15, 10, 12, 9]);
+		fieldPicker.find("button[data-id='properties-apply-button']").simulate("click");
+
+		const renameFieldTable = wrapper.find("div[data-id='properties-ft-structuretableMultiInputSchema']");
+		const secondColumn = renameFieldTable.find(".properties-field-type-icon + .properties-field-type");
+
+		// Even though we selected [1, 15, 10, 12, 9], they should be displayed as [1, 9, 10, 12, 15]
+		expect(secondColumn.at(3).text()).to.equal(schemaNames.at(1).text() + "." + fieldNames.at(1).text());
+		expect(secondColumn.at(4).text()).to.equal(schemaNames.at(9).text() + "." + fieldNames.at(9).text());
+		expect(secondColumn.at(5).text()).to.equal(schemaNames.at(10).text() + "." + fieldNames.at(10).text());
+		expect(secondColumn.at(6).text()).to.equal(schemaNames.at(12).text() + "." + fieldNames.at(12).text());
+		expect(secondColumn.at(7).text()).to.equal(schemaNames.at(15).text() + "." + fieldNames.at(15).text());
+	});
+
+});

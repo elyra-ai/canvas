@@ -326,3 +326,118 @@ describe("All checkboxes in someofselect must have labels", () => {
 		});
 	});
 });
+
+describe("someofselect control multiple rows selection", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(SomeOfSelectParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should select/deselect multiple rows in someofselect using shift key", () => {
+		let someofselectWrapper;
+		let someofselectCheckbox;
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_empty_array']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(6);
+
+		// Verify no rows are selected
+		const selected = tableUtils.validateSelectedRowNum(someofselectWrapper);
+		expect(selected).to.have.length(0);
+
+		// select 2nd row
+		tableUtils.selectCheckboxes(someofselectWrapper, [1]);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_empty_array']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// verify 1 row is selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(1);
+
+		// Shift + select 5th row
+		tableUtils.shiftSelectCheckbox(someofselectWrapper, 5);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_empty_array']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify 2-5 rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(4);
+
+		// Shift + select 1st row
+		tableUtils.shiftSelectCheckbox(someofselectWrapper, 1);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_empty_array']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify 1-5 rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(5);
+
+		// Shift + select 5th row
+		tableUtils.shiftSelectCheckbox(someofselectWrapper, 5);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_empty_array']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify all rows are deselected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(0);
+	});
+
+	it("verify multiple rows select/deselect works fine with filtered enum", () => {
+		// Open filters tab
+		wrapper.find("button.properties-category-title")
+			.at(2)
+			.simulate("click");
+		let someofselectWrapper;
+		let someofselectCheckbox;
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		expect(someofselectCheckbox).to.have.length(5);
+
+		// Verify 1 row is selected
+		const selected = tableUtils.validateSelectedRowNum(someofselectWrapper);
+		expect(selected).to.have.length(1);
+
+		// Shift + select 5th row
+		tableUtils.shiftSelectCheckbox(someofselectWrapper, 5);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify all rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(5);
+
+		// Click on filtered enum button
+		renderedController.updatePropertyValue({ name: "filter" }, true);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// After filtering only 3 rows are displayed. Verify all 3 rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(3);
+
+		// Remove filter
+		renderedController.updatePropertyValue({ name: "filter" }, false);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify 3 rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(3);
+
+		// Shift + select 2nd row
+		tableUtils.shiftSelectCheckbox(someofselectWrapper, 2);
+		// Update wrapper
+		wrapper.update();
+		someofselectWrapper = wrapper.find("div[data-id='properties-someofselect_filtered']");
+		someofselectCheckbox = someofselectWrapper.find("input");
+		// Verify all rows are selected
+		expect(tableUtils.validateSelectedRowNum(someofselectCheckbox)).to.have.length(5);
+	});
+
+});

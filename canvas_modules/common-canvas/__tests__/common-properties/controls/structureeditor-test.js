@@ -487,7 +487,7 @@ describe("structureeditor control renders correctly in a nested structure", () =
 		structure = wrapper.find("div[data-id='properties-ci-nestedStructuretable']");
 		const tableRows = structure.find("div[data-role='properties-data-row']");
 		expect(tableRows).to.have.length(2);
-		const secondRow = tableRows.at(1);
+		const firstRow = tableRows.at(0);
 
 		actual = controller.getPropertyValue(propertyId);
 		expected = [
@@ -495,17 +495,17 @@ describe("structureeditor control renders correctly in a nested structure", () =
 			23,
 			[
 				[
-					"Field 5", 1, ["annotation for field 5"]
+					"Field 3", 1, []
 				],
 				[
-					"Field 3", 2, []
+					"Field 5", 2, ["annotation for field 5"]
 				]
 			]
 		];
 		expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
 
-		// // Modify values in the second row
-		const editButton = secondRow.find(".properties-subpanel-button").at(0);
+		// As "Field 3" row is displayed before "Field 5", it will be added as the first row. Modify values in the first row
+		const editButton = firstRow.find(".properties-subpanel-button").at(0);
 		editButton.simulate("click");
 		const userFields = wrapper.find("div[data-id='properties-userFieldsTable']");
 		userFields.find("textarea").simulate("change", { target: { value: "annotation for newly added Field 3" } });
@@ -517,10 +517,10 @@ describe("structureeditor control renders correctly in a nested structure", () =
 			23,
 			[
 				[
-					"Field 5", 1, ["annotation for field 5"]
+					"Field 3", 1, ["annotation for newly added Field 3"]
 				],
 				[
-					"Field 3", 2, ["annotation for newly added Field 3"]
+					"Field 5", 2, ["annotation for field 5"]
 				]
 			]
 		];
