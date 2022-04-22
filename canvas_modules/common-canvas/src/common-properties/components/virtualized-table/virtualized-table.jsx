@@ -54,6 +54,7 @@ class VirtualizedTable extends React.Component {
 			columnResized: false
 		};
 		this.virtualizedTableRef = React.createRef();
+		this.lastChecked = isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop();
 
 		this.isOverSelectOption = false;
 		this.mouseEventCalled = false;
@@ -88,7 +89,12 @@ class VirtualizedTable extends React.Component {
 					"index": index,
 					"originalRowIndex": rowData.originalRowIndex,
 					"selected": selected,
-					"isOverSelectOption": this.isOverSelectOption }, evt);
+					"isOverSelectOption": this.isOverSelectOption,
+					"selectMultipleRows": evt.shiftKey ? evt.shiftKey : false,
+					"lastCheckedRow": this.lastChecked === null ? 0 : this.lastChecked }, evt);
+
+				// Track lastChecked row for shift key selection
+				this.lastChecked = rowData.index;
 			}
 		}
 	}

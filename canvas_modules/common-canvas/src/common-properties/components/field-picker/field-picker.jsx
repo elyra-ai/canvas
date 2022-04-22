@@ -250,17 +250,16 @@ export default class FieldPicker extends React.Component {
 	updateFieldSelections(rowsIndex) {
 		const fields = this.getVisibleData();
 		const currField = Array.from(this.state.selectedFields);
+		// Remove previously selected fields
 		let current = currField.filter(function(value, index, arr) {
 			const idx = fields.findIndex((field) => field.name === currField[index]);
-			return (idx === -1 || rowsIndex.includes(idx));
+			return (idx === -1);
 		});
-		for (let i = 0; i < rowsIndex.length; i++) {
-			const field = fields[rowsIndex[i]];
-			if (field && !current.includes(field)) {
-				const fieldName = field.name;
-				current.push(fieldName);
-			}
-		}
+		// Add new selections in current
+		rowsIndex.forEach((rowIndex) => {
+			current.push(fields[rowIndex].name);
+		});
+
 		current = Array.from(new Set(current));
 		this.setState({
 			selectedFields: current
