@@ -216,28 +216,22 @@ export default class SvgCanvasLinks {
 	}
 
 	getCenterOffset(node, originInfo) {
-		let x = 0;
-		let y = 0;
 		const parts = originInfo.len + 1;
 		const index = originInfo.idx + 1;
-		switch (originInfo.dir) {
-		case NORTH:
-		case SOUTH: {
+
+		let x = 0;
+		let y = 0;
+
+		if (originInfo.dir === NORTH ||
+				originInfo.dir === SOUTH) {
 			x = node.x_pos + ((node.width / parts) * index);
 			y = this.nodeUtils.getNodeCenterPosY(node);
-			break;
-		}
-		case EAST:
-		case WEST: {
+		// EAST or WEST
+		} else {
 			x = this.nodeUtils.getNodeCenterPosX(node);
 			y = node.y_pos + ((node.height / parts) * index);
-			break;
 		}
-		default: {
-			x = 0;
-			y = 0;
-		}
-		}
+
 		return { x, y };
 	}
 
