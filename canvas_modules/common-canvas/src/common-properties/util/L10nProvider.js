@@ -92,6 +92,9 @@ export class ResourceDef {
 			if (resourceObj.type) {
 				resource.type = resourceObj.type;
 			}
+			if (resourceObj.link) {
+				resource.link = resourceObj.link;
+			}
 		}
 		return resource;
 	}

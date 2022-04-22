@@ -109,7 +109,13 @@
           "default": "checkbox"
         },
         "description": {
-          "default": "checkbox"
+          "default": "checkbox",
+          "link": {
+            "id": "link_for_checkbox",
+            "data": {
+              "something": "option data"
+            }
+          }
         },
         "class_name": "checkbox-control-class"
       },

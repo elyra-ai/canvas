@@ -34,6 +34,17 @@
 	word-wrap: break-word;
 	max-width: 228px;
 	border-radius: 2px;
+	.bx--link {
+		display: block;
+		color: $inverse-link;
+		margin-top: $spacing-05;
+		pointer-events: auto; // To make link clickable inside tooltip
+		cursor: pointer;
+		&:hover {
+			color: $inverse-link;
+			text-decoration: underline;
+		}
+	}
 }
 
 .common-canvas-tooltip[direction="right"] {

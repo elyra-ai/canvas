@@ -230,7 +230,12 @@ class CanvasContents extends React.Component {
 	// the boundaries of the canvas or sets the mousePos to null. This position
 	// info can be used with keyboard operations.
 	onMouseMove(e) {
-		if (e.target.className.baseVal === "svg-area" || e.target.className.baseVal === "d3-svg-background") {
+		if (e.target &&
+			e.target.className &&
+			(
+				e.target.className.baseVal === "svg-area" ||
+				e.target.className.baseVal === "d3-svg-background"
+			)) {
 			this.mousePos = {
 				x: e.clientX,
 				y: e.clientY

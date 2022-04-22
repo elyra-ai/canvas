@@ -24,7 +24,7 @@ import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { forIn, get, has, isEmpty } from "lodash";
+import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
 
 import { getMessages } from "../intl/intl-utils";
@@ -392,6 +392,7 @@ class App extends React.Component {
 		this.propertiesControllerHandler2 = this.propertiesControllerHandler2.bind(this);
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
+		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -1404,6 +1405,18 @@ class App extends React.Component {
 		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
 
+	// To show link in tooltip
+	tooltipLinkHandler(link) {
+		if (link.id && isEqual(link.propertyId, { name: "number" })) {
+			return { url: "https://www.google.com/", label: "More info" };
+		} else if (link.id && isEqual(link.propertyId, { name: "weather" })) {
+			return { url: "https://www.yahoo.com/", label: "Learn more" };
+		} else if (link.id && isEqual(link.propertyId, { name: "checkbox" })) {
+			return { url: "https://www.google.com/", label: "Link in checkbox" };
+		}
+		return {};
+	}
+
 	contextMenuHandler(source, defaultMenu) {
 		let defMenu = defaultMenu;
 		// Add custom menu items at proper positions: open, preview & execute
@@ -1912,7 +1925,8 @@ class App extends React.Component {
 			buttonHandler: this.buttonHandler,
 			buttonIconHandler: this.buttonIconHandler,
 			titleChangeHandler: this.titleChangeHandler,
-			propertiesActionLabelHandler: this.propertiesActionLabelHandler
+			propertiesActionLabelHandler: this.propertiesActionLabelHandler,
+			tooltipLinkHandler: this.tooltipLinkHandler
 		};
 		if (this.state.propertiesValidationHandler) {
 			callbacks.validationHandler = this.validationHandler;

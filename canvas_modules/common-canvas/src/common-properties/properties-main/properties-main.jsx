@@ -63,7 +63,8 @@ class PropertiesMain extends React.Component {
 			buttonHandler: props.callbacks.buttonHandler,
 			buttonIconHandler: props.callbacks.buttonIconHandler,
 			validationHandler: props.callbacks.validationHandler,
-			titleChangeHandler: props.callbacks.titleChangeHandler
+			titleChangeHandler: props.callbacks.titleChangeHandler,
+			tooltipLinkHandler: props.callbacks.tooltipLinkHandler
 		});
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
@@ -573,7 +574,8 @@ PropertiesMain.propTypes = {
 		buttonIconHandler: PropTypes.func,
 		validationHandler: PropTypes.func,
 		titleChangeHandler: PropTypes.func,
-		propertiesActionLabelHandler: PropTypes.func
+		propertiesActionLabelHandler: PropTypes.func,
+		tooltipLinkHandler: PropTypes.func
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls

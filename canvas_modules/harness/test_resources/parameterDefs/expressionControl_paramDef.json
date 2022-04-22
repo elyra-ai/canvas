@@ -458,6 +458,19 @@
           }
         },
         {
+          "name": "timestamp",
+          "type": "timestamp",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input",
+            "range": {
+              "min": "1989-01-01 00:00:00",
+              "max": "1998-12-01 00:00:00"
+            }
+          }
+        },
+        {
           "name": "Sex",
           "type": "string",
           "metadata": {
