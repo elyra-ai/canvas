@@ -119,6 +119,11 @@ export default class PipelineInHandler {
 		if (node.type === MODEL_NODE) {
 			obj.model_ref = has(node, "model_ref") ? node.model_ref : "";
 		}
+		if (has(node, "app_data.ui_data.is_resized")) {
+			obj.isResized = node.app_data.ui_data.is_resized;
+			obj.resizeHeight = node.app_data.ui_data.resize_height;
+			obj.resizeWidth = node.app_data.ui_data.resize_width;
+		}
 		if (has(node, "app_data.ui_data.description")) {
 			obj.description = node.app_data.ui_data.description;
 		}

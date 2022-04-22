@@ -232,46 +232,7 @@ Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight)
 			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
-			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
-				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
-				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
-				let canvasX;
-				let canvasY;
-				let startPosition;
-
-				if (corner === "north-west") {
-					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - subtractOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - subtractOffsetForSizingArea;
-					startPosition = "topLeft";
-
-				} else if (corner === "north-east") {
-					canvasX = commentDimensions.x_pos + newWidth + addOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos - (newHeight - commentDimensions.height) - subtractOffsetForSizingArea;
-					startPosition = "topRight";
-
-				} else if (corner === "south-west") {
-					canvasX = commentDimensions.x_pos - (newWidth - commentDimensions.width) - subtractOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos + newHeight + addOffsetForSizingArea;
-					startPosition = "bottomLeft";
-
-				} else { // "south-east"
-					canvasX = commentDimensions.x_pos + newWidth + addOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos + newHeight + addOffsetForSizingArea;
-					startPosition = "bottomRight";
-				}
-
-				cy.window().then((win) => {
-					cy.getCanvasTranslateCoords()
-						.then((transform) => {
-							cy.get(srcSizingSelector)
-								.trigger("mouseenter", startPosition, { view: win })
-								.trigger("mousedown", startPosition, { view: win });
-							cy.get("#canvas-div-0")
-								.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
-								.trigger("mouseup", canvasX + transform.x, canvasY + transform.y, { view: win });
-						});
-				});
-			});
+			cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, corner, newWidth, newHeight);
 		});
 });
 
@@ -281,56 +242,35 @@ Cypress.Commands.add("resizeCommentOneDirection", (commentText, corner, newValue
 			const srcBodySelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-rect";
 			const srcSizingSelector = "[data-id='" + comment[0].getAttribute("data-id") + "'] > .d3-comment-sizing";
 
-			cy.getCommentDimensions(srcBodySelector).then((commentDimensions) => {
-				const addOffsetForSizingArea = 9; // Offset from edge of body to somewhere in sizing area
-				const subtractOffsetForSizingArea = 10; // Adding two offset values to adjust the comment dimensions
-				let canvasX;
-				let canvasY;
-				let startPosition;
+			cy.getObjectDimensions(srcBodySelector).then((commentDimensions) => {
+				let newWidth = 0;
+				let newHeight = 0;
+				let newCorner = "";
 
 				if (corner === "north") {
-					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
-					canvasY = commentDimensions.y_pos - (newValue - commentDimensions.height) - subtractOffsetForSizingArea;
-					startPosition = "top";
+					newWidth = commentDimensions.width;
+					newHeight = newValue;
+					newCorner = "north-east";
 
 				} else if (corner === "east") {
-					canvasX = commentDimensions.x_pos + newValue + addOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos - (commentDimensions.height / 2);
-					startPosition = "right";
+					newWidth = newValue;
+					newHeight = commentDimensions.height;
+					newCorner = "south-east";
 
 				} else if (corner === "west") {
-					canvasX = commentDimensions.x_pos - (newValue - commentDimensions.width) - subtractOffsetForSizingArea;
-					canvasY = commentDimensions.y_pos + (commentDimensions.height / 2);
-					startPosition = "left";
+					newWidth = newValue;
+					newHeight = commentDimensions.height;
+					newCorner = "south-west";
 
 				} else { // "south"
-					canvasX = commentDimensions.x_pos + (commentDimensions.width / 2);
-					canvasY = commentDimensions.y_pos + newValue + addOffsetForSizingArea;
-					startPosition = "bottom";
+					newWidth = commentDimensions.width;
+					newHeight = newValue;
+					newCorner = "south-west";
 				}
 
-				cy.window().then((win) => {
-					cy.get(srcSizingSelector)
-						.trigger("mouseenter", startPosition, { view: win })
-						.trigger("mousedown", startPosition, { view: win });
-					cy.get(".svg-area")
-						.trigger("mousemove", canvasX, canvasY, { view: win })
-						.trigger("mouseup", canvasX, canvasY, { view: win });
-				});
+				cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, newCorner, newWidth, newHeight);
 			});
 		});
-});
-
-Cypress.Commands.add("getCommentDimensions", (commentSelector) => {
-	cy.get(commentSelector).then((comment) => {
-		const commentDimensions = {
-			x_pos: Math.round(comment[0].__data__.x_pos),
-			y_pos: Math.round(comment[0].__data__.y_pos),
-			width: comment[0].__data__.width,
-			height: comment[0].__data__.height
-		};
-		return commentDimensions;
-	});
 });
 
 Cypress.Commands.add("deleteCommentUsingContextMenu", (commentText) => {

@@ -430,27 +430,48 @@ Cypress.Commands.add("verifyNumberOfAssociationLinks", (noOfAssociationLinks) =>
 	});
 });
 
-Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, path) => {
+Cypress.Commands.add("verifyLinkPath", (srcNodeName, srcPortId, trgNodeName, trgPortId, expectedPath) => {
 	cy.getPipeline()
 		.then((pipeline) => {
 			cy.getPortLinks(pipeline, srcNodeName, srcPortId, trgNodeName, trgPortId)
 				.then((links) => {
 					cy.wrap(links).should("have.length", 1);
-
 					cy.getLinkLineUsingLinkId(links[0].id, "line")
-						.then((link) => {
-							const actualElements = link[0].getAttribute("d").split(" ");
-							const expectedElements = path.split(" ");
-							for (let i = 0; i < actualElements.length; i++) {
-								const actualNumber = parseFloat(actualElements[i]);
-								const expectedNumber = parseFloat(expectedElements[i]);
-								if (isNaN(actualNumber)) {
-									expect(actualElements[i]).to.equal(expectedElements[i]);
-								} else {
-									compareCloseTo(actualNumber, expectedNumber);
-								}
-							}
+						.then((linkLine) => {
+							verifyPath(linkLine[0], expectedPath);
 						});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyDetachedLinkPathFromSource", (srcNodeName, srcPortId, pathCount, expectedPaths) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getDetachedPortLinksFromSource(pipeline, srcNodeName, srcPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", pathCount);
+					links.forEach((link, index) => {
+						cy.getLinkLineUsingLinkId(link.id, "line")
+							.then((linkLine) => {
+								verifyPath(linkLine[0], expectedPaths[index]);
+							});
+					});
+				});
+		});
+});
+
+Cypress.Commands.add("verifyDetachedLinkPathToTarget", (trgNodeName, trgPortId, pathCount, expectedPaths) => {
+	cy.getPipeline()
+		.then((pipeline) => {
+			cy.getDetachedPortLinksToTarget(pipeline, trgNodeName, trgPortId)
+				.then((links) => {
+					cy.wrap(links).should("have.length", pathCount);
+					links.forEach((link, index) => {
+						cy.getLinkLineUsingLinkId(link.id, "line")
+							.then((linkLine) => {
+								verifyPath(linkLine[0], expectedPaths[index]);
+							});
+					});
 				});
 		});
 });
@@ -751,12 +772,15 @@ Cypress.Commands.add("verifyNoErrorOrWarningMarkerOnNodeInSupernode", (nodeName,
 		});
 });
 
-Cypress.Commands.add("verifyNodeDimensions", (nodeId, width, height) => {
-	// Find node in object model based on nodeId
-	cy.getNodeFromObjectModel(nodeId)
+Cypress.Commands.add("verifyNodeDimensions", (nodeLabel, width, height) => {
+	cy.getNodeWithLabel(nodeLabel)
 		.then((node) => {
-			expect(node.width).to.equal(width);
-			expect(node.height).to.equal(height);
+			const nodeSelector = getNodeBodySelector(node[0]);
+			cy.getObjectDimensions(nodeSelector)
+				.then((nodeDimensions) => {
+					cy.verifyValueInCompareRange(nodeDimensions.width, width);
+					cy.verifyValueInCompareRange(nodeDimensions.height, height);
+				});
 		});
 });
 
@@ -776,7 +800,7 @@ Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => 
 	cy.getCommentWithText(commentText)
 		.then((comment) => {
 			const commentSelector = getCommentBodySelector(comment[0]);
-			cy.getCommentDimensions(commentSelector)
+			cy.getObjectDimensions(commentSelector)
 				.then((commentDimensions) => {
 					cy.verifyValueInCompareRange(commentDimensions.width, width);
 					cy.verifyValueInCompareRange(commentDimensions.height, height);
@@ -1282,6 +1306,21 @@ Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
 	compareCloseTo(value, compareValue);
 });
 
+function verifyPath(actualPath, expectedPath) {
+	const actualElements = actualPath.getAttribute("d").split(" ");
+	// console.log(actualPath.getAttribute("d"));
+	const expectedElements = expectedPath.split(" ");
+	for (let i = 0; i < actualElements.length; i++) {
+		const actualNumber = parseFloat(actualElements[i]);
+		const expectedNumber = parseFloat(expectedElements[i]);
+		if (isNaN(actualNumber)) {
+			expect(actualElements[i]).to.equal(expectedElements[i]);
+		} else {
+			compareCloseTo(actualNumber, expectedNumber);
+		}
+	}
+}
+
 function compareCloseTo(value, compareValue) {
 	expect(Number(value)).to.be.closeTo(Number(compareValue), Cypress.env("compareRange"));
 }
@@ -1292,6 +1331,10 @@ function getNodeGroupSelector(node) {
 
 function getNodeSelectionOutlineSelector(node) {
 	return getNodeGroupSelector(node) + " > .d3-node-selection-highlight";
+}
+
+function getNodeBodySelector(node) {
+	return getNodeGroupSelector(node) + " > .d3-node-body-outline";
 }
 
 function getNodeImageSelector(node) {

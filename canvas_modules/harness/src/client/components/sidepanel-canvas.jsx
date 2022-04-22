@@ -904,6 +904,14 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableResizableNodes = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedResizableNodes" // Set ID to corresponding field in App.js state
+				labelText="Enable Resizable Nodes"
+				toggled={this.props.getStateValue("selectedResizableNodes")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
 
 		var interactionType = (<div className="harness-sidepanel-children" id="harness-sidepanel-interaction-type">
 			<FormGroup
@@ -1391,6 +1399,8 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-side-panel-header">Nodes</div>
 					{divider}
 					{nodeFormatType}
+					{divider}
+					{enableResizableNodes}
 					{divider}
 					{enableInsertNodeDroppedOnLink}
 					{divider}

@@ -776,6 +776,7 @@ export default class ObjectModel {
 			: 0;
 
 		node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+		node.width = node.layout.defaultNodeWidth;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
@@ -784,12 +785,13 @@ export default class ObjectModel {
 			if (node.expanded_height) {
 				node.expanded_height = Math.max(node.expanded_height, node.height);
 			}
-		}
-		node.width = node.layout.defaultNodeWidth;
 
-		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
+
+		} else {
+			node.height = node.resizeHeight ? node.resizeHeight : node.height;
+			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
 
 		return node;
@@ -807,21 +809,23 @@ export default class ObjectModel {
 			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 			: 0;
 
+		node.height = node.layout.defaultNodeHeight;
 		node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
-			// If an expanded height is provided make sure it is at least as big
-			// as the node height.
+			// If an expanded width is provided make sure it is at least as big
+			// as the node width.
 			if (node.expanded_width) {
 				node.expanded_width = Math.max(node.expanded_width, node.width);
 			}
-		}
-		node.height = node.layout.defaultNodeHeight;
 
-		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
+
+		} else {
+			node.height = node.resizeHeight ? node.resizeHeight : node.height;
+			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
 
 		return node;

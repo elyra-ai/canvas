@@ -45,7 +45,6 @@ Cypress.Commands.add("getFirstOutputPortIdForLabel", (nodeLabel) =>
 		})
 );
 
-
 Cypress.Commands.add("doubleClickLabelOnNode", (nodeLabel) => {
 	cy.getNodeWithLabel(nodeLabel)
 		.find("foreignObject > div > span")
@@ -589,4 +588,14 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 				});
 		}
 	});
+});
+
+Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.then((node) => {
+			const srcBodySelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-body-outline";
+			const srcSizingSelector = "[data-id='" + node[0].getAttribute("data-id") + "'] > .d3-node-sizing";
+
+			cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, corner, newWidth, newHeight);
+		});
 });

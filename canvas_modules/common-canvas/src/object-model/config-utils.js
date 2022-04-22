@@ -62,6 +62,7 @@ export default class CanvasUtils {
 			enableInternalObjectModel: true,
 			enablePaletteLayout: "Flyout",
 			enableToolbarLayout: "Top",
+			enableResizableNodes: false,
 			enableInsertNodeDroppedOnLink: false,
 			enableHighlightNodeOnNewLinkDrag: false,
 			enableHighlightUnavailableNodes: false,

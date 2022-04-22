@@ -75,7 +75,18 @@ export default (state = [], action) => {
 				if (newNode.type === SUPER_NODE && newNode.is_expanded) {
 					newNode.expanded_width = nodeObj.width;
 					newNode.expanded_height = nodeObj.height;
+
+				} else if (nodeObj.isResized) {
+					newNode.isResized = nodeObj.isResized;
+					newNode.resizeWidth = nodeObj.resizeWidth;
+					newNode.resizeHeight = nodeObj.resizeHeight;
+
+				} else {
+					delete newNode.isResized;
+					delete newNode.resizeWidth;
+					delete newNode.resizeHeight;
 				}
+
 				return newNode;
 			}
 

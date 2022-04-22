@@ -92,7 +92,7 @@ describe("Test supernode expanded to correct size", function() {
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		//  Verify node dimensions based on nodeId
-		cy.verifyNodeDimensions("7015d906-2eae-45c1-999e-fb888ed957e5", 200, 200);
+		cy.verifyNodeDimensions("Supernode", 200, 200);
 
 		// Rename supernode
 		cy.openCanvasAPI("Set Node Label");

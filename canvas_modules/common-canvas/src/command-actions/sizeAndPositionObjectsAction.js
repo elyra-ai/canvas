@@ -55,6 +55,11 @@ export default class SizeAndPositionObjectsAction extends Action {
 					width: obj.width,
 					height: obj.height
 				};
+				if (obj.isResized) {
+					previousObjectsInfo[objId].isResized = obj.isResized;
+					previousObjectsInfo[objId].resizeWidth = obj.resizeWidth;
+					previousObjectsInfo[objId].resizeHeight = obj.resizeHeight;
+				}
 			}
 		});
 		return previousObjectsInfo;

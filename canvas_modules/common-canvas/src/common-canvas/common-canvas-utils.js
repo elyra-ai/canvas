@@ -19,7 +19,8 @@
 // the CanvasRender objects.
 
 import { get, set } from "lodash";
-import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK, LINK_TYPE_STRAIGHT, SUPER_NODE }
+import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
+	LINK_TYPE_STRAIGHT, SUPER_NODE, NORTH, SOUTH, EAST, WEST }
 	from "../common-canvas/constants/canvas-constants.js";
 
 
@@ -354,6 +355,56 @@ export default class CanvasUtils {
 		}
 
 		return { x: startPointX, y: startPointY };
+	}
+
+	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
+	// from the origin position within the rectangle described by x, y, w and h
+	// to the end position described by endX and endY.
+	static getDir(x, y, w, h, originX, originY, endX, endY) {
+		const bottomEdge = y + h;
+
+		// The origin may not be in the center of the node rectangle so offset left
+		// and right may be different and also top and bottom.
+		const originTopOffsetY = originY - y;
+		const originLeftOffsetX = originX - x;
+
+		const originToEndX = originX - endX;
+		const originToEndY = originY - endY;
+
+		let dir = "";
+
+		if (originToEndX === 0) {
+			dir = (endY < originY) ? NORTH : SOUTH;
+
+		} else if (endX > originX) {
+			const rightEdge = x + w;
+			const topRightRatio = originTopOffsetY / (originX - rightEdge);
+			const botRightRatio = (originY - bottomEdge) / (originX - rightEdge);
+			const ratioRight = originToEndY / originToEndX;
+
+			if (ratioRight < topRightRatio) {
+				dir = NORTH;
+			} else if (ratioRight > botRightRatio) {
+				dir = SOUTH;
+			} else {
+				dir = EAST;
+			}
+		// End point is to the left of center
+		} else {
+			const topLeftRatio = originTopOffsetY / originLeftOffsetX;
+			const botLeftRatio = (originY - bottomEdge) / originLeftOffsetX;
+			const ratioLeft = originToEndY / originToEndX;
+
+			if (ratioLeft > topLeftRatio) {
+				dir = NORTH;
+			} else if (ratioLeft < botLeftRatio) {
+				dir = SOUTH;
+			} else {
+				dir = WEST;
+			}
+		}
+
+		return dir;
 	}
 
 	// Returns true if the line described by x1, y1, x2, y2 either intersects or
@@ -892,6 +943,9 @@ export default class CanvasUtils {
 		return this.isSupernode(node) && this.isExpanded(node);
 	}
 
+	static isCollapsedSupernode(node) {
+		return this.isSupernode(node) && !this.isExpanded(node);
+	}
 	// Returns true if the node passed in is a binding node in a subflow
 	// for a supernode.
 	static isSuperBindingNode(d) {

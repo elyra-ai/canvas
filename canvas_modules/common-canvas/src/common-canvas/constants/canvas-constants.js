@@ -141,6 +141,13 @@ export const SAVED_NODES_CATEGORY_ID = "savedNodes";
 export const USE_DEFAULT_ICON = "useDefaultIcon";
 export const USE_DEFAULT_EXT_ICON = "useDefaultExtIcon";
 
+// Directions
+export const NORTH = "n";
+export const SOUTH = "s";
+export const EAST = "e";
+export const WEST = "w";
+
+
 export const CONTEXT_MENU_BUTTON = 2;
 
 export const CANVAS_CARBON_ICONS = {
