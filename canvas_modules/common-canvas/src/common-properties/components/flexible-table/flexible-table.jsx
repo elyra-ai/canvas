@@ -254,7 +254,7 @@ class FlexibleTable extends React.Component {
 		} else if (rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
-				const ftHeaderHeight = ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height;
+				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				if (flyoutHeight === 0) {
 					newHeight = "100vh"; // set full window height if flyout height not found
@@ -467,13 +467,16 @@ class FlexibleTable extends React.Component {
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
 		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
+		const ftHeader = (searchBar || this.props.topRightPanel)
+			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
+				{searchBar}
+				{this.props.topRightPanel}
+			</div>)
+			: null;
 
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
-				<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
-					{searchBar}
-					{this.props.topRightPanel}
-				</div>
+				{ftHeader}
 				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
 						<div className="properties-ft-container-wrapper" style={ heightStyle }>

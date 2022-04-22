@@ -630,7 +630,7 @@ export default class AbstractTable extends React.Component {
 		const selectedEditRow = this.props.control.rowSelection === ROW_SELECTION.MULTIPLE
 			? this.makeSelectedEditRow(this.props.selectedRows)
 			: null;
-		let topRightPanel = <div />;
+		let topRightPanel = null;
 		if (customButtons) {
 			topRightPanel = this.makeCustomButtonsPanel(tableState, customButtons);
 		} else if (this.isReadonlyTable()) {
