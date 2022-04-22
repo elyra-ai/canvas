@@ -16,7 +16,6 @@
     "checkbox_error": false,
     "checkbox_warning": false,
     "disable": true,
-    "checkbox_disabled": false,
     "hide": true,
     "checkbox_hidden": false
   },
