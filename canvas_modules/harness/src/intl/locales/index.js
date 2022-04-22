@@ -21,10 +21,8 @@ const es = require("./es.json");
 const fr = require("./fr.json");
 const itIT = require("./it.json");
 const ja = require("./ja.json");
-const ptBR = require("./pt-br.json");
 const zhTW = require("./zh-TW.json");
 const zhCN = require("./zh-CN.json");
-const ru = require("./ru.json");
 const ko = require("./ko.json");
 
 module.exports = {
@@ -34,10 +32,8 @@ module.exports = {
 	"fr": fr,
 	"it": itIT,
 	"ja": ja,
-	"pt-BR": ptBR,
 	"zh-TW": zhTW,
 	"zh-CN": zhCN,
-	"ru": ru,
 	"eo": eo,
 	"ko": ko
 };
