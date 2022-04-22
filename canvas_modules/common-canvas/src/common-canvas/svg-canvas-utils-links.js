@@ -226,8 +226,9 @@ export default class SvgCanvasLinks {
 				originInfo.dir === SOUTH) {
 			x = node.x_pos + ((node.width / parts) * index);
 			y = this.nodeUtils.getNodeCenterPosY(node);
-		// EAST or WEST
-		} else {
+
+		} else if (originInfo.dir === EAST ||
+								originInfo.dir === WEST) {
 			x = this.nodeUtils.getNodeCenterPosX(node);
 			y = node.y_pos + ((node.height / parts) * index);
 		}
