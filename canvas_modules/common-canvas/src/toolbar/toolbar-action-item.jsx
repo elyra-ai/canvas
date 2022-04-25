@@ -78,9 +78,9 @@ class ToolbarActionItem extends React.Component {
 		case (TOOLBAR_ZOOM_FIT):
 			return <SVG src={ZoomToFit} disabled={disabled} />;
 		case (TOOLBAR_ARRANGE_HORIZONALLY):
-			return <SVG src={ArrangeVertically} disabled={disabled} />;
-		case (TOOLBAR_ARRANGE_VERTICALLY):
 			return <SVG src={ArrangeHorizontally} disabled={disabled} />;
+		case (TOOLBAR_ARRANGE_VERTICALLY):
+			return <SVG src={ArrangeVertically} disabled={disabled} />;
 		case (TOOLBAR_OPEN_PALETTE):
 			return <SVG src={PaletteOpen} disabled={disabled} />;
 		case (TOOLBAR_CLOSE_PALETTE):
