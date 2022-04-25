@@ -405,7 +405,6 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const columnSelect = wrapper.find("div[data-id='properties-ft-columnSelect']");
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
-		// console.log("STYLE: " + JSON.stringify(heightStyle));
 		expect(heightStyle).to.eql({ "height": "8rem" }); // includes header
 	});
 
@@ -425,8 +424,39 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
-		// console.log("STYLE: " + JSON.stringify(heightStyle));
 		expect(heightStyle).to.eql({ "height": "6rem" }); // includes header
+	});
+
+	it("should display 5.5 rows by default in select columns in onpanel", () => {
+		// Open 'Configure fields on panel' table add 7 rows to the table
+		const summaryPanelWrapper = wrapper.find("div[data-id='properties-structurelist-summary-panel']");
+		summaryPanelWrapper.find("button").simulate("click");
+		let tableWrapper = wrapper.find("div[data-id='properties-structurelist']");
+		const emptyTableButton = tableWrapper.find("button.properties-empty-table-button"); // add row button for empty table
+		emptyTableButton.simulate("click"); // add 1st row
+
+		wrapper.update();
+		tableWrapper = wrapper.find("div[data-id='properties-structurelist']");
+		// add another 6 rows
+		const addValueButton = tableWrapper.find(".properties-add-fields-button").at(0);
+		addValueButton.simulate("click");
+		addValueButton.simulate("click");
+		addValueButton.simulate("click");
+		addValueButton.simulate("click");
+		addValueButton.simulate("click");
+		addValueButton.simulate("click");
+
+		wrapper.update();
+		tableWrapper = wrapper.find("div[data-id='properties-structurelist']");
+		// Verify table has 7 rows
+		const tableRows = tableUtils.getTableRows(tableWrapper);
+		expect(tableRows).to.have.length(7);
+
+		const heightDiv = tableWrapper.find("div.properties-ft-container-wrapper");
+		const heightStyle = heightDiv.prop("style");
+		// header height = 2rem, each row height = 2 rem. Total height = 2 + 5.5*(2) = 13rem
+		// This means only 5.5 rows are visible
+		expect(heightStyle).to.eql({ "height": "13rem" }); // includes header
 	});
 });
 
