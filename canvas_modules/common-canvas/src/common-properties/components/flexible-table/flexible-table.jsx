@@ -245,7 +245,7 @@ class FlexibleTable extends React.Component {
 		let newHeight = this.state.tableHeight;
 		const rowHeight = 2; // in rem
 		const headerHeight = 2; // in rem
-		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 4;
+		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 5.5;
 		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
 			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
 		} else if (rows > 0) {
