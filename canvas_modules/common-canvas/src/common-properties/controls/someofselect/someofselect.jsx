@@ -90,7 +90,7 @@ class SomeofselectControl extends React.Component {
 			controlValue = [];
 		}
 		const tableOptions = this.genSelectOptions(controlValue);
-		const rows = this.props.control.rows ? this.props.control.rows : 4;
+		const rows = this.props.control.rows ? this.props.control.rows : 5.5;
 		const tableLabel = (this.props.control.label && this.props.control.label.text) ? this.props.control.label.text : "";
 
 		return (
