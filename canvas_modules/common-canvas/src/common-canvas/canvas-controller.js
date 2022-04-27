@@ -2532,7 +2532,7 @@ export default class CanvasController {
 
 			// Commands which are not added to the command stack.
 			case "setZoom": {
-				this.objectModel.setZoom(data.zoom);
+				this.objectModel.setZoom(data.zoom, data.pipelineId);
 				break;
 			}
 			case "highlightBranch":

@@ -1683,11 +1683,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	isZoomedToMax() {
-		return this.zoomTransform.k === this.maxScaleExtent;
+		return this.zoomTransform ? this.zoomTransform.k === this.maxScaleExtent : false;
 	}
 
 	isZoomedToMin() {
-		return this.zoomTransform.k === this.minScaleExtent;
+		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
 	}
 
 	getZoomToReveal(nodeIDs, xPos, yPos) {

@@ -142,11 +142,11 @@ export default class SVGCanvasD3 {
 	}
 
 	isZoomedToMax() {
-		return this.renderer.isZoomedToMax();
+		return this.renderer ? this.renderer.isZoomedToMax() : false;
 	}
 
 	isZoomedToMin() {
-		return this.renderer.isZoomedToMin();
+		return this.renderer ? this.renderer.isZoomedToMin() : false;
 	}
 
 	getZoomToReveal(objectIds, xPos, yPos) {

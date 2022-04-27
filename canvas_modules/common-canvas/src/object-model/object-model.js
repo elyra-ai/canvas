@@ -1917,26 +1917,26 @@ export default class ObjectModel {
 		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
-	setZoom(zoom) {
-		const enableSaveZoom = this.getCanvasConfig.enableSaveZoom;
+	setZoom(zoom, pipelineId) {
+		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
 		// This will save zoom to the pipeline if enableSaveZoom is
 		// SAVE_ZOOM_PIPELINE_FLOW and also will cause the toolbar to be updated
 		// so zoom icons can be enabled/disabled.
-		this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
 
 		if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
-			this.setSavedZoomLocal(zoom, this.getPipelineFlowId(), this.pipelineId);
+			this.setSavedZoomLocal(zoom, pipelineId);
 		}
 	}
 
 	// Returns the saved zoom based on the enableSaveZoom config parameter.
 	getSavedZoom(pipelineId) {
-		const enableSaveZoom = this.getCanvasConfig.enableSaveZoom;
+		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
 		if (enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
 			return this.store.getZoom(pipelineId);
 
 		} else if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
-			return this.getSavedZoomLocal(this.getPipelineFlowId(), pipelineId);
+			return this.getSavedZoomLocal(pipelineId);
 		}
 		return null;
 	}
@@ -1948,20 +1948,20 @@ export default class ObjectModel {
 
 	// Saves the zoom object passed in for this pipeline in local storage.
 	// The pipeline is identified by the pipelineFlowId and pipelineId passed in.
-	setSavedZoomLocal(zoom, pipelineFlowId, pipelineId) {
+	setSavedZoomLocal(zoom, pipelineId) {
 		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
 		const savedZooms = canvasSavedZoomValues ? JSON.parse(canvasSavedZoomValues) : {};
-		set(savedZooms, [this.canvasInfo.id, this.pipelineId], zoom);
+		set(savedZooms, [this.getPipelineFlowId(), pipelineId], zoom);
 		LocalStorage.set("canvasSavedZoomValues", JSON.stringify(savedZooms));
 	}
 
 	// Returns the zoom for this pipeline saved in local storage. The pipeline is
 	// identified by the pipelineFlowId and pipelineId passed in.
-	getSavedZoomLocal(pipelineFlowId, pipelineId) {
+	getSavedZoomLocal(pipelineId) {
 		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
 		if (canvasSavedZoomValues) {
 			const savedZoom = JSON.parse(canvasSavedZoomValues);
-			return get(savedZoom, [pipelineFlowId, pipelineId]);
+			return get(savedZoom, [this.getPipelineFlowId(), pipelineId]);
 		}
 		return null;
 	}
