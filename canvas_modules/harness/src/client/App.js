@@ -2176,24 +2176,42 @@ class App extends React.Component {
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "custom-loading",
-						jsx: (<div style={{ padding: "0 11px" }}><InlineLoading status="active" description="Loading..." /></div>) },
+						jsx: (
+							<div style={{ padding: "0 11px" }}>
+								<InlineLoading status="active" description="Loading..." />
+							</div>
+						)
+					},
 					{ divider: true },
 					{ action: "custom-checkbox",
-						jsx: (<div style={{ padding: "0 11px" }}><Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} /></div>) },
+						jsx: (
+							<div style={{ padding: "0 11px" }}>
+								<Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} />
+							</div>
+						)
+					},
 					{ divider: true },
 					{ action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+						jsx: (
+							<div className="toolbar-custom-button">
+								<Button id={"btn1"} size="field" kind="primary">Custom button </Button>
+							</div>
+						)
+					},
 					{ divider: true },
 					{ action: "custom-dropdown",
 						tooltip: "A drop down using the overflow menu!",
-						jsx: (<div className="toolbar-custom-button">
-							<OverflowMenu id={"ovf1"} renderIcon={TextScale32}>
-								<OverflowMenuItem itemText="Big" />
-								<OverflowMenuItem itemText="Medium" />
-								<OverflowMenuItem itemText="Little" />
-							</OverflowMenu>
-						</div>) },
+						jsx: (
+							<div className="toolbar-custom-button">
+								<OverflowMenu id={"ovf1"} renderIcon={TextScale32}>
+									<OverflowMenuItem itemText="Big" />
+									<OverflowMenuItem itemText="Medium" />
+									<OverflowMenuItem itemText="Little" />
+								</OverflowMenu>
+							</div>
+						)
+					},
 					{ divider: true }
 				]
 			};
