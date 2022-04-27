@@ -74,6 +74,11 @@ export const STATE_TAG_NONE = "None";
 export const STATE_TAG_LOCKED = "Locked";
 export const STATE_TAG_READ_ONLY = "ReadOnly";
 
+// Values for enableSaveZoom
+export const SAVE_ZOOM_NONE = "None";
+export const SAVE_ZOOM_PIPELINE_FLOW = "Pipelineflow";
+export const SAVE_ZOOM_LOCAL_STORAGE = "LocalStorage";
+
 export const ERROR = "error";
 export const WARNING = "warning";
 export const INFO = "info";

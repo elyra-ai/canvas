@@ -26,7 +26,7 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Zoom from "./d3-zoom-extension/src";
 const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
-import { cloneDeep, escape as escapeText, forOwn, get, set,
+import { cloneDeep, escape as escapeText, forOwn, get,
 	unescape as unescapeText } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
@@ -44,7 +44,6 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
 import SUPERNODE_EXT_ICON from "../../assets/images/supernode_ext.svg";
 import Logger from "../logging/canvas-logger.js";
-import LocalStorage from "./local-storage.js";
 import CanvasUtils from "./common-canvas-utils.js";
 import SvgCanvasDisplay from "./svg-canvas-utils-display.js";
 import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
@@ -255,16 +254,12 @@ export default class SVGCanvasRenderer {
 			this.addBackToParentFlowArrow(this.canvasSVG);
 		}
 
-		// If we are showing a sub-flow in full screen mode, zoom it to fit the
-		// screen so it looks similar to the in-place sub-flow view unless there
-		// is a saved zoom for this pipeline.
-		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
-			if (!this.config.enableSaveZoom ||
-					this.config.enableSaveZoom === "None" ||
-					(this.config.enableSaveZoom === "LocalStorage" && !this.getSavedZoom()) ||
-					(this.config.enableSaveZoom === "Pipelineflow" && !this.activePipeline.zoom)) {
-				this.zoomToFit();
-			}
+		// If we are showing a sub-flow in full screen mode and there
+		// is no saved zoom for this pipeline, zoom it to fit the
+		// screen so it looks similar to the in-place sub-flow view.
+		if (this.dispUtils.isDisplayingSubFlowFullPage() &&
+				!this.canvasController.getSavedZoom(this.pipelineId)) {
+			this.zoomToFit();
 		}
 
 		// If we are showing an in-place subflow make sure any already existing
@@ -1579,18 +1574,7 @@ export default class SVGCanvasRenderer {
 	// of 'save zoom' specified in the configuration and, if no saved zoom, was
 	// provided pans the canvas area so it is always visible.
 	restoreZoom() {
-		let newZoom = null;
-
-		if (this.config.enableSaveZoom === "Pipelineflow" &&
-				this.activePipeline.zoom) {
-			newZoom = this.activePipeline.zoom;
-
-		} else if (this.config.enableSaveZoom === "LocalStorage") {
-			const savedZoom = this.getSavedZoom();
-			if (savedZoom) {
-				newZoom = savedZoom;
-			}
-		}
+		let newZoom = this.canvasController.getSavedZoom(this.pipelineId);
 
 		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan so
 		// the canvas area (containing nodes and comments) is visible in the viewport.
@@ -1631,24 +1615,6 @@ export default class SVGCanvasRenderer {
 				this.canvasSVG.call(this.zoom.transform, zoomTransform);
 			}
 		}
-	}
-
-	// Saves the zoom object passed in for this pipeline in local storage.
-	setSavedZoom(zoom) {
-		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
-		const savedZooms = canvasSavedZoomValues ? JSON.parse(canvasSavedZoomValues) : {};
-		set(savedZooms, [this.canvasInfo.id, this.pipelineId], zoom);
-		LocalStorage.set("canvasSavedZoomValues", JSON.stringify(savedZooms));
-	}
-
-	// Returns the zoom for this pipeline saved in local storage
-	getSavedZoom() {
-		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
-		if (canvasSavedZoomValues) {
-			const savedZoom = JSON.parse(canvasSavedZoomValues);
-			return get(savedZoom, [this.canvasInfo.id, this.pipelineId]);
-		}
-		return null;
 	}
 
 	zoomToFit() {
@@ -1714,6 +1680,14 @@ export default class SVGCanvasRenderer {
 			const newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
 			this.canvasSVG.call(this.zoom.scaleTo, newScale);
 		}
+	}
+
+	isZoomedToMax() {
+		return this.zoomTransform.k === this.maxScaleExtent;
+	}
+
+	isZoomedToMin() {
+		return this.zoomTransform.k === this.minScaleExtent;
 	}
 
 	getZoomToReveal(nodeIDs, xPos, yPos) {
@@ -1915,19 +1889,13 @@ export default class SVGCanvasRenderer {
 			// used by d3Event next time a zoom action is initiated.
 			this.canvasSVG.property("__zoom", this.zoomTransform);
 
-
-			if (this.config.enableSaveZoom === "Pipelineflow") {
-				const data = {
-					editType: "setPipelineZoom",
-					editSource: "canvas",
-					zoom: this.zoomTransform,
-					pipelineId: this.activePipeline.id
-				};
-				this.canvasController.editActionHandler(data);
-
-			} else if (this.config.enableSaveZoom === "LocalStorage") {
-				this.setSavedZoom(this.zoomTransform);
-			}
+			const data = {
+				editType: "setZoom",
+				editSource: "canvas",
+				zoom: this.zoomTransform,
+				pipelineId: this.activePipeline.id
+			};
+			this.canvasController.editActionHandler(data);
 		}
 
 		// Remove the cursor overlay and reset the SVG background rectangle

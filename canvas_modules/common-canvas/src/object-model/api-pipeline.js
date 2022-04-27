@@ -51,10 +51,6 @@ export default class APIPipeline {
 		return this.objectModel.getCanvasInfoPipeline(this.pipelineId).parentUrl;
 	}
 
-	setPipelineZoom(zoom, translate) {
-		this.store.dispatch({ type: "SET_PIPELINE_ZOOM", data: { zoom: zoom }, pipelineId: this.pipelineId });
-	}
-
 	// ---------------------------------------------------------------------------
 	// Node AND comment methods
 	// ---------------------------------------------------------------------------
