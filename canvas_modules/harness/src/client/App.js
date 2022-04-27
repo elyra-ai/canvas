@@ -71,9 +71,9 @@ import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32 } from "@carbon/icons-react";
+import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
 
-import { InlineLoading, Checkbox, Button } from "carbon-components-react";
+import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -2184,6 +2184,16 @@ class App extends React.Component {
 					{ action: "custom-button",
 						tooltip: "A custom button of type primary!",
 						jsx: (<div className="toolbar-custom-button"><Button id={"btn1"} size="field" kind="primary">Custom button </Button></div>) },
+					{ divider: true },
+					{ action: "custom-dropdown",
+						tooltip: "A drop down using the overflow menu!",
+						jsx: (<div className="toolbar-custom-button">
+							<OverflowMenu id={"ovf1"} renderIcon={TextScale32}>
+								<OverflowMenuItem itemText="Big" />
+								<OverflowMenuItem itemText="Medium" />
+								<OverflowMenuItem itemText="Little" />
+							</OverflowMenu>
+						</div>) },
 					{ divider: true }
 				]
 			};
