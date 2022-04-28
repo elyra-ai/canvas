@@ -70,7 +70,7 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a1");
+		expect(undoStack[0].getData()).to.equal("a1");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
@@ -87,7 +87,7 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a2");
+		expect(undoStack[0].getData()).to.equal("a2");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
@@ -105,9 +105,9 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a1");
+		expect(undoStack[0].getData()).to.equal("a1");
 		expect(redoStack).to.have.length(1);
-		expect(redoStack[0].value.getData()).to.equal("a2");
+		expect(redoStack[0].getData()).to.equal("a2");
 
 		// clear the stack
 		commandStack.undo();
@@ -124,8 +124,8 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(2);
-		expect(undoStack[0].value.getData()).to.equal("a1");
-		expect(undoStack[1].value.getData()).to.equal("a2");
+		expect(undoStack[0].getData()).to.equal("a1");
+		expect(undoStack[1].getData()).to.equal("a2");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
@@ -145,8 +145,8 @@ describe("command stack handle commmands OK", () => {
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(0);
 		expect(redoStack).to.have.length(2);
-		expect(redoStack[0].value.getData()).to.equal("a1");
-		expect(redoStack[1].value.getData()).to.equal("a2");
+		expect(redoStack[0].getData()).to.equal("a1");
+		expect(redoStack[1].getData()).to.equal("a2");
 	});
 
 	it("should do(a1), do(a2), undo(), undo(), redo() onto a command stack", () => {
@@ -161,9 +161,9 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a1");
+		expect(undoStack[0].getData()).to.equal("a1");
 		expect(redoStack).to.have.length(1);
-		expect(redoStack[0].value.getData()).to.equal("a2");
+		expect(redoStack[0].getData()).to.equal("a2");
 
 		// clear the stack
 		commandStack.undo();
@@ -181,7 +181,7 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a3");
+		expect(undoStack[0].getData()).to.equal("a3");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
@@ -202,9 +202,9 @@ describe("command stack handle commmands OK", () => {
 		const undoStack = commandStack.getStack().undos.toArray();
 		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
-		expect(undoStack[0].value.getData()).to.equal("a1");
+		expect(undoStack[0].getData()).to.equal("a1");
 		expect(redoStack).to.have.length(2);
-		expect(redoStack[0].value.getData()).to.equal("a2");
-		expect(redoStack[1].value.getData()).to.equal("a3");
+		expect(redoStack[0].getData()).to.equal("a2");
+		expect(redoStack[1].getData()).to.equal("a3");
 	});
 });
