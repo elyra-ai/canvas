@@ -18,10 +18,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constants/constants.js";
+import { Size } from "./../../constants/form-constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
+import { has } from "lodash";
 
 class ButtonAction extends React.Component {
 	constructor(props) {
@@ -30,6 +32,39 @@ class ButtonAction extends React.Component {
 		};
 		this.applyAction = this.applyAction.bind(this);
 		this.uuid = uuid4();
+	}
+
+	getActionButtonKind() {
+		if (!has(this.props, "action.button.kind")) {
+			return CARBON_BUTTON_KIND.TERTIARY;
+		}
+		switch (this.props.action.button.kind) {
+		case CARBON_BUTTON_KIND.PRIMARY: return CARBON_BUTTON_KIND.PRIMARY;
+		case CARBON_BUTTON_KIND.SECONDARY: return CARBON_BUTTON_KIND.SECONDARY;
+		case CARBON_BUTTON_KIND.TERTIARY: return CARBON_BUTTON_KIND.TERTIARY;
+		case CARBON_BUTTON_KIND.GHOST: return CARBON_BUTTON_KIND.GHOST;
+		case CARBON_BUTTON_KIND.DANGER: return CARBON_BUTTON_KIND.DANGER;
+		case CARBON_BUTTON_KIND.DANGER_TERTIARY: return CARBON_BUTTON_KIND.DANGER_TERTIARY;
+		case CARBON_BUTTON_KIND.DANGER_GHOST: return CARBON_BUTTON_KIND.DANGER_GHOST;
+		default: return CARBON_BUTTON_KIND.TERTIARY;
+		}
+	}
+
+	getActionButtonSize() {
+		if (!has(this.props, "action.button.size")) {
+			return CARBON_BUTTON_SIZE.SMALL;
+		}
+		switch (this.props.action.button.size) {
+		case CARBON_BUTTON_SIZE.FIELD: return CARBON_BUTTON_SIZE.FIELD;
+		case CARBON_BUTTON_SIZE.SMALL: return CARBON_BUTTON_SIZE.SMALL;
+		case CARBON_BUTTON_SIZE.LARGE: return CARBON_BUTTON_SIZE.LARGE;
+		case CARBON_BUTTON_SIZE.EXTRA_LARGE: return CARBON_BUTTON_SIZE.EXTRA_LARGE;
+		case CARBON_BUTTON_SIZE.DEFAULT: return CARBON_BUTTON_SIZE.DEFAULT;
+		case Size.SMALL: return CARBON_BUTTON_SIZE.SMALL; // "small"
+		case Size.MEDIUM: return CARBON_BUTTON_SIZE.DEFAULT; // "medium"
+		case Size.LARGE: return CARBON_BUTTON_SIZE.LARGE; // "large"
+		default: return CARBON_BUTTON_SIZE.SMALL;
+		}
 	}
 
 	applyAction() {
@@ -44,12 +79,14 @@ class ButtonAction extends React.Component {
 	render() {
 		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN });
 		const disabled = this.props.state === STATES.DISABLED;
+		const actionButtonKind = this.getActionButtonKind();
+		const actionButtonSize = this.getActionButtonSize();
 		const button = (
 			<div className={className} data-id={this.props.action.name}>
 				<Button
 					type="button"
-					size="small"
-					kind="tertiary"
+					size={actionButtonSize}
+					kind={actionButtonKind}
 					onClick={this.applyAction}
 					disabled={disabled}
 				>
