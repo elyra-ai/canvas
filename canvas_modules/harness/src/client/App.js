@@ -217,6 +217,8 @@ class App extends React.Component {
 			// Use these settings when enableResizableNodes is tested (these
 			// settings only work with vertical node format).
 			// selectedNodeLayout: {
+			// 	inputPortDisplay: false,
+			// 	outputPortDisplay: false,
 			// 	imagePosition: "middleCenter", imagePosX: -24, imagePosY: -30,
 			// 	labelPosition: "middleCenter", labelPosX: 0, labelPosY: 20,
 			// 	ellipsisPosition: "middleCenter", ellipsisPosX: 22, ellipsisPosY: -36

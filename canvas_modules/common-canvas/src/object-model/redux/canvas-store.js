@@ -105,6 +105,22 @@ export default class CanavasStore {
 		return cloneDeep(this.store.getState().canvasinfo);
 	}
 
+	getPipelineFlowId() {
+		return this.store.getState().canvasinfo.id;
+	}
+
+	getPrimaryPipelineId() {
+		return this.store.getState().canvasinfo.primary_pipeline;
+	}
+
+	getZoom(pipelineId) {
+		const p = this.getNonClonedPipeline(pipelineId);
+		if (p) {
+			return cloneDeep(p.zoom);
+		}
+		return null;
+	}
+
 	// This is a service method for retrieving the internal pipeline. It does NOT
 	// clone the pipeline therefore it should NOT be called from outside this
 	// class because we don't want to surface the intenal data in redux to

@@ -13,71 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import History from "immutable-undo";
-
-/* eslint no-shadow: ["error", { "allow": ["History"] }] */
+import InternalStack from "./internal-stack.js";
 
 export default class CommandStack {
 
 	constructor() {
-		this.commands = History.create({
-			maxUndos: 100
-		});
+		this.commands = new InternalStack();
 	}
 
 	do(action) {
-		this.commands = this.commands.push(action);
-		action.do();
+		this.commands.do(action);
 	}
 
 	undo() {
-		if (this.commands.canUndo) {
-			const action = this.commands.previous;
-			this.commands = this.commands.undo(action);
-			action.undo();
-		}
+		this.commands.undo();
 	}
 
 	redo() {
-		if (this.commands.canRedo) {
-			const action = this.commands.next;
-			this.commands = this.commands.redo(action);
-			action.redo();
-		}
+		this.commands.redo();
 	}
 
 	getUndoCommand() {
-		if (this.commands.canUndo) {
-			return this.commands.previous;
+		if (this.commands.canUndo()) {
+			return this.commands.getPrevious();
 		}
 		return null;
 	}
 
 	getRedoCommand() {
-		if (this.commands.canRedo) {
-			return this.commands.next;
+		if (this.commands.canRedo()) {
+			return this.commands.getNext();
 		}
 		return null;
 	}
 
 	// need this for validation on unit tests
 	getStack() {
-		const undoStack = this.commands.undos;
-		const redoStack = this.commands.redos;
-		return { "undos": undoStack, "redos": redoStack };
+		return {
+			"undos": this.commands.getUndoCommands(),
+			"redos": this.commands.getRedoCommands()
+		};
 	}
 
 	canUndo() {
-		return this.commands.canUndo;
+		return this.commands.canUndo();
 	}
 
 	canRedo() {
-		return this.commands.canRedo;
+		return this.commands.canRedo();
 	}
 
 	clearCommandStack() {
-		this.commands = History.create({
-			maxUndos: 100
-		});
+		this.commands = new InternalStack();
 	}
 }

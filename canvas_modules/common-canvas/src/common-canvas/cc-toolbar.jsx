@@ -215,6 +215,10 @@ class CommonCanvasToolbar extends React.Component {
 			this.applyToolState("createAutoComment", toolbarConfig, editingAllowed);
 			this.applyToolState("arrangeHorizontally", toolbarConfig, editingAllowed);
 			this.applyToolState("arrangeVertically", toolbarConfig, editingAllowed);
+			// editingAllowed = false doesn't stop zoom capability
+			this.applyToolState("zoomIn", toolbarConfig, this.props.canZoomIn);
+			this.applyToolState("zoomOut", toolbarConfig, this.props.canZoomOut);
+			this.applyToolState("zoomToFit", toolbarConfig, this.props.canZoomToFit);
 		}
 		return toolbarConfig;
 	}
@@ -304,6 +308,9 @@ CommonCanvasToolbar.propTypes = {
 	canCutCopy: PropTypes.bool,
 	canPaste: PropTypes.bool,
 	canDelete: PropTypes.bool,
+	canZoomIn: PropTypes.bool,
+	canZoomOut: PropTypes.bool,
+	canZoomToFit: PropTypes.bool,
 	undoLabel: PropTypes.string,
 	redoLabel: PropTypes.string
 };
@@ -323,6 +330,9 @@ const mapStateToProps = (state, ownProps) => ({
 	canCutCopy: ownProps.canvasController.canCutCopy(),
 	canPaste: ownProps.canvasController.canPaste(),
 	canDelete: ownProps.canvasController.canDelete(),
+	canZoomIn: ownProps.canvasController.canZoomIn(),
+	canZoomOut: ownProps.canvasController.canZoomOut(),
+	canZoomToFit: ownProps.canvasController.canZoomToFit(),
 	undoLabel: ownProps.canvasController.getUndoLabel(),
 	redoLabel: ownProps.canvasController.getRedoLabel()
 });
