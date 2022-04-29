@@ -35,7 +35,8 @@ import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from ".
 import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK, ERROR, WARNING, SUCCESS, INFO, CREATE_PIPELINE,
 	CLONE_COMMENT, CLONE_COMMENT_LINK, CLONE_NODE, CLONE_NODE_LINK, CLONE_PIPELINE, SUPER_NODE,
 	HIGHLIGHT_BRANCH, HIGHLIGHT_UPSTREAM, HIGHLIGHT_DOWNSTREAM,
-	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING
+	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
+	SAVE_ZOOM_LOCAL_STORAGE, SAVE_ZOOM_PIPELINE_FLOW
 } from "../common-canvas/constants/canvas-constants.js";
 
 export default class ObjectModel {
@@ -1127,11 +1128,11 @@ export default class ObjectModel {
 	}
 
 	getPipelineFlowId() {
-		return this.getCanvasInfo().id;
+		return this.store.getPipelineFlowId();
 	}
 
 	getPrimaryPipelineId() {
-		return this.getCanvasInfo().primary_pipeline;
+		return this.store.getPrimaryPipelineId();
 	}
 
 	getPrimaryPipeline() {
@@ -1916,9 +1917,53 @@ export default class ObjectModel {
 		return obj.type === NODE_LINK || obj.type === COMMENT_LINK || obj.type === ASSOCIATION_LINK;
 	}
 
-	// Clears any saved zom values in Local Storage
+	setZoom(zoom, pipelineId) {
+		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
+		// This will save zoom to the pipeline if enableSaveZoom is
+		// SAVE_ZOOM_PIPELINE_FLOW and also will cause the toolbar to be updated
+		// so zoom icons can be enabled/disabled.
+		this.store.dispatch({ type: "SET_ZOOM", data: { zoom: zoom, enableSaveZoom }, pipelineId });
+
+		if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
+			this.setSavedZoomLocal(zoom, pipelineId);
+		}
+	}
+
+	// Returns the saved zoom based on the enableSaveZoom config parameter.
+	getSavedZoom(pipelineId) {
+		const enableSaveZoom = this.getCanvasConfig().enableSaveZoom;
+		if (enableSaveZoom === SAVE_ZOOM_PIPELINE_FLOW) {
+			return this.store.getZoom(pipelineId);
+
+		} else if (enableSaveZoom === SAVE_ZOOM_LOCAL_STORAGE) {
+			return this.getSavedZoomLocal(pipelineId);
+		}
+		return null;
+	}
+
+	// Clears any saved zoom values in Local Storage
 	clearSavedZoomValues() {
 		LocalStorage.delete("canvasSavedZoomValues");
+	}
+
+	// Saves the zoom object passed in for this pipeline in local storage.
+	// The pipeline is identified by the pipelineFlowId and pipelineId passed in.
+	setSavedZoomLocal(zoom, pipelineId) {
+		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
+		const savedZooms = canvasSavedZoomValues ? JSON.parse(canvasSavedZoomValues) : {};
+		set(savedZooms, [this.getPipelineFlowId(), pipelineId], zoom);
+		LocalStorage.set("canvasSavedZoomValues", JSON.stringify(savedZooms));
+	}
+
+	// Returns the zoom for this pipeline saved in local storage. The pipeline is
+	// identified by the pipelineFlowId and pipelineId passed in.
+	getSavedZoomLocal(pipelineId) {
+		const canvasSavedZoomValues = LocalStorage.get("canvasSavedZoomValues");
+		if (canvasSavedZoomValues) {
+			const savedZoom = JSON.parse(canvasSavedZoomValues);
+			return get(savedZoom, [this.getPipelineFlowId(), pipelineId]);
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------------------

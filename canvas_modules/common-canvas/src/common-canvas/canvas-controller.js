@@ -205,7 +205,10 @@ export default class CanvasController {
 
 	// Returns a reference to the 'top-level' D3 rendering object
 	getSVGCanvasD3() {
-		return this.canvasContents.getSVGCanvasD3();
+		if (this.canvasContents) {
+			return this.canvasContents.getSVGCanvasD3();
+		}
+		return null;
 	}
 
 	// Allow application to set instanceId.  Needed for server side rendering to prevent
@@ -1572,7 +1575,7 @@ export default class CanvasController {
 	// Clears any saved zoom values stored in local storage. This means
 	// newly opened flows will appear with the default zoom. This method
 	// is only applicable when the enableSaveZoom config parameter is
-	// set to "localstorage".
+	// set to "LocalStorage".
 	clearSavedZoomValues() {
 		this.objectModel.clearSavedZoomValues();
 	}
@@ -1652,6 +1655,40 @@ export default class CanvasController {
 
 	canDelete() {
 		return this.getSelectedObjectIds().length > 0;
+	}
+
+	canZoomIn() {
+		if (this.isPrimaryPipelineEmpty()) {
+			return false;
+
+		} else if (this.getSVGCanvasD3()) {
+			return !this.getSVGCanvasD3().isZoomedToMax();
+		}
+		return true;
+	}
+
+	canZoomOut() {
+		if (this.isPrimaryPipelineEmpty()) {
+			return false;
+
+		} else if (this.getSVGCanvasD3()) {
+			return !this.getSVGCanvasD3().isZoomedToMin();
+		}
+		return true;
+	}
+
+	canZoomToFit() {
+		if (this.isPrimaryPipelineEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	// Returns the saved zoom either from what is in local storage or in the
+	// pipeline flow (based on the enableSaveZoom config parameter) or null,
+	// if there is no saved zoom.
+	getSavedZoom(pipelineId) {
+		this.objectModel.getSavedZoom(pipelineId);
 	}
 
 	openTip(tipConfig) {
@@ -2494,8 +2531,8 @@ export default class CanvasController {
 			}
 
 			// Commands which are not added to the command stack.
-			case "setPipelineZoom": {
-				this.objectModel.getAPIPipeline(data.pipelineId).setPipelineZoom(data.zoom);
+			case "setZoom": {
+				this.objectModel.setZoom(data.zoom, data.pipelineId);
 				break;
 			}
 			case "highlightBranch":

@@ -215,13 +215,73 @@ describe("Test for toolbar add comment", function() {
 	});
 });
 
+describe("Test toolbar button enable/disable", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Test zoom in, zoom out and zoom to fit are disabled with empty canvas", function() {
+		cy.verifyToolbarButtonEnabled("zoomIn", false);
+		cy.verifyToolbarButtonEnabled("zoomOut", false);
+		cy.verifyToolbarButtonEnabled("zoomToFit", false);
+	});
+
+
+	it("Test zoom in, zoom out and zoom to fit are enabled with a canvas", function() {
+		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.verifyToolbarButtonEnabled("zoomIn", true);
+		cy.verifyToolbarButtonEnabled("zoomOut", true);
+		cy.verifyToolbarButtonEnabled("zoomToFit", true);
+	});
+
+	it("Test zoom in is disabled at maximum zoom in", function() {
+		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+		cy.clickToolbarZoomIn();
+
+		cy.verifyToolbarButtonEnabled("zoomIn", false);
+		cy.verifyToolbarButtonEnabled("zoomOut", true);
+		cy.verifyToolbarButtonEnabled("zoomToFit", true);
+	});
+
+	it("Test zoom out is disabled at maximum zoom out", function() {
+		cy.openCanvasDefinition("commentColorCanvas.json");
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+		cy.clickToolbarZoomOut();
+
+		cy.verifyToolbarButtonEnabled("zoomIn", true);
+		cy.verifyToolbarButtonEnabled("zoomOut", false);
+		cy.verifyToolbarButtonEnabled("zoomToFit", true);
+	});
+});
+
 describe("Test overrideAutoEnableDisable toolbar config option", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedToolbarType": "OverrideAutoEnableDisable" });
 	});
 
-	it("Test overrideAutoEnableDisable leaves all standard buttons disabled", function() {
+	it("Test overrideAutoEnableDisable leaves all standard buttons in default state", function() {
 		cy.verifyToolbarButtonEnabled("undo", false);
 		cy.verifyToolbarButtonEnabled("redo", false);
 
@@ -232,7 +292,7 @@ describe("Test overrideAutoEnableDisable toolbar config option", function() {
 		cy.verifyToolbarButtonEnabled("createAutoComment", false);
 		cy.verifyToolbarButtonEnabled("deleteSelectedObjects", false);
 
-		// The zoom icons will be enabled because they are not auto enabled.
+		// Zoom in, out, to-fit will be enabled by default.
 		cy.verifyToolbarButtonEnabled("zoomIn", true);
 		cy.verifyToolbarButtonEnabled("zoomOut", true);
 		cy.verifyToolbarButtonEnabled("zoomToFit", true);
