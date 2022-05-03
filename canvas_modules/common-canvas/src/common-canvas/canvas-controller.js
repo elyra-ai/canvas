@@ -1688,7 +1688,7 @@ export default class CanvasController {
 	// pipeline flow (based on the enableSaveZoom config parameter) or null,
 	// if there is no saved zoom.
 	getSavedZoom(pipelineId) {
-		this.objectModel.getSavedZoom(pipelineId);
+		return this.objectModel.getSavedZoom(pipelineId);
 	}
 
 	openTip(tipConfig) {
