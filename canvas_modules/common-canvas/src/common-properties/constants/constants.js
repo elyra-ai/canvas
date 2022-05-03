@@ -241,9 +241,9 @@ export const CARBON_BUTTON_KIND = {
 };
 
 export const CARBON_BUTTON_SIZE = {
-	FIELD: "field",
 	SMALL: "sm",
+	MEDIUM: "md",
 	LARGE: "lg",
 	EXTRA_LARGE: "xl",
-	DEFAULT: "default"
+	DEFAULT: "default" // TODO: remove this after upgrading to carbon 11.x
 };

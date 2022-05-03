@@ -19,7 +19,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "carbon-components-react";
 import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constants/constants.js";
-import { Size } from "./../../constants/form-constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
@@ -55,14 +54,10 @@ class ButtonAction extends React.Component {
 			return CARBON_BUTTON_SIZE.SMALL;
 		}
 		switch (this.props.action.button.size) {
-		case CARBON_BUTTON_SIZE.FIELD: return CARBON_BUTTON_SIZE.FIELD;
 		case CARBON_BUTTON_SIZE.SMALL: return CARBON_BUTTON_SIZE.SMALL;
+		case CARBON_BUTTON_SIZE.MEDIUM: return CARBON_BUTTON_SIZE.DEFAULT; // TODO: update this after upgrading to carbon 11.x
 		case CARBON_BUTTON_SIZE.LARGE: return CARBON_BUTTON_SIZE.LARGE;
 		case CARBON_BUTTON_SIZE.EXTRA_LARGE: return CARBON_BUTTON_SIZE.EXTRA_LARGE;
-		case CARBON_BUTTON_SIZE.DEFAULT: return CARBON_BUTTON_SIZE.DEFAULT;
-		case Size.SMALL: return CARBON_BUTTON_SIZE.SMALL; // "small"
-		case Size.MEDIUM: return CARBON_BUTTON_SIZE.DEFAULT; // "medium"
-		case Size.LARGE: return CARBON_BUTTON_SIZE.LARGE; // "large"
 		default: return CARBON_BUTTON_SIZE.SMALL;
 		}
 	}
