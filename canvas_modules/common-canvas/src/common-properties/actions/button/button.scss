@@ -18,7 +18,12 @@
 * Fixed in new versions
 */
 .properties-action-button  {
+	display: inline-block;
 	&.hide {
 		display: none;
 	}
+}
+
+.properties-control-item > .properties-action-button {
+	padding-bottom: $spacing-05;
 }

@@ -77,17 +77,15 @@ class ButtonAction extends React.Component {
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
 		const button = (
-			<div className={className} data-id={this.props.action.name}>
-				<Button
-					type="button"
-					size={actionButtonSize}
-					kind={actionButtonKind}
-					onClick={this.applyAction}
-					disabled={disabled}
-				>
-					{this.props.action.label.text}
-				</Button>
-			</div>
+			<Button
+				type="button"
+				size={actionButtonSize}
+				kind={actionButtonKind}
+				onClick={this.applyAction}
+				disabled={disabled}
+			>
+				{this.props.action.label.text}
+			</Button>
 		);
 
 		let display = button;
@@ -111,7 +109,9 @@ class ButtonAction extends React.Component {
 		}
 
 		return (
-			display
+			<div className={className} data-id={this.props.action.name}>
+				{display}
+			</div>
 		);
 	}
 }
