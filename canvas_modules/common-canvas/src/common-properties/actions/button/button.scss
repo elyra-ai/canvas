@@ -24,6 +24,7 @@
 	}
 }
 
-.properties-control-item > .properties-action-button {
-	padding-bottom: $spacing-05;
+// TODO: Remove first part after all controls are accessible - CSS for inaccessible controls
+.properties-control-item > .properties-action-button, .properties-ctrl-wrapper > .properties-action-button {
+	padding-top: $spacing-05;
 }
