@@ -95,9 +95,10 @@ $bottom-panel-height: 393px;
 }
 
 .bottom-panel-drag {
-	background: $palette-border-color;
+	border-top: $palette-border-color;
 	cursor: row-resize;
 	flex: 0 0 2px;
+	border-top-width: 1px;
 	transition: all 0.2s ease-in;
 	&:hover {
 		background: $interactive-01;
