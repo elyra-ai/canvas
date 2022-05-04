@@ -103,8 +103,8 @@ class ControlItem extends React.Component {
 			>
 				{label}
 				{description}
-				{action}
 				{this.props.controlObj}
+				{action}
 			</div>
 		);
 	}

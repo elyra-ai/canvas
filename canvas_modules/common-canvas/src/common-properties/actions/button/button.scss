@@ -18,17 +18,13 @@
 * Fixed in new versions
 */
 .properties-action-button  {
-	padding: $spacing-03 $spacing-02 $spacing-03 0;
+	display: inline-block;
 	&.hide {
 		display: none;
 	}
-	> button {
-		padding: 0 $spacing-03;
-	}
 }
 
-.properties-action-panel {
-	.properties-action-button {
-		padding-bottom: 0; // .properties-action-panel adds 8px bottom padding
-	}
+// TODO: Remove first part after all controls are accessible - CSS for inaccessible controls
+.properties-control-item > .properties-action-button, .properties-ctrl-wrapper > .properties-action-button {
+	padding-top: $spacing-05;
 }

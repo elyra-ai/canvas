@@ -370,6 +370,10 @@
           "default": "This will increment the number field by 1."
         },
         "control": "button",
+        "button": {
+          "kind": "primary",
+          "size": "sm"
+        },
         "data": {
           "parameter_ref": "number"
         }
@@ -383,6 +387,10 @@
           "default": "This will increment the number field by 1."
         },
         "control": "button",
+        "button": {
+          "kind": "secondary",
+          "size": "lg"
+        },
         "data": {
           "parameter_ref": "oneofselect_custom_value"
         }
@@ -396,6 +404,10 @@
           "default": "This will increment the number field by 1."
         },
         "control": "button",
+        "button": {
+          "kind": "ghost",
+          "size": "md"
+        },
         "data": {
           "parameter_ref": "radioBooleanWithLabels"
         }

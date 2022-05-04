@@ -229,3 +229,21 @@ export const CARBON_MODAL_SIZE_LARGE = "lg";
 
 export const MINIMUM_COLUMN_WIDTH = 56; // 16px padding on both sides + 24px label
 export const MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL = 32; // 16px padding on both sides
+
+export const CARBON_BUTTON_KIND = {
+	PRIMARY: "primary",
+	SECONDARY: "secondary",
+	TERTIARY: "tertiary",
+	GHOST: "ghost",
+	DANGER: "danger",
+	DANGER_TERTIARY: "danger--tertiary",
+	DANGER_GHOST: "danger--ghost"
+};
+
+export const CARBON_BUTTON_SIZE = {
+	SMALL: "sm",
+	MEDIUM: "md",
+	LARGE: "lg",
+	EXTRA_LARGE: "xl",
+	DEFAULT: "default" // TODO: remove this after upgrading to carbon 11.x
+};
