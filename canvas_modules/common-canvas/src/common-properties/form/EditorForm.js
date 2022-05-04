@@ -703,7 +703,7 @@ function _makeAction(action, l10nProvider) {
 	if (action.description) {
 		actionDesc = new Description(l10nProvider.l10nDesc(action, action.id));
 	}
-	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image);
+	return new Action(action.id, actionLabel, actionDesc, action.control, action.data, action.image, action.button);
 }
 
 function _makeButtons(buttonMetadata, l10nProvider) {

@@ -43,6 +43,10 @@ const action = {
 	"actionType": "button",
 	"data": {
 		"parameter_ref": "number"
+	},
+	"button": {
+		"kind": "secondary",
+		"size": "xl"
 	}
 };
 
@@ -134,6 +138,51 @@ describe("action-button renders correctly", () => {
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Increment number by 1.");
 
+	});
+	it("action button kind and size", () => {
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={action}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const button = wrapper.find("button");
+		expect(button).to.have.length(1);
+		// verify button kind is secondary
+		expect(button.prop("className").includes("bx--btn--secondary")).to.equal(true);
+		// verify button size is extra large
+		expect(button.prop("className").includes("bx--btn--xl")).to.equal(true);
+	});
+	it("action button default kind is tertiary and size is small", () => {
+		const actionWithoutButtonObject = {
+			"name": "increment",
+			"label": {
+				"text": "Increment"
+			},
+			"description": {
+				"text": "Increment number by 1."
+			},
+			"actionType": "button",
+			"data": {
+				"parameter_ref": "number"
+			}
+		};
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<ActionButton
+					action={actionWithoutButtonObject}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		const button = wrapper.find("button");
+		expect(button).to.have.length(1);
+		// verify default button kind is tertiary
+		expect(button.prop("className").includes("bx--btn--tertiary")).to.equal(true);
+		// verify default button size is small
+		expect(button.prop("className").includes("bx--btn--sm")).to.equal(true);
 	});
 });
 
