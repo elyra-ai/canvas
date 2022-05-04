@@ -332,24 +332,9 @@ class VirtualizedTable extends React.Component {
 				return true;
 			});
 
-			// const beforeWidths = [];
-			// console.log("totalDelta: " + deltaX);
-			// resizableColumns.forEach((col) => beforeWidths.push(col.width));
-			// beforeWidths.sort((a, b) => a - b);
-			// console.log("before widths sorted");
-			// console.log(beforeWidths);
-
 			// Get column wise delta for resizableColumns
 			const columnWiseDeltas = this.getColumnWiseDeltas(resizableColumns, deltaX);
 			const columnsToBeResized = Object.keys(columnWiseDeltas);
-			// console.log("columnWiseDeltas");
-			// console.log(Object.values(columnWiseDeltas));
-
-			// const afterWidths = [];
-			// resizableColumns.sort((a, b) => a.width - b.width);
-			// resizableColumns.forEach((col, idx) => afterWidths.push(col.width - columnWiseDeltas[col.key]));
-			// console.log("afterWidths = beforeWidths - columnWiseDeltas");
-			// console.log(afterWidths);
 
 			// check if all column wise deltas are 0. This happens when deltaX is more than maximum allowed delta for all columns
 			const everyColumnHasZeroDelta = Object.values(columnWiseDeltas).every((delta) => delta === 0);
