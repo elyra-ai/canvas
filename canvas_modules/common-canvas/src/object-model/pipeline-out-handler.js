@@ -16,7 +16,7 @@
 
 import { cloneDeep, isEmpty, set } from "lodash";
 import { BINDING, EXECUTION_NODE,
-	SUPER_NODE, MODEL_NODE,SCALE_EXTENT_MIN, SCALE_EXTENT_MAX }
+	SUPER_NODE, MODEL_NODE, SCALE_EXTENT_MIN, SCALE_EXTENT_MAX }
 	from "../common-canvas/constants/canvas-constants.js";
 
 
