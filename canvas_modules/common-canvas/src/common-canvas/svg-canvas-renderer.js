@@ -39,6 +39,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
+	SCALE_EXTENT_MIN, SCALE_EXTENT_MAX,
 	NORTH, SOUTH, EAST, WEST }
 	from "./constants/canvas-constants";
 import SUPERNODE_ICON from "../../assets/images/supernode.svg";
@@ -107,8 +108,8 @@ export default class SVGCanvasRenderer {
 		this.initializeZoomVariables();
 
 		// Dimensions for extent of canvas scaling
-		this.minScaleExtent = 0.2;
-		this.maxScaleExtent = 1.8;
+		this.minScaleExtent = SCALE_EXTENT_MIN;
+		this.maxScaleExtent = SCALE_EXTENT_MAX;
 
 		// Allow us to keep track of the object (node or comment) being sized and
 		// its initial size and position at the start of the sizing event.

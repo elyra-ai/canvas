@@ -16,7 +16,8 @@
 
 import { cloneDeep, isEmpty, set } from "lodash";
 import { BINDING, EXECUTION_NODE,
-	SUPER_NODE, MODEL_NODE } from "../common-canvas/constants/canvas-constants.js";
+	SUPER_NODE, MODEL_NODE,SCALE_EXTENT_MIN, SCALE_EXTENT_MAX }
+	from "../common-canvas/constants/canvas-constants.js";
 
 
 export default class PipelineOutHandler {
@@ -333,9 +334,21 @@ export default class PipelineOutHandler {
 		}
 
 		if (canvasInfoPipeline.zoom) {
-			uiData.zoom = canvasInfoPipeline.zoom;
+			uiData.zoom = {
+				x: canvasInfoPipeline.zoom.x,
+				y: canvasInfoPipeline.zoom.y,
+				k: this.constrict(canvasInfoPipeline.zoom.k)
+			};
 		}
 		return uiData;
+	}
+
+	// Returns a scale value constricted by the maximum and minimum scale
+	// amounts allowed by the pipeline flow schema. This ensures we only write
+	// out a scale amount in the zoom that is allowed by the schema.
+	static constrict(scale) {
+		const newScale = Math.max(scale, SCALE_EXTENT_MIN);
+		return Math.min(newScale, SCALE_EXTENT_MAX);
 	}
 
 	static createComments(canvasInfoComments, canvasInfoLinks) {

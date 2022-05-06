@@ -83,6 +83,21 @@ describe("Test canvas controller methods", () => {
 		expect(isEqual(expectedZoom2, actualZoom2)).to.be.true;
 	});
 
+	it("should return canvas with zoom amount constricted by minimum zoom", () => {
+		// If zoom scale is 0.1, it should be constricted to be a min of 0.2
+		// The zoom might become this small if a very large canvas is loaded and
+		// zoom to fit is clicked OR if a pipeline flow is loaded with a very
+		// small zoom scale value with schemaValidation turned off.
+		testZoomExtent(0.1, 0.2);
+	});
+
+	it("should return canvas with zoom amount constricted by maximum zoom", () => {
+		// If zoom scale is 4.2, it should be constricted to be a max of 1.8
+		// The zoom might become this big if a pipeline flow is loaded with a very
+		// big zoom scale value with schemaValidation turned off.
+		testZoomExtent(4.2, 1.8);
+	});
+
 	it("should update a link with new properties using: setLinkProperties", () => {
 		deepFreeze(startCanvas);
 
@@ -585,4 +600,44 @@ function beforeEditActionHandler(data) {
 	default:
 	}
 	return data;
+}
+
+// Tests that the testScale ammout in the zoom object of a pipeline
+// is limited to be the limtScale amount in the returned pipeline.
+function testZoomExtent(testScale, limitScale) {
+	const config = {};
+	const canvasController = new CanvasController();
+
+	// We start with a pipeline flow that has a scale amount in the zoom that
+	// is outside the allowed range for teh scale.
+	const inFlow = {
+		"version": "3.0",
+		"primary_pipeline": "123",
+		"pipelines": [
+			{
+				"id": "123",
+				"nodes": [],
+				"app_data": {
+					"ui_data": {
+						"zoom": { x: 100, y: 200, k: testScale },
+						"comments": []
+					}
+				}
+			}
+		]
+	};
+
+	canvasController.setPipelineFlow(inFlow);
+	createCommonCanvas(config, canvasController);
+
+	// Adjust the initial flow object and adjust its scale amount (k) to be the
+	// amount that the scale should be limited to for this test.
+	const expectedFlow = inFlow;
+	expectedFlow.pipelines[0].app_data.ui_data.zoom.k = limitScale;
+
+	const actualFlow = canvasController.getPipelineFlow();
+
+	// console.log(JSON.stringify(actualFlow, null, 2));
+
+	expect(isEqual(JSON.stringify(expectedFlow), JSON.stringify(actualFlow))).to.be.true;
 }

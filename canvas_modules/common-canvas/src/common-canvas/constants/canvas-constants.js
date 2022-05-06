@@ -188,6 +188,12 @@ export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
 export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
 export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
 
+// The extent of the zoom scale amount allowed. These numbers must correspond
+// to the values in the pipeline flow schema:
+// https://github.com/elyra-ai/pipeline-schemas/blob/b0a1a7c36c43509461b809dce3c9864073ac81b4/common-pipeline/pipeline-flow/pipeline-flow-ui-v3-schema.json#L58
+export const SCALE_EXTENT_MIN = 0.2;
+export const SCALE_EXTENT_MAX = 1.8;
+
 export const EDIT_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +
 	"<rect x=\"2\" y=\"26\" width=\"28\" height=\"2\"/>" +
