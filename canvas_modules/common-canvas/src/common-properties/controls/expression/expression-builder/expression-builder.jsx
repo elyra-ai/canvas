@@ -35,6 +35,10 @@ export default class ExpressionBuilder extends React.Component {
 	}
 
 	onChange(newValue) {
+		// In chrome and safari, editor is still in focus after selecting operator. Remove editor focus.
+		if (this.editor.hasFocus()) {
+			this.editor.display.input.blur();
+		}
 		const value = (typeof newValue === "string") ? newValue : newValue.toString();
 		let cursor = this.editor.getCursor();
 		let selectionOffset = 1;
