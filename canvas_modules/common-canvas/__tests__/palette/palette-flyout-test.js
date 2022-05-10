@@ -81,11 +81,11 @@ describe("Palette search renders correctly", () => {
 
 		simulateSearchEntry(searchInput, "t");
 		wrapper.update();
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "test");
 		wrapper.update();
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
 
 	});
 
@@ -162,8 +162,8 @@ describe("Palette renders correctly", () => {
 		const wrapper = createMountedPalette();
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
-		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(3);
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
@@ -176,10 +176,14 @@ describe("Palette renders correctly", () => {
 		importCat.simulate("click");
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
+		// We now click the Import category again to close it
 		const importCat2 = findCategoryElement(wrapper, "Import");
 		importCat2.simulate("click");
-		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
+		// When the Import category is closed and the Outputs category is opened
+		// we should have 2 palettes flyout content lists objects because
+		// content lists always exist whether categories are opened or closed.
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 	});
 
 	// WARNING: The data-id attribute is used by host application "walk-me"
@@ -238,7 +242,7 @@ describe("Palette renders correctly", () => {
 		const category = findCategoryElement(palette, "Category1");
 		category.simulate("click");
 		// 2 nodes should be rendered
-		expect(palette.find(PaletteContentListItem)).to.have.length(2);
+		expect(palette.find(PaletteContentListItem)).to.have.length(3);
 	});
 
 	it("narrow palette should show correct values for category and node with and without an image", () => {
@@ -256,7 +260,7 @@ describe("Palette renders correctly", () => {
 		expect(category.find("span").text()).to.equal("Cat");
 		category.simulate("click");
 		// 2 nodes should be rendered
-		expect(palette.find(PaletteContentListItem)).to.have.length(2);
+		expect(palette.find(PaletteContentListItem)).to.have.length(3);
 		// Category2 should show image when provided
 		const category2 = findCategoryElement(palette, "Category2");
 		expect(category2.find("img")).to.have.length(1);

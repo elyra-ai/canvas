@@ -60,7 +60,7 @@ $palette-border-color: $ui-03;
 	}
 
 	.palette-content-list {
-		border-bottom: $palette-border-width solid $palette-border-color;
+		border-bottom: 0;
 	}
 
 	.palette-no-results-title {
@@ -90,15 +90,14 @@ $palette-border-color: $ui-03;
 	}
 
 	.palette-list-item {
-		height: 46px;
+		height: 42px;
 		border-width: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* Prevent elements from being selectable */
-		/* This stops it being dragged incorrectly.*/
-		user-select: none;
-
+		padding-left: 1rem;
+		padding-top: 0.5rem;
+		width: 100%;
 		&:hover {
 			background-color: $ui-03;
 		}
@@ -119,13 +118,14 @@ $palette-border-color: $ui-03;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			min-height: 46px;
+			max-height: 30px;
 			align-items: center;
+			height: 100%;
+			margin-left: 18px;
 		}
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			margin-left: 20px;
 			color: $text-02;
 		}
 
@@ -182,25 +182,11 @@ $palette-border-color: $ui-03;
 	cursor: pointer;
 	border-width: 0 0 0 $palette-border-width;
 	height: fit-content;
-	min-height: 46px;
+	max-height: 25px;
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	border-bottom: $palette-border-width solid $palette-border-color;
-}
-
-.palette-flyout-category-caret {
-	height: 16px;
-	width: 16px;
-	position: relative;
-	right: 16px;
-	background-color: $ui-01;
-	fill: $icon-01;
-}
-
-.palette-flyout-category-caret-closed {
-	top: 0;
-	right: 16px;
+	margin-left: 0;
 }
 
 .palette-flyout-category-item {
@@ -208,7 +194,7 @@ $palette-border-color: $ui-03;
 	align-items: center;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
-	user-select: none;
+
 }
 
 .palette-flyout-category-item-loading {
@@ -217,44 +203,34 @@ $palette-border-color: $ui-03;
 
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
-	margin-left: 16px;
+	margin-left: 5px;
 	fill: $icon-01;
-}
-
-.palette-flyout-text-container {
-	max-width: 205px;
-	display: flex;
-	/* Prevent elements from being selectable */
-	/* This stops it being dragged incorrectly.*/
-	user-select: none;
+	padding-top: 0.5rem;
 }
 
 .palette-flyout-category-text {
 	width: 165px;
 	overflow-wrap: break-word;
 	line-height: 1.3;
-	margin-left: 16px;
+	margin-left: 15px;
+	padding-top: 0.2rem;
 }
 
 .palette-flyout-category-text-abbr {
 	line-height: 46px;  /* Must be same as containing div height */
 	margin-left: 16px;
-	width: 35px;
 }
 
 .palette-flyout-category-text-no-image {
 	line-height: 46px;  /* Must be same as containing div height */
 	margin-left: 16px;
 	width: 170px;
+
 }
 
 .palette-flyout-category-count {
 	line-height: 46px;  /* Must be same as containing div height */
 	padding-left: 5px;
-}
-
-.palette-flyout-category:hover {
-	font-weight: 600;
 }
 
 .palette-flyout-search-container {
@@ -265,7 +241,7 @@ $palette-border-color: $ui-03;
 
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
-		.bx--search-magnifier svg {
+		.bx--search-magnifier fbx--accordion__item bx--accordion__item--activesvg {
 			margin-left: 10px;
 		}
 
@@ -298,14 +274,6 @@ $palette-border-color: $ui-03;
 			}
 		}
 	}
-}
-
-.palette-flyout-categories {
-	height: calc(100% - 48px);
-	width: 100%;
-	position: absolute;
-	overflow-x: hidden;
-	overflow-y: overlay;
 }
 
 //--------------------------------------------------------
@@ -354,13 +322,13 @@ $palette-border-color: $ui-03;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			margin-left: 20px;
 			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-02;
 		}
 
 		.palette-list-item-text-div {
-			margin-left: 10px;
+			width: 100%;
+			display: block;
 		}
 
 		.palette-list-item-text-span {
@@ -523,4 +491,23 @@ $palette-border-color: $ui-03;
 
 .palette-content-list {
 	width: 100%;
+}
+
+.bx--accordion__item.bx--accordion__item--active .bx--accordion__content{
+	width: 100%;
+	display: block;
+	height: 100%;
+	padding: 0;
+}
+
+.common-canvas.classic-vertical .palette-flyout-categories li.bx--accordion__item:hover
+.tooltip-trigger,
+.common-canvas-tooltip{
+	margin-left: 0rem;
+}
+
+.common-canvas.classic-vertical .palette-flyout-categories .bx--accordion__item .bx--accordion__content .palette-content-list.palette-scroll:hover
+.tooltip-trigger,
+.common-canvas-tooltip{
+	margin-left: 2rem;
 }
