@@ -1884,7 +1884,7 @@ export default class SVGCanvasRenderer {
 			this.canvasController.setSelections(selections, this.activePipeline.id);
 			this.regionSelect = false;
 
-		} else if (this.dispUtils.isDisplayingFullPage()) {
+		} else if (this.dispUtils.isDisplayingFullPage() && this.zoomChanged()) {
 			// Set the internal zoom value for canvasSVG used by D3. This will be
 			// used by d3Event next time a zoom action is initiated.
 			this.canvasSVG.property("__zoom", this.zoomTransform);
@@ -1902,6 +1902,14 @@ export default class SVGCanvasRenderer {
 		// cursor style, which was set in the zoom start method.
 		this.resetCanvasCursor();
 		this.removeTempCursorOverlay();
+	}
+
+	// Returns true if the current zoom transform is different from the
+	// zoom values at the beginning of the zoom action.
+	zoomChanged() {
+		return (this.zoomTransform.k !== this.zoomStartPoint.k ||
+			this.zoomTransform.x !== this.zoomStartPoint.x ||
+			this.zoomTransform.y !== this.zoomStartPoint.y);
 	}
 
 	zoomCanvasBackground(d3Event) {
