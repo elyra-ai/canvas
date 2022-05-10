@@ -68,402 +68,402 @@
               "description": "supernode",
               "is_expanded": false,
               "expanded_width": 200,
-              "expanded_height": 200
-            },
-            "pipeline_data": [
-              {
-                "id": "babad275-1719-4224-8d65-b04d0804d95c",
-                "nodes": [
-                  {
-                    "id": "691e065f-8359-4b46-aad2-531702ef2a8e",
-                    "type": "execution_node",
-                    "op": "dummy_operator",
-                    "app_data": {
-                      "my_data": {
-                        "value": "Execution node - data value"
+              "expanded_height": 200,
+              "sub_pipelines": [
+                {
+                  "id": "babad275-1719-4224-8d65-b04d0804d95c",
+                  "nodes": [
+                    {
+                      "id": "691e065f-8359-4b46-aad2-531702ef2a8e",
+                      "type": "execution_node",
+                      "op": "dummy_operator",
+                      "app_data": {
+                        "my_data": {
+                          "value": "Execution node - data value"
+                        },
+                        "ui_data": {
+                          "label": "Execution node",
+                          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xNC40IDQ3LjEgNDUuNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTQuNCA0Ny4xIDQ1LjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiNGOUY5RkI7fQ0KCS5zdDR7ZmlsbDojNDFENkMzO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF1Q0FZQUFBQm5OVG9XQUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQlZaSlJFRlVlTnJjV3QxTzQwWVluUm5uQjBOKwp0dXNsQXBVV1ZWcXRGcUtzaXJUZHEwcmxqcHZla3BkQVBBUHdFdHh5RHcvUVc3cTlvdXFxRWkxc3hhNUEyd3FCVWd4MEU4ZjVzV2Q2CnZzUkIyVzVDYkhDeVZpMk54bmFTYitiTU9kK3gvVG1NL2M4MmZ0ZmZLYVhZeHNZR0g4YWsxdGJXRk9ldDBHcm9nTmJYMTRWcG1uSEQKTUpMMWVqM2VhRFJDQlpWT3B5WGlPNGhmdzZHRDhXU1EzOGVDZ3FsVUt2ckV4TVFrd0h3dXBYd1F3d2EyUWdFRlZwUmxXYzFVS21WVwpxOVcvYk5zMmNib1JoS2tnZ0RneGswd21jOHhsejZXUUx6RE1qR0pxakxQUVNGSkNDRXU1NmdpTDlCTEE2dHZiMjlmRll0RU5YWElJCnJPM3Q3WDJHVmZ4YTA3VHZjZXBiQUpvR29FU1lnTkFxaVBkYU12a0RiL0lmOWF4K2duTlZ2OUtMK1pYYTRlR2hEblZOWStYbU1XQWUKL1N3K3ltSmZDekdGQ0ZBS2kwVDlsWXFycTFxdEJoVmFwMzZsNTJjeXZGQW9KQ0FGQXZOY01MR0lBWi9oL0NPME9KcndtQTZqQ1c5Twp4SG9TWXpXbGtxV3hzYkhMNmVucE9oWjFJQ0F4NkF2THk4c0NXazdCQUw3Q0FDODhNRGtQekRCc1cyRGhkUFFrNXpsSS9Ba015TWpuCjg3N0dHd1NJVXlBS1NJRnBnTlpBN1FFRkc5S0dzU2gyQ3Ywc2s2d0FxYytXeStVVThsamNTM0pnUjh0bXN4a0VudU9LZjhjRlg4RHAKU1J3UGk1MXVzMnBMa0xNbStrc1kwY1gxOVhWbGNYSFIyZDNkVlhkaHFKdWR4d2o4R013WVE1UmFyN21sME5wU1Yrb1pEQ0pIbDQ3Ygp4dGR1cytuajQrTXM2SDdhemM0SUFYVk1Jb0htMnlERUlKdkc0UnhDUHhreE8zYzJDTTJQVGVOY3diUHAySWdCa1VIUWVGcXJsOHdTCm1qaUQ0NXI5V0JJUnNHay8wb3UzRklJOHBueStqU1VSQlp2MmFSQVRmbXhjaTRoTmgyYmpJa0kySFlxTmF4R3k2VkJzWEVUTXBnUGIKdU9NNEQ2ZW1wbTdjVjNRZTNQQWtTbXdVOEtWdmlGYVBYc0VpdG5YdTg5QytoSktlb3A4aXhwUlNONGlacnVzSno1cnp1RzBuNUk4aQp5RTYzOUdLWVl3WXM1WEM5ekZBWm9GT3d1V0VBSDlDRmkrb0RDYlRRNmdRajF5UmRnRzNiYmdDQXFiZzZ3ZkVaUGZLaXlZak9tYlRsCllMN3ZvYVlTYmdEZUk0OGNLbjExR0ZMbjUrY09XTHZFL2h0OC9RLzBad0JtUnhRVXpjbEMreE1FMEZ6UDBlcGVIYTh0dVoyZEhRbFQKcUVCMko1TEpuNEY4SDZkTGFNMjdGUHVHekU0VGt6ZXg5eFlzdlNVaWlKRE9QRHRGRW1VWUJrMitCUG50dzk4TmdDTDN5S0k5OEZsNwpHRDRhcFNUQVZOQy9BeFcvT1UzbjNmajR1RVdFZkhTblFHV2krZmw1RzNLa0hIb052RWV0bFlnT1M5Skxnek1xY3dIVVVUS1pOQThPCkRqNlkzd2ZYbVdLeEtOUHBkQVdnV2l2UVdvbTJYbVVVcEVZS29uU2d0S0Qwb0RUcFpxZlgzYllpeElTYzlFazZqUWhMTk9rS1dqdkgKT2QvSExVL0pTeE4xNi9NUUlRWWc2ejhza1c1bEJJemdpTktCMG9MU28xYzF0ZGV0VFRkTFI2VFhUMnpqTFp1K01RSXNOS1VGcFlmdgpta0tFYlB3am0rNWxCTjFidjlwMkpHemNqMDM3cnN0RndNWjkyWFNnVW5BZkd4K0ZRZmkyNlVDQVBxRkIrTFpwMzVYVHpvWW5XYmF3CnNPQUNsSXRjRW5qMHplRDBRNnJDZUwvblEyQ25BUkRuMlBzRjBYOXlYZmNONWxCZVdWa1p1SWgrWG5pTjFDQjZHVUVtaytscjAwRWwKMTljZzBGK3c5bHMxMTVOSUdNMmhkNnhCalNDUTVMcXVUV3hwYVVtQ0pTWTBNWTRCNlRGZDl3RFJLM2o3UGcyUDB6WmlsckZQcng5ZgprZFFBN25mTHNzeXRyUzNIN3p5RHZBVnZHY1RNek13RkpISElGWi9FQTlaVks1ZFVTSG5FV1ExeFR4SHZWZE50L29yRksrVnl1VUNYCmlhQVQ0YXVycXdsZDF3MU4wNzZBQkEyc1lqeU0rZ1A5UjRFa2gvWVBUT0MwV3EzK2pjMkdNdHdnY1dKQmM5WXppQXZUTkN2WWo1WEwKNWRCS1hZbEVRaUZubW9oZEoyWTJOemRsY0pMdnVLREQrcS9QZmY3blE5dS9BZ3dBeDYzSVh5TW1tNnNBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNCAtMTQpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI4LjEsMjYgMTcuNCw3LjUgMjguMSwtMTEgNDkuNiwtMTEgNjAuNCw3LjUgNDkuNiwyNiAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjI4LjEsMjYgMTcuNCw3LjUgMjguMSwtMTEgNDkuNiwtMTEgNjAuNCw3LjUgNDkuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIyNSIgeTE9IjcuNSIgeDI9IjMwIiB5Mj0iNy41Ii8+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMzQiIHkxPSI3LjUiIHgyPSIzOSIgeTI9IjcuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0OSwxMS4yIDQ5LDkgNDMsOSA0Myw2IDQ5LDYgNDksMi41IDU2LjUsNi44ICIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSIzOC40LDEyIDQwLDEyIDQwLDggNDIsOCA0MiwxMiA0NC4xLDEyIDQxLjIsMTYuOSAiLz4NCjxyZWN0IHg9IjQwIiB5PSIzLjQiIGNsYXNzPSJzdDQiIHdpZHRoPSIyIiBoZWlnaHQ9IjQuMiIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSIzNS4xLDQgMzMsNCAzMyw4IDMxLDggMzEsNCAyOS40LDQgMzIuMiwtMC45ICIvPg0KPHJlY3QgeD0iMzEiIHk9IjcuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjIiIGhlaWdodD0iNC41Ii8+DQo8L3N2Zz4NCg==",
+                          "x_pos": 134.56588745117188,
+                          "y_pos": -15.529327392578125,
+                          "description": "Sorts the data"
+                        }
                       },
-                      "ui_data": {
-                        "label": "Execution node",
-                        "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xNC40IDQ3LjEgNDUuNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTQuNCA0Ny4xIDQ1LjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOiNGOUY5RkI7fQ0KCS5zdDR7ZmlsbDojNDFENkMzO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF1Q0FZQUFBQm5OVG9XQUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQlZaSlJFRlVlTnJjV3QxTzQwWVluUm5uQjBOKwp0dXNsQXBVV1ZWcXRGcUtzaXJUZHEwcmxqcHZla3BkQVBBUHdFdHh5RHcvUVc3cTlvdXFxRWkxc3hhNUEyd3FCVWd4MEU4ZjVzV2Q2CnZzUkIyVzVDYkhDeVZpMk54bmFTYitiTU9kK3gvVG1NL2M4MmZ0ZmZLYVhZeHNZR0g4YWsxdGJXRk9ldDBHcm9nTmJYMTRWcG1uSEQKTUpMMWVqM2VhRFJDQlpWT3B5WGlPNGhmdzZHRDhXU1EzOGVDZ3FsVUt2ckV4TVFrd0h3dXBYd1F3d2EyUWdFRlZwUmxXYzFVS21WVwpxOVcvYk5zMmNib1JoS2tnZ0RneGswd21jOHhsejZXUUx6RE1qR0pxakxQUVNGSkNDRXU1NmdpTDlCTEE2dHZiMjlmRll0RU5YWElJCnJPM3Q3WDJHVmZ4YTA3VHZjZXBiQUpvR29FU1lnTkFxaVBkYU12a0RiL0lmOWF4K2duTlZ2OUtMK1pYYTRlR2hEblZOWStYbU1XQWUKL1N3K3ltSmZDekdGQ0ZBS2kwVDlsWXFycTFxdEJoVmFwMzZsNTJjeXZGQW9KQ0FGQXZOY01MR0lBWi9oL0NPME9KcndtQTZqQ1c5Twp4SG9TWXpXbGtxV3hzYkhMNmVucE9oWjFJQ0F4NkF2THk4c0NXazdCQUw3Q0FDODhNRGtQekRCc1cyRGhkUFFrNXpsSS9Ba015TWpuCjg3N0dHd1NJVXlBS1NJRnBnTlpBN1FFRkc5S0dzU2gyQ3Ywc2s2d0FxYytXeStVVThsamNTM0pnUjh0bXN4a0VudU9LZjhjRlg4RHAKU1J3UGk1MXVzMnBMa0xNbStrc1kwY1gxOVhWbGNYSFIyZDNkVlhkaHFKdWR4d2o4R013WVE1UmFyN21sME5wU1Yrb1pEQ0pIbDQ3Ygp4dGR1cytuajQrTXM2SDdhemM0SUFYVk1Jb0htMnlERUlKdkc0UnhDUHhreE8zYzJDTTJQVGVOY3diUHAySWdCa1VIUWVGcXJsOHdTCm1qaUQ0NXI5V0JJUnNHay8wb3UzRklJOHBueStqU1VSQlp2MmFSQVRmbXhjaTRoTmgyYmpJa0kySFlxTmF4R3k2VkJzWEVUTXBnUGIKdU9NNEQ2ZW1wbTdjVjNRZTNQQWtTbXdVOEtWdmlGYVBYc0VpdG5YdTg5QytoSktlb3A4aXhwUlNONGlacnVzSno1cnp1RzBuNUk4aQp5RTYzOUdLWVl3WXM1WEM5ekZBWm9GT3d1V0VBSDlDRmkrb0RDYlRRNmdRajF5UmRnRzNiYmdDQXFiZzZ3ZkVaUGZLaXlZak9tYlRsCllMN3ZvYVlTYmdEZUk0OGNLbjExR0ZMbjUrY09XTHZFL2h0OC9RLzBad0JtUnhRVXpjbEMreE1FMEZ6UDBlcGVIYTh0dVoyZEhRbFQKcUVCMko1TEpuNEY4SDZkTGFNMjdGUHVHekU0VGt6ZXg5eFlzdlNVaWlKRE9QRHRGRW1VWUJrMitCUG50dzk4TmdDTDN5S0k5OEZsNwpHRDRhcFNUQVZOQy9BeFcvT1UzbjNmajR1RVdFZkhTblFHV2krZmw1RzNLa0hIb052RWV0bFlnT1M5Skxnek1xY3dIVVVUS1pOQThPCkRqNlkzd2ZYbVdLeEtOUHBkQVdnV2l2UVdvbTJYbVVVcEVZS29uU2d0S0Qwb0RUcFpxZlgzYllpeElTYzlFazZqUWhMTk9rS1dqdkgKT2QvSExVL0pTeE4xNi9NUUlRWWc2ejhza1c1bEJJemdpTktCMG9MU28xYzF0ZGV0VFRkTFI2VFhUMnpqTFp1K01RSXNOS1VGcFlmdgpta0tFYlB3am0rNWxCTjFidjlwMkpHemNqMDM3cnN0RndNWjkyWFNnVW5BZkd4K0ZRZmkyNlVDQVBxRkIrTFpwMzVYVHpvWW5XYmF3CnNPQUNsSXRjRW5qMHplRDBRNnJDZUwvblEyQ25BUkRuMlBzRjBYOXlYZmNONWxCZVdWa1p1SWgrWG5pTjFDQjZHVUVtaytscjAwRWwKMTljZzBGK3c5bHMxMTVOSUdNMmhkNnhCalNDUTVMcXVUV3hwYVVtQ0pTWTBNWTRCNlRGZDl3RFJLM2o3UGcyUDB6WmlsckZQcng5ZgprZFFBN25mTHNzeXRyUzNIN3p5RHZBVnZHY1RNek13RkpISElGWi9FQTlaVks1ZFVTSG5FV1ExeFR4SHZWZE50L29yRksrVnl1VUNYCmlhQVQ0YXVycXdsZDF3MU4wNzZBQkEyc1lqeU0rZ1A5UjRFa2gvWVBUT0MwV3EzK2pjMkdNdHdnY1dKQmM5WXppQXZUTkN2WWo1WEwKNWRCS1hZbEVRaUZubW9oZEoyWTJOemRsY0pMdnVLREQrcS9QZmY3blE5dS9BZ3dBeDYzSVh5TW1tNnNBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAxNCAtMTQpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI4LjEsMjYgMTcuNCw3LjUgMjguMSwtMTEgNDkuNiwtMTEgNjAuNCw3LjUgNDkuNiwyNiAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjI4LjEsMjYgMTcuNCw3LjUgMjguMSwtMTEgNDkuNiwtMTEgNjAuNCw3LjUgNDkuNiwyNiAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIyNSIgeTE9IjcuNSIgeDI9IjMwIiB5Mj0iNy41Ii8+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMzQiIHkxPSI3LjUiIHgyPSIzOSIgeTI9IjcuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI0OSwxMS4yIDQ5LDkgNDMsOSA0Myw2IDQ5LDYgNDksMi41IDU2LjUsNi44ICIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSIzOC40LDEyIDQwLDEyIDQwLDggNDIsOCA0MiwxMiA0NC4xLDEyIDQxLjIsMTYuOSAiLz4NCjxyZWN0IHg9IjQwIiB5PSIzLjQiIGNsYXNzPSJzdDQiIHdpZHRoPSIyIiBoZWlnaHQ9IjQuMiIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSIzNS4xLDQgMzMsNCAzMyw4IDMxLDggMzEsNCAyOS40LDQgMzIuMiwtMC45ICIvPg0KPHJlY3QgeD0iMzEiIHk9IjcuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjIiIGhlaWdodD0iNC41Ii8+DQo8L3N2Zz4NCg==",
-                        "x_pos": 134.56588745117188,
-                        "y_pos": -15.529327392578125,
-                        "description": "Sorts the data"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "my_data": {
-                            "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+                      "inputs": [
+                        {
+                          "id": "inPort",
+                          "app_data": {
+                            "my_data": {
+                              "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+                            },
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
                           },
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "b47036ee-2fac-48da-a625-31e00fbd4811",
-                            "node_id_ref": "d585f3c8-29d7-4daf-b808-f80a64634343",
-                            "port_id_ref": "output_691e065f-8359-4b46-aad2-531702ef2a8e_inPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "my_data": {
-                            "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
-                          },
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        },
-                        "parameters": {
-                          "props": [
+                          "links": [
                             {
-                              "field1": "execution-node-port-param-val1"
-                            },
-                            {
-                              "field2": "execution-node-port-param-val2"
+                              "id": "b47036ee-2fac-48da-a625-31e00fbd4811",
+                              "node_id_ref": "d585f3c8-29d7-4daf-b808-f80a64634343",
+                              "port_id_ref": "output_691e065f-8359-4b46-aad2-531702ef2a8e_inPort"
                             }
                           ]
                         }
+                      ],
+                      "outputs": [
+                        {
+                          "id": "outPort",
+                          "app_data": {
+                            "my_data": {
+                              "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                            },
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          },
+                          "parameters": {
+                            "props": [
+                              {
+                                "field1": "execution-node-port-param-val1"
+                              },
+                              {
+                                "field2": "execution-node-port-param-val2"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "parameters": {
+                        "props": [
+                          {
+                            "field1": "execution-node-param-val1"
+                          },
+                          {
+                            "field2": "execution-node-param-val2"
+                          }
+                        ]
                       }
-                    ],
-                    "parameters": {
-                      "props": [
+                    },
+                    {
+                      "id": "49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
+                      "type": "execution_node",
+                      "op": "type",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Type",
+                          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjkgLTIgNDcuNyA0My43IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0wLjkgLTIgNDcuNyA0My43OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOm5vbmU7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDojRjlGOUZCO30NCgkuc3Q0e2ZpbGw6IzQxRDZDMzt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NSIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF0Q0FZQUFBRGhvVWk0QUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQldWSlJFRlVlTnJNV3QxdUdrY1kzWmxkREppLwpwRnVzMGtTeFdpR3J0b3NsVjFGdVdxbSs4Q3VZbDdEOERMWmZ4MzRKVjFWdjBxb1hUazBreDNIa1JBMFZaRjMvc0FZTU85UHpiWllWCkpmenNrZ1YycGRIQ2lKMlpNK2Q4WjJhK2hTbmpYVXhLcWV6djd6TmxBdGZ1N3E1a3pHNWEraDZZM3dmMjl2YTRZUmdSWGRlanpXWXoKY245L0h5aW9WQ29sMEg0YjdUZnd0WTMraEovbk5iOWdhclZhUEpGSVpBSG1rUkRpZ1lZTGJBVUNDcXhJMHpSYnlXVFN1THU3ZTFldgoxdzFVMy90aHlnOGdSc3hFbzlFRnhWS2VDaTZlb1p2SFVwRXhwZ1JHa3VTY205S1Nwd0QzQythcXNiVzExVDQ4UExRQ0I0U0dPV1l1CmFWbld0NUxKSDFIMUUwb09aUzR3dlVtYmlScHVEOEY2RmFEK1dWMWR2UU1nNFpVbHI0QVlHbzdjM056b2tVaGtDVTJ2b0c0UkpRTjIKMUFCRGlBYWRKSmt4eWRiQTBPdmIyOXZMZzRPRFZyRlk5TVNTNnBFZE5aUEpwREZqeStqb1o4YlpPcXF6RGp2Y01aY2dDbmNMVTFxNApYNnFxK3VIcTZxcTJzYkhSUGpvNkdza1M5OG9PVEVBSG9EdzZ5a01PT3VvajQ3aWtoNHM3TEgzREZmNE1mYTAxR28wRmlsOHYvWTFrCkNIU3I1K2ZuR2REL1hRODdrd0xVWVlyWWp3SlVTMGhSaWNWaWw3bGNybGtxbGVUWURKRk5vNEU0d0ZEd0w2T3JwUW16NDQ0TC9jVEoKZEdBUXkxREdFaW1FbERLcTMyRU1zVUtoTUFjYnphSHhwNWlwRGRRVlVMNTB6R1NTZ0doTm92WlYreTRVazZ1OGpIWFBHTVVTSDJYVAphT1NqbGhXNWh1cUZLYkRUTGIySXJRakVMY1d2RjVhNEJ5TllJdHB0K2ovS2dDdlR1Nml2Qk1hd0NKWUtrUDRpYkR5SnVPYStKRGZJCkNORHd0TmpwWm9uNXNYRnRtQkdBa1drYWdTY2JoK01ac0hGcytjeS8rKzN6MURBWlFSQTJ6a05tQko5dDR6eUVSakRJeG0zcGpUSUkKZGRSK2JRWkc4RmtHb2ZYWlRlZnhQVDlqSXhocEVDaTB6ek53NEt4QlZlODdCc0U3c1ZPdFZoTXdneWRnNTN2bmFKQUlnOVQ2TGJZVQoxNGp4QW80dVA0Q2xSMlFXbE9Od1l3anNxUEY0bk9UMkJMRkQ2TDhJSVR2ZExNVXdUdG9nZjAxbk1waFlwSk93c2M4eTE5ZlhLZ1UvCkFEMEVhZ0kyRjFJd0xpaU1VY01LRktXd2dZV3piclFTWm1EaEIzV0EraGZJYjNEM2xaaVl3U1V3eGphbXZFbVpJU3kwOG4rMmZYSnkKWXRYcmRRTHlGZ3k5SVFkQmFZVVVGT1VYR2hobkZYY3lnMnZFZm90eWVTNGdTa0prczFrVFdud3JtZndMVlJjb3B2TndtQzdwVEhSRgpLT0lGMVBTblpWbTBCV282aVVuWHhTUllha1dqVVFNc25lR3hNL3pBQ0NGTE5NRTFGRkxSYzR6eEdCdWJxcTdyN2poZFd5YVdBTWhzCnQ5c1hxSDBCWUJkMlNrbEtFU1oyN0ltV3lpayt2OFJZeXlzcksvWHU3R3IzT3RQTjBpazAraEoxWlRLTGtFaVB4bURhRTQwSnA0bFAKcFZLMVlyRW9CbTVPaVNWYWVSRmtiNkRSNXdCMVRIb05nZlM2MlRtanNLQ0pKd0o2eDlWN0hwS09IaXR3dldOczAzV0Erb29XTDVRSApYdk40Z2FPQjdBR201ckxUYWwvTXo4K2JUa1oxK0JHYzlFaTZKSDJTVGttdk16WUk0Y2krVEdGQTRUQ0luWUU1QmRJbDZUTUVCdUhhCk5NbWZ3b0RDZ2NLaUh6dkRraVJoTVFqWHB1MlloazFqbTFQcHRtblBlVGtjYlpYMTlYVUxvQ3pFRXNmdU51MXNXaFBPYzJ3SzdOelQKR3doOCtnTzkvWXBGOUJYR2RMdTl2VDF3VW9lOWZaaXBRZlF6Z25RNi9ZbE4rMDBGejhvZ2ZCbUJaMEJEREdLUyt6emZSdUFMMEF6MgplYjZOd0pNcDlCckU1dWFtUUN3cHFxWW0wQ3k5amRDZFhCbHpPZ3FpQ0NjM1VQWmpCRjVONFJPVzh2bThnUTRvamtxMjQwazdUellYCjVFdGpoNTB6SEdPT1NlWmVqR0FjUVBZK2IyZG5wd2Jwbld0TSswMXlTUko0VE9mN0FGTWdCTWhra3AzaWN3a1MvK0RGQ01ZQzFMRngKeEdZRlF2MmRNLzZlL3FjQWRvTDduNExDSk5wc2FacG1DRXU4QTBPbUZ5UG9UUXY1dXNMK1Q1SnhCeFBhLy9yOEo4QUFRN0N3YTRLRwpEUjBBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMyAtMikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iOC41IiB4Mj0iMTgiIHkyPSI4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMTEuNiAyOSwxMCAyNSwxMCAyNSw3IDI5LDcgMjksNC45IDM0LjgsOC4yICIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMTguNSIgeDI9IjE4IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMjguNSIgeDI9IjE4IiB5Mj0iMjguNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSIyOSwyMS42IDI5LDIwIDI1LDIwIDI1LDE3IDI5LDE3IDI5LDE0LjkgMzQuOCwxOC4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSIyOSwzMS42IDI5LDMwIDI1LDMwIDI1LDI3IDI5LDI3IDI5LDI0LjkgMzQuOCwyOC4yICIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q0IiBjeD0iMjEuMyIgY3k9IjguNiIgcj0iMyIvPg0KPHJlY3QgeD0iMTguOCIgeT0iMTUuOSIgY2xhc3M9InN0NCIgd2lkdGg9IjUuNSIgaGVpZ2h0PSI1LjIiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDQiIHBvaW50cz0iMTguMywzMSAyMS44LDI1IDI1LjMsMzEgIi8+DQo8L3N2Zz4NCg==",
+                          "x_pos": 346.8600769042969,
+                          "y_pos": 126.65591430664062,
+                          "description": "Defines field metadata and purpose",
+                          "messages": [
+                            {
+                              "id_ref": "metadata",
+                              "validation_id": "validField_metadata[0]_108.12905184830979",
+                              "type": "warning",
+                              "text": "Invalid Field, field not found in schema"
+                            }
+                          ]
+                        }
+                      },
+                      "inputs": [
                         {
-                          "field1": "execution-node-param-val1"
-                        },
+                          "id": "inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "1016e81f-c10d-41d6-beec-74d145d3ce5a",
+                              "node_id_ref": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
+                              "port_id_ref": "outPort"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputs": [
                         {
-                          "field2": "execution-node-param-val2"
+                          "id": "outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
+                      "type": "execution_node",
+                      "op": "partition",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Partition",
+                          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xMy4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTMuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6I0Y5RjlGQjt9DQoJLnN0M3tmaWxsOiM0MUQ2QzM7fQ0KCS5zdDR7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6Mjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDYiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdUNBWUFBQUJuTlRvV0FBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJYWkpSRUZVZU5yY1d1MU9HMGNVM1puMVlodC8KUWJkR2RkTUd0VUtvUUl4RUZlVlBxNWFYd0MrQmVBYmdHWGdMZUFtaS9vdXFJam1CU0lRUWtkSzZ3bG1Lc1JkLzdlNzAzTzJ5M1JKLwo3Q1pydk1wSW8yRUhlMmJPbkh2UDNMbGVTZnJFQ3Z2UTd3a2hwTzN0YlRhS1JXMXViZ3JHN0tIRnlBRnRiVzF4VGRNVVZWWGo3WFpiCjZYUTZvWUxLWkRJV3hqY3dmZ3VQQnVhemdudy9GaFJNbzlGSXBsS3BQTUE4c0N4cktvWUN0a0lCQlZhRXJ1dmRkRHF0M2R6Yy9ONXMKTmpWMGQ0SXdGUVFRSTJiaThmaU1aRXFQTFc0OXdUUmZDVWtrbUJRYVNZSnpyZ3RUSEFQY1UreFZhMjF0emRqYjJ6TkRCNFNCT1hZdQpiWnJtdDRLSkg5RDFJMm9CZFNJMGV4TTJFdzAwMDJDOUNsQi9MUzB0M1FDUTVaY2x2NEFZQmxhdXI2OVZSVkhtTWZRaSttWlJjMkJICkR0R0ZhTkZwTWpNbTJESVllbDJ2MXk5M2QzZTdwVkxKRjB1K0ZvTUI1ZFBUMHh3bStBNFQvY3c0VzBGMzNtR0hPK0lTUnVWdVpWSVgKN2FVc3krK3VycTRhcTZ1cnh2Nyt2dmhvaGtnSWpvNk9rZ0JUZ0Jrc1lLSjV0Q3IrcFh5RTdBOHEzR0hwR3k3eEo1YXd0RmFyQmEzUQovL0FqRU1NWVlzVmljUUtPU21BZVk0SlY5QlZSUDNjMll4U0FicGtpOXVPWXN3dFFGNGxFNHJKUUtMU3h1V0xZYmd3VkFzaXp2VnR3CjFtVjB6NHlRSFhkZDJNQWtpUTdtWElBNHpPT1lVTW1QaDgzTGh3a0JEVVFEMHNEMkJQOU94RWNld2pCbW14N2FXY21TaWpENVdRaEUKR3Y3TVA4amt3STZjeStXeUdIREJLd1I0SGpVN1h0TmpRUVdDKzJCbkRnUE9qVmdJZkFrRTFyQU1nWmloQTc3Zk91U0FNbjNmZ0FJTApCQjhrMDNpOEQ1a09WU0RrQ01pMEg0R2dlV1c3dFNTZHk3d0M1ZFY2c2NRakl0TitURSt4TFFYK1RIN2RqeVVlRlpuMktSQ3BZVEl1ClIwaW1RNUh4V0k5b2VnN1BjMk1XZ3FFeWprb3lydUhDMllCVi9Ya2I1L0ZiMzZsV3F5bUl3VU93ODhpNUdxUWlZbXJ2K1JMNU5YeTgKaUt2TDkyRHBBVWs2NVRoY0h3STdjaktaSkhON0NOOGg5SjlGa0IwdlN3bXNrODdGTCtsT0JoRlRiaE0yOWwybVZxdko1UHdBTkEzVQpCR3dpb21CY1VGaGpEQmVKT0xrTkRscm1SU3NnQmlZKzBBU292NEg4R20yZ3hNUVlpb1UxR3RqeU5tV0dFQTZKLzhuMjRlR2gyV3cyCkNjaGJNUFNHRkFTMUcxRlFsRjlvWVoxVnRDUUdOZmgrbDNKNUxpQktRdVR6ZVIyMitGWXc4UUpkWjNheVFnZ3JZbUNFczlFWGxtUTkKaHpYOVpwb20zV1RiVG1MU1ZURUJscnJ4ZUZ3RGlHT2dmNG0rQ3BtaHN5TlJZcWVCU2xiMERPc3JJN0NwcXFycVdwTjdzQ0lta2xaVwpWa3lBTWhIUmNzaGkxbEc3bFBNNUZnRjJPcFRhd2wrL1lqVy9nSjFYV0hOOWZYM2Q2cFVrRVE3U0MvaFRHYUJVTVBVRnlTTHFsTjhNCjBjalF3UHdCaHR6Z0RIYjEzT2dhWjlsc3RsRXFsYXkrd1NubGtSY1hGNXVHWVZUdytCSTdRUmxNTFFJQ1lUbm1YeUYzSUxjZzl5QTMKdWJ1dTl5SUJRcHpKWkJvQVplK0V2U09TcEkvUmwxd2hBSmd5eE9BWlZPME5oVHhPUm5Yb0Zkd3JFQ2NZN21UTUxMbENRR0JJQ0hDUQpYbmlGWUdoT2daQURrSDZIcFhISXVNMk92YUV3ZjNJRGNnZHlpMzQvcy9RTFBxTWk0elNYN2dvQk5wamM0YTRRK01yTEVVdGtwMlN2Ck50V3dYN0xqZXpROUx6c25aUDc5aE1CYkJ1VzJ4eXJqdldSNmNuSlM3eVVFdmxQQlk1UngzeklkQ05BQUdSK2xRQVNTNmNDQXhpQVEKZ1dUYVYrYjBicmtiNTZFckMyQVU1M2t6UWlLRWFqbTVnY3FnZUcxUThmdVQ1SDhDVVd1V2hTTG9aanVOOEowNVNRc1dvcmtST3llNAp4cFRKekh2RmE4T1NEcjRMNWJ3UERnNm1NTkVqbWNrL1lkSjVPeG9YSVFGaU5pQ2RDWGFNc1o5Mk9wMFg1K2ZudFNDL2dnZGRDTnZZCjJKaElKcE9xTE10ZkE1Z0toMVhDZkU4Qmw4eHVMQmJUWUdyMmV3bzdPenNqZTAvQmEzcnZORTFyNE85WXZWNFBOZFhsZlpNRTU0NFIKOUhqNDVONzErVWVBQVFCMGhLd1BVa2RKakFBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTMgLTE1KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjQwLDIwLjUgNDAsMTkgMzYsMTkgMzYsMTYgNDAsMTYgNDAsMTMuOCA0NywxNy4xICIvPg0KPHJlY3QgeD0iMzEuNCIgeT0iMTQuNCIgY2xhc3M9InN0MyIgd2lkdGg9IjEuNSIgaGVpZ2h0PSI2Ii8+DQo8cmVjdCB4PSIyOS4xIiB5PSIxNi42IiBjbGFzcz0ic3QzIiB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiLz4NCjxyZWN0IHg9IjI5LjEiIHk9Ii02LjciIGNsYXNzPSJzdDMiIHdpZHRoPSIxNy45IiBoZWlnaHQ9IjQuNSIvPg0KPHJlY3QgeD0iMjkuMSIgeT0iLTIuMiIgY2xhc3M9InN0MyIgd2lkdGg9IjE3LjkiIGhlaWdodD0iNC41Ii8+DQo8cmVjdCB4PSIyOS4xIiB5PSIyLjMiIGNsYXNzPSJzdDMiIHdpZHRoPSIxNy45IiBoZWlnaHQ9IjQuNSIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjI3IiB5MT0iMi41IiB4Mj0iNDkiIHkyPSIyLjUiLz4NCjxsaW5lIGNsYXNzPSJzdDQiIHgxPSIyNyIgeTE9Ii0yLjUiIHgyPSI0OSIgeTI9Ii0yLjUiLz4NCjwvc3ZnPg0K",
+                          "x_pos": 289.00714111328125,
+                          "y_pos": 12.600616455078125,
+                          "description": "Defines data partitions for model building"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "4907899d-d8ee-4373-93ec-179250b866ca",
+                              "node_id_ref": "691e065f-8359-4b46-aad2-531702ef2a8e",
+                              "port_id_ref": "outPort"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputs": [
+                        {
+                          "id": "outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
+                      "type": "execution_node",
+                      "op": "distribution",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Distribution",
+                          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0yNzUgMTc5LjUgNDcuMyA0My41IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0yNzUgMTc5LjUgNDcuMyA0My41OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiMxRDM2NDk7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDojNDFENkMzO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MyIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iQzVFNjJBMjI2MzU2QkU5NS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIC0yNzggMTc4KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSItMjczLjgsMjE4IC0yNTIuNCwxODEgLTIzMS4xLDIxOCAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9Ii0yNzMuOCwyMTggLTI1Mi40LDE4MSAtMjMxLjEsMjE4IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBvbHlsaW5lIGNsYXNzPSJzdDIiIHBvaW50cz0iLTI1OS41LDIwMSAtMjU5LjUsMjE0LjUgLTI0MiwyMTQuNSAiLz4NCjxyZWN0IHg9Ii0yNTguMiIgeT0iMjAxLjUiIGNsYXNzPSJzdDMiIHdpZHRoPSI0LjkiIGhlaWdodD0iMiIvPg0KPHJlY3QgeD0iLTI1OC4yIiB5PSIyMDQuNyIgY2xhc3M9InN0MyIgd2lkdGg9IjguOCIgaGVpZ2h0PSIyIi8+DQo8cmVjdCB4PSItMjU4LjIiIHk9IjIwNy44IiBjbGFzcz0ic3QzIiB3aWR0aD0iNi45IiBoZWlnaHQ9IjIiLz4NCjxyZWN0IHg9Ii0yNTguMiIgeT0iMjEwLjkiIGNsYXNzPSJzdDMiIHdpZHRoPSIxMS4xIiBoZWlnaHQ9IjIiLz4NCjwvc3ZnPg0K",
+                          "x_pos": 465.5658874511719,
+                          "y_pos": 5.470672607421875,
+                          "description": "Displays results as a distribution"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 2
+                              },
+                              "label": "Input Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "78fb6f69-2cb8-40ad-8744-0f8a8e29bced",
+                              "node_id_ref": "7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
+                              "port_id_ref": "outPort"
+                            },
+                            {
+                              "id": "4cc622b6-c754-4222-84fd-363bec53f2e4",
+                              "node_id_ref": "49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
+                              "port_id_ref": "outPort"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputs": [
+                        {
+                          "id": "outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
+                      "type": "execution_node",
+                      "op": "balance",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Balance",
+                          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xNS4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTUuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiM0MUQ2QzM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojRjlGOUZCO30NCgkuc3Q1e2ZpbGw6bm9uZTtzdHJva2U6IzQxRDZDMztzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iMTdEQzUzRUUyN0I3NzZBMi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEzLjY1IC0xNy4wNSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMjcuOCwyMyAxNyw0LjUgMjcuOCwtMTQgNDkuMiwtMTQgNjAuMSw0LjUgNDkuMiwyMyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjI3LjgsMjMgMTcsNC41IDI3LjgsLTE0IDQ5LjIsLTE0IDYwLjEsNC41IDQ5LjIsMjMgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjQuNiIgeTE9IjQuNSIgeDI9IjI5LjYiIHkyPSI0LjUiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzMy43IiB5MT0iMTUiIHgyPSIzOS43IiB5Mj0iMTUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDQiIHBvaW50cz0iNDguNyw4LjUgNDguNyw2IDQyLjcsNiA0Mi43LDMgNDguNywzIDQ4LjcsLTAuMiA1Ni4yLDQuMiAiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzNi43IiB5MT0iMTQiIHgyPSIzNi43IiB5Mj0iNSIvPg0KPGxpbmUgY2xhc3M9InN0NSIgeDE9IjMwLjUiIHkxPSI4LjUiIHgyPSI0Mi4yIiB5Mj0iMC42Ii8+DQo8L3N2Zz4NCg==",
+                          "x_pos": 186.56588745117188,
+                          "y_pos": 135.47067260742188,
+                          "description": "Corrects imbalances in the data using specified conditions"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "977c3627-c197-473c-aca5-240c047ba63c",
+                              "node_id_ref": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
+                              "port_id_ref": "output_ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputs": [
+                        {
+                          "id": "outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "d585f3c8-29d7-4daf-b808-f80a64634343",
+                      "type": "binding",
+                      "op": "variablefile",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "image": "",
+                          "x_pos": 0,
+                          "y_pos": -18.65471649169922,
+                          "description": "Supernode binding node"
+                        }
+                      },
+                      "outputs": [
+                        {
+                          "id": "output_691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
+                          "app_data": {
+                            "my_data": {
+                              "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+                            },
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
+                      "type": "binding",
+                      "op": "variablefile",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "image": "",
+                          "x_pos": 3.9893436431884766,
+                          "y_pos": 131.6482696533203,
+                          "description": "Supernode binding node"
+                        }
+                      },
+                      "outputs": [
+                        {
+                          "id": "output_ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "813ddbfd-cabb-4037-833d-bc839e13e264",
+                      "type": "binding",
+                      "op": "binding",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "image": "",
+                          "x_pos": 607.082706451416,
+                          "y_pos": 25.72130584716797,
+                          "description": "Supernode binding node"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "input_7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "ebcc93c3-4918-4e40-831c-532c93c845b9",
+                              "node_id_ref": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
+                              "port_id_ref": "outPort"
+                            }
+                          ]
                         }
                       ]
                     }
+                  ],
+                  "app_data": {
+                    "ui_data": {
+                      "comments": []
+                    }
                   },
-                  {
-                    "id": "49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
-                    "type": "execution_node",
-                    "op": "type",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Type",
-                        "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0wLjkgLTIgNDcuNyA0My43IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0wLjkgLTIgNDcuNyA0My43OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOm5vbmU7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDojRjlGOUZCO30NCgkuc3Q0e2ZpbGw6IzQxRDZDMzt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NSIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFEUUFBQUF0Q0FZQUFBRGhvVWk0QUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQldWSlJFRlVlTnJNV3QxdUdrY1kzWmxkREppLwpwRnVzMGtTeFdpR3J0b3NsVjFGdVdxbSs4Q3VZbDdEOERMWmZ4MzRKVjFWdjBxb1hUazBreDNIa1JBMFZaRjMvc0FZTU85UHpiWllWCkpmenNrZ1YycGRIQ2lKMlpNK2Q4WjJhK2hTbmpYVXhLcWV6djd6TmxBdGZ1N3E1a3pHNWEraDZZM3dmMjl2YTRZUmdSWGRlanpXWXoKY245L0h5aW9WQ29sMEg0YjdUZnd0WTMraEovbk5iOWdhclZhUEpGSVpBSG1rUkRpZ1lZTGJBVUNDcXhJMHpSYnlXVFN1THU3ZTFldgoxdzFVMy90aHlnOGdSc3hFbzlFRnhWS2VDaTZlb1p2SFVwRXhwZ1JHa3VTY205S1Nwd0QzQythcXNiVzExVDQ4UExRQ0I0U0dPV1l1CmFWbld0NUxKSDFIMUUwb09aUzR3dlVtYmlScHVEOEY2RmFEK1dWMWR2UU1nNFpVbHI0QVlHbzdjM056b2tVaGtDVTJ2b0c0UkpRTjIKMUFCRGlBYWRKSmt4eWRiQTBPdmIyOXZMZzRPRFZyRlk5TVNTNnBFZE5aUEpwREZqeStqb1o4YlpPcXF6RGp2Y01aY2dDbmNMVTFxNApYNnFxK3VIcTZxcTJzYkhSUGpvNkdza1M5OG9PVEVBSG9EdzZ5a01PT3VvajQ3aWtoNHM3TEgzREZmNE1mYTAxR28wRmlsOHYvWTFrCkNIU3I1K2ZuR2REL1hRODdrd0xVWVlyWWp3SlVTMGhSaWNWaWw3bGNybGtxbGVUWURKRk5vNEU0d0ZEd0w2T3JwUW16NDQ0TC9jVEoKZEdBUXkxREdFaW1FbERLcTMyRU1zVUtoTUFjYnphSHhwNWlwRGRRVlVMNTB6R1NTZ0doTm92WlYreTRVazZ1OGpIWFBHTVVTSDJYVAphT1NqbGhXNWh1cUZLYkRUTGIySXJRakVMY1d2RjVhNEJ5TllJdHB0K2ovS2dDdlR1Nml2Qk1hd0NKWUtrUDRpYkR5SnVPYStKRGZJCkNORHd0TmpwWm9uNXNYRnRtQkdBa1drYWdTY2JoK01ac0hGcytjeS8rKzN6MURBWlFSQTJ6a05tQko5dDR6eUVSakRJeG0zcGpUSUkKZGRSK2JRWkc4RmtHb2ZYWlRlZnhQVDlqSXhocEVDaTB6ek53NEt4QlZlODdCc0U3c1ZPdFZoTXdneWRnNTN2bmFKQUlnOVQ2TGJZVQoxNGp4QW80dVA0Q2xSMlFXbE9Od1l3anNxUEY0bk9UMkJMRkQ2TDhJSVR2ZExNVXdUdG9nZjAxbk1waFlwSk93c2M4eTE5ZlhLZ1UvCkFEMEVhZ0kyRjFJd0xpaU1VY01LRktXd2dZV3piclFTWm1EaEIzV0EraGZJYjNEM2xaaVl3U1V3eGphbXZFbVpJU3kwOG4rMmZYSnkKWXRYcmRRTHlGZ3k5SVFkQmFZVVVGT1VYR2hobkZYY3lnMnZFZm90eWVTNGdTa0prczFrVFdud3JtZndMVlJjb3B2TndtQzdwVEhSRgpLT0lGMVBTblpWbTBCV282aVVuWHhTUllha1dqVVFNc25lR3hNL3pBQ0NGTE5NRTFGRkxSYzR6eEdCdWJxcTdyN2poZFd5YVdBTWhzCnQ5c1hxSDBCWUJkMlNrbEtFU1oyN0ltV3lpayt2OFJZeXlzcksvWHU3R3IzT3RQTjBpazAraEoxWlRLTGtFaVB4bURhRTQwSnA0bFAKcFZLMVlyRW9CbTVPaVNWYWVSRmtiNkRSNXdCMVRIb05nZlM2MlRtanNLQ0pKd0o2eDlWN0hwS09IaXR3dldOczAzV0Erb29XTDVRSApYdk40Z2FPQjdBR201ckxUYWwvTXo4K2JUa1oxK0JHYzlFaTZKSDJTVGttdk16WUk0Y2krVEdGQTRUQ0luWUU1QmRJbDZUTUVCdUhhCk5NbWZ3b0RDZ2NLaUh6dkRraVJoTVFqWHB1MlloazFqbTFQcHRtblBlVGtjYlpYMTlYVUxvQ3pFRXNmdU51MXNXaFBPYzJ3SzdOelQKR3doOCtnTzkvWXBGOUJYR2RMdTl2VDF3VW9lOWZaaXBRZlF6Z25RNi9ZbE4rMDBGejhvZ2ZCbUJaMEJEREdLUyt6emZSdUFMMEF6MgplYjZOd0pNcDlCckU1dWFtUUN3cHFxWW0wQ3k5amRDZFhCbHpPZ3FpQ0NjM1VQWmpCRjVONFJPVzh2bThnUTRvamtxMjQwazdUellYCjVFdGpoNTB6SEdPT1NlWmVqR0FjUVBZK2IyZG5wd2Jwbld0TSswMXlTUko0VE9mN0FGTWdCTWhra3AzaWN3a1MvK0RGQ01ZQzFMRngKeEdZRlF2MmRNLzZlL3FjQWRvTDduNExDSk5wc2FacG1DRXU4QTBPbUZ5UG9UUXY1dXNMK1Q1SnhCeFBhLy9yOEo4QUFRN0N3YTRLRwpEUjBBQUFBQVNVVk9SSzVDWUlJPSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAtMyAtMikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMTEuMSwzNyAwLjQsMTguNSAxMS4xLDAgMzIuNiwwIDQzLjQsMTguNSAzMi42LDM3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iOC41IiB4Mj0iMTgiIHkyPSI4LjUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDMiIHBvaW50cz0iMjksMTEuNiAyOSwxMCAyNSwxMCAyNSw3IDI5LDcgMjksNC45IDM0LjgsOC4yICIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMTguNSIgeDI9IjE4IiB5Mj0iMTguNSIvPg0KPGxpbmUgY2xhc3M9InN0MiIgeDE9IjExIiB5MT0iMjguNSIgeDI9IjE4IiB5Mj0iMjguNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSIyOSwyMS42IDI5LDIwIDI1LDIwIDI1LDE3IDI5LDE3IDI5LDE0LjkgMzQuOCwxOC4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSIyOSwzMS42IDI5LDMwIDI1LDMwIDI1LDI3IDI5LDI3IDI5LDI0LjkgMzQuOCwyOC4yICIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q0IiBjeD0iMjEuMyIgY3k9IjguNiIgcj0iMyIvPg0KPHJlY3QgeD0iMTguOCIgeT0iMTUuOSIgY2xhc3M9InN0NCIgd2lkdGg9IjUuNSIgaGVpZ2h0PSI1LjIiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDQiIHBvaW50cz0iMTguMywzMSAyMS44LDI1IDI1LjMsMzEgIi8+DQo8L3N2Zz4NCg==",
-                        "x_pos": 346.8600769042969,
-                        "y_pos": 126.65591430664062,
-                        "description": "Defines field metadata and purpose",
-                        "messages": [
-                          {
-                            "id_ref": "metadata",
-                            "validation_id": "validField_metadata[0]_108.12905184830979",
-                            "type": "warning",
-                            "text": "Invalid Field, field not found in schema"
-                          }
-                        ]
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "1016e81f-c10d-41d6-beec-74d145d3ce5a",
-                            "node_id_ref": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
-                            "port_id_ref": "outPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
-                    "type": "execution_node",
-                    "op": "partition",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Partition",
-                        "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xMy4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTMuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6I0Y5RjlGQjt9DQoJLnN0M3tmaWxsOiM0MUQ2QzM7fQ0KCS5zdDR7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS1taXRlcmxpbWl0OjEwO3N0cm9rZS1kYXNoYXJyYXk6Mjt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7IiB3aWR0aD0iNTIiIGhlaWdodD0iNDYiIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRFFBQUFBdUNBWUFBQUJuTlRvV0FBQUFDWEJJV1hNQUFBc1NBQUFMRWdIUzNYNzhBQUFBCkdYUkZXSFJUYjJaMGQyRnlaUUJCWkc5aVpTQkpiV0ZuWlZKbFlXUjVjY2xsUEFBQUJYWkpSRUZVZU5yY1d1MU9HMGNVM1puMVlodC8KUWJkR2RkTUd0VUtvUUl4RUZlVlBxNWFYd0MrQmVBYmdHWGdMZUFtaS9vdXFJam1CU0lRUWtkSzZ3bG1Lc1JkLzdlNzAzTzJ5M1JKLwo3Q1pydk1wSW8yRUhlMmJPbkh2UDNMbGVTZnJFQ3Z2UTd3a2hwTzN0YlRhS1JXMXViZ3JHN0tIRnlBRnRiVzF4VGRNVVZWWGo3WFpiCjZYUTZvWUxLWkRJV3hqY3dmZ3VQQnVhemdudy9GaFJNbzlGSXBsS3BQTUE4c0N4cktvWUN0a0lCQlZhRXJ1dmRkRHF0M2R6Yy9ONXMKTmpWMGQ0SXdGUVFRSTJiaThmaU1aRXFQTFc0OXdUUmZDVWtrbUJRYVNZSnpyZ3RUSEFQY1UreFZhMjF0emRqYjJ6TkRCNFNCT1hZdQpiWnJtdDRLSkg5RDFJMm9CZFNJMGV4TTJFdzAwMDJDOUNsQi9MUzB0M1FDUTVaY2x2NEFZQmxhdXI2OVZSVkhtTWZRaSttWlJjMkJICkR0R0ZhTkZwTWpNbTJESVllbDJ2MXk5M2QzZTdwVkxKRjB1K0ZvTUI1ZFBUMHh3bStBNFQvY3c0VzBGMzNtR0hPK0lTUnVWdVpWSVgKN2FVc3krK3VycTRhcTZ1cnh2Nyt2dmhvaGtnSWpvNk9rZ0JUZ0Jrc1lLSjV0Q3IrcFh5RTdBOHEzR0hwR3k3eEo1YXd0RmFyQmEzUQovL0FqRU1NWVlzVmljUUtPU21BZVk0SlY5QlZSUDNjMll4U0FicGtpOXVPWXN3dFFGNGxFNHJKUUtMU3h1V0xZYmd3VkFzaXp2VnR3CjFtVjB6NHlRSFhkZDJNQWtpUTdtWElBNHpPT1lVTW1QaDgzTGh3a0JEVVFEMHNEMkJQOU94RWNld2pCbW14N2FXY21TaWpENVdRaEUKR3Y3TVA4amt3STZjeStXeUdIREJLd1I0SGpVN1h0TmpRUVdDKzJCbkRnUE9qVmdJZkFrRTFyQU1nWmloQTc3Zk91U0FNbjNmZ0FJTApCQjhrMDNpOEQ1a09WU0RrQ01pMEg0R2dlV1c3dFNTZHk3d0M1ZFY2c2NRakl0TitURSt4TFFYK1RIN2RqeVVlRlpuMktSQ3BZVEl1ClIwaW1RNUh4V0k5b2VnN1BjMk1XZ3FFeWprb3lydUhDMllCVi9Ya2I1L0ZiMzZsV3F5bUl3VU93ODhpNUdxUWlZbXJ2K1JMNU5YeTgKaUt2TDkyRHBBVWs2NVRoY0h3STdjaktaSkhON0NOOGg5SjlGa0IwdlN3bXNrODdGTCtsT0JoRlRiaE0yOWwybVZxdko1UHdBTkEzVQpCR3dpb21CY1VGaGpEQmVKT0xrTkRscm1SU3NnQmlZKzBBU292NEg4R20yZ3hNUVlpb1UxR3RqeU5tV0dFQTZKLzhuMjRlR2gyV3cyCkNjaGJNUFNHRkFTMUcxRlFsRjlvWVoxVnRDUUdOZmgrbDNKNUxpQktRdVR6ZVIyMitGWXc4UUpkWjNheVFnZ3JZbUNFczlFWGxtUTkKaHpYOVpwb20zV1RiVG1MU1ZURUJscnJ4ZUZ3RGlHT2dmNG0rQ3BtaHN5TlJZcWVCU2xiMERPc3JJN0NwcXFycVdwTjdzQ0lta2xaVwpWa3lBTWhIUmNzaGkxbEc3bFBNNUZnRjJPcFRhd2wrL1lqVy9nSjFYV0hOOWZYM2Q2cFVrRVE3U0MvaFRHYUJVTVBVRnlTTHFsTjhNCjBjalF3UHdCaHR6Z0RIYjEzT2dhWjlsc3RsRXFsYXkrd1NubGtSY1hGNXVHWVZUdytCSTdRUmxNTFFJQ1lUbm1YeUYzSUxjZzl5QTMKdWJ1dTl5SUJRcHpKWkJvQVplK0V2U09TcEkvUmwxd2hBSmd5eE9BWlZPME5oVHhPUm5Yb0Zkd3JFQ2NZN21UTUxMbENRR0JJQ0hDUQpYbmlGWUdoT2daQURrSDZIcFhISXVNMk92YUV3ZjNJRGNnZHlpMzQvcy9RTFBxTWk0elNYN2dvQk5wamM0YTRRK01yTEVVdGtwMlN2Ck50V3dYN0xqZXpROUx6c25aUDc5aE1CYkJ1VzJ4eXJqdldSNmNuSlM3eVVFdmxQQlk1UngzeklkQ05BQUdSK2xRQVNTNmNDQXhpQVEKZ1dUYVYrYjBicmtiNTZFckMyQVU1M2t6UWlLRWFqbTVnY3FnZUcxUThmdVQ1SDhDVVd1V2hTTG9aanVOOEowNVNRc1dvcmtST3llNAp4cFRKekh2RmE4T1NEcjRMNWJ3UERnNm1NTkVqbWNrL1lkSjVPeG9YSVFGaU5pQ2RDWGFNc1o5Mk9wMFg1K2ZudFNDL2dnZGRDTnZZCjJKaElKcE9xTE10ZkE1Z0toMVhDZkU4Qmw4eHVMQmJUWUdyMmV3bzdPenNqZTAvQmEzcnZORTFyNE85WXZWNFBOZFhsZlpNRTU0NFIKOUhqNDVONzErVWVBQVFCMGhLd1BVa2RKakFBQUFBQkpSVTVFcmtKZ2dnPT0iIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTMgLTE1KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyNy4xLDI1IDE2LjQsNi41IDI3LjEsLTEyIDQ4LjYsLTEyIDU5LjQsNi41IDQ4LjYsMjUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjQwLDIwLjUgNDAsMTkgMzYsMTkgMzYsMTYgNDAsMTYgNDAsMTMuOCA0NywxNy4xICIvPg0KPHJlY3QgeD0iMzEuNCIgeT0iMTQuNCIgY2xhc3M9InN0MyIgd2lkdGg9IjEuNSIgaGVpZ2h0PSI2Ii8+DQo8cmVjdCB4PSIyOS4xIiB5PSIxNi42IiBjbGFzcz0ic3QzIiB3aWR0aD0iNiIgaGVpZ2h0PSIxLjUiLz4NCjxyZWN0IHg9IjI5LjEiIHk9Ii02LjciIGNsYXNzPSJzdDMiIHdpZHRoPSIxNy45IiBoZWlnaHQ9IjQuNSIvPg0KPHJlY3QgeD0iMjkuMSIgeT0iLTIuMiIgY2xhc3M9InN0MyIgd2lkdGg9IjE3LjkiIGhlaWdodD0iNC41Ii8+DQo8cmVjdCB4PSIyOS4xIiB5PSIyLjMiIGNsYXNzPSJzdDMiIHdpZHRoPSIxNy45IiBoZWlnaHQ9IjQuNSIvPg0KPGxpbmUgY2xhc3M9InN0NCIgeDE9IjI3IiB5MT0iMi41IiB4Mj0iNDkiIHkyPSIyLjUiLz4NCjxsaW5lIGNsYXNzPSJzdDQiIHgxPSIyNyIgeTE9Ii0yLjUiIHgyPSI0OSIgeTI9Ii0yLjUiLz4NCjwvc3ZnPg0K",
-                        "x_pos": 289.00714111328125,
-                        "y_pos": 12.600616455078125,
-                        "description": "Defines data partitions for model building"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "4907899d-d8ee-4373-93ec-179250b866ca",
-                            "node_id_ref": "691e065f-8359-4b46-aad2-531702ef2a8e",
-                            "port_id_ref": "outPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
-                    "type": "execution_node",
-                    "op": "distribution",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Distribution",
-                        "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9Ii0yNzUgMTc5LjUgNDcuMyA0My41IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IC0yNzUgMTc5LjUgNDcuMyA0My41OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojMUQzNjQ5O30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzE1MjkzNTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiMxRDM2NDk7c3Ryb2tlOiNGOUY5RkI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDN7ZmlsbDojNDFENkMzO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MyIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iQzVFNjJBMjI2MzU2QkU5NS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIC0yNzggMTc4KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSItMjczLjgsMjE4IC0yNTIuNCwxODEgLTIzMS4xLDIxOCAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9Ii0yNzMuOCwyMTggLTI1Mi40LDE4MSAtMjMxLjEsMjE4IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBvbHlsaW5lIGNsYXNzPSJzdDIiIHBvaW50cz0iLTI1OS41LDIwMSAtMjU5LjUsMjE0LjUgLTI0MiwyMTQuNSAiLz4NCjxyZWN0IHg9Ii0yNTguMiIgeT0iMjAxLjUiIGNsYXNzPSJzdDMiIHdpZHRoPSI0LjkiIGhlaWdodD0iMiIvPg0KPHJlY3QgeD0iLTI1OC4yIiB5PSIyMDQuNyIgY2xhc3M9InN0MyIgd2lkdGg9IjguOCIgaGVpZ2h0PSIyIi8+DQo8cmVjdCB4PSItMjU4LjIiIHk9IjIwNy44IiBjbGFzcz0ic3QzIiB3aWR0aD0iNi45IiBoZWlnaHQ9IjIiLz4NCjxyZWN0IHg9Ii0yNTguMiIgeT0iMjEwLjkiIGNsYXNzPSJzdDMiIHdpZHRoPSIxMS4xIiBoZWlnaHQ9IjIiLz4NCjwvc3ZnPg0K",
-                        "x_pos": 465.5658874511719,
-                        "y_pos": 5.470672607421875,
-                        "description": "Displays results as a distribution"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 2
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "78fb6f69-2cb8-40ad-8744-0f8a8e29bced",
-                            "node_id_ref": "7fadc642-9c03-473e-b4c5-308b1e4cbbb8",
-                            "port_id_ref": "outPort"
-                          },
-                          {
-                            "id": "4cc622b6-c754-4222-84fd-363bec53f2e4",
-                            "node_id_ref": "49b5e5e5-ab72-4d8e-babe-9bd5977bc8e2",
-                            "port_id_ref": "outPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "ba83fcf4-d7d7-4862-b7c9-f2e611f912df",
-                    "type": "execution_node",
-                    "op": "balance",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Balance",
-                        "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE2IC0xNS4xIDQ3LjMgNDIuMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNiAtMTUuMSA0Ny4zIDQyLjE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMxRDM2NDk7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMTUyOTM1O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6I0Y5RjlGQjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiM0MUQ2QzM7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojRjlGOUZCO30NCgkuc3Q1e2ZpbGw6bm9uZTtzdHJva2U6IzQxRDZDMztzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQo8L3N0eWxlPg0KPGc+DQoJDQoJCTxpbWFnZSBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTtvcGFjaXR5OjAuNjY7ZW5hYmxlLWJhY2tncm91bmQ6bmV3ICAgIDsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI0NiIgeGxpbms6aHJlZj0iMTdEQzUzRUUyN0I3NzZBMi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDEzLjY1IC0xNy4wNSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMjcuOCwyMyAxNyw0LjUgMjcuOCwtMTQgNDkuMiwtMTQgNjAuMSw0LjUgNDkuMiwyMyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjI3LjgsMjMgMTcsNC41IDI3LjgsLTE0IDQ5LjIsLTE0IDYwLjEsNC41IDQ5LjIsMjMgCQkiLz4NCgk8L2c+DQo8L2c+DQo8bGluZSBjbGFzcz0ic3QyIiB4MT0iMjQuNiIgeTE9IjQuNSIgeDI9IjI5LjYiIHkyPSI0LjUiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzMy43IiB5MT0iMTUiIHgyPSIzOS43IiB5Mj0iMTUiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDQiIHBvaW50cz0iNDguNyw4LjUgNDguNyw2IDQyLjcsNiA0Mi43LDMgNDguNywzIDQ4LjcsLTAuMiA1Ni4yLDQuMiAiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzNi43IiB5MT0iMTQiIHgyPSIzNi43IiB5Mj0iNSIvPg0KPGxpbmUgY2xhc3M9InN0NSIgeDE9IjMwLjUiIHkxPSI4LjUiIHgyPSI0Mi4yIiB5Mj0iMC42Ii8+DQo8L3N2Zz4NCg==",
-                        "x_pos": 186.56588745117188,
-                        "y_pos": 135.47067260742188,
-                        "description": "Corrects imbalances in the data using specified conditions"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "977c3627-c197-473c-aca5-240c047ba63c",
-                            "node_id_ref": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
-                            "port_id_ref": "output_ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "d585f3c8-29d7-4daf-b808-f80a64634343",
-                    "type": "binding",
-                    "op": "variablefile",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "image": "",
-                        "x_pos": 0,
-                        "y_pos": -18.65471649169922,
-                        "description": "Supernode binding node"
-                      }
-                    },
-                    "outputs": [
-                      {
-                        "id": "output_691e065f-8359-4b46-aad2-531702ef2a8e_inPort",
-                        "app_data": {
-                          "my_data": {
-                            "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
-                          },
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "b82bb50c-edd4-44b5-9e14-f5db5eedddb8",
-                    "type": "binding",
-                    "op": "variablefile",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "image": "",
-                        "x_pos": 3.9893436431884766,
-                        "y_pos": 131.6482696533203,
-                        "description": "Supernode binding node"
-                      }
-                    },
-                    "outputs": [
-                      {
-                        "id": "output_ba83fcf4-d7d7-4862-b7c9-f2e611f912df_inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "813ddbfd-cabb-4037-833d-bc839e13e264",
-                    "type": "binding",
-                    "op": "binding",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "image": "",
-                        "x_pos": 607.082706451416,
-                        "y_pos": 25.72130584716797,
-                        "description": "Supernode binding node"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "input_7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "ebcc93c3-4918-4e40-831c-532c93c845b9",
-                            "node_id_ref": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2",
-                            "port_id_ref": "outPort"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "app_data": {
-                  "ui_data": {
-                    "comments": []
-                  }
-                },
-                "runtime_ref": "test_runtime"
-              }
-            ]
+                  "runtime_ref": "test_runtime"
+                }
+              ]
+            }
           },
           "inputs": [
             {

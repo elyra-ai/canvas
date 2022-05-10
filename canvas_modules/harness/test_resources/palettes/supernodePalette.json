@@ -50,73 +50,73 @@
               "x_pos": 0,
               "y_pos": 0,
               "description": "An empty suprnode with two ports - one input and one output.",
-              "is_expanded": false
-            },
-            "pipeline_data": [
-              {
-                "id": "subflow1",
-                "nodes": [
-                  {
-                    "id": "subflow-entry-binding",
-                    "type": "binding",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "x_pos": 0,
-                        "y_pos": 0,
-                        "description": "Suubflow binding entry node"
-                      }
-                    },
-                    "outputs": [
-                      {
-                        "id": "output1",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Binding output port for subflow"
+              "is_expanded": false,
+              "sub_pipelines": [
+                {
+                  "id": "subflow1",
+                  "nodes": [
+                    {
+                      "id": "subflow-entry-binding",
+                      "type": "binding",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "x_pos": 0,
+                          "y_pos": 0,
+                          "description": "Suubflow binding entry node"
+                        }
+                      },
+                      "outputs": [
+                        {
+                          "id": "output1",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Binding output port for subflow"
+                            }
                           }
                         }
-                      }
-                    ]
+                      ]
+                    },
+                    {
+                      "id": "subflow-exit-binding",
+                      "type": "binding",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "x_pos": 0,
+                          "y_pos": 0,
+                          "description": "Subflow binding exit node"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "input1",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Binding input port for subflow"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "app_data": {
+                    "ui_data": {
+                      "comments": []
+                    }
                   },
-                  {
-                    "id": "subflow-exit-binding",
-                    "type": "binding",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "x_pos": 0,
-                        "y_pos": 0,
-                        "description": "Subflow binding exit node"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "input1",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Binding input port for subflow"
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ],
-                "app_data": {
-                  "ui_data": {
-                    "comments": []
-                  }
-                },
-                "runtime_ref": "test_runtime"
-              }
-            ]
+                  "runtime_ref": "test_runtime"
+                }
+              ]
+            }
           }
         },
         {
@@ -131,129 +131,129 @@
               "image": "useDefaultIcon",
               "x_pos": 0,
               "y_pos": 0,
-              "description": "A 'local' supernode containing a single pipeline."
-            },
-            "pipeline_data": [
-              {
-                "id": "6811e184-6e11-4c51-b769-40e68fd218e5",
-                "nodes": [
-                  {
-                    "id": "f9a48d6e-e798-4e46-8859-338cb2d6c29f",
-                    "type": "execution_node",
-                    "op": "com.ibm.commonicons.operations.append",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Append",
-                        "image": "/images/common_node_icons/operations/operation_append.svg",
-                        "x_pos": 201,
-                        "y_pos": 158.5,
-                        "description": "Append data"
-                      }
-                    },
-                    "inputs": [
-                      {
-                        "id": "inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Input Port"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "912d3085-9d07-4af2-828e-3808eaffbde0",
-                            "node_id_ref": "8be7151f-75d3-4f5e-9435-975adacb38f8",
-                            "port_id_ref": "output_f9a48d6e-e798-4e46-8859-338cb2d6c29f_inPort"
-                          }
-                        ]
-                      }
-                    ],
-                    "outputs": [
-                      {
-                        "id": "outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Output Port"
+              "description": "A 'local' supernode containing a single pipeline.",
+              "sub_pipelines": [
+                {
+                  "id": "6811e184-6e11-4c51-b769-40e68fd218e5",
+                  "nodes": [
+                    {
+                      "id": "f9a48d6e-e798-4e46-8859-338cb2d6c29f",
+                      "type": "execution_node",
+                      "op": "com.ibm.commonicons.operations.append",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Append",
+                          "image": "/images/common_node_icons/operations/operation_append.svg",
+                          "x_pos": 201,
+                          "y_pos": 158.5,
+                          "description": "Append data"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Input Port"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "912d3085-9d07-4af2-828e-3808eaffbde0",
+                              "node_id_ref": "8be7151f-75d3-4f5e-9435-975adacb38f8",
+                              "port_id_ref": "output_f9a48d6e-e798-4e46-8859-338cb2d6c29f_inPort"
+                            }
+                          ]
+                        }
+                      ],
+                      "outputs": [
+                        {
+                          "id": "outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Output Port"
+                            }
                           }
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "8be7151f-75d3-4f5e-9435-975adacb38f8",
-                    "type": "binding",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "x_pos": 41,
-                        "y_pos": 158.5,
-                        "description": "Supernode binding node"
-                      }
+                      ]
                     },
-                    "outputs": [
-                      {
-                        "id": "output_f9a48d6e-e798-4e46-8859-338cb2d6c29f_inPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": 1
-                            },
-                            "label": "Binding port for supernode"
+                    {
+                      "id": "8be7151f-75d3-4f5e-9435-975adacb38f8",
+                      "type": "binding",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "x_pos": 41,
+                          "y_pos": 158.5,
+                          "description": "Supernode binding node"
+                        }
+                      },
+                      "outputs": [
+                        {
+                          "id": "output_f9a48d6e-e798-4e46-8859-338cb2d6c29f_inPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": 1
+                              },
+                              "label": "Binding port for supernode"
+                            }
                           }
                         }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "b00b1356-2bca-467f-8500-ae5e399219f6",
-                    "type": "binding",
-                    "app_data": {
-                      "ui_data": {
-                        "label": "Binding",
-                        "x_pos": 351,
-                        "y_pos": 158.5,
-                        "description": "Supernode binding node"
-                      }
+                      ]
                     },
-                    "inputs": [
-                      {
-                        "id": "input_f9a48d6e-e798-4e46-8859-338cb2d6c29f_outPort",
-                        "app_data": {
-                          "ui_data": {
-                            "cardinality": {
-                              "min": 0,
-                              "max": -1
-                            },
-                            "label": "Binding port for supernode"
-                          }
-                        },
-                        "links": [
-                          {
-                            "id": "cbc13b33-0d3d-4dd2-85e3-9966fc26becd",
-                            "node_id_ref": "f9a48d6e-e798-4e46-8859-338cb2d6c29f",
-                            "port_id_ref": "outPort"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "app_data": {
-                  "ui_data": {
-                    "comments": []
-                  }
-                },
-                "runtime_ref": ""
-              }
-            ]
+                    {
+                      "id": "b00b1356-2bca-467f-8500-ae5e399219f6",
+                      "type": "binding",
+                      "app_data": {
+                        "ui_data": {
+                          "label": "Binding",
+                          "x_pos": 351,
+                          "y_pos": 158.5,
+                          "description": "Supernode binding node"
+                        }
+                      },
+                      "inputs": [
+                        {
+                          "id": "input_f9a48d6e-e798-4e46-8859-338cb2d6c29f_outPort",
+                          "app_data": {
+                            "ui_data": {
+                              "cardinality": {
+                                "min": 0,
+                                "max": -1
+                              },
+                              "label": "Binding port for supernode"
+                            }
+                          },
+                          "links": [
+                            {
+                              "id": "cbc13b33-0d3d-4dd2-85e3-9966fc26becd",
+                              "node_id_ref": "f9a48d6e-e798-4e46-8859-338cb2d6c29f",
+                              "port_id_ref": "outPort"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "app_data": {
+                    "ui_data": {
+                      "comments": []
+                    }
+                  },
+                  "runtime_ref": ""
+                }
+              ]
+            }
           },
           "inputs": [
             {
@@ -302,10 +302,10 @@
               "y_pos": 0,
               "class_name": "canvas-node",
               "description": "An external supernode",
-              "is_expanded": false
-            },
-            "pipeline_data": [
-            ]
+              "is_expanded": false,
+              "sub_pipelines": [
+              ]
+            }
           },
           "inputs": [
             {
@@ -348,10 +348,10 @@
               "y_pos": 0,
               "class_name": "canvas-node",
               "description": "An external supernode containing two nested external pipelines",
-              "is_expanded": false
-            },
-            "pipeline_data": [
-            ]
+              "is_expanded": false,
+              "sub_pipelines": [
+              ]
+            }
           },
           "inputs": [
             {
@@ -406,10 +406,10 @@
               "description": "An external supernode which is already expanded in-place",
               "is_expanded": true,
               "expanded_width": 200,
-              "expanded_height": 200
-            },
-            "pipeline_data": [
-            ]
+              "expanded_height": 200,
+              "sub_pipelines": [
+              ]
+            }
           },
           "inputs": [
             {
