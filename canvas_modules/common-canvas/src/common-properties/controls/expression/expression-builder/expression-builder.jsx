@@ -71,12 +71,9 @@ export default class ExpressionBuilder extends React.Component {
 		this.lastCursorPos = editor.getCursor();
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newValue = this.editor.getValue();
-		if (!isEqual(currentValue, newValue)) {
-			let skipValidate = false;
-			if (this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget)) {
-				// don't validate on old content when adding new content
-				skipValidate = true;
-			}
+		const skipValidate = this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget);
+		// update property value when value is updated OR value is to be validated
+		if (!isEqual(currentValue, newValue) || !skipValidate) {
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
 	}
