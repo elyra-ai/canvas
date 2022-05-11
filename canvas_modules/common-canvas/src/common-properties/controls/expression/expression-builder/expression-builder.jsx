@@ -20,6 +20,7 @@ import ExpressionControl from "./../expression";
 import ExpressionSelectionPanel from "./expression-selection-panel";
 import { MESSAGE_KEYS } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
+import { isEqual } from "lodash";
 
 export default class ExpressionBuilder extends React.Component {
 	constructor(props) {
@@ -35,10 +36,6 @@ export default class ExpressionBuilder extends React.Component {
 	}
 
 	onChange(newValue) {
-		// In chrome and safari, editor is still in focus after selecting operator. Remove editor focus.
-		if (this.editor.hasFocus()) {
-			this.editor.display.input.blur();
-		}
 		const value = (typeof newValue === "string") ? newValue : newValue.toString();
 		let cursor = this.editor.getCursor();
 		let selectionOffset = 1;
@@ -72,13 +69,16 @@ export default class ExpressionBuilder extends React.Component {
 
 	onBlur(editor, evt) {
 		this.lastCursorPos = editor.getCursor();
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newValue = this.editor.getValue();
-		let skipValidate = false;
-		if (this.expressionSelectionPanel && this.expressionSelectionPanel.contains(evt.relatedTarget)) {
-			// don't validate on old content when adding new content
-			skipValidate = true;
+		if (!isEqual(currentValue, newValue)) {
+			let skipValidate = false;
+			if (this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget)) {
+				// don't validate on old content when adding new content
+				skipValidate = true;
+			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 	}
 
 	editorDidMount(editor, next) {
