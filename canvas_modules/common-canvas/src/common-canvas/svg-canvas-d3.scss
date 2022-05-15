@@ -610,7 +610,6 @@ $link-highlight-color: $support-04;
 	}
 }
 
-
 /* Style for default comment background rectangle */
 .d3-comment-rect {
 	fill: $comment-fill-color;
@@ -622,7 +621,7 @@ $link-highlight-color: $support-04;
 	user-select: none;
 }
 
-@mixin comment-color-overrides($background-color) {
+@mixin d3-comment-color-overrides($background-color) {
 	.d3-comment-rect {
 		fill: $background-color;
 	}
@@ -630,7 +629,6 @@ $link-highlight-color: $support-04;
 		background-color: $background-color;
 		color: $gray-100;
 	}
-
 }
 
 /* Styles for comments colored by the user */
@@ -639,40 +637,40 @@ $link-highlight-color: $support-04;
 // assumption is, the user would prefer the color they set in the UI to
 // override any color provided by the host app.
 g.bkg-col-white-0 {
-	@include comment-color-overrides($white-0);
+	@include d3-comment-color-overrides($white-0);
 }
 g.bkg-col-yellow-20 {
-	@include comment-color-overrides($yellow-20);
+	@include d3-comment-color-overrides($yellow-20);
 }
 g.bkg-col-gray-20 {
-	@include comment-color-overrides($gray-20);
+	@include d3-comment-color-overrides($gray-20);
 }
 g.bkg-col-green-20 {
-	@include comment-color-overrides($green-20);
+	@include d3-comment-color-overrides($green-20);
 }
 g.bkg-col-teal-20 {
-	@include comment-color-overrides($teal-20);
+	@include d3-comment-color-overrides($teal-20);
 }
 g.bkg-col-cyan-20 {
-	@include comment-color-overrides($cyan-20);
+	@include d3-comment-color-overrides($cyan-20);
 }
 g.bkg-col-red-50 {
-	@include comment-color-overrides($red-50);
+	@include d3-comment-color-overrides($red-50);
 }
 g.bkg-col-orange-40 {
-	@include comment-color-overrides($orange-40);
+	@include d3-comment-color-overrides($orange-40);
 }
 g.bkg-col-gray-50 {
-	@include comment-color-overrides($gray-50);
+	@include d3-comment-color-overrides($gray-50);
 }
 g.bkg-col-green-50 {
-	@include comment-color-overrides($green-50);
+	@include d3-comment-color-overrides($green-50);
 }
 g.bkg-col-teal-50 {
-	@include comment-color-overrides($teal-50);
+	@include d3-comment-color-overrides($teal-50);
 }
 g.bkg-col-cyan-50 {
-	@include comment-color-overrides($cyan-50);
+	@include d3-comment-color-overrides($cyan-50);
 }
 
 .d3-comment-selection-highlight {
@@ -687,6 +685,144 @@ g.bkg-col-cyan-50 {
 	stroke-width: 3;
 	fill: transparent;
 	pointer-events: none;
+}
+
+@mixin d3-comment-markdown {
+	font-family: $comment-text-font-family;
+
+	// Styles need for HTML elemnets genereted from markdown.
+	h1 {
+		font-size: 28px;
+		font-weight: 500;
+	}
+	h2 {
+		font-size: 22px;
+		font-weight: 500;
+	}
+	h3 {
+		font-size: 18px;
+		font-weight: 500;
+	}
+	h4 {
+		font-size: 16px;
+		font-weight: 500;
+	}
+	h5 {
+		font-size: 14px;
+		font-weight: 500;
+	}
+	h6 {
+		font-size: 12px;
+		font-weight: 500;
+	}
+	p {
+		font-size: $comment-text-font-size;
+		font-weight: $comment-text-font-weight;
+		line-height: 14px;
+		letter-spacing: 0.15px;
+	}
+	hr {
+		border-top-color: $ui-background; // Replace with design chosen color
+	}
+	img {
+		max-width: 100%;
+	}
+	blockquote {
+		padding: 0 12px;
+		border-left: 5px solid $ui-background; // Replace with design chosen color
+		line-height: 8px;
+	}
+	code {
+		background-color: $ui-background; // Replace with design chosen color
+		white-space: pre-wrap;
+	}
+	pre {
+		background-color: $ui-background; // Replace with design chosen color
+		padding: 4px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		white-space: pre-wrap;
+	}
+	table {
+		width: 100%;
+		max-width: 100%;
+		margin-bottom: 20px;
+		border-spacing: 0;
+		border-collapse: collapse;
+		box-sizing: border-box;
+		text-indent: initial;
+		thead {
+			display: table-header-group;
+			vertical-align: middle;
+			border-color: inherit;
+			padding: 8px;
+
+			tr th {
+				border-bottom: 2px solid $ui-background; // Replace with design chosen color
+			}
+		}
+	}
+	li {
+		display: list-item;
+		margin-top: -7px;
+		margin-bottom: -7px;
+
+		// background-color: cyan;
+
+		&:first-child {
+			margin-top: -14px;
+		}
+		&:last-child {
+			margin-bottom: -14px;
+		}
+		// A paragraph is generated in a list item when a blank line is entered
+		// between two if the list items in the input text.
+		p {
+			margin: 0 0 10px;
+			margin-block-start: -14px; // Will keep the paragraph on same line as marker
+		}
+	}
+	ul {
+		list-style-type: disc;
+		padding-inline-start: 30px;
+		line-height: 14px;
+		margin-top: 0;
+
+		// background-color: aliceblue;
+	}
+	ul ul {
+		list-style-type: circle;
+		margin-bottom: -14px;
+
+		// background-color: cornflowerblue;
+
+	}
+	ul ol {
+		margin-bottom: -14px;
+
+		// background-color: cornflowerblue;
+	}
+	ul ul ul {
+		list-style-type: square;
+
+		// background-color: blue;
+	}
+	ol {
+		list-style-type: decimal;
+		padding-inline-start: 30px;
+		line-height: 14px;
+		margin-top: 0;
+	}
+	ol ol {
+		list-style-type: lower-alpha;
+		margin-bottom: -14px;
+	}
+	ol ul {
+		margin-bottom: -14px;
+	}
+	ol ol ol {
+		list-style-type: lower-roman;
+	}
 }
 
 @mixin d3-comment-mixin {
@@ -712,8 +848,10 @@ g.bkg-col-cyan-50 {
 
 .d3-comment-text {
 	@include d3-comment-mixin;
+	@include d3-comment-markdown;
 	border-width: $comment-text-display-border;
 	user-select: none;
+	font-family: $comment-text-font-family;
 }
 
 /* Style for comment text entry when shown in an HTML textarea control. */

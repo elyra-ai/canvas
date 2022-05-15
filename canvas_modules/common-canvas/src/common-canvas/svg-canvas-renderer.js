@@ -26,6 +26,12 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Zoom from "./d3-zoom-extension/src";
 const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
+const markdownIt = require("markdown-it")({
+	html: false, // Don't allow HTML to be executed in comments.
+	linkify: false, // Don't convert URL like strings to be links.
+	typographer: true
+});
+
 import { cloneDeep, escape as escapeText, forOwn, get,
 	unescape as unescapeText } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
@@ -5112,7 +5118,8 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.select("div")
 			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
-			.html((c) => escapeText(c.content));
+			// .html((c) => escapeText(c.content));
+			.html((c) => markdownIt.render(c.content));
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
