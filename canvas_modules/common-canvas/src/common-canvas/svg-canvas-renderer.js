@@ -110,11 +110,6 @@ export default class SVGCanvasRenderer {
 		this.minScaleExtent = 0.2;
 		this.maxScaleExtent = 1.8;
 
-		// Allow us to keep track of the object (node or comment) being sized and
-		// its initial size and position at the start of the sizing event.
-		this.resizeObj = null;
-		this.resizeObjInitialInfo = null;
-
 		// Allows us to track the sizing behavior of comments
 		this.commentSizing = false;
 		this.commentSizingDirection = "";
@@ -125,7 +120,12 @@ export default class SVGCanvasRenderer {
 		this.nodeSizingObjectsInfo = [];
 		this.nodeSizingDetLinksInfo = [];
 
-		// General purpose variables to allow us to handle resize and snap to grid
+		// Keeps track of the size and position, at the start of the sizing event,
+		// of the object (node or comment) being sized.
+		this.resizeObjInitialInfo = null;
+
+		// Keeps track of the size and position, during a sizing event, of the
+		// object (node or comment) being sized, before it is snapped to grid.
 		this.notSnappedXPos = 0;
 		this.notSnappedYPos = 0;
 		this.notSnappedWidth = 0;
@@ -2094,12 +2094,12 @@ export default class SVGCanvasRenderer {
 
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		if (this.commentSizing) {
-			this.resizeObj = this.activePipeline.getComment(d.id);
-			this.initializeResizeVariables(this.resizeObj);
+			const resizeObj = this.activePipeline.getComment(d.id);
+			this.initializeResizeVariables(resizeObj);
 
 		} else if (this.nodeSizing) {
-			this.resizeObj = this.activePipeline.getNode(d.id);
-			this.initializeResizeVariables(this.resizeObj);
+			const resizeObj = this.activePipeline.getNode(d.id);
+			this.initializeResizeVariables(resizeObj);
 
 		} else {
 			this.dragObjectsStart(d3Event, d);
@@ -2126,10 +2126,10 @@ export default class SVGCanvasRenderer {
 		this.removeTempCursorOverlay();
 
 		if (this.commentSizing) {
-			this.endCommentSizing();
+			this.endCommentSizing(d);
 
 		} else if (this.nodeSizing) {
-			this.endNodeSizing();
+			this.endNodeSizing(d);
 
 		} else if (this.dragging) {
 			this.dragObjectsEnd(d3Event, d);
@@ -5671,23 +5671,23 @@ export default class SVGCanvasRenderer {
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
 	resizeNode(d3Event, d) {
-		this.resizeObj = this.activePipeline.getNode(d.id);
-		const oldSupernode = Object.assign({}, this.resizeObj);
-		const minHeight = this.getMinHeight(this.resizeObj);
-		const minWidth = this.getMinWidth(this.resizeObj);
+		const resizeObj = this.activePipeline.getNode(d.id);
+		const oldSupernode = Object.assign({}, resizeObj);
+		const minHeight = this.getMinHeight(resizeObj);
+		const minWidth = this.getMinWidth(resizeObj);
 
-		const delta = this.resizeObject(d3Event, this.resizeObj,
+		const delta = this.resizeObject(d3Event, resizeObj,
 			this.nodeSizingDirection, minWidth, minHeight);
 
 		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			if (CanvasUtils.isSupernode(this.resizeObj) &&
+			if (CanvasUtils.isSupernode(resizeObj) &&
 					this.config.enableMoveNodesOnSupernodeResize) {
 				const objectsInfo = CanvasUtils.moveSurroundingObjects(
 					oldSupernode,
 					this.activePipeline.getNodesAndComments(),
 					this.nodeSizingDirection,
-					this.resizeObj.width,
-					this.resizeObj.height,
+					resizeObj.width,
+					resizeObj.height,
 					true // Pass true to indicate that object positions should be updated.
 				);
 
@@ -5695,8 +5695,8 @@ export default class SVGCanvasRenderer {
 					oldSupernode,
 					this.activePipeline.links,
 					this.nodeSizingDirection,
-					this.resizeObj.width,
-					this.resizeObj.height,
+					resizeObj.width,
+					resizeObj.height,
 					true // Pass true to indicate that link positions should be updated.
 				);
 
@@ -5709,7 +5709,7 @@ export default class SVGCanvasRenderer {
 			this.displayNodes();
 			this.displayLinks();
 
-			if (CanvasUtils.isSupernode(this.resizeObj)) {
+			if (CanvasUtils.isSupernode(resizeObj)) {
 				if (this.dispUtils.isDisplayingSubFlow()) {
 					this.displayBindingNodesToFitSVG();
 				}
@@ -5723,8 +5723,8 @@ export default class SVGCanvasRenderer {
 	// then redraws the comment and links (the link positions may move based
 	// on the comment size change).
 	resizeComment(d3Event, d) {
-		this.resizeObj = this.activePipeline.getComment(d.id);
-		this.resizeObject(d3Event, this.resizeObj, this.commentSizingDirection, 20, 20);
+		const resizeObj = this.activePipeline.getComment(d.id);
+		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
 		this.displayComments();
 		this.displayLinks();
 	}
@@ -5802,32 +5802,33 @@ export default class SVGCanvasRenderer {
 
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
-	endNodeSizing() {
+	endNodeSizing(node) {
+		let resizeObj = this.activePipeline.getNode(node.id);
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			this.resizeObj = this.snapToGridObject(this.resizeObj);
+			resizeObj = this.snapToGridObject(resizeObj);
 		}
 
 		// If the dimensions or position has changed, issue the command.
 		// Note: x_pos or y_pos might change on resize if the node is sized
 		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== this.resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== this.resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== this.resizeObj.width ||
-				this.resizeObjInitialInfo.height !== this.resizeObj.height) {
+		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
+				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
+				this.resizeObjInitialInfo.width !== resizeObj.width ||
+				this.resizeObjInitialInfo.height !== resizeObj.height) {
 			// Add the dimensions of the object being resized to the array of object infos.
-			this.nodeSizingObjectsInfo[this.resizeObj.id] = {
-				width: this.resizeObj.width,
-				height: this.resizeObj.height,
-				x_pos: this.resizeObj.x_pos,
-				y_pos: this.resizeObj.y_pos
+			this.nodeSizingObjectsInfo[resizeObj.id] = {
+				width: resizeObj.width,
+				height: resizeObj.height,
+				x_pos: resizeObj.x_pos,
+				y_pos: resizeObj.y_pos
 			};
 
 			// If the node has been resized set the resize properties appropriately.
-			if (this.resizeObjInitialInfo.width !== this.resizeObj.width ||
-					this.resizeObjInitialInfo.height !== this.resizeObj.height) {
-				this.nodeSizingObjectsInfo[this.resizeObj.id].isResized = true;
-				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeWidth = this.resizeObj.width;
-				this.nodeSizingObjectsInfo[this.resizeObj.id].resizeHeight = this.resizeObj.height;
+			if (this.resizeObjInitialInfo.width !== resizeObj.width ||
+					this.resizeObjInitialInfo.height !== resizeObj.height) {
+				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
+				this.nodeSizingObjectsInfo[resizeObj.id].resizeWidth = resizeObj.width;
+				this.nodeSizingObjectsInfo[resizeObj.id].resizeHeight = resizeObj.height;
 			}
 
 			this.canvasController.editActionHandler({
@@ -5838,7 +5839,6 @@ export default class SVGCanvasRenderer {
 				pipelineId: this.pipelineId
 			});
 		}
-		this.resizeObj = null;
 		this.nodeSizing = false;
 		this.nodeSizingObjectsInfo = [];
 		this.nodeSizingDetLinksInfo = [];
@@ -5846,24 +5846,25 @@ export default class SVGCanvasRenderer {
 
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
-	endCommentSizing() {
+	endCommentSizing(comment) {
+		let resizeObj = this.activePipeline.getComment(comment.id);
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			this.resizeObj = this.snapToGridObject(this.resizeObj);
+			resizeObj = this.snapToGridObject(resizeObj);
 		}
 
 		// If the dimensions or position has changed, issue the command.
 		// Note: x_pos or y_pos might change on resize if the node is sized
 		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== this.resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== this.resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== this.resizeObj.width ||
-				this.resizeObjInitialInfo.height !== this.resizeObj.height) {
+		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
+				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
+				this.resizeObjInitialInfo.width !== resizeObj.width ||
+				this.resizeObjInitialInfo.height !== resizeObj.height) {
 			const commentSizingObjectsInfo = [];
-			commentSizingObjectsInfo[this.resizeObj.id] = {
-				width: this.resizeObj.width,
-				height: this.resizeObj.height,
-				x_pos: this.resizeObj.x_pos,
-				y_pos: this.resizeObj.y_pos
+			commentSizingObjectsInfo[resizeObj.id] = {
+				width: resizeObj.width,
+				height: resizeObj.height,
+				x_pos: resizeObj.x_pos,
+				y_pos: resizeObj.y_pos
 			};
 
 			const data = {
