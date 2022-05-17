@@ -123,7 +123,7 @@ export default class SVGCanvasRenderer {
 		this.nodeSizing = false;
 		this.nodeSizingDirection = "";
 		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingLinksInfo = [];
+		this.nodeSizingDetLinksInfo = [];
 
 		// General purpose variables to allow us to handle resize and snap to grid
 		this.notSnappedXPos = 0;
@@ -2107,12 +2107,12 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("dragStart", true);
 	}
 
-	dragMove(d3Event) {
+	dragMove(d3Event, d) {
 		this.logger.logStartTimer("dragMove");
 		if (this.commentSizing) {
-			this.resizeComment(d3Event);
+			this.resizeComment(d3Event, d);
 		} else if (this.nodeSizing) {
-			this.resizeNode(d3Event);
+			this.resizeNode(d3Event, d);
 		} else {
 			this.dragObjectsAction(d3Event);
 		}
@@ -5670,7 +5670,8 @@ export default class SVGCanvasRenderer {
 	// array based on the position of the pointer during the resize action
 	// then redraws the nodes and links (the link positions may move based
 	// on the node size change).
-	resizeNode(d3Event) {
+	resizeNode(d3Event, d) {
+		this.resizeObj = this.activePipeline.getNode(d.id);
 		const oldSupernode = Object.assign({}, this.resizeObj);
 		const minHeight = this.getMinHeight(this.resizeObj);
 		const minWidth = this.getMinWidth(this.resizeObj);
@@ -5701,7 +5702,7 @@ export default class SVGCanvasRenderer {
 
 				// Overwrite the object and link info with any new info.
 				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
-				this.nodeSizingLinksInfo = Object.assign(this.nodeSizingLinksInfo, linksInfo);
+				this.nodeSizingDetLinksInfo = Object.assign(this.nodeSizingDetLinksInfo, linksInfo);
 			}
 
 			this.displayComments();
@@ -5721,7 +5722,8 @@ export default class SVGCanvasRenderer {
 	// array based on the position of the pointer during the resize action
 	// then redraws the comment and links (the link positions may move based
 	// on the comment size change).
-	resizeComment(d3Event) {
+	resizeComment(d3Event, d) {
+		this.resizeObj = this.activePipeline.getComment(d.id);
 		this.resizeObject(d3Event, this.resizeObj, this.commentSizingDirection, 20, 20);
 		this.displayComments();
 		this.displayLinks();
@@ -5832,14 +5834,14 @@ export default class SVGCanvasRenderer {
 				editType: "resizeObjects",
 				editSource: "canvas",
 				objectsInfo: this.nodeSizingObjectsInfo,
-				linksInfo: this.nodeSizingLinksInfo,
+				detachedLinksInfo: this.nodeSizingDetLinksInfo,
 				pipelineId: this.pipelineId
 			});
 		}
 		this.resizeObj = null;
 		this.nodeSizing = false;
 		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingLinksInfo = [];
+		this.nodeSizingDetLinksInfo = [];
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
@@ -5856,15 +5858,19 @@ export default class SVGCanvasRenderer {
 				this.resizeObjInitialInfo.y_pos !== this.resizeObj.y_pos ||
 				this.resizeObjInitialInfo.width !== this.resizeObj.width ||
 				this.resizeObjInitialInfo.height !== this.resizeObj.height) {
-			const data = {
-				editType: "editComment",
-				editSource: "canvas",
-				id: this.resizeObj.id,
-				content: this.resizeObj.content,
+			const commentSizingObjectsInfo = [];
+			commentSizingObjectsInfo[this.resizeObj.id] = {
 				width: this.resizeObj.width,
 				height: this.resizeObj.height,
 				x_pos: this.resizeObj.x_pos,
-				y_pos: this.resizeObj.y_pos,
+				y_pos: this.resizeObj.y_pos
+			};
+
+			const data = {
+				editType: "resizeObjects",
+				editSource: "canvas",
+				objectsInfo: commentSizingObjectsInfo,
+				detachedLinksInfo: {}, // Comments cannot have detached links
 				pipelineId: this.pipelineId
 			};
 			this.canvasController.editActionHandler(data);
