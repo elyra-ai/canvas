@@ -25,7 +25,7 @@ const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const nodeIds = canvasController.getNodes().map((node) => node.id);
-const newObjectInfo = { objectsInfo: [], linksInfo: [] };
+const newObjectInfo = { objectsInfo: [], detachedLinksInfo: [] };
 for (let i = 0; i < nodeIds.length; i++) {
 	newObjectInfo.objectsInfo[nodeIds[i]] = {
 		id: nodeIds[i],
