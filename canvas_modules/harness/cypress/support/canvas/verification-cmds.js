@@ -868,6 +868,12 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 		.then((idx) => expect(idx).to.equal(index));
 });
 
+Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) => {
+	cy.get("li.bx--accordion__item.bx--accordion__item--active .bx--accordion__title .palette-flyout-category")
+		.contains(categoryName)
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
 	// Verify category exists in palette
 	cy.findCategory(nodeCategory)

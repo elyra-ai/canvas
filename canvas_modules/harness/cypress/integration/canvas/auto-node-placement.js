@@ -96,10 +96,10 @@ describe("Test auto layout variations", function() {
 
 		// Select Type node
 		cy.clickNode("Type");
-
+		cy.clickCategory("Field Ops");
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNodeTransform("Object Store", 350, 360);
 		cy.verifyNumberOfNodes(10);
 		cy.verifyNumberOfPortDataLinks(8);
@@ -108,7 +108,7 @@ describe("Test auto layout variations", function() {
 		cy.clickNode("Object Store");
 
 		// Double click Object Store node on canvas
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNumberOfNodes(11);
 		cy.verifyNumberOfPortDataLinks(9);
 
@@ -148,7 +148,7 @@ describe("Test auto layout variations", function() {
 
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNodeTransform("Object Store", 50, 50);
 		cy.verifyNumberOfNodes(1);
 		cy.verifyNumberOfPortDataLinks(0);

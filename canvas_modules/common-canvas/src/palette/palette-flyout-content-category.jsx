@@ -168,9 +168,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
-	isCategorySelected: PropTypes.bool.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
-	itemCount: PropTypes.number.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired
 };

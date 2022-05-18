@@ -519,10 +519,15 @@ Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
 	cy.findCategory(nodeCategory).trigger("mouseover");
 });
 
-Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
+Cypress.Commands.add("findNodeInCategory", (nodeLabel, paletteName) => {
 	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		if (paletteName) {
+			cy.get("li.bx--accordion__item.bx--accordion__item--active #accordion-item-28")
+				.contains(nodeLabel)
+				.parent()
+				.parent();
+			// Palette Layout - Modal
+		} else if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
 				.contains(nodeLabel)
 				.parent()
@@ -538,8 +543,8 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 	});
 });
 
-Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
-	cy.findNodeInCategory(nodeLabel).dblclick();
+Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, palette) => {
+	cy.findNodeInCategory(nodeLabel, palette).dblclick();
 });
 
 Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {

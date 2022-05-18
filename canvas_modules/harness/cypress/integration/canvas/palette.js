@@ -75,7 +75,7 @@ describe("Test adding nodes into empty canvas", function() {
 
 		// Close Import category
 		cy.clickCategory("Import");
-		cy.verifyNodeDoesNotExistInPalette("Var. File");
+		cy.verifyCategoryIsClosed("Import");
 	});
 });
 
