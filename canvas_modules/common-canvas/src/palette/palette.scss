@@ -269,7 +269,7 @@ $palette-border-color: $ui-03;
 
 		.bx--search-magnifier svg {
 			margin-left: 10px;
-	}
+		}
 
 		svg {
 			fill: $icon-01;
@@ -311,7 +311,7 @@ $palette-border-color: $ui-03;
 	li .bx--accordion__arrow {
 		margin-top: 0.2rem;
 	}
-	 button::before .common-canvas.classic-vertical .palette-flyout-categories .tooltip-container{
+	button::before .common-canvas.classic-vertical .palette-flyout-categories .tooltip-container{
 		display: none;
 	}
 }
@@ -334,7 +334,7 @@ $palette-border-color: $ui-03;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
-  display: block;
+	display: block;
 
 	.palette-list-item {
 		height: 46px;
@@ -543,5 +543,5 @@ $palette-border-color: $ui-03;
 }
 
 .bx--accordion__item.bx--accordion__item--active .bx--accordion__heading{
- border-bottom: $palette-border-width solid $palette-border-color;
+	border-bottom: $palette-border-width solid $palette-border-color;
 }
