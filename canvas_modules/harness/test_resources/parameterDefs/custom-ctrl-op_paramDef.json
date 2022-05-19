@@ -7,7 +7,6 @@
     "structuretable": [
       [
         "BP",
-        false,
         [
           20,
           "low"
@@ -15,7 +14,6 @@
       ],
       [
         "Age",
-        true,
         [
           50,
           "high"
@@ -56,11 +54,6 @@
         "default": ""
       },
       "parameters": [
-        {
-          "id": "toggle",
-          "type": "boolean",
-          "default": false
-        },
         {
           "id": "sub-structuretable",
           "type": "array[sub-structuretable]",
@@ -148,20 +141,6 @@
         },
         "parameters": [
           {
-            "parameter_ref": "toggle",
-            "width": 40,
-            "label": {
-              "default": "Toggle"
-            },
-            "control": "custom",
-            "custom_control_id": "harness-custom-toggle-control",
-            "edit_style": "inline",
-            "data": {
-              "type": "toggle"
-            },
-            "class_name": "table-custom-control-class"
-          },
-          {
             "parameter_ref": "sub-structuretable",
             "width": 40,
             "label": {
@@ -239,6 +218,23 @@
             "parameter_ref": "custom_op_num",
             "op": "customMax",
             "value": 100
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "structuretable[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretable[1]",
+            "op": "customHideColumn",
+            "value": [
+              20,
+              "low"
+            ]
           }
         }
       }

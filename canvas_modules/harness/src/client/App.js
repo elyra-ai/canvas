@@ -68,6 +68,7 @@ import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel"
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+import * as CustomHideColumn from "./custom/condition-ops/customHideColumn";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -1946,7 +1947,7 @@ class App extends React.Component {
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomHideColumn]}
 				light={this.state.light}
 			/>);
 
@@ -1980,7 +1981,7 @@ class App extends React.Component {
 					EMMeansPanel, FixedEffectsPanel, RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks2}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck]}
+				customConditionOps={[CustomOpMax, CustomOpSyntaxCheck, CustomHideColumn]}
 				light={this.state.light}
 			/>);
 

@@ -423,7 +423,7 @@ function updatePanelChildrenStatesForPanelIds(panelIds, controller) {
 * @param {object} propertyId. required.
 * @param {string} proposed new state value. required.
 */
-function updateState(refState, propertyId, value) {
+function updateState(refState, propertyId, value, controller) {
 	let propState = refState[propertyId.name];
 	if (!propState) {
 		propState = {};
@@ -449,6 +449,11 @@ function updateState(refState, propertyId, value) {
 			}
 			// Table cell level
 			propState[colId][rowId].value = newPropState.value;
+			// if all cells are "hidden", we should hide an entire column
+			const allCellsAreHidden = Object.values(propState[colId]).every((val) => val.value === "hidden");
+			if (typeof controller !== "undefined") {
+				controller.controls[propertyId.name][propertyId.col].visible = !allCellsAreHidden;
+			}
 		} else {
 			// Table column level
 			propState[colId].value = newPropState.value;
@@ -841,10 +846,10 @@ function _updateRefsState(stateOn, definition, propertyId, newStates, controller
 			}
 		} else if (stateOn === true) { // control|panel should be visible || enabled
 			if (referenceId && currentState !== newOnState && currentState !== notAllowedState) {
-				updateState(refStates, referenceId, newOnState);
+				updateState(refStates, referenceId, newOnState, controller);
 			}
 		} else if (referenceId && (visibleControl || (!visibleControl && currentState !== notAllowedState))) {
-			_updateStateIfPanel(newStates, referenceId, newOffState, refStates);
+			_updateStateIfPanel(newStates, referenceId, newOffState, refStates, controller);
 		}
 	}
 }
@@ -975,7 +980,7 @@ function _updateStateIfParent(newStates, panel, state, controller, referenceId) 
 }
 
 // A control can only set a state to enabled if it was previously disabled. The same applies to hidden and visible
-function _updateStateIfPanel(newStates, referenceId, state, refStates) {
+function _updateStateIfPanel(newStates, referenceId, state, refStates, controller) {
 	const controlName = referenceId.name;
 	if (refStates[controlName]) {
 		let prevValue = refStates[controlName].value;
@@ -985,10 +990,10 @@ function _updateStateIfPanel(newStates, referenceId, state, refStates) {
 				if (typeof referenceId.row !== "undefined" && refStates[controlName][referenceId.col][referenceId.row]) {
 					prevValue = refStates[controlName][referenceId.col][referenceId.row].value;
 				} else { // first time setting control state for each row in the column
-					updateState(refStates, referenceId, state);
+					updateState(refStates, referenceId, state, controller);
 				}
 			} else { // first time setting control state for the column
-				updateState(refStates, referenceId, state);
+				updateState(refStates, referenceId, state, controller);
 			}
 		}
 		// Can only set a state to enabled if it was previously disabled. The same applies to hidden and visible
@@ -996,10 +1001,10 @@ function _updateStateIfPanel(newStates, referenceId, state, refStates) {
 				(prevValue === STATES.DISABLED && state === STATES.ENABLED) ||
 				(prevValue === STATES.DISABLED && state === STATES.HIDDEN) ||
 				(prevValue === STATES.HIDDEN && state === STATES.VISIBLE)) {
-			updateState(refStates, referenceId, state);
+			updateState(refStates, referenceId, state, controller);
 		}
 	} else { // first time setting control state
-		updateState(refStates, referenceId, state);
+		updateState(refStates, referenceId, state, controller);
 	}
 }
 
