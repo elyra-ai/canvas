@@ -755,10 +755,21 @@ g.bkg-col-cyan-50 {
 			display: table-header-group;
 			vertical-align: middle;
 			border-color: inherit;
-			padding: 8px;
+			color: $text-primary;
+			background-color: $layer-accent;
 
 			tr th {
+				padding: 8px;
 				border-bottom: 2px solid $ui-background; // Replace with design chosen color
+			}
+		}
+		tbody {
+			tr {
+				border-bottom: 2px solid $ui-background; // Replace with design chosen color
+				background-color: $ui-background; // Replace with design chosen color
+				td {
+					padding: 8px;
+				}
 			}
 		}
 	}
