@@ -184,6 +184,9 @@ describe("Palette renders correctly", () => {
 		// content lists always exist whether categories are opened or closed.
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+
+		const categoryList = wrapper.find("div.palette-flyout-categories");
+		expect(categoryList.find(".bx--accordion__item--active")).to.have.length(1);
 	});
 
 	// WARNING: The data-id attribute is used by host application "walk-me"
@@ -236,12 +239,10 @@ describe("Palette renders correctly", () => {
 			paletteWidth: 250
 		};
 		const palette = createMountedPalette(config);
-		// 2 categories should be rendered
 		const categories = palette.find(PaletteFlyoutContentCategory);
 		expect(categories).to.have.length(2);
 		const category = findCategoryElement(palette, "Category1");
 		category.simulate("click");
-		// 2 nodes should be rendered
 		expect(palette.find(PaletteContentListItem)).to.have.length(3);
 	});
 
@@ -259,7 +260,6 @@ describe("Palette renders correctly", () => {
 		const category = findCategoryElement(palette, "Category1");
 		expect(category.find("span").text()).to.equal("Cat");
 		category.simulate("click");
-		// 2 nodes should be rendered
 		expect(palette.find(PaletteContentListItem)).to.have.length(3);
 		// Category2 should show image when provided
 		const category2 = findCategoryElement(palette, "Category2");

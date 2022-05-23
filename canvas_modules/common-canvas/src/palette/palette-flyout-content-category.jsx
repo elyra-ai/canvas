@@ -144,7 +144,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}
 					isPaletteOpen={this.props.isPaletteOpen}
-					isEditingEnabled
+					isEditingEnabled={this.props.isEditingEnabled}
 				/>
 			</AccordionItem>
 		);
@@ -170,7 +170,8 @@ PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
 };
 
 export default PaletteFlyoutContentCategory;

@@ -99,6 +99,7 @@ $palette-border-color: $ui-03;
 		padding-top: 0.5rem;
 		user-select: none;
 		width: 100%;
+
 		&:hover {
 			background-color: $ui-03;
 		}
@@ -119,7 +120,6 @@ $palette-border-color: $ui-03;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			max-height: 30px;
 			align-items: center;
 			height: 100%;
 			margin-left: 18px;
@@ -169,10 +169,13 @@ $palette-border-color: $ui-03;
 			min-height: 46px;
 			height: fit-content;
 			padding-bottom: $spacing-05;
+			padding-top: 0px;
+			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
-
+			padding-right: 10px;
 			.palette-list-item-icon-and-text {
 				min-height: 30px;
+				padding-left: 10px;
 			}
 		}
 	}
@@ -188,42 +191,35 @@ $palette-border-color: $ui-03;
 	justify-content: space-between;
 	display: flex;
 	margin-left: 0;
-	//border-bottom: $palette-border-width solid $palette-border-color;
-}
-
-.palette-flyout-category-caret {
-	height: 16px;
-	width: 16px;
-	position: relative;
-	right: 16px;
-	background-color: $ui-01;
-	fill: $icon-01;
-}
-
-.palette-flyout-category-caret-closed {
-	top: 0;
-	right: 16px;
 }
 
 .palette-flyout-category-item {
 	display: flex;
 	align-items: center;
-	user-select: none;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
+	user-select: none;
+	padding-top: 7px;
+	padding-left: 10px;
+	padding-bottom: 4px;
 
 }
 
 .palette-flyout-category-item-loading {
 	margin-left: 16px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	max-height: 60px;
 }
 
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
 	margin-left: 5px;
 	fill: $icon-01;
-	padding-top: 0rem;
-	margin-right: 0.2rem;
+	padding-top: 0px;
+	margin-right: 5px;
 }
 
 .palette-flyout-text-container {
@@ -237,8 +233,10 @@ $palette-border-color: $ui-03;
 .palette-flyout-category-text {
 	width: 165px;
 	overflow-wrap: break-word;
-	line-height: 1.3;
-	margin-left: 15px;
+	line-height: 1.2;
+	margin-left: 10px;
+	height: 100%;
+	max-height: 59px;
 }
 
 .palette-flyout-category-text-abbr {
@@ -250,7 +248,6 @@ $palette-border-color: $ui-03;
 	line-height: 46px;  /* Must be same as containing div height */
 	margin-left: 16px;
 	width: 170px;
-
 }
 
 .palette-flyout-category-count {
@@ -263,10 +260,8 @@ $palette-border-color: $ui-03;
 	.palette-flyout-search {
 		height: 100%;
 		overflow: hidden;
-
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
-
 		.bx--search-magnifier svg {
 			margin-left: 10px;
 		}
@@ -309,10 +304,7 @@ $palette-border-color: $ui-03;
 	overflow-x: hidden;
 	overflow-y: overlay;
 	li .bx--accordion__arrow {
-		margin-top: 0.2rem;
-	}
-	button::before .common-canvas.classic-vertical .palette-flyout-categories .tooltip-container{
-		display: none;
+		margin-top: 5px;
 	}
 }
 
@@ -344,10 +336,10 @@ $palette-border-color: $ui-03;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 100%;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
+		padding-left: 19px;
 
 		&:hover {
 			background-color: $ui-03;
@@ -366,6 +358,7 @@ $palette-border-color: $ui-03;
 			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-02;
 			margin-left: 0;
+			margin-right: 10px;
 		}
 
 		.palette-list-item-text-div {
@@ -535,13 +528,32 @@ $palette-border-color: $ui-03;
 	width: 100%;
 }
 
-.bx--accordion__item.bx--accordion__item--active .bx--accordion__content{
-	width: 100%;
-	display: block;
-	height: 100%;
-	padding: 0;
-}
-
-.bx--accordion__item.bx--accordion__item--active .bx--accordion__heading{
-	border-bottom: $palette-border-width solid $palette-border-color;
+.bx--accordion__item {
+	button.bx--accordion__heading {
+		position: relative;
+		height: 60px;
+		max-height: 60px;
+		height: fit-content;
+		padding-top: 11px;
+		padding-bottom:11px;
+		.palette-flyout-category {
+			position: absolute;
+			top:0;
+			left:0;
+			right:0;
+			bottom: 0;
+			height: 100%;
+		}
+	}
+	&.bx--accordion__item--active {
+		.bx--accordion__heading {
+			border-bottom: $palette-border-width solid $palette-border-color;
+		}
+		.bx--accordion__content{
+			width: 100%;
+			display: block;
+			height: 100%;
+			padding: 0;
+		}
+	}
 }
