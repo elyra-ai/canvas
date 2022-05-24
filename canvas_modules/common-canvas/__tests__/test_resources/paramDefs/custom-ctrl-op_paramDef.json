@@ -22,7 +22,17 @@
         ]
       ]
     ],
-    "custom_op_num": 0
+    "custom_op_num": 0,
+    "valueProperties": [
+      [
+        "BP",
+        "ci"
+      ],
+      [
+        "Age",
+        "cs"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -44,6 +54,11 @@
       "enum": [
         "blue"
       ]
+    },
+    {
+      "id": "valueProperties",
+      "type": "array[valueSubProperties]",
+      "default": []
     }
   ],
   "complex_types": [
@@ -81,6 +96,25 @@
         {
           "id": "value",
           "type": "string"
+        }
+      ]
+    },
+    {
+      "id": "valueSubProperties",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "id": "value-ci-cs",
+          "enum": [
+            "cs",
+            "ci"
+          ],
+          "default": "cs"
         }
       ]
     }
@@ -133,6 +167,18 @@
         "description": {
           "default": "numberfield with an error when value > 100 using a custom operator called `customMax`"
         }
+      },
+      {
+        "parameter_ref": "valueProperties",
+        "label": {
+          "default": "Join Keys"
+        },
+        "description": {
+          "default": "When all rows in 'Case sensitive' column have value 'ci', entire column will be hidden.",
+          "placement": "on_panel"
+        },
+        "resource_key": "valuePropertiesRKey",
+        "control": "readonlyTable"
       }
     ],
     "complex_type_info": [
@@ -197,6 +243,33 @@
             }
           }
         ]
+      },
+      {
+        "complex_type_ref": "valueSubProperties",
+        "label": {
+          "default": "Add valueSubProperties"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "value",
+            "label": {
+              "resource_key": "valueRkey.label"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "valueRKey"
+          },
+          {
+            "parameter_ref": "value-ci-cs",
+            "label": {
+              "resource_key": "value-ci-csRkey.label"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "value-ci-csRKey"
+          }
+        ],
+        "row_selection": "single"
       }
     ],
     "group_info": [
@@ -209,7 +282,8 @@
         "parameter_refs": [
           "custom_toggle",
           "structuretable",
-          "colors"
+          "colors",
+          "valueProperties"
         ]
       },
       {
@@ -239,6 +313,20 @@
             "parameter_ref": "custom_op_num",
             "op": "customMax",
             "value": 100
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "valueProperties[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "valueProperties[1]",
+            "op": "customHideColumn",
+            "value": "cs"
           }
         }
       }
@@ -286,5 +374,9 @@
       ]
     }
   ],
-  "resources": {}
+  "resources": {
+    "valueRkey.label": "Value",
+    "value-ci-csRkey.label": "Case sensitive",
+    "value-ci-cs.description": "Whether this column is case sensitive or not."
+  }
 }
