@@ -518,10 +518,21 @@ describe("condition renders correctly with structure table control", () => {
 		// open the summary panel
 		propertyUtils.openSummaryPanel(wrapper, "dummy_types-summary-panel");
 
-		// verify the table is HIDDEN
-		const cellControlDiv = wrapper.find("div[data-id='properties-dummy_types_0_4']");
-		expect(cellControlDiv.hasClass("hide")).to.be.true;
+		// When all rows in the column are hidden, we hide entire column
+		// "Check" column has only 1 row and its hidden
+		// verify the "Check" column is HIDDEN
+		const checkColumnHidden = wrapper.find("div[data-id='properties-dummy_types_0_4']");
+		expect(checkColumnHidden).to.have.length(0);
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("hidden");
+
+		// Set the visible flag
+		renderedController.updatePropertyValue(conditionsPropertyId, true);
+		wrapper.update();
+
+		// verify the "Check" column is visible
+		const checkColumnVisible = wrapper.find("div[data-id='properties-dummy_types_0_4']");
+		expect(checkColumnVisible).to.have.length(1);
+		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("visible");
 	});
 	it("should disable a table cell", () => {
 		// set the disable flag
