@@ -520,7 +520,7 @@ describe("condition renders correctly with structure table control", () => {
 
 		// When all rows in the column are hidden, we hide entire column
 		// "Check" column has only 1 row and its hidden
-		// verify the "Check" column is HIDDEN
+		// verify the "Check" column is hidden
 		const checkColumnHidden = wrapper.find("div[data-id='properties-dummy_types_0_4']");
 		expect(checkColumnHidden).to.have.length(0);
 		expect(renderedController.getControlState({ name: "dummy_types", row: 0, col: 4 })).to.equal("hidden");
