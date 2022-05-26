@@ -65,7 +65,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			description = this.props.category.loading_text;
 		}
 
-		const content = (
+		const titleLoadingObj = (
 			<div className="palette-flyout-category">
 				<div className="palette-flyout-category-item-loading">
 					<InlineLoading
@@ -79,6 +79,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 					/>
 				</div>
 			</div>
+		);
+
+		const content = (
+			<AccordionItem className="palette-loading-category" title={titleLoadingObj} />
 		);
 		return content;
 	}
