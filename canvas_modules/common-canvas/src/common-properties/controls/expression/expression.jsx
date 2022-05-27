@@ -23,7 +23,7 @@ import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import classNames from "classnames";
-
+import { isEqual } from "lodash";
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
 import { formatMessage } from "./../../util/property-utils";
@@ -102,8 +102,13 @@ class ExpressionControl extends React.Component {
 	}
 
 	// this is needed to ensure expression builder selection works.
-	componentDidUpdate() {
-		if (this.props.selectionRange && this.props.selectionRange.length > 0 && this.editor) {
+	componentDidUpdate(prevProps) {
+		if (
+			this.props.selectionRange &&
+			this.props.selectionRange.length > 0 &&
+			!isEqual(prevProps.selectionRange, this.props.selectionRange) &&
+			this.editor
+		) {
 			this.props.selectionRange.forEach((selected) => {
 				this.editor.setSelection(selected.anchor, selected.head);
 			});
@@ -225,6 +230,7 @@ class ExpressionControl extends React.Component {
 				validateIcon: response.type,
 				validationInProgress: false
 			});
+			this.editor.display.input.blur();
 		});
 	}
 
