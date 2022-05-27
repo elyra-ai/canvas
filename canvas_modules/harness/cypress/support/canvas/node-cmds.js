@@ -519,15 +519,10 @@ Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
 	cy.findCategory(nodeCategory).trigger("mouseover");
 });
 
-Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
+Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 	cy.document().then((doc) => {
-		if (categoryLabel) {
-			cy.get("li.bx--accordion__item.bx--accordion__item--active .bx--accordion__content")
-				.contains(nodeLabel)
-				.parent()
-				.parent();
-			// Palette Layout - Modal
-		} else if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+		// Palette Layout - Flyout
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
 				.contains(nodeLabel)
 				.parent()

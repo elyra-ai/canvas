@@ -142,8 +142,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return (
 			<AccordionItem title={titleObj}>
 				<PaletteContentList
-					key={this.props.category.label + "-nodes"}
-					show
+					key={this.props.category.id + "-nodes"}
 					category={this.props.category}
 					nodeTypeInfos={nodeTypeInfos}
 					canvasController={this.props.canvasController}

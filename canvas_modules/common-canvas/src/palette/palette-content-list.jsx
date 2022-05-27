@@ -59,11 +59,9 @@ class PaletteContentList extends React.Component {
 				);
 			}
 		}
-		const style = {};
-		style.display = this.props.show ? "block" : "none";
 
 		return (
-			<div width="100%" style={style} draggable="false" className="palette-content-list palette-scroll">
+			<div width="100%" draggable="false" className="palette-content-list palette-scroll">
 				{contentItems}
 			</div>
 		);
@@ -76,8 +74,6 @@ PaletteContentList.propTypes = {
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
-	show: PropTypes.bool.isRequired,
-
 };
 
 export default PaletteContentList;

@@ -164,10 +164,17 @@ describe("Palette renders correctly", () => {
 		importCat.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+
+		const counts = categoriesOpenCounts(wrapper);
+		expect(counts).to.have.length(1);
+
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+
+		const counts2 = categoriesOpenCounts(wrapper);
+		expect(counts2).to.have.length(2);
 	});
 
 	it("should close a category when two categories are currently open", () => {
@@ -177,9 +184,8 @@ describe("Palette renders correctly", () => {
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 
-		const categoryList = wrapper.find("div.palette-flyout-categories");
-		expect(categoryList.find(".bx--accordion__item--active")).to.have.length(2);
-
+		const counts = categoriesOpenCounts(wrapper);
+		expect(counts).to.have.length(2);
 		// We now click the Import category again to close it
 		const importCat2 = findCategoryElement(wrapper, "Import");
 		importCat2.simulate("click");
@@ -189,8 +195,9 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 
-		const categoryList2 = wrapper.find("div.palette-flyout-categories");
-		expect(categoryList2.find(".bx--accordion__item--active")).to.have.length(1);
+		const counts2 = categoriesOpenCounts(wrapper);
+		expect(counts2).to.have.length(1);
+
 	});
 
 	// WARNING: The data-id attribute is used by host application "walk-me"
@@ -298,4 +305,9 @@ function findCategoryElement(flyoutPaletteContent, categoryName) {
 		}
 	}
 	return null;
+}
+
+function categoriesOpenCounts(wrapper) {
+	const categoryList2 = wrapper.find("div.palette-flyout-categories");
+	return categoryList2.find(".bx--accordion__item--active");
 }
