@@ -521,7 +521,7 @@ Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
 
 Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
-		// Palette Layout - Flyout
+		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
 				.contains(nodeLabel)
