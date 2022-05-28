@@ -519,7 +519,7 @@ Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
 	cy.findCategory(nodeCategory).trigger("mouseover");
 });
 
-Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
+Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Flyout
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
@@ -527,8 +527,20 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 				.contains(nodeLabel)
 				.parent()
 				.parent();
-		} else {
 			// Palette Layout - Flyout
+		} else if (categoryLabel === "Import") {
+			cy.get("div#accordion-item-22.bx--accordion__content")
+				.contains(nodeLabel)
+				.parent()
+				.parent()
+				.parent();
+		} else if (categoryLabel === "Export") {
+			cy.get("div#accordion-item-28.bx--accordion__content")
+				.contains(nodeLabel)
+				.parent()
+				.parent()
+				.parent();
+		} else {
 			cy.get(".palette-list-item-text-div > span")
 				.contains(nodeLabel)
 				.parent()
