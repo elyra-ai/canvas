@@ -16,6 +16,7 @@
 
 $palette-border-width: 1px;
 $palette-border-color: $ui-03;
+$palette-search-container-height: 41px;
 
 //--------------------------------------------------------
 // Classes used by Flyout palette
@@ -181,7 +182,7 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-categories {
-	height: calc(100% - 48px);
+	height: calc(100% - $palette-search-container-height);
 	width: 100%;
 	position: absolute;
 	overflow-x: hidden;
@@ -199,7 +200,6 @@ $palette-border-color: $ui-03;
 
 		.bx--accordion__heading {
 			padding: 0;
-			// border-bottom: $palette-border-width solid $palette-border-color;
 			.bx--accordion__title {
 				margin: 0;
 				padding: 0 0 0 11px;
@@ -288,7 +288,7 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-search-container {
-	height: 41px;
+	height: $palette-search-container-height;
 	.palette-flyout-search {
 		height: 100%;
 		overflow: hidden;

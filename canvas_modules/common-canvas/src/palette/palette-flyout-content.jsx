@@ -81,7 +81,7 @@ class PaletteFlyoutContent extends React.Component {
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 						isEditingEnabled={this.props.isEditingEnabled}
-						// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm
+						// isShowRanking // Uncomment this to show ranking for debuggig ranking algorithm.
 					/>
 				</div>
 			);

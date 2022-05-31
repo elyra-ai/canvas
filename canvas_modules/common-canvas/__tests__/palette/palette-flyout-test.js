@@ -165,7 +165,7 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 
-		const counts = categoriesOpenCounts(wrapper);
+		const counts = getOpenCategories(wrapper);
 		expect(counts).to.have.length(1);
 
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
@@ -173,7 +173,7 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 
-		const counts2 = categoriesOpenCounts(wrapper);
+		const counts2 = getOpenCategories(wrapper);
 		expect(counts2).to.have.length(2);
 	});
 
@@ -184,7 +184,7 @@ describe("Palette renders correctly", () => {
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 
-		const counts = categoriesOpenCounts(wrapper);
+		const counts = getOpenCategories(wrapper);
 		expect(counts).to.have.length(2);
 		// We now click the Import category again to close it
 		const importCat2 = findCategoryElement(wrapper, "Import");
@@ -195,7 +195,7 @@ describe("Palette renders correctly", () => {
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 
-		const counts2 = categoriesOpenCounts(wrapper);
+		const counts2 = getOpenCategories(wrapper);
 		expect(counts2).to.have.length(1);
 
 	});
@@ -307,7 +307,7 @@ function findCategoryElement(flyoutPaletteContent, categoryName) {
 	return null;
 }
 
-function categoriesOpenCounts(wrapper) {
+function getOpenCategories(wrapper) {
 	const categoryList2 = wrapper.find("div.palette-flyout-categories");
 	return categoryList2.find(".bx--accordion__item--active");
 }
