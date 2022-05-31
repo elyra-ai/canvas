@@ -527,25 +527,17 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 				.contains(nodeLabel)
 				.parent()
 				.parent();
-			// Palette Layout - Flyout
-		} else if (categoryLabel === "Import") {
-			cy.get("div#accordion-item-22.bx--accordion__content")
-				.contains(nodeLabel)
-				.parent()
-				.parent()
-				.parent();
-		} else if (categoryLabel === "Export") {
-			cy.get("div#accordion-item-28.bx--accordion__content")
-				.contains(nodeLabel)
-				.parent()
-				.parent()
-				.parent();
+		// Palette Layout - Flyout
 		} else {
-			cy.get(".palette-list-item-text-div > span")
-				.contains(nodeLabel)
-				.parent()
-				.parent()
-				.parent();
+			cy.findCategory(categoryLabel)
+				.then((category) => {
+					const nodeSelectedID = category.offsetParent()[0].getAttribute("aria-controls");
+					cy.get(`div#${nodeSelectedID} .palette-list-item-text-div > span`)
+						.contains(nodeLabel)
+						.parent()
+						.parent()
+						.parent();
+				});
 		}
 	});
 });
