@@ -16,7 +16,7 @@
             "ui_data": {
               "label": "Charts",
               "image": "images/custom-canvases/flows/palette/icons/dvcharts.svg",
-              "x_pos": 558,
+              "x_pos": 658,
               "y_pos": 129.6,
               "description": "Launch the chart builder and create chart definitions to save with your flow."
             }
@@ -64,7 +64,7 @@
             "ui_data": {
               "label": "Sim Gen",
               "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
-              "x_pos": -36,
+              "x_pos": 64,
               "y_pos": 172.79999999999998,
               "description": "Generate simulated data automatically or with user-specified statistical distributions."
             }
@@ -92,7 +92,7 @@
             "ui_data": {
               "label": "Auto Cluster",
               "image": "images/custom-canvases/flows/palette/icons/autocluster.svg",
-              "x_pos": 558,
+              "x_pos": 658,
               "y_pos": 216.00000000000003,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
               "associations": [
@@ -132,7 +132,7 @@
             "ui_data": {
               "label": "Auto Cluster",
               "image": "images/custom-canvases/flows/palette/icons/applyautocluster.svg",
-              "x_pos": 558,
+              "x_pos": 658,
               "y_pos": 331.20000000000005,
               "description": "Estimates and compares clustering models that identify groups of records with similar characteristics."
             }
@@ -160,7 +160,7 @@
             "ui_data": {
               "label": "Type",
               "image": "images/custom-canvases/flows/palette/icons/type.svg",
-              "x_pos": 306,
+              "x_pos": 406,
               "y_pos": 172.79999999999998,
               "description": "Specify field metadata and properties that are invaluable to modeling."
             }
@@ -210,14 +210,14 @@
             "ui_data": {
               "label": "Supernode",
               "image": "images/custom-canvases/flows/palette/icons/supernode.svg",
-              "x_pos": 144,
+              "x_pos": 244,
               "y_pos": 172.79999999999998,
               "description": "This supernode was created by common-canvas.",
               "decorations": [
                 {
                   "position": "topLeft",
-                  "x_pos": "9",
-                  "y_pos": "0",
+                  "x_pos": 9,
+                  "y_pos": 0,
                   "image": "images/custom-canvases/flows/decorations/drillIntoSupernode.svg",
                   "outline": true,
                   "hotspot": true,
@@ -269,7 +269,7 @@
           "comments": [
             {
               "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-              "x_pos": 18,
+              "x_pos": 118,
               "y_pos": 14.4,
               "width": 175,
               "height": 52,
@@ -299,8 +299,8 @@
               "decorations": [
                 {
                   "position": "topLeft",
-                  "x_pos": "-10",
-                  "y_pos": "0",
+                  "x_pos": -10,
+                  "y_pos": 0,
                   "image": "images/custom-canvases/flows/decorations/cacheWithNoData.svg",
                   "outline": false,
                   "id": "463528be-1099-496c-a458-b6364e6dc449"
@@ -357,7 +357,7 @@
               "decorations": [
                 {
                   "position": "topLeft",
-                  "x_pos": "-10",
+                  "x_pos": -10,
                   "y_pos": 0,
                   "image": "images/custom-canvases/flows/decorations/cacheWithData.svg",
                   "outline": false,
