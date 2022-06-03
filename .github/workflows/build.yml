@@ -32,7 +32,7 @@ jobs:
         node-version: 14.x
     - run: npm install -g grunt-cli sass
     - run: ./canvas_modules/common-canvas/build.sh
-    - run: ./canvas_modules/harness/build.sh
+    - run: ./canvas_modules/harness/build.sh test
     - run: ./canvas_modules/harness/functional_test.sh
 
   tag:
