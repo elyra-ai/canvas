@@ -31,9 +31,9 @@ npm run start-prod &
 # start running the test Cases
 sleep 30
 echo "Cypress version"
-./node_modules/.bin/cypress --version
+./node_modules/cypress/bin/cypress --version
 echo "Starting cypress electron tests"
-./node_modules/.bin/cypress run --headed --browser electron
+./node_modules/cypress/bin/cypress run --headed --browser electron
 
 echo "download coverage"
 mkdir -p coverage
