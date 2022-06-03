@@ -30,6 +30,8 @@ npm run start-prod &
 
 # start running the test Cases
 sleep 30
+echo "Cypress version"
+npx cypress --version
 echo "Starting cypress electron tests"
 npx cypress run --headed --browser electron
 
