@@ -27,26 +27,26 @@ describe("Test auto layout variations", function() {
 
 		// Double click Var. File node on canvas
 		cy.clickCategory("Import");
-		cy.doubleClickNodeInCategory("Var. File");
+		cy.doubleClickNodeInCategory("Var. File", "Import");
 		cy.verifyNodeTransform("Var. File", 50, 50);
 		cy.verifyNumberOfNodes(1);
 		cy.verifyNumberOfPortDataLinks(0);
 
 		// Double click Select node on canvas
 		cy.clickCategory("Record Ops");
-		cy.doubleClickNodeInCategory("Select");
+		cy.doubleClickNodeInCategory("Select", "Record Ops");
 		cy.verifyNodeTransform("Select", 200, 50);
 		cy.verifyNumberOfNodes(2);
 		cy.verifyNumberOfPortDataLinks(1);
 
 		// Double click Sample node on canvas
-		cy.doubleClickNodeInCategory("Sample");
+		cy.doubleClickNodeInCategory("Sample", "Record Ops");
 		cy.verifyNodeTransform("Sample", 350, 50);
 		cy.verifyNumberOfNodes(3);
 		cy.verifyNumberOfPortDataLinks(2);
 
 		// Double click Merge node on canvas
-		cy.doubleClickNodeInCategory("Merge");
+		cy.doubleClickNodeInCategory("Merge", "Record Ops");
 		cy.verifyNodeTransform("Merge", 500, 50);
 		cy.verifyNumberOfNodes(4);
 		cy.verifyNumberOfPortDataLinks(3);
@@ -55,13 +55,13 @@ describe("Test auto layout variations", function() {
 		cy.clickNode("Var. File");
 
 		// Double click Sort node on canvas
-		cy.doubleClickNodeInCategory("Sort");
+		cy.doubleClickNodeInCategory("Sort", "Record Ops");
 		cy.verifyNodeTransform("Sort", 200, 205);
 		cy.verifyNumberOfNodes(5);
 		cy.verifyNumberOfPortDataLinks(4);
 
 		// Double click Aggregate node on canvas
-		cy.doubleClickNodeInCategory("Aggregate");
+		cy.doubleClickNodeInCategory("Aggregate", "Record Ops");
 		cy.verifyNodeTransform("Aggregate", 350, 205);
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfPortDataLinks(5);
@@ -70,13 +70,13 @@ describe("Test auto layout variations", function() {
 		cy.clickNode("Aggregate");
 
 		// Double click Balance node on canvas
-		cy.doubleClickNodeInCategory("Balance");
+		cy.doubleClickNodeInCategory("Balance", "Record Ops");
 		cy.verifyNodeTransform("Balance", 500, 205);
 		cy.verifyNumberOfNodes(7);
 		cy.verifyNumberOfPortDataLinks(6);
 
 		// Double click Database node on canvas
-		cy.doubleClickNodeInCategory("Database");
+		cy.doubleClickNodeInCategory("Database", "Import");
 		cy.verifyNodeTransform("Database", 50, 360);
 		cy.verifyNumberOfNodes(8);
 		cy.verifyNumberOfPortDataLinks(6);
@@ -89,17 +89,17 @@ describe("Test auto layout variations", function() {
 
 		// Double click Type node on canvas
 		cy.clickCategory("Field Ops");
-		cy.doubleClickNodeInCategory("Type");
+		cy.doubleClickNodeInCategory("Type", "Field Ops");
 		cy.verifyNodeTransform("Type", 200, 360);
 		cy.verifyNumberOfNodes(9);
 		cy.verifyNumberOfPortDataLinks(7);
 
 		// Select Type node
 		cy.clickNode("Type");
-
+		cy.clickCategory("Field Ops");
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNodeTransform("Object Store", 350, 360);
 		cy.verifyNumberOfNodes(10);
 		cy.verifyNumberOfPortDataLinks(8);
@@ -108,7 +108,7 @@ describe("Test auto layout variations", function() {
 		cy.clickNode("Object Store");
 
 		// Double click Object Store node on canvas
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNumberOfNodes(11);
 		cy.verifyNumberOfPortDataLinks(9);
 
@@ -148,14 +148,14 @@ describe("Test auto layout variations", function() {
 
 		// Double click Object Store node on canvas
 		cy.clickCategory("Export");
-		cy.doubleClickNodeInCategory("Object Store");
+		cy.doubleClickNodeInCategory("Object Store", "Export");
 		cy.verifyNodeTransform("Object Store", 50, 50);
 		cy.verifyNumberOfNodes(1);
 		cy.verifyNumberOfPortDataLinks(0);
 
 		// Double click Table node on canvas
 		cy.clickCategory("Outputs");
-		cy.doubleClickNodeInCategory("Table");
+		cy.doubleClickNodeInCategory("Table", "Outputs");
 		cy.verifyNodeTransform("Table", 50, 205);
 		cy.verifyNumberOfNodes(2);
 		cy.verifyNumberOfPortDataLinks(0);
@@ -193,12 +193,12 @@ describe("Test that auto-nodes are added to an in-place expanded supernode", fun
 		// Test that first auto node is added to the sub-flow
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Field Ops");
-		cy.doubleClickNodeInCategory("Filter");
+		cy.doubleClickNodeInCategory("Filter", "Field Ops");
 		cy.verifyNumberOfNodesInSupernode("Supernode", 9);
 		cy.verifyNumberOfLinksInSupernode("Supernode", 8);
 
 		// Test that second auto node is added to the sub-flow
-		cy.doubleClickNodeInCategory("Derive");
+		cy.doubleClickNodeInCategory("Derive", "Field Ops");
 		cy.verifyNumberOfNodesInSupernode("Supernode", 10);
 		cy.verifyNumberOfLinksInSupernode("Supernode", 9);
 	});
@@ -217,10 +217,10 @@ describe("Test that supernodes are auto-added from the palette", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Supernodes");
 
-		cy.doubleClickNodeInCategory("External Supernode");
+		cy.doubleClickNodeInCategory("External Supernode", "Supernodes");
 		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
 
-		cy.doubleClickNodeInCategory("Local Supernode");
+		cy.doubleClickNodeInCategory("Local Supernode", "Supernodes");
 		verify({ nodes: 2, links: 1, pipelines: 2, extPipelines: 0, extFlows: 0 });
 
 		cy.getNodeWithLabel("External Supernode").rightclick();
@@ -264,13 +264,13 @@ describe("Test that supernodes are auto-added from the palette", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Supernodes");
 
-		cy.doubleClickNodeInCategory("External Supernode");
+		cy.doubleClickNodeInCategory("External Supernode", "Supernodes");
 		cy.hoverOverNodeLabel("External Supernode");
 		cy.clickNodeLabelEditIcon("External Supernode");
 		cy.enterLabelForNode("External Supernode", "External 1");
 		verify({ nodes: 1, links: 0, pipelines: 1, extPipelines: 0, extFlows: 0 });
 
-		cy.doubleClickNodeInCategory("External Supernode");
+		cy.doubleClickNodeInCategory("External Supernode", "Supernodes");
 		cy.hoverOverNodeLabel("External Supernode");
 		cy.clickNodeLabelEditIcon("External Supernode");
 		cy.enterLabelForNode("External Supernode", "External 2");

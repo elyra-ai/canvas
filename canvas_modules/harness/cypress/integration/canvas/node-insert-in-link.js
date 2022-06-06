@@ -158,8 +158,8 @@ describe("Test dropping a node, with existing links, on the canvas onto a link w
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Record Ops");
 		cy.dragNodeToPosition("Sample", 500, 600);
-		cy.doubleClickNodeInCategory("Merge");
-		cy.doubleClickNodeInCategory("Sort");
+		cy.doubleClickNodeInCategory("Merge", "Record Ops");
+		cy.doubleClickNodeInCategory("Sort", "Record Ops");
 
 		// Now there should be 6 data links
 		cy.verifyNumberOfPortDataLinks(6);

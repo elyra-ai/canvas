@@ -157,7 +157,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		// Double click Derive node on canvas
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Field Ops");
-		cy.doubleClickNodeInCategory("Derive");
+		cy.doubleClickNodeInCategory("Derive", "Field Ops");
 
 		// Verify number of nodes in all pipelines
 		cy.verifyNumberOfNodesInPipeline(16);

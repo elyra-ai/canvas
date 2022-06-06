@@ -20,9 +20,10 @@ import { debounce } from "lodash";
 import { getFilteredNodeTypeInfos } from "./palette-flyout-utils.js";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
-import PaletteContentList from "./palette-content-list.jsx";
 import PaletteFlyoutContentFilteredList from "./palette-flyout-content-filtered-list.jsx";
 import Logger from "../logging/canvas-logger.js";
+import { Accordion } from "carbon-components-react";
+
 
 const logger = new Logger("PaletteFlyoutContent");
 
@@ -71,41 +72,20 @@ class PaletteFlyoutContent extends React.Component {
 		const contentDivs = [];
 		for (let idx = 0; idx < categories.length; idx++) {
 			const category = categories[idx];
-			const isLastCategory = idx === categories.length - 1;
-			const nodeTypeInfos = category.node_types.map((nt) => ({ nodeType: nt, category: category }));
-			const isCategorySelected = this.isCategorySelected(category.id);
-
-			let content = null;
-			if (isCategorySelected) {
-				content = (
-					<PaletteContentList
-						key={category.label + "-nodes"}
-						show
-						category={category}
-						nodeTypeInfos={nodeTypeInfos}
-						canvasController={this.props.canvasController}
-						isPaletteOpen={this.props.isPaletteOpen}
-						isLastCategory={isLastCategory}
-						isEditingEnabled={this.props.isEditingEnabled}
-					/>);
-			}
-
 			contentDivs.push(
 				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
-						isCategorySelected={isCategorySelected}
 						categorySelectedMethod={this.categorySelected}
-						itemCount={nodeTypeInfos.length}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
+						isEditingEnabled={this.props.isEditingEnabled}
 					/>
-					{content}
 				</div>
 			);
 		}
-		return contentDivs;
+		return <Accordion>{contentDivs}</Accordion>;
 	}
 
 	getFilteredContentDivs(categories) {

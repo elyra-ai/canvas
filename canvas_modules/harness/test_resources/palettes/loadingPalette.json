@@ -1,0 +1,50 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "label": "Import",
+      "description": "This category defines data importers",
+      "image": "images/custom-canvases/flows/palette/icons/palette-import.svg",
+      "id": "import",
+      "loading_text": "Loading import category",
+      "node_types": [
+      ]
+    },
+    {
+      "label": "Record Operations",
+      "description": "This category defines operations on records",
+      "image": "images/custom-canvases/flows/palette/icons/palette-record-ops.svg",
+      "id": "recordOp",
+      "loading_text": "Loading record operations category",
+      "node_types": [
+      ]
+    },
+    {
+      "label": "Field Operations",
+      "description": "This category defines operations on fields",
+      "image": "images/custom-canvases/flows/palette/icons/palette-field-ops.svg",
+      "id": "fieldOp",
+      "loading_text": "Loading field operations category",
+      "node_types": [
+      ]
+    },
+    {
+      "label": "Graphs",
+      "description": "This category defines chart builders",
+      "image": "images/custom-canvases/flows/palette/icons/palette-charts.svg",
+      "id": "graph",
+      "loading_text": "Loading graphs category",
+      "node_types": [
+      ]
+    },
+    {
+      "label": "Export",
+      "description": "This category defines data exporters",
+      "image": "images/custom-canvases/flows/palette/icons/palette-export.svg",
+      "id": "export",
+      "loading_text": "Loading export category",
+      "node_types": [
+      ]
+    }
+  ]
+}

@@ -868,6 +868,12 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 		.then((idx) => expect(idx).to.equal(index));
 });
 
+Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) => {
+	cy.get(".bx--accordion__item--active")
+		.contains(categoryName)
+		.should("not.exist");
+});
+
 Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
 	// Verify category exists in palette
 	cy.findCategory(nodeCategory)
@@ -1287,8 +1293,8 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	}
 });
 
-Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue) => {
-	cy.findNodeInCategory(nodeLabel)
+Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel)
 		.invoke("attr", "data-id")
 		.then((dataId) => {
 			expect(dataId).to.equal(dataIdValue);

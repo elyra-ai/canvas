@@ -80,27 +80,29 @@ class PaletteDialogContent extends React.Component {
 		const category = this.getSelectedCategory(this.props.paletteJSON.categories);
 		const nodeTypes = category && category.node_types ? category.node_types : [];
 		const nodeTypeInfos = nodeTypes.map((nt) =>	({ nodeType: nt, category: category }));
-
+		const content = this.props.showGrid
+			? (
+				<PaletteDialogContentGrid
+					category={category}
+					nodeTypes={nodeTypes}
+					canvasController={this.props.canvasController}
+					isEditingEnabled={this.props.isEditingEnabled}
+				/>)
+			: (
+				<PaletteContentList
+					category={category}
+					nodeTypeInfos={nodeTypeInfos}
+					canvasController={this.props.canvasController}
+					isPaletteOpen
+					isEditingEnabled={this.props.isEditingEnabled}
+				/>);
 		return (
 			<div className="palette-dialog-content" ref="palettecontent">
 				<PaletteDialogContentCategories categories={cats}
 					selectedCategory={this.state.selectedCategory}
 					categorySelectedMethod={this.categorySelected}
 				/>
-				<PaletteDialogContentGrid show={this.props.showGrid}
-					category={category}
-					nodeTypes={nodeTypes}
-					canvasController={this.props.canvasController}
-					isEditingEnabled={this.props.isEditingEnabled}
-				/>
-				<PaletteContentList show={!this.props.showGrid}
-					category={category}
-					nodeTypeInfos={nodeTypeInfos}
-					canvasController={this.props.canvasController}
-					isPaletteOpen
-					isLastCategory={false}
-					isEditingEnabled={this.props.isEditingEnabled}
-				/>
+				{content}
 			</div>
 		);
 	}

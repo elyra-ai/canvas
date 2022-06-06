@@ -53,12 +53,8 @@ class PaletteDialogContentGrid extends React.Component {
 			}
 		}
 
-		const displayValue = this.props.show ? "block" : "none";
-
 		return (
-			<div width="100%" className="palette-scroll"
-				style={{ display: displayValue }}
-			>
+			<div width="100%" className="palette-scroll">
 				{gridNodes}
 			</div>
 		);
@@ -68,7 +64,6 @@ class PaletteDialogContentGrid extends React.Component {
 PaletteDialogContentGrid.propTypes = {
 	category: PropTypes.object.isRequired,
 	nodeTypes: PropTypes.array.isRequired,
-	show: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired
 };

@@ -16,6 +16,7 @@
 
 $palette-border-width: 1px;
 $palette-border-color: $ui-03;
+$palette-search-container-height: 41px;
 
 //--------------------------------------------------------
 // Classes used by Flyout palette
@@ -53,14 +54,12 @@ $palette-border-color: $ui-03;
 }
 
 .palette-flyout-content {
-	height: 41px;
-
 	.palette-scroll {
 		overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 	}
 
 	.palette-content-list {
-		border-bottom: $palette-border-width solid $palette-border-color;
+		border-bottom: 0;
 	}
 
 	.palette-no-results-title {
@@ -95,9 +94,11 @@ $palette-border-color: $ui-03;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding: 9px 10px;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
+		width: 100%;
 
 		&:hover {
 			background-color: $ui-03;
@@ -119,13 +120,13 @@ $palette-border-color: $ui-03;
 			display: flex;
 			flex-direction: row;
 			width: 100%;
-			min-height: 46px;
 			align-items: center;
+			height: 100%;
+			margin-left: 20px;
 		}
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			margin-left: 20px;
 			color: $text-02;
 		}
 
@@ -168,57 +169,88 @@ $palette-border-color: $ui-03;
 			min-height: 46px;
 			height: fit-content;
 			padding-bottom: $spacing-05;
+			padding-top: 0px;
+			padding-left: 0px;
 			border-bottom: $palette-border-width solid $palette-border-color;
-
+			padding-right: 6px;
 			.palette-list-item-icon-and-text {
 				min-height: 30px;
+				padding-left: 10px;
 			}
 		}
 	}
+}
 
+.palette-flyout-categories {
+	height: calc(100% - $palette-search-container-height);
+	width: 100%;
+	position: absolute;
+	overflow-x: hidden;
+	overflow-y: overlay;
+	li .bx--accordion__arrow {
+		margin-top: 15px;
+	}
+	.bx--accordion__item--active {
+		button {
+			border-bottom: $palette-border-width solid $palette-border-color;
+		}
+	}
+	.bx--accordion__item {
+		border-top: 0;
+
+		.bx--accordion__heading {
+			padding: 0;
+			.bx--accordion__title {
+				margin: 0;
+				padding: 0 0 0 11px;
+				height: 45px;
+			}
+		}
+	}
+	li .bx--accordion__content {
+		padding: 0;
+	}
 }
 
 .palette-flyout-category {
 	cursor: pointer;
 	border-width: 0 0 0 $palette-border-width;
-	height: fit-content;
-	min-height: 46px;
+	height: 100%;
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	border-bottom: $palette-border-width solid $palette-border-color;
-}
-
-.palette-flyout-category-caret {
-	height: 16px;
-	width: 16px;
-	position: relative;
-	right: 16px;
-	background-color: $ui-01;
-	fill: $icon-01;
-}
-
-.palette-flyout-category-caret-closed {
+	// Absolute position is needed to get the category tooltip to display correctly.
+	position: absolute;
 	top: 0;
-	right: 16px;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 .palette-flyout-category-item {
 	display: flex;
 	align-items: center;
+	min-height: 44px;
+	padding-left: 11px;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
 }
 
 .palette-flyout-category-item-loading {
+	display: flex;
 	margin-left: 16px;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	max-height: 60px;
 }
 
 .palette-flyout-category-item-icon {
 	width: 20px;  /* Not specifying height preserves the image's aspect ratio. */
-	margin-left: 16px;
+	margin-left: 5px;
 	fill: $icon-01;
+	padding-top: 4px;
 }
 
 .palette-flyout-text-container {
@@ -232,14 +264,16 @@ $palette-border-color: $ui-03;
 .palette-flyout-category-text {
 	width: 165px;
 	overflow-wrap: break-word;
-	line-height: 1.3;
-	margin-left: 16px;
+	line-height: 1.2;
+	padding-left: 16px;
+	align-items: center;
+	height: 100%;
+	max-height: 59px;
 }
 
 .palette-flyout-category-text-abbr {
 	line-height: 46px;  /* Must be same as containing div height */
 	margin-left: 16px;
-	width: 35px;
 }
 
 .palette-flyout-category-text-no-image {
@@ -253,16 +287,11 @@ $palette-border-color: $ui-03;
 	padding-left: 5px;
 }
 
-.palette-flyout-category:hover {
-	font-weight: 600;
-}
-
 .palette-flyout-search-container {
-	height: 100%;
+	height: $palette-search-container-height;
 	.palette-flyout-search {
 		height: 100%;
 		overflow: hidden;
-
 		// Move the magnifying glass icon to be positioned over the category icons
 		// in the palette, as required from DUX review.
 		.bx--search-magnifier svg {
@@ -300,12 +329,8 @@ $palette-border-color: $ui-03;
 	}
 }
 
-.palette-flyout-categories {
-	height: calc(100% - 48px);
-	width: 100%;
-	position: absolute;
-	overflow-x: hidden;
-	overflow-y: overlay;
+.palette-loading-category .bx--accordion__arrow {
+	display: none;
 }
 
 //--------------------------------------------------------
@@ -326,7 +351,7 @@ $palette-border-color: $ui-03;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	user-select: none;
-
+	display: block;
 
 	.palette-list-item {
 		height: 46px;
@@ -339,6 +364,7 @@ $palette-border-color: $ui-03;
 		/* Prevent elements from being selectable */
 		/* This stops it being dragged incorrectly.*/
 		user-select: none;
+		padding-left: 19px;
 
 		&:hover {
 			background-color: $ui-03;
@@ -354,13 +380,15 @@ $palette-border-color: $ui-03;
 
 		.palette-list-item-icon {
 			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
-			margin-left: 20px;
 			line-height: 46px;  /* Must be same as containing div height */
 			color: $text-02;
+			margin-left: 0;
+			margin-right: 10px;
 		}
 
 		.palette-list-item-text-div {
-			margin-left: 10px;
+			width: 100%;
+			display: block;
 		}
 
 		.palette-list-item-text-span {
@@ -515,7 +543,7 @@ $palette-border-color: $ui-03;
 }
 
 //--------------------------------------------------------
-// Common calsses used by Flyout and Dialog palette
+// Common classes used by Flyout and Dialog palette
 //--------------------------------------------------------
 .palette-scroll {
 	overflow-y: auto;

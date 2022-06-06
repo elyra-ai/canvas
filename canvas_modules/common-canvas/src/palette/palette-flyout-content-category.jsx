@@ -17,10 +17,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { InlineLoading } from "carbon-components-react";
-import Icon from "../icons/icon.jsx";
 import SVG from "react-inlinesvg";
-import { TIP_TYPE_PALETTE_CATEGORY, CANVAS_CARBON_ICONS } from "../common-canvas/constants/canvas-constants.js";
+import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
+import { AccordionItem } from "carbon-components-react";
+import PaletteContentList from "./palette-content-list.jsx";
+
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -63,7 +65,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			description = this.props.category.loading_text;
 		}
 
-		const content = (
+		const titleLoadingObj = (
 			<div className="palette-flyout-category">
 				<div className="palette-flyout-category-item-loading">
 					<InlineLoading
@@ -78,22 +80,14 @@ class PaletteFlyoutContentCategory extends React.Component {
 				</div>
 			</div>
 		);
+
+		const content = (
+			<AccordionItem className="palette-loading-category" title={titleLoadingObj} />
+		);
 		return content;
 	}
 
 	getRenderCategory() {
-		let caretClassName = "palette-flyout-category-caret";
-		if (!this.props.isPaletteOpen) {
-			caretClassName += " palette-flyout-category-caret-closed"; // When palette is closed extra style
-		}
-
-		let caretImage = null;
-		if (this.props.itemCount > 0 || this.props.category.empty_text) {
-			caretImage = this.props.isCategorySelected
-				? <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.UP} className={caretClassName} />
-				: <Icon type={CANVAS_CARBON_ICONS.CHEVRONARROWS.DOWN} className={caretClassName} />;
-		}
-
 		let itemImage = null;
 		if (this.props.category.image && this.props.category.image !== "") {
 			if (this.props.category.image.endsWith(".svg")) {
@@ -131,8 +125,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 				</span>
 			);
 		}
-
-		const content = (
+		const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
+		const titleObj = (
 			<div className="palette-flyout-category"
 				data-id={get(this.props.category, "id", "")}
 				onClick={this.categorySelected}
@@ -143,11 +137,20 @@ class PaletteFlyoutContentCategory extends React.Component {
 				<div className="palette-flyout-category-item">
 					{itemImage}
 					{itemText}
-				</div>
-				{caretImage}
-			</div>
+				</div></div>
 		);
-		return content;
+		return (
+			<AccordionItem title={titleObj}>
+				<PaletteContentList
+					key={this.props.category.id + "-nodes"}
+					category={this.props.category}
+					nodeTypeInfos={nodeTypeInfos}
+					canvasController={this.props.canvasController}
+					isPaletteOpen={this.props.isPaletteOpen}
+					isEditingEnabled={this.props.isEditingEnabled}
+				/>
+			</AccordionItem>
+		);
 	}
 
 	categorySelected() {
@@ -168,11 +171,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
-	isCategorySelected: PropTypes.bool.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
-	itemCount: PropTypes.number.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
+	isPaletteOpen: PropTypes.bool.isRequired,
+	isEditingEnabled: PropTypes.bool.isRequired,
 };
 
 export default PaletteFlyoutContentCategory;

@@ -519,7 +519,7 @@ Cypress.Commands.add("hoverOverCategory", (nodeCategory) => {
 	cy.findCategory(nodeCategory).trigger("mouseover");
 });
 
-Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
+Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
@@ -527,19 +527,23 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel) => {
 				.contains(nodeLabel)
 				.parent()
 				.parent();
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-list-item-text-div > span")
-				.contains(nodeLabel)
-				.parent()
-				.parent()
-				.parent();
+		// Palette Layout - Flyout
+		} else if (categoryLabel) {
+			cy.findCategory(categoryLabel)
+				.then((category) => {
+					const nodeSelectedID = category.offsetParent()[0].getAttribute("aria-controls");
+					cy.get(`div#${nodeSelectedID} .palette-list-item-text-div > span`)
+						.contains(nodeLabel)
+						.parent()
+						.parent()
+						.parent();
+				});
 		}
 	});
 });
 
-Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel) => {
-	cy.findNodeInCategory(nodeLabel).dblclick();
+Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
 
 Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {
