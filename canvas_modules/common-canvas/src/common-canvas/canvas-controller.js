@@ -1688,7 +1688,7 @@ export default class CanvasController {
 	// pipeline flow (based on the enableSaveZoom config parameter) or null,
 	// if there is no saved zoom.
 	getSavedZoom(pipelineId) {
-		this.objectModel.getSavedZoom(pipelineId);
+		return this.objectModel.getSavedZoom(pipelineId);
 	}
 
 	openTip(tipConfig) {
@@ -2285,6 +2285,10 @@ export default class CanvasController {
 			this.zoomToFit();
 			break;
 		}
+		case "setZoom": {
+			this.objectModel.setZoom(data.zoom, data.pipelineId);
+			break;
+		}
 		case "togglePalette": {
 			this.togglePalette();
 			break;
@@ -2531,10 +2535,6 @@ export default class CanvasController {
 			}
 
 			// Commands which are not added to the command stack.
-			case "setZoom": {
-				this.objectModel.setZoom(data.zoom, data.pipelineId);
-				break;
-			}
 			case "highlightBranch":
 				data.highlightedObjectIds = this.highlightBranch(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;

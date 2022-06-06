@@ -136,6 +136,9 @@ export default class PipelineInHandler {
 		if (has(node, "app_data.ui_data.style")) {
 			obj.style = node.app_data.ui_data.style;
 		}
+		if (has(node, "app_data.ui_data.sub_pipelines")) {
+			obj.sub_pipelines = node.app_data.ui_data.sub_pipelines;
+		}
 		if (has(node, "isSupernodeInputBinding")) {
 			obj.isSupernodeInputBinding = true;
 		}

@@ -156,7 +156,14 @@ describe("Test to see if zoom IS preserved with 'Save Zoom' set to 'LocalStorage
 		// sure the zoom amount has returned to the default
 		cy.openCanvasDefinition("blankCanvas.json");
 
-		// Now I reload the original canvas and the zoom should return to the default
+		// Wait for the canvas to load otherwise zoom is not reset as desired.
+		/* eslint cypress/no-unnecessary-waiting: "off" */
+		cy.wait(1000);
+
+		// Make sure the zoom was reset for the new canvas.
+		cy.verifyZoomTransform(0, 0, 1);
+
+		// Now reload the original canvas and the zoom should return to the default
 		// zoom because we are using 'LocalStorage' for the 'Save Zoom' parameter.
 		cy.openCanvasDefinition("commentColorCanvas.json");
 		cy.verifyZoomTransform(156, 71, 0.75);

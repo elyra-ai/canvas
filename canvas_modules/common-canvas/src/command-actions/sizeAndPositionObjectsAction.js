@@ -23,7 +23,7 @@ export default class SizeAndPositionObjectsAction extends Action {
 		this.labelUtil = labelUtil;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 		this.previousObjectsInfo = this.getPreviousObjectsInfo(data);
-		this.previousLinksInfo = this.getPreviousLinksInfo(data);
+		this.previousDetLinksInfo = this.getPreviousDetachedLinksInfo(data);
 	}
 
 	// Standard methods
@@ -32,7 +32,7 @@ export default class SizeAndPositionObjectsAction extends Action {
 	}
 
 	undo() {
-		this.apiPipeline.sizeAndPositionObjects(this.previousObjectsInfo, this.previousLinksInfo);
+		this.apiPipeline.sizeAndPositionObjects(this.previousObjectsInfo, this.previousDetLinksInfo);
 	}
 
 	redo() {
@@ -65,9 +65,9 @@ export default class SizeAndPositionObjectsAction extends Action {
 		return previousObjectsInfo;
 	}
 
-	getPreviousLinksInfo(data) {
+	getPreviousDetachedLinksInfo(data) {
 		const previousLinksInfo = [];
-		Object.keys(data.linksInfo).forEach((linkId) => {
+		Object.keys(data.detachedLinksInfo).forEach((linkId) => {
 			const obj = this.apiPipeline.getLink(linkId);
 			if (obj) {
 				if (obj.srcPos || obj.trgPos) {

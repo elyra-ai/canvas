@@ -23,7 +23,7 @@ import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_CO
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-import { isEmpty, differenceBy } from "lodash";
+import { isEmpty, differenceBy, mapValues } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
@@ -119,6 +119,37 @@ class VirtualizedTable extends React.Component {
 	getColumnIndex(columns, key) {
 		const index = columns.findIndex((column) => column.key === key);
 		return index;
+	}
+
+	// Returns an object of deltas for every column - {columnKey: individualDelta}
+	getColumnWiseDeltas(columns, deltaX) {
+		const columnWiseDeltas = {};
+		if (columns.length > 0) {
+			// sort columns in ascending order of widths because smallest column will reach MINIMUM_COLUMN_WIDTH first
+			columns.sort((a, b) => a.width - b.width);
+			let totalDelta = deltaX;
+			// Finalize individualDelta for 1 column at a time starting from smallest column
+			// If individualDelta is greater than maximum allowed delta for the column, set individualDelta = maximum allowed delta until column reaches MINIMUM_COLUMN_WIDTH
+			// Total delta will reduce after every iteration
+			for (let i = 0; i < columns.length; i++) {
+				const widthOfAllColumns = columns.slice(i).reduce((prev, current) => prev + current.width, 0);
+				let individualDelta = Math.round((columns[i].width * totalDelta) / widthOfAllColumns);
+				// check if individualDelta is greater than the maximum allowed delta for this column
+				if (columns[i].headerLabel.length > 0 && columns[i].width - individualDelta < MINIMUM_COLUMN_WIDTH) {
+					individualDelta = columns[i].width - MINIMUM_COLUMN_WIDTH;
+				} else if (columns[i].width - individualDelta < MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL) {
+					individualDelta = columns[i].width - MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL;
+				}
+				totalDelta -= individualDelta;
+				columnWiseDeltas[columns[i].key] = individualDelta;
+			}
+			if (totalDelta > 0) {
+				// deltaX is greater than maximum allowed delta for all columns.
+				// Don't allow resizing by setting individualDelta = 0 for ALL columns
+				return mapValues(columnWiseDeltas, () => 0);
+			}
+		}
+		return columnWiseDeltas;
 	}
 
 	isRowSelected(index) {
@@ -271,35 +302,50 @@ class VirtualizedTable extends React.Component {
 
 	/* Columns are not resizable by default. Host application specifies resizable columns in parameter definition.
 	* When a column is resized, width of ALL the columns to the right of resized column is adjusted.
-	* Example: If a column width is reduced by 10px and there are 5 columns on the right of resized column. Each of the 5 columns width is increased by 2px (10px/number of columns)
-	* When any column's width reaches MINIMUM_COLUMN_WIDTH (56px), resizing is stopped.
+	* Every column grows/shrinks directly proportional to column width.
+	* Example: If a column width is reduced by 10px and there are 4 columns on the right of resized column having widths [40, 30, 20, 10],
+	* Then 10px will be adjusted in 4 columns as - [4px, 3px, 2px, 1px]
+	* When every column's width reaches MINIMUM_COLUMN_WIDTH (56px), resizing is stopped.
 	* Special case - For columns without labels, when their width reaches MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL (32px), resizing is stopped.
 	*/
 	resizeColumn({ dataKey, deltaX }) {
 		this.setState((prevState) => {
 
 			const columns = prevState.columns;
-			// Calculate number of columns on the right of resized column
+			// Calculate number of resizable columns on the right of resized column
 			const resizedColumnIndex = this.getColumnIndex(columns, dataKey);
-			const numberOfColumnsOnTheRight = columns.length - 1 - resizedColumnIndex;
-			const rightColumnsDelta = deltaX / numberOfColumnsOnTheRight;
+			const allColumnsOnRight = columns.slice(resizedColumnIndex + 1);
+			// Exclude columns having staticWidth: true
+			const nonStaticColumns = allColumnsOnRight.filter((column) => !column.staticWidth);
 
-			// Verify adjusted width of every column on the right is greater than minimum width
-			const everyColumnGreaterThanMinWidth = columns.slice(resizedColumnIndex + 1).every((col) => {
-				if (col.headerLabel.length > 0) {
-					// Column with label has min width 56px
-					return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH);
+			const resizableColumns = nonStaticColumns.filter((column) => {
+				// When shrinking, get columns having width greater than MINIMUM_COLUMN_WIDTH
+				if (deltaX >= 0) {
+					if (column.headerLabel.length > 0) {
+						// Column with label has min width 56px
+						return (column.width > MINIMUM_COLUMN_WIDTH);
+					}
+					// Column without label has min width 32px
+					return (column.width > MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL);
 				}
-				// Column without label has min width 32px
-				return (col.width - rightColumnsDelta > MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL);
+				// When expanding, get all columns
+				return true;
 			});
 
-			if ((columns[resizedColumnIndex].width + deltaX) > MINIMUM_COLUMN_WIDTH && everyColumnGreaterThanMinWidth) {
+			// Get column wise delta for resizableColumns
+			const columnWiseDeltas = this.getColumnWiseDeltas(resizableColumns, deltaX);
+			const columnsToBeResized = Object.keys(columnWiseDeltas);
+
+			// check if all column wise deltas are 0. This happens when deltaX is more than maximum allowed delta for all columns
+			const everyColumnHasZeroDelta = Object.values(columnWiseDeltas).every((delta) => delta === 0);
+
+			if ((columns[resizedColumnIndex].width + deltaX) > MINIMUM_COLUMN_WIDTH && !isEmpty(columnWiseDeltas) && !everyColumnHasZeroDelta) {
 				columns[resizedColumnIndex].width += deltaX;
-				// Adjust width of all columns on the right
-				for (let i = resizedColumnIndex + 1; i < columns.length; i++) {
-					columns[i].width -= rightColumnsDelta;
-				}
+				// Adjust width of all resizable columns
+				columnsToBeResized.forEach((columnKey) => {
+					const idx = columns.findIndex((col) => col.key === columnKey);
+					columns[idx].width -= columnWiseDeltas[columnKey];
+				});
 			}
 			return {
 				columnResized: true,

@@ -25,7 +25,7 @@ import PipelineOutHandler from "./pipeline-out-handler.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils";
 
 import dagre from "dagre/dist/dagre.min.js";
-import { cloneDeep, get, has } from "lodash";
+import { cloneDeep, get, has, set } from "lodash";
 
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
 	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -419,10 +419,8 @@ export default class APIPipeline {
 				node.y_pos = 0;
 				node = PipelineOutHandler.createSchemaNode(node, []);
 				if (node.type === SUPER_NODE) {
-					if (!node.app_data) {
-						node.app_data = {};
-					}
-					node.app_data.pipeline_data = this.objectModel.getSchemaPipelinesForSupernode(node);
+					const pData = this.objectModel.getSchemaPipelinesForSupernode(node);
+					set(node, "app_data.ui_data.sub_pipelines", pData);
 				}
 				newNodes.push(node);
 			}
@@ -501,7 +499,7 @@ export default class APIPipeline {
 	addNode(newNode) {
 		if (newNode) {
 			if (newNode.type === SUPER_NODE) {
-				this.addSupernode(newNode, get(newNode, "app_data.pipeline_data"));
+				this.addSupernode(newNode, get(newNode, "sub_pipelines"));
 			} else {
 				this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.pipelineId });
 			}
@@ -541,7 +539,9 @@ export default class APIPipeline {
 		const sn = Object.assign({}, supernode);
 		if (sn.app_data) {
 			sn.app_data = Object.assign({}, sn.app_data);
-			delete sn.app_data.pipeline_data;
+			if (sn.app_data.ui_data) {
+				delete sn.app_data.ui_data.sub_pipelines;
+			}
 		}
 		return sn;
 	}

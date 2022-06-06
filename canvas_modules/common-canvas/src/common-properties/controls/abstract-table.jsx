@@ -720,8 +720,8 @@ export default class AbstractTable extends React.Component {
 		}
 		// subpanel column will always be empty for ReadonlyTable control based on condition in makeCells()
 		if (this.props.control.childItem && !this.isReadonlyTable()) {
-			// set to specific size
-			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH });
+			// set to specific size. Exclude this column from resizing.
+			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH, "staticWidth": true });
 		}
 		return headers;
 	}

@@ -28,8 +28,12 @@ echo "npm install"
 npm install
 echo "npm run build-prod"
 npm run build-prod
-echo "Prune production"
-npm prune --production
+
+# Don't prune when used for testing
+if [[ $1 != "test" ]]; then
+	echo "Prune production"
+	npm prune --production
+fi
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR

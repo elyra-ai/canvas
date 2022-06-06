@@ -385,7 +385,8 @@ class FlexibleTable extends React.Component {
 	*     "label": string,
 	*     "width": integer or string if containts 'px',
 	*     "description": optional string,
-	*     "resizable": optional string
+	*     "resizable": optional boolean,
+	*     "staticWidth": optional boolean - This is a special property added only for SPSS modeler which directly calls FlexibleTable. This property is NOT a part of uiHints.
 	*   }
 	* ]
 	* @param columnWidths
@@ -412,7 +413,8 @@ class FlexibleTable extends React.Component {
 				description: columnDef.description,
 				headerLabel: headerLabel,
 				resizable: columnDef.resizable,
-				operation: columnDef.operation
+				operation: columnDef.operation,
+				staticWidth: columnDef.staticWidth ? columnDef.staticWidth : false // Used to exclude a column from resizing. If true, "resizable" value will be ignored.
 			});
 		}
 		return {

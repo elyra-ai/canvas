@@ -228,8 +228,8 @@ export default class ObjectModel {
 		if (nodeTemplate) {
 			node = PipelineInHandler.convertNode(nodeTemplate, this.getCanvasLayout());
 
-			// PipelineInHandler will not handle the app_data.pipeline_data field of
-			// supernodes so...
+			// PipelineInHandler will not handle the conversion of sub_pipelines
+			// in supernodes to internal format so...
 			if (node.type === SUPER_NODE) {
 				node = this.convertPipelineData(node);
 			}
@@ -239,7 +239,7 @@ export default class ObjectModel {
 	}
 
 	convertPipelineData(supernode) {
-		const pd = get(supernode, "app_data.pipeline_data");
+		const pd = get(supernode, "sub_pipelines");
 		let newPd;
 		if (pd) {
 			newPd = supernode.subflow_ref.url
@@ -254,24 +254,26 @@ export default class ObjectModel {
 			newPd = [newPipeline];
 			set(supernode, "subflow_ref.pipeline_id_ref", newPipeline.id);
 		}
-		set(supernode, "app_data.pipeline_data", newPd);
+		supernode.sub_pipelines = newPd;
 		return supernode;
 	}
 
 	// Returns an object containing nodes and pipelines. The nodes are the
 	// same as the array of nodes passed in except that, any supernodes within
-	// the array will have their app_data.pipeline_data fields removed. The
+	// the array will have their app_data.ui_data.sub_pipelines fields removed. The
 	// pipelines returned will be any pipelines that were contained within the
-	// app_data.pipeline_data fields.
+	// app_data.ui_data.sub_pipelines fields.
 	extractAddDataPipelines(inNodes) {
 		const pipelines = [];
 		const nodes = [];
 		inNodes.forEach((n) => {
 			if (CanvasUtils.isSupernode(n)) {
-				const pDataArray = get(n, "app_data.pipeline_data");
+				const pDataArray = get(n, "sub_pipelines");
 				if (pDataArray) {
 					pipelines.push(...pDataArray);
-					delete n.app_data.pipeline_data;
+					if (n.sub_pipelines) {
+						delete n.sub_pipelines;
+					}
 				}
 			}
 			nodes.push(n);
@@ -1451,7 +1453,7 @@ export default class ObjectModel {
 		if (nodes) {
 			nodes.forEach((node) => {
 				let clonedNode = this.cloneNode(node);
-				// Pipelines in app_data.pipeline_data in supernodes will be in schema
+				// Pipelines in app_data.ui_data.sub_pipelines in supernodes will be in schema
 				// format (conforming to the pipeline flow schema) so they must be converted.
 				if (clonedNode.type === SUPER_NODE) {
 					clonedNode = this.convertPipelineData(clonedNode);
@@ -2295,7 +2297,7 @@ export default class ObjectModel {
 			const supernodes = CanvasUtils.filterSupernodes(nodes);
 			supernodes.forEach((supernode) => {
 				pipelines = pipelines.concat(this.getSchemaPipelinesForSupernode(supernode));
-				set(supernode, "app_data.pipeline_data", pipelines);
+				supernode.sub_pipelines = pipelines;
 			});
 		}
 

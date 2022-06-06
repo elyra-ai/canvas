@@ -17,6 +17,8 @@
 @import "carbon-components/scss/globals/scss/_vars";
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 $bottom-panel-height: 393px;
+$bottom-panel-border-width: 1px;
+$bottom-panel-border-color: $ui-03;
 
 /* Default layout for common-canvas components where the canvas appears below
  * the toolbar and right-side flyout appears to the right of the toolbar and
@@ -90,14 +92,16 @@ $bottom-panel-height: 393px;
 	left:0;
 	right:0;
 	bottom: 0;
-	border-top: $palette-border-width solid $palette-border-color;
+	border-top: $bottom-panel-border-width solid $bottom-panel-border-color;
 	min-height: 75px;
 }
 
 .bottom-panel-drag {
-	background: $palette-border-color;
+	border-top: $bottom-panel-border-color;
 	cursor: row-resize;
 	flex: 0 0 2px;
+	border-top-width: 1px;
+	background: $ui-01;
 	transition: all 0.2s ease-in;
 	&:hover {
 		background: $interactive-01;
