@@ -25,6 +25,7 @@ import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
 import fieldPickerParamDef from "./../../test_resources/paramDefs/fieldpicker_paramDef.json";
+import glmmParamDef from "./../../test_resources/paramDefs/glmm_paramDef.json";
 import propertyUtils from "../../_utils_/property-utils";
 
 chai.use(chaiEnzyme()); // Note the invocation at the end
@@ -267,6 +268,58 @@ describe("FlexibleTable renders correctly", () => {
 
 		const searchBarLabel = wrapper.find("div.properties-ft-search-container").text();
 		expect(searchBarLabel).to.equal("Search in example table");
+	});
+
+	it("Empty `FlexibleTable` should have emptyTablePlaceholder", () => {
+		const emptyTablePlaceholder = "This is an empty table placeholder";
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				data={[]}
+				emptyTablePlaceholder={emptyTablePlaceholder}
+			/>
+		);
+
+		const tableBody = wrapper.find("div.properties-ft-control-container");
+		expect(tableBody).to.have.length(1);
+		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		expect(emptyTableDiv).to.have.length(1);
+		expect(emptyTableDiv).to.have.text(emptyTablePlaceholder);
+	});
+
+	it("Empty `FlexibleTable` shows blank text when emptyTablePlaceholder is not defined", () => {
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				data={[]}
+			/>
+		);
+
+		const tableBody = wrapper.find("div.properties-ft-control-container");
+		expect(tableBody).to.have.length(1);
+		const emptyTableDiv = tableBody.find("div.properties-ft-empty-table");
+		expect(emptyTableDiv).to.have.length(1);
+		expect(emptyTableDiv).to.have.text("");
+	});
+
+	it("Empty `FlexibleTable` uses place_holder_text from uiHints", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(glmmParamDef);
+		const wrapper = renderedObject.wrapper;
+
+		// Terms table is an empty table using place_holder_text default value
+		const termsTable = wrapper.find("div[data-id='properties-ctrl-emeansUI']");
+		expect(termsTable).to.have.length(1);
+		const emptyTableDiv = termsTable.find("div.properties-ft-empty-table");
+		expect(emptyTableDiv).to.have.length(1);
+		expect(emptyTableDiv).to.have.text("No terms added");
+
+
+		// Fields table is an empty table using place_holder_text resource_key
+		const fieldsTable = wrapper.find("div[data-id='properties-ctrl-covariance_list']");
+		expect(fieldsTable).to.have.length(1);
+		const emptyTableDiv1 = fieldsTable.find("div.properties-ft-empty-table");
+		expect(emptyTableDiv1).to.have.length(1);
+		expect(emptyTableDiv1).to.have.text(glmmParamDef.resources["covariance_list.placeholder.label"]);
 	});
 
 });
