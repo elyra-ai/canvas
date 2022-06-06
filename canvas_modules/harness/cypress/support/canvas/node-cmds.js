@@ -538,12 +538,6 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 						.parent()
 						.parent();
 				});
-		} else {
-			cy.get(".palette-list-item-text-div > span")
-				.contains(nodeLabel)
-				.parent()
-				.parent()
-				.parent();
 		}
 	});
 });
