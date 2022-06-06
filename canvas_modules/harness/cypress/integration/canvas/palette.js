@@ -234,18 +234,18 @@ describe("Test nodes in Modal palette have data-id attribute", function() {
 
 	it("Nodes in Modal palette should have data-id attribute", function() {
 		cy.clickCategory("Import");
-		cy.verifyNodeHasDataId("Var. File", "variablefile");
-		cy.verifyNodeHasDataId("Database", "database");
+		cy.verifyNodeHasDataId("Var. File", "variablefile", "Import");
+		cy.verifyNodeHasDataId("Database", "database", "Import");
 		cy.verifyNodeHasDataId("Object Store", "object_storage_import");
 
 		cy.clickCategory("Record Ops");
-		cy.verifyNodeHasDataId("User Input", "userinput");
-		cy.verifyNodeHasDataId("Select", "select");
-		cy.verifyNodeHasDataId("Sample", "sample");
-		cy.verifyNodeHasDataId("Merge", "merge");
-		cy.verifyNodeHasDataId("Sort", "sort");
-		cy.verifyNodeHasDataId("Aggregate", "aggregate");
-		cy.verifyNodeHasDataId("Balance", "balance");
+		cy.verifyNodeHasDataId("User Input", "userinput", "Record Ops");
+		cy.verifyNodeHasDataId("Select", "select", "Record Ops");
+		cy.verifyNodeHasDataId("Sample", "sample", "Record Ops");
+		cy.verifyNodeHasDataId("Merge", "merge", "Record Ops");
+		cy.verifyNodeHasDataId("Sort", "sort", "Record Ops");
+		cy.verifyNodeHasDataId("Aggregate", "aggregate", "Record Ops");
+		cy.verifyNodeHasDataId("Balance", "balance", "Record Ops");
 	});
 });
 
@@ -259,17 +259,17 @@ describe("Test nodes in Flyout palette have data-id attribute", function() {
 
 	it("Nodes in Flyout palette should have data-id attribute", function() {
 		cy.clickCategory("Import");
-		cy.verifyNodeHasDataId("Var. File", "variablefile");
-		cy.verifyNodeHasDataId("Database", "database");
-		cy.verifyNodeHasDataId("Object Store", "object_storage_import");
+		cy.verifyNodeHasDataId("Var. File", "variablefile", "Import");
+		cy.verifyNodeHasDataId("Database", "database", "Import");
+		cy.verifyNodeHasDataId("Object Store", "object_storage_import", "Import");
 
 		cy.clickCategory("Record Ops");
-		cy.verifyNodeHasDataId("User Input", "userinput");
-		cy.verifyNodeHasDataId("Select", "select");
-		cy.verifyNodeHasDataId("Sample", "sample");
-		cy.verifyNodeHasDataId("Merge", "merge");
-		cy.verifyNodeHasDataId("Sort", "sort");
-		cy.verifyNodeHasDataId("Aggregate", "aggregate");
-		cy.verifyNodeHasDataId("Balance", "balance");
+		cy.verifyNodeHasDataId("User Input", "userinput", "Record Ops");
+		cy.verifyNodeHasDataId("Select", "select", "Record Ops");
+		cy.verifyNodeHasDataId("Sample", "sample", "Record Ops");
+		cy.verifyNodeHasDataId("Merge", "merge", "Record Ops");
+		cy.verifyNodeHasDataId("Sort", "sort", "Record Ops");
+		cy.verifyNodeHasDataId("Aggregate", "aggregate", "Record Ops");
+		cy.verifyNodeHasDataId("Balance", "balance", "Record Ops");
 	});
 });

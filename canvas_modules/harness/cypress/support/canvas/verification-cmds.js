@@ -1293,8 +1293,8 @@ Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	}
 });
 
-Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue) => {
-	cy.findNodeInCategory(nodeLabel)
+Cypress.Commands.add("verifyNodeHasDataId", (nodeLabel, dataIdValue, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel)
 		.invoke("attr", "data-id")
 		.then((dataId) => {
 			expect(dataId).to.equal(dataIdValue);
