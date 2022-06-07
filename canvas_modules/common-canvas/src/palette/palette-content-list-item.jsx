@@ -47,6 +47,7 @@ class PaletteContentListItem extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.keyPressEvent = this.keyPressEvent.bind(this);
 	}
 
 	onMouseDown() {
@@ -224,6 +225,12 @@ class PaletteContentListItem extends React.Component {
 		return highlightedElements;
 	}
 
+	keyPressEvent(e) {
+		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
+			this.onDoubleClick();
+		}
+	}
+
 	showFullDescription() {
 		this.setState({ showFullDescription: true });
 	}
@@ -299,6 +306,8 @@ class PaletteContentListItem extends React.Component {
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				tabIndex={0}
+				onKeyPress={this.keyPressEvent}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
