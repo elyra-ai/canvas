@@ -1105,7 +1105,7 @@ describe("Properties Controller handlers", () => {
 			"structuretable_filter": []
 		};
 		controller.setPropertyValues(values);
-		expect(propertyListener).to.have.property("callCount", 3);
+		expect(propertyListener).to.have.property("callCount", 4);
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
 	});
@@ -1131,7 +1131,7 @@ describe("Properties Controller handlers", () => {
 			"readonly": "Readonly phrase"
 		}];
 		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue);
-		expect(propertyListener).to.have.property("callCount", 3);
+		expect(propertyListener).to.have.property("callCount", 4);
 		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue })).to.be.true;
 	});
 	it("should callback after all properties are loaded", () => {
