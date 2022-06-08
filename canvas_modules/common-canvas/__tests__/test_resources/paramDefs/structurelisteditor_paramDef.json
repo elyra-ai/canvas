@@ -229,6 +229,11 @@
       "default": []
     },
     {
+      "id": "emptyTableNoButtons",
+      "type": "array[emptyTableNoButtons]",
+      "default": []
+    },
+    {
       "id": "inlineEditingTableWarning",
       "type": "array[inlineEditingTableWarning]",
       "default": []
@@ -363,6 +368,29 @@
     },
     {
       "id": "inlineEditingTableNoButtons",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 1,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "emptyTableNoButtons",
       "parameters": [
         {
           "id": "valueName",
@@ -810,6 +838,18 @@
         }
       },
       {
+        "parameter_ref": "emptyTableNoButtons",
+        "label": {
+          "default": "No buttons empty table"
+        },
+        "description": {
+          "default": "Empty table with no add-remove buttons"
+        },
+        "place_holder_text": {
+          "default": "Empty table placeholder text"
+        }
+      },
+      {
         "parameter_ref": "inlineEditingTableWarning",
         "label": {
           "default": "Values"
@@ -876,7 +916,7 @@
           "default": "Resizable columns"
         },
         "description": {
-          "default": "integer Field and Animals columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. When any column's width reaches 56px, resizing is stopped.",
+          "default": "integer Field and Animals columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. Resizing is stopped when all columns reach minimum width of 56px. Every column grows/shrinks directly proportional to column width.",
           "placement": "on_panel"
         }
       },
@@ -1035,6 +1075,53 @@
       },
       {
         "complex_type_ref": "inlineEditingTableNoButtons",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "emptyTableNoButtons",
         "add_remove_rows": false,
         "parameters": [
           {
@@ -1772,7 +1859,8 @@
               {
                 "id": "Inline editing No Buttons",
                 "parameter_refs": [
-                  "inlineEditingTableNoButtons"
+                  "inlineEditingTableNoButtons",
+                  "emptyTableNoButtons"
                 ]
               }
             ]

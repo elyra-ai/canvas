@@ -25,7 +25,7 @@ import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import { SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
-import { has } from "lodash";
+import { has, isEmpty } from "lodash";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 class FlexibleTable extends React.Component {
@@ -79,7 +79,7 @@ class FlexibleTable extends React.Component {
 		}
 
 		// Calculate if checkedAllRows is true
-		if (this.props.selectedRows) {
+		if (this.props.selectedRows && !isEmpty(this.props.data)) {
 			this.setCheckedAll(this.props.selectedRows);
 		}
 
@@ -506,6 +506,14 @@ class FlexibleTable extends React.Component {
 			</div>)
 			: null;
 
+		const emptyTableContent = isEmpty(this.props.data)
+			? (
+				<div className="properties-ft-empty-table">
+					{this.props.emptyTablePlaceholder}
+				</div>
+			)
+			: null;
+
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
@@ -543,6 +551,7 @@ class FlexibleTable extends React.Component {
 						</div>
 					</ReactResizeDetector>
 				</div>
+				{emptyTableContent}
 			</div>
 		);
 	}
@@ -550,13 +559,15 @@ class FlexibleTable extends React.Component {
 
 FlexibleTable.defaultProps = {
 	showHeader: true,
-	light: true
+	light: true,
+	emptyTablePlaceholder: ""
 };
 
 FlexibleTable.propTypes = {
 	sortable: PropTypes.array,
 	columns: PropTypes.array.isRequired,
 	data: PropTypes.array.isRequired,
+	emptyTablePlaceholder: PropTypes.string,
 	filterable: PropTypes.array,
 	filterBy: PropTypes.string,
 	filterKeyword: PropTypes.string,

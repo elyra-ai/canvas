@@ -362,6 +362,10 @@
 			"type": "array[structuretableNoButtons]"
 		},
 		{
+			"id": "structuretableNoButtonsEmptyTable",
+			"type": "array[structuretableNoButtonsEmptyTable]"
+		},
+		{
 			"id": "structuretableNoHeader",
 			"type": "array[structuretableNoHeader]"
 		},
@@ -585,6 +589,25 @@
 			"parameters": [
 				{
 					"id": "BP_trend",
+					"enum": [
+						"Ascending",
+						"Descending"
+					],
+					"default": "Ascending"
+				}
+			]
+		},
+		{
+			"id": "structuretableNoButtonsEmptyTable",
+			"key_definition": {
+				"id": "field1",
+				"type": "string",
+				"role": "column",
+				"default": ""
+			},
+			"parameters": [
+				{
+					"id": "BP_trend1",
 					"enum": [
 						"Ascending",
 						"Descending"
@@ -1304,6 +1327,18 @@
 				}
 			},
 			{
+				"parameter_ref": "structuretableNoButtonsEmptyTable",
+				"label": {
+					"default": "No Buttons Empty Table"
+				},
+				"description": {
+					"default": "Empty Structure Table with no add-remove buttons"
+				},
+				"place_holder_text": {
+          "resource_key": "structuretableNoButtonsEmptyTable.placeholder.label"
+        }
+			},
+			{
 				"parameter_ref": "structuretableNoHeader",
 				"label": {
 					"default": "No Header"
@@ -1327,7 +1362,7 @@
 					"default": "Resizable columns"
 				},
 				"description": {
-					"default": "Name and Type columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. When any column's width reaches 56px, resizing is stopped.",
+					"default": "Name and Type columns are resizable. Columns are not resizable by default. Host application specifies resizable columns in parameter definition. When a column is resized, width of ALL the columns to the right of resized column is adjusted. Resizing is stopped when all columns reach minimum width of 56px. Every column grows/shrinks directly proportional to column width.",
 					"placement": "on_panel"
 				}
 			},
@@ -1367,10 +1402,10 @@
 			{
 				"parameter_ref": "showRenameFieldsTable",
 				"label": {
-					"default": "Show Rename Fields Table"
+					"default": "Show Rename Fields Table and No Buttons Empty Table"
 				},
 				"description": {
-					"default": "Show Rename Fields Table"
+					"default": "Show Rename Fields Table and No Buttons Empty Table"
 				}
 			},
 			{
@@ -1694,6 +1729,34 @@
 				"parameters": [
 					{
 						"parameter_ref": "BP_trend",
+						"width": 16,
+						"label": {
+							"resource_key": "structuretableNoButtons.BP_trend.label"
+						},
+						"description": {
+							"resource_key": "structuretableNoButtons.BP_trend.desc"
+						},
+						"control": "toggletext",
+						"value_icons": [
+							"/images/up-triangle.svg",
+							"/images/down-triangle.svg"
+						]
+					}
+				]
+			},
+			{
+				"complex_type_ref": "structuretableNoButtonsEmptyTable",
+				"add_remove_rows": false,
+				"key_definition": {
+					"parameter_ref": "field1",
+					"width": 28,
+					"label": {
+						"resource_key": "structuretableNoButtons.field.label"
+					}
+				},
+				"parameters": [
+					{
+						"parameter_ref": "BP_trend1",
 						"width": 16,
 						"label": {
 							"resource_key": "structuretableNoButtons.BP_trend.label"
@@ -3068,7 +3131,8 @@
 									"default": "Columns"
 								},
 								"parameter_refs": [
-									"structuretableNoButtons"
+									"structuretableNoButtons",
+									"structuretableNoButtonsEmptyTable"
 								]
 							}
 						]
@@ -3295,7 +3359,8 @@
 								"parameter_refs": [
 									"enableSortByTable",
 									"structuretableSortOrder",
-									"structuretableCustomIconButtons"
+									"structuretableCustomIconButtons",
+									"structuretableNoButtonsEmptyTable"
 								]
 							}
 						]
@@ -3315,7 +3380,8 @@
 								"type": "columnSelection",
 								"parameter_refs": [
 									"showRenameFieldsTable",
-									"structuretableRenameFields"
+									"structuretableRenameFields",
+									"structuretableNoButtonsEmptyTable"
 								]
 							}
 						]
@@ -3499,7 +3565,8 @@
 			"enabled": {
 				"parameter_refs": [
 					"structuretableSortOrder",
-					"structuretableCustomIconButtons"
+					"structuretableCustomIconButtons",
+					"structuretableNoButtonsEmptyTable"
 				],
 				"evaluate": {
 					"condition": {
@@ -3513,7 +3580,8 @@
 		{
 			"visible": {
 				"parameter_refs": [
-					"structuretableRenameFields"
+					"structuretableRenameFields",
+					"structuretableNoButtonsEmptyTable"
 				],
 				"evaluate": {
 					"condition": {
@@ -3760,6 +3828,7 @@
 		"structuretableObjectType.sort_order.Ascending.label": "Ascending",
 		"structuretableObjectType.sort_order.Descending.label": "Descending",
 		"nestedStructures.structure.label": "This nested structure is configured with 'edit_style' as 'subpanel'",
-		"nestedStructureMap_structure.nestedStructureMap_structure_data_type.label": "Type"
+		"nestedStructureMap_structure.nestedStructureMap_structure_data_type.label": "Type",
+		"structuretableNoButtonsEmptyTable.placeholder.label": "No patients added"
 	}
 }
