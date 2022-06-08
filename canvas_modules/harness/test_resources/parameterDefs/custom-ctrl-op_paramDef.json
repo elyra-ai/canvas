@@ -177,8 +177,7 @@
           "default": "When all rows in 'Case sensitive' column have value 'ci', entire column will be hidden.",
           "placement": "on_panel"
         },
-        "resource_key": "valuePropertiesRKey",
-        "control": "readonlyTable"
+        "resource_key": "valuePropertiesRKey"
       }
     ],
     "complex_type_info": [
@@ -265,7 +264,7 @@
               "resource_key": "value-ci-csRkey.label"
             },
             "width": 20,
-            "edit_style": "inline",
+            "edit_style": "on_panel",
             "resource_key": "value-ci-csRKey"
           }
         ],
