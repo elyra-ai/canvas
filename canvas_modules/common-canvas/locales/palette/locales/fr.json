@@ -1,10 +1,10 @@
 {
-	"palette.dialog.label": "Palette de boîte de dialogue",
-	"palette.flyout.label": "Palette de menu déroulant",
-	"palette.flyout.search.adjustsearch": "Essayez d'ajuster votre recherche pour trouver ce que vous cherchez.",
-	"palette.flyout.search.less": "Afficher moins",
-	"palette.flyout.search.more": "Afficher plus",
-	"palette.flyout.search.noresults": "Aucun résultat trouvé.",
-	"palette.flyout.search.placeholder": "Rechercher des noeuds de palette",
-	"palette.flyout.search.resultsrestricted": "Résultats limités à 10 noeuds. Essayez d'affiner votre recherche."
+  "palette.flyout.search.placeholder": "Rechercher des noeuds de palette",
+  "palette.flyout.search.noresults": "Aucun résultat trouvé.",
+  "palette.flyout.search.adjustsearch": "Essayez d'ajuster votre recherche pour trouver ce que vous cherchez.",
+  "palette.flyout.search.resultsrestricted": "Résultats limités à 10 noeuds. Essayez d'affiner votre recherche.",
+  "palette.flyout.search.more": "Afficher plus",
+  "palette.flyout.search.less": "Afficher moins",
+  "palette.flyout.label": "Palette de menu déroulant",
+  "palette.dialog.label": "Palette de boîte de dialogue"
 }

@@ -1,5 +1,5 @@
 {
-	"action.createNode": "Create {node_label} node",
+  "action.createNode": "Create {node_label} node",
 	"action.arrangeLayout": "Arrange layout",
 	"action.attachNodeToLinks": "Attach {node_label} node to link",
 	"action.collapseSuperNodeInPlace": "Collapse supernode",

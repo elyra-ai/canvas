@@ -1,8 +1,8 @@
 {
-	"toolbar.label": "Barre d'outils de canevas",
-	"toolbar.overflowMenu": "Menu déroulant dynamique",
-	"toolbar.palette": "Palette",
-	"toolbar.zoomIn": "Zoom avant",
-	"toolbar.zoomOut": "Zoom arrière",
-	"toolbar.zoomToFit": "Zoom d'ajustement"
+  "toolbar.palette": "Palette",
+  "toolbar.zoomIn": "Zoom avant",
+  "toolbar.zoomOut": "Zoom arrière",
+  "toolbar.zoomToFit": "Zoom d'ajustement",
+  "toolbar.overflowMenu": "Menu déroulant dynamique",
+  "toolbar.label": "Barre d'outils de canevas"
 }

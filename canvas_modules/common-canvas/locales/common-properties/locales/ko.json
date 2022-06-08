@@ -41,7 +41,7 @@
   "control.summary.error": "오류가 있는 {errorMsgCount} 매개변수가 있습니다. ",
   "control.summary.warning": "경고가 있는 {warningMsgCount} 매개변수가 있습니다. ",
   "control.summary.error.warning": "오류가 있는 {errorMsgCount} 매개변수와 경고가 있는 {warningMsgCount} 매개변수가 있습니다.",
-  "required.error": "필수 매개변수 ''{label}''에 값이 없습니다.",
+  "required.error": "{label}을(를) 제공해야 합니다.",
   "datetime.format.error": "올바르지 않은 {role}입니다. 형식은 {format}이어야 합니다.",
   "invalid.field.error": "올바르지 않은 {label}, 데이터 세트에서 필드를 찾을 수 없습니다.",
   "expression.validate.label": "유효성 검증",

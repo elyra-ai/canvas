@@ -1,10 +1,10 @@
 {
-	"palette.dialog.label": "Paleta de diálogos",
-	"palette.flyout.label": "Paleta flotante",
-	"palette.flyout.search.adjustsearch": "Intente ajustar la búsqueda para encontrar lo que busca.",
-	"palette.flyout.search.less": "Mostrar menos",
-	"palette.flyout.search.more": "Mostrar más",
-	"palette.flyout.search.noresults": "No se han encontrado resultados.",
-	"palette.flyout.search.placeholder": "Buscar nodos de paleta",
-	"palette.flyout.search.resultsrestricted": "Resultados restringidos a 10 nodos. Intente refinar la búsqueda."
+  "palette.flyout.search.placeholder": "Buscar nodos de paleta",
+  "palette.flyout.search.noresults": "No se han encontrado resultados.",
+  "palette.flyout.search.adjustsearch": "Intente ajustar la búsqueda para encontrar lo que busca.",
+  "palette.flyout.search.resultsrestricted": "Resultados restringidos a 10 nodos. Intente refinar la búsqueda.",
+  "palette.flyout.search.more": "Mostrar más",
+  "palette.flyout.search.less": "Mostrar menos",
+  "palette.flyout.label": "Paleta flotante",
+  "palette.dialog.label": "Paleta de diálogos"
 }
