@@ -305,9 +305,9 @@ class PaletteContentListItem extends React.Component {
 				tabIndex={0}
 				draggable={draggable}
 				className={mainDivClass}
-				onKeyPress={this.onKeyPress}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onKeyPress={this.props.isEditingEnabled ? this.onKeyPress : null}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}

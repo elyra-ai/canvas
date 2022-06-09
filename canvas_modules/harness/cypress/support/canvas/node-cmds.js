@@ -603,3 +603,19 @@ Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {
 			cy.resizeObjectToDimensions(srcBodySelector, srcSizingSelector, corner, newWidth, newHeight);
 		});
 });
+
+Cypress.Commands.add("tabNdodeAndOpenWithSpaceBar", (nodeLabel, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel)
+	// This code simulates the user pressing tab to move the keyboard focus.
+	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+		.focus()
+		.type(" ");
+});
+
+Cypress.Commands.add("tabCategoryAndOpenWithSpaceBar", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
+	// This code simulates the user pressing tab to move the keyboard focus.
+	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+		.type(" ")
+		.focus();
+});
