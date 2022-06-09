@@ -874,6 +874,12 @@ Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) => {
 		.should("not.exist");
 });
 
+Cypress.Commands.add("verifyCategoryIsOpened", (categoryName) => {
+	cy.get(".bx--accordion__item--active")
+		.contains(categoryName)
+		.should("exist");
+});
+
 Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
 	// Verify category exists in palette
 	cy.findCategory(nodeCategory)

@@ -273,3 +273,46 @@ describe("Test nodes in Flyout palette have data-id attribute", function() {
 		cy.verifyNodeHasDataId("Balance", "balance", "Record Ops");
 	});
 });
+
+describe("Test nodes & categories accessibility within palette", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.clickToolbarPaletteOpen();
+	});
+
+	it("Nodes and categories should be accessible", function() {
+		cy.get(".palette-flyout-category")
+			.eq(0)
+			.type("{shift}{alt}Q")
+			// This code simulates the user pressing tab to move the keyboard focus.
+			// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+			.focus();
+
+		cy.verifyCategoryIsOpened("Import");
+
+		cy.get(".bx--accordion__item--active .palette-list-item")
+			.eq(0)
+			.type("{shift}{alt}Q")
+			// This code simulates the user pressing tab to move the keyboard focus.
+			// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+			.focus();
+
+
+		cy.get(".bx--accordion__item--active .palette-list-item")
+			.eq(1)
+			.type("{shift}{alt}Q")
+			// This code simulates the user pressing tab to move the keyboard focus.
+			// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+			.focus();
+
+		cy.get(".bx--accordion__item--active .palette-list-item")
+			.eq(2)
+			.type(" ")
+			// This code simulates the user pressing tab to move the keyboard focus.
+			// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+			.focus();
+
+		cy.verifyNodeExists("Object Store");
+	});
+});

@@ -47,6 +47,7 @@ class PaletteContentListItem extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onKeyPress = this.onKeyPress.bind(this);
 	}
 
 	onMouseDown() {
@@ -70,6 +71,12 @@ class PaletteContentListItem extends React.Component {
 
 		if (this.ghostData) {
 			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.centerX, this.ghostData.centerY);
+		}
+	}
+
+	onKeyPress(e) {
+		if (e.code === "Space" || e.keyCode === 32) {
+			this.onDoubleClick();
 		}
 	}
 
@@ -295,8 +302,10 @@ class PaletteContentListItem extends React.Component {
 		return (
 			<div id={this.props.nodeTypeInfo.nodeType.id}
 				data-id={this.props.nodeTypeInfo.nodeType.op}
+				tabIndex={0}
 				draggable={draggable}
 				className={mainDivClass}
+				onKeyPress={this.onKeyPress}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
