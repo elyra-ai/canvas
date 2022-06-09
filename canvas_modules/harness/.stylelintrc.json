@@ -13,6 +13,7 @@
 		"function-comma-space-after": "always",
 		"function-url-quotes": "always",
 		"value-no-vendor-prefix": true,
+		"no-missing-end-of-source-newline": true,
 		"declaration-block-semicolon-newline-after": "always"
 	}
 }
