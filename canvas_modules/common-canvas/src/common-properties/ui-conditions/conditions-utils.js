@@ -449,15 +449,15 @@ function updateState(refState, propertyId, value, controller) {
 			}
 			// Table cell level
 			propState[colId][rowId].value = newPropState.value;
-			// if all cells are "hidden", we should hide an entire column
-			const allCellsAreHidden = Object.values(propState[colId]).every((val) => val.value === "hidden");
-			const updateColumnVisibility = controller.getColumnVisibility(propertyId, propertyId.col) !== !allCellsAreHidden;
-			if (typeof controller !== "undefined" && updateColumnVisibility) {
-				controller.toggleColumnVisibility(propertyId, propertyId.col, !allCellsAreHidden);
-			}
 		} else {
 			// Table column level
 			propState[colId].value = newPropState.value;
+			// if all cells are "hidden", hide an entire column
+			const hideColumn = (value === "hidden");
+			const updateColumnVisibility = controller.getColumnVisibility(propertyId, propertyId.col) !== !hideColumn;
+			if (typeof controller !== "undefined" && updateColumnVisibility) {
+				controller.toggleColumnVisibility(propertyId, propertyId.col, !hideColumn);
+			}
 		}
 	} else {
 		// Control level
