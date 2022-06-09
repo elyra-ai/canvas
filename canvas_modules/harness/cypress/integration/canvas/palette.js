@@ -287,11 +287,11 @@ describe("Test nodes & categories accessibility within palette", function() {
 		cy.verifyCategoryIsOpened("Import");
 
 		// Focus on a nodes inside an open category
-		cy.tabNdodeAndOpenWithSpaceBar("Var. File", "Import");
-		cy.tabNdodeAndOpenWithSpaceBar("Database", "Import");
-		cy.tabNdodeAndOpenWithSpaceBar("Object Store", "Import");
+		cy.tabNdodeAndAddWithSpaceBar("Var. File", "Import");
+		cy.tabNdodeAndAddWithSpaceBar("Database", "Import");
+		cy.tabNdodeAndAddWithSpaceBar("Object Store", "Import");
 
-		cy.verifyNodeExists("Object Store");
+		cy.verifyNodeExists("Var. File");
 		cy.verifyNodeExists("Database");
 		cy.verifyNodeExists("Object Store");
 	});

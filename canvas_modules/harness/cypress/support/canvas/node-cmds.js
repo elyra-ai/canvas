@@ -604,7 +604,7 @@ Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {
 		});
 });
 
-Cypress.Commands.add("tabNdodeAndOpenWithSpaceBar", (nodeLabel, categoryLabel) => {
+Cypress.Commands.add("tabNdodeAndAddWithSpaceBar", (nodeLabel, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel)
 	// This code simulates the user pressing tab to move the keyboard focus.
 	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
