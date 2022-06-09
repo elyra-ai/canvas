@@ -1,18 +1,19 @@
 {
-  "rules": {
-    "indentation": "tab",
-    "string-quotes": "double",
-    "color-hex-case": "upper",
-    "color-hex-length": "long",
-    "color-no-invalid-hex": true,
-    "color-named": "never",
-    "number-leading-zero": "always",
-    "number-max-precision": 6,
-    "number-no-trailing-zeros": true,
-    "function-calc-no-unspaced-operator": true,
-    "function-comma-space-after": "always",
-    "function-url-quotes": "always",
-    "value-no-vendor-prefix": true,
-    "declaration-block-semicolon-newline-after": "always"
-  }
+	"rules": {
+		"indentation": "tab",
+		"string-quotes": "double",
+		"color-hex-case": "upper",
+		"color-hex-length": "long",
+		"color-no-invalid-hex": true,
+		"color-named": "never",
+		"number-leading-zero": "always",
+		"number-max-precision": 6,
+		"number-no-trailing-zeros": true,
+		"function-calc-no-unspaced-operator": true,
+		"function-comma-space-after": "always",
+		"function-url-quotes": "always",
+		"value-no-vendor-prefix": true,
+		"no-missing-end-of-source-newline": true,
+		"declaration-block-semicolon-newline-after": "always"
+	}
 }
