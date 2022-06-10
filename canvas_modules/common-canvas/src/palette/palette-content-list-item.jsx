@@ -50,6 +50,11 @@ class PaletteContentListItem extends React.Component {
 		this.onKeyPress = this.onKeyPress.bind(this);
 	}
 
+	componentDidMount() {
+		document.querySelectorAll(".palette-list-item > *").forEach((e) => {
+			e.setAttribute("tabindex", -1);
+		});
+	}
 	onMouseDown() {
 		// Make sure the tip doesn't appear when starting to drag a node.
 		this.props.canvasController.closeTip();
@@ -296,7 +301,7 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		const nodeLabel = itemText
-			? <div className="palette-list-item-text-div">{itemText}</div>
+			? <div className="palette-list-item-text-div" tabIndex="-1">{itemText}</div>
 			: null;
 
 		return (
@@ -314,7 +319,7 @@ class PaletteContentListItem extends React.Component {
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
-				<div className="palette-list-item-icon-and-text">
+				<div className="palette-list-item-icon-and-text" tabIndex="-1">
 					{icon}
 					{nodeLabel}
 					{ranking}

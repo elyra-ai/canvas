@@ -604,11 +604,10 @@ Cypress.Commands.add("resizeNode", (nodeLabel, corner, newWidth, newHeight) => {
 		});
 });
 
-Cypress.Commands.add("tabNdodeAndAddWithSpaceBar", (nodeLabel, categoryLabel) => {
+Cypress.Commands.add("tabNodeAndAddWithSpaceBar", (nodeLabel, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel)
 	// This code simulates the user pressing tab to move the keyboard focus.
 	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
-		.focus()
 		.type(" ");
 });
 
@@ -616,6 +615,5 @@ Cypress.Commands.add("tabCategoryAndOpenWithSpaceBar", (categoryLabel) => {
 	cy.findCategory(categoryLabel)
 	// This code simulates the user pressing tab to move the keyboard focus.
 	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
-		.type(" ")
-		.focus();
+		.type(" ");
 });

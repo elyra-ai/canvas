@@ -868,9 +868,11 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 		.then((idx) => expect(idx).to.equal(index));
 });
 
-Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) =>
-	!cy.verifyCategoryIsOpened());
-
+Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) => {
+	cy.get(".bx--accordion__item--active")
+		.contains(categoryName)
+		.should("not.exist");
+});
 
 Cypress.Commands.add("verifyCategoryIsOpened", (categoryName) => {
 	cy.get(".bx--accordion__item--active")
