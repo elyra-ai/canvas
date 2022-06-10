@@ -50,11 +50,6 @@ class PaletteContentListItem extends React.Component {
 		this.onKeyPress = this.onKeyPress.bind(this);
 	}
 
-	componentDidMount() {
-		document.querySelectorAll(".palette-list-item > *").forEach((e) => {
-			e.setAttribute("tabindex", -1);
-		});
-	}
 	onMouseDown() {
 		// Make sure the tip doesn't appear when starting to drag a node.
 		this.props.canvasController.closeTip();
