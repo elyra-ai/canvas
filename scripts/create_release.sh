@@ -40,7 +40,7 @@ echo "Setting local variables"
 WORKING_DIR="$PWD"
 GIT_DIRECTORY="canvas_repo"
 RELEASE="release"
-MASTER_TAG="master-last_success"
+MAIN_TAG="main-last_success"
 GIT_USER="automated_user"
 GIT_USER_EMAIL="automated_user.com"
 
@@ -54,12 +54,12 @@ git clone https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
 git checkout ${RELEASE}
-if [[ $(git diff --name-status ${MASTER_TAG}..${RELEASE}) ]]; then
-	echo "Changes found between ${MASTER_TAG} and ${RELEASE}.  Merge branches."
-	git checkout ${MASTER_TAG}
+if [[ $(git diff --name-status ${MAIN_TAG}..${RELEASE}) ]]; then
+	echo "Changes found between ${MAIN_TAG} and ${RELEASE}.  Merge branches."
+	git checkout ${MAIN_TAG}
 	git push https://$GITHUB_TOKEN@github.com/${GIT_ORG}/canvas HEAD:${RELEASE} --force
 else
-	echo "No changes found between ${MASTER_TAG} and ${RELEASE}"
+	echo "No changes found between ${MAIN_TAG} and ${RELEASE}"
 	exit 0;
 fi
 

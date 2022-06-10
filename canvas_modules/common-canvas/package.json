@@ -7,7 +7,7 @@
   "homepage": "https://github.com/elyra-ai/canvas",
   "repository": {
     "type": "git",
-    "url": "https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
+    "url": "https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas"
   },
   "bugs": {
     "url": "https://github.com/elyra-ai/canvas/issues"

@@ -420,20 +420,20 @@ class CustomEffectsCtrl extends React.Component {
 			if (!Array.isArray(controlValue)) {
 				controlValue = [];
 			}
-			let masterValue = this.getPropertyValue();
-			if (!Array.isArray(masterValue)) {
-				masterValue = [];
+			let mainValue = this.getPropertyValue();
+			if (!Array.isArray(mainValue)) {
+				mainValue = [];
 			}
 			const term = this.serializeEffect(this.currentTermValue);
-			if (this.effectExists(term, masterValue)) {
+			if (this.effectExists(term, mainValue)) {
 				this.setError("This term is already in the model");
 				return;
 			}
 			controlValue.push(this.state.currentTermString);
-			masterValue.push(term);
+			mainValue.push(term);
 			this.controller.updatePropertyValue(this.UI_LIST_ID, controlValue);
-			this.updatePropertyValue(masterValue);
-			this.controller.updateSelectedRows(this.UI_LIST_ID, [masterValue.length - 1]);
+			this.updatePropertyValue(mainValue);
+			this.controller.updateSelectedRows(this.UI_LIST_ID, [mainValue.length - 1]);
 			this.focusTargetList();
 			this.clearTerm();
 		}
@@ -445,13 +445,13 @@ class CustomEffectsCtrl extends React.Component {
 			targetRows.sort(function(val1, val2) {
 				return val1 - val2;
 			});
-			const masterValue = this.getPropertyValue();
+			const mainValue = this.getPropertyValue();
 			const uiValue = this.controller.getPropertyValue(this.UI_LIST_ID);
 			for (let idx = targetRows.length - 1; idx >= 0; idx--) {
-				masterValue.splice(targetRows[idx], 1);
+				mainValue.splice(targetRows[idx], 1);
 				uiValue.splice(targetRows[idx], 1);
 			}
-			this.updatePropertyValue(masterValue);
+			this.updatePropertyValue(mainValue);
 			this.controller.updatePropertyValue(this.UI_LIST_ID, uiValue);
 			this.controller.updateSelectedRows(this.UI_LIST_ID, []);
 		}
@@ -590,25 +590,25 @@ class CustomEffectsCtrl extends React.Component {
 			if (!Array.isArray(controlValue)) {
 				controlValue = [];
 			}
-			let masterValue = this.getPropertyValue();
-			if (!Array.isArray(masterValue)) {
-				masterValue = [];
+			let mainValue = this.getPropertyValue();
+			if (!Array.isArray(mainValue)) {
+				mainValue = [];
 			}
 			const selectedRows = [];
 			const interactions = this.interactionTypeToNumber();
 			for (const combo of generateCombinations(fieldArray, interactions)) {
 				const effect = { fields: combo, nestingLevels: Array(combo.length).fill(0) };
 				const term = this.serializeEffect(effect);
-				if (!this.effectExists(term, masterValue)) {
+				if (!this.effectExists(term, mainValue)) {
 					controlValue.push(this.makeTermString(effect));
-					masterValue.push(term);
-					selectedRows.push(masterValue.length - 1);
+					mainValue.push(term);
+					selectedRows.push(mainValue.length - 1);
 				} else if (interactions >= fieldArray.length) {
 					this.setError("This term is already in the model");
 				}
 			}
 			this.controller.updatePropertyValue(this.UI_LIST_ID, controlValue);
-			this.updatePropertyValue(masterValue);
+			this.updatePropertyValue(mainValue);
 			// Select the new effects
 			this.controller.updateSelectedRows(this.UI_LIST_ID, selectedRows);
 			this.focusTargetList();

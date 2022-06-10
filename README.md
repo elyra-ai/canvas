@@ -21,10 +21,10 @@ limitations under the License.
 ## Overview
 The Common Canvas tooling consists of two Node JS modules:
 
-1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas).
+1) A `Common Canvas` for use in building canvas-like applications. See [detailed API and event documentation](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas).
 
 2) `Test harness`  
-See [here](https://github.com/elyra-ai/canvas/tree/master/canvas_modules/harness) for setting up local environment
+See [here](https://github.com/elyra-ai/canvas/tree/main/canvas_modules/harness) for setting up local environment
 
 ## Using local version of common-canvas and/or common-properties
 Clone elyra/canvas
