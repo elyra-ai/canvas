@@ -56,6 +56,21 @@ describe("action panel visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "action-buttons-panel" })).to.equal("disabled");
 		expect(wrapper.find("div[data-id='properties-action-buttons-panel']").prop("disabled")).to.equal(true);
 	});
+	it("action panels should have label and description", () => {
+		const actionPanel = wrapper.find("div[data-id='properties-action-buttons-panel']");
+		const labelContainer = actionPanel.find(".properties-label-container");
+		expect(labelContainer).to.have.length(1);
+		// Verify label
+		expect(labelContainer.find("label.properties-control-label").text()).to.equal("Action panel label");
+
+		// Verify description in tooltip
+		const tooltip = labelContainer.find("div.tooltip-container");
+		expect(tooltip).to.have.length(1);
+		// tooltip icon
+		expect(tooltip.find("svg.canvas-state-icon-information-hollow")).to.have.length(1);
+		// tooltip text
+		expect(tooltip.find("div.common-canvas-tooltip span").text()).to.equal("Action panel description");
+	});
 });
 
 describe("action panel classNames applied correctly", () => {

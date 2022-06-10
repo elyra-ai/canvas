@@ -18,6 +18,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding-bottom: $spacing-03;
+	.properties-label-container {
+		width: 100%;
+	}
 	&:last-child {
 		padding-bottom: $spacing-06; // (24px + 16px outer padding)
 	}
