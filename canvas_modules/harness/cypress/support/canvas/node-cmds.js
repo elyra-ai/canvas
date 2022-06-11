@@ -608,12 +608,17 @@ Cypress.Commands.add("tabNodeAndAddWithSpaceBar", (nodeLabel, categoryLabel) => 
 	cy.findNodeInCategory(nodeLabel, categoryLabel)
 	// This code simulates the user pressing tab to move the keyboard focus.
 	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+		.focus()
 		.type(" ");
 });
 
 Cypress.Commands.add("tabCategoryAndOpenWithSpaceBar", (categoryLabel) => {
 	cy.findCategory(categoryLabel)
+		.parent()
+		.parent()
 	// This code simulates the user pressing tab to move the keyboard focus.
 	// TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
+		.focus();
+	cy.findCategory(categoryLabel)
 		.type(" ");
 });
