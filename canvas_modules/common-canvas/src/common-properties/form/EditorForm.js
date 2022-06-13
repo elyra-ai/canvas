@@ -88,13 +88,19 @@ class ControlPanel {
 }
 
 class ActionPanel {
-	constructor(id, panelType, className, nestedPanel, actions) {
+	constructor(id, panelType, className, nestedPanel, actions, label, description) {
 		this.id = id;
 		this.panelType = panelType;
 		this.nestedPanel = nestedPanel;
 		this.uiItems = actions;
 		if (className) {
 			this.className = className;
+		}
+		if (label) {
+			this.label = label;
+		}
+		if (description) {
+			this.description = description;
 		}
 	}
 }
@@ -201,8 +207,15 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, groupClassName, nestedPanel, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
+		groupLabel = l10nProvider.l10nResource(group.label);
+		let groupDesc;
+		if (group.description) {
+			groupDesc = new Description(l10nProvider.l10nResource(group.description),
+				null,
+				group.description ? group.description.link : null);
+		}
 		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, groupClassName, nestedPanel,
-			_makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+			_makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), groupLabel, groupDesc));
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);

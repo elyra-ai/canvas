@@ -19,22 +19,57 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants";
+import { STATES, CARBON_ICONS } from "./../../constants/constants";
+import { evaluateText } from "./../../util/property-utils.js";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import Icon from "./../../../icons/icon.jsx";
+import { isEmpty } from "lodash";
 
 class ActionPanel extends Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
+		const hidden = this.props.panelState === STATES.HIDDEN;
+		const disabled = this.props.panelState === STATES.DISABLED;
+		let label;
+		if (this.props.panel.label) {
+			let tooltip;
+			if (this.props.panel.description && !isEmpty(this.props.panel.description.text)) {
+				const dynamicDescriptionText = evaluateText(this.props.panel.description.text, this.props.controller);
+				// If tooltip has a link, add propertyId in the link object
+				if (this.props.panel.description.link) {
+					this.props.panel.description.link.propertyId = { name: this.props.panel.id };
+				}
+				tooltip = (<Tooltip
+					id={`tooltip-label-${this.props.panel.id}`}
+					tip={dynamicDescriptionText}
+					link={this.props.panel.description.link ? this.props.panel.description.link : null}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="bottom"
+					disable={hidden || disabled}
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>);
+			}
+			label = (
+				<div className={classNames("properties-label-container")}>
+					<label className="properties-control-label">{this.props.panel.label}</label>
+					{tooltip}
+				</div>
+			);
+		}
 		return (
 			<div
 				className={classNames(
 					"properties-action-panel",
-					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "hide": hidden },
 					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
 					className
 				)}
 				data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
-				disabled={this.props.panelState === STATES.DISABLED}
+				disabled={disabled}
 			>
+				{label}
 				{this.props.children}
 			</div>);
 	}

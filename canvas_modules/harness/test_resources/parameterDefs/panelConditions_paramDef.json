@@ -1100,6 +1100,7 @@
                   "default": "Colors"
                 },
                 "type": "panelSelector",
+                "class_name": "panel-selector2-group-panelselector-class",
                 "depends_on_ref": "fruit-color2",
                 "group_info": [
                   {
@@ -1530,6 +1531,18 @@
           {
             "id": "action-buttons-panel",
             "type": "actionPanel",
+            "label": {
+              "default": "Action panel label"
+            },
+            "description": {
+              "default": "Action panel description",
+              "link": {
+                "id": "link_for_action-buttons-panel",
+                "data": {
+                  "something": "option data"
+                }
+              }
+            },
             "class_name": "action-buttons-panel-group-actionpanel-class",
             "action_refs": [
               "increment",

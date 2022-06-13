@@ -1415,6 +1415,10 @@ class App extends React.Component {
 			return { url: "https://www.yahoo.com/", label: "Learn more" };
 		} else if (link.id && isEqual(link.propertyId, { name: "checkbox" })) {
 			return { url: "https://www.google.com/", label: "Link in checkbox" };
+		} else if (link.id && isEqual(link.propertyId, { name: "increment-action-panel" })) {
+			return { url: "https://www.google.com/", label: "Link in action panel" };
+		} else if (link.id && isEqual(link.propertyId, { name: "action-buttons-panel" })) {
+			return { url: "https://www.google.com/", label: "Link in action buttons panel" };
 		}
 		return {};
 	}

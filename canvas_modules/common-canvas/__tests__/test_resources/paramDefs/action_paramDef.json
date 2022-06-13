@@ -722,6 +722,18 @@
           {
             "id": "increment-action-panel",
             "type": "actionPanel",
+            "label": {
+              "default": "Action panel label"
+            },
+            "description": {
+              "default": "Action panel description",
+              "link": {
+                "id": "link_for_increment-action-panel",
+                "data": {
+                  "something": "option data"
+                }
+              }
+            },
             "action_refs": [
               "increment",
               "decrement"
@@ -737,6 +749,12 @@
           {
             "id": "weather-action-panel",
             "type": "actionPanel",
+            "label": {
+              "resource_key": "weather.action.panel.label"
+            },
+            "description": {
+              "resource_key": "weather.action.panel.desc"
+            },
             "action_refs": [
               "winter",
               "spring",
@@ -1066,6 +1084,8 @@
     "fall":      "Fall",
     "spring":    "Spring",
     "moon":      "Moon",
-    "meteor":    "Meteor"
+    "meteor":    "Meteor",
+    "weather.action.panel.label": "Weather action panel label",
+    "weather.action.panel.desc": "Weather action panel description"
   }
 }
