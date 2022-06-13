@@ -273,3 +273,32 @@ describe("Test nodes in Flyout palette have data-id attribute", function() {
 		cy.verifyNodeHasDataId("Balance", "balance", "Record Ops");
 	});
 });
+
+describe("Test nodes & categories accessibility within palette", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.clickToolbarPaletteOpen();
+	});
+
+	it("Nodes and categories should be accessible", function() {
+		// Focus on palette and press apce bar
+		cy.tabToCategory("Import");
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsOpened("Import");
+
+		// Focus on a nodes inside an open category and press space bar
+		cy.tabToNodeInCategory("Var. File", "Import");
+		cy.pressSpaceOnNodeInCategory("Var. File", "Import");
+
+		cy.tabToNodeInCategory("Database", "Import");
+		cy.pressSpaceOnNodeInCategory("Database", "Import");
+
+		cy.tabToNodeInCategory("Object Store", "Import");
+		cy.pressSpaceOnNodeInCategory("Object Store", "Import");
+
+		cy.verifyNodeExists("Var. File");
+		cy.verifyNodeExists("Database");
+		cy.verifyNodeExists("Object Store");
+	});
+});

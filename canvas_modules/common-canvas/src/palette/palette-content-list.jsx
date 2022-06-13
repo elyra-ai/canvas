@@ -47,15 +47,14 @@ class PaletteContentList extends React.Component {
 				var itemKey = "item_" + idx;
 
 				contentItems.push(
-					<div key={itemKey}>
-						<PaletteContentListItem
-							nodeTypeInfo={this.props.nodeTypeInfos[idx]}
-							isDisplaySearchResult={false}
-							canvasController={this.props.canvasController}
-							isPaletteOpen={this.props.isPaletteOpen}
-							isEditingEnabled={this.props.isEditingEnabled}
-						/>
-					</div>
+					<PaletteContentListItem
+						key={itemKey}
+						nodeTypeInfo={this.props.nodeTypeInfos[idx]}
+						isDisplaySearchResult={false}
+						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.isPaletteOpen}
+						isEditingEnabled={this.props.isEditingEnabled}
+					/>
 				);
 			}
 		}
