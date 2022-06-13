@@ -1639,6 +1639,15 @@ export default class PropertiesController {
 		return null;
 	}
 
+	// check if given column is visible in the table
+	getColumnVisibility(propertyId, columnIndex) {
+		return this.controls[propertyId.name][columnIndex].visible;
+	}
+
+	toggleColumnVisibility(propertyId, columnIndex, value) {
+		this.controls[propertyId.name][columnIndex].visible = value;
+	}
+
 	/*
 	* Summary Panel controls Methods
 	*/

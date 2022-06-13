@@ -104,7 +104,18 @@
       ]
     ],
     "showHiddenTable": true,
-    "readonlyTableHidden": []
+    "readonlyTableHidden": [],
+    "hideTableColumn": false,
+    "valueProperties": [
+      [
+        "BP",
+        "ci"
+      ],
+      [
+        "Age",
+        "cs"
+      ]
+    ]
   },
   "parameters": [
     {
@@ -150,6 +161,15 @@
       "type": "array[readonlyNestedStructureArray]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "hideTableColumn",
+      "type": "boolean"
+    },
+    {
+      "id": "valueProperties",
+      "type": "array[valueSubProperties]",
+      "default": []
     }
   ],
   "complex_types": [
@@ -271,6 +291,25 @@
           "default": ""
         }
       ]
+    },
+    {
+      "id": "valueSubProperties",
+      "type": "object",
+      "parameters": [
+        {
+          "id": "value",
+          "type": "string",
+          "required": false
+        },
+        {
+          "id": "value-ci-cs",
+          "enum": [
+            "cs",
+            "ci"
+          ],
+          "default": "cs"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -363,6 +402,24 @@
           "default": "readonlyTable control that was hidden because there are no rows in the table",
           "placement": "on_panel"
         },
+        "control": "readonlyTable"
+      },
+      {
+        "parameter_ref": "hideTableColumn",
+        "label": {
+          "default": "Hide the Case Sensitive column in readonlyTable"
+        }
+      },
+      {
+        "parameter_ref": "valueProperties",
+        "label": {
+          "default": "ReadonlyTable - hide column"
+        },
+        "description": {
+          "default": "You can hide a column in this table by selecting checkbox.",
+          "placement": "on_panel"
+        },
+        "resource_key": "valuePropertiesRKey",
         "control": "readonlyTable"
       }
     ],
@@ -553,6 +610,33 @@
             "edit_style": "on_panel"
           }
         ]
+      },
+      {
+        "complex_type_ref": "valueSubProperties",
+        "label": {
+          "default": "Add valueSubProperties"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "value",
+            "label": {
+              "resource_key": "valueRkey.label"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "valueRKey"
+          },
+          {
+            "parameter_ref": "value-ci-cs",
+            "label": {
+              "resource_key": "value-ci-csRkey.label"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "value-ci-csRKey"
+          }
+        ],
+        "row_selection": "single"
       }
     ],
     "group_info": [
@@ -605,6 +689,8 @@
                   "readonlyTableHidden",
                   "enableDisabledTable",
                   "readonlyTableDisabled",
+                  "hideTableColumn",
+                  "valueProperties",
                   "readonlyTableError"
                 ]
               }
@@ -657,6 +743,20 @@
             "parameter_ref": "readonlyTableError[4]",
             "op": "matches",
             "value": "19\\d\\d-\\d\\d-\\d\\d"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "valueProperties[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTableColumn",
+            "op": "equals",
+            "value": false
           }
         }
       }
@@ -750,6 +850,9 @@
     "new_datatype.binary.label": "BINARY",
     "new_datatype.boolean.label": "BOOLEAN",
     "readonlyTableError-cell-new_date": "Date cannot be earlier than the 2000s",
-    "readonlyStructurelistTableControl.edit.button.label": "Edit test"
+    "readonlyStructurelistTableControl.edit.button.label": "Edit test",
+    "valueRkey.label": "Value",
+    "value-ci-csRkey.label": "Case sensitive",
+    "value-ci-cs.description": "Whether this column is case sensitive or not."
   }
 }
