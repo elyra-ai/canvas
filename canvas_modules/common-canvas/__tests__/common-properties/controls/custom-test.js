@@ -35,7 +35,7 @@ describe("custom control renders correctly", () => {
 	it("should show the correct custom controls", () => {
 		const customToggles = wrapper.find("div.custom-toggle");
 		expect(customToggles).to.have.length(3);// includes table toggles
-		const tableCustomToggles = tableUtils.getTableRows(wrapper);
+		const tableCustomToggles = tableUtils.getTableRows(wrapper.find("div[data-id='properties-structuretable']"));
 		expect(tableCustomToggles).to.have.length(2);
 		// This summary text comes from the custom control
 		const cellText = wrapper.find("span.properties-field-type div.text");

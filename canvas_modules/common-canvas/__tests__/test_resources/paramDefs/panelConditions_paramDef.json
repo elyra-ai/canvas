@@ -985,7 +985,6 @@
           {
             "id": "textpanelsctrl",
             "type": "controls",
-            "class_name": "textpanelsctrl-group-controls-class",
             "parameter_refs": [
               "hideTextPanel"
             ],
@@ -993,7 +992,6 @@
               {
                 "id": "apple-panel",
                 "type": "textPanel",
-                "class_name": "apple-panel-group-textpanel-class",
                 "label": {
                   "default": "Apples"
                 },
@@ -1011,7 +1009,6 @@
           "default": "Panel Selectors"
         },
         "type": "panels",
-        "class_name": "panel-selectors-group-panels-class",
         "group_info": [
           {
             "id": "panel-selector1",
@@ -1019,7 +1016,6 @@
               "default": "Panel Selector"
             },
             "type": "controls",
-            "class_name": "panel-selector1-group-controls-class",
             "parameter_refs": [
               "disablePanelSelector",
               "fruit-color1",
@@ -1029,7 +1025,6 @@
               {
                 "id": "dynamicTextPercent",
                 "type": "textPanel",
-                "class_name": "dynamicTextPercent-group-textpanel-class",
                 "label": {
                   "default": "Dynamic Percent"
                 },
@@ -1040,7 +1035,6 @@
               {
                 "id": "dynamicTextSum",
                 "type": "textPanel",
-                "class_name": "dynamicTextSum-group-textpanel-class",
                 "label": {
                   "default": "Dynamic Sum"
                 },
@@ -1068,7 +1062,6 @@
                   {
                     "id": "blue1",
                     "type": "textPanel",
-                    "class_name": "panel-selector-fields1-blue1-group-textpanel-class",
                     "label": {
                       "default": "Blueberries"
                     },
@@ -1079,7 +1072,6 @@
                   {
                     "id": "yellow1",
                     "type": "textPanel",
-                    "class_name": "panel-selector-fields1-yellow1-group-textpanel-class",
                     "label": {
                       "default": "Lemons"
                     },
@@ -1097,7 +1089,6 @@
               "default": "Panel Selector"
             },
             "type": "controls",
-            "class_name": "panel-selector2-group-controls-class",
             "parameter_refs": [
               "hidePanelSelector",
               "fruit-color2"
@@ -1115,7 +1106,6 @@
                   {
                     "id": "red2",
                     "type": "textPanel",
-                    "class_name": "panel-selector2-red2-group-textpanel-class",
                     "description": {
                       "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
                     }
@@ -1123,7 +1113,6 @@
                   {
                     "id": "blue2",
                     "type": "textPanel",
-                    "class_name": "panel-selector2-blue2-group-textpanel-class",
                     "label": {
                       "default": "Blueberries"
                     },
@@ -1134,7 +1123,6 @@
                   {
                     "id": "yellow2",
                     "type": "textPanel",
-                    "class_name": "panel-selector2-yellow2-group-textpanel-class",
                     "label": {
                       "default": "Lemons"
                     },
@@ -1154,7 +1142,6 @@
           "default": "Column Selection"
         },
         "type": "panels",
-        "class_name": "column-selections-group-panels-class",
         "group_info": [
           {
             "id": "disable-selectcolumn-values",
@@ -1162,7 +1149,6 @@
               "default": "Values"
             },
             "type": "controls",
-            "class_name": "disable-selectcolumn-group-controls-class",
             "parameter_refs": [
               "disableColumnSelectionPanel"
             ],
@@ -1187,7 +1173,6 @@
               "default": "Column Selection"
             },
             "type": "controls",
-            "class_name": "hide-column-selection-panel-group-controls-class",
             "parameter_refs": [
               "hideColumnSelectionPanel"
             ],
@@ -1211,7 +1196,6 @@
       {
         "id": "summary_panel_category",
         "type": "panels",
-        "class_name": "summary-panel-category-group-panels-class",
         "label": {
           "default": "Summary Panel"
         },
@@ -1219,7 +1203,6 @@
           {
             "id": "summary_info",
             "type": "textPanel",
-            "class_name": "summary-info-group-textpanel-class",
             "description": {
               "default": "Configure fields link and summary will be disabled or hidden using the below checkboxes."
             }
@@ -1227,7 +1210,6 @@
           {
             "id": "enable_summary_checkbox",
             "type": "controls",
-            "class_name": "enable-summary-checkbox-group-controls-class",
             "label": {
               "default": "Enable Summary"
             },
@@ -1260,7 +1242,6 @@
           {
             "id": "hide_summary_checkbox",
             "type": "controls",
-            "class_name": "hide-summary-checkbox-group-controls-class",
             "label": {
               "default": "Hide Summary"
             },
@@ -1277,7 +1258,6 @@
               "default": "Configure Fields"
             },
             "type": "summaryPanel",
-            "class_name": "structuretable-summary-panel2-category-group-summarypanel-class",
             "group_info": [
               {
                 "id": "structuretable_summary3_panel",
@@ -1296,12 +1276,10 @@
           "default": "Twisty Panels"
         },
         "type": "panels",
-        "class_name": "twisty-panel2-group-panels-class",
         "group_info": [
           {
             "id": "disabletwistypanels",
             "type": "controls",
-            "class_name": "disabletwistypanels-group-controls-class",
             "parameter_refs": [
               "disableTwistyPanel"
             ],
@@ -1317,7 +1295,6 @@
                   {
                     "id": "twisty-panel1-controls",
                     "type": "controls",
-                    "class_name": "twisty-panel1-controls-group-controls-class",
                     "parameter_refs": [
                       "numberfield1",
                       "numberfield2"
@@ -1330,7 +1307,6 @@
           {
             "id": "hidetwistypanels",
             "type": "controls",
-            "class_name": "hidetwistypanels-group-controls-class",
             "parameter_refs": [
               "hideTwistyPanel"
             ],
@@ -1338,7 +1314,6 @@
               {
                 "id": "twisty-panel2",
                 "type": "twistyPanel",
-                "class_name": "twisty-panel2-group-twistypanel-class",
                 "label": {
                   "default": "Twisty Panel2"
                 },
@@ -1346,7 +1321,6 @@
                   {
                     "id": "twisty-panel2-controls",
                     "type": "controls",
-                    "class_name": "twisty-panel2-controls-group-controls-class",
                     "parameter_refs": [
                       "numberfield3"
                     ]
@@ -1363,7 +1337,6 @@
           "default": "Panels within Panels"
         },
         "type": "controls",
-        "class_name": "panels-in-panels-group-controls-class",
         "parameter_refs": [
           "disablePanelLevel1",
           "hidePanelLevel1"
@@ -1373,7 +1346,6 @@
             "id": "Level1",
             "type": "textPanel",
             "nested_panel": true,
-            "class_name": "level1-group-textpanel-class",
             "label": {
               "default": "Level1 Group"
             }
@@ -1387,7 +1359,6 @@
               {
                 "id": "level2buttons",
                 "type": "controls",
-                "class_name": "level2buttons-group-controls-class",
                 "parameter_refs": [
                   "disablePanelLevel2",
                   "hidePanelLevel2"
@@ -1397,7 +1368,6 @@
                     "id": "Level2",
                     "type": "textPanel",
                     "nested_panel": true,
-                    "class_name": "level2-group-textpanel-class",
                     "label": {
                       "default": "Level2 Group"
                     }
@@ -1406,12 +1376,10 @@
                     "id": "level2",
                     "type": "panels",
                     "nested_panel": true,
-                    "class_name": "level2-group-panels-class",
                     "group_info": [
                       {
                         "id": "level3buttons",
                         "type": "controls",
-                        "class_name": "leve32buttons-group-controls-class",
                         "parameter_refs": [
                           "textfield1",
                           "textfield2",
@@ -1438,7 +1406,6 @@
                               {
                                 "id": "level3control",
                                 "type": "controls",
-                                "class_name": "level3control-group-controls-class",
                                 "parameter_refs": [
                                   "textfield3"
                                 ]
@@ -1477,7 +1444,6 @@
           "default": "Panels within Panels (2)"
         },
         "type": "controls",
-        "class_name": "init-panels-in-panels-group-controls-class",
         "parameter_refs": [
           "disableInit1PanelLevel1",
           "hideInit1PanelLevel1"
@@ -1485,19 +1451,16 @@
         "group_info": [
           {
             "id": "init1Level1",
-            "type": "textPanel",
-            "class_name": "init1level1-group-textpanel-class"
+            "type": "textPanel"
           },
           {
             "id": "init1level1",
             "type": "panels",
             "nested_panel": true,
-            "class_name": "init1level1-group-panels-class",
             "group_info": [
               {
                 "id": "init1level2buttons",
                 "type": "controls",
-                "class_name": "init1level2buttons-group-controls-class",
                 "parameter_refs": [
                   "disableInit1PanelLevel2",
                   "hideInit1PanelLevel2"
@@ -1505,19 +1468,16 @@
                 "group_info": [
                   {
                     "id": "init1Level2",
-                    "type": "textPanel",
-                    "class_name": "init1level2-group-textpanel-class"
+                    "type": "textPanel"
                   },
                   {
                     "id": "init1level2",
                     "type": "panels",
                     "nested_panel": true,
-                    "class_name": "init1level2-group-panels-class",
                     "group_info": [
                       {
                         "id": "init1level3buttons",
                         "type": "controls",
-                        "class_name": "init1level3buttons-group-controls-class",
                         "parameter_refs": [
                           "textfieldInit11",
                           "textfieldInit12",
@@ -1527,19 +1487,16 @@
                         "group_info": [
                           {
                             "id": "init1Level3",
-                            "type": "textPanel",
-                            "class_name": "init1level3-group-textpanel-class"
+                            "type": "textPanel"
                           },
                           {
                             "id": "init1level3",
                             "type": "panels",
                             "nested_panel": true,
-                            "class_name": "init1level3-group-panels-class",
                             "group_info": [
                               {
                                 "id": "init1level3control",
                                 "type": "controls",
-                                "class_name": "init1level3control-group-controls-class",
                                 "parameter_refs": [
                                   "textfieldInit13"
                                 ]
@@ -1562,12 +1519,10 @@
           "default": "Action Panels"
         },
         "type": "panels",
-        "class_name": "action-panels-group-panels-class",
         "group_info": [
           {
             "id": "action-checkbox-control",
             "type": "controls",
-            "class_name": "action-checkbox-control-group-controls-class",
             "parameter_refs": [
               "actionDisable",
               "actionHide"
@@ -1576,6 +1531,18 @@
           {
             "id": "action-buttons-panel",
             "type": "actionPanel",
+            "label": {
+              "default": "Action panel label"
+            },
+            "description": {
+              "default": "Action panel description",
+              "link": {
+                "id": "link_for_action-buttons-panel",
+                "data": {
+                  "something": "option data"
+                }
+              }
+            },
             "class_name": "action-buttons-panel-group-actionpanel-class",
             "action_refs": [
               "increment",
@@ -1585,7 +1552,6 @@
           {
             "id": "action-number-control",
             "type": "controls",
-            "class_name": "action-number-control-group-controls-class",
             "parameter_refs": [
               "actionNumber"
             ]
@@ -1598,12 +1564,10 @@
           "default": "Column Panels"
         },
         "type": "panels",
-        "class_name": "column-panels-group-panels-class",
         "group_info": [
           {
             "id": "column-checkbox-control",
             "type": "controls",
-            "class_name": "column-checkbox-control-group-controls-class",
             "parameter_refs": [
               "colDisable",
               "colHide"
@@ -1617,7 +1581,6 @@
               {
                 "id": "panel1-values",
                 "type": "controls",
-                "class_name": "panel1-values-group-controls-class",
                 "parameter_refs": [
                   "col1_ctrl1",
                   "col1_ctrl2"
@@ -1626,7 +1589,6 @@
               {
                 "id": "panel2-values",
                 "type": "controls",
-                "class_name": "panel2-values-group-controls-class",
                 "parameter_refs": [
                   "col2_ctrl1",
                   "col2_ctrl2"

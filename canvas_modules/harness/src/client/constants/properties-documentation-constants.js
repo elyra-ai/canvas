@@ -4946,6 +4946,12 @@ _defineConstant("ACTION_PROPS_INFO", {
 						{
 							"id": "increment-action-panel",
 							"type": "actionPanel",
+							"label": {
+								"default": "Action panel label"
+							},
+							"description": {
+								"default": "Action panel description"
+							},
 							"action_refs": [
 								"increment",
 								"decrement"
