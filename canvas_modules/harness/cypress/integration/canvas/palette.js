@@ -281,7 +281,18 @@ describe("Test nodes & categories accessibility within palette", function() {
 		cy.clickToolbarPaletteOpen();
 	});
 
-	it("Nodes and categories should be accessible", function() {
+	it("Category opens and closes when space bar is pressed", function() {
+		// Focus on palette and press space bar to open the category
+		cy.tabToCategory("Import");
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsOpened("Import");
+
+		// Press space bar to close the category
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsClosed("Import");
+	});
+
+	it("Nodes added to canvas when focus is on palette node and space bar is pressed", function() {
 		// Focus on palette and press apce bar
 		cy.tabToCategory("Import");
 		cy.pressSpaceOnCategory("Import");

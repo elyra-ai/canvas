@@ -868,25 +868,31 @@ Cypress.Commands.add("verifyNodeDoesExistInPaletteAtIndex", (nodeName, index) =>
 		.then((idx) => expect(idx).to.equal(index));
 });
 
-Cypress.Commands.add("verifyCategoryIsClosed", (categoryName) => {
-	cy.get(".bx--accordion__item--active")
-		.contains(categoryName)
-		.should("not.exist");
+Cypress.Commands.add("verifyCategoryIsClosed", (categoryLabel) => {
+	cy.get(".bx--accordion__item")
+		.then((catItems) => {
+			for (let i = 0; i < catItems.length; i++) {
+				if (catItems[i].textContent.includes(categoryLabel)) {
+					const index = catItems[i].className.indexOf("bx--accordion__item--active");
+					expect(index).to.equal(-1);
+				}
+			}
+		});
 });
 
-Cypress.Commands.add("verifyCategoryIsOpened", (categoryName) => {
+Cypress.Commands.add("verifyCategoryIsOpened", (categoryLabel) => {
 	cy.get(".bx--accordion__item--active")
-		.contains(categoryName)
+		.contains(categoryLabel)
 		.should("exist");
 });
 
-Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, nodeCategory) => {
+Cypress.Commands.add("verifyNodeIsAddedInPaletteCategory", (nodeName, categoryLabel) => {
 	// Verify category exists in palette
-	cy.findCategory(nodeCategory)
+	cy.findCategory(categoryLabel)
 		.should("not.be.null");
 
 	// Open category
-	cy.clickCategory(nodeCategory);
+	cy.clickCategory(categoryLabel);
 
 	// Verify node exists in category
 	cy.findNodeIndexInPalette(nodeName)
@@ -991,21 +997,21 @@ Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
 		.should("not.exist");
 });
 
-Cypress.Commands.add("verifyTipForCategory", (nodeCategory) => {
+Cypress.Commands.add("verifyTipForCategory", (categoryLabel) => {
 	// Verify the tip shows next to given category
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
 	// Verify tip label
 	cy.get(".tip-palette-item")
 		.find(".tip-palette-label")
-		.should("have.text", nodeCategory);
+		.should("have.text", categoryLabel);
 	// Verify tip description
 	cy.get(".tip-palette-item")
 		.find(".tip-palette-desc")
-		.should("have.text", "Description for " + nodeCategory);
+		.should("have.text", "Description for " + categoryLabel);
 });
 
-Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
+Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, categoryLabel) => {
 	// Verify the tip shows next to the node in category
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
@@ -1026,8 +1032,8 @@ Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, nodeCategory) => {
 		});
 });
 
-Cypress.Commands.add("verifyTipDoesNotShowForCategory", (nodeCategory) => {
-	cy.findCategory(nodeCategory)
+Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
 		.invoke("attr", "data-id")
 		.then((dataId) => {
 			cy.get(`div[data-id='paletteTip_${dataId}']`)
