@@ -424,7 +424,7 @@ class CommonPropertiesComponents extends React.Component {
 		const header = (<div id="main" className="harness-properties-documentation-section-header">
 			<h1>Elyra-ai/canvas Common Properties Components</h1>
 			<a className="harness-properties-documentation-page-link"
-				href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas/src/common-properties"
+				href="https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas/src/common-properties"
 				target="_blank"
 			>
 				Source Code
@@ -436,12 +436,12 @@ class CommonPropertiesComponents extends React.Component {
 			<div className="harness-section-description">
 				<p>To create UIs based on the Elyra-ai/canvas Common Properties Components, a JSON document adhering to the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.com/elyra-ai/pipeline-schemas/tree/master/common-canvas/parameter-defs"
+						href="https://github.com/elyra-ai/pipeline-schemas/tree/main/common-canvas/parameter-defs"
 					>Parameter Definition Schema</a> has to be provided. The JSON document contains parameter definitions, uihints,
 					dataset_metadata, etc. The data in these sections is used to generate the UI. Certain parameter types
 					translate into specific controls. The control type can be overriden in the uihints section, which follows the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
+						href="https://github.com/elyra-ai/pipeline-schemas/blob/main/common-pipeline/operators/uihints-v1-schema.json"
 					>UI Hints schema</a>. In addition, uihints are used to group UI controls.
 				</p>
 				<p>

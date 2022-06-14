@@ -270,7 +270,7 @@ class CommonPropertiesComponents extends React.Component {
 		const header = (<div id="main" className="harness-properties-documentation-section-header">
 			<h1>Elyra-ai/canvas Common Properties Conditions</h1>
 			<a className="harness-properties-documentation-page-link"
-				href="https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
+				href="https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas"
 				target="_blank"
 			>
 				Source Code
@@ -285,9 +285,9 @@ class CommonPropertiesComponents extends React.Component {
 					between multiple parameters (i.e. valid values for parameter 1 depend upon the value of parameter 2).
 					To create a condition for a control, create a JSON that adheres to the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-pipeline/operators/conditions-v3-schema.json"
+					href="https://github.com/elyra-ai/pipeline-schemas/blob/main/common-pipeline/operators/conditions-v3-schema.json"
 				>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
-				<a className="harness-properties-documentation-page-intro-link" href="https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v3-schema.json">
+				<a className="harness-properties-documentation-page-intro-link" href="https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/parameter-defs/parameter-defs-v3-schema.json">
 					parameter definition</a> JSON.
 				</p>
 				<p>

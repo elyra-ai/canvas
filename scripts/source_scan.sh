@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-if [[ ( "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "master" ) ]]; then
+if [[ ( "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "main" ) ]]; then
 	set -x
 	VER_NUMBER=$TRAVIS_BUILD_NUMBER
 
