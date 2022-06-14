@@ -86,15 +86,15 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 		} else if (categoryLabel) {
 			cy.findCategoryAccordionItem(categoryLabel)
 				.find(".palette-list-item")
-				.contains(nodeLabel)
-				.parent()
+				.contains(nodeLabel) // This will return the text <span> within in the node item
+				.parent() // These parent() calls will navigate from the <span> up to the palette list item.
 				.parent()
 				.parent();
 		}
 	});
 });
 
-Cypress.Commands.add("findNodeInCategory2", (nodeLabel, categoryLabel) => {
+Cypress.Commands.add("findNodeTextSpanInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
@@ -106,7 +106,7 @@ Cypress.Commands.add("findNodeInCategory2", (nodeLabel, categoryLabel) => {
 		} else if (categoryLabel) {
 			cy.findCategoryAccordionItem(categoryLabel)
 				.find(".palette-list-item")
-				.contains(nodeLabel);
+				.contains(nodeLabel); // This will return the text <span> within in the node item
 		}
 	});
 });
@@ -184,6 +184,6 @@ Cypress.Commands.add("tabToNodeInCategory", (nodeLabel, categoryLabel) => {
 });
 
 Cypress.Commands.add("pressSpaceOnNodeInCategory", (nodeLabel, categoryLabel) => {
-	cy.findNodeInCategory2(nodeLabel, categoryLabel)
+	cy.findNodeTextSpanInCategory(nodeLabel, categoryLabel)
 		.type(" ");
 });
