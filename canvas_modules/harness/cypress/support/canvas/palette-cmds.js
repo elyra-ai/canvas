@@ -94,6 +94,24 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	});
 });
 
+Cypress.Commands.add("findNodeInCategory2", (nodeLabel, categoryLabel) => {
+	cy.document().then((doc) => {
+		// Palette Layout - Modal
+		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
+			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
+				.contains(nodeLabel)
+				.parent()
+				.parent();
+		// Palette Layout - Flyout
+		} else if (categoryLabel) {
+			cy.findCategoryAccordionItem(categoryLabel)
+				.find(".palette-list-item")
+				.contains(nodeLabel);
+		}
+	});
+});
+
+
 Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
@@ -166,6 +184,6 @@ Cypress.Commands.add("tabToNodeInCategory", (nodeLabel, categoryLabel) => {
 });
 
 Cypress.Commands.add("pressSpaceOnNodeInCategory", (nodeLabel, categoryLabel) => {
-	cy.findNodeInCategory(nodeLabel, categoryLabel)
+	cy.findNodeInCategory2(nodeLabel, categoryLabel)
 		.type(" ");
 });
