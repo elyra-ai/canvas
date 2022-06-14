@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* eslint arrow-body-style: "off" */
 
 Cypress.Commands.add("findCategory", (categoryLabel) => {
 	cy.document().then((doc) => {
@@ -54,6 +55,25 @@ Cypress.Commands.add("hoverOverCategory", (categoryLabel) => {
 	cy.findCategory(categoryLabel).trigger("mouseover");
 });
 
+Cypress.Commands.add("findCategoryAccordionItem", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
+		.then((cat) => {
+			return cat
+				.parent()
+				.parent()
+				.parent();
+		});
+});
+
+Cypress.Commands.add("findCategoryAccordionItemButton", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
+		.then((cat) => {
+			return cat
+				.parent()
+				.parent();
+		});
+});
+
 Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.document().then((doc) => {
 		// Palette Layout - Modal
@@ -64,8 +84,8 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 				.parent();
 		// Palette Layout - Flyout
 		} else if (categoryLabel) {
-			cy.findCategory(categoryLabel)
-				.get(".palette-list-item")
+			cy.findCategoryAccordionItem(categoryLabel)
+				.find(".palette-list-item")
 				.contains(nodeLabel)
 				.parent()
 				.parent()
@@ -87,7 +107,7 @@ Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {
 		});
 });
 
-Cypress.Commands.add("findNodeInPalette", (filterText) => {
+Cypress.Commands.add("searchForNodeUsing", (filterText) => {
 	cy.get(".palette-flyout-search").click();
 	cy.get(".palette-flyout-search")
 		.find("input")
@@ -129,9 +149,7 @@ Cypress.Commands.add("findNodeIndexInPalette", (nodeName) => {
 // This code simulates the user pressing tab to move the keyboard focus.
 // TODO - Use the Cypress tab() method when "Native Events" are supported in Cypress
 Cypress.Commands.add("tabToCategory", (categoryLabel) => {
-	cy.findCategory(categoryLabel)
-		.parent()
-		.parent()
+	cy.findCategoryAccordionItemButton(categoryLabel)
 		.focus();
 });
 

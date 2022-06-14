@@ -31,7 +31,7 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.dragNodeToPosition("Derive", 400, 200);
 
 		// Search for a node in Palette Search bar
-		cy.findNodeInPalette("sel");
+		cy.searchForNodeUsing("sel");
 
 		// Search function can run slowly on build machine so give it some time.
 		/* eslint cypress/no-unnecessary-waiting: "off" */
@@ -49,7 +49,7 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.clickToolbarPaletteOpen();
 
 		// Search for a node in Palette Search bar
-		cy.findNodeInPalette("Data File");
+		cy.searchForNodeUsing("Data File");
 
 		// Search function can run slowly on build machine so give it some time.
 		/* eslint cypress/no-unnecessary-waiting: "off" */
@@ -302,15 +302,15 @@ describe("Test nodes & categories accessibility within palette", function() {
 		cy.tabToNodeInCategory("Var. File", "Import");
 		cy.pressSpaceOnNodeInCategory("Var. File", "Import");
 
-		// cy.tabToNodeInCategory("Database", "Import");
-		// cy.pressSpaceOnNodeInCategory("Database", "Import");
-		//
-		// cy.tabToNodeInCategory("Object Store", "Import");
-		// cy.pressSpaceOnNodeInCategory("Object Store", "Import");
-		//
-		// // Verify the nodes are on the canvas
-		// cy.verifyNodeExists("Var. File");
-		// cy.verifyNodeExists("Database");
-		// cy.verifyNodeExists("Object Store");
+		cy.tabToNodeInCategory("Database", "Import");
+		cy.pressSpaceOnNodeInCategory("Database", "Import");
+
+		cy.tabToNodeInCategory("Object Store", "Import");
+		cy.pressSpaceOnNodeInCategory("Object Store", "Import");
+
+		// Verify the nodes are on the canvas
+		cy.verifyNodeExists("Var. File");
+		cy.verifyNodeExists("Database");
+		cy.verifyNodeExists("Object Store");
 	});
 });
