@@ -65,14 +65,11 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 		// Palette Layout - Flyout
 		} else if (categoryLabel) {
 			cy.findCategory(categoryLabel)
-				.then((category) => {
-					const nodeSelectedID = category.offsetParent()[0].getAttribute("aria-controls");
-					cy.get(`div#${nodeSelectedID} .palette-list-item-text-div > span`)
-						.contains(nodeLabel)
-						.parent()
-						.parent()
-						.parent();
-				});
+				.get(".palette-list-item")
+				.contains(nodeLabel)
+				.parent()
+				.parent()
+				.parent();
 		}
 	});
 });
