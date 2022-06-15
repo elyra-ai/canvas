@@ -186,6 +186,6 @@ Cypress.Commands.add("tabToNodeInCategory", (nodeLabel, categoryLabel) => {
 });
 
 Cypress.Commands.add("pressSpaceOnNodeInCategory", (nodeLabel, categoryLabel) => {
-	cy.findNodeTextSpanInCategory(nodeLabel, categoryLabel)
+	cy.findNodeInCategory(nodeLabel, categoryLabel)
 		.type(" ");
 });
