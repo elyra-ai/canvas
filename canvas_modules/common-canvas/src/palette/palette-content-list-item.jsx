@@ -75,6 +75,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onKeyPress(e) {
+		// e.key === " " is needed to allow Cypress test in palette.js to run on the build machine!
 		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
 			this.onDoubleClick();
 		}
