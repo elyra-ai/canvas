@@ -86,10 +86,10 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 		} else if (categoryLabel) {
 			cy.findCategoryAccordionItem(categoryLabel)
 				.find(".palette-list-item")
-				.contains(nodeLabel) // This will return the text <span> within in the node item
-				.parent() // These parent() calls will navigate from the <span> up to the palette list item.
-				.parent()
-				.parent();
+				.contains(nodeLabel) // Returns the text <span> within in the node item
+				.parent() // Returns the palette-list-item-text-div
+				.parent() // Returns the palette-list-item-icon-and-text
+				.parent(); // Returns the palette-list-item
 		}
 	});
 });
@@ -106,7 +106,8 @@ Cypress.Commands.add("findNodeTextSpanInCategory", (nodeLabel, categoryLabel) =>
 		} else if (categoryLabel) {
 			cy.findCategoryAccordionItem(categoryLabel)
 				.find(".palette-list-item")
-				.contains(nodeLabel); // This will return the text <span> within in the node item
+				.contains(nodeLabel) // Returns the text <span> within in the node item
+				.parent(); // Returns the palette-list-item-text-div
 		}
 	});
 });
