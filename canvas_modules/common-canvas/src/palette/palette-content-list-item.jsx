@@ -75,7 +75,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onKeyPress(e) {
-		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
+		if (e.code === "Space" || e.keyCode === 32) {
 			this.onDoubleClick();
 		}
 	}

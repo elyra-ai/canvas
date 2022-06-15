@@ -94,26 +94,6 @@ Cypress.Commands.add("findNodeInCategory", (nodeLabel, categoryLabel) => {
 	});
 });
 
-Cypress.Commands.add("findNodeTextSpanInCategory", (nodeLabel, categoryLabel) => {
-	cy.document().then((doc) => {
-		// Palette Layout - Modal
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			cy.get(".palette-dialog-grid-node-inner > .palette-dialog-grid-node-text")
-				.contains(nodeLabel)
-				.parent()
-				.parent();
-		// Palette Layout - Flyout
-		} else if (categoryLabel) {
-			cy.findCategoryAccordionItem(categoryLabel)
-				.find(".palette-list-item")
-				.contains(nodeLabel) // Returns the text <span> within in the node item
-				.parent() // Returns the palette-list-item-text-div
-				.parent(); // Returns the palette-list-item-icon-and-text
-		}
-	});
-});
-
-
 Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => {
 	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
