@@ -47,6 +47,7 @@ class PaletteContentListItem extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onKeyPress = this.onKeyPress.bind(this);
 	}
 
 	onMouseDown() {
@@ -70,6 +71,12 @@ class PaletteContentListItem extends React.Component {
 
 		if (this.ghostData) {
 			ev.dataTransfer.setDragImage(this.ghostData.element, this.ghostData.centerX, this.ghostData.centerY);
+		}
+	}
+
+	onKeyPress(e) {
+		if (e.key === " " || e.code === "Space" || e.keyCode === 32) {
+			this.onDoubleClick();
 		}
 	}
 
@@ -289,23 +296,25 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		const nodeLabel = itemText
-			? <div className="palette-list-item-text-div">{itemText}</div>
+			? <div className="palette-list-item-text-div" tabIndex="-1">{itemText}</div>
 			: null;
 
 		return (
 			<div id={this.props.nodeTypeInfo.nodeType.id}
 				data-id={this.props.nodeTypeInfo.nodeType.op}
+				tabIndex={0}
 				draggable={draggable}
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				onKeyPress={this.props.isEditingEnabled ? this.onKeyPress : null}
 				onMouseDown={this.props.isEditingEnabled ? this.onMouseDown : null}
 				onDragStart={this.props.isEditingEnabled ? this.onDragStart : null}
 				onDragEnd={this.props.isEditingEnabled ? this.onDragEnd : null}
 				onDoubleClick={this.props.isEditingEnabled ? this.onDoubleClick : null}
 			>
 				{categoryLabel}
-				<div className="palette-list-item-icon-and-text">
+				<div className="palette-list-item-icon-and-text" tabIndex="-1">
 					{icon}
 					{nodeLabel}
 					{ranking}

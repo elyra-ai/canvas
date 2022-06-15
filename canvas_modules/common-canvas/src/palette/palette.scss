@@ -135,7 +135,7 @@ $palette-search-container-height: 41px;
 			font-weight: 400;
 			padding: 0 10px;
 			width: calc(100% - 68px);
-
+			line-height: 1;
 			& mark {
 				color: $interactive-01;
 				background-color: $highlight;
