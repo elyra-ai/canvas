@@ -33,7 +33,7 @@ sleep 30
 echo "Cypress version"
 npx cypress --version
 echo "Starting cypress electron tests"
-npx cypress run --headed "cypress/integration/canvas/palette.js" --browser electron
+npx cypress run --headed --browser electron
 
 echo "download coverage"
 mkdir -p coverage

@@ -107,7 +107,8 @@ Cypress.Commands.add("findNodeTextSpanInCategory", (nodeLabel, categoryLabel) =>
 			cy.findCategoryAccordionItem(categoryLabel)
 				.find(".palette-list-item")
 				.contains(nodeLabel) // Returns the text <span> within in the node item
-				.parent(); // Returns the palette-list-item-text-div
+				.parent() // Returns the palette-list-item-text-div
+				.parent(); // Returns the palette-list-item-icon-and-text
 		}
 	});
 });
