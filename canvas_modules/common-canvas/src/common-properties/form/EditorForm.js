@@ -219,7 +219,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
-		const groupDesc = l10nProvider.l10nResource(group.description);
+		let groupDesc;
+		if (group.description) {
+			groupDesc = new Description(l10nProvider.l10nResource(group.description),
+				group.description ? group.description.placement : null,
+				group.description ? group.description.link : null);
+		}
 		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName, nestedPanel);
 	}
 	case GroupType.TWISTY_PANEL: {

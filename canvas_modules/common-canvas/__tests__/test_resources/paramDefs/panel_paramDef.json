@@ -188,6 +188,17 @@
             }
           },
           {
+            "id": "avocado",
+            "type": "textPanel",
+            "label": {
+              "default": "Avocados"
+            },
+            "description": {
+              "default": "An avocado tree can range from 15 to 30 feet tall.",
+              "placement": "as_tooltip"
+            }
+          },
+          {
             "id": "number-panel",
             "type": "controls",
             "parameter_refs": [

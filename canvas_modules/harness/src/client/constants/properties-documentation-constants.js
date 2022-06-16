@@ -1285,18 +1285,37 @@ _defineConstant("TEXT_PANEL_PROPS_INFO", {
 		],
 		"uihints": {
 			"id": "TextPanelId",
-			"parameter_info": [
-			],
+			"parameter_info": [],
 			"group_info": [
 				{
-					"id": "orange",
-					"type": "textPanel",
+					"id": "text-panels",
 					"label": {
-						"default": "Oranges"
+						"default": "Text Panels"
 					},
-					"description": {
-						"default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
-					}
+					"type": "panels",
+					"group_info": [
+						{
+							"id": "orange",
+							"type": "textPanel",
+							"label": {
+								"default": "Oranges"
+							},
+							"description": {
+								"default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+							}
+						},
+						{
+							"id": "avocado",
+							"type": "textPanel",
+							"label": {
+								"default": "Avocados"
+							},
+							"description": {
+								"default": "An avocado tree can range from 15 to 30 feet tall.",
+								"placement": "as_tooltip"
+							}
+						}
+					]
 				}
 			]
 		}
