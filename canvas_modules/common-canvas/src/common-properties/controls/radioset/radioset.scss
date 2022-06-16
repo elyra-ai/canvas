@@ -21,6 +21,13 @@
 	.bx--form-item {
 		margin-bottom: $spacing-02;
 	}
+	.radioset-tooltip-wrapper{
+		display: flex;
+		margin-right: 5px;
+		.tooltip-container{
+			margin-top: 2px;
+		}
+	}
 }
 
 .properties-radio-button-group {

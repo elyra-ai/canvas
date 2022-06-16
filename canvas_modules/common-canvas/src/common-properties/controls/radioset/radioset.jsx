@@ -26,6 +26,10 @@ import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
+import Icon from "./../../../icons/icon.jsx";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { CARBON_ICONS } from "./../../constants/constants.js";
+import { isEmpty } from "lodash";
 
 class RadiosetControl extends React.Component {
 	constructor(props) {
@@ -167,6 +171,31 @@ class RadiosetControl extends React.Component {
 		let wasChecked = false;
 		const valueSet = this.props.controlOpts;
 		for (var i = 0; i < valueSet.values.length; i++) {
+			const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+			let tooltip = "";
+			if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+				tooltip = (
+					<span>{this.props.control.valueDescs[i]}</span>
+				);
+				// If tooltip has a link, add propertyId in the link object
+				if (this.props.control.description.link) {
+					this.props.control.description.link.propertyId = this.props.propertyId;
+				}
+			}
+			const tooltipIcon = isEmpty(tooltip) ? "" : (
+				<Tooltip
+					id={tooltipId}
+					tip={tooltip}
+					link={this.props.control.description.link ? this.props.control.description.link : null}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="right"
+					className="properties-tooltips"
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>
+			);
+
 			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
 			const val = (this.props.control.valueDef.propType === "boolean") ? String(valueSet.values[i]) : valueSet.values[i];
@@ -178,17 +207,20 @@ class RadiosetControl extends React.Component {
 				row: i
 			};
 			buttons.push(
-				<div key={i} className="properties-radioset-panel">
-					<RadioButton
-						key={i}
-						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={this.props.state === STATES.DISABLED || itemDisabled}
-						labelText={valueSet.valueLabels[i]}
-						value={val}
-						onChange={this.handleChange}
-						checked={checked}
-					/>
-					{optionalPanel}
+				<div className="radioset-tooltip-wrapper" key={i}>
+					<div key={i} className="properties-radioset-panel">
+						<RadioButton
+							key={i}
+							id={ControlUtils.getControlId(id, this.uuid)}
+							disabled={this.props.state === STATES.DISABLED || itemDisabled}
+							labelText={valueSet.valueLabels[i]}
+							value={val}
+							onChange={this.handleChange}
+							checked={checked}
+						/>
+						{optionalPanel}
+					</div>
+					{tooltipIcon}
 				</div>
 			);
 		}

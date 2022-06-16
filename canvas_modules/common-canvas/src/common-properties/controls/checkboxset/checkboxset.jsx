@@ -24,6 +24,11 @@ import ValidationMessage from "./../../components/validation-message";
 import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
+import Icon from "./../../../icons/icon.jsx";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { CARBON_ICONS } from "./../../constants/constants.js";
+import { isEmpty } from "lodash";
+
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {
@@ -80,6 +85,31 @@ class CheckboxsetControl extends React.Component {
 		}
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
+			const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+			let tooltip = "";
+			if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+				tooltip = (
+					<span >{this.props.control.valueDescs[i]}</span>
+				);
+				// If tooltip has a link, add propertyId in the link object
+				if (this.props.control.description.link) {
+					this.props.control.description.link.propertyId = this.props.propertyId;
+				}
+			}
+			const tooltipIcon = isEmpty(tooltip) ? "" : (
+				<Tooltip
+					id={tooltipId}
+					tip={tooltip}
+					link={this.props.control.description.link ? this.props.control.description.link : null}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="right"
+					className="properties-tooltips"
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>
+			);
+
 			const id = {
 				name: this.props.propertyId.name,
 				row: i
@@ -87,14 +117,17 @@ class CheckboxsetControl extends React.Component {
 			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
 			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
-			checkboxes.push(<Checkbox
-				disabled={disabled}
-				id={ControlUtils.getControlId(id, this.uuid)}
-				key={val + i}
-				labelText={this.props.control.valueLabels[i]}
-				onChange={this.handleChange.bind(this, val)}
-				checked={checked}
-			/>);
+			checkboxes.push(<div className="wrapper" key={val + i}>
+				<Checkbox
+					disabled={disabled}
+					id={ControlUtils.getControlId(id, this.uuid)}
+					key={val + i}
+					labelText={this.props.control.valueLabels[i]}
+					onChange={this.handleChange.bind(this, val)}
+					checked={checked}
+				/>
+				{tooltipIcon}
+			</div>);
 		}
 		return (
 			<fieldset>

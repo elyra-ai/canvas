@@ -22,6 +22,15 @@
 		margin-bottom: $spacing-03;
 	}
 	.properties-checkboxset-container {
+		.wrapper{
+			display: flex;
+			justify-content:space-between;
+			width: 90px;
+			.tooltip-container{
+				flex:1;
+				margin-top: 8px;
+			}
+		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;
 		}
