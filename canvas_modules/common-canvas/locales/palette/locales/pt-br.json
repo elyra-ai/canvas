@@ -1,10 +1,10 @@
 {
-	"palette.dialog.label": "Paleta de diálogo",
-	"palette.flyout.label": "Paleta de menu flyout",
-	"palette.flyout.search.adjustsearch": "Tente ajustar sua procura para localizar o que você está procurando.",
-	"palette.flyout.search.less": "Mostrar menos",
-	"palette.flyout.search.more": "Mostrar mais",
-	"palette.flyout.search.noresults": "Nenhum resultado encontrado",
-	"palette.flyout.search.placeholder": "Localizar nós da paleta",
-	"palette.flyout.search.resultsrestricted": "Resultados restritos a 10 nós. Tente refinar sua procura."
+  "palette.flyout.search.placeholder": "Localizar nós da paleta",
+  "palette.flyout.search.noresults": "Nenhum resultado encontrado",
+  "palette.flyout.search.adjustsearch": "Tente ajustar sua procura para localizar o que você está procurando.",
+  "palette.flyout.search.resultsrestricted": "Resultados restritos a 10 nós. Tente refinar sua procura.",
+  "palette.flyout.search.more": "Mostrar mais",
+  "palette.flyout.search.less": "Mostrar menos",
+  "palette.flyout.label": "Paleta de menu flyout",
+  "palette.dialog.label": "Paleta de diálogo"
 }
