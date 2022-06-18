@@ -1346,7 +1346,8 @@ export default class PropertiesController {
 		// don't return hidden message
 		if (filterHiddenDisable) {
 			const controlState = this.getControlState(propertyId);
-			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+			const controlType = this.getControlType(propertyId);
+			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN || controlType === ControlType.HIDDEN) {
 				return null;
 			}
 		}
@@ -1444,7 +1445,8 @@ export default class PropertiesController {
 	_filterHiddenDisabledErrors(messages) {
 		const filterCondition = (testMessage, propertyId) => {
 			const controlState = this.getControlState(propertyId);
-			return controlState !== "hidden" && controlState !== "disabled";
+			const controlType = this.getControlType(propertyId);
+			return controlState !== STATES.HIDDEN && controlState !== STATES.DISABLED && controlType !== ControlType.HIDDEN;
 		};
 		const filteredMessages = this._filterErrors(messages, filterCondition);
 		return filteredMessages;
@@ -1632,6 +1634,9 @@ export default class PropertiesController {
 	}
 
 	getControlType(propertyId) {
+		if (typeof propertyId === "undefined") {
+			return null;
+		}
 		const control = this.getControl(propertyId);
 		if (control) {
 			return control.controlType;

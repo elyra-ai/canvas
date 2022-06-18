@@ -66,6 +66,17 @@ const controls = [
 		}
 	},
 	{
+		name: "hidden_required_control",
+		controlType: "hidden",
+		required: true,
+		valueDef: {
+			defaultValue: undefined,
+			isList: false,
+			isMap: false,
+			propType: "string"
+		}
+	},
+	{
 		name: "param_enum",
 		valueDef: {
 			isList: true,
@@ -1696,6 +1707,14 @@ describe("Properties Controller getRequiredDefinitionIds", () => {
 
 describe("Properties Controller getRequiredErrorMessages", () => {
 	const requiredErrors = {
+		"hidden_required_control": {
+			"type": "error",
+			"text": "You must provide your hidden_required_control.",
+			"validation_id": "required_hidden_required_control_424.43891381281946",
+			"required": true,
+			"propertyId": { "name": "hidden_required_control" },
+			"displayError": false
+		},
 		"numberfieldMaxBins": {
 			"type": "error",
 			"text": "You must provide your Maximum number of bins.",
@@ -1818,6 +1837,14 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 
 	it("should return all required error messages with hidden/disabled errors removed", () => {
 		controller.setErrorMessages(requiredErrors);
+		// hidden_required_control has controlType "hidden" and required "true"
+		const allErrorMessages = controller.getErrorMessages(false, false, false, false);
+		expect(allErrorMessages).to.have.property("hidden_required_control");
+		// set filterHiddenDisable: true
+		const filterHiddenDisableErrors = controller.getErrorMessages(false, true, false, false);
+		// Verify error for hidden_required_control is filtered
+		expect(filterHiddenDisableErrors).to.not.have.property("hidden_required_control");
+
 		controller.updateControlState(requiredErrors.textfieldName.propertyId, "hidden");
 		const actualRequiredErrors = controller.getRequiredErrorMessages();
 		const expectedRequiredErrors = {
@@ -1832,6 +1859,8 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 			}
 		};
 		expect(actualRequiredErrors).to.eql(expectedRequiredErrors);
+		// getRequiredErrorMessages() filters error messages for controls having controlType: hidden
+		expect(actualRequiredErrors).to.not.have.property("hidden_required_control");
 
 		controller.updateControlState(requiredErrors.numberfieldMaxBins.propertyId, "disabled");
 		const actualRequiredErrors2 = controller.getRequiredErrorMessages();
