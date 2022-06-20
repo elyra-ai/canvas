@@ -131,7 +131,7 @@ describe("radio renders and works correctly with different enum types", () => {
 		expect(renderedController.getPropertyValue({ name: "radioNull" })).to.equal("entropy");
 	});
 
-	it.only("radioset control with long label wrapped", () => {
+	it("radioset control with long label wrapped", () => {
 		const controlDiv = wrapper.find("div[data-id='properties-ci-radioLabelWrapped']");
 		const label = controlDiv.find("label.properties-control-label");
 		expect(label.text()).to.equal("Radio Label Wrapped");
