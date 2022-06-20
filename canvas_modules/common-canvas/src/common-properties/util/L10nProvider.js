@@ -77,6 +77,11 @@ export class L10nProvider {
 		const lookupKey = baseKey + "." + value + ".label";
 		return this.l10n(lookupKey, value);
 	}
+
+	l10nValueDesc(baseKey, value) {
+		const lookupKey = baseKey + "." + value + ".desc";
+		return this.l10n(lookupKey, value);
+	}
 }
 
 export class ResourceDef {

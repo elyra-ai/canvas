@@ -770,14 +770,15 @@ function _parameterValueDescription(parameter, l10nProvider) {
 		} else {
 			key = parameter.name;
 		}
-		const paramLabels = [];
-		parameter.getValidValues().forEach(function(paramValue) {
-			paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
+		const paramDescs = [];
+		parameter.getValidValues().forEach(function(paramValueDesc) {
+			paramDescs.push(l10nProvider.l10nValueDesc(key, String(paramValueDesc)));
 		});
-		return paramLabels;
+		return paramDescs;
 	}
 	return [];
 }
+
 
 export {
 	makePrimaryTab, _makeControl as makeControl

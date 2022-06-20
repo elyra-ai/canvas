@@ -270,7 +270,11 @@
                       "valueLabels": [
                         "Include: resource",
                         "Discard"
-                      ]
+                      ],
+											"valueDescs": [
+												"Include",
+												"Discard"
+											]
                     }
                   },
                   {
@@ -380,7 +384,11 @@
                             "valueLabels": [
                               "true",
                               "false"
-                            ]
+                            ],
+														"valueDescs": [
+															"true",
+															"false"
+														]
                           }
                         },
                         {

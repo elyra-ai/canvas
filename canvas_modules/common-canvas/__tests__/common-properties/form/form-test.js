@@ -73,6 +73,10 @@ describe("Correct form should be created", () => {
 										"valueLabels": [
 											"true",
 											"false"
+										],
+										"valueDescs": [
+											"true",
+											"false"
 										]
 									}
 								}

@@ -571,5 +571,28 @@
       }
     }
   ],
-  "resources": {}
+  "resources": {
+		"checkboxset_number.0.desc":"Desc for 0",
+		"checkboxset_number.10.desc":"Desc for 10",
+		"checkboxset_number.20.desc":"Desc for 20",
+		"checkboxset_number.30.desc":"Desc for 30",
+		"checkboxset_null.apple.desc": "Desc for apple null",
+		"checkboxset_null.orange.desc": "Desc for orange null",
+		"checkboxset_null.pear.desc": "Desc for pear null",
+		"checkboxset_undefined.apple.desc": "Desc for apple undefined",
+		"checkboxset_undefined.orange.desc": "Desc for orange undefined",
+		"checkboxset_undefined.pear.desc": "Desc for pear undefined",
+		"checkboxset_default.apple.desc": "Desc for apple default",
+		"checkboxset_default.orange.desc": "Desc for orange default",
+		"checkboxset_default.pear.desc": "Desc for pear default",
+		"checkboxset_error.apple.desc": "Desc for apple error",
+		"checkboxset_error.orange.desc": "Desc for orange error",
+		"checkboxset_error.pear.desc": "Desc for pear error",
+		"checkboxset_warning.apple.desc": "Desc for apple warning",
+		"checkboxset_warning.orange.desc": "Desc for orange warning",
+		"checkboxset_warning.pear.desc": "Desc for pear warning",
+		"checkboxset_filtered.apple.desc": "Desc for apple filter",
+		"checkboxset_filtered.orange.desc": "Desc for orange filter",
+		"checkboxset_filtered.pear.desc": "Desc for pear filter"
+	}
 }

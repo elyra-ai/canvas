@@ -22,14 +22,17 @@
 		margin-bottom: $spacing-03;
 	}
 	.properties-checkboxset-container {
-		.wrapper{
-			display: flex;
-			justify-content:space-between;
-			width: 90px;
-			.tooltip-container{
-				flex:1;
-				margin-top: 8px;
-			}
+		.checkbox-tooltip-container{
+			display: grid;
+			justify-content: center;
+			align-items: center;
+			grid-template-columns: 1fr 4fr;
+		}
+		.bx--checkbox-label-text{
+			margin-right: 5px;
+		}
+		.tooltip-container{
+			margin-top: 0.8rem;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;
