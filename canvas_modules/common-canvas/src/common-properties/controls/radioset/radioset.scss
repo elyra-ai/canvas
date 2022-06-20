@@ -23,10 +23,7 @@
 	}
 	.radioset-tooltip-wrapper{
 		display: flex;
-		margin-right: 5px;
-		.tooltip-container{
-			margin-top: 2px;
-		}
+		margin-right: $spacing-02;
 	}
 }
 

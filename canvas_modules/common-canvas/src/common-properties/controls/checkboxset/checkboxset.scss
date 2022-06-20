@@ -29,10 +29,10 @@
 			grid-template-columns: 1fr 4fr;
 		}
 		.bx--checkbox-label-text{
-			margin-right: 5px;
+			margin-right: $spacing-04;
 		}
 		.tooltip-container{
-			margin-top: 0.8rem;
+			margin-top: $spacing-04;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;

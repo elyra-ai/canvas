@@ -26,7 +26,7 @@ import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
-import Icon from "./../../../icons/icon.jsx";
+import { Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { CARBON_ICONS } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
@@ -177,10 +177,6 @@ class RadiosetControl extends React.Component {
 				tooltip = (
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
-				// If tooltip has a link, add propertyId in the link object
-				if (this.props.control.description.link) {
-					this.props.control.description.link.propertyId = this.props.propertyId;
-				}
 			}
 			const tooltipIcon = isEmpty(tooltip) ? "" : (
 				<Tooltip
@@ -192,7 +188,7 @@ class RadiosetControl extends React.Component {
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					<Information16 type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
 
@@ -207,7 +203,7 @@ class RadiosetControl extends React.Component {
 				row: i
 			};
 			buttons.push(
-				<div className="radioset-tooltip-wrapper" key={i}>
+				<div className="radioset-tooltip-wrapper" key={ControlUtils.getControlId(id, this.uuid)}>
 					<div key={i} className="properties-radioset-panel">
 						<RadioButton
 							key={i}

@@ -23,7 +23,7 @@ import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
-import Icon from "./../../../icons/icon.jsx";
+import { Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { CARBON_ICONS, STATES } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
@@ -94,10 +94,6 @@ class CheckboxsetControl extends React.Component {
 				tooltip = (
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
-				// If tooltip has a link, add propertyId in the link object
-				if (this.props.control.description.link) {
-					this.props.control.description.link.propertyId = this.props.propertyId;
-				}
 			}
 			const tooltipIcon = isEmpty(tooltip) ? "" : (
 				<Tooltip
@@ -110,7 +106,7 @@ class CheckboxsetControl extends React.Component {
 					showToolTipOnClick
 					disable={hidden || disabledTip}
 				>
-					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					<Information16 type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
 
@@ -121,7 +117,7 @@ class CheckboxsetControl extends React.Component {
 			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
 			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
-			checkboxes.push(<div className="checkbox-tooltip-container" key={val + i}>
+			checkboxes.push(<div className="checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
 				<Checkbox
 					disabled={disabled}
 					id={ControlUtils.getControlId(id, this.uuid)}
