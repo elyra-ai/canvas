@@ -571,5 +571,9 @@
       }
     }
   ],
-  "resources": {}
+  "resources": {
+    "checkboxset_number.0.desc":"desc for 0",
+    "checkboxset_number.10.desc":"desc for 10",
+    "checkboxset_filtered.apple.desc":"desc for apple"
+	}
 }

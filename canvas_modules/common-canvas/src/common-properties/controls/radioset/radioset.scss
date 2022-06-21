@@ -22,7 +22,9 @@
 		margin-bottom: $spacing-02;
 	}
 	.radioset-tooltip-wrapper{
+		height: auto;
 		display: flex;
+		align-items: center;
 		margin-right: $spacing-02;
 	}
 }

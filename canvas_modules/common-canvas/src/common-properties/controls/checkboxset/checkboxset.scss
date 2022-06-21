@@ -24,7 +24,6 @@
 	.properties-checkboxset-container {
 		.checkbox-tooltip-container{
 			display: grid;
-			justify-content: center;
 			align-items: center;
 			grid-template-columns: 1fr 4fr;
 		}
@@ -32,7 +31,9 @@
 			margin-right: $spacing-04;
 		}
 		.tooltip-container{
-			margin-top: $spacing-04;
+			height: auto;
+			display: flex;
+			align-items: center;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;

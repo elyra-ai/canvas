@@ -900,16 +900,16 @@
     }
   ],
   "resources": {
-		"withradioString.gini.label": "Gini",
-		"withradioString.gini.desc": "Desc for Gini",
-		"withradioString.entropy.label": "Entropy",
-		"withradioString.entropy.desc": "Desc for Entropy",
-		"withradioBoolean.true.label": "trueBoolean",
- 		"withradioBoolean.false.label": "falseBoolean",
- 		"radioBooleanWithLabels.true.label": "True Label",
-   	"radioBooleanWithLabels.false.label": "False Label",
- 		"withradioLabelWrapped.firstN.label": "First N",
- 		"withradioLabelWrapped.oneInN.label": "One in N",
- 		"withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label"
-   }
+    "withradioString.gini.label": "Gini",
+    "withradioString.gini.desc": "desc for Gini",
+    "withradioString.entropy.label": "Entropy",
+    "withradioString.entropy.desc": "desc for Entropy",
+    "withradioBoolean.true.label": "trueBoolean",
+    "withradioBoolean.false.label": "falseBoolean",
+    "radioBooleanWithLabels.true.label": "True Label",
+    "radioBooleanWithLabels.false.label": "False Label",
+    "withradioLabelWrapped.firstN.label": "First N",
+    "withradioLabelWrapped.oneInN.label": "One in N",
+    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label"
+  }
 }

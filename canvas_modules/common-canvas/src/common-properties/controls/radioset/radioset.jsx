@@ -28,7 +28,6 @@ import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { CARBON_ICONS } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
 
 class RadiosetControl extends React.Component {
@@ -173,22 +172,22 @@ class RadiosetControl extends React.Component {
 		for (var i = 0; i < valueSet.values.length; i++) {
 			const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
 			let tooltip = "";
-			if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+			if (this.props.control.valueDescs && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
 				tooltip = (
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(tooltip) ? "" : (
+			const tooltipIcon = isEmpty(tooltip) ? "" : (this.props.control.valueDescs[i].indexOf("desc") !== -1) && (
 				<Tooltip
 					id={tooltipId}
 					tip={tooltip}
 					link={this.props.control.description.link ? this.props.control.description.link : null}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="right"
+					direction="bottom"
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Information16 type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					<Information16 disabled={this.props.disabled} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
 
@@ -237,6 +236,10 @@ class RadiosetControl extends React.Component {
 	}
 }
 
+RadiosetControl.defaultProps = {
+	disabled: false,
+};
+
 RadiosetControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
@@ -244,6 +247,7 @@ RadiosetControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	valueStates: PropTypes.object, // pass in by redux
+	disabled: PropTypes.bool,
 	value: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,

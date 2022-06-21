@@ -262,10 +262,10 @@
                             "Ascending",
                             "Descending"
                           ],
-													"valueDescs": [
-														"Ascending",
-														"Descending"
-													],
+                            "valueDescs": [
+                            "Ascending",
+                            "Descending"
+                          ],
                           "valueIcons": [
                             "/images/up-triangle.svg",
                             "/images/down-triangle.svg"

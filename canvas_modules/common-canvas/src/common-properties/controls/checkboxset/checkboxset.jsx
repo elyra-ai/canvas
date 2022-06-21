@@ -25,7 +25,7 @@ import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
 import { Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { CARBON_ICONS, STATES } from "./../../constants/constants.js";
+import { STATES } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
 
 
@@ -90,23 +90,21 @@ class CheckboxsetControl extends React.Component {
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
 			let tooltip = "";
-			if (this.props.control.description && !this.props.tableControl) {
+			if (this.props.control.valueDescs && !this.props.tableControl) {
 				tooltip = (
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(tooltip) ? "" : (
+			const tooltipIcon = isEmpty(tooltip) ? "" : (this.props.control.valueDescs[i].indexOf("desc") !== -1) && (
 				<Tooltip
 					id={`tooltip-${this.props.control.name}-${i}`}
 					tip={tooltip}
-					link={this.props.control.description.link ? this.props.control.description.link : null}
-					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="left"
+					direction="bottom"
 					className="properties-tooltips"
 					showToolTipOnClick
 					disable={hidden || disabledTip}
 				>
-					<Information16 type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+					<Information16 disabled={this.props.disabled} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
 
@@ -145,12 +143,17 @@ class CheckboxsetControl extends React.Component {
 	}
 }
 
+CheckboxsetControl.defaultProps = {
+	disabled: false,
+};
+
 CheckboxsetControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
+	disabled: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
 	controlOpts: PropTypes.oneOfType([

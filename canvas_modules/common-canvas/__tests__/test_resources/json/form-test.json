@@ -271,10 +271,10 @@
                         "Include: resource",
                         "Discard"
                       ],
-											"valueDescs": [
-												"Include",
-												"Discard"
-											]
+                      "valueDescs": [
+                        "Include",
+                        "Discard"
+                      ]
                     }
                   },
                   {
