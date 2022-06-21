@@ -385,10 +385,10 @@
                               "true",
                               "false"
                             ],
-														"valueDescs": [
-															"true",
-															"false"
-														]
+                            "valueDescs": [
+                              "true",
+                              "false"
+                            ]
                           }
                         },
                         {
