@@ -79,7 +79,6 @@ class CheckboxsetControl extends React.Component {
 
 	render() {
 
-
 		const hidden = this.props.state === STATES.HIDDEN;
 		const disabledTip = this.props.state === STATES.DISABLED;
 
@@ -95,7 +94,7 @@ class CheckboxsetControl extends React.Component {
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(tooltip) ? "" : (this.props.control.valueDescs[i].indexOf("desc") !== -1) && (
+			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? "" : (
 				<Tooltip
 					id={`tooltip-${this.props.control.name}-${i}`}
 					tip={tooltip}
@@ -142,10 +141,6 @@ class CheckboxsetControl extends React.Component {
 		);
 	}
 }
-
-CheckboxsetControl.defaultProps = {
-	disabled: false,
-};
 
 CheckboxsetControl.propTypes = {
 	control: PropTypes.object.isRequired,

@@ -25,7 +25,8 @@
 		.checkbox-tooltip-container{
 			display: grid;
 			align-items: center;
-			grid-template-columns: 1fr 4fr;
+			grid-template-columns: 1fr 8fr;
+			width: 100%;
 		}
 		.bx--checkbox-label-text{
 			margin-right: $spacing-04;

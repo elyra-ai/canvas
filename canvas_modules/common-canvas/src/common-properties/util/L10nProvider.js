@@ -80,7 +80,8 @@ export class L10nProvider {
 
 	l10nValueDesc(baseKey, value) {
 		const lookupKey = baseKey + "." + value + ".desc";
-		return this.l10n(lookupKey, value);
+		const desc = this.l10n(lookupKey, value);
+		return (desc !== value ? desc : null);
 	}
 }
 

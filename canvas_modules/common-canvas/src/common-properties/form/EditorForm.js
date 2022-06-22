@@ -771,8 +771,8 @@ function _parameterValueDescription(parameter, l10nProvider) {
 			key = parameter.name;
 		}
 		const paramDescs = [];
-		parameter.getValidValues().forEach(function(paramValueDesc) {
-			paramDescs.push(l10nProvider.l10nValueDesc(key, String(paramValueDesc)));
+		parameter.getValidValues().forEach(function(paramValue) {
+			paramDescs.push(l10nProvider.l10nValueDesc(key, String(paramValue)));
 		});
 		return paramDescs;
 	}
