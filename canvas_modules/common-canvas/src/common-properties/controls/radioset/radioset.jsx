@@ -177,7 +177,7 @@ class RadiosetControl extends React.Component {
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? "" : (this.props.control.valueDescs[i].indexOf("desc") !== -1) && (
+			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? "" : (
 				<Tooltip
 					id={tooltipId}
 					tip={tooltip}
