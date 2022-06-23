@@ -5151,7 +5151,6 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.select("div")
 			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
-			// .html((c) => escapeText(c.content));
 			.html((c) => markdownIt.render(c.content));
 	}
 
@@ -5327,6 +5326,8 @@ export default class SVGCanvasRenderer {
 		this.canvasController.openTextToolbar(pos.x, pos.y, this.textToolbarActionHandler.bind(this));
 	}
 
+	// Handles any actions requested on the comment text to add markdown
+	// characters to the text.
 	textToolbarActionHandler(action) {
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
