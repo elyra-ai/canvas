@@ -56,7 +56,9 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
+import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
+
 
 const showLinksTime = false;
 
@@ -170,13 +172,12 @@ export default class SVGCanvasRenderer {
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
 
-
 		// Flag to indicate if the current drag operation is for a node that can
 		// be inserted into a link. Such a node would need input and output ports.
 		this.existingNodeInsertableIntoLink = false;
 
 		// Flag to indicate if the current drag operation is for a node that can
-		// be attachd to a a detachd link.
+		// be attached to a detached link.
 		this.existingNodeAttachableToDetachedLinks = false;
 
 		// Allow us to track when a selection is being made so there is
@@ -737,13 +738,23 @@ export default class SVGCanvasRenderer {
 		return this.transformPos({ x: x - Math.round(svgRect.left), y: y - Math.round(svgRect.top) });
 	}
 
-	// Transforms the x and y fields of the object passed in by the current zoom
+	// Transforms the x and y fields passed in by the current zoom
 	// transformation amounts to convert a coordinate position in screen pixels
-	// to a coordinate position in zoomed pixels.
+	// to a canvas coordinate position.
 	transformPos(pos) {
 		return {
 			x: (pos.x - this.zoomTransform.x) / this.zoomTransform.k,
 			y: (pos.y - this.zoomTransform.y) / this.zoomTransform.k
+		};
+	}
+
+	// Transforms the x and y fields passed in by the current zoom
+	// transformation amounts to convert a canvas coordinate position
+	// to a coordinate position in screen pixels.
+	unTransformPos(pos) {
+		return {
+			x: (pos.x * this.zoomTransform.k) + this.zoomTransform.x,
+			y: (pos.y * this.zoomTransform.k) + this.zoomTransform.y
 		};
 	}
 
@@ -1846,6 +1857,7 @@ export default class SVGCanvasRenderer {
 			}
 		} else {
 			this.zoomCanvasBackground(d3Event);
+			this.zoomCommentToolbar();
 		}
 	}
 
@@ -1944,6 +1956,27 @@ export default class SVGCanvasRenderer {
 		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
+	}
+
+	// Repositions the comment toolbar so it is always over the top of the
+	// comment being edited.
+	zoomCommentToolbar() {
+		// If a node label or text decoration is being edited com will be undefined.
+		const com = this.activePipeline.getComment(this.editingTextId);
+		if (com) {
+			const pos = this.getCommentToolbarPos(com);
+			this.canvasController.moveTextToolbar(pos.x, pos.y);
+		}
+	}
+
+	// Returns a position object that describes the position in page coordinates
+	// of the comment toolbar so that it is positioned above the comment being edited.
+	getCommentToolbarPos(com) {
+		const pos = this.unTransformPos({ x: com.x_pos, y: com.y_pos });
+		return {
+			x: pos.x + this.canvasLayout.commentToolbarPosX,
+			y: pos.y + this.canvasLayout.commentToolbarPosY
+		};
 	}
 
 	// Returns a new zoom which is the result of incrementing the current zoom
@@ -5127,7 +5160,7 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				if (this.config.enableEditingActions) {
+				if (this.config.enableEditingActions && d.id !== this.editingTextId) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 			})
@@ -5154,6 +5187,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 
+					this.deleteCommentPort(d3Event.currentTarget);
 					this.displayCommentTextArea(d, d3Event.currentTarget);
 
 					this.canvasController.clickActionHandler({
@@ -5211,8 +5245,8 @@ export default class SVGCanvasRenderer {
 
 		commentGrp
 			.append("circle")
-			.attr("cx", 0 - this.canvasLayout.commentHighlightGap)
-			.attr("cy", 0 - this.canvasLayout.commentHighlightGap)
+			.attr("cx", (com) => com.width / 2)
+			.attr("cy", (com) => com.height + this.canvasLayout.commentHighlightGap)
 			.attr("r", this.canvasLayout.commentPortRadius)
 			.attr("class", "d3-comment-port-circle")
 			.on("mousedown", (d3Event, cd) => {
@@ -5287,8 +5321,34 @@ export default class SVGCanvasRenderer {
 			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeComment.bind(this),
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
-			closeTextAreaCallback: null
+			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		});
+		const pos = this.getCommentToolbarPos(d);
+		this.canvasController.openTextToolbar(pos.x, pos.y, this.textToolbarActionHandler.bind(this));
+	}
+
+	textToolbarActionHandler(action) {
+		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
+		const commentEntryElement = commentEntry.node();
+		const start = commentEntryElement.selectionStart;
+		const end = commentEntryElement.selectionEnd;
+		let text = commentEntryElement.value;
+
+		text = SvgCanvasMarkdown.addMarkdownCharacters(text, start, end, action);
+
+		text = unescapeText(text);
+		this.addTextToTextArea(text, commentEntryElement);
+		commentEntryElement.focus();
+	}
+
+	// Replaces the text in the currently displayed textarea with the text
+	// passed in. We use execCommand because this adds the inserted text to the
+	// textarea's undo/redo stack whereas setting the text directly into the
+	// textarea control does not.
+	addTextToTextArea(text, commentEntryElement) {
+		commentEntryElement.focus();
+		commentEntryElement.select();
+		document.execCommand("insertText", false, text);
 	}
 
 	autoSizeComment(textArea, foreignObject, data) {
@@ -5318,6 +5378,10 @@ export default class SVGCanvasRenderer {
 			pipelineId: this.activePipeline.id
 		};
 		this.canvasController.editActionHandler(data);
+	}
+
+	closeCommentTextArea() {
+		this.canvasController.closeTextToolbar();
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
@@ -5479,6 +5543,13 @@ export default class SVGCanvasRenderer {
 					that.textAreaEscKeyPressed = false;
 					return;
 				}
+
+				// If the user clicked on an element in the text toolbar to cause the
+				// blur event, just return.
+				if (d3Event.relatedTarget && that.getParentElementWithClass(d3Event.relatedTarget, "text-toolbar")) {
+					return;
+				}
+
 				// If there is no text for the label and textCanBeEmpty is false
 				// just return so label returns to what it was before editing started.
 				if (!this.value && !data.textCanBeEmpty) {
@@ -6751,9 +6822,9 @@ export default class SVGCanvasRenderer {
 				});
 			});
 
-			// For NORTH and SOUTH links we sort linksDirArray by the x co-ordinate
+			// For NORTH and SOUTH links we sort linksDirArray by the x coordinate
 			// of the end of each link. For EAST and WEST we sort by the y
-			// co-ordinate.
+			// coordinate.
 			if (dir === NORTH || dir === SOUTH) {
 				linksDirArray = linksDirArray.sort((a, b) => (a.x > b.x ? 1 : -1));
 			} else {

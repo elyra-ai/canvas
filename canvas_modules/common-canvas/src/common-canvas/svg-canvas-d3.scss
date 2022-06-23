@@ -722,24 +722,26 @@ g.bkg-col-cyan-50 {
 		letter-spacing: 0.15px;
 	}
 	hr {
-		border-top-color: $ui-background; // Replace with design chosen color
+		border-top-color: $ui-03;
 	}
 	img {
 		max-width: 100%;
 	}
 	blockquote {
 		padding: 0 12px;
-		border-left: 5px solid $ui-background; // Replace with design chosen color
+		border-left: 5px solid $ui-03;
 		line-height: 8px;
 	}
 	code {
-		background-color: $ui-background; // Replace with design chosen color
+		background-color: $ui-02;
 		white-space: pre-wrap;
 	}
 	pre {
-		background-color: $ui-background; // Replace with design chosen color
+		font-size: 11px;
+		line-height: 14px;
+		background-color: $ui-02;
 		padding: 4px;
-		border: 1px solid #ccc;
+		border: 1px solid $ui-03;
 		border-radius: 4px;
 		white-space: pre-wrap;
 	}
@@ -760,13 +762,13 @@ g.bkg-col-cyan-50 {
 
 			tr th {
 				padding: 8px;
-				border-bottom: 2px solid $ui-background; // Replace with design chosen color
+				border-bottom: 2px solid $ui-03;
 			}
 		}
 		tbody {
 			tr {
-				border-bottom: 2px solid $ui-background; // Replace with design chosen color
-				background-color: $ui-background; // Replace with design chosen color
+				border-bottom: 2px solid $ui-03;
+				background-color: $ui-02;
 				td {
 					padding: 8px;
 				}
@@ -777,8 +779,6 @@ g.bkg-col-cyan-50 {
 		display: list-item;
 		margin-top: -7px;
 		margin-bottom: -7px;
-
-		// background-color: cyan;
 
 		&:first-child {
 			margin-top: -14px;
@@ -798,25 +798,16 @@ g.bkg-col-cyan-50 {
 		padding-inline-start: 30px;
 		line-height: 14px;
 		margin-top: 0;
-
-		// background-color: aliceblue;
 	}
 	ul ul {
 		list-style-type: circle;
 		margin-bottom: -14px;
-
-		// background-color: cornflowerblue;
-
 	}
 	ul ol {
 		margin-bottom: -14px;
-
-		// background-color: cornflowerblue;
 	}
 	ul ul ul {
 		list-style-type: square;
-
-		// background-color: blue;
 	}
 	ol {
 		list-style-type: decimal;

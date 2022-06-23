@@ -1776,6 +1776,18 @@ export default class CanvasController {
 		}
 	}
 
+	openTextToolbar(xPos, yPos, actionHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler });
+	}
+
+	closeTextToolbar() {
+		this.objectModel.setTextToolbarDef({ isOpen: false });
+	}
+
+	moveTextToolbar(xPos, yPos) {
+		this.objectModel.setTextToolbarDef({ pos_x: xPos, pos_y: yPos });
+	}
+
 	// Processes the drop of an 'external' object, either from the desktop or
 	// elsewhere on the browser page, onto the canvas.
 	// dropData - The data describing the object being dropped

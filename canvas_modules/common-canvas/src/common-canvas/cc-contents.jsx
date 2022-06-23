@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import CommonCanvasContextMenu from "./cc-context-menu.jsx";
+import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
 import { FlowData16 } from "@carbon/icons-react";
@@ -305,6 +306,13 @@ class CanvasContents extends React.Component {
 			/>);
 	}
 
+	getTextToolbar() {
+		return (
+			<CommonCanvasTextToolbar
+				canvasController={this.props.canvasController}
+			/>);
+	}
+
 	getDropZone() {
 		let dropZoneCanvas = null;
 		if (this.isDropZoneDisplayed()) {
@@ -485,6 +493,7 @@ class CanvasContents extends React.Component {
 		const stateTag = this.getStateTag();
 		const emptyCanvas = this.getEmptyCanvas();
 		const contextMenu = this.getContextMenu();
+		const textToolbar = this.getTextToolbar();
 		const dropZoneCanvas = this.getDropZone();
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
@@ -518,6 +527,7 @@ class CanvasContents extends React.Component {
 						{emptyCanvas}
 						{svgCanvasDiv}
 						{contextMenu}
+						{textToolbar}
 						{dropZoneCanvas}
 						{stateTag}
 					</div>

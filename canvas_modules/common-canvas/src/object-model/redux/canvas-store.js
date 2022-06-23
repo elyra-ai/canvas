@@ -28,6 +28,7 @@ import bottompanel from "./reducers/bottompanel.js";
 import breadcrumbs from "./reducers/breadcrumbs.js";
 import canvasconfig from "./reducers/canvasconfig.js";
 import canvastoolbar from "./reducers/canvastoolbar.js";
+import texttoolbar from "./reducers/texttoolbar.js";
 import notifications from "./reducers/notifications.js";
 import selectioninfo from "./reducers/selectioninfo.js";
 import notificationpanel from "./reducers/notificationpanel.js";
@@ -50,6 +51,7 @@ export default class CanavasStore {
 			externalpipelineflows,
 			tooltip,
 			canvastoolbar,
+			texttoolbar,
 			contextmenu,
 			rightflyout,
 			bottompanel
@@ -66,6 +68,7 @@ export default class CanavasStore {
 			externalpipelineflows: [],
 			tooltip: {},
 			canvastoolbar: {},
+			texttoolbar: { isOpen: false },
 			contextmenu: { menuDef: [] },
 			rightflyout: {},
 			bottompanel: {}

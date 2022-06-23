@@ -202,9 +202,10 @@ class ToolbarActionItem extends React.Component {
 			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
 			const enableTooltip = this.props.actionObj.enable ? this.props.actionObj.enable : false;
+			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tipText} disable={!enableTooltip} className="icon-tooltip" >
+				<Tooltip id={tooltipId} tip={tipText} disable={!enableTooltip} className="icon-tooltip" direction={direction}>
 					{content}
 				</Tooltip>
 			);
@@ -285,6 +286,7 @@ ToolbarActionItem.propTypes = {
 			PropTypes.object
 		])
 	}),
+	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
