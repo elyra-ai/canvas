@@ -162,6 +162,8 @@ class RadiosetControl extends React.Component {
 	}
 
 	render() {
+		const disabledProps = this.props.state === STATES.DISABLED;
+
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
@@ -171,13 +173,12 @@ class RadiosetControl extends React.Component {
 		const valueSet = this.props.controlOpts;
 		for (var i = 0; i < valueSet.values.length; i++) {
 			const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
-			let tooltip = "";
 			if (this.props.control.valueDescs && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
 				tooltip = (
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? "" : (
+			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? null : (
 				<Tooltip
 					id={tooltipId}
 					tip={tooltip}
@@ -187,10 +188,10 @@ class RadiosetControl extends React.Component {
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Information16 disabled={this.props.disabled} className="properties-control-description-icon-info" />
+					<Information16 disabled={disabledProps} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
-
+			let tooltip = "";
 			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
 			const val = (this.props.control.valueDef.propType === "boolean") ? String(valueSet.values[i]) : valueSet.values[i];
@@ -236,10 +237,6 @@ class RadiosetControl extends React.Component {
 	}
 }
 
-RadiosetControl.defaultProps = {
-	disabled: false,
-};
-
 RadiosetControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
@@ -247,7 +244,6 @@ RadiosetControl.propTypes = {
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	valueStates: PropTypes.object, // pass in by redux
-	disabled: PropTypes.bool,
 	value: PropTypes.oneOfType([
 		PropTypes.string,
 		PropTypes.number,

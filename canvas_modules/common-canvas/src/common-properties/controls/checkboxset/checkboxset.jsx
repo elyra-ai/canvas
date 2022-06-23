@@ -80,7 +80,7 @@ class CheckboxsetControl extends React.Component {
 	render() {
 
 		const hidden = this.props.state === STATES.HIDDEN;
-		const disabledTip = this.props.state === STATES.DISABLED;
+		const disabledProps = this.props.state === STATES.DISABLED;
 
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
@@ -88,32 +88,31 @@ class CheckboxsetControl extends React.Component {
 		}
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
-			let tooltip = "";
 			if (this.props.control.valueDescs && !this.props.tableControl) {
 				tooltip = (
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
 			}
-			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? "" : (
+			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? null : (
 				<Tooltip
 					id={`tooltip-${this.props.control.name}-${i}`}
 					tip={tooltip}
 					direction="bottom"
 					className="properties-tooltips"
 					showToolTipOnClick
-					disable={hidden || disabledTip}
+					disable={hidden || disabledProps}
 				>
-					<Information16 disabled={this.props.disabled} className="properties-control-description-icon-info" />
+					<Information16 disabled={disabledProps} className="properties-control-description-icon-info" />
 				</Tooltip>
 			);
-
+			let tooltip = "";
 			const id = {
 				name: this.props.propertyId.name,
 				row: i
 			};
 			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
-			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
+			const disabled = disabledProps || !this.props.controlOpts.values.includes(val);
 			checkboxes.push(<div className="checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
 				<Checkbox
 					disabled={disabled}
@@ -148,7 +147,6 @@ CheckboxsetControl.propTypes = {
 	controller: PropTypes.object.isRequired,
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
-	disabled: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
 	value: PropTypes.array, // pass in by redux
 	controlOpts: PropTypes.oneOfType([
