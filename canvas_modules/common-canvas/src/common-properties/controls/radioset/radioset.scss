@@ -35,6 +35,9 @@
 		display: inline-flex;
 		flex-wrap: wrap;
 		.properties-radioset-panel {
+			display: flex;
+			height: auto;
+			align-items: center;
 			margin-bottom: 0;
 		}
 	}

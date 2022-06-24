@@ -272,8 +272,8 @@
                         "Discard"
                       ],
                       "valueDescs": [
-                        "Include",
-                        "Discard"
+                        null,
+                        null
                       ]
                     }
                   },
@@ -386,8 +386,8 @@
                               "false"
                             ],
                             "valueDescs": [
-                              "true",
-                              "false"
+                              null,
+                              null
                             ]
                           }
                         },

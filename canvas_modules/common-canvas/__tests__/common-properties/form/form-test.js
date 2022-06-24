@@ -75,8 +75,8 @@ describe("Correct form should be created", () => {
 											"false"
 										],
 										"valueDescs": [
-											"true",
-											"false"
+											null,
+											null
 										]
 									}
 								}

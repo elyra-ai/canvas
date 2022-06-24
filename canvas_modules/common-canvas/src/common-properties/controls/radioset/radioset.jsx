@@ -172,15 +172,14 @@ class RadiosetControl extends React.Component {
 		let wasChecked = false;
 		const valueSet = this.props.controlOpts;
 		for (var i = 0; i < valueSet.values.length; i++) {
-			const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
-			if (this.props.control.valueDescs && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+			if (this.props.control.valueDescs && !(disabledProps) && !this.props.tableControl) {
 				tooltip = (
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
 			}
 			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? null : (
 				<Tooltip
-					id={tooltipId}
+					id={`tooltip-${this.props.control.name}-${i}`}
 					tip={tooltip}
 					link={this.props.control.description.link ? this.props.control.description.link : null}
 					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
@@ -208,15 +207,15 @@ class RadiosetControl extends React.Component {
 						<RadioButton
 							key={i}
 							id={ControlUtils.getControlId(id, this.uuid)}
-							disabled={this.props.state === STATES.DISABLED || itemDisabled}
+							disabled={disabledProps || itemDisabled}
 							labelText={valueSet.valueLabels[i]}
 							value={val}
 							onChange={this.handleChange}
 							checked={checked}
 						/>
+						{tooltipIcon}
 						{optionalPanel}
 					</div>
-					{tooltipIcon}
 				</div>
 			);
 		}
