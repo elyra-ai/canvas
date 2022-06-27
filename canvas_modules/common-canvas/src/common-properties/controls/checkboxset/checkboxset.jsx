@@ -93,6 +93,7 @@ class CheckboxsetControl extends React.Component {
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
 			}
+			const val = this.props.control.values[i];
 			const disabled = disabledProps || !this.props.controlOpts.values.includes(val);
 			let tooltipIcon = null;
 			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i])) {
@@ -112,7 +113,6 @@ class CheckboxsetControl extends React.Component {
 				name: this.props.propertyId.name,
 				row: i
 			};
-			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
 			checkboxes.push(<div className="checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
 				<Checkbox
