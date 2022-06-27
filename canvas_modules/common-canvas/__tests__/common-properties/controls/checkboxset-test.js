@@ -120,8 +120,11 @@ describe("checkboxset control tests", () => {
 				/>
 			</Provider>
 		);
-		expect(wrapper.find("div[data-id='tooltip-test-checkboxset-0']").text()).to.equal(control.valueDescs[0]);
-		expect(wrapper.find("div[data-id='tooltip-test-checkboxset-1']").text()).to.equal(control.valueDescs[1]);
+		const tooltipConatiner = wrapper.find("div#tooltipContainer");
+		for (let i = 0; i < tooltipConatiner.length; ++i) {
+			expect(tooltipConatiner.at(i).text()).to.equal(control.valueDescs[i]);
+		}
+
 	});
 	it("checkboxset number labels are displayed", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };

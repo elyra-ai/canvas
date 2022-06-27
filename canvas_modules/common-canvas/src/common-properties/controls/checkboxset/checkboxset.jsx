@@ -80,8 +80,6 @@ class CheckboxsetControl extends React.Component {
 	render() {
 
 		const hidden = this.props.state === STATES.HIDDEN;
-		const disabledProps = this.props.state === STATES.DISABLED;
-
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
@@ -94,18 +92,18 @@ class CheckboxsetControl extends React.Component {
 				);
 			}
 			const val = this.props.control.values[i];
-			const disabled = disabledProps || !this.props.controlOpts.values.includes(val);
+			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
 			let tooltipIcon = null;
 			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i])) {
 				tooltipIcon = (<Tooltip
-					id={`tooltip-${this.props.control.name}-${i}`}
+					id={`tooltip-${this.uuid}-${i}`}
 					tip={tooltip}
 					direction="bottom"
 					className="properties-tooltips"
 					showToolTipOnClick
 					disable={hidden || disabled}
 				>
-					<Information16 disabled={disabledProps} className="properties-control-description-icon-info" />
+					<Information16 disabled={disabled} className="properties-control-description-icon-info" />
 				</Tooltip>);
 			}
 			let tooltip = "";

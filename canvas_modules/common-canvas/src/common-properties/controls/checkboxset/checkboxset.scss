@@ -25,16 +25,14 @@
 		.checkbox-tooltip-container{
 			display: grid;
 			align-items: center;
-			grid-template-columns: 1fr 8fr;
+			grid-template-columns: 1fr 12fr;
 			width: 100%;
-		}
-		.bx--checkbox-label-text{
-			margin-right: $spacing-04;
 		}
 		.tooltip-container{
 			height: auto;
 			display: flex;
 			align-items: center;
+			margin-left: $spacing-04;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;
