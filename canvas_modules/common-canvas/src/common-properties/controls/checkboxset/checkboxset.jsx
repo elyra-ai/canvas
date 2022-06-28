@@ -86,15 +86,13 @@ class CheckboxsetControl extends React.Component {
 		}
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
-			if (this.props.control.valueDescs && !this.props.tableControl) {
-				tooltip = (
-					<span >{this.props.control.valueDescs[i]}</span>
-				);
-			}
+			tooltip = (
+				<span >{this.props.control.valueDescs[i]}</span>
+			);
 			const val = this.props.control.values[i];
 			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
 			let tooltipIcon = null;
-			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i])) {
+			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i]) && !this.props.tableControl) {
 				tooltipIcon = (<Tooltip
 					id={`tooltip-${this.uuid}-${i}`}
 					tip={tooltip}

@@ -33,13 +33,12 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset tooltip with string enum Gini & Entropy are displayed ", () => {
-		const control = {
-			valueDescs: ["desc for Gini", "desc for Entropy", "Filter out the 'green' radio", "Filter out the 'green' radio"]
-		};
-		const tooltipConatiner = wrapper.find("div#tooltipContainer");
-		for (let i = 0; i < tooltipConatiner.length; ++i) {
-			expect(tooltipConatiner.at(i).text()).to.equal(control.valueDescs[i]);
-		}
+		const radioStringContainer = wrapper.find("div[data-id='properties-ci-radioString']");
+		const tooltipConatiner = radioStringContainer.find("div#tooltipContainer");
+		// Verify Entropy Tooltips text
+		expect(tooltipConatiner.at(0).text()).to.equal("desc for Gini");
+		// Verify Gini Tooltips text
+		expect(tooltipConatiner.at(1).text()).to.equal("desc for Entropy");
 	});
 
 	it("radioset control with string enum", () => {
