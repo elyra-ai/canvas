@@ -33,6 +33,7 @@
 			display: flex;
 			align-items: center;
 			margin-left: $spacing-04;
+			cursor: pointer;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;

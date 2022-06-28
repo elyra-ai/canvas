@@ -37,26 +37,22 @@ const control = {
 const controlNull = {
 	name: "test-checkboxset-null",
 	values: ["apple", "orange", "pear"],
-	valueLabels: ["apple", "orange", "pear"],
-	valueDescs: ["desc for 0", null, "desc for 20", null]
+	valueLabels: ["apple", "orange", "pear"]
 };
 const controlUndefined = {
 	name: "test-checkboxset-undefined",
 	values: ["apple", "orange", "pear"],
-	valueLabels: ["apple", "orange", "pear"],
-	valueDescs: ["desc for 0", null, "desc for 20", null]
+	valueLabels: ["apple", "orange", "pear"]
 };
 const controlNumber = {
 	name: "test-checkboxset-number",
 	values: [10, 14.2, 20, -1, 25, 400],
-	valueLabels: ["10", "14.2", "20", "-1", "25", "400"],
-	valueDescs: ["desc for 0", null, "desc for 20", null]
+	valueLabels: ["10", "14.2", "20", "-1", "25", "400"]
 };
 const controlInvalid = {
 	name: "test-checkboxset-invalid",
 	values: ["orange", "pear", "peach"],
-	valueLabels: ["orange", "pear", "peach"],
-	valueDescs: ["desc for 0", null, "desc for 20", null]
+	valueLabels: ["orange", "pear", "peach"]
 };
 propertyUtils.setControls(controller, [control, controlNull, controlNumber,
 	controlInvalid, controlUndefined]);

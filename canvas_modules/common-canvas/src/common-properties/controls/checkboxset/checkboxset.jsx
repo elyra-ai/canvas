@@ -86,13 +86,13 @@ class CheckboxsetControl extends React.Component {
 		}
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
-			tooltip = (
-				<span >{this.props.control.valueDescs[i]}</span>
-			);
 			const val = this.props.control.values[i];
 			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
 			let tooltipIcon = null;
 			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i]) && !this.props.tableControl) {
+				const tooltip = (
+					<span >{this.props.control.valueDescs[i]}</span>
+				);
 				tooltipIcon = (<Tooltip
 					id={`tooltip-${this.uuid}-${i}`}
 					tip={tooltip}
@@ -104,7 +104,6 @@ class CheckboxsetControl extends React.Component {
 					<Information16 disabled={disabled} className="properties-control-description-icon-info" />
 				</Tooltip>);
 			}
-			let tooltip = "";
 			const id = {
 				name: this.props.propertyId.name,
 				row: i

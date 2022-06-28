@@ -162,8 +162,8 @@ class RadiosetControl extends React.Component {
 	}
 
 	render() {
-		const disabledProps = this.props.state === STATES.DISABLED;
-
+		const disabled = this.props.state === STATES.DISABLED;
+		const hidden = this.props.state === STATES.HIDDEN;
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
@@ -172,25 +172,24 @@ class RadiosetControl extends React.Component {
 		let wasChecked = false;
 		const valueSet = this.props.controlOpts;
 		for (var i = 0; i < valueSet.values.length; i++) {
-			if (this.props.control.valueDescs && !(disabledProps) && !this.props.tableControl) {
-				tooltip = (
+			let tooltipIcon = null;
+			if (Array.isArray(this.props.control.valueDescs) && isEmpty(this.props.control.valueDescs[i] && !this.props.tableControl)) {
+				const tooltip = (
 					<span>{this.props.control.valueDescs[i]}</span>
 				);
+				tooltipIcon = (
+					<Tooltip
+						id={`tooltip-${this.uuid}-${i}`}
+						tip={tooltip}
+						direction="bottom"
+						className="properties-tooltips"
+						showToolTipOnClick
+						disable={hidden || disabled}
+					>
+						<Information16 disabled={disabled} className="properties-control-description-icon-info" />
+					</Tooltip>
+				);
 			}
-			const tooltipIcon = isEmpty(this.props.control.valueDescs[i]) ? null : (
-				<Tooltip
-					id={`tooltip-${this.uuid}-${i}`}
-					tip={tooltip}
-					link={this.props.control.description.link ? this.props.control.description.link : null}
-					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
-					direction="bottom"
-					className="properties-tooltips"
-					showToolTipOnClick
-				>
-					<Information16 disabled={disabledProps} className="properties-control-description-icon-info" />
-				</Tooltip>
-			);
-			let tooltip = "";
 			const checked = valueSet.values[i] === this.props.value;
 			// RadioButton only accepts values of type string || number
 			const val = (this.props.control.valueDef.propType === "boolean") ? String(valueSet.values[i]) : valueSet.values[i];
@@ -206,7 +205,7 @@ class RadiosetControl extends React.Component {
 					<RadioButton
 						key={i}
 						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={disabledProps || itemDisabled}
+						disabled={disabled || itemDisabled}
 						labelText={valueSet.valueLabels[i]}
 						value={val}
 						onChange={this.handleChange}
