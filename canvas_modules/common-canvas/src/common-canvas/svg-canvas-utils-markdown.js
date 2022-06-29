@@ -214,12 +214,15 @@ export default class SvgCanvasUtilsComments {
 		const selectedText = text.slice(start, end);
 		const endText = text.slice(end);
 
-		if (this.isTexAlreadyinLink(startText, endText)) {
-			newText = startText.slice(0, startText.length - 1) +
-				selectedText +
-				endText.slice(6);
+		if (startText.endsWith("[") && endText.startsWith("](url)")) {
+			newText = startText.slice(0, startText.length - 1) + selectedText + endText.slice(6);
 			newStart = start - 1;
 			newEnd = end - 1;
+
+		} else if (selectedText === "[](url)") {
+			newText = startText + endText;
+			newStart = start;
+			newEnd = newStart;
 
 		} else if (start === end) {
 			newText = startText + "[](url)" + endText;
@@ -233,10 +236,6 @@ export default class SvgCanvasUtilsComments {
 		}
 
 		return { newText, newStart, newEnd };
-	}
-
-	static isTexAlreadyinLink(startText, endText) {
-		return startText.endsWith("[") && endText.startsWith("](url)");
 	}
 
 	static processMultiLineCommand(text, start, end, action) {

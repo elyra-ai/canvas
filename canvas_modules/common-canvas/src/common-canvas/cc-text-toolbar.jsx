@@ -121,14 +121,4 @@ const mapStateToProps = (state, ownProps) => ({
 	actionHandler: state.texttoolbar.actionHandler
 });
 
-// const mapStateToProps = (state, ownProps) => {
-// 	console.log(state);
-// 	return {
-// 		isOpen: state.texttoolbar.isOpen,
-// 		pos_x: state.texttoolbar.pos_x,
-// 		pos_y: state.texttoolbar.pos_y,
-// 		actionHandler: state.texttoolbar.actionHandler
-// 	};
-// };
-
 export default connect(mapStateToProps)(injectIntl(CommonCanvasTextToolbar));

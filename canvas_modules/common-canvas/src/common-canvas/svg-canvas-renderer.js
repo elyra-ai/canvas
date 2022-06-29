@@ -28,7 +28,7 @@ const d3 = Object.assign({}, d3Drag, d3Ease, d3Selection, d3Fetch, d3Zoom);
 
 const markdownIt = require("markdown-it")({
 	html: false, // Don't allow HTML to be executed in comments.
-	linkify: false, // Don't convert URL like strings to be links.
+	linkify: false, // Don't convert strings, in URL format, to be links.
 	typographer: true
 });
 
@@ -5377,8 +5377,7 @@ export default class SVGCanvasRenderer {
 
 		this.addTextToTextArea(unescapeText(mdObj.newText), commentEntryElement);
 
-		commentEntryElement.selectionStart = mdObj.newStart;
-		commentEntryElement.selectionEnd = mdObj.newEnd;
+		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
 		commentEntryElement.focus();
 	}
 
