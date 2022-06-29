@@ -41,10 +41,12 @@
 			margin-bottom: 0;
 		}
 	}
+	.properties-radioset-panel-number{
+		display: flex;
+	}
 	.properties-radioset-panel {
 		margin-bottom: $spacing-02;
 		margin-right: $spacing-04;
-		display: flex;
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
 		}

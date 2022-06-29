@@ -905,6 +905,8 @@
     "withradioString.entropy.label": "Entropy",
     "withradioString.entropy.desc": "desc for Entropy",
     "withradioBoolean.true.label": "trueBoolean",
+		"radioInteger.2.desc":"desc for 2",
+		"radioInteger.4.desc":"desc for 4",
     "withradioBoolean.false.label": "falseBoolean",
     "radioBooleanWithLabels.true.label": "True Label",
     "radioBooleanWithLabels.false.label": "False Label",

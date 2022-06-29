@@ -201,7 +201,7 @@ class RadiosetControl extends React.Component {
 				row: i
 			};
 			buttons.push(
-				<div key={i} className="properties-radioset-panel">
+				<div key={i} className={`properties-radioset-panel ${Number(this.props.control.values[i]) && "properties-radioset-panel-number"}`}>
 					<RadioButton
 						key={i}
 						id={ControlUtils.getControlId(id, this.uuid)}
