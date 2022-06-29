@@ -71,6 +71,15 @@ const RIGHT_ARROW_KEY = 39;
 const DOWN_ARROW_KEY = 40;
 const DELETE_KEY = 46;
 const A_KEY = 65;
+const B_KEY = 66;
+const E_KEY = 69;
+const I_KEY = 73;
+const K_KEY = 75;
+const X_KEY = 88;
+const LAB_KEY = 190;
+const SEVEN_KEY = 55;
+const EIGHT_KEY = 56;
+
 
 const SCROLL_PADDING = 12;
 
@@ -5318,27 +5327,58 @@ export default class SVGCanvasRenderer {
 			height: d.height,
 			className: "d3-comment-entry",
 			parentDomObj: parentDomObj,
+			keyboardInputCallback: this.commentKeyboardHandler.bind(this),
 			autoSizeCallback: this.autoSizeComment.bind(this),
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		});
 		const pos = this.getCommentToolbarPos(d);
-		this.canvasController.openTextToolbar(pos.x, pos.y, this.textToolbarActionHandler.bind(this));
+		this.canvasController.openTextToolbar(pos.x, pos.y, this.markdownActionHandler.bind(this));
+	}
+
+	// Handles markdown actions initiated through the keyboard.
+	commentKeyboardHandler(d3Event) {
+		const action = this.getMarkdownAction(d3Event);
+		if (action) {
+			this.markdownActionHandler(action);
+		}
+	}
+
+	// Applies a markdown action to the comment text being edited using
+	// the same commands as the toolbar.
+	getMarkdownAction(d3Event) {
+		if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
+			switch (d3Event.keyCode) {
+			case B_KEY: return "bold";
+			case I_KEY: return "italics";
+			case X_KEY: return d3Event.shiftKey ? "strikethrough" : null;
+			case LAB_KEY: return d3Event.shiftKey ? "quote" : null;
+			case SEVEN_KEY: return d3Event.shiftKey ? "numberedList" : null;
+			case EIGHT_KEY: return d3Event.shiftKey ? "bulletedList" : null;
+			case E_KEY: return "code";
+			case K_KEY: return "link";
+			default:
+			}
+		}
+
+		return null;
 	}
 
 	// Handles any actions requested on the comment text to add markdown
 	// characters to the text.
-	textToolbarActionHandler(action) {
+	markdownActionHandler(action) {
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
 		const start = commentEntryElement.selectionStart;
 		const end = commentEntryElement.selectionEnd;
-		let text = commentEntryElement.value;
+		const text = commentEntryElement.value;
 
-		text = SvgCanvasMarkdown.addMarkdownCharacters(text, start, end, action);
+		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
 
-		text = unescapeText(text);
-		this.addTextToTextArea(text, commentEntryElement);
+		this.addTextToTextArea(unescapeText(mdObj.newText), commentEntryElement);
+
+		commentEntryElement.selectionStart = mdObj.newStart;
+		commentEntryElement.selectionEnd = mdObj.newEnd;
 		commentEntryElement.focus();
 	}
 
@@ -5524,6 +5564,11 @@ export default class SVGCanvasRenderer {
 						this.value.length >= data.maxCharacters &&
 						!that.textAreaAllowedKeys(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				}
+				// Call any specific keyboard handler for the type of
+				// text being edited.
+				if (data.keyboardInputCallback) {
+					data.keyboardInputCallback(d3Event);
 				}
 			})
 			.on("keyup", function(d3Event) {

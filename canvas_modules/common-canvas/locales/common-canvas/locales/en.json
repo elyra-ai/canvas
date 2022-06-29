@@ -35,5 +35,14 @@
   "node.editMenu": "Edit",
   "node.disconnectNode": "Disconnect",
   "node.saveToPalette": "Save to palette",
-  "link.deleteLink": "Delete"
+  "link.deleteLink": "Delete",
+  "texttoolbar.headerAction": "Header",
+  "texttoolbar.boldAction": "Bold",
+  "texttoolbar.italicsAction": "Italics",
+  "texttoolbar.strikethroughAction": "Strikethrough",
+  "texttoolbar.codeAction": "Code",
+  "texttoolbar.linkAction": "Link",
+  "texttoolbar.quoteAction": "Quote",
+  "texttoolbar.bulletedListAction": "Bulleted List",
+  "texttoolbar.numberedListAction": "Numbered List"
 }

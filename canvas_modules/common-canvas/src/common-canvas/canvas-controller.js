@@ -545,7 +545,7 @@ export default class CanvasController {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
 
-	// Returns true if all the selected objcts are links.
+	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		return this.objectModel.areAllSelectedObjectsLinks();
 	}

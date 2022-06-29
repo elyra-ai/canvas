@@ -21,8 +21,10 @@ import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
+import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { Code32, ListBulleted32, ListNumbered32, TextBold32, TextItalic32, TextStrikethrough32 } from "@carbon/icons-react";
+import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
+	TextBold32, TextItalic32, TextSmallCaps32, TextStrikethrough32 } from "@carbon/icons-react";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
@@ -37,17 +39,43 @@ class CommonCanvasTextToolbar extends React.Component {
 		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessage }, substituteObj);
 	}
 
+	getJsxLabel(key, shortcutSuffix) {
+		const osKey = CanvasUtils.isMacintosh() ? "⌘" : "Ctrl";
+		const shortCut = shortcutSuffix ? (osKey + " + " + shortcutSuffix) : null;
+		return (
+			<div>
+				{this.getLabel(key)}<br />{shortCut}
+			</div>
+		);
+	}
+
 	getTextToolbar() {
+		const headerLabel = this.getJsxLabel("texttoolbar.headerAction");
+		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
+		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
+		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + k");
+		const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
+		const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
+		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
+		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
+		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
+
 		return {
 			leftBar: [
-				{ action: "bold", label: "Bold", enable: true, iconEnabled: (<TextBold32 />) },
-				{ action: "italics", label: "Italics", enable: true, iconEnabled: (<TextItalic32 />) },
-				{ action: "strikethrough", label: "Strikethrough", enable: true, iconEnabled: (<TextStrikethrough32 />) },
+				{ action: "header", label: headerLabel, enable: true, iconEnabled: (<TextSmallCaps32 />) },
 				{ divider: true },
-				{ action: "code", label: "Code", enable: true, iconEnabled: (<Code32 />) },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough32 />) },
 				{ divider: true },
-				{ action: "bulletedList", label: "Bulleted List", enable: true, iconEnabled: (<ListBulleted32 />) },
-				{ action: "numberedList", label: "Numbered List", enable: true, iconEnabled: (<ListNumbered32 />) }
+				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code32 />) },
+				{ divider: true },
+				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link32 />) },
+				{ divider: true },
+				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore32 />) },
+				{ divider: true },
+				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered32 />) },
+				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted32 />) }
 			]
 		};
 	}
