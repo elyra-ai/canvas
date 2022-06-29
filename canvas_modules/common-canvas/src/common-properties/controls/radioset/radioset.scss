@@ -27,6 +27,9 @@
 		align-items: center;
 		cursor: pointer;
 	}
+	&[data-id="properties-radioInteger"] .properties-radioset-panel {
+		display: flex;
+	}
 }
 
 .properties-radio-button-group {
@@ -40,9 +43,6 @@
 			align-items: center;
 			margin-bottom: 0;
 		}
-	}
-	.properties-radioset-panel-number{
-		display: flex;
 	}
 	.properties-radioset-panel {
 		margin-bottom: $spacing-02;
