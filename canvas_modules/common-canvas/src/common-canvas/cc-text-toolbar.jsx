@@ -24,7 +24,7 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
 import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
-	TextBold32, TextItalic32, TextSmallCaps32, TextStrikethrough32 } from "@carbon/icons-react";
+	TextBold32, TextItalic32, TextScale32, TextStrikethrough32 } from "@carbon/icons-react";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
@@ -53,7 +53,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		const headerLabel = this.getJsxLabel("texttoolbar.headerAction");
 		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
 		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
-		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + k");
+		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
 		const codeLabel = this.getJsxLabel("texttoolbar.codeAction", "e");
 		const linkLabel = this.getJsxLabel("texttoolbar.linkAction", "k");
 		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
@@ -62,7 +62,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		return {
 			leftBar: [
-				{ action: "header", label: headerLabel, enable: true, iconEnabled: (<TextSmallCaps32 />) },
+				{ action: "header", label: headerLabel, enable: true, iconEnabled: (<TextScale32 />) },
 				{ divider: true },
 				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
 				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },

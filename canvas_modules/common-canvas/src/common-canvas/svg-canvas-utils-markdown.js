@@ -69,6 +69,10 @@ export default class SvgCanvasUtilsComments {
 			mdObj = this.processMultiLineCommand(text, start, end, action);
 			break;
 		}
+		case "return": {
+			mdObj = this.processReturnCommand(text, start, end, inStart, inEnd);
+			break;
+		}
 		default: {
 			break;
 		}
@@ -251,13 +255,7 @@ export default class SvgCanvasUtilsComments {
 		const selectedText = text.slice(start, end);
 
 		const lines = selectedText.split("\n");
-		let isMultiLineItem = true;
-		for (let i = 0; i < lines.length; i++) {
-			if (!this.isMultiLineItem(lines[i], action)) {
-				isMultiLineItem = false;
-			}
-		}
-		return isMultiLineItem;
+		return lines.every((line) => this.isMultiLineItem(line, action));
 	}
 
 	static isMultiLineItem(text, action) {
@@ -267,14 +265,18 @@ export default class SvgCanvasUtilsComments {
 		case "bulletedList":
 			return text.startsWith("* ");
 		case "numberedList": {
-			const firstSpace = text.indexOf(". ");
-			const firstText = text.slice(0, firstSpace);
-			const number = Number(firstText);
+			const number = this.getPrefixNumber(text);
 			return (!isNaN(number) && number > 0);
 		}
 		default:
 		}
 		return false;
+	}
+
+	static getPrefixNumber(text) {
+		const firstSpace = text.indexOf(". ");
+		const firstText = text.slice(0, firstSpace);
+		return Number(firstText);
 	}
 
 	static removeMultiLineMarkdown(text, inStart, inEnd, action) {
@@ -290,14 +292,14 @@ export default class SvgCanvasUtilsComments {
 		let newText = startText;
 
 		const lines = selectedText.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const newLine = this.removeListPrefix(lines[i], action);
-			newEnd -= (lines[i].length - newLine.length);
+		lines.forEach((line, i) => {
+			const newLine = this.removeListPrefix(line, action);
+			newEnd -= (line.length - newLine.length);
 			newText += newLine;
 			if (i < lines.length - 1) {
 				newText += "\n";
 			}
-		}
+		});
 		newText += endText;
 
 		return { newText, newStart, newEnd };
@@ -339,8 +341,8 @@ export default class SvgCanvasUtilsComments {
 		} else {
 			const lines = selectedText.split("\n");
 			lines.forEach((line, i) => {
-				const newLine = this.getListPrefix(action, i + 1, lines[i]);
-				newEnd += (newLine.length - lines[i].length);
+				const newLine = this.getListPrefix(action, i + 1, line);
+				newEnd += (newLine.length - line.length);
 				newText += newLine;
 
 				if (i === lines.length - 1) {
@@ -384,5 +386,68 @@ export default class SvgCanvasUtilsComments {
 			sucEnd++;
 		}
 		return sucEnd;
+	}
+
+	static processReturnCommand(text, inStart, inEnd, originalStart, originalEnd) {
+		const start = this.findPrecedingNewLine(text, inStart);
+		const end = this.findSuceedingNewLine(text, inEnd);
+
+		const startText = text.slice(0, start);
+		const selectedText = text.slice(start, end);
+		const endText = text.slice(end);
+
+		// If cursor is at the beginning of the line we just let it insert the
+		// newline by default, if not we insert a new multi-line element.
+		if (!this.isCursorAtBeginningOfLine(start, originalStart, originalEnd)) {
+			if (this.isMultiLineItem(selectedText, "quote")) {
+				return this.insertMultiLineItem(">", startText, selectedText, endText, end);
+
+			} else if (this.isMultiLineItem(selectedText, "bulletedList")) {
+				return this.insertMultiLineItem("*", startText, selectedText, endText, end);
+
+			} else if (this.isMultiLineItem(selectedText, "numberedList")) {
+				const number = this.getPrefixNumber(selectedText) + 1; // Increment for next multi-line item
+				const newEndText = this.renumberEndText(endText, number);
+				return this.insertMultiLineItem(number + ".", startText, selectedText, newEndText, end);
+			}
+		}
+
+		return null; // Return null is there is nothing to do so key processing is ignored.
+	}
+
+	static isCursorAtBeginningOfLine(start, originalStart, originalEnd) {
+		return (originalStart === originalEnd && originalStart === start);
+	}
+
+	static insertMultiLineItem(char, startText, selectedText, endText, end) {
+		const newText = startText + selectedText + "\n" + char + " " + endText;
+		const newStart = end + 2 + char.length; // Add 2 for newline and space plus length of the char.
+		const newEnd = newStart;
+		return { newText, newStart, newEnd };
+	}
+
+	static renumberEndText(text, startIndex) {
+		const lines = text.split("\n");
+		let newText = "";
+		let finished = false;
+
+		lines.forEach((line, i) => {
+			if (this.isMultiLineItem(line, "numberedList") && finished === false) {
+				newText += this.renumberLine(line, startIndex + i);
+			} else {
+				newText += line;
+				if (i > 0) {
+					finished = true; // As soon as we hit a line without a number we finished renumbering
+				}
+			}
+
+			newText += "\n";
+		});
+		return newText;
+	}
+
+	static renumberLine(text, number) {
+		const firstSpace = text.indexOf(". ");
+		return number + ". " + text.slice(firstSpace + 2);
 	}
 }

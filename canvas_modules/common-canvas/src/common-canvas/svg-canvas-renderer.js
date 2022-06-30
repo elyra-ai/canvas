@@ -5340,7 +5340,7 @@ export default class SVGCanvasRenderer {
 	commentKeyboardHandler(d3Event) {
 		const action = this.getMarkdownAction(d3Event);
 		if (action) {
-			this.markdownActionHandler(action);
+			this.markdownActionHandler(action, d3Event);
 		}
 	}
 
@@ -5359,6 +5359,8 @@ export default class SVGCanvasRenderer {
 			case K_KEY: return "link";
 			default:
 			}
+		} else if (d3Event.keyCode === RETURN_KEY) {
+			return "return";
 		}
 
 		return null;
@@ -5366,7 +5368,7 @@ export default class SVGCanvasRenderer {
 
 	// Handles any actions requested on the comment text to add markdown
 	// characters to the text.
-	markdownActionHandler(action) {
+	markdownActionHandler(action, d3Event) {
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
 		const start = commentEntryElement.selectionStart;
@@ -5374,11 +5376,15 @@ export default class SVGCanvasRenderer {
 		const text = commentEntryElement.value;
 
 		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
+		if (mdObj) {
+			if (d3Event) { // d3Event is only available on keyboard initiated actions.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			}
+			this.addTextToTextArea(unescapeText(mdObj.newText), commentEntryElement);
 
-		this.addTextToTextArea(unescapeText(mdObj.newText), commentEntryElement);
-
-		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
-		commentEntryElement.focus();
+			commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
+			commentEntryElement.focus();
+		}
 	}
 
 	// Replaces the text in the currently displayed textarea with the text
