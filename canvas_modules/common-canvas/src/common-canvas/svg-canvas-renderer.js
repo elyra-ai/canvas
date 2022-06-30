@@ -5160,7 +5160,10 @@ export default class SVGCanvasRenderer {
 			.attr("height", (c) => c.height)
 			.select("div")
 			.attr("style", (c) => this.getNodeLabelStyle(c, "default"))
-			.html((c) => markdownIt.render(c.content));
+			.html((c) => (
+				this.config.enableMarkdownInComments
+					? markdownIt.render(c.content)
+					: escapeText(c.content)));
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
@@ -5327,13 +5330,15 @@ export default class SVGCanvasRenderer {
 			height: d.height,
 			className: "d3-comment-entry",
 			parentDomObj: parentDomObj,
-			keyboardInputCallback: this.commentKeyboardHandler.bind(this),
+			keyboardInputCallback: this.config.enableMarkdownInComments ? this.commentKeyboardHandler.bind(this) : null,
 			autoSizeCallback: this.autoSizeComment.bind(this),
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		});
 		const pos = this.getCommentToolbarPos(d);
-		this.canvasController.openTextToolbar(pos.x, pos.y, this.markdownActionHandler.bind(this));
+		if (this.config.enableMarkdownInComments) {
+			this.canvasController.openTextToolbar(pos.x, pos.y, this.markdownActionHandler.bind(this));
+		}
 	}
 
 	// Handles markdown actions initiated through the keyboard.
