@@ -1970,11 +1970,13 @@ export default class SVGCanvasRenderer {
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	zoomCommentToolbar() {
-		// If a node label or text decoration is being edited com will be undefined.
-		const com = this.activePipeline.getComment(this.editingTextId);
-		if (com) {
-			const pos = this.getCommentToolbarPos(com);
-			this.canvasController.moveTextToolbar(pos.x, pos.y);
+		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
+			// If a node label or text decoration is being edited com will be undefined.
+			const com = this.activePipeline.getComment(this.editingTextId);
+			if (com) {
+				const pos = this.getCommentToolbarPos(com);
+				this.canvasController.moveTextToolbar(pos.x, pos.y);
+			}
 		}
 	}
 
@@ -5335,8 +5337,8 @@ export default class SVGCanvasRenderer {
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
 		});
-		const pos = this.getCommentToolbarPos(d);
-		if (this.config.enableMarkdownInComments) {
+		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
+			const pos = this.getCommentToolbarPos(d);
 			this.canvasController.openTextToolbar(pos.x, pos.y, this.markdownActionHandler.bind(this));
 		}
 	}
