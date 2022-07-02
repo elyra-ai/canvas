@@ -177,7 +177,7 @@ class ToolTip extends React.Component {
 				}
 			} else if (tooltipDirection === "left") {
 				// For long tooltips, tooltip.offsetWidth is updated after setting tooltip.style.left. Ensure tooltip doesn't overlap tooltipTrigger element.
-				while ((tooltip.offsetLeft + tooltip.offsetWidth + pointerLayout.width) > triggerLayout.left) {
+				while ((tooltip.offsetLeft + tooltip.offsetWidth + pointerLayout.width) > Math.round(triggerLayout.left)) {
 					tooltip.style.left = this.getStyleValue(triggerLayout.left - tooltip.offsetWidth - pointerLayout.width);
 				}
 			} else if (tooltipDirection === "right") {
