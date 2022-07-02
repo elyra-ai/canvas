@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 	afterEach(() => {
 		wrapper.unmount();
 	});
-
 
 	it("should NOT render <Toolbar> inside <CommonCanvasTextToolbar/> when closed", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);
@@ -75,7 +74,6 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 		expect(wrapper.find(".text-toolbar").get(0).props.style.left).to.equal(150);
 		expect(wrapper.find(".text-toolbar").get(0).props.style.top).to.equal(250);
 	});
-
 
 	it("should NOT render <Toolbar/> after it is closed", () => {
 		wrapper = createIntlCommonCanvasTextToolbar({}, canvasController);

@@ -75,3 +75,22 @@ Cypress.Commands.add("useShiftKey", () => "{shift}");
 // Press 'backspace' key on keyboard
 Cypress.Commands.add("useBackspaceKey", () => "{backspace}");
 
+/* ------------------------------------------------------------------ */
+/* Text Toolbar Keyboard shortcuts                                    */
+/* ------------------------------------------------------------------ */
+
+Cypress.Commands.add("shortcutKeysStrikethrough", () => {
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.useShiftKey().then((shiftKey) => {
+			cy.get("body").type(selectedKey + shiftKey + "{x}");
+		});
+	});
+});
+
+Cypress.Commands.add("shortcutKeysBulletedList", () => {
+	cy.useCtrlOrCmdKey().then((selectedKey) => {
+		cy.useShiftKey().then((shiftKey) => {
+			cy.get("body").type(selectedKey + shiftKey + "{8}");
+		});
+	});
+});

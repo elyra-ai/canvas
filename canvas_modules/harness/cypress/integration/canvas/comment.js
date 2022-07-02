@@ -135,6 +135,114 @@ describe("Test creating comment from toolbar and editing them within supernodes"
 	});
 });
 
+describe("Test edting a comment using the text toolbar to add markdown syntax", function() {
+	beforeEach(() => {
+		cy.visit("/");
+	});
+
+	it("Test adding bold markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some bold text!");
+
+		cy.selectTextInComment("bold", "Some bold text!");
+		cy.clickTextToolbarOption("bold");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("Some **bold** text!", "<p>Some <strong>bold</strong> text!</p>\n");
+	});
+
+	it("Test adding italics markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some italics text!");
+
+		cy.selectTextInComment("italics", "Some italics text!");
+		cy.clickTextToolbarOption("italics");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("Some _italics_ text!", "<p>Some <em>italics</em> text!</p>\n");
+	});
+
+	it("Test adding strikethrough markdown using a keyboard shortcut.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some strikethrough text!");
+
+		cy.selectTextInComment("strikethrough", "Some strikethrough text!");
+		cy.shortcutKeysStrikethrough();
+
+		cy.clickCanvasAt(5, 5);
+
+		cy.verifyCommentContainsHTML("Some ~~strikethrough~~ text!", "<p>Some <s>strikethrough</s> text!</p>\n");
+	});
+
+	it("Test adding code markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some code text!");
+
+		cy.selectTextInComment("code", "Some code text!");
+		cy.clickTextToolbarOption("code");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("Some `code` text!", "<p>Some <code>code</code> text!</p>\n");
+	});
+
+	it("Test adding link markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some link text!");
+
+		cy.selectTextInComment("link", "Some link text!");
+		cy.clickTextToolbarOption("link");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("Some [link](url) text!", "<p>Some <a href=\"url\">link</a> text!</p>\n");
+	});
+
+	it("Test adding quote markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some quote text!");
+
+		cy.selectTextInComment("quote", "Some quote text!");
+		cy.clickTextToolbarOption("quote");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("> Some quote text!\n", "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n");
+	});
+
+	it("Test adding numbered list markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some numbered list text!");
+
+		cy.selectTextInComment("numberedList", "Some numbered list text!");
+		cy.clickTextToolbarOption("numberedList");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("1. Some numbered list text!\n",
+			"<ol>\n<li>Some numbered list text!</li>\n</ol>\n");
+	});
+
+	it("Test adding bulleted list markdown.", function() {
+		cy.clickToolbarAddComment();
+		cy.verifyNumberOfComments(1);
+		cy.editTextInComment("", "Some bulleted list text!");
+
+		cy.selectTextInComment("bulletedList", "Some bulleted list text!");
+		cy.shortcutKeysBulletedList();
+		// cy.clickTextToolbarOption("bulletedList");
+
+		cy.clickCanvasAt(5, 5);
+		cy.verifyCommentContainsHTML("* Some bulleted list text!\n",
+			"<ul>\n<li>Some bulleted list text!</li>\n</ul>\n");
+	});
+
+});
+
+
 describe("Test coloring comments", function() {
 	beforeEach(() => {
 		cy.visit("/");
