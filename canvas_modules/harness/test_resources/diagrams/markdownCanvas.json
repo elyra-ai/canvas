@@ -13,8 +13,8 @@
           "comments": [
             {
               "id": "bca1e7f9-ec24-435d-b79c-0a552d760720",
-              "x_pos": -6.576681137084961,
-              "y_pos": 46.15458679199219,
+              "x_pos": 27.42331886291504,
+              "y_pos": 41.15458679199219,
               "width": 243.65543174743652,
               "height": 278.9369812011719,
               "class_name": "d3-comment-rect",
@@ -23,27 +23,27 @@
             },
             {
               "id": "9db7b220-d56b-46c8-91e2-64bfb84f801b",
-              "x_pos": 549.5804443359375,
-              "y_pos": 52.998687744140625,
+              "x_pos": 583.5804443359375,
+              "y_pos": 47.998687744140625,
               "width": 300.2222900390625,
               "height": 682,
               "class_name": "d3-comment-rect",
-              "content": "### Bold text\nSome **bold** text with double asterisks\nSome __bold__ text with double underscores\n\n### Italics text\nSome *italics* text with single asterisks\nSome _italics_ text with underscores\n\n### Bold and Italics text\nSome ***bold and italics*** text with triple underscores\n\n### Strikethrough text\nSome ~~strikethrough~~ text with double tildes\n\n### Inline code text\nSome `inline code` text with backtick/backquote\n\n### A link\nA link:  [LCFC](http://www.lcfc.com)\n\n### A code block \nCode with triple backticks/backquotes\n\n```\nconst config = {\n   enableMarkupInComments: true\n};\n```\n\n### Typographic replacements\n(c) (C) (r) (R) (tm) (TM) (p) (P) +-",
+              "content": "### Bold text\nSome **bold** text with double asterisks\nSome __bold__ text with double underscores\n\n### Italics text\nSome *italics* text with single asterisks\nSome _italics_ text with underscores\n\n### Bold and Italics text\nSome ***bold and italics*** text with triple underscores\n\n### Strikethrough text\nSome ~~strikethrough~~ text with double tildes\n\n### Inline code text\nSome `inline code` text with backtick/backquote\n\n### A link\nA link:  [LCFC](http://www.lcfc.com)\n\n### A code block \nCode with triple backticks/backquotes\n\n```\nconst config = {\n   enableMarkupInComments: true\n};\n```\n\n### Typographic replacements\n(c) (C) (r) (R) (tm) (TM) +-",
               "associated_id_refs": []
             },
             {
               "id": "b8bb10b4-b643-4e7b-bc08-f0c39d939c4b",
-              "x_pos": 878.9190673828125,
-              "y_pos": 52.322113037109375,
-              "width": 489.4132080078125,
-              "height": 468,
+              "x_pos": 912.9190673828125,
+              "y_pos": 47.322113037109375,
+              "width": 431.1923828125,
+              "height": 379.28912353515625,
               "content": "### Block Quotes\n\n#### Single blockquote\n\nPreceding text\n> Blockquote text\n\nSucceeding text\n\n-------\n\n#### Nested blockquotes\n\n> Blockquotes can also be nested...\n>> ...by using additional greater-than signs right next to each other...\n> > > ...or with spaces between arrows.\n\n\n\n\n",
               "associated_id_refs": []
             },
             {
               "id": "ee6f7895-ccef-4189-9940-398c41c07c38",
-              "x_pos": -9.033828735351562,
-              "y_pos": 514.3447265625,
+              "x_pos": 24.966171264648438,
+              "y_pos": 509.3447265625,
               "width": 242.50255393981934,
               "height": 281.0437316894531,
               "class_name": "d3-comment-rect",
@@ -52,8 +52,8 @@
             },
             {
               "id": "e23180de-dc4f-49c1-93ff-ba344dee7853",
-              "x_pos": -6.3930511474609375,
-              "y_pos": 341.63519287109375,
+              "x_pos": 27.606948852539062,
+              "y_pos": 336.63519287109375,
               "width": 242,
               "height": 152,
               "content": "Headings using repeated equals\n\nHeading One\n========\n\nHeading using repeated dashes\n\nHeading Two\n---------",
@@ -61,8 +61,8 @@
             },
             {
               "id": "524e502f-bd1e-4b06-9e86-8b404e18213a",
-              "x_pos": 268.3590045134859,
-              "y_pos": 553.5443123036525,
+              "x_pos": 302.3590045134859,
+              "y_pos": 580.9782112294338,
               "width": 241.98770141601562,
               "height": 181,
               "content": "## Dividing lines\n\nAll dashes\n\n--------\n\nAll underscores\n______\n",
@@ -70,8 +70,8 @@
             },
             {
               "id": "925f0e6f-38a3-4818-be8e-fe174ad78cd5",
-              "x_pos": 1420.67919921875,
-              "y_pos": 368.1352844238281,
+              "x_pos": 1389.93798828125,
+              "y_pos": 362.6741943359375,
               "width": 357,
               "height": 316,
               "content": "### GIF file embedded\n\nSpaceX Rockets Landing from gify.com\n\n![Rocket Landing](https://media.giphy.com/media/3ohs4gSs3V0Q7qOtKU/giphy.gif)",
@@ -79,8 +79,8 @@
             },
             {
               "id": "00aa24b8-c2b4-4800-a5a9-5b822f7f204c",
-              "x_pos": 1403.880615234375,
-              "y_pos": 62.711585998535156,
+              "x_pos": 1381.3721923828125,
+              "y_pos": 54.286827087402344,
               "width": 362,
               "height": 274,
               "content": "## Image (jpg) file embedded\n\nThe Green - Mountsorrel - from free-images.com\n\n![The green - Mountsorrel](http://free-images.com/or/c6bf/mountsorrel_village_green_2006.jpg)",
@@ -88,21 +88,21 @@
             },
             {
               "id": "8bc5e102-cf4e-4f81-a174-d51b40c2809e",
-              "x_pos": 265.72172313164435,
-              "y_pos": 47.11345072811703,
+              "x_pos": 299.72172313164435,
+              "y_pos": 42.11345072811703,
               "width": 247.87200927734375,
-              "height": 497.3991394042969,
+              "height": 516.5646667480469,
               "class_name": "d3-comment-rect bkg-col-white-0",
               "content": "## Lists\n\n1. Defenders\n    1. Fullbacks\n        1. Castagne\n        2. Riccardo\n        3. Justin\n        4. Thomas\n    1. Centrebacks\n        1. Evans\n        1. Fofana\n1. Goalkeeper - Schmeichel\n1. Midfield\n    - Central\n        * Tielemans\n        * Dewsbury-Hall\n        * Maddison\n    - Wingers\n        - Albrigton\n        - Lookman\n        - Barnes\n1. Forward - Vardy\n\nManagers\n\n1. ***Rodgers*** **\n1. Puel\n1. Shakespeare\n1. *Ranieri* ***\n1. *Pearson* ***\n\n** Won FA Cup & Community Shield\n*** Won Premier League\n**** Won promotion to Premier League\n\n\n",
               "associated_id_refs": []
             },
             {
               "id": "aff2d2cc-70dc-4a2f-8538-84f6525ac039",
-              "x_pos": 882.6495971679688,
-              "y_pos": 549.5282592773438,
-              "width": 491.7493896484375,
+              "x_pos": 914.5120239257812,
+              "y_pos": 457.9549560546875,
+              "width": 433.528564453125,
               "height": 430.82647705078125,
-              "content": "## Tables\n\n##### Regular columns\n\n| Player | Description |\n| ------ | ----------- |\n| Vardy   |Legend. World-class striker. Plays on the shoulder. Fast in behind. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n\n##### Right aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| Vardy   | Legend. World-class striker. Plays on the shoulder. Fast in behind. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n",
+              "content": "## Tables\n\n##### Regular columns\n\n| Player | Description |\n| ------ | ----------- |\n| Vardy   |Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n\n##### Right aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| Vardy   | Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n",
               "associated_id_refs": []
             }
           ]
