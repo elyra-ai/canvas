@@ -78,19 +78,42 @@ Cypress.Commands.add("useBackspaceKey", () => "{backspace}");
 /* ------------------------------------------------------------------ */
 /* Text Toolbar Keyboard shortcuts                                    */
 /* ------------------------------------------------------------------ */
-
-Cypress.Commands.add("shortcutKeysStrikethrough", () => {
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.useShiftKey().then((shiftKey) => {
-			cy.get("body").type(selectedKey + shiftKey + "{x}");
-		});
-	});
-});
-
-Cypress.Commands.add("shortcutKeysBulletedList", () => {
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.useShiftKey().then((shiftKey) => {
-			cy.get("body").type(selectedKey + shiftKey + "{8}");
-		});
+Cypress.Commands.add("shortcutKeysMarkdown", (action) => {
+	cy.useCtrlOrCmdKey().then((cmndCtrlKey) => {
+		switch (action) {
+		case "bold": {
+			cy.get("body").type(cmndCtrlKey + "{b}");
+			break;
+		}
+		case "italics": {
+			cy.get("body").type(cmndCtrlKey + "{i}");
+			break;
+		}
+		case "strikethrough": {
+			cy.get("body").type(cmndCtrlKey + "{shift}{x}");
+			break;
+		}
+		case "code": {
+			cy.get("body").type(cmndCtrlKey + "{e}");
+			break;
+		}
+		case "quote": {
+			cy.get("body").type(cmndCtrlKey + "{shift}{>}");
+			break;
+		}
+		case "link": {
+			cy.get("body").type(cmndCtrlKey + "{k}");
+			break;
+		}
+		case "numberedList": {
+			cy.get("body").type(cmndCtrlKey + "{shift}{7}");
+			break;
+		}
+		case "bulletedList": {
+			cy.get("body").type(cmndCtrlKey + "{shift}{8}");
+			break;
+		}
+		default:
+		}
 	});
 });
