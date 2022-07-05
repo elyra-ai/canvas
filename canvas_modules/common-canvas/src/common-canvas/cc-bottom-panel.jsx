@@ -23,10 +23,6 @@ class CanvasBottomPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			panelHeight: 393
-		};
-
 		this.logger = new Logger("CC-Bottom-Panel");
 
 		this.onMouseUp = this.onMouseUp.bind(this);
@@ -38,7 +34,7 @@ class CanvasBottomPanel extends React.Component {
 		if (e.button === 0) {
 			document.addEventListener("mousemove", this.onMouseMoveY, true);
 			document.addEventListener("mouseup", this.onMouseUp, true);
-			this.poseY = e.clientY;
+			this.posY = e.clientY;
 		}
 	}
 
@@ -49,11 +45,9 @@ class CanvasBottomPanel extends React.Component {
 
 	onMouseMoveY(e) {
 		if (e.clientY) {
-			const diff = e.clientY - this.poseY;
-			this.setState({
-				panelHeight: this.state.panelHeight - diff
-			});
-			this.poseY = e.clientY;
+			const diff = e.clientY - this.posY;
+			this.props.canvasController.setBottomPanelHeight(this.props.panelHeight - diff);
+			this.posY = e.clientY;
 		}
 	}
 	render() {
@@ -66,9 +60,10 @@ class CanvasBottomPanel extends React.Component {
 				? canvasContainer.getBoundingClientRect().height
 				: 0;
 			const marginTop = 60;
-			const height = this.state.panelHeight >= (rectHeight - marginTop)
-				? (rectHeight - marginTop)
-				: this.state.panelHeight;
+			const minHeight = 75;
+			const maxHeight = rectHeight - marginTop;
+			let height = Math.max(this.props.panelHeight, minHeight);
+			height = Math.min(height, maxHeight);
 
 			bottomPanel = (
 				<div className="bottom-panel" style={{ height }} >
@@ -85,13 +80,18 @@ class CanvasBottomPanel extends React.Component {
 }
 
 CanvasBottomPanel.propTypes = {
+	// Provided by CommonCanvas
+	canvasController: PropTypes.object,
+
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,
-	bottomPanelContent: PropTypes.object
+	bottomPanelContent: PropTypes.object,
+	panelHeight: PropTypes.number
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	bottomPanelIsOpen: state.bottompanel.isOpen,
-	bottomPanelContent: state.bottompanel.content
+	bottomPanelContent: state.bottompanel.content,
+	panelHeight: state.bottompanel.panelHeight
 });
 export default connect(mapStateToProps)(CanvasBottomPanel);

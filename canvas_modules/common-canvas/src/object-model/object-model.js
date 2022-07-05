@@ -1442,6 +1442,10 @@ export default class ObjectModel {
 		return this.store.isBottomPanelOpen();
 	}
 
+	setBottomPanelHeight(ht) {
+		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: { panelHeight: ht } } });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Clone methods
 	// ---------------------------------------------------------------------------

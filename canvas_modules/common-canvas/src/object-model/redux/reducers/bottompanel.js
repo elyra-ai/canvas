@@ -18,9 +18,7 @@ export default (state = {}, action) => {
 	switch (action.type) {
 	case "SET_BOTTOM_PANEL_CONFIG": {
 		if (action.data.config) {
-			return {
-				content: action.data.config.content,
-				isOpen: action.data.config.isOpen };
+			return Object.assign({}, state, action.data.config);
 		}
 		return state;
 	}
