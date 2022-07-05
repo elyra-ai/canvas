@@ -97,7 +97,7 @@ class CheckboxsetControl extends React.Component {
 					id={`tooltip-${this.uuid}-${i}`}
 					tip={tooltip}
 					direction="bottom"
-					className="properties-tooltips properties-icon-tooltip"
+					className="properties-tooltips"
 					showToolTipOnClick
 					disable={hidden || disabled}
 				>
@@ -109,7 +109,7 @@ class CheckboxsetControl extends React.Component {
 				row: i
 			};
 			const checked = (controlValue.indexOf(val) >= 0);
-			checkboxes.push(<div className="checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
+			checkboxes.push(<div className="properties-checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
 				<Checkbox
 					disabled={disabled}
 					id={ControlUtils.getControlId(id, this.uuid)}
