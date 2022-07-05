@@ -19,6 +19,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Logger from "../logging/canvas-logger.js";
 
+const MARGIN_TOP = 100;
+const MIN_HEIGHT = 75;
+
 class CanvasBottomPanel extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,6 +38,9 @@ class CanvasBottomPanel extends React.Component {
 			document.addEventListener("mousemove", this.onMouseMoveY, true);
 			document.addEventListener("mouseup", this.onMouseUp, true);
 			this.posY = e.clientY;
+			// Prevent panel contents being dragged in the test harness (which can
+			// happen even though draggable is false for the contents!)
+			e.preventDefault();
 		}
 	}
 
@@ -46,27 +52,36 @@ class CanvasBottomPanel extends React.Component {
 	onMouseMoveY(e) {
 		if (e.clientY) {
 			const diff = e.clientY - this.posY;
-			this.props.canvasController.setBottomPanelHeight(this.props.panelHeight - diff);
+			const ht = this.props.panelHeight - diff;
+			this.props.canvasController.setBottomPanelHeight(this.limitHeight(ht));
 			this.posY = e.clientY;
 		}
 	}
+
+	// Returns a new height for the bottom panel limited by the need to enforce
+	// a minimum and maximum height.
+	limitHeight(ht) {
+		const canvasContainer = document.getElementById(this.props.containingDivId);
+		let height = ht;
+
+		// canvasContainer may not be available in some test situations
+		if (canvasContainer) {
+			const canvasHeight = canvasContainer.getBoundingClientRect().height;
+			const maxHeight = canvasHeight - MARGIN_TOP;
+			height = Math.min(Math.max(height, MIN_HEIGHT), maxHeight);
+		}
+		return height;
+	}
+
 	render() {
 		this.logger.log("render");
 		let bottomPanel = null;
 
 		if (this.props.bottomPanelIsOpen) {
-			const canvasContainer = document.querySelector(".common-canvas-drop-div");
-			const rectHeight = canvasContainer
-				? canvasContainer.getBoundingClientRect().height
-				: 0;
-			const marginTop = 60;
-			const minHeight = 75;
-			const maxHeight = rectHeight - marginTop;
-			let height = Math.max(this.props.panelHeight, minHeight);
-			height = Math.min(height, maxHeight);
+			const heightPx = this.limitHeight(this.props.panelHeight) + "px";
 
 			bottomPanel = (
-				<div className="bottom-panel" style={{ height }} >
+				<div className="bottom-panel" style={{ height: heightPx }} >
 					<div className="bottom-panel-drag" onMouseDown={this.onMouseDown} />
 					<div className="bottom-panel-contents">
 						{this.props.bottomPanelContent}
@@ -82,6 +97,7 @@ class CanvasBottomPanel extends React.Component {
 CanvasBottomPanel.propTypes = {
 	// Provided by CommonCanvas
 	canvasController: PropTypes.object,
+	containingDivId: PropTypes.string,
 
 	// Provided by Redux
 	bottomPanelIsOpen: PropTypes.bool,

@@ -42,6 +42,19 @@ describe("CommonCanvas renders correctly", () => {
 		expect(canvasController.isBottomPanelOpen() === true).to.be.true;
 	});
 
+	it("should render one <CanvasBottomPanel/> component when showBottomPanel is true", () => {
+		const config = {};
+		const canvasParams = { showBottomPanel: true };
+		canvasController.setBottomPanelHeight(500);
+		const wrapper = createCommonCanvas(config, canvasController, canvasParams);
+
+		const bottomPanel = wrapper.find(".bottom-panel");
+		const heightStyle = bottomPanel.prop("style");
+		expect(heightStyle).to.eql({ "height": "500px" }); // includes header
+
+	});
+
+
 	it("should not render one <CanvasBottomPanel/> component when showBottomPanel is false", () => {
 		const config = {};
 		const canvasParams = { showBottomPanel: false };
