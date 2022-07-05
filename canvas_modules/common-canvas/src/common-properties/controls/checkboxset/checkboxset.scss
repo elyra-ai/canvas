@@ -20,7 +20,6 @@
 	}
 	.bx--checkbox-wrapper { //override carbon checkbox styling TODO currently doesn't override
 		margin-bottom: $spacing-03;
-		margin-right: $spacing-03;
 	}
 	.properties-checkboxset-container {
 		.properties-checkbox-tooltip-container{
@@ -28,12 +27,6 @@
 			align-items: center;
 			grid-template-columns: 1fr 12fr;
 			width: 100%;
-		}
-		.tooltip-container{
-			height: auto;
-			display: flex;
-			align-items: center;
-			cursor: pointer;
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;
