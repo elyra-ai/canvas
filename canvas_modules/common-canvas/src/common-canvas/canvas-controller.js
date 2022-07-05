@@ -406,7 +406,7 @@ export default class CanvasController {
 	// nodeTypeObj - must conform to the style of node used by the palette as
 	// described in the palette schema. See objects in nodeTypes array in the
 	// palette schema:
-	//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json
+	//  https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json
 	// category - is the name of the palette category where the node will be
 	// added. If the category doesn't exist it will be created.
 	// categoryLabel - Is an optional param. If a new category is created it will
@@ -423,7 +423,7 @@ export default class CanvasController {
 	// nodeTypeObjs - an array of nodetypes that must conform to the style of
 	// nodes used by the palette as described in the palette schema. See objects
 	// in nodeTypes array in the palette schema:
-	//  https://github.com/elyra-ai/pipeline-schemas/blob/master/common-canvas/palette/palette-v3-schema.json
+	//  https://github.com/elyra-ai/pipeline-schemas/blob/main/common-canvas/palette/palette-v3-schema.json
 	// category - is the name of the palette category where the node will be
 	// added. If the category doesn't exist it will be created.
 	// categoryLabel - is an optional param. If a new category is created it will

@@ -19,24 +19,55 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { evaluateText } from "./../../util/property-utils.js";
 import classNames from "classnames";
-import { STATES } from "./../../constants/constants";
+import { STATES, CARBON_ICONS } from "./../../constants/constants";
+import { isEmpty } from "lodash";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import Icon from "./../../../icons/icon.jsx";
 
 class TextPanel extends Component {
 	render() {
 		const className = this.props.panel.className ? this.props.panel.className : "";
-		const label = this.props.panel.label ? (<div className="panel-label">{this.props.panel.label}</div>) : null;
-		const description = this.props.panel.description
-			? (<div className="panel-description">{evaluateText(this.props.panel.description, this.props.controller)}</div>)
-			: null;
+		const hidden = this.props.panelState === STATES.HIDDEN;
+		const disabled = this.props.panelState === STATES.DISABLED;
+		let label = this.props.panel.label ? (<div className="panel-label">{this.props.panel.label}</div>) : null;
+		let description;
+		if (this.props.panel.description && !isEmpty(this.props.panel.description.text)) {
+			const dynamicDescriptionText = evaluateText(this.props.panel.description.text, this.props.controller);
+			if (this.props.panel.description.placement === "as_tooltip") {
+				// If tooltip has a link, add propertyId in the link object
+				if (this.props.panel.description.link) {
+					this.props.panel.description.link.propertyId = { name: this.props.panel.id };
+				}
+				const tooltip = (<Tooltip
+					id={`tooltip-label-${this.props.panel.id}`}
+					tip={dynamicDescriptionText}
+					link={this.props.panel.description.link ? this.props.panel.description.link : null}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="bottom"
+					disable={hidden || disabled}
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>);
+				label = (
+					<div className={classNames("properties-label-container")}>
+						{label}
+						{tooltip}
+					</div>
+				);
+			} else {
+				description = <div className="panel-description">{dynamicDescriptionText}</div>;
+			}
+		}
 		return (
 			<div
 				className={classNames(
 					"properties-text-panel",
-					{ "hide": this.props.panelState === STATES.HIDDEN },
+					{ "hide": hidden },
 					{ "properties-control-nested-panel": this.props.panel.nestedPanel },
 					className
 				)}
-				disabled={this.props.panelState === STATES.DISABLED}
+				disabled={disabled}
 			>
 				{label}
 				{description}

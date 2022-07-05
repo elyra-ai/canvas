@@ -31,7 +31,7 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.dragNodeToPosition("Derive", 400, 200);
 
 		// Search for a node in Palette Search bar
-		cy.findNodeInPalette("sel");
+		cy.searchForNodeUsing("sel");
 
 		// Search function can run slowly on build machine so give it some time.
 		/* eslint cypress/no-unnecessary-waiting: "off" */
@@ -49,7 +49,7 @@ describe("Test adding nodes into empty canvas", function() {
 		cy.clickToolbarPaletteOpen();
 
 		// Search for a node in Palette Search bar
-		cy.findNodeInPalette("Data File");
+		cy.searchForNodeUsing("Data File");
 
 		// Search function can run slowly on build machine so give it some time.
 		/* eslint cypress/no-unnecessary-waiting: "off" */
@@ -271,5 +271,46 @@ describe("Test nodes in Flyout palette have data-id attribute", function() {
 		cy.verifyNodeHasDataId("Sort", "sort", "Record Ops");
 		cy.verifyNodeHasDataId("Aggregate", "aggregate", "Record Ops");
 		cy.verifyNodeHasDataId("Balance", "balance", "Record Ops");
+	});
+});
+
+describe("Test nodes & categories accessibility within palette", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+		cy.clickToolbarPaletteOpen();
+	});
+
+	it("Category opens and closes when space bar is pressed", function() {
+		// Focus on palette and press space bar to open the category
+		cy.tabToCategory("Import");
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsOpened("Import");
+
+		// Press space bar to close the category
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsClosed("Import");
+	});
+
+	it("Nodes added to canvas when focus is on palette node and space bar is pressed", function() {
+		// Focus on palette and press apce bar
+		cy.tabToCategory("Import");
+		cy.pressSpaceOnCategory("Import");
+		cy.verifyCategoryIsOpened("Import");
+
+		// Focus on nodes inside the open category and press space bar
+		cy.tabToNodeInCategory("Var. File", "Import");
+		cy.pressSpaceOnNodeInCategory("Var. File", "Import");
+
+		cy.tabToNodeInCategory("Database", "Import");
+		cy.pressSpaceOnNodeInCategory("Database", "Import");
+
+		cy.tabToNodeInCategory("Object Store", "Import");
+		cy.pressSpaceOnNodeInCategory("Object Store", "Import");
+
+		// Verify the nodes are on the canvas
+		cy.verifyNodeExists("Var. File");
+		cy.verifyNodeExists("Database");
+		cy.verifyNodeExists("Object Store");
 	});
 });

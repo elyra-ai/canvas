@@ -40,5 +40,12 @@
   "action.setNodeLabel": "노드 레이블 설정",
   "action.setObjectsStyle": "오브젝트 스타일 설정",
   "action.sizeAndPositionObjects": "크기 노드",
-  "action.updateLink": "링크 업데이트"
+  "action.updateLink": "링크 업데이트",
+  "supernode.template.description": "이 수퍼노드는 공통 캔버스에서 작성되었습니다.",
+  "supernode.template.label": "수퍼노드",
+  "supernode.new.port.label": "수퍼노드에 대한 포트 바인딩",
+  "supernode.binding.node.label": "바인딩",
+  "supernode.binding.node.description": "수퍼노드 바인딩 노드",
+  "palette.saved.nodes.label": "저장된 노드",
+  "palette.saved.nodes.description": "이 범주의 노드는 이전에 플로우에서 저장되었습니다."
 }

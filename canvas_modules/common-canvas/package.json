@@ -1,13 +1,13 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.12.3",
+  "version": "12.13.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "module": "dist/common-canvas.es.js",
   "homepage": "https://github.com/elyra-ai/canvas",
   "repository": {
     "type": "git",
-    "url": "https://github.com/elyra-ai/canvas/tree/master/canvas_modules/common-canvas"
+    "url": "https://github.com/elyra-ai/canvas/tree/main/canvas_modules/common-canvas"
   },
   "bugs": {
     "url": "https://github.com/elyra-ai/canvas/issues"
