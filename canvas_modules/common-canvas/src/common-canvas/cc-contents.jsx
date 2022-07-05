@@ -416,9 +416,6 @@ class CanvasContents extends React.Component {
 			}
 			this.svgCanvasD3.externalObjectDropped(dropData, event.clientX, event.clientY);
 		}
-
-		// Also clear dataTransfer data for when we get external objects.
-		event.dataTransfer.clearData();
 	}
 
 	dragOver(event) {
