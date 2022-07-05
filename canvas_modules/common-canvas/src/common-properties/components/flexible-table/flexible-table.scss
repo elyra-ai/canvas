@@ -130,7 +130,7 @@ $row-left-padding: $spacing-02;
 }
 
 .properties-ft-empty-table {
-	height: $spacing-11 + $spacing-08;
+	height: calc($spacing-11 + $spacing-08);
 	display: flex;
 	justify-content: center;
 	align-items: center;
