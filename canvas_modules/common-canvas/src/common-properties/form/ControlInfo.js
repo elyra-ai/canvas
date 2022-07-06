@@ -50,6 +50,9 @@ export class Control {
 		if (settings.valueLabels) {
 			this.valueLabels = settings.valueLabels;
 		}
+		if (settings.valueDescs) {
+			this.valueDescs = settings.valueDescs;
+		}
 		if (settings.valueIcons) {
 			this.valueIcons = settings.valueIcons;
 		}

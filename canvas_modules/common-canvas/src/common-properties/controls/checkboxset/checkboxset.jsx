@@ -21,9 +21,13 @@ import { Checkbox } from "carbon-components-react";
 import * as ControlUtils from "./../../util/control-utils";
 import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
-import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
+import { Information16 } from "@carbon/icons-react";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { STATES } from "./../../constants/constants.js";
+import { isEmpty } from "lodash";
+
 
 class CheckboxsetControl extends React.Component {
 	constructor(props) {
@@ -74,27 +78,48 @@ class CheckboxsetControl extends React.Component {
 	}
 
 	render() {
+
+		const hidden = this.props.state === STATES.HIDDEN;
 		let controlValue = this.props.value;
 		if (typeof controlValue === "undefined" || controlValue === null) {
 			controlValue = [];
 		}
 		const checkboxes = [];
 		for (var i = 0; i < this.props.control.values.length; i++) {
+			const val = this.props.control.values[i];
+			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
+			let tooltipIcon = null;
+			if (Array.isArray(this.props.control.valueDescs) && !isEmpty(this.props.control.valueDescs[i]) && !this.props.tableControl) {
+				const tooltip = (
+					<span >{this.props.control.valueDescs[i]}</span>
+				);
+				tooltipIcon = (<Tooltip
+					id={`tooltip-${this.uuid}-${i}`}
+					tip={tooltip}
+					direction="bottom"
+					className="properties-tooltips"
+					showToolTipOnClick
+					disable={hidden || disabled}
+				>
+					<Information16 disabled={disabled} className="properties-control-description-icon-info" />
+				</Tooltip>);
+			}
 			const id = {
 				name: this.props.propertyId.name,
 				row: i
 			};
-			const val = this.props.control.values[i];
 			const checked = (controlValue.indexOf(val) >= 0);
-			const disabled = this.props.state === STATES.DISABLED || !this.props.controlOpts.values.includes(val);
-			checkboxes.push(<Checkbox
-				disabled={disabled}
-				id={ControlUtils.getControlId(id, this.uuid)}
-				key={val + i}
-				labelText={this.props.control.valueLabels[i]}
-				onChange={this.handleChange.bind(this, val)}
-				checked={checked}
-			/>);
+			checkboxes.push(<div className="properties-checkbox-tooltip-container" key={ControlUtils.getControlId(id, this.uuid)}>
+				<Checkbox
+					disabled={disabled}
+					id={ControlUtils.getControlId(id, this.uuid)}
+					key={val + i}
+					labelText={this.props.control.valueLabels[i]}
+					onChange={this.handleChange.bind(this, val)}
+					checked={checked}
+				/>
+				{tooltipIcon}
+			</div>);
 		}
 		return (
 			<fieldset>
