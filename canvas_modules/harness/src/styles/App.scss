@@ -71,6 +71,7 @@ $harness-navbar-icon-width: 48px;
 	text-decoration: underline;
 	cursor: pointer;
 	pointer-events: all;
+	user-select: none;
 }
 
 .harness-empty-text {
@@ -79,6 +80,7 @@ $harness-navbar-icon-width: 48px;
 	opacity: 0.5;
 	font-size: 20px;
 	text-align: center;
+	user-select: none;
 }
 
 /*Navbar*/
@@ -211,6 +213,8 @@ $harness-navbar-icon-width: 48px;
 	padding: 30px;
 	color: $text-03;
 	font-size: 20px;
+	pointer-events: none;
+	user-select: none;
 	& .text {
 		font-size: 16px;
 	}
@@ -221,6 +225,7 @@ $harness-navbar-icon-width: 48px;
 	color: $text-01;
 	font-size: 16px;
 	font-weight: bold;
+	pointer-events: none;
 }
 
 /* Provide animation key frames for sample progress indication in harness */
