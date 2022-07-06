@@ -43,7 +43,7 @@ describe("Testing bottom panel", function() {
 		cy.moveBottomPanelDivider(50);
 		cy.verifyBottomPanelHeight(648);
 
-		// Test bottom panel does not exceed max-size successfully with right flyout open
+		// Test bottom panel does not exceed max-size successfully with the right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(50);
 		cy.verifyBottomPanelHeight(648);
@@ -55,7 +55,7 @@ describe("Testing bottom panel", function() {
 		cy.moveBottomPanelDivider(640);
 		cy.verifyBottomPanelHeight(75);
 
-		// Test bottom panel does not exceed max-size successfully with right flyout open
+		// Test bottom panel does not go under the min-size with the right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(640);
 		cy.verifyBottomPanelHeight(75);

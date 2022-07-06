@@ -2349,9 +2349,9 @@ class App extends React.Component {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
 		return (
-			<div draggable={false} className="harness-panel-temp-content">
-				<div draggable={false} className="title">{text1}</div>
-				<div draggable={false} className="text">{text2}</div>
+			<div className="harness-panel-temp-content">
+				<div className="title">{text1}</div>
+				<div className="text">{text2}</div>
 			</div>
 		);
 	}
