@@ -75,7 +75,7 @@ export default class CanvasUtils {
 			enablePanIntoViewOnOpen: false,
 			enableZoomIntoSubFlows: false,
 			enableBrowserEditMenu: true,
-			enableMarkdownInComments: true,
+			enableMarkdownInComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
