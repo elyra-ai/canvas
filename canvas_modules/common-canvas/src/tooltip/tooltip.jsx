@@ -368,23 +368,8 @@ class ToolTip extends React.Component {
 	}
 
 	createTooltip() {
-		let tooltip = null;
-		if ((typeof this.props.tip) === "string") {
-			tooltip = (
-				<span id="tooltipContainer">
-					{this.props.tip}
-				</span>
-			);
-		} else if ((typeof this.props.tip) === "object") {
-			tooltip = (
-				<div id="tooltipContainer">
-					{this.props.tip}
-				</div>
-			);
-		} else if ((typeof this.props.tip) === "function") {
-			tooltip = this.props.tip();
-		}
-		return tooltip;
+		const tip = (typeof this.props.tip === "function") ? this.props.tip() : this.props.tip;
+		return (tip ? <span id="tooltipContainer">{tip}</span> : null);
 	}
 
 	createTipClass() {
