@@ -330,8 +330,7 @@ class ToolTip extends React.Component {
 		window.open(url, "_blank", "noopener");
 	}
 
-	render() {
-		let tooltipContent = null;
+	createTriggerContent() {
 		let triggerContent = null;
 		if (this.props.children) {
 			// when children are passed in, tooltip will handle show/hide, otherwise consumer has to hide show/hide tooltip
@@ -365,34 +364,44 @@ class ToolTip extends React.Component {
 				{this.props.children}
 			</div>);
 		}
+		return triggerContent;
+	}
 
+	createTooltip() {
+		let tooltip = null;
 		if ((typeof this.props.tip) === "string") {
-			tooltipContent = (
+			tooltip = (
 				<span id="tooltipContainer">
 					{this.props.tip}
 				</span>
 			);
 		} else if ((typeof this.props.tip) === "object") {
-			tooltipContent = (
+			tooltip = (
 				<div id="tooltipContainer">
 					{this.props.tip}
 				</div>
 			);
 		} else if ((typeof this.props.tip) === "function") {
-			tooltipContent = this.props.tip();
+			tooltip = this.props.tip();
 		}
+		return tooltip;
+	}
 
+	createTipClass() {
 		let tipClass = "common-canvas-tooltip";
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
+		return tipClass;
+	}
 
-		let link = null;
+	createTipLink() {
+		let tipLink = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
 			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
-				link = (<Link
+				tipLink = (<Link
 					className="tooltip-link"
 					id={this.props.link.id}
 					onClick={this.tooltipLinkOnClick.bind(this, linkInformation.url)}
@@ -401,18 +410,27 @@ class ToolTip extends React.Component {
 				</Link>);
 			}
 		}
+		return tipLink;
+	}
 
-		let tooltip = null;
-		if (tooltipContent || link) {
-			tooltip = (
+	render() {
+		const triggerContent = this.createTriggerContent();
+		const tooltip = this.createTooltip();
+		const tipLink = this.createTipLink();
+		const tipClass = this.createTipClass();
+
+		let tooltipContent = null;
+
+		if (tooltip || tipLink) {
+			tooltipContent = (
 				<Portal>
 					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
 						</svg>
-						{tooltipContent}
-						{link}
+						{tooltip}
+						{tipLink}
 					</div>
 				</Portal>
 			);
@@ -421,7 +439,7 @@ class ToolTip extends React.Component {
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
-				{tooltip}
+				{tooltipContent}
 			</div>
 		);
 	}
