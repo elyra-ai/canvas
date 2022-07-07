@@ -162,7 +162,7 @@ class App extends React.Component {
 			selectedInternalObjectModel: true,
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
-			selectedMarkdownInComments: true,
+			selectedMarkdownInComments: false,
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
