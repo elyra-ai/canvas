@@ -2182,7 +2182,7 @@ class App extends React.Component {
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "custom-loading",
-						tooltip: "A custom loding!",
+						tooltip: "A custom loading!",
 						jsx: (
 							<div style={{ padding: "4px 11px" }}>
 								<InlineLoading status="active" description="Loading..." />
@@ -2209,10 +2209,16 @@ class App extends React.Component {
 					},
 					{ divider: true },
 					{ action: "custom-dropdown",
-						tooltip: "A drop down using the overflow menu!",
+						tooltip: () => (this.suppressTooltip ? null : "A drop down using the overflow menu!"),
 						jsx: (
 							<div className="toolbar-custom-button">
-								<OverflowMenu id={"ovf1"} renderIcon={TextScale32}>
+								<OverflowMenu
+									id={"ovf1"}
+									renderIcon={TextScale32}
+									iconDescription={""}
+									onOpen={() => (this.suppressTooltip = true)}
+									onClose={() => (this.suppressTooltip = false)}
+								>
 									<OverflowMenuItem itemText="Big" />
 									<OverflowMenuItem itemText="Medium" />
 									<OverflowMenuItem itemText="Little" />
