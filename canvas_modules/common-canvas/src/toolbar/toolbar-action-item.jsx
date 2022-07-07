@@ -201,7 +201,7 @@ class ToolbarActionItem extends React.Component {
 			const actionName = this.generateActionName();
 			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
-			const enableTooltip = this.props.actionObj.enable ? this.props.actionObj.enable : false;
+			const enableTooltip = this.props.actionObj.enable || this.props.actionObj.jsx; // JSX 'tools' don't have enable attr so always display a tooltip for them.
 
 			return (
 				<Tooltip id={tooltipId} tip={tipText} disable={!enableTooltip} className="icon-tooltip" >

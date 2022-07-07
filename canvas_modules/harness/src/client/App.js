@@ -2182,16 +2182,18 @@ class App extends React.Component {
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
 					{ action: "custom-loading",
+						tooltip: "A custom loding!",
 						jsx: (
-							<div style={{ padding: "0 11px" }}>
+							<div style={{ padding: "4px 11px" }}>
 								<InlineLoading status="active" description="Loading..." />
 							</div>
 						)
 					},
 					{ divider: true },
 					{ action: "custom-checkbox",
+						tooltip: "A custom checkbox!",
 						jsx: (
-							<div style={{ padding: "0 11px" }}>
+							<div style={{ padding: "5px 11px" }}>
 								<Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} />
 							</div>
 						)
