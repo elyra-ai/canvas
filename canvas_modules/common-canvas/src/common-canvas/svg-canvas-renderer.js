@@ -5347,7 +5347,9 @@ export default class SVGCanvasRenderer {
 	commentKeyboardHandler(d3Event) {
 		const action = this.getMarkdownAction(d3Event);
 		if (action) {
-			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			if (action !== "return") {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			}
 			this.markdownActionHandler(action, d3Event);
 		}
 	}
