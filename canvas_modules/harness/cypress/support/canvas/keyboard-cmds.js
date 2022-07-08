@@ -81,6 +81,14 @@ Cypress.Commands.add("useBackspaceKey", () => "{backspace}");
 Cypress.Commands.add("shortcutKeysMarkdown", (action) => {
 	cy.useCtrlOrCmdKey().then((cmndCtrlKey) => {
 		switch (action) {
+		case "increaseHashes": {
+			cy.get("body").type(cmndCtrlKey + "{>}");
+			break;
+		}
+		case "decreaseHashes": {
+			cy.get("body").type(cmndCtrlKey + "{<}");
+			break;
+		}
 		case "bold": {
 			cy.get("body").type(cmndCtrlKey + "{b}");
 			break;

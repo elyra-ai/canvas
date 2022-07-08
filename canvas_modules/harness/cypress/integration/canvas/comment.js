@@ -193,6 +193,50 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
 	});
 
+	it("Test adding title markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some title text!",
+			textToHighlight: "title",
+			action: "header",
+			menuAction: "title",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
+	});
+
+	it("Test adding header markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some header text!",
+			textToHighlight: "header",
+			action: "header",
+			menuAction: "header",
+			markdownText: "## Some header text!",
+			html: "<h2>Some header text!</h2>\n"
+		});
+	});
+
+	it("Test adding subheader markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some subheader text!",
+			textToHighlight: "subheader",
+			action: "header",
+			menuAction: "subheader",
+			markdownText: "### Some subheader text!",
+			html: "<h3>Some subheader text!</h3>\n"
+		});
+	});
+
+	it("Test adding body markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "## Some body text!", // Set initial text to be a header so it can change to body.
+			textToHighlight: "body",
+			action: "header",
+			menuAction: "body",
+			markdownText: "Some body text!",
+			html: "<p>Some body text!</p>\n"
+		});
+	});
+
 	it("Test adding bold markdown.", function() {
 		addMarkdownWithToolbar({
 			initialText: "Some bold text!",
@@ -277,6 +321,27 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 describe("Test edting a comment using keyboard shortcuts to add markdown syntax", function() {
 	beforeEach(() => {
 		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+
+	it("Test adding title markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some title text!",
+			textToHighlight: "title",
+			action: "increaseHashes",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
+	});
+
+	it("Test adding title markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "## Some title text!",
+			textToHighlight: "title",
+			action: "decreaseHashes",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
 	});
 
 	it("Test adding bold markdown.", function() {
@@ -366,7 +431,7 @@ function addMarkdownWithToolbar(d) {
 	cy.editTextInComment("", d.initialText);
 
 	cy.selectTextInComment(d.textToHighlight, d.initialText);
-	cy.clickTextToolbarOption(d.action);
+	cy.clickTextToolbarOption(d.action, d.menuAction);
 
 	cy.clickCanvasAt(5, 5);
 	cy.verifyCommentContainsHTML(d.markdownText, d.html);
