@@ -76,11 +76,10 @@ const E_KEY = 69;
 const I_KEY = 73;
 const K_KEY = 75;
 const X_KEY = 88;
-const LAB_KEY = 188;
-const RAB_KEY = 190;
+const LAB_KEY = 188; // Left angle bracket <
+const RAB_KEY = 190; // Right angle bracket >
 const SEVEN_KEY = 55;
 const EIGHT_KEY = 56;
-
 
 const SCROLL_PADDING = 12;
 
