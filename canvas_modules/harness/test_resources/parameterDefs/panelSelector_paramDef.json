@@ -709,6 +709,7 @@
   "dataset_metadata": [],
   "resources": {
     "fruit-color1.red1.label": "Red",
+    "fruit-color1.red1.desc": "desc for Red",
     "fruit-color1.blue1.label": "Blue",
     "fruit-color1.yellow1.label": "Yellow",
     "fruit-color2.red2.label": "Red",
@@ -717,6 +718,7 @@
     "fruit-color3.red3.label": "Red",
     "fruit-color3.blue3.label": "Blue",
     "fruit-color3.yellow3.label": "Yellow",
+    "fruit-color3.yellow3.desc": " desc for Yellow",
     "fruit-size.bigfruit.label": "Big",
     "fruit-size.mediumfruit.label": "Medium",
     "fruit-size.littlefruit.label": "Little"

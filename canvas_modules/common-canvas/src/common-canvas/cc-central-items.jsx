@@ -37,7 +37,7 @@ class CommonCanvasCentralItems extends React.Component {
 		const canvasToolbar = (<CommonCanvasToolbar canvasController={this.props.canvasController} />);
 		const notificationPanel = (<NotificationPanel canvasController={this.props.canvasController} />);
 		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
-		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} />);
+		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
 
 		let centralItems = null;
 		if (this.props.enableRightFlyoutUnderToolbar) {

@@ -25,7 +25,7 @@ import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
-import Icon from "./../../../icons/icon.jsx";
+import Icon from "./../../../icons/icon";
 
 class CheckboxControl extends React.Component {
 

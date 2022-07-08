@@ -177,7 +177,7 @@ class ToolTip extends React.Component {
 				}
 			} else if (tooltipDirection === "left") {
 				// For long tooltips, tooltip.offsetWidth is updated after setting tooltip.style.left. Ensure tooltip doesn't overlap tooltipTrigger element.
-				while ((tooltip.offsetLeft + tooltip.offsetWidth + pointerLayout.width) > triggerLayout.left) {
+				while ((tooltip.offsetLeft + tooltip.offsetWidth + pointerLayout.width) > Math.round(triggerLayout.left)) {
 					tooltip.style.left = this.getStyleValue(triggerLayout.left - tooltip.offsetWidth - pointerLayout.width);
 				}
 			} else if (tooltipDirection === "right") {
@@ -378,6 +378,8 @@ class ToolTip extends React.Component {
 					{this.props.tip}
 				</div>
 			);
+		} else if ((typeof this.props.tip) === "function") {
+			tooltipContent = this.props.tip();
 		}
 
 		let tipClass = "common-canvas-tooltip";
@@ -400,9 +402,9 @@ class ToolTip extends React.Component {
 			}
 		}
 
-		return (
-			<div className="tooltip-container">
-				{triggerContent}
+		let tooltip = null;
+		if (tooltipContent || link) {
+			tooltip = (
 				<Portal>
 					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
@@ -413,13 +415,20 @@ class ToolTip extends React.Component {
 						{link}
 					</div>
 				</Portal>
+			);
+		}
+
+		return (
+			<div className="tooltip-container">
+				{triggerContent}
+				{tooltip}
 			</div>
 		);
 	}
 }
 
 ToolTip.propTypes = {
-	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.func]).isRequired,
 	link: PropTypes.object,
 	tooltipLinkHandler: PropTypes.func,
 	direction: PropTypes.oneOf(["left", "right", "top", "bottom"]),

@@ -1405,6 +1405,10 @@ export default class CanvasController {
 		return this.getObjectModel().isBottomPanelOpen();
 	}
 
+	setBottomPanelHeight(ht) {
+		this.objectModel.setBottomPanelHeight(ht);
+	}
+
 	closeContextMenu() {
 		this.objectModel.closeContextMenu();
 	}

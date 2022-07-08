@@ -1,8 +1,8 @@
 {
-	"toolbar.label": "Barra de ferramentas da tela",
-	"toolbar.overflowMenu": "Menu overflow",
-	"toolbar.palette": "Paleta",
-	"toolbar.zoomIn": "Aumentar zoom",
-	"toolbar.zoomOut": "Reduzir zoom",
-	"toolbar.zoomToFit": "Zoom para ajustar"
+  "toolbar.palette": "Paleta",
+  "toolbar.zoomIn": "Aumentar zoom",
+  "toolbar.zoomOut": "Diminuir zoom",
+  "toolbar.zoomToFit": "Zoom para ajustar",
+  "toolbar.overflowMenu": "Menu overflow",
+  "toolbar.label": "Barra de ferramentas de tela"
 }

@@ -16,7 +16,6 @@
 
 @import "carbon-components/scss/globals/scss/_vars";
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
-$bottom-panel-height: 393px;
 $bottom-panel-border-width: 1px;
 $bottom-panel-border-color: $ui-03;
 
@@ -87,13 +86,11 @@ $bottom-panel-border-color: $ui-03;
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	height: $bottom-panel-height;
 	position: absolute;
 	left:0;
 	right:0;
 	bottom: 0;
 	border-top: $bottom-panel-border-width solid $bottom-panel-border-color;
-	min-height: 75px;
 }
 
 .bottom-panel-drag {

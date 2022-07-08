@@ -219,7 +219,12 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
-		const groupDesc = l10nProvider.l10nResource(group.description);
+		let groupDesc;
+		if (group.description) {
+			groupDesc = new Description(l10nProvider.l10nResource(group.description),
+				group.description ? group.description.placement : null,
+				group.description ? group.description.link : null);
+		}
 		return UIItem.makeTextPanel(groupName, groupLabel, groupDesc, groupClassName, nestedPanel);
 	}
 	case GroupType.TWISTY_PANEL: {
@@ -565,6 +570,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	if (parameter.getRole() === ParamRole.ENUM) {
 		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
+
+	let valueDescs;
+	if (parameter.getRole() === ParamRole.ENUM) {
+		valueDescs = _parameterValueDescription(parameter, l10nProvider);
+	}
 	let action;
 	if (!isSubControl && parameter.actionRef) {
 		action = _makeAction(actionMetadata.getAction(parameter.actionRef), l10nProvider);
@@ -582,6 +592,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.orientation = orientation;
 	settings.values = parameter.getValidValues();
 	settings.valueLabels = valueLabels;
+	settings.valueDescs = valueDescs;
 	settings.valueIcons = parameter.valueIcons;
 	settings.sortable = parameter.sortable;
 	settings.filterable = parameter.filterable;
@@ -755,6 +766,24 @@ function _parameterValueLabels(parameter, l10nProvider) {
 	}
 	return [];
 }
+
+function _parameterValueDescription(parameter, l10nProvider) {
+	if (Array.isArray(parameter.getValidValues())) {
+		let key;
+		if (parameter.resource_key) {
+			key = parameter.resource_key;
+		} else {
+			key = parameter.name;
+		}
+		const paramDescs = [];
+		parameter.getValidValues().forEach(function(paramValue) {
+			paramDescs.push(l10nProvider.l10nValueDesc(key, String(paramValue)));
+		});
+		return paramDescs;
+	}
+	return [];
+}
+
 
 export {
 	makePrimaryTab, _makeControl as makeControl

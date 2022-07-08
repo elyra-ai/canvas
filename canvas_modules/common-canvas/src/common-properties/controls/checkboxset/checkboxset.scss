@@ -22,6 +22,12 @@
 		margin-bottom: $spacing-03;
 	}
 	.properties-checkboxset-container {
+		.properties-checkbox-tooltip-container{
+			display: grid;
+			align-items: center;
+			grid-template-columns: 1fr 12fr;
+			width: 100%;
+		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;
 		}

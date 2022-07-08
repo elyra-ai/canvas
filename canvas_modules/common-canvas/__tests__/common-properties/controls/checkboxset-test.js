@@ -31,7 +31,8 @@ const controller = new Controller();
 const control = {
 	name: "test-checkboxset",
 	values: ["apple", "grape", "orange", "pear"],
-	valueLabels: ["apple", "grape", "orange", "pear"]
+	valueLabels: ["apple", "grape", "orange", "pear"],
+	valueDescs: ["desc for 0", "desc for 20"]
 };
 const controlNull = {
 	name: "test-checkboxset-null",
@@ -104,6 +105,22 @@ describe("checkboxset control tests", () => {
 		for (let i = 0; i < labels.length; ++i) {
 			expect(labels.at(i).text()).to.equal(control.valueLabels[i]);
 		}
+	});
+	it("checkboxset tooltips for NumberChecbox are displayed", () => {
+		const wrapper = mount(
+			<Provider store={controller.getStore()}>
+				<Checkboxset
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const tooltipConatiner = wrapper.find("div#tooltipContainer");
+		for (let i = 0; i < tooltipConatiner.length; ++i) {
+			expect(tooltipConatiner.at(i).text()).to.equal(control.valueDescs[i]);
+		}
+
 	});
 	it("checkboxset number labels are displayed", () => {
 		const propertyIdNumber = { name: "test-checkboxset-number" };
