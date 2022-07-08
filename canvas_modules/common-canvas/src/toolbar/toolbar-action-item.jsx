@@ -199,12 +199,12 @@ class ToolbarActionItem extends React.Component {
 	wrapInTooltip(content) {
 		if (!this.props.overflow && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const actionName = this.generateActionName();
-			const tipText = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
+			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
-			const enableTooltip = this.props.actionObj.enable ? this.props.actionObj.enable : false;
+			const enableTooltip = this.props.actionObj.enable || this.props.actionObj.jsx; // JSX 'tools' don't have enable attr so always display a tooltip for them.
 
 			return (
-				<Tooltip id={tooltipId} tip={tipText} disable={!enableTooltip} className="icon-tooltip" >
+				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" >
 					{content}
 				</Tooltip>
 			);
@@ -282,7 +282,8 @@ ToolbarActionItem.propTypes = {
 		jsx: PropTypes.object,
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
-			PropTypes.object
+			PropTypes.object,
+			PropTypes.func
 		])
 	}),
 	toolbarActionHandler: PropTypes.func.isRequired,
