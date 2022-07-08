@@ -23,6 +23,7 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
+import { OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
 	TextBold32, TextItalic32, TextScale32, TextStrikethrough32 } from "@carbon/icons-react";
 
@@ -39,18 +40,19 @@ class CommonCanvasTextToolbar extends React.Component {
 		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultMessage }, substituteObj);
 	}
 
-	getJsxLabel(key, shortcutSuffix) {
+	getJsxLabel(key, shortcutSuffix, shortcutSuffix2) {
 		const osKey = CanvasUtils.isMacintosh() ? "⌘" : "Ctrl";
 		const shortCut = shortcutSuffix ? (osKey + " + " + shortcutSuffix) : null;
+		const shortCut2 = shortcutSuffix2 ? (osKey + " + " + shortcutSuffix2) : null;
 		return (
 			<div>
-				{this.getLabel(key)}<br />{shortCut}
+				{this.getLabel(key)}<br />{shortCut}<br />{shortCut2}
 			</div>
 		);
 	}
 
 	getTextToolbar() {
-		const headerLabel = this.getJsxLabel("texttoolbar.headerAction");
+		const headerLabel = this.getJsxLabel("texttoolbar.headerAction", ">", "<");
 		const boldLabel = this.getJsxLabel("texttoolbar.boldAction", "b");
 		const italicsLabel = this.getJsxLabel("texttoolbar.italicsAction", "i");
 		const strikethroughLabel = this.getJsxLabel("texttoolbar.strikethroughAction", "shift + x");
@@ -59,10 +61,18 @@ class CommonCanvasTextToolbar extends React.Component {
 		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
 		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
+		const headerOptions = (
+			<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
+				<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={() => this.props.actionHandler("title")} />
+				<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={() => this.props.actionHandler("header")} />
+				<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={() => this.props.actionHandler("subheader")} />
+				<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={() => this.props.actionHandler("body")} />
+			</OverflowMenu>
+		);
 
 		return {
 			leftBar: [
-				{ action: "header", label: headerLabel, enable: true, iconEnabled: (<TextScale32 />) },
+				{ action: "header", tooltip: headerLabel, jsx: headerOptions },
 				{ divider: true },
 				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
 				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },

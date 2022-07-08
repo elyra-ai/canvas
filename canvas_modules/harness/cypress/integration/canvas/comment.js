@@ -190,6 +190,7 @@ describe("Test coloring comments", function() {
 describe("Test edting a comment using the text toolbar to add markdown syntax", function() {
 	beforeEach(() => {
 		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
 	});
 
 	it("Test adding bold markdown.", function() {

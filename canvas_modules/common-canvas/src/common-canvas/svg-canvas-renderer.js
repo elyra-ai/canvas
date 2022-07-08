@@ -76,7 +76,8 @@ const E_KEY = 69;
 const I_KEY = 73;
 const K_KEY = 75;
 const X_KEY = 88;
-const LAB_KEY = 190;
+const LAB_KEY = 188;
+const RAB_KEY = 190;
 const SEVEN_KEY = 55;
 const EIGHT_KEY = 56;
 
@@ -5347,6 +5348,7 @@ export default class SVGCanvasRenderer {
 	commentKeyboardHandler(d3Event) {
 		const action = this.getMarkdownAction(d3Event);
 		if (action) {
+			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			this.markdownActionHandler(action, d3Event);
 		}
 	}
@@ -5359,11 +5361,12 @@ export default class SVGCanvasRenderer {
 			case B_KEY: return "bold";
 			case I_KEY: return "italics";
 			case X_KEY: return d3Event.shiftKey ? "strikethrough" : null;
-			case LAB_KEY: return d3Event.shiftKey ? "quote" : null;
 			case SEVEN_KEY: return d3Event.shiftKey ? "numberedList" : null;
 			case EIGHT_KEY: return d3Event.shiftKey ? "bulletedList" : null;
 			case E_KEY: return "code";
 			case K_KEY: return "link";
+			case LAB_KEY: return "decreaseHashes";
+			case RAB_KEY: return d3Event.shiftKey ? "quote" : "increaseHashes";
 			default:
 			}
 		} else if (d3Event.keyCode === RETURN_KEY) {

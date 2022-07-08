@@ -39,8 +39,13 @@ export default class SvgCanvasUtilsComments {
 		}
 
 		switch (action) {
-		case "header": {
-			mdObj = this.processHeaderCommand(text, start, end);
+		case "title":
+		case "header":
+		case "subheader":
+		case "body":
+		case "increaseHashes":
+		case "decreaseHashes": {
+			mdObj = this.processHeaderCommand(text, start, end, action);
 			break;
 		}
 		case "bold": {
@@ -114,7 +119,7 @@ export default class SvgCanvasUtilsComments {
 		return newEnd;
 	}
 
-	static processHeaderCommand(text, inStart, inEnd, chars) {
+	static processHeaderCommand(text, inStart, inEnd, action) {
 		const start = this.findPrecedingNewLine(text, inStart);
 		const end = this.findSuceedingNewLine(text, inEnd);
 
@@ -125,18 +130,75 @@ export default class SvgCanvasUtilsComments {
 		let newStart = start;
 		let newEnd = end;
 		let newText = "";
+		let tempText = selectedText;
 
-		if (selectedText.startsWith("### ")) {
-			newText = startText + selectedText.slice(4) + endText;
-			newEnd -= 4;
-
-		} else {
-			newText = startText + "### " + selectedText + endText;
-			newStart += 4;
-			newEnd += 4;
+		// Remove all hashes if any from the line.
+		const hashCount = this.getHashCount(selectedText);
+		if (hashCount > 0) {
+			const firstSpace = selectedText.indexOf(" ");
+			tempText = selectedText.slice(firstSpace + 1);
+			newText = startText + tempText + endText;
+			newEnd -= firstSpace + 1;
 		}
 
+		// Add as many hashes as appropriate for the action.
+		const headerSyntax = this.getHeaderSyntax(action, hashCount);
+		if (headerSyntax) {
+			newText = startText + headerSyntax + tempText + endText;
+			newStart += headerSyntax.length;
+			newEnd += headerSyntax.length;
+		}
 		return { newText, newStart, newEnd };
+	}
+
+	static getHeaderSyntax(action, hashCount) {
+		switch (action) {
+		case "title": return "# ";
+		case "header": return "## ";
+		case "subheader": return "### ";
+		case "body": return false;
+		case "increaseHashes": {
+			if (hashCount === 0) {
+				return "# ";
+			} else if (hashCount === 1) {
+				return "## ";
+			} else if (hashCount === 2) {
+				return "### ";
+			}
+			return false;
+		}
+		case "decreaseHashes": {
+			if (hashCount === 0) {
+				return "### ";
+			} else if (hashCount === 1) {
+				return false;
+			} else if (hashCount === 2) {
+				return "# ";
+			} else if (hashCount === 3) {
+				return "## ";
+			}
+			return "### ";
+		}
+		default:
+		}
+		return false;
+	}
+
+	static getHashCount(text) {
+		if (text.startsWith("# ")) {
+			return 1;
+		} else if (text.startsWith("## ")) {
+			return 2;
+		} else if (text.startsWith("### ")) {
+			return 3;
+		} else if (text.startsWith("#### ")) {
+			return 4;
+		} else if (text.startsWith("##### ")) {
+			return 5;
+		} else if (text.startsWith("###### ")) {
+			return 6;
+		}
+		return 0;
 	}
 
 	static processWrapCommand(text, start, end, chars) {

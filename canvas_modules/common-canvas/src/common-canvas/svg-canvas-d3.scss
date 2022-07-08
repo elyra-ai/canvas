@@ -87,8 +87,8 @@ $comment-text-color: $gray-100;
 // Comment properties
 $comment-text-font-size: 12px;
 $comment-text-font-weight: 400;
-$comment-text-font-line-height: 14px;
 $comment-text-font-family: "ibm-plex-sans", Helvetica Neue, Arial, sans-serif;
+$comment-text-line-height: 14px;
 $comment-text-display-border: 8px;
 $comment-text-entry-border: $comment-text-display-border - 2px; // Remove 2px to allow for focus border
 
@@ -717,7 +717,8 @@ g.bkg-col-cyan-50 {
 	p {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
-		line-height: $comment-text-font-line-height;
+		font-family: $comment-text-font-family;
+		line-height: $comment-text-line-height;
 		letter-spacing: 0.15px;
 	}
 	hr {
@@ -734,14 +735,14 @@ g.bkg-col-cyan-50 {
 	code {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
-		line-height: $comment-text-font-line-height;
+		line-height: $comment-text-line-height;
 		background-color: $ui-02;
 		white-space: pre-wrap;
 	}
 	pre {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
-		line-height: $comment-text-font-line-height;
+		line-height: $comment-text-line-height;
 		background-color: $ui-02;
 		padding: 4px;
 		border: 1px solid $ui-03;
@@ -843,7 +844,7 @@ g.bkg-col-cyan-50 {
 	height: 100%;
 	pointer-events: auto; /* Override the pointer-events: none on the foreignObject container */
 	overflow: hidden;
-	line-height: $comment-text-font-line-height;  /* Set so that entry text is displayed the same as display text */
+	line-height: $comment-text-line-height;  /* Set so that entry text is displayed the same as display text */
 	letter-spacing: 0.15px; /* Keeps letter spacing the same as before changing comments to use foreignObject */
 	/* Format text display */
 	white-space: pre-wrap;

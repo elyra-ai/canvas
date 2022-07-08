@@ -44,5 +44,9 @@
   "texttoolbar.linkAction": "Link",
   "texttoolbar.quoteAction": "Quote",
   "texttoolbar.bulletedListAction": "Bulleted List",
-  "texttoolbar.numberedListAction": "Numbered List"
+  "texttoolbar.numberedListAction": "Numbered List",
+  "texttoolbar.titleAction": "Title",
+  "texttoolbar.headerAction": "Header",
+  "texttoolbar.subheaderAction": "Subheader",
+  "texttoolbar.bodyAction": "Body"
 }
