@@ -39,8 +39,9 @@
 		margin-bottom: $spacing-02;
 		margin-right: $spacing-04;
 		display: grid;
-		grid-template-columns: 1fr 8fr;
+		grid-template-columns: 1fr 11fr;
 		grid-template-rows: auto;
+		align-items: center;
 		grid-template-areas:
 			"radio tooltip"
 			"panel panel";
