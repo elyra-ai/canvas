@@ -1186,37 +1186,4 @@ export default class CanvasUtils {
 		}
 		return null;
 	}
-
-	// Returns the element passed in, or an ancestor of the element, if either
-	// contains the classNames passed in. Otherwise it returns null if the
-	// className cannot be found. For example, if this element is a child of the
-	// node group object and "d3-node-group" is passed in, this function will
-	// find the group element.
-	static getParentElementWithClass(element, className) {
-		let el = element;
-		let foundElement = null;
-
-		while (el) {
-			// No need to proceed if we find either of these. Stopping at svg-area
-			// prevents the search transitioning from a sub-flow to a parent flow.
-			if (this.isClassNameIncluded(el, "d3-new-connection-guide") ||
-					this.isClassNameIncluded(el, "svg-area")) {
-				el = null;
-
-			} else if (this.isClassNameIncluded(el, className)) {
-				foundElement = el;
-				el = null;
-			} else {
-				el = el.parentNode;
-			}
-		}
-		return foundElement;
-	}
-
-	// Returns true if the class name passed in is one of the classes assigned
-	// to the element passed in.
-	static isClassNameIncluded(el, className) {
-		return el.classList && el.classList.contains(className);
-	}
-
 }
