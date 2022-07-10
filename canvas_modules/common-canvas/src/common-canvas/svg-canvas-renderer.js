@@ -5339,7 +5339,9 @@ export default class SVGCanvasRenderer {
 		});
 		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
 			const pos = this.getCommentToolbarPos(d);
-			this.canvasController.openTextToolbar(pos.x, pos.y, this.markdownActionHandler.bind(this));
+			this.canvasController.openTextToolbar(pos.x, pos.y,
+				this.markdownActionHandler.bind(this),
+				this.blurInTextToolbar.bind(this));
 		}
 	}
 
@@ -5352,6 +5354,18 @@ export default class SVGCanvasRenderer {
 			}
 			this.markdownActionHandler(action, d3Event);
 		}
+	}
+
+	blurInTextToolbar(evt) {
+		// TODO - Figure out how to get blur from text toolbar to work correctly
+		// if (evt.relatedTarget &&
+		// 		(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
+		// 			this.getParentElementWithClass(evt.relatedTarget, "text-toolbar"))) {
+		// 	return;
+		// }
+		// const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
+		// const commentEntryElement = commentEntry.node();
+		// commentEntryElement.focus();
 	}
 
 	// Applies a markdown action to the comment text being edited using
@@ -5612,20 +5626,7 @@ export default class SVGCanvasRenderer {
 					return;
 				}
 
-				// If there is no text for the label and textCanBeEmpty is false
-				// just return so label returns to what it was before editing started.
-				if (!this.value && !data.textCanBeEmpty) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					that.closeTextArea(foreignObject, data);
-					return;
-				}
-				const newText = this.value; // Save the text before closing the foreign object
-				that.closeTextArea(foreignObject, data);
-				if (data.text !== newText) {
-					that.isCommentBeingUpdated = true;
-					data.saveTextChangesCallback(data.id, newText, that.textAreaHeight, data);
-					that.isCommentBeingUpdatd = false;
-				}
+				that.saveAndCloseTextArea(foreignObject, data, this.value, d3Event);
 			})
 			.on("focus", function(d3Event, d) {
 				that.logger.log("Text area - focus");
@@ -5639,6 +5640,23 @@ export default class SVGCanvasRenderer {
 
 		// Set the cusrsor to the end of the text.
 		textArea.node().setSelectionRange(data.text.length, data.text.length);
+	}
+
+	saveAndCloseTextArea(foreignObject, data, newValue, d3Event) {
+		// If there is no text for the label and textCanBeEmpty is false
+		// just return, so label returns to what it was before editing started.
+		if (!newValue && !data.textCanBeEmpty) {
+			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			this.closeTextArea(foreignObject, data);
+			return;
+		}
+		const newText = newValue; // Save the text before closing the foreign object
+		this.closeTextArea(foreignObject, data);
+		if (data.text !== newText) {
+			this.isCommentBeingUpdated = true;
+			data.saveTextChangesCallback(data.id, newText, this.textAreaHeight, data);
+			this.isCommentBeingUpdatd = false;
+		}
 	}
 
 	// Closes the text area and resets the flags.

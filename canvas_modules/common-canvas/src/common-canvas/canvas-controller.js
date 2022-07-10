@@ -1780,8 +1780,8 @@ export default class CanvasController {
 		}
 	}
 
-	openTextToolbar(xPos, yPos, actionHandler) {
-		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler });
+	openTextToolbar(xPos, yPos, actionHandler, blurHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler, blurHandler });
 	}
 
 	closeTextToolbar() {

@@ -97,7 +97,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		if (this.props.isOpen) {
 			textToolbar = (
-				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }}>
+				<div className={"text-toolbar"} style={{ left: this.props.pos_x, top: this.props.pos_y }} onBlur={this.props.blurHandler}>
 					<Toolbar
 						config={this.getTextToolbar()}
 						instanceId={this.props.canvasController.getInstanceId()}
@@ -121,14 +121,16 @@ CommonCanvasTextToolbar.propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	pos_x: PropTypes.number,
 	pos_y: PropTypes.number,
-	actionHandler: PropTypes.func
+	actionHandler: PropTypes.func,
+	blurHandler: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	isOpen: state.texttoolbar.isOpen,
 	pos_x: state.texttoolbar.pos_x,
 	pos_y: state.texttoolbar.pos_y,
-	actionHandler: state.texttoolbar.actionHandler
+	actionHandler: state.texttoolbar.actionHandler,
+	blurHandler: state.texttoolbar.blurHandler
 });
 
 export default connect(mapStateToProps)(injectIntl(CommonCanvasTextToolbar));
