@@ -132,6 +132,19 @@ $bottom-panel-border-color: $ui-03;
 			padding-right: 0px;
 		}
 	}
+
+	.text-toolbar-tick-svg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 40px;
+		width: 40px;
+		pointer-events: none;
+	}
+
+	.text-toolbar-tick-mark {
+		fill: $interactive-02;
+	}
 }
 
 // Causes the text toolbar to animate upwards from the top of the comment

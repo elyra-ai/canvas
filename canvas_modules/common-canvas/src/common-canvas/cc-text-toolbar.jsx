@@ -62,12 +62,17 @@ class CommonCanvasTextToolbar extends React.Component {
 		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
 		const headerOptions = (
-			<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
-				<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={() => this.props.actionHandler("title")} />
-				<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={() => this.props.actionHandler("header")} />
-				<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={() => this.props.actionHandler("subheader")} />
-				<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={() => this.props.actionHandler("body")} />
-			</OverflowMenu>
+			<div>
+				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={() => this.props.actionHandler("title")} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={() => this.props.actionHandler("header")} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={() => this.props.actionHandler("subheader")} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={() => this.props.actionHandler("body")} />
+				</OverflowMenu>
+				<svg className="text-toolbar-tick-svg">
+					<path d="M 39 39 L 39 33 33 39 Z" className="text-toolbar-tick-mark" />
+				</svg>
+			</div>
 		);
 
 		return {
