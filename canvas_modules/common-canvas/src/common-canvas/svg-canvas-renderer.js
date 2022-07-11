@@ -5319,7 +5319,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayCommentTextArea(d, parentDomObj) {
-		this.displayTextArea({
+		this.editingTextData = {
 			id: d.id,
 			text: d.content,
 			singleLine: false,
@@ -5336,7 +5336,8 @@ export default class SVGCanvasRenderer {
 			autoSizeCallback: this.autoSizeComment.bind(this),
 			saveTextChangesCallback: this.saveCommentChanges.bind(this),
 			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
-		});
+		};
+		this.displayTextArea(this.editingTextData);
 		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
 			const pos = this.getCommentToolbarPos(d);
 			this.canvasController.openTextToolbar(pos.x, pos.y,
@@ -5357,15 +5358,19 @@ export default class SVGCanvasRenderer {
 	}
 
 	blurInTextToolbar(evt) {
-		// TODO - Figure out how to get blur from text toolbar to work correctly
-		// if (evt.relatedTarget &&
-		// 		(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
-		// 			this.getParentElementWithClass(evt.relatedTarget, "text-toolbar"))) {
-		// 	return;
-		// }
-		// const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		// const commentEntryElement = commentEntry.node();
-		// commentEntryElement.focus();
+		if (evt.relatedTarget &&
+				(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
+					this.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
+					this.getParentElementWithClass(evt.relatedTarget, "bx--overflow-menu-options__btn"))) {
+			return;
+		}
+
+		const commentParent = d3.select(this.editingTextData.parentDomObj);
+		const foreignObject = commentParent.selectAll(".d3-text-entry-fo");
+		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
+		const commentEntryElement = commentEntry.node();
+
+		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
 	}
 
 	// Applies a markdown action to the comment text being edited using
@@ -5568,7 +5573,7 @@ export default class SVGCanvasRenderer {
 
 		const foreignObject = d3.select(data.parentDomObj)
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object d3-text-entry-fo")
 			.attr("width", data.width)
 			.attr("height", data.height)
 			.attr("x", data.xPos)
