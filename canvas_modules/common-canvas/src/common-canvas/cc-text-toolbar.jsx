@@ -64,10 +64,10 @@ class CommonCanvasTextToolbar extends React.Component {
 		const headerOptions = (
 			<div>
 				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={() => this.props.actionHandler("title")} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={() => this.props.actionHandler("header")} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={() => this.props.actionHandler("subheader")} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={() => this.props.actionHandler("body")} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={(evt) => this.props.actionHandler("title", evt)} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={(evt) => this.props.actionHandler("header", evt)} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={(evt) => this.props.actionHandler("subheader", evt)} />
+					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={(evt) => this.props.actionHandler("body", evt)} />
 				</OverflowMenu>
 				<svg className="text-toolbar-tick-svg">
 					<path d="M 39 39 L 39 33 33 39 Z" className="text-toolbar-tick-mark" />

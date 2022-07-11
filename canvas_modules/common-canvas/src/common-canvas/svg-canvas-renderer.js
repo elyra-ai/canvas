@@ -5357,7 +5357,18 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Called when the blur event occurs for the text toolbar.
 	blurInTextToolbar(evt) {
+		// When Cypress tests are running a call to focus() in addTextToTextArea()
+		// can cause an incorrect blur event to be generated for the text toolbar
+		// (where relatedTarget is null). This flag therefore allows us to avoid
+		// thus blue events that occur while addTextToTextArea() is executing.
+		if (this.addingTextToTextArea) {
+			return;
+		}
+
+		// If there is a relatedTarget and it is set to one of the elements for the
+		// textarea, texttoolbar, etc we ignore the blur event.
 		if (evt.relatedTarget &&
 				(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
 					this.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
@@ -5365,11 +5376,12 @@ export default class SVGCanvasRenderer {
 			return;
 		}
 
+		// If the blur event is ocurring for an object outside of the textarea and
+		// text toolbar we save the current text and close the textarea.
 		const commentParent = d3.select(this.editingTextData.parentDomObj);
 		const foreignObject = commentParent.selectAll(".d3-text-entry-fo");
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
-
 		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
 	}
 
@@ -5397,8 +5409,12 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Handles any actions requested on the comment text to add markdown
-	// characters to the text.
-	markdownActionHandler(action, d3Event) {
+	// characters to the text. evt can be either a d3Event object from D3 when
+	// this method is called from keyboard entry in the textarea or it can be
+	// a synthetic event object from React when called from the text toolbar.
+	markdownActionHandler(action, evt) {
+		this.logger.log("markdownActionHandler - action = " + action);
+
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
 		const start = commentEntryElement.selectionStart;
@@ -5407,13 +5423,8 @@ export default class SVGCanvasRenderer {
 
 		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
 		if (mdObj) {
-			if (d3Event) { // d3Event is only available on keyboard initiated actions.
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			}
-			this.addTextToTextArea(unescapeText(mdObj.newText), commentEntryElement);
-
-			commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
-			commentEntryElement.focus();
+			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			this.addTextToTextArea(mdObj, commentEntryElement);
 		}
 	}
 
@@ -5421,10 +5432,14 @@ export default class SVGCanvasRenderer {
 	// passed in. We use execCommand because this adds the inserted text to the
 	// textarea's undo/redo stack whereas setting the text directly into the
 	// textarea control does not.
-	addTextToTextArea(text, commentEntryElement) {
+	addTextToTextArea(mdObj, commentEntryElement) {
+		this.addingTextToTextArea = true;
+		const text = unescapeText(mdObj.newText);
 		commentEntryElement.focus();
 		commentEntryElement.select();
 		document.execCommand("insertText", false, text);
+		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
+		this.addingTextToTextArea = false;
 	}
 
 	autoSizeComment(textArea, foreignObject, data) {

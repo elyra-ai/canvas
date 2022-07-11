@@ -138,8 +138,8 @@ class ToolbarActionItem extends React.Component {
 		return null;
 	}
 
-	actionClickHandler() {
-		this.props.toolbarActionHandler(this.props.actionObj.action);
+	actionClickHandler(evt) {
+		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 	}
 
 	generateButton(actionObj) {
