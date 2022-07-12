@@ -31,7 +31,6 @@
 		.properties-radioset-panel {
 			display: flex;
 			height: auto;
-			justify-content: flex-start;
 			align-items: center;
 			margin-bottom: 0;
 		}
@@ -39,11 +38,21 @@
 	.properties-radioset-panel {
 		margin-bottom: $spacing-01;
 		margin-right: $spacing-04;
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: 1fr 8fr;
 		align-items: center;
+		grid-template-areas:
+			"radio tooltip"
+			"panel panel";
 		.bx--radio-button-wrapper{
+			grid-area: radio;
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
+		}
+		.tooltip-container{
+			grid-area: tooltip;
+		}
+		.properties-control-nested-panel{
+			grid-area: panel;
 		}
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
@@ -58,5 +67,12 @@
 	}
 	&.warning:not([disabled]) {
 		padding-bottom: $spacing-02;
+	}
+}
+[data-id~="properties-radioInteger"] {
+	.properties-radioset-panel {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
 	}
 }
