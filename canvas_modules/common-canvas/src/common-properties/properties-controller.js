@@ -1051,10 +1051,11 @@ export default class PropertiesController {
 	/*
 	* return the property value for the given 'inPropertyId'
 	* options - optional object of config options where
-	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   filterHiddenDisabled: true - filter out values from controls having state "hidden" or "disabled"
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
-	*   filterHidden: true - filter out values from controls that are hidden
-	*   filterDisabled: true - filter out values from controls that are disabled
+	*   filterHidden: true - filter out values from controls having state "hidden"
+	*   filterDisabled: true - filter out values from controls having state "disabled"
+	*   filterHiddenControls: true - filter out values from controls having type "hidden"
 	*/
 	getPropertyValue(inPropertyId, options, defaultValue) {
 		const propertyId = this.convertPropertyId(inPropertyId);
@@ -1064,10 +1065,16 @@ export default class PropertiesController {
 		// don't return hidden/disabled values
 		const filterHidden = options && (options.filterHiddenDisabled || options.filterHidden);
 		const filterDisabled = options && (options.filterHiddenDisabled || options.filterDisabled);
-		if (filterHidden || filterDisabled) {
+		const filterHiddenControls = options && options.filterHiddenControls;
+		if (filterHidden || filterDisabled || filterHiddenControls) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
-			if ((controlState === STATES.DISABLED && filterDisabled) || (controlState === STATES.HIDDEN && filterHidden)) {
+			const controlType = this.getControlType(propertyId);
+			if (
+				(controlState === STATES.DISABLED && filterDisabled) ||
+				(controlState === STATES.HIDDEN && filterHidden) ||
+				(controlType === ControlType.HIDDEN && filterHiddenControls)
+			) {
 				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
@@ -1083,7 +1090,12 @@ export default class PropertiesController {
 								col: colIdx
 							};
 							const valueState = this.getControlState(colPropertyId);
-							if ((valueState === STATES.DISABLED && filterDisabled) || (valueState === STATES.HIDDEN && filterHidden)) {
+							const valueType = this.getControlType(colPropertyId);
+							if (
+								(valueState === STATES.DISABLED && filterDisabled) ||
+								(valueState === STATES.HIDDEN && filterHidden) ||
+								(valueType === ControlType.HIDDEN && filterHiddenControls)
+							) {
 								filteredValue[rowIdx][colIdx] = null;
 							}
 						}
@@ -1121,15 +1133,16 @@ export default class PropertiesController {
 	/*
 	* return the property values for all controls
 	* options - optional object of config options where
-	*   filterHiddenDisabled: true - filter out values from controls that are hidden or disabled
+	*   filterHiddenDisabled: true - filter out values from controls having state "hidden" or "disabled"
 	*   applyProperties: true - this function is called from PropertiesMain.applyPropertiesEditing()
-	*   filterHidden: true - filter out values from controls that are hidden
-	*   filterDisabled: true - filter out values from controls that are disabled
+	*   filterHidden: true - filter out values from controls having state "hidden"
+	*   filterDisabled: true - filter out values from controls having state "disabled"
+	*   filterHiddenControls: true - filter out values from controls having type "hidden"
 	*/
 	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		let returnValues = propertyValues;
-		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled)) {
+		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled || options.filterHiddenControls)) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
