@@ -31,15 +31,17 @@
 		.properties-radioset-panel {
 			display: flex;
 			height: auto;
+			justify-content: flex-start;
 			align-items: center;
 			margin-bottom: 0;
 		}
 	}
 	.properties-radioset-panel {
-		margin-bottom: $spacing-02;
+		margin-bottom: $spacing-01;
 		margin-right: $spacing-04;
 		display: grid;
-		grid-template-columns: 1fr 11fr;
+		grid-template-columns: auto;
+		justify-content: flex-start;
 		grid-template-rows: auto;
 		align-items: center;
 		grid-template-areas:
