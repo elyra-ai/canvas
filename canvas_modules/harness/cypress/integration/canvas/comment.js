@@ -186,3 +186,265 @@ describe("Test coloring comments", function() {
 		cy.verifyCommentColor("Orange 40", "cyan-20");
 	});
 });
+
+describe("Test edting a comment using the text toolbar to add markdown syntax", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+
+	it("Test adding title markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some title text!",
+			textToHighlight: "title",
+			action: "header",
+			menuAction: "title",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
+	});
+
+	it("Test adding header markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some header text!",
+			textToHighlight: "header",
+			action: "header",
+			menuAction: "header",
+			markdownText: "## Some header text!",
+			html: "<h2>Some header text!</h2>\n"
+		});
+	});
+
+	it("Test adding subheader markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some subheader text!",
+			textToHighlight: "subheader",
+			action: "header",
+			menuAction: "subheader",
+			markdownText: "### Some subheader text!",
+			html: "<h3>Some subheader text!</h3>\n"
+		});
+	});
+
+	it("Test adding body markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "## Some body text!", // Set initial text to be a header so it can change to body.
+			textToHighlight: "body",
+			action: "header",
+			menuAction: "body",
+			markdownText: "Some body text!",
+			html: "<p>Some body text!</p>\n"
+		});
+	});
+
+	it("Test adding bold markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some bold text!",
+			textToHighlight: "bold",
+			action: "bold",
+			markdownText: "Some **bold** text!",
+			html: "<p>Some <strong>bold</strong> text!</p>\n"
+		});
+	});
+
+	it("Test adding italics markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some italics text!",
+			textToHighlight: "italics",
+			action: "italics",
+			markdownText: "Some _italics_ text!",
+			html: "<p>Some <em>italics</em> text!</p>\n"
+		});
+	});
+
+	it("Test adding strikethrough markdown using a keyboard shortcut.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some strikethrough text!",
+			textToHighlight: "strikethrough",
+			action: "strikethrough",
+			markdownText: "Some ~~strikethrough~~ text!",
+			html: "<p>Some <s>strikethrough</s> text!</p>\n"
+		});
+	});
+
+	it("Test adding code markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some code text!",
+			textToHighlight: "code",
+			action: "code",
+			markdownText: "Some `code` text!",
+			html: "<p>Some <code>code</code> text!</p>\n"
+		});
+	});
+
+	it("Test adding link markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some link text!",
+			textToHighlight: "link",
+			action: "link",
+			markdownText: "Some [link](url) text!",
+			html: "<p>Some <a href=\"url\">link</a> text!</p>\n"
+		});
+	});
+
+	it("Test adding quote markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some quote text!",
+			textToHighlight: "quote",
+			action: "quote",
+			markdownText: "> Some quote text!\n",
+			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
+		});
+	});
+
+	it("Test adding numbered list markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some numbered list text!",
+			textToHighlight: "numberedList",
+			action: "numberedList",
+			markdownText: "1. Some numbered list text!\n",
+			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
+		});
+	});
+
+	it("Test adding bulleted list markdown.", function() {
+		addMarkdownWithToolbar({
+			initialText: "Some bulleted list text!",
+			textToHighlight: "bulletedList",
+			action: "bulletedList",
+			markdownText: "* Some bulleted list text!\n",
+			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
+		});
+	});
+});
+
+describe("Test edting a comment using keyboard shortcuts to add markdown syntax", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.setCanvasConfig({ "selectedMarkdownInComments": true });
+	});
+
+	it("Test adding title markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some title text!",
+			textToHighlight: "title",
+			action: "increaseHashes",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
+	});
+
+	it("Test adding title markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "## Some title text!",
+			textToHighlight: "title",
+			action: "decreaseHashes",
+			markdownText: "# Some title text!",
+			html: "<h1>Some title text!</h1>\n"
+		});
+	});
+
+	it("Test adding bold markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some bold text!",
+			textToHighlight: "bold",
+			action: "bold",
+			markdownText: "Some **bold** text!",
+			html: "<p>Some <strong>bold</strong> text!</p>\n"
+		});
+	});
+
+	it("Test adding italics markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some italics text!",
+			textToHighlight: "italics",
+			action: "italics",
+			markdownText: "Some _italics_ text!",
+			html: "<p>Some <em>italics</em> text!</p>\n"
+		});
+	});
+
+	it("Test adding strikethrough markdown using a keyboard shortcut.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some strikethrough text!",
+			textToHighlight: "strikethrough",
+			action: "strikethrough",
+			markdownText: "Some ~~strikethrough~~ text!",
+			html: "<p>Some <s>strikethrough</s> text!</p>\n"
+		});
+	});
+
+	it("Test adding code markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some code text!",
+			textToHighlight: "code",
+			action: "code",
+			markdownText: "Some `code` text!",
+			html: "<p>Some <code>code</code> text!</p>\n"
+		});
+	});
+
+	it("Test adding link markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some link text!",
+			textToHighlight: "link",
+			action: "link",
+			markdownText: "Some [link](url) text!",
+			html: "<p>Some <a href=\"url\">link</a> text!</p>\n"
+		});
+	});
+
+	it("Test adding quote markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some quote text!",
+			textToHighlight: "quote",
+			action: "quote",
+			markdownText: "> Some quote text!\n",
+			html: "<blockquote>\n<p>Some quote text!</p>\n</blockquote>\n"
+		});
+	});
+
+	it("Test adding numbered list markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some numbered list text!",
+			textToHighlight: "numberedList",
+			action: "numberedList",
+			markdownText: "1. Some numbered list text!\n",
+			html: "<ol>\n<li>Some numbered list text!</li>\n</ol>\n"
+		});
+	});
+
+	it("Test adding bulleted list markdown.", function() {
+		addMarkdownWithKeyboard({
+			initialText: "Some bulleted list text!",
+			textToHighlight: "bulletedList",
+			action: "bulletedList",
+			markdownText: "* Some bulleted list text!\n",
+			html: "<ul>\n<li>Some bulleted list text!</li>\n</ul>\n"
+		});
+	});
+});
+
+function addMarkdownWithToolbar(d) {
+	cy.clickToolbarAddComment();
+	cy.verifyNumberOfComments(1);
+	cy.editTextInComment("", d.initialText);
+
+	cy.selectTextInComment(d.textToHighlight, d.initialText);
+	cy.clickTextToolbarOption(d.action, d.menuAction);
+
+	cy.clickCanvasAt(5, 5);
+	cy.verifyCommentContainsHTML(d.markdownText, d.html);
+}
+
+function addMarkdownWithKeyboard(d) {
+	cy.clickToolbarAddComment();
+	cy.verifyNumberOfComments(1);
+	cy.editTextInComment("", d.initialText);
+
+	cy.selectTextInComment(d.textToHighlight, d.initialText);
+	cy.shortcutKeysMarkdown(d.action);
+
+	cy.clickCanvasAt(5, 5);
+	cy.verifyCommentContainsHTML(d.markdownText, d.html);
+}

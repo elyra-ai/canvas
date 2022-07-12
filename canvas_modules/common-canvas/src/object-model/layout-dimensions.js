@@ -358,6 +358,11 @@ const portsHorizontalDefaultLayout = {
 		// Comment port (circle) radius
 		commentPortRadius: 5,
 
+		// Position of the comment toolbar as an offset from the comment position
+		// (which is the top left corner of the comment bounding box).
+		commentToolbarPosX: -2,
+		commentToolbarPosY: -44,
+
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
 		// ---------------------------------------------------------------------------
@@ -741,6 +746,11 @@ const portsVerticalDefaultLayout = {
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
+
+		// Position of the comment toolbar as an offset from the comment position
+		// (which is the top left corner of the comment bounding box).
+		commentToolbarPosX: -2,
+		commentToolbarPosY: -44,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations

@@ -622,6 +622,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableMarkdownInComments = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedMarkdownInComments" // Set ID to corresponding field in App.js state
+				labelText="Enable Markdown Text"
+				toggled={this.props.getStateValue("selectedMarkdownInComments")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
@@ -1429,6 +1438,10 @@ export default class SidePanelForms extends React.Component {
 					{enableAssocLinkCreation}
 					{divider}
 					{assocLinkType}
+					{divider}
+					<div className="harness-side-panel-header">Comments</div>
+					{divider}
+					{enableMarkdownInComments}
 					{divider}
 					<div className="harness-side-panel-header">Drag, Pan, Zoom and Select</div>
 					{divider}

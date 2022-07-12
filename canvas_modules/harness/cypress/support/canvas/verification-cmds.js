@@ -63,6 +63,13 @@ Cypress.Commands.add("verifyCommentColor", (commentText, color) => {
 		});
 });
 
+Cypress.Commands.add("verifyCommentContainsHTML", (commentText, commentHTML) => {
+	cy.getCommentWithText(commentText)
+		.find("foreignObject .d3-comment-text")
+		.then((com) => {
+			expect(com[0].innerHTML).to.equal(commentHTML);
+		});
+});
 
 Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 	cy.getCanvasTranslateCoords()
