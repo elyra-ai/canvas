@@ -498,8 +498,80 @@ describe("Properties Controller property values", () => {
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
-		const actualValues = controller.getPropertyValues({ "filterHiddenDisabled": true });
-		const expectedValues = {
+		// Set value for hidden control
+		controller.updatePropertyValue({ name: "hidden_required_control" }, "test");
+
+		// Get all properties
+		const expectedAllProperties = {
+			param_int: 5,
+			param_str: "Testing a string parameter",
+			param_str_array: ["value1", "value2", "value3", "value4"],
+			param_mix_table: [
+				["field1", true, 10, 0.674, "DSX"],
+				["field2", null, 10, 0.674, "WDP"],
+				["field3", false, null, 0.674, "WML"],
+				["field4", true, 10, null, ""],
+				["field5", false, 10, 0.674, null]
+			],
+			param_message1: [],
+			param_message2: [],
+			param_null: null,
+			param_empty: "",
+			param_complex: [3, "col in complex type", "zoom"],
+			structureeditor: [1, 2, 3],
+			hidden_required_control: "test"
+		};
+		const actualAllProperties = controller.getPropertyValues();
+		expect(expectedAllProperties).to.eql(actualAllProperties);
+
+		// filterHiddenControls: Only filter controls having controlType "hidden"
+		// Note - hidden_required_control is filtered because it's a hidden control
+		const expectedFilteredHiddenProperties = {
+			param_int: 5,
+			param_str: "Testing a string parameter",
+			param_str_array: ["value1", "value2", "value3", "value4"],
+			param_mix_table: [
+				["field1", true, 10, 0.674, "DSX"],
+				["field2", null, 10, 0.674, "WDP"],
+				["field3", false, null, 0.674, "WML"],
+				["field4", true, 10, null, ""],
+				["field5", false, 10, 0.674, null]
+			],
+			param_message1: [],
+			param_message2: [],
+			param_null: null,
+			param_empty: "",
+			param_complex: [3, "col in complex type", "zoom"],
+			structureeditor: [1, 2, 3]
+		};
+		const actualFilteredHiddenProperties = controller.getPropertyValues({ filterHiddenControls: true });
+		expect(expectedFilteredHiddenProperties).to.eql(actualFilteredHiddenProperties);
+
+		// filterHiddenDisabled: Only filter controls having state "hidden" or "disabled"
+		// Note - param_str_array is filtered because it has state hidden
+		const expectedFilteredHiddenDisabled = {
+			param_int: 5,
+			param_str: "Testing a string parameter",
+			param_mix_table: [
+				["field1", true, null, 0.674, "DSX"],
+				["field2", null, 10, 0.674, "WDP"],
+				["field3", false, null, 0.674, "WML"],
+				["field4", null, 10, null, ""],
+				[null, false, 10, null, null]],
+			param_message1: [],
+			param_message2: [],
+			param_null: null,
+			param_empty: "",
+			param_complex: [3, "col in complex type", "zoom"],
+			structureeditor: [1, 2, 3],
+			hidden_required_control: "test"
+		};
+		const actualFilteredHiddenDisabled = controller.getPropertyValues({ filterHiddenDisabled: true });
+		expect(expectedFilteredHiddenDisabled).to.eql(actualFilteredHiddenDisabled);
+
+		// filterHiddenControls, filterHiddenDisabled: Filter controls having state "hidden" or "disabled" AND control type "hidden"
+		// Note - hidden_required_control, param_str_array both are filtered
+		const expectedFilteredValues = {
 			param_int: 5,
 			param_str: "Testing a string parameter",
 			param_mix_table: [
@@ -515,7 +587,8 @@ describe("Properties Controller property values", () => {
 			param_complex: [3, "col in complex type", "zoom"],
 			structureeditor: [1, 2, 3]
 		};
-		expect(expectedValues).to.eql(actualValues);
+		const actualFilteredValues = controller.getPropertyValues({ filterHiddenControls: true, filterHiddenDisabled: true });
+		expect(expectedFilteredValues).to.eql(actualFilteredValues);
 	});
 });
 
