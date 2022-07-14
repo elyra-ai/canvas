@@ -1882,7 +1882,7 @@ export default class SVGCanvasRenderer {
 			this.isSelecting = true;
 
 			// Ensure the link objects in the active pipeline have their coordinate
-			// positions set. The coords might be set if the last object model
+			// positions set. The coords might not be set if the last object model
 			// update was a change in selections or some other operation that does
 			// not redraw link lines.
 			this.buildLinksArray();
@@ -1955,7 +1955,9 @@ export default class SVGCanvasRenderer {
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	zoomCommentToolbar() {
-		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
+		if (this.config.enableMarkdownInComments &&
+				this.dispUtils.isDisplayingFullPage() &&
+				this.svgCanvasTextArea.isEditingText()) {
 			// If a node label or text decoration is being edited com will be undefined.
 			const com = this.activePipeline.getComment(this.svgCanvasTextArea.getEditingTextId());
 			if (com) {
@@ -6022,9 +6024,7 @@ export default class SVGCanvasRenderer {
 		return "d3-node-group" + supernodeClass + draggableClass + customClass;
 	}
 
-	// Pushes the links to be below nodes and then pushes comments to be below
-	// nodes and links. This lets the user put a large comment underneath a set
-	// of nodes and links for annotation purposes.
+	// Pushes the links to be below nodes within the nodesLinksGrp group.
 	setDisplayOrder(linkGroup) {
 		// Force those links without decorations to be behind those with decorations
 		// in case the links overlap we don't want the decorations to be overwritten.
