@@ -348,8 +348,6 @@ export default class SvgCanvasTextArea {
 	// Displays a text area to allow text entry and editing for: comments;
 	// node labels; or text decorations on either a node or link.
 	displayTextArea(data) {
-		const that = this;
-
 		this.textAreaHeight = data.height; // Save for comparison during auto-resize
 		this.editingText = true;
 		this.editingTextId = data.id;
@@ -366,21 +364,24 @@ export default class SvgCanvasTextArea {
 			.append("xhtml:textarea")
 			.attr("class", data.className)
 			.text(unescapeText(data.text))
-			.on("keydown", function(d3Event) {
+			.on("keydown", (d3Event) => {
 				// Don't accept return key press when text is all on one line or
 				// if application doesn't want line feeds inserted in the label.
 				if ((data.singleLine || !data.allowReturnKey) &&
 						d3Event.keyCode === RETURN_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
+				// If user presses ESC key revert back to original text by just
+				// closing the text area.
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					that.textAreaEscKeyPressed = true;
-					that.closeTextArea(foreignObject, data);
+					this.textAreaEscKeyPressed = true;
+					this.closeTextArea(foreignObject, data);
 				}
+				// Prevent user entering more than any allowed maximum for characters.
 				if (data.maxCharacters &&
-						this.value.length >= data.maxCharacters &&
-						!that.textAreaAllowedKeys(d3Event)) {
+						d3Event.target.value.length >= data.maxCharacters &&
+						!this.textAreaAllowedKeys(d3Event)) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				}
 				// Call any specific keyboard handler for the type of
@@ -389,22 +390,22 @@ export default class SvgCanvasTextArea {
 					data.keyboardInputCallback(d3Event);
 				}
 			})
-			.on("keyup", function(d3Event) {
-				data.autoSizeCallback(this, foreignObject, data);
+			.on("keyup", (d3Event) => {
+				data.autoSizeCallback(d3Event.target, foreignObject, data);
 			})
-			.on("paste", function() {
-				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+			.on("paste", (d3Event) => {
+				this.logger.log("Text area - Paste - Scroll Ht = " + d3Event.target.scrollHeight);
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data);
+				setTimeout(data.autoSizeCallback, 500, d3Event.target, foreignObject, data);
 			})
-			.on("blur", function(d3Event, d) {
-				that.logger.log("Text area - blur");
+			.on("blur", (d3Event, d) => {
+				this.logger.log("Text area - blur");
 				// If the esc key was pressed to cause the blur event just return
 				// so label returns to what it was before editing started.
-				if (that.textAreaEscKeyPressed) {
-					that.textAreaEscKeyPressed = false;
+				if (this.textAreaEscKeyPressed) {
+					this.textAreaEscKeyPressed = false;
 					return;
 				}
 
@@ -414,11 +415,11 @@ export default class SvgCanvasTextArea {
 					return;
 				}
 
-				that.saveAndCloseTextArea(foreignObject, data, this.value, d3Event);
+				this.saveAndCloseTextArea(foreignObject, data, d3Event.target.value, d3Event);
 			})
-			.on("focus", function(d3Event, d) {
-				that.logger.log("Text area - focus");
-				data.autoSizeCallback(this, foreignObject, data);
+			.on("focus", (d3Event, d) => {
+				this.logger.log("Text area - focus");
+				data.autoSizeCallback(d3Event.target, foreignObject, data);
 			})
 			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
