@@ -313,7 +313,7 @@ export default class SvgCanvasTextArea {
 		this.displayTextArea({
 			id: dec.id,
 			text: dec.label,
-			singleLine: dec.label_single_line || true,
+			singleLine: dec.label_single_line || false,
 			maxCharacters: dec.label_max_characters || null,
 			allowReturnKey: dec.label_allow_return_key || false,
 			textCanBeEmpty: false,
