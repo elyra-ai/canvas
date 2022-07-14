@@ -144,7 +144,7 @@ export default class SvgCanvasTextArea {
 		// If the blur event is ocurring for an object outside of the textarea and
 		// text toolbar we save the current text and close the textarea.
 		const commentParent = d3.select(this.editingTextData.parentDomObj);
-		const foreignObject = commentParent.selectAll(".d3-text-entry-fo");
+		const foreignObject = commentParent.selectAll(".d3-foreign-object-text-entry");
 		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
 		const commentEntryElement = commentEntry.node();
 		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
@@ -356,7 +356,7 @@ export default class SvgCanvasTextArea {
 
 		const foreignObject = d3.select(data.parentDomObj)
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object d3-text-entry-fo")
+			.attr("class", "d3-foreign-object-text-entry")
 			.attr("width", data.width)
 			.attr("height", data.height)
 			.attr("x", data.xPos)

@@ -862,7 +862,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
 			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
 			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", this.nodeUtils.getNodeLabelForeignClass(node));
+			.attr("class", "d3-foreign-object-ghost-label");
 
 		const fObjectDiv = fObject
 			.append("xhtml:div")
@@ -2580,7 +2580,7 @@ export default class SVGCanvasRenderer {
 		// Node Label
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-node-label")
 			.call(this.attachNodeLabelListeners.bind(this))
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
@@ -2623,13 +2623,12 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object")
+		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-			.attr("class", (d) => this.nodeUtils.getNodeLabelForeignClass(d))
 			.select("div")
 			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
 			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
@@ -3367,7 +3366,7 @@ export default class SVGCanvasRenderer {
 			if (labelSel.empty()) {
 				labelSel = decSel
 					.append("foreignObject")
-					.attr("class", this.decUtils.getDecLabelForeignClass(dec))
+					.attr("class", "d3-foreign-object-dec-label")
 					.attr("x", 0)
 					.attr("y", 0)
 					.call(this.attachDecLabelListeners.bind(this, d, objType));
@@ -5060,7 +5059,7 @@ export default class SVGCanvasRenderer {
 		// Comment Text
 		newCommentGroups
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-comment-text")
 			.attr("x", 0)
 			.attr("y", 0)
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
@@ -5102,7 +5101,7 @@ export default class SVGCanvasRenderer {
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
 		// Comment Text
-		joinedCommentGrps.selectChildren(".d3-foreign-object")
+		joinedCommentGrps.selectChildren(".d3-foreign-object-comment-text")
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
@@ -5248,7 +5247,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentTextStyles(d, type, comGrp) {
 		const style = this.getCommentTextStyle(d, type);
-		comGrp.selectChildren(".d3-foreign-object").select("div")
+		comGrp.selectChildren(".d3-foreign-object-comment-text").select("div")
 			.attr("style", style);
 	}
 

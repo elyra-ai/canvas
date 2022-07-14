@@ -111,7 +111,11 @@ $link-highlight-color: $support-04;
 	outline: none;
 }
 
-.d3-foreign-object {
+.d3-foreign-object-ghost-label,
+.d3-foreign-object-node-label,
+.d3-foreign-object-dec-label,
+.d3-foreign-object-comment-text,
+.d3-foreign-object-text-entry {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
 	// Allows the focus highlight to be visible on FF and Safari
@@ -303,12 +307,6 @@ $link-highlight-color: $support-04;
 
 .d3-node-warning-label {
 	color: $node-warning-color;
-}
-
-/* Used for debugging label position */
-
-.d3-node-label-outline {
-	border: solid 1px;
 }
 
 /* Common styles for node labels and node/link decoration labels */

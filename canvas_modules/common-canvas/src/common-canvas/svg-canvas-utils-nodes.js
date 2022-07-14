@@ -27,11 +27,6 @@ export default class SvgCanvasNodes {
 		return "d3-node-image";
 	}
 
-	getNodeLabelForeignClass(node) {
-		const outlineClass = node.layout.labelOutline ? " d3-node-label-outline" : "";
-		return "d3-foreign-object" + outlineClass;
-	}
-
 	getNodeLabelClass(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
