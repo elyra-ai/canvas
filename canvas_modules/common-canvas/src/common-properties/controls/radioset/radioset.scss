@@ -45,7 +45,6 @@
 		flex-wrap: wrap;
 		overflow: hidden;
 		.bx--radio-button-wrapper{
-			grid-area: radio;
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
 		}
 		.properties-control-nested-panel{
