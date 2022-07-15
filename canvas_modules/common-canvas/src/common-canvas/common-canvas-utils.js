@@ -27,7 +27,7 @@ import { ASSOCIATION_LINK, ASSOC_STRAIGHT, COMMENT_LINK, NODE_LINK,
 export default class CanvasUtils {
 
 	static getObjectPositions(objects) {
-		const objectPositions = [];
+		const objectPositions = {};
 		objects.forEach((obj) => {
 			objectPositions[obj.id] = { x_pos: obj.x_pos, y_pos: obj.y_pos };
 		});
@@ -35,7 +35,7 @@ export default class CanvasUtils {
 	}
 
 	static getLinkPositions(links) {
-		const positions = [];
+		const positions = {};
 		links.forEach((l) => {
 			if (l.srcPos) {
 				set(positions[l.id], "srcPos.x_pos", l.srcPos.x_pos);
@@ -53,7 +53,7 @@ export default class CanvasUtils {
 	}
 
 	static moveSurroundingObjects(supernode, objects, nodeSizingDirection, newWidth, newHeight, updateNodePos) {
-		const newObjectPositions = [];
+		const newObjectPositions = {};
 		const incWidth = newWidth - supernode.width;
 		const incHeight = newHeight - supernode.height;
 		const superCenterX = supernode.x_pos + (supernode.width / 2);
@@ -88,7 +88,7 @@ export default class CanvasUtils {
 	}
 
 	static moveSurroundingDetachedLinks(supernode, links, nodeSizingDirection, newWidth, newHeight, updateLinkPos) {
-		const newLinkPositions = [];
+		const newLinkPositions = {};
 		const incWidth = newWidth - supernode.width;
 		const incHeight = newHeight - supernode.height;
 		const superCenterX = supernode.x_pos + (supernode.width / 2);
