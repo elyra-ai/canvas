@@ -757,19 +757,23 @@ g.bkg-col-cyan-50 {
 		border-collapse: collapse;
 		box-sizing: border-box;
 		text-indent: initial;
+		color: $text-01;
 		thead {
+			@include carbon--type-style("productive-heading-01");
+			font-size: 12px;
 			display: table-header-group;
 			vertical-align: middle;
 			border-color: inherit;
-			color: $text-primary;
-			background-color: $layer-accent;
-
+			background-color: $ui-03;
+			text-align: left;
 			tr th {
 				padding: 8px;
 				border-bottom: 2px solid $ui-03;
 			}
 		}
 		tbody {
+			@include carbon--type-style("body-short-01");
+			font-size: 12px;
 			tr {
 				border-bottom: 2px solid $ui-03;
 				background-color: $ui-02;

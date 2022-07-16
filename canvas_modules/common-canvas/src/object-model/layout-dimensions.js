@@ -353,7 +353,8 @@ const portsHorizontalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
@@ -742,7 +743,8 @@ const portsVerticalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,

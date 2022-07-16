@@ -101,7 +101,7 @@
               "x_pos": 914.5120239257812,
               "y_pos": 457.9549560546875,
               "width": 433.528564453125,
-              "height": 430.82647705078125,
+              "height": 452.82647705078125,
               "content": "## Tables\n\n##### Regular columns\n\n| Player | Description |\n| ------ | ----------- |\n| Vardy   |Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n\n##### Right aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| Vardy   | Legend. World-class striker. Fast as lightning. |\n| KDH | Brilliant new prospect. Tenacious mid-fielder. |\n| Thomas    | Young left full back. Has a FA Cup winners medal. |\n",
               "associated_id_refs": []
             }

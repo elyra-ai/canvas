@@ -7099,16 +7099,16 @@ export default class SVGCanvasRenderer {
 	// This is used when a new comment is created from the toolbar to make sure the
 	// new comment always appears in the view port.
 	getSvgViewportOffset() {
-		let xPos = this.canvasLayout.addCommentOffset;
-		let yPos = this.canvasLayout.addCommentOffset;
+		let xPos = this.canvasLayout.addCommentOffsetX;
+		let yPos = this.canvasLayout.addCommentOffsetY;
 
 		if (this.zoomTransform) {
 			xPos = this.zoomTransform.x / this.zoomTransform.k;
 			yPos = this.zoomTransform.y / this.zoomTransform.k;
 
 			// The window's viewport is in the opposite direction of zoomTransform
-			xPos = -xPos + this.canvasLayout.addCommentOffset;
-			yPos = -yPos + this.canvasLayout.addCommentOffset;
+			xPos = -xPos + this.canvasLayout.addCommentOffsetX;
+			yPos = -yPos + this.canvasLayout.addCommentOffsetY;
 		}
 
 		return {
