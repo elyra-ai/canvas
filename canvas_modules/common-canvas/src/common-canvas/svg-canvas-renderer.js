@@ -134,8 +134,8 @@ export default class SVGCanvasRenderer {
 		// Allows us to track the sizing behavior of nodes
 		this.nodeSizing = false;
 		this.nodeSizingDirection = "";
-		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingDetLinksInfo = [];
+		this.nodeSizingObjectsInfo = {};
+		this.nodeSizingDetLinksInfo = {};
 
 		// Keeps track of the size and position, at the start of the sizing event,
 		// of the object (node or comment) being sized.
@@ -6018,8 +6018,8 @@ export default class SVGCanvasRenderer {
 			});
 		}
 		this.nodeSizing = false;
-		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingDetLinksInfo = [];
+		this.nodeSizingObjectsInfo = {};
+		this.nodeSizingDetLinksInfo = {};
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
