@@ -1,0 +1,106 @@
+/*
+ * Copyright 2017-2022 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { isEmpty } from "lodash";
+import { Toggle } from "carbon-components-react";
+import ValidationMessage from "./../../components/validation-message";
+import * as ControlUtils from "./../../util/control-utils";
+import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { v4 as uuid4 } from "uuid";
+import classNames from "classnames";
+import Icon from "./../../../icons/icon";
+
+class ToggleControl extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.id = ControlUtils.getControlId(this.props.propertyId);
+	}
+
+	handleChange(value) {
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+	}
+
+	render() {
+		const label = this.props.control.label ? this.props.control.label.text : "";
+		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+		let tooltip = "";
+		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
+			tooltip = (
+				<span >{this.props.control.description.text}</span>
+			);
+			// If tooltip has a link, add propertyId in the link object
+			if (this.props.control.description.link) {
+				this.props.control.description.link.propertyId = this.props.propertyId;
+			}
+		}
+		const tooltipIcon = isEmpty(tooltip) ? "" : (
+			<Tooltip
+				id={tooltipId}
+				tip={tooltip}
+				link={this.props.control.description.link ? this.props.control.description.link : null}
+				tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+				direction="bottom"
+				className="properties-tooltips"
+				showToolTipOnClick
+			>
+				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+			</Tooltip>
+		);
+		const toggleLabel = (
+			<span className="properties-toggle-label">
+				{label}
+			</span>
+		);
+		return (
+			<div className={classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
+				<Toggle
+					disabled={this.props.state === STATES.DISABLED}
+					id={this.id}
+					size="sm"
+					labelText={toggleLabel}
+					onToggle={this.handleChange.bind(this)}
+				/>
+				{tooltipIcon}
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
+			</div>
+		);
+	}
+}
+
+ToggleControl.propTypes = {
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool,
+	state: PropTypes.string, // pass in by redux
+	value: PropTypes.bool, // pass in by redux
+	messageInfo: PropTypes.object // pass in by redux
+};
+
+const mapStateToProps = (state, ownProps) => ({
+	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
+	state: ownProps.controller.getControlState(ownProps.propertyId),
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+});
+
+export default connect(mapStateToProps, null)(ToggleControl);

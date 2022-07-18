@@ -35,6 +35,7 @@ import NumberfieldControl from "./numberfield";
 import DatefieldControl from "./datefield";
 import TimefieldControl from "./timefield";
 import CheckboxControl from "./checkbox";
+import ToggleControl from "./toggle";
 import CheckboxsetControl from "./checkboxset";
 import RadiosetControl from "./radioset";
 import Dropdown from "./dropdown";
@@ -220,6 +221,9 @@ export default class ControlFactory {
 			break;
 		case (ControlType.CHECKBOX):
 			createdControl = (<CheckboxControl {...props} />);
+			break;
+		case (ControlType.TOGGLE):
+			createdControl = (<ToggleControl {...props} />);
 			break;
 		case (ControlType.CHECKBOXSET):
 			if (!tableInfo) {
