@@ -736,7 +736,8 @@ g.bkg-col-cyan-50 {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
-		background-color: $ui-02;
+		background-color: $ui-03;
+		border-radius: 4px;
 		white-space: pre-wrap;
 	}
 	pre {
@@ -748,6 +749,9 @@ g.bkg-col-cyan-50 {
 		border: 1px solid $ui-03;
 		border-radius: 4px;
 		white-space: pre-wrap;
+		code {
+			background-color: $ui-02;
+		}
 	}
 	table {
 		width: 100%;
