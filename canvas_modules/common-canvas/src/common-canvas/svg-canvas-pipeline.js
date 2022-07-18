@@ -24,7 +24,15 @@ import { COMMENT_LINK } from "./constants/canvas-constants";
 export default class SVGCanvasPipeline {
 	constructor(pipelineId, canvasInfo) {
 		this.logger = new Logger("SVGCanvasActivePipeline");
-		this.logger.logStartTimer("constructor");
+		this.logger.log("constructor - start");
+
+		this.initialize(pipelineId, canvasInfo);
+
+		this.logger.log("constructor - end");
+	}
+
+	initialize(pipelineId, canvasInfo) {
+		this.logger.logStartTimer("initialize");
 		this.canvasInfo = canvasInfo;
 		this.pipeline = this.getPipeline(pipelineId, canvasInfo);
 
@@ -43,8 +51,7 @@ export default class SVGCanvasPipeline {
 		// preProcessPipeline uses the mapped objects so this needs to be done
 		// after they have been created.
 		this.pipeline = this.preProcessPipeline(this.pipeline);
-
-		this.logger.logEndTimer("constructor");
+		this.logger.logEndTimer("initialize");
 	}
 
 	getCanvasDimensions(gap) {

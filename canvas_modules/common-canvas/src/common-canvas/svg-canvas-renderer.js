@@ -32,8 +32,7 @@ const markdownIt = require("markdown-it")({
 	typographer: true
 });
 
-import { cloneDeep, escape as escapeText, forOwn, get,
-	unescape as unescapeText } from "lodash";
+import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -56,32 +55,10 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
-import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
+import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
-
 const showLinksTime = false;
-
-const BACKSPACE_KEY = 8;
-const RETURN_KEY = 13;
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const UP_ARROW_KEY = 38;
-const RIGHT_ARROW_KEY = 39;
-const DOWN_ARROW_KEY = 40;
-const DELETE_KEY = 46;
-const A_KEY = 65;
-const B_KEY = 66;
-const E_KEY = 69;
-const I_KEY = 73;
-const K_KEY = 75;
-const X_KEY = 88;
-const LAB_KEY = 188; // Left angle bracket <
-const RAB_KEY = 190; // Right angle bracket >
-const SEVEN_KEY = 55;
-const EIGHT_KEY = 56;
-
-const SCROLL_PADDING = 12;
 
 const NINETY_DEGREES = 90;
 
@@ -116,6 +93,18 @@ export default class SVGCanvasRenderer {
 		this.commentUtils = new SvgCanvasComments();
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
+		this.svgCanvasTextArea = new SvgCanvasTextArea(
+			this.config,
+			this.dispUtils,
+			this.nodeUtils,
+			this.decUtils,
+			this.canvasController,
+			this.canvasDiv,
+			this.activePipeline,
+			this.displayComments.bind(this), // Function
+			this.displayLinks.bind(this), // Function
+			this.getCommentToolbarPos.bind(this) // Function
+		);
 
 		this.dispUtils.setDisplayState();
 		this.logger.log(this.dispUtils.getDisplayStateMsg());
@@ -147,10 +136,6 @@ export default class SVGCanvasRenderer {
 		this.notSnappedYPos = 0;
 		this.notSnappedWidth = 0;
 		this.notSnappedHeight = 0;
-
-		// Allows us to track the editing of text (either comments or node labels)
-		this.editingText = false;
-		this.editingTextId = "";
 
 		// Allows us to record the drag behavior or nodes and comments.
 		this.dragging = false;
@@ -323,7 +308,7 @@ export default class SVGCanvasRenderer {
 	setCanvasInfoRenderer(canvasInfo) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
-		this.activePipeline = new SVGCanvasPipeline(this.pipelineId, canvasInfo);
+		this.activePipeline.initialize(this.pipelineId, canvasInfo);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
@@ -618,7 +603,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns true when we are editing text. Called by svg-canvas-d3.
 	isEditingText() {
-		if (this.editingText) {
+		if (this.svgCanvasTextArea.isEditingText()) {
 			return true;
 		}
 		let state = false;
@@ -877,7 +862,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
 			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
 			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", this.nodeUtils.getNodeLabelForeignClass(node));
+			.attr("class", "d3-foreign-object-ghost-label");
 
 		const fObjectDiv = fObject
 			.append("xhtml:div")
@@ -1897,7 +1882,7 @@ export default class SVGCanvasRenderer {
 			this.isSelecting = true;
 
 			// Ensure the link objects in the active pipeline have their coordinate
-			// positions set. The coords might be set if the last object model
+			// positions set. The coords might not be set if the last object model
 			// update was a change in selections or some other operation that does
 			// not redraw link lines.
 			this.buildLinksArray();
@@ -1970,9 +1955,11 @@ export default class SVGCanvasRenderer {
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	zoomCommentToolbar() {
-		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
+		if (this.config.enableMarkdownInComments &&
+				this.dispUtils.isDisplayingFullPage() &&
+				this.svgCanvasTextArea.isEditingText()) {
 			// If a node label or text decoration is being edited com will be undefined.
-			const com = this.activePipeline.getComment(this.editingTextId);
+			const com = this.activePipeline.getComment(this.svgCanvasTextArea.getEditingTextId());
 			if (com) {
 				const pos = this.getCommentToolbarPos(com);
 				this.canvasController.moveTextToolbar(pos.x, pos.y);
@@ -2595,7 +2582,7 @@ export default class SVGCanvasRenderer {
 		// Node Label
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-node-label")
 			.call(this.attachNodeLabelListeners.bind(this))
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
@@ -2638,13 +2625,12 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object")
+		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-			.attr("class", (d) => this.nodeUtils.getNodeLabelForeignClass(d))
 			.select("div")
 			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
 			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
@@ -3382,7 +3368,7 @@ export default class SVGCanvasRenderer {
 			if (labelSel.empty()) {
 				labelSel = decSel
 					.append("foreignObject")
-					.attr("class", this.decUtils.getDecLabelForeignClass(dec))
+					.attr("class", "d3-foreign-object-dec-label")
 					.attr("x", 0)
 					.attr("y", 0)
 					.call(this.attachDecLabelListeners.bind(this, d, objType));
@@ -4537,13 +4523,6 @@ export default class SVGCanvasRenderer {
 		return this.getNodePortIdForElement(portElement);
 	}
 
-	// Returns an element, with the class name passed in, if one exists, at the
-	// position defined by x,y.
-	getElementAtPoint(x, y, className) {
-		const elements = document.elementsFromPoint(x, y);
-		return elements.find((el) => this.isClassNameIncluded(el, className));
-	}
-
 	// Returns a DOM element which either has the classNames passed in or
 	// has an ancestor with the className passed in, at the position
 	// indicated by the clientX and clientY coordinates in the d3Event.
@@ -4560,42 +4539,10 @@ export default class SVGCanvasRenderer {
 		let foundElement = null;
 		let count = 0;
 		while (!foundElement && count < elements.length) {
-			foundElement = this.getParentElementWithClass(elements[count], className);
+			foundElement = CanvasUtils.getParentElementWithClass(elements[count], className);
 			count++;
 		}
 		return foundElement;
-	}
-
-	// Returns the element passed in, or an ancestor of the element, if either
-	// contains the classNames passed in. Otherwise it returns null if the
-	// className cannot be found. For example, if this element is a child of the
-	// node group object and "d3-node-group" is passed in, this function will
-	// find the group element.
-	getParentElementWithClass(element, className) {
-		let el = element;
-		let foundElement = null;
-
-		while (el) {
-			// No need to proceed if we find either of these. Stopping at svg-area
-			// prevents the search transitioning from a sub-flow to a parent flow.
-			if (this.isClassNameIncluded(el, "d3-new-connection-guide") ||
-					this.isClassNameIncluded(el, "svg-area")) {
-				el = null;
-
-			} else if (this.isClassNameIncluded(el, className)) {
-				foundElement = el;
-				el = null;
-			} else {
-				el = el.parentNode;
-			}
-		}
-		return foundElement;
-	}
-
-	// Returns true if the class name passed in is one of the classes assigned
-	// to the element passed in.
-	isClassNameIncluded(el, className) {
-		return el.classList && el.classList.contains(className);
 	}
 
 	// Returns the node link object from the canvasInfo corresponding to the
@@ -5114,7 +5061,7 @@ export default class SVGCanvasRenderer {
 		// Comment Text
 		newCommentGroups
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-comment-text")
 			.attr("x", 0)
 			.attr("y", 0)
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
@@ -5156,7 +5103,7 @@ export default class SVGCanvasRenderer {
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
 		// Comment Text
-		joinedCommentGrps.selectChildren(".d3-foreign-object")
+		joinedCommentGrps.selectChildren(".d3-foreign-object-comment-text")
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
@@ -5173,7 +5120,7 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				if (this.config.enableEditingActions && d.id !== this.editingTextId) {
+				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 			})
@@ -5302,7 +5249,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentTextStyles(d, type, comGrp) {
 		const style = this.getCommentTextStyle(d, type);
-		comGrp.selectChildren(".d3-foreign-object").select("div")
+		comGrp.selectChildren(".d3-foreign-object-comment-text").select("div")
 			.attr("style", style);
 	}
 
@@ -5318,387 +5265,16 @@ export default class SVGCanvasRenderer {
 		return CanvasUtils.getObjectStyle(d, "text", type);
 	}
 
-	displayCommentTextArea(d, parentDomObj) {
-		this.editingTextData = {
-			id: d.id,
-			text: d.content,
-			singleLine: false,
-			maxCharacters: null,
-			allowReturnKey: true,
-			textCanBeEmpty: true,
-			xPos: 0,
-			yPos: 0,
-			width: d.width,
-			height: d.height,
-			className: "d3-comment-entry",
-			parentDomObj: parentDomObj,
-			keyboardInputCallback: this.config.enableMarkdownInComments ? this.commentKeyboardHandler.bind(this) : null,
-			autoSizeCallback: this.autoSizeComment.bind(this),
-			saveTextChangesCallback: this.saveCommentChanges.bind(this),
-			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
-		};
-		this.displayTextArea(this.editingTextData);
-		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
-			const pos = this.getCommentToolbarPos(d);
-			this.canvasController.openTextToolbar(pos.x, pos.y,
-				this.markdownActionHandler.bind(this),
-				this.blurInTextToolbar.bind(this));
-		}
-	}
-
-	// Handles markdown actions initiated through the keyboard.
-	commentKeyboardHandler(d3Event) {
-		const action = this.getMarkdownAction(d3Event);
-		if (action) {
-			if (action !== "return") {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			}
-			this.markdownActionHandler(action, d3Event);
-		}
-	}
-
-	// Called when the blur event occurs for the text toolbar.
-	blurInTextToolbar(evt) {
-		// When Cypress tests are running a call to focus() in addTextToTextArea()
-		// can cause an incorrect blur event to be generated for the text toolbar
-		// (where relatedTarget is null). This flag therefore allows us to avoid
-		// thus blue events that occur while addTextToTextArea() is executing.
-		if (this.addingTextToTextArea) {
-			return;
-		}
-
-		// If there is a relatedTarget and it is set to one of the elements for the
-		// textarea, texttoolbar, etc we ignore the blur event.
-		if (evt.relatedTarget &&
-				(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
-					this.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
-					this.getParentElementWithClass(evt.relatedTarget, "bx--overflow-menu-options__btn"))) {
-			return;
-		}
-
-		// If the blur event is ocurring for an object outside of the textarea and
-		// text toolbar we save the current text and close the textarea.
-		const commentParent = d3.select(this.editingTextData.parentDomObj);
-		const foreignObject = commentParent.selectAll(".d3-text-entry-fo");
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
-	}
-
-	// Applies a markdown action to the comment text being edited using
-	// the same commands as the toolbar.
-	getMarkdownAction(d3Event) {
-		if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
-			switch (d3Event.keyCode) {
-			case B_KEY: return "bold";
-			case I_KEY: return "italics";
-			case X_KEY: return d3Event.shiftKey ? "strikethrough" : null;
-			case SEVEN_KEY: return d3Event.shiftKey ? "numberedList" : null;
-			case EIGHT_KEY: return d3Event.shiftKey ? "bulletedList" : null;
-			case E_KEY: return "code";
-			case K_KEY: return "link";
-			case LAB_KEY: return "decreaseHashes";
-			case RAB_KEY: return d3Event.shiftKey ? "quote" : "increaseHashes";
-			default:
-			}
-		} else if (d3Event.keyCode === RETURN_KEY) {
-			return "return";
-		}
-
-		return null;
-	}
-
-	// Handles any actions requested on the comment text to add markdown
-	// characters to the text. evt can be either a d3Event object from D3 when
-	// this method is called from keyboard entry in the textarea or it can be
-	// a synthetic event object from React when called from the text toolbar.
-	markdownActionHandler(action, evt) {
-		this.logger.log("markdownActionHandler - action = " + action);
-
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		const start = commentEntryElement.selectionStart;
-		const end = commentEntryElement.selectionEnd;
-		const text = commentEntryElement.value;
-
-		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
-		if (mdObj) {
-			CanvasUtils.stopPropagationAndPreventDefault(evt);
-			this.addTextToTextArea(mdObj, commentEntryElement);
-		}
-	}
-
-	// Replaces the text in the currently displayed textarea with the text
-	// passed in. We use execCommand because this adds the inserted text to the
-	// textarea's undo/redo stack whereas setting the text directly into the
-	// textarea control does not.
-	addTextToTextArea(mdObj, commentEntryElement) {
-		this.addingTextToTextArea = true;
-		const text = unescapeText(mdObj.newText);
-		commentEntryElement.focus();
-		commentEntryElement.select();
-		document.execCommand("insertText", false, text);
-		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
-		this.addingTextToTextArea = false;
-	}
-
-	autoSizeComment(textArea, foreignObject, data) {
-		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
-
-		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
-		if (this.textAreaHeight < scrollHeight) {
-			this.textAreaHeight = scrollHeight;
-			foreignObject.style("height", this.textAreaHeight + "px");
-			this.activePipeline.getComment(data.id).height = this.textAreaHeight;
-			this.displayComments();
-			this.displayLinks();
-		}
-	}
-
-	saveCommentChanges(id, newText, newHeight) {
-		const comment = this.activePipeline.getComment(id);
-		const data = {
-			editType: "editComment",
-			editSource: "canvas",
-			id: comment.id,
-			content: newText,
-			width: comment.width,
-			height: newHeight,
-			x_pos: comment.x_pos,
-			y_pos: comment.y_pos,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	closeCommentTextArea() {
-		this.canvasController.closeTextToolbar();
+	displayCommentTextArea(comment, parentDomObj) {
+		this.svgCanvasTextArea.displayCommentTextArea(comment, parentDomObj);
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
-		d3.select(parentDomObj).selectAll("div")
-			.attr("style", "display:none;");
-		this.displayTextArea({
-			id: node.id,
-			text: node.label,
-			singleLine: node.layout.labelSingleLine,
-			maxCharacters: node.layout.labelMaxCharacters,
-			allowReturnKey: node.layout.labelAllowReturnKey,
-			textCanBeEmpty: false,
-			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
-			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
-			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
-			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
-			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
-			parentDomObj: parentDomObj,
-			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
-			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
-			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
-		});
+		this.svgCanvasTextArea.displayNodeLabelTextArea(node, parentDomObj);
 	}
 
-	// Increases the size of the editable multi-line text area for a label based
-	//  on the characters entered, and also ensures the maximum number of
-	//  characters for the label, if one is provided, is not exceeded.
-	// This callback works for editable multi-line node labels and also
-	// editable multi-line text decorations for either nodes or links.
-	autoSizeMultiLineLabel(textArea, foreignObject, data) {
-		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
-
-		// Restrict max characters in case text was pasted in to the text area.
-		if (data.maxCharacters &&
-				textArea.value.length > data.maxCharacters) {
-			textArea.value = textArea.value.substring(0, data.maxCharacters);
-		}
-		// Temporarily set the height to zero so the scrollHeight will get set to
-		// the full height of the text in the textarea. This allows us to close up
-		// the text area when the lines of text reduce.
-		foreignObject.style("height", 0);
-		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
-		this.textAreaHeight = scrollHeight;
-		foreignObject.style("height", this.textAreaHeight + "px");
-	}
-
-	saveNodeLabelChanges(id, newText, newHeight, taData) {
-		const data = {
-			editType: "setNodeLabel",
-			editSource: "canvas",
-			nodeId: id,
-			label: newText,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	// Called when the node label text area is closed. Sets the style of the
-	// div for the node label so the label is displayed (because it was hidden
-	// when the text area opened).
-	closeNodeLabelTextArea(nodeId) {
-		this.getNodeGroupSelectionById(nodeId)
-			.selectAll("div")
-			.attr("style", null);
-	}
-
-	// Displays a text area for an editable text decoration on either a node
-	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
-		this.displayTextArea({
-			id: dec.id,
-			text: dec.label,
-			singleLine: dec.label_single_line || true,
-			maxCharacters: dec.label_max_characters || null,
-			allowReturnKey: dec.label_allow_return_key || false,
-			textCanBeEmpty: false,
-			xPos: this.decUtils.getDecLabelTextAreaPosX(),
-			yPos: this.decUtils.getDecLabelTextAreaPosY(),
-			width: this.decUtils.getDecLabelTextAreaWidth(dec, obj, objType),
-			height: this.decUtils.getDecLabelTextAreaHeight(dec, obj, objType),
-			className: this.decUtils.getDecLabelTextAreaClass(dec),
-			parentDomObj: parentDomObj,
-			objId: obj.id,
-			objType: objType,
-			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
-			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
-			closeTextAreaCallback: null
-		});
-	}
-
-	// Handles saved changes to editable text decorations.
-	saveDecLabelChanges(id, newText, newHeight, taData) {
-		const data = {
-			editType: "editDecorationLabel",
-			editSource: "canvas",
-			decId: id,
-			objId: taData.objId,
-			objType: taData.objType,
-			label: newText,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	// Displays a text area to allow text entry and editing for: comments;
-	// node labels; or text decorations on either a node or link.
-	displayTextArea(data) {
-		const that = this;
-
-		this.textAreaHeight = data.height; // Save for comparison during auto-resize
-		this.editingText = true;
-		this.editingTextId = data.id;
-
-		const foreignObject = d3.select(data.parentDomObj)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object d3-text-entry-fo")
-			.attr("width", data.width)
-			.attr("height", data.height)
-			.attr("x", data.xPos)
-			.attr("y", data.yPos);
-
-		const textArea = foreignObject
-			.append("xhtml:textarea")
-			.attr("class", data.className)
-			.text(unescapeText(data.text))
-			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all on one line or
-				// if application doesn't want line feeds inserted in the label.
-				if ((data.singleLine || !data.allowReturnKey) &&
-						d3Event.keyCode === RETURN_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				}
-				if (d3Event.keyCode === ESC_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					that.textAreaEscKeyPressed = true;
-					that.closeTextArea(foreignObject, data);
-				}
-				if (data.maxCharacters &&
-						this.value.length >= data.maxCharacters &&
-						!that.textAreaAllowedKeys(d3Event)) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				}
-				// Call any specific keyboard handler for the type of
-				// text being edited.
-				if (data.keyboardInputCallback) {
-					data.keyboardInputCallback(d3Event);
-				}
-			})
-			.on("keyup", function(d3Event) {
-				data.autoSizeCallback(this, foreignObject, data);
-			})
-			.on("paste", function() {
-				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
-				// Allow some time for pasted text (from context menu) to be
-				// loaded into the text area. Otherwise the text is not there
-				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data);
-			})
-			.on("blur", function(d3Event, d) {
-				that.logger.log("Text area - blur");
-				// If the esc key was pressed to cause the blur event just return
-				// so label returns to what it was before editing started.
-				if (that.textAreaEscKeyPressed) {
-					that.textAreaEscKeyPressed = false;
-					return;
-				}
-
-				// If the user clicked on an element in the text toolbar to cause the
-				// blur event, just return.
-				if (d3Event.relatedTarget && that.getParentElementWithClass(d3Event.relatedTarget, "text-toolbar")) {
-					return;
-				}
-
-				that.saveAndCloseTextArea(foreignObject, data, this.value, d3Event);
-			})
-			.on("focus", function(d3Event, d) {
-				that.logger.log("Text area - focus");
-				data.autoSizeCallback(this, foreignObject, data);
-			})
-			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
-				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
-			});
-
-		textArea.node().focus();
-
-		// Set the cusrsor to the end of the text.
-		textArea.node().setSelectionRange(data.text.length, data.text.length);
-	}
-
-	saveAndCloseTextArea(foreignObject, data, newValue, d3Event) {
-		// If there is no text for the label and textCanBeEmpty is false
-		// just return, so label returns to what it was before editing started.
-		if (!newValue && !data.textCanBeEmpty) {
-			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			this.closeTextArea(foreignObject, data);
-			return;
-		}
-		const newText = newValue; // Save the text before closing the foreign object
-		this.closeTextArea(foreignObject, data);
-		if (data.text !== newText) {
-			this.isCommentBeingUpdated = true;
-			data.saveTextChangesCallback(data.id, newText, this.textAreaHeight, data);
-			this.isCommentBeingUpdatd = false;
-		}
-	}
-
-	// Closes the text area and resets the flags.
-	closeTextArea(foreignObject, data) {
-		if (data.closeTextAreaCallback) {
-			data.closeTextAreaCallback(data.id);
-		}
-		foreignObject.remove();
-		this.editingText = false;
-		this.editingTextId = "";
-	}
-
-	// Returns true if one of the keys that are allowed in the text area, when
-	// checking for maximum characters, has been pressed.
-	textAreaAllowedKeys(d3Event) {
-		return d3Event.keyCode === DELETE_KEY ||
-			d3Event.keyCode === BACKSPACE_KEY ||
-			d3Event.keyCode === LEFT_ARROW_KEY ||
-			d3Event.keyCode === RIGHT_ARROW_KEY ||
-			d3Event.keyCode === UP_ARROW_KEY ||
-			d3Event.keyCode === DOWN_ARROW_KEY ||
-			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
+		this.svgCanvasTextArea.displayDecLabelTextArea(dec, obj, objType, parentDomObj);
 	}
 
 	// Adds a rectangle over the top of the canvas which is used to display a
@@ -6448,9 +6024,7 @@ export default class SVGCanvasRenderer {
 		return "d3-node-group" + supernodeClass + draggableClass + customClass;
 	}
 
-	// Pushes the links to be below nodes and then pushes comments to be below
-	// nodes and links. This lets the user put a large comment underneath a set
-	// of nodes and links for annotation purposes.
+	// Pushes the links to be below nodes within the nodesLinksGrp group.
 	setDisplayOrder(linkGroup) {
 		// Force those links without decorations to be behind those with decorations
 		// in case the links overlap we don't want the decorations to be overwritten.
