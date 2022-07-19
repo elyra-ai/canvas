@@ -29,7 +29,7 @@ describe("Test of canvas comments", function() {
 			expect("createAutoComment").to.equal(lastEventLog.data.editType);
 			expect("toolbar").to.equal(lastEventLog.data.editSource);
 			expect(30).to.equal(lastEventLog.data.mousePos.x);
-			expect(30).to.equal(lastEventLog.data.mousePos.y);
+			expect(50).to.equal(lastEventLog.data.mousePos.y);
 		});
 	});
 });
