@@ -1,96 +1,172 @@
 {
   "titleDefinition": {
-    "title": "toggle"
+    "title": "Toggle Controls"
   },
   "current_parameters": {
-    "toggle": true,
-    "toggle_null": null,
-    "toggle_table": [
-      [
-        true
-      ]
+    "string": "testing, toggle, control",
+    "string_array": [],
+    "string_charLimit": [
+      "testing"
     ],
-    "toggle_table_cond": [
+    "string_null": null,
+    "string_empty": "",
+    "string_placeholder": null,
+    "string_error": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "string_warning": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "hide": true,
+    "string_hidden": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "disable": true,
+    "string_disabled": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "string_table": [
+      [
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
       []
     ],
-    "toggle_error": false,
-    "toggle_warning": false,
-    "disable": true,
-    "hide": true,
-    "toggle_hidden": false
+    "string_table_cond": [
+      [
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
+      []
+    ],
+    "string_long_value": [
+      "one",
+      "two",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    ]
   },
   "parameters": [
     {
-      "id": "toggle",
-      "type": "boolean"
+      "id": "string",
+      "type": "string"
     },
     {
-      "id": "toggle_null",
-      "type": "boolean"
+      "id": "string_array",
+      "type": "array[string]"
     },
     {
-      "id": "toggle_table",
-      "type": "array[togglees]"
+      "id": "string_charLimit",
+      "type": "array[string]"
     },
     {
-      "id": "toggle_table_cond",
-      "type": "array[togglees]"
+      "id": "string_default",
+      "type": "array[string]",
+      "default": "default testing"
     },
     {
-      "id": "toggle_default",
-      "default": true,
-      "type": "boolean"
+      "id": "string_empty",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
     },
     {
-      "id": "toggle_undefined",
-      "type": "boolean"
+      "id": "string_undefined",
+      "type": "array[string]"
     },
     {
-      "id": "toggle_error",
-      "type": "boolean"
+      "id": "string_null",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
     },
     {
-      "id": "toggle_warning",
-      "type": "boolean"
+      "id": "string_placeholder",
+      "type": "array[string]"
     },
     {
-      "id": "disable",
-      "type": "boolean"
+      "id": "string_error",
+      "type": "array[string]"
     },
     {
-      "id": "toggle_disable",
-      "type": "boolean",
-      "required": true
+      "id": "string_warning",
+      "type": "array[string]"
     },
     {
       "id": "hide",
       "type": "boolean"
     },
     {
-      "id": "toggle_hidden",
-      "type": "boolean",
+      "id": "string_hidden",
+      "type": "array[string]",
       "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "string_disabled",
+      "type": "array[string]",
+      "required": true
+    },
+    {
+      "id": "string_table",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "string_table_cond",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "string_long_value",
+      "type": "array[string]"
     }
   ],
   "complex_types": [
     {
-      "id": "togglees",
+      "id": "toggles",
       "parameters": [
         {
           "id": "toggle",
-          "type": "boolean"
+          "type": "array[string]"
         },
         {
           "id": "toggle2",
-          "type": "boolean"
+          "type": "array[string]"
         },
         {
           "id": "toggle_on_panel",
-          "type": "boolean"
+          "type": "array[string]"
         },
         {
           "id": "toggle_sub_panel",
-          "type": "boolean"
+          "type": "array[string]"
         }
       ]
     }
@@ -99,127 +175,169 @@
     "id": "toggle",
     "icon": "images/default.svg",
     "label": {
-      "default": "toggle "
+      "default": "string Fields"
     },
     "parameter_info": [
       {
-        "parameter_ref": "toggle",
+        "parameter_ref": "string",
         "label": {
-          "default": "toggle"
+          "default": "string"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle",
-          "link": {
-            "id": "link_for_toggle",
-            "data": {
-              "something": "option data"
-            }
-          }
+          "default": "toggle with sting value"
         },
-        "class_name": "toggle-control-class"
+        "class_name": "string-toggle-control-class"
       },
       {
-        "parameter_ref": "toggle_table",
+        "parameter_ref": "string_array",
         "label": {
-          "default": "toggle in a table"
-        }
-      },
-      {
-        "parameter_ref": "toggle_table_cond",
-        "label": {
-          "default": "toggle conditions in a table"
-        }
-      },
-      {
-        "parameter_ref": "toggle_default",
-        "label": {
-          "default": "toggle default"
+          "default": "string array"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle with a default value of 'true'"
+          "default": "toggle with string array value"
         }
       },
       {
-        "parameter_ref": "toggle_undefined",
+        "parameter_ref": "string_charLimit",
         "label": {
-          "default": "toggle undefined"
+          "default": "string with char limit"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle with 'undefined' value"
+          "default": "toggle with parameter value with a char_limit of `20`"
+        },
+        "char_limit": 20
+      },
+      {
+        "parameter_ref": "string_default",
+        "label": {
+          "default": "Default"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with parameter value set to 'default testing' by default"
         }
       },
       {
-        "parameter_ref": "toggle_null",
+        "parameter_ref": "string_empty",
         "label": {
-          "default": "toggle null"
+          "default": "Empty"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle with 'null' value"
+          "default": "toggle with parameter value set to '\"\"'"
         }
       },
       {
-        "parameter_ref": "toggle_error",
+        "parameter_ref": "string_null",
         "label": {
-          "default": "toggle error"
+          "default": "Null"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle with error when toggled"
+          "default": "toggle with parameter value set to 'null'"
         }
       },
       {
-        "parameter_ref": "toggle_warning",
+        "parameter_ref": "string_undefined",
         "label": {
-          "default": "toggle warning"
+          "default": "Undefined"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle with warning when toggled"
+          "default": "toggle with parameter value set to 'undefined'"
         }
       },
       {
-        "parameter_ref": "disable",
+        "parameter_ref": "string_placeholder",
         "label": {
-          "default": "Disable 'toggle disabled'"
-        },
-          "control": "toggle"
-      },
-      {
-        "parameter_ref": "toggle_disable",
-        "label": {
-          "default": "toggle disabled"
+          "default": "Placeholder text"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle that is disabled"
+          "default": "toggle with placeholder text 'Enter a string'"
         },
-          "control": "toggle"
+        "place_holder_text": {
+          "default": "Enter a string"
+        }
+      },
+      {
+        "parameter_ref": "string_error",
+        "label": {
+          "default": "Error"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with error when set to 'error'"
+        }
+      },
+      {
+        "parameter_ref": "string_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with warning when set to 'warn'"
+        }
       },
       {
         "parameter_ref": "hide",
         "label": {
-          "default": "Hide 'toggle hidden'"
-        },
-          "control": "toggle"
+          "default": "Hide 'string Hidden'"
+        },  "control": "toggle"
       },
       {
-        "parameter_ref": "toggle_hidden",
+        "parameter_ref": "string_hidden",
         "label": {
-          "default": "toggle hidden"
+          "default": "string Hidden"
+        },  "control": "toggle"
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'string Disabled'"
+        },  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_disabled",
+        "label": {
+          "default": "string Disabled"
+        },  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_table",
+        "label": {
+          "default": "toggle control in a table"
+        },  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_table_cond",
+        "label": {
+          "default": "toggle conditions in a table"
         },
         "control": "toggle",
         "description": {
-          "default": "toggle that is hidden"
+          "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
+          "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "string_long_value",
+        "label": {
+          "default": "string"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle error handling for long strings"
         }
       }
     ],
     "complex_type_info": [
       {
-        "complex_type_ref": "togglees",
+        "complex_type_ref": "toggles",
         "parameters": [
           {
             "parameter_ref": "toggle",
@@ -235,7 +353,7 @@
             "width": 10,
             "label": {
               "default": "Additional"
-            }
+            },  "control": "toggle"
           },
           {
             "parameter_ref": "toggle_on_panel",
@@ -247,6 +365,7 @@
             "description": {
               "default": "toggle with `edit_style=on_panel`"
             },
+            "control": "toggle",
             "edit_style": "on_panel",
             "class_name": "table-on-panel-toggle-control-class"
           },
@@ -256,6 +375,7 @@
             "label": {
               "default": "sub_panel"
             },
+            "control": "toggle",
             "description": {
               "default": "toggle with `edit_style=sub_panel`"
             },
@@ -267,16 +387,21 @@
     ],
     "group_info": [
       {
-        "id": "toggle-values-panels",
+        "id": "toggle-values",
         "label": {
           "default": "Values"
         },
+        "control": "toggle",
         "type": "controls",
         "parameter_refs": [
-          "toggle",
-          "toggle_default",
-          "toggle_undefined",
-          "toggle_null"
+          "string",
+          "string_array",
+          "string_charLimit",
+          "string_default",
+          "string_empty",
+          "string_undefined",
+          "string_null",
+          "string_placeholder"
         ]
       },
       {
@@ -287,12 +412,12 @@
         "control": "toggle",
         "type": "controls",
         "parameter_refs": [
-          "toggle_error",
-          "toggle_warning",
-          "disable",
-          "toggle_disable",
+          "string_error",
+          "string_warning",
           "hide",
-          "toggle_hidden"
+          "string_hidden",
+          "disable",
+          "string_disabled"
         ]
       },
       {
@@ -309,16 +434,28 @@
             "label": {
               "default": "Edit toggle table"
             },
+            "control": "toggle",
             "group_info": [
               {
                 "id": "toggle-table-summary-ctrls",
                 "parameter_refs": [
-                  "toggle_table",
-                  "toggle_table_cond"
+                  "string_table",
+                  "string_table_cond"
                 ]
               }
             ]
           }
+        ]
+      },
+      {
+        "id": "toggle-error-handling",
+        "label": {
+          "default": "Error handling"
+        },
+        "control": "toggle",
+        "type": "controls",
+        "parameter_refs": [
+          "string_long_value"
         ]
       }
     ]
@@ -328,16 +465,16 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "toggle_error",
+          "focus_parameter_ref": "string_error",
           "message": {
-            "default": "Needs to be false"
+            "default": "Should not be 'error'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggle_error",
-            "op": "equals",
-            "value": false
+            "parameter_ref": "string_error",
+            "op": "notContains",
+            "value": "error"
           }
         }
       }
@@ -346,16 +483,16 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "toggle_warning",
+          "focus_parameter_ref": "string_warning",
           "message": {
-            "default": "Needs to be false"
+            "default": "Should not be 'warn'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggle_warning",
-            "op": "equals",
-            "value": false
+            "parameter_ref": "string_warning",
+            "op": "notContains",
+            "value": "warn"
           }
         }
       }
@@ -364,16 +501,16 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "toggle_table_cond[1]",
+          "focus_parameter_ref": "string_table_cond[1]",
           "message": {
-            "default": "toggle in a table warning testing"
+            "default": "Should not be 'warn'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggle_table_cond[1]",
-            "op": "equals",
-            "value": false
+            "parameter_ref": "string_table_cond[1]",
+            "op": "notContains",
+            "value": "warn"
           }
         }
       }
@@ -382,16 +519,16 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "toggle_table_cond[0]",
+          "focus_parameter_ref": "string_table_cond[0]",
           "message": {
-            "default": "toggle in a table error testing"
+            "default": "Should not be 'error'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggle_table_cond[0]",
-            "op": "equals",
-            "value": false
+            "parameter_ref": "string_table_cond[0]",
+            "op": "notContains",
+            "value": "error"
           }
         }
       }
@@ -399,7 +536,7 @@
     {
       "visible": {
         "parameter_refs": [
-          "toggle_hidden"
+          "string_hidden"
         ],
         "evaluate": {
           "condition": {
@@ -413,7 +550,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "toggle_disable"
+          "string_disabled"
         ],
         "evaluate": {
           "condition": {
@@ -424,6 +561,5 @@
         }
       }
     }
-  ],
-  "resources": {}
+  ]
 }

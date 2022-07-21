@@ -17,72 +17,76 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { isEmpty } from "lodash";
 import { Toggle } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { v4 as uuid4 } from "uuid";
+import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
-import Icon from "./../../../icons/icon";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+
+
+const newLine = "\n";
 
 class ToggleControl extends React.Component {
-
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
+		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForMultiLineControls());
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 	}
+
 
 	handleChange(value) {
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
-		const label = this.props.control.label ? this.props.control.label.text : "";
-		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
-		let tooltip = "";
-		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
-			tooltip = (
-				<span >{this.props.control.description.text}</span>
-			);
-			// If tooltip has a link, add propertyId in the link object
-			if (this.props.control.description.link) {
-				this.props.control.description.link.propertyId = this.props.propertyId;
+		let value = this.props.value ? this.props.value : "";
+		const joined = ControlUtils.joinNewlines(value, newLine);
+		value = joined.value;
+
+		let toggle = null;
+
+		toggle = (<Toggle
+			id={this.id}
+			size="sm"
+			toggled={false}
+			labelA="Off"
+			labelB="On"
+			disabled={this.props.state === STATES.DISABLED}
+			onToggle={this.handleChange.bind(this)}
+			toggled={value}
+		/>);
+
+
+		let display = toggle;
+		if (this.props.tableControl) {
+			let disabled = true;
+			if (value && this.props.state !== STATES.DISABLED) {
+				disabled = false;
 			}
-		}
-		const tooltipIcon = isEmpty(tooltip) ? "" : (
-			<Tooltip
-				id={tooltipId}
+			const tooltip = (
+				<div className="properties-tooltips">
+					{String(value)}
+				</div>
+			);
+			display = (<Tooltip
+				id={`tooltip-${this.uuid}`}
 				tip={tooltip}
-				link={this.props.control.description.link ? this.props.control.description.link : null}
-				tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
 				direction="bottom"
 				className="properties-tooltips"
-				showToolTipOnClick
+				disable={disabled}
 			>
-				<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
-			</Tooltip>
-		);
-		const toggleLabel = (
-			<span className="properties-toggle-label">
-				{label}
-			</span>
-		);
+				{toggle}
+			</Tooltip>);
+		}
+		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
-			<div className={classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null)}
-				data-id={ControlUtils.getDataId(this.props.propertyId)}
-			>
-				<Toggle
-					disabled={this.props.state === STATES.DISABLED}
-					id={this.id}
-					size="sm"
-					labelText={toggleLabel}
-					onToggle={this.handleChange.bind(this)}
-				/>
-				{tooltipIcon}
-				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.controller.getErrorMessage(this.props.propertyId)} />
+			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
+				{display}
+				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
+
 		);
 	}
 }
@@ -91,9 +95,13 @@ ToggleControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.bool, // pass in by redux
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.array
+	]), // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
