@@ -19,15 +19,12 @@
 	align-items: flex-end;
 	max-width: 100%;
 	width: 50%;
-	.bx--toggle-input__label {
-		.bx--toggle__switch {
-			margin-top: $spacing-02;
-		}
-		.properties-toggle-label {
-			margin-left: $spacing-01;
-		}
+	.bx--toggle__switch {
+		margin-top: $spacing-02;
 	}
-
+	.properties-toggle-label {
+		margin-left: $spacing-01;
+	}
 	.tooltip-container {
 		margin-left: $spacing-03;
 		margin-bottom: $spacing-02;
