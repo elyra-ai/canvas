@@ -75,6 +75,12 @@ describe("Palette search renders correctly", () => {
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
 		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
+		// Search for something that doesn't exist.
+		simulateSearchEntry(searchInput, "xxxxx");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
+
 	});
 
 	it("should filter nodes based on search text when fields are missing", () => {
