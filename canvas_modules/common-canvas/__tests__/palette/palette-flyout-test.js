@@ -19,6 +19,7 @@ import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
 import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
+import PaletteFlyoutContentFilteredList from "../../src/palette/palette-flyout-content-filtered-list.jsx";
 import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx";
 import PaletteContentListItem from "../../src/palette/palette-content-list-item.jsx";
 import { expect } from "chai";
@@ -52,28 +53,39 @@ describe("Palette search renders correctly", () => {
 		simulateSearchEntry(searchInput, "data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "var");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "data import");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "d");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "import data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
+
+		// Search for something that doesn't exist.
+		simulateSearchEntry(searchInput, "xxxxx");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 	});
 
 	it("should filter nodes based on search text when fields are missing", () => {
 
-		const wrapper = createMountedPalette({ palette: paletteMissingFields });
+		const wrapper = createMountedPalette({ palette: paletteMissingFields, showPalette: true });
 
 		// Simulate click on search input to open palette with search bar
 		const searchInput = wrapper.find("div.palette-flyout-search-container");
@@ -85,8 +97,9 @@ describe("Palette search renders correctly", () => {
 
 		simulateSearchEntry(searchInput, "test");
 		wrapper.update();
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
 
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 	});
 
 	it("should filter nodes based on search text when no node descriptions are present", () => {
@@ -290,6 +303,7 @@ function createMountedPalette(config) {
 			showPalette={showPalette}
 			canvasController={canvasController}
 			paletteWidth={paletteWidth}
+			isEditingEnabled
 			enableNarrowPalette
 		/>
 	);
