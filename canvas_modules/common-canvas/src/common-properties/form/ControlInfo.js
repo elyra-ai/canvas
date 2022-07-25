@@ -71,6 +71,12 @@ export class Control {
 		if (settings.charLimit) {
 			this.charLimit = settings.charLimit;
 		}
+		if (settings.toggleofflabel) {
+			this.toggleofflabel = settings.toggleofflabel;
+		}
+		if (settings.toggleonlabel) {
+			this.toggleonlabel = settings.toggleonlabel;
+		}
 		if (settings.summary) {
 			this.summary = settings.summary;
 		}

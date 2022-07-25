@@ -27,20 +27,12 @@ const controller = new Controller();
 const control = {
 	"name": "toggle",
 	"label": {
-		"text": "toggle"
+		"text": "Toggle"
 	},
 	"values": [
-		"Ascending",
-		"Descending"
+		"On",
+		"Off"
 	],
-	"valueLabels": [
-		"Sort Ascending",
-		"Sort Descending"
-	],
-	"valueIcons": [
-		"/images/up-triangle.svg",
-		"/images/down-triangle.svg"
-	]
 };
 
 propertyUtils.setControls(controller, [control]);
@@ -48,14 +40,6 @@ propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "toggle" };
 
 describe("toggle renders correctly", () => {
-
-	beforeEach(() => {
-		controller.setErrorMessages({});
-		controller.setControlStates({});
-		controller.setPropertyValues(
-			{ toggle: "Ascending" }
-		);
-	});
 
 	it("toggle props should have been defined", () => {
 		const wrapper = mount(
@@ -69,6 +53,42 @@ describe("toggle renders correctly", () => {
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("controller")).to.equal(controller);
+	});
+
+	it("toggle should render correctly", () => {
+		const wrapper = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper2 = wrapper.find("span.bx--toggle__switch");
+
+		const toggleLableOff = wrapper.find(".bx--toggle__text--off");
+		const toggleLableOn = wrapper.find(".bx--toggle__text--on");
+
+		const svg = toggleWrapper2.find("svg");
+		expect(svg).to.have.length(1);
+
+		expect(toggleLableOff.text()).to.equal(control.values[1]);
+		expect(toggleLableOn.text()).to.equal(control.values[0]);
+
+	});
+
+	it("toggle renders when hidden", () => {
+		controller.updateControlState(propertyId, "hidden");
+		const wrapper = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		expect(toggleWrapper.hasClass("hide")).to.equal(true);
 	});
 
 });

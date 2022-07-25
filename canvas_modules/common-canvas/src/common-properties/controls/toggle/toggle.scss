@@ -14,23 +14,35 @@
  * limitations under the License.
  */
 
-.properties-toggle {
+.properties-control-item {
 	display: flex;
-	align-items: flex-end;
-	max-width: 100%;
-	width: 50%;
-	.bx--toggle__switch {
-		margin-top: $spacing-02;
-	}
-	.properties-toggle-label {
-		margin-left: $spacing-01;
-	}
-	.tooltip-container {
-		margin-left: $spacing-03;
-		margin-bottom: $spacing-02;
-		cursor: pointer;
-		.tooltip-trigger {
-			display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	.properties-toggle {
+		display: flex;
+		align-items: flex-end;
+		max-width: 100%;
+		width: 50%;
+		.bx--toggle__switch {
+			margin-top: $spacing-01;
+			margin-bottom: $spacing-02;
 		}
+		.properties-toggle-label {
+			margin-left: $spacing-01;
+		}
+		.tooltip-container {
+			margin-left: $spacing-03;
+			margin-bottom: $spacing-02;
+			cursor: pointer;
+			.tooltip-trigger {
+				display: flex;
+			}
+		}
+	}
+	.properties-label-container, .tooltip-container {
+		display: none;
+	}
+	.bx--form-item .properties-label-container, .tooltip-container {
+		display: flex;
 	}
 }
