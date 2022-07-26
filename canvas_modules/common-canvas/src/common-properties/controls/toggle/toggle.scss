@@ -22,7 +22,7 @@
 		display: flex;
 		align-items: flex-end;
 		max-width: 100%;
-		width: 50%;
+		width: 60%;
 		.bx--toggle__switch {
 			margin-top: $spacing-01;
 			margin-bottom: $spacing-02;
@@ -38,11 +38,5 @@
 				display: flex;
 			}
 		}
-	}
-	.properties-label-container, .tooltip-container {
-		display: none;
-	}
-	.bx--form-item .properties-label-container, .tooltip-container {
-		display: flex;
 	}
 }

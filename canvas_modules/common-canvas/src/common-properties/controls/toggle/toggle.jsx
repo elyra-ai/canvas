@@ -43,10 +43,9 @@ class ToggleControl extends React.Component {
 			id={this.id}
 			size="sm"
 			disabled={this.props.state === STATES.DISABLED}
-			labelText={this.props.controlItem}
 			toggled={Boolean(this.props.value)}
-			toggleofflabel={this.props.toggleofflabel}
-			toggleonlabel={this.props.toggleonlabel}
+			labelA={this.props.toggleofflabel}
+			labelB={this.props.toggleonlabel}
 			onToggle={this.handleChange.bind(this)}
 		/>);
 

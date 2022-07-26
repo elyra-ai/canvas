@@ -1,120 +1,150 @@
 {
   "titleDefinition": {
-    "title": "Toggle Set"
+    "title": "toggle Fields"
   },
   "current_parameters": {
-    "toggle": "On",
-    "toggleNoIcon": "Ascending",
-    "toggleError": "Ascending",
-    "toggleWarning": "Ascending",
-    "disable": true,
-    "toggleDisable": "Ascending",
+    "string": "toggle",
+    "string_null": null,
+    "string_empty": "",
+     "string_error": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "string_warning": [
+      "testing",
+      "toggle",
+      "control"
+    ],
     "hide": true,
-    "toggleHidden": "Ascending",
-    "toggle_table": [
+    "string_hidden": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "disable": true,
+    "string_disabled": [
+      "testing",
+      "toggle",
+      "control"
+    ],
+    "string_table": [
       [
-        "Ascending",
-        "Ascending",
-        "Ascending",
-        "Ascending"
-      ]
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
+      []
+    ],
+    "string_table_cond": [
+      [
+        [
+          "Hopper"
+        ],
+        [
+          "Turing"
+        ],
+        [
+          "Shannon"
+        ],
+        [
+          "Babbage"
+        ]
+      ],
+      []
     ]
   },
   "parameters": [
     {
-      "id": "toggle",
-      "enum": [
-        "On",
-        "Off"
-      ]
+      "id": "string",
+      "type": "string"
     },
     {
-      "id": "toggleNoIcon",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ]
+      "id": "string_default",
+      "type": "array[string]",
+      "default": "default testing"
     },
     {
-      "id": "toggleDefault",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ],
-      "default": "Descending"
+      "id": "string_empty",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
     },
     {
-      "id": "toggleError",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ]
+      "id": "string_undefined",
+      "type": "array[string]"
     },
     {
-      "id": "toggleWarning",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ]
+      "id": "string_null",
+      "type": "array[string]",
+      "default": "ERROR - should not be set"
     },
     {
-      "id": "disable",
-      "type": "boolean"
+      "id": "string_error",
+      "type": "array[string]"
     },
     {
-      "id": "toggleDisable",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ]
+      "id": "string_warning",
+      "type": "array[string]"
     },
     {
       "id": "hide",
       "type": "boolean"
     },
     {
-      "id": "toggleHidden",
-      "enum": [
-        "Ascending",
-        "Descending"
-      ]
+      "id": "string_hidden",
+      "type": "array[string]",
+      "required": true
     },
     {
-      "id": "toggle_table",
-      "type": "array[togglefields]"
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "string_disabled",
+      "type": "array[string]",
+      "required": true
+    },
+    {
+      "id": "string_table",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "string_table_cond",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "string_long_value",
+      "type": "array[string]"
     }
   ],
   "complex_types": [
     {
-      "id": "togglefields",
+      "id": "toggles",
       "parameters": [
         {
           "id": "toggle",
-          "enum": [
-            "Ascending",
-            "Descending"
-          ]
+          "type": "array[string]"
         },
         {
           "id": "toggle2",
-          "enum": [
-            "Ascending",
-            "Descending"
-          ]
+          "type": "array[string]"
         },
         {
           "id": "toggle_on_panel",
-          "enum": [
-            "Ascending",
-            "Descending"
-          ]
+          "type": "array[string]"
         },
         {
           "id": "toggle_sub_panel",
-          "enum": [
-            "Ascending",
-            "Descending"
-          ]
+          "type": "array[string]"
         }
       ]
     }
@@ -123,124 +153,138 @@
     "id": "toggle",
     "icon": "images/default.svg",
     "label": {
-      "default": "toggle"
+      "default": "string Fields"
     },
     "parameter_info": [
       {
-        "parameter_ref": "toggle",
+        "parameter_ref": "string",
         "label": {
-          "default": "toggle"
+          "default": "string"
         },
         "control": "toggle",
-        "value_icons": [
-          "/images/light-on.svg",
-          "/images/light-off.svg"
-        ],
-        "class_name": "toggle-control-class"
-      },
-      {
-        "parameter_ref": "toggleNoIcon",
-        "label": {
-          "default": "toggle without icons"
-        },
-        "control": "toggle"
-      },
-      {
-        "parameter_ref": "toggleDefault",
-        "label": {
-          "default": "toggle Default"
-        },
         "description": {
-          "default": "toggle with default set to `Descending`"
+          "default": "toggle with sting value"
         },
-        "control": "toggle",
-        "value_icons": [
-          "/images/up-triangle.svg",
-          "/images/down-triangle.svg"
-        ]
+        "class_name": "string-toggle-control-class"
       },
       {
-        "parameter_ref": "toggleError",
+        "parameter_ref": "string_default",
         "label": {
-          "default": "toggle Error"
+          "default": "Default"
         },
+				  "control": "toggle",
         "description": {
-          "default": "toggle with an error when set to `Descending`"
-        },
-        "control": "toggle",
-        "value_icons": [
-          "/images/up-triangle.svg",
-          "/images/down-triangle.svg"
-        ]
-      },
-      {
-        "parameter_ref": "toggleWarning",
-        "label": {
-          "default": "toggle Warning"
-        },
-        "description": {
-          "default": "toggle with a warning when set to `Descending`"
-        },
-        "control": "toggle",
-        "value_icons": [
-          "/images/up-triangle.svg",
-          "/images/down-triangle.svg"
-        ]
-      },
-      {
-        "parameter_ref": "disable",
-        "label": {
-          "default": "Disable 'toggle Disabled'"
+          "default": "toggle with parameter value set to 'default testing' by default"
         }
       },
       {
-        "parameter_ref": "toggleDisable",
+        "parameter_ref": "string_empty",
         "label": {
-          "default": "toggle Disabled"
+          "default": "Empty"
         },
+				  "control": "toggle",
         "description": {
-          "default": "Disabled toggle with enum string type"
+          "default": "toggle with parameter value set to '\"\"'"
+        }
+      },
+      {
+        "parameter_ref": "string_null",
+        "label": {
+          "default": "Null"
         },
-        "control": "toggle",
-        "value_icons": [
-          "/images/up-triangle.svg",
-          "/images/down-triangle.svg"
-        ]
+				  "control": "toggle",
+        "description": {
+          "default": "toggle with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "string_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+				  "control": "toggle",
+        "description": {
+          "default": "toggle with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "string_error",
+        "label": {
+          "default": "Error"
+        },
+				  "control": "toggle",
+        "description": {
+          "default": "toggle with error when set to 'error'"
+        }
+      },
+      {
+        "parameter_ref": "string_warning",
+        "label": {
+          "default": "Warning"
+        },
+				  "control": "toggle",
+        "description": {
+          "default": "toggle with warning when set to 'warn'"
+        }
       },
       {
         "parameter_ref": "hide",
         "label": {
-          "default": "Hide 'toggle Hidden'"
+          "default": "Hide 'string Hidden'"
+        },
+				  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_hidden",
+        "label": {
+          "default": "string Hidden"
+        },
+				  "control": "toggle"
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'string Disabled'"
+        },
+				  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_disabled",
+        "label": {
+          "default": "string Disabled"
+        },
+				  "control": "toggle"
+      },
+      {
+        "parameter_ref": "string_table",
+        "label": {
+          "default": "toggle control in a table"
         }
       },
       {
-        "parameter_ref": "toggleHidden",
+        "parameter_ref": "string_table_cond",
         "label": {
-          "default": "toggle Hidden"
+          "default": "toggle conditions in a table"
         },
         "description": {
-          "default": "Hidden toggle with enum string type"
-        },
-        "control": "toggle",
-        "value_icons": [
-          "/images/up-triangle.svg",
-          "/images/down-triangle.svg"
-        ]
+          "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
+          "placement": "on_panel"
+        }
       },
       {
-        "parameter_ref": "toggle_table",
+        "parameter_ref": "string_long_value",
         "label": {
-          "default": "toggle in a table"
+          "default": "string"
         },
+        "control": "toggle",
         "description": {
-          "default": "Toggle `Standard` column to show an `error`. Toggle `Additional` column to show an `warn`",
-          "placement": "on_panel"
+          "default": "toggle error handling for long strings"
         }
       }
     ],
     "complex_type_info": [
       {
-        "complex_type_ref": "togglefields",
+        "complex_type_ref": "toggles",
         "parameters": [
           {
             "parameter_ref": "toggle",
@@ -248,11 +292,7 @@
             "label": {
               "default": "Standard"
             },
-            "control": "toggle",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ],
+						"control": "toggle",
             "class_name": "table-toggle-control-class"
           },
           {
@@ -261,11 +301,7 @@
             "label": {
               "default": "Additional"
             },
-            "control": "toggle",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ]
+						"control": "toggle"
           },
           {
             "parameter_ref": "toggle_on_panel",
@@ -273,15 +309,11 @@
             "label": {
               "default": "on_panel"
             },
+						  "control": "toggle",
             "description": {
               "default": "toggle with `edit_style=on_panel`"
             },
             "edit_style": "on_panel",
-            "control": "toggle",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ],
             "class_name": "table-on-panel-toggle-control-class"
           },
           {
@@ -290,15 +322,11 @@
             "label": {
               "default": "sub_panel"
             },
+						  "control": "toggle",
             "description": {
               "default": "toggle with `edit_style=sub_panel`"
             },
             "edit_style": "subpanel",
-            "control": "toggle",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ],
             "class_name": "table-subpanel-toggle-control-class"
           }
         ]
@@ -312,9 +340,11 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "toggle",
-          "toggleNoIcon",
-          "toggleDefault"
+          "string",
+          "string_default",
+          "string_empty",
+          "string_undefined",
+          "string_null"
         ]
       },
       {
@@ -324,12 +354,12 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "toggleError",
-          "toggleWarning",
-          "disable",
-          "toggleDisable",
+          "string_error",
+          "string_warning",
           "hide",
-          "toggleHidden"
+          "string_hidden",
+          "disable",
+          "string_disabled"
         ]
       },
       {
@@ -349,11 +379,23 @@
               {
                 "id": "toggle-table-summary-ctrls",
                 "parameter_refs": [
-                  "toggle_table"
+                  "string_table",
+                  "string_table_cond"
                 ]
               }
             ]
           }
+        ]
+      },
+      {
+        "id": "toggle-error-handling",
+        "label": {
+          "default": "Error handling"
+        },
+				 "control": "toggle",
+        "type": "controls",
+        "parameter_refs": [
+          "string_long_value"
         ]
       }
     ]
@@ -363,16 +405,17 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "toggleError",
+          "focus_parameter_ref": "string_error",
           "message": {
-            "default": "Testing toggle error condition"
-          }
+            "default": "Should not be 'error'"
+          },
+					 "control": "toggle"
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggleError",
-            "op": "equals",
-            "value": "Ascending"
+            "parameter_ref": "string_error",
+            "op": "notContains",
+            "value": "error"
           }
         }
       }
@@ -381,16 +424,35 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "toggleWarning",
+          "focus_parameter_ref": "string_warning",
           "message": {
-            "default": "Testing toggle warning condition"
+            "default": "Should not be 'warn'"
+          },
+					"control": "toggle"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_warning",
+            "op": "notContains",
+            "value": "warn"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "string_table_cond[1]",
+          "message": {
+            "default": "Should not be 'warn'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggleWarning",
-            "op": "equals",
-            "value": "Ascending"
+            "parameter_ref": "string_table_cond[1]",
+            "op": "notContains",
+            "value": "warn"
           }
         }
       }
@@ -399,34 +461,16 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "toggle_table[1]",
+          "focus_parameter_ref": "string_table_cond[0]",
           "message": {
-            "default": "Testing toggle error condition"
+            "default": "Should not be 'error'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "toggle_table[1]",
-            "op": "equals",
-            "value": "Ascending"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "toggle_table[0]",
-          "message": {
-            "default": "Testing toggle warning condition"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "toggle_table[0]",
-            "op": "equals",
-            "value": "Ascending"
+            "parameter_ref": "string_table_cond[0]",
+            "op": "notContains",
+            "value": "error"
           }
         }
       }
@@ -434,7 +478,7 @@
     {
       "visible": {
         "parameter_refs": [
-          "toggleHidden"
+          "string_hidden"
         ],
         "evaluate": {
           "condition": {
@@ -448,7 +492,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "toggleDisable"
+          "string_disabled"
         ],
         "evaluate": {
           "condition": {
