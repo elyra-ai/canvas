@@ -38,8 +38,8 @@ describe("Test the external supernode/sub-flows support", function() {
 		cy.verifyNumberOfNodesInPipeline(4);
 		cy.verifyNumberOfExternalPipelines(2);
 
-		cy.verifyNumberOfNodesInSupernode("Supernode", 4); // Includes supernode binding nodes
-		cy.verifyNumberOfLinksInSupernode("Supernode", 3);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 5); // 2 regular nodes + 3 supernode binding nodes
+		cy.verifyNumberOfLinksInSupernode("Supernode", 4); // 1 link between nodes + 3 links to binding nodes
 	});
 
 	it("Test creating and converting an external supernode referencing multiple nested supernodes", function() {

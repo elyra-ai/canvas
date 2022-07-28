@@ -221,7 +221,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "idGWRVT47XDV_outPort"
+                  "port_id_ref": "idGWRVT47XDV_outPort_1"
                 }
               ]
             }
@@ -265,7 +265,19 @@
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
-                    "max": -1
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "idGWRVT47XDV_outPort_1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
                   },
                   "label": "Binding port for supernode"
                 }
@@ -470,7 +482,38 @@
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
-                    "max": -1
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 910,
+              "y_pos": 212.99999237060547,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_idGWRVT47XDV_outPort_1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
                   },
                   "label": "Binding port for supernode"
                 }
