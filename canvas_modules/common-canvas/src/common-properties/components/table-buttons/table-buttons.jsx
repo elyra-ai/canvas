@@ -25,6 +25,9 @@ import { STATES } from "./../../constants/constants";
 class TableButtons extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			updatedValue: "md"
+		};
 
 		this.getCustomButtonEnabled = this.getCustomButtonEnabled.bind(this);
 		this.customButtonIconCallback = this.customButtonIconCallback.bind(this);
@@ -32,6 +35,9 @@ class TableButtons extends React.Component {
 		this.convertToolbarConfig = this.convertToolbarConfig.bind(this);
 	}
 
+	componentDidMount() {
+		this.changeToolbarSize();
+	}
 	getCustomButtonEnabled(tableState, buttonConfig) {
 		const tableDisabled = typeof tableState !== "undefined" && tableState === STATES.DISABLED;
 		const buttonEnabled = this.props.customButtonsState && typeof this.props.customButtonsState[buttonConfig.id] !== "undefined"
@@ -103,6 +109,12 @@ class TableButtons extends React.Component {
 		return toolbarConfig;
 	}
 
+	changeToolbarSize() {
+		this.setState({
+			...this.state,
+			updatedValue: "sm"
+		});
+	}
 	render() {
 		const toolbarConfig = {
 			leftBar: this.convertToolbarConfig(this.props.tableState, this.props.customButtons)
@@ -111,6 +123,7 @@ class TableButtons extends React.Component {
 			<Toolbar
 				config={toolbarConfig}
 				instanceId={0}
+				size={this.state.updatedValue}
 				toolbarActionHandler={this.customButtonOnClick}
 			/>
 		</div>);

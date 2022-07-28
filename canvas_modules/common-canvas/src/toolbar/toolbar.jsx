@@ -276,13 +276,11 @@ class Toolbar extends React.Component {
 		this.leftBar = this.props.config.leftBar || [];
 		this.rightBar = this.props.config.rightBar || [];
 		this.rightBar = [...this.rightBar].reverse() || [];
-
 		const leftItems = this.generateToolbarItems(this.leftBar, false, true);
 		const rightItems = this.generateToolbarItems(this.rightBar, false, false);
-
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-				<div className="toolbar-div" instanceid={this.props.instanceId}>
+				<div className={`${this.props.size === "sm" ? "toolbar-div toolbar-sm-div" : "toolbar-div"}`} instanceid={this.props.instanceId}>
 					<div className="toolbar-left-bar" onScroll={this.onScroll}>
 						{leftItems}
 					</div>
@@ -301,7 +299,8 @@ Toolbar.propTypes = {
 	instanceId: PropTypes.number,
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
-	additionalText: PropTypes.object
+	additionalText: PropTypes.object,
+	size: PropTypes.string
 };
 
 export default Toolbar;
