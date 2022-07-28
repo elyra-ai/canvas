@@ -40,6 +40,36 @@ $toolbar-divider-width: 1px;
 
 	&.toolbar-sm-div {
 		height: $toolbar-button-sm-height;
+		.toolbar-item {
+			& button {
+				padding: 0;
+				height: $toolbar-button-sm-height;
+				width: $toolbar-button-sm-width;
+				min-height: 30px;
+			}
+
+			&.default,
+			&.ghost {
+				& button {
+					height: $toolbar-button-sm-height;
+					width: $toolbar-button-sm-width;
+				}
+
+			}
+
+			&.tertiary {
+				& button {
+					height: $toolbar-button-sm-height;
+					width: $toolbar-button-sm-width;
+				}
+			}
+		}
+		.toolbar-spacer {
+			& button {
+				height: $toolbar-button-sm-height;
+				width: $toolbar-button-sm-width;
+			}
+		}
 	}
 }
 
@@ -103,32 +133,6 @@ $toolbar-divider-width: 1px;
 		& button:disabled:hover {
 			color: $disabled-02;
 			background-color: $ui-01;
-		}
-	}
-}
-
-.toolbar-div.toolbar-sm-div .toolbar-item {
-
-	& button {
-		padding: 0;
-		height: $toolbar-button-sm-height;
-		width: $toolbar-button-sm-width;
-		min-height: 30px;
-	}
-
-	&.default,
-	&.ghost {
-		& button {
-			height: $toolbar-button-sm-height;
-			width: $toolbar-button-sm-width;
-		}
-
-	}
-
-	&.tertiary {
-		& button {
-			height: $toolbar-button-sm-height;
-			width: $toolbar-button-sm-width;
 		}
 	}
 }
