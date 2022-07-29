@@ -105,51 +105,17 @@ export default class CreateSuperNodeAction extends Action {
 		this.subAPIPipeline = this.objectModel.getAPIPipeline(this.subPipeline.id);
 
 		// Create binding input/output data objects cotaining port and link.
-		this.bindingInputData = this.getBindingInputData(this.subflowInputLinks);
-		this.bindingOutputData = this.getBindingOutputData(this.subflowOutputLinks);
+		this.bindingInputData = this.getBindingInputData(this.subflowInputLinks, this.subflowRect);
+		this.bindingOutputData = this.getBindingOutputData(this.subflowOutputLinks, this.subflowRect);
 
 		// Create Supernode using previously created input and output ports.
-		const supernodeInputPorts = this.bindingInputData.map((nodeData) => nodeData.port);
-		const supernodeOutputPorts = this.bindingOutputData.map((nodeData) => nodeData.port);
-		this.supernode = this.createSupernode(supernodeInputPorts, supernodeOutputPorts);
+		this.supernode = this.createSupernode(this.bindingInputData, this.bindingOutputData);
 
 		// Create definitions for links to and from supernode.
 		this.linkDefs = this.createLinkDefs(this.bindingInputData, this.bindingOutputData, this.supernode);
 
-		// Keep a map of which supernode port the subflow binding node links to
-		// and the link the subflow binding node needs to read from to connect
-		// to the correct node in the subflow.
-		this.supernodeBindingNodesMappedToParentFlowData = [];
-
-		// Create subflow binding nodes.
-		this.supernodeEntryBindingNodes = this.createEntryBindingNodes(this.bindingInputData, this.subflowRect);
-		this.supernodeExitBindingNodes = this.createExitBindingNodes(this.bindingOutputData, this.subflowRect);
-
 		// Create links to and from subflow binding nodes.
-		this.bindingNodeLinkSrcDefs = [];
-		this.bindingNodeLinkTrgDefs = [];
-		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
-			const link = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].link;
-			this.bindingNodeLinkSrcDefs.push({
-				id: bindingNode.id,
-				portId: bindingNode.outputs[0].id
-			});
-			this.bindingNodeLinkTrgDefs.push({
-				id: link.trgNodeId,
-				portId: link.trgNodePortId
-			});
-		});
-		this.supernodeExitBindingNodes.forEach((bindingNode) => {
-			const link = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].link;
-			this.bindingNodeLinkSrcDefs.push({
-				id: link.srcNodeId,
-				portId: link.srcNodePortId
-			});
-			this.bindingNodeLinkTrgDefs.push({
-				id: bindingNode.id,
-				portId: bindingNode.inputs[0].id
-			});
-		});
+		this.bindingNodeLinkDefs = this.createBindingNodeLinkDefs(this.bindingInputData, this.bindingOutputData);
 
 		if (this.data.externalUrl) {
 			const supernodes = CanvasUtils.filterSupernodes(this.subflowNodes);
@@ -204,7 +170,10 @@ export default class CreateSuperNodeAction extends Action {
 		return subflowOutputLinks;
 	}
 
-	createSupernode(supernodeInputPorts, supernodeOutputPorts) {
+	createSupernode(bindingInputData, bindingOutputData) {
+		const supernodeInputPorts = bindingInputData.map((bnd) => bnd.supernodePort);
+		const supernodeOutputPorts = bindingOutputData.map((bnd) => bnd.supernodePort);
+
 		const supernodeTemplate = {
 			label: this.labelUtil.getLabel("supernode.template.label"),
 			description: this.labelUtil.getLabel("supernode.template.description"),
@@ -319,22 +288,35 @@ export default class CreateSuperNodeAction extends Action {
 	// is for each input link a binding input data object is created that contains
 	// the link and a new port that can be added to the supernode. The port will
 	// have a unique ID within the scope of the input ports for the supernode.
-	getBindingInputData(subflowInputLinks) {
+	getBindingInputData(subflowInputLinks, subflowRect) {
 		const bindingInputData = [];
+
+		// Determine relative position of the binding nodes in the subflow.
+		let entryBindingYPos = subflowRect.y - BOUNDING_RECT_PADDING;
 
 		subflowInputLinks.forEach((link) => {
 			const trgNode = this.apiPipeline.getNode(link.trgNodeId);
 
-			const newPort = Object.assign({}, this.findPort(link.trgNodePortId, trgNode.inputs));
-			newPort.id = this.generateUniquePortId(newPort, link.trgNodeId, bindingInputData);
-			newPort.label = this.labelUtil.getLabel("supernode.new.port.label");
-			newPort.cardinality = {
+			const supernodePort = Object.assign({}, this.findPort(link.trgNodePortId, trgNode.inputs));
+			supernodePort.id = this.generateUniquePortId(supernodePort, link.trgNodeId, bindingInputData);
+			supernodePort.label = this.labelUtil.getLabel("supernode.new.port.label");
+			supernodePort.cardinality = {
 				min: 0,
 				max: 1
 			};
+
+			const bindingNodePort = Object.assign({}, supernodePort);
+			const pos = {
+				x: subflowRect.x - (BOUNDING_RECT_PADDING * 2),
+				y: entryBindingYPos += BOUNDING_RECT_PADDING
+			};
+			bindingNodePort.id = bindingNodePort.id ? "output_" + bindingNodePort.id : bindingNodePort.id;
+			const inputBindingNode = this.createBindingNode(link, { outputs: [bindingNodePort], isSupernodeInputBinding: true }, pos);
+
 			bindingInputData.push({
 				link: link,
-				port: newPort
+				supernodePort: supernodePort,
+				bindingNode: inputBindingNode
 			});
 		});
 		return bindingInputData;
@@ -344,22 +326,35 @@ export default class CreateSuperNodeAction extends Action {
 	// is for each output link a binding input data object is created that contains
 	// the link and a new port that can be added to the supernode. The port will
 	// have a unique ID within the scope of the output ports for the supernode.
-	getBindingOutputData(subflowOutputLinks) {
+	getBindingOutputData(subflowOutputLinks, subflowRect) {
 		const bindingOutputData = [];
+
+		// Determine relative position of the binding nodes in the subflow.
+		let exitBindingYPos = subflowRect.y - BOUNDING_RECT_PADDING;
 
 		subflowOutputLinks.forEach((link) => {
 			const srcNode = this.apiPipeline.getNode(link.srcNodeId);
 
-			const newPort = Object.assign({}, this.findPort(link.srcNodePortId, srcNode.outputs));
-			newPort.id = this.generateUniquePortId(newPort, link.srcNodeId, bindingOutputData);
-			newPort.label = this.labelUtil.getLabel("supernode.new.port.label");
-			newPort.cardinality = {
+			const supernodePort = Object.assign({}, this.findPort(link.srcNodePortId, srcNode.outputs));
+			supernodePort.id = this.generateUniquePortId(supernodePort, link.srcNodeId, bindingOutputData);
+			supernodePort.label = this.labelUtil.getLabel("supernode.new.port.label");
+			supernodePort.cardinality = {
 				min: 0,
 				max: 1
 			};
+
+			const bindingNodePort = Object.assign({}, supernodePort);
+			const pos = {
+				x: subflowRect.x + subflowRect.width + BOUNDING_RECT_PADDING,
+				y: exitBindingYPos += BOUNDING_RECT_PADDING
+			};
+			bindingNodePort.id = bindingNodePort.id ? "input_" + bindingNodePort.id : bindingNodePort.id;
+			const outputBindingNode = this.createBindingNode(link, { inputs: [bindingNodePort], isSupernodeOutputBinding: true }, pos);
+
 			bindingOutputData.push({
 				link: link,
-				port: newPort
+				supernodePort: supernodePort,
+				bindingNode: outputBindingNode
 			});
 		});
 		return bindingOutputData;
@@ -385,56 +380,8 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	occurancesStartingWith(id, bindingNodeData) {
-		const foundIds = bindingNodeData.filter((bnd) => (bnd.port.id.startsWith(id)));
+		const foundIds = bindingNodeData.filter((bnd) => (bnd.supernodePort.id.startsWith(id)));
 		return foundIds.length;
-	}
-
-	createEntryBindingNodes(bindingInputData, subflowRect) {
-		const supernodeEntryBindingNodes = [];
-
-		// Determine relative position of the binding nodes in the subflow.
-		let entryBindingYPos = subflowRect.y - BOUNDING_RECT_PADDING;
-
-		bindingInputData.forEach((bnd) => {
-			const bindingNodePort = Object.assign({}, bnd.port);
-
-			const pos = {
-				x: subflowRect.x - (BOUNDING_RECT_PADDING * 2),
-				y: entryBindingYPos += BOUNDING_RECT_PADDING
-			};
-			bindingNodePort.id = bindingNodePort.id ? "output_" + bindingNodePort.id : bindingNodePort.id;
-			const inputBindingNode = this.createBindingNode(bnd.link, { outputs: [bindingNodePort], isSupernodeInputBinding: true }, pos);
-			this.supernodeBindingNodesMappedToParentFlowData[inputBindingNode.id] = {
-				portId: bnd.port.id,
-				link: bnd.link
-			};
-
-			supernodeEntryBindingNodes.push(inputBindingNode);
-		});
-		return supernodeEntryBindingNodes;
-	}
-
-	createExitBindingNodes(bindingOutputData, subflowRect) {
-		const supernodeExitBindingNodes = [];
-
-		// Determine relative position of the binding nodes in the subflow.
-		let exitBindingYPos = subflowRect.y - BOUNDING_RECT_PADDING;
-
-		bindingOutputData.forEach((bnd) => {
-			const bindingNodePort = Object.assign({}, bnd.port);
-			const pos = {
-				x: subflowRect.x + subflowRect.width + BOUNDING_RECT_PADDING,
-				y: exitBindingYPos += BOUNDING_RECT_PADDING
-			};
-			bindingNodePort.id = bindingNodePort.id ? "input_" + bindingNodePort.id : bindingNodePort.id;
-			const outputBindingNode = this.createBindingNode(bnd.link, { inputs: [bindingNodePort], isSupernodeOutputBinding: true }, pos);
-			this.supernodeBindingNodesMappedToParentFlowData[outputBindingNode.id] = {
-				portId: bnd.port.id,
-				link: bnd.link
-			};
-			supernodeExitBindingNodes.push(outputBindingNode);
-		});
-		return supernodeExitBindingNodes;
 	}
 
 	createBindingNode(link, portsData, pos) {
@@ -474,7 +421,7 @@ export default class CreateSuperNodeAction extends Action {
 				},
 				linkTrgDef: {
 					id: supernode.id,
-					portId: bnd.port.id
+					portId: bnd.supernodePort.id
 				}
 			});
 		});
@@ -483,7 +430,7 @@ export default class CreateSuperNodeAction extends Action {
 			linkDefs.push({
 				linkSrcDef: {
 					id: supernode.id,
-					portId: bnd.port.id
+					portId: bnd.supernodePort.id
 				},
 				linkTrgDef: {
 					id: bnd.link.trgNodeId,
@@ -493,6 +440,38 @@ export default class CreateSuperNodeAction extends Action {
 		});
 
 		return linkDefs;
+	}
+
+	// Create links to and from subflow binding nodes.
+	createBindingNodeLinkDefs(bindingInputData, bindingOutputData) {
+		const bindingNodeLinkDefs = [];
+
+		bindingInputData.forEach((bnd) => {
+			bindingNodeLinkDefs.push({
+				srcDef: {
+					id: bnd.bindingNode.id,
+					portId: bnd.bindingNode.outputs[0].id
+				},
+				trgDef: {
+					id: bnd.link.trgNodeId,
+					portId: bnd.link.trgNodePortId
+				}
+			});
+		});
+
+		bindingOutputData.forEach((bnd) => {
+			bindingNodeLinkDefs.push({
+				srcDef: {
+					id: bnd.link.srcNodeId,
+					portId: bnd.link.srcNodePortId
+				},
+				trgDef: {
+					id: bnd.bindingNode.id,
+					portId: bnd.bindingNode.inputs[0].id
+				}
+			});
+		});
+		return bindingNodeLinkDefs;
 	}
 
 	// Return augmented command object which will be passed to the client app.
@@ -515,13 +494,11 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addSupernode(this.supernode, [this.subPipeline]);
 
 		// Add subflow_node_ref to supernode ports.
-		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
-			const portId = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].portId;
-			this.apiPipeline.setInputPortSubflowNodeRef(this.supernode.id, portId, bindingNode.id);
+		this.bindingInputData.forEach((bnd) => {
+			this.apiPipeline.setInputPortSubflowNodeRef(this.supernode.id, bnd.supernodePort.id, bnd.bindingNode.id);
 		});
-		this.supernodeExitBindingNodes.forEach((bindingNode) => {
-			const portId = this.supernodeBindingNodesMappedToParentFlowData[bindingNode.id].portId;
-			this.apiPipeline.setOutputPortSubflowNodeRef(this.supernode.id, portId, bindingNode.id);
+		this.bindingOutputData.forEach((bnd) => {
+			this.apiPipeline.setOutputPortSubflowNodeRef(this.supernode.id, bnd.supernodePort.id, bnd.bindingNode.id);
 		});
 
 		// Create new links to and from supernode in the main flow. We can only
@@ -537,20 +514,20 @@ export default class CreateSuperNodeAction extends Action {
 		this.apiPipeline.addLinks(this.newLinks);
 
 		// Add the binding nodes to the subflow.
-		this.supernodeEntryBindingNodes.forEach((bindingNode) => {
-			this.subAPIPipeline.addNode(bindingNode);
+		this.bindingInputData.forEach((bnd) => {
+			this.subAPIPipeline.addNode(bnd.bindingNode);
 		});
-		this.supernodeExitBindingNodes.forEach((bindingNode) => {
-			this.subAPIPipeline.addNode(bindingNode);
+		this.bindingOutputData.forEach((bnd) => {
+			this.subAPIPipeline.addNode(bnd.bindingNode);
 		});
 
 		// Create links to and from the subflow binding nodes.
-		this.supernodeNewLinks = [];
-		for (let idx = 0; idx < this.bindingNodeLinkSrcDefs.length; idx++) {
-			this.supernodeNewLinks.push(
-				this.subAPIPipeline.createNodeLink(this.bindingNodeLinkSrcDefs[idx], this.bindingNodeLinkTrgDefs[idx], { type: NODE_LINK }));
+		this.subflowNewLinks = [];
+		for (let idx = 0; idx < this.bindingNodeLinkDefs.length; idx++) {
+			this.subflowNewLinks.push(
+				this.subAPIPipeline.createNodeLink(this.bindingNodeLinkDefs[idx].srcDef, this.bindingNodeLinkDefs[idx].trgDef, { type: NODE_LINK }));
 		}
-		this.subAPIPipeline.addLinks(this.supernodeNewLinks);
+		this.subAPIPipeline.addLinks(this.subflowNewLinks);
 
 		// If we are creating an external supernode create the external flow
 		// header info and switch the parentUrls for descendant pipelines (including
