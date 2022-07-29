@@ -34,74 +34,28 @@ export default class CreateSuperNodeAction extends Action {
 		this.subflowComments = this.objectModel.getSelectedComments();
 		this.subflowRect = this.apiPipeline.getBoundingRectForNodes(this.subflowNodes);
 
-		this.subflowLinks = [];
 		this.linksToDelete = [];
-		this.commentLinks = [];
 
-		// Separate the comment links and node links for each selected object.
-		this.data.selectedObjectIds.forEach((id) => {
-			const objectLinks = this.apiPipeline.getLinksContainingId(id);
-			// Ensure each link is only stored once.
-			objectLinks.forEach((objectLink) => {
-				if ((objectLink.type === NODE_LINK || objectLink.type === ASSOCIATION_LINK) &&
-						(!this.subflowLinks.find((link) => (link.id === objectLink.id)))) {
-					this.subflowLinks.push(objectLink);
-				// Do not add any comment links to the supernode at this moment.
-				} else if (objectLink.type === COMMENT_LINK &&
-								(!this.commentLinks.find((link) => (link.id === objectLink.id)))) {
-					this.commentLinks.push(objectLink);
-				}
-			});
-		});
+		// Get the subflow links
+		const uniqueSubflowLinks = this.getUniqueSubflowLinks(this.data.selectedObjectIds);
+		this.subflowNodeLinks = this.getSubflowNodeLinks(uniqueSubflowLinks);
+		this.subflowCommentLinks = this.getSubflowCommentLinks(uniqueSubflowLinks);
 
-		// Determine if the comment should be brought into the supernode.
-		this.commentLinks.forEach((link) => {
-			const comment = this.apiPipeline.getComment(link.srcNodeId);
-			if (this.apiPipeline.isObjectIdInObjects(comment.id, this.subflowComments)) {
-				// Include links that are connected to selected comments.
-				this.subflowLinks.push(link);
-			} else if (!this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
-				// Include links that are connected to nonselected comments and connected to selected nodes.
-				this.subflowLinks.push(link);
-				this.subflowComments.push(comment); // Add nonselected comment.
-			} else {
-				// Do not include link in supernode if nonselected comment have links to nonselected nodes.
-				this.linksToDelete.push(link);
-				// Remove the link from supernode.
-				this.subflowLinks = this.subflowLinks.filter((superLink) => superLink.id !== link.id);
-			}
-		});
+		// Filter comment links to remove any un-needed links
+		this.subflowCommentLinks = this.filterCommentLinks(this.subflowCommentLinks, this.subflowComments);
 
-		// Comments
-		this.commentsToUnlinkFromUnselectedNodes = [];
-
-		// Do not move a selected comment to supernode if it is linked to an nonselected node or comment.
-		for (const comment of this.subflowComments) {
-			if (this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
-				this.commentsToUnlinkFromUnselectedNodes.push(comment);
-			}
-		}
-
-		// If selected comments have links to nonselected nodes, break the links to nonselected nodes.
-		this.commentsToUnlinkFromUnselectedNodes.forEach((comment) => {
-			const commentLinks = this.apiPipeline.getLinksContainingId(comment.id);
-			commentLinks.forEach((link) => {
-				if ((!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) &&
-						(!this.apiPipeline.isObjectIdInObjects(link.id, this.linksToDelete))) {
-					this.removeLinkFromSubflow(link, true);
-				}
-			});
-		});
+		// Create an array with both node and comment links
+		this.subflowLinks = this.subflowNodeLinks.concat(this.subflowCommentLinks);
 
 		// Determine supernode input and output links. These functions will also
 		// add links to this.subFlowLinks and this.linksToDelete arrays.
-		const subflowNodeLinks = this.apiPipeline.getNodeLinks(this.subflowNodes);
-		this.subflowInputLinks = this.createOrderedSubflowInputLinks(subflowNodeLinks);
-		this.subflowOutputLinks = this.createOrderedSubflowOutputLinks(subflowNodeLinks);
+		this.subflowInputLinks = this.createOrderedSubflowInputLinks(this.subflowNodeLinks);
+		this.subflowOutputLinks = this.createOrderedSubflowOutputLinks(this.subflowNodeLinks);
 
 		// Create the new sub-pipeline which will be referenced by the supernode.
-		this.subPipeline =
-			this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks);
+		this.subPipeline = this.objectModel.createPipeline(this.subflowNodes, this.subflowComments, this.subflowLinks);
+
+		// Create an API pipeline for the new pipeline so we can call helper functions on it.
 		this.subAPIPipeline = this.objectModel.getAPIPipeline(this.subPipeline.id);
 
 		// Create binding input/output data objects cotaining port and link.
@@ -117,15 +71,106 @@ export default class CreateSuperNodeAction extends Action {
 		// Create links to and from subflow binding nodes.
 		this.bindingNodeLinkDefs = this.createBindingNodeLinkDefs(this.bindingInputData, this.bindingOutputData);
 
+		// Handle external subflows in supernode
 		if (this.data.externalUrl) {
-			const supernodes = CanvasUtils.filterSupernodes(this.subflowNodes);
-			const descPipelines = this.objectModel.getDescendantPipelinesForSupernodes(supernodes);
-			this.descPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipelines
-
-			this.newPipelineFlow =
-				this.objectModel.createExternalPipelineFlowTemplate(
-					this.data.externalPipelineFlowId, this.supernode.subflow_ref.pipeline_id_ref);
+			this.handleExternalSubflow();
 		}
+	}
+
+	// Returns an object containing two links arrays (node links and comment links)
+	// for the selected nodes.
+	getUniqueSubflowLinks(selectedObjectIds) {
+		const uniqueSubflowLinks = [];
+
+		// Separate the comment links and node links for each selected object.
+		selectedObjectIds.forEach((id) => {
+			const objectLinks = this.apiPipeline.getLinksContainingId(id);
+			// Ensure each link is only stored once.
+			objectLinks.forEach((objectLink) => {
+				if (!uniqueSubflowLinks.find((link) => (link.id === objectLink.id))) {
+					uniqueSubflowLinks.push(objectLink);
+				}
+			});
+		});
+
+		return uniqueSubflowLinks;
+	}
+
+
+	// Returns an object containing two links arrays (node links and comment links)
+	// for the selected nodes.
+	getSubflowNodeLinks(uniqueSubflowLinks) {
+		return uniqueSubflowLinks.filter((link) => (link.type === NODE_LINK || link.type === ASSOCIATION_LINK));
+	}
+
+	// Returns an object containing two links arrays (node links and comment links)
+	// for the selected nodes.
+	getSubflowCommentLinks(uniqueSubflowLinks) {
+		return uniqueSubflowLinks.filter((link) => (link.type === COMMENT_LINK));
+	}
+
+	// Filters the array of comment links passed in so that links that should
+	// NOT be in the subflow are removed. This method may also adjust
+	// this.subflowComments and this.linksToDelete.
+	filterCommentLinks(subflowCommentLinks, subflowComments) {
+		let filteredLinks = [];
+
+		// Determine if the comment should be brought into the supernode.
+		subflowCommentLinks.forEach((link) => {
+			const comment = this.apiPipeline.getComment(link.srcNodeId);
+
+			// Include links that are connected to selected comments.
+			if (this.apiPipeline.isObjectIdInObjects(comment.id, this.subflowComments)) {
+				filteredLinks.push(link);
+
+			// Include links that are connected to nonselected comments and connected
+			// to selected nodes AND include their comment in the subflow as well.
+			} else if (!this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
+				filteredLinks.push(link);
+				this.subflowComments.push(comment); // Intrinsically, add nonselected comment.
+
+			// Do not include any other links in the subflow. These will be links
+			// from nonselected comments to nonselected nodes. Such links will have
+			// been included in the comment links if the comment has another link
+			// to a selected node. These links will be deleted from the main flow
+			// instead.
+			} else {
+				this.linksToDelete.push(link);
+			}
+		});
+
+		filteredLinks = this.removeCommentLinksToUnselectedNodes(filteredLinks, subflowComments);
+
+		return filteredLinks;
+	}
+
+	// Handles all instances where a subflow comment (that is being included in
+	// the subflow) is also linked to a non-selectd node (that is, a node that is
+	// NOT being inlcuded in the subflow). This method will alter
+	// this.subflowLinks and this.linkToDelete.
+	removeCommentLinksToUnselectedNodes(inSubflowCommentLinks, subflowComments) {
+		let subflowCommentLinks = inSubflowCommentLinks;
+		const commentsToUnlinkFromUnselectedNodes = [];
+
+		// Do not move a selected comment to supernode if it is linked to an nonselected node or comment.
+		for (const comment of subflowComments) {
+			if (this.apiPipeline.isCommentLinkedToNonSelectedNodes(comment.id)) {
+				commentsToUnlinkFromUnselectedNodes.push(comment);
+			}
+		}
+
+		// If selected comments have links to nonselected nodes, break the links to nonselected nodes.
+		commentsToUnlinkFromUnselectedNodes.forEach((comment) => {
+			const commentLinks = this.apiPipeline.getLinksContainingId(comment.id);
+			commentLinks.forEach((link) => {
+				if ((!this.apiPipeline.isObjectIdInObjects(link.trgNodeId, this.subflowNodes)) &&
+						(!this.apiPipeline.isObjectIdInObjects(link.id, this.linksToDelete))) {
+					subflowCommentLinks = subflowCommentLinks.filter((superLink) => superLink.id !== link.id);
+					this.linksToDelete.push(link);
+				}
+			});
+		});
+		return subflowCommentLinks;
 	}
 
 	// Returns an array of ordered supernode input links. These are the links
@@ -168,6 +213,17 @@ export default class CreateSuperNodeAction extends Action {
 		// Reorder the supernode output links to the correct order.
 		subflowOutputLinks = this.reorderSubflowLinks(subflowOutputLinks, "output");
 		return subflowOutputLinks;
+	}
+
+	// Handles the subflow when an external pipeline flow is required.
+	handleExternalSubflow() {
+		const supernodes = CanvasUtils.filterSupernodes(this.subflowNodes);
+		const descPipelines = this.objectModel.getDescendantPipelinesForSupernodes(supernodes);
+		this.descPipelines = descPipelines.filter((p) => !p.parentUrl); // Filter the local pipelines
+
+		this.newPipelineFlow =
+			this.objectModel.createExternalPipelineFlowTemplate(
+				this.data.externalPipelineFlowId, this.supernode.subflow_ref.pipeline_id_ref);
 	}
 
 	createSupernode(bindingInputData, bindingOutputData) {
