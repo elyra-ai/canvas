@@ -37,7 +37,6 @@
                 {
                   "id": "8bbbd5cc-9dfd-40f5-88f1-f9d00a3308b0",
                   "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
@@ -144,7 +143,6 @@
                 {
                   "id": "600b5ed5-6a8f-43ec-9600-0f6f7524fdb4",
                   "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
@@ -285,7 +283,6 @@
                 {
                   "id": "e38f0d9c-8d4e-4757-9c4f-585b39522451",
                   "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"

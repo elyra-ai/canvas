@@ -116,8 +116,7 @@
                 },
                 {
                   "id": "ec43a264-0e0d-4c29-872f-2cdca6574661",
-                  "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort"
+                  "node_id_ref": "idGWRVT47XDV"
                 }
               ],
               "parameters": {

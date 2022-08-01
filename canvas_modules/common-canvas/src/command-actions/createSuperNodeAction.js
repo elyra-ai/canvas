@@ -261,58 +261,27 @@ export default class CreateSuperNodeAction extends Action {
 	}
 
 	// Reorder the links in the same vertical order as the connected nodes on
-	// the canvas and, if necessary, the ports within the nodes. This helps us
-	// position the ports in the supernode that will be created so that the
-	// link lines do not cross.
+	// the canvas. This helps us position the ports in the supernode so they
+	// will be created so the link lines do not cross.
 	reorderSubflowLinks(links, type) {
 		if (links.length > 1) {
 			const supernodeLinks = [...links];
-
-			const portType = type === "input" ? "inputs" : "outputs";
-			const linkNodeType = type === "input" ? "trgNodeId" : "srcNodeId";
-			const linkNodePortType = type === "input" ? "trgNodePortId" : "srcNodePortId";
-
-			const subBindingNodes = [];
-			supernodeLinks.forEach((link) => {
-				if (!subBindingNodes.find((subBindingNode) => (subBindingNode.id === link[linkNodeType]))) {
-					subBindingNodes.push(this.apiPipeline.getNode(link[linkNodeType]));
-				}
-			});
+			const nodeId = type === "input" ? "srcNodeId" : "trgNodeId";
 
 			// Sort the nodes in the order they appear on the screen from top to bottom.
-			subBindingNodes.sort((a, b) => {
-				if (a.y_pos < b.y_pos) {
+			supernodeLinks.sort((a, b) => {
+				const nodeA = this.apiPipeline.getNode(a[nodeId]);
+				const nodeB = this.apiPipeline.getNode(b[nodeId]);
+				if (nodeA.y_pos < nodeB.y_pos) {
 					return -1;
 				}
-				if (a.y_pos > b.y_pos) {
+				if (nodeA.y_pos > nodeB.y_pos) {
 					return 1;
 				}
 				return 0;
 			});
+			return supernodeLinks;
 
-			let reorderedSupernodeLinks = [];
-			subBindingNodes.forEach((bindingNode) => {
-				const nodePorts = bindingNode[portType];
-				const firstPort = nodePorts[0];
-				nodePorts.forEach((port) => {
-					let correspondingLinks = supernodeLinks.filter((link) =>
-						(link[linkNodePortType] === port.id || typeof link[linkNodePortType] === "undefined" || link[linkNodePortType] === null) &&
-							link[linkNodeType] === bindingNode.id);
-					// If any link has an undefined nodePortId, assign the first portId.
-					correspondingLinks = correspondingLinks.map((link) => {
-						const newLink = Object.assign({}, link);
-						newLink[linkNodePortType] = newLink[linkNodePortType] ? newLink[linkNodePortType] : firstPort.id;
-						return newLink;
-					});
-
-					correspondingLinks.forEach((correspondingLink) => {
-						if (!reorderedSupernodeLinks.find((reorderedSupernodeLink) => (reorderedSupernodeLink.id === correspondingLink.id))) {
-							reorderedSupernodeLinks = reorderedSupernodeLinks.concat(correspondingLink);
-						}
-					});
-				});
-			});
-			return reorderedSupernodeLinks;
 		}
 		return links;
 	}

@@ -35,7 +35,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "idGWRVT47XDV_outPort"
+                  "port_id_ref": "idGWRVT47XDV_outPort_1"
                 }
               ]
             }
@@ -135,7 +135,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "idGWRVT47XDV_outPort_1"
+                  "port_id_ref": "idGWRVT47XDV_outPort_2"
                 }
               ]
             }
@@ -269,7 +269,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "idGWRVT47XDV_outPort_2"
+                  "port_id_ref": "idGWRVT47XDV_outPort"
                 }
               ]
             }
@@ -489,8 +489,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort"
+                  "node_id_ref": "idGWRVT47XDV"
                 }
               ]
             }
@@ -520,8 +519,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort"
+                  "node_id_ref": "idGWRVT47XDV"
                 }
               ]
             }
@@ -551,8 +549,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort"
+                  "node_id_ref": "idGWRVT47XDV"
                 }
               ]
             }

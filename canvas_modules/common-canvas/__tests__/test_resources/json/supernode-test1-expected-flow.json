@@ -1422,8 +1422,7 @@
               },
               "links": [
                 {
-                  "node_id_ref": "idGWRVT47XDV",
-                  "port_id_ref": "outPort"
+                  "node_id_ref": "idGWRVT47XDV"
                 }
               ],
               "parameters": {
