@@ -37,7 +37,7 @@
 		}
 	}
 	.properties-radioset-panel {
-		margin-bottom: $spacing-01;
+		margin-bottom: $spacing-02;
 		margin-right: $spacing-04;
 		display: flex;
 		justify-content: flex-start;
@@ -46,6 +46,9 @@
 		overflow: hidden;
 		.bx--radio-button-wrapper{
 			margin-right: 0; // We removed the space between radio & tooltip to position it correctly
+		}
+		.properties-radioset-tooltip {
+			display: flex;
 		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;

@@ -912,6 +912,7 @@
     "radioBooleanWithLabels.false.label": "False Label",
     "withradioLabelWrapped.firstN.label": "First N",
     "withradioLabelWrapped.oneInN.label": "One in N",
-    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label"
+    "withradioLabelWrapped.longLabel.label": "This is really a longgggggggggggg label",
+		"withradioLabelWrapped.longLabel.desc": "This is really a longgggggggggggg label"
   }
 }
