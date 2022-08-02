@@ -36,7 +36,9 @@ export default class CreateSuperNodeAction extends Action {
 
 		this.linksToDelete = [];
 
-		// Get the subflow links
+		// Get the subflow links - this is all links which go to and from the nodes
+		// and comments that are to be included in the subflow. No link is repeated
+		// in the arrays.
 		const uniqueSubflowLinks = this.getUniqueSubflowLinks(this.data.selectedObjectIds);
 		this.subflowNodeLinks = this.getSubflowNodeLinks(uniqueSubflowLinks);
 		this.subflowCommentLinks = this.getSubflowCommentLinks(uniqueSubflowLinks);
@@ -66,7 +68,7 @@ export default class CreateSuperNodeAction extends Action {
 		this.supernode = this.createSupernode(this.bindingInputData, this.bindingOutputData);
 
 		// Create definitions for links to and from supernode.
-		this.linkDefs = this.createLinkDefs(this.bindingInputData, this.bindingOutputData, this.supernode);
+		this.supernodeLinkDefs = this.createSupernodeLinkDefs(this.bindingInputData, this.bindingOutputData, this.supernode);
 
 		// Create links to and from subflow binding nodes.
 		this.bindingNodeLinkDefs = this.createBindingNodeLinkDefs(this.bindingInputData, this.bindingOutputData);
@@ -435,16 +437,16 @@ export default class CreateSuperNodeAction extends Action {
 
 	// Create an array of link definitions that define the links between the
 	// supernode in/out ports and surrounding input/output nodes.
-	createLinkDefs(bindingInputData, bindingOutputData, supernode) {
+	createSupernodeLinkDefs(bindingInputData, bindingOutputData, supernode) {
 		const linkDefs = [];
 
 		bindingInputData.forEach((bnd) => {
 			linkDefs.push({
-				linkSrcDef: {
+				srcInfo: {
 					id: bnd.link.srcNodeId,
 					portId: bnd.link.srcNodePortId
 				},
-				linkTrgDef: {
+				trgInfo: {
 					id: supernode.id,
 					portId: bnd.supernodePort.id
 				}
@@ -453,11 +455,11 @@ export default class CreateSuperNodeAction extends Action {
 
 		bindingOutputData.forEach((bnd) => {
 			linkDefs.push({
-				linkSrcDef: {
+				srcInfo: {
 					id: supernode.id,
 					portId: bnd.supernodePort.id
 				},
-				linkTrgDef: {
+				trgInfo: {
 					id: bnd.link.trgNodeId,
 					portId: bnd.link.trgNodePortId
 				}
@@ -469,15 +471,15 @@ export default class CreateSuperNodeAction extends Action {
 
 	// Create links to and from subflow binding nodes.
 	createBindingNodeLinkDefs(bindingInputData, bindingOutputData) {
-		const bindingNodeLinkDefs = [];
+		const linkDefs = [];
 
 		bindingInputData.forEach((bnd) => {
-			bindingNodeLinkDefs.push({
-				srcDef: {
+			linkDefs.push({
+				srcInfo: {
 					id: bnd.bindingNode.id,
 					portId: bnd.bindingNode.outputs[0].id
 				},
-				trgDef: {
+				trgInfo: {
 					id: bnd.link.trgNodeId,
 					portId: bnd.link.trgNodePortId
 				}
@@ -485,18 +487,18 @@ export default class CreateSuperNodeAction extends Action {
 		});
 
 		bindingOutputData.forEach((bnd) => {
-			bindingNodeLinkDefs.push({
-				srcDef: {
+			linkDefs.push({
+				srcInfo: {
 					id: bnd.link.srcNodeId,
 					portId: bnd.link.srcNodePortId
 				},
-				trgDef: {
+				trgInfo: {
 					id: bnd.bindingNode.id,
 					portId: bnd.bindingNode.inputs[0].id
 				}
 			});
 		});
-		return bindingNodeLinkDefs;
+		return linkDefs;
 	}
 
 	// Return augmented command object which will be passed to the client app.
@@ -530,12 +532,12 @@ export default class CreateSuperNodeAction extends Action {
 		// do this AFTER the supernode has been added to the canvas otherwise the
 		// links cannot be created in the object model.
 		this.newLinks = [];
-		for (let idx = 0; idx < this.linkDefs.length; idx++) {
-			const link = this.apiPipeline.createNodeLink(this.linkDefs[idx].linkSrcDef, this.linkDefs[idx].linkTrgDef, { type: NODE_LINK });
+		this.supernodeLinkDefs.forEach((linkDef) => {
+			const link = this.apiPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK });
 			if (link) {
 				this.newLinks.push(link);
 			}
-		}
+		});
 		this.apiPipeline.addLinks(this.newLinks);
 
 		// Add the binding nodes to the subflow.
@@ -548,10 +550,10 @@ export default class CreateSuperNodeAction extends Action {
 
 		// Create links to and from the subflow binding nodes.
 		this.subflowNewLinks = [];
-		for (let idx = 0; idx < this.bindingNodeLinkDefs.length; idx++) {
+		this.bindingNodeLinkDefs.forEach((linkDef) => {
 			this.subflowNewLinks.push(
-				this.subAPIPipeline.createNodeLink(this.bindingNodeLinkDefs[idx].srcDef, this.bindingNodeLinkDefs[idx].trgDef, { type: NODE_LINK }));
-		}
+				this.subAPIPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK }));
+		});
 		this.subAPIPipeline.addLinks(this.subflowNewLinks);
 
 		// If we are creating an external supernode create the external flow
