@@ -22,9 +22,6 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { v4 as uuid4 } from "uuid";
-
 
 class ToggleControl extends React.Component {
 	constructor(props) {
@@ -38,7 +35,6 @@ class ToggleControl extends React.Component {
 	}
 
 	render() {
-		const value = this.props.value ? this.props.value : "";
 		const toggleControl = (<Toggle
 			id={this.id}
 			size="sm"
@@ -47,35 +43,14 @@ class ToggleControl extends React.Component {
 			labelA={this.props.toggleofflabel}
 			labelB={this.props.toggleonlabel}
 			onToggle={this.handleChange.bind(this)}
+			labelText={this.props.controlItem}
 		/>);
 
 
-		let display = toggleControl;
-		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
-			let disabled = true;
-			if (value && this.props.state !== STATES.DISABLED) {
-				disabled = false;
-			}
-			const tooltip = (
-				<div className="properties-tooltips">
-					{String(value)}
-				</div>
-			);
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction="bottom"
-				className="properties-tooltips"
-				disable={disabled}
-			>
-				{toggleControl}
-			</Tooltip>);
-		}
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{display}
+				{toggleControl}
 				<ValidationMessage inTable={this.props.tableControl} state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>
 

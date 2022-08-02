@@ -67,6 +67,7 @@ const accessibleControls = [
 	ControlType.TIMEFIELD,
 	ControlType.TOGGLETEXT,
 	ControlType.LIST,
+	ControlType.TOGGLE,
 	ControlType.SOMEOFSELECT,
 	ControlType.SELECTCOLUMNS,
 	ControlType.READONLY,
@@ -184,6 +185,9 @@ export default class ControlFactory {
 		case (ControlType.TEXTAREA):
 			createdControl = (<TextareaControl {...props} />);
 			break;
+		case (ControlType.TOGGLE):
+			createdControl = (<ToggleControl {...props} />);
+			break;
 		case (ControlType.LIST):
 			createdControl = (<ListControl {...props} />);
 			break;
@@ -221,9 +225,6 @@ export default class ControlFactory {
 			break;
 		case (ControlType.CHECKBOX):
 			createdControl = (<CheckboxControl {...props} />);
-			break;
-		case (ControlType.TOGGLE):
-			createdControl = (<ToggleControl {...props} />);
 			break;
 		case (ControlType.CHECKBOXSET):
 			if (!tableInfo) {

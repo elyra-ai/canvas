@@ -3,31 +3,15 @@
     "title": "toggle Fields"
   },
   "current_parameters": {
-    "string": "toggle",
+    "string": null,
     "string_null": null,
     "string_empty": "",
-     "string_error": [
-      "testing",
-      "toggle",
-      "control"
-    ],
-    "string_warning": [
-      "testing",
-      "toggle",
-      "control"
-    ],
+     "string_error": null,
+    "string_warning":null,
     "hide": true,
-    "string_hidden": [
-      "testing",
-      "toggle",
-      "control"
-    ],
+    "string_hidden": true,
     "disable": true,
-    "string_disabled": [
-      "testing",
-      "toggle",
-      "control"
-    ],
+    "string_disabled": true,
     "string_table": [
       [
         [
@@ -120,10 +104,6 @@
     {
       "id": "string_table_cond",
       "type": "array[toggles]"
-    },
-    {
-      "id": "string_long_value",
-      "type": "array[string]"
     }
   ],
   "complex_types": [
@@ -159,7 +139,7 @@
       {
         "parameter_ref": "string",
         "label": {
-          "default": "string"
+          "default": "toggle string"
         },
         "control": "toggle",
         "description": {
@@ -170,9 +150,9 @@
       {
         "parameter_ref": "string_default",
         "label": {
-          "default": "Default"
+          "default": "toggle Default"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with parameter value set to 'default testing' by default"
         }
@@ -180,9 +160,9 @@
       {
         "parameter_ref": "string_empty",
         "label": {
-          "default": "Empty"
+          "default": "toggle Empty"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with parameter value set to '\"\"'"
         }
@@ -190,9 +170,9 @@
       {
         "parameter_ref": "string_null",
         "label": {
-          "default": "Null"
+          "default": "toggle Null"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with parameter value set to 'null'"
         }
@@ -200,9 +180,9 @@
       {
         "parameter_ref": "string_undefined",
         "label": {
-          "default": "Undefined"
+          "default": "toggle Undefined"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with parameter value set to 'undefined'"
         }
@@ -210,9 +190,9 @@
       {
         "parameter_ref": "string_error",
         "label": {
-          "default": "Error"
+          "default": "toggle Error"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with error when set to 'error'"
         }
@@ -222,7 +202,7 @@
         "label": {
           "default": "Warning"
         },
-				  "control": "toggle",
+          "control": "toggle",
         "description": {
           "default": "toggle with warning when set to 'warn'"
         }
@@ -231,29 +211,27 @@
         "parameter_ref": "hide",
         "label": {
           "default": "Hide 'string Hidden'"
-        },
-				  "control": "toggle"
+        }
       },
       {
         "parameter_ref": "string_hidden",
         "label": {
           "default": "string Hidden"
         },
-				  "control": "toggle"
+          "control": "toggle"
       },
       {
         "parameter_ref": "disable",
         "label": {
           "default": "Disable 'string Disabled'"
-        },
-				  "control": "toggle"
+        }
       },
       {
         "parameter_ref": "string_disabled",
         "label": {
           "default": "string Disabled"
         },
-				  "control": "toggle"
+          "control": "toggle"
       },
       {
         "parameter_ref": "string_table",
@@ -270,16 +248,6 @@
           "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
           "placement": "on_panel"
         }
-      },
-      {
-        "parameter_ref": "string_long_value",
-        "label": {
-          "default": "string"
-        },
-        "control": "toggle",
-        "description": {
-          "default": "toggle error handling for long strings"
-        }
       }
     ],
     "complex_type_info": [
@@ -292,7 +260,9 @@
             "label": {
               "default": "Standard"
             },
-						"control": "toggle",
+            "toggleofflabel": "Off",
+            "toggleonlabel": "On",
+            "control": "toggle",
             "class_name": "table-toggle-control-class"
           },
           {
@@ -301,7 +271,9 @@
             "label": {
               "default": "Additional"
             },
-						"control": "toggle"
+              "control": "toggle",
+              "toggleofflabel": "Off",
+              "toggleonlabel": "On",
           },
           {
             "parameter_ref": "toggle_on_panel",
@@ -309,7 +281,9 @@
             "label": {
               "default": "on_panel"
             },
-						  "control": "toggle",
+            "control": "toggle",
+              "toggleofflabel": "Off",
+              "toggleonlabel": "On",
             "description": {
               "default": "toggle with `edit_style=on_panel`"
             },
@@ -322,7 +296,7 @@
             "label": {
               "default": "sub_panel"
             },
-						  "control": "toggle",
+            "control": "toggle",
             "description": {
               "default": "toggle with `edit_style=sub_panel`"
             },
@@ -386,17 +360,6 @@
             ]
           }
         ]
-      },
-      {
-        "id": "toggle-error-handling",
-        "label": {
-          "default": "Error handling"
-        },
-				 "control": "toggle",
-        "type": "controls",
-        "parameter_refs": [
-          "string_long_value"
-        ]
       }
     ]
   },
@@ -407,34 +370,66 @@
           "type": "error",
           "focus_parameter_ref": "string_error",
           "message": {
-            "default": "Should not be 'error'"
-          },
-					 "control": "toggle"
+            "default": "Testing toggle error condition"
+          }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "string_error",
-            "op": "notContains",
-            "value": "error"
+            "op": "equals",
+            "value": "Ascending"
           }
         }
       }
     },
     {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "string_warning",
-          "message": {
-            "default": "Should not be 'warn'"
-          },
-					"control": "toggle"
+       "validation": {
+         "fail_message": {
+           "type": "warning",
+           "focus_parameter_ref": "string_warning",
+           "message": {
+             "default": "Testing toggle warning condition"
+          }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "string_warning",
-            "op": "notContains",
-            "value": "warn"
+            "op": "equals",
+            "value": "Ascending"
+          }
+        }
+      }
+    },
+    {
+       "validation": {
+         "fail_message": {
+           "type": "error",
+           "focus_parameter_ref": "string_table[1]",
+           "message": {
+             "default": "Testing toggle error condition"
+          }
+        },
+        "evaluate": {
+          "condition": {
+           "parameter_ref": "string_table[1]",
+            "op": "equals",
+            "value": "Ascending"
+         }
+       }
+      },
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "string_table[1]",
+          "message": {
+            "default": "Testing toggle error condition"
+           }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_table[1]",
+            "op": "equals",
+            "value": "Ascending"
           }
         }
       }
@@ -443,34 +438,16 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "string_table_cond[1]",
-          "message": {
-            "default": "Should not be 'warn'"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "string_table_cond[1]",
-            "op": "notContains",
-            "value": "warn"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "error",
           "focus_parameter_ref": "string_table_cond[0]",
           "message": {
-            "default": "Should not be 'error'"
+            "default": "Testing toggle warning condition"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "string_table_cond[0]",
-            "op": "notContains",
-            "value": "error"
+            "op": "equals",
+            "value": "Ascending"
           }
         }
       }
