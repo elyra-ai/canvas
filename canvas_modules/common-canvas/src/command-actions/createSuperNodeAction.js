@@ -533,10 +533,9 @@ export default class CreateSuperNodeAction extends Action {
 		// links cannot be created in the object model.
 		this.newLinks = [];
 		this.supernodeLinkDefs.forEach((linkDef) => {
-			const link = this.apiPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK });
-			if (link) {
-				this.newLinks.push(link);
-			}
+			this.newLinks.push(
+				this.apiPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK })
+			);
 		});
 		this.apiPipeline.addLinks(this.newLinks);
 
@@ -552,7 +551,8 @@ export default class CreateSuperNodeAction extends Action {
 		this.subflowNewLinks = [];
 		this.bindingNodeLinkDefs.forEach((linkDef) => {
 			this.subflowNewLinks.push(
-				this.subAPIPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK }));
+				this.subAPIPipeline.createNodeLink(linkDef.srcInfo, linkDef.trgInfo, { type: NODE_LINK })
+			);
 		});
 		this.subAPIPipeline.addLinks(this.subflowNewLinks);
 
