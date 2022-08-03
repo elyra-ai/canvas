@@ -568,3 +568,55 @@ describe("Test all the nodes are correctly positioned", function() {
 		);
 	});
 });
+
+describe("Test that supernode ports/binding nodes are created correctly with multiple inputs and outputs", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("multiInputOutput.json");
+		cy.setCanvasConfig({ "selectedLinkSelection": "Detachable" });
+	});
+
+	it("Test all binding nodes and ports are created correctly", function() {
+		cy.clickNode("In Unlimtd");
+		cy.ctrlOrCmdClickNode("Out Unlmt");
+		cy.verifyNumberOfSelectedObjects(2);
+
+		cy.rightClickNode("In Unlimtd");
+		cy.clickOptionFromContextMenu("Create supernode");
+
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		cy.verifyNumberOfNodes(7);
+		cy.verifyNumberOfLinks(6);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 7);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 8);
+	});
+
+	it("Test all binding nodes and ports are created correctly with detached links", function() {
+		cy.rightClickNode("Partition");
+		cy.clickOptionFromContextMenu("Delete");
+
+		cy.rightClickNode("Field Reorder");
+		cy.clickOptionFromContextMenu("Delete");
+
+		cy.verifyNumberOfNodes(6);
+
+		cy.clickNode("In Unlimtd");
+		cy.ctrlOrCmdClickNode("Out Unlmt");
+		cy.verifyNumberOfSelectedObjects(2);
+
+		cy.rightClickNode("In Unlimtd");
+		cy.clickOptionFromContextMenu("Create supernode");
+
+		cy.rightClickNode("Supernode");
+		cy.clickOptionFromContextMenu("Expand supernode");
+
+		cy.verifyNumberOfNodes(5);
+		cy.verifyNumberOfLinks(6);
+		cy.verifyNumberOfLinksInSupernode("Supernode", 7);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 8);
+	});
+
+
+});
