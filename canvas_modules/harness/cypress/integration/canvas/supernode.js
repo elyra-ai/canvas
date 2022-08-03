@@ -328,11 +328,12 @@ describe("Test create a supernode with link that does not have port info", funct
 		cy.clickOptionFromContextMenu("Expand supernode");
 
 		// Verify number of nodes and links in supernode
-		cy.verifyNumberOfNodesInSupernode("Supernode", 2); // Includes supernode binding node
-		cy.verifyNumberOfLinksInSupernode("Supernode", 1);
+		cy.verifyNumberOfNodesInSupernode("Supernode", 3); // Includes supernode binding nodes
+		cy.verifyNumberOfLinksInSupernode("Supernode", 2);
 
-		// Verify the "Supernode" node has 3 "output" ports
-		cy.verifyNumberOfPortsOnNode("Supernode", "output", 3);
+		// Verify the "Supernode" node has 4 "output" ports
+		// Includes the supernode's output ports + the node's output ports
+		cy.verifyNumberOfPortsOnNode("Supernode", "output", 4);
 	});
 });
 
