@@ -269,15 +269,20 @@ export default class CreateSuperNodeAction extends Action {
 		if (links.length > 1) {
 			const supernodeLinks = [...links];
 			const nodeId = type === "input" ? "srcNodeId" : "trgNodeId";
+			const pos = type === "input" ? "srcPos" : "trgPos";
 
 			// Sort the nodes in the order they appear on the screen from top to bottom.
 			supernodeLinks.sort((a, b) => {
 				const nodeA = this.apiPipeline.getNode(a[nodeId]);
 				const nodeB = this.apiPipeline.getNode(b[nodeId]);
-				if (nodeA.y_pos < nodeB.y_pos) {
+
+				const aYcoord = a[pos] ? a[pos].y_pos : nodeA.y_pos;
+				const bYcoord = b[pos] ? b[pos].y_pos : nodeB.y_pos;
+
+				if (aYcoord < bYcoord) {
 					return -1;
 				}
-				if (nodeA.y_pos > nodeB.y_pos) {
+				if (aYcoord > bYcoord) {
 					return 1;
 				}
 				return 0;
@@ -441,29 +446,31 @@ export default class CreateSuperNodeAction extends Action {
 		const linkDefs = [];
 
 		bindingInputData.forEach((bnd) => {
-			linkDefs.push({
-				srcInfo: {
-					id: bnd.link.srcNodeId,
-					portId: bnd.link.srcNodePortId
-				},
-				trgInfo: {
-					id: supernode.id,
-					portId: bnd.supernodePort.id
-				}
-			});
+			const linkData = { srcInfo: {}, trgInfo: {} };
+			if (bnd.link.srcPos) {
+				linkData.srcInfo.srcPos = bnd.link.srcPos;
+			} else {
+				linkData.srcInfo.id = bnd.link.srcNodeId;
+				linkData.srcInfo.portId = bnd.link.srcNodePortId;
+			}
+
+			linkData.trgInfo.id = supernode.id;
+			linkData.trgInfo.portId = bnd.supernodePort.id;
+			linkDefs.push(linkData);
 		});
 
 		bindingOutputData.forEach((bnd) => {
-			linkDefs.push({
-				srcInfo: {
-					id: supernode.id,
-					portId: bnd.supernodePort.id
-				},
-				trgInfo: {
-					id: bnd.link.trgNodeId,
-					portId: bnd.link.trgNodePortId
-				}
-			});
+			const linkData = { srcInfo: {}, trgInfo: {} };
+			linkData.srcInfo.id = supernode.id;
+			linkData.srcInfo.portId = bnd.supernodePort.id;
+
+			if (bnd.link.trgPos) {
+				linkData.trgInfo.trgPos = bnd.link.trgPos;
+			} else {
+				linkData.trgInfo.id = bnd.link.trgNodeId;
+				linkData.trgInfo.portId = bnd.link.trgNodePortId;
+			}
+			linkDefs.push(linkData);
 		});
 
 		return linkDefs;
