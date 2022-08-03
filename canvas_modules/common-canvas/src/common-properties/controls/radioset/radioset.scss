@@ -49,6 +49,7 @@
 		}
 		.properties-radioset-tooltip {
 			display: flex;
+			align-items: center;
 		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;
@@ -59,6 +60,7 @@
 		}
 		.bx--radio-button-wrapper > label {
 			justify-content: left; // override carbon style to center justify radio-button labels
+			margin:  2.3px 0 0 $spacing-01;;
 		}
 	}
 	&.error:not([disabled]) {
