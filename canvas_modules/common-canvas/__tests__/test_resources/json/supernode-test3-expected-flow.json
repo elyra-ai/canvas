@@ -181,7 +181,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE"
+                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE_1"
                 }
               ]
             }
@@ -699,30 +699,13 @@
           },
           "inputs": [
             {
-              "id": "idGWRVT47XDV_inPort",
+              "id": "nodeIDMultiPlotPE_input2MultiPlotPE",
               "app_data": {
-                "my_data": {
-                  "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
-                },
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
                     "max": 1
                   },
-                  "label": "Binding port for supernode"
-                }
-              },
-              "links": [
-                {
-                  "node_id_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            },
-            {
-              "id": "nodeIDMultiPlotPE_input2MultiPlotPE",
-              "app_data": {
-                "ui_data": {
                   "label": "Binding port for supernode"
                 }
               },
@@ -742,6 +725,27 @@
                   }
                 ]
               }
+            },
+            {
+              "id": "idGWRVT47XDV_inPort",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
+                  "port_id_ref": "outPort"
+                }
+              ]
             }
           ],
           "outputs": [
@@ -752,6 +756,25 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               }
@@ -1365,11 +1388,8 @@
           },
           "outputs": [
             {
-              "id": "output_idGWRVT47XDV_inPort",
+              "id": "output_nodeIDMultiPlotPE_input2MultiPlotPE",
               "app_data": {
-                "my_data": {
-                  "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
-                },
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
@@ -1377,6 +1397,16 @@
                   },
                   "label": "Binding port for supernode"
                 }
+              },
+              "parameters": {
+                "props": [
+                  {
+                    "field1": "multiplot-port2-param-val1"
+                  },
+                  {
+                    "field2": "multiplot-port2-param-val2"
+                  }
+                ]
               }
             }
           ]
@@ -1393,21 +1423,18 @@
           },
           "outputs": [
             {
-              "id": "output_nodeIDMultiPlotPE_input2MultiPlotPE",
+              "id": "output_idGWRVT47XDV_inPort",
               "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Inputs -> My data -> My field -> My value"
+                },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
-              },
-              "parameters": {
-                "props": [
-                  {
-                    "field1": "multiplot-port2-param-val1"
-                  },
-                  {
-                    "field2": "multiplot-port2-param-val2"
-                  }
-                ]
               }
             }
           ]
@@ -1430,6 +1457,44 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDMultiPlotPE",
+                  "port_id_ref": "output1MultiPlotPE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 650,
+              "y_pos": 218.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               },
