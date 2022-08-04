@@ -2384,4 +2384,12 @@ export default class ObjectModel {
 	isTooltipOpen() {
 		return this.store.isTooltipOpen();
 	}
+
+	// ---------------------------------------------------------------------------
+	// Text Toolbar methods
+	// ---------------------------------------------------------------------------
+	setTextToolbarDef(textToolbarDef) {
+		this.store.dispatch({ type: "SET_TEXT_TOOLBAR_DEF", data: { textToolbarDef: textToolbarDef } });
+	}
+
 }

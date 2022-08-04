@@ -63,6 +63,13 @@ Cypress.Commands.add("verifyCommentColor", (commentText, color) => {
 		});
 });
 
+Cypress.Commands.add("verifyCommentContainsHTML", (commentText, commentHTML) => {
+	cy.getCommentWithText(commentText)
+		.find("foreignObject .d3-comment-text")
+		.then((com) => {
+			expect(com[0].innerHTML).to.equal(commentHTML);
+		});
+});
 
 Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 	cy.getCanvasTranslateCoords()
@@ -1360,7 +1367,7 @@ function getNodeImageSelector(node) {
 }
 
 function getNodeLabelSelector(node) {
-	return getNodeGroupSelector(node) + " > .d3-foreign-object";
+	return getNodeGroupSelector(node) + " > .d3-foreign-object-node-label";
 }
 
 function getCommentSelectionOutlineSelector(comment) {

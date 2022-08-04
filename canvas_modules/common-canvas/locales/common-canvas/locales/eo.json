@@ -35,5 +35,18 @@
 	"node.editMenu": "[Esperanto~Edit~eo]",
 	"node.disconnectNode": "[Esperanto~Disconnect~~~~~~eo]",
 	"node.saveToPalette": "[Esperanto~Save to palette~eo]",
-	"link.deleteLink": "[Esperanto~Delete~eo]"
+	"link.deleteLink": "[Esperanto~Delete~eo]",
+	"texttoolbar.headerAction": "[Esperanto~Header~~~~eo]",
+	"texttoolbar.boldAction": "[Esperanto~Bold~~~~eo]",
+	"texttoolbar.italicsAction": "[Esperanto~Italics~~~~eo]",
+	"texttoolbar.strikethroughAction": "[Esperanto~Strikethrough~~~~eo]",
+	"texttoolbar.codeAction": "[Esperanto~Code~~~~eo]",
+	"texttoolbar.linkAction": "[Esperanto~Link~~~~eo]",
+	"texttoolbar.quoteAction": "[Esperanto~Quote~~~~eo]",
+	"texttoolbar.bulletedListAction": "[Esperanto~Bulleted List~~~~eo]",
+	"texttoolbar.numberedListAction": "[Esperanto~Numbered List~~~~eo]",
+	"texttoolbar.titleAction": "[Esperanto~Title~eo]",
+	"texttoolbar.headerAction": "[Esperanto~Header~eo]",
+	"texttoolbar.subheaderAction": "[Esperanto~Subheader~eo]",
+	"texttoolbar.bodyAction": "[Esperanto~Body~eo]"
 }

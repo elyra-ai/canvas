@@ -138,8 +138,8 @@ class ToolbarActionItem extends React.Component {
 		return null;
 	}
 
-	actionClickHandler() {
-		this.props.toolbarActionHandler(this.props.actionObj.action);
+	actionClickHandler(evt) {
+		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 	}
 
 	generateButton(actionObj) {
@@ -202,9 +202,10 @@ class ToolbarActionItem extends React.Component {
 			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = actionName + "-" + this.props.instanceId + "-tooltip";
 			const enableTooltip = this.props.actionObj.enable || this.props.actionObj.jsx; // JSX 'tools' don't have enable attr so always display a tooltip for them.
+			const direction = this.props.tooltipDirection ? this.props.tooltipDirection : "bottom";
 
 			return (
-				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" >
+				<Tooltip id={tooltipId} tip={tip} disable={!enableTooltip} className="icon-tooltip" direction={direction}>
 					{content}
 				</Tooltip>
 			);
@@ -286,6 +287,7 @@ ToolbarActionItem.propTypes = {
 			PropTypes.func
 		])
 	}),
+	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,

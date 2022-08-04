@@ -23,6 +23,7 @@ import sinon from "sinon";
 
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
 import CommonCanvasToolbar from "../../src/common-canvas/cc-toolbar.jsx";
+import CommonCanvasTextToolbar from "../../src/common-canvas/cc-text-toolbar.jsx";
 
 const locale = "en";
 const messages = {
@@ -133,6 +134,18 @@ export function createIntlCommonCanvasToolbar(data, canvasController) {
 		<Provider store={canvasController.getStore()}>
 			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
 				<CommonCanvasToolbar canvasController={canvasController} />
+			</IntlProvider>
+		</Provider>
+	);
+
+	return wrapper;
+}
+
+export function createIntlCommonCanvasTextToolbar(data, canvasController) {
+	const wrapper = mount(
+		<Provider store={canvasController.getStore()}>
+			<IntlProvider key="IntlProvider1" locale={ locale } messages={messages}>
+				<CommonCanvasTextToolbar canvasController={canvasController} />
 			</IntlProvider>
 		</Provider>
 	);

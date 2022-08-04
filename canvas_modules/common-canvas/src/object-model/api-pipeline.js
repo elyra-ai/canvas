@@ -1144,19 +1144,32 @@ export default class APIPipeline {
 		return linkNodeList;
 	}
 
+	// Creates a node link from the srcInfo and trgInfo and other link 'data'
+	// passed in.
 	createNodeLink(srcInfo, trgInfo, data) {
 		const srcNode = this.getNode(srcInfo.id);
 		const trgNode = this.getNode(trgInfo.id);
 		const links = this.getLinks();
 
-		if (CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type)) {
+		if ((srcInfo.srcPos && trgInfo.trgPos) || // Fully detached
+				(srcInfo.srcPos && CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(trgInfo.portId, trgNode, links)) || // Semi-detached
+				(trgInfo.trgPos && CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(srcInfo.portId, srcNode, links)) || // Semi-detached
+				(CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type))) { // Fully attached
 			const link = {};
-			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 			link.type = data.type;
-			link.srcNodeId = srcInfo.id;
-			link.srcNodePortId = srcInfo.portId;
-			link.trgNodeId = trgInfo.id;
-			link.trgNodePortId = trgInfo.portId;
+			if (srcInfo.srcPos) {
+				link.srcPos = srcInfo.srcPos;
+			} else {
+				link.srcNodeId = srcInfo.id;
+				link.srcNodePortId = srcInfo.portId;
+			}
+			if (trgInfo.trgPos) {
+				link.trgPos = trgInfo.trgPos;
+			} else {
+				link.trgNodeId = trgInfo.id;
+				link.trgNodePortId = trgInfo.portId;
+			}
 			if (data.class_name) {
 				link.class_name = data.class_name;
 			}

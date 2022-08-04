@@ -15,9 +15,7 @@
  */
 
 import React from "react";
-import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
-import defaultMessages from "../../locales/toolbar/locales/en.json";
 import ReactResizeDetector from "react-resize-detector";
 
 import ToolbarActionItem from "./toolbar-action-item.jsx";
@@ -205,6 +203,7 @@ class Toolbar extends React.Component {
 					<ToolbarActionItem
 						key={"toolbar-item-key-" + i}
 						actionObj={actionObj}
+						tooltipDirection={this.props.tooltipDirection}
 						toolbarActionHandler={this.props.toolbarActionHandler}
 						overflow={overflow}
 						instanceId={this.props.instanceId}
@@ -282,29 +281,27 @@ class Toolbar extends React.Component {
 		const rightItems = this.generateToolbarItems(this.rightBar, false, false);
 
 		const canvasToolbar = (
-			<section aria-label={this.props.intl.formatMessage({ id: "toolbar.label", defaultMessage: defaultMessages["toolbar.label"] })} role="toolbar">
-				<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-					<div className="toolbar-div" instanceid={this.props.instanceId}>
-						<div className="toolbar-left-bar" onScroll={this.onScroll}>
-							{leftItems}
-						</div>
-						<div className="toolbar-right-bar">
-							{rightItems}
-						</div>
+			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
+				<div className="toolbar-div" instanceid={this.props.instanceId}>
+					<div className="toolbar-left-bar" onScroll={this.onScroll}>
+						{leftItems}
 					</div>
-				</ReactResizeDetector>
-			</section>
+					<div className="toolbar-right-bar">
+						{rightItems}
+					</div>
+				</div>
+			</ReactResizeDetector>
 		);
 		return canvasToolbar;
 	}
 }
 
 Toolbar.propTypes = {
-	intl: PropTypes.object.isRequired,
 	config: PropTypes.object.isRequired,
 	instanceId: PropTypes.number,
 	toolbarActionHandler: PropTypes.func,
+	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object
 };
 
-export default injectIntl(Toolbar);
+export default Toolbar;

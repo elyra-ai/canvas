@@ -545,7 +545,7 @@ export default class CanvasController {
 		return this.objectModel.areSelectedNodesContiguous();
 	}
 
-	// Returns true if all the selected objcts are links.
+	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
 		return this.objectModel.areAllSelectedObjectsLinks();
 	}
@@ -1778,6 +1778,18 @@ export default class CanvasController {
 		default:
 			return false;
 		}
+	}
+
+	openTextToolbar(xPos, yPos, actionHandler, blurHandler) {
+		this.objectModel.setTextToolbarDef({ isOpen: true, pos_x: xPos, pos_y: yPos, actionHandler, blurHandler });
+	}
+
+	closeTextToolbar() {
+		this.objectModel.setTextToolbarDef({ isOpen: false });
+	}
+
+	moveTextToolbar(xPos, yPos) {
+		this.objectModel.setTextToolbarDef({ pos_x: xPos, pos_y: yPos });
 	}
 
 	// Processes the drop of an 'external' object, either from the desktop or

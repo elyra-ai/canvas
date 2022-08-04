@@ -17,7 +17,8 @@
 
 Cypress.Commands.add("getCommentWithText", (commentText) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-comment-group").length) {
+		const len = $body.find(".d3-comment-group").length;
+		if (len) {
 			cy.get(getCommentGrpSelector())
 				.then((grpArray) => findGrpForText(grpArray, commentText));
 		}
@@ -315,5 +316,16 @@ Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
 					cy.get("body")
 						.type(selectedKey, { release: true });
 				});
+		});
+});
+
+Cypress.Commands.add("selectTextInComment", (textToSelect, commentText) => {
+	cy.getCommentWithText(commentText)
+		.dblclick()
+		.get("textarea")
+		.then((tas) => {
+			const start = commentText.indexOf(textToSelect);
+			const end = start + textToSelect.length;
+			tas[0].setSelectionRange(start, end);
 		});
 });

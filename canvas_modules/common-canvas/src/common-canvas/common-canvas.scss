@@ -112,6 +112,54 @@ $bottom-panel-border-color: $ui-03;
 	height: 100%;
 }
 
+.text-toolbar {
+	position: absolute;
+	// top and left will be calculated and set for the text toolbar programmatically
+	top: 0;
+	left: 0;
+	width: fit-content;
+
+	.toolbar-div {
+		// Position the div 'relative' to text-toolbar so we can animate its
+		// opening by adjusting its 'height' and 'top' values.
+		position: relative;
+		left: 0;
+		animation: raise-toolbar 0.3s linear;
+		border: 1px solid $ui-04;
+		padding-right: 0px;
+
+		.toolbar-left-bar {
+			padding-right: 0px;
+		}
+	}
+
+	.text-toolbar-tick-svg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 40px;
+		width: 40px;
+		pointer-events: none;
+	}
+
+	.text-toolbar-tick-mark {
+		fill: $interactive-02;
+	}
+}
+
+// Causes the text toolbar to animate upwards from the top of the comment
+// to its final position
+@keyframes raise-toolbar {
+	from {
+		height: 0;
+		top: $toolbar-button-height;
+	}
+	to {
+		height: $toolbar-button-height;
+		top: 0;
+	}
+}
+
 /* Alternative layout for common-canvas components where canvas and right-side
  * flyout appear under the toolbar and the right-side flyout does not compress
  * the toolbar when it is opened. These are used when the config field

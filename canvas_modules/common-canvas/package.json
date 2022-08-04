@@ -1,6 +1,6 @@
 {
   "name": "@elyra/canvas",
-  "version": "12.13.0",
+  "version": "12.15.0",
   "description": "Elyra common-canvas",
   "main": "dist/common-canvas.js",
   "module": "dist/common-canvas.es.js",
@@ -31,6 +31,7 @@
     "immutable": "^4.0.0",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21",
+    "markdown-it": "^13.0.1",
     "prop-types": "^15.7.2",
     "react-codemirror2": "^7.2.1",
     "react-contextmenu": "^2.14.0",

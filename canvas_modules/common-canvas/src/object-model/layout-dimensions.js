@@ -353,10 +353,16 @@ const portsHorizontalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
+
+		// Position of the comment toolbar as an offset from the comment position
+		// (which is the top left corner of the comment bounding box).
+		commentToolbarPosX: -2,
+		commentToolbarPosY: -44,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
@@ -737,10 +743,16 @@ const portsVerticalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
+
+		// Position of the comment toolbar as an offset from the comment position
+		// (which is the top left corner of the comment bounding box).
+		commentToolbarPosX: -2,
+		commentToolbarPosY: -44,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
