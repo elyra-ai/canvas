@@ -25,6 +25,7 @@ const zhCN = require("./zh-CN.json");
 const ru = require("./ru.json");
 const eo = require("./eo.json");
 const ko = require("./ko.json");
+const sv = require("./sv.json");
 
 module.exports = {
 	"de": de,
@@ -38,5 +39,6 @@ module.exports = {
 	"zh-CN": zhCN,
 	"ru": ru,
 	"eo": eo,
-	"ko": ko
+	"ko": ko,
+	"sv": sv
 };
