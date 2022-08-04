@@ -50,6 +50,7 @@
 		.properties-radioset-tooltip {
 			display: flex;
 			align-items: center;
+			margin: 2.5px 0 1.5px 1.5px;
 		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;
@@ -60,7 +61,7 @@
 		}
 		.bx--radio-button-wrapper > label {
 			justify-content: left; // override carbon style to center justify radio-button labels
-			margin:  2.3px 0 0 $spacing-01;
+			align-items: center;
 		}
 	}
 	&.error:not([disabled]) {
