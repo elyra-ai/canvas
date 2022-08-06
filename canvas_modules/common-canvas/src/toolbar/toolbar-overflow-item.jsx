@@ -52,7 +52,7 @@ class ToolbarOverflowItem extends React.Component {
 						onClick={this.toggleExtendedMenu}
 						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
-						size={this.props.buttonSize}
+						size={this.props.size}
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
@@ -74,7 +74,7 @@ ToolbarOverflowItem.propTypes = {
 	generateExtensionMenuItems: PropTypes.func,
 	onFocus: PropTypes.func,
 	label: PropTypes.string,
-	buttonSize: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm"])
 };
 
 export default ToolbarOverflowItem;

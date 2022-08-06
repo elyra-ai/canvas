@@ -69,7 +69,7 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(0);
 	});
 
-	it("should render a Toolbar with medium size buttons", () => {
+	it.only("should render a Toolbar with medium size buttons", () => {
 		const toolbarConfig = {
 			leftBar: [
 				{ action: "palette", label: "Palette", enable: true },
@@ -79,18 +79,31 @@ describe("Toolbar renders correctly", () => {
 			]
 		};
 
-		const canvasToolbar = createToolbar(toolbarConfig);
+		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "sm");
 
-		// Select the toolbar buttons
+		// Select the toolbar small buttons
 		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
-		// Verify if the buttons show up with the right size
-		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
-		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
+		// Verify if the buttons show up with in small size
+		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
+
+		const canvasToolbar2 = createToolbar(toolbarConfig, sinon.spy(), "md");
+
+		// Select the toolbar medium buttons
+		const overflowButtons2 = canvasToolbar2.find(".toolbar-overflow-item button");
+		const defaultButtons2 = canvasToolbar2.find(".toolbar-item.default button");
+
+		expect(overflowButtons2).to.have.length(3);
+		expect(defaultButtons2).to.have.length(3);
+
+		// Verify if the buttons show up in medium size
+		expect(overflowButtons2.find(".bx--btn--md")).to.have.length(3);
+		expect(defaultButtons2.find(".bx--btn--md")).to.have.length(3);
 
 	});
 
@@ -134,14 +147,14 @@ describe("Toolbar renders correctly", () => {
 	});
 });
 
-function createToolbar(config, actionHandler) {
+function createToolbar(config, actionHandler, size) {
 	const toolbarActionHandler = actionHandler || sinon.spy();
 	const canvasToolbar = mountWithIntl(
 		<Toolbar
 			config={config}
 			instanceId={0}
 			toolbarActionHandler={toolbarActionHandler}
-			size="md"
+			size={size}
 		/>
 	);
 	return canvasToolbar;

@@ -196,7 +196,6 @@ class Toolbar extends React.Component {
 					<ToolbarDividerItem
 						key={"toolbar-item-key-" + i}
 						overflow={overflow}
-						buttonSize={this.props.size}
 					/>
 				);
 			} else {
@@ -209,7 +208,7 @@ class Toolbar extends React.Component {
 						overflow={overflow}
 						instanceId={this.props.instanceId}
 						onFocus={this.onFocus}
-						buttonSize={this.props.size}
+						size={this.props.size}
 					/>
 				);
 			}
@@ -228,7 +227,7 @@ class Toolbar extends React.Component {
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
 				onFocus={this.onFocus}
 				label={label}
-				buttonSize={this.props.size}
+				size={this.props.size}
 			/>
 		);
 
@@ -283,7 +282,7 @@ class Toolbar extends React.Component {
 		const rightItems = this.generateToolbarItems(this.rightBar, false, false);
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-				<div className="toolbar-div" instanceid={this.props.instanceId} >
+				<div className="toolbar-div" instanceid={this.props.instanceId}>
 					<div className="toolbar-left-bar" onScroll={this.onScroll}>
 						{leftItems}
 					</div>

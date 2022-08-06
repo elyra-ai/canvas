@@ -111,7 +111,7 @@ class TableButtons extends React.Component {
 			<Toolbar
 				config={toolbarConfig}
 				instanceId={0}
-				size="md"
+				size="sm"
 				toolbarActionHandler={this.customButtonOnClick}
 			/>
 		</div>);
