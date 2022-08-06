@@ -69,6 +69,31 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(0);
 	});
 
+	it("should render a Toolbar with medium size buttons", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+			]
+		};
+
+		const canvasToolbar = createToolbar(toolbarConfig);
+
+		// Select toolbar buttons
+		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(overflowButtons).to.have.length(3);
+		expect(defaultButtons).to.have.length(3);
+
+		// Verify buttons show up with right size
+		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
+
+	});
+
 	it("should register a click when clicked on an enabled toolbar item", () => {
 		const toolbarConfig = {
 			rightBar: [
@@ -116,6 +141,7 @@ function createToolbar(config, actionHandler) {
 			config={config}
 			instanceId={0}
 			toolbarActionHandler={toolbarActionHandler}
+			size="md"
 		/>
 	);
 	return canvasToolbar;

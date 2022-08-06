@@ -33,7 +33,6 @@ class ToolbarOverflowItem extends React.Component {
 	render() {
 		const menuItems = this.props.showExtendedMenu ? this.props.generateExtensionMenuItems(this.props.index) : [];
 		const subMenuClassName = this.props.showExtendedMenu ? "" : "toolbar-popover-list-hide";
-
 		let overflowMenu = null;
 		if (menuItems.length > 0) {
 			overflowMenu = (
@@ -53,6 +52,7 @@ class ToolbarOverflowItem extends React.Component {
 						onClick={this.toggleExtendedMenu}
 						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
+						size={this.props.buttonSize}
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
@@ -73,7 +73,8 @@ ToolbarOverflowItem.propTypes = {
 	index: PropTypes.number.isRequired,
 	generateExtensionMenuItems: PropTypes.func,
 	onFocus: PropTypes.func,
-	label: PropTypes.string
+	label: PropTypes.string,
+	buttonSize: PropTypes.oneOf(["md", "sm"])
 };
 
 export default ToolbarOverflowItem;

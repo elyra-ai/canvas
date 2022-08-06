@@ -20,8 +20,6 @@ $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
-$toolbar-button-sm-height: 32px;
-$toolbar-button-sm-width: 32px;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
@@ -37,40 +35,6 @@ $toolbar-divider-width: 1px;
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
-
-	&.toolbar-sm-div {
-		height: $toolbar-button-sm-height;
-		.toolbar-item {
-			& button {
-				padding: 0;
-				height: $toolbar-button-sm-height;
-				width: $toolbar-button-sm-width;
-				min-height: 30px;
-			}
-
-			&.default,
-			&.ghost {
-				& button {
-					height: $toolbar-button-sm-height;
-					width: $toolbar-button-sm-width;
-				}
-
-			}
-
-			&.tertiary {
-				& button {
-					height: $toolbar-button-sm-height;
-					width: $toolbar-button-sm-width;
-				}
-			}
-		}
-		.toolbar-spacer {
-			& button {
-				height: $toolbar-button-sm-height;
-				width: $toolbar-button-sm-width;
-			}
-		}
-	}
 }
 
 .toolbar-left-bar {
