@@ -69,7 +69,7 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(0);
 	});
 
-	it.only("should render a Toolbar with medium size buttons", () => {
+	it("should render a Toolbar with medium size buttons", () => {
 		const toolbarConfig = {
 			leftBar: [
 				{ action: "palette", label: "Palette", enable: true },
