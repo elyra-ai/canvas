@@ -81,14 +81,14 @@ describe("Toolbar renders correctly", () => {
 
 		const canvasToolbar = createToolbar(toolbarConfig);
 
-		// Select toolbar buttons
+		// Select the toolbar buttons
 		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
-		// Verify buttons show up with right size
+		// Verify if the buttons show up with the right size
 		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
 		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
 
