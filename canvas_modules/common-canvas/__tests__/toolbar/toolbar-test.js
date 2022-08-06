@@ -88,7 +88,7 @@ describe("Toolbar renders correctly", () => {
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
-		// Verify if the buttons show up with in small size
+		// Verify if the buttons show up small
 		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
 		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
 
@@ -101,7 +101,7 @@ describe("Toolbar renders correctly", () => {
 		expect(overflowButtons2).to.have.length(3);
 		expect(defaultButtons2).to.have.length(3);
 
-		// Verify if the buttons show up in medium size
+		// Verify if the buttons show up medium
 		expect(overflowButtons2.find(".bx--btn--md")).to.have.length(3);
 		expect(defaultButtons2.find(".bx--btn--md")).to.have.length(3);
 
