@@ -2468,7 +2468,7 @@ export default class CanvasController {
 			}
 			case "createSuperNode":
 			case "createSuperNodeExternal": {
-				command = new CreateSuperNodeAction(data, this.objectModel, this.labelUtil);
+				command = new CreateSuperNodeAction(data, this.objectModel, this.labelUtil, this.getCanvasConfig().enableUseCardFromOriginalPorts);
 				this.commandStack.do(command);
 				break;
 			}
