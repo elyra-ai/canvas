@@ -3892,6 +3892,8 @@ export default class SVGCanvasRenderer {
 			"y1": startPos.y,
 			"x2": transPos.x,
 			"y2": transPos.y,
+			"originX": startPos.originX,
+			"originY": startPos.originY,
 			"type": linkType }];
 
 		if (this.config.enableAssocLinkCreation) {
@@ -3909,15 +3911,24 @@ export default class SVGCanvasRenderer {
 		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
 		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
 
-		connectionLineSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("path")
-			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType)
-			.merge(connectionLineSel)
-			.attr("d", pathInfo.path)
-			.attr("transform", pathInfo.transform);
+		// For a straight node line, don't draw the new link line when the guide
+		// icon or object is inside the node boundary.
+		if (linkType === NODE_LINK &&
+				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
+				this.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcNode)) {
+			this.removeNewLinkLine();
+
+		} else {
+			connectionLineSel
+				.data(this.drawingNewLinkData.linkArray)
+				.enter()
+				.append("path")
+				.attr("class", "d3-new-connection-line")
+				.attr("linkType", linkType)
+				.merge(connectionLineSel)
+				.attr("d", pathInfo.path)
+				.attr("transform", pathInfo.transform);
+		}
 
 		if (this.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
 			connectionStartSel
@@ -3970,8 +3981,8 @@ export default class SVGCanvasRenderer {
 	getLinkImageTransform(d) {
 		let angle = 0;
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			const adjacent = d.x2 - d.x1;
-			const opposite = d.y2 - d.y1;
+			const adjacent = d.x2 - (d.originX || d.x1);
+			const opposite = d.y2 - (d.originY || d.y1);
 			if (adjacent === 0 && opposite === 0) {
 				angle = 0;
 			} else {
@@ -4257,6 +4268,10 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
 		this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
 		this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
+	}
+
+	removeNewLinkLine() {
+		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
 	}
 
 	dragLinkHandle(d3Event) {
@@ -4856,13 +4871,11 @@ export default class SVGCanvasRenderer {
 			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY,
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight,
+				this.nodeUtils.getNodeOutputPortRightPosX(node),
+				this.nodeUtils.getNodeOutputPortRightPosY(node),
 				this.config.enableSingleOutputPortDisplay);
 		}
-	}
-
-	getOutputPortRightPosX(node) {
-		return node.width + node.layout.outputPortRightPosX;
 	}
 
 	getOutputPortBottomPosY(node) {
@@ -5578,8 +5591,10 @@ export default class SVGCanvasRenderer {
 			};
 
 			// If the node has been resized set the resize properties appropriately.
-			if (this.resizeObjInitialInfo.width !== resizeObj.width ||
-					this.resizeObjInitialInfo.height !== resizeObj.height) {
+			// We use some padding because sometimes, when a node is sized back to its
+			// original dimensions, it isn't retunred to EXACTLY its default width/height.
+			if (resizeObj.height > resizeObj.layout.defaultNodeHeight + 2 ||
+					resizeObj.width > resizeObj.layout.defaultNodeWidth + 2) {
 				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
 				this.nodeSizingObjectsInfo[resizeObj.id].resizeWidth = resizeObj.width;
 				this.nodeSizingObjectsInfo[resizeObj.id].resizeHeight = resizeObj.height;
@@ -6021,7 +6036,11 @@ export default class SVGCanvasRenderer {
 			? " d3-draggable"
 			: " d3-non-draggable";
 
-		return "d3-node-group" + supernodeClass + draggableClass + customClass;
+		const resizeClass = d.isResized // this.isNodeResized(d)
+			? " d3-resized"
+			: "";
+
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + customClass;
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.
@@ -6144,6 +6163,8 @@ export default class SVGCanvasRenderer {
 			link.y1 = coords.y1;
 			link.x2 = coords.x2;
 			link.y2 = coords.y2;
+			link.originX = coords.originX;
+			link.originY = coords.originY;
 			return link;
 		}
 		return null;
@@ -6171,6 +6192,8 @@ export default class SVGCanvasRenderer {
 				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
+				coords.originX = startPos.originX;
+				coords.originY = startPos.originY;
 
 			} else {
 				srcPortId = this.getSourcePortId(link, srcObj);
@@ -6209,6 +6232,8 @@ export default class SVGCanvasRenderer {
 		link.y1 = coords.y1;
 		link.x2 = coords.x2;
 		link.y2 = coords.y2;
+		link.originX = coords.originX;
+		link.originY = coords.originY;
 
 		return link;
 	}

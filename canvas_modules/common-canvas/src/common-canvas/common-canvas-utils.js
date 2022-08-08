@@ -354,7 +354,7 @@ export default class CanvasUtils {
 			}
 		}
 
-		return { x: startPointX, y: startPointY };
+		return { x: startPointX, y: startPointY, originX, originY };
 	}
 
 	// Returns a direction NORTH, SOUTH, EAST or WEST which is the direction
