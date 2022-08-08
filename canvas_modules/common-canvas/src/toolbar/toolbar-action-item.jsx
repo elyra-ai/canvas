@@ -184,6 +184,7 @@ class ToolbarActionItem extends React.Component {
 				disabled={!actionObj.enable}
 				onFocus={this.props.onFocus}
 				aria-label={actionObj.label}
+				size={this.props.size}
 			>
 				{buttonContent}
 			</Button>
@@ -291,7 +292,8 @@ ToolbarActionItem.propTypes = {
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
-	onFocus: PropTypes.func
+	onFocus: PropTypes.func,
+	size: PropTypes.oneOf(["md", "sm"])
 };
 
 export default ToolbarActionItem;

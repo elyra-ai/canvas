@@ -111,6 +111,7 @@ class TableButtons extends React.Component {
 			<Toolbar
 				config={toolbarConfig}
 				instanceId={0}
+				size="sm"
 				toolbarActionHandler={this.customButtonOnClick}
 			/>
 		</div>);
@@ -122,7 +123,8 @@ TableButtons.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	customButtons: PropTypes.array.isRequired,
 	tableState: PropTypes.string,
-	customButtonsState: PropTypes.object // set in by redux
+	customButtonsState: PropTypes.object, // set in by redux
+	size: PropTypes.oneOf(["md", "sm"])
 };
 
 export default TableButtons;
