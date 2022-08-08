@@ -212,7 +212,11 @@ export default class SvgCanvasLinks {
 			srcCenterX,
 			srcCenterY);
 
-		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
+		return {
+			originX: startPos.originX, originY: startPos.originY,
+			x1: startPos.x, y1: startPos.y,
+			x2: endPos.x, y2: endPos.y
+		};
 	}
 
 	getCenterOffset(node, originInfo) {

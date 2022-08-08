@@ -21,12 +21,12 @@
 	// ----------------------------------------------------
 	// Node Styles
 	// ----------------------------------------------------
-	.d3-node-group {
 
+	.d3-node-group {
 		// Style the node body so it doesn't appear.
 		.d3-node-body-outline {
-			fill: transparent;
-			stroke: transparent;
+			fill: $ui-background;
+			stroke: $ui-background;
 		}
 
 		&.d3-node-supernode-expanded > .d3-node-body-outline {
@@ -79,13 +79,25 @@
 
 			&:hover {
 				.d3-node-ellipsis-background {
-					fill: $ui-03;
+					fill: #C6C6C6;
 				}
+			}
+		}
+
+		&.d3-resized {
+			.d3-node-body-outline {
+				fill: $ui-background;
+				stroke: #A0A0A0;
 			}
 		}
 
 		/* Hover over d3-node-group */
 		&:hover {
+			.d3-node-body-outline {
+				fill: #E5E5E5;
+				stroke: #E5E5E5;
+			}
+
 			.d3-node-port-input {
 				stroke: transparent;
 				fill: transparent;

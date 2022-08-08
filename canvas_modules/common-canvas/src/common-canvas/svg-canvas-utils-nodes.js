@@ -23,6 +23,13 @@ export default class SvgCanvasNodes {
 		this.canvasLayout = canvasLayout;
 	}
 
+	isPointInNodeBoundary(pos, node) {
+		return pos.x >= node.x_pos &&
+			pos.x <= node.x_pos + node.width &&
+			pos.y >= node.y_pos &&
+			pos.y <= node.y_pos + node.height;
+	}
+
 	getNodeImageClass(node) {
 		return "d3-node-image";
 	}
@@ -334,6 +341,22 @@ export default class SvgCanvasNodes {
 			return this.canvasLayout.supernodeErrorHeight;
 		}
 		return node.layout.errorHeight;
+	}
+
+	getNodeInputPortLeftPosX(node) {
+		return this.getElementPosX(node.width, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosition);
+	}
+
+	getNodeInputPortLeftPosY(node) {
+		return this.getElementPosY(node.height, node.layout.inputPortLeftPosY, node.layout.inputPortLeftPosition);
+	}
+
+	getNodeOutputPortRightPosX(node) {
+		return this.getElementPosX(node.width, node.layout.outputPortRightPosX, node.layout.outputPortRightPosition);
+	}
+
+	getNodeOutputPortRightPosY(node) {
+		return this.getElementPosY(node.height, node.layout.outputPortRightPosY, node.layout.outputPortRightPosition);
 	}
 
 	getElementPosX(width, xOffset = 0, position = "topLeft") {
