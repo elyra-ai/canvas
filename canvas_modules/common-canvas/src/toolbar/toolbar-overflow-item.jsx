@@ -33,8 +33,6 @@ class ToolbarOverflowItem extends React.Component {
 	render() {
 		const menuItems = this.props.showExtendedMenu ? this.props.generateExtensionMenuItems(this.props.index) : [];
 		const subMenuClassName = this.props.showExtendedMenu ? "" : "toolbar-popover-list-hide";
-
-
 		let overflowMenu = null;
 		if (menuItems.length > 0) {
 			overflowMenu = (
