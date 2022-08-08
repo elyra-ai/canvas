@@ -79,6 +79,30 @@ describe("Toolbar renders correctly", () => {
 			]
 		};
 
+		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "md");
+
+		// Select the toolbar medium buttons
+		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(overflowButtons).to.have.length(3);
+		expect(defaultButtons).to.have.length(3);
+
+		// Verify if the buttons show up with medium size
+		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
+	});
+
+	it("should render a Toolbar with small size buttons", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+			]
+		};
+
 		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "sm");
 
 		// Select the toolbar small buttons
@@ -88,23 +112,9 @@ describe("Toolbar renders correctly", () => {
 		expect(overflowButtons).to.have.length(3);
 		expect(defaultButtons).to.have.length(3);
 
-		// Verify if the buttons show up small
+		// Verify if the buttons show up with small size
 		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
 		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
-
-		const canvasToolbar2 = createToolbar(toolbarConfig, sinon.spy(), "md");
-
-		// Select the toolbar medium buttons
-		const overflowButtons2 = canvasToolbar2.find(".toolbar-overflow-item button");
-		const defaultButtons2 = canvasToolbar2.find(".toolbar-item.default button");
-
-		expect(overflowButtons2).to.have.length(3);
-		expect(defaultButtons2).to.have.length(3);
-
-		// Verify if the buttons show up medium
-		expect(overflowButtons2.find(".bx--btn--md")).to.have.length(3);
-		expect(defaultButtons2.find(".bx--btn--md")).to.have.length(3);
-
 	});
 
 	it("should register a click when clicked on an enabled toolbar item", () => {
