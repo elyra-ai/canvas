@@ -273,6 +273,7 @@ class Toolbar extends React.Component {
 	}
 
 	render() {
+		const x;
 		this.leftBar = this.props.config.leftBar || [];
 		this.rightBar = this.props.config.rightBar || [];
 		this.rightBar = [...this.rightBar].reverse() || [];
