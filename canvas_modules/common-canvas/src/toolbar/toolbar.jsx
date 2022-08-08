@@ -275,13 +275,9 @@ class Toolbar extends React.Component {
 	}
 
 	render() {
-
-
 		this.leftBar = this.props.config.leftBar || [];
 		this.rightBar = this.props.config.rightBar || [];
 		this.rightBar = [...this.rightBar].reverse() || [];
-		const leftItems = this.generateToolbarItems(this.leftBar, false, true);
-		const rightItems = this.generateToolbarItems(this.rightBar, false, false);
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
 				<div className="toolbar-div" instanceid={this.props.instanceId}>
