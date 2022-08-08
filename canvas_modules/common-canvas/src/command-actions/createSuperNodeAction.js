@@ -23,10 +23,11 @@ import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 const BOUNDING_RECT_PADDING = 80;
 
 export default class CreateSuperNodeAction extends Action {
-	constructor(data, objectModel, labelUtil) {
+	constructor(data, objectModel, labelUtil, useCardFromOriginalPorts) {
 		super(data);
 		this.labelUtil = labelUtil;
 		this.data = data;
+		this.useCardFromOriginalPorts = useCardFromOriginalPorts;
 		this.objectModel = objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
@@ -332,10 +333,12 @@ export default class CreateSuperNodeAction extends Action {
 			const supernodePort = Object.assign({}, this.findPort(link.trgNodePortId, trgNode.inputs));
 			supernodePort.id = this.generateUniquePortId(supernodePort, link.trgNodeId, bindingInputData);
 			supernodePort.label = this.labelUtil.getLabel("supernode.new.port.label");
-			supernodePort.cardinality = {
-				min: 0,
-				max: 1
-			};
+			if (!this.useCardFromOriginalPorts) {
+				supernodePort.cardinality = {
+					min: 0,
+					max: 1
+				};
+			}
 
 			const bindingNodePort = Object.assign({}, supernodePort);
 			const pos = {
@@ -370,10 +373,12 @@ export default class CreateSuperNodeAction extends Action {
 			const supernodePort = Object.assign({}, this.findPort(link.srcNodePortId, srcNode.outputs));
 			supernodePort.id = this.generateUniquePortId(supernodePort, link.srcNodeId, bindingOutputData);
 			supernodePort.label = this.labelUtil.getLabel("supernode.new.port.label");
-			supernodePort.cardinality = {
-				min: 0,
-				max: 1
-			};
+			if (!this.useCardFromOriginalPorts) {
+				supernodePort.cardinality = {
+					min: 0,
+					max: 1
+				};
+			}
 
 			const bindingNodePort = Object.assign({}, supernodePort);
 			const pos = {
