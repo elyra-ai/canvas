@@ -25,8 +25,8 @@
 	.d3-node-group {
 		// Style the node body so it doesn't appear.
 		.d3-node-body-outline {
-			fill: $ui-background;
-			stroke: $ui-background;
+			fill: transparent;
+			stroke: transparent;
 		}
 
 		&.d3-node-supernode-expanded > .d3-node-body-outline {
