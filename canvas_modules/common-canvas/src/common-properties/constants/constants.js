@@ -163,8 +163,7 @@ export const CONDITION_TYPE = {
 	ALLOWCHANGE: "allow_change",
 	FILTER: "filter",
 	VALIDATION: "validation",
-	CONDITIONALDEFAULT: "default_value",
-	COLUMNDOESEXISTS: "colDoesExists"
+	CONDITIONALDEFAULT: "default_value"
 };
 
 export const CONDITION_DEFINITION_INDEX = {

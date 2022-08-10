@@ -24,7 +24,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS, CONDITION_TYPE } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
@@ -69,11 +69,9 @@ class PropertiesMain extends React.Component {
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
-		this.propertiesController.validatePropertiesValues(CONDITION_TYPE.VALIDATION, false);
-		// Run "colDoesExists" condition after all values are set
-		this.propertiesController.validatePropertiesValues(CONDITION_TYPE.COLUMNDOESEXISTS, true);
+		this.propertiesController.validatePropertiesValues(false);
 		if (props.propertiesInfo.messages) {
-			this.propertiesController.validatePropertiesValues(CONDITION_TYPE.VALIDATION, true);
+			this.propertiesController.validatePropertiesValues(true);
 			this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 		}
 		// Callback after all values and messages are set
@@ -117,7 +115,7 @@ class PropertiesMain extends React.Component {
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
 				this.previousErrorMessages = {};
 				if (newProps.propertiesInfo.messages) {
-					this.propertiesController.validatePropertiesValues(CONDITION_TYPE.VALIDATION);
+					this.propertiesController.validatePropertiesValues();
 					this.previousErrorMessages = this.propertiesController.getAllErrorMessages();
 				}
 			}
@@ -340,7 +338,7 @@ class PropertiesMain extends React.Component {
 
 	applyPropertiesEditing(closeProperties) {
 		// validate all the input values.
-		this.propertiesController.validatePropertiesValues(CONDITION_TYPE.VALIDATION);
+		this.propertiesController.validatePropertiesValues();
 		const newErrorMessages = this.propertiesController.getAllErrorMessages();
 
 		// only save if title or parameters have changed or new error messages

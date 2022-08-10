@@ -18,7 +18,6 @@ import { convertInputDataModel } from "../common-properties/util/property-utils"
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
 import { isEqual } from "lodash";
-import { CONDITION_TYPE } from "../common-properties/constants/constants";
 
 /* eslint max-depth: ["error", 7] */
 
@@ -52,7 +51,7 @@ function validatePipelineFlow(canvasController, pipelineId, getParameterData, se
 		} else if (node.type === "execution_node" || node.type === "binding") {
 			const formData = _getFormData(node.id, pipelineId, getParameterData, canvasController);
 			const propertiesController = _getPropertiesController(formData, intl);
-			propertiesController.validatePropertiesValues(CONDITION_TYPE.VALIDATION);
+			propertiesController.validatePropertiesValues();
 			_setNodeMessages(node, pipelineId, propertiesController, canvasController, setMessagesCallback);
 		}
 	}
