@@ -49,6 +49,7 @@ export default class PropertiesController {
 		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
+		this.colDoesExistsDefinitions = {};
 		this.requiredDefinitionsIds = [];
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
@@ -153,7 +154,7 @@ export default class PropertiesController {
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
-			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions, this.requiredDefinitionsIds, intl);
+			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions, this.colDoesExistsDefinitions, this.requiredDefinitionsIds, intl);
 			let datasetMetadata;
 			let propertyValues = {};
 			if (this.form.data) {
@@ -211,6 +212,7 @@ export default class PropertiesController {
 		this.visibleDefinitions = { controls: {}, refs: {} };
 		this.enabledDefinitions = { controls: {}, refs: {} };
 		this.validationDefinitions = { controls: {}, refs: {} };
+		this.colDoesExistsDefinitions = { controls: {}, refs: {} };
 		this.filterDefinitions = { controls: {}, refs: {} };
 		this.filteredEnumDefinitions = { controls: {}, refs: {} };
 		this.allowChangeDefinitions = { controls: {}, refs: {} };
@@ -224,6 +226,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.enabledDefinitions, condition, CONDITION_TYPE.ENABLED);
 				} else if (condition.validation) {
 					UiConditionsParser.parseConditions(this.validationDefinitions, condition, CONDITION_TYPE.VALIDATION);
+				} else if (condition.colDoesExists) {
+					UiConditionsParser.parseConditions(this.colDoesExistsDefinitions, condition, CONDITION_TYPE.COLUMNDOESEXISTS);
 				} else if (condition.filter) {
 					UiConditionsParser.parseConditions(this.filterDefinitions, condition, CONDITION_TYPE.FILTER);
 				} else if (condition.enum_filter) {
@@ -266,6 +270,9 @@ export default class PropertiesController {
 			break;
 		case CONDITION_TYPE.VALIDATION:
 			conditionDefinitions = this.validationDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.COLUMNDOESEXISTS:
+			conditionDefinitions = this.colDoesExistsDefinitions[dfnIndex];
 			break;
 		default:
 			break;
@@ -779,11 +786,12 @@ export default class PropertiesController {
 
 	/**
 	* This public API will validate all properties input values.
+	* @param {string} conditionType. required. Either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 	* @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
 	*    Defaults to true to always display errors
 	*/
-	validatePropertiesValues(showErrors = true) {
-		conditionsUtil.validatePropertiesValues(this, showErrors);
+	validatePropertiesValues(conditionType, showErrors = true) {
+		conditionsUtil.validatePropertiesValues(this, conditionType, showErrors);
 	}
 
 	//

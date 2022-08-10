@@ -32,11 +32,12 @@ import seedrandom from "seedrandom";
 * This function will get all controls and validate each properties value.
 *
 * @param {object} properties controller. required
+* @param {string} conditionType. required. Either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 * @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
 */
-function validatePropertiesValues(controller, showErrors = true) {
+function validatePropertiesValues(controller, conditionType, showErrors = true) {
 	const controls = controller.getControls();
-	validatePropertiesListValues(controller, controls, showErrors);
+	validatePropertiesListValues(controller, controls, conditionType, showErrors);
 }
 
 /**
@@ -80,8 +81,9 @@ function validatePropertiesConditions(controller) {
 *
 * @param {object} properties controller. required
 * @param {object} list of control objects or properties. required
+* @param {string} conditionType. required. Either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 */
-function validatePropertiesListValues(controller, controls, showErrors) {
+function validatePropertiesListValues(controller, controls, conditionType, showErrors) {
 	if (Object.keys(controls).length > 0) {
 		for (const controlKey in controls) {
 			if (!has(controls, controlKey)) {
@@ -93,7 +95,7 @@ function validatePropertiesListValues(controller, controls, showErrors) {
 				continue;
 			}
 			const propertyId = control.name ? { name: control.name } : { name: control };
-			validateInput(propertyId, controller, showErrors);
+			validateInput(propertyId, controller, conditionType, showErrors);
 		}
 	}
 }
@@ -158,9 +160,10 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 *
 * @param {object} propertyId. required
 * @param {object} properties controller. required
+* @param {string} conditionType. required. Either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 * @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
 */
-function validateInput(inPropertyId, controller, showErrors = true) {
+function validateInput(inPropertyId, controller, conditionType, showErrors = true) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -170,7 +173,7 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 	const controlValue = controller.getPropertyValue(propertyId);
 	if (Array.isArray(controlValue)) {
 	// validate the table as a whole
-		_validateInput(propertyId, controller, control, showErrors);
+		_validateInput(propertyId, controller, control, conditionType, showErrors);
 		// validate each cell
 		if (control.subControls) {
 			if (control.valueDef.isList || control.valueDef.isMap) {
@@ -179,7 +182,7 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 					for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
 						propertyId.row = rowIndex;
 						propertyId.col = colIndex;
-						_validateInput(propertyId, controller, control.subControls[colIndex], showErrors);
+						_validateInput(propertyId, controller, control.subControls[colIndex], conditionType, showErrors);
 					}
 				}
 			} else {
@@ -189,19 +192,19 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 						name: inPropertyId.name,
 						col: colIndex
 					};
-					_validateInput(subPropId, controller, control.subControls[colIndex], showErrors);
+					_validateInput(subPropId, controller, control.subControls[colIndex], conditionType, showErrors);
 				}
 			}
 		} else if (typeof propertyId.row === "undefined") { // validate each row in array for controls that are not within a table.
 			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				propertyId.row = rowIndex;
 				propertyId.col = 0;
-				_validateInput(propertyId, controller, control, showErrors);
+				_validateInput(propertyId, controller, control, conditionType, showErrors);
 			}
 		}
 
 	} else {
-		_validateInput(propertyId, controller, control, showErrors);
+		_validateInput(propertyId, controller, control, conditionType, showErrors);
 	}
 }
 
@@ -564,7 +567,7 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 * @param {object} a list of validation definition objects. required.
 * @return {object} a modified validation defintion object with any injected definitions.
 */
-function injectDefaultValidations(controls, validationDefinitions, requiredDefinitionsIds, intl) {
+function injectDefaultValidations(controls, validationDefinitions, colDoesExistsDefinitions, requiredDefinitionsIds, intl) {
 	for (const keyName in controls) {
 		if (!has(controls, keyName)) {
 			continue;
@@ -587,6 +590,7 @@ function injectDefaultValidations(controls, validationDefinitions, requiredDefin
 				locKeyName += "[0]";
 			}
 			_injectInvalidFieldDefinition(control, validationDefinitions, locKeyName, controlValId, intl);
+			_injectInvalidColumnDefinition(control, colDoesExistsDefinitions, locKeyName, controlValId, intl);
 		}
 
 		if (control.subControls) {
@@ -595,7 +599,7 @@ function injectDefaultValidations(controls, validationDefinitions, requiredDefin
 				const subKeyName = keyName + "[" + idx + "]";
 				subControls[subKeyName] = control.subControls[idx];
 			}
-			injectDefaultValidations(subControls, validationDefinitions, requiredDefinitionsIds, intl);
+			injectDefaultValidations(subControls, validationDefinitions, colDoesExistsDefinitions, requiredDefinitionsIds, intl);
 		}
 	}
 }
@@ -654,10 +658,11 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 	}
 }
 
+// conditionType can be either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 // This will validate a single propertyID value
-function _validateInput(propertyId, controller, control, showErrors) {
+function _validateInput(propertyId, controller, control, conditionType, showErrors) {
 	let errorSet = false;
-	const validations = controller.getDefinitions(propertyId, CONDITION_TYPE.VALIDATION, CONDITION_DEFINITION_INDEX.CONTROLS);
+	const validations = controller.getDefinitions(propertyId, conditionType, CONDITION_DEFINITION_INDEX.CONTROLS);
 	if (validations.length > 0) {
 		const requiredDefinitionsIds = controller.getRequiredDefinitionIds();
 		try {
@@ -1163,6 +1168,39 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 		valDefinitions.controls[keyName].push(injectedDefinition);
 	} else {
 		valDefinitions.controls[keyName] = [injectedDefinition];
+	}
+}
+function _injectInvalidColumnDefinition(control, colDoesExistsDefinitions, keyName, controlValId, intl) {
+	// For Selectcolumn and selectcolumns controls - verify column exists in datasetMetadata
+	const label = (control.label && control.label.text) ? control.label.text : keyName;
+	const errorMsg = formatMessage(intl,
+		MESSAGE_KEYS.INVALID_FIELD_ERROR, { label: label });
+	const injectedDefinition = {
+		params: keyName,
+		definition: {
+			validation: {
+				id: "validColumn_" + keyName + "_" + controlValId,
+				fail_message: {
+					type: "warning",
+					message: {
+						default: errorMsg
+					},
+					focus_parameter_ref: keyName
+				},
+				evaluate: {
+					condition: {
+						parameter_ref: keyName,
+						op: "colDoesExists"
+					}
+				}
+			}
+		}
+	};
+		// add the new definition to the set of validation definitions for this control.
+	if (colDoesExistsDefinitions.controls[keyName]) {
+		colDoesExistsDefinitions.controls[keyName].push(injectedDefinition);
+	} else {
+		colDoesExistsDefinitions.controls[keyName] = [injectedDefinition];
 	}
 }
 
