@@ -396,7 +396,7 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				this.updatePropertyValue(propertyId, controlValue, true);
+				this.updatePropertyValue(propertyId, controlValue, true, "initial_load");
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
@@ -1019,7 +1019,7 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(inPropertyId, value, skipValidateInput) {
+	updatePropertyValue(inPropertyId, value, skipValidateInput, type) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const initialValue = this.getPropertyValue(propertyId);
 		if (typeof value === "undefined") {
@@ -1042,7 +1042,8 @@ export default class PropertiesController {
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
 					property: propertyId,
-					value: convertedValue
+					value: convertedValue,
+					type: type
 				}
 			);
 		}
