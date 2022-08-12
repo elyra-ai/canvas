@@ -21,7 +21,7 @@ import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import { isEmpty, cloneDeep, has, union, isEqual } from "lodash";
+import { isEmpty, cloneDeep, has, union, isEqual, get } from "lodash";
 import seedrandom from "seedrandom";
 
 
@@ -33,10 +33,11 @@ import seedrandom from "seedrandom";
 *
 * @param {object} properties controller. required
 * @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
+* @param {boolean} onlyValidateInvalidFieldDefinition. optional. Set to true to validate "colDoesExists" condition
 */
-function validatePropertiesValues(controller, showErrors = true) {
+function validatePropertiesValues(controller, showErrors = true, onlyValidateInvalidFieldDefinition = false) {
 	const controls = controller.getControls();
-	validatePropertiesListValues(controller, controls, showErrors);
+	validatePropertiesListValues(controller, controls, showErrors, onlyValidateInvalidFieldDefinition);
 }
 
 /**
@@ -80,8 +81,10 @@ function validatePropertiesConditions(controller) {
 *
 * @param {object} properties controller. required
 * @param {object} list of control objects or properties. required
+* @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
+* @param {boolean} onlyValidateInvalidFieldDefinition. optional. Set to true to validate "colDoesExists" condition
 */
-function validatePropertiesListValues(controller, controls, showErrors) {
+function validatePropertiesListValues(controller, controls, showErrors, onlyValidateInvalidFieldDefinition) {
 	if (Object.keys(controls).length > 0) {
 		for (const controlKey in controls) {
 			if (!has(controls, controlKey)) {
@@ -93,7 +96,7 @@ function validatePropertiesListValues(controller, controls, showErrors) {
 				continue;
 			}
 			const propertyId = control.name ? { name: control.name } : { name: control };
-			validateInput(propertyId, controller, showErrors);
+			validateInput(propertyId, controller, showErrors, onlyValidateInvalidFieldDefinition);
 		}
 	}
 }
@@ -159,8 +162,9 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 * @param {object} propertyId. required
 * @param {object} properties controller. required
 * @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
+* @param {boolean} onlyValidateInvalidFieldDefinition. optional. Set to true to validate "colDoesExists" condition
 */
-function validateInput(inPropertyId, controller, showErrors = true) {
+function validateInput(inPropertyId, controller, showErrors = true, onlyValidateInvalidFieldDefinition = false) {
 	const control = controller.getControl(inPropertyId);
 	if (!control) {
 		logger.warn("Control not found for " + inPropertyId.name);
@@ -170,7 +174,7 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 	const controlValue = controller.getPropertyValue(propertyId);
 	if (Array.isArray(controlValue)) {
 	// validate the table as a whole
-		_validateInput(propertyId, controller, control, showErrors);
+		_validateInput(propertyId, controller, control, showErrors, onlyValidateInvalidFieldDefinition);
 		// validate each cell
 		if (control.subControls) {
 			if (control.valueDef.isList || control.valueDef.isMap) {
@@ -179,7 +183,7 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 					for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
 						propertyId.row = rowIndex;
 						propertyId.col = colIndex;
-						_validateInput(propertyId, controller, control.subControls[colIndex], showErrors);
+						_validateInput(propertyId, controller, control.subControls[colIndex], showErrors, onlyValidateInvalidFieldDefinition);
 					}
 				}
 			} else {
@@ -189,19 +193,19 @@ function validateInput(inPropertyId, controller, showErrors = true) {
 						name: inPropertyId.name,
 						col: colIndex
 					};
-					_validateInput(subPropId, controller, control.subControls[colIndex], showErrors);
+					_validateInput(subPropId, controller, control.subControls[colIndex], showErrors, onlyValidateInvalidFieldDefinition);
 				}
 			}
 		} else if (typeof propertyId.row === "undefined") { // validate each row in array for controls that are not within a table.
 			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				propertyId.row = rowIndex;
 				propertyId.col = 0;
-				_validateInput(propertyId, controller, control, showErrors);
+				_validateInput(propertyId, controller, control, showErrors, onlyValidateInvalidFieldDefinition);
 			}
 		}
 
 	} else {
-		_validateInput(propertyId, controller, control, showErrors);
+		_validateInput(propertyId, controller, control, showErrors, onlyValidateInvalidFieldDefinition);
 	}
 }
 
@@ -655,9 +659,13 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 }
 
 // This will validate a single propertyID value
-function _validateInput(propertyId, controller, control, showErrors) {
+function _validateInput(propertyId, controller, control, showErrors, onlyValidateInvalidFieldDefinition = false) {
 	let errorSet = false;
-	const validations = controller.getDefinitions(propertyId, CONDITION_TYPE.VALIDATION, CONDITION_DEFINITION_INDEX.CONTROLS);
+	let validations = controller.getDefinitions(propertyId, CONDITION_TYPE.VALIDATION, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (onlyValidateInvalidFieldDefinition) {
+		const invalidFieldDefinition = validations.find((val) => get(val, "definition.validation.id", "").includes("validField_"));
+		validations = (typeof invalidFieldDefinition === "undefined") ? [] : [invalidFieldDefinition];
+	}
 	if (validations.length > 0) {
 		const requiredDefinitionsIds = controller.getRequiredDefinitionIds();
 		try {
@@ -1127,6 +1135,7 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
 	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.INVALID_FIELD_ERROR, { label: label });
+	// Note: Please don't update "validField_" in validation id. It is used as identifier in another condition.
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -1140,20 +1149,10 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 					focus_parameter_ref: keyName
 				},
 				evaluate: {
-					or: [
-						{
-							condition: {
-								parameter_ref: keyName,
-								op: "colDoesExists"
-							}
-						},
-						{
-							condition: {
-								parameter_ref: keyName,
-								op: "isEmpty"
-							}
-						}
-					]
+					condition: {
+						parameter_ref: keyName,
+						op: "colDoesExists"
+					}
 				}
 			}
 		}

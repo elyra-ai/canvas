@@ -771,20 +771,21 @@ export default class PropertiesController {
 	*
 	* @param {object} propertyId. required.
 	* @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
+	* @param {boolean} onlyValidateInvalidFieldDefinition. optional. Set to true to validate "colDoesExists" condition
 	*    Defaults to true to always display errors
 	*/
-	validateInput(propertyId, showErrors = true) {
-		conditionsUtil.validateInput(propertyId, this, showErrors);
+	validateInput(propertyId, showErrors = true, onlyValidateInvalidFieldDefinition = false) {
+		conditionsUtil.validateInput(propertyId, this, showErrors, onlyValidateInvalidFieldDefinition);
 	}
 
 	/**
 	* This public API will validate all properties input values.
-	* @param {string} conditionType. required. Either CONDITION_TYPE.VALIDATION or CONDITION_TYPE.COLUMNDOESEXISTS
 	* @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
+	* @param {boolean} onlyValidateInvalidFieldDefinition. optional. Set to true to validate "colDoesExists" condition
 	*    Defaults to true to always display errors
 	*/
-	validatePropertiesValues(showErrors = true) {
-		conditionsUtil.validatePropertiesValues(this, showErrors);
+	validatePropertiesValues(showErrors = true, onlyValidateInvalidFieldDefinition = false) {
+		conditionsUtil.validatePropertiesValues(this, showErrors, onlyValidateInvalidFieldDefinition);
 	}
 
 	//
@@ -1034,7 +1035,7 @@ export default class PropertiesController {
 		}
 		conditionsUtil.validateConditions(inPropertyId, this);
 		if (!skipValidateInput) {
-			conditionsUtil.validateInput(inPropertyId, this, true);
+			conditionsUtil.validateInput(inPropertyId, this, true, false);
 		}
 
 		if (this.handlers.propertyListener) {

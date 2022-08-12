@@ -493,7 +493,7 @@ describe("selectcolumns control functions correctly in a table", () => {
 		tableUtils.fieldPicker(fieldPicker, ["Na"]);
 
 		// There should be no error messages
-		expect(scController.getErrorMessages()).to.eql({});
+		expect(scController.getErrorMessage({ name: "structurelist_sub_panel" })).to.eql(null);
 	});
 
 });
@@ -556,4 +556,43 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 			expect(rowCheckboxLabel).to.equal(`Select row ${index + 1} from ${tableName}`);
 		});
 	});
+});
+
+describe("selectcolumns control shows warnings on initial load when invalid value is selected", () => {
+	let wrapper;
+	let scController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		wrapper = renderedObject.wrapper;
+		scController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display invalid fields warnings for selectColumns control", () => {
+		// "fields_bad_field" property has 2 columns that aren't part of the schema
+		// Verify both fields show warning on initial load
+		const expectedErrorMessages = {
+			fields_bad_field: {
+				"0": {
+					type: "warning",
+					text: "Invalid Bad Field, field not found in data set.",
+					validation_id: "validField_fields_bad_field[0]_399.5244252726766",
+					propertyId: { name: "fields_bad_field", row: 0 },
+					required: false
+				},
+				"1": {
+					type: "warning",
+					text: "Invalid Bad Field, field not found in data set.",
+					validation_id: "validField_fields_bad_field[0]_399.5244252726766",
+					propertyId: { name: "fields_bad_field", row: 1 },
+					required: false
+				}
+			}
+		};
+		expect(expectedErrorMessages).to.eql(scController.getErrorMessages());
+	});
+
 });
