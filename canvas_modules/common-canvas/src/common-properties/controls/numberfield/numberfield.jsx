@@ -48,9 +48,9 @@ class NumberfieldControl extends React.Component {
 			if (decimalsInOriginalValue) {
 				decimalPrecision = decimalsInOriginalValue.length >= decimalsInIncrement.length ? decimalsInOriginalValue.length : decimalsInIncrement.length;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, Number(numValue.toFixed(decimalPrecision)));
+			this.props.controller.updatePropertyValue(this.props.propertyId, Number(numValue.toFixed(decimalPrecision)), true, "initial_load");
 		} else {
-			this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
+			this.props.controller.updatePropertyValue(this.props.propertyId, numValue, true, "initial_load");
 		}
 	}
 
@@ -67,9 +67,9 @@ class NumberfieldControl extends React.Component {
 		}
 		const actualValue = evt.target.value;
 		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
-			this.props.controller.updatePropertyValue(this.props.propertyId, null);
+			this.props.controller.updatePropertyValue(this.props.propertyId, null, true, "initial_load");
 		} else {
-			this.props.controller.updatePropertyValue(this.props.propertyId, Number(actualValue));
+			this.props.controller.updatePropertyValue(this.props.propertyId, Number(actualValue), true, "initial_load");
 		}
 		// TODO need to check for integer in validations
 	}
@@ -79,7 +79,7 @@ class NumberfieldControl extends React.Component {
 		const min = generator.range && generator.range.min ? generator.range.min : 10000;
 		const max = generator.range && generator.range.max ? generator.range.max : 99999;
 		const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-		this.props.controller.updatePropertyValue(this.props.propertyId, newValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true, "initial_load");
 	}
 
 	render() {

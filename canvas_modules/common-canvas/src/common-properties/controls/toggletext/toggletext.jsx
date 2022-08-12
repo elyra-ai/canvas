@@ -42,7 +42,7 @@ class ToggletextControl extends React.Component {
 	onClick(evt) {
 		const renderValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newValue = (renderValue === this.props.control.values[0]) ? this.props.control.values[1] : this.props.control.values[0];
-		this.props.controller.updatePropertyValue(this.props.propertyId, newValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue, true, "initial_load");
 
 	}
 

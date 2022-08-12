@@ -30,7 +30,7 @@ class PasswordControl extends React.Component {
 	}
 
 	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value, true, "initial_load");
 	}
 
 	render() {

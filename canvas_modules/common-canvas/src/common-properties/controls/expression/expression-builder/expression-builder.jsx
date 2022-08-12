@@ -59,7 +59,7 @@ export default class ExpressionBuilder extends React.Component {
 		this._setSelection(value, cursor, selectionOffset);
 		// This is needed to generate a render so that the selection will appear.
 		const exprValue = this.editor.getValue();
-		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
+		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true, "initial_load");
 		this.lastCursorPos = this.editor.getCursor();
 	}
 
@@ -74,7 +74,7 @@ export default class ExpressionBuilder extends React.Component {
 		const skipValidate = this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget);
 		// update property value when value is updated OR value is to be validated
 		if (!isEqual(currentValue, newValue) || !skipValidate) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate, "initial_load");
 		}
 	}
 

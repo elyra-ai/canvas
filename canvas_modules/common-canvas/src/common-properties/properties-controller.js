@@ -382,7 +382,7 @@ export default class PropertiesController {
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
-					this.updatePropertyValue(propertyId, controlValue, true);
+					this.updatePropertyValue(propertyId, controlValue, true, "initial_load");
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
 				controlValue = this._populateFieldData(controlValue, control);
@@ -400,7 +400,7 @@ export default class PropertiesController {
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
-						this.updatePropertyValue(propertyId, control.defaultRow, true);
+						this.updatePropertyValue(propertyId, control.defaultRow, true, "initial_load");
 					}
 				}
 			}
@@ -1038,14 +1038,15 @@ export default class PropertiesController {
 
 		if (this.handlers.propertyListener) {
 			const convertedValue = this._convertObjectStructure(propertyId, value);
-			this.handlers.propertyListener(
-				{
-					action: ACTIONS.UPDATE_PROPERTY,
-					property: propertyId,
-					value: convertedValue,
-					type: type
-				}
-			);
+			const data = {
+				action: ACTIONS.UPDATE_PROPERTY,
+				property: propertyId,
+				value: convertedValue
+			};
+			if (typeof type !== "undefined") {
+				data.type = type;
+			}
+			this.handlers.propertyListener(data);
 		}
 	}
 

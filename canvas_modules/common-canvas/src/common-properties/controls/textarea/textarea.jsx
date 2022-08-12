@@ -45,7 +45,7 @@ class TextareaControl extends React.Component {
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
 			value = ControlUtils.splitNewlines(value, newLine);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 	}
 
 	render() {

@@ -103,7 +103,7 @@ class MultiSelectControl extends React.Component {
 					newValues = intersection(this.props.control.valueDef.defaultValue, this.props.controlOpts.values);
 				}
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput, "initial_load");
 		}
 	}
 
@@ -112,7 +112,7 @@ class MultiSelectControl extends React.Component {
 		for (let i = 0; i < evt.selectedItems.length; i++) {
 			controlValues.push(evt.selectedItems[i].id);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
+		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues, true, "initial_load");
 	}
 
 	render() {

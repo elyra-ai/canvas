@@ -212,7 +212,7 @@ class ExpressionControl extends React.Component {
 	}
 	cancelExpressionBuilder() {
 		// on cancel reset back to original value
-		this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue, true, "initial_load");
 		this.props.controller.updateErrorMessage(this.props.propertyId, this.initialMessage);
 		this.props.controller.updateControlState(this.props.propertyId, this.initialState);
 		this.hideExpressionBuilder();

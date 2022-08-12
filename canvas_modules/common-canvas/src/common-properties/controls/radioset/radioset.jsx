@@ -100,7 +100,7 @@ class RadiosetControl extends React.Component {
 			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, "initial_load");
 		}
 	}
 
@@ -118,7 +118,7 @@ class RadiosetControl extends React.Component {
 	handleChange(evt) {
 		const oldVal = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newVal = this.convertTargetValue(evt);
-		this.props.controller.updatePropertyValue(this.props.propertyId, newVal);
+		this.props.controller.updatePropertyValue(this.props.propertyId, newVal, true, "initial_load");
 
 		if (oldVal !== newVal) {
 			this.setEnabledStateOfOptionalPanels(newVal);
@@ -156,7 +156,7 @@ class RadiosetControl extends React.Component {
 				}
 			}
 			if (newRadioSelection) {
-				this.props.controller.updatePropertyValue(this.props.propertyId, newRadioSelection);
+				this.props.controller.updatePropertyValue(this.props.propertyId, newRadioSelection, true, "initial_load");
 			}
 		}
 	}

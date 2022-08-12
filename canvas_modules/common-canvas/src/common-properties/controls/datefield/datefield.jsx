@@ -64,7 +64,7 @@ class DatefieldControl extends React.Component {
 				formattedValue = evt.target.value; // Otherwise just save as invalid entered string
 			}
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, formattedValue);
+		this.props.controller.updatePropertyValue(this.props.propertyId, formattedValue, true, "initial_load");
 	}
 
 	render() {

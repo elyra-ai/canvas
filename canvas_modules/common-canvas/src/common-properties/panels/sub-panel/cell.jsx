@@ -38,7 +38,7 @@ export default class SubPanelCell extends React.Component {
 	onSubPanelHidden(applyChanges) {
 		// on cancel reset back to original value
 		if (!applyChanges) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue, true, "initial_load");
 			this.props.controller.setErrorMessages(this.initialMessages);
 			this.props.controller.setControlStates(this.initialStates);
 		}

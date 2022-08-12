@@ -48,7 +48,7 @@ class SomeofselectControl extends React.Component {
 	updateValueFromFilterEnum(skipValidateInput) {
 		const newValues = intersection(this.props.value, this.props.controlOpts.values);
 		if (!isEqual(newValues, this.props.value)) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput, "initial_load");
 		}
 	}
 
@@ -58,7 +58,7 @@ class SomeofselectControl extends React.Component {
 			const value = this.props.controlOpts.values[selected[i]];
 			controlValues.push(value);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues);
+		this.props.controller.updatePropertyValue(this.props.propertyId, controlValues, true, "initial_load");
 	}
 
 	genSelectOptions(selectedValues) {

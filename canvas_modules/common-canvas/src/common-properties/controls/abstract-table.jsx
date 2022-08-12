@@ -85,7 +85,7 @@ export default class AbstractTable extends React.Component {
 	componentDidMount() {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue();
-			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
+			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true, "initial_load");
 		}
 	}
 
@@ -176,7 +176,7 @@ export default class AbstractTable extends React.Component {
 		}
 
 		// Update the property value
-		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true, "initial_load");
 		const selectedRows = Array.isArray(inSelectedRows) ? inSelectedRows : [];
 		this.updateRowSelections(selectedRows);
 	}
@@ -207,7 +207,7 @@ export default class AbstractTable extends React.Component {
 			let value = this.props.controller.getPropertyValue(summaryPropertyId);
 			if (!value) {
 				value = [this.getDefaultRow()];
-				this.props.controller.updatePropertyValue(summaryPropertyId, value, true);
+				this.props.controller.updatePropertyValue(summaryPropertyId, value, true, "initial_load");
 			}
 			this.selectedSummaryRowValue = cloneDeep(value);
 		}
@@ -266,7 +266,7 @@ export default class AbstractTable extends React.Component {
 					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
 					this.props.selectedRows.forEach((rowIndex) => {
-						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true);
+						this.props.controller.updatePropertyValue({ name: this.props.control.name, row: rowIndex, col: colIndex }, testCell, true, "initial_load");
 					});
 				}
 			});
@@ -568,7 +568,7 @@ export default class AbstractTable extends React.Component {
 					col: colIndex
 				};
 				if (this.props.controller.getControlState(propertyId) !== STATES.DISABLED) {
-					this.props.controller.updatePropertyValue(propertyId, checked);
+					this.props.controller.updatePropertyValue(propertyId, checked, true, "initial_load");
 				}
 			}
 			this.checkedAll[colIndex] = checked;

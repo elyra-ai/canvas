@@ -143,7 +143,7 @@ class DropDown extends React.Component {
 			} else if (this.props.control.customValueAllowed && this.props.value) {
 				defaultValue = this.props.value;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, "initial_load");
 		}
 	}
 
@@ -152,7 +152,7 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 	}
 
 	handleComboOnChange(evt) {
@@ -160,14 +160,14 @@ class DropDown extends React.Component {
 		if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 	}
 
 	// evt is null when onBlur, empty string when clicking the 'x' to clear input
 	handleOnInputChange(evt) {
 		if (evt !== null) {
 			const value = evt;
-			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+			this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 		}
 	}
 

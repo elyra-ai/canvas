@@ -35,7 +35,7 @@ class CheckboxControl extends React.Component {
 	}
 
 	handleChange(value) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 	}
 
 	render() {

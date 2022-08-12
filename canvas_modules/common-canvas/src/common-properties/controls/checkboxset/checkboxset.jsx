@@ -54,7 +54,7 @@ class CheckboxsetControl extends React.Component {
 		if (Array.isArray(this.props.value)) {
 			const newValue = intersection(this.props.value, this.props.controlOpts.values);
 			if (!isEqual(this.props.value, newValue)) {
-				this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidateInput);
+				this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidateInput, "initial_load");
 			}
 		}
 	}
