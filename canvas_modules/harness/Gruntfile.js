@@ -19,7 +19,6 @@
 "use strict";
 
 var IS_PRODUCTION = process.env.NODE_ENV === "production";
-var codeCoverageDir = "reports/coverage";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -46,11 +45,6 @@ module.exports = function(grunt) {
 			]
 		},
 		clean: {
-			coverage: {
-				src: [
-					codeCoverageDir
-				]
-			},
 			build: {
 				src: [".build"]
 			}

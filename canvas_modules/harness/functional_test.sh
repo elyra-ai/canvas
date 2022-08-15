@@ -35,11 +35,5 @@ npx cypress --version
 echo "Starting cypress electron tests"
 npx cypress run --headed --browser electron
 
-echo "download coverage"
-mkdir -p coverage
-cd coverage
-curl -L http://localhost:3001/coverage/download -o coverage.zip
-unzip coverage.zip
-
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR
