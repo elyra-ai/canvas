@@ -12,7 +12,7 @@
     "build-prod": "npx stylelint 'src/**/*.scss' && NODE_ENV=production grunt"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "dependencies": {
     "body-parser": "1.19.0",
@@ -20,7 +20,6 @@
     "express": "4.17.1",
     "express-session": "1.17.1",
     "isomorphic-fetch": "3.0.0",
-    "istanbul-middleware": "0.2.2",
     "js-file-download": "0.4.12",
     "lodash": "4.17.21",
     "log4js": "6.4.1",
