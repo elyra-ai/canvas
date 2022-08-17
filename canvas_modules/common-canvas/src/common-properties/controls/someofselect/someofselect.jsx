@@ -23,7 +23,7 @@ import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import { isEqual, intersection } from "lodash";
 
-import { STATES } from "../../constants/constants";
+import { STATES, UPDATE_TYPE } from "../../constants/constants";
 
 class SomeofselectControl extends React.Component {
 	constructor(props) {
@@ -34,7 +34,7 @@ class SomeofselectControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true, "initial_load");
+		this.updateValueFromFilterEnum(true, UPDATE_TYPE);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -45,10 +45,10 @@ class SomeofselectControl extends React.Component {
 	}
 
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput, onMount) {
+	updateValueFromFilterEnum(skipValidateInput, updateType) {
 		const newValues = intersection(this.props.value, this.props.controlOpts.values);
 		if (!isEqual(newValues, this.props.value)) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput, onMount);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput, updateType);
 		}
 	}
 
