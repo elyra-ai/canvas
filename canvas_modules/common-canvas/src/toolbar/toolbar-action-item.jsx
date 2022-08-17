@@ -185,6 +185,7 @@ class ToolbarActionItem extends React.Component {
 				onFocus={this.props.onFocus}
 				aria-label={actionObj.label}
 				size={this.props.size}
+				hasIconOnly
 			>
 				{buttonContent}
 			</Button>

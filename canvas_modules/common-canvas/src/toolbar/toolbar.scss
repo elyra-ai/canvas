@@ -29,7 +29,6 @@ $toolbar-divider-width: 1px;
 	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
-
 	display: flex;
 	justify-content: space-between;
 
@@ -58,12 +57,6 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 
-	& button {
-		padding: 0;
-		height: $toolbar-button-height;
-		min-height: 30px;
-	}
-
 	&.default,
 	&.ghost {
 		& button {
@@ -77,28 +70,8 @@ $toolbar-divider-width: 1px;
 		& button:focus {
 			background-color: $hover-field;
 		}
-
-		& button:disabled:hover {
-			background-color: $ui-01;
-		}
 	}
 
-	&.tertiary {
-		& button {
-			color: $brand-03;
-			background-color: $ui-01;
-		}
-
-		& button:hover {
-			background-color: $hover-field;
-		}
-
-		& button:disabled,
-		& button:disabled:hover {
-			color: $disabled-02;
-			background-color: $ui-01;
-		}
-	}
 }
 
 .toolbar-spacer {
