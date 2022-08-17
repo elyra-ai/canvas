@@ -46,7 +46,7 @@ class DropDown extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true);
+		this.updateValueFromFilterEnum(true, "initial_load");
 	}
 
 	componentDidUpdate(prevProps) {
@@ -132,7 +132,7 @@ class DropDown extends React.Component {
 		};
 	}
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput) {
+	updateValueFromFilterEnum(skipValidateInput, onMount) {
 		// update property value if value isn't in current enum value.  Should only be used for oneofselect
 		if (this.props.control.controlType === ControlType.ONEOFSELECT && this.props.value !== null && typeof this.props.value !== "undefined" &&
 			!this.props.controlOpts.values.includes(this.props.value)) {
@@ -143,7 +143,7 @@ class DropDown extends React.Component {
 			} else if (this.props.control.customValueAllowed && this.props.value) {
 				defaultValue = this.props.value;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, onMount);
 		}
 	}
 
@@ -167,7 +167,7 @@ class DropDown extends React.Component {
 	handleOnInputChange(evt) {
 		if (evt !== null) {
 			const value = evt;
-			this.props.controller.updatePropertyValue(this.props.propertyId, value);
+			this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
 		}
 	}
 
