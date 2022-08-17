@@ -167,7 +167,7 @@ class DropDown extends React.Component {
 	handleOnInputChange(evt) {
 		if (evt !== null) {
 			const value = evt;
-			this.props.controller.updatePropertyValue(this.props.propertyId, value, true, "initial_load");
+			this.props.controller.updatePropertyValue(this.props.propertyId, value);
 		}
 	}
 
