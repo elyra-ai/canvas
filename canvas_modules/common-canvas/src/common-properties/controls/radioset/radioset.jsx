@@ -39,7 +39,7 @@ class RadiosetControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true);
+		this.updateValueFromFilterEnum(true, "initial_load");
 		const val = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.setEnabledStateOfOptionalPanels(val);
 		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
@@ -92,7 +92,7 @@ class RadiosetControl extends React.Component {
 	}
 
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput) {
+	updateValueFromFilterEnum(skipValidateInput, onMount) {
 		if (this.props.value !== null && typeof this.props.value !== "undefined" &&
 			!this.props.controlOpts.values.includes(this.props.value)) {
 			let defaultValue = null;
@@ -100,7 +100,7 @@ class RadiosetControl extends React.Component {
 			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, onMount);
 		}
 	}
 

@@ -34,7 +34,7 @@ class SomeofselectControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true);
+		this.updateValueFromFilterEnum(true, "initial_load");
 	}
 
 	componentDidUpdate(prevProps) {
@@ -45,10 +45,10 @@ class SomeofselectControl extends React.Component {
 	}
 
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput) {
+	updateValueFromFilterEnum(skipValidateInput, onMount) {
 		const newValues = intersection(this.props.value, this.props.controlOpts.values);
 		if (!isEqual(newValues, this.props.value)) {
-			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, newValues, skipValidateInput, onMount);
 		}
 	}
 

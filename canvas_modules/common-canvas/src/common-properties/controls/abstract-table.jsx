@@ -85,7 +85,7 @@ export default class AbstractTable extends React.Component {
 	componentDidMount() {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue();
-			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
+			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true, "initial_load");
 		}
 	}
 
