@@ -34,7 +34,7 @@ class SomeofselectControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true, UPDATE_TYPE);
+		this.updateValueFromFilterEnum(true, UPDATE_TYPE.INITIAL_LOAD);
 	}
 
 	componentDidUpdate(prevProps) {

@@ -24,7 +24,8 @@ import ValidationMessage from "./../../components/validation-message";
 import { RadioButton } from "carbon-components-react";
 import classNames from "classnames";
 import { STATES } from "./../../constants/constants.js";
-import { ORIENTATIONS, UPDATE_TYPE } from "./../../constants/form-constants.js";
+import { ORIENTATIONS } from "./../../constants/form-constants.js";
+import { UPDATE_TYPE } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
@@ -39,7 +40,7 @@ class RadiosetControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true, UPDATE_TYPE);
+		this.updateValueFromFilterEnum(true, UPDATE_TYPE.INITIAL_LOAD);
 		const val = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.setEnabledStateOfOptionalPanels(val);
 		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
