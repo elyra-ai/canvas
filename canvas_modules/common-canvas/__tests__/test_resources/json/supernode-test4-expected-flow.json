@@ -745,6 +745,24 @@
           },
           "inputs": [
             {
+              "id": "id5KIRGGJ3FYT_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDMultiPlotPE",
+                  "port_id_ref": "output1MultiPlotPE"
+                }
+              ]
+            },
+            {
               "id": "id125TTEEIK7V_inPort",
               "app_data": {
                 "my_data": {
@@ -774,24 +792,6 @@
                   }
                 ]
               }
-            },
-            {
-              "id": "id5KIRGGJ3FYT_inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Binding port for supernode"
-                }
-              },
-              "links": [
-                {
-                  "node_id_ref": "nodeIDMultiPlotPE",
-                  "port_id_ref": "output1MultiPlotPE"
-                }
-              ]
             }
           ],
           "outputs": []
@@ -1384,6 +1384,31 @@
           },
           "outputs": [
             {
+              "id": "output_id5KIRGGJ3FYT_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 482,
+              "y_pos": 310.99999237060547,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
               "id": "output_id125TTEEIK7V_inPort",
               "app_data": {
                 "my_data": {
@@ -1406,31 +1431,6 @@
                     "field2": "model-node-port-param-val2"
                   }
                 ]
-              }
-            }
-          ]
-        },
-        {
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "Binding",
-              "x_pos": 482,
-              "y_pos": 310.99999237060547,
-              "description": "Supernode binding node"
-            }
-          },
-          "outputs": [
-            {
-              "id": "output_id5KIRGGJ3FYT_inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Binding port for supernode"
-                }
               }
             }
           ]

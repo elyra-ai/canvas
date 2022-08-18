@@ -111,7 +111,11 @@ $link-highlight-color: $support-04;
 	outline: none;
 }
 
-.d3-foreign-object {
+.d3-foreign-object-ghost-label,
+.d3-foreign-object-node-label,
+.d3-foreign-object-dec-label,
+.d3-foreign-object-comment-text,
+.d3-foreign-object-text-entry {
 	// Don't handle events - let objects inside foreign object handle them.
 	pointer-events: none;
 	// Allows the focus highlight to be visible on FF and Safari
@@ -303,12 +307,6 @@ $link-highlight-color: $support-04;
 
 .d3-node-warning-label {
 	color: $node-warning-color;
-}
-
-/* Used for debugging label position */
-
-.d3-node-label-outline {
-	border: solid 1px;
 }
 
 /* Common styles for node labels and node/link decoration labels */
@@ -736,7 +734,8 @@ g.bkg-col-cyan-50 {
 		font-size: $comment-text-font-size;
 		font-weight: $comment-text-font-weight;
 		line-height: $comment-text-line-height;
-		background-color: $ui-02;
+		background-color: $ui-03;
+		border-radius: 4px;
 		white-space: pre-wrap;
 	}
 	pre {
@@ -748,6 +747,9 @@ g.bkg-col-cyan-50 {
 		border: 1px solid $ui-03;
 		border-radius: 4px;
 		white-space: pre-wrap;
+		code {
+			background-color: $ui-02;
+		}
 	}
 	table {
 		width: 100%;
@@ -757,19 +759,23 @@ g.bkg-col-cyan-50 {
 		border-collapse: collapse;
 		box-sizing: border-box;
 		text-indent: initial;
+		color: $text-01;
 		thead {
+			@include carbon--type-style("productive-heading-01");
+			font-size: 12px;
 			display: table-header-group;
 			vertical-align: middle;
 			border-color: inherit;
-			color: $text-primary;
-			background-color: $layer-accent;
-
+			background-color: $ui-03;
+			text-align: left;
 			tr th {
 				padding: 8px;
 				border-bottom: 2px solid $ui-03;
 			}
 		}
 		tbody {
+			@include carbon--type-style("body-short-01");
+			font-size: 12px;
 			tr {
 				border-bottom: 2px solid $ui-03;
 				background-color: $ui-02;

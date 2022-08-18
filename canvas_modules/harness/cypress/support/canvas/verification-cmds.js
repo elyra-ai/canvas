@@ -1367,7 +1367,7 @@ function getNodeImageSelector(node) {
 }
 
 function getNodeLabelSelector(node) {
-	return getNodeGroupSelector(node) + " > .d3-foreign-object";
+	return getNodeGroupSelector(node) + " > .d3-foreign-object-node-label";
 }
 
 function getCommentSelectionOutlineSelector(comment) {

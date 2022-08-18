@@ -24,7 +24,7 @@ import { TextInput, Button } from "carbon-components-react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
-import { Information16, Edit16, Close16 } from "@carbon/icons-react";
+import { Help16, Edit16, Close16 } from "@carbon/icons-react";
 
 
 class TitleEditor extends Component {
@@ -121,7 +121,7 @@ class TitleEditor extends Component {
 				data-id="help"
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
-				renderIcon={Information16}
+				renderIcon={Help16}
 				size="small"
 				iconDescription={helpButtonLabel}
 				hasIconOnly

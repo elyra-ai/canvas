@@ -181,7 +181,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE"
+                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE_1"
                 }
               ]
             }
@@ -688,6 +688,25 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               }
@@ -1484,6 +1503,44 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDMultiPlotPE",
+                  "port_id_ref": "output1MultiPlotPE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 650,
+              "y_pos": 218.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               },

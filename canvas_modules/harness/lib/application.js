@@ -29,8 +29,6 @@ const bodyParser = require("body-parser");
 const log4jsUtil = require("./utils/log4js-util");
 log4jsUtil.init();
 
-const im = require("istanbul-middleware");
-
 const isProduction = process.env.NODE_ENV === "production";
 
 const logger = log4js.getLogger("application");
@@ -78,8 +76,6 @@ function _create(callback) {
 	v1Router.use(bodyParser.json({ limit: "10mb" }));
 	v1Router.use(constants.APP_PATH, formsAPI);
 	v1Router.use(constants.APP_PATH, opsAPI);
-
-	app.use("/coverage", im.createHandler());
 
 	callback(null, app);
 }

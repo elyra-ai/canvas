@@ -202,16 +202,18 @@ class RadiosetControl extends React.Component {
 			};
 			buttons.push(
 				<div key={i} className="properties-radioset-panel">
-					<RadioButton
-						key={i}
-						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={disabled || itemDisabled}
-						labelText={valueSet.valueLabels[i]}
-						value={val}
-						onChange={this.handleChange}
-						checked={checked}
-					/>
-					{tooltipIcon}
+					<div className="properties-radioset-tooltip">
+						<RadioButton
+							key={i}
+							id={ControlUtils.getControlId(id, this.uuid)}
+							disabled={disabled || itemDisabled}
+							labelText={valueSet.valueLabels[i]}
+							value={val}
+							onChange={this.handleChange}
+							checked={checked}
+						/>
+						{tooltipIcon}
+					</div>
 					{optionalPanel}
 				</div>
 			);

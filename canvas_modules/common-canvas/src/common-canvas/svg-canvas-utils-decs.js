@@ -30,11 +30,6 @@ export default class SvgCanvasDecs {
 		return null;
 	}
 
-	getDecLabelForeignClass(dec) {
-		const outlineClass = dec.label_outline ? " d3-node-label-outline" : "";
-		return "d3-foreign-object" + outlineClass;
-	}
-
 	getDecLabelClass(dec, objType) {
 		const lineTypeClass = dec.label_single_line ? " d3-label-single-line" : " d3-label-multi-line";
 		const justificationClass = dec.label_align === "center" ? " d3-label-center" : "";

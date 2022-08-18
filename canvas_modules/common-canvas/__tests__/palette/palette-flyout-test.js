@@ -19,6 +19,7 @@ import { mountWithIntl } from "../_utils_/intl-utils";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
 import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
+import PaletteFlyoutContentFilteredList from "../../src/palette/palette-flyout-content-filtered-list.jsx";
 import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx";
 import PaletteContentListItem from "../../src/palette/palette-content-list-item.jsx";
 import { expect } from "chai";
@@ -52,28 +53,39 @@ describe("Palette search renders correctly", () => {
 		simulateSearchEntry(searchInput, "data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "var");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "data import");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "d");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 		simulateSearchEntry(searchInput, "import data");
 		wrapper.update();
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(4);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
+
+		// Search for something that doesn't exist.
+		simulateSearchEntry(searchInput, "xxxxx");
+		wrapper.update();
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 
 	});
 
 	it("should filter nodes based on search text when fields are missing", () => {
 
-		const wrapper = createMountedPalette({ palette: paletteMissingFields });
+		const wrapper = createMountedPalette({ palette: paletteMissingFields, showPalette: true });
 
 		// Simulate click on search input to open palette with search bar
 		const searchInput = wrapper.find("div.palette-flyout-search-container");
@@ -85,8 +97,9 @@ describe("Palette search renders correctly", () => {
 
 		simulateSearchEntry(searchInput, "test");
 		wrapper.update();
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(1);
 
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		expect(wrapper.find(PaletteFlyoutContentFilteredList)).to.have.length(1);
 	});
 
 	it("should filter nodes based on search text when no node descriptions are present", () => {
@@ -162,8 +175,8 @@ describe("Palette renders correctly", () => {
 		const wrapper = createMountedPalette();
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
-		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(3);
 
 		const counts = getOpenCategories(wrapper);
 		expect(counts).to.have.length(1);
@@ -184,16 +197,20 @@ describe("Palette renders correctly", () => {
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
 
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 		const counts = getOpenCategories(wrapper);
 		expect(counts).to.have.length(2);
+
 		// We now click the Import category again to close it
 		const importCat2 = findCategoryElement(wrapper, "Import");
 		importCat2.simulate("click");
+
 		// When the Import category is closed and the Outputs category is opened
-		// we should have 2 palettes flyout content lists objects because
-		// content lists always exist whether categories are opened or closed.
-		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
-		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		// we should have 1 palette flyout content list object because
+		// content lists are removed when a category is closed.
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 
 		const counts2 = getOpenCategories(wrapper);
 		expect(counts2).to.have.length(1);
@@ -252,9 +269,10 @@ describe("Palette renders correctly", () => {
 		const palette = createMountedPalette(config);
 		const categories = palette.find(PaletteFlyoutContentCategory);
 		expect(categories).to.have.length(2);
+
 		const category = findCategoryElement(palette, "Category1");
 		category.simulate("click");
-		expect(palette.find(PaletteContentListItem)).to.have.length(3);
+		expect(palette.find(PaletteContentListItem)).to.have.length(2);
 	});
 
 	it("narrow palette should show correct values for category and node with and without an image", () => {
@@ -264,14 +282,17 @@ describe("Palette renders correctly", () => {
 			paletteWidth: 64
 		};
 		const palette = createMountedPalette(config);
+
 		// 2 categories should be rendered
 		const categories = palette.find(PaletteFlyoutContentCategory);
 		expect(categories).to.have.length(2);
+
 		// Category1 should show `Cat` when no image provided
 		const category = findCategoryElement(palette, "Category1");
 		expect(category.find("span").text()).to.equal("Cat");
 		category.simulate("click");
-		expect(palette.find(PaletteContentListItem)).to.have.length(3);
+		expect(palette.find(PaletteContentListItem)).to.have.length(2);
+
 		// Category2 should show image when provided
 		const category2 = findCategoryElement(palette, "Category2");
 		expect(category2.find("img")).to.have.length(1);
@@ -290,6 +311,7 @@ function createMountedPalette(config) {
 			showPalette={showPalette}
 			canvasController={canvasController}
 			paletteWidth={paletteWidth}
+			isEditingEnabled
 			enableNarrowPalette
 		/>
 	);

@@ -1540,9 +1540,13 @@ export default class CanvasController {
 		}
 	}
 
-	// Returns the current zoom object for the currently displayed canvas.
+	// Returns the current zoom object for the currently displayed canvas or null
+	// if the canvas is not yet rendered for the first time.
 	getZoom() {
-		return this.getSVGCanvasD3().getZoom();
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getZoom();
+		}
+		return null;
 	}
 
 	// Returns a zoom object required to pan the objects (nodes and/or comments)
@@ -2468,7 +2472,7 @@ export default class CanvasController {
 			}
 			case "createSuperNode":
 			case "createSuperNodeExternal": {
-				command = new CreateSuperNodeAction(data, this.objectModel, this.labelUtil);
+				command = new CreateSuperNodeAction(data, this.objectModel, this.labelUtil, this.getCanvasConfig().enableUseCardFromOriginalPorts);
 				this.commandStack.do(command);
 				break;
 			}
