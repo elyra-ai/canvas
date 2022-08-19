@@ -1033,7 +1033,7 @@ export default class PropertiesController {
 		}
 		conditionsUtil.validateConditions(inPropertyId, this);
 		if (!skipValidateInput) {
-			conditionsUtil.validateInput(inPropertyId, this, true, false);
+			conditionsUtil.validateInput(inPropertyId, this, true);
 		}
 
 		if (this.handlers.propertyListener) {
