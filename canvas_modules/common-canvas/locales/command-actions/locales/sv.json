@@ -27,7 +27,7 @@
   "action.disconnectObjects": "Koppla bort objekt",
   "action.displayPreviousPipeline": "Visa föregående pipeline",
   "action.displaySubPipeline": "Visa hela sidan med supernoden",
-  "action.editComment": "Ändra kommentar",
+  "action.editComment": "Redigera kommentar",
   "action.editLinkDecorationLabel": "Ändra länkdekorationsetikett",
   "action.editNodeDecorationLabel": "Redigera noddekorationsetikett",
   "action.expandSuperNodeInPlace": "Expandera {node_label}-supernod på plats",

@@ -12,6 +12,8 @@
   "canvas.selectAll": "全选",
   "canvas.undo": "撤销",
   "canvas.redo": "重做",
+  "canvas.undoCommand": "撤销：{undo_command}",
+  "canvas.redoCommand": "重做：{redo_command}",
   "canvas.deleteObject": "删除",
   "canvas.flowIsEmpty": "该流程是空的。",
   "canvas.addNodeToStart": "通过添加节点开始。",
@@ -33,5 +35,17 @@
   "node.editMenu": "编辑",
   "node.disconnectNode": "断开连接",
   "node.saveToPalette": "保存到选用板",
-  "link.deleteLink": "删除"
+  "link.deleteLink": "删除",
+  "texttoolbar.headerAction": "标题",
+  "texttoolbar.boldAction": "粗体",
+  "texttoolbar.italicsAction": "斜体",
+  "texttoolbar.strikethroughAction": "删除线",
+  "texttoolbar.codeAction": "代码",
+  "texttoolbar.linkAction": "链接",
+  "texttoolbar.quoteAction": "引号",
+  "texttoolbar.bulletedListAction": "项目符号列表",
+  "texttoolbar.numberedListAction": "编号列表",
+  "texttoolbar.titleAction": "标题",
+  "texttoolbar.subheaderAction": "子标题",
+  "texttoolbar.bodyAction": "主体"
 }

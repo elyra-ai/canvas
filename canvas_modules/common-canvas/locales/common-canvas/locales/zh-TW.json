@@ -12,6 +12,8 @@
   "canvas.selectAll": "全選",
   "canvas.undo": "復原",
   "canvas.redo": "重做",
+  "canvas.undoCommand": "復原：{undo_command}",
+  "canvas.redoCommand": "重做：{redo_command}",
   "canvas.deleteObject": "刪除",
   "canvas.flowIsEmpty": "您的流程為空。",
   "canvas.addNodeToStart": "從新增節點開始。",
@@ -33,5 +35,17 @@
   "node.editMenu": "編輯",
   "node.disconnectNode": "中斷連線",
   "node.saveToPalette": "儲存至選用區",
-  "link.deleteLink": "刪除"
+  "link.deleteLink": "刪除",
+  "texttoolbar.headerAction": "標頭",
+  "texttoolbar.boldAction": "粗體",
+  "texttoolbar.italicsAction": "斜體",
+  "texttoolbar.strikethroughAction": "刪除線",
+  "texttoolbar.codeAction": "代碼",
+  "texttoolbar.linkAction": "鏈結",
+  "texttoolbar.quoteAction": "引用",
+  "texttoolbar.bulletedListAction": "項目符號清單",
+  "texttoolbar.numberedListAction": "編號清單",
+  "texttoolbar.titleAction": "標題",
+  "texttoolbar.subheaderAction": "子標頭",
+  "texttoolbar.bodyAction": "內文"
 }

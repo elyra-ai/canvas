@@ -2,7 +2,7 @@
   "palette.flyout.search.placeholder": "パレット・ノードの検索",
   "palette.flyout.search.noresults": "結果は検出されませんでした。",
   "palette.flyout.search.adjustsearch": "検索対象を見つけるには、検索を調整してみてください。",
-  "palette.flyout.search.resultsrestricted": "結果は 10 ノードに制限されています。検索を絞り込んでみてください。",
+  "palette.flyout.search.resultsrestricted": "結果は 10 ノードに制限されています。 検索を絞り込んでみてください。",
   "palette.flyout.search.more": "さらに表示",
   "palette.flyout.search.less": "簡略表示",
   "palette.flyout.label": "フライアウト・パレット",
