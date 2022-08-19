@@ -21,7 +21,7 @@ import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
 	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
-import { isEmpty, cloneDeep, has, union, isEqual, get } from "lodash";
+import { isEmpty, cloneDeep, has, union, isEqual } from "lodash";
 import seedrandom from "seedrandom";
 
 
