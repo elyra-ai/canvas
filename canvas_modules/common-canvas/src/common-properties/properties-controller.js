@@ -24,7 +24,7 @@ import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
 import * as conditionsUtil from "./ui-conditions/conditions-utils";
 import * as PropertyUtils from "./util/property-utils.js";
 
-import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE, UPDATE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType } from "./constants/form-constants";
@@ -382,11 +382,11 @@ export default class PropertiesController {
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
-					this.updatePropertyValue(propertyId, controlValue, true);
+					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
 				controlValue = this._populateFieldData(controlValue, control);
-				this.updatePropertyValue(propertyId, controlValue, true);
+				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
 				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
@@ -396,11 +396,11 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				this.updatePropertyValue(propertyId, controlValue, true);
+				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
-						this.updatePropertyValue(propertyId, control.defaultRow, true);
+						this.updatePropertyValue(propertyId, control.defaultRow, true, UPDATE_TYPE.INITIAL_LOAD);
 					}
 				}
 			}
@@ -1019,7 +1019,7 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(inPropertyId, value, skipValidateInput) {
+	updatePropertyValue(inPropertyId, value, skipValidateInput, type) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const initialValue = this.getPropertyValue(propertyId);
 		if (typeof value === "undefined") {
@@ -1038,13 +1038,15 @@ export default class PropertiesController {
 
 		if (this.handlers.propertyListener) {
 			const convertedValue = this._convertObjectStructure(propertyId, value);
-			this.handlers.propertyListener(
-				{
-					action: ACTIONS.UPDATE_PROPERTY,
-					property: propertyId,
-					value: convertedValue
-				}
-			);
+			const data = {
+				action: ACTIONS.UPDATE_PROPERTY,
+				property: propertyId,
+				value: convertedValue
+			};
+			if (typeof type !== "undefined") {
+				data.type = type;
+			}
+			this.handlers.propertyListener(data);
 		}
 	}
 
