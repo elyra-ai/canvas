@@ -16,6 +16,7 @@
 
 import logger from "./../../../../utils/logger";
 import { fieldValueMatchesProto } from "./../../util/property-utils.js";
+import { isEmpty } from "lodash";
 
 function op() {
 	return "colDoesExists";
@@ -51,9 +52,14 @@ function evaluate(paramInfo, param2Info, value, controller) {
 
 // Return the field if found in dataset, else undefined
 function valueInDataset(dataset, field) {
-	return dataset.find(function(dataModelField) {
-		return fieldValueMatchesProto(field, dataModelField);
-	});
+	// Don't validate empty, null or undefined value
+	return (
+		(typeof field === "undefined" || field === null || isEmpty(field))
+			? true
+			: dataset.find(function(dataModelField) {
+				return fieldValueMatchesProto(field, dataModelField);
+			})
+	);
 }
 
 

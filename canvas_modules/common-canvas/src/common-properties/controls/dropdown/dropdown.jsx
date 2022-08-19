@@ -63,8 +63,10 @@ class DropDown extends React.Component {
 		});
 		selectedOption = typeof selectedOption === "undefined" ? null : selectedOption;
 
+		// Show the existing value but with a warning instead of filtering it out.
+		const showExistingValue = (selectedOption === null && value);
 		// user defined value
-		if (selectedOption === null && this.props.control.customValueAllowed) {
+		if (showExistingValue || this.props.control.customValueAllowed) {
 			selectedOption = {
 				value: value,
 				label: value

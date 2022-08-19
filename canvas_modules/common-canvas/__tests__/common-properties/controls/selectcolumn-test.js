@@ -417,6 +417,44 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		const selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
 		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel*");
 	});
+
+	it("selectcolumn control should show warning for invalid selected values", () => {
+		// Verify there are 2 alerts
+		// get alerts tabs
+		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
+		const alertButton = alertCategory.find("button.properties-category-title");
+		expect(alertButton.text()).to.equal("Alerts (2)");
+		alertButton.simulate("click");
+
+		// ensure that alert tab is open
+		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
+		const alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		expect(alertDiv).to.have.length(1);
+		const alertList = alertDiv.find("a.properties-link-text");
+		expect(alertList).to.have.length(2);
+		expect(alertList.at(0).text()).to.equal("Invalid Field, field not found in data set.");
+		expect(alertList.at(1).text()).to.equal("Invalid Field Warning, field not found in data set.");
+
+		// Fix the warnings by selecting one of the options from dropdown menu
+		let fieldWrapperDropdown = wrapper.find("div[data-id='properties-field'] Dropdown");
+		let dropdownButton = fieldWrapperDropdown.find("button");
+		dropdownButton.simulate("click");
+		fieldWrapperDropdown = wrapper.find("div[data-id='properties-field'] Dropdown");
+		let dropdownList = fieldWrapperDropdown.find("div.bx--list-box__menu-item");
+		dropdownList.at(2).simulate("click");
+
+		let fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
+		dropdownButton = fieldWarningWrapperDropdown.find("button");
+		dropdownButton.simulate("click");
+		fieldWarningWrapperDropdown = wrapper.find("div[data-id='properties-field_warning'] Dropdown");
+		dropdownList = fieldWarningWrapperDropdown.find("div.bx--list-box__menu-item");
+		dropdownList.at(2).simulate("click");
+
+		// Verify alerts are cleared by checking first tab is not the alert tab
+		const firstCategory = wrapper.find("div.properties-category-container").at(0);
+		const firstTab = firstCategory.find("button.properties-category-title");
+		expect(firstTab.text()).to.equal("Values");
+	});
 });
 
 describe("selectcolumn works correctly with multi input schemas", () => {

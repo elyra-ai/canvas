@@ -78,7 +78,7 @@ describe("text panel visible and enabled conditions work correctly", () => {
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
-		const textPanelcategory = wrapper.find("div.properties-category-container").at(0); // TEXT PANEL category
+		const textPanelcategory = wrapper.find("div.properties-category-container").at(1); // TEXT PANEL category
 		panels = textPanelcategory.find("div.properties-text-panel");
 		controller = renderedObject.controller;
 	});
