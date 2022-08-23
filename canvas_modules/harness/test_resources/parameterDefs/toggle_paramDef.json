@@ -3,106 +3,92 @@
     "title": "toggle Fields"
   },
   "current_parameters": {
-    "string": null,
-    "string_null": null,
-    "string_empty": "",
-     "string_error": null,
-    "string_warning":null,
-    "hide": true,
-    "string_hidden": true,
+    "toggleـstring_null": true,
+    "toggle_string_error": false,
+    "toggleـstring_warning":false,
+    "toggle_string_undefined":false,
+    "toggle_hide": true,
+    "toggle_string_hidden": true,
     "disable": true,
-    "string_disabled": true,
-    "string_table": [
+    "toggle_string_hidden":true,
+    "toggle_string_disabled": true,
+    "toggle_string_table": [
       [
         [
-          "Hopper"
+          true
         ],
         [
-          "Turing"
+          true
         ],
         [
-          "Shannon"
+          false
         ],
         [
-          "Babbage"
+          true
         ]
-      ],
-      []
+      ]
     ],
-    "string_table_cond": [
+    "toggle_string_table_cond": [
       [
         [
-          "Hopper"
+          true
         ],
         [
-          "Turing"
+          false
         ],
         [
-          "Shannon"
+          true
         ],
         [
-          "Babbage"
+          false
         ]
-      ],
-      []
+      ]
     ]
   },
   "parameters": [
     {
-      "id": "string",
-      "type": "string"
+      "id": "toggle_string_default",
+      "type": "boolean",
+      "default":true
     },
     {
-      "id": "string_default",
-      "type": "array[string]",
-      "default": "default testing"
-    },
-    {
-      "id": "string_empty",
-      "type": "array[string]",
-      "default": "ERROR - should not be set"
-    },
-    {
-      "id": "string_undefined",
-      "type": "array[string]"
-    },
-    {
-      "id": "string_null",
-      "type": "array[string]",
-      "default": "ERROR - should not be set"
-    },
-    {
-      "id": "string_error",
-      "type": "array[string]"
-    },
-    {
-      "id": "string_warning",
-      "type": "array[string]"
-    },
-    {
-      "id": "hide",
+      "id": "toggle_string_undefined",
       "type": "boolean"
     },
     {
-      "id": "string_hidden",
-      "type": "array[string]",
-      "required": true
+      "id": "toggleـstring_null",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_string_error",
+      "type": "boolean"
+    },
+    {
+      "id": "toggleـstring_warning",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_hide",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_string_hidden",
+      "type": "boolean"
     },
     {
       "id": "disable",
       "type": "boolean"
     },
     {
-      "id": "string_disabled",
-      "type": "array[string]",
-      "required": true
+      "id": "toggle_string_disabled",
+      "type": "boolean"
     },
     {
-      "id": "string_table",
+      "id": "toggle_string_table",
       "type": "array[toggles]"
     },
     {
-      "id": "string_table_cond",
+      "id": "toggle_string_table_cond",
       "type": "array[toggles]"
     }
   ],
@@ -112,19 +98,19 @@
       "parameters": [
         {
           "id": "toggle",
-          "type": "array[string]"
+          "type": "boolean"
         },
         {
           "id": "toggle2",
-          "type": "array[string]"
+          "type": "boolean"
         },
         {
           "id": "toggle_on_panel",
-          "type": "array[string]"
+          "type": "boolean"
         },
         {
           "id": "toggle_sub_panel",
-          "type": "array[string]"
+          "type": "boolean"
         }
       ]
     }
@@ -137,18 +123,7 @@
     },
     "parameter_info": [
       {
-        "parameter_ref": "string",
-        "label": {
-          "default": "toggle string"
-        },
-        "control": "toggle",
-        "description": {
-          "default": "toggle with sting value"
-        },
-        "class_name": "string-toggle-control-class"
-      },
-      {
-        "parameter_ref": "string_default",
+        "parameter_ref": "toggle_string_default",
         "label": {
           "default": "toggle Default"
         },
@@ -158,17 +133,7 @@
         }
       },
       {
-        "parameter_ref": "string_empty",
-        "label": {
-          "default": "toggle Empty"
-        },
-          "control": "toggle",
-        "description": {
-          "default": "toggle with parameter value set to '\"\"'"
-        }
-      },
-      {
-        "parameter_ref": "string_null",
+        "parameter_ref": "toggleـstring_null",
         "label": {
           "default": "toggle Null"
         },
@@ -178,7 +143,7 @@
         }
       },
       {
-        "parameter_ref": "string_undefined",
+        "parameter_ref": "toggle_string_undefined",
         "label": {
           "default": "toggle Undefined"
         },
@@ -188,7 +153,7 @@
         }
       },
       {
-        "parameter_ref": "string_error",
+        "parameter_ref": "toggle_string_error",
         "label": {
           "default": "toggle Error"
         },
@@ -198,7 +163,7 @@
         }
       },
       {
-        "parameter_ref": "string_warning",
+        "parameter_ref": "toggleـstring_warning",
         "label": {
           "default": "Warning"
         },
@@ -208,46 +173,30 @@
         }
       },
       {
-        "parameter_ref": "hide",
+        "parameter_ref": "toggle_hide",
         "label": {
-          "default": "Hide 'string Hidden'"
+          "default": "toggle_hide 'toggle string Hidden'"
         }
       },
       {
-        "parameter_ref": "string_hidden",
+        "parameter_ref": "toggle_string_hidden",
         "label": {
-          "default": "string Hidden"
+          "default": "toggle_string Hidden"
         },
           "control": "toggle"
       },
       {
         "parameter_ref": "disable",
         "label": {
-          "default": "Disable 'string Disabled'"
+          "default": "toggle_Disable 'toggle_string Disabled'"
         }
       },
       {
-        "parameter_ref": "string_disabled",
+        "parameter_ref": "toggle_string_disabled",
         "label": {
-          "default": "string Disabled"
+          "default": "toggle_string Disabled"
         },
           "control": "toggle"
-      },
-      {
-        "parameter_ref": "string_table",
-        "label": {
-          "default": "toggle control in a table"
-        }
-      },
-      {
-        "parameter_ref": "string_table_cond",
-        "label": {
-          "default": "toggle conditions in a table"
-        },
-        "description": {
-          "default": "Type 'error' in `Standard` column to show an `error`. Type 'warn' in `Additional` column to show an `warn`",
-          "placement": "on_panel"
-        }
       }
     ],
     "complex_type_info": [
@@ -260,8 +209,6 @@
             "label": {
               "default": "Standard"
             },
-            "toggleofflabel": "Off",
-            "toggleonlabel": "On",
             "control": "toggle",
             "class_name": "table-toggle-control-class"
           },
@@ -271,9 +218,7 @@
             "label": {
               "default": "Additional"
             },
-              "control": "toggle",
-              "toggleofflabel": "Off",
-              "toggleonlabel": "On",
+              "control": "toggle"
           },
           {
             "parameter_ref": "toggle_on_panel",
@@ -282,8 +227,6 @@
               "default": "on_panel"
             },
             "control": "toggle",
-              "toggleofflabel": "Off",
-              "toggleonlabel": "On",
             "description": {
               "default": "toggle with `edit_style=on_panel`"
             },
@@ -314,11 +257,9 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "string",
-          "string_default",
-          "string_empty",
-          "string_undefined",
-          "string_null"
+          "toggle_string_default",
+          "toggle_string_undefined",
+          "toggleـstring_null"
         ]
       },
       {
@@ -328,12 +269,12 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "string_error",
-          "string_warning",
-          "hide",
-          "string_hidden",
+          "toggle_string_error",
+          "toggleـstring_warning",
+          "toggle_hide",
+          "toggle_string_hidden",
           "disable",
-          "string_disabled"
+          "toggle_string_disabled"
         ]
       },
       {
@@ -353,8 +294,8 @@
               {
                 "id": "toggle-table-summary-ctrls",
                 "parameter_refs": [
-                  "string_table",
-                  "string_table_cond"
+                  "toggle_string_table",
+                  "toggle_string_table_cond"
                 ]
               }
             ]
@@ -368,16 +309,16 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "string_error",
+          "focus_parameter_ref": "toggle_string_error",
           "message": {
             "default": "Testing toggle error condition"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "string_error",
+            "parameter_ref": "toggle_string_error",
             "op": "equals",
-            "value": "Ascending"
+            "value": false
           }
         }
       }
@@ -386,16 +327,16 @@
        "validation": {
          "fail_message": {
            "type": "warning",
-           "focus_parameter_ref": "string_warning",
+           "focus_parameter_ref": "toggleـstring_warning",
            "message": {
              "default": "Testing toggle warning condition"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "string_warning",
+            "parameter_ref": "toggleـstring_warning",
             "op": "equals",
-            "value": "Ascending"
+            "value": false
           }
         }
       }
@@ -404,32 +345,32 @@
        "validation": {
          "fail_message": {
            "type": "error",
-           "focus_parameter_ref": "string_table[1]",
+           "focus_parameter_ref": "toggle_string_table[1]",
            "message": {
              "default": "Testing toggle error condition"
           }
         },
         "evaluate": {
           "condition": {
-           "parameter_ref": "string_table[1]",
+           "parameter_ref": "toggle_string_table[1]",
             "op": "equals",
-            "value": "Ascending"
+            "value": false
          }
        }
       },
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "string_table[1]",
+          "focus_parameter_ref": "toggle_string_table[1]",
           "message": {
             "default": "Testing toggle error condition"
            }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "string_table[1]",
+            "parameter_ref": "toggle_string_table[1]",
             "op": "equals",
-            "value": "Ascending"
+            "value": true
           }
         }
       }
@@ -438,16 +379,16 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "string_table_cond[0]",
+          "focus_parameter_ref": "toggle_string_table_cond[0]",
           "message": {
             "default": "Testing toggle warning condition"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "string_table_cond[0]",
+            "parameter_ref": "toggle_string_table_cond[0]",
             "op": "equals",
-            "value": "Ascending"
+            "value": false
           }
         }
       }
@@ -455,11 +396,11 @@
     {
       "visible": {
         "parameter_refs": [
-          "string_hidden"
+          "toggle_string_hidden"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "hide",
+            "parameter_ref": "toggle_hide",
             "op": "equals",
             "value": false
           }
@@ -469,7 +410,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "string_disabled"
+          "toggle_string_disabled"
         ],
         "evaluate": {
           "condition": {
@@ -480,5 +421,13 @@
         }
       }
     }
-  ]
+  ],
+  "resources": {
+    "toggle_string_default.toggle.on.label": "toggle string ON",
+    "toggle_string_default.toggle.off.label": "toggle string OFF",
+    "toggle_string_undefined.toggle.on.label": "toggle string undefined ON",
+    "toggle_string_undefined.toggle.off.label": "toggle string undefined OFF",
+    "toggleـstring_null.toggle.on.label": "toggle null ON",
+    "toggleـstring_null.toggle.off.label": "toggle null OFF"
+  }
 }

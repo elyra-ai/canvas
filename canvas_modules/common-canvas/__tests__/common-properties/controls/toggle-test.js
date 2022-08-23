@@ -55,28 +55,6 @@ describe("toggle renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("toggle should render correctly", () => {
-		const wrapper = mount(
-			<Toggle
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const toggleWrapper2 = wrapper.find("span.bx--toggle__switch");
-
-		const toggleLableOff = wrapper.find(".bx--toggle__text--off");
-		const toggleLableOn = wrapper.find(".bx--toggle__text--on");
-
-		const svg = toggleWrapper2.find("svg");
-		expect(svg).to.have.length(1);
-
-		expect(toggleLableOff.text()).to.equal(control.values[1]);
-		expect(toggleLableOn.text()).to.equal(control.values[0]);
-
-	});
-
 	it("toggle renders when hidden", () => {
 		controller.updateControlState(propertyId, "hidden");
 		const wrapper = mount(
@@ -89,6 +67,28 @@ describe("toggle renders correctly", () => {
 		);
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		expect(toggleWrapper.hasClass("hide")).to.equal(true);
+	});
+
+	it("toggle should set correct value", () => {
+		const wrapper = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const toggle = wrapper.find("div.properties-toggle");
+
+		const image = toggle.find("svg");
+		expect(image).to.have.length(1);
+		image.simulate("click");
+
+		const toggleLableOn = toggle.find("span.bx--toggle__text--on");
+		const toggleLableOff = toggle.find("span.bx--toggle__text--off");
+
+		expect(toggleLableOn.text()).to.equal(control.values[0]);
+		expect(toggleLableOff.text()).to.equal(control.values[1]);
 	});
 
 });

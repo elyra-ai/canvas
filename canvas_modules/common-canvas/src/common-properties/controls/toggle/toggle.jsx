@@ -20,8 +20,10 @@ import { connect } from "react-redux";
 import { Toggle } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
+import { formatMessage } from "./../../util/property-utils";
+
 
 class ToggleControl extends React.Component {
 	constructor(props) {
@@ -35,13 +37,22 @@ class ToggleControl extends React.Component {
 	}
 
 	render() {
+		const overrideLabelKeyOn = `${this.props.control.name}.toggle.on.label`;
+		const overrideLabelKeyOff = `${this.props.control.name}.toggle.off.label`;
+
+		const defaultOnEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLE_ON_LABEL);
+		const defaultOffEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLE_OFF_LABEL);
+
+		const labelOn = this.props.controller.getResource(overrideLabelKeyOn, defaultOnEditLabel);
+		const labelOff = this.props.controller.getResource(overrideLabelKeyOff, defaultOffEditLabel);
+
 		const toggleControl = (<Toggle
 			id={this.id}
 			size="sm"
 			disabled={this.props.state === STATES.DISABLED}
-			toggled={Boolean(this.props.value)}
-			labelA={this.props.toggleofflabel}
-			labelB={this.props.toggleonlabel}
+			toggled={this.props.value}
+			labelB={labelOn}
+			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
 			labelText={this.props.controlItem}
 		/>);
@@ -65,7 +76,7 @@ ToggleControl.propTypes = {
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.string,
+	value: PropTypes.bool,
 	toggleofflabel: PropTypes.string,
 	toggleonlabel: PropTypes.string,
 	messageInfo: PropTypes.object // pass in by redux
