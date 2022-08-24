@@ -312,7 +312,8 @@ class ExpressionControl extends React.Component {
 			theme: theme + " custom",
 			readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
 			extraKeys: { "Ctrl-Space": "autocomplete" },
-			autoRefresh: true
+			autoRefresh: true,
+			lineNumbers: true
 		};
 		const applyLabel = formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
