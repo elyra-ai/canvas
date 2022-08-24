@@ -41,6 +41,14 @@ const propertyId = { name: "toggle" };
 
 describe("toggle renders correctly", () => {
 
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+		controller.setPropertyValues(
+			{ toggle: true }
+		);
+	});
+
 	it("toggle props should have been defined", () => {
 		const wrapper = mount(
 			<Toggle
@@ -78,17 +86,11 @@ describe("toggle renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const toggle = wrapper.find("div.properties-toggle");
-
-		const image = toggle.find("svg");
+		const toggleWrapper = wrapper.find("div.properties-toggle");
+		const image = toggleWrapper.find("svg");
 		expect(image).to.have.length(1);
 		image.simulate("click");
-
-		const toggleLableOn = toggle.find("span.bx--toggle__text--on");
-		const toggleLableOff = toggle.find("span.bx--toggle__text--off");
-
-		expect(toggleLableOn.text()).to.equal(control.values[0]);
-		expect(toggleLableOff.text()).to.equal(control.values[1]);
+		expect(controller.getPropertyValue(propertyId)).to.equal(true);
 	});
 
 });

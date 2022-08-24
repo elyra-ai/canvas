@@ -76,9 +76,7 @@ ToggleControl.propTypes = {
 	controlItem: PropTypes.element,
 	tableControl: PropTypes.bool,
 	state: PropTypes.string, // pass in by redux
-	value: PropTypes.bool,
-	toggleofflabel: PropTypes.string,
-	toggleonlabel: PropTypes.string,
+	value: PropTypes.bool, // pass in by redux
 	messageInfo: PropTypes.object // pass in by redux
 };
 
