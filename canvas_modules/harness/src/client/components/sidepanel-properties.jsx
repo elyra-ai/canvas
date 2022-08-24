@@ -59,7 +59,8 @@ export default class SidePanelModal extends React.Component {
 			invalidSetHideEditButtonPropertyId: true,
 			invalidTableButtonPropertyId: true,
 			invalidSetStaticRowPropertyId: true,
-			invalidSetStaticRowIndexes: true
+			invalidSetStaticRowIndexes: true,
+			invalidDisableOkButtonPanelId: true
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
@@ -91,6 +92,9 @@ export default class SidePanelModal extends React.Component {
 		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
 		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
+		this.disableOkButtonPanelId = this.disableOkButtonPanelId.bind(this);
+		this.setOkButtonDisabled = this.setOkButtonDisabled.bind(this);
+		this.disableOkButton = this.disableOkButton.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -242,6 +246,27 @@ export default class SidePanelModal extends React.Component {
 	// Button to submit StaticRows data and call propertiesController
 	setStaticRows(evt) {
 		this.props.propertiesConfig.setStaticRows();
+	}
+
+	// Toggle to set Ok button enabled or disabled for summary panel
+	setOkButtonDisabled(disabled) {
+		this.props.propertiesConfig.setOkButtonDisabled(disabled);
+	}
+
+	// Textfield to enter the summary panelId for disabling OK button in Wide Flyout panel
+	disableOkButtonPanelId(evt) {
+		try {
+			const panelId = JSON.parse(evt.target.value);
+			this.props.propertiesConfig.disableOkButtonPanelId(panelId);
+			this.setState({ invalidDisableOkButtonPanelId: false });
+		} catch (ex) {
+			this.setState({ invalidDisableOkButtonPanelId: true });
+		}
+	}
+
+	// Button to submit disable Ok button data and call propertiesController
+	disableOkButton(evt) {
+		this.props.propertiesConfig.disableOkButton();
 	}
 
 	submitProperties() {
@@ -773,6 +798,41 @@ export default class SidePanelModal extends React.Component {
 			</Button>
 		</div>);
 
+		const disableOkButtonPanelId = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-disable-ok-button-panelid">
+				<TextInput
+					labelText="Set the summary panel id for enabling/disabling OK button in Wide Flyout"
+					id="harness-panelId-disableOkButton"
+					placeholder='{ "name": "panelId" }'
+					invalid={this.state.invalidDisableOkButtonPanelId}
+					invalidText="Please enter valid JSON"
+					onChange={ this.disableOkButtonPanelId }
+					helperText='PanelId format: {"name": "unique_id_for_panel"}'
+				/>
+			</div>
+		);
+
+		const setOkButtonDisabled = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-set-ok-button-disabled">
+				<Toggle
+					id="harness-sidepanel-setOkButtonDisabled-toggle"
+					labelText="Set OK button disabled for the summary panelId entered above"
+					labelA="Enable Ok button"
+					labelB="Disable OK button"
+					toggled={this.props.propertiesConfig.okButtonDisabled}
+					onToggle={this.setOkButtonDisabled}
+				/>
+			</div>);
+
+		const disableOkButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-disable-ok-button-submit">
+			<Button size="small"
+				disabled={this.state.invalidDisableOkButtonPanelId}
+				onClick={this.props.propertiesConfig.disableOkButton}
+			>
+				Submit
+			</Button>
+		</div>);
+
 		const divider = (<div className="harness-sidepanel-children harness-sidepanel-divider" />);
 		return (
 			<div>
@@ -828,6 +888,10 @@ export default class SidePanelModal extends React.Component {
 				{setStaticRowsPropertyId}
 				{setStaticRowsIndexes}
 				{submitStaticRows}
+				{divider}
+				{disableOkButtonPanelId}
+				{setOkButtonDisabled}
+				{disableOkButton}
 			</div>
 		);
 	}
@@ -890,6 +954,10 @@ SidePanelModal.propTypes = {
 		setConditionDisabledPropertyHandling: PropTypes.func,
 		conditionDisabledPropertyHandling: PropTypes.string,
 		enablePropertiesValidationHandler: PropTypes.func,
-		propertiesValidationHandler: PropTypes.bool
+		propertiesValidationHandler: PropTypes.bool,
+		okButtonDisabled: PropTypes.bool,
+		disableOkButtonPanelId: PropTypes.func,
+		setOkButtonDisabled: PropTypes.func,
+		disableOkButton: PropTypes.func
 	})
 };

@@ -37,6 +37,7 @@ export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
 export const SET_SAVE_BUTTON_DISABLE = "SET_SAVE_BUTTON_DISABLE";
+export const SET_OK_BUTTON_DISABLE = "SET_OK_BUTTON_DISABLE";
 export const SET_ADD_REMOVE_ROWS = "SET_ADD_REMOVE_ROWS";
 export const UPDATE_STATIC_ROWS = "UPDATE_STATIC_ROWS";
 export const CLEAR_STATIC_ROWS = "CLEAR_STATIC_ROWS";
@@ -127,6 +128,10 @@ export function disableRowMoveButtons(propertyIds) {
 
 export function setSaveButtonDisable(disableState) {
 	return { type: SET_SAVE_BUTTON_DISABLE, disableState };
+}
+
+export function setOkButtonDisable(info) {
+	return { type: SET_OK_BUTTON_DISABLE, info };
 }
 
 export function setAddRemoveRows(info) {

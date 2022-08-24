@@ -1630,6 +1630,22 @@ export default class PropertiesController {
 		return this.propertiesStore.getSaveButtonDisable();
 	}
 
+	/**
+	* Enable/disable OK button for given summary panel
+	* @param panelId {name: panel.id}
+	* @param okDisable boolean
+	*/
+	setOkButtonDisable(panelId, okDisable) {
+		this.propertiesStore.setOkButtonDisable(panelId, okDisable);
+	}
+
+	/**
+	* @param panelId {name: panel.id}
+	*/
+	getOkButtonDisable(panelId) {
+		return this.propertiesStore.getOkButtonDisable(panelId);
+	}
+
 	isRequired(propertyId) {
 		const control = this.getControl(propertyId);
 		if (control) {

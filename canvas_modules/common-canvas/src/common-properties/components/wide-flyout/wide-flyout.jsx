@@ -82,6 +82,7 @@ export default class WideFlyout extends Component {
 				showPropertiesButtons={this.props.showPropertiesButtons}
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
+				applyButtonEnabled={this.props.okButtonEnabled}
 			/>);
 			children = (<div className="properties-wf-children"> {this.props.children} </div>);
 		}
@@ -109,9 +110,11 @@ WideFlyout.propTypes = {
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
 	title: PropTypes.string,
-	light: PropTypes.bool
+	light: PropTypes.bool,
+	okButtonEnabled: PropTypes.bool
 };
 
 WideFlyout.defaultProps = {
-	show: false
+	show: false,
+	okButtonEnabled: true
 };
