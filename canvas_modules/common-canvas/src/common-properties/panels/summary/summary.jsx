@@ -333,7 +333,7 @@ SummaryPanel.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
 	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id }),
-	okButtonEnabled: !ownProps.controller.getOkButtonDisable({ name: ownProps.panel.id })
+	okButtonEnabled: !ownProps.controller.getWideFlyoutPrimaryButtonDisabled({ name: ownProps.panel.id })
 });
 
 export default connect(mapStateToProps, null)(SummaryPanel);

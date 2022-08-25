@@ -2243,7 +2243,7 @@ describe("Properties Controller custom table buttons", () => {
 	});
 });
 
-describe("Properties Controller setOkButtonDisable", () => {
+describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 	beforeEach(() => {
 		reset();
 	});
@@ -2256,33 +2256,33 @@ describe("Properties Controller setOkButtonDisable", () => {
 
 		// Verify OK button is enabled by default
 		let summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		let okButton = summaryPanel
+		let wideFlyoutPrimaryButton = summaryPanel
 			.find(".properties-wf-content")
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
-		expect(okButton.props()).to.have.property("disabled", false);
-		expect(okButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
 
 		// Disable OK button for this summary panel using controller method
-		controller.setOkButtonDisable(summaryPanelId, true);
+		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, true);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		okButton = summaryPanel
+		wideFlyoutPrimaryButton = summaryPanel
 			.find(".properties-wf-content")
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
-		expect(okButton.props()).to.have.property("disabled", true);
-		expect(okButton.prop("className").includes("bx--btn--disabled")).to.equal(true);
-		expect(controller.getOkButtonDisable(summaryPanelId)).to.be.true;
+		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", true);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(true);
+		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.true;
 
 		// Enable OK button for this summary panel using controller method
-		controller.setOkButtonDisable(summaryPanelId, false);
+		controller.setWideFlyoutPrimaryButtonDisabled(summaryPanelId, false);
 		summaryPanel = testUtils.openSummaryPanel(wrapper, id);
-		okButton = summaryPanel
+		wideFlyoutPrimaryButton = summaryPanel
 			.find(".properties-wf-content")
 			.find(".properties-modal-buttons")
 			.find("button[data-id='properties-apply-button']");
-		expect(okButton.props()).to.have.property("disabled", false);
-		expect(okButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
-		expect(controller.getOkButtonDisable(summaryPanelId)).to.be.false;
+		expect(wideFlyoutPrimaryButton.props()).to.have.property("disabled", false);
+		expect(wideFlyoutPrimaryButton.prop("className").includes("bx--btn--disabled")).to.equal(false);
+		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
 	});
 });

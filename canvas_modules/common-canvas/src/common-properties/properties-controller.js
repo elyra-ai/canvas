@@ -1633,17 +1633,17 @@ export default class PropertiesController {
 	/**
 	* Enable/disable OK button for given summary panel
 	* @param panelId {name: panel.id}
-	* @param okDisable boolean
+	* @param wideFlyoutPrimaryButtonDisable boolean
 	*/
-	setOkButtonDisable(panelId, okDisable) {
-		this.propertiesStore.setOkButtonDisable(panelId, okDisable);
+	setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable) {
+		this.propertiesStore.setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable);
 	}
 
 	/**
 	* @param panelId {name: panel.id}
 	*/
-	getOkButtonDisable(panelId) {
-		return this.propertiesStore.getOkButtonDisable(panelId);
+	getWideFlyoutPrimaryButtonDisabled(panelId) {
+		return this.propertiesStore.getWideFlyoutPrimaryButtonDisabled(panelId);
 	}
 
 	isRequired(propertyId) {

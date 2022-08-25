@@ -60,7 +60,7 @@ export default class SidePanelModal extends React.Component {
 			invalidTableButtonPropertyId: true,
 			invalidSetStaticRowPropertyId: true,
 			invalidSetStaticRowIndexes: true,
-			invalidDisableOkButtonPanelId: true
+			invalidDisableWideFlyoutPrimaryButtonPanelId: true
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
@@ -92,9 +92,9 @@ export default class SidePanelModal extends React.Component {
 		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
 		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
-		this.disableOkButtonPanelId = this.disableOkButtonPanelId.bind(this);
-		this.setOkButtonDisabled = this.setOkButtonDisabled.bind(this);
-		this.disableOkButton = this.disableOkButton.bind(this);
+		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
+		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
+		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -249,24 +249,24 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	// Toggle to set Ok button enabled or disabled for summary panel
-	setOkButtonDisabled(disabled) {
-		this.props.propertiesConfig.setOkButtonDisabled(disabled);
+	setWideFlyoutPrimaryButtonDisabled(disabled) {
+		this.props.propertiesConfig.setWideFlyoutPrimaryButtonDisabled(disabled);
 	}
 
 	// Textfield to enter the summary panelId for disabling OK button in Wide Flyout panel
-	disableOkButtonPanelId(evt) {
+	disableWideFlyoutPrimaryButtonForPanelId(evt) {
 		try {
 			const panelId = JSON.parse(evt.target.value);
-			this.props.propertiesConfig.disableOkButtonPanelId(panelId);
-			this.setState({ invalidDisableOkButtonPanelId: false });
+			this.props.propertiesConfig.disableWideFlyoutPrimaryButtonForPanelId(panelId);
+			this.setState({ invalidDisableWideFlyoutPrimaryButtonPanelId: false });
 		} catch (ex) {
-			this.setState({ invalidDisableOkButtonPanelId: true });
+			this.setState({ invalidDisableWideFlyoutPrimaryButtonPanelId: true });
 		}
 	}
 
 	// Button to submit disable Ok button data and call propertiesController
-	disableOkButton(evt) {
-		this.props.propertiesConfig.disableOkButton();
+	disableWideFlyoutPrimaryButton(evt) {
+		this.props.propertiesConfig.disableWideFlyoutPrimaryButton();
 	}
 
 	submitProperties() {
@@ -798,36 +798,36 @@ export default class SidePanelModal extends React.Component {
 			</Button>
 		</div>);
 
-		const disableOkButtonPanelId = (
+		const disableWideFlyoutPrimaryButtonForPanelId = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-disable-ok-button-panelid">
 				<TextInput
 					labelText="Set the summary panel id for enabling/disabling OK button in Wide Flyout"
-					id="harness-panelId-disableOkButton"
+					id="harness-panelId-disableWideFlyoutPrimaryButton"
 					placeholder='{ "name": "panelId" }'
-					invalid={this.state.invalidDisableOkButtonPanelId}
+					invalid={this.state.invalidDisableWideFlyoutPrimaryButtonPanelId}
 					invalidText="Please enter valid JSON"
-					onChange={ this.disableOkButtonPanelId }
+					onChange={ this.disableWideFlyoutPrimaryButtonForPanelId }
 					helperText='PanelId format: {"name": "unique_id_for_panel"}'
 				/>
 			</div>
 		);
 
-		const setOkButtonDisabled = (
+		const setWideFlyoutPrimaryButtonDisabled = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-set-ok-button-disabled">
 				<Toggle
-					id="harness-sidepanel-setOkButtonDisabled-toggle"
+					id="harness-sidepanel-setWideFlyoutPrimaryButtonDisabled-toggle"
 					labelText="Set OK button disabled for the summary panelId entered above"
 					labelA="Enable Ok button"
 					labelB="Disable OK button"
-					toggled={this.props.propertiesConfig.okButtonDisabled}
-					onToggle={this.setOkButtonDisabled}
+					toggled={this.props.propertiesConfig.wideFlyoutPrimaryButtonDisabled}
+					onToggle={this.setWideFlyoutPrimaryButtonDisabled}
 				/>
 			</div>);
 
-		const disableOkButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-disable-ok-button-submit">
+		const disableWideFlyoutPrimaryButton = (<div className="harness-sidepanel-children" id="sidepanel-properties-disable-ok-button-submit">
 			<Button size="small"
-				disabled={this.state.invalidDisableOkButtonPanelId}
-				onClick={this.props.propertiesConfig.disableOkButton}
+				disabled={this.state.invalidDisableWideFlyoutPrimaryButtonPanelId}
+				onClick={this.props.propertiesConfig.disableWideFlyoutPrimaryButton}
 			>
 				Submit
 			</Button>
@@ -889,9 +889,9 @@ export default class SidePanelModal extends React.Component {
 				{setStaticRowsIndexes}
 				{submitStaticRows}
 				{divider}
-				{disableOkButtonPanelId}
-				{setOkButtonDisabled}
-				{disableOkButton}
+				{disableWideFlyoutPrimaryButtonForPanelId}
+				{setWideFlyoutPrimaryButtonDisabled}
+				{disableWideFlyoutPrimaryButton}
 			</div>
 		);
 	}
@@ -955,9 +955,9 @@ SidePanelModal.propTypes = {
 		conditionDisabledPropertyHandling: PropTypes.string,
 		enablePropertiesValidationHandler: PropTypes.func,
 		propertiesValidationHandler: PropTypes.bool,
-		okButtonDisabled: PropTypes.bool,
-		disableOkButtonPanelId: PropTypes.func,
-		setOkButtonDisabled: PropTypes.func,
-		disableOkButton: PropTypes.func
+		wideFlyoutPrimaryButtonDisabled: PropTypes.bool,
+		disableWideFlyoutPrimaryButtonForPanelId: PropTypes.func,
+		setWideFlyoutPrimaryButtonDisabled: PropTypes.func,
+		disableWideFlyoutPrimaryButton: PropTypes.func
 	})
 };

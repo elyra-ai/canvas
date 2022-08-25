@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { SET_OK_BUTTON_DISABLE } from "../actions";
+import { SET_WIDE_FLYOUT_PRIMARY_BUTTON_DISABLED } from "../actions";
 
-function setOkButtonDisable(state = [], action) {
+function setWideFlyoutPrimaryButtonDisabled(state = [], action) {
 	switch (action.type) {
-	case SET_OK_BUTTON_DISABLE: {
+	case SET_WIDE_FLYOUT_PRIMARY_BUTTON_DISABLED: {
 		const newState = state;
 		newState[action.info.panelId.name] = action.info.disableState;
 		return Object.assign({}, state, newState);
@@ -28,4 +28,4 @@ function setOkButtonDisable(state = [], action) {
 	}
 }
 
-export default setOkButtonDisable;
+export default setWideFlyoutPrimaryButtonDisabled;

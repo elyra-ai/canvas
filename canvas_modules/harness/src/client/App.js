@@ -245,8 +245,8 @@ class App extends React.Component {
 			tableButtonEnabled: true,
 			staticRowsPropertyId: {},
 			staticRowsIndexes: [],
-			disableOkButtonPanelId: {},
-			okButtonDisabled: false,
+			disableWideFlyoutPrimaryButtonForPanelId: {},
+			wideFlyoutPrimaryButtonDisabled: false,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -342,9 +342,9 @@ class App extends React.Component {
 		this.setStaticRows = this.setStaticRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
-		this.disableOkButtonPanelId = this.disableOkButtonPanelId.bind(this);
-		this.setOkButtonDisabled = this.setOkButtonDisabled.bind(this);
-		this.disableOkButton = this.disableOkButton.bind(this);
+		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
+		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
+		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -969,19 +969,19 @@ class App extends React.Component {
 	}
 
 	// Textfield to disable Ok button for given summary panel Id
-	disableOkButtonPanelId(panelId) {
-		this.setState({ disableOkButtonPanelId: panelId });
+	disableWideFlyoutPrimaryButtonForPanelId(panelId) {
+		this.setState({ disableWideFlyoutPrimaryButtonForPanelId: panelId });
 	}
 
 	// Toggle to set OK button enabled or disabled
-	setOkButtonDisabled(disabled) {
-		this.setState({ okButtonDisabled: disabled });
+	setWideFlyoutPrimaryButtonDisabled(disabled) {
+		this.setState({ wideFlyoutPrimaryButtonDisabled: disabled });
 	}
 
 	// Button to call propertiesController to set addRemoveRows
-	disableOkButton() {
+	disableWideFlyoutPrimaryButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setOkButtonDisable(this.state.disableOkButtonPanelId, this.state.okButtonDisabled);
+			this.propertiesController.setWideFlyoutPrimaryButtonDisabled(this.state.disableWideFlyoutPrimaryButtonForPanelId, this.state.wideFlyoutPrimaryButtonDisabled);
 		}
 	}
 
@@ -2705,10 +2705,10 @@ class App extends React.Component {
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
 			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
 			propertiesValidationHandler: this.state.propertiesValidationHandler,
-			okButtonDisabled: this.state.okButtonDisabled,
-			disableOkButtonPanelId: this.disableOkButtonPanelId,
-			setOkButtonDisabled: this.setOkButtonDisabled,
-			disableOkButton: this.disableOkButton
+			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
+			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
+			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
+			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton
 		};
 
 		const sidePanelAPIConfig = {
