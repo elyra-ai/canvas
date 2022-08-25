@@ -37,6 +37,7 @@
 
 .CodeMirror-gutters {
 	border-right: none;
+	background-color: inherit;
 }
 
 .cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
