@@ -299,6 +299,7 @@ class SummaryPanel extends React.Component {
 			rejectLabel={rejectLabel}
 			title={this.props.panel.label}
 			light={this.props.controller.getLight()}
+			okButtonEnabled={this.props.okButtonEnabled}
 		>
 			<div>
 				{this.props.children}
@@ -326,11 +327,13 @@ SummaryPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
 	panel: PropTypes.object.isRequired,
-	panelState: PropTypes.string // set by redux
+	panelState: PropTypes.string, // set by redux
+	okButtonEnabled: PropTypes.bool // set by redux
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id })
+	panelState: ownProps.controller.getPanelState({ name: ownProps.panel.id }),
+	okButtonEnabled: !ownProps.controller.getWideFlyoutPrimaryButtonDisabled({ name: ownProps.panel.id })
 });
 
 export default connect(mapStateToProps, null)(SummaryPanel);
