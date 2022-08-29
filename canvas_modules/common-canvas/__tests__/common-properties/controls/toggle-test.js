@@ -26,13 +26,10 @@ const controller = new Controller();
 
 const control = {
 	"name": "toggle",
-	"label": {
-		"text": "Toggle"
-	},
 	"values": [
-		"On",
-		"Off"
-	],
+		true,
+		false
+	]
 };
 
 propertyUtils.setControls(controller, [control]);
@@ -47,6 +44,45 @@ describe("toggle renders correctly", () => {
 		controller.setPropertyValues(
 			{ toggle: true }
 		);
+	});
+
+
+	it("toggle should set correct value", () => {
+		// In toggle.jsx we're setting toggled={this.props.value}
+		// And value: ownProps.controller.getPropertyValue(ownProps.propertyId)
+		// whatever boolean "value" we set in properties controller toggled
+		// property is getting that value, also in the DOM we dont see
+		// the value being changed upon click either, so we test value in
+		// Toggle props before & after setPropertyValues
+		const wrapper = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+
+		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
+		const toggle = toggleWrapper.find("Toggle");
+		expect(toggle.props()).to.have.property("toggled", true);
+
+		controller.setPropertyValues(
+			{ toggle: false }
+		);
+		const wrapper2 = mount(
+			<Toggle
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+
+		const toggleWrapper2 = wrapper2.find("div[data-id='properties-toggle']");
+		const toggle2 = toggleWrapper2.find("Toggle");
+		expect(toggle2.props()).to.have.property("toggled", false);
+
 	});
 
 	it("toggle props should have been defined", () => {
@@ -75,22 +111,6 @@ describe("toggle renders correctly", () => {
 		);
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
 		expect(toggleWrapper.hasClass("hide")).to.equal(true);
-	});
-
-	it("toggle should set correct value", () => {
-		const wrapper = mount(
-			<Toggle
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const toggleWrapper = wrapper.find("div.properties-toggle");
-		const image = toggleWrapper.find("svg");
-		expect(image).to.have.length(1);
-		image.simulate("click");
-		expect(controller.getPropertyValue(propertyId)).to.equal(true);
 	});
 
 });

@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-
 .properties-toggle {
-	.properties-toggle-label {
-		margin-left: $spacing-01;
-	}
-	.tooltip-container {
-		margin-left: $spacing-03;
-		margin-bottom: $spacing-02;
-		cursor: pointer;
-		.tooltip-trigger {
-			display: flex;
-		}
-	}
+	margin-bottom: 14px;
 }
