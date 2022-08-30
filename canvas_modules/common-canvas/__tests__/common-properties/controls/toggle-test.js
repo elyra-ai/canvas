@@ -46,14 +46,7 @@ describe("toggle renders correctly", () => {
 		);
 	});
 
-
 	it("toggle should set correct value", () => {
-		// In toggle.jsx we're setting toggled={this.props.value}
-		// And value: ownProps.controller.getPropertyValue(ownProps.propertyId)
-		// whatever boolean "value" we set in properties controller toggled
-		// property is getting that value, also in the DOM we dont see
-		// the value being changed upon click either, so we test value in
-		// Toggle props before & after setPropertyValues
 		const wrapper = mount(
 			<Toggle
 				store={controller.getStore()}
@@ -64,24 +57,11 @@ describe("toggle renders correctly", () => {
 		);
 
 		const toggleWrapper = wrapper.find("div[data-id='properties-toggle']");
-		const toggle = toggleWrapper.find("Toggle");
-		expect(toggle.props()).to.have.property("toggled", true);
-
-		controller.setPropertyValues(
-			{ toggle: false }
-		);
-		const wrapper2 = mount(
-			<Toggle
-				store={controller.getStore()}
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-
-		const toggleWrapper2 = wrapper2.find("div[data-id='properties-toggle']");
-		const toggle2 = toggleWrapper2.find("Toggle");
-		expect(toggle2.props()).to.have.property("toggled", false);
+		const toggle = toggleWrapper.find("input");
+		expect(toggle.getDOMNode().checked).to.equal(true);
+		toggle.getDOMNode().checked = false;
+		toggle.simulate("change");
+		expect(controller.getPropertyValue(propertyId)).to.equal(false);
 
 	});
 
