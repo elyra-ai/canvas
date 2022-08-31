@@ -30,11 +30,11 @@
     },
     {
       "id": "toggle_table",
-      "type": "array[togglees]"
+      "type": "array[toggles]"
     },
     {
       "id": "toggle_table_cond",
-      "type": "array[togglees]"
+      "type": "array[toggles]"
     },
     {
       "id": "toggle_default",
@@ -74,7 +74,7 @@
   ],
   "complex_types": [
     {
-      "id": "togglees",
+      "id": "toggles",
       "parameters": [
         {
           "id": "toggle",
@@ -219,7 +219,7 @@
     ],
     "complex_type_info": [
       {
-        "complex_type_ref": "togglees",
+        "complex_type_ref": "toggles",
         "parameters": [
           {
             "parameter_ref": "toggle",
