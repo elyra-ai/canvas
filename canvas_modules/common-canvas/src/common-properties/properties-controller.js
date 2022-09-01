@@ -1639,6 +1639,22 @@ export default class PropertiesController {
 		return this.propertiesStore.getSaveButtonDisable();
 	}
 
+	/**
+	* Enable/disable OK button for given summary panel
+	* @param panelId {name: panel.id}
+	* @param wideFlyoutPrimaryButtonDisable boolean
+	*/
+	setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable) {
+		this.propertiesStore.setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable);
+	}
+
+	/**
+	* @param panelId {name: panel.id}
+	*/
+	getWideFlyoutPrimaryButtonDisabled(panelId) {
+		return this.propertiesStore.getWideFlyoutPrimaryButtonDisabled(panelId);
+	}
+
 	isRequired(propertyId) {
 		const control = this.getControl(propertyId);
 		if (control) {

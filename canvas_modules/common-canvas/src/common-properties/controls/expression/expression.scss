@@ -35,6 +35,11 @@
 	border-left: 1px solid $text-01;
 }
 
+.CodeMirror-gutters {
+	border-right: none;
+	background-color: inherit;
+}
+
 .cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
 
 .cm-s-warning.CodeMirror { border: $spacing-01 solid $support-03; }

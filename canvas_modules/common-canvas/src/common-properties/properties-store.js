@@ -25,7 +25,7 @@ import { setActionStates, updateActionState } from "./actions";
 import { clearSelectedRows, updateSelectedRows, disableRowMoveButtons } from "./actions";
 import { clearStaticRows, updateStaticRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
-import { setDatasetMetadata, setSaveButtonDisable, setAddRemoveRows, setTableButtonEnabled, setHideEditButton } from "./actions";
+import { setDatasetMetadata, setSaveButtonDisable, setWideFlyoutPrimaryButtonDisabled, setAddRemoveRows, setTableButtonEnabled, setHideEditButton } from "./actions";
 import { setTitle, setActiveTab } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
@@ -38,6 +38,7 @@ import rowFreezeReducer from "./reducers/row-static";
 import componentMetadataReducer from "./reducers/component-metadata";
 import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
 import saveButtonDisableReducer from "./reducers/save-button-disable";
+import wideFlyoutPrimaryButtonDisableReducer from "./reducers/wide-flyout-primary-button-disable";
 import propertiesSettingsReducer from "./reducers/properties-settings";
 import tearsheetStatesReducer from "./reducers/tearsheet-states";
 import * as PropertyUtils from "./util/property-utils.js";
@@ -49,7 +50,8 @@ export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
 			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer,
-			disableRowMoveButtonsReducer, actionStatesReducer, tearsheetStatesReducer, saveButtonDisableReducer, propertiesSettingsReducer, rowFreezeReducer });
+			disableRowMoveButtonsReducer, actionStatesReducer, wideFlyoutPrimaryButtonDisableReducer, tearsheetStatesReducer,
+			saveButtonDisableReducer, propertiesSettingsReducer, rowFreezeReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -218,6 +220,22 @@ export default class PropertiesStore {
 	getSaveButtonDisable() {
 		const state = this.store.getState();
 		return state.saveButtonDisableReducer.disable;
+	}
+
+	setWideFlyoutPrimaryButtonDisabled(panelId, disableState) {
+		this.store.dispatch(setWideFlyoutPrimaryButtonDisabled({ panelId: panelId, disableState: disableState }));
+	}
+
+	getWideFlyoutPrimaryButtonDisabled(panelId) {
+		if (typeof panelId === "undefined") {
+			return null;
+		}
+		const state = this.store.getState();
+		const disablePrimaryButtonForPanel = state.wideFlyoutPrimaryButtonDisableReducer[panelId.name];
+		if (typeof disablePrimaryButtonForPanel !== "undefined") {
+			return disablePrimaryButtonForPanel;
+		}
+		return null;
 	}
 
 	/*
