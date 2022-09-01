@@ -42,6 +42,7 @@ export const UPDATE_STATIC_ROWS = "UPDATE_STATIC_ROWS";
 export const CLEAR_STATIC_ROWS = "CLEAR_STATIC_ROWS";
 export const SET_TABLE_BUTTON_ENABLED = "SET_TABLE_BUTTON_ENABLED";
 export const SET_HIDE_EDIT_BUTTON = "SET_HIDE_EDIT_BUTTON";
+export const SET_ACTIVE_TEARSHEET = "SET_ACTIVE_TEARSHEET";
 
 
 /*
@@ -143,4 +144,8 @@ export function clearStaticRows(info) {
 
 export function setTableButtonEnabled(info) {
 	return { type: SET_TABLE_BUTTON_ENABLED, info };
+}
+
+export function setTearsheetState(tearsheetId) {
+	return { type: SET_ACTIVE_TEARSHEET, tearsheetId };
 }

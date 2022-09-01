@@ -113,6 +113,10 @@ export class ParameterDef {
 		if (settings.language) {
 			this.language = settings.language;
 		}
+		if (settings.enableMaximize) {
+			this.enableMaximize = settings.enableMaximize;
+		}
+
 		if (toType(settings.summary) === "boolean") {
 			this.summary = settings.summary;
 		}
@@ -314,6 +318,7 @@ export class ParameterDef {
 		if (param) {
 			return new ParameterDef({
 				"id": propertyOf(param)("id"),
+				"enableMaximize": propertyOf(uihint)("enable_maximize"),
 				"label": propertyOf(uihint)("label"),
 				"description": propertyOf(uihint)("description"),
 				"type": propertyOf(param)("type"),

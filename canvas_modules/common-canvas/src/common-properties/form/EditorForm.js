@@ -238,6 +238,23 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.open));
 	}
+	case GroupType.TEARSHEET_PANEL: {
+		groupLabel = l10nProvider.l10nLabel(group, group.name);
+		const panSubItems = [];
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				parameterMetadata.paramDefs.forEach((param) => {
+					param.parentTearsheetId = groupName;
+					return param;
+				});
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem.parentId = groupName;
+				panSubItems.push(groupItem);
+			});
+		}
+		// return _makeUIItem(parameterMetadata, actionMetadata, group.subGroups[0], structureMetadata, l10nProvider);
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, false));
+	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
 		return null;
@@ -605,6 +622,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.moveableRows = moveableRows;
 	settings.required = required;
 	settings.language = parameter.language;
+	settings.enableMaximize = parameter.enableMaximize;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;
 	settings.rowSelection = rowSelection;
@@ -625,7 +643,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
-
+	if (parameter.parentTearsheetId) {
+		settings.parentTearsheetId = parameter.parentTearsheetId;
+	}
 	if (isSubControl) {
 		settings.visible = parameter.visible;
 		settings.width = parameter.columns(8);

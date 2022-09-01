@@ -53,7 +53,8 @@ const GroupType = {
 	ACTION_PANEL: "actionPanel",
 	TEXT_PANEL: "textPanel",
 	TWISTY_PANEL: "twistyPanel",
-	COLUMN_PANEL: "columnPanel"
+	COLUMN_PANEL: "columnPanel",
+	TEARSHEET_PANEL: "tearsheetPanel"
 };
 
 const PanelType = {
@@ -63,7 +64,8 @@ const PanelType = {
 	SUMMARY: "summary",
 	ACTION_PANEL: "actionPanel",
 	TWISTY_PANEL: "twisty",
-	COLUMN_PANEL: "column"
+	COLUMN_PANEL: "column",
+	TEARSHEET: "tearsheet"
 };
 
 const ControlType = {

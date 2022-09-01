@@ -34,6 +34,7 @@ import ControlPanel from "./../../panels/control";
 import Subtabs from "./../../panels/subtabs";
 
 import WideFlyout from "./../wide-flyout";
+import TearSheet from "../../panels/tearsheet";
 import FieldPicker from "./../field-picker";
 import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
@@ -426,6 +427,19 @@ class EditorForm extends React.Component {
 				>
 					{content}
 				</TwistyPanel>);
+		case ("tearsheet"):
+			return (
+				<div>
+					<TearSheet
+						key={id}
+						controller={this.props.controller}
+						panel={panel}
+					>
+						{content}
+					</TearSheet>
+					{content}
+				</div>
+			);
 		case ("column"):
 			return (
 				<ColumnPanel
