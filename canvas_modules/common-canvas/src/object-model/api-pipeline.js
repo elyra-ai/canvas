@@ -1020,29 +1020,19 @@ export default class APIPipeline {
 	// occupied by an existing comment.
 	getAdjustedCommentPosition(comPos) {
 		const stgType = this.objectModel.getCanvasConfig().enableSnapToGridType;
-		const isSnapToGrid = (stgType === SNAP_TO_GRID_DURING || stgType === SNAP_TO_GRID_AFTER);
 		const pos = { x_pos: comPos.x, y_pos: comPos.y };
 
 		while (this.exactlyOverlaps(null, [pos], null)) {
-			pos.x_pos += this.getCommentPosXInc(isSnapToGrid);
-			pos.y_pos += this.getCommentPosYInc(isSnapToGrid);
+			if (stgType === SNAP_TO_GRID_DURING || stgType === SNAP_TO_GRID_AFTER) {
+				pos.x_pos += this.objectModel.getCanvasLayout().snapToGridXPx;
+				pos.y_pos += this.objectModel.getCanvasLayout().snapToGridYPx;
+			} else {
+				pos.x_pos += 10;
+				pos.y_pos += 10;
+			}
 		}
 
 		return pos;
-	}
-
-	getCommentPosXInc(isSnapToGrid) {
-		if (isSnapToGrid) {
-			return this.objectModel.getCanvasLayout().snapToGridXPx;
-		}
-		return 10;
-	}
-
-	getCommentPosYInc(isSnapToGrid) {
-		if (isSnapToGrid) {
-			return this.objectModel.getCanvasLayout().snapToGridYPx;
-		}
-		return 10;
 	}
 
 	// Deletes the comment specified by the id passed in.
