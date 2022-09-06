@@ -977,6 +977,17 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getComment(comId);
 	}
 
+	// Returns a position object which indicates the position of where a new
+	// comment should be placed in a situation where the mouse position cannot be
+	// used (e.g. the toolbar button was clicked).
+	// pipelineId - The ID of the pipeline
+	getNewCommentPosition(pipelineId) {
+		const apiPipeline = this.objectModel.getAPIPipeline(pipelineId);
+		const defComPos = this.getSVGCanvasD3().getDefaultCommentOffset();
+		const newComPos = apiPipeline.getAdjustedCommentPosition(defComPos);
+		return { x: newComPos.x_pos, y: newComPos.y_pos };
+	}
+
 	// Creates a comment for the pipeline.
 	// source - Input data
 	// pipelineId - The ID of the pipeline
@@ -2361,8 +2372,8 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoComment": {
-				const svgPos = this.getSVGCanvasD3().getSvgViewportOffset();
-				command = new CreateCommentAction(data, this.objectModel, this.labelUtil, svgPos);
+				const comPos = this.getNewCommentPosition(data.pipelineId);
+				command = new CreateCommentAction(data, this.objectModel, this.labelUtil, comPos);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
