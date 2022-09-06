@@ -45,10 +45,10 @@ class ToggleControl extends React.Component {
 
 		const labelOn = this.props.controller.getResource(overrideLabelKeyOn, defaultOnEditLabel);
 		const labelOff = this.props.controller.getResource(overrideLabelKeyOff, defaultOffEditLabel);
-
+		const size = this.props.tableControl ? "sm" : "md";
 		const toggleControl = (<Toggle
 			id={this.id}
-			size="sm"
+			size={size}
 			disabled={this.props.state === STATES.DISABLED}
 			toggled={this.props.value}
 			labelB={labelOn}
