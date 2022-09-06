@@ -13,24 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as testUtils from "../../utils/eventlog-utils";
 
-describe("Test of canvas comments", function() {
+describe("Test creating comments", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test adding a comment", function() {
+	it("Test adding a comment using the toolbar without snap to grid", function() {
 		cy.clickToolbarAddComment();
+		cy.verifyCreateAutoCommentCommand(30, 50);
 
-		cy.document().then((doc) => {
-			const lastEventLog = testUtils.getLastEventLogData(doc);
-			expect("createAutoComment").to.equal(lastEventLog.data.editType);
-			expect("toolbar").to.equal(lastEventLog.data.editSource);
-			expect(30).to.equal(lastEventLog.data.mousePos.x);
-			expect(50).to.equal(lastEventLog.data.mousePos.y);
-		});
+		// Change the text and test its position
+		cy.editTextInComment("", "First comment");
+		cy.verifyCommentTransform("First comment", 30, 50);
+
+		// Second comment should be offset from the first by 10px (with no snap to grid).
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "Second comment");
+		cy.verifyCommentTransform("Second comment", 40, 60);
+	});
+
+	it("Test adding a comment using the toolbar with snap to grid: During", function() {
+		cy.setCanvasConfig({ "selectedSnapToGridType": "During" });
+		cy.clickToolbarAddComment();
+		cy.verifyCreateAutoCommentCommand(35, 45);
+
+		// Change the text and test its position
+		cy.editTextInComment("", "First comment");
+		cy.verifyCommentTransform("First comment", 35, 45);
+
+		// Second comment should be offset from the first by 18px (with snap to grid).
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "Second comment");
+		cy.verifyCommentTransform("Second comment", 53, 60);
+	});
+
+	it("Test adding a comment using the toolbar with snap to grid: After", function() {
+		cy.setCanvasConfig({ "selectedSnapToGridType": "After" });
+		cy.clickToolbarAddComment();
+		cy.verifyCreateAutoCommentCommand(35, 45);
+
+		// Change the text and test its position
+		cy.editTextInComment("", "First comment");
+		cy.verifyCommentTransform("First comment", 35, 45);
+
+		// Second comment should be offset from the first by 18px (with snap to grid).
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "Second comment");
+		cy.verifyCommentTransform("Second comment", 53, 60);
 	});
 });
 
