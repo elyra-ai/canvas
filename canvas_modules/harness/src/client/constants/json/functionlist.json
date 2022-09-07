@@ -6504,6 +6504,8 @@
 	},
 	"resources": {
 		"globals.field_column_info.label": "Field",
-		"globals.label": "Globals"
+		"globals.label": "Globals",
+		"expression.fields.empty.table.label": "There are no fields",
+		"expression.values.empty.table.label": "There are no values"
 	}
 }

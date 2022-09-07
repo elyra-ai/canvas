@@ -24,6 +24,8 @@ import ExpressionBuilder from "../../../src/common-properties/controls/expressio
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
+import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
+import * as messages from "./../../../locales/common-properties/locales/en.json";
 
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
@@ -182,9 +184,11 @@ describe("expression-control renders correctly", () => {
 });
 
 describe("expression-builder renders correctly", () => {
+	beforeEach(() => {
+		reset();
+	});
 
 	it("expression builder props should have been defined", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -201,7 +205,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("should render a `ExpressionBuilder`", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -222,7 +225,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("Fields and Values tables should have aria-label", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -244,7 +246,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("Functions table should have aria-label", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -262,6 +263,110 @@ describe("expression-builder renders correctly", () => {
 		expect(functionsTable.props()).to.have.property("aria-label", "Functions table");
 	});
 
+	it("Fields and Values tables should display default empty label if no values", () => {
+		// Remove datasetmetadata
+		controller.setDatasetMetadata([]);
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL];
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const fieldsTable = wrapper.find("div.properties-field-table-container");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL]);
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL]);
+	});
+
+	it("Fields and Values tables should display custom empty label if no values", () => {
+		// Remove datasetmetadata
+		controller.setDatasetMetadata([]);
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const fieldsTable = wrapper.find("div.properties-field-table-container");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL]);
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL]);
+	});
+
+	it("Functions table should display default empty label if no values", () => {
+		// Remove function_refs
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		expressionInfo.functions.function_categories[0].function_refs = [];
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// Switch to functions
+		const contentSwitcher = wrapper.find(".properties-expression-selection-content-switcher");
+		expect(contentSwitcher).to.have.length(1);
+		const buttons = contentSwitcher.find("button");
+		expect(buttons).to.have.length(2);
+		buttons.at(1).simulate("click");
+
+		const functionsTable = wrapper.find("div.properties-functions-table-container");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS]);
+	});
+
+	it("Functions table should display custom empty label if no values", () => {
+		// Remove function_refs
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		expressionInfo.functions.function_categories[0].function_refs = [];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// Switch to functions
+		const contentSwitcher = wrapper.find(".properties-expression-selection-content-switcher");
+		expect(contentSwitcher).to.have.length(1);
+		const buttons = contentSwitcher.find("button");
+		expect(buttons).to.have.length(2);
+		buttons.at(1).simulate("click");
+
+		const functionsTable = wrapper.find("div.properties-functions-table-container");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS]);
+	});
 });
 
 describe("expression-builder select from tables correctly", () => {

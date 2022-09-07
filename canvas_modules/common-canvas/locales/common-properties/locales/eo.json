@@ -51,6 +51,8 @@
   "expression.builder.label": "[Esperanto~Expression~~~~~~eo]",
   "expression.fields.table.label": "[Esperanto~Fields table~eo]",
   "expression.values.table.label": "[Esperanto~Values table~eo]",
+  "expression.fields.empty.table.label": "[Esperanto~No fields found~eo]",
+  "expression.values.empty.table.label": "[Esperanto~No values found~eo]",
   "expression.functions.table.label": "[Esperanto~Functions table~eo]",
   "expression.fields.dropdown": "[Esperanto~Fields~eo]",
   "expression.fields.title": "[Esperanto~Fields~eo]",

@@ -51,6 +51,8 @@
   "expression.builder.label": "Expression",
   "expression.fields.table.label": "Fields table",
   "expression.values.table.label": "Values table",
+  "expression.fields.empty.table.label": "No fields found",
+  "expression.values.empty.table.label": "No values found",
   "expression.functions.table.label": "Functions table",
   "expression.fields.dropdown": "Fields",
   "expression.fields.title": "Fields",
