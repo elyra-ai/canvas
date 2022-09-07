@@ -56,11 +56,6 @@
 		}
 	}
 
-	/* Override so Codemirror autocomplete shows up on top */
-	.CodeMirror-hints {
-		z-index: 1110;
-	}
-
 	.cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
 
 	.cm-s-warning.CodeMirror { border: $spacing-01 solid $support-03; }
@@ -90,6 +85,11 @@
 	.cm-s-custom .cm-string-2 { color: $text-error; }
 
 	.cm-s-custom .cm-meta { color: $ui-01; }
+}
+
+/* Override so Codemirror autocomplete shows up on top */
+.CodeMirror-hints {
+	z-index: 1110;
 }
 
 .properties-expression-editor {
