@@ -480,7 +480,7 @@ describe("condition renders correctly with structure table control", () => {
 			"type": "error",
 			"text": "order cannot be descending"
 		};
-		expect(renderedController.getErrorMessages(conditionsPropertyId)[0]).to.eql(errorMessage);
+		expect(renderedController.getErrorMessages(conditionsPropertyId)[2]).to.eql(errorMessage);
 		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableErrors']");
 		expect(tableWrapper.find("div.properties-validation-message span").text()).to.equal(errorMessage.text);
 	});

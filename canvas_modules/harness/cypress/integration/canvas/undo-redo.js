@@ -52,8 +52,8 @@ describe("Test basic undo/redo operations", function() {
 		// Add comment to selected node
 		cy.clickNode("Select");
 		cy.clickToolbarAddComment();
+		cy.moveCommentToPosition("", 350, 250);
 		cy.editTextInComment("", "This comment box should be linked to the Select node.");
-		cy.moveCommentToPosition("This comment box should be linked to the Select node.", 350, 250);
 
 		// Edit comment
 		cy.editTextInComment(

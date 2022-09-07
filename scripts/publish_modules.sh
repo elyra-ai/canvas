@@ -58,5 +58,5 @@ echo "Updated main build $NPM_VERSION"
 commit_changes ${MAIN} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"
 
 echo "Publishing Elyra Canvas $NPM_VERSION to Artifactory NPM"
-echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-npm publish
+echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+npm publish --userconfig=~/.npmrc

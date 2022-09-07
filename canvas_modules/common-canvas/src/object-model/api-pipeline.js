@@ -30,6 +30,7 @@ import { cloneDeep, get, has, set } from "lodash";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
 	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CREATE_COMMENT, CREATE_NODE_LINK, CREATE_COMMENT_LINK,
+	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -1017,12 +1018,18 @@ export default class APIPipeline {
 	// Returns a position for a new comment added by clicking the 'add comment'
 	// button on the toolbar. It searches for a position that is not already
 	// occupied by an existing comment.
-	getNewCommentPosition(svgPos) {
-		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
+	getAdjustedCommentPosition(comPos) {
+		const stgType = this.objectModel.getCanvasConfig().enableSnapToGridType;
+		const pos = { x_pos: comPos.x, y_pos: comPos.y };
 
 		while (this.exactlyOverlaps(null, [pos], null)) {
-			pos.x_pos += 10;
-			pos.y_pos += 10;
+			if (stgType === SNAP_TO_GRID_DURING || stgType === SNAP_TO_GRID_AFTER) {
+				pos.x_pos += this.objectModel.getCanvasLayout().snapToGridXPx;
+				pos.y_pos += this.objectModel.getCanvasLayout().snapToGridYPx;
+			} else {
+				pos.x_pos += 10;
+				pos.y_pos += 10;
+			}
 		}
 
 		return pos;
@@ -1144,19 +1151,32 @@ export default class APIPipeline {
 		return linkNodeList;
 	}
 
+	// Creates a node link from the srcInfo and trgInfo and other link 'data'
+	// passed in.
 	createNodeLink(srcInfo, trgInfo, data) {
 		const srcNode = this.getNode(srcInfo.id);
 		const trgNode = this.getNode(trgInfo.id);
 		const links = this.getLinks();
 
-		if (CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type)) {
+		if ((srcInfo.srcPos && trgInfo.trgPos) || // Fully detached
+				(srcInfo.srcPos && CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(trgInfo.portId, trgNode, links)) || // Semi-detached
+				(trgInfo.trgPos && CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(srcInfo.portId, srcNode, links)) || // Semi-detached
+				(CanvasUtils.isConnectionAllowed(srcInfo.portId, trgInfo.portId, srcNode, trgNode, links, data.type))) { // Fully attached
 			const link = {};
-			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.id = data.id ? data.id : this.objectModel.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": trgNode });
 			link.type = data.type;
-			link.srcNodeId = srcInfo.id;
-			link.srcNodePortId = srcInfo.portId;
-			link.trgNodeId = trgInfo.id;
-			link.trgNodePortId = trgInfo.portId;
+			if (srcInfo.srcPos) {
+				link.srcPos = srcInfo.srcPos;
+			} else {
+				link.srcNodeId = srcInfo.id;
+				link.srcNodePortId = srcInfo.portId;
+			}
+			if (trgInfo.trgPos) {
+				link.trgPos = trgInfo.trgPos;
+			} else {
+				link.trgNodeId = trgInfo.id;
+				link.trgNodePortId = trgInfo.portId;
+			}
 			if (data.class_name) {
 				link.class_name = data.class_name;
 			}

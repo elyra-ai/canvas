@@ -50,7 +50,7 @@ describe("Test of action image tooltip direction", function() {
 
 	it("When tooltip_direction is not specified, default direction is bottom", function() {
 		// Click "Conditions" catgeory
-		cy.get(".properties-category-title").eq(1)
+		cy.get(".properties-category-title").eq(2)
 			.click();
 		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");

@@ -181,21 +181,22 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single input port. Multiple input ports will be
+		// Position of right single output port. Multiple input ports will be
 		// automatically positioned with the Y coordinate being overriden. These
 		// values are an offset from the top right corner of the node outline.
 		// Used when linkDirection is "LeftRight".
+		outputPortRightPosition: "topRight",
 		outputPortRightPosX: 0,
 		outputPortRightPosY: 20,
 
-		// Position of top single input port. Multiple input ports will be
+		// Position of top single output port. Multiple input ports will be
 		// automatically positioned with the X coordinate being overriden. These
 		// values are an offset from the top left corner of the node outline.
 		// Used when linkDirection is "BottomTop".
 		outputPortTopPosX: 80,
 		outputPortTopPosY: 0,
 
-		// Position of bottom single input port. Multiple input ports will be
+		// Position of bottom single output port. Multiple input ports will be
 		// automatically positioned with the X coordinate being overriden. These
 		// values are an offset from the bottom left corner of the node outline.
 		// Used when linkDirection is "TopBottom".
@@ -353,7 +354,8 @@ const portsHorizontalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
@@ -574,6 +576,7 @@ const portsVerticalDefaultLayout = {
 		// automatically positioned with the Y coordinate being overriden. These
 		// values are an offset from the top right corner of the node outline.
 		// Used when linkDirection is "LeftRight".
+		outputPortRightPosition: "topRight",
 		outputPortRightPosX: 0,
 		outputPortRightPosY: 29,
 
@@ -742,7 +745,8 @@ const portsVerticalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,

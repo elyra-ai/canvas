@@ -34,7 +34,7 @@
 	}
 	.properties-title-editor-btn.help {
 		&.help {
-			margin: 0 0 0 $spacing-02; // spacing between heading label and help button
+			margin-left: $spacing-02; // spacing between heading label and help button
 		}
 	}
 }
@@ -82,21 +82,6 @@
 // warning and invalid icons should be aligned with close icon. And input field should stretch full width
 .properties-title-editor-with-warning, .properties-title-editor-with-error {
 	width: calc(100% - 2px); // subtract 2px for input active right border
-}
-
-.properties-title-editor-btn.help, .properties-title-editor-btn.edit {
-	fill: $icon-02;
-	// edit & help buttons size - 32x32
-	width: $spacing-07;
-	min-height: $spacing-07;
-	padding-left: $spacing-04;
-	padding-right: $spacing-04;
-	&:hover {
-		background-color: $ui-03;
-	}
-	&:active {
-		background-color: $ui-03;
-	}
 }
 
 // Close icon without heading

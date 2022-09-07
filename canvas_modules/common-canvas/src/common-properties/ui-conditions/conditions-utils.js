@@ -80,6 +80,7 @@ function validatePropertiesConditions(controller) {
 *
 * @param {object} properties controller. required
 * @param {object} list of control objects or properties. required
+* @param {boolean} showErrors. optional. Set to false to run conditions without displaying errors in the UI
 */
 function validatePropertiesListValues(controller, controls, showErrors) {
 	if (Object.keys(controls).length > 0) {
@@ -697,7 +698,8 @@ function _validateInput(propertyId, controller, control, showErrors) {
 
 				// Determine if this condition is for required parameters
 				errorMessage.required = requiredDefinitionsIds.indexOf(validation.definition.validation.id) > -1;
-				if (!showErrors) {
+				// Only show warning messages for "colDoesExists" condition
+				if (!showErrors && !validation.alwaysShow) {
 					errorMessage.displayError = false;
 				}
 
@@ -1127,6 +1129,7 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
 	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.INVALID_FIELD_ERROR, { label: label });
+	// Note: Please don't update "validField_" in validation id. It is used as identifier in another condition.
 	const injectedDefinition = {
 		params: keyName,
 		definition: {
@@ -1140,23 +1143,14 @@ function _injectInvalidFieldDefinition(control, valDefinitions, keyName, control
 					focus_parameter_ref: keyName
 				},
 				evaluate: {
-					or: [
-						{
-							condition: {
-								parameter_ref: keyName,
-								op: "colDoesExists"
-							}
-						},
-						{
-							condition: {
-								parameter_ref: keyName,
-								op: "isEmpty"
-							}
-						}
-					]
+					condition: {
+						parameter_ref: keyName,
+						op: "colDoesExists"
+					}
 				}
 			}
-		}
+		},
+		alwaysShow: true
 	};
 		// add the new definition to the set of validation definitions for this control.
 	if (valDefinitions.controls[keyName]) {

@@ -28,6 +28,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			isOpen: false
+		};
+
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.categorySelected = this.categorySelected.bind(this);
@@ -87,24 +91,38 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return content;
 	}
 
+	// Returns the category object for a regular category.
 	getRenderCategory() {
-		let itemImage = null;
-		if (this.props.category.image && this.props.category.image !== "") {
-			if (this.props.category.image.endsWith(".svg")) {
-				itemImage = (
-					<div>
-						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
-					</div>
-				);
-			} else {
-				itemImage = (
-					<div>
-						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
-					</div>
-				);
-			}
-		}
+		const titleObj = this.getTitleObj();
+		const content = this.getContent();
+		return (
+			<AccordionItem title={titleObj} onHeadingClick={({ isOpen }) => this.setState({ isOpen })}>
+				{content}
+			</AccordionItem>
+		);
+	}
 
+	// Returns the title object for the category consisting of the image and text.
+	getTitleObj() {
+		const itemImage = this.getItemImage();
+		const itemText = this.getItemText();
+		return (
+			<div className="palette-flyout-category"
+				data-id={get(this.props.category, "id", "")}
+				onClick={this.categorySelected}
+				value={this.props.category.label}
+				onMouseOver={this.onMouseOver}
+				onMouseLeave={this.onMouseLeave}
+			>
+				<div className="palette-flyout-category-item">
+					{itemImage}
+					{itemText}
+				</div></div>
+		);
+	}
+
+	// Returns the text for the category
+	getItemText() {
 		let itemText = null;
 		const label = this.getDisplayLabel();
 		if (this.props.isPaletteOpen === true) {
@@ -125,22 +143,39 @@ class PaletteFlyoutContentCategory extends React.Component {
 				</span>
 			);
 		}
-		const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
-		const titleObj = (
-			<div className="palette-flyout-category"
-				data-id={get(this.props.category, "id", "")}
-				onClick={this.categorySelected}
-				value={this.props.category.label}
-				onMouseOver={this.onMouseOver}
-				onMouseLeave={this.onMouseLeave}
-			>
-				<div className="palette-flyout-category-item">
-					{itemImage}
-					{itemText}
-				</div></div>
-		);
-		return (
-			<AccordionItem title={titleObj}>
+		return itemText;
+	}
+
+	// Returns the image for the category
+	getItemImage() {
+		let itemImage = null;
+		if (this.props.category.image && this.props.category.image !== "") {
+			if (this.props.category.image.endsWith(".svg")) {
+				itemImage = (
+					<div>
+						<SVG src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+					</div>
+				);
+			} else {
+				itemImage = (
+					<div>
+						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+					</div>
+				);
+			}
+		}
+		return itemImage;
+	}
+
+	// Returns the content object for the AccordionItem. This is only set to
+	// something if the category is open (that is: isOpen is true). It is useful
+	// to remove the nodes from the DOM when the category is closed because this
+	// can help inline SVG icons on the canvas, that reference elements in the
+	// <defs> element, to appear correclty.
+	getContent() {
+		if (this.state.isOpen) {
+			const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
+			return (
 				<PaletteContentList
 					key={this.props.category.id + "-nodes"}
 					category={this.props.category}
@@ -149,8 +184,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 					isPaletteOpen={this.props.isPaletteOpen}
 					isEditingEnabled={this.props.isEditingEnabled}
 				/>
-			</AccordionItem>
-		);
+			);
+		}
+		return null;
 	}
 
 	categorySelected() {
@@ -158,14 +194,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	render() {
-		let content = null;
-		if (this.props.category.loading_text) {
-			content = this.getInlineLoadingRenderCategory();
-		} else {
-			content = this.getRenderCategory();
-		}
-
-		return content;
+		return this.props.category.loading_text
+			? this.getInlineLoadingRenderCategory()
+			: this.getRenderCategory();
 	}
 }
 

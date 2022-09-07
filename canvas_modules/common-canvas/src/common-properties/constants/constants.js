@@ -126,6 +126,11 @@ export const CONDITION_MESSAGE_TYPE = {
 
 export const SPINNER = "spinner";
 
+
+export const UPDATE_TYPE = {
+	INITIAL_LOAD: "initial_load"
+};
+
 export const DATA_TYPE = {
 	INTEGER: "integer",
 	DOUBLE: "double",

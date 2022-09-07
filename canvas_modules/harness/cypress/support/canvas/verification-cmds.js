@@ -80,6 +80,17 @@ Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 		});
 });
 
+Cypress.Commands.add("verifyCreateAutoCommentCommand", (x, y) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect("createAutoComment").to.equal(lastEventLog.data.editType);
+		expect("toolbar").to.equal(lastEventLog.data.editSource);
+		expect(x).to.equal(lastEventLog.data.mousePos.x);
+		expect(y).to.equal(lastEventLog.data.mousePos.y);
+	});
+});
+
+
 Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
 	cy.get(".svg-area > g")
 		.eq(0)
@@ -1367,7 +1378,7 @@ function getNodeImageSelector(node) {
 }
 
 function getNodeLabelSelector(node) {
-	return getNodeGroupSelector(node) + " > .d3-foreign-object";
+	return getNodeGroupSelector(node) + " > .d3-foreign-object-node-label";
 }
 
 function getCommentSelectionOutlineSelector(comment) {

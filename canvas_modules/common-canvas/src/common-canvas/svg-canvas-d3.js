@@ -163,8 +163,8 @@ export default class SVGCanvasD3 {
 		}
 	}
 
-	getSvgViewportOffset() {
-		return this.renderer.getSvgViewportOffset();
+	getDefaultCommentOffset() {
+		return this.renderer.getDefaultCommentOffset();
 	}
 
 	getTransformedViewportDimensions() {

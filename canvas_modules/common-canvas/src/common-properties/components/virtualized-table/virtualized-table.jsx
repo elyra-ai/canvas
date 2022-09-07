@@ -396,6 +396,11 @@ class VirtualizedTable extends React.Component {
 					onMouseLeave={(evt) => this.overSelectOption(evt)}
 					onFocus={(evt) => this.overSelectOption(evt)}
 					onBlur={(evt) => this.overSelectOption(evt)}
+					onKeyDown={(evt) => {
+						if (evt.code === "Space" || evt.code === "Enter") {
+							this.onRowClick(evt, rowData, index);
+						}
+					}}
 				>
 					<Checkbox
 						id={`properties-vt-row-cb-${scrollKey}-${index}`}
@@ -442,11 +447,6 @@ class VirtualizedTable extends React.Component {
 				role="row"
 				style={newStyle}
 				onMouseDown={(evt) => this.onRowClick(evt, rowData, index)}
-				onKeyPress={(evt) => {
-					if (evt.code === "Space" || evt.code === "Enter") {
-						this.onRowClick(evt, rowData, index);
-					}
-				}}
 			>
 				{selectOption}
 				{columns}

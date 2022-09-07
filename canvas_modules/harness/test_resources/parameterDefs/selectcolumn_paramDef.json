@@ -3,7 +3,7 @@
     "title": "Select Column"
   },
   "current_parameters": {
-    "field": "age",
+    "field": "Age",
     "field_null": null,
     "field_empty_string": "",
     "field_placeholder": "",
@@ -180,7 +180,7 @@
           "default": "Field"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'age'"
+          "default": "selectcolumn with parameter value set to 'Age'"
         },
         "class_name": "selectcolumn-control-class"
       },
