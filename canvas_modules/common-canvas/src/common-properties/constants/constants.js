@@ -100,7 +100,9 @@ export const MESSAGE_KEYS = {
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
-	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
+	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text",
+	TOGGLE_ON_LABEL: "toggle.on.label",
+	TOGGLE_OFF_LABEL: "toggle.off.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;

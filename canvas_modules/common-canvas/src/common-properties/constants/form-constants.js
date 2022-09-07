@@ -78,6 +78,7 @@ const ControlType = {
 	TIMEFIELD: "timefield",
 	TIMESTAMP: "timestampfield",
 	CHECKBOX: "checkbox",
+	TOGGLE: "toggle",
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",
 	ONEOFSELECT: "oneofselect",
