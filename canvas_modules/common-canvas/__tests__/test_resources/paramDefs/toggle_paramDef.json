@@ -5,14 +5,22 @@
   "current_parameters": {
     "toggle": true,
     "toggle_null": null,
-    "toggle_table": [
-      [
-        true
-      ]
-    ],
+    "toggle_table":  [
+       [
+         true,
+         true,
+         false,
+         true
+       ]
+     ],
     "toggle_table_cond": [
-      []
-    ],
+       [
+         true,
+         false,
+         true,
+         false
+       ]
+     ],
     "toggle_error": false,
     "toggle_warning": false,
     "disable": true,
