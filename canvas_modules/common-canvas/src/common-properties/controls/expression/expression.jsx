@@ -32,7 +32,7 @@ import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from
 import { Calculator24 } from "@carbon/icons-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
-import ExpressionToggle from "./../../components/expression-toggle";
+import ExpressionToggle from "./expression-toggle/expression-toggle";
 
 import { register as registerPython } from "./languages/python-hint";
 import { register as registerR } from "./languages/r-hint";
@@ -83,7 +83,6 @@ class ExpressionControl extends React.Component {
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
-		this.handleToggle = this.handleToggle.bind(this);
 
 		this.handleChange = (editor, data, newValue) => {
 			// this is needed when characters are added into the expression builder because
@@ -262,14 +261,6 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
-	handleToggle(openTearsheet) {
-		if (openTearsheet) {
-			this.props.controller.setActiveTearsheet(this.props.control.parentTearsheetId);
-		} else {
-			this.props.controller.clearActiveTearsheet();
-		}
-	}
-
 	_showBuilderButton() {
 		// only show the button if there are function lists available and
 		// not explicitly told not to by the this.props.builder
@@ -365,8 +356,12 @@ class ExpressionControl extends React.Component {
 
 		let toggleMaxMin = null;
 		if (this.props.control.enableMaximize) {
-			const isTearsheetOpen = this.props.controller.getActiveTearsheet() === this.props.control.parentTearsheetId;
-			toggleMaxMin = (<ExpressionToggle handleToggle={this.handleToggle} enableMaximize={!isTearsheetOpen} />);
+			const isTearsheetOpen = this.props.controller.getActiveTearsheet() === this.props.control.customControlId;
+			toggleMaxMin = (<ExpressionToggle
+				control={this.props.control}
+				controller={this.props.controller}
+				enableMaximize={!isTearsheetOpen}
+			/>);
 		}
 
 		return (

@@ -15,6 +15,7 @@
  */
 
 @import "./expression-builder/expression-builder";
+@import "./expression-toggle/expression-toggle";
 
 /* Override so Codemirror autocomplete shows up on top */
 .CodeMirror-hints {

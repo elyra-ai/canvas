@@ -1379,6 +1379,11 @@ class App extends React.Component {
 	buttonHandler(data) {
 		this.log("buttonHandler()", data);
 
+		// Handle maximize button to enable tearsheet by propertyId
+		if (data.type === "maximize_tearsheet") {
+			this.propertiesController.setActiveTearsheet(data.propertyId);
+		}
+
 		// Trigger conditions to show an error
 		if (data.propertyId.name === "readonlyTableError") {
 			this.propertiesController.validateInput(data.propertyId);

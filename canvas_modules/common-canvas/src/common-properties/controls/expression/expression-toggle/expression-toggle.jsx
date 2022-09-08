@@ -22,6 +22,10 @@ import { Button } from "carbon-components-react";
 import { Maximize16, Minimize16 } from "@carbon/icons-react";
 
 class ExpressionToggle extends React.Component {
+	constructor(props) {
+		super(props);
+		this.buttonHandler = props.controller.getHandlers().buttonHandler;
+	}
 	render() {
 		return (
 			<div className="ExpressionToggle">
@@ -31,21 +35,27 @@ class ExpressionToggle extends React.Component {
 					kind="ghost"
 					renderIcon={Maximize16}
 					iconDescription="Maximize"
-					onClick={() => this.props.handleToggle(true)}
+					onClick={() => {
+						this.buttonHandler({
+							type: "maximize_tearsheet",
+							propertyId: this.props.control.customControlId
+						});
+					}}
 				/>) : (<Button
 					type="button"
 					size="small"
 					kind="ghost"
 					renderIcon={Minimize16}
 					iconDescription="Minimize"
-					onClick={() => this.props.handleToggle(false)}
+					onClick={() => this.props.controller.clearActiveTearsheet()}
 				/>)
 				}
 			</div>);
 	}
 }
 ExpressionToggle.propTypes = {
-	handleToggle: PropTypes.func.isRequired,
+	control: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	enableMaximize: PropTypes.bool.isRequired
 };
 export default ExpressionToggle;

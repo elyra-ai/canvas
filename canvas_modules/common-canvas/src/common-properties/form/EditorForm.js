@@ -243,12 +243,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				parameterMetadata.paramDefs.forEach((param) => {
-					param.parentTearsheetId = groupName;
-					return param;
-				});
 				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-				groupItem.parentId = groupName;
 				panSubItems.push(groupItem);
 			});
 		}
@@ -643,9 +638,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
-	if (parameter.parentTearsheetId) {
-		settings.parentTearsheetId = parameter.parentTearsheetId;
-	}
 	if (isSubControl) {
 		settings.visible = parameter.visible;
 		settings.width = parameter.columns(8);

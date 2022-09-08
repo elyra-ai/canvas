@@ -71,9 +71,6 @@ export class Control {
 		if (settings.enableMaximize) {
 			this.enableMaximize = settings.enableMaximize;
 		}
-		if (settings.parentTearsheetId) {
-			this.parentTearsheetId = settings.parentTearsheetId;
-		}
 		if (settings.charLimit) {
 			this.charLimit = settings.charLimit;
 		}

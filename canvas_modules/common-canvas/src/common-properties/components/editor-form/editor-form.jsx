@@ -431,13 +431,12 @@ class EditorForm extends React.Component {
 			return (
 				<div>
 					<TearSheet
-						key={id}
+						key={"tearsheet-panel-" + key}
 						controller={this.props.controller}
 						panel={panel}
 					>
 						{content}
 					</TearSheet>
-					{content}
 				</div>
 			);
 		case ("column"):
