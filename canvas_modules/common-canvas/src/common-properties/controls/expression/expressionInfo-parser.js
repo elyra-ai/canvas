@@ -75,6 +75,11 @@ function setExpressionInfo(inExpressionInfo) {
 			}
 		}
 	}
+
+	if (inExpressionInfo && inExpressionInfo.resources) {
+		expressionFunctionInfo.resources = inExpressionInfo.resources;
+	}
+
 	return expressionFunctionInfo;
 }
 
