@@ -64,7 +64,9 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
 	EXPRESSION_FIELDS_TABLE_LABEL: "expression.fields.table.label",
+	EXPRESSION_FIELDS_EMPTY_TABLE_LABEL: "expression.fields.empty.table.label",
 	EXPRESSION_VALUES_TABLE_LABEL: "expression.values.table.label",
+	EXPRESSION_VALUES_EMPTY_TABLE_LABEL: "expression.values.empty.table.label",
 	EXPRESSION_FUNCTIONS_TABLE_LABEL: "expression.functions.table.label",
 	EXPRESSION_FIELDS_DROPDOWN_TITLE: "expression.fields.dropdown",
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
@@ -100,7 +102,9 @@ export const MESSAGE_KEYS = {
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
-	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
+	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text",
+	TOGGLE_ON_LABEL: "toggle.on.label",
+	TOGGLE_OFF_LABEL: "toggle.off.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;

@@ -35,6 +35,7 @@ import NumberfieldControl from "./numberfield";
 import DatefieldControl from "./datefield";
 import TimefieldControl from "./timefield";
 import CheckboxControl from "./checkbox";
+import ToggleControl from "./toggle";
 import CheckboxsetControl from "./checkboxset";
 import RadiosetControl from "./radioset";
 import Dropdown from "./dropdown";
@@ -66,6 +67,7 @@ const accessibleControls = [
 	ControlType.TIMEFIELD,
 	ControlType.TOGGLETEXT,
 	ControlType.LIST,
+	ControlType.TOGGLE,
 	ControlType.SOMEOFSELECT,
 	ControlType.SELECTCOLUMNS,
 	ControlType.READONLY,
@@ -182,6 +184,9 @@ export default class ControlFactory {
 			break;
 		case (ControlType.TEXTAREA):
 			createdControl = (<TextareaControl {...props} />);
+			break;
+		case (ControlType.TOGGLE):
+			createdControl = (<ToggleControl {...props} />);
 			break;
 		case (ControlType.LIST):
 			createdControl = (<ListControl {...props} />);
