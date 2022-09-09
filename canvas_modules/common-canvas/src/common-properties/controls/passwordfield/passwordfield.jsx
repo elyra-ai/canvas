@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
+import { TextInput, Form } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
@@ -40,19 +40,21 @@ class PasswordControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<TextInput.PasswordInput
-					{...validationProps}
-					autoComplete="off"
-					id={this.id}
-					disabled={this.props.state === STATES.DISABLED}
-					placeholder={this.props.control.additionalText}
-					onChange={this.handleChange.bind(this)}
-					value={value}
-					labelText={this.props.controlItem}
-					hideLabel={this.props.tableControl}
-					light={this.props.controller.getLight()}
-					tooltipAlignment="end"
-				/>
+				<Form>
+					<TextInput.PasswordInput
+						{...validationProps}
+						autoComplete="off"
+						id={this.id}
+						disabled={this.props.state === STATES.DISABLED}
+						placeholder={this.props.control.additionalText}
+						onChange={this.handleChange.bind(this)}
+						value={value}
+						labelText={this.props.controlItem}
+						hideLabel={this.props.tableControl}
+						light={this.props.controller.getLight()}
+						tooltipAlignment="end"
+					/>
+				</Form>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
 			</div>);
 	}
