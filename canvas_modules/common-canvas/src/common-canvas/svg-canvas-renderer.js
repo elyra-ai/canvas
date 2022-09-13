@@ -1520,6 +1520,11 @@ export default class SVGCanvasRenderer {
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "no");
 			})
+			.on("mousedown mouseup", (d3Event) => {
+				// Prevent mouse events going through to the canvas. This prevents
+				// a drag gesture on the button activating the canvas drag action.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			})
 			.on("click", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				this.canvasController.displayPreviousPipeline();
