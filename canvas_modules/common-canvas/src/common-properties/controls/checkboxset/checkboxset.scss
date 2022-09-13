@@ -18,15 +18,18 @@
 	&.hide {
 		display: none;
 	}
-	.bx--checkbox-wrapper { //override carbon checkbox styling TODO currently doesn't override
+	.bx--form-item.bx--checkbox-wrapper:first-of-type { //override carbon checkbox styling
 		margin-bottom: $spacing-03;
+		flex: 0 1 auto; // Do not allow value to take up entire width
 	}
 	.properties-checkboxset-container {
 		.properties-checkbox-tooltip-container{
-			display: grid;
+			display: flex;
 			align-items: center;
-			grid-template-columns: 1fr 12fr;
-			width: 100%;
+
+			.tooltip-container {
+				margin-bottom: $spacing-02;
+			}
 		}
 		&.error:not([disabled]) {
 			padding-bottom: $spacing-02;

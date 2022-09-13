@@ -969,7 +969,10 @@
       "group.GeneralFunctions.label": "General Functions",
       "to_integer.label": "to_integer",
       "to_integer.item.param": "Item",
-      "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number."
+      "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+      "expression.no.functions": "There are no functions",
+      "expression.fields.empty.table.label": "There are no fields",
+      "expression.values.empty.table.label": "There are no values"
     },
     "fields": {
       "field_categories":[
