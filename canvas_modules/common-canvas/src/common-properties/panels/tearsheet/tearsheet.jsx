@@ -9,7 +9,7 @@ class TearSheet extends Component {
 		return (
 			<Portal>
 				<Modal
-					classnames="properties-modal"
+					className="tearsheet-panel"
 					open={this.props.panel.id === this.props.panelState}
 					passiveModal
 					size="lg"

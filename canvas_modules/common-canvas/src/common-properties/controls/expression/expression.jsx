@@ -356,7 +356,7 @@ class ExpressionControl extends React.Component {
 
 		let toggleMaxMin = null;
 		if (this.props.control.enableMaximize) {
-			const isTearsheetOpen = this.props.controller.getActiveTearsheet() === this.props.control.customControlId;
+			const isTearsheetOpen = this.props.controller.getActiveTearsheet() === this.props.control.data.tearsheet_ref;
 			toggleMaxMin = (<ExpressionToggle
 				control={this.props.control}
 				controller={this.props.controller}

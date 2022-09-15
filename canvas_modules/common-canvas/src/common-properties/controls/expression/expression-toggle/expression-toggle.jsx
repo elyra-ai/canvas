@@ -36,10 +36,13 @@ class ExpressionToggle extends React.Component {
 					renderIcon={Maximize16}
 					iconDescription="Maximize"
 					onClick={() => {
-						this.buttonHandler({
+						const handlerStatus = this.buttonHandler({
 							type: "maximize_tearsheet",
-							propertyId: this.props.control.customControlId
+							propertyId: this.props.control.data
 						});
+						if (!handlerStatus && this.props.control.data && this.props.control.data.tearsheet_ref) {
+							this.props.controller.setActiveTearsheet(this.props.control.data.tearsheet_ref);
+						}
 					}}
 				/>) : (<Button
 					type="button"
