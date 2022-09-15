@@ -70,12 +70,12 @@
       "id": "checkboxset_default",
       "type": "array[string]",
       "enum": [
-        "apple",
-        "orange",
+        "apples can be red or green, sweet or sour",
+        "oranges should only be orange when ready to eat",
         "pear"
       ],
       "default": [
-        "apple"
+        "pear"
       ]
     },
     {
@@ -242,7 +242,7 @@
           "default": "checkboxset default"
         },
         "description": {
-          "default": "checkboxset with a default value of 'apple'"
+          "default": "checkboxset with a default value of 'pear'"
         }
       },
       {
@@ -572,8 +572,9 @@
     }
   ],
   "resources": {
-    "checkboxset_number.0.desc":"desc for 0",
-    "checkboxset_number.20.desc":"desc for 20",
-    "checkboxset_filtered.apple.desc":"desc for apple"
+    "checkboxset_number.0.desc": "desc for 0",
+    "checkboxset_number.20.desc": "desc for 20",
+    "checkboxset_filtered.apple.desc": "desc for apple",
+    "checkboxset_default.apples can be red or green, sweet or sour.desc": "tooltip for long checkbox value"
   }
 }
