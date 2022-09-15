@@ -14,28 +14,5 @@
  * limitations under the License.
  */
 
-.properties-checkboxset {
-	&.hide {
-		display: none;
-	}
-	.bx--form-item.bx--checkbox-wrapper:first-of-type { //override carbon checkbox styling
-		margin-bottom: $spacing-03;
-		flex: 0 1 auto; // Do not allow value to take up entire width
-	}
-	.properties-checkboxset-container {
-		.properties-checkbox-tooltip-container{
-			display: flex;
-			align-items: center;
-
-			.tooltip-container {
-				margin-bottom: $spacing-02;
-			}
-		}
-		&.error:not([disabled]) {
-			padding-bottom: $spacing-02;
-		}
-		&.warning:not([disabled]) {
-			padding-bottom: $spacing-02;
-		}
-	}
-}
+import ToggleControl from "./toggle.jsx";
+export default ToggleControl;

@@ -1520,6 +1520,11 @@ export default class SVGCanvasRenderer {
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "no");
 			})
+			.on("mousedown mouseup", (d3Event) => {
+				// Prevent mouse events going through to the canvas. This prevents
+				// a drag gesture on the button activating the canvas drag action.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+			})
 			.on("click", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				this.canvasController.displayPreviousPipeline();
@@ -6697,7 +6702,7 @@ export default class SVGCanvasRenderer {
 	// Return the x,y coordinates of the svg group relative to the window's viewport
 	// This is used when a new comment is created from the toolbar to make sure the
 	// new comment always appears in the view port.
-	getSvgViewportOffset() {
+	getDefaultCommentOffset() {
 		let xPos = this.canvasLayout.addCommentOffsetX;
 		let yPos = this.canvasLayout.addCommentOffsetY;
 
@@ -6710,10 +6715,11 @@ export default class SVGCanvasRenderer {
 			yPos = -yPos + this.canvasLayout.addCommentOffsetY;
 		}
 
-		return {
-			x_pos: xPos,
-			y_pos: yPos
-		};
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+				this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			return this.snapToGridPosition({ x: xPos, y: yPos });
+		}
+		return { x: xPos, y: yPos };
 	}
 
 	// Returns a string that explains which flags are set to true.

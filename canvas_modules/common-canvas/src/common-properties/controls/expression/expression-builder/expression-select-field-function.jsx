@@ -21,7 +21,7 @@ import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
-import { sortBy } from "lodash";
+import { sortBy, get } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
 export default class ExpressionSelectFieldOrFunction extends React.Component {
@@ -47,6 +47,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		};
 		this.inCategories = Object.keys(props.functionList);
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
+		this.resources = get(props.controller.getExpressionInfo(), "resources", {});
 		this.state = {
 			fieldSelected: 0,
 			valueSelected: 0,
@@ -412,8 +413,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
 			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
 		}
+
 		const fieldsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_TABLE_LABEL);
 		const valuesTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_TABLE_LABEL);
+		const emptyFieldsLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL));
+		const emptyValuesLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL));
 
 		return (
 			<div className="properties-field-and-values-table-container" >
@@ -433,6 +439,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onFieldTableDblClick}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -450,6 +457,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onValueTableDblClick}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={emptyValuesLabel}
 					/>
 				</div>
 			</div>
@@ -585,6 +593,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			selectedFunction = data.findIndex((row) => row.rowKey === this.state.functionSelected);
 		}
 		const functionsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TABLE_LABEL);
+		const functionsEmptyLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS));
 
 		return (
 			<div className="properties-functions-table-container" >
@@ -603,6 +613,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onFunctionTableDblClick}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={functionsEmptyLabel}
 					/>
 				</div>
 				<div className="properties-help-table-container" >

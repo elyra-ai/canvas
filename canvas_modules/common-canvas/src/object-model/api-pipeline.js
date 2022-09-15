@@ -30,6 +30,7 @@ import { cloneDeep, get, has, set } from "lodash";
 import { ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK, VERTICAL,
 	DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CREATE_NODE, CREATE_COMMENT, CREATE_NODE_LINK, CREATE_COMMENT_LINK,
+	SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	BINDING, SUPER_NODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
@@ -1017,12 +1018,18 @@ export default class APIPipeline {
 	// Returns a position for a new comment added by clicking the 'add comment'
 	// button on the toolbar. It searches for a position that is not already
 	// occupied by an existing comment.
-	getNewCommentPosition(svgPos) {
-		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
+	getAdjustedCommentPosition(comPos) {
+		const stgType = this.objectModel.getCanvasConfig().enableSnapToGridType;
+		const pos = { x_pos: comPos.x, y_pos: comPos.y };
 
 		while (this.exactlyOverlaps(null, [pos], null)) {
-			pos.x_pos += 10;
-			pos.y_pos += 10;
+			if (stgType === SNAP_TO_GRID_DURING || stgType === SNAP_TO_GRID_AFTER) {
+				pos.x_pos += this.objectModel.getCanvasLayout().snapToGridXPx;
+				pos.y_pos += this.objectModel.getCanvasLayout().snapToGridYPx;
+			} else {
+				pos.x_pos += 10;
+				pos.y_pos += 10;
+			}
 		}
 
 		return pos;

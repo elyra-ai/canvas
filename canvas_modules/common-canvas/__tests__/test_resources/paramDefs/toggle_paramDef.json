@@ -1,0 +1,437 @@
+{
+  "titleDefinition": {
+    "title": "toggle"
+  },
+  "current_parameters": {
+    "toggle": true,
+    "toggle_null": null,
+    "toggle_table":  [
+       [
+         true,
+         true,
+         false,
+         true
+       ]
+     ],
+    "toggle_table_cond": [
+       [
+         true,
+         false,
+         true,
+         false
+       ]
+     ],
+    "toggle_error": false,
+    "toggle_warning": false,
+    "disable": true,
+    "hide": true,
+    "toggle_hidden": false
+  },
+  "parameters": [
+    {
+      "id": "toggle",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_null",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_table",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "toggle_table_cond",
+      "type": "array[toggles]"
+    },
+    {
+      "id": "toggle_default",
+      "default": true,
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_undefined",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_error",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_warning",
+      "type": "boolean"
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_disable",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "toggle_hidden",
+      "type": "boolean",
+      "required": true
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "toggles",
+      "parameters": [
+        {
+          "id": "toggle",
+          "type": "boolean"
+        },
+        {
+          "id": "toggle2",
+          "type": "boolean"
+        },
+        {
+          "id": "toggle_on_panel",
+          "type": "boolean"
+        },
+        {
+          "id": "toggle_sub_panel",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "toggle",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "toggle "
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "toggle",
+        "label": {
+          "default": "toggle"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle",
+          "link": {
+            "id": "link_for_toggle",
+            "data": {
+              "something": "option data"
+            }
+          }
+        },
+        "class_name": "toggle-control-class"
+      },
+      {
+        "parameter_ref": "toggle_table",
+        "label": {
+          "default": "toggle in a table"
+        }
+      },
+      {
+        "parameter_ref": "toggle_table_cond",
+        "label": {
+          "default": "toggle conditions in a table"
+        }
+      },
+      {
+        "parameter_ref": "toggle_default",
+        "label": {
+          "default": "toggle default"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with a default value of 'true'"
+        }
+      },
+      {
+        "parameter_ref": "toggle_undefined",
+        "label": {
+          "default": "toggle undefined"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with 'undefined' value"
+        }
+      },
+      {
+        "parameter_ref": "toggle_null",
+        "label": {
+          "default": "toggle null"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with 'null' value"
+        }
+      },
+      {
+        "parameter_ref": "toggle_error",
+        "label": {
+          "default": "toggle error"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with error when checked"
+        }
+      },
+      {
+        "parameter_ref": "toggle_warning",
+        "label": {
+          "default": "toggle warning"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle with warning when checked"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'toggle disabled'"
+        },
+          "control": "toggle"
+      },
+      {
+        "parameter_ref": "toggle_disable",
+        "label": {
+          "default": "toggle disabled"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle that is disabled"
+        },
+          "control": "toggle"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'toggle hidden'"
+        },
+          "control": "toggle"
+      },
+      {
+        "parameter_ref": "toggle_hidden",
+        "label": {
+          "default": "toggle hidden"
+        },
+        "control": "toggle",
+        "description": {
+          "default": "toggle that is hidden"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "toggles",
+        "parameters": [
+          {
+            "parameter_ref": "toggle",
+            "width": 10,
+            "label": {
+              "default": "Standard"
+            },
+            "control": "toggle",
+            "class_name": "table-toggle-control-class"
+          },
+          {
+            "parameter_ref": "toggle2",
+            "width": 10,
+            "label": {
+              "default": "Additional"
+            }
+          },
+          {
+            "parameter_ref": "toggle_on_panel",
+            "width": 10,
+            "label": {
+              "default": "on_panel"
+            },
+            "control": "toggle",
+            "description": {
+              "default": "toggle with `edit_style=on_panel`"
+            },
+            "edit_style": "on_panel",
+            "class_name": "table-on-panel-toggle-control-class"
+          },
+          {
+            "parameter_ref": "toggle_sub_panel",
+            "width": 10,
+            "label": {
+              "default": "sub_panel"
+            },
+            "description": {
+              "default": "toggle with `edit_style=sub_panel`"
+            },
+            "edit_style": "subpanel",
+            "class_name": "table-subpanel-toggle-control-class"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "toggle-values-panels",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "toggle",
+          "toggle_default",
+          "toggle_undefined",
+          "toggle_null"
+        ]
+      },
+      {
+        "id": "toggle-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "control": "toggle",
+        "type": "controls",
+        "parameter_refs": [
+          "toggle_error",
+          "toggle_warning",
+          "disable",
+          "toggle_disable",
+          "hide",
+          "toggle_hidden"
+        ]
+      },
+      {
+        "id": "toggle-table-panels",
+        "label": {
+          "default": "Table"
+        },
+        "control": "toggle",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "toggle-table-summary",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Edit toggle table"
+            },
+            "group_info": [
+              {
+                "id": "toggle-table-summary-ctrls",
+                "parameter_refs": [
+                  "toggle_table",
+                  "toggle_table_cond"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "toggle_error",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_error",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "toggle_warning",
+          "message": {
+            "default": "Needs to be false"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_warning",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "toggle_table_cond[1]",
+          "message": {
+            "default": "toggle in a table warning testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_table_cond[1]",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "toggle_table_cond[0]",
+          "message": {
+            "default": "toggle in a table error testing"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "toggle_table_cond[0]",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "toggle_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "toggle_disable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {}
+}
