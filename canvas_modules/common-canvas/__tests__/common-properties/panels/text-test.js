@@ -78,7 +78,7 @@ describe("text panel visible and enabled conditions work correctly", () => {
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
-		const textPanelcategory = wrapper.find("div.properties-category-container").at(1); // TEXT PANEL category
+		const textPanelcategory = wrapper.find("div.properties-category-container").at(2); // TEXT PANEL category
 		panels = textPanelcategory.find("div.properties-text-panel");
 		controller = renderedObject.controller;
 	});
@@ -89,7 +89,8 @@ describe("text panel visible and enabled conditions work correctly", () => {
 
 	it("text panel should be disabled", () => {
 		expect(panels).to.have.length(2);
-		expect(controller.getPanelState({ name: "orange-panel" })).to.equal("enabled");
+		// initially set to visible since there is a primary panel hidden condition
+		expect(controller.getPanelState({ name: "orange-panel" })).to.equal("visible");
 		controller.updatePropertyValue({ name: "disableTextPanel" }, true);
 		expect(controller.getPanelState({ name: "orange-panel" })).to.equal("disabled");
 	});

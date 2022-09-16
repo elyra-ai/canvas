@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
-import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
@@ -39,7 +39,7 @@ import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
 
 import ActionFactory from "./../../actions/action-factory";
-import Icon from "./../../../icons/icon.jsx";
+import Icon from "./../../../icons/icon";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
@@ -128,8 +128,13 @@ class EditorForm extends React.Component {
 		const tabContent = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
-		for (var i = 0; i < tabs.length; i++) {
+
+		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
+			const tabState = this.props.controller.getPanelState({ name: tab.group });
+			if (tabState === STATES.HIDDEN) {
+				continue;
+			}
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
 				hasAlertsTab = true;
 			}
