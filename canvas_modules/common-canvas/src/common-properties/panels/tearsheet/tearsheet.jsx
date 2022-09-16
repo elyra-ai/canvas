@@ -6,6 +6,8 @@ import { Portal } from "react-portal";
 
 class TearSheet extends Component {
 	render() {
+		const title = this.props.panel.data ? this.props.panel.data.title : null;
+		const description = this.props.panel.data ? this.props.panel.data.description : null;
 		return (
 			<Portal>
 				<Modal
@@ -18,6 +20,9 @@ class TearSheet extends Component {
 					}}
 					preventCloseOnClickOutside
 				>
+					{title ? (<h3>{title}</h3>) : null}
+					{description ? (<p>{description}</p>) : null}
+					{title || description ? (<hr />) : null}
 					{this.props.children}
 				</Modal>
 			</Portal>);

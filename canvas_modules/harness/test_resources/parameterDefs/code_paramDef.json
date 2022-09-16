@@ -71,10 +71,10 @@
         "type": "panels",
         "group_info": [{
 					"id": "tearsheet1",
-					"title": "Python",
-					"description": {
-						"default": "Your change is automatically saved."
-					},
+          "data": {
+            "title": "Python",
+					  "description": "Your change is automatically saved."
+          },
 					"type": "tearsheetPanel",
 					"group_info": [{
 						"id": "tearsheet-code",
@@ -87,10 +87,10 @@
 					}]
         },{
 					"id": "tearsheet2",
-					"title": "Python",
-					"description": {
-						"default": "Your change is automatically saved."
-					},
+					"data": {
+            "title": "Python 2",
+					  "description": "Your change is automatically saved 2."
+          },
 					"type": "tearsheetPanel",
 					"group_info": [{
 						"id": "tearsheet-code-2",

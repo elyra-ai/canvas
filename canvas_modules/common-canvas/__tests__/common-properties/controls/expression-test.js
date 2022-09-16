@@ -21,6 +21,7 @@ import sinon from "sinon";
 
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
+import ExpressionToggle from "../../../src/common-properties/controls/expression/expression-toggle/expression-toggle";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
@@ -974,5 +975,21 @@ describe("expression builder classnames appear correctly", () => {
 		expect(wrapper.find(".expression-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-on-panel-expression-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-subpanel-expression-control-class")).to.have.length(1);
+	});
+});
+describe("expression toggle", () => {
+	beforeEach(() => {
+		reset();
+	});
+	it("should render minimize", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionToggle
+					control={control}
+					controller={controller}
+				/>
+			</Provider>
+		);
+		expect(wrapper.find(".maximize")).to.have.length(0);
 	});
 });

@@ -30,6 +30,7 @@ class ExpressionToggle extends React.Component {
 		return (
 			<div className="ExpressionToggle">
 				{this.props.enableMaximize ? (<Button
+					className="maximize"
 					type="button"
 					size="small"
 					kind="ghost"
@@ -46,6 +47,7 @@ class ExpressionToggle extends React.Component {
 					}}
 				/>) : (<Button
 					type="button"
+					className="minimize"
 					size="small"
 					kind="ghost"
 					renderIcon={Minimize16}
