@@ -5,6 +5,7 @@
   "current_parameters": {
     "disableTextPanel": false,
     "hideTextPanel": false,
+    "hideTextPanels": false,
     "disablePanelSelector": true,
     "fruit-color1": "red1",
     "hidePanelSelector": true,
@@ -90,6 +91,10 @@
     },
     {
       "id": "hideTextPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "hideTextPanels",
       "type": "boolean"
     },
     {
@@ -399,6 +404,15 @@
         },
         "description": {
           "default": "Hide Apples text panel"
+        }
+      },
+      {
+        "parameter_ref": "hideTextPanels",
+        "label": {
+          "default": "Hide Text Panels"
+        },
+        "description": {
+          "default": "Hides Text Panels primary panel"
         }
       },
       {
@@ -953,6 +967,15 @@
       }
     ],
     "group_info": [
+      {
+        "id": "primary-panel-condition",
+        "label": {
+          "default": "Primary Panel Condition"
+        },
+        "parameter_refs": [
+          "hideTextPanels"
+        ]
+      },
       {
         "id": "text-panels",
         "label": {
@@ -1623,6 +1646,20 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hideTextPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "text-panels"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTextPanels",
             "op": "equals",
             "value": false
           }
