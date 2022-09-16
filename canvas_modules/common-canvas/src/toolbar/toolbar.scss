@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 @import "carbon-components/scss/globals/scss/vars";
-
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
 $toolbar-divider-width: 1px;
-
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
@@ -29,13 +26,13 @@ $toolbar-divider-width: 1px;
 	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
+
 	display: flex;
 	justify-content: space-between;
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 }
-
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
@@ -43,7 +40,6 @@ $toolbar-divider-width: 1px;
 	overflow: hidden;
 	align-items: center;
 }
-
 .toolbar-right-bar {
 	display: flex;
 	flex-direction: row-reverse;
@@ -52,35 +48,7 @@ $toolbar-divider-width: 1px;
 	flex-shrink: 1;
 	overflow: hidden;
 }
-
 .toolbar-item {
-	background-color: $ui-01;
-	display: inline-block;
-
-	&.default,
-	&.ghost {
-		& button {
-			background-color: $ui-01;
-		}
-
-		& button:hover {
-			background-color: $hover-field;
-		}
-
-		& button:focus {
-			background-color: $hover-field;
-		}
-	}
-
-}
-
-.toolbar-spacer {
-	width: 0;
-	display: inline-block;
-}
-
-
-.toolbar-overflow-item {
 	background-color: $ui-01;
 	display: inline-block;
 
@@ -88,46 +56,86 @@ $toolbar-divider-width: 1px;
 		padding: 0;
 		height: $toolbar-button-height;
 		min-height: 30px;
+	}
+
+	&.default,
+	&.ghost {
+		& button {
+			background-color: $ui-01;
+		}
+		& button:hover {
+			background-color: $hover-field;
+		}
+		& button:focus {
+			background-color: $hover-field;
+		}
+
+		& button:disabled:hover {
+			background-color: $ui-01;
+		}
+	}
+
+	&.tertiary {
+		& button {
+			color: $brand-03;
+			background-color: $ui-01;
+		}
+
+		& button:hover {
+			background-color: $hover-field;
+		}
+
+		& button:disabled,
+		& button:disabled:hover {
+			color: $disabled-02;
+			background-color: $ui-01;
+		}
+	}
+}
+
+.toolbar-spacer {
+	width: 0;
+	display: inline-block;
+}
+.toolbar-overflow-item {
+	background-color: $ui-01;
+	display: inline-block;
+	& button {
+		padding: 0;
+		height: $toolbar-button-height;
+		min-height: 30px;
 		background-color: $ui-01;
 		border-right: $toolbar-divider-width solid $ui-03;
 	}
-
 	& button:hover {
 		background-color: $hover-field;
 	}
-
 	& button:disabled:hover {
 		background-color: $ui-01;
 	}
 }
-
 .toolbar-overflow-menu-item button {
 	width: 100%;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	min-height: 20px;
 }
-
 .toolbar-item-content {
 	width: inherit;
 	display: flex;
 	justify-content: center;
 	padding: 11px;
-
 	&.overflow {
 		justify-content: left;
 		padding: 8px 0;
 	}
-
 	&.default {
 		color: $icon-01; // Used by label and pick up as currentColor in icons.
 	}
-
 	&.disabled.default {
 		color: $disabled-02;
 		fill: $disabled-02; // For custom svg images
 	}
-
 	.toolbar-icon {
 		height: $toolbar-icon-size;
 		& svg {
@@ -138,7 +146,6 @@ $toolbar-divider-width: 1px;
 		}
 	}
 }
-
 .toolbar-text-content {
 	position: absolute;
 	top: 14px;
@@ -146,25 +153,20 @@ $toolbar-divider-width: 1px;
 	line-height: 9px;
 	color: $icon-01;
 }
-
 .toolbar-icon-label {
 	line-height: 16px;
-
 	&.before {
 		padding-right: 8px;
 	}
-
 	&.after {
 		padding-left: 8px;
 	}
-
 	&.overflow {
 		padding-left: 8px;
 		word-break: break-word;
 		hyphens: auto;
 	}
 }
-
 .toolbar-jsx-item {
 	height: 40px;
 	display: inline-flex;
@@ -174,7 +176,6 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	padding: 0;
 }
-
 .toolbar-overflow-jsx-item {
 	width: 100%;
 	height: 38px;
@@ -184,7 +185,6 @@ $toolbar-divider-width: 1px;
 	position: relative;
 	padding: 0;
 }
-
 .toolbar-item-selected {
 	&.default,
 	&.ghost {
@@ -196,7 +196,6 @@ $toolbar-divider-width: 1px;
 		}
 	}
 }
-
 .toolbar-divider {
 	border-right: $toolbar-divider-width solid $ui-03;
 	background-color: $ui-01;
@@ -204,12 +203,10 @@ $toolbar-divider-width: 1px;
 	height: $toolbar-button-height;
 	width: 0;
 }
-
 .toolbar-divider-overflow {
 	height: 0;
 	border-bottom: $toolbar-divider-width solid $ui-03;
 }
-
 .toolbar-popover-list {
 	width: 200px;
 	z-index: 1;
@@ -221,7 +218,6 @@ $toolbar-divider-width: 1px;
 	border: $toolbar-divider-width solid $ui-03;
 	background-color: $ui-01;
 }
-
 .toolbar-popover-list-hide {
 	display: none;
 }

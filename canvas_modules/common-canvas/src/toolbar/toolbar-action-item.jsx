@@ -175,9 +175,9 @@ class ToolbarActionItem extends React.Component {
 				{textContent}
 			</div>
 		);
-
 		buttonContent = this.wrapInTooltip(buttonContent);
-
+		let btnHasIcon = false;
+		btnHasIcon = this.props.actionObj.incLabelWithIcon === "none" && true;
 		buttonContent = (
 			<Button kind={kind}
 				onClick={this.actionClickHandler}
@@ -185,12 +185,11 @@ class ToolbarActionItem extends React.Component {
 				onFocus={this.props.onFocus}
 				aria-label={actionObj.label}
 				size={this.props.size}
-				hasIconOnly
+				hasIconOnly={btnHasIcon}
 			>
 				{buttonContent}
 			</Button>
 		);
-
 		return buttonContent;
 	}
 
@@ -294,7 +293,7 @@ ToolbarActionItem.propTypes = {
 	instanceId: PropTypes.number.isRequired,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default ToolbarActionItem;

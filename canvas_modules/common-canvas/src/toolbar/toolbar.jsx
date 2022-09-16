@@ -304,7 +304,7 @@ Toolbar.propTypes = {
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default Toolbar;
