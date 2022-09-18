@@ -314,6 +314,7 @@ class EditorForm extends React.Component {
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		case ("panel"):
+		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
 			return (<Subtabs key={"subtabs." + key}

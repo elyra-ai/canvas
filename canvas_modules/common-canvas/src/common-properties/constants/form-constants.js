@@ -20,6 +20,7 @@ const ItemType = {
 	STATIC_TEXT: "staticText",
 	HORIZONTAL_SEPARATOR: "hSeparator",
 	PANEL: "panel",
+	TEARSHEET: "tearsheet",
 	SUB_TABS: "subTabs",
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector",

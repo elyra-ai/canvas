@@ -6,8 +6,8 @@ import { Portal } from "react-portal";
 
 class TearSheet extends Component {
 	render() {
-		const title = this.props.panel.data ? this.props.panel.data.title : null;
-		const description = this.props.panel.data ? this.props.panel.data.description : null;
+		const title = this.props.panel.label ? this.props.panel.label : null;
+		const description = this.props.panel.description ? this.props.panel.description.default : null;
 		return (
 			<Portal>
 				<Modal
