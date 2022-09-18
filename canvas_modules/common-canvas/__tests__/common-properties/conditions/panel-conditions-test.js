@@ -1113,3 +1113,28 @@ describe("complex nested panels visible and enabled conditions work correctly", 
 		expect(controller.getPanelState({ name: "init1level3control" })).to.equal("enabled");
 	});
 });
+
+
+describe("Primary panel conditions work correctly", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Primary panel can be hidden", () => {
+		let textPanel = wrapper.find("div[data-id='properties-text-panels']");
+		expect(textPanel).to.have.length(1);
+		controller.updatePropertyValue({ name: "hideTextPanels" }, true);
+		wrapper.update();
+		textPanel = wrapper.find("div[data-id='properties-text-panels']");
+		expect(textPanel).to.have.length(0);
+	});
+
+});

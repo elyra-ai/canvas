@@ -74,7 +74,7 @@
     "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-react": "7.21.2",
-    "grunt": "1.3.0",
+    "grunt": "1.5.3",
     "grunt-contrib-clean": "2.0.0",
     "grunt-contrib-sass": "2.0.0",
     "grunt-env": "1.0.1",
