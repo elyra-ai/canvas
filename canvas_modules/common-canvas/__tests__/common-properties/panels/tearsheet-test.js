@@ -22,15 +22,30 @@ import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
 
 describe("tearsheet tests", () => {
 	var wrapper;
+	var controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(codeParamDef);
 		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
 		wrapper.unmount();
 	});
 	it("should be hidden initially", () => {
-		expect(wrapper.find(".tearsheet-panel")).to.have.length(0);
+		expect(wrapper.find("div.tearsheet-panel")).to.have.length(0);
+	});
+	it("should be visible from the controller method", () => {
+		controller.setActiveTearsheet("tearsheet1");
+		wrapper.update();
+		expect(wrapper.find("div.tearsheet-panel")).to.have.length(1);
+	});
+	it("should be hidden from DON on the tearsheet close button", () => {
+		controller.setActiveTearsheet("tearsheet1");
+		wrapper.update();
+		wrapper.find("div.tearsheet-panel button.bx--modal-close").simulate("click");
+		wrapper.update();
+		expect(wrapper.find("div.tearsheet-panel")).to.have.length(0);
+		expect(controller.getActiveTearsheet()).to.equal(null);
 	});
 });

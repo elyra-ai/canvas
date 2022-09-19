@@ -41,7 +41,11 @@ const control = {
 	valueDef: {
 		isList: false
 	},
-	language: "CLEM"
+	language: "CLEM",
+	data: {
+		tearsheet_ref: "tearsheetX"
+	},
+	enableMaximize: true
 };
 
 const propertyId = { name: "test-expression" };
@@ -121,7 +125,7 @@ function getCopy(value) {
 }
 
 var controller = new Controller();
-
+const buttonHandler = sinon.spy();
 function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
@@ -131,6 +135,9 @@ function reset() {
 	controller.setDatasetMetadata(getCopy(dataModel));
 	var expressionInfo = getCopy(ExpressionInfo.input);
 	controller.setExpressionInfo(expressionInfo);
+	controller.setHandlers({
+		buttonHandler: buttonHandler
+	});
 }
 
 const propertiesConfig = { containerType: "Custom", rightFLyout: true };
@@ -180,6 +187,19 @@ describe("expression-control renders correctly", () => {
 		const expressionBuilderIcon = wrapper.find("button.properties-expression-button");
 		expect(expressionBuilderIcon).to.have.length(1);
 		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
+	});
+	it("should render maximize button", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		expect(wrapper.find("button.maximize")).to.have.length(1);
 	});
 
 });
@@ -978,18 +998,57 @@ describe("expression builder classnames appear correctly", () => {
 	});
 });
 describe("expression toggle", () => {
+	let wrapper;
 	beforeEach(() => {
 		reset();
-	});
-	it("should render minimize", () => {
-		const wrapper = mountWithIntl(
+		wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionToggle
 					control={control}
 					controller={controller}
+					enableMaximize
 				/>
 			</Provider>
 		);
-		expect(wrapper.find(".maximize")).to.have.length(0);
+	});
+	it("should render maximize", () => {
+		expect(wrapper.find("button.maximize")).to.have.length(1);
+		expect(wrapper.find("button.minimize")).to.have.length(0);
+	});
+	it("should call button handler on maximize", () => {
+		wrapper.find("button.maximize").simulate("click");
+		expect(buttonHandler.calledOnce).to.equal(true);
+	});
+	it("should set active tearsheet", () => {
+		wrapper.find("button.maximize").simulate("click");
+		expect(controller.getActiveTearsheet()).to.equal("tearsheetX");
+	});
+});
+describe("expression toggle in tearsheet", () => {
+	let wrapper;
+	beforeEach(() => {
+		reset();
+		wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionToggle
+					control={control}
+					controller={controller}
+					enableMaximize={false}
+				/>
+			</Provider>
+		);
+	});
+	it("should render minimize", () => {
+		expect(wrapper.find("button.maximize")).to.have.length(0);
+		expect(wrapper.find("button.minimize")).to.have.length(1);
+	});
+	it("should not call button handler on minimize", () => {
+		wrapper.find("button.minimize").simulate("click");
+		expect(buttonHandler.calledOnce).to.equal(false);
+	});
+	it("should set active tearsheet to null", () => {
+		controller.setActiveTearsheet("tearsheetX");
+		wrapper.find("button.minimize").simulate("click");
+		expect(controller.getActiveTearsheet()).to.equal(null);
 	});
 });

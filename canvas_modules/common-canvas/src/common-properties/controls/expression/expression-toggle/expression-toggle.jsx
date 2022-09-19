@@ -61,6 +61,6 @@ class ExpressionToggle extends React.Component {
 ExpressionToggle.propTypes = {
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	enableMaximize: PropTypes.bool.isRequired
+	enableMaximize: PropTypes.bool
 };
 export default ExpressionToggle;

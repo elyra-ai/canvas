@@ -434,17 +434,18 @@ class EditorForm extends React.Component {
 					{content}
 				</TwistyPanel>);
 		case ("tearsheet"):
-			return (
-				<div>
+			if (this.props.controller.getActiveTearsheet() === panel.id) {
+				return (
 					<TearSheet
-						key={"tearsheet-panel-" + key}
+						key={panel.id}
 						controller={this.props.controller}
 						panel={panel}
 					>
 						{content}
 					</TearSheet>
-				</div>
-			);
+				);
+			}
+			return null;
 		case ("column"):
 			return (
 				<ColumnPanel
