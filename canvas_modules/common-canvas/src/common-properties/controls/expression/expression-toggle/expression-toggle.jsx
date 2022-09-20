@@ -33,32 +33,36 @@ class ExpressionToggle extends React.Component {
 	render() {
 		return (
 			<div className="properties-expression-toggle">
-				{this.props.enableMaximize ? (<Button
-					className="maximize"
-					type="button"
-					size="small"
-					kind="ghost"
-					renderIcon={Maximize16}
-					iconDescription={this.props.intl.formatMessage({ id: maximizeId, defaultMessage: defaultMessages[maximizeId] })}
-					onClick={() => {
-						const handlerStatus = this.buttonHandler({
-							type: "maximize_tearsheet",
-							propertyId: this.props.control.data || {}
-						});
-						if (!handlerStatus && this.props.control.data && this.props.control.data.tearsheet_ref) {
-							this.props.controller.setActiveTearsheet(this.props.control.data.tearsheet_ref);
-						}
-					}}
-				/>) : (<Button
-					type="button"
-					className="minimize"
-					size="small"
-					kind="ghost"
-					renderIcon={Minimize16}
-					iconDescription={this.props.intl.formatMessage({ id: minimizeId, defaultMessage: defaultMessages[minimizeId] })}
-					onClick={() => this.props.controller.clearActiveTearsheet()}
-				/>)
-				}
+				<div className="properties-expression-toggle-absolute">
+					{this.props.enableMaximize ? (<Button
+						className="maximize"
+						type="button"
+						size="small"
+						kind="ghost"
+						renderIcon={Maximize16}
+						hasIconOnly
+						iconDescription={this.props.intl.formatMessage({ id: maximizeId })}
+						onClick={() => {
+							const handlerStatus = this.buttonHandler({
+								type: "maximize_tearsheet",
+								propertyId: this.props.control.data || {}
+							});
+							if (!handlerStatus && this.props.control.data && this.props.control.data.tearsheet_ref) {
+								this.props.controller.setActiveTearsheet(this.props.control.data.tearsheet_ref);
+							}
+						}}
+					/>) : (<Button
+						type="button"
+						className="minimize"
+						size="small"
+						kind="ghost"
+						hasIconOnly
+						renderIcon={Minimize16}
+						iconDescription={this.props.intl.formatMessage({ id: minimizeId })}
+						onClick={() => this.props.controller.clearActiveTearsheet()}
+					/>)
+					}
+				</div>
 			</div>);
 	}
 }
