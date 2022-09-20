@@ -4,6 +4,9 @@ import { Modal } from "carbon-components-react";
 import { Portal } from "react-portal";
 
 class TearSheet extends Component {
+	componentDidMount() {
+		document.querySelector(".bx--modal-close").blur();
+	}
 	render() {
 		const title = this.props.panel.label ? this.props.panel.label : null;
 		const description = this.props.panel.description ? this.props.panel.description.default : null;
@@ -19,10 +22,13 @@ class TearSheet extends Component {
 					}}
 					preventCloseOnClickOutside
 				>
-					{title ? (<h3>{title}</h3>) : null}
-					{description ? (<p>{description}</p>) : null}
-					{title || description ? (<hr />) : null}
-					{this.props.children}
+					<div className="tearsheet-header">
+						{title ? (<h3>{title}</h3>) : null}
+						{description ? (<p>{description}</p>) : null}
+					</div>
+					<div className="tearsheet-body">
+						{this.props.children}
+					</div>
 				</Modal>
 			</Portal>);
 	}

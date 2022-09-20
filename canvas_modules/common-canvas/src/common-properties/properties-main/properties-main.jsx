@@ -140,8 +140,7 @@ class PropertiesMain extends React.Component {
 			formData = propertiesInfo.formData;
 		} else if (propertiesInfo.parameterDef) {
 			if (this.props.propertiesConfig.schemaValidation) {
-				// temporary disabled, will update schema before creating a PR
-				// validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
+				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
 			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 		}

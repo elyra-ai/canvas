@@ -1,3 +1,21 @@
-/*
-	TODO: ADD CSS TO MINIC @dap/tearsheet
-*/
+.tearsheet-panel {
+	.bx--modal-header {
+		position: absolute;
+		right: 0;
+	}
+	.bx--modal-content {
+		padding: 0;
+		margin: 0;
+		.tearsheet-header {
+			padding: 1.5rem 2rem;
+			border-bottom: 1px solid rgb(224,224,224);
+		}
+		.tearsheet-body {
+			padding: 1.5rem 2rem;
+			background-color: rgb(244,244,244);
+			.react-codemirror2, .react-codemirror2 .CodeMirror {
+				background-color: #fff;
+			}
+		}
+	}	
+}
