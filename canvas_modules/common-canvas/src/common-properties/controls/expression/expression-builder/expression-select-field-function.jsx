@@ -632,8 +632,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const columns = [];
 				if (!this.state.functionFilterText || this.state.functionFilterText.length === 0 ||
 					(catFunction.locLabel.toLowerCase().indexOf(this.state.functionFilterText.toLowerCase()) > -1)) {
+					const returnType = catFunction.locReturnType ? catFunction.locReturnType : catFunction.return_type;
 					columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel), value: catFunction.locLabel });
-					columns.push({ column: "return", content: this.createContentObject(catFunction.return_type), value: catFunction.return_type });
+					columns.push({ column: "return", content: this.createContentObject(returnType), value: returnType });
 					table.rows.push({ columns: columns, rowKey: index });
 					if (index === this.state.functionSelected) {
 						table.helpContainer = (
