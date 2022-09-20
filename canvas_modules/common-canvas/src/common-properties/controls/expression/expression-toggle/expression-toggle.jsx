@@ -17,29 +17,33 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-
+import defaultMessages from "../../../../../locales/common-canvas/locales/en.json";
+import { injectIntl } from "react-intl";
 import { Button } from "carbon-components-react";
 import { Maximize16, Minimize16 } from "@carbon/icons-react";
+
+const maximizeId = "expression.maximize.label";
+const minimizeId = "expression.minimize.label";
 
 class ExpressionToggle extends React.Component {
 	constructor(props) {
 		super(props);
-		this.buttonHandler = props.controller.getHandlers().buttonHandler;
+		this.buttonHandler = props.controller.getHandlers().buttonHandler || (() => null);
 	}
 	render() {
 		return (
-			<div className="ExpressionToggle">
+			<div className="properties-expression-toggle">
 				{this.props.enableMaximize ? (<Button
 					className="maximize"
 					type="button"
 					size="small"
 					kind="ghost"
 					renderIcon={Maximize16}
-					iconDescription="Maximize"
+					iconDescription={this.props.intl.formatMessage({ id: maximizeId, defaultMessage: defaultMessages[maximizeId] })}
 					onClick={() => {
 						const handlerStatus = this.buttonHandler({
 							type: "maximize_tearsheet",
-							propertyId: this.props.control.data
+							propertyId: this.props.control.data || {}
 						});
 						if (!handlerStatus && this.props.control.data && this.props.control.data.tearsheet_ref) {
 							this.props.controller.setActiveTearsheet(this.props.control.data.tearsheet_ref);
@@ -51,7 +55,7 @@ class ExpressionToggle extends React.Component {
 					size="small"
 					kind="ghost"
 					renderIcon={Minimize16}
-					iconDescription="Minimize"
+					iconDescription={this.props.intl.formatMessage({ id: minimizeId, defaultMessage: defaultMessages[minimizeId] })}
 					onClick={() => this.props.controller.clearActiveTearsheet()}
 				/>)
 				}
@@ -59,8 +63,9 @@ class ExpressionToggle extends React.Component {
 	}
 }
 ExpressionToggle.propTypes = {
+	intl: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	enableMaximize: PropTypes.bool
 };
-export default ExpressionToggle;
+export default injectIntl(ExpressionToggle);

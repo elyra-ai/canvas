@@ -66,38 +66,38 @@
         },
         "type": "panels",
         "group_info": [{
-					"id": "tearsheet1",
+          "id": "tearsheet1",
           "label": {
             "default": "Python"
           },
           "description": {
             "default": "Your change is automatically saved."
           },
-					"type": "tearsheetPanel",
-					"group_info": [{
-						"id": "tearsheet-code",
-						"label": {
-						  "default": "Code Rows"
-						},
-						"parameter_refs": [
-							"code"
-						]
-					}]
+          "type": "tearsheetPanel",
+          "group_info": [{
+            "id": "tearsheet-code",
+            "label": {
+            "default": "Code Rows"
+          },
+          "parameter_refs": [
+            "code"
+          ]
+          }]
         },
         {
-					"id": "code-panel",
-					"type": "panels",
-					"group_info": [{
-						"id": "code",
-						"label": {
-						  "default": "Code Rows"
-						},
-						"parameter_refs": [
-							"code",
+          "id": "code-panel",
+          "type": "panels",
+          "group_info": [{
+            "id": "code",
+            "label": {
+              "default": "Code Rows"
+            },
+            "parameter_refs": [
+              "code",
               "code_rows"
-						]
-					}]
-				}]
+            ]
+          }]
+        }]
       }
     ]
   },

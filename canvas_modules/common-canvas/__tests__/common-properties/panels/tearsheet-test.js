@@ -38,12 +38,12 @@ describe("tearsheet tests", () => {
 	it("should be visible from the controller method", () => {
 		controller.setActiveTearsheet("tearsheet1");
 		wrapper.update();
-		expect(wrapper.find("div.tearsheet-panel")).to.have.length(1);
+		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
 	});
 	it("should be hidden from DON on the tearsheet close button", () => {
 		controller.setActiveTearsheet("tearsheet1");
 		wrapper.update();
-		wrapper.find("div.tearsheet-panel button.bx--modal-close").simulate("click");
+		wrapper.find("div.properties-tearsheet-panel button.bx--modal-close").simulate("click");
 		wrapper.update();
 		expect(wrapper.find("div.tearsheet-panel")).to.have.length(0);
 		expect(controller.getActiveTearsheet()).to.equal(null);

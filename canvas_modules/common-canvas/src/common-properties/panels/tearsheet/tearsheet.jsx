@@ -13,7 +13,7 @@ class TearSheet extends Component {
 		return (
 			<Portal>
 				<Modal
-					className="tearsheet-panel"
+					className="properties-tearsheet-panel"
 					open
 					passiveModal
 					size="lg"
@@ -22,11 +22,11 @@ class TearSheet extends Component {
 					}}
 					preventCloseOnClickOutside
 				>
-					<div className="tearsheet-header">
+					<div className="properties-tearsheet-header">
 						{title ? (<h3>{title}</h3>) : null}
 						{description ? (<p>{description}</p>) : null}
 					</div>
-					<div className="tearsheet-body">
+					<div className="properties-tearsheet-body">
 						{this.props.children}
 					</div>
 				</Modal>
