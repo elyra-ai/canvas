@@ -367,6 +367,55 @@ describe("expression-builder renders correctly", () => {
 		expect(functionsTable).to.have.length(1);
 		expect(functionsTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS]);
 	});
+
+	it("Functions table should display 'Return' column from return_type_label, default to return_type if undefined", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
+
+		// Verify Return column in "General Functions" table
+		let functionsTable = wrapper.find("div.properties-functions-table").find(".ReactVirtualized__Table");
+		expect(functionsTable).to.have.length(1);
+		let rows = tableUtils.getTableRows(functionsTable);
+		expect(rows).to.have.length(4);
+		rows.forEach((row, idx) => {
+			const functionInfo = ExpressionInfo.actual.functionCategories["General Functions"].functionList[idx];
+			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
+			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
+			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
+				.at(1)
+				.text();
+			expect(expectedReturnType).to.eql(actualReturnType);
+		});
+
+		// Navigate to Information table
+		var dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(2).simulate("click");
+		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Information");
+
+		// Verify Return column in "Information" table
+		functionsTable = wrapper.find("div.properties-functions-table").find(".ReactVirtualized__Table");
+		rows = tableUtils.getTableRows(functionsTable);
+		expect(rows).to.have.length(3);
+		rows.forEach((row, idx) => {
+			const functionInfo = ExpressionInfo.actual.functionCategories.Information.functionList[idx];
+			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
+			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
+			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
+				.at(1)
+				.text();
+			expect(expectedReturnType).to.eql(actualReturnType);
+		});
+	});
 });
 
 describe("expression-builder select from tables correctly", () => {
@@ -744,7 +793,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		functionTable = wrapper.find("div.properties-functions-table");
 		rows = tableUtils.getTableRows(functionTable);
 		expect(rows).to.have.length(1);
-		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(rows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 	});
 	it("expression builder sorts fields table", () => {
 		reset();
@@ -811,7 +860,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const rows = tableUtils.getTableRows(functionTable);
 		const sortHeaders = functionTable.find(".ReactVirtualized__Table__sortableHeaderColumn");
 		expect(rows).to.have.length(4);
-		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(rows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtils.clickHeaderColumnSort(functionTable, 0);
@@ -935,7 +984,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
 		expect(funcRows.at(0).text()).to.equal("count_equal(Item, List)Integer");
-		expect(funcRows.at(1).text()).to.equal("to_integer(Item)Integer");
+		expect(funcRows.at(1).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		// check that reusing a function will move it to the top of Recently Used
 		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
 		dropDown.simulate("click");
@@ -952,7 +1001,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// order of rows should be reversed
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
-		expect(funcRows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(funcRows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		expect(funcRows.at(1).text()).to.equal("count_equal(Item, List)Integer");
 	});
 });

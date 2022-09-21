@@ -235,6 +235,9 @@
             "resource_key": "to_integer.label"
           },
           "return_type": "Integer",
+          "return_type_label": {
+            "resource_key": "to_integer.returnType.label"
+          },
           "id": "to_integer",
           "parameters": [
             {
@@ -276,6 +279,9 @@
             "default": "@BLANK"
           },
           "return_type": "Boolean",
+          "return_type_label": {
+            "default": "Return type defined in return_type_label"
+          },
           "id": "@BLANK",
           "parameters": [
             {
@@ -969,6 +975,7 @@
       "group.GeneralFunctions.label": "General Functions",
       "to_integer.label": "to_integer",
       "to_integer.item.param": "Item",
+      "to_integer.returnType.label": "[Esperanto~Integer~~eo]",
       "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
       "expression.no.functions": "There are no functions",
       "expression.fields.empty.table.label": "There are no fields",
@@ -1150,6 +1157,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1165,7 +1175,8 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           },
           {
             "label": {
@@ -1281,6 +1292,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1296,13 +1310,17 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           },
           {
             "label": {
               "default": "@BLANK"
             },
             "return_type": "Boolean",
+            "return_type_label": {
+              "default": "Return type defined in return_type_label"
+            },
             "id": "@BLANK",
             "parameters": [
               {
@@ -1316,7 +1334,8 @@
             },
             "locLabel": "@BLANK(Item)",
             "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-            "value": "@BLANK(?)"
+            "value": "@BLANK(?)",
+            "locReturnType": "Return type defined in return_type_label"
           },
           {
             "label": {
@@ -1845,6 +1864,9 @@
               "default": "@BLANK"
             },
             "return_type": "Boolean",
+            "return_type_label": {
+              "default": "Return type defined in return_type_label"
+            },
             "id": "@BLANK",
             "parameters": [
               {
@@ -1858,7 +1880,8 @@
             },
             "locLabel": "@BLANK(Item)",
             "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-            "value": "@BLANK(?)"
+            "value": "@BLANK(?)",
+            "locReturnType": "Return type defined in return_type_label"
           },
           {
             "label": {
@@ -1896,6 +1919,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1911,7 +1937,8 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           }
         ]
       },
