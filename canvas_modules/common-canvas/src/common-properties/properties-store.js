@@ -16,7 +16,7 @@
 
 import { createStore, combineReducers } from "redux";
 import { has, get, isEqual, cloneDeep } from "lodash";
-
+import { setTearsheetState } from "./actions";
 import { setPropertyValues, updatePropertyValue, removePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
 import { setPanelStates, updatePanelState } from "./actions";
@@ -40,6 +40,7 @@ import disableRowMoveButtonsReducer from "./reducers/disable-row-move-buttons";
 import saveButtonDisableReducer from "./reducers/save-button-disable";
 import wideFlyoutPrimaryButtonDisableReducer from "./reducers/wide-flyout-primary-button-disable";
 import propertiesSettingsReducer from "./reducers/properties-settings";
+import tearsheetStatesReducer from "./reducers/tearsheet-states";
 import * as PropertyUtils from "./util/property-utils.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS } from "./constants/constants.js";
 
@@ -49,7 +50,8 @@ export default class PropertiesStore {
 	constructor() {
 		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
 			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer,
-			disableRowMoveButtonsReducer, actionStatesReducer, saveButtonDisableReducer, wideFlyoutPrimaryButtonDisableReducer, propertiesSettingsReducer, rowFreezeReducer });
+			disableRowMoveButtonsReducer, actionStatesReducer, wideFlyoutPrimaryButtonDisableReducer, tearsheetStatesReducer,
+			saveButtonDisableReducer, propertiesSettingsReducer, rowFreezeReducer });
 		let enableDevTools = false;
 		if (typeof window !== "undefined") {
 			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -536,6 +538,19 @@ export default class PropertiesStore {
 			return state.propertiesSettingsReducer[propertyId.name].hideEditButton;
 		}
 		return defaultValue;
+	}
+
+	setActiveTearsheetId(tearsheetId) {
+		this.store.dispatch(setTearsheetState({ tearsheetId: tearsheetId }));
+	}
+
+	getActiveTearsheetId() {
+		const state = this.store.getState();
+		const tearsheetId = state.tearsheetStatesReducer.tearsheetId;
+		if (typeof tearsheetId !== "undefined") {
+			return tearsheetId;
+		}
+		return null;
 	}
 }
 

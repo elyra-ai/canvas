@@ -1302,6 +1302,15 @@ export default class PropertiesController {
 	getPanelStates() {
 		return this.propertiesStore.getPanelStates();
 	}
+	clearActiveTearsheet() {
+		this.propertiesStore.setActiveTearsheetId(null);
+	}
+	setActiveTearsheet(tearsheetId) {
+		this.propertiesStore.setActiveTearsheetId(tearsheetId);
+	}
+	getActiveTearsheet() {
+		return this.propertiesStore.getActiveTearsheetId() || null;
+	}
 
 
 	/**

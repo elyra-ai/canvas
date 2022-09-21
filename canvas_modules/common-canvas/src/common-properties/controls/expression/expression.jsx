@@ -32,6 +32,8 @@ import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from
 import { Calculator24 } from "@carbon/icons-react";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
+import { get } from "lodash";
+import ExpressionToggle from "./expression-toggle/expression-toggle";
 
 import { register as registerPython } from "./languages/python-hint";
 import { register as registerR } from "./languages/r-hint";
@@ -353,12 +355,23 @@ class ExpressionControl extends React.Component {
 			</div>);
 		}
 
+		let toggleMaxMin = null;
+		if (this.props.control.enableMaximize) {
+			const isTearsheetOpen = this.props.controller.getActiveTearsheet() === get(this, "props.control.data.tearsheet_ref");
+			toggleMaxMin = (<ExpressionToggle
+				control={this.props.control}
+				controller={this.props.controller}
+				enableMaximize={!isTearsheetOpen}
+			/>);
+		}
+
 		return (
 			<div className="properties-expression-editor-wrapper" >
 				{this.props.controlItem}
 				{flyout}
 				<div className="properties-editor-container">
 					{header}
+					{toggleMaxMin}
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>

@@ -34,6 +34,7 @@ import ControlPanel from "./../../panels/control";
 import Subtabs from "./../../panels/subtabs";
 
 import WideFlyout from "./../wide-flyout";
+import TearSheet from "../../panels/tearsheet";
 import FieldPicker from "./../field-picker";
 import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
@@ -318,6 +319,7 @@ class EditorForm extends React.Component {
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		case ("panel"):
+		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
 			return (<Subtabs key={"subtabs." + key}
@@ -431,6 +433,19 @@ class EditorForm extends React.Component {
 				>
 					{content}
 				</TwistyPanel>);
+		case ("tearsheet"):
+			if (this.props.controller.getActiveTearsheet() === panel.id) {
+				return (
+					<TearSheet
+						key={panel.id}
+						controller={this.props.controller}
+						panel={panel}
+					>
+						{content}
+					</TearSheet>
+				);
+			}
+			return null;
 		case ("column"):
 			return (
 				<ColumnPanel

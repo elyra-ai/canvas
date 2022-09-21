@@ -14,12 +14,5 @@
  * limitations under the License.
  */
 
-@import "./summary/summary";
-@import "./sub-panel/sub-panel";
-@import "./subtabs/subtabs";
-@import "./twisty/twisty";
-@import "./text-panel/text-panel";
-@import "./action-panel/action-panel";
-@import "./column/column";
-@import "./control/control";
-@import "./tearsheet/tearsheet";
+import TearSheet from "./tearsheet.jsx";
+export default TearSheet;

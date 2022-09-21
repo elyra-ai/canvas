@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-@import "./summary/summary";
-@import "./sub-panel/sub-panel";
-@import "./subtabs/subtabs";
-@import "./twisty/twisty";
-@import "./text-panel/text-panel";
-@import "./action-panel/action-panel";
-@import "./column/column";
-@import "./control/control";
-@import "./tearsheet/tearsheet";
+import { SET_ACTIVE_TEARSHEET } from "../actions";
+
+function states(state = [], action) {
+	switch (action.type) {
+	case SET_ACTIVE_TEARSHEET: {
+		return Object.assign({}, state, action.tearsheetId);
+	}
+	default:
+		return state;
+	}
+}
+
+export default states;

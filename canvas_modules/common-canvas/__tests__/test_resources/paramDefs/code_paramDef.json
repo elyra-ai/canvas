@@ -29,6 +29,10 @@
       {
         "parameter_ref": "code",
         "language": "text/x-python",
+        "enable_maximize": true,
+        "data": {
+          "tearsheet_ref": "tearsheet1"
+        },
         "label": {
           "default": "Code"
         },
@@ -56,14 +60,44 @@
     ],
     "group_info": [
       {
-        "id": "Values",
+        "id": "mainPanel",
         "label": {
-          "default": "Values"
+          "default": "Single Panel"
         },
-        "parameter_refs": [
-          "code",
-          "code_rows"
-        ]
+        "type": "panels",
+        "group_info": [{
+          "id": "tearsheet1",
+          "label": {
+            "default": "Python"
+          },
+          "description": {
+            "default": "Your change is automatically saved."
+          },
+          "type": "tearsheetPanel",
+          "group_info": [{
+            "id": "tearsheet-code",
+            "label": {
+            "default": "Code Rows"
+          },
+          "parameter_refs": [
+            "code"
+          ]
+          }]
+        },
+        {
+          "id": "code-panel",
+          "type": "panels",
+          "group_info": [{
+            "id": "code",
+            "label": {
+              "default": "Code Rows"
+            },
+            "parameter_refs": [
+              "code",
+              "code_rows"
+            ]
+          }]
+        }]
       }
     ]
   },

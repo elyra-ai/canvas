@@ -1,0 +1,12 @@
+.properties-expression-toggle {
+	position: relative;
+	z-index: 999;
+	.properties-expression-toggle-absolute {
+		position: absolute;
+		width: 100%;
+		button.bx--btn.bx--btn--icon-only {
+			position: absolute;
+			right: 0;
+		}
+	}
+}
