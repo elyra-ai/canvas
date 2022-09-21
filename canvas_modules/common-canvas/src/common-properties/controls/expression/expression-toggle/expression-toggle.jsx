@@ -17,7 +17,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import defaultMessages from "../../../../../locales/common-canvas/locales/en.json";
 import { injectIntl } from "react-intl";
 import { Button } from "carbon-components-react";
 import { Maximize16, Minimize16 } from "@carbon/icons-react";
