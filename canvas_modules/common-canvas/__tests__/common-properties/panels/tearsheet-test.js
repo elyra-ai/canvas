@@ -45,7 +45,9 @@ describe("tearsheet tests", () => {
 		wrapper.update();
 		wrapper.find("div.properties-tearsheet-panel button.bx--modal-close").simulate("click");
 		wrapper.update();
-		expect(wrapper.find("div.tearsheet-panel")).to.have.length(0);
-		expect(controller.getActiveTearsheet()).to.equal(null);
+		setTimeout(() => {
+			expect(wrapper.find("div.tearsheet-panel")).to.have.length(0);
+			expect(controller.getActiveTearsheet()).to.equal(null);
+		}, 1000);
 	});
 });
