@@ -208,6 +208,7 @@ class Toolbar extends React.Component {
 						overflow={overflow}
 						instanceId={this.props.instanceId}
 						onFocus={this.onFocus}
+						size={this.props.size}
 					/>
 				);
 			}
@@ -226,6 +227,7 @@ class Toolbar extends React.Component {
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
 				onFocus={this.onFocus}
 				label={label}
+				size={this.props.size}
 			/>
 		);
 
@@ -301,7 +303,8 @@ Toolbar.propTypes = {
 	instanceId: PropTypes.number,
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
-	additionalText: PropTypes.object
+	additionalText: PropTypes.object,
+	size: PropTypes.oneOf(["md", "sm"])
 };
 
 export default Toolbar;

@@ -107,15 +107,79 @@ describe("Toolbar renders correctly", () => {
 			.simulate("click");
 		expect(toolbarActionHandler.calledOnce).to.equal(false);
 	});
+
+	it("should render a Toolbar with medium size buttons", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+			]
+		};
+		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "md");
+		// Select the toolbar medium buttons
+		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(overflowButtons).to.have.length(3);
+		expect(defaultButtons).to.have.length(3);
+
+		// Verify if the buttons show up with medium size
+		expect(overflowButtons.find(".bx--btn--md")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--md")).to.have.length(3);
+	});
+
+	it("should render a Toolbar with small size buttons", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+			]
+		};
+		const canvasToolbar = createToolbar(toolbarConfig, sinon.spy(), "sm");
+		// Select the toolbar small buttons
+		const overflowButtons = canvasToolbar.find(".toolbar-overflow-item button");
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(overflowButtons).to.have.length(3);
+		expect(defaultButtons).to.have.length(3);
+
+		// Verify if the buttons show up with small size
+		expect(overflowButtons.find(".bx--btn--sm")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
+	});
+
+	it("should render a Toolbar buttons with hasIconOnly for those without label ", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+			]
+		};
+		const canvasToolbar = createToolbar(toolbarConfig);
+		// Select the toolbar only icons buttons
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(defaultButtons).to.have.length(3);
+
+		// Verify if the buttons show up with icon-only carbon class
+		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(3);
+	});
 });
 
-function createToolbar(config, actionHandler) {
+function createToolbar(config, actionHandler, size) {
 	const toolbarActionHandler = actionHandler || sinon.spy();
 	const canvasToolbar = mountWithIntl(
 		<Toolbar
 			config={config}
 			instanceId={0}
 			toolbarActionHandler={toolbarActionHandler}
+			size={size}
 		/>
 	);
 	return canvasToolbar;
