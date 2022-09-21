@@ -75,7 +75,7 @@ ToolbarOverflowItem.propTypes = {
 	generateExtensionMenuItems: PropTypes.func,
 	onFocus: PropTypes.func,
 	label: PropTypes.string,
-	size: PropTypes.string,
+	size: PropTypes.oneOf(["md", "sm"])
 };
 
 export default ToolbarOverflowItem;

@@ -124,7 +124,6 @@ TableButtons.propTypes = {
 	customButtons: PropTypes.array.isRequired,
 	tableState: PropTypes.string,
 	customButtonsState: PropTypes.object, // set in by redux
-	size: PropTypes.oneOf(["md", "sm", "lg"])
 };
 
 export default TableButtons;
