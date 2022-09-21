@@ -15,7 +15,7 @@
  */
 
 import logger from "../../../../utils/logger";
-import { L10nProvider } from "../../util/L10nProvider";
+import { L10nProvider, ResourceDef } from "../../util/L10nProvider";
 import { cloneDeep, propertyOf } from "lodash";
 
 function setExpressionInfo(inExpressionInfo) {
@@ -90,6 +90,11 @@ function _genFunctionParameters(functionInfoList, l10nProvider) {
 		newEntry.locLabel = l10nProvider.l10nLabel(newEntry, newEntry.id);
 		newEntry.help = l10nProvider.l10nDesc(newEntry, newEntry.locLabel);
 		newEntry.value = newEntry.locLabel;
+		// Translatable return type of function
+		if (newEntry.return_type_label) {
+			const returnTypeLabel = ResourceDef.make(newEntry.return_type_label);
+			newEntry.locReturnType = l10nProvider.l10nResource(returnTypeLabel);
+		}
 		if (Array.isArray(functionInfo.parameters)) {
 			// if the function label has any parameter substituion char '?' then replace with parameter label
 			if (newEntry.locLabel && newEntry.locLabel.indexOf("?") !== -1) {
