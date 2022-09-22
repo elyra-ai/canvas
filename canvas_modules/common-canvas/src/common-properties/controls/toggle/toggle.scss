@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-.properties-table-cell-control { // overrides when in a table cell
-	.properties-toggle {
+ 	.properties-toggle {
+		display: flex;
+		flex-direction: column;
 		.bx--toggle__switch { // override carbon when inside a table
-			margin: $spacing-02 0;
+			margin-bottom: $spacing-03;
 		}
 	}
-}
