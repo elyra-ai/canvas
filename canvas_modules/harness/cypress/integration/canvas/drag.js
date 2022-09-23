@@ -122,8 +122,9 @@ describe("Test to see if regular selection and drag behavior works " +
 		// Verify Execution Node has not moved
 		cy.verifyNodeTransform("Execution node", 297, 139);
 
-		// Verify that the canvas has been dragged (instead of the node)
-		cy.verifyZoomTransform(103, 311, 1);
+		// Verify that the canvas has not been dragged (instead of the node)
+		// Note: The canvas would only move if the space key was pressed
+		cy.verifyZoomTransform(0, 0, 1);
 	});
 
 	it("Test comment cannot be dragged when enableEditingActions is false", function() {
@@ -151,8 +152,9 @@ describe("Test to see if regular selection and drag behavior works " +
 			"association links and comments links.", 20, 20
 		);
 
-		// Verify that the canvas has been dragged (instead of the comment)
-		cy.verifyZoomTransform(280, 330, 1);
+		// Verify that the canvas has not been dragged (instead of the comment)
+		// Note: The canvas would only move if the space key was pressed
+		cy.verifyZoomTransform(0, 0, 1);
 	});
 });
 
