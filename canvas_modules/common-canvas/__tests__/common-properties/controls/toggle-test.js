@@ -26,6 +26,9 @@ const controller = new Controller();
 
 const control = {
 	"name": "toggle",
+	"label": {
+		"text": "Toggle"
+	},
 	"values": [
 		true,
 		false
