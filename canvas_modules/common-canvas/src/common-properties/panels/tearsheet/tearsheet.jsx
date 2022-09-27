@@ -19,7 +19,7 @@ class TearSheet extends Component {
 	}
 	render() {
 		const title = this.props.panel.label ? this.props.panel.label : null;
-		const description = this.props.panel.description ? this.props.panel.description.default : null;
+		const description = this.props.panel.description ? this.props.panel.description.text : null;
 		return (
 			<Portal>
 				<ComposedModal

@@ -240,6 +240,10 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.TEARSHEET_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
+		let groupDesc;
+		if (group.description) {
+			groupDesc = new Description(l10nProvider.l10nResource(group.description));
+		}
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
@@ -247,7 +251,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 				panSubItems.push(groupItem);
 			});
 		}
-		return UIItem.makeTearsheetPanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, false), group.description);
+		return UIItem.makeTearsheetPanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, false), groupDesc);
 	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
