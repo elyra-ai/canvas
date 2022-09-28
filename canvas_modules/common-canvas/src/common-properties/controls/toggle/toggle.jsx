@@ -54,7 +54,7 @@ class ToggleControl extends React.Component {
 			labelB={labelOn}
 			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
-			labelText={this.props.control.label.text}
+			labelText={this.props.controlItem}
 		/>);
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (

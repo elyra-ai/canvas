@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-.bx--toggle__switch {
-	margin-bottom: $spacing-04;
-	padding-bottom: 0;
+.properties-toggle {
+	.properties-label-container {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+	.bx--toggle__switch {
+		margin-bottom: $spacing-05;
+	}
 }
-
 .properties-table-cell-control { // overrides when in a table cell
 	.bx--toggle__switch { // override carbon when inside a table
 		margin-bottom: $spacing-07;
