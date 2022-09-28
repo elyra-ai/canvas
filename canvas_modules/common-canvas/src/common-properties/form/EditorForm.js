@@ -463,8 +463,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			controlType = ControlType.PASSWORDFIELD;
 			break;
 		case Type.BOOLEAN:
-			labelVisible = false;
-			controlType = ControlType.CHECKBOX;
+			if (!parameter.control || parameter.control === ControlType.CHECKBOX) {
+				labelVisible = false;
+				controlType = ControlType.CHECKBOX;
+			}
 			break;
 		case Type.INTEGER:
 		case Type.LONG:
