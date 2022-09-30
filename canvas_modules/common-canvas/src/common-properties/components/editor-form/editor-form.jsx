@@ -43,9 +43,6 @@ import ActionFactory from "./../../actions/action-factory";
 import Icon from "./../../../icons/icon";
 
 const ALERT_TAB_GROUP = "alertMsgs";
-let FIRST_TEARSHEET_ID;
-const TEARSHEETS = {};
-let visibleTearsheet = null;
 class EditorForm extends React.Component {
 
 	constructor(props) {
@@ -71,6 +68,10 @@ class EditorForm extends React.Component {
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
 
 		this.actionFactory = new ActionFactory(this.props.controller);
+
+		this.FIRST_TEARSHEET_ID = null;
+		this.TEARSHEETS = {};
+		this.visibleTearsheet = null;
 
 	}
 
@@ -436,8 +437,8 @@ class EditorForm extends React.Component {
 					{content}
 				</TwistyPanel>);
 		case ("tearsheet"):
-			if (!TEARSHEETS[panel.id]) {
-				TEARSHEETS[panel.id] = {
+			if (!this.TEARSHEETS[panel.id]) {
+				this.TEARSHEETS[panel.id] = {
 					panel: panel,
 					title: panel.label,
 					description: panel.description ? panel.description.text : null,
@@ -445,18 +446,18 @@ class EditorForm extends React.Component {
 				};
 			}
 			if (this.props.controller.getActiveTearsheet() !== null) {
-				visibleTearsheet = TEARSHEETS[this.props.controller.getActiveTearsheet()];
+				this.visibleTearsheet = this.TEARSHEETS[this.props.controller.getActiveTearsheet()];
 			} else {
-				visibleTearsheet = null;
+				this.visibleTearsheet = null;
 			}
-			if (!FIRST_TEARSHEET_ID || FIRST_TEARSHEET_ID === panel.id) {
-				FIRST_TEARSHEET_ID = panel.id;
+			if (!this.FIRST_TEARSHEET_ID || this.FIRST_TEARSHEET_ID === panel.id) {
+				this.FIRST_TEARSHEET_ID = panel.id;
 				return (
 					<TearSheet
 						open={this.props.controller.getActiveTearsheet() !== null}
 						key={panel.id}
 						controller={this.props.controller}
-						tearsheet={visibleTearsheet}
+						tearsheet={this.visibleTearsheet}
 					>
 						{content}
 					</TearSheet>
