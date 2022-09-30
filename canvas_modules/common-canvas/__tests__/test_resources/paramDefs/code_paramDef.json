@@ -48,6 +48,10 @@
       {
         "parameter_ref": "code_rows",
         "language": "text/x-rsrc",
+        "enable_maximize": true,
+        "data": {
+          "tearsheet_ref": "tearsheet2"
+        },
         "label": {
           "default": "R code with Rows"
         },
@@ -81,6 +85,25 @@
           },
           "parameter_refs": [
             "code"
+          ]
+          }]
+        },
+        {
+          "id": "tearsheet2",
+          "label": {
+            "default": "Python 2"
+          },
+          "description": {
+            "default": "Your change is automatically saved 2."
+          },
+          "type": "tearsheetPanel",
+          "group_info": [{
+            "id": "tearsheet-code",
+            "label": {
+            "default": "Code Rows"
+          },
+          "parameter_refs": [
+            "code_rows"
           ]
           }]
         },
