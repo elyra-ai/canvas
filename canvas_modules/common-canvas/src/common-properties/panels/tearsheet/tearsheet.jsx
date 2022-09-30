@@ -5,8 +5,8 @@ import { Portal } from "react-portal";
 
 class TearSheet extends Component {
 	render() {
-		const title = this.props.tearsheet.label ? this.props.tearsheet.label : null;
-		const description = this.props.tearsheet && this.props.tearsheet.description ? this.props.tearsheet.description.text : null;
+		const title = this.props.tearsheet ? this.props.tearsheet.title : null;
+		const description = this.props.tearsheet ? this.props.tearsheet.description : null;
 		const content = this.props.tearsheet ? this.props.tearsheet.content : null;
 		return (
 			<Portal>

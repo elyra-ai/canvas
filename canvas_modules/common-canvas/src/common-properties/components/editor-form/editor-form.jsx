@@ -440,7 +440,7 @@ class EditorForm extends React.Component {
 				TEARSHEETS[panel.id] = {
 					panel: panel,
 					title: panel.label,
-					description: panel.description ? panel.description.default : null,
+					description: panel.description ? panel.description.text : null,
 					content: content
 				};
 			}
