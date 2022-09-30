@@ -4,51 +4,38 @@ import { ComposedModal, ModalHeader, ModalBody } from "carbon-components-react";
 import { Portal } from "react-portal";
 
 class TearSheet extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			open: false
-		};
-	}
-	componentDidMount() {
-		setTimeout(() => {
-			this.setState({
-				open: true
-			});
-		}, 0);
-	}
 	render() {
-		const title = this.props.panel.label ? this.props.panel.label : null;
-		const description = this.props.panel.description ? this.props.panel.description.text : null;
+		const title = this.props.tearsheet.label ? this.props.tearsheet.label : null;
+		const description = this.props.tearsheet && this.props.tearsheet.description ? this.props.tearsheet.description.text : null;
+		const content = this.props.tearsheet ? this.props.tearsheet.content : null;
 		return (
 			<Portal>
 				<ComposedModal
 					className="properties-tearsheet-panel"
-					open={this.state.open}
+					open={this.props.open}
 					size="lg"
 					preventCloseOnClickOutside
 				>
 					<ModalHeader
 						title={title}
 						buttonOnClick={() => {
-							setTimeout(() => {
-								this.props.controller.clearActiveTearsheet();
-							}, 500);
+							this.props.controller.clearActiveTearsheet();
 						}}
 					>
 						{description ? (<p>{description}</p>) : null}
 					</ModalHeader>
 					<ModalBody>
-						{this.props.children}
+						{content}
 					</ModalBody>
 				</ComposedModal>
 			</Portal>);
 	}
 }
 TearSheet.propTypes = {
-	panel: PropTypes.object.isRequired,
+	open: PropTypes.bool,
 	controller: PropTypes.object.isRequired,
-	children: PropTypes.array
+	children: PropTypes.array,
+	tearsheet: PropTypes.object
 };
 
 export default TearSheet;
