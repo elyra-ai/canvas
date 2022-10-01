@@ -28,7 +28,7 @@
 			padding: $spacing-06 $spacing-07;
 			background-color: $ui-background;
 			margin-bottom: 0;
-			.react-codemirror2, .react-codemirror2 .CodeMirror {
+			.bx--text-input, .bx--text-area {	// override carbon's modal
 				background-color: $ui-01;
 			}
 		}	

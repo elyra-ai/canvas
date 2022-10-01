@@ -475,9 +475,7 @@ class EditorForm extends React.Component {
 						key={panel.id}
 						controller={this.props.controller}
 						tearsheet={this.visibleTearsheet}
-					>
-						{content}
-					</TearSheet>
+					/>
 				);
 			}
 			return null;
