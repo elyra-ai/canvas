@@ -120,7 +120,6 @@ class CommonPropertiesComponents extends React.Component {
 		this.twistyActionHandler = this.twistyActionHandler.bind(this);
 		this.twistyControllerHandler = this.twistyControllerHandler.bind(this);
 
-		this.tearsheetButtonHandler = this.tearsheetButtonHandler.bind(this);
 		this.tearsheetControllerHandler = this.tearsheetControllerHandler.bind(this);
 
 	}
@@ -209,9 +208,6 @@ class CommonPropertiesComponents extends React.Component {
 			let value = this.twistyPropertiesController.getPropertyValue(propertyId);
 			this.twistyPropertiesController.updatePropertyValue(propertyId, value += 1);
 		}
-	}
-
-	tearsheetButtonHandler(data) {
 	}
 
 	flyoutActionHandler(actionId, appData, data) {
@@ -731,7 +727,7 @@ class CommonPropertiesComponents extends React.Component {
 								<div className="harness-properties-hidden">
 									<CommonProperties
 										propertiesInfo={TEARSHEET_PANEL_FROM_HOST_PROPS_INFO}
-										callbacks={{ buttonHandler: this.tearsheetButtonHandler, controllerHandler: this.tearsheetControllerHandler }}
+										callbacks={{ controllerHandler: this.tearsheetControllerHandler }}
 										propertiesConfig={this.propertiesConfig}
 										light={this.state.light}
 									/>

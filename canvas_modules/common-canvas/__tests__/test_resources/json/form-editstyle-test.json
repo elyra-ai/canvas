@@ -238,6 +238,7 @@
                             "description": {
                               "text": "Rename columns in the active dataset"
                             },
+                            "light": false,
                             "labelVisible": true,
                             "controlType": "structuretable",
                             "valueDef": {
@@ -253,6 +254,7 @@
                                 "label": {
                                   "text": "Input name"
                                 },
+                                "light": false,
                                 "labelVisible": true,
                                 "controlType": "selectcolumn",
                                 "valueDef": {
@@ -269,6 +271,7 @@
                                 "label": {
                                   "text": "Output name"
                                 },
+                                "light": false,
                                 "labelVisible": true,
                                 "controlType": "textfield",
                                 "valueDef": {
@@ -287,6 +290,7 @@
                                 "label": {
                                   "text": "New Label"
                                 },
+                                "light": false,
                                 "labelVisible": true,
                                 "controlType": "textfield",
                                 "valueDef": {
@@ -314,6 +318,7 @@
                                       "label": {
                                         "text": "Output name"
                                       },
+                                      "light": false,
                                       "labelVisible": true,
                                       "controlType": "textfield",
                                       "valueDef": {
