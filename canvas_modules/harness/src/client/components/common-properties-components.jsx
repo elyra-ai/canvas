@@ -360,6 +360,8 @@ class CommonPropertiesComponents extends React.Component {
 					"--columnPanel",
 					"--columnSelection",
 					"--textPanel",
+					"--tearsheetPanel",
+					"--tearsheetPanelExpression",
 					"Controls",
 					"--textfield",
 					"--textarea",
@@ -751,7 +753,7 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--tearsheetPanel" className="harness-section-subtitle">tearsheetPanel with Expression </h3>
+					<h3 id="--tearsheetPanelExpression" className="harness-section-subtitle">tearsheetPanel with Expression </h3>
 					<p>A modal window animated into view from below that can hold any children.
 					</p>
 					<p>Automatically invoked from maximize button under the following 2 conditions:</p>

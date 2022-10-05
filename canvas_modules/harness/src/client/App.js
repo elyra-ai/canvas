@@ -1841,6 +1841,9 @@ class App extends React.Component {
 	propertyActionHandler(actionId, appData, data) {
 		const propertiesController = (appData && appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
 
+		if (actionId === "openTearsheet") {
+			propertiesController.setActiveTearsheet(data.tearsheet_ref);
+		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
