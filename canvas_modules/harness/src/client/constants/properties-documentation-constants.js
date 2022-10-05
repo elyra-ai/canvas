@@ -1102,10 +1102,6 @@ _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 _defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
 	"title": "Panel Type: Tearsheet",
 	"parameterDef": {
-		"titleDefinition": {
-			"title": "Group: Tearsheet",
-			"editable": false
-		},
 		"current_parameters": {
 			"code": "Age >= 55"
 		},
@@ -1167,29 +1163,13 @@ _defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
 					]
 				}]
 			}]
-		},
-		"conditions": [],
-		"resources": {}
+		}
 	}
 });
 _defineConstant("TEARSHEET_PANEL_FROM_HOST_PROPS_INFO", {
 	"title": "Panel Type: Tearsheet",
 	"parameterDef": {
-		"titleDefinition": {
-			"title": "Group: Tearsheet",
-			"editable": false
-		},
-		"current_parameters": {},
-		"parameters": [],
 		"uihints": {
-			"id": "code.test",
-			"label": {
-				"default": "Code Test"
-			},
-			"editor_size": "medium",
-			"description": {
-				"default": "Test code controls"
-			},
 			"group_info": [{
 				"id": "tearsheet0",
 				"label": {
@@ -1210,9 +1190,7 @@ _defineConstant("TEARSHEET_PANEL_FROM_HOST_PROPS_INFO", {
 					}
 				}]
 			}]
-		},
-		"conditions": [],
-		"resources": {}
+		}
 	}
 });
 _defineConstant("COLUMN_PANEL_PROPS_INFO", {
