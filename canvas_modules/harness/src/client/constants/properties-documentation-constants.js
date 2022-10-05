@@ -1112,14 +1112,6 @@ _defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
 			}
 		],
 		"uihints": {
-			"id": "code.test",
-			"label": {
-				"default": "Code Test"
-			},
-			"editor_size": "medium",
-			"description": {
-				"default": "Test code controls"
-			},
 			"parameter_info": [{
 				"parameter_ref": "code",
 				"language": "text/x-python",
