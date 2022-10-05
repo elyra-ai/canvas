@@ -93,6 +93,7 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 		break;
 	}
 	case ItemType.STATIC_TEXT:
+	case ItemType.TEARSHEET:
 	case ItemType.HORIZONTAL_SEPARATOR: {
 		break;
 	}

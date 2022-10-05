@@ -196,6 +196,7 @@
                             "label": {
                               "text": "Target label: resource"
                             },
+                            "light": false,
                             "labelVisible": true,
                             "controlType": "selectcolumn",
                             "valueDef": {
@@ -213,6 +214,7 @@
                             "label": {
                               "text": "inputs"
                             },
+                            "light": false,
                             "labelVisible": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
@@ -253,6 +255,7 @@
                       "description": {
                         "text": "Enum description: default"
                       },
+                      "light": false,
                       "labelVisible": true,
                       "controlType": "radioset",
                       "valueDef": {
@@ -301,6 +304,7 @@
                                   "description": {
                                     "text": "Int description: default"
                                   },
+                                  "light": false,
                                   "labelVisible": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
@@ -337,6 +341,7 @@
                                   "label": {
                                     "text": "double_param"
                                   },
+                                  "light": false,
                                   "labelVisible": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
@@ -369,6 +374,7 @@
                             "label": {
                               "text": "boolean_param"
                             },
+                            "light": false,
                             "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
@@ -404,6 +410,7 @@
                             "description": {
                               "text": "String desciption: default"
                             },
+                            "light": false,
                             "labelVisible": true,
                             "controlType": "textfield",
                             "valueDef": {
