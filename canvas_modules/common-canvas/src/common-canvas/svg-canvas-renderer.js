@@ -178,8 +178,11 @@ export default class SVGCanvasRenderer {
 		// no need to re-render whole canvas
 		this.selecting = false;
 
-		// Track when space key is down (used when dragging).
+		// Flag to indicate when the space key is down (used when dragging).
 		this.spaceKeyPressed = false;
+
+		// Flag to indicate when a zoom is invoked programmatically.
+		this.zoomingAction = false;
 
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
@@ -1611,12 +1614,10 @@ export default class SVGCanvasRenderer {
 	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
 	// and zoomEnd).
 	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
-		// Simulate the user pressing the space key - to enable drag behavior
-		// instead of region select.
-		this.spaceKeyPressed = true;
 		if (isFinite(newZoomTransform.x) &&
 				isFinite(newZoomTransform.y) &&
 				isFinite(newZoomTransform.k)) {
+			this.zoomingAction = true;
 			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
 			if (animateTime) {
 				this.canvasSVG.call(this.zoom).transition()
@@ -1625,8 +1626,8 @@ export default class SVGCanvasRenderer {
 			} else {
 				this.canvasSVG.call(this.zoom.transform, zoomTransform);
 			}
+			this.zoomingAction = false;
 		}
-		this.spaceKeyPressed = false;
 	}
 
 	zoomToFit() {
@@ -1645,9 +1646,7 @@ export default class SVGCanvasRenderer {
 			x -= newScale * canvasDimensions.left;
 			y -= newScale * canvasDimensions.top;
 
-			this.zoomingToFit = true;
 			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
-			this.zoomingToFit = false;
 		}
 	}
 
@@ -1791,11 +1790,9 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
-		// this.zoomingToFit flag is used to avoid redo actions initialized
-		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
-		// selection to start. So whenever it is set, make sure we do a scale
-		// operation.
-		if (this.zoomingToFit) {
+		// The this.zoomingAction flag indicates zooming is being invoked
+		// programmatically.
+		if (this.zoomingAction) {
 			this.regionSelect = false;
 		} else if (!this.spaceKeyPressed &&
 							((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
@@ -1818,7 +1815,11 @@ export default class SVGCanvasRenderer {
 				height: 0
 			};
 		} else {
-			this.addTempCursorOverlay("grabbing");
+			if (this.isSpaceKeyPressed()) {
+				this.addTempCursorOverlay("grabbing");
+			} else {
+				this.addTempCursorOverlay("default");
+			}
 		}
 
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
