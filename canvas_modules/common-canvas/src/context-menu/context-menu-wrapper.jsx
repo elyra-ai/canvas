@@ -18,8 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import CommonContextMenu from "./common-context-menu.jsx";
 
-const CONTEXT_MENU_BUTTON = 2;
-
 export default class ContextMenuWrapper extends React.Component {
 	constructor(props) {
 		super(props);
