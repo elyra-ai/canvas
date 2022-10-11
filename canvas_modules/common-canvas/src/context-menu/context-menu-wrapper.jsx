@@ -64,13 +64,9 @@ export default class ContextMenuWrapper extends React.Component {
 			return;
 		}
 
-		// If the click was anywhere outside the context menu or ellipsis button
-		// we just close the menu.
-		const domNode = document.getElementById("context-menu-popover");
-		const ellipsisNodes = document.getElementsByClassName("d3-node-ellipsis-group");
-
-		if ((domNode && !domNode.contains(e.target)) &&
-				(ellipsisNodes[0] && !ellipsisNodes[0].contains(e.target))) {
+		// If the click was anywhere outside the context menu and
+		// the ellipsis button we just close the menu.
+		if (!this.isOverContextMenu(e) && !this.isOverEllipsisButton(e)) {
 			// This stop propagation is needed in common canvas so that selected nodes will
 			// remain selected even after clicking outside the context menu to close the menu.
 			if (this.props.stopPropagation) {
@@ -78,6 +74,27 @@ export default class ContextMenuWrapper extends React.Component {
 			}
 			this.props.closeContextMenu();
 		}
+	}
+
+	// Retruns true if the event occurred is over the context menu.
+	isOverContextMenu(e) {
+		const domNode = document.getElementById("context-menu-popover");
+		return !domNode || domNode.contains(e.target);
+	}
+
+	// Returns true if the event occurred over the ellipsis button. Typically
+	// there will be only one ellipsis button onthe canvas, since they are only
+	// displayed on hover, but in some test cicumstances there might be more
+	// than one.
+	isOverEllipsisButton(e) {
+		const ellipsisNodes = document.getElementsByClassName("d3-node-ellipsis-group");
+		let state = false;
+		for (let i = 0; i < ellipsisNodes.length; i++) {
+			if (state === false && ellipsisNodes[i].contains(e.target)) {
+				state = true;
+			}
+		}
+		return state;
 	}
 
 	contextMenuClicked(action, param) {
