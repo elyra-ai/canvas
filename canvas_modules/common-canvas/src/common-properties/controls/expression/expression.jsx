@@ -339,7 +339,7 @@ class ExpressionControl extends React.Component {
 			</div>
 		</WideFlyout>) : null;
 
-		const className = classNames(`properties-expression-editor ${messageType}`, { "properties-light-disabled": !this.props.controller.getLight() });
+		const className = classNames(`properties-expression-editor ${messageType}`, { "properties-light-disabled": this.props.control.light || !this.props.controller.getLight() });
 
 		const expressionLink = (<div className="properties-expression-link-container" >
 			{button}

@@ -184,5 +184,6 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
+		this.light = settings.light || false;
 	}
 }

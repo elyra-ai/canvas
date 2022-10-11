@@ -1099,6 +1099,92 @@ _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("TEARSHEET_PANEL_PROPS_INFO", {
+	"title": "Panel Type: Tearsheet",
+	"parameterDef": {
+		"current_parameters": {
+			"code": "Age >= 55"
+		},
+		"parameters": [
+			{
+				"id": "code",
+				"type": "string"
+			}
+		],
+		"uihints": {
+			"parameter_info": [{
+				"parameter_ref": "code",
+				"language": "text/x-python",
+				"enable_maximize": true,
+				"data": {
+					"tearsheet_ref": "tearsheet1"
+				},
+				"label": {
+					"default": "Code"
+				},
+				"description": {
+					"default": "Enter Python code"
+				},
+				"text_before": {
+					"default": "Press ctrl-space to autocomplete"
+				},
+				"control": "code",
+				"class_name": "code-control-class"
+			}],
+			"group_info": [{
+				"id": "tearsheet-code",
+				"label": {
+					"default": "Expression with Maximize"
+				},
+				"parameter_refs": [
+					"code"
+				]
+			}, {
+				"id": "tearsheet1",
+				"label": {
+					"default": "Python"
+				},
+				"description": {
+					"default": "Your change is automatically saved."
+				},
+				"type": "tearsheetPanel",
+				"group_info": [{
+					"id": "tearsheet-code-2",
+					"parameter_refs": [
+						"code"
+					]
+				}]
+			}]
+		}
+	}
+});
+_defineConstant("TEARSHEET_PANEL_FROM_HOST_PROPS_INFO", {
+	"title": "Panel Type: Tearsheet",
+	"parameterDef": {
+		"uihints": {
+			"group_info": [{
+				"id": "tearsheet0",
+				"label": {
+					"default": "Python"
+				},
+				"description": {
+					"default": "Your change is automatically saved."
+				},
+				"type": "tearsheetPanel",
+				"group_info": [{
+					"id": "orange",
+					"type": "textPanel",
+					"label": {
+						"default": "Oranges"
+					},
+					"description": {
+						"default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+					}
+				}]
+			}]
+		}
+	}
+});
 _defineConstant("COLUMN_PANEL_PROPS_INFO", {
 	"title": "Panel Type: ColumnPanel",
 	"parameterDef": {

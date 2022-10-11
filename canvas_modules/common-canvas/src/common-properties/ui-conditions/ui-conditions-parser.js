@@ -193,6 +193,7 @@ function parseUiItem(controls, actions, uiItem, panelId, parentCategoryId) {
 		break;
 	case ItemType.STATIC_TEXT:
 	case ItemType.TEXT_PANEL:
+	case ItemType.TEARSHEET:
 	case ItemType.HORIZONTAL_SEPARATOR: {
 		break;
 	}

@@ -34,6 +34,8 @@ import {
 	PANEL_SELECTOR_INSERT_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
+	TEARSHEET_PANEL_PROPS_INFO,
+	TEARSHEET_PANEL_FROM_HOST_PROPS_INFO,
 	COLUMN_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXT_PANEL_PROPS_INFO,
@@ -118,6 +120,8 @@ class CommonPropertiesComponents extends React.Component {
 		this.twistyActionHandler = this.twistyActionHandler.bind(this);
 		this.twistyControllerHandler = this.twistyControllerHandler.bind(this);
 
+		this.tearsheetControllerHandler = this.tearsheetControllerHandler.bind(this);
+
 	}
 
 	componentDidMount() {
@@ -160,6 +164,10 @@ class CommonPropertiesComponents extends React.Component {
 
 	twistyControllerHandler(propertiesController) {
 		this.twistyPropertiesController = propertiesController;
+	}
+
+	tearsheetControllerHandler(propertiesController) {
+		this.tearsheetPropertiesController = propertiesController;
 	}
 
 	actionHandler(actionId, appData, data) {
@@ -352,6 +360,8 @@ class CommonPropertiesComponents extends React.Component {
 					"--columnPanel",
 					"--columnSelection",
 					"--textPanel",
+					"--tearsheetPanel",
+					"--tearsheetPanelExpression",
 					"Controls",
 					"--textfield",
 					"--textarea",
@@ -702,6 +712,68 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="harness-section-column harness-section-column-code">
 								<pre className="harness-json-block">
 									{this.jsonReplacer(TWISTY_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--tearsheetPanel" className="harness-section-subtitle">tearsheetPanel with Host </h3>
+					<p>A modal window animated into view from below that can hold any children.
+					</p>
+					<p>The tearsheetPanel can be invoked by the host application via referrence to
+						any <span className="harness-highlight">tearsheetId</span></p>
+					<div className="harness-section-row">
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<div className="harness-properties-hidden">
+									<CommonProperties
+										propertiesInfo={TEARSHEET_PANEL_FROM_HOST_PROPS_INFO}
+										callbacks={{ controllerHandler: this.tearsheetControllerHandler }}
+										propertiesConfig={this.propertiesConfig}
+										light={this.state.light}
+									/>
+								</div>
+								<Button
+									className="harness-properties-documentation-show-flyout-button"
+									type="button"
+									size="small"
+									kind="secondary"
+									onClick={() => this.tearsheetPropertiesController.setActiveTearsheet("tearsheet0")}
+								>
+									Open Tearsheet
+								</Button>
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(TEARSHEET_PANEL_FROM_HOST_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--tearsheetPanelExpression" className="harness-section-subtitle">tearsheetPanel with Expression </h3>
+					<p>A modal window animated into view from below that can hold any children.
+					</p>
+					<p>Automatically invoked from maximize button under the following 2 conditions:</p>
+					<ol>
+						<li>1. In code parameter info, add enable_maximize: true and tearsheet_ref propertly mapped in data attribute</li>
+						<li>2. Host application returns null to button handler function</li>
+					</ol>
+					<br />
+					<div className="harness-section-row">
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<CommonProperties
+									propertiesInfo={TEARSHEET_PANEL_PROPS_INFO}
+									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
+								/>
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(TEARSHEET_PANEL_PROPS_INFO.parameterDef, "panel")}
 								</pre>
 							</div>
 						</div>
