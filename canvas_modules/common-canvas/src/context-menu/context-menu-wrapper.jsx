@@ -57,23 +57,22 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	handleClickOutside(e) {
-		// On Firefox, the context menu gesture emits both a 'context menu' event
-		// and a 'click' event. If the click is processed it causes the
-		// context menu to disappear imediately after it has displayed.
-		// Consequently, when this method is called with the context menu button set
-		// (which indicates one of the additional clicks from Firefox) we just
-		// stop propogation and return. On other browsers we don't get this extra
-		// events.
-		// Also, on Safari, when a user is displaying the context menu with a ctrl-click,
-		// the click is received with a ctrlKey field enabled. So we also ignore that.
-		if (e.button === CONTEXT_MENU_BUTTON || e.ctrlKey) {
+		// On Safari, when a user is displaying the context menu with a ctrl-click
+		// (which is a supported context menu gesture on the Mac) a secondary click
+		// event is emmitted which is received here with a ctrlKey field enabled.
+		// So we also ignore that event.
+		if (e.ctrlKey) {
 			e.stopPropagation();
 			return;
 		}
 
-		// If the click was anywhere outside the context menu we just close the menu.
+		// If the click was anywhere outside the context menu or ellipsis button
+		// we just close the menu.
 		const domNode = document.getElementById("context-menu-popover");
-		if (domNode && !domNode.contains(e.target)) {
+		const ellipsisNodes = document.getElementsByClassName("d3-node-ellipsis-group");
+
+		if ((domNode && !domNode.contains(e.target)) &&
+				(ellipsisNodes[0] && !ellipsisNodes[0].contains(e.target))) {
 			// This stop propagation is needed in common canvas so that selected nodes will
 			// remain selected even after clicking outside the context menu to close the menu.
 			if (this.props.stopPropagation) {
