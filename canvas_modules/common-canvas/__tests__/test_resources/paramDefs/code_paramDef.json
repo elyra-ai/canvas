@@ -297,8 +297,7 @@
         },
         "parameter_refs": [
           "code",
-          "code_rows",
-          "listControlName"
+          "code_rows"
         ]
       }]
     }]

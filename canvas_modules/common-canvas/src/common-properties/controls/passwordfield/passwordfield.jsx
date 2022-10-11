@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput, Form } from "carbon-components-react";
+import { PasswordInput, Form } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
@@ -41,7 +41,7 @@ class PasswordControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<Form>
-					<TextInput.PasswordInput
+					<PasswordInput
 						{...validationProps}
 						autoComplete="off"
 						id={this.id}
