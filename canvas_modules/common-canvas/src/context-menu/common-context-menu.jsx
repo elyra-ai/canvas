@@ -94,8 +94,8 @@ class CommonContextMenu extends React.Component {
 
 		// Add a pixel to x and y because on Chrome without this the context menu
 		// appears with  the top corner of the first menu item under the mouse
-		// cursor. This highlights the first menu (which looks weird) and, if the
-		// first item is a cascade menu, automatically opens the sub-menu.
+		// cursor. This highlights the first menu item (which looks weird) and, if
+		// the first item is a cascade menu, automatically opens the sub-menu.
 		menuPos.x += 1;
 		menuPos.y += 1;
 

@@ -76,14 +76,14 @@ export default class ContextMenuWrapper extends React.Component {
 		}
 	}
 
-	// Retruns true if the event occurred is over the context menu.
+	// Retruns true if the event occurred over the context menu.
 	isOverContextMenu(e) {
 		const domNode = document.getElementById("context-menu-popover");
 		return !domNode || domNode.contains(e.target);
 	}
 
 	// Returns true if the event occurred over the ellipsis button. Typically
-	// there will be only one ellipsis button onthe canvas, since they are only
+	// there will be only one ellipsis button on the canvas, since they are only
 	// displayed on hover, but in some test cicumstances there might be more
 	// than one.
 	isOverEllipsisButton(e) {
