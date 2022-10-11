@@ -46,6 +46,7 @@ class ToggleControl extends React.Component {
 		const labelOn = this.props.controller.getResource(overrideLabelKeyOn, defaultOnEditLabel);
 		const labelOff = this.props.controller.getResource(overrideLabelKeyOff, defaultOffEditLabel);
 		const size = this.props.tableControl ? "sm" : "md";
+		const tableLabelText = this.props.tableControl ? false : this.props.controlItem;
 		const toggleControl = (<Toggle
 			id={this.id}
 			size={size}
@@ -54,7 +55,7 @@ class ToggleControl extends React.Component {
 			labelB={labelOn}
 			labelA={labelOff}
 			onToggle={this.handleChange.bind(this)}
-			labelText={this.props.controlItem}
+			labelText={tableLabelText}
 		/>);
 		const className = classNames("properties-toggle", { "hide": this.props.state === STATES.HIDDEN }, this.props.messageInfo ? this.props.messageInfo.type : null);
 		return (
