@@ -716,7 +716,10 @@ export default class APIPipeline {
 	}
 
 	setNodeProperties(nodeId, properties) {
-		this.store.dispatch({ type: "SET_NODE_PROPERTIES", data: { nodeId: nodeId, properties: properties }, pipelineId: this.pipelineId });
+		let newNode = cloneDeep(this.getNode(nodeId));
+		newNode = Object.assign(newNode, properties);
+		newNode = this.objectModel.setNodeAttributes(newNode);
+		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
 	}
 
 	setNodeMessage(nodeId, message) {
@@ -736,17 +739,11 @@ export default class APIPipeline {
 	}
 
 	setNodeInputPorts(nodeId, inputs) {
-		const node = this.getNode(nodeId);
-		node.inputs = inputs;
-		const newNode = this.objectModel.setNodeAttributes(node);
-		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+		this.setNodeProperties(nodeId, { inputs });
 	}
 
 	setNodeOutputPorts(nodeId, outputs) {
-		const node = this.getNode(nodeId);
-		node.outputs = outputs;
-		const newNode = this.objectModel.setNodeAttributes(node);
-		this.store.dispatch({ type: "REPLACE_NODE", data: { node: newNode }, pipelineId: this.pipelineId });
+		this.setNodeProperties(nodeId, { outputs });
 	}
 
 	addCustomAttrToNodes(nodeIds, attrName, attrValue) {
