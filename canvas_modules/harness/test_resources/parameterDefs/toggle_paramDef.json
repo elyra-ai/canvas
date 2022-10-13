@@ -149,7 +149,7 @@
       {
         "parameter_ref": "toggle_warning",
         "label": {
-          "default": "Warning"
+          "default": "toggle Warning"
         },
           "control": "toggle",
         "description": {
