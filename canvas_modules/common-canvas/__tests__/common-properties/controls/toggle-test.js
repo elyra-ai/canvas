@@ -102,10 +102,6 @@ describe("toggle classnames appear correctly", () => {
 		wrapper = renderedObject.wrapper;
 	});
 
-	it("toggle should have custom classname defined", () => {
-		expect(wrapper.find(".toggle-control-class")).to.have.length(1);
-	});
-
 	it("toggle should have custom classname defined in table cells", () => {
 		propertyUtils.openSummaryPanel(wrapper, "toggle-table-summary");
 		expect(wrapper.find(".table-toggle-control-class")).to.have.length(2);
