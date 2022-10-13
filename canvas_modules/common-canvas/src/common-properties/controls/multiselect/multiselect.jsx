@@ -154,7 +154,7 @@ class MultiSelectControl extends React.Component {
 				onChange={this.handleOnChange}
 				placeholder={label}
 				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 			/>);
 		} else {
 			dropdownComponent = (<MultiSelect
@@ -167,7 +167,7 @@ class MultiSelectControl extends React.Component {
 				onChange={this.handleOnChange}
 				label={label}
 				titleText={this.props.tableControl ? null : this.props.controlItem}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 			/>);
 		}
 

@@ -44,6 +44,7 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 	case ItemType.PANEL:
 	case ItemType.CUSTOM_PANEL:
 	case ItemType.ADDITIONAL_LINK:
+	case ItemType.TEARSHEET:
 	case ItemType.CHECKBOX_SELECTOR: {
 		if (uiItem.panel && uiItem.panel.id) {
 			panelTree[currentPanel].panels.push(uiItem.panel.id);
