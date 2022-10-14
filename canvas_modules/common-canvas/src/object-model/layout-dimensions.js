@@ -57,7 +57,7 @@ const portsHorizontalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -448,7 +448,7 @@ const portsVerticalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
