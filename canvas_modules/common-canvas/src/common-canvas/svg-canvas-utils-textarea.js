@@ -365,11 +365,18 @@ export default class SvgCanvasTextArea {
 			.attr("class", data.className)
 			.text(unescapeText(data.text))
 			.on("keydown", (d3Event) => {
-				// Don't accept return key press when text is all on one line or
-				// if application doesn't want line feeds inserted in the label.
-				if ((data.singleLine || !data.allowReturnKey) &&
-						d3Event.keyCode === RETURN_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				// If user hits return/enter
+				if (d3Event.keyCode === RETURN_KEY) {
+					if (data.allowReturnKey === "save") {
+						this.textAreaLabelSaved = true;
+						this.saveAndCloseTextArea(foreignObject, data, d3Event.target.value, d3Event);
+						return;
+
+					// Don't accept return key press when text is all on one line or
+					// if application doesn't want line feeds inserted in the label.
+					} else if (data.singleLine || !data.allowReturnKey) {
+						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					}
 				}
 				// If user presses ESC key revert back to original text by just
 				// closing the text area.
@@ -406,6 +413,13 @@ export default class SvgCanvasTextArea {
 				// so label returns to what it was before editing started.
 				if (this.textAreaEscKeyPressed) {
 					this.textAreaEscKeyPressed = false;
+					return;
+				}
+
+				// If the text label has been saved by the user hitting the return key
+				// we just return since there's nothing further to do.
+				if (this.textAreaLabelSaved) {
+					this.textAreaLabelSaved = false;
 					return;
 				}
 
