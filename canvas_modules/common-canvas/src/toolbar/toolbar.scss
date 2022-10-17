@@ -76,8 +76,8 @@ $toolbar-divider-width: 1px;
 			background-color: $ui-01;
 			padding: 0;
 			.toolbar-icon-label.before {
-				padding-right: 6px;
-				padding-bottom: 5px;
+				padding-right: $spacing-03;
+				padding-bottom: $spacing-03;
 			}
 		}
 		& button:hover {
