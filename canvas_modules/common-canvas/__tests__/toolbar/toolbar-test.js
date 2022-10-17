@@ -152,23 +152,34 @@ describe("Toolbar renders correctly", () => {
 		expect(defaultButtons.find(".bx--btn--sm")).to.have.length(3);
 	});
 
-	it("should render a Toolbar buttons with hasIconOnly for those without label ", () => {
+	it("should render a Toolbar buttons with only icons ", () => {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "palette", label: "Palette", enable: true },
-				{ divider: true },
-				{ action: "stop", label: "Stop Execution", enable: false },
-				{ action: "run", label: "Run Pipeline", enable: false },
+				{ action: "cut", enable: true, incLabelWithIcon: "none" },
 			]
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
 		// Select the toolbar only icons buttons
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
-		expect(defaultButtons).to.have.length(3);
+		expect(defaultButtons).to.have.length(1);
 
 		// Verify if the buttons show up with icon-only carbon class
-		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(3);
+		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(1);
+	});
+
+	it("should render a Toolbar buttons with icon&label ", () => {
+		const toolbarConfig = {
+			leftBar: [
+				{ action: "run", label: "Label btn", enable: true },
+			]
+		};
+		const canvasToolbar = createToolbar(toolbarConfig);
+		// Select the toolbar only icons buttons
+		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
+
+		expect(defaultButtons).to.have.length(1);
+		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(1);
 	});
 });
 
