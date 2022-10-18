@@ -846,7 +846,7 @@
           "default": "Empty table with no add-remove buttons"
         },
         "place_holder_text": {
-          "default": "Empty table placeholder text"
+          "default": "Empty table placeholder text. This is a multi-line long long long long long text. It should have some left and right padding."
         }
       },
       {
