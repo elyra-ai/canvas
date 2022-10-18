@@ -34,6 +34,7 @@ export const NOTIFICATION_ICON_CLASS = "notificationCounterIcon";
 // Values for enableInteractionType config parameter
 export const INTERACTION_MOUSE = "Mouse";
 export const INTERACTION_TRACKPAD = "Trackpad";
+export const INTERACTION_LEGACY = "Legacy";
 
 // Values for enableLinkType config parameter
 export const LINK_TYPE_CURVE = "Curve";
