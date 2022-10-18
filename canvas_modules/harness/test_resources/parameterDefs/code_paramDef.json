@@ -12,7 +12,8 @@
     "listControlName": [
       "list item 1"
     ],
-    "passwordField": ""
+    "passwordField": "",
+    "hide": true
   },
   "parameters": [
     {
@@ -93,6 +94,10 @@
         "blue",
         "purple"
       ]
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
     }
   ],
   "uihints": {
@@ -239,6 +244,12 @@
         "description": {
           "default": "someofselect test"
         }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'checkbox hidden'"
+        }
       }
     ],
     "group_info": [{
@@ -297,11 +308,25 @@
         },
         "parameter_refs": [
           "code",
+          "hide",
           "code_rows"
         ]
       }]
     }]
   },
-  "conditions": [],
+  "conditions": [{
+    "visible": {
+      "parameter_refs": [
+        "code_rows"
+      ],
+      "evaluate": {
+        "condition": {
+          "parameter_ref": "hide",
+          "op": "equals",
+          "value": false
+        }
+      }
+    }
+  }],
   "resources": {}
 }
