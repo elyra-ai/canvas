@@ -134,6 +134,7 @@ $row-left-padding: $spacing-02;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding: 0 $spacing-05;
 	@include carbon--type-style("body-long-01");
 }
 
