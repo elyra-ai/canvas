@@ -32,26 +32,20 @@ $toolbar-divider-width: 1px;
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
-	.toolbar-left-bar
-	.toolbar-item.default.icon_button_1-action button,
-	.toolbar-item.default.icon_button_2-action button,
-	.toolbar-item.default.icon_button_3-action button,
-	.toolbar-item.default.icon_button_4-action button {
-		margin: 0;
+	.toolbar-left-bar .toolbar-item-content.default {
 		padding: 0;
 	}
 }
-.toolbar-left-bar .toolbar-icon-label.before{
-	margin: 0;
-	padding: 0
-}
+
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
 	padding-right: 42px;
 	overflow: hidden;
 	align-items: center;
+	padding-right: 0;
 }
+
 .toolbar-right-bar {
 	display: flex;
 	flex-direction: row-reverse;
@@ -75,9 +69,11 @@ $toolbar-divider-width: 1px;
 		& button {
 			background-color: $ui-01;
 			padding: 0;
-			.toolbar-icon-label.before {
-				padding-right: $spacing-03;
-				padding-bottom: $spacing-03;
+			.toolbar-item-content {
+				padding: 11px;
+				height: $spacing-07;
+				min-width: $spacing-07;
+				align-items: center;
 			}
 		}
 		& button:hover {
@@ -148,7 +144,6 @@ $toolbar-divider-width: 1px;
 	}
 	&.default {
 		color: $icon-01; // Used by label and pick up as currentColor in icons.
-		align-items: center;
 	}
 	&.disabled.default {
 		color: $disabled-02;
