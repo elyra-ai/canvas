@@ -2092,7 +2092,7 @@ export default class SVGCanvasRenderer {
 
 	drawRegionSelector(d3Event) {
 		this.removeRegionSelector();
-		let { startX, startY, width, height } = this.getRegionDimensions(d3Event);
+		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
 
 		this.canvasGrp
 			.append("rect")
