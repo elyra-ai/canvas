@@ -55,4 +55,17 @@ describe("tearsheet tests", () => {
 		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
 		expect(controller.getActiveTearsheet()).to.equal(null);
 	});
+	it("should show tearsheet content which is previously hidden", () => {
+		expect(wrapper.find("div.properties-tearsheet-panel")).to.have.length(1);
+		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
+		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(0);
+		wrapper.update();
+		wrapper.find("div[data-id='properties-hide'] input[type='checkbox']").simulate("click");
+		wrapper.update();
+		wrapper.find("div[data-id='properties-ctrl-code_rows'] button.maximize").simulate("click");
+		wrapper.update();
+		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
+		expect(wrapper.find("div.properties-tearsheet-panel .bx--modal-header h3").text()).to.equal("Python 2");
+		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(1);
+	});
 });

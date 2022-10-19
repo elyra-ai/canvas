@@ -248,7 +248,7 @@
       {
         "parameter_ref": "hide",
         "label": {
-          "default": "Hide 'checkbox hidden'"
+          "default": "Hide code control"
         }
       }
     ],
