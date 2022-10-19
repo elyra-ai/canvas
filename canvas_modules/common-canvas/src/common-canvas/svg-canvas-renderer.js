@@ -1798,18 +1798,11 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
-		// The this.zoomingAction flag indicates zooming is being invoked
-		// programmatically.
-		if (this.zoomingAction) {
-			this.regionSelect = false;
-		} else if (this.shouldDoRegionSelect(d3Event)) {
-			this.regionSelect = true;
-		} else {
-			this.regionSelect = false;
-		}
+		this.regionSelect = this.shouldDoRegionSelect(d3Event);
 
 		if (this.regionSelect) {
-			// Add a delay so, if the user just clicks, they don't see the crosshair momentarily.
+			// Add a delay so, if the user just clicks, they don't see the crosshair.
+			// This will be cleared in zoomEnd.
 			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
@@ -1873,7 +1866,7 @@ export default class SVGCanvasRenderer {
 				this.selecting = false;
 			}
 
-		} else if (this.regionSelect === true) {
+		} else if (this.regionSelect) {
 			this.zoomEndRegionSelect(d3Event);
 
 		} else if (this.dispUtils.isDisplayingFullPage() && this.zoomChanged()) {
@@ -1885,11 +1878,17 @@ export default class SVGCanvasRenderer {
 		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
 		this.contextMenuClosedOnZoom = false;
+		this.regionSelect = false;
 	}
 
 	// Returns true if the region select gesture is requested by the user.
 	shouldDoRegionSelect(d3Event) {
-		if (this.config.enableInteractionType === INTERACTION_LEGACY &&
+		// The this.zoomingAction flag indicates zooming is being invoked
+		// programmatically.
+		if (this.zoomingAction) {
+			return false;
+
+		} else if (this.config.enableInteractionType === INTERACTION_LEGACY &&
 				(d3Event && d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) {
 			return true;
 
@@ -1944,8 +1943,6 @@ export default class SVGCanvasRenderer {
 
 	zoomEndRegionSelect(d3Event) {
 		this.removeRegionSelector();
-
-		this.regionSelect = false;
 
 		// Reset the transform x and y to what they were before the region
 		// selection action was started. This directly sets the x and y values
