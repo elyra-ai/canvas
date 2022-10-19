@@ -292,16 +292,15 @@ export default class SVGCanvasRenderer {
 		return this.spaceKeyPressed;
 	}
 
-	// Returns true if the augmentation key is pressed to alter the drag behavior.
-	// This can be either the shift key or the space bar depending on the
-	// interaction mode.
+	// Returns true if the event indicates that a drag is in action. This means
+	// with regular Mouse interation that the space bar is pressed or with
+	// legacy interation it means the shift key is NOT pressed.
 	isDragActivated(d3Event) {
 		if (this.config.enableInteractionType === INTERACTION_MOUSE) {
 			return this.isSpaceKeyPressed();
 		}
 		return (d3Event && d3Event.sourceEvent && !d3Event.sourceEvent.shiftKey);
 	}
-
 
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
@@ -1802,7 +1801,7 @@ export default class SVGCanvasRenderer {
 
 		if (this.regionSelect) {
 			// Add a delay so, if the user just clicks, they don't see the crosshair.
-			// This will be cleared in zoomEnd.
+			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
 			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
@@ -1846,7 +1845,9 @@ export default class SVGCanvasRenderer {
 	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
+		// Clears the display of the crosshair cursor if the user clicks within 200 ms
 		clearTimeout(this.addingCrossHairCursor);
+
 		const transPos = this.getTransformedMousePos(d3Event);
 
 		if (this.drawingNewLinkData) {
@@ -1855,16 +1856,11 @@ export default class SVGCanvasRenderer {
 		} else if (this.draggingLinkData) {
 			this.stopDraggingLink();
 
+		// The user just clicked -- with no drag.
 		} else if (transPos.x === this.zoomStartPoint.startX &&
 							transPos.y === this.zoomStartPoint.startY &&
 							!this.zoomChanged()) {
-			// Only clear selections if clicked on the canvas of the current active pipeline.
-			// Clicking the canvas of an expanded supernode will select that node.
-			if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
-				this.selecting = true;
-				this.canvasController.clearSelections();
-				this.selecting = false;
-			}
+			this.zoomClick();
 
 		} else if (this.regionSelect) {
 			this.zoomEndRegionSelect(d3Event);
@@ -1941,6 +1937,18 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Handles a zoom operation that is just a click on the canvas background.
+	zoomClick() {
+		// Only clear selections if clicked on the canvas of the current active pipeline.
+		// Clicking the canvas of an expanded supernode will select that node.
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
+			this.selecting = true;
+			this.canvasController.clearSelections();
+			this.selecting = false;
+		}
+	}
+
+	// Handles the behavior when the user stops doing a region select.
 	zoomEndRegionSelect(d3Event) {
 		this.removeRegionSelector();
 
@@ -1969,6 +1977,8 @@ export default class SVGCanvasRenderer {
 		this.selecting = false;
 	}
 
+	// Save the zoom amount. The canvas controller/object model will decide
+	// how this info is saved.
 	zoomSave() {
 		// Set the internal zoom value for canvasSVG used by D3. This will be
 		// used by d3Event next time a zoom action is initiated.
