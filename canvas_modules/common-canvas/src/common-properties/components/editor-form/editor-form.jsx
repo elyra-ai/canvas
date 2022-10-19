@@ -454,14 +454,12 @@ class EditorForm extends React.Component {
 					{content}
 				</TwistyPanel>);
 		case ("tearsheet"):
-			if (!this.TEARSHEETS[panel.id]) {
-				this.TEARSHEETS[panel.id] = {
-					panel: panel,
-					title: panel.label,
-					description: panel.description ? panel.description.text : null,
-					content: content
-				};
-			}
+			this.TEARSHEETS[panel.id] = {
+				panel: panel,
+				title: panel.label,
+				description: panel.description ? panel.description.text : null,
+				content: content
+			};
 			if (this.props.controller.getActiveTearsheet() !== null) {
 				this.visibleTearsheet = this.TEARSHEETS[this.props.controller.getActiveTearsheet()];
 			} else {
