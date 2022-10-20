@@ -34,6 +34,7 @@ describe("Test basic undo/redo operations", function() {
 		// Undo using toolbar
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfNodes(1);
+
 		// Redo using toolbar
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfNodes(2);
@@ -42,10 +43,12 @@ describe("Test basic undo/redo operations", function() {
 		cy.linkNodes("Var. File", "Select");
 		cy.verifyLinkBetweenNodes("Var. File", "Select", 1);
 		cy.verifyLinkNodesActionOccurred("Var. File", "Select");
-		// Undo using shortcut keys
+
+		// Undo using shortcut keys - removes the link
 		cy.shortcutKeysUndo();
 		cy.verifyNumberOfPortDataLinks(0);
-		// Redo using toolbar
+
+		// Redo using toolbar - adds the link back
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfPortDataLinks(1);
 
@@ -54,23 +57,28 @@ describe("Test basic undo/redo operations", function() {
 		cy.clickToolbarAddComment();
 		cy.moveCommentToPosition("", 350, 250);
 		cy.editTextInComment("", "This comment box should be linked to the Select node.");
+		cy.verifyCommentTransform("This comment box should be linked to the Select node.", 350, 250);
 
 		// Edit comment
 		cy.editTextInComment(
 			"This comment box should be linked to the Select node.", "This comment box should be edited."
 		);
-		// Undo and redo using toolbar
+
+		// Undo using toolbar - replaces previous text
 		cy.clickToolbarUndo();
 		cy.verifyEditedCommentExists("This comment box should be linked to the Select node.");
+
+		// Redo using toolbar - puts newly added text back.
 		cy.clickToolbarRedo();
 		cy.verifyEditedCommentExists("This comment box should be edited.");
 
-		// Undo edit comment, add comment
+		// Undo edit comment, add comment -- undoes all the way back to the comment add
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(0);
+
 		// Redo add comment, edit comment
 		cy.shortcutKeysRedo();
 		cy.clickToolbarRedo();
@@ -92,37 +100,57 @@ describe("Test basic undo/redo operations", function() {
 
 		// Move node on canvas
 		cy.moveNodeToPosition("Var. File", 50, 50);
-		verifyNodeIsMoved("Var. File");
+		cy.verifyNodeTransform("Var. File", 50, 50);
+		verifyMoveObjectsCommandExecuted("Var. File");
+
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
-		verifyNodeIsNotMoved("Var. File");
+		cy.verifyNodeTransform("Var. File", 58, 72);
+		verifyUndoCommandExecuted("Var. File");
+
+		// Redo - move node back
 		cy.clickToolbarRedo();
+		cy.verifyNodeTransform("Var. File", 50, 50);
+		verifyRedoCommandExecuted("Var. File");
 
 		// Move comment on canvas
 		cy.moveCommentToPosition("This comment box should be edited.", 100, 100);
-		verifyCommentIsMoved("This comment box should be edited.");
+		cy.verifyCommentTransform("This comment box should be edited.", 100, 100);
+		verifyMoveObjectsCommandExecuted("This comment box should be edited.");
+
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		verifyCommentIsNotMoved("This comment box should be edited.");
+		cy.verifyCommentTransform("This comment box should be edited.", 350, 250);
+		verifyUndoCommandExecuted("This comment box should be edited.");
 
 		// Click somewhere on canvas to deselect comment
-		cy.clickCanvasAt(1, 1);
+		cy.mouseUpDownOnCanvasAt(1, 1);
+		cy.verifyNumberOfComments(1);
+		cy.verifyNumberOfNodes(2);
 
 		// Delete node
 		cy.deleteNodeUsingToolbar("Var. File");
 		cy.verifyNodeIsDeleted("Var. File");
-		// Undo and redo using toolbar
+		cy.verifyNumberOfNodes(1);
+
+		// Undo using toolbar - add node back
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfNodes(2);
+
+		// Redo using toolbar - remove node again
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfNodes(1);
 
 		// Delete comment
 		cy.deleteCommentUsingToolbar("This comment box should be edited.");
 		cy.verifyCommentIsDeleted("This comment box should be edited.");
-		// Undo and redo using toolbar
+		cy.verifyNumberOfComments(0);
+
+		// Undo using toolbar - add comment back
 		cy.clickToolbarUndo();
 		cy.verifyNumberOfComments(1);
+
+		// Redo using toolbar - remove comment again
 		cy.clickToolbarRedo();
 		cy.verifyNumberOfComments(0);
 
@@ -131,6 +159,7 @@ describe("Test basic undo/redo operations", function() {
 		cy.setTextFieldValue("colName", "testValue");
 		cy.saveFlyout();
 		verifyColumnNameEntryInConsole("testValue");
+
 		// Undo and redo using toolbar
 		cy.clickToolbarUndo();
 		verifyTextValueIsNotPresentInColumnName("testValue");
@@ -292,19 +321,19 @@ describe("Test select all canvas objects undo/redo operations", function() {
 
 		// Move node on canvas
 		cy.moveNodeToPosition("Sort", 50, 50);
-		verifyNodeIsMoved("Sort");
+		verifyMoveObjectsCommandExecuted("Sort");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		verifyNodeIsNotMoved("Sort");
+		verifyUndoCommandExecuted("Sort");
 		// Redo using toolbar
 		cy.clickToolbarRedo();
 
 		// Move comment on canvas
 		cy.moveCommentToPosition(" comment 1", 100, 100);
-		verifyCommentIsMoved(" comment 1");
+		verifyMoveObjectsCommandExecuted(" comment 1");
 		// Undo using toolbar
 		cy.clickToolbarUndo();
-		verifyCommentIsNotMoved(" comment 1");
+		verifyUndoCommandExecuted(" comment 1");
 		// Redo using toolbar
 		cy.clickToolbarRedo();
 	});
@@ -759,34 +788,38 @@ function verifyTextValueIsPresentInColumnName(columnName) {
 	});
 }
 
-function verifyNodeIsMoved(nodeName) {
+function verifyMoveObjectsCommandExecuted(commentText) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+		if (lastEventLog.data.selectedObjects[0].content) {
+			expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+		} else {
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(commentText);
+		}
 	});
 }
 
-function verifyNodeIsNotMoved(nodeName) {
+function verifyUndoCommandExecuted(commentText) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
 		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].label).to.equal(nodeName);
+		if (lastEventLog.data.selectedObjects[0].content) {
+			expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+		} else {
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(commentText);
+		}
 	});
 }
 
-function verifyCommentIsMoved(commentText) {
+function verifyRedoCommandExecuted(commentText) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): moveObjects");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
-	});
-}
-
-function verifyCommentIsNotMoved(commentText) {
-	cy.document().then((doc) => {
-		const lastEventLog = testUtils.getLastEventLogData(doc);
-		expect(lastEventLog.event).to.equal("editActionHandler(): undo");
-		expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+		expect(lastEventLog.event).to.equal("editActionHandler(): redo");
+		if (lastEventLog.data.selectedObjects[0].content) {
+			expect(lastEventLog.data.selectedObjects[0].content).to.equal(commentText);
+		} else {
+			expect(lastEventLog.data.selectedObjects[0].label).to.equal(commentText);
+		}
 	});
 }

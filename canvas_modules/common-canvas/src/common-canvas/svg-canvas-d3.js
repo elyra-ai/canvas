@@ -174,4 +174,12 @@ export default class SVGCanvasD3 {
 	getGhostNode(nodeTemplate) {
 		return this.renderer.getGhostNode(nodeTemplate);
 	}
+
+	setSpaceKeyPressed(state) {
+		this.renderer.setSpaceKeyPressed(state);
+	}
+
+	isSpaceKeyPressed() {
+		return this.renderer.isSpaceKeyPressed();
+	}
 }

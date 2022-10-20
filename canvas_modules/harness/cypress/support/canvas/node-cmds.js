@@ -345,23 +345,6 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		});
 });
 
-
-Cypress.Commands.add("movecCanvasToPosition", (canvasLabel, canvasX, canvasY) => {
-	cy.getNodeWithLabel(canvasLabel)
-		.then((node) => {
-			cy.window().then((win) => {
-				cy.getCanvasTranslateCoords()
-					.then((transform) => {
-						cy.get(canvasLabel)
-							.trigger("mousedown", "topLeft", { which: 1, view: win });
-						cy.get("#canvas-div-0")
-							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
-							.trigger("mouseup", { which: 1, view: win });
-					});
-			});
-		});
-});
-
 Cypress.Commands.add("deleteNodeUsingContextMenu", (nodeLabel) => {
 	// Delete node from context menu
 	cy.getNodeWithLabel(nodeLabel).rightclick();

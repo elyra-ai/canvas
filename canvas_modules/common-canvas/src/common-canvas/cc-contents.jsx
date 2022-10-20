@@ -34,6 +34,7 @@ import SVGCanvasD3 from "./svg-canvas-d3.js";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+const SPACE_KEY = 32;
 const A_KEY = 65;
 const C_KEY = 67;
 const P_KEY = 80;
@@ -88,6 +89,7 @@ class CanvasContents extends React.Component {
 		this.onCopy = this.onCopy.bind(this);
 		this.onPaste = this.onPaste.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
@@ -215,16 +217,26 @@ class CanvasContents extends React.Component {
 				}
 			}
 		}
-		// These last two keyboard actions do not alter the canvas objects so we
+		// These last three keyboard actions do not alter the canvas objects so we
 		// do not need to check this.config.enableEditingActions before calling them.
 		if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === A_KEY && actions.selectAll) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			this.props.canvasController.keyboardActionHandler("selectAll");
 
+		} else if (evt.keyCode === SPACE_KEY) {
+			if (!this.svgCanvasD3.isSpaceKeyPressed()) {
+				CanvasUtils.stopPropagationAndPreventDefault(evt);
+				this.svgCanvasD3.setSpaceKeyPressed(true);
+			}
+
 		} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.shiftKey && evt.altKey && evt.keyCode === P_KEY) {
 			CanvasUtils.stopPropagationAndPreventDefault(evt);
 			Logger.switchLoggingState(); // Switch the logging on and off
 		}
+	}
+
+	onKeyUp() {
+		this.svgCanvasD3.setSpaceKeyPressed(false);
 	}
 
 	// Records in mousePos the mouse pointer position when the pointer is inside
@@ -334,7 +346,7 @@ class CanvasContents extends React.Component {
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
-		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} onKeyDown={this.onKeyDown} />);
+		return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} />);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
