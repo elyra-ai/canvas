@@ -171,7 +171,7 @@ describe("Toolbar renders correctly", () => {
 	it("should render a Toolbar buttons with icon&label ", () => {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "run", label: "Label btn", enable: true },
+				{ action: "run", label: "Before - enabled", enable: true, incLabelWithIcon: "before" },
 			]
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
@@ -179,7 +179,7 @@ describe("Toolbar renders correctly", () => {
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
 		expect(defaultButtons).to.have.length(1);
-		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(1);
+		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(0);
 	});
 });
 
