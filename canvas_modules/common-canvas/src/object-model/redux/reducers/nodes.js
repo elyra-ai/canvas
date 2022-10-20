@@ -123,15 +123,6 @@ export default (state = [], action) => {
 			return !nodeFound;
 		});
 
-	case "SET_NODE_PROPERTIES":
-		return state.map((node, index) => {
-			if (action.data.nodeId === node.id) {
-				const newNode = Object.assign({}, node, action.data.properties);
-				return newNode;
-			}
-			return node;
-		});
-
 	case "SET_NODE_PARAMETERS":
 		return state.map((node, index) => {
 			if (action.data.nodeId === node.id) {

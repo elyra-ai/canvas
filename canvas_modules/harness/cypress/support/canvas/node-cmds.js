@@ -67,6 +67,15 @@ Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
+Cypress.Commands.add("enterLabelForNodeHitReturn", (nodeLabel, newLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > textarea")
+		.clear()
+		.type(newLabel)
+		.type("{enter}");
+});
+
+
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
 		.then((nodeId) => {
@@ -249,6 +258,15 @@ Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
 	// Click canvas to complete text entry
 	cy.get("#canvas-div-0").click(1, 1);
 });
+
+Cypress.Commands.add("enterLabelForNodeDecHitReturn", (nodeName, decId, newLabel) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel)
+		.type("{enter}");
+});
+
 
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.getSelectedNodes()

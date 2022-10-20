@@ -183,11 +183,12 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecLabelEditIconPosX(dec, obj, objType, spanObj, zoomScale) {
+		const minWidth = Math.min(spanObj.getBoundingClientRect().width, this.getDecLabelWidth(dec, obj, objType));
 		if (dec.label_align === "center") {
 			const halfWid = this.getDecLabelWidth(dec, obj, objType) / 2;
-			return halfWid + (spanObj.getBoundingClientRect().width / 2) / zoomScale;
+			return halfWid + (minWidth / 2) / zoomScale;
 		}
-		return spanObj.getBoundingClientRect().width / zoomScale;
+		return minWidth / zoomScale;
 	}
 
 	getDecLabelEditIconPosY(dec) {

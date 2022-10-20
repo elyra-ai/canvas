@@ -76,6 +76,14 @@ Cypress.Commands.add("enterLabelForLinkDec", (linkLabel, decId, newLabel) => {
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
+Cypress.Commands.add("enterLabelForLinkDecHitReturn", (linkLabel, decId, newLabel) => {
+	cy.getLinkWithLabel(linkLabel)
+		.find("[data-id='link_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel)
+		.type("{enter}");
+});
+
 
 function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";
