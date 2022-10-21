@@ -17,9 +17,9 @@
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
-import { ArrowUp16, ArrowDown16, ArrowsVertical16 } from "@carbon/icons-react";
+import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL, CARBON_ICONS } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
@@ -234,28 +234,25 @@ class VirtualizedTable extends React.Component {
 			</span>);
 		}
 
-		let tooltip = null;
-		if (columnData.description && columnData.headerLabel) {
-			tooltip = (
-				<div className="properties-tooltips">
-					<span style= {{ fontWeight: "bold" }}>{columnData.headerLabel}</span>
-					<br />
-					{columnData.description}
-				</div>
-			);
-		} else if (columnData.description) {
-			tooltip = (
-				<div className="properties-tooltips">
-					{columnData.description}
-				</div>
-			);
-		} else if (columnData.headerLabel) {
-			tooltip = (
-				<div className="properties-tooltips">
-					<span style= {{ fontWeight: "bold" }}>{columnData.headerLabel}</span>
-				</div>
-			);
-		}
+		const tooltip = columnData.headerLabel
+			? (<div className="properties-tooltips">
+				<span style= {{ fontWeight: "bold" }}>{columnData.headerLabel}</span>
+			</div>)
+			: null;
+
+		const infoIcon = isEmpty(columnData.description)
+			? null
+			: (<div className="properties-vt-info-icon-tip">
+				<Tooltip
+					id={`properties-tooltip-${columnData.headerLabel}-info`}
+					tip={columnData.description}
+					direction="bottom"
+					className="properties-tooltips"
+					showToolTipOnClick
+				>
+					<Information16 className="properties-vt-info-icon" />
+				</Tooltip>
+			</div>);
 
 		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
@@ -279,20 +276,27 @@ class VirtualizedTable extends React.Component {
 			</Draggable>)
 			: "";
 
+		const header = isEmpty(tooltip)
+			? (<div className="properties-vt-label-icon">
+				{label}
+				{infoIcon}
+			</div>)
+			: (<div className="properties-vt-label-tip-icon">
+				<Tooltip
+					id={tooltipId}
+					tip={tooltip}
+					direction="bottom"
+					className="properties-tooltips"
+				>
+					{label}
+				</Tooltip>
+				{infoIcon}
+			</div>);
+
 		return (
 			<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
 				<div className={classNames("properties-vt-column properties-tooltips-container", { "sort-column-active": dataKey === this.props.sortBy })}>
-					{ isEmpty(tooltip)
-						? label
-						: <Tooltip
-							id={tooltipId}
-							tip={tooltip}
-							direction="bottom"
-							className="properties-tooltips"
-						>
-							{label}
-						</Tooltip>
-					}
+					{header}
 					{disableSort === false && sortIcon}
 				</div>
 				{ resizeElem }
