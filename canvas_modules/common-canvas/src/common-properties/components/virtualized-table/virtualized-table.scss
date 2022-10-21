@@ -108,6 +108,12 @@
 		.properties-vt-info-icon-tip {
 			height: $spacing-05;
 			margin-left: $spacing-03;
+
+			.properties-vt-info-icon {
+				&:hover {
+					cursor: pointer;
+				}
+			}
 		}
 	}
 

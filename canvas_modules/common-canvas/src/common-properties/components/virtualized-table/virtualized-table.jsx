@@ -19,7 +19,7 @@ import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
 import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL, CARBON_ICONS } from "./../../constants/constants";
+import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
