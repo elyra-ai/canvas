@@ -390,12 +390,12 @@ describe("structuretable control renders correctly", () => {
 		expect(columns.at(0).find(".tooltip-container")).to.have.length(1);
 		expect(columns.at(1).find(".tooltip-container")).to.have.length(1);
 		expect(columns.at(2).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(2).find(".properties-vt-info-icon")).to.have.length(1);
+		expect(columns.at(2).find("svg.properties-vt-info-icon")).to.have.length(1);
 		expect(columns.at(3).find(".tooltip-container")).to.have.length(1);
 		expect(columns.at(4).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(4).find(".properties-vt-info-icon")).to.have.length(1);
+		expect(columns.at(4).find("svg.properties-vt-info-icon")).to.have.length(1);
 		expect(columns.at(5).find(".tooltip-container")).to.have.length(2);
-		expect(columns.at(5).find(".properties-vt-info-icon")).to.have.length(1);
+		expect(columns.at(5).find("svg.properties-vt-info-icon")).to.have.length(1);
 	});
 
 	it("should select add columns button and field picker should display", () => {
