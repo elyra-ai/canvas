@@ -398,18 +398,22 @@
               "content": "The 4 different node types",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "nodeIDSuperNodePE",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "id125TTEEIK7V",
                   "class_name": "canvas-comment-link"
                 }

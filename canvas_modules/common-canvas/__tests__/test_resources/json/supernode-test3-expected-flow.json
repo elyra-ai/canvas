@@ -805,6 +805,7 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
+                  "id": "aaee5567d-aaaa-bbbb-ccccc-d5d6d7d8d7",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -1521,10 +1522,12 @@
               "content": "Connected to 4 nodes\n",
               "associated_id_refs": [
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "nodeIDMultiPlotPE",
                   "class_name": "d3-comment-link"
                 }

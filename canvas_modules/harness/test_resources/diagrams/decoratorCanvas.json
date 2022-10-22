@@ -621,6 +621,7 @@
               "content": " This node does not have any decorators.",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id1222222222",
                   "class_name": "canvas-comment-link"
                 }
@@ -636,10 +637,12 @@
               "content": "These two nodes have decorators that are hot spots. Clicking them should output a decorationHandler() message to the test harness console.",
               "associated_id_refs": [
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "id1ZZTZ3ZMYWL",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "id125TTEEIK7V",
                   "class_name": "canvas-comment-link"
                 }
@@ -655,10 +658,12 @@
               "content": " These two nodes have view only decorators",
               "associated_id_refs": [
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "1234adf2-cd45-7d34-3478-af67sdfe87",
                   "node_ref": "id2PZSCTRPRIJ",
                   "class_name": "canvas-comment-link"
                 }
@@ -674,6 +679,7 @@
               "content": " This node shows a decorator with a zoom-in image and a yellow background rectangle.",
               "associated_id_refs": [
                 {
+                  "id": "6df87f66234-672d-bbbb-aaaa-abcd5642d",
                   "node_ref": "id125111111",
                   "class_name": "canvas-comment-link"
                 }
@@ -689,6 +695,7 @@
               "content": "This node has a decorator at a custom position of x = -10 y = -10",
               "associated_id_refs": [
                 {
+                  "id": "68dae98f-78ef-a4527-7823-abfe89d78d",
                   "node_ref": "idABCD12345CT",
                   "class_name": "d3-comment-link"
                 }
@@ -704,6 +711,7 @@
               "content": "This node has two label decorators",
               "associated_id_refs": [
                 {
+                  "id": "67de892-1234-5678-90ad-7d9a3c7b9",
                   "node_ref": "idSGTRD12345XX",
                   "class_name": "d3-comment-link"
                 }
@@ -719,6 +727,7 @@
               "content": "This node should show 9 rectangle decorators each positioned at 0,0 offset from the 9 'anchor' points around the node.",
               "associated_id_refs": [
                 {
+                  "id": "6542960ae-ad47-902d-2378-894def90",
                   "node_ref": "d4b70f12-a42b-4f86-ba81-70c39cb61f7d",
                   "class_name": "d3-comment-link"
                 }

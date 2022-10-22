@@ -444,6 +444,7 @@
               "content": "These nodes should have a dark sea green fill and forest green outline and dark cyan text. \n\nOn hover, they should have deep sky blue fill and a dodger blue outline with a royal blue selection highlight.\n\nThe line to the Binding node is orange/red and is 3px width and on hover becomes blue/violet.\n\nThe line between the binding node and execution node is hot pink and on hover become purple.",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link",
                   "style": {
@@ -454,6 +455,7 @@
                   }
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "nodeIDSuperNodePE",
                   "class_name": "d3-comment-link"
                 }
