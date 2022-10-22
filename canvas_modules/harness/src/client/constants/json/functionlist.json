@@ -6343,6 +6343,9 @@
 					"value_column_info": {
 						"label": {
 							"default": "Value"
+						},
+						"description": {
+							"default": "Globals value description"
 						}
 					}
 				}

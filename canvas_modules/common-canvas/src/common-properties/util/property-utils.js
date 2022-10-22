@@ -54,6 +54,9 @@ function formatMessage(intl, key, substituteObj) {
 	const defaultMessages = { ...defaultMessages1, ...defaultMessages2 };
 	let formattedMessage;
 	if (typeof intl !== "undefined" && intl !== null) {
+		if (intl.messages[key] === "") {
+			return ""; // Allow empty strings
+		}
 		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessages[key] }, substituteObj);
 	} else {
 		formattedMessage = defaultMessages[key];

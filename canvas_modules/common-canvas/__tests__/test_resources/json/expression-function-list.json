@@ -990,10 +990,14 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Field"
             },
             "value_column_info": {
-              "label": "Value"
+              "label": {
+                "default": "Value"
+              },
+              "description": {
+                "default": "Globals value description"
+              }
             }
           }
         },
@@ -1004,15 +1008,21 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Group"
+              "label": {
+                "default": "Group"
+              }
             },
             "value_column_info": {
-              "label": "Counted Value"
+              "label": {
+                "default": "Counted Value"
+              }
             },
             "additional_column_info": [
               {
               "id": "type",
-              "label": "Type"
+              "label": {
+                "default": "Type"
+                }
               }
             ]
           }
@@ -1024,10 +1034,14 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Parameter"
+              "label": {
+                "default": "Parameter"
+              }
             },
             "value_column_info": {
-              "label": "Current Value"
+              "label": {
+                "default": "Current Value"
+              }
             }
           }
         }
