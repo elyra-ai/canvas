@@ -191,11 +191,15 @@ export default class SVGCanvasRenderer {
 		// selections when a context menu is closed during a zoom gesture.
 		this.contextMenuClosedOnZoom = false;
 
+		// Keep track of when the text editing has been ended so we don't remove
+		// selections when text editing ends during a zoom gesture.
+		this.textEditingClosedOnZoom = false;
+
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
 
 		// Used to track the start of the zoom.
-		this.zoomStartPoint = { x: 0, y: 0, k: 0, startX: 0, startY: 0 };
+		this.zoomStartPoint = { x: 0, y: 0, k: 0, startX: 0, startY: 0, pageX: 0, pageY: 0 };
 
 		// I was not able to figure out how to use the zoom filter method to
 		// allow mousedown and mousemove messages to go through to the canvas to
@@ -1797,6 +1801,14 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
+		// If text editing is in progress, this editing will be ended because a
+		// blur event will be triggered on the text area, when the user presses
+		// mouse down on the canvas (causing this zoomStart to be called).
+		// So we set this flag.
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.textEditingClosedOnZoom = true;
+		}
+
 		this.regionSelect = this.shouldDoRegionSelect(d3Event);
 
 		if (this.regionSelect) {
@@ -1815,7 +1827,11 @@ export default class SVGCanvasRenderer {
 		}
 
 		const transPos = this.getTransformedMousePos(d3Event);
-		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k, startX: transPos.x, startY: transPos.y };
+		this.zoomStartPoint = {
+			x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k,
+			startX: transPos.x, startY: transPos.y,
+			pageX: d3Event.sourceEvent.pageX, pageY: d3Event.sourceEvent.pageY
+		};
 		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 		// Calculate the canvas dimensions here, so we don't have to recalculate
 		// them for every zoom action event.
@@ -1848,17 +1864,18 @@ export default class SVGCanvasRenderer {
 		// Clears the display of the crosshair cursor if the user clicks within 200 ms
 		clearTimeout(this.addingCrossHairCursor);
 
-		const transPos = this.getTransformedMousePos(d3Event);
-
 		if (this.drawingNewLinkData) {
 			this.stopDrawingNewLink();
 
 		} else if (this.draggingLinkData) {
 			this.stopDraggingLink();
 
-		// The user just clicked -- with no drag.
-		} else if (transPos.x === this.zoomStartPoint.startX &&
-							transPos.y === this.zoomStartPoint.startY &&
+		// The user just clicked -- with no drag. We compare pageX and pageY values
+		// here because the blur event, triggered when text editing ends, can cuase
+		// the mouse position returned by D3 to be different to that on zoomStart
+		// (mouse down) when the user clicks on the canvas background.
+		} else if (d3Event.sourceEvent.pageX === this.zoomStartPoint.pageX &&
+							d3Event.sourceEvent.pageY === this.zoomStartPoint.pageY &&
 							!this.zoomChanged()) {
 			this.zoomClick();
 
@@ -1874,6 +1891,7 @@ export default class SVGCanvasRenderer {
 		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
 		this.contextMenuClosedOnZoom = false;
+		this.textEditingClosedOnZoom = false;
 		this.regionSelect = false;
 	}
 
@@ -1939,9 +1957,15 @@ export default class SVGCanvasRenderer {
 
 	// Handles a zoom operation that is just a click on the canvas background.
 	zoomClick() {
-		// Only clear selections if clicked on the canvas of the current active pipeline.
-		// Clicking the canvas of an expanded supernode will select that node.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
+		// Only clear selections if:
+		// * the user clicked on the canvas of the current active pipeline
+		//   (because clicking the canvas of an expanded supernode will select that
+		//    node) and
+		// * we have not just closed the context menu and
+		// * we have not just ended any text editing
+		if (this.dispUtils.isDisplayingCurrentPipeline() &&
+				!this.contextMenuClosedOnZoom &&
+				!this.textEditingClosedOnZoom) {
 			this.selecting = true;
 			this.canvasController.clearSelections();
 			this.selecting = false;
