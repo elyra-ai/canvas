@@ -19,6 +19,9 @@ $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
 $toolbar-divider-width: 1px;
+.common-canvas-items-container .toolbar-item {
+	padding: 3px;
+}
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
@@ -41,14 +44,6 @@ $toolbar-divider-width: 1px;
 	align-items: center;
 	.toolbar-icon-label.before {
 		padding: $spacing-04;
-	}
-	.togglePalette-action,
-	.undo-action,.redo-action,
-	.cut-action,.copy-action,
-	.paste-action,
-	.createAutoComment-action,
-	.deleteSelectedObjects-action{
-		padding: 3px;
 	}
 }
 

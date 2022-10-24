@@ -123,7 +123,7 @@ TableButtons.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	customButtons: PropTypes.array.isRequired,
 	tableState: PropTypes.string,
-	customButtonsState: PropTypes.object, // set in by redux
+	customButtonsState: PropTypes.object // set in by redux
 };
 
 export default TableButtons;

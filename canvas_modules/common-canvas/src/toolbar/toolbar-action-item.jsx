@@ -177,8 +177,7 @@ class ToolbarActionItem extends React.Component {
 		);
 		buttonContent = this.wrapInTooltip(buttonContent);
 
-		let btnHasIcon = false;
-		btnHasIcon = this.props.actionObj.incLabelWithIcon !== "before" && this.props.actionObj.incLabelWithIcon !== "after";
+		const btnHasIcon = this.props.actionObj.incLabelWithIcon !== "before" && this.props.actionObj.incLabelWithIcon !== "after";
 		buttonContent = (
 			<Button kind={kind}
 				onClick={this.actionClickHandler}
