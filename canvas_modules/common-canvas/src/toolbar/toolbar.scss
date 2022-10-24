@@ -32,18 +32,24 @@ $toolbar-divider-width: 1px;
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
-	.toolbar-left-bar .toolbar-item-content.default {
-		padding: 0;
-	}
 }
 
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
-	padding-right: 42px;
 	overflow: hidden;
 	align-items: center;
-	padding-right: 0;
+	.toolbar-icon-label.before {
+		padding: $spacing-04;
+	}
+	.togglePalette-action,
+	.undo-action,.redo-action,
+	.cut-action,.copy-action,
+	.paste-action,
+	.createAutoComment-action,
+	.deleteSelectedObjects-action{
+		padding: 3px;
+	}
 }
 
 .toolbar-right-bar {
@@ -63,14 +69,12 @@ $toolbar-divider-width: 1px;
 		height: $toolbar-button-height;
 		min-height: 30px;
 	}
-
 	&.default,
 	&.ghost {
 		& button {
 			background-color: $ui-01;
 			padding: 0;
 			.toolbar-item-content {
-				padding: 11px;
 				height: $spacing-07;
 				min-width: $spacing-07;
 				align-items: center;
@@ -137,7 +141,6 @@ $toolbar-divider-width: 1px;
 	width: inherit;
 	display: flex;
 	justify-content: center;
-	padding: 11px;
 	&.overflow {
 		justify-content: left;
 		padding: 8px 0;
