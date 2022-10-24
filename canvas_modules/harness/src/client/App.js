@@ -463,8 +463,9 @@ class App extends React.Component {
 
 		// Create messages here (not in the render) since that would cause
 		// unnecssary renders inside common-canvas and/or common-properties.
-		this.messages = getMessages(this.locale, [HarnessBundles,
-			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
+		this.messages = getMessages(this.locale, [
+			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles,
+			HarnessBundles]); // Allow test harness to override labels
 	}
 
 	componentDidMount() {
