@@ -27,6 +27,7 @@ import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
 import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
 import * as messages from "./../../../locales/common-properties/locales/en.json";
+import * as harnessMessages from "./../,,/../../../../harness/src/intl/locales/en.json";
 
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
@@ -436,6 +437,33 @@ describe("expression-builder renders correctly", () => {
 				.text();
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
+	});
+
+	it("expression builder displays table header descriptions in info icon", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = propertyUtils.flyoutEditorFormWithIntl(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		const expression = wrapper.find("div[data-id='properties-ctrl-expression']");
+		const expressionEditorBtn = expression.find("button.properties-expression-button");
+		expressionEditorBtn.simulate("click");
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+
+		// Verify custom header label
+		const header = valuesTable.find("div[data-role='properties-header-row']");
+		const headerLabel = header.find(".properties-vt-label-tip-icon");
+		expect(headerLabel).to.have.length(1);
+		expect(header.text()).to.equal(harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
+
+		// Verify info icon
+		const headerInfoIcon = header.find(".properties-vt-info-icon-tip");
+		expect(headerInfoIcon).to.have.length(1);
+		let infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		expect(infoTip.props()).to.have.property("aria-hidden", true);
+		headerInfoIcon.find("div[data-id='properties-tooltip-Custom Value-info-trigger']").simulate("click");
+		infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		expect(infoTip.props()).to.have.property("aria-hidden", false);
 	});
 });
 
