@@ -17,7 +17,7 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import * as UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
-import { mountWithIntl } from "./intl-utils";
+import { mountWithIntl, mountWithIntlMessages } from "./intl-utils";
 import { expect } from "chai";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -75,6 +75,51 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
 }
 
+// Uses 'mountWithIntlMessages()' to allow for custom resources to be applied from the test harness
+function flyoutEditorFormWithIntl(paramDef, propertiesConfigOverrides, callbacksOverrides, propertiesInfoOverrides) {
+	const applyPropertyChanges = sinon.spy();
+	const closePropertiesDialog = sinon.spy();
+	let callbacks = {
+		applyPropertyChanges: applyPropertyChanges,
+		closePropertiesDialog: closePropertiesDialog,
+		controllerHandler: controllerHandler
+	};
+	if (callbacksOverrides) {
+		callbacks = Object.assign(callbacks, callbacksOverrides);
+	}
+
+	let propertiesInfo = {
+		parameterDef: cloneDeep(paramDef)
+	};
+
+	if (propertiesInfoOverrides) {
+		propertiesInfo = Object.assign(propertiesInfo, propertiesInfoOverrides);
+	}
+
+	let propertiesConfig = {
+		applyOnBlur: true,
+		rightFlyout: true,
+		containerType: "Custom"
+	};
+	if (propertiesConfigOverrides) {
+		propertiesConfig = Object.assign(propertiesConfig, propertiesConfigOverrides);
+	}
+
+	const wrapper = mountWithIntlMessages(
+		<div className="properties-right-flyout">
+			<CommonProperties
+				propertiesInfo={propertiesInfo}
+				propertiesConfig={propertiesConfig}
+				callbacks={callbacks}
+				customControls={[CustomTableControl, CustomToggleControl]}
+				customConditionOps={[CustomOpMax]}
+			/>
+		</div>
+	);
+
+	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
+}
+
 function setControls(controller, controls) {
 	const parsedControls = [];
 	for (const control of controls) {
@@ -113,6 +158,7 @@ function getParameterFromParamDef(parameterId, paramDef) {
 
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
+	flyoutEditorFormWithIntl: flyoutEditorFormWithIntl,
 	setControls: setControls,
 	genLongString: genLongString,
 	openSummaryPanel: openSummaryPanel,

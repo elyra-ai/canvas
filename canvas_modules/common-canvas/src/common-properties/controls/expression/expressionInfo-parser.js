@@ -57,8 +57,19 @@ function setExpressionInfo(inExpressionInfo) {
 				if (inExpressionInfo.fields.field_categories) {
 					inExpressionInfo.fields.field_categories.forEach((fieldCat) => {
 						fieldCat.locLabel = l10nProvider.l10nLabel(fieldCat, fieldCat.id);
+
 						fieldCat.field_columns.field_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
 						fieldCat.field_columns.value_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
+
+						const fieldColInfoDesc = l10nProvider.l10nDesc(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
+						if (fieldColInfoDesc !== fieldCat.id + ".field_column_info") {
+							fieldCat.field_columns.field_column_info.descLabel = fieldColInfoDesc;
+						}
+						const valueColInfoDesc = l10nProvider.l10nDesc(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
+						if (valueColInfoDesc !== fieldCat.id + ".value_column_info") {
+							fieldCat.field_columns.value_column_info.descLabel = valueColInfoDesc;
+						}
+
 						if (fieldCat.field_columns.additional_column_info) {
 							fieldCat.field_columns.additional_column_info.forEach((col) => {
 								col.locLabel = l10nProvider.l10nLabel(col, fieldCat.id + ".additional_column_info." + col.id);

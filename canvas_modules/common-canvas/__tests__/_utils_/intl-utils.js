@@ -17,6 +17,9 @@
 import { IntlProvider } from "react-intl";
 import { mount, shallow } from "enzyme";
 
+import { getMessages } from "../../../harness/src/intl/intl-utils";
+import * as HarnessBundles from "../../../harness/src/intl/locales";
+
 const defaultLocale = "en-US";
 const locale = defaultLocale;
 
@@ -26,6 +29,20 @@ export function mountWithIntl(node, inOptions) {
 		wrappingComponentProps: {
 			locale,
 			defaultLocale
+		}
+	}, inOptions);
+	return mount(node, options);
+}
+
+// Allow for custom resources to be applied from the test harness
+export function mountWithIntlMessages(node, inOptions) {
+	const messages = getMessages("en", [HarnessBundles]); // Allow test harness to override labels
+	const options = Object.assign({
+		wrappingComponent: IntlProvider,
+		wrappingComponentProps: {
+			locale,
+			defaultLocale,
+			messages
 		}
 	}, inOptions);
 	return mount(node, options);
