@@ -5772,6 +5772,7 @@
               "content": "",
               "associated_id_refs": [
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "id7KBTL695D5M",
                   "class_name": "canvas-comment-link"
                 }
