@@ -108,7 +108,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 	it("Test node cannot be dragged when enableEditingActions is false", function() {
 
-		cy.setCanvasConfig({ "selectedEditingActions": false });
+		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
 
 		// Verify initial positon of Execution Node
 		cy.verifyNodeTransform("Execution node", 297, 139);
@@ -129,7 +129,7 @@ describe("Test to see if regular selection and drag behavior works " +
 
 	it("Test comment cannot be dragged when enableEditingActions is false", function() {
 
-		cy.setCanvasConfig({ "selectedEditingActions": false });
+		cy.setCanvasConfig({ "selectedEditingActions": false, "selectedInteractionType": "Carbon" });
 
 		// Verify initial positon of Comment
 		cy.verifyCommentTransform(
