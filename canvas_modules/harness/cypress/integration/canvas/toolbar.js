@@ -138,6 +138,8 @@ describe("Test for toolbar add comment", function() {
 
 	it("Add comments using toolbar in regular canvas and extra canvas, verify comment transform, " +
   "zoom-in and zoom-out using toolbar in regular canvas and extra canvas", function() {
+		cy.setCanvasConfig({ "selectedInteractionType": "Carbon" });
+
 		// Add first comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 1");

@@ -2088,6 +2088,7 @@ class App extends React.Component {
 
 	getCanvasConfig2() {
 		const canvasConfig2 = {
+			enableInteractionType: this.state.selectedInteractionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: this.getParentClass(),
