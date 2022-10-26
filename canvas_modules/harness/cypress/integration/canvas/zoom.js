@@ -81,6 +81,8 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 	});
 
 	it("Test ZoomTo function with x,y parameters after panning the canvas", function() {
+		cy.setCanvasConfig({ "selectedInteractionType": "Carbon" });
+
 		cy.verifyCanvasTransform(undefined);
 		// Panning the canvas.
 		cy.panCanvasToPosition(350, 200);

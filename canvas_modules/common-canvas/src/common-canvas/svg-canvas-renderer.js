@@ -41,7 +41,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
-	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_LEGACY,
+	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_CARBON,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST }
@@ -296,7 +296,7 @@ export default class SVGCanvasRenderer {
 	// with regular Mouse interation that the space bar is pressed or with
 	// legacy interation it means the shift key is NOT pressed.
 	isDragActivated(d3Event) {
-		if (this.config.enableInteractionType === INTERACTION_MOUSE) {
+		if (this.config.enableInteractionType === INTERACTION_CARBON) {
 			return this.isSpaceKeyPressed();
 		}
 		return (d3Event && d3Event.sourceEvent && !d3Event.sourceEvent.shiftKey);
@@ -1884,11 +1884,11 @@ export default class SVGCanvasRenderer {
 		if (this.zoomingAction) {
 			return false;
 
-		} else if (this.config.enableInteractionType === INTERACTION_LEGACY &&
+		} else if (this.config.enableInteractionType === INTERACTION_MOUSE &&
 				(d3Event && d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) {
 			return true;
 
-		} else if (this.config.enableInteractionType === INTERACTION_MOUSE &&
+		} else if (this.config.enableInteractionType === INTERACTION_CARBON &&
 							!this.isSpaceKeyPressed(d3Event)) {
 			return true;
 
