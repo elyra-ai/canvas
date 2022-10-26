@@ -82,7 +82,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: true,
@@ -294,7 +294,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -473,7 +473,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: false,
@@ -685,7 +685,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
