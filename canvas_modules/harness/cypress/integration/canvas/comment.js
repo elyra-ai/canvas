@@ -62,6 +62,12 @@ describe("Test creating comments", function() {
 		cy.editTextInComment("", "Second comment");
 		cy.verifyCommentTransform("Second comment", 53, 60);
 	});
+
+	it("Test that after editing a comment the comment is still selected", function() {
+		cy.clickToolbarAddComment();
+		cy.editTextInComment("", "First comment");
+		cy.verifyCommentIsSelected("First comment");
+	});
 });
 
 describe("Test creating a comment in main flow with toolbar and context menu", function() {
