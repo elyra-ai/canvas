@@ -19,9 +19,6 @@ $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
 $toolbar-divider-width: 1px;
-.common-canvas-items-container .toolbar-item {
-	padding: 3px;
-}
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
@@ -29,14 +26,21 @@ $toolbar-divider-width: 1px;
 	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
-
 	display: flex;
 	justify-content: space-between;
-
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
+	&.toolbar-size-small {
+		.toolbar-item {
+			&.default,
+			&.ghost {
+				& button {
+					padding: 0px;
+				}
+			}
+		}
+	}
 }
-
 .toolbar-left-bar {
 	flex-shrink: 5000000; // Make sure left bar always shrinks first
 	display: block;
@@ -46,7 +50,6 @@ $toolbar-divider-width: 1px;
 		padding: $spacing-04;
 	}
 }
-
 .toolbar-right-bar {
 	display: flex;
 	flex-direction: row-reverse;
@@ -58,7 +61,6 @@ $toolbar-divider-width: 1px;
 .toolbar-item {
 	background-color: $ui-01;
 	display: inline-block;
-
 	& button {
 		padding: 0;
 		height: $toolbar-button-height;
@@ -68,7 +70,7 @@ $toolbar-divider-width: 1px;
 	&.ghost {
 		& button {
 			background-color: $ui-01;
-			padding: 0;
+			padding: 3px;
 			.toolbar-item-content {
 				height: $spacing-07;
 				min-width: $spacing-07;
@@ -86,17 +88,14 @@ $toolbar-divider-width: 1px;
 			background-color: $ui-01;
 		}
 	}
-
 	&.tertiary {
 		& button {
 			color: $brand-03;
 			background-color: $ui-01;
 		}
-
 		& button:hover {
 			background-color: $hover-field;
 		}
-
 		& button:disabled,
 		& button:disabled:hover {
 			color: $disabled-02;
@@ -104,7 +103,6 @@ $toolbar-divider-width: 1px;
 		}
 	}
 }
-
 .toolbar-spacer {
 	width: 0;
 	display: inline-block;
@@ -113,7 +111,7 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 	display: inline-block;
 	& button {
-		padding: 0;
+		padding:0;
 		height: $toolbar-button-height;
 		min-height: 30px;
 		background-color: $ui-01;
