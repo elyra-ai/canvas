@@ -333,6 +333,16 @@ $link-highlight-color: $support-04;
 	}
 }
 
+.d3-label-multi-line-entry {
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: break-word;
+
+	& .d3-label-full {
+		display: inline-block;
+	}
+}
+
 .d3-label-center {
 	text-align: center;
 }
