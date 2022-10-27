@@ -127,7 +127,7 @@ export default class SvgCanvasTextArea {
 		// When Cypress tests are running a call to focus() in addTextToTextArea()
 		// can cause an incorrect blur event to be generated for the text toolbar
 		// (where relatedTarget is null). This flag therefore allows us to avoid
-		// thus blue events that occur while addTextToTextArea() is executing.
+		// that blur event that occurs while addTextToTextArea() is executing.
 		if (this.addingTextToTextArea) {
 			return;
 		}
@@ -143,11 +143,7 @@ export default class SvgCanvasTextArea {
 
 		// If the blur event is ocurring for an object outside of the textarea and
 		// text toolbar we save the current text and close the textarea.
-		const commentParent = d3.select(this.editingTextData.parentDomObj);
-		const foreignObject = commentParent.selectAll(".d3-foreign-object-text-entry");
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
+		this.completeEditing(evt);
 	}
 
 	// Applies a markdown action to the comment text being edited using
@@ -207,13 +203,13 @@ export default class SvgCanvasTextArea {
 		this.addingTextToTextArea = false;
 	}
 
-	autoSizeComment(textArea, foreignObject, data) {
+	autoSizeComment(textArea, data) {
 		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
 		if (this.textAreaHeight < scrollHeight) {
 			this.textAreaHeight = scrollHeight;
-			foreignObject.style("height", this.textAreaHeight + "px");
+			this.foreignObject.style("height", this.textAreaHeight + "px");
 			this.activePipeline.getComment(data.id).height = this.textAreaHeight;
 			this.displayCommentsCallback();
 			this.displayLinksCallback();
@@ -270,7 +266,7 @@ export default class SvgCanvasTextArea {
 	//  characters for the label, if one is provided, is not exceeded.
 	// This callback works for editable multi-line node labels and also
 	// editable multi-line text decorations for either nodes or links.
-	autoSizeMultiLineLabel(textArea, foreignObject, data) {
+	autoSizeMultiLineLabel(textArea, data) {
 		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 
 		// Restrict max characters in case text was pasted in to the text area.
@@ -281,10 +277,10 @@ export default class SvgCanvasTextArea {
 		// Temporarily set the height to zero so the scrollHeight will get set to
 		// the full height of the text in the textarea. This allows us to close up
 		// the text area when the lines of text reduce.
-		foreignObject.style("height", 0);
+		this.foreignObject.style("height", 0);
 		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
 		this.textAreaHeight = scrollHeight;
-		foreignObject.style("height", this.textAreaHeight + "px");
+		this.foreignObject.style("height", this.textAreaHeight + "px");
 	}
 
 	saveNodeLabelChanges(id, newText, newHeight, taData) {
@@ -310,7 +306,7 @@ export default class SvgCanvasTextArea {
 	// Displays a text area for an editable text decoration on either a node
 	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
-		this.displayTextArea({
+		this.editingTextData = {
 			id: dec.id,
 			text: dec.label,
 			singleLine: dec.label_single_line || false,
@@ -328,7 +324,8 @@ export default class SvgCanvasTextArea {
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
 			closeTextAreaCallback: null
-		});
+		};
+		this.displayTextArea(this.editingTextData);
 	}
 
 	// Handles saved changes to editable text decorations.
@@ -352,7 +349,7 @@ export default class SvgCanvasTextArea {
 		this.editingText = true;
 		this.editingTextId = data.id;
 
-		const foreignObject = d3.select(data.parentDomObj)
+		this.foreignObject = d3.select(data.parentDomObj)
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-text-entry")
 			.attr("width", data.width)
@@ -360,7 +357,7 @@ export default class SvgCanvasTextArea {
 			.attr("x", data.xPos)
 			.attr("y", data.yPos);
 
-		const textArea = foreignObject
+		const textArea = this.foreignObject
 			.append("xhtml:textarea")
 			.attr("class", data.className)
 			.text(unescapeText(data.text))
@@ -368,8 +365,8 @@ export default class SvgCanvasTextArea {
 				// If user hits return/enter
 				if (d3Event.keyCode === RETURN_KEY) {
 					if (data.allowReturnKey === "save") {
-						this.textAreaLabelSaved = true;
-						this.saveAndCloseTextArea(foreignObject, data, d3Event.target.value, d3Event);
+						this.textContentSaved = true;
+						this.saveAndCloseTextArea(data, d3Event.target.value, d3Event);
 						return;
 
 					// Don't accept return key press when text is all on one line or
@@ -383,7 +380,7 @@ export default class SvgCanvasTextArea {
 				if (d3Event.keyCode === ESC_KEY) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.textAreaEscKeyPressed = true;
-					this.closeTextArea(foreignObject, data);
+					this.closeTextArea(data);
 				}
 				// Prevent user entering more than any allowed maximum for characters.
 				if (data.maxCharacters &&
@@ -398,14 +395,14 @@ export default class SvgCanvasTextArea {
 				}
 			})
 			.on("keyup", (d3Event) => {
-				data.autoSizeCallback(d3Event.target, foreignObject, data);
+				data.autoSizeCallback(d3Event.target, data);
 			})
 			.on("paste", (d3Event) => {
 				this.logger.log("Text area - Paste - Scroll Ht = " + d3Event.target.scrollHeight);
 				// Allow some time for pasted text (from context menu) to be
 				// loaded into the text area. Otherwise the text is not there
 				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, d3Event.target, foreignObject, data);
+				setTimeout(data.autoSizeCallback, 500, d3Event.target, data);
 			})
 			.on("blur", (d3Event, d) => {
 				this.logger.log("Text area - blur");
@@ -418,8 +415,8 @@ export default class SvgCanvasTextArea {
 
 				// If the text label has been saved by the user hitting the return key
 				// we just return since there's nothing further to do.
-				if (this.textAreaLabelSaved) {
-					this.textAreaLabelSaved = false;
+				if (this.textContentSaved) {
+					this.textContentSaved = false;
 					return;
 				}
 
@@ -429,11 +426,11 @@ export default class SvgCanvasTextArea {
 					return;
 				}
 
-				this.saveAndCloseTextArea(foreignObject, data, d3Event.target.value, d3Event);
+				this.saveAndCloseTextArea(data, d3Event.target.value, d3Event);
 			})
 			.on("focus", (d3Event, d) => {
 				this.logger.log("Text area - focus");
-				data.autoSizeCallback(d3Event.target, foreignObject, data);
+				data.autoSizeCallback(d3Event.target, data);
 			})
 			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
 				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
@@ -445,16 +442,26 @@ export default class SvgCanvasTextArea {
 		textArea.node().setSelectionRange(data.text.length, data.text.length);
 	}
 
-	saveAndCloseTextArea(foreignObject, data, newValue, d3Event) {
+	// Complete the text editing. evt may be undefined when called from the
+	// canvas renderer.
+	completeEditing(evt) {
+		// const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
+		const commentEntry = this.foreignObject.selectAll("textarea");
+		const commentEntryElement = commentEntry.node();
+		this.textContentSaved = true;
+		this.saveAndCloseTextArea(this.editingTextData, commentEntryElement.value, evt);
+	}
+
+	saveAndCloseTextArea(data, newValue, d3Event) {
 		// If there is no text for the label and textCanBeEmpty is false
 		// just return, so label returns to what it was before editing started.
 		if (!newValue && !data.textCanBeEmpty) {
 			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			this.closeTextArea(foreignObject, data);
+			this.closeTextArea(data);
 			return;
 		}
 		const newText = newValue; // Save the text before closing the foreign object
-		this.closeTextArea(foreignObject, data);
+		this.closeTextArea(data);
 		if (data.text !== newText || this.textAreaHeight !== data.height) {
 			this.isCommentBeingUpdated = true;
 			data.saveTextChangesCallback(data.id, newText, this.textAreaHeight, data);
@@ -463,11 +470,12 @@ export default class SvgCanvasTextArea {
 	}
 
 	// Closes the text area and resets the flags.
-	closeTextArea(foreignObject, data) {
+	closeTextArea(data) {
 		if (data.closeTextAreaCallback) {
 			data.closeTextAreaCallback(data.id);
 		}
-		foreignObject.remove();
+		this.foreignObject.remove();
+		this.foreignObject = null;
 		this.editingText = false;
 		this.editingTextId = "";
 	}

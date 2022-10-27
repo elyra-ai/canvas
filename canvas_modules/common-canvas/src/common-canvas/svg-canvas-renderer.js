@@ -187,9 +187,13 @@ export default class SVGCanvasRenderer {
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
 
-		// Keep track of when the context menu has been closed so we don't remove
+		// Keep track of when the context menu has been closed, so we don't remove
 		// selections when a context menu is closed during a zoom gesture.
 		this.contextMenuClosedOnZoom = false;
+
+		// Keep track of when text editing has been closed, so we don't remove
+		// selections when that happens during a zoom gesture.
+		this.textEditingClosedfOnZoom = false;
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -1797,6 +1801,13 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
+		// Any text editing in progress will be closed by the textarea's blur event
+		// if the user clicks on the canvas background. So we set this flag to
+		// prevent the selection being lost in the zoomEnd (mouseup) event.
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.textEditingClosedfOnZoom = true;
+		}
+
 		this.regionSelect = this.shouldDoRegionSelect(d3Event);
 
 		if (this.regionSelect) {
@@ -1874,6 +1885,7 @@ export default class SVGCanvasRenderer {
 		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
 		this.contextMenuClosedOnZoom = false;
+		this.textEditingClosedfOnZoom = false;
 		this.regionSelect = false;
 	}
 
@@ -1941,7 +1953,9 @@ export default class SVGCanvasRenderer {
 	zoomClick() {
 		// Only clear selections if clicked on the canvas of the current active pipeline.
 		// Clicking the canvas of an expanded supernode will select that node.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
+		// Also, don't clear selections if we have closed a context menu or
+		// closed text editing.
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
 			this.selecting = true;
 			this.canvasController.clearSelections();
 			this.selecting = false;
@@ -2888,6 +2902,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Node Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -5186,6 +5203,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Comment Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -5846,6 +5866,9 @@ export default class SVGCanvasRenderer {
 		linkGrps
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d);
 				}
