@@ -475,7 +475,6 @@ export default class SvgCanvasTextArea {
 			data.closeTextAreaCallback(data.id);
 		}
 		this.foreignObject.remove();
-		this.foreignObject = null;
 		this.editingText = false;
 		this.editingTextId = "";
 	}
