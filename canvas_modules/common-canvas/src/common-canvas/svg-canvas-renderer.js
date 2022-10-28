@@ -743,8 +743,17 @@ export default class SVGCanvasRenderer {
 	// Returns the current mouse position based on the D3 SVG selection object
 	// passed in.
 	getMousePos(d3Event, svgSel) {
-		const mousePos = d3.pointer(d3Event, svgSel.node());
-		return { x: mousePos[0], y: mousePos[1] };
+		// The d3Event must have either a sourceEvent or be an actual event, which
+		// can be indicated by the existence of a pageX attribute. This test is only
+		// necessary on Firefox and then only when the action (such as zoom)
+		// calling this function is itself called programmatically - for example,
+		// when the user clicks one of the zoom buttons on the toolbar. It's not
+		// clear why d3.pointer cannot handle all events like it can on Chrome.
+		if (d3Event.sourceEvent || d3Event.pageX) {
+			const mousePos = d3.pointer(d3Event, svgSel.node());
+			return { x: mousePos[0], y: mousePos[1] };
+		}
+		return { x: 0, y: 0 };
 	}
 
 	// Convert coordinates from the page (based on the page top left corner) to
