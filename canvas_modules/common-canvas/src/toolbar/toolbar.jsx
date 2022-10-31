@@ -284,7 +284,7 @@ class Toolbar extends React.Component {
 		const toolbarSizeClass = this.props.size === "sm" ? "toolbar-div toolbar-size-small" : "toolbar-div";
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-				<div className={toolbarSizeClass} toolbarSizeClass instanceid={this.props.instanceId}>
+				<div className={toolbarSizeClass} instanceid={this.props.instanceId}>
 					<div className="toolbar-left-bar" onScroll={this.onScroll}>
 						{leftItems}
 					</div>
