@@ -175,6 +175,7 @@ class ToolbarActionItem extends React.Component {
 				{textContent}
 			</div>
 		);
+
 		buttonContent = this.wrapInTooltip(buttonContent);
 
 		const btnHasIcon = this.props.actionObj.incLabelWithIcon !== "before" && this.props.actionObj.incLabelWithIcon !== "after";
@@ -190,6 +191,7 @@ class ToolbarActionItem extends React.Component {
 				{buttonContent}
 			</Button>
 		);
+
 		return buttonContent;
 	}
 
