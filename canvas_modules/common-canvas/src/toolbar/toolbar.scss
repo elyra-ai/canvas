@@ -21,7 +21,9 @@ $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
 $toolbar-divider-width: 1px;
-
+.properties-custom-table-buttons .toolbar-right-bar {
+	display: none;
+}
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
@@ -37,25 +39,23 @@ $toolbar-divider-width: 1px;
 	-webkit-user-drag: none;
 	&.toolbar-size-small {
 		.toolbar-left-bar {
-			align-items: center;
-			text-align: center;
-			padding: 0px;
-		}
-		.toolbar-item {
-			&.default,
-			&.ghost {
-				& button {
-					padding: 3px;
-				}
+			padding: 0;
+			.toolbar-popover-list {
+				top: $spacing-07;
+				right: 0;
 			}
+		}
+		.toolbar-item button {
+			padding: 3px;
+			height: auto;
 		}
 		.toolbar-overflow-item {
 			background-color: $ui-01;
 			display: inline-block;
 			& button {
-				padding:0;
+				padding-bottom: 11px;
+				padding-left: 3px;
 				height: $toolbar-button-height;
-				min-height: 30px;
 				background-color: $ui-01;
 				border-right: $toolbar-divider-width solid $ui-03;
 			}
@@ -80,6 +80,7 @@ $toolbar-divider-width: 1px;
 			&.overflow {
 				justify-content: left;
 				padding: 8px 0;
+				padding-left: 8px;
 			}
 			&.default {
 				color: $icon-01; // Used by label and pick up as currentColor in icons.
@@ -88,16 +89,8 @@ $toolbar-divider-width: 1px;
 				color: $disabled-02;
 				fill: $disabled-02; // For custom svg images
 			}
-			.toolbar-icon {
-				height: $toolbar-icon-size;
-				& svg {
-					height: $toolbar-icon-size;
-					width: $toolbar-icon-size;
-					/* Prevent elements from being dragged onto canvas */
-					-webkit-user-drag: none;
-				}
-			}
 		}
+
 	}
 }
 
