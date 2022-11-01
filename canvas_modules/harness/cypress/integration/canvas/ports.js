@@ -74,79 +74,79 @@ describe("Test multiple ports operations", function() {
   "negative tests to check link is not created when maximum cardinality is reached", function() {
 		// Add port to port link and verification steps
 		cy.linkNodeOutputPortToNodeInputPort("Select4", "outPort", "Merge1", "inPort3");
-		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select4", "outPort", "Merge1", "inPort3", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Var. File", "outPort", "Select1", "inPort");
-		cy.verifyNumberOfPortDataLinks(5);
+		cy.verifyNumberOfPortDataLinks(7);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Var. File", "outPort", "Select1", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select2", "outPort1", "Table", "inPort");
-		cy.verifyNumberOfPortDataLinks(6);
+		cy.verifyNumberOfPortDataLinks(8);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select2", "outPort1", "Table", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select2", "outPort2", "Table", "inPort");
-		cy.verifyNumberOfPortDataLinks(7);
+		cy.verifyNumberOfPortDataLinks(9);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select2", "outPort2", "Table", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select2", "outPort3", "Table", "inPort");
-		cy.verifyNumberOfPortDataLinks(8);
+		cy.verifyNumberOfPortDataLinks(10);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select2", "outPort3", "Table", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select2", "outPort4", "Table", "inPort");
-		cy.verifyNumberOfPortDataLinks(9);
+		cy.verifyNumberOfPortDataLinks(11);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select2", "outPort4", "Table", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort1", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(10);
+		cy.verifyNumberOfPortDataLinks(12);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort1", "Neural Net", "inPort1", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort2", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(11);
+		cy.verifyNumberOfPortDataLinks(13);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort2", "Neural Net", "inPort1", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort3", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(12);
+		cy.verifyNumberOfPortDataLinks(14);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort3", "Neural Net", "inPort1", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort4", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(13);
+		cy.verifyNumberOfPortDataLinks(15);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort4", "Neural Net", "inPort1", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort5", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(14);
+		cy.verifyNumberOfPortDataLinks(16);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort5", "Neural Net", "inPort1", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select4", "outPort", "Sort", "inPort");
-		cy.verifyNumberOfPortDataLinks(15);
+		cy.verifyNumberOfPortDataLinks(17);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select4", "outPort", "Sort", "inPort", 1
 		);
 
 		cy.linkNodeOutputPortToNodeInputPort("Select4", "outPort", "Merge1", "inPort1");
-		cy.verifyNumberOfPortDataLinks(16);
+		cy.verifyNumberOfPortDataLinks(18);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select4", "outPort", "Merge1", "inPort1", 1
 		);
@@ -155,7 +155,7 @@ describe("Test multiple ports operations", function() {
 		// The cardinality of 'inPort2' port on 'Neural Net' node is a max of 2 so this following
 		// link should fail so we verify the number of ports is the same.
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort8", "Neural Net", "inPort2");
-		cy.verifyNumberOfPortDataLinks(16);
+		cy.verifyNumberOfPortDataLinks(18);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select3", "outPort8", "Neural Net", "inPort2", 0
 		);
@@ -163,7 +163,7 @@ describe("Test multiple ports operations", function() {
 		// Node "Select4" node "outPort" has a maximum cardinality of 4. That node already has 4 links
 		// coming from it so this next connection should fail.
 		cy.linkNodeOutputPortToNodeInputPort("Select4", "outPort", "Merge2", "inPort");
-		cy.verifyNumberOfPortDataLinks(16);
+		cy.verifyNumberOfPortDataLinks(18);
 		cy.verifyNumberOfLinksBetweenNodeOutputPortAndNodeInputPort(
 			"Select4", "outPort", "Merge2", "inPort", 0
 		);
@@ -171,7 +171,7 @@ describe("Test multiple ports operations", function() {
 		// Node "Var. File" is a binding node with no input ports. Therefore, it should not be
 		// possible to make a link to it from another node.
 		cy.linkNodeOutputPortToNode("Merge2", "outPort", "Var. File");
-		cy.verifyNumberOfPortDataLinks(16);
+		cy.verifyNumberOfPortDataLinks(18);
 	});
 });
 
