@@ -655,7 +655,9 @@ export default class SvgCanvasLinks {
 	// the target node is to the left of the source node. This is either the
 	// center point between the source and target nodes, if there is room to draw
 	// the line between them, or it is the coordinate of a wrap-around line to be
-	// drawn around the outside of the source and target nodes.
+	// drawn around the outside of the source and target nodes. The direction of
+	// the wrap around line is chosen based on which is the shortest route from
+	// the source port to the target port.
 	calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg) {
 		let midY;
 
@@ -674,17 +676,13 @@ export default class SvgCanvasLinks {
 			const srcTopInc = data.y1 - minTop;
 			const trgTopInc = data.y2 - minTop;
 
+			// Set the mid-point based in the shortest distance from the source port
+			// on the source node to the target port on the target node.
 			if (srcBottomInc + trgBottomInc > srcTopInc + trgTopInc) {
 				midY = minTop - this.canvasLayout.wrapAroundSpacing;
 			} else {
 				midY = maxBottom + this.canvasLayout.wrapAroundSpacing;
 			}
-
-			// if (data.y1 > data.y2) {
-			//      midY = Math.min(topSrc, topTrg) - this.canvasLayout.wrapAroundSpacing;
-			// } else {
-			//      midY = Math.max(bottomSrc, bottomTrg) + this.canvasLayout.wrapAroundSpacing;
-			// }
 		}
 
 		return midY;
