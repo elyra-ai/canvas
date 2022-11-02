@@ -180,7 +180,7 @@ class Toolbar extends React.Component {
 			const actionObj = actionDefinitions[i];
 			if (actionObj) {
 				if (withSpacer && !actionObj.divider) {
-					newItems.push(this.generateOverflowIcon(i));
+					newItems.push(this.generateOverflowIcon(i, actionDefinitions));
 				}
 				newItems.push(this.generateToolbarItem(actionObj, i, overflow));
 			}
@@ -216,7 +216,7 @@ class Toolbar extends React.Component {
 		return jsx;
 	}
 
-	generateOverflowIcon(index) {
+	generateOverflowIcon(index, actionObj) {
 		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const jsx = (
 			<ToolbarOverflowItem
@@ -228,6 +228,7 @@ class Toolbar extends React.Component {
 				onFocus={this.onFocus}
 				label={label}
 				size={this.props.size}
+				actionObj={actionObj}
 			/>
 		);
 

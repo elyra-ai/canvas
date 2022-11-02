@@ -31,6 +31,7 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	render() {
+		const btnHasIcon = this.props.actionObj.incLabelWithIcon !== "before" && this.props.actionObj.incLabelWithIcon !== "after";
 		const menuItems = this.props.showExtendedMenu ? this.props.generateExtensionMenuItems(this.props.index) : [];
 		const subMenuClassName = this.props.showExtendedMenu ? "" : "toolbar-popover-list-hide";
 
@@ -44,7 +45,6 @@ class ToolbarOverflowItem extends React.Component {
 		}
 
 		const className = "toolbar-spacer toolbar-index-" + this.props.index;
-
 		return (
 			<div className={className} >
 				<div className={"toolbar-overflow-item"}>
@@ -54,6 +54,7 @@ class ToolbarOverflowItem extends React.Component {
 						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
 						size={this.props.size}
+						hasIconOnly={btnHasIcon}
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
@@ -75,7 +76,10 @@ ToolbarOverflowItem.propTypes = {
 	generateExtensionMenuItems: PropTypes.func,
 	onFocus: PropTypes.func,
 	label: PropTypes.string,
-	size: PropTypes.oneOf(["md", "sm"])
+	size: PropTypes.oneOf(["md", "sm"]),
+	actionObj: PropTypes.shape({
+		incLabelWithIcon: PropTypes.oneOf(["no", "before", "after"]),
+	})
 };
 
 export default ToolbarOverflowItem;
