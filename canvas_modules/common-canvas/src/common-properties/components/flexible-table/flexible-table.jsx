@@ -515,6 +515,10 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
+		var tableHeight = this.props.data.length * ROW_HEIGHT;
+		if (this.props.rows) {
+			tableHeight = (this.props.rows + 1) * ROW_HEIGHT; // 1 is for header
+		}
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
@@ -525,7 +529,7 @@ class FlexibleTable extends React.Component {
 								{this.props.selectedEditRow}
 								<VirtualizedTable
 									tableLabel={this.props.tableLabel}
-									tableHeight={(this.props.rows + 1) * ROW_HEIGHT} // 1 is for header
+									tableHeight={tableHeight}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
 									rowCount={this.props.data.length}
