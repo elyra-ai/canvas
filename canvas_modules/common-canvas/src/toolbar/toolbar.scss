@@ -57,6 +57,11 @@ $toolbar-divider-width: 1px;
 			&.default {
 				color: $icon-01; // Used by label and pick up as currentColor in icons.
 			}
+			&.overflow {
+				justify-content: left;
+				padding: 8px 0;
+				padding-left: $spacing-04;
+			}
 			&.disabled.default {
 				color: $disabled-02;
 				fill: $disabled-02; // For custom svg images
