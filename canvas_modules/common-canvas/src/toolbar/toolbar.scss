@@ -36,38 +36,23 @@ $toolbar-divider-width: 1px;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 	&.toolbar-size-small {
+		height: $spacing-07;
 		.toolbar-left-bar {
 			padding: 0;
 		}
-		.toolbar-item button {
-			padding: 3px;
-			height: auto;
-		}
-		.toolbar-overflow-item {
-			& button {
-				padding-bottom: $spacing-04;
-				padding-left: $spacing-02;
-			}
+		.toolbar-item button,
+		.toolbar-overflow-item > button {
+			padding: 0;
+			height: $spacing-07;
 		}
 		.toolbar-item-content {
-			width: inherit;
-			display: flex;
-			justify-content: center;
-			padding: 5px;
-			&.default {
-				color: $icon-01; // Used by label and pick up as currentColor in icons.
-			}
-			&.overflow {
-				justify-content: left;
-				padding: 8px 0;
-				padding-left: $spacing-04;
-			}
-			&.disabled.default {
-				color: $disabled-02;
-				fill: $disabled-02; // For custom svg images
-			}
+			padding: $spacing-02 $spacing-03;
+			height: $spacing-07;
+			align-items: center;
 		}
-
+		.toolbar-popover-list button {
+			padding: 0;
+		}
 	}
 }
 
