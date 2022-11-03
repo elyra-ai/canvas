@@ -44,6 +44,7 @@ class ToolbarOverflowItem extends React.Component {
 		}
 
 		const className = "toolbar-spacer toolbar-index-" + this.props.index;
+
 		return (
 			<div className={className} >
 				<div className={"toolbar-overflow-item"}>
