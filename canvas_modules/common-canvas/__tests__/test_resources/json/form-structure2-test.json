@@ -213,6 +213,7 @@
                       "label": {
                         "text": "Sort by"
                       },
+                      "light": false,
                       "labelVisible": true,
                       "controlType": "structuretable",
                       "valueDef": {
@@ -228,6 +229,7 @@
                           "label": {
                             "text": "Field"
                           },
+                          "light": false,
                           "labelVisible": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
@@ -245,6 +247,7 @@
                           "label": {
                             "text": "Order"
                           },
+                          "light": false,
                           "labelVisible": true,
                           "controlType": "toggletext",
                           "valueDef": {

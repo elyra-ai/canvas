@@ -69,6 +69,7 @@ class PropertiesMain extends React.Component {
 		this.setForm(props.propertiesInfo);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
+		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
 		this.propertiesController.validatePropertiesValues(false);
 		if (props.propertiesInfo.messages) {
 			this.propertiesController.validatePropertiesValues(true);

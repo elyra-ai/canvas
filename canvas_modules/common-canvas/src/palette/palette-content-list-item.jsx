@@ -250,7 +250,9 @@ class PaletteContentListItem extends React.Component {
 		let icon = null;
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
-			let image = this.props.nodeTypeInfo.nodeType.app_data.ui_data.image;
+			let image = this.props.nodeTypeInfo.nodeType.app_data.ui_data.palette_image
+				? this.props.nodeTypeInfo.nodeType.app_data.ui_data.palette_image
+				: this.props.nodeTypeInfo.nodeType.app_data.ui_data.image;
 
 			if (image === USE_DEFAULT_ICON) {
 				image = SUPERNODE_ICON;

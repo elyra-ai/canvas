@@ -57,7 +57,7 @@ const portsHorizontalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -82,7 +82,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: true,
@@ -181,21 +181,22 @@ const portsHorizontalDefaultLayout = {
 		outputPortWidth: 12,
 		outputPortHeight: 12,
 
-		// Position of right single input port. Multiple input ports will be
+		// Position of right single output port. Multiple input ports will be
 		// automatically positioned with the Y coordinate being overriden. These
 		// values are an offset from the top right corner of the node outline.
 		// Used when linkDirection is "LeftRight".
+		outputPortRightPosition: "topRight",
 		outputPortRightPosX: 0,
 		outputPortRightPosY: 20,
 
-		// Position of top single input port. Multiple input ports will be
+		// Position of top single output port. Multiple input ports will be
 		// automatically positioned with the X coordinate being overriden. These
 		// values are an offset from the top left corner of the node outline.
 		// Used when linkDirection is "BottomTop".
 		outputPortTopPosX: 80,
 		outputPortTopPosY: 0,
 
-		// Position of bottom single input port. Multiple input ports will be
+		// Position of bottom single output port. Multiple input ports will be
 		// automatically positioned with the X coordinate being overriden. These
 		// values are an offset from the bottom left corner of the node outline.
 		// Used when linkDirection is "TopBottom".
@@ -293,7 +294,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -353,7 +354,8 @@ const portsHorizontalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,
@@ -446,7 +448,7 @@ const portsVerticalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -471,7 +473,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: false,
@@ -574,6 +576,7 @@ const portsVerticalDefaultLayout = {
 		// automatically positioned with the Y coordinate being overriden. These
 		// values are an offset from the top right corner of the node outline.
 		// Used when linkDirection is "LeftRight".
+		outputPortRightPosition: "topRight",
 		outputPortRightPosX: 0,
 		outputPortRightPosY: 29,
 
@@ -682,7 +685,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -742,7 +745,8 @@ const portsVerticalDefaultLayout = {
 		commentSizingArea: 10,
 
 		// Add comment toolbar action, default offset from viewport
-		addCommentOffset: 30,
+		addCommentOffsetX: 30,
+		addCommentOffsetY: 50,
 
 		// Comment port (circle) radius
 		commentPortRadius: 5,

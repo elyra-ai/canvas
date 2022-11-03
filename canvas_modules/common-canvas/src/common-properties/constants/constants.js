@@ -64,17 +64,22 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_BUILDER_ICON_DESCRIPTION: "expression.builder.icon.description",
 	EXPRESSION_BUILDER_LABEL: "expression.builder.label",
 	EXPRESSION_FIELDS_TABLE_LABEL: "expression.fields.table.label",
+	EXPRESSION_FIELDS_EMPTY_TABLE_LABEL: "expression.fields.empty.table.label",
 	EXPRESSION_VALUES_TABLE_LABEL: "expression.values.table.label",
+	EXPRESSION_VALUES_EMPTY_TABLE_LABEL: "expression.values.empty.table.label",
 	EXPRESSION_FUNCTIONS_TABLE_LABEL: "expression.functions.table.label",
 	EXPRESSION_FIELDS_DROPDOWN_TITLE: "expression.fields.dropdown",
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
 	EXPRESSION_FIELD_COLUMN: "expression.field.column",
+	EXPRESSION_FIELD_COLUMN_DESCRIPTION: "expression.field.column.description",
 	EXPRESSION_STORAGE_COLUMN: "expression.storage.column",
 	EXPRESSION_VALUE_COLUMN: "expression.value.column",
+	EXPRESSION_VALUE_COLUMN_DESCRIPTION: "expression.value.column.description",
 	EXPRESSION_FUNCTION_COLUMN: "expression.function.column",
 	EXPRESSION_RETURN_COLUMN: "expression.return.column",
 	EXPRESSION_RECENTLY_USED_COLUMN: "expression.recently.used.column",
+	EXPRESSION_RECENTLY_USED_COLUMN_DESCRIPTION: "expression.recently.used.column.description",
 	EXPRESSION_FIELD_TAB: "expression.field.tab",
 	EXPRESSION_FUNCTIONS_TAB: "expression.functions.tab",
 	EXPRESSION_RECENTLY_USED: "expression.recently.used",
@@ -100,7 +105,9 @@ export const MESSAGE_KEYS = {
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
 	MULTISELECT_DROPDOWN_EMPTY_LABEL: "multiselect.dropdown.empty.label",
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
-	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text"
+	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text",
+	TOGGLE_ON_LABEL: "toggle.on.label",
+	TOGGLE_OFF_LABEL: "toggle.off.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;
@@ -123,6 +130,11 @@ export const CONDITION_MESSAGE_TYPE = {
 };
 
 export const SPINNER = "spinner";
+
+
+export const UPDATE_TYPE = {
+	INITIAL_LOAD: "initial_load"
+};
 
 export const DATA_TYPE = {
 	INTEGER: "integer",

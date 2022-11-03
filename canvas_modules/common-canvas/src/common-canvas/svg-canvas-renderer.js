@@ -32,8 +32,7 @@ const markdownIt = require("markdown-it")({
 	typographer: true
 });
 
-import { cloneDeep, escape as escapeText, forOwn, get,
-	unescape as unescapeText } from "lodash";
+import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -42,7 +41,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
-	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
+	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_CARBON,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST }
@@ -56,32 +55,10 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
-import SvgCanvasMarkdown from "./svg-canvas-utils-markdown.js";
+import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
-
 const showLinksTime = false;
-
-const BACKSPACE_KEY = 8;
-const RETURN_KEY = 13;
-const ESC_KEY = 27;
-const LEFT_ARROW_KEY = 37;
-const UP_ARROW_KEY = 38;
-const RIGHT_ARROW_KEY = 39;
-const DOWN_ARROW_KEY = 40;
-const DELETE_KEY = 46;
-const A_KEY = 65;
-const B_KEY = 66;
-const E_KEY = 69;
-const I_KEY = 73;
-const K_KEY = 75;
-const X_KEY = 88;
-const LAB_KEY = 188; // Left angle bracket <
-const RAB_KEY = 190; // Right angle bracket >
-const SEVEN_KEY = 55;
-const EIGHT_KEY = 56;
-
-const SCROLL_PADDING = 12;
 
 const NINETY_DEGREES = 90;
 
@@ -116,6 +93,18 @@ export default class SVGCanvasRenderer {
 		this.commentUtils = new SvgCanvasComments();
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
+		this.svgCanvasTextArea = new SvgCanvasTextArea(
+			this.config,
+			this.dispUtils,
+			this.nodeUtils,
+			this.decUtils,
+			this.canvasController,
+			this.canvasDiv,
+			this.activePipeline,
+			this.displayComments.bind(this), // Function
+			this.displayLinks.bind(this), // Function
+			this.getCommentToolbarPos.bind(this) // Function
+		);
 
 		this.dispUtils.setDisplayState();
 		this.logger.log(this.dispUtils.getDisplayStateMsg());
@@ -134,8 +123,8 @@ export default class SVGCanvasRenderer {
 		// Allows us to track the sizing behavior of nodes
 		this.nodeSizing = false;
 		this.nodeSizingDirection = "";
-		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingDetLinksInfo = [];
+		this.nodeSizingObjectsInfo = {};
+		this.nodeSizingDetLinksInfo = {};
 
 		// Keeps track of the size and position, at the start of the sizing event,
 		// of the object (node or comment) being sized.
@@ -147,10 +136,6 @@ export default class SVGCanvasRenderer {
 		this.notSnappedYPos = 0;
 		this.notSnappedWidth = 0;
 		this.notSnappedHeight = 0;
-
-		// Allows us to track the editing of text (either comments or node labels)
-		this.editingText = false;
-		this.editingTextId = "";
 
 		// Allows us to record the drag behavior or nodes and comments.
 		this.dragging = false;
@@ -193,16 +178,28 @@ export default class SVGCanvasRenderer {
 		// no need to re-render whole canvas
 		this.selecting = false;
 
+		// Flag to indicate when the space key is down (used when dragging).
+		this.spaceKeyPressed = false;
+
+		// Flag to indicate when a zoom is invoked programmatically.
+		this.zoomingAction = false;
+
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
 
-		// Keep track of when the context menu has been closed so we don't remove
+		// Keep track of when the context menu has been closed, so we don't remove
 		// selections when a context menu is closed during a zoom gesture.
 		this.contextMenuClosedOnZoom = false;
 
+		// Keep track of when text editing has been closed, so we don't remove
+		// selections when that happens during a zoom gesture.
+		this.textEditingClosedfOnZoom = false;
+
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
-		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
+
+		// Used to track the start of the zoom.
+		this.zoomStartPoint = { x: 0, y: 0, k: 0, startX: 0, startY: 0 };
 
 		// I was not able to figure out how to use the zoom filter method to
 		// allow mousedown and mousemove messages to go through to the canvas to
@@ -288,6 +285,27 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
+	setSpaceKeyPressed(state) {
+		this.spaceKeyPressed = state;
+		this.resetCanvasCursor();
+	}
+
+	// Returns true if the space bar is pressed and held down. This is called
+	// from outside canvas via svg-canvas-d3 as well as internally.
+	isSpaceKeyPressed() {
+		return this.spaceKeyPressed;
+	}
+
+	// Returns true if the event indicates that a drag is in action. This means
+	// with regular Mouse interation that the space bar is pressed or with
+	// legacy interation it means the shift key is NOT pressed.
+	isDragActivated(d3Event) {
+		if (this.config.enableInteractionType === INTERACTION_CARBON) {
+			return this.isSpaceKeyPressed();
+		}
+		return (d3Event && d3Event.sourceEvent && !d3Event.sourceEvent.shiftKey);
+	}
+
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
 	// looking through the overall canvas info objects.
@@ -315,15 +333,12 @@ export default class SVGCanvasRenderer {
 	initializeZoomVariables() {
 		// Allows us to record the current zoom amounts.
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
-
-		// Allows us to record the start point of the current zoom.
-		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
 		this.canvasInfo = canvasInfo;
-		this.activePipeline = new SVGCanvasPipeline(this.pipelineId, canvasInfo);
+		this.activePipeline.initialize(this.pipelineId, canvasInfo);
 		this.canvasLayout = this.objectModel.getCanvasLayout(); // Refresh the canvas layout info in case it changed.
 
 		// Set the display state incase we changed from in-place to full-page
@@ -336,10 +351,6 @@ export default class SVGCanvasRenderer {
 		// behavior to populated (with at least one node or comment) where we do
 		// need the zoom behavior, or vice versa.
 		this.resetCanvasSVGBehaviors();
-
-		// Reset the canvas cursor, in case we went from an empty canvas
-		// (default cursor) to one with nodes and/or comments (hand cursor).
-		this.resetCanvasCursor();
 
 		// If a supernode and its corresponding pipeline has been deleted in the
 		// object model we need to make sure the renderer is removed.
@@ -618,7 +629,7 @@ export default class SVGCanvasRenderer {
 
 	// Returns true when we are editing text. Called by svg-canvas-d3.
 	isEditingText() {
-		if (this.editingText) {
+		if (this.svgCanvasTextArea.isEditingText()) {
 			return true;
 		}
 		let state = false;
@@ -736,8 +747,17 @@ export default class SVGCanvasRenderer {
 	// Returns the current mouse position based on the D3 SVG selection object
 	// passed in.
 	getMousePos(d3Event, svgSel) {
-		const mousePos = d3.pointer(d3Event, svgSel.node());
-		return { x: mousePos[0], y: mousePos[1] };
+		// The d3Event must have either a sourceEvent or be an actual event, which
+		// can be indicated by the existence of a pageX attribute. This test is only
+		// necessary on Firefox and then only when the action (such as zoom)
+		// calling this function is itself called programmatically - for example,
+		// when the user clicks one of the zoom buttons on the toolbar. It's not
+		// clear why d3.pointer cannot handle all events like it can on Chrome.
+		if (d3Event.sourceEvent || d3Event.pageX) {
+			const mousePos = d3.pointer(d3Event, svgSel.node());
+			return { x: mousePos[0], y: mousePos[1] };
+		}
+		return { x: 0, y: 0 };
 	}
 
 	// Convert coordinates from the page (based on the page top left corner) to
@@ -877,7 +897,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
 			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
 			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", this.nodeUtils.getNodeLabelForeignClass(node));
+			.attr("class", "d3-foreign-object-ghost-label");
 
 		const fObjectDiv = fObject
 			.append("xhtml:div")
@@ -1379,7 +1399,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
-			.style("cursor", this.getCanvasCursor());
+			.style("cursor", "default");
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying
 		// either the primary pipeline full page or a sub-pipeline full page.
@@ -1448,15 +1468,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("click.zoom", (d3Event) => {
 				this.logger.log("Canvas - click-zoom");
-				this.selecting = true;
-				// Only clear selections if clicked on the canvas of the current active pipeline.
-				// Clicking the canvas of an expanded supernode will select that node.
-				if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
-					this.canvasController.clearSelections();
-				}
-				this.contextMenuClosedOnZoom = false;
-				// Ensure 'selecting' flag is off before calling click action callback.
-				this.selecting = false;
+
 				this.canvasController.clickActionHandler({
 					clickType: d3Event.type === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 					objectType: "canvas",
@@ -1479,19 +1491,7 @@ export default class SVGCanvasRenderer {
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
 	resetCanvasCursor() {
 		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		this.canvasSVG.select(selector).style("cursor", this.getCanvasCursor());
-	}
-
-	// Retuens the appropriate cursor for the canvas SVG area.
-	getCanvasCursor() {
-		if (this.dispUtils.isDisplayingFullPage()) {
-			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
-					this.activePipeline.isEmptyOrBindingsOnly()) {
-				return "default";
-			}
-			return "grab";
-		}
-		return "pointer";
+		this.canvasSVG.select(selector).style("cursor", this.isDragActivated() && this.dispUtils.isDisplayingFullPage() ? "grab" : "default");
 	}
 
 	createCanvasGroup(canvasObj, className) {
@@ -1534,6 +1534,11 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
 				d3.select(this).select("rect")
 					.attr("data-pointer-hover", "no");
+			})
+			.on("mousedown mouseup", (d3Event) => {
+				// Prevent mouse events going through to the canvas. This prevents
+				// a drag gesture on the button activating the canvas drag action.
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			})
 			.on("click", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
@@ -1632,6 +1637,7 @@ export default class SVGCanvasRenderer {
 		if (isFinite(newZoomTransform.x) &&
 				isFinite(newZoomTransform.y) &&
 				isFinite(newZoomTransform.k)) {
+			this.zoomingAction = true;
 			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
 			if (animateTime) {
 				this.canvasSVG.call(this.zoom).transition()
@@ -1640,6 +1646,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				this.canvasSVG.call(this.zoom.transform, zoomTransform);
 			}
+			this.zoomingAction = false;
 		}
 	}
 
@@ -1659,9 +1666,7 @@ export default class SVGCanvasRenderer {
 			x -= newScale * canvasDimensions.left;
 			y -= newScale * canvasDimensions.top;
 
-			this.zoomingToFit = true;
 			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
-			this.zoomingToFit = false;
 		}
 	}
 
@@ -1805,47 +1810,35 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
-		// this.zoomingToFit flag is used to avoid redo actions initialized
-		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
-		// selection to start. So whenever it is set, make sure we do a scale
-		// operation.
-		// Also, below, we must check the d3Event.sourceEvent because for a zoom
-		// operation d3Event does not contain info about the shift key.
-		if (this.zoomingToFit) {
-			this.regionSelect = false;
-		} else if ((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
-								d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) || // Main button is pressed
-							(this.config.enableInteractionType === INTERACTION_MOUSE &&
-								d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) { // Shift key is pressed
-			this.regionSelect = true;
-		} else {
-			this.regionSelect = false;
+		// Any text editing in progress will be closed by the textarea's blur event
+		// if the user clicks on the canvas background. So we set this flag to
+		// prevent the selection being lost in the zoomEnd (mouseup) event.
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.textEditingClosedfOnZoom = true;
 		}
 
+		this.regionSelect = this.shouldDoRegionSelect(d3Event);
+
 		if (this.regionSelect) {
+			// Add a delay so, if the user just clicks, they don't see the crosshair.
+			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
+			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
-			const transPos = this.getTransformedMousePos(d3Event);
-			this.region = {
-				startX: transPos.x,
-				startY: transPos.y,
-				width: 0,
-				height: 0
-			};
-		}
 
-		// To make the new cursor style appear *immediately* on mousedown we set the
-		// appropriate cursor style on the SVG background rectanagle. The cursor
-		// overlay will handle the cursor style as the mouse is moved.
-		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		if (this.regionSelect) {
-			this.canvasSVG.select(selector).style("cursor", "crosshair");
 		} else {
-			this.canvasSVG.select(selector).style("cursor", "grabbing");
+			if (this.isDragActivated(d3Event)) {
+				this.addTempCursorOverlay("grabbing");
+			} else {
+				this.addTempCursorOverlay("default");
+			}
 		}
 
-		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		const transPos = this.getTransformedMousePos(d3Event);
+		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k, startX: transPos.x, startY: transPos.y };
 		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		// Calculate the canvas dimensions here, so we don't have to recalculate
+		// them for every zoom action event.
 		this.zoomCanvasDimensions = CanvasUtils.getCanvasDimensions(
 			this.activePipeline.nodes, this.activePipeline.comments,
 			this.activePipeline.links, this.canvasLayout.commentHighlightGap);
@@ -1857,14 +1850,13 @@ export default class SVGCanvasRenderer {
 		// If the scale amount is the same we are not zooming, so we must be panning.
 		if (d3Event.transform.k === this.zoomStartPoint.k) {
 			if (this.regionSelect) {
-				this.addTempCursorOverlay("crosshair");
 				this.drawRegionSelector(d3Event);
 
 			} else {
-				this.addTempCursorOverlay("grabbing");
 				this.zoomCanvasBackground(d3Event);
 			}
 		} else {
+			this.addTempCursorOverlay("default");
 			this.zoomCanvasBackground(d3Event);
 			this.zoomCommentToolbar();
 		}
@@ -1873,62 +1865,61 @@ export default class SVGCanvasRenderer {
 	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
+		// Clears the display of the crosshair cursor if the user clicks within 200 ms
+		clearTimeout(this.addingCrossHairCursor);
+
+		const transPos = this.getTransformedMousePos(d3Event);
+
 		if (this.drawingNewLinkData) {
 			this.stopDrawingNewLink();
-			this.drawingNewLinkData = null;
-		}
 
-		if (this.draggingLinkData) {
+		} else if (this.draggingLinkData) {
 			this.stopDraggingLink();
-			this.draggingLinkData = null;
-		}
 
-		if (d3Event.transform.k === this.zoomStartPoint.k &&
-				this.regionSelect === true) {
-			this.removeRegionSelector();
+		// The user just clicked -- with no drag.
+		} else if (transPos.x === this.zoomStartPoint.startX &&
+							transPos.y === this.zoomStartPoint.startY &&
+							!this.zoomChanged()) {
+			this.zoomClick();
 
-			// Reset the transform x and y to what they were before the region
-			// selection action was started. This directly sets the x and y values
-			// in the __zoom property of the svgCanvas DOM object.
-			d3Event.transform.x = this.regionStartTransformX;
-			d3Event.transform.y = this.regionStartTransformY;
-
-			var { startX, startY, width, height } = this.getRegionDimensions();
-			this.isSelecting = true;
-
-			// Ensure the link objects in the active pipeline have their coordinate
-			// positions set. The coords might be set if the last object model
-			// update was a change in selections or some other operation that does
-			// not redraw link lines.
-			this.buildLinksArray();
-
-			const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
-			const selections =
-				CanvasUtils.selectInRegion(region, this.activePipeline,
-					this.config.enableLinkSelection !== LINK_SELECTION_NONE,
-					this.config.enableLinkType,
-					this.config.enableAssocLinkType);
-			this.canvasController.setSelections(selections, this.activePipeline.id);
-			this.regionSelect = false;
+		} else if (this.regionSelect) {
+			this.zoomEndRegionSelect(d3Event);
 
 		} else if (this.dispUtils.isDisplayingFullPage() && this.zoomChanged()) {
-			// Set the internal zoom value for canvasSVG used by D3. This will be
-			// used by d3Event next time a zoom action is initiated.
-			this.canvasSVG.property("__zoom", this.zoomTransform);
-
-			const data = {
-				editType: "setZoom",
-				editSource: "canvas",
-				zoom: this.zoomTransform,
-				pipelineId: this.activePipeline.id
-			};
-			this.canvasController.editActionHandler(data);
+			this.zoomSave();
 		}
 
 		// Remove the cursor overlay and reset the SVG background rectangle
 		// cursor style, which was set in the zoom start method.
-		this.resetCanvasCursor();
+		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
+		this.contextMenuClosedOnZoom = false;
+		this.textEditingClosedfOnZoom = false;
+		this.regionSelect = false;
+	}
+
+	// Returns true if the region select gesture is requested by the user.
+	shouldDoRegionSelect(d3Event) {
+		// The this.zoomingAction flag indicates zooming is being invoked
+		// programmatically.
+		if (this.zoomingAction) {
+			return false;
+
+		} else if (this.config.enableInteractionType === INTERACTION_MOUSE &&
+				(d3Event && d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) {
+			return true;
+
+		} else if (this.config.enableInteractionType === INTERACTION_CARBON &&
+							!this.isSpaceKeyPressed(d3Event)) {
+			return true;
+
+		} else if (this.config.enableInteractionType === INTERACTION_TRACKPAD &&
+				(d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) && // Main button is pressed
+				!this.spaceKeyPressed) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// Returns true if the current zoom transform is different from the
@@ -1967,12 +1958,73 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Handles a zoom operation that is just a click on the canvas background.
+	zoomClick() {
+		// Only clear selections if clicked on the canvas of the current active pipeline.
+		// Clicking the canvas of an expanded supernode will select that node.
+		// Also, don't clear selections if we have closed a context menu or
+		// closed text editing.
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
+			this.selecting = true;
+			this.canvasController.clearSelections();
+			this.selecting = false;
+		}
+	}
+
+	// Handles the behavior when the user stops doing a region select.
+	zoomEndRegionSelect(d3Event) {
+		this.removeRegionSelector();
+
+		// Reset the transform x and y to what they were before the region
+		// selection action was started. This directly sets the x and y values
+		// in the __zoom property of the svgCanvas DOM object.
+		d3Event.transform.x = this.regionStartTransformX;
+		d3Event.transform.y = this.regionStartTransformY;
+
+		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
+
+		// Ensure the link objects in the active pipeline have their coordinate
+		// positions set. The coords might not be set if the last object model
+		// update was a change in selections or some other operation that does
+		// not redraw link lines.
+		this.buildLinksArray();
+
+		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
+		const selections =
+			CanvasUtils.selectInRegion(region, this.activePipeline,
+				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
+				this.config.enableLinkType,
+				this.config.enableAssocLinkType);
+		this.selecting = true;
+		this.canvasController.setSelections(selections, this.activePipeline.id);
+		this.selecting = false;
+	}
+
+	// Save the zoom amount. The canvas controller/object model will decide
+	// how this info is saved.
+	zoomSave() {
+		// Set the internal zoom value for canvasSVG used by D3. This will be
+		// used by d3Event next time a zoom action is initiated.
+		this.canvasSVG.property("__zoom", this.zoomTransform);
+
+		const data = {
+			editType: "setZoom",
+			editSource: "canvas",
+			zoom: this.zoomTransform,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
+
+	}
+
 	// Repositions the comment toolbar so it is always over the top of the
 	// comment being edited.
 	zoomCommentToolbar() {
-		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
+		if (this.config.enableMarkdownInComments &&
+				this.dispUtils.isDisplayingFullPage() &&
+				this.svgCanvasTextArea.isEditingText()) {
 			// If a node label or text decoration is being edited com will be undefined.
-			const com = this.activePipeline.getComment(this.editingTextId);
+			const com = this.activePipeline.getComment(this.svgCanvasTextArea.getEditingTextId());
 			if (com) {
 				const pos = this.getCommentToolbarPos(com);
 				this.canvasController.moveTextToolbar(pos.x, pos.y);
@@ -2069,12 +2121,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawRegionSelector(d3Event) {
-		const transPos = this.getTransformedMousePos(d3Event);
-		this.region.width = transPos.x - this.region.startX;
-		this.region.height = transPos.y - this.region.startY;
-
 		this.removeRegionSelector();
-		var { startX, startY, width, height } = this.getRegionDimensions();
+		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
 
 		this.canvasGrp
 			.append("rect")
@@ -2089,22 +2137,23 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp.selectAll(".d3-region-selector").remove();
 	}
 
-	// Returns the startX, startY, width and height of the selction region
+	// Returns the startX, startY, width and height of the selection region
 	// where startX and startY are always the top left corner of the region
 	// and width and height are therefore always positive.
-	getRegionDimensions() {
-		var startX = this.region.startX;
-		var startY = this.region.startY;
-		var width = this.region.width;
-		var height = this.region.height;
+	getRegionDimensions(d3Event) {
+		const transPos = this.getTransformedMousePos(d3Event);
+		let startX = this.zoomStartPoint.startX;
+		let startY = this.zoomStartPoint.startY;
+		let width = transPos.x - startX;
+		let height = transPos.y - startY;
 
 		if (width < 0) {
 			width = Math.abs(width);
-			startX = this.region.startX - width;
+			startX -= width;
 		}
 		if (height < 0) {
 			height = Math.abs(height);
-			startY = this.region.startY - height;
+			startY -= height;
 		}
 
 		return { startX, startY, width, height };
@@ -2497,7 +2546,7 @@ export default class SVGCanvasRenderer {
 		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
 			this.displayMovedNodes();
 
-		} else if (this.selecting || this.regionSelect) {
+		} else if (this.selecting) {
 			this.displayNodesSelectionStatus();
 
 		} else {
@@ -2595,7 +2644,7 @@ export default class SVGCanvasRenderer {
 		// Node Label
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-node-label")
 			.call(this.attachNodeLabelListeners.bind(this))
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
@@ -2638,13 +2687,12 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object")
+		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
 			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-			.attr("class", (d) => this.nodeUtils.getNodeLabelForeignClass(d))
 			.select("div")
 			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
 			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
@@ -2863,6 +2911,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Node Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -2931,7 +2982,7 @@ export default class SVGCanvasRenderer {
 			.on("mousemove mouseenter", (d3Event, d) => {
 				if (this.isNodeResizable(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
-					let cursorType = "pointer";
+					let cursorType = "default";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
 						this.nodeSizingDirection = this.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
 						this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
@@ -2941,7 +2992,7 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				d3.select(d3Event.currentTarget).style("cursor", "pointer");
+				d3.select(d3Event.currentTarget).style("cursor", "default");
 			});
 	}
 
@@ -3382,7 +3433,7 @@ export default class SVGCanvasRenderer {
 			if (labelSel.empty()) {
 				labelSel = decSel
 					.append("foreignObject")
-					.attr("class", this.decUtils.getDecLabelForeignClass(dec))
+					.attr("class", "d3-foreign-object-dec-label")
 					.attr("x", 0)
 					.attr("y", 0)
 					.call(this.attachDecLabelListeners.bind(this, d, objType));
@@ -3906,6 +3957,8 @@ export default class SVGCanvasRenderer {
 			"y1": startPos.y,
 			"x2": transPos.x,
 			"y2": transPos.y,
+			"originX": startPos.originX,
+			"originY": startPos.originY,
 			"type": linkType }];
 
 		if (this.config.enableAssocLinkCreation) {
@@ -3923,15 +3976,24 @@ export default class SVGCanvasRenderer {
 		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
 		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
 
-		connectionLineSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("path")
-			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType)
-			.merge(connectionLineSel)
-			.attr("d", pathInfo.path)
-			.attr("transform", pathInfo.transform);
+		// For a straight node line, don't draw the new link line when the guide
+		// icon or object is inside the node boundary.
+		if (linkType === NODE_LINK &&
+				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
+				this.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcNode)) {
+			this.removeNewLinkLine();
+
+		} else {
+			connectionLineSel
+				.data(this.drawingNewLinkData.linkArray)
+				.enter()
+				.append("path")
+				.attr("class", "d3-new-connection-line")
+				.attr("linkType", linkType)
+				.merge(connectionLineSel)
+				.attr("d", pathInfo.path)
+				.attr("transform", pathInfo.transform);
+		}
 
 		if (this.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
 			connectionStartSel
@@ -3984,8 +4046,8 @@ export default class SVGCanvasRenderer {
 	getLinkImageTransform(d) {
 		let angle = 0;
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			const adjacent = d.x2 - d.x1;
-			const opposite = d.y2 - d.y1;
+			const adjacent = d.x2 - (d.originX || d.x1);
+			const opposite = d.y2 - (d.originY || d.y1);
 			if (adjacent === 0 && opposite === 0) {
 				angle = 0;
 			} else {
@@ -4191,6 +4253,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.stopDrawingNewLinkForPorts();
+		this.drawingNewLinkData = null;
 	}
 
 	stopDrawingNewLinkForPorts() {
@@ -4271,6 +4334,10 @@ export default class SVGCanvasRenderer {
 		this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
 		this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
 		this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
+	}
+
+	removeNewLinkLine() {
+		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
 	}
 
 	dragLinkHandle(d3Event) {
@@ -4537,13 +4604,6 @@ export default class SVGCanvasRenderer {
 		return this.getNodePortIdForElement(portElement);
 	}
 
-	// Returns an element, with the class name passed in, if one exists, at the
-	// position defined by x,y.
-	getElementAtPoint(x, y, className) {
-		const elements = document.elementsFromPoint(x, y);
-		return elements.find((el) => this.isClassNameIncluded(el, className));
-	}
-
 	// Returns a DOM element which either has the classNames passed in or
 	// has an ancestor with the className passed in, at the position
 	// indicated by the clientX and clientY coordinates in the d3Event.
@@ -4560,42 +4620,10 @@ export default class SVGCanvasRenderer {
 		let foundElement = null;
 		let count = 0;
 		while (!foundElement && count < elements.length) {
-			foundElement = this.getParentElementWithClass(elements[count], className);
+			foundElement = CanvasUtils.getParentElementWithClass(elements[count], className);
 			count++;
 		}
 		return foundElement;
-	}
-
-	// Returns the element passed in, or an ancestor of the element, if either
-	// contains the classNames passed in. Otherwise it returns null if the
-	// className cannot be found. For example, if this element is a child of the
-	// node group object and "d3-node-group" is passed in, this function will
-	// find the group element.
-	getParentElementWithClass(element, className) {
-		let el = element;
-		let foundElement = null;
-
-		while (el) {
-			// No need to proceed if we find either of these. Stopping at svg-area
-			// prevents the search transitioning from a sub-flow to a parent flow.
-			if (this.isClassNameIncluded(el, "d3-new-connection-guide") ||
-					this.isClassNameIncluded(el, "svg-area")) {
-				el = null;
-
-			} else if (this.isClassNameIncluded(el, className)) {
-				foundElement = el;
-				el = null;
-			} else {
-				el = el.parentNode;
-			}
-		}
-		return foundElement;
-	}
-
-	// Returns true if the class name passed in is one of the classes assigned
-	// to the element passed in.
-	isClassNameIncluded(el, className) {
-		return el.classList && el.classList.contains(className);
 	}
 
 	// Returns the node link object from the canvasInfo corresponding to the
@@ -4909,13 +4937,11 @@ export default class SVGCanvasRenderer {
 			this.setPortPositionsVertical(node, node.outputs, node.outputPortsWidth, node.layout.outputPortTopPosX, node.layout.outputPortTopPosY);
 		} else {
 			this.setPortPositionsLeftRight(node, node.inputs, node.inputPortsHeight, node.layout.inputPortLeftPosX, node.layout.inputPortLeftPosY);
-			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight, this.getOutputPortRightPosX(node), node.layout.outputPortRightPosY,
+			this.setPortPositionsLeftRight(node, node.outputs, node.outputPortsHeight,
+				this.nodeUtils.getNodeOutputPortRightPosX(node),
+				this.nodeUtils.getNodeOutputPortRightPosY(node),
 				this.config.enableSingleOutputPortDisplay);
 		}
-	}
-
-	getOutputPortRightPosX(node) {
-		return node.width + node.layout.outputPortRightPosX;
 	}
 
 	getOutputPortBottomPosY(node) {
@@ -5041,7 +5067,7 @@ export default class SVGCanvasRenderer {
 		if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			this.displayMovedComments();
 
-		} else if (this.selecting || this.regionSelect) {
+		} else if (this.selecting) {
 			this.displayCommentsSelectionStatus();
 
 		} else {
@@ -5114,7 +5140,7 @@ export default class SVGCanvasRenderer {
 		// Comment Text
 		newCommentGroups
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object")
+			.attr("class", "d3-foreign-object-comment-text")
 			.attr("x", 0)
 			.attr("y", 0)
 			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
@@ -5156,7 +5182,7 @@ export default class SVGCanvasRenderer {
 			.attr("style", (c) => this.getCommentBodyStyle(c, "default"));
 
 		// Comment Text
-		joinedCommentGrps.selectChildren(".d3-foreign-object")
+		joinedCommentGrps.selectChildren(".d3-foreign-object-comment-text")
 			.datum((c) => this.activePipeline.getComment(c.id))
 			.attr("width", (c) => c.width)
 			.attr("height", (c) => c.height)
@@ -5173,7 +5199,7 @@ export default class SVGCanvasRenderer {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
-				if (this.config.enableEditingActions && d.id !== this.editingTextId) {
+				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
 			})
@@ -5186,6 +5212,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Comment Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -5239,7 +5268,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions && // Only set cursor when we are able to edit comments
 					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 				{
-					let cursorType = "pointer";
+					let cursorType = "default";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
 						this.commentSizingDirection = this.getSizingDirection(d3Event, d, this.canvasLayout.commentCornerResizeArea);
 						this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
@@ -5302,7 +5331,7 @@ export default class SVGCanvasRenderer {
 
 	setCommentTextStyles(d, type, comGrp) {
 		const style = this.getCommentTextStyle(d, type);
-		comGrp.selectChildren(".d3-foreign-object").select("div")
+		comGrp.selectChildren(".d3-foreign-object-comment-text").select("div")
 			.attr("style", style);
 	}
 
@@ -5318,387 +5347,16 @@ export default class SVGCanvasRenderer {
 		return CanvasUtils.getObjectStyle(d, "text", type);
 	}
 
-	displayCommentTextArea(d, parentDomObj) {
-		this.editingTextData = {
-			id: d.id,
-			text: d.content,
-			singleLine: false,
-			maxCharacters: null,
-			allowReturnKey: true,
-			textCanBeEmpty: true,
-			xPos: 0,
-			yPos: 0,
-			width: d.width,
-			height: d.height,
-			className: "d3-comment-entry",
-			parentDomObj: parentDomObj,
-			keyboardInputCallback: this.config.enableMarkdownInComments ? this.commentKeyboardHandler.bind(this) : null,
-			autoSizeCallback: this.autoSizeComment.bind(this),
-			saveTextChangesCallback: this.saveCommentChanges.bind(this),
-			closeTextAreaCallback: this.closeCommentTextArea.bind(this)
-		};
-		this.displayTextArea(this.editingTextData);
-		if (this.config.enableMarkdownInComments && this.dispUtils.isDisplayingFullPage()) {
-			const pos = this.getCommentToolbarPos(d);
-			this.canvasController.openTextToolbar(pos.x, pos.y,
-				this.markdownActionHandler.bind(this),
-				this.blurInTextToolbar.bind(this));
-		}
-	}
-
-	// Handles markdown actions initiated through the keyboard.
-	commentKeyboardHandler(d3Event) {
-		const action = this.getMarkdownAction(d3Event);
-		if (action) {
-			if (action !== "return") {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			}
-			this.markdownActionHandler(action, d3Event);
-		}
-	}
-
-	// Called when the blur event occurs for the text toolbar.
-	blurInTextToolbar(evt) {
-		// When Cypress tests are running a call to focus() in addTextToTextArea()
-		// can cause an incorrect blur event to be generated for the text toolbar
-		// (where relatedTarget is null). This flag therefore allows us to avoid
-		// thus blue events that occur while addTextToTextArea() is executing.
-		if (this.addingTextToTextArea) {
-			return;
-		}
-
-		// If there is a relatedTarget and it is set to one of the elements for the
-		// textarea, texttoolbar, etc we ignore the blur event.
-		if (evt.relatedTarget &&
-				(this.getParentElementWithClass(evt.relatedTarget, "d3-comment-entry") ||
-					this.getParentElementWithClass(evt.relatedTarget, "text-toolbar") ||
-					this.getParentElementWithClass(evt.relatedTarget, "bx--overflow-menu-options__btn"))) {
-			return;
-		}
-
-		// If the blur event is ocurring for an object outside of the textarea and
-		// text toolbar we save the current text and close the textarea.
-		const commentParent = d3.select(this.editingTextData.parentDomObj);
-		const foreignObject = commentParent.selectAll(".d3-text-entry-fo");
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		this.saveAndCloseTextArea(foreignObject, this.editingTextData, commentEntryElement.value, evt);
-	}
-
-	// Applies a markdown action to the comment text being edited using
-	// the same commands as the toolbar.
-	getMarkdownAction(d3Event) {
-		if (CanvasUtils.isCmndCtrlPressed(d3Event)) {
-			switch (d3Event.keyCode) {
-			case B_KEY: return "bold";
-			case I_KEY: return "italics";
-			case X_KEY: return d3Event.shiftKey ? "strikethrough" : null;
-			case SEVEN_KEY: return d3Event.shiftKey ? "numberedList" : null;
-			case EIGHT_KEY: return d3Event.shiftKey ? "bulletedList" : null;
-			case E_KEY: return "code";
-			case K_KEY: return "link";
-			case LAB_KEY: return "decreaseHashes";
-			case RAB_KEY: return d3Event.shiftKey ? "quote" : "increaseHashes";
-			default:
-			}
-		} else if (d3Event.keyCode === RETURN_KEY) {
-			return "return";
-		}
-
-		return null;
-	}
-
-	// Handles any actions requested on the comment text to add markdown
-	// characters to the text. evt can be either a d3Event object from D3 when
-	// this method is called from keyboard entry in the textarea or it can be
-	// a synthetic event object from React when called from the text toolbar.
-	markdownActionHandler(action, evt) {
-		this.logger.log("markdownActionHandler - action = " + action);
-
-		const commentEntry = this.canvasDiv.selectAll(".d3-comment-entry");
-		const commentEntryElement = commentEntry.node();
-		const start = commentEntryElement.selectionStart;
-		const end = commentEntryElement.selectionEnd;
-		const text = commentEntryElement.value;
-
-		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
-		if (mdObj) {
-			CanvasUtils.stopPropagationAndPreventDefault(evt);
-			this.addTextToTextArea(mdObj, commentEntryElement);
-		}
-	}
-
-	// Replaces the text in the currently displayed textarea with the text
-	// passed in. We use execCommand because this adds the inserted text to the
-	// textarea's undo/redo stack whereas setting the text directly into the
-	// textarea control does not.
-	addTextToTextArea(mdObj, commentEntryElement) {
-		this.addingTextToTextArea = true;
-		const text = unescapeText(mdObj.newText);
-		commentEntryElement.focus();
-		commentEntryElement.select();
-		document.execCommand("insertText", false, text);
-		commentEntryElement.setSelectionRange(mdObj.newStart, mdObj.newEnd);
-		this.addingTextToTextArea = false;
-	}
-
-	autoSizeComment(textArea, foreignObject, data) {
-		this.logger.log("autoSizeComment - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
-
-		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
-		if (this.textAreaHeight < scrollHeight) {
-			this.textAreaHeight = scrollHeight;
-			foreignObject.style("height", this.textAreaHeight + "px");
-			this.activePipeline.getComment(data.id).height = this.textAreaHeight;
-			this.displayComments();
-			this.displayLinks();
-		}
-	}
-
-	saveCommentChanges(id, newText, newHeight) {
-		const comment = this.activePipeline.getComment(id);
-		const data = {
-			editType: "editComment",
-			editSource: "canvas",
-			id: comment.id,
-			content: newText,
-			width: comment.width,
-			height: newHeight,
-			x_pos: comment.x_pos,
-			y_pos: comment.y_pos,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	closeCommentTextArea() {
-		this.canvasController.closeTextToolbar();
+	displayCommentTextArea(comment, parentDomObj) {
+		this.svgCanvasTextArea.displayCommentTextArea(comment, parentDomObj);
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
-		d3.select(parentDomObj).selectAll("div")
-			.attr("style", "display:none;");
-		this.displayTextArea({
-			id: node.id,
-			text: node.label,
-			singleLine: node.layout.labelSingleLine,
-			maxCharacters: node.layout.labelMaxCharacters,
-			allowReturnKey: node.layout.labelAllowReturnKey,
-			textCanBeEmpty: false,
-			xPos: this.nodeUtils.getNodeLabelTextAreaPosX(node),
-			yPos: this.nodeUtils.getNodeLabelTextAreaPosY(node),
-			width: this.nodeUtils.getNodeLabelTextAreaWidth(node),
-			height: this.nodeUtils.getNodeLabelTextAreaHeight(node),
-			className: this.nodeUtils.getNodeLabelTextAreaClass(node),
-			parentDomObj: parentDomObj,
-			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
-			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
-			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
-		});
+		this.svgCanvasTextArea.displayNodeLabelTextArea(node, parentDomObj);
 	}
 
-	// Increases the size of the editable multi-line text area for a label based
-	//  on the characters entered, and also ensures the maximum number of
-	//  characters for the label, if one is provided, is not exceeded.
-	// This callback works for editable multi-line node labels and also
-	// editable multi-line text decorations for either nodes or links.
-	autoSizeMultiLineLabel(textArea, foreignObject, data) {
-		this.logger.log("autoSizeNodeLabel - textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
-
-		// Restrict max characters in case text was pasted in to the text area.
-		if (data.maxCharacters &&
-				textArea.value.length > data.maxCharacters) {
-			textArea.value = textArea.value.substring(0, data.maxCharacters);
-		}
-		// Temporarily set the height to zero so the scrollHeight will get set to
-		// the full height of the text in the textarea. This allows us to close up
-		// the text area when the lines of text reduce.
-		foreignObject.style("height", 0);
-		const scrollHeight = textArea.scrollHeight + SCROLL_PADDING;
-		this.textAreaHeight = scrollHeight;
-		foreignObject.style("height", this.textAreaHeight + "px");
-	}
-
-	saveNodeLabelChanges(id, newText, newHeight, taData) {
-		const data = {
-			editType: "setNodeLabel",
-			editSource: "canvas",
-			nodeId: id,
-			label: newText,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	// Called when the node label text area is closed. Sets the style of the
-	// div for the node label so the label is displayed (because it was hidden
-	// when the text area opened).
-	closeNodeLabelTextArea(nodeId) {
-		this.getNodeGroupSelectionById(nodeId)
-			.selectAll("div")
-			.attr("style", null);
-	}
-
-	// Displays a text area for an editable text decoration on either a node
-	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
-		this.displayTextArea({
-			id: dec.id,
-			text: dec.label,
-			singleLine: dec.label_single_line || true,
-			maxCharacters: dec.label_max_characters || null,
-			allowReturnKey: dec.label_allow_return_key || false,
-			textCanBeEmpty: false,
-			xPos: this.decUtils.getDecLabelTextAreaPosX(),
-			yPos: this.decUtils.getDecLabelTextAreaPosY(),
-			width: this.decUtils.getDecLabelTextAreaWidth(dec, obj, objType),
-			height: this.decUtils.getDecLabelTextAreaHeight(dec, obj, objType),
-			className: this.decUtils.getDecLabelTextAreaClass(dec),
-			parentDomObj: parentDomObj,
-			objId: obj.id,
-			objType: objType,
-			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
-			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
-			closeTextAreaCallback: null
-		});
-	}
-
-	// Handles saved changes to editable text decorations.
-	saveDecLabelChanges(id, newText, newHeight, taData) {
-		const data = {
-			editType: "editDecorationLabel",
-			editSource: "canvas",
-			decId: id,
-			objId: taData.objId,
-			objType: taData.objType,
-			label: newText,
-			pipelineId: this.activePipeline.id
-		};
-		this.canvasController.editActionHandler(data);
-	}
-
-	// Displays a text area to allow text entry and editing for: comments;
-	// node labels; or text decorations on either a node or link.
-	displayTextArea(data) {
-		const that = this;
-
-		this.textAreaHeight = data.height; // Save for comparison during auto-resize
-		this.editingText = true;
-		this.editingTextId = data.id;
-
-		const foreignObject = d3.select(data.parentDomObj)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object d3-text-entry-fo")
-			.attr("width", data.width)
-			.attr("height", data.height)
-			.attr("x", data.xPos)
-			.attr("y", data.yPos);
-
-		const textArea = foreignObject
-			.append("xhtml:textarea")
-			.attr("class", data.className)
-			.text(unescapeText(data.text))
-			.on("keydown", function(d3Event) {
-				// Don't accept return key press when text is all on one line or
-				// if application doesn't want line feeds inserted in the label.
-				if ((data.singleLine || !data.allowReturnKey) &&
-						d3Event.keyCode === RETURN_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				}
-				if (d3Event.keyCode === ESC_KEY) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					that.textAreaEscKeyPressed = true;
-					that.closeTextArea(foreignObject, data);
-				}
-				if (data.maxCharacters &&
-						this.value.length >= data.maxCharacters &&
-						!that.textAreaAllowedKeys(d3Event)) {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				}
-				// Call any specific keyboard handler for the type of
-				// text being edited.
-				if (data.keyboardInputCallback) {
-					data.keyboardInputCallback(d3Event);
-				}
-			})
-			.on("keyup", function(d3Event) {
-				data.autoSizeCallback(this, foreignObject, data);
-			})
-			.on("paste", function() {
-				that.logger.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
-				// Allow some time for pasted text (from context menu) to be
-				// loaded into the text area. Otherwise the text is not there
-				// and the auto size does not increase the height correctly.
-				setTimeout(data.autoSizeCallback, 500, this, foreignObject, data);
-			})
-			.on("blur", function(d3Event, d) {
-				that.logger.log("Text area - blur");
-				// If the esc key was pressed to cause the blur event just return
-				// so label returns to what it was before editing started.
-				if (that.textAreaEscKeyPressed) {
-					that.textAreaEscKeyPressed = false;
-					return;
-				}
-
-				// If the user clicked on an element in the text toolbar to cause the
-				// blur event, just return.
-				if (d3Event.relatedTarget && that.getParentElementWithClass(d3Event.relatedTarget, "text-toolbar")) {
-					return;
-				}
-
-				that.saveAndCloseTextArea(foreignObject, data, this.value, d3Event);
-			})
-			.on("focus", function(d3Event, d) {
-				that.logger.log("Text area - focus");
-				data.autoSizeCallback(this, foreignObject, data);
-			})
-			.on("mousedown click dblclick contextmenu", (d3Event, d) => {
-				d3Event.stopPropagation(); // Allow default behavior to show system contenxt menu
-			});
-
-		textArea.node().focus();
-
-		// Set the cusrsor to the end of the text.
-		textArea.node().setSelectionRange(data.text.length, data.text.length);
-	}
-
-	saveAndCloseTextArea(foreignObject, data, newValue, d3Event) {
-		// If there is no text for the label and textCanBeEmpty is false
-		// just return, so label returns to what it was before editing started.
-		if (!newValue && !data.textCanBeEmpty) {
-			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			this.closeTextArea(foreignObject, data);
-			return;
-		}
-		const newText = newValue; // Save the text before closing the foreign object
-		this.closeTextArea(foreignObject, data);
-		if (data.text !== newText) {
-			this.isCommentBeingUpdated = true;
-			data.saveTextChangesCallback(data.id, newText, this.textAreaHeight, data);
-			this.isCommentBeingUpdatd = false;
-		}
-	}
-
-	// Closes the text area and resets the flags.
-	closeTextArea(foreignObject, data) {
-		if (data.closeTextAreaCallback) {
-			data.closeTextAreaCallback(data.id);
-		}
-		foreignObject.remove();
-		this.editingText = false;
-		this.editingTextId = "";
-	}
-
-	// Returns true if one of the keys that are allowed in the text area, when
-	// checking for maximum characters, has been pressed.
-	textAreaAllowedKeys(d3Event) {
-		return d3Event.keyCode === DELETE_KEY ||
-			d3Event.keyCode === BACKSPACE_KEY ||
-			d3Event.keyCode === LEFT_ARROW_KEY ||
-			d3Event.keyCode === RIGHT_ARROW_KEY ||
-			d3Event.keyCode === UP_ARROW_KEY ||
-			d3Event.keyCode === DOWN_ARROW_KEY ||
-			(d3Event.keyCode === A_KEY && CanvasUtils.isCmndCtrlPressed(d3Event));
+		this.svgCanvasTextArea.displayDecLabelTextArea(dec, obj, objType, parentDomObj);
 	}
 
 	// Adds a rectangle over the top of the canvas which is used to display a
@@ -6002,8 +5660,10 @@ export default class SVGCanvasRenderer {
 			};
 
 			// If the node has been resized set the resize properties appropriately.
-			if (this.resizeObjInitialInfo.width !== resizeObj.width ||
-					this.resizeObjInitialInfo.height !== resizeObj.height) {
+			// We use some padding because sometimes, when a node is sized back to its
+			// original dimensions, it isn't retunred to EXACTLY its default width/height.
+			if (resizeObj.height > resizeObj.layout.defaultNodeHeight + 2 ||
+					resizeObj.width > resizeObj.layout.defaultNodeWidth + 2) {
 				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
 				this.nodeSizingObjectsInfo[resizeObj.id].resizeWidth = resizeObj.width;
 				this.nodeSizingObjectsInfo[resizeObj.id].resizeHeight = resizeObj.height;
@@ -6018,8 +5678,8 @@ export default class SVGCanvasRenderer {
 			});
 		}
 		this.nodeSizing = false;
-		this.nodeSizingObjectsInfo = [];
-		this.nodeSizingDetLinksInfo = [];
+		this.nodeSizingObjectsInfo = {};
+		this.nodeSizingDetLinksInfo = {};
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
@@ -6060,7 +5720,7 @@ export default class SVGCanvasRenderer {
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
-		if (this.selecting || this.regionSelect) {
+		if (this.selecting) {
 			this.displayLinksSelectionStatus();
 
 		} else {
@@ -6215,6 +5875,9 @@ export default class SVGCanvasRenderer {
 		linkGrps
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -6445,12 +6108,14 @@ export default class SVGCanvasRenderer {
 			? " d3-draggable"
 			: " d3-non-draggable";
 
-		return "d3-node-group" + supernodeClass + draggableClass + customClass;
+		const resizeClass = d.isResized // this.isNodeResized(d)
+			? " d3-resized"
+			: "";
+
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + customClass;
 	}
 
-	// Pushes the links to be below nodes and then pushes comments to be below
-	// nodes and links. This lets the user put a large comment underneath a set
-	// of nodes and links for annotation purposes.
+	// Pushes the links to be below nodes within the nodesLinksGrp group.
 	setDisplayOrder(linkGroup) {
 		// Force those links without decorations to be behind those with decorations
 		// in case the links overlap we don't want the decorations to be overwritten.
@@ -6570,6 +6235,8 @@ export default class SVGCanvasRenderer {
 			link.y1 = coords.y1;
 			link.x2 = coords.x2;
 			link.y2 = coords.y2;
+			link.originX = coords.originX;
+			link.originY = coords.originY;
 			return link;
 		}
 		return null;
@@ -6597,6 +6264,8 @@ export default class SVGCanvasRenderer {
 				const startPos = this.linkUtils.getNewStraightNodeLinkStartPos(srcObj, endPos, link.srcOriginInfo);
 				coords.x1 = startPos.x;
 				coords.y1 = startPos.y;
+				coords.originX = startPos.originX;
+				coords.originY = startPos.originY;
 
 			} else {
 				srcPortId = this.getSourcePortId(link, srcObj);
@@ -6635,6 +6304,8 @@ export default class SVGCanvasRenderer {
 		link.y1 = coords.y1;
 		link.x2 = coords.x2;
 		link.y2 = coords.y2;
+		link.originX = coords.originX;
+		link.originY = coords.originY;
 
 		return link;
 	}
@@ -7098,23 +6769,24 @@ export default class SVGCanvasRenderer {
 	// Return the x,y coordinates of the svg group relative to the window's viewport
 	// This is used when a new comment is created from the toolbar to make sure the
 	// new comment always appears in the view port.
-	getSvgViewportOffset() {
-		let xPos = this.canvasLayout.addCommentOffset;
-		let yPos = this.canvasLayout.addCommentOffset;
+	getDefaultCommentOffset() {
+		let xPos = this.canvasLayout.addCommentOffsetX;
+		let yPos = this.canvasLayout.addCommentOffsetY;
 
 		if (this.zoomTransform) {
 			xPos = this.zoomTransform.x / this.zoomTransform.k;
 			yPos = this.zoomTransform.y / this.zoomTransform.k;
 
 			// The window's viewport is in the opposite direction of zoomTransform
-			xPos = -xPos + this.canvasLayout.addCommentOffset;
-			yPos = -yPos + this.canvasLayout.addCommentOffset;
+			xPos = -xPos + this.canvasLayout.addCommentOffsetX;
+			yPos = -yPos + this.canvasLayout.addCommentOffsetY;
 		}
 
-		return {
-			x_pos: xPos,
-			y_pos: yPos
-		};
+		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING ||
+				this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
+			return this.snapToGridPosition({ x: xPos, y: yPos });
+		}
+		return { x: xPos, y: yPos };
 	}
 
 	// Returns a string that explains which flags are set to true.

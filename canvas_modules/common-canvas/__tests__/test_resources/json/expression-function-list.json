@@ -235,6 +235,9 @@
             "resource_key": "to_integer.label"
           },
           "return_type": "Integer",
+          "return_type_label": {
+            "resource_key": "to_integer.returnType.label"
+          },
           "id": "to_integer",
           "parameters": [
             {
@@ -276,6 +279,9 @@
             "default": "@BLANK"
           },
           "return_type": "Boolean",
+          "return_type_label": {
+            "default": "Return type defined in return_type_label"
+          },
           "id": "@BLANK",
           "parameters": [
             {
@@ -969,7 +975,11 @@
       "group.GeneralFunctions.label": "General Functions",
       "to_integer.label": "to_integer",
       "to_integer.item.param": "Item",
-      "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number."
+      "to_integer.returnType.label": "[Esperanto~Integer~~eo]",
+      "to_integer.item.help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
+      "expression.no.functions": "There are no functions",
+      "expression.fields.empty.table.label": "There are no fields",
+      "expression.values.empty.table.label": "There are no values"
     },
     "fields": {
       "field_categories":[
@@ -980,10 +990,14 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Field"
             },
             "value_column_info": {
-              "label": "Value"
+              "label": {
+                "default": "Value"
+              },
+              "description": {
+                "default": "Globals value description"
+              }
             }
           }
         },
@@ -994,15 +1008,21 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Group"
+              "label": {
+                "default": "Group"
+              }
             },
             "value_column_info": {
-              "label": "Counted Value"
+              "label": {
+                "default": "Counted Value"
+              }
             },
             "additional_column_info": [
               {
               "id": "type",
-              "label": "Type"
+              "label": {
+                "default": "Type"
+                }
               }
             ]
           }
@@ -1014,10 +1034,14 @@
           },
           "field_columns": {
             "field_column_info": {
-              "label": "Parameter"
+              "label": {
+                "default": "Parameter"
+              }
             },
             "value_column_info": {
-              "label": "Current Value"
+              "label": {
+                "default": "Current Value"
+              }
             }
           }
         }
@@ -1147,6 +1171,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1162,7 +1189,8 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           },
           {
             "label": {
@@ -1278,6 +1306,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1293,13 +1324,17 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           },
           {
             "label": {
               "default": "@BLANK"
             },
             "return_type": "Boolean",
+            "return_type_label": {
+              "default": "Return type defined in return_type_label"
+            },
             "id": "@BLANK",
             "parameters": [
               {
@@ -1313,7 +1348,8 @@
             },
             "locLabel": "@BLANK(Item)",
             "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-            "value": "@BLANK(?)"
+            "value": "@BLANK(?)",
+            "locReturnType": "Return type defined in return_type_label"
           },
           {
             "label": {
@@ -1842,6 +1878,9 @@
               "default": "@BLANK"
             },
             "return_type": "Boolean",
+            "return_type_label": {
+              "default": "Return type defined in return_type_label"
+            },
             "id": "@BLANK",
             "parameters": [
               {
@@ -1855,7 +1894,8 @@
             },
             "locLabel": "@BLANK(Item)",
             "help": "Returns true if the value of FIELD is blank according to the definition for FIELD in an upstream type node.",
-            "value": "@BLANK(?)"
+            "value": "@BLANK(?)",
+            "locReturnType": "Return type defined in return_type_label"
           },
           {
             "label": {
@@ -1893,6 +1933,9 @@
               "resource_key": "to_integer.label"
             },
             "return_type": "Integer",
+            "return_type_label": {
+              "resource_key": "to_integer.returnType.label"
+            },
             "id": "to_integer",
             "parameters": [
               {
@@ -1908,7 +1951,8 @@
             },
             "locLabel": "to_integer(Item)",
             "help": "Converts ITEM to an integer. ITEM must be a string, or a number.",
-            "value": "to_integer(?)"
+            "value": "to_integer(?)",
+            "locReturnType": "[Esperanto~Integer~~eo]"
           }
         ]
       },

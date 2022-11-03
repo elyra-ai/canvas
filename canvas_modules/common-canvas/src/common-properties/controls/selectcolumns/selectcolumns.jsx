@@ -31,7 +31,7 @@ import ReadonlyControl from "./../readonly";
 
 /* eslint max-depth: ["error", 6] */
 
-class SelectColumns extends AbstractTable {
+class SelectColumnsControl extends AbstractTable {
 
 	constructor(props) {
 		super(props);
@@ -137,7 +137,7 @@ class SelectColumns extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 
@@ -170,7 +170,7 @@ class SelectColumns extends AbstractTable {
 	}
 }
 
-SelectColumns.propTypes = {
+SelectColumnsControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
@@ -194,4 +194,4 @@ const mapStateToProps = (state, ownProps) => ({
 	tableButtons: ownProps.controller.getTableButtons(ownProps.propertyId)
 });
 
-export default connect(mapStateToProps, null)(SelectColumns);
+export default connect(mapStateToProps, null)(SelectColumnsControl);

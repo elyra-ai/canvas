@@ -565,6 +565,7 @@ describe("Test undo redo tooltips for different actions", function() {
 		cy.clickToolbarRedo();
 
 		// Edit comment
+		cy.moveCommentToPosition("", 30, 250);
 		cy.editTextInComment("", "This is a select node");
 		// Verify undo/redo tooltip after editing comment
 		cy.hoverOverToolbarItem(".undo-action");

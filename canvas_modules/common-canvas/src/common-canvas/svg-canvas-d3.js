@@ -163,8 +163,8 @@ export default class SVGCanvasD3 {
 		}
 	}
 
-	getSvgViewportOffset() {
-		return this.renderer.getSvgViewportOffset();
+	getDefaultCommentOffset() {
+		return this.renderer.getDefaultCommentOffset();
 	}
 
 	getTransformedViewportDimensions() {
@@ -173,5 +173,13 @@ export default class SVGCanvasD3 {
 
 	getGhostNode(nodeTemplate) {
 		return this.renderer.getGhostNode(nodeTemplate);
+	}
+
+	setSpaceKeyPressed(state) {
+		this.renderer.setSpaceKeyPressed(state);
+	}
+
+	isSpaceKeyPressed() {
+		return this.renderer.isSpaceKeyPressed();
 	}
 }

@@ -80,6 +80,17 @@ Cypress.Commands.add("verifyZoomTransform", (x, y, k) => {
 		});
 });
 
+Cypress.Commands.add("verifyCreateAutoCommentCommand", (x, y) => {
+	cy.document().then((doc) => {
+		const lastEventLog = testUtils.getLastEventLogData(doc);
+		expect("createAutoComment").to.equal(lastEventLog.data.editType);
+		expect("toolbar").to.equal(lastEventLog.data.editSource);
+		expect(x).to.equal(lastEventLog.data.mousePos.x);
+		expect(y).to.equal(lastEventLog.data.mousePos.y);
+	});
+});
+
+
 Cypress.Commands.add("verifyZoomTransformDoesNotExist", () => {
 	cy.get(".svg-area > g")
 		.eq(0)
@@ -343,24 +354,6 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 	});
 });
 
-Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(dataLinkSelector).length) {
-			cy.document().then((doc) => {
-				cy.get(dataLinkSelector).should("have.length", noOfLinks);
-			});
-		} else {
-			// No Port Data Links found on canvas
-			expect(0).equal(noOfLinks);
-		}
-	});
-
-	// verify the number of port-links in the internal object model
-	cy.getPipeline().then((pipeline) => {
-		cy.getCountDataLinks(pipeline).should("eq", noOfLinks);
-	});
-});
-
 Cypress.Commands.add("verifyNumberOfComments", (noOfComments) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-comment-group").length) {
@@ -398,6 +391,24 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 	// verify the number of links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountLinks(pipeline).should("eq", noOfLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(dataLinkSelector).length) {
+			cy.document().then((doc) => {
+				cy.get(dataLinkSelector).should("have.length", noOfLinks);
+			});
+		} else {
+			// No Port Data Links found on canvas
+			expect(0).equal(noOfLinks);
+		}
+	});
+
+	// verify the number of port-links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountDataLinks(pipeline).should("eq", noOfLinks);
 	});
 });
 
@@ -1367,7 +1378,7 @@ function getNodeImageSelector(node) {
 }
 
 function getNodeLabelSelector(node) {
-	return getNodeGroupSelector(node) + " > .d3-foreign-object";
+	return getNodeGroupSelector(node) + " > .d3-foreign-object-node-label";
 }
 
 function getCommentSelectionOutlineSelector(comment) {

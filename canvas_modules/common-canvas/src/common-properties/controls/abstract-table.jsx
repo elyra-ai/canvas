@@ -27,7 +27,7 @@ import classNames from "classnames";
 import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 
-import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION } from "./../constants/constants";
+import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION, UPDATE_TYPE } from "./../constants/constants";
 
 import { isEqual, findIndex, sortBy, cloneDeep } from "lodash";
 
@@ -85,7 +85,7 @@ export default class AbstractTable extends React.Component {
 	componentDidMount() {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue();
-			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
+			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true, UPDATE_TYPE.INITIAL_LOAD);
 		}
 	}
 

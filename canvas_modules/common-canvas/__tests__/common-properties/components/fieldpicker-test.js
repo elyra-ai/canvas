@@ -719,6 +719,35 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		expect(selectRows2.length).to.equal(5);
 
 		const warningMessage = {
+			structuretableMultiInputSchema: {
+				"0": {
+					"1": {
+						type: "warning",
+						text: "Invalid Input name, field not found in data set.",
+						validation_id: "validField_structuretableMultiInputSchema[1]_893.8202755554307",
+						propertyId: { "name": "structuretableMultiInputSchema", "col": 1, "row": 0 },
+						required: false
+					}
+				},
+				"1": {
+					"1": {
+						type: "warning",
+						text: "Invalid Input name, field not found in data set.",
+						validation_id: "validField_structuretableMultiInputSchema[1]_893.8202755554307",
+						propertyId: { "name": "structuretableMultiInputSchema", "col": 1, "row": 1 },
+						required: false
+					}
+				},
+				"2": {
+					"1": {
+						type: "warning",
+						text: "Invalid Input name, field not found in data set.",
+						validation_id: "validField_structuretableMultiInputSchema[1]_893.8202755554307",
+						propertyId: { "name": "structuretableMultiInputSchema", "col": 1, "row": 2 },
+						required: false
+					}
+				}
+			},
 			fields: {
 				"1": {
 					"propertyId": {

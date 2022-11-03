@@ -18,8 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import CommonContextMenu from "./common-context-menu.jsx";
 
-const CONTEXT_MENU_BUTTON = 2;
-
 export default class ContextMenuWrapper extends React.Component {
 	constructor(props) {
 		super(props);
@@ -57,23 +55,19 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	handleClickOutside(e) {
-		// On Firefox, the context menu gesture emits both a 'context menu' event
-		// and a 'click' event. If the click is processed it causes the
-		// context menu to disappear imediately after it has displayed.
-		// Consequently, when this method is called with the context menu button set
-		// (which indicates one of the additional clicks from Firefox) we just
-		// stop propogation and return. On other browsers we don't get this extra
-		// events.
-		// Also, on Safari, when a user is displaying the context menu with a ctrl-click,
-		// the click is received with a ctrlKey field enabled. So we also ignore that.
-		if (e.button === CONTEXT_MENU_BUTTON || e.ctrlKey) {
+		// On Safari, when a user is displaying the context menu with a ctrl-click
+		// (which is a supported context menu gesture on the Mac) a secondary click
+		// event is emmitted which is received here with the ctrlKey field enabled.
+		// So we ignore that event otherwse, if we continue, the context menu will
+		// be closed.
+		if (e.ctrlKey) {
 			e.stopPropagation();
 			return;
 		}
 
-		// If the click was anywhere outside the context menu we just close the menu.
-		const domNode = document.getElementById("context-menu-popover");
-		if (domNode && !domNode.contains(e.target)) {
+		// If the click was anywhere outside the context menu and
+		// the ellipsis button we just close the menu.
+		if (!this.isOverContextMenu(e) && !this.isOverEllipsisButton(e)) {
 			// This stop propagation is needed in common canvas so that selected nodes will
 			// remain selected even after clicking outside the context menu to close the menu.
 			if (this.props.stopPropagation) {
@@ -81,6 +75,27 @@ export default class ContextMenuWrapper extends React.Component {
 			}
 			this.props.closeContextMenu();
 		}
+	}
+
+	// Retruns true if the event occurred over the context menu.
+	isOverContextMenu(e) {
+		const domNode = document.getElementById("context-menu-popover");
+		return !domNode || domNode.contains(e.target);
+	}
+
+	// Returns true if the event occurred over the ellipsis button. Typically
+	// there will be only one ellipsis button on the canvas, since they are only
+	// displayed on hover, but in some test cicumstances there might be more
+	// than one.
+	isOverEllipsisButton(e) {
+		const ellipsisNodes = document.getElementsByClassName("d3-node-ellipsis-group");
+		let state = false;
+		for (let i = 0; i < ellipsisNodes.length; i++) {
+			if (state === false && ellipsisNodes[i].contains(e.target)) {
+				state = true;
+			}
+		}
+		return state;
 	}
 
 	contextMenuClicked(action, param) {

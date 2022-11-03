@@ -375,6 +375,28 @@ describe("structuretable control renders correctly", () => {
 		expect(moveableRowsContainer.find("button.table-row-move-button[disabled=true]")).to.have.length(4);
 	});
 
+	it("Should display header labels with tooltip and info icon correctly", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const wrapper = renderedObject.wrapper;
+
+		const table = propertyUtils.openSummaryPanel(wrapper, "structuretableReadonlyColumnDefaultIndex-summary-panel");
+		const header = tableUtils.getTableHeaderRows(table);
+		expect(header).to.have.length(1);
+		// console.log(header.debug());
+
+		const columns = header.find(".properties-vt-column");
+		expect(columns).to.have.length(7);
+
+		expect(columns.at(0).find(".tooltip-container")).to.have.length(1);
+		expect(columns.at(1).find(".tooltip-container")).to.have.length(1);
+		expect(columns.at(2).find(".tooltip-container")).to.have.length(2);
+		expect(columns.at(2).find("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns.at(3).find(".tooltip-container")).to.have.length(1);
+		expect(columns.at(4).find(".tooltip-container")).to.have.length(2);
+		expect(columns.at(4).find("svg.properties-vt-info-icon")).to.have.length(1);
+		expect(columns.at(5).find(".tooltip-container")).to.have.length(2);
+		expect(columns.at(5).find("svg.properties-vt-info-icon")).to.have.length(1);
+	});
 
 	it("should select add columns button and field picker should display", () => {
 		setPropertyValue();
@@ -480,7 +502,7 @@ describe("condition renders correctly with structure table control", () => {
 			"type": "error",
 			"text": "order cannot be descending"
 		};
-		expect(renderedController.getErrorMessages(conditionsPropertyId)[0]).to.eql(errorMessage);
+		expect(renderedController.getErrorMessages(conditionsPropertyId)[2]).to.eql(errorMessage);
 		const tableWrapper = wrapper.find("div[data-id='properties-ft-structuretableErrors']");
 		expect(tableWrapper.find("div.properties-validation-message span").text()).to.equal(errorMessage.text);
 	});

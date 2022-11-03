@@ -23,7 +23,7 @@ import * as ConditionsUtils from "./../../ui-conditions/conditions-utils.js";
 import ValidationMessage from "./../../components/validation-message";
 import { RadioButton } from "carbon-components-react";
 import classNames from "classnames";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { ORIENTATIONS } from "./../../constants/form-constants.js";
 import { v4 as uuid4 } from "uuid";
 import { Information16 } from "@carbon/icons-react";
@@ -39,7 +39,7 @@ class RadiosetControl extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true);
+		this.updateValueFromFilterEnum(true, UPDATE_TYPE.INITIAL_LOAD);
 		const val = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.setEnabledStateOfOptionalPanels(val);
 		if (typeof this.props.value !== "undefined" && this.props.value !== null) {
@@ -92,7 +92,7 @@ class RadiosetControl extends React.Component {
 	}
 
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput) {
+	updateValueFromFilterEnum(skipValidateInput, updateType) {
 		if (this.props.value !== null && typeof this.props.value !== "undefined" &&
 			!this.props.controlOpts.values.includes(this.props.value)) {
 			let defaultValue = null;
@@ -100,7 +100,7 @@ class RadiosetControl extends React.Component {
 			if (this.props.control.valueDef && this.props.control.valueDef.defaultValue && this.props.controlOpts.values.includes(this.props.control.valueDef.defaultValue)) {
 				defaultValue = this.props.control.valueDef.defaultValue;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, updateType);
 		}
 	}
 
@@ -202,16 +202,18 @@ class RadiosetControl extends React.Component {
 			};
 			buttons.push(
 				<div key={i} className="properties-radioset-panel">
-					<RadioButton
-						key={i}
-						id={ControlUtils.getControlId(id, this.uuid)}
-						disabled={disabled || itemDisabled}
-						labelText={valueSet.valueLabels[i]}
-						value={val}
-						onChange={this.handleChange}
-						checked={checked}
-					/>
-					{tooltipIcon}
+					<div className="properties-radioset-tooltip">
+						<RadioButton
+							key={i}
+							id={ControlUtils.getControlId(id, this.uuid)}
+							disabled={disabled || itemDisabled}
+							labelText={valueSet.valueLabels[i]}
+							value={val}
+							onChange={this.handleChange}
+							checked={checked}
+						/>
+						{tooltipIcon}
+					</div>
 					{optionalPanel}
 				</div>
 			);

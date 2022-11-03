@@ -130,6 +130,36 @@ describe("Test adding a decorator to a node", function() {
 		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
 	});
 
+	it("Test editable multi-line label decoration on a node with label_allow_return_key = 'save'.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
+
+	it("Test editable single-line label decoration on a node with label_allow_return_key = 'save'.", function() {
+		cy.setNodeDecorations("No Decorator",
+			[{ "id": "123", "position": "bottomRight", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]
+		);
+		cy.hoverOverNodeDecoration("No Decorator", "123");
+		cy.clickEditIconForNodeDecLabel("No Decorator", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForNodeDecHitReturn("No Decorator", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnNode("No Decorator", 1);
+		cy.verifyLabelDecorationOnNode("No Decorator", "123", "New Label Text", 90, 55);
+	});
+
 });
 
 
@@ -253,6 +283,34 @@ describe("Test adding a decorator to a link", function() {
 		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
 		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
 		cy.enterLabelForLinkDec("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
+	});
+
+	it("Test editable multi-line label decoration on a link, with label_allow_return_key = 'save'", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": false, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
+		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
+		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
+	});
+
+	it("Test editable single-line label decoration on a link, with label_allow_return_key = 'save'", function() {
+		cy.setLinkDecorations("Bottom Left-Bottom Right",
+			[{ "id": "123", "label": "Dec Label",
+				"label_editable": true, "label_single_line": true, "height": 28,
+				"label_align": "center", "label_allow_return_key": "save",
+				"x_pos": "20", "y_pos": "-20" }]);
+		cy.hoverOverLinkDecoration("Bottom Left-Bottom Right", "123");
+		cy.clickEditIconForLinkDecLabel("Bottom Left-Bottom Right", "123");
+		// Enter the label and hit return after which will edit edit and save the label
+		cy.enterLabelForLinkDecHitReturn("Bottom Left-Bottom Right", "123", "New Label Text");
 		cy.verifyNumberOfDecoratorsOnLink("Bottom Left-Bottom Right", 1);
 		cy.verifyLabelDecorationOnLink("Bottom Left-Bottom Right", "123", "New Label Text", 498, 215);
 	});

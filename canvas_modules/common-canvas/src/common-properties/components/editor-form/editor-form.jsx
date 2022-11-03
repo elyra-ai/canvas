@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
-import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
@@ -34,15 +34,16 @@ import ControlPanel from "./../../panels/control";
 import Subtabs from "./../../panels/subtabs";
 
 import WideFlyout from "./../wide-flyout";
+import TearSheet from "../../panels/tearsheet";
 import FieldPicker from "./../field-picker";
 import TextPanel from "./../../panels/text-panel";
 import ActionPanel from "./../../panels/action-panel";
 
 import ActionFactory from "./../../actions/action-factory";
-import Icon from "./../../../icons/icon.jsx";
+import Icon from "./../../../icons/icon";
+import { ItemType } from "../../constants/form-constants";
 
 const ALERT_TAB_GROUP = "alertMsgs";
-
 class EditorForm extends React.Component {
 
 	constructor(props) {
@@ -68,6 +69,10 @@ class EditorForm extends React.Component {
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
 
 		this.actionFactory = new ActionFactory(this.props.controller);
+
+		this.FIRST_TEARSHEET_ID = null;
+		this.TEARSHEETS = {};
+		this.visibleTearsheet = null;
 
 	}
 
@@ -128,8 +133,16 @@ class EditorForm extends React.Component {
 		const tabContent = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
-		for (var i = 0; i < tabs.length; i++) {
-			const tab = tabs[i];
+		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
+		const tearsheetTabs = tabs.filter((t) => t.content.itemType === ItemType.TEARSHEET);
+		const totalTabs = tearsheetTabs.concat(nonTearsheetTabs);
+
+		for (let i = 0; i < totalTabs.length; i++) {
+			const tab = totalTabs[i];
+			const tabState = this.props.controller.getPanelState({ name: tab.group });
+			if (tabState === STATES.HIDDEN) {
+				continue;
+			}
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
 				hasAlertsTab = true;
 			}
@@ -138,8 +151,9 @@ class EditorForm extends React.Component {
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
 			}
-			// if only 1 tab don't show any tabs
-			if (tabs.length === 1) {
+			// if only 1 tab AND
+			// if total non-tearsheet tabs is 1; don't show any tabs
+			if (totalTabs.length === 1 && nonTearsheetTabs.length === 1) {
 				return (
 					<div key={"cat." + key} className="properties-category">
 						{panelItems}
@@ -154,20 +168,31 @@ class EditorForm extends React.Component {
 					panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} className="properties-category-caret-up" />;
 					categoryOpen = true;
 				}
-				tabContent.push(
-					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="properties-category-container">
-						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
-							className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
-						>
-							{tab.text}{this._getMessageCountForCategory(tab)}
-							{panelArrow}
-						</button>
-						<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
+				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
+					tabContent.push(
+						<div key={"cat." + key} className="properties-category">
 							{panelItems}
 							{additionalComponent}
 						</div>
-					</div>
-				);
+					);
+				} else {
+					tabContent.push(
+						<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
+							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
+						>
+							<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
+								className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
+							>
+								{tab.text}{this._getMessageCountForCategory(tab)}
+								{panelArrow}
+							</button>
+							<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
+								{panelItems}
+								{additionalComponent}
+							</div>
+						</div>
+					);
+				}
 			} else {
 				if (this.props.activeTab === tab.group) {
 					modalSelected = i;
@@ -177,6 +202,7 @@ class EditorForm extends React.Component {
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
 						label={tab.text}
+						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
 						{panelItems}
@@ -313,6 +339,7 @@ class EditorForm extends React.Component {
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
 		case ("panel"):
+		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
 			return (<Subtabs key={"subtabs." + key}
@@ -426,6 +453,30 @@ class EditorForm extends React.Component {
 				>
 					{content}
 				</TwistyPanel>);
+		case ("tearsheet"):
+			this.TEARSHEETS[panel.id] = {
+				panel: panel,
+				title: panel.label,
+				description: panel.description ? panel.description.text : null,
+				content: content
+			};
+			if (this.props.controller.getActiveTearsheet() !== null) {
+				this.visibleTearsheet = this.TEARSHEETS[this.props.controller.getActiveTearsheet()];
+			} else {
+				this.visibleTearsheet = null;
+			}
+			if (!this.FIRST_TEARSHEET_ID || this.FIRST_TEARSHEET_ID === panel.id) {
+				this.FIRST_TEARSHEET_ID = panel.id;
+				return (
+					<TearSheet
+						open={this.props.controller.getActiveTearsheet() !== null}
+						key={panel.id}
+						controller={this.props.controller}
+						tearsheet={this.visibleTearsheet}
+					/>
+				);
+			}
+			return null;
 		case ("column"):
 			return (
 				<ColumnPanel

@@ -171,7 +171,7 @@ describe("twisty panel classNames applied correctly", () => {
 	});
 
 	it("text panel should have custom classname defined", () => {
-		const twistyPanelcategory = wrapper.find("div.properties-category-container").at(4); // TWISTY PANEL category
+		const twistyPanelcategory = wrapper.find("div.properties-category-container").at(6); // TWISTY PANEL category
 		expect(twistyPanelcategory.find(".twisty-panel1-group-twistypanel-class")).to.have.length(1);
 	});
 });

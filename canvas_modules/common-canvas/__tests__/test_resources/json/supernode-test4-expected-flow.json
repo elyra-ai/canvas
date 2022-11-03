@@ -745,6 +745,24 @@
           },
           "inputs": [
             {
+              "id": "id5KIRGGJ3FYT_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDMultiPlotPE",
+                  "port_id_ref": "output1MultiPlotPE"
+                }
+              ]
+            },
+            {
               "id": "id125TTEEIK7V_inPort",
               "app_data": {
                 "my_data": {
@@ -774,24 +792,6 @@
                   }
                 ]
               }
-            },
-            {
-              "id": "id5KIRGGJ3FYT_inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Binding port for supernode"
-                }
-              },
-              "links": [
-                {
-                  "node_id_ref": "nodeIDMultiPlotPE",
-                  "port_id_ref": "output1MultiPlotPE"
-                }
-              ]
             }
           ],
           "outputs": []
@@ -820,14 +820,17 @@
               "content": "Connected to 4 nodes\n",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "nodeIDMultiPlotPE",
                   "class_name": "d3-comment-link"
                 }
@@ -843,6 +846,7 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
+                  "id": "aaee5567d-aaaa-bbbb-ccccc-d5d6d7d8d7",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -1384,6 +1388,31 @@
           },
           "outputs": [
             {
+              "id": "output_id5KIRGGJ3FYT_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 482,
+              "y_pos": 310.99999237060547,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
               "id": "output_id125TTEEIK7V_inPort",
               "app_data": {
                 "my_data": {
@@ -1406,31 +1435,6 @@
                     "field2": "model-node-port-param-val2"
                   }
                 ]
-              }
-            }
-          ]
-        },
-        {
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "Binding",
-              "x_pos": 482,
-              "y_pos": 310.99999237060547,
-              "description": "Supernode binding node"
-            }
-          },
-          "outputs": [
-            {
-              "id": "output_id5KIRGGJ3FYT_inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Binding port for supernode"
-                }
               }
             }
           ]

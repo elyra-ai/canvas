@@ -4,7 +4,16 @@
   },
   "current_parameters": {
     "code": "Age >= 55",
-    "code_rows": ""
+    "code_rows": "Age < 55",
+    "string": "test",
+    "string2": "test",
+    "date_mdy": "11-05-2018",
+    "timefieldControlName": "10:05:20Z",
+    "listControlName": [
+      "list item 1"
+    ],
+    "passwordField": "",
+    "hide": true
   },
   "parameters": [
     {
@@ -14,6 +23,81 @@
     {
       "id": "code_rows",
       "type": "string"
+    },
+    {
+      "id": "string",
+      "type": "string"
+    },
+    {
+      "id": "string2",
+      "type": "string"
+    },
+    {
+      "id": "listControlName",
+      "type": "array[string]",
+      "default": "listPlaceholderText"
+    },
+    {
+      "id": "date_mdy",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "timefieldControlName",
+      "type": "time"
+    },
+    {
+      "id": "passwordField",
+      "type": "password",
+      "default": "",
+      "role": "new_column"
+    },
+    {
+      "id": "numberfieldControlName",
+      "type": "integer",
+      "default": 0
+    },
+    {
+      "id": "oneofselectList",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": "yellow"
+    },
+    {
+      "id": "multiselectList",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "default": [
+        "yellow"
+      ]
+    },
+    {
+      "id": "someofselectList",
+      "type": "array[string]",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
     }
   ],
   "uihints": {
@@ -29,6 +113,10 @@
       {
         "parameter_ref": "code",
         "language": "text/x-python",
+        "enable_maximize": true,
+        "data": {
+          "tearsheet_ref": "tearsheet1"
+        },
         "label": {
           "default": "Code"
         },
@@ -44,6 +132,10 @@
       {
         "parameter_ref": "code_rows",
         "language": "text/x-rsrc",
+        "enable_maximize": true,
+        "data": {
+          "tearsheet_ref": "tearsheet2"
+        },
         "label": {
           "default": "R code with Rows"
         },
@@ -52,21 +144,189 @@
         },
         "control": "code",
         "rows": 15
+      },
+      {
+        "parameter_ref": "string",
+        "label": {
+          "default": "string"
+        },
+        "description": {
+          "default": "textfield with parameter value set to 'testing'"
+        },
+        "class_name": "string-textfield-control-class"
+      },
+      {
+        "parameter_ref": "string2",
+        "label": {
+          "default": "string"
+        },
+        "control": "textarea",
+        "description": {
+          "default": "textarea with sting value"
+        },
+        "class_name": "string-textarea-control-class"
+      },
+      {
+        "parameter_ref": "listControlName",
+        "control": "list",
+        "label": {
+          "default": "List Control Name"
+        },
+        "moveable_rows": true,
+        "rows": 6,
+        "description": {
+          "default": "List test"
+        }
+      },
+      {
+        "parameter_ref": "date_mdy",
+        "label": {
+          "default": "Required Date M-D-Y"
+        },
+        "description": {
+          "default": "Required datefield with value set to '2018-5-11' with M-D-Y format"
+        },
+        "date_format": "M-D-Y",
+        "class_name": "datefield-control-class"
+      },
+      {
+        "parameter_ref": "timefieldControlName",
+        "label": {
+          "default": "Timefield Control Name"
+        },
+        "description": {
+          "default": "Timefield test"
+        },
+        "time_format": "HH:mm:ss"
+      },
+      {
+        "parameter_ref": "passwordField",
+        "label": {
+          "default": "Password Control Name"
+        },
+        "description": {
+          "default": "Enter your password"
+        }
+      },
+      {
+        "parameter_ref": "numberfieldControlName",
+        "label": {
+          "default": "Numberfield Control Name"
+        },
+        "description": {
+          "default": "Numberfield test"
+        }
+      },
+      {
+        "parameter_ref": "oneofselectList",
+        "label": {
+          "default": "One of Select Control Name"
+        },
+        "description": {
+          "default": "oneofselect test"
+        }
+      },
+      {
+        "parameter_ref": "multiselectList",
+        "control": "multiselect",
+        "label": {
+          "default": "Multiselect Control Name"
+        },
+        "description": {
+          "default": "multiselect test"
+        }
+      },
+      {
+        "parameter_ref": "someofselectList",
+        "label": {
+          "default": "Some of Select Control Name"
+        },
+        "description": {
+          "default": "someofselect test"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide code control"
+        }
       }
     ],
-    "group_info": [
-      {
-        "id": "Values",
+    "group_info": [{
+      "id": "tearsheet1",
+      "label": {
+        "default": "Python"
+      },
+      "description": {
+        "default": "Your change is automatically saved."
+      },
+      "type": "tearsheetPanel",
+      "group_info": [{
+        "id": "tearsheet-code",
         "label": {
-          "default": "Values"
+          "default": "Code Rows"
         },
         "parameter_refs": [
           "code",
+          "string",
+          "string2",
+          "date_mdy",
+          "timefieldControlName",
+          "passwordField",
+          "numberfieldControlName",
+          "oneofselectList",
+          "multiselectList",
+          "someofselectList",
+          "listControlName"
+        ]
+      }]
+    }, {
+      "id": "tearsheet2",
+      "label": {
+        "default": "Python 2"
+      },
+      "description": {
+        "default": "Your change is automatically saved 2."
+      },
+      "type": "tearsheetPanel",
+      "group_info": [{
+        "id": "tearsheet-code-2",
+        "label": {
+          "default": "Code Rows"
+        },
+        "parameter_refs": [
           "code_rows"
         ]
-      }
-    ]
+      }]
+    }, {
+      "id": "code-panel",
+      "type": "panels",
+      "group_info": [{
+        "id": "code",
+        "label": {
+          "default": "Code Rows"
+        },
+        "parameter_refs": [
+          "code",
+          "hide",
+          "code_rows"
+        ]
+      }]
+    }]
   },
-  "conditions": [],
+  "conditions": [{
+    "visible": {
+      "parameter_refs": [
+        "code_rows"
+      ],
+      "evaluate": {
+        "condition": {
+          "parameter_ref": "hide",
+          "op": "equals",
+          "value": false
+        }
+      }
+    }
+  }],
   "resources": {}
 }

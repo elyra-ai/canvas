@@ -21,9 +21,13 @@ import sinon from "sinon";
 
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
+import ExpressionToggle from "../../../src/common-properties/controls/expression/expression-toggle/expression-toggle";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
+import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
+import * as messages from "./../../../locales/common-properties/locales/en.json";
+import * as harnessMessages from "./../,,/../../../../harness/src/intl/locales/en.json";
 
 import { mountWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
@@ -38,7 +42,11 @@ const control = {
 	valueDef: {
 		isList: false
 	},
-	language: "CLEM"
+	language: "CLEM",
+	data: {
+		tearsheet_ref: "tearsheetX"
+	},
+	enableMaximize: true
 };
 
 const propertyId = { name: "test-expression" };
@@ -118,7 +126,7 @@ function getCopy(value) {
 }
 
 var controller = new Controller();
-
+const buttonHandler = sinon.spy();
 function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
@@ -128,6 +136,9 @@ function reset() {
 	controller.setDatasetMetadata(getCopy(dataModel));
 	var expressionInfo = getCopy(ExpressionInfo.input);
 	controller.setExpressionInfo(expressionInfo);
+	controller.setHandlers({
+		buttonHandler: buttonHandler
+	});
 }
 
 const propertiesConfig = { containerType: "Custom", rightFLyout: true };
@@ -178,13 +189,28 @@ describe("expression-control renders correctly", () => {
 		expect(expressionBuilderIcon).to.have.length(1);
 		expect(expressionBuilderIcon.text()).to.equal("launch expression builder");
 	});
+	it("should render maximize button", () => {
+		reset();
+		const wrapper = mountWithIntl(
+			<Expression
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+				rightFlyout
+			/>
+		);
+		expect(wrapper.find("button.maximize")).to.have.length(1);
+	});
 
 });
 
 describe("expression-builder renders correctly", () => {
+	beforeEach(() => {
+		reset();
+	});
 
 	it("expression builder props should have been defined", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -201,7 +227,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("should render a `ExpressionBuilder`", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -222,7 +247,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("Fields and Values tables should have aria-label", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -244,7 +268,6 @@ describe("expression-builder renders correctly", () => {
 	});
 
 	it("Functions table should have aria-label", () => {
-		reset();
 		const wrapper = mountWithIntl(
 			<Provider store={controller.getStore()}>
 				<ExpressionBuilder
@@ -262,6 +285,186 @@ describe("expression-builder renders correctly", () => {
 		expect(functionsTable.props()).to.have.property("aria-label", "Functions table");
 	});
 
+	it("Fields and Values tables should display default empty label if no values", () => {
+		// Remove datasetmetadata
+		controller.setDatasetMetadata([]);
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL];
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const fieldsTable = wrapper.find("div.properties-field-table-container");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL]);
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL]);
+	});
+
+	it("Fields and Values tables should display custom empty label if no values", () => {
+		// Remove datasetmetadata
+		controller.setDatasetMetadata([]);
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		const fieldsTable = wrapper.find("div.properties-field-table-container");
+		expect(fieldsTable).to.have.length(1);
+		expect(fieldsTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL]);
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+		expect(valuesTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL]);
+	});
+
+	it("Functions table should display default empty label if no values", () => {
+		// Remove function_refs
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		expressionInfo.functions.function_categories[0].function_refs = [];
+		delete expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// Switch to functions
+		const contentSwitcher = wrapper.find(".properties-expression-selection-content-switcher");
+		expect(contentSwitcher).to.have.length(1);
+		const buttons = contentSwitcher.find("button");
+		expect(buttons).to.have.length(2);
+		buttons.at(1).simulate("click");
+
+		const functionsTable = wrapper.find("div.properties-functions-table-container");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.find(".properties-ft-empty-table").text()).to.equal(messages[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS]);
+	});
+
+	it("Functions table should display custom empty label if no values", () => {
+		// Remove function_refs
+		const expressionInfo = getCopy(ExpressionInfo.input);
+		expressionInfo.functions.function_categories[0].function_refs = [];
+		controller.setExpressionInfo(expressionInfo);
+
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		// Switch to functions
+		const contentSwitcher = wrapper.find(".properties-expression-selection-content-switcher");
+		expect(contentSwitcher).to.have.length(1);
+		const buttons = contentSwitcher.find("button");
+		expect(buttons).to.have.length(2);
+		buttons.at(1).simulate("click");
+
+		const functionsTable = wrapper.find("div.properties-functions-table-container");
+		expect(functionsTable).to.have.length(1);
+		expect(functionsTable.find(".properties-ft-empty-table").text()).to.equal(expressionInfo.resources[MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS]);
+	});
+
+	it("Functions table should display 'Return' column from return_type_label, default to return_type if undefined", () => {
+		const wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionBuilder
+					control={control}
+					controller={controller}
+					propertyId={propertyId}
+				/>
+			</Provider>
+		);
+		wrapper.find("button.expresson-builder-function-tab").simulate("click");
+
+		// Verify Return column in "General Functions" table
+		let functionsTable = wrapper.find("div.properties-functions-table").find(".ReactVirtualized__Table");
+		expect(functionsTable).to.have.length(1);
+		let rows = tableUtils.getTableRows(functionsTable);
+		expect(rows).to.have.length(4);
+		rows.forEach((row, idx) => {
+			const functionInfo = ExpressionInfo.actual.functionCategories["General Functions"].functionList[idx];
+			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
+			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
+			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
+				.at(1)
+				.text();
+			expect(expectedReturnType).to.eql(actualReturnType);
+		});
+
+		// Navigate to Information table
+		var dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
+		dropDown.simulate("click");
+		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
+		dropDownList.at(2).simulate("click");
+		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Information");
+
+		// Verify Return column in "Information" table
+		functionsTable = wrapper.find("div.properties-functions-table").find(".ReactVirtualized__Table");
+		rows = tableUtils.getTableRows(functionsTable);
+		expect(rows).to.have.length(3);
+		rows.forEach((row, idx) => {
+			const functionInfo = ExpressionInfo.actual.functionCategories.Information.functionList[idx];
+			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
+			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
+			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
+				.at(1)
+				.text();
+			expect(expectedReturnType).to.eql(actualReturnType);
+		});
+	});
+
+	it("expression builder displays table header descriptions in info icon", () => {
+		propertiesInfo.expressionInfo = getCopy(ExpressionInfo.input);
+		const renderedObject = propertyUtils.flyoutEditorFormWithIntl(ExpressionParamdef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+		const expression = wrapper.find("div[data-id='properties-ctrl-expression']");
+		const expressionEditorBtn = expression.find("button.properties-expression-button");
+		expressionEditorBtn.simulate("click");
+
+		const valuesTable = wrapper.find("div.properties-value-table-container");
+		expect(valuesTable).to.have.length(1);
+
+		// Verify custom header label
+		const header = valuesTable.find("div[data-role='properties-header-row']");
+		const headerLabel = header.find(".properties-vt-label-tip-icon");
+		expect(headerLabel).to.have.length(1);
+		expect(header.text()).to.equal(harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
+
+		// Verify info icon
+		const headerInfoIcon = header.find(".properties-vt-info-icon-tip");
+		expect(headerInfoIcon).to.have.length(1);
+		let infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		expect(infoTip.props()).to.have.property("aria-hidden", true);
+		headerInfoIcon.find("div[data-id='properties-tooltip-Custom Value-info-trigger']").simulate("click");
+		infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		expect(infoTip.props()).to.have.property("aria-hidden", false);
+	});
 });
 
 describe("expression-builder select from tables correctly", () => {
@@ -639,7 +842,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		functionTable = wrapper.find("div.properties-functions-table");
 		rows = tableUtils.getTableRows(functionTable);
 		expect(rows).to.have.length(1);
-		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(rows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 	});
 	it("expression builder sorts fields table", () => {
 		reset();
@@ -706,7 +909,7 @@ describe("ExpressionBuilder filters and sorts correctly", () => {
 		const rows = tableUtils.getTableRows(functionTable);
 		const sortHeaders = functionTable.find(".ReactVirtualized__Table__sortableHeaderColumn");
 		expect(rows).to.have.length(4);
-		expect(rows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(rows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		expect(sortHeaders).to.have.length(2);
 
 		tableUtils.clickHeaderColumnSort(functionTable, 0);
@@ -830,7 +1033,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
 		expect(funcRows.at(0).text()).to.equal("count_equal(Item, List)Integer");
-		expect(funcRows.at(1).text()).to.equal("to_integer(Item)Integer");
+		expect(funcRows.at(1).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		// check that reusing a function will move it to the top of Recently Used
 		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
 		dropDown.simulate("click");
@@ -847,7 +1050,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		// order of rows should be reversed
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(2);
-		expect(funcRows.at(0).text()).to.equal("to_integer(Item)Integer");
+		expect(funcRows.at(0).text()).to.equal("to_integer(Item)[Esperanto~Integer~~eo]");
 		expect(funcRows.at(1).text()).to.equal("count_equal(Item, List)Integer");
 	});
 });
@@ -869,5 +1072,60 @@ describe("expression builder classnames appear correctly", () => {
 		expect(wrapper.find(".expression-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-on-panel-expression-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-subpanel-expression-control-class")).to.have.length(1);
+	});
+});
+describe("expression toggle", () => {
+	let wrapper;
+	beforeEach(() => {
+		reset();
+		wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionToggle
+					control={control}
+					controller={controller}
+					enableMaximize
+				/>
+			</Provider>
+		);
+	});
+	it("should render maximize", () => {
+		expect(wrapper.find("button.maximize")).to.have.length(1);
+		expect(wrapper.find("button.minimize")).to.have.length(0);
+	});
+	it("should call button handler on maximize", () => {
+		wrapper.find("button.maximize").simulate("click");
+		expect(buttonHandler.calledOnce).to.equal(true);
+	});
+	it("should set active tearsheet", () => {
+		wrapper.find("button.maximize").simulate("click");
+		expect(controller.getActiveTearsheet()).to.equal("tearsheetX");
+	});
+});
+describe("expression toggle in tearsheet", () => {
+	let wrapper;
+	beforeEach(() => {
+		reset();
+		wrapper = mountWithIntl(
+			<Provider store={controller.getStore()}>
+				<ExpressionToggle
+					control={control}
+					controller={controller}
+					enableMaximize={false}
+				/>
+			</Provider>
+		);
+	});
+	it("should render minimize", () => {
+		expect(wrapper.find("button.maximize")).to.have.length(0);
+		expect(wrapper.find("button.minimize")).to.have.length(1);
+	});
+	it("should not call button handler on minimize", () => {
+		wrapper.find("button.minimize").simulate("click");
+		expect(buttonHandler.calledOnce).to.equal(false);
+	});
+	it("should set active tearsheet to null", () => {
+		controller.setActiveTearsheet("tearsheetX");
+		wrapper.find("button.minimize").simulate("click");
+		expect(controller.getActiveTearsheet()).to.equal(null);
 	});
 });

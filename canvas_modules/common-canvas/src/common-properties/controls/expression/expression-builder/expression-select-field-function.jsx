@@ -21,7 +21,7 @@ import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";
 import { formatMessage } from "./../../../util/property-utils";
-import { sortBy } from "lodash";
+import { sortBy, get } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
 export default class ExpressionSelectFieldOrFunction extends React.Component {
@@ -29,24 +29,25 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
-		this.recentUseCat = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
+		this.valueColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
+		this.valueColumnDesc = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN_DESCRIPTION);
+		this.recentUseCat = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
 		this.recentUseCatInfo = {
 			id: this.recentUseCat,
 			locLabel: this.recentUseCat,
 			field_columns: {
 				field_column_info: {
-					locLabel: formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN)
+					locLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN)
 				},
 				value_column_info: {
-					locLabel: formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN)
+					locLabel: this.valueColumn,
+					descLabel: this.valueColumnDesc
 				}
 			}
 		};
 		this.inCategories = Object.keys(props.functionList);
 		this.fields = this._makeDatasetFields(props.controller.getDatasetMetadataFields(), props.controller.getExpressionInfo().fields);
+		this.resources = get(props.controller.getExpressionInfo(), "resources", {});
 		this.state = {
 			fieldSelected: 0,
 			valueSelected: 0,
@@ -255,23 +256,21 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	_makeDatasetFields(dataset, fieldDataset) {
-		const fieldColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN);
-		const storageColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN);
-		const valueColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
-		const dropdownLabel = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
+		const fieldColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN);
+		const fieldColumnDesc = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN_DESCRIPTION);
+		const storageColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN);
+		const dropdownLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
 		const fieldsCatInfo = {
 			id: "fields",
 			locLabel: dropdownLabel,
 			field_columns: {
 				field_column_info: {
-					locLabel: fieldColumn
+					locLabel: fieldColumn,
+					descLabel: fieldColumnDesc
 				},
 				value_column_info: {
-					locLabel: valueColumn
+					locLabel: this.valueColumn,
+					descLabel: this.valueColumnDesc
 				},
 				additional_column_info: [
 					{
@@ -368,8 +367,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 
 		if (categoryInfo) {
-			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel, resizable: true });
-			valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
+			fieldHeaders.push({
+				key: "fieldName",
+				label: categoryInfo.field_columns.field_column_info.locLabel,
+				description: categoryInfo.field_columns.field_column_info.descLabel,
+				resizable: true
+			});
+			valueHeader.push({
+				key: "values",
+				label: categoryInfo.field_columns.value_column_info.locLabel,
+				description: categoryInfo.field_columns.value_column_info.descLabel
+			});
 			if (categoryInfo.field_columns.additional_column_info) {
 				for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
 					sortable.push(categoryInfo.field_columns.additional_column_info[i].id);
@@ -412,8 +420,13 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			valuesTableData = this.sortTableRows(valuesTableData, this.state.valuesTableSortSpec);
 			selectedValue = valuesTableData.findIndex((row) => row.rowKey === this.state.valueSelected);
 		}
+
 		const fieldsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_TABLE_LABEL);
 		const valuesTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_TABLE_LABEL);
+		const emptyFieldsLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_EMPTY_TABLE_LABEL));
+		const emptyValuesLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUES_EMPTY_TABLE_LABEL));
 
 		return (
 			<div className="properties-field-and-values-table-container" >
@@ -433,6 +446,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onFieldTableDblClick}
 						onSort={this.setSortColumn.bind(this, "fieldTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={emptyFieldsLabel}
 					/>
 				</div>
 				<div className="properties-value-table-container" >
@@ -450,6 +464,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onValueTableDblClick}
 						onSort={this.setSortColumn.bind(this, "valuesTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={emptyValuesLabel}
 					/>
 				</div>
 			</div>
@@ -585,6 +600,8 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			selectedFunction = data.findIndex((row) => row.rowKey === this.state.functionSelected);
 		}
 		const functionsTableLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FUNCTIONS_TABLE_LABEL);
+		const functionsEmptyLabel = get(this.resources, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS,
+			formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_NO_FUNCTIONS));
 
 		return (
 			<div className="properties-functions-table-container" >
@@ -603,6 +620,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 						onRowDoubleClick={this.onFunctionTableDblClick}
 						onSort={this.setSortColumn.bind(this, "functionTable")}
 						light={this.props.controller.getLight()}
+						emptyTablePlaceholder={functionsEmptyLabel}
 					/>
 				</div>
 				<div className="properties-help-table-container" >
@@ -621,8 +639,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const columns = [];
 				if (!this.state.functionFilterText || this.state.functionFilterText.length === 0 ||
 					(catFunction.locLabel.toLowerCase().indexOf(this.state.functionFilterText.toLowerCase()) > -1)) {
+					const returnType = catFunction.locReturnType ? catFunction.locReturnType : catFunction.return_type;
 					columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel), value: catFunction.locLabel });
-					columns.push({ column: "return", content: this.createContentObject(catFunction.return_type), value: catFunction.return_type });
+					columns.push({ column: "return", content: this.createContentObject(returnType), value: returnType });
 					table.rows.push({ columns: columns, rowKey: index });
 					if (index === this.state.functionSelected) {
 						table.helpContainer = (

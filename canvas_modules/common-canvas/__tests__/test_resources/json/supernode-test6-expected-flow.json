@@ -181,7 +181,7 @@
               },
               "links": [
                 {
-                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE"
+                  "port_id_ref": "nodeIDMultiPlotPE_output1MultiPlotPE_1"
                 }
               ]
             }
@@ -688,6 +688,25 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            },
+            {
+              "id": "nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               }
@@ -718,10 +737,12 @@
               "content": "Connected to 4 nodes\n",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "id125TTEEIK7V",
                   "class_name": "canvas-comment-link"
                 }
@@ -737,6 +758,7 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
+                  "id": "aaee5567d-aaaa-bbbb-ccccc-d5d6d7d8d7",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -1484,6 +1506,44 @@
                   "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
                 },
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDMultiPlotPE",
+                  "port_id_ref": "output1MultiPlotPE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 650,
+              "y_pos": 218.5,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_nodeIDMultiPlotPE_output1MultiPlotPE_1",
+              "app_data": {
+                "my_data": {
+                  "my_field": "Execution node -> Outputs -> My data -> My field -> My value"
+                },
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               },

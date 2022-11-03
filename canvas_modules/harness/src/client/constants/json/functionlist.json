@@ -1086,6 +1086,9 @@
 					"default": "is_integer"
 				},
 				"return_type": "Boolean",
+				"return_type_label": {
+					"resource_key": "is_integer_1.returnType.label"
+				},
 				"parameters": [
 					{
 						"label": {
@@ -6340,6 +6343,9 @@
 					"value_column_info": {
 						"label": {
 							"default": "Value"
+						},
+						"description": {
+							"default": "Globals value description"
 						}
 					}
 				}
@@ -6504,6 +6510,10 @@
 	},
 	"resources": {
 		"globals.field_column_info.label": "Field",
-		"globals.label": "Globals"
+		"globals.label": "Globals",
+		"expression.no.functions": "There are no functions",
+		"expression.fields.empty.table.label": "There are no fields",
+		"expression.values.empty.table.label": "There are no values",
+		"is_integer_1.returnType.label": "[Esperanto~Boolean~~eo]"
 	}
 }

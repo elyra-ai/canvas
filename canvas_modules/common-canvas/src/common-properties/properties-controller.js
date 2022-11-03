@@ -24,14 +24,14 @@ import { parseUiContent } from "./ui-conditions/ui-groups-parser.js";
 import * as conditionsUtil from "./ui-conditions/conditions-utils";
 import * as PropertyUtils from "./util/property-utils.js";
 
-import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE, UPDATE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
-
+import { ItemType } from "./constants/form-constants";
 export default class PropertiesController {
 
 	constructor() {
@@ -180,7 +180,11 @@ export default class PropertiesController {
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
-				this.propertiesStore.setActiveTab(this.uiItems[0].tabs[0].group);
+				// active tab is the first non-tearsheet
+				const filteredTearsheets = this.uiItems[0].tabs.filter((tab) => tab.content.itemType !== ItemType.TEARSHEET);
+				if (filteredTearsheets.length) {
+					this.propertiesStore.setActiveTab(filteredTearsheets[0].group);
+				}
 			}
 
 			// set title
@@ -382,11 +386,11 @@ export default class PropertiesController {
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
 					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
-					this.updatePropertyValue(propertyId, controlValue, true);
+					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
 				controlValue = this._populateFieldData(controlValue, control);
-				this.updatePropertyValue(propertyId, controlValue, true);
+				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
 				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
@@ -396,11 +400,11 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				this.updatePropertyValue(propertyId, controlValue, true);
+				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
-						this.updatePropertyValue(propertyId, control.defaultRow, true);
+						this.updatePropertyValue(propertyId, control.defaultRow, true, UPDATE_TYPE.INITIAL_LOAD);
 					}
 				}
 			}
@@ -1019,7 +1023,7 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(inPropertyId, value, skipValidateInput) {
+	updatePropertyValue(inPropertyId, value, skipValidateInput, type) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		const initialValue = this.getPropertyValue(propertyId);
 		if (typeof value === "undefined") {
@@ -1038,13 +1042,15 @@ export default class PropertiesController {
 
 		if (this.handlers.propertyListener) {
 			const convertedValue = this._convertObjectStructure(propertyId, value);
-			this.handlers.propertyListener(
-				{
-					action: ACTIONS.UPDATE_PROPERTY,
-					property: propertyId,
-					value: convertedValue
-				}
-			);
+			const data = {
+				action: ACTIONS.UPDATE_PROPERTY,
+				property: propertyId,
+				value: convertedValue
+			};
+			if (typeof type !== "undefined") {
+				data.type = type;
+			}
+			this.handlers.propertyListener(data);
 		}
 	}
 
@@ -1299,6 +1305,15 @@ export default class PropertiesController {
 	}
 	getPanelStates() {
 		return this.propertiesStore.getPanelStates();
+	}
+	clearActiveTearsheet() {
+		this.propertiesStore.setActiveTearsheetId(null);
+	}
+	setActiveTearsheet(tearsheetId) {
+		this.propertiesStore.setActiveTearsheetId(tearsheetId);
+	}
+	getActiveTearsheet() {
+		return this.propertiesStore.getActiveTearsheetId() || null;
 	}
 
 
@@ -1626,6 +1641,22 @@ export default class PropertiesController {
 
 	getSaveButtonDisable() {
 		return this.propertiesStore.getSaveButtonDisable();
+	}
+
+	/**
+	* Enable/disable OK button for given summary panel
+	* @param panelId {name: panel.id}
+	* @param wideFlyoutPrimaryButtonDisable boolean
+	*/
+	setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable) {
+		this.propertiesStore.setWideFlyoutPrimaryButtonDisabled(panelId, wideFlyoutPrimaryButtonDisable);
+	}
+
+	/**
+	* @param panelId {name: panel.id}
+	*/
+	getWideFlyoutPrimaryButtonDisabled(panelId) {
+		return this.propertiesStore.getWideFlyoutPrimaryButtonDisabled(panelId);
 	}
 
 	isRequired(propertyId) {

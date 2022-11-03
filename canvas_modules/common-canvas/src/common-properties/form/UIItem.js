@@ -123,4 +123,14 @@ export class UIItem {
 			className: className
 		});
 	}
+
+	static makeTearsheetPanel(control, description) {
+		return new UIItem({
+			itemType: ItemType.TEARSHEET,
+			panel: {
+				...control,
+				description
+			}
+		});
+	}
 }

@@ -135,7 +135,7 @@ function makePrimaryTab(propertyDef, group, l10nProvider) {
 	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, propertyDef.actionMetadata, group, propertyDef.structureMetadata, l10nProvider));
 }
 
-function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider) {
+function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
@@ -144,7 +144,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
@@ -238,6 +238,21 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		}
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, groupClassName, nestedPanel, panSubItems, groupLabel, group.open));
 	}
+	case GroupType.TEARSHEET_PANEL: {
+		groupLabel = l10nProvider.l10nLabel(group, group.name);
+		let groupDesc;
+		if (group.description) {
+			groupDesc = new Description(l10nProvider.l10nResource(group.description));
+		}
+		const panSubItems = [];
+		if (Array.isArray(group.subGroups)) {
+			group.subGroups.forEach(function(subGroup) {
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, true);
+				panSubItems.push(groupItem);
+			});
+		}
+		return UIItem.makeTearsheetPanel(new ControlPanel(groupName, PanelType.TEARSHEET, groupClassName, nestedPanel, panSubItems, groupLabel, false), groupDesc);
+	}
 	default:
 		logger.warn("(Unknown group type '" + group.groupType() + "')");
 		return null;
@@ -247,7 +262,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider) {
+function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
 	const uiItems = [];
 	const panelInsertedFor = [];
 	if (!Array.isArray(group.parameterNames())) {
@@ -261,7 +276,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
-			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata);
+			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, null, light);
 			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
@@ -305,7 +320,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 	if (Array.isArray(group.subGroups)) {
 		group.subGroups.forEach(function(subGroup) {
 			if (!_hasPanelBeenInserted(panelInsertedFor, subGroup.dependsOn)) {
-				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				uiItems.push(uiItem);
 			}
 		});
@@ -400,8 +415,8 @@ function _makeStringControl(parameter, isSubControl) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl) {
-	const isSubControl = typeof subControl !== "undefined";
+function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl, light = false) {
+	const isSubControl = typeof subControl !== "undefined" && subControl;
 
 	// Assume the property is defined
 	const parameter = isSubControl ? subControl : parameterMetadata.getParameter(paramName);
@@ -452,8 +467,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			controlType = ControlType.PASSWORDFIELD;
 			break;
 		case Type.BOOLEAN:
-			labelVisible = false;
-			controlType = ControlType.CHECKBOX;
+			if (!parameter.control || parameter.control === ControlType.CHECKBOX) {
+				labelVisible = false;
+				controlType = ControlType.CHECKBOX;
+			}
 			break;
 		case Type.INTEGER:
 		case Type.LONG:
@@ -605,6 +622,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.moveableRows = moveableRows;
 	settings.required = required;
 	settings.language = parameter.language;
+	settings.enableMaximize = parameter.enableMaximize;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;
 	settings.rowSelection = rowSelection;
@@ -625,7 +643,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.customValueAllowed = parameter.customValueAllowed;
 	settings.className = parameter.className;
 	settings.buttons = buttons;
-
+	settings.light = light;
 	if (isSubControl) {
 		settings.visible = parameter.visible;
 		settings.width = parameter.columns(8);

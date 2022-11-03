@@ -665,13 +665,41 @@
               "id": "nodeIDMultiPlotPE_input2MultiPlotPE",
               "app_data": {
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               },
               "links": [
                 {
                   "node_id_ref": "idGWRVT47XDV"
-                },
+                }
+              ],
+              "parameters": {
+                "props": [
+                  {
+                    "field1": "multiplot-port2-param-val1"
+                  },
+                  {
+                    "field2": "multiplot-port2-param-val2"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "nodeIDMultiPlotPE_input2MultiPlotPE_1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
                 {
                   "node_id_ref": "7015d906-2eae-45c1-999e-fb888ed957e5",
                   "port_id_ref": "7d1ac5ee-a599-451a-9036-dd2bafb53dd2_outPort"
@@ -715,10 +743,12 @@
               "content": "Connected to 4 nodes\n",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 }
@@ -734,6 +764,7 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
+                  "id": "aaee5567d-aaaa-bbbb-ccccc-d5d6d7d8d7",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -1187,6 +1218,9 @@
               "links": [
                 {
                   "port_id_ref": "output_nodeIDMultiPlotPE_input2MultiPlotPE"
+                },
+                {
+                  "port_id_ref": "output_nodeIDMultiPlotPE_input2MultiPlotPE_1"
                 }
               ],
               "parameters": {
@@ -1359,6 +1393,45 @@
               "id": "output_nodeIDMultiPlotPE_input2MultiPlotPE",
               "app_data": {
                 "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "parameters": {
+                "props": [
+                  {
+                    "field1": "multiplot-port2-param-val1"
+                  },
+                  {
+                    "field2": "multiplot-port2-param-val2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 340,
+              "y_pos": 250,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_nodeIDMultiPlotPE_input2MultiPlotPE_1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
                   "label": "Binding port for supernode"
                 }
               },

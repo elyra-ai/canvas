@@ -67,6 +67,15 @@ Cypress.Commands.add("enterLabelForNode", (nodeLabel, newLabel) => {
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
+Cypress.Commands.add("enterLabelForNodeHitReturn", (nodeLabel, newLabel) => {
+	cy.getNodeWithLabel(nodeLabel)
+		.find("foreignObject > textarea")
+		.clear()
+		.type(newLabel)
+		.type("{enter}");
+});
+
+
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
 		.then((nodeId) => {
@@ -250,6 +259,15 @@ Cypress.Commands.add("enterLabelForNodeDec", (nodeName, decId, newLabel) => {
 	cy.get("#canvas-div-0").click(1, 1);
 });
 
+Cypress.Commands.add("enterLabelForNodeDecHitReturn", (nodeName, decId, newLabel) => {
+	cy.getNodeWithLabel(nodeName)
+		.find("[data-id='node_dec_group_0_" + decId + "'] > foreignObject > textarea")
+		.clear()
+		.type(newLabel)
+		.type("{enter}");
+});
+
+
 Cypress.Commands.add("getNumberOfSelectedNodes", () => {
 	cy.getSelectedNodes()
 		.then((selectedNodes) => selectedNodes.length);
@@ -318,23 +336,6 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 				cy.getCanvasTranslateCoords()
 					.then((transform) => {
 						cy.get(srcSelector)
-							.trigger("mousedown", "topLeft", { which: 1, view: win });
-						cy.get("#canvas-div-0")
-							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
-							.trigger("mouseup", { which: 1, view: win });
-					});
-			});
-		});
-});
-
-
-Cypress.Commands.add("movecCanvasToPosition", (canvasLabel, canvasX, canvasY) => {
-	cy.getNodeWithLabel(canvasLabel)
-		.then((node) => {
-			cy.window().then((win) => {
-				cy.getCanvasTranslateCoords()
-					.then((transform) => {
-						cy.get(canvasLabel)
 							.trigger("mousedown", "topLeft", { which: 1, view: win });
 						cy.get("#canvas-div-0")
 							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })

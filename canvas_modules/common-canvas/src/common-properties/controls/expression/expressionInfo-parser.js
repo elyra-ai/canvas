@@ -15,7 +15,7 @@
  */
 
 import logger from "../../../../utils/logger";
-import { L10nProvider } from "../../util/L10nProvider";
+import { L10nProvider, ResourceDef } from "../../util/L10nProvider";
 import { cloneDeep, propertyOf } from "lodash";
 
 function setExpressionInfo(inExpressionInfo) {
@@ -57,8 +57,19 @@ function setExpressionInfo(inExpressionInfo) {
 				if (inExpressionInfo.fields.field_categories) {
 					inExpressionInfo.fields.field_categories.forEach((fieldCat) => {
 						fieldCat.locLabel = l10nProvider.l10nLabel(fieldCat, fieldCat.id);
+
 						fieldCat.field_columns.field_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
 						fieldCat.field_columns.value_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
+
+						const fieldColInfoDesc = l10nProvider.l10nDesc(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
+						if (fieldColInfoDesc !== fieldCat.id + ".field_column_info") {
+							fieldCat.field_columns.field_column_info.descLabel = fieldColInfoDesc;
+						}
+						const valueColInfoDesc = l10nProvider.l10nDesc(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
+						if (valueColInfoDesc !== fieldCat.id + ".value_column_info") {
+							fieldCat.field_columns.value_column_info.descLabel = valueColInfoDesc;
+						}
+
 						if (fieldCat.field_columns.additional_column_info) {
 							fieldCat.field_columns.additional_column_info.forEach((col) => {
 								col.locLabel = l10nProvider.l10nLabel(col, fieldCat.id + ".additional_column_info." + col.id);
@@ -75,6 +86,11 @@ function setExpressionInfo(inExpressionInfo) {
 			}
 		}
 	}
+
+	if (inExpressionInfo && inExpressionInfo.resources) {
+		expressionFunctionInfo.resources = inExpressionInfo.resources;
+	}
+
 	return expressionFunctionInfo;
 }
 
@@ -85,6 +101,11 @@ function _genFunctionParameters(functionInfoList, l10nProvider) {
 		newEntry.locLabel = l10nProvider.l10nLabel(newEntry, newEntry.id);
 		newEntry.help = l10nProvider.l10nDesc(newEntry, newEntry.locLabel);
 		newEntry.value = newEntry.locLabel;
+		// Translatable return type of function
+		if (newEntry.return_type_label) {
+			const returnTypeLabel = ResourceDef.make(newEntry.return_type_label);
+			newEntry.locReturnType = l10nProvider.l10nResource(returnTypeLabel);
+		}
 		if (Array.isArray(functionInfo.parameters)) {
 			// if the function label has any parameter substituion char '?' then replace with parameter label
 			if (newEntry.locLabel && newEntry.locLabel.indexOf("?") !== -1) {

@@ -1,0 +1,10 @@
+{
+  "palette.flyout.search.placeholder": "Sök efter palettnoder",
+  "palette.flyout.search.noresults": "Inga resultat hittades.",
+  "palette.flyout.search.adjustsearch": "Försök justera sökkriterierna för att hitta det du söker.",
+  "palette.flyout.search.resultsrestricted": "Resultaten är begränsade till 10 noder. Försök med att förfina din sökning.",
+  "palette.flyout.search.more": "Visa mer",
+  "palette.flyout.search.less": "Visa färre",
+  "palette.flyout.label": "Flyout-palett",
+  "palette.dialog.label": "Dialogpalett"
+}

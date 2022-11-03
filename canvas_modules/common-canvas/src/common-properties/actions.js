@@ -37,11 +37,13 @@ export const SET_TITLE = "SET_TITLE";
 export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
 export const DISABLE_ROW_MOVE_BUTTONS = "DISABLE_ROW_MOVE_BUTTONS";
 export const SET_SAVE_BUTTON_DISABLE = "SET_SAVE_BUTTON_DISABLE";
+export const SET_WIDE_FLYOUT_PRIMARY_BUTTON_DISABLED = "SET_WIDE_FLYOUT_PRIMARY_BUTTON_DISABLED";
 export const SET_ADD_REMOVE_ROWS = "SET_ADD_REMOVE_ROWS";
 export const UPDATE_STATIC_ROWS = "UPDATE_STATIC_ROWS";
 export const CLEAR_STATIC_ROWS = "CLEAR_STATIC_ROWS";
 export const SET_TABLE_BUTTON_ENABLED = "SET_TABLE_BUTTON_ENABLED";
 export const SET_HIDE_EDIT_BUTTON = "SET_HIDE_EDIT_BUTTON";
+export const SET_ACTIVE_TEARSHEET = "SET_ACTIVE_TEARSHEET";
 
 
 /*
@@ -129,6 +131,10 @@ export function setSaveButtonDisable(disableState) {
 	return { type: SET_SAVE_BUTTON_DISABLE, disableState };
 }
 
+export function setWideFlyoutPrimaryButtonDisabled(info) {
+	return { type: SET_WIDE_FLYOUT_PRIMARY_BUTTON_DISABLED, info };
+}
+
 export function setAddRemoveRows(info) {
 	return { type: SET_ADD_REMOVE_ROWS, info };
 }
@@ -143,4 +149,8 @@ export function clearStaticRows(info) {
 
 export function setTableButtonEnabled(info) {
 	return { type: SET_TABLE_BUTTON_ENABLED, info };
+}
+
+export function setTearsheetState(tearsheetId) {
+	return { type: SET_ACTIVE_TEARSHEET, tearsheetId };
 }

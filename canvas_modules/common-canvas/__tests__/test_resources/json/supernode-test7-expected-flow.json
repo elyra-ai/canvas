@@ -700,7 +700,7 @@
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
-                    "max": -1
+                    "max": 1
                   },
                   "label": "Binding port for supernode"
                 }
@@ -732,18 +732,22 @@
               "content": "Connected to 4 nodes\n",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id8I6RH2V91XW",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "id125TTEEIK7V",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "nodeIDMultiPlotPE",
                   "class_name": "d3-comment-link"
                 }
@@ -759,6 +763,7 @@
               "content": "This is connected to the select node",
               "associated_id_refs": [
                 {
+                  "id": "aaee5567d-aaaa-bbbb-ccccc-d5d6d7d8d7",
                   "node_ref": "6f704d84-85be-4520-9d76-57fe2295b310",
                   "class_name": "d3-comment-link"
                 }
@@ -1482,7 +1487,7 @@
                 "ui_data": {
                   "cardinality": {
                     "min": 0,
-                    "max": -1
+                    "max": 1
                   },
                   "label": "Binding port for supernode"
                 }

@@ -94,6 +94,7 @@ export default class CanvasUtils {
 			dropZoneCanvasContent: null,
 			enableNodeLayout: {},
 			enableCanvasLayout: {}, // Not documented
+			enableUseCardFromOriginalPorts: false, // Not documented
 			tipConfig: {
 				"palette": true,
 				"nodes": true,

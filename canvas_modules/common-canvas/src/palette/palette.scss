@@ -182,7 +182,7 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-categories {
-	height: calc(100% - $palette-search-container-height);
+	height: calc(100% - #{$palette-search-container-height});
 	width: 100%;
 	position: absolute;
 	overflow-x: hidden;
@@ -273,7 +273,7 @@ $palette-search-container-height: 41px;
 
 .palette-flyout-category-text-abbr {
 	line-height: 46px;  /* Must be same as containing div height */
-	margin-left: 16px;
+	margin-left: 0;
 }
 
 .palette-flyout-category-text-no-image {

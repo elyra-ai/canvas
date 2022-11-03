@@ -68,6 +68,9 @@ export class Control {
 		if (settings.language) {
 			this.language = settings.language;
 		}
+		if (settings.enableMaximize) {
+			this.enableMaximize = settings.enableMaximize;
+		}
 		if (settings.charLimit) {
 			this.charLimit = settings.charLimit;
 		}
@@ -181,5 +184,6 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
+		this.light = settings.light || false;
 	}
 }

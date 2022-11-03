@@ -245,6 +245,8 @@ class App extends React.Component {
 			tableButtonEnabled: true,
 			staticRowsPropertyId: {},
 			staticRowsIndexes: [],
+			disableWideFlyoutPrimaryButtonForPanelId: {},
+			wideFlyoutPrimaryButtonDisabled: false,
 			expressionBuilder: true,
 			heading: false,
 			light: true,
@@ -340,6 +342,9 @@ class App extends React.Component {
 		this.setStaticRows = this.setStaticRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
+		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
+		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
+		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -458,8 +463,9 @@ class App extends React.Component {
 
 		// Create messages here (not in the render) since that would cause
 		// unnecssary renders inside common-canvas and/or common-properties.
-		this.messages = getMessages(this.locale, [HarnessBundles,
-			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
+		this.messages = getMessages(this.locale, [
+			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles,
+			HarnessBundles]); // Allow test harness to override labels
 	}
 
 	componentDidMount() {
@@ -962,6 +968,24 @@ class App extends React.Component {
 			this.propertiesController.updateStaticRows(this.state.staticRowsPropertyId, this.state.staticRowsIndexes);
 		}
 	}
+
+	// Textfield to disable Ok button for given summary panel Id
+	disableWideFlyoutPrimaryButtonForPanelId(panelId) {
+		this.setState({ disableWideFlyoutPrimaryButtonForPanelId: panelId });
+	}
+
+	// Toggle to set OK button enabled or disabled
+	setWideFlyoutPrimaryButtonDisabled(disabled) {
+		this.setState({ wideFlyoutPrimaryButtonDisabled: disabled });
+	}
+
+	// Button to call propertiesController to set addRemoveRows
+	disableWideFlyoutPrimaryButton() {
+		if (this.propertiesController) {
+			this.propertiesController.setWideFlyoutPrimaryButtonDisabled(this.state.disableWideFlyoutPrimaryButtonForPanelId, this.state.wideFlyoutPrimaryButtonDisabled);
+		}
+	}
+
 
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
@@ -1818,6 +1842,9 @@ class App extends React.Component {
 	propertyActionHandler(actionId, appData, data) {
 		const propertiesController = (appData && appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
 
+		if (actionId === "openTearsheet") {
+			propertiesController.setActiveTearsheet(data.tearsheet_ref);
+		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
@@ -2061,6 +2088,7 @@ class App extends React.Component {
 
 	getCanvasConfig2() {
 		const canvasConfig2 = {
+			enableInteractionType: this.state.selectedInteractionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: this.getParentClass(),
@@ -2682,6 +2710,10 @@ class App extends React.Component {
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
 			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
 			propertiesValidationHandler: this.state.propertiesValidationHandler,
+			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
+			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
+			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
+			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton
 		};
 
 		const sidePanelAPIConfig = {

@@ -138,10 +138,12 @@ describe("Test for toolbar add comment", function() {
 
 	it("Add comments using toolbar in regular canvas and extra canvas, verify comment transform, " +
   "zoom-in and zoom-out using toolbar in regular canvas and extra canvas", function() {
+		cy.setCanvasConfig({ "selectedInteractionType": "Carbon" });
+
 		// Add first comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 1");
-		cy.verifyCommentTransform("Comment 1", 30, 30);
+		cy.verifyCommentTransform("Comment 1", 30, 50);
 
 		// Zoom-in using toolbar
 		cy.clickToolbarZoomIn();
@@ -151,7 +153,7 @@ describe("Test for toolbar add comment", function() {
 		// Add second comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 2");
-		cy.verifyCommentTransform("Comment 2", 139, 79);
+		cy.verifyCommentTransform("Comment 2", 139, 99);
 
 		// Zoom-out using toolbar
 		cy.clickToolbarZoomOut();
@@ -163,12 +165,12 @@ describe("Test for toolbar add comment", function() {
 		// Add third comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 3");
-		cy.verifyCommentTransform("Comment 3", -102, -29);
+		cy.verifyCommentTransform("Comment 3", -102, -10);
 
 		// Add fourth comment using toolbar
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 4");
-		cy.verifyCommentTransform("Comment 4", -92, -19);
+		cy.verifyCommentTransform("Comment 4", -92, 0);
 
 		// Set canvas config to display extra canvas
 		cy.setCanvasConfig({ "selectedExtraCanvasDisplayed": true });
@@ -177,7 +179,7 @@ describe("Test for toolbar add comment", function() {
 		// Add first comment in extra canvas using toolbar
 		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 5");
-		cy.verifyCommentTransform("Comment 5", 30, 30);
+		cy.verifyCommentTransform("Comment 5", 30, 50);
 
 		// Zoom-in extra canvas using toolbar
 		cy.clickToolbarZoomInExtraCanvas();
@@ -187,7 +189,7 @@ describe("Test for toolbar add comment", function() {
 		// Add second comment in extra canvas using toolbar
 		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 6");
-		cy.verifyCommentTransform("Comment 6", 139, 52);
+		cy.verifyCommentTransform("Comment 6", 139, 73);
 
 		// Zoom-out in extra canvas using toolbar
 		cy.clickToolbarZoomOutExtraCanvas();
@@ -199,19 +201,19 @@ describe("Test for toolbar add comment", function() {
 		// Add third comment in extra canvas using toolbar
 		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 7");
-		cy.verifyCommentTransform("Comment 7", -102, 2);
+		cy.verifyCommentTransform("Comment 7", -102, 22);
 
 		// Add fourth comment in extra canvas using toolbar
 		cy.clickToolbarAddCommentInExtraCanvas();
 		cy.editTextInComment("", "Comment 8");
-		cy.verifyCommentTransform("Comment 8", -92, 12);
+		cy.verifyCommentTransform("Comment 8", -92, 32);
 
 		// Add 5th comment to first canvas
 		cy.inRegularCanvas();
 		cy.clickToolbarZoomToFit();
 		cy.clickToolbarAddComment();
 		cy.editTextInComment("", "Comment 5a");
-		cy.verifyCommentTransform("Comment 5a", -492, -56);
+		cy.verifyCommentTransform("Comment 5a", -492, -16);
 	});
 });
 

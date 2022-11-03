@@ -19,6 +19,31 @@ Cypress.Commands.add("clickCanvasAt", (x, y) => {
 	cy.get("#canvas-div-0").click(x, y);
 });
 
+// Trigger mouse up and mouse down on the canvas at the position {x, y}.
+// This is sometimes needed in place of the clickCanvasAt method for test
+// cases to run OK on the build machine.
+Cypress.Commands.add("mouseUpDownOnCanvasAt", (x, y) => {
+	cy.window().then((win) => {
+		cy.get("#canvas-div-0")
+			.trigger("mousedown", x, y, { which: 1, view: win })
+			.trigger("mouseup", x, y, { which: 1, view: win });
+	});
+});
+
+// Pan the canvas by a specified amount
+Cypress.Commands.add("panCanvasToPosition", (canvasX, canvasY) => {
+	cy.window().then((win) => {
+		cy.getCanvasTranslateCoords()
+			.then((transform) => {
+				cy.get("#canvas-div-0")
+					.trigger("keydown", { keyCode: 32, release: false })
+					.trigger("mousedown", "topLeft", { which: 1, view: win })
+					.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
+					.trigger("mouseup", { which: 1, view: win });
+			});
+	});
+});
+
 // Move the mouse to the {x,y} position
 Cypress.Commands.add("moveMouseToCoordinates", (x, y) => {
 	cy.get(".d3-svg-canvas-div").trigger("mousemove", x, y);

@@ -24,7 +24,7 @@ import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
 import * as PropertyUtils from "./../../util/property-utils.js";
 import { ControlType } from "./../../constants/form-constants";
-import { MESSAGE_KEYS, STATES } from "./../../constants/constants.js";
+import { MESSAGE_KEYS, STATES, UPDATE_TYPE } from "./../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
 class DropDown extends React.Component {
@@ -46,7 +46,7 @@ class DropDown extends React.Component {
 	}
 
 	componentDidMount() {
-		this.updateValueFromFilterEnum(true);
+		this.updateValueFromFilterEnum(true, UPDATE_TYPE.INITIAL_LOAD);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -63,8 +63,10 @@ class DropDown extends React.Component {
 		});
 		selectedOption = typeof selectedOption === "undefined" ? null : selectedOption;
 
+		// Show the existing value but with a warning instead of filtering it out.
+		const showExistingValue = (selectedOption === null && value);
 		// user defined value
-		if (selectedOption === null && this.props.control.customValueAllowed) {
+		if (showExistingValue || this.props.control.customValueAllowed) {
 			selectedOption = {
 				value: value,
 				label: value
@@ -132,7 +134,7 @@ class DropDown extends React.Component {
 		};
 	}
 	// this is needed in order to reset the property value when a value is filtered out.
-	updateValueFromFilterEnum(skipValidateInput) {
+	updateValueFromFilterEnum(skipValidateInput, updateType) {
 		// update property value if value isn't in current enum value.  Should only be used for oneofselect
 		if (this.props.control.controlType === ControlType.ONEOFSELECT && this.props.value !== null && typeof this.props.value !== "undefined" &&
 			!this.props.controlOpts.values.includes(this.props.value)) {
@@ -143,7 +145,7 @@ class DropDown extends React.Component {
 			} else if (this.props.control.customValueAllowed && this.props.value) {
 				defaultValue = this.props.value;
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput);
+			this.props.controller.updatePropertyValue(this.props.propertyId, defaultValue, skipValidateInput, updateType);
 		}
 	}
 
@@ -206,7 +208,7 @@ class DropDown extends React.Component {
 				disabled={this.props.state === STATES.DISABLED}
 				onChange={this.handleChange}
 				value={selection}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 			>
 				{ options }
 			</Select>);
@@ -221,7 +223,7 @@ class DropDown extends React.Component {
 				items={dropDown.options}
 				onChange={this.handleComboOnChange}
 				onInputChange={this.handleOnInputChange}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				titleText={this.props.controlItem}
 			/>);
@@ -235,7 +237,7 @@ class DropDown extends React.Component {
 				onChange={this.handleChange}
 				selectedItem={dropDown.selectedOption}
 				label={this.emptyLabel}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 				translateWithId={(id) => listBoxMenuIconTranslationIds[id]}
 				titleText={this.props.controlItem}
 			/>);

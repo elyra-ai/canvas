@@ -1,0 +1,37 @@
+.properties-tearsheet-panel.bx--modal {
+	align-items: flex-end;
+	&.is-visible {
+		.bx--modal-container {
+			transform: translate3d(0, 0, 0);
+			transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
+		}
+	}
+	.bx--modal-container {
+		max-height: calc(100% - 88px);
+		height: 100%;
+		width: calc(100% - 128px);
+		transform: translate3d(0, 500px, 0);
+		transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
+		.bx--modal-header {
+			padding: $spacing-06 $spacing-07;
+			border-bottom: 1px solid $ui-03;
+			margin-bottom: 0;
+			h3 {
+				@include carbon--type-style("productive-heading-04");
+			}
+			p {
+				margin-top: $spacing-03;
+				@include carbon--type-style("body-short-01");
+			}
+		}
+		.bx--modal-content {
+			padding: $spacing-06 $spacing-07;
+			background-color: $ui-background;
+			margin-bottom: 0;
+			.bx--multi-select, .bx--dropdown, .bx--number input[type=number], .bx--text-input, .bx--text-area {	// override carbon's modal
+				background-color: $ui-01;
+			}
+		}	
+	}
+	
+}

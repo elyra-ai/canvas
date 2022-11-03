@@ -18,6 +18,7 @@ import propertyUtils from "../../_utils_/property-utils";
 import { expect } from "chai";
 import TAB_PARAM_DEF from "../../test_resources/paramDefs/tab_paramDef.json";
 import PARAMS_ONLY_DEF from "../../test_resources/paramDefs/paramsOnly_paramDef.json";
+import CODE_PARAM_DEF from "../../test_resources/paramDefs/code_paramDef.json";
 
 describe("tabs and subtabs should be rendered correctly", () => {
 	let wrapper;
@@ -59,6 +60,24 @@ describe("tabs and subtabs should be rendered correctly", () => {
 		expect(tabContent.at(0).prop("hidden")).to.equal(true);
 		expect(tabContent.at(1).prop("hidden")).to.equal(false);
 		expect(tabContent.at(2).prop("hidden")).to.equal(true);
+	});
+});
+
+describe("Tearsheet group type", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const flyout = propertyUtils.flyoutEditorForm(CODE_PARAM_DEF);
+		wrapper = flyout.wrapper;
+		controller = flyout.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("validate tearsheet activates in memory", () => {
+		controller.setActiveTearsheet("tearsheet1");
+		expect(controller.getActiveTearsheet()).to.equal("tearsheet1");
 	});
 });
 

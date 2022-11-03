@@ -287,6 +287,7 @@
               "content": " comment 1",
               "associated_id_refs": [
                 {
+                  "id": "aa86d345-7834-a345-dfe3-36892ae73bc",
                   "node_ref": "id2PZSCTRPRIJ",
                   "class_name": "canvas-comment-link"
                 }
@@ -302,10 +303,12 @@
               "content": " comment 2",
               "associated_id_refs": [
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "id5KIRGGJ3FYT",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 }
