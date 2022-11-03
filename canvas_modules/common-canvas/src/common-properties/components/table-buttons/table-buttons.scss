@@ -16,34 +16,12 @@
 
 .properties-custom-table-buttons {
 	.toolbar-div {
-		height: $spacing-07;
-
-		.toolbar-left-bar {
-			padding-right: 0;
-
-			.toolbar-item button {
-				height: $spacing-07;
-			}
-
-			.toolbar-item-content {
-				padding: $spacing-02 $spacing-03;
-				height: $spacing-07;
-				min-width: $spacing-07;
-				align-items: center;
-			}
-
-			.toolbar-overflow-item button {
-				height: $spacing-07;
-			}
-
-			.toolbar-popover-list {
-				top: $spacing-07;
-				right: 0;
-			}
-		}
-
 		.toolbar-right-bar {
 			display: none;
 		}
+	}
+	.toolbar-popover-list {
+		top: $spacing-07;
+		right: 0;
 	}
 }
