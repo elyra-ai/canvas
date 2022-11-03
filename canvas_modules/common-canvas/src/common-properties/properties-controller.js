@@ -57,6 +57,7 @@ export default class PropertiesController {
 		this.panelTree = {};
 		this.controls = {};
 		this.actions = {};
+		this.trimSpaces = false;
 		this.customControls = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;

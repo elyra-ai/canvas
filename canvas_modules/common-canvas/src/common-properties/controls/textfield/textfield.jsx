@@ -46,7 +46,8 @@ class TextfieldControl extends React.Component {
 	}
 
 	handleChange(evt) {
-		let value = evt.target.value;
+		const trimSpaces = this.props.controller.trimSpaces;
+		let value = trimSpaces ? evt.target.value.trim() : evt.target.value;
 		if (this.charLimit !== -1 && value) {
 			value = value.substring(0, this.charLimit);
 		}
