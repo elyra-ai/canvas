@@ -57,7 +57,7 @@ const portsHorizontalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -82,7 +82,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: true,
@@ -294,7 +294,7 @@ const portsHorizontalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the
@@ -448,7 +448,7 @@ const portsVerticalDefaultLayout = {
 		labelSingleLine: true, // false allow multi-line labels
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
-		labelAllowReturnKey: false, // true allows line feed to be inserted into label
+		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
 		// An array of decorations to be applied to the node. For details see:
 		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
@@ -473,7 +473,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		decoratorLabelWidth: 80,
-		decoratorLabelHeight: 15,
+		decoratorLabelHeight: 30,
 
 		// Display drop shadow under and round the nodes
 		dropShadow: false,
@@ -685,7 +685,7 @@ const portsVerticalDefaultLayout = {
 
 		// Width and height for label decorators
 		linkDecoratorLabelWidth: 80,
-		linkDecoratorLabelHeight: 15,
+		linkDecoratorLabelHeight: 30,
 
 		// Values for drawing connectors. wrapAroundSpacing and
 		// wrapAroundNodePadding are used when curved connectors are drawn all the

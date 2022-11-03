@@ -31,7 +31,7 @@ import { Type, ParamRole, ControlType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
-
+import { ItemType } from "./constants/form-constants";
 export default class PropertiesController {
 
 	constructor() {
@@ -181,7 +181,11 @@ export default class PropertiesController {
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 			// set initial tab to first tab
 			if (!isEmpty(this.uiItems) && !isEmpty(this.uiItems[0].tabs)) {
-				this.propertiesStore.setActiveTab(this.uiItems[0].tabs[0].group);
+				// active tab is the first non-tearsheet
+				const filteredTearsheets = this.uiItems[0].tabs.filter((tab) => tab.content.itemType !== ItemType.TEARSHEET);
+				if (filteredTearsheets.length) {
+					this.propertiesStore.setActiveTab(filteredTearsheets[0].group);
+				}
 			}
 
 			// set title

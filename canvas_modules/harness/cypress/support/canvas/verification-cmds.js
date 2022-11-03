@@ -354,24 +354,6 @@ Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
 	});
 });
 
-Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(dataLinkSelector).length) {
-			cy.document().then((doc) => {
-				cy.get(dataLinkSelector).should("have.length", noOfLinks);
-			});
-		} else {
-			// No Port Data Links found on canvas
-			expect(0).equal(noOfLinks);
-		}
-	});
-
-	// verify the number of port-links in the internal object model
-	cy.getPipeline().then((pipeline) => {
-		cy.getCountDataLinks(pipeline).should("eq", noOfLinks);
-	});
-});
-
 Cypress.Commands.add("verifyNumberOfComments", (noOfComments) => {
 	cy.get("body").then(($body) => {
 		if ($body.find(".d3-comment-group").length) {
@@ -409,6 +391,24 @@ Cypress.Commands.add("verifyNumberOfLinks", (noOfLinks) => {
 	// verify the number of links in the internal object model
 	cy.getPipeline().then((pipeline) => {
 		cy.getCountLinks(pipeline).should("eq", noOfLinks);
+	});
+});
+
+Cypress.Commands.add("verifyNumberOfPortDataLinks", (noOfLinks) => {
+	cy.get("body").then(($body) => {
+		if ($body.find(dataLinkSelector).length) {
+			cy.document().then((doc) => {
+				cy.get(dataLinkSelector).should("have.length", noOfLinks);
+			});
+		} else {
+			// No Port Data Links found on canvas
+			expect(0).equal(noOfLinks);
+		}
+	});
+
+	// verify the number of port-links in the internal object model
+	cy.getPipeline().then((pipeline) => {
+		cy.getCountDataLinks(pipeline).should("eq", noOfLinks);
 	});
 });
 

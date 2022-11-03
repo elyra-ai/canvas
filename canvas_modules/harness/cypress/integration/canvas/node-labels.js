@@ -61,6 +61,18 @@ describe("Test editing node labels - Vertical node", function() {
 		cy.verifyNodeExists("Binding\n(entry) node");
 	});
 
+	it("Vertical node - Test editing multiple line centered node label, labelAllowReturnKey set to 'save' & hit return", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			labelEditable: true, labelWidth: 200, labelHeight: 30, labelSingleLine: false,
+			labelAllowReturnKey: "save" } });
+		cy.doubleClickLabelOnNode("Binding (entry) node");
+		cy.enterLabelForNodeHitReturn("Binding (entry) node", "New Label");
+
+		// Label should be saved.
+		cy.verifyEditActionInConsole("setNodeLabel", "label", "New Label");
+		cy.verifyNodeExists("New Label");
+	});
+
 	it("Vertical node - Test editing multiple line centered node label with a long node label", function() {
 		cy.setCanvasConfig({ "selectedNodeLayout": {
 			labelEditable: true, labelWidth: 200, labelHeight: 30, labelSingleLine: false } });
@@ -170,6 +182,17 @@ describe("Test editing node labels - Horizontal node", function() {
 		cy.verifyNodeExists("Binding\n(entry) node");
 	});
 
+	it("Horizontal node - Test editing multiple line left-align node label, labelAllowReturnKey set to 'save' & hit return", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": {
+			labelEditable: true, labelWidth: 200, labelHeight: 30, labelSingleLine: false,
+			labelAllowReturnKey: "save" } });
+		cy.doubleClickLabelOnNode("Binding (entry) node");
+		cy.enterLabelForNodeHitReturn("Binding (entry) node", "New Label");
+
+		// Label should be saved.
+		cy.verifyEditActionInConsole("setNodeLabel", "label", "New Label");
+		cy.verifyNodeExists("New Label");
+	});
 
 	it("Horizontal node - Test editing multiple line left-align node label with a long node label", function() {
 		cy.setCanvasConfig({ "selectedNodeLayout": {

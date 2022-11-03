@@ -176,6 +176,7 @@
                         "text": "Only the first row for each value of the columns added below will be included in the data table. Duplicate rows with the same value will be discarded.",
                         "placement": "on_panel"
                       },
+                      "light": false,
                       "labelVisible": true,
                       "controlType": "selectcolumns",
                       "valueDef": {

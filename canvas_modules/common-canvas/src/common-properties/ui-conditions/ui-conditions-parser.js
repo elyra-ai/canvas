@@ -144,6 +144,7 @@ function parseUiItem(controls, actions, uiItem, panelId, parentCategoryId) {
 	}
 	case ItemType.ADDITIONAL_LINK:
 	case ItemType.CHECKBOX_SELECTOR:
+	case ItemType.TEARSHEET:
 	case ItemType.PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			let locPanelId = panelId;

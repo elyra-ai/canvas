@@ -193,7 +193,7 @@ $link-highlight-color: $support-04;
 
 .d3-node-group.d3-draggable,
 .d3-comment-group.d3-draggable {
-	cursor: pointer;
+	cursor: default;
 }
 
 .d3-node-group-translucent {
@@ -327,6 +327,16 @@ $link-highlight-color: $support-04;
 	display: -webkit-box; // stylelint-disable-line value-no-vendor-prefix
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
+
+	& .d3-label-full {
+		display: inline-block;
+	}
+}
+
+.d3-label-multi-line-entry {
+	white-space: pre-wrap;
+	word-wrap: normal;
+	word-break: break-word;
 
 	& .d3-label-full {
 		display: inline-block;

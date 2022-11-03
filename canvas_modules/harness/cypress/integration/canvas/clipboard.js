@@ -158,6 +158,8 @@ describe("Test clipboard with no link selection enabled", function() {
 	it("Test cutting some nodes and a comment and paste to canvas using keyboard", function() {
 		// Validate there are 8 links on the canvas
 		cy.verifyNumberOfLinks(8);
+		cy.verifyNumberOfPortDataLinks(5);
+		cy.verifyNumberOfCommentLinks(3);
 
 		// I ctrl/cmd click the comment with text " comment 1" to select it
 		cy.ctrlOrCmdClickComment(" comment 1");
@@ -173,8 +175,11 @@ describe("Test clipboard with no link selection enabled", function() {
 
 		cy.verifyNumberOfNodes(6);
 		cy.verifyNumberOfComments(3);
+
 		// There are 7 links because a data link has disappeared during the cut and paste
 		cy.verifyNumberOfLinks(7);
+		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfCommentLinks(3);
 	});
 
 	it("Test copying some nodes and a comment and paste to canvas using keyboard", function() {

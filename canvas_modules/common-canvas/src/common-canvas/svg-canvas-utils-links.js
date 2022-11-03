@@ -592,11 +592,13 @@ export default class SvgCanvasLinks {
 		elements.push(
 			{ p: "M", x: data.x1, y: data.y1 },
 			{ p: "L", x: (corner1X - this.canvasLayout.elbowSize), y: corner1Y },
-			{ p: "Q", x: corner1X, y: corner1Y, x2: corner1X, y2: (corner1Y + elbowYOffset) }
 		);
 
 		if (extraSegments === false) {
-			elements.push({ p: "L", x: corner2X, y: (corner2Y - elbowYOffset) });
+			elements.push(
+				{ p: "Q", x: corner1X, y: corner1Y, x2: corner1X, y2: (corner1Y + elbowYOffset) },
+				{ p: "L", x: corner2X, y: (corner2Y - elbowYOffset) }
+			);
 
 			centerPoint.x = corner2X;
 			centerPoint.y = corner2Y;
@@ -606,6 +608,14 @@ export default class SvgCanvasLinks {
 				? this.calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg)
 				: corner2Y - (corner2Y - corner1Y) / 2;
 
+			if (xDiff < 0) {
+				if (midY >= bottomSrc) {
+					elbowYOffset = this.canvasLayout.elbowSize;
+				} else {
+					elbowYOffset = -this.canvasLayout.elbowSize;
+				}
+			}
+
 			let corner2Ya;
 			let corner2Yb;
 
@@ -613,12 +623,14 @@ export default class SvgCanvasLinks {
 					(midY > bottomTrg && midY > bottomSrc)) {
 				corner2Ya = midY - elbowYOffset;
 				corner2Yb = corner2Y + elbowYOffset;
+
 			} else {
 				corner2Ya = midY + elbowYOffset;
 				corner2Yb = corner2Y - elbowYOffset;
 			}
 
 			elements.push(
+				{ p: "Q", x: corner1X, y: corner1Y, x2: corner1X, y2: (corner1Y + elbowYOffset) },
 				{ p: "L", x: corner1X, y: (midY - elbowYOffset) },
 				{ p: "Q", x: corner1X, y: midY, x2: (corner1X - elbowXOffset), y2: midY },
 				{ p: "L", x: (corner2X + elbowXOffset), y: midY },
@@ -643,19 +655,33 @@ export default class SvgCanvasLinks {
 	// the target node is to the left of the source node. This is either the
 	// center point between the source and target nodes, if there is room to draw
 	// the line between them, or it is the coordinate of a wrap-around line to be
-	// drawn around the outside of the source and target nodes.
+	// drawn around the outside of the source and target nodes. The direction of
+	// the wrap around line is chosen based on which is the shortest route from
+	// the source port to the target port.
 	calculateMidY(data, topSrc, bottomSrc, topTrg, bottomTrg) {
 		let midY;
 
 		if (topTrg >= bottomSrc + this.canvasLayout.wrapAroundNodePadding) {
 			midY = bottomSrc + ((topTrg - bottomSrc) / 2);
+
 		} else if (bottomTrg <= topSrc - this.canvasLayout.wrapAroundNodePadding) {
 			midY = bottomTrg + ((topSrc - bottomTrg) / 2);
+
 		} else {
-			if (data.y1 > data.y2) {
-				midY = Math.min(topSrc, topTrg) - this.canvasLayout.wrapAroundSpacing;
+			const maxBottom = Math.max(bottomSrc, bottomTrg);
+			const srcBottomInc = maxBottom - data.y1;
+			const trgBottomInc = maxBottom - data.y2;
+
+			const minTop = Math.min(topSrc, topTrg);
+			const srcTopInc = data.y1 - minTop;
+			const trgTopInc = data.y2 - minTop;
+
+			// Set the mid-point based in the shortest distance from the source port
+			// on the source node to the target port on the target node.
+			if (srcBottomInc + trgBottomInc > srcTopInc + trgTopInc) {
+				midY = minTop - this.canvasLayout.wrapAroundSpacing;
 			} else {
-				midY = Math.max(bottomSrc, bottomTrg) + this.canvasLayout.wrapAroundSpacing;
+				midY = maxBottom + this.canvasLayout.wrapAroundSpacing;
 			}
 		}
 

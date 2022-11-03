@@ -463,8 +463,9 @@ class App extends React.Component {
 
 		// Create messages here (not in the render) since that would cause
 		// unnecssary renders inside common-canvas and/or common-properties.
-		this.messages = getMessages(this.locale, [HarnessBundles,
-			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles]);
+		this.messages = getMessages(this.locale, [
+			CommandActionsBundles, CommonCanvasBundles, CommonPropsBundles, PaletteBundles, ToolbarBundles,
+			HarnessBundles]); // Allow test harness to override labels
 	}
 
 	componentDidMount() {
@@ -1841,6 +1842,9 @@ class App extends React.Component {
 	propertyActionHandler(actionId, appData, data) {
 		const propertiesController = (appData && appData.inExtraCanvas) ? this.propertiesController2 : this.propertiesController;
 
+		if (actionId === "openTearsheet") {
+			propertiesController.setActiveTearsheet(data.tearsheet_ref);
+		}
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
@@ -2084,6 +2088,7 @@ class App extends React.Component {
 
 	getCanvasConfig2() {
 		const canvasConfig2 = {
+			enableInteractionType: this.state.selectedInteractionType,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
 			enableLinkType: this.state.selectedLinkType,
 			enableParentClass: this.getParentClass(),

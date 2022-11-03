@@ -363,10 +363,12 @@
               "content": " This should link to port 2 on Na_to_K",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id6PXRG57DGIV",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "id2PZSCTRPRIJ",
                   "class_name": "canvas-comment-link"
                 }
@@ -382,10 +384,12 @@
               "content": " This should link port 2 on Discard Fields to port 2 on Define Types",
               "associated_id_refs": [
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "id5RYSYN9CV1H",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 }

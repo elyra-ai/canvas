@@ -105,7 +105,7 @@ describe("Test node and comment combination link disconnection", function() {
 	});
 });
 
-describe("Test elbow connections from multi-port source node do not overlap", function() {
+describe("Test elbow connections from multi-port source nodes", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.setCanvasConfig({ "selectedLinkType": "Elbow" });
@@ -115,7 +115,7 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 	it("Test elbow connections from multi-port source node do not overlap", function() {
 		// Link node "Select3" output port "outPort8" to node "Neural Net" input port "inPort1"
 		cy.linkNodeOutputPortToNodeInputPort("Select3", "outPort8", "Neural Net", "inPort1");
-		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfPortDataLinks(6);
 
 		// Verify link paths
 		cy.verifyLinkPath(
@@ -133,7 +133,7 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 
 		// Move node on canvas and verify updated link paths
 		cy.moveNodeToPosition("Neural Net", 50, 530);
-		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyLinkPath(
 			"Select3", "outPort6", "Neural Net", "inPort2",
 			"M 108 443.5 L 128 443.5 Q 138 443.5 138 453.5 L 138 500.25 Q 138 510.25 " +
@@ -151,7 +151,7 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 		);
 
 		cy.moveNodeToPosition("Select3", 150, 400);
-		cy.verifyNumberOfPortDataLinks(4);
+		cy.verifyNumberOfPortDataLinks(6);
 		cy.verifyLinkPath(
 			"Select3", "outPort6", "Neural Net", "inPort2",
 			"M 220 509.5 L 240 509.5 Q 250 509.5 250 519.5 L 250 614.5 Q 250 624.5 " +
@@ -166,6 +166,67 @@ describe("Test elbow connections from multi-port source node do not overlap", fu
 			"Select3", "outPort8", "Neural Net", "inPort1",
 			"M 220 549.5 L 256 549.5 Q 266 549.5 266 559.5 L 266 614.5 Q 266 624.5 " +
 			"256 624.5 L 30 624.5 Q 20 624.5 20 614.5 L 20 567 Q 20 557 30 557 L 50 557"
+		);
+	});
+
+	it("Test elbow connections from multi-port source node travel shortest route", function() {
+		cy.verifyNumberOfPortDataLinks(5);
+
+		// Verify link paths - one should go up and over the 'Select' and 'Filler'
+		// nodes and one should go down and under the nodes. This is because
+		// common-canvas calculates the shortest distance from the source port to
+		// the target port and draws the links to travel the shortest distance.
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 688 522.5 Q 698 522.5 698 512.5 L 698 485 Q 698 475 688 475 " +
+			"L 415 475 Q 405 475 405 485 L 405 535 Q 405 545 415 545 L 435 545"
+		);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 688 522.5 Q 698 522.5 698 512.5 L 698 485 Q 698 475 688 475 " +
+			"L 415 475 Q 405 475 405 485 L 405 535 Q 405 545 415 545 L 435 545"
+		);
+
+		// Move the target node so one link line continues to go over the top of
+		// both nodes and one goes underneath both nodes.
+		cy.moveNodeToPosition("Select", 440, 450);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 696 522.5 Q 706 522.5 706 512.5 L 706 440 Q 706 430 696 430 " +
+			"L 420 430 Q 410 430 410 440 L 410 469 Q 410 479 420 479 L 440 479"
+		);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 696 522.5 Q 706 522.5 706 512.5 L 706 440 Q 706 430 696 430 " +
+			"L 420 430 Q 410 430 410 440 L 410 469 Q 410 479 420 479 L 440 479"
+		);
+
+		// Move the target node so both link lines go over the source node and
+		// under the target node.
+		cy.moveNodeToPosition("Select", 440, 400);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 696 522.5 Q 706 522.5 706 512.5 L 706 495 Q 706 485 696 485 " +
+			"L 420 485 Q 410 485 410 475 L 410 439 Q 410 429 420 429 L 440 429"
+		);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 696 522.5 Q 706 522.5 706 512.5 L 706 495 Q 706 485 696 485 " +
+			"L 420 485 Q 410 485 410 475 L 410 439 Q 410 429 420 429 L 440 429"
+		);
+
+		// Move the target node so both link lines go under the source node and
+		// over the target node.
+		cy.moveNodeToPosition("Select", 440, 600);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 688 522.5 Q 698 522.5 698 532.5 L 698 575 Q 698 585 688 585 " +
+			"L 420 585 Q 410 585 410 595 L 410 619 Q 410 629 420 629 L 440 629"
+		);
+		cy.verifyLinkPath(
+			"Filler", "outPort1", "Select", "inPort",
+			"M 668 522.5 L 688 522.5 Q 698 522.5 698 532.5 L 698 575 Q 698 585 688 585 " +
+			"L 420 585 Q 410 585 410 595 L 410 619 Q 410 629 420 629 L 440 629"
 		);
 	});
 });

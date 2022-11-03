@@ -29,19 +29,19 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
-		this.recentUseCat = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
+		this.valueColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
+		this.valueColumnDesc = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN_DESCRIPTION);
+		this.recentUseCat = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_RECENTLY_USED);
 		this.recentUseCatInfo = {
 			id: this.recentUseCat,
 			locLabel: this.recentUseCat,
 			field_columns: {
 				field_column_info: {
-					locLabel: formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN)
+					locLabel: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_RECENTLY_USED_COLUMN)
 				},
 				value_column_info: {
-					locLabel: formatMessage(this.reactIntl,
-						MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN)
+					locLabel: this.valueColumn,
+					descLabel: this.valueColumnDesc
 				}
 			}
 		};
@@ -256,23 +256,21 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	}
 
 	_makeDatasetFields(dataset, fieldDataset) {
-		const fieldColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN);
-		const storageColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN);
-		const valueColumn = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
-		const dropdownLabel = formatMessage(this.reactIntl,
-			MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
+		const fieldColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN);
+		const fieldColumnDesc = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELD_COLUMN_DESCRIPTION);
+		const storageColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_STORAGE_COLUMN);
+		const dropdownLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_FIELDS_DROPDOWN_TITLE);
 		const fieldsCatInfo = {
 			id: "fields",
 			locLabel: dropdownLabel,
 			field_columns: {
 				field_column_info: {
-					locLabel: fieldColumn
+					locLabel: fieldColumn,
+					descLabel: fieldColumnDesc
 				},
 				value_column_info: {
-					locLabel: valueColumn
+					locLabel: this.valueColumn,
+					descLabel: this.valueColumnDesc
 				},
 				additional_column_info: [
 					{
@@ -369,8 +367,17 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 
 		if (categoryInfo) {
-			fieldHeaders.push({ key: "fieldName", label: categoryInfo.field_columns.field_column_info.locLabel, resizable: true });
-			valueHeader.push({ key: "values", label: categoryInfo.field_columns.value_column_info.locLabel });
+			fieldHeaders.push({
+				key: "fieldName",
+				label: categoryInfo.field_columns.field_column_info.locLabel,
+				description: categoryInfo.field_columns.field_column_info.descLabel,
+				resizable: true
+			});
+			valueHeader.push({
+				key: "values",
+				label: categoryInfo.field_columns.value_column_info.locLabel,
+				description: categoryInfo.field_columns.value_column_info.descLabel
+			});
 			if (categoryInfo.field_columns.additional_column_info) {
 				for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
 					sortable.push(categoryInfo.field_columns.additional_column_info[i].id);

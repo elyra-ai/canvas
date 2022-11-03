@@ -49,6 +49,11 @@
 	align-items: left;
 }
 
+.bx--tabs--scrollable .bx--tabs--scrollable__nav-item.properties-hidden-container,
+.properties-hidden-container {
+	display: none;
+}
+
 .properties-modal-error {
 	button:first-of-type { // hides the secondary button
 		display: none;

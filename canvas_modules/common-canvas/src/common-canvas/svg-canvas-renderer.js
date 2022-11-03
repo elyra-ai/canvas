@@ -41,7 +41,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
-	INTERACTION_MOUSE, INTERACTION_TRACKPAD,
+	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_CARBON,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
 	SUPER_NODE, SNAP_TO_GRID_AFTER, SNAP_TO_GRID_DURING,
 	NORTH, SOUTH, EAST, WEST }
@@ -178,16 +178,28 @@ export default class SVGCanvasRenderer {
 		// no need to re-render whole canvas
 		this.selecting = false;
 
+		// Flag to indicate when the space key is down (used when dragging).
+		this.spaceKeyPressed = false;
+
+		// Flag to indicate when a zoom is invoked programmatically.
+		this.zoomingAction = false;
+
 		// Allows us to track when the binding nodes in a subflow are being moved.
 		this.movingBindingNodes = false;
 
-		// Keep track of when the context menu has been closed so we don't remove
+		// Keep track of when the context menu has been closed, so we don't remove
 		// selections when a context menu is closed during a zoom gesture.
 		this.contextMenuClosedOnZoom = false;
 
+		// Keep track of when text editing has been closed, so we don't remove
+		// selections when that happens during a zoom gesture.
+		this.textEditingClosedfOnZoom = false;
+
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
-		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
+
+		// Used to track the start of the zoom.
+		this.zoomStartPoint = { x: 0, y: 0, k: 0, startX: 0, startY: 0 };
 
 		// I was not able to figure out how to use the zoom filter method to
 		// allow mousedown and mousemove messages to go through to the canvas to
@@ -273,6 +285,27 @@ export default class SVGCanvasRenderer {
 		this.logger.logEndTimer("constructor" + pipelineId.substring(0, 5));
 	}
 
+	setSpaceKeyPressed(state) {
+		this.spaceKeyPressed = state;
+		this.resetCanvasCursor();
+	}
+
+	// Returns true if the space bar is pressed and held down. This is called
+	// from outside canvas via svg-canvas-d3 as well as internally.
+	isSpaceKeyPressed() {
+		return this.spaceKeyPressed;
+	}
+
+	// Returns true if the event indicates that a drag is in action. This means
+	// with regular Mouse interation that the space bar is pressed or with
+	// legacy interation it means the shift key is NOT pressed.
+	isDragActivated(d3Event) {
+		if (this.config.enableInteractionType === INTERACTION_CARBON) {
+			return this.isSpaceKeyPressed();
+		}
+		return (d3Event && d3Event.sourceEvent && !d3Event.sourceEvent.shiftKey);
+	}
+
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
 	// looking through the overall canvas info objects.
@@ -300,9 +333,6 @@ export default class SVGCanvasRenderer {
 	initializeZoomVariables() {
 		// Allows us to record the current zoom amounts.
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
-
-		// Allows us to record the start point of the current zoom.
-		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
 	}
 
 	setCanvasInfoRenderer(canvasInfo) {
@@ -321,10 +351,6 @@ export default class SVGCanvasRenderer {
 		// behavior to populated (with at least one node or comment) where we do
 		// need the zoom behavior, or vice versa.
 		this.resetCanvasSVGBehaviors();
-
-		// Reset the canvas cursor, in case we went from an empty canvas
-		// (default cursor) to one with nodes and/or comments (hand cursor).
-		this.resetCanvasCursor();
 
 		// If a supernode and its corresponding pipeline has been deleted in the
 		// object model we need to make sure the renderer is removed.
@@ -721,8 +747,17 @@ export default class SVGCanvasRenderer {
 	// Returns the current mouse position based on the D3 SVG selection object
 	// passed in.
 	getMousePos(d3Event, svgSel) {
-		const mousePos = d3.pointer(d3Event, svgSel.node());
-		return { x: mousePos[0], y: mousePos[1] };
+		// The d3Event must have either a sourceEvent or be an actual event, which
+		// can be indicated by the existence of a pageX attribute. This test is only
+		// necessary on Firefox and then only when the action (such as zoom)
+		// calling this function is itself called programmatically - for example,
+		// when the user clicks one of the zoom buttons on the toolbar. It's not
+		// clear why d3.pointer cannot handle all events like it can on Chrome.
+		if (d3Event.sourceEvent || d3Event.pageX) {
+			const mousePos = d3.pointer(d3Event, svgSel.node());
+			return { x: mousePos[0], y: mousePos[1] };
+		}
+		return { x: 0, y: 0 };
 	}
 
 	// Convert coordinates from the page (based on the page top left corner) to
@@ -1364,7 +1399,7 @@ export default class SVGCanvasRenderer {
 			.attr("data-pipeline-id", this.activePipeline.id)
 			.attr("class", "d3-svg-background")
 			.attr("pointer-events", "all")
-			.style("cursor", this.getCanvasCursor());
+			.style("cursor", "default");
 
 		// Only attach the 'defs' to the top most SVG area when we are displaying
 		// either the primary pipeline full page or a sub-pipeline full page.
@@ -1433,15 +1468,7 @@ export default class SVGCanvasRenderer {
 			})
 			.on("click.zoom", (d3Event) => {
 				this.logger.log("Canvas - click-zoom");
-				this.selecting = true;
-				// Only clear selections if clicked on the canvas of the current active pipeline.
-				// Clicking the canvas of an expanded supernode will select that node.
-				if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom) {
-					this.canvasController.clearSelections();
-				}
-				this.contextMenuClosedOnZoom = false;
-				// Ensure 'selecting' flag is off before calling click action callback.
-				this.selecting = false;
+
 				this.canvasController.clickActionHandler({
 					clickType: d3Event.type === "contextmenu" ? "SINGLE_CLICK_CONTEXTMENU" : "SINGLE_CLICK",
 					objectType: "canvas",
@@ -1464,19 +1491,7 @@ export default class SVGCanvasRenderer {
 	// Resets the pointer cursor on the background rectangle in the Canvas SVG area.
 	resetCanvasCursor() {
 		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		this.canvasSVG.select(selector).style("cursor", this.getCanvasCursor());
-	}
-
-	// Retuens the appropriate cursor for the canvas SVG area.
-	getCanvasCursor() {
-		if (this.dispUtils.isDisplayingFullPage()) {
-			if (this.config.enableInteractionType === INTERACTION_TRACKPAD ||
-					this.activePipeline.isEmptyOrBindingsOnly()) {
-				return "default";
-			}
-			return "grab";
-		}
-		return "pointer";
+		this.canvasSVG.select(selector).style("cursor", this.isDragActivated() && this.dispUtils.isDisplayingFullPage() ? "grab" : "default");
 	}
 
 	createCanvasGroup(canvasObj, className) {
@@ -1622,6 +1637,7 @@ export default class SVGCanvasRenderer {
 		if (isFinite(newZoomTransform.x) &&
 				isFinite(newZoomTransform.y) &&
 				isFinite(newZoomTransform.k)) {
+			this.zoomingAction = true;
 			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
 			if (animateTime) {
 				this.canvasSVG.call(this.zoom).transition()
@@ -1630,6 +1646,7 @@ export default class SVGCanvasRenderer {
 			} else {
 				this.canvasSVG.call(this.zoom.transform, zoomTransform);
 			}
+			this.zoomingAction = false;
 		}
 	}
 
@@ -1649,9 +1666,7 @@ export default class SVGCanvasRenderer {
 			x -= newScale * canvasDimensions.left;
 			y -= newScale * canvasDimensions.top;
 
-			this.zoomingToFit = true;
 			this.zoomCanvasInvokeZoomBehavior({ x: x, y: y, k: newScale });
-			this.zoomingToFit = false;
 		}
 	}
 
@@ -1795,47 +1810,35 @@ export default class SVGCanvasRenderer {
 			this.contextMenuClosedOnZoom = true;
 		}
 
-		// this.zoomingToFit flag is used to avoid redo actions initialized
-		// by Cmd+Shift+Z (where the shift key has been pressed) causing a region
-		// selection to start. So whenever it is set, make sure we do a scale
-		// operation.
-		// Also, below, we must check the d3Event.sourceEvent because for a zoom
-		// operation d3Event does not contain info about the shift key.
-		if (this.zoomingToFit) {
-			this.regionSelect = false;
-		} else if ((this.config.enableInteractionType === INTERACTION_TRACKPAD &&
-								d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) || // Main button is pressed
-							(this.config.enableInteractionType === INTERACTION_MOUSE &&
-								d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) { // Shift key is pressed
-			this.regionSelect = true;
-		} else {
-			this.regionSelect = false;
+		// Any text editing in progress will be closed by the textarea's blur event
+		// if the user clicks on the canvas background. So we set this flag to
+		// prevent the selection being lost in the zoomEnd (mouseup) event.
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.textEditingClosedfOnZoom = true;
 		}
 
+		this.regionSelect = this.shouldDoRegionSelect(d3Event);
+
 		if (this.regionSelect) {
+			// Add a delay so, if the user just clicks, they don't see the crosshair.
+			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
+			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
-			const transPos = this.getTransformedMousePos(d3Event);
-			this.region = {
-				startX: transPos.x,
-				startY: transPos.y,
-				width: 0,
-				height: 0
-			};
-		}
 
-		// To make the new cursor style appear *immediately* on mousedown we set the
-		// appropriate cursor style on the SVG background rectanagle. The cursor
-		// overlay will handle the cursor style as the mouse is moved.
-		const selector = ".d3-svg-background[data-pipeline-id='" + this.activePipeline.id + "']";
-		if (this.regionSelect) {
-			this.canvasSVG.select(selector).style("cursor", "crosshair");
 		} else {
-			this.canvasSVG.select(selector).style("cursor", "grabbing");
+			if (this.isDragActivated(d3Event)) {
+				this.addTempCursorOverlay("grabbing");
+			} else {
+				this.addTempCursorOverlay("default");
+			}
 		}
 
-		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		const transPos = this.getTransformedMousePos(d3Event);
+		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k, startX: transPos.x, startY: transPos.y };
 		this.previousD3Event = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
+		// Calculate the canvas dimensions here, so we don't have to recalculate
+		// them for every zoom action event.
 		this.zoomCanvasDimensions = CanvasUtils.getCanvasDimensions(
 			this.activePipeline.nodes, this.activePipeline.comments,
 			this.activePipeline.links, this.canvasLayout.commentHighlightGap);
@@ -1847,14 +1850,13 @@ export default class SVGCanvasRenderer {
 		// If the scale amount is the same we are not zooming, so we must be panning.
 		if (d3Event.transform.k === this.zoomStartPoint.k) {
 			if (this.regionSelect) {
-				this.addTempCursorOverlay("crosshair");
 				this.drawRegionSelector(d3Event);
 
 			} else {
-				this.addTempCursorOverlay("grabbing");
 				this.zoomCanvasBackground(d3Event);
 			}
 		} else {
+			this.addTempCursorOverlay("default");
 			this.zoomCanvasBackground(d3Event);
 			this.zoomCommentToolbar();
 		}
@@ -1863,62 +1865,61 @@ export default class SVGCanvasRenderer {
 	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
+		// Clears the display of the crosshair cursor if the user clicks within 200 ms
+		clearTimeout(this.addingCrossHairCursor);
+
+		const transPos = this.getTransformedMousePos(d3Event);
+
 		if (this.drawingNewLinkData) {
 			this.stopDrawingNewLink();
-			this.drawingNewLinkData = null;
-		}
 
-		if (this.draggingLinkData) {
+		} else if (this.draggingLinkData) {
 			this.stopDraggingLink();
-			this.draggingLinkData = null;
-		}
 
-		if (d3Event.transform.k === this.zoomStartPoint.k &&
-				this.regionSelect === true) {
-			this.removeRegionSelector();
+		// The user just clicked -- with no drag.
+		} else if (transPos.x === this.zoomStartPoint.startX &&
+							transPos.y === this.zoomStartPoint.startY &&
+							!this.zoomChanged()) {
+			this.zoomClick();
 
-			// Reset the transform x and y to what they were before the region
-			// selection action was started. This directly sets the x and y values
-			// in the __zoom property of the svgCanvas DOM object.
-			d3Event.transform.x = this.regionStartTransformX;
-			d3Event.transform.y = this.regionStartTransformY;
-
-			var { startX, startY, width, height } = this.getRegionDimensions();
-			this.isSelecting = true;
-
-			// Ensure the link objects in the active pipeline have their coordinate
-			// positions set. The coords might not be set if the last object model
-			// update was a change in selections or some other operation that does
-			// not redraw link lines.
-			this.buildLinksArray();
-
-			const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
-			const selections =
-				CanvasUtils.selectInRegion(region, this.activePipeline,
-					this.config.enableLinkSelection !== LINK_SELECTION_NONE,
-					this.config.enableLinkType,
-					this.config.enableAssocLinkType);
-			this.canvasController.setSelections(selections, this.activePipeline.id);
-			this.regionSelect = false;
+		} else if (this.regionSelect) {
+			this.zoomEndRegionSelect(d3Event);
 
 		} else if (this.dispUtils.isDisplayingFullPage() && this.zoomChanged()) {
-			// Set the internal zoom value for canvasSVG used by D3. This will be
-			// used by d3Event next time a zoom action is initiated.
-			this.canvasSVG.property("__zoom", this.zoomTransform);
-
-			const data = {
-				editType: "setZoom",
-				editSource: "canvas",
-				zoom: this.zoomTransform,
-				pipelineId: this.activePipeline.id
-			};
-			this.canvasController.editActionHandler(data);
+			this.zoomSave();
 		}
 
 		// Remove the cursor overlay and reset the SVG background rectangle
 		// cursor style, which was set in the zoom start method.
-		this.resetCanvasCursor();
+		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
+		this.contextMenuClosedOnZoom = false;
+		this.textEditingClosedfOnZoom = false;
+		this.regionSelect = false;
+	}
+
+	// Returns true if the region select gesture is requested by the user.
+	shouldDoRegionSelect(d3Event) {
+		// The this.zoomingAction flag indicates zooming is being invoked
+		// programmatically.
+		if (this.zoomingAction) {
+			return false;
+
+		} else if (this.config.enableInteractionType === INTERACTION_MOUSE &&
+				(d3Event && d3Event.sourceEvent && d3Event.sourceEvent.shiftKey)) {
+			return true;
+
+		} else if (this.config.enableInteractionType === INTERACTION_CARBON &&
+							!this.isSpaceKeyPressed(d3Event)) {
+			return true;
+
+		} else if (this.config.enableInteractionType === INTERACTION_TRACKPAD &&
+				(d3Event.sourceEvent && d3Event.sourceEvent.buttons === 1) && // Main button is pressed
+				!this.spaceKeyPressed) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// Returns true if the current zoom transform is different from the
@@ -1955,6 +1956,65 @@ export default class SVGCanvasRenderer {
 		if (this.dispUtils.isDisplayingSubFlowFullPage()) {
 			this.displayPortsForSubFlowFullPage();
 		}
+	}
+
+	// Handles a zoom operation that is just a click on the canvas background.
+	zoomClick() {
+		// Only clear selections if clicked on the canvas of the current active pipeline.
+		// Clicking the canvas of an expanded supernode will select that node.
+		// Also, don't clear selections if we have closed a context menu or
+		// closed text editing.
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
+			this.selecting = true;
+			this.canvasController.clearSelections();
+			this.selecting = false;
+		}
+	}
+
+	// Handles the behavior when the user stops doing a region select.
+	zoomEndRegionSelect(d3Event) {
+		this.removeRegionSelector();
+
+		// Reset the transform x and y to what they were before the region
+		// selection action was started. This directly sets the x and y values
+		// in the __zoom property of the svgCanvas DOM object.
+		d3Event.transform.x = this.regionStartTransformX;
+		d3Event.transform.y = this.regionStartTransformY;
+
+		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
+
+		// Ensure the link objects in the active pipeline have their coordinate
+		// positions set. The coords might not be set if the last object model
+		// update was a change in selections or some other operation that does
+		// not redraw link lines.
+		this.buildLinksArray();
+
+		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
+		const selections =
+			CanvasUtils.selectInRegion(region, this.activePipeline,
+				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
+				this.config.enableLinkType,
+				this.config.enableAssocLinkType);
+		this.selecting = true;
+		this.canvasController.setSelections(selections, this.activePipeline.id);
+		this.selecting = false;
+	}
+
+	// Save the zoom amount. The canvas controller/object model will decide
+	// how this info is saved.
+	zoomSave() {
+		// Set the internal zoom value for canvasSVG used by D3. This will be
+		// used by d3Event next time a zoom action is initiated.
+		this.canvasSVG.property("__zoom", this.zoomTransform);
+
+		const data = {
+			editType: "setZoom",
+			editSource: "canvas",
+			zoom: this.zoomTransform,
+			pipelineId: this.activePipeline.id
+		};
+		this.canvasController.editActionHandler(data);
+
 	}
 
 	// Repositions the comment toolbar so it is always over the top of the
@@ -2061,12 +2121,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawRegionSelector(d3Event) {
-		const transPos = this.getTransformedMousePos(d3Event);
-		this.region.width = transPos.x - this.region.startX;
-		this.region.height = transPos.y - this.region.startY;
-
 		this.removeRegionSelector();
-		var { startX, startY, width, height } = this.getRegionDimensions();
+		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
 
 		this.canvasGrp
 			.append("rect")
@@ -2081,22 +2137,23 @@ export default class SVGCanvasRenderer {
 		this.canvasGrp.selectAll(".d3-region-selector").remove();
 	}
 
-	// Returns the startX, startY, width and height of the selction region
+	// Returns the startX, startY, width and height of the selection region
 	// where startX and startY are always the top left corner of the region
 	// and width and height are therefore always positive.
-	getRegionDimensions() {
-		var startX = this.region.startX;
-		var startY = this.region.startY;
-		var width = this.region.width;
-		var height = this.region.height;
+	getRegionDimensions(d3Event) {
+		const transPos = this.getTransformedMousePos(d3Event);
+		let startX = this.zoomStartPoint.startX;
+		let startY = this.zoomStartPoint.startY;
+		let width = transPos.x - startX;
+		let height = transPos.y - startY;
 
 		if (width < 0) {
 			width = Math.abs(width);
-			startX = this.region.startX - width;
+			startX -= width;
 		}
 		if (height < 0) {
 			height = Math.abs(height);
-			startY = this.region.startY - height;
+			startY -= height;
 		}
 
 		return { startX, startY, width, height };
@@ -2489,7 +2546,7 @@ export default class SVGCanvasRenderer {
 		} else if ((this.dragging && !this.nodeSizing && !this.commentSizing) || this.movingBindingNodes) {
 			this.displayMovedNodes();
 
-		} else if (this.selecting || this.regionSelect) {
+		} else if (this.selecting) {
 			this.displayNodesSelectionStatus();
 
 		} else {
@@ -2854,6 +2911,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Node Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -2922,7 +2982,7 @@ export default class SVGCanvasRenderer {
 			.on("mousemove mouseenter", (d3Event, d) => {
 				if (this.isNodeResizable(d) &&
 						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
-					let cursorType = "pointer";
+					let cursorType = "default";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
 						this.nodeSizingDirection = this.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
 						this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
@@ -2932,7 +2992,7 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("mouseleave", (d3Event, d) => {
-				d3.select(d3Event.currentTarget).style("cursor", "pointer");
+				d3.select(d3Event.currentTarget).style("cursor", "default");
 			});
 	}
 
@@ -4193,6 +4253,7 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.stopDrawingNewLinkForPorts();
+		this.drawingNewLinkData = null;
 	}
 
 	stopDrawingNewLinkForPorts() {
@@ -5006,7 +5067,7 @@ export default class SVGCanvasRenderer {
 		if (this.dragging && !this.commentSizing && !this.nodeSizing && !this.isCommentBeingUpdated) {
 			this.displayMovedComments();
 
-		} else if (this.selecting || this.regionSelect) {
+		} else if (this.selecting) {
 			this.displayCommentsSelectionStatus();
 
 		} else {
@@ -5151,6 +5212,9 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Comment Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (!this.config.enableDragWithoutSelect) {
 					this.selectObjectD3Event(d3Event, d);
 				}
@@ -5204,7 +5268,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions && // Only set cursor when we are able to edit comments
 					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
 				{
-					let cursorType = "pointer";
+					let cursorType = "default";
 					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
 						this.commentSizingDirection = this.getSizingDirection(d3Event, d, this.canvasLayout.commentCornerResizeArea);
 						this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
@@ -5656,7 +5720,7 @@ export default class SVGCanvasRenderer {
 	displayLinks() {
 		this.logger.logStartTimer("displayLinks " + this.getFlags());
 
-		if (this.selecting || this.regionSelect) {
+		if (this.selecting) {
 			this.displayLinksSelectionStatus();
 
 		} else {
@@ -5811,6 +5875,9 @@ export default class SVGCanvasRenderer {
 		linkGrps
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d);
 				}

@@ -502,8 +502,6 @@ export default class SvgCanvasUtilsComments {
 					finished = true; // As soon as we hit a line without a number we finished renumbering
 				}
 			}
-
-			newText += "\n";
 		});
 		return newText;
 	}

@@ -182,7 +182,7 @@ $palette-search-container-height: 41px;
 }
 
 .palette-flyout-categories {
-	height: calc(100% - $palette-search-container-height);
+	height: calc(100% - #{$palette-search-container-height});
 	width: 100%;
 	position: absolute;
 	overflow-x: hidden;

@@ -392,10 +392,12 @@
               "content": "The link between these nodes should be blue",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
                   "class_name": "d3-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V",
                   "class_name": "d3-comment-link"
                 }
@@ -411,10 +413,12 @@
               "content": "The link between these nodes should be green",
               "associated_id_refs": [
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
                   "class_name": "d3-comment-link"
                 },
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
                   "class_name": "d3-comment-link"
                 }
@@ -430,10 +434,12 @@
               "content": "The link between these nodes should be yellow",
               "associated_id_refs": [
                 {
+                  "id": "bbbbbbbbb-aaaa-1234-3456-1234567",
                   "node_ref": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
                   "class_name": "d3-comment-link"
                 },
                 {
+                  "id": "ea45ed78-53bc-cacac-ffff-2355566",
                   "node_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
                   "class_name": "d3-comment-link"
                 }
@@ -449,10 +455,12 @@
               "content": "The link between these nodes should be red",
               "associated_id_refs": [
                 {
+                  "id": "aaaaaaa-bbbb-cccc-dddd-eeeee",
                   "node_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
                   "class_name": "d3-comment-link"
                 },
                 {
+                  "id": "111111-2222-3333-4444-5555555",
                   "node_ref": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15",
                   "class_name": "d3-comment-link"
                 }

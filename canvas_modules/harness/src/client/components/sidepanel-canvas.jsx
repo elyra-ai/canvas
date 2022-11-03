@@ -35,6 +35,7 @@ import {
 	HORIZONTAL_FORMAT,
 	INTERACTION_MOUSE,
 	INTERACTION_TRACKPAD,
+	INTERACTION_CARBON,
 	CURVE_LINKS,
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
@@ -935,6 +936,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={INTERACTION_MOUSE}
 						labelText={INTERACTION_MOUSE}
+					/>
+					<RadioButton
+						value={INTERACTION_CARBON}
+						labelText={INTERACTION_CARBON}
 					/>
 					<RadioButton
 						value={INTERACTION_TRACKPAD}

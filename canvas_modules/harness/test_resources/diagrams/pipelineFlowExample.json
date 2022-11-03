@@ -475,10 +475,12 @@
               "content": "This is sample comment should be linked to two nodes.",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "nodeID2PE",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "nodeID3PE",
                   "class_name": "canvas-comment-link"
                 }

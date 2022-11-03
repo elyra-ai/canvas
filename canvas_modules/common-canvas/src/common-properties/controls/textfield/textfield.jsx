@@ -104,7 +104,7 @@ class TextfieldControl extends React.Component {
 				value={value}
 				labelText={this.props.controlItem}
 				hideLabel={this.props.tableControl}
-				light={this.props.controller.getLight()}
+				light={this.props.controller.getLight() && !this.props.control.light}
 			/>);
 		}
 

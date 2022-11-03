@@ -365,7 +365,7 @@ export default class PipelineOutHandler {
 		canvasInfoLinks.forEach((link) => {
 			if (link.type === "commentLink" &&
 					link.srcNodeId === commentId) {
-				const newLink = { node_ref: link.trgNodeId };
+				const newLink = { id: link.id, node_ref: link.trgNodeId };
 				if (link.class_name) {
 					newLink.class_name = link.class_name;
 				}

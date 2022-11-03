@@ -5300,6 +5300,7 @@
               "content": " comment 1",
               "associated_id_refs": [
                 {
+                  "id": "3b54f984-ab32-4da0-8a5a-41e3dba5dde3",
                   "node_ref": "id2PZSCTRPRIJ",
                   "class_name": "canvas-comment-link"
                 }
@@ -5315,10 +5316,12 @@
               "content": " comment 2",
               "associated_id_refs": [
                 {
+                  "id": "eaa87bbf-0a30-47df-bda1-da154c566dfb",
                   "node_ref": "id5KIRGGJ3FYT",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "307b36cc-4058-41b5-9840-7ed01740023c",
                   "node_ref": "idGWRVT47XDV",
                   "class_name": "canvas-comment-link"
                 }
@@ -5344,10 +5347,12 @@
               "content": " Special comment",
               "associated_id_refs": [
                 {
+                  "id": "bbf2f832-b096-471d-a6a1-9072619f1747",
                   "node_ref": "22c42be1-ae33-45f8-8f31-e0097b44aec8",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "ccd45623-c056-1234-a6a1-9072619c11123",
                   "node_ref": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747",
                   "class_name": "canvas-comment-link"
                 }
@@ -5363,14 +5368,17 @@
               "content": " Up and down comment",
               "associated_id_refs": [
                 {
+                  "id": "ddd86023-5634-df34-3295-16743ad456",
                   "node_ref": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "345df528-ae56-67a3-fad6-ad765af98bc",
                   "node_ref": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "123f528-6354-7643-8754-983cbda873",
                   "node_ref": "7b17a32d-035f-484f-9eb5-1036f407ecf0",
                   "class_name": "canvas-comment-link"
                 }
@@ -5386,14 +5394,17 @@
               "content": " Inside Comment",
               "associated_id_refs": [
                 {
+                  "id": "adbd64575-2111-2222-3333-4a4d4f454",
                   "node_ref": "79059d92-54bc-4545-ba5d-59954a81910a",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "7dabc73-cdd8-53ad-708c-6abcd78ee",
                   "node_ref": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4",
                   "class_name": "canvas-comment-link"
                 },
                 {
+                  "id": "cde567aaa-bc56-3ad7-43ad-65382adef",
                   "node_ref": "c91a4724-91fe-435e-a077-9c4100b95043",
                   "class_name": "canvas-comment-link"
                 }
