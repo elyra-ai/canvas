@@ -291,7 +291,12 @@
                   "node_ref": "id2PZSCTRPRIJ",
                   "class_name": "canvas-comment-link"
                 }
-              ]
+              ],
+              "style": {
+                "body": {
+                  "default": "fill: #FFFF99"
+                }
+              }
             },
             {
               "id": "id2MHTH4XNJ32",
