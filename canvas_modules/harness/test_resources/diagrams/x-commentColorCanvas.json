@@ -212,7 +212,12 @@
             "id2PZSCTRPRIJ"
           ]
         },
-        "isCut": false
+        "isCut": false,
+        "style": {
+          "body": {
+            "default": "fill: #FFFF99"
+          }
+        }
       },
       {
         "id": "id2MHTH4XNJ32",

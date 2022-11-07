@@ -61,7 +61,8 @@ export default class CanvasInHandler {
 				y_pos: typeof canvasNode.y_pos !== "undefined" ? canvasNode.y_pos : canvasNode.yPos, // Handle old field name yPos
 				class_name: canvasNode.className,
 				label: canvasNode.objectData.label,
-				type: nodeType
+				type: nodeType,
+				style: canvasNode.style
 			};
 			if (canvasNode.objectData && canvasNode.objectData.description) {
 				newNode.description = canvasNode.objectData.description;
@@ -178,7 +179,8 @@ export default class CanvasInHandler {
 				x_pos: typeof canvasComment.x_pos !== "undefined" ? canvasComment.x_pos : canvasComment.xPos, // Handle old field name xPos
 				y_pos: typeof canvasComment.y_pos !== "undefined" ? canvasComment.y_pos : canvasComment.yPos, // Handle old field name yPos
 				height: canvasComment.height,
-				width: canvasComment.width
+				width: canvasComment.width,
+				style: canvasComment.style
 			})
 		);
 	}
@@ -192,7 +194,8 @@ export default class CanvasInHandler {
 					class_name: canvasLink.className,
 					srcNodeId: canvasLink.source,
 					trgNodeId: canvasLink.target,
-					type: this.getLinkType(canvasLink)
+					type: this.getLinkType(canvasLink),
+					style: canvasLink.style
 				};
 				if (canvasLink.sourcePort) {
 					newLink.srcNodePortId = canvasLink.sourcePort;
