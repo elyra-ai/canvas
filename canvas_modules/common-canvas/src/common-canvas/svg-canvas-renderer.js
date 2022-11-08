@@ -965,13 +965,13 @@ export default class SVGCanvasRenderer {
 		// the Chrome browser userAgent contains the words "Chrome and "Safari"!
 		// However, with the Safari browser, userAgent only contains the word "Safari".
 		if (navigator.userAgent.includes("Chrome")) {
-			browserZoom = window.devicePixelRatio; // This works for Chrome
+			browserZoom = 1; // This works for Chrome
 
 		} else if (navigator.userAgent.includes("Safari")) {
 			browserZoom = (window.outerWidth - 8) / window.innerWidth; // This works for Safari
 
 		} else if (navigator.userAgent.includes("Firefox")) {
-			browserZoom = window.devicePixelRatio / 2; // This works for Firefox
+			browserZoom = 1; // This works for Firefox
 		}
 
 		return browserZoom;
