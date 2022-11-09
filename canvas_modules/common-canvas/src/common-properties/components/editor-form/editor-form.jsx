@@ -467,11 +467,14 @@ class EditorForm extends React.Component {
 			}
 			if (!this.FIRST_TEARSHEET_ID || this.FIRST_TEARSHEET_ID === panel.id) {
 				this.FIRST_TEARSHEET_ID = panel.id;
+				const onCloseCallback = () => {
+					this.props.controller.clearActiveTearsheet();
+				}
 				return (
 					<TearSheet
 						open={this.props.controller.getActiveTearsheet() !== null}
+						onCloseCallback={onCloseCallback}
 						key={panel.id}
-						controller={this.props.controller}
 						tearsheet={this.visibleTearsheet}
 					/>
 				);

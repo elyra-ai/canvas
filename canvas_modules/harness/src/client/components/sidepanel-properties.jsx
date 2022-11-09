@@ -39,6 +39,7 @@ import {
 	CHOOSE_FROM_LOCATION,
 	PROPERTIES_FLYOUT,
 	PROPERTIES_MODAL,
+	PROPERTIES_TEARSHEET,
 	LOCAL_FILE_OPTION,
 	FORMS,
 	PARAMETER_DEFS,
@@ -442,6 +443,10 @@ export default class SidePanelModal extends React.Component {
 					<RadioButton
 						value={PROPERTIES_MODAL}
 						labelText={PROPERTIES_MODAL}
+					/>
+					<RadioButton
+						value={PROPERTIES_TEARSHEET}
+						labelText={PROPERTIES_TEARSHEET}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>

@@ -94,6 +94,7 @@ _defineConstant("PALETTE_NONE", "None");
 
 _defineConstant("PROPERTIES_FLYOUT", "Flyout");
 _defineConstant("PROPERTIES_MODAL", "Modal");
+_defineConstant("PROPERTIES_TEARSHEET", "Tearsheet");
 _defineConstant("CUSTOM", "Custom");
 _defineConstant("EDITING", "Editing");
 

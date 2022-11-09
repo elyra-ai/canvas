@@ -15,14 +15,17 @@
  */
 
 // Test suite for generic tearsheet testing
-
+import React from "react";
 import propertyUtils from "./../../_utils_/property-utils";
 import { expect } from "chai";
+import { mountWithIntl } from "../../_utils_/intl-utils";
+import TearSheet from "./../../../src/common-properties/panels/tearsheet";
 import codeParamDef from "./../../test_resources/paramDefs/code_paramDef.json";
+import Sinon from "sinon";
 
 describe("tearsheet tests", () => {
-	var wrapper;
-	var controller;
+	let wrapper;
+	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(codeParamDef);
 		wrapper = renderedObject.wrapper;
@@ -67,5 +70,47 @@ describe("tearsheet tests", () => {
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
 		expect(wrapper.find("div.properties-tearsheet-panel .bx--modal-header h3").text()).to.equal("Python 2");
 		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(1);
+	});
+});
+
+describe("Tearsheet renders correctly", () => {
+	it("should display buttons in tearsheet if showPropertiesButtons is false", () => {
+		const wrapper = mountWithIntl(<TearSheet
+			open
+			onCloseCallback={Sinon.spy()}
+			tearsheet={{
+				title: "test title",
+				content: "test content"
+			}}
+			showPropertiesButtons={false}
+		/>);
+		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
+		expect(tearsheet).to.have.length(1);
+		expect(tearsheet.find(".bx--modal-header")).to.have.length(1);
+		expect(tearsheet.find(".bx--modal-header").text()).to.equal("test title");
+		expect(tearsheet.find(".bx--modal-content")).to.have.length(1);
+		expect(tearsheet.find(".bx--modal-content").text()).to.equal("test content");
+		expect(tearsheet.find(".properties-tearsheet-body-with-buttons")).to.have.length(0);
+		expect(tearsheet.find(".properties-modal-buttons")).to.have.length(0);
+	});
+
+	it("should display buttons in tearsheet if showPropertiesButtons is true", () => {
+		const wrapper = mountWithIntl(<TearSheet
+			open
+			onCloseCallback={Sinon.spy()}
+			tearsheet={{
+				title: "test title",
+				content: "test content"
+			}}
+			applyLabel="Save"
+			rejectLabel="Cancel"
+			okHandler={Sinon.spy()}
+			cancelHandler={Sinon.spy()}
+			showPropertiesButtons
+		/>);
+		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
+		expect(tearsheet).to.have.length(1);
+		expect(tearsheet.find("div.properties-tearsheet-body-with-buttons")).to.have.length(1);
+		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(1);
 	});
 });
