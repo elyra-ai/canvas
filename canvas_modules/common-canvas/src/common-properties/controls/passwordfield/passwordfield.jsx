@@ -37,7 +37,6 @@ class PasswordControl extends React.Component {
 	render() {
 		const overrideShowPasswordLabel = `${this.props.control.name}.password.showPasswordLabel.tooltip`;
 		const overrideHidePasswordLabel = `${this.props.control.name}.password.hidePasswordLabel.tooltip`;
-
 		const defaultShowLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP);
 		const defaultHidelabel = formatMessage(this.reactIntl, MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP);
 
