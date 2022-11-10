@@ -22,6 +22,7 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
+
 import { formatMessage } from "./../../util/property-utils";
 class PasswordControl extends React.Component {
 	constructor(props) {
@@ -62,8 +63,8 @@ class PasswordControl extends React.Component {
 						hideLabel={this.props.tableControl}
 						light={this.props.controller.getLight() && !this.props.control.light}
 						tooltipAlignment="end"
-						showPasswordLabel={showPassword}
-						hidePasswordLabel={hidePassword}
+						showPasswordLabel={showPassword ? showPassword : "Show password"}
+						hidePasswordLabel={hidePassword ? hidePassword : "Hide password"}
 					/>
 				</Form>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

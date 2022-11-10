@@ -175,6 +175,25 @@ describe("Passwordfield renders correctly", () => {
 		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("Passwordfield eyeIcon tooltip appear correctly", () => {
+		const wrapper = mount(
+			<Passwordfield
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const passwordWrapper = wrapper.find(".properties-pwdfield");
+		// Verify the eye icon
+		const eyeIcon = wrapper.find("button span");
+		expect(passwordWrapper).to.have.length(1);
+		// Verify the right message upon hover & click
+		eyeIcon.simulate("mouseover");
+		expect(eyeIcon.at(0).text()).to.equal("Show");
+		eyeIcon.simulate("click");
+		expect(eyeIcon.at(0).text()).to.equal("Hide");
+	});
 });
 
 describe("passwordfield classnames appear correctly", () => {
