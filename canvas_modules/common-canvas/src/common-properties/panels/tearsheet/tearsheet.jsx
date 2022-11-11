@@ -46,12 +46,13 @@ class TearSheet extends Component {
 					preventCloseOnClickOutside
 				>
 					<ModalHeader
+						className={classNames("properties-tearsheet-header", { "with-buttons": this.props.showPropertiesButtons })}
 						title={title}
 						buttonOnClick={this.props.onCloseCallback}
 					>
 						{description ? (<p>{description}</p>) : null}
 					</ModalHeader>
-					<ModalBody className={classNames({ "properties-tearsheet-body-with-buttons": this.props.showPropertiesButtons })}>
+					<ModalBody className={classNames("properties-tearsheet-body", { "with-buttons": this.props.showPropertiesButtons })}>
 						{content}
 					</ModalBody>
 					{buttons}

@@ -46,8 +46,8 @@ describe("tearsheet tests", () => {
 	it("should have title and description set", () => {
 		controller.setActiveTearsheet("tearsheet1");
 		wrapper.update();
-		expect(wrapper.find("div.properties-tearsheet-panel .bx--modal-header h3").text()).to.equal("Python");
-		expect(wrapper.find("div.properties-tearsheet-panel .bx--modal-header p").text()).to.equal("Your change is automatically saved.");
+		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header h3").text()).to.equal("Python");
+		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header p").text()).to.equal("Your change is automatically saved.");
 	});
 	it("should be hidden but not removed from DOM on the tearsheet close button", () => {
 		controller.setActiveTearsheet("tearsheet1");
@@ -68,7 +68,7 @@ describe("tearsheet tests", () => {
 		wrapper.find("div[data-id='properties-ctrl-code_rows'] button.maximize").simulate("click");
 		wrapper.update();
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(1);
-		expect(wrapper.find("div.properties-tearsheet-panel .bx--modal-header h3").text()).to.equal("Python 2");
+		expect(wrapper.find("div.properties-tearsheet-panel .properties-tearsheet-header h3").text()).to.equal("Python 2");
 		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(1);
 	});
 });
@@ -86,12 +86,12 @@ describe("Tearsheet renders correctly", () => {
 		/>);
 		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
 		expect(tearsheet).to.have.length(1);
-		expect(tearsheet.find(".bx--modal-header")).to.have.length(1);
-		expect(tearsheet.find(".bx--modal-header").text()).to.equal("test title");
-		expect(tearsheet.find(".bx--modal-content")).to.have.length(1);
-		expect(tearsheet.find(".bx--modal-content").text()).to.equal("test content");
-		expect(tearsheet.find(".properties-tearsheet-body-with-buttons")).to.have.length(0);
-		expect(tearsheet.find(".properties-modal-buttons")).to.have.length(0);
+		expect(tearsheet.find("div.properties-tearsheet-header")).to.have.length(1);
+		expect(tearsheet.find("div.properties-tearsheet-header").text()).to.equal("test title");
+		expect(tearsheet.find("div.properties-tearsheet-body")).to.have.length(1);
+		expect(tearsheet.find("div.properties-tearsheet-body").text()).to.equal("test content");
+		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(0);
+		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(0);
 	});
 
 	it("should display buttons in tearsheet if showPropertiesButtons is true", () => {
@@ -110,7 +110,7 @@ describe("Tearsheet renders correctly", () => {
 		/>);
 		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
 		expect(tearsheet).to.have.length(1);
-		expect(tearsheet.find("div.properties-tearsheet-body-with-buttons")).to.have.length(1);
+		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(1);
 		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(1);
 	});
 });
