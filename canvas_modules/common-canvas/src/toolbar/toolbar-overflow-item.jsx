@@ -54,7 +54,6 @@ class ToolbarOverflowItem extends React.Component {
 						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
 						size={this.props.size}
-						hasIconOnly
 					>
 						<div className="toolbar-item-content default">
 							<div className="toolbar-icon">
