@@ -184,15 +184,14 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const passwordWrapper = wrapper.find(".properties-pwdfield");
+		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
 		// Verify the eye icon
-		const eyeIcon = wrapper.find("button span");
-		expect(passwordWrapper).to.have.length(1);
+		const eyeIcon = passwordWrapper.find("button span");
+		expect(eyeIcon).to.have.length(1);
 		// Verify the right message upon hover & click
-		eyeIcon.simulate("mouseover");
 		expect(eyeIcon.at(0).text()).to.equal("Show");
 		eyeIcon.simulate("click");
-		expect(eyeIcon.at(0).text()).to.equal("Hide");
+		expect(eyeIcon.at(0).text()).to.equal("Custom Hide Value");
 	});
 });
 
