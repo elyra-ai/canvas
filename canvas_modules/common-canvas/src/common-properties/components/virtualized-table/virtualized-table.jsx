@@ -531,7 +531,7 @@ VirtualizedTable.defaultProps = {
 
 VirtualizedTable.propTypes = {
 	tableLabel: PropTypes.string,
-	tableHeight: PropTypes.number,
+	tableHeight: PropTypes.number.isRequired,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,

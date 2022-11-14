@@ -28,7 +28,6 @@ import classNames from "classnames";
 import { has, isEmpty } from "lodash";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
-const REMOF2ROWS = 4;
 class FlexibleTable extends React.Component {
 
 	constructor(props) {
@@ -250,7 +249,8 @@ class FlexibleTable extends React.Component {
 		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
 			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
 		} else if (rows > 0) {
-			newHeight = (rowHeight * rows + headerHeight + (this.props.selectedEditRow ? REMOF2ROWS : 0)) + "rem";
+			const multiSelectTableHeight = rowHeight + headerHeight;
+			newHeight = (rowHeight * rows + headerHeight + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
 		} else if (rows === 0) { // only display header
 			newHeight = headerHeight + "rem";
 		} else if (rows === -1) {
@@ -515,7 +515,7 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
-		var tableHeight = this.props.data.length * ROW_HEIGHT;
+		let tableHeight = this.props.data.length * ROW_HEIGHT;
 		if (this.props.rows) {
 			tableHeight = (this.props.rows + 1) * ROW_HEIGHT; // 1 is for header
 		}
