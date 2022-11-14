@@ -189,7 +189,7 @@ describe("Passwordfield renders correctly", () => {
 		const eyeIcon = passwordWrapper.find("button span");
 		expect(eyeIcon).to.have.length(1);
 		// Verify the right message upon hover & click
-		expect(eyeIcon.at(0).text()).to.equal("Show");
+		expect(eyeIcon.at(0).text()).to.equal("Show ");
 		eyeIcon.simulate("click");
 		expect(eyeIcon.at(0).text()).to.equal("Custom Hide Value");
 	});
