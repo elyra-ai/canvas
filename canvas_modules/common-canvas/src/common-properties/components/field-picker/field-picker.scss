@@ -92,33 +92,16 @@
 	}
 }
 
-// This is for field-picker in properties-modal instead of flyout
-.properties-modal {
-	.properties-fp-top-row {
-		width: 100%;
-		margin-bottom: $spacing-03;
-		display: flex;
-		justify-content: space-between;
-
-		.properties-fp-button-label {
-			position: relative;
-			top: $spacing-03;
+// This is for field-picker in properties-modal, containerType="Modal"
+.properties-modal, .properties-tearsheet-panel.bx--modal {
+	.properties-fp-table {
+		.properties-fp-top-row {
+			display: flex;
+			justify-content: end;
 		}
 
-		// This back button is used in common-properties modal format
-		.properties-fp-back-button {
-			height: $spacing-07;
-			width: $spacing-07;
-			padding: 0;
-			margin-right: $spacing-03;
-
-			> svg {
-				left: $spacing-03;
-			}
+		.properties-modal-buttons {
+			width: 100%;
 		}
-	}
-
-	.properties-fp-filter-list {
-		float: right;
 	}
 }

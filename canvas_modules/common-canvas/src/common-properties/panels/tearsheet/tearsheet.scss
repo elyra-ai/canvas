@@ -31,62 +31,60 @@ $properties-buttons-height: $spacing-10;
 		transform: translate3d(0, 500px, 0);
 		transition: transform 240ms cubic-bezier(0, 0, 0.3, 1);
 		background-color: $ui-background;
+	}
 
-		// Start:: These styles are to display only parameters in a Tearsheet
-		.properties-tearsheet-header {
-			padding: $spacing-06 $spacing-07;
-			border-bottom: 1px solid $ui-03;
-			margin-bottom: 0;
-			h3 {
-				@include carbon--type-style("productive-heading-04");
-			}
-			p {
-				margin-top: $spacing-03;
-				@include carbon--type-style("body-short-01");
-			}
+	// Start:: These styles are to display only parameters in a Tearsheet
+	.properties-tearsheet-header {
+		padding: $spacing-06 $spacing-07;
+		border-bottom: 1px solid $ui-03;
+		margin-bottom: 0;
+		h3 {
+			@include carbon--type-style("productive-heading-04");
+		}
+		p {
+			margin-top: $spacing-03;
+			@include carbon--type-style("body-short-01");
+		}
+		background-color: $ui-01;
+	}
+
+	.properties-tearsheet-body {
+		padding: $spacing-06 $spacing-07;
+		margin-bottom: 0;
+		.bx--multi-select, .bx--dropdown, .bx--number input[type=number], .bx--text-input, .bx--text-area {	// override carbon's modal
 			background-color: $ui-01;
 		}
-
-		.properties-tearsheet-body {
-			padding: $spacing-06 $spacing-07;
-			margin-bottom: 0;
-			.bx--multi-select, .bx--dropdown, .bx--number input[type=number], .bx--text-input, .bx--text-area {	// override carbon's modal
-				background-color: $ui-01;
-			}
-		}
-		// End:: These styles are to display only parameters in a Tearsheet
 	}
+	// End:: These styles are to display only parameters in a Tearsheet
 }
 
 // These styles are to display editor-form in a Tearsheet
 .properties-tearsheet-panel.bx--modal {
-	.bx--modal-container {
-		.properties-tearsheet-header.with-buttons {
-			border-bottom: 0;
-		}
+	.properties-tearsheet-header.with-buttons {
+		border-bottom: 0;
+	}
 
-		.properties-tearsheet-body.with-buttons {
-			height: calc(100% - #{$properties-buttons-height});
-			padding: 0;
+	.properties-tearsheet-body.with-buttons {
+		height: calc(100% - #{$properties-buttons-height});
+		padding: 0;
 
-			// Display the tabs in the Tearsheet header
-			.properties-editor-form {
-				> div {
-					padding: 0 $spacing-05;
-				}
+		// Display the tabs in the Tearsheet header
+		.properties-editor-form {
+			> div {
+				padding: 0 $spacing-05;
+			}
 
-				.properties-primaryTabs {
-					background-color: $ui-01;
-					border-bottom: 1px solid $ui-03;
-					margin-bottom: $spacing-05;
-				}
+			.properties-primaryTabs {
+				background-color: $ui-01;
+				border-bottom: 1px solid $ui-03;
+				margin-bottom: $spacing-05;
 			}
 		}
+	}
 
-		.properties-modal-buttons {
-			width: 50%;
-			right: 0;
-			left: unset;
-		}
+	.properties-modal-buttons {
+		width: 50%;
+		right: 0;
+		left: unset;
 	}
 }
