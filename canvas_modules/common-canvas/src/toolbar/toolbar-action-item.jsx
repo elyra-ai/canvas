@@ -178,7 +178,6 @@ class ToolbarActionItem extends React.Component {
 
 		buttonContent = this.wrapInTooltip(buttonContent);
 
-		const btnHasIcon = this.props.actionObj.incLabelWithIcon !== "before" && this.props.actionObj.incLabelWithIcon !== "after";
 		buttonContent = (
 			<Button kind={kind}
 				onClick={this.actionClickHandler}
@@ -186,7 +185,6 @@ class ToolbarActionItem extends React.Component {
 				onFocus={this.props.onFocus}
 				aria-label={actionObj.label}
 				size={this.props.size}
-				hasIconOnly={btnHasIcon}
 			>
 				{buttonContent}
 			</Button>
