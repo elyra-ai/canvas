@@ -3448,7 +3448,7 @@ export default class SVGCanvasRenderer {
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
-				.html(escapeText(dec.label));
+				.html(escapeText(this.decUtils.getDecLabel(d, dec, objType)));
 		} else {
 			labelSel.remove();
 		}
@@ -3732,7 +3732,14 @@ export default class SVGCanvasRenderer {
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d);
 					}
-					this.openContextMenu(d3Event, "node", d);
+					if (this.canvasController.isContextMenuDisplayed()) {
+						this.canvasController.closeContextMenu();
+					} else {
+						const rect = ellipsisGrp.node().getBoundingClientRect();
+						const rect2 = this.canvasSVG.node().getBoundingClientRect();
+						const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
+						this.openContextMenu(d3Event, "node", d, null, pos);
+					}
 				});
 
 			ellipsisGrp
@@ -3890,14 +3897,16 @@ export default class SVGCanvasRenderer {
 
 	}
 
-	openContextMenu(d3Event, type, d, port) {
+	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
-			cmPos: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
+			cmPos: pos
+				? pos
+				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
 			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
