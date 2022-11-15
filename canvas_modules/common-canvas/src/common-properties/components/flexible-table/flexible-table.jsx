@@ -45,7 +45,9 @@ class FlexibleTable extends React.Component {
 			columnSortDir: sortDirs,
 			currentSortColumn: "",
 			tableWidth: 0,
-			tableHeight: 0
+			tableHeight: 0,
+			rows: typeof props.rows !== "undefined" ? props.rows : 5.5,
+			dynamicHeight: null
 		};
 
 		this.rowHeight = this.rowHeight.bind(this);
@@ -245,28 +247,30 @@ class FlexibleTable extends React.Component {
 		let newHeight = this.state.tableHeight;
 		const rowHeight = 2; // in rem
 		const headerHeight = 2; // in rem
-		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 5.5;
-		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
+		let dynamicH = this.state.dynamicHeight;
+		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
 			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
-		} else if (rows > 0) {
+		} else if (this.state.rows > 0) {
 			const multiSelectTableHeight = rowHeight + headerHeight;
-			newHeight = (rowHeight * rows + headerHeight + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
-		} else if (rows === 0) { // only display header
+			newHeight = (rowHeight * this.state.rows + headerHeight + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+		} else if (this.state.rows === 0) { // only display header
 			newHeight = headerHeight + "rem";
-		} else if (rows === -1) {
+		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
 				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				if (flyoutHeight === 0) {
 					newHeight = "100vh"; // set full window height if flyout height not found
+					dynamicH = -1;
 				} else {
 					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
+					dynamicH = (flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
 				}
 			}
 		}
 		if (newHeight !== this.state.tableHeight) {
-			this.setState({ tableHeight: newHeight });
+			this.setState({ tableHeight: newHeight, dynamicHeight: dynamicH });
 		}
 	}
 
@@ -515,9 +519,14 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
-		let tableHeight = this.props.data.length * ROW_HEIGHT;
-		if (this.props.rows) {
-			tableHeight = (this.props.rows + 1) * ROW_HEIGHT; // 1 is for header
+		let tableHeight = 0;
+		if (this.state.rows !== -1 && this.state.tableHeight) {
+			const remHeight = Number(this.state.tableHeight.match(/^[0-9]{1,2}/i)[0]);
+			tableHeight = (remHeight - (this.props.selectedEditRow ? 4 : 0)) * 16;
+		} else if (this.state.rows === -1) {
+			if (this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
+				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? 64 : 0);
+			} // else how do we handle this.state.tableHeight = "100vh"?
 		}
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
