@@ -17,17 +17,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { get } from "lodash";
+
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./detachedPalette.json";
+import StagesCardNodeFlow from "./stagesCardNodeCanvas.json";
+import StagesCardNodePalette from "./stagesCardNodePalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(DetachedCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(DetachedPalette);
+		this.canvasController.setPipelineFlow(StagesCardNodeFlow);
+		this.canvasController.setPipelineFlowPalette(StagesCardNodePalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
@@ -48,8 +50,8 @@ export default class DetachedCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "detached-links",
-			enableNodeFormatType: "Vertical",
+			enableParentClass: "stages-card-node",
+			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
@@ -73,43 +75,66 @@ export default class DetachedCanvas extends React.Component {
 				links: false
 			},
 			enableNodeLayout: {
+				nodeShape: "rectangle",
 				drawNodeLinkLineFromTo: "node_center",
 				drawCommentLinkLineTo: "node_center",
-				defaultNodeWidth: 72,
-				defaultNodeHeight: 82,
-				ellipsisWidth: 14,
-				ellipsisHeight: 18,
-				ellipsisPosition: "middleCenter",
+				bodyPath: (data) => this.createCurvedNodeOutline(0, 0, data.width, data.height, 10),
+				selectionPath: (data) => this.createCurvedNodeOutline(-3, -3, data.width + 6, data.height + 6, 10),
+				defaultNodeWidth: 200,
+				defaultNodeHeight: 65,
+				ellipsisWidth: 24,
+				ellipsisHeight: 24,
+				ellipsisPosition: "topRight",
 				ellipsisPosY: -30,
-				ellipsisPosX: 20,
-				imageWidth: 48,
-				imageHeight: 48,
-				imagePosition: "middleCenter",
-				imagePosX: -24,
-				imagePosY: -30,
-				labelPosition: "middleCenter",
-				labelPosX: 0,
-				labelPosY: 20,
-				labelWidth: 200,
+				ellipsisPosX: -35,
+				imageWidth: 32,
+				imageHeight: 32,
+				imagePosition: "topLeft",
+				imagePosX: 20,
+				imagePosY: 15,
+				labelPosition: "topLeft",
+				labelPosX: 60,
+				labelPosY: 14,
+				labelWidth: 110,
 				labelHeight: 29,
 				labelEditable: true,
-				labelSingleLine: false,
+				labelSingleLine: true,
 				labelOutline: false,
 				labelMaxCharacters: 64,
 				labelAllowReturnKey: "save",
 				portRadius: 10,
 				inputPortDisplay: false,
-				outputPortRightPosition: "middleCenter",
-				outputPortRightPosX: 34,
+				outputPortRightPosition: "middleRight",
+				outputPortRightPosX: 0,
 				outputPortRightPosY: 0,
 				outputPortObject: "image",
 				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				decorations: [
+					{
+						id: "second_label",
+						label: (data) => get(data, "app_data.stages.secondary_label", ""),
+						position: "topLeft",
+						x_pos: 60,
+						y_pos: 28,
+						temporary: true
+					},
+					{
+						id: "toolbar_background",
+						path: "M 0 0 L 26 0 26 26 0 26 Z",
+						position: "topRight",
+						class_name: "toolbar-background",
+						x_pos: -35,
+						y_pos: -26,
+						temporary: true
+					},
+				]
 			},
 			enableCanvasLayout: {
+				commentHighlightGap: 3,
 				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
@@ -149,6 +174,21 @@ export default class DetachedCanvas extends React.Component {
 			},
 			"label": "Output Port " + i
 		};
+	}
+
+	createCurvedNodeOutline(startX, startY, width, height, corner) {
+		const topEdge = startY;
+		const bottomEdge = startY + height;
+		const leftEdge = startX;
+		const rightEdge = startX + width;
+		return `M ${leftEdge + corner} ${topEdge} L ${rightEdge - corner} ${topEdge}` +
+			`Q ${rightEdge} ${topEdge} ${rightEdge} ${topEdge + corner} ` +
+			`L ${rightEdge} ${bottomEdge - corner} ` +
+			`Q ${rightEdge} ${bottomEdge} ${rightEdge - corner} ${bottomEdge} ` +
+			`L ${leftEdge + corner} ${bottomEdge} ` +
+			`Q ${leftEdge} ${bottomEdge} ${leftEdge} ${bottomEdge - corner} ` +
+			`L ${leftEdge} ${topEdge + corner} ` +
+			`Q ${leftEdge} ${topEdge} ${leftEdge + corner} ${topEdge} Z`;
 	}
 
 	decorationActionHandler() {

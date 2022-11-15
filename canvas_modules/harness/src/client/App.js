@@ -40,7 +40,8 @@ import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
-import DetachedCanvas from "./components/custom-canvases/detached-links/detached-canvas";
+import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
+import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
@@ -92,7 +93,8 @@ import {
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
-	EXAMPLE_APP_DETACHED,
+	EXAMPLE_APP_STAGES,
+	EXAMPLE_APP_STAGES_CARD_NODE,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -2548,9 +2550,16 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_APP_DETACHED) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STAGES) {
 			firstCanvas = (
-				<DetachedCanvas
+				<StagesCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_STAGES_CARD_NODE) {
+			firstCanvas = (
+				<StagesCardNodeCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

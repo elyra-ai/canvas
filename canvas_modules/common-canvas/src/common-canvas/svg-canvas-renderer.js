@@ -965,13 +965,13 @@ export default class SVGCanvasRenderer {
 		// the Chrome browser userAgent contains the words "Chrome and "Safari"!
 		// However, with the Safari browser, userAgent only contains the word "Safari".
 		if (navigator.userAgent.includes("Chrome")) {
-			browserZoom = window.devicePixelRatio; // This works for Chrome
+			browserZoom = 1; // This works for Chrome
 
 		} else if (navigator.userAgent.includes("Safari")) {
 			browserZoom = (window.outerWidth - 8) / window.innerWidth; // This works for Safari
 
 		} else if (navigator.userAgent.includes("Firefox")) {
-			browserZoom = window.devicePixelRatio / 2; // This works for Firefox
+			browserZoom = 1; // This works for Firefox
 		}
 
 		return browserZoom;
@@ -3448,7 +3448,7 @@ export default class SVGCanvasRenderer {
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
-				.html(escapeText(dec.label));
+				.html(escapeText(this.decUtils.getDecLabel(d, dec, objType)));
 		} else {
 			labelSel.remove();
 		}
@@ -3732,7 +3732,14 @@ export default class SVGCanvasRenderer {
 					if (!this.config.enableDragWithoutSelect) {
 						this.selectObjectD3Event(d3Event, d);
 					}
-					this.openContextMenu(d3Event, "node", d);
+					if (this.canvasController.isContextMenuDisplayed()) {
+						this.canvasController.closeContextMenu();
+					} else {
+						const rect = ellipsisGrp.node().getBoundingClientRect();
+						const rect2 = this.canvasSVG.node().getBoundingClientRect();
+						const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
+						this.openContextMenu(d3Event, "node", d, null, pos);
+					}
 				});
 
 			ellipsisGrp
@@ -3890,14 +3897,16 @@ export default class SVGCanvasRenderer {
 
 	}
 
-	openContextMenu(d3Event, type, d, port) {
+	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			pipelineId: this.activePipeline.id,
-			cmPos: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
+			cmPos: pos
+				? pos
+				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
 			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
 			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
@@ -4750,6 +4759,9 @@ export default class SVGCanvasRenderer {
 	// Returns a path string that will draw the selection outline shape of the node.
 	getNodeSelectionOutline(data) {
 		if (data.layout.selectionPath && !CanvasUtils.isExpanded(data)) {
+			if (typeof data.layout.selectionPath === "function") {
+				return data.layout.selectionPath(data);
+			}
 			return data.layout.selectionPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -4762,6 +4774,10 @@ export default class SVGCanvasRenderer {
 	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
 		if (data.layout.bodyPath && !CanvasUtils.isExpanded(data)) {
+			if (typeof data.layout.bodyPath === "function") {
+				return data.layout.bodyPath(data);
+			}
+
 			return data.layout.bodyPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
