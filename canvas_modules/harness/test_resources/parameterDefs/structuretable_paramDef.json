@@ -1436,7 +1436,7 @@
 					"default": "If 'Text' field is 'European' then 'Sport' will not be allowed to change to 'Football'.",
 					"placement": "on_panel"
 				},
-				"rows": 3
+				"rows": -1
 			},
 			{
 				"parameter_ref": "structuretableCustomIconButtons",
