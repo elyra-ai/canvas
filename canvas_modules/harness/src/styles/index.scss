@@ -29,7 +29,8 @@ $carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
 
 @import "../client/components/custom-canvases/tables/tables.scss";
 @import "../client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
-@import "../client/components/custom-canvases/detached-links/detached.scss";
+@import "../client/components/custom-canvases/stages/stages.scss";
+@import "../client/components/custom-canvases/stages-card-node/stages-card-node.scss";
 @import "../client/components/custom-canvases/explain/explain.scss";
 @import "../client/components/custom-canvases/explain2/explain2.scss";
 @import "../client/components/custom-canvases/flows/flows.scss";

@@ -53,7 +53,8 @@ import {
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
 	EXAMPLE_APP_BLUE_ELLIPSES,
-	EXAMPLE_APP_DETACHED,
+	EXAMPLE_APP_STAGES,
+	EXAMPLE_APP_STAGES_CARD_NODE,
 	EXAMPLE_APP_EXPLAIN,
 	EXAMPLE_APP_EXPLAIN2,
 	EXAMPLE_APP_STREAMS,
@@ -1038,8 +1039,12 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_FLOWS}
 					/>
 					<RadioButton
-						value={EXAMPLE_APP_DETACHED}
-						labelText={EXAMPLE_APP_DETACHED}
+						value={EXAMPLE_APP_STAGES}
+						labelText={EXAMPLE_APP_STAGES}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_STAGES_CARD_NODE}
+						labelText={EXAMPLE_APP_STAGES_CARD_NODE}
 					/>
 					<RadioButton
 						value={EXAMPLE_READ_ONLY}
