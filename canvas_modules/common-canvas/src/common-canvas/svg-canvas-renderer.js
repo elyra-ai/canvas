@@ -4759,6 +4759,9 @@ export default class SVGCanvasRenderer {
 	// Returns a path string that will draw the selection outline shape of the node.
 	getNodeSelectionOutline(data) {
 		if (data.layout.selectionPath && !CanvasUtils.isExpanded(data)) {
+			if (typeof data.layout.selectionPath === "function") {
+				return data.layout.selectionPath(data);
+			}
 			return data.layout.selectionPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
@@ -4771,6 +4774,10 @@ export default class SVGCanvasRenderer {
 	// Returns a path string that will draw the body shape of the node.
 	getNodeShapePath(data) {
 		if (data.layout.bodyPath && !CanvasUtils.isExpanded(data)) {
+			if (typeof data.layout.bodyPath === "function") {
+				return data.layout.bodyPath(data);
+			}
+
 			return data.layout.bodyPath;
 
 		} else if (data.layout.nodeShape === "port-arcs") {
