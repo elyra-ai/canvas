@@ -202,6 +202,7 @@ class EditorForm extends React.Component {
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
 						label={tab.text}
+						title={tab.text}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
