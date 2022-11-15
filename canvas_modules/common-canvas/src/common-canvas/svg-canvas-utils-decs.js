@@ -30,6 +30,10 @@ export default class SvgCanvasDecs {
 		return null;
 	}
 
+	getDecLabel(d, dec, objType) {
+		return dec.label;
+	}
+
 	getDecLabelClass(dec, objType) {
 		const lineTypeClass = dec.label_single_line ? " d3-label-single-line" : " d3-label-multi-line";
 		const justificationClass = dec.label_align === "center" ? " d3-label-center" : "";

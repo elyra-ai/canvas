@@ -19,15 +19,15 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./detachedPalette.json";
+import StagesCanvasFlow from "./stagesCanvas.json";
+import StagesPalette from "./stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
-		this.canvasController.setPipelineFlow(DetachedCanvasFlow);
-		this.canvasController.setPipelineFlowPalette(DetachedPalette);
+		this.canvasController.setPipelineFlow(StagesCanvasFlow);
+		this.canvasController.setPipelineFlowPalette(StagesPalette);
 
 		this.getConfig = this.getConfig.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
