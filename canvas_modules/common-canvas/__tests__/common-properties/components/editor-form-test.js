@@ -103,7 +103,7 @@ describe("controls should be rendered correctly when no uihints are provided", (
 
 	it("validate no tabs are present", () => {
 		expect(wrapper.find(".properties-categories")).to.have.length(0);
-		expect(wrapper.find(".properties-category")).to.have.length(1);
+		expect(wrapper.find(".properties-single-category")).to.have.length(1);
 	});
 
 	it("validate alerts tab isn't created", () => {
