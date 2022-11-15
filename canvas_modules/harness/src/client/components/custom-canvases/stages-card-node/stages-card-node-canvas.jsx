@@ -17,6 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { get } from "lodash";
+
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCardNodeFlow from "./stagesCardNodeCanvas.json";
@@ -114,7 +116,7 @@ export default class DetachedCanvas extends React.Component {
 				decorations: [
 					{
 						id: "second_label",
-						label: "secondary_label",
+						label: (data) => get(data, "app_data.stages.secondary_label", ""),
 						position: "topLeft",
 						x_pos: 60,
 						y_pos: 28,

@@ -31,6 +31,9 @@ export default class SvgCanvasDecs {
 	}
 
 	getDecLabel(d, dec, objType) {
+		if (typeof dec.label === "function") {
+			return dec.label(d, dec, objType);
+		}
 		return dec.label;
 	}
 
