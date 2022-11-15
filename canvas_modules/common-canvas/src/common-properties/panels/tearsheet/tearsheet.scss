@@ -74,6 +74,11 @@ $properties-buttons-height: $spacing-10;
 				padding: 0 $spacing-05;
 			}
 
+			// styling when there is only 1 tab
+			.properties-single-category {
+				padding: $spacing-05;
+			}
+
 			.properties-primaryTabs {
 				background-color: $ui-01;
 				border-bottom: 1px solid $ui-03;

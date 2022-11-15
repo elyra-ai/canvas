@@ -155,7 +155,7 @@ class EditorForm extends React.Component {
 			// if total non-tearsheet tabs is 1; don't show any tabs
 			if (totalTabs.length === 1 && nonTearsheetTabs.length === 1) {
 				return (
-					<div key={"cat." + key} className="properties-category">
+					<div key={"cat." + key} className="properties-single-category">
 						{panelItems}
 						{additionalComponent}
 					</div>
