@@ -27,7 +27,7 @@ import { Button } from "carbon-components-react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { ArrowLeft24, Reset24 } from "@carbon/icons-react";
+import { Reset24 } from "@carbon/icons-react";
 
 import { has, isEmpty, sortBy, isEqual } from "lodash";
 
@@ -298,50 +298,20 @@ export default class FieldPicker extends React.Component {
 	}
 
 	_genBackButton() {
-		if (this.props.rightFlyout) {
-			const applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
-			const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
+		let applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.REJECTBUTTON_LABEL);
 
-			return (<PropertiesButtons
-				okHandler={this.handleSave}
-				cancelHandler={this.handleCancel}
-				showPropertiesButtons
-				applyLabel={applyLabel}
-				rejectLabel={rejectLabel}
-			/>);
+		if (!this.props.rightFlyout) {
+			applyLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_MODAL_LABEL);
 		}
 
-		const saveTooltip = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
-			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
-		const tooltipId = uuid4() + "-tooltip-fp";
-		const tooltip = (
-			<div className="properties-tooltips">
-				{saveTooltip}
-			</div>
-		);
-
-		return (
-			<div>
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="left"
-					className="properties-tooltips"
-				>
-					<div>
-						<Button
-							className="properties-fp-back-button"
-							renderIcon={ArrowLeft24}
-							iconDescription={this.props.title}
-							size="small"
-							kind="primary"
-							onClick={this.handleSave}
-						/>
-						<label className="properties-fp-button-label">{this.props.title}</label>
-					</div>
-				</Tooltip>
-			</div>
-		);
+		return (<PropertiesButtons
+			okHandler={this.handleSave}
+			cancelHandler={this.handleCancel}
+			showPropertiesButtons
+			applyLabel={applyLabel}
+			rejectLabel={rejectLabel}
+		/>);
 	}
 
 	_genResetButton() {
@@ -460,25 +430,14 @@ export default class FieldPicker extends React.Component {
 		const filterTypes = this._genFilterTypes();
 		const table = this._genTable();
 
-		if (this.props.rightFlyout) {
-			return (<React.Fragment>
-				<div className="properties-fp-top-row">
-					{filterTypes}
-					{resetButton}
-				</div>
-				{table}
-				{backButton}
-			</React.Fragment>);
-		}
-
-		return (<div>
+		return (<React.Fragment>
 			<div className="properties-fp-top-row">
-				{backButton}
+				{filterTypes}
 				{resetButton}
 			</div>
-			{filterTypes}
 			{table}
-		</div>);
+			{backButton}
+		</React.Fragment>);
 	}
 }
 

@@ -21,7 +21,7 @@ export const MESSAGE_KEYS = {
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
-	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
+	FIELDPICKER_SAVEBUTTON_MODAL_LABEL: "fieldPicker.saveButton.modal.label",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
 	FIELDPICKER_FILTER_LABEL: "fieldPicker.filter.label",
 	FIELDPICKER_FIELDCOLUMN_LABEL: "fieldPicker.fieldColumn.label",

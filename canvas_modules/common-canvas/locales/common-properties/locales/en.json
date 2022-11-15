@@ -5,7 +5,7 @@
   "structureTable.addButton.label": "Add columns",
   "structureTable.removeButton.label": "Remove",
   "fieldPicker.saveButton.label": "Select Fields for",
-  "fieldPicker.saveButton.tooltip": "Save and return",
+  "fieldPicker.saveButton.modal.label": "Save and continue",
   "fieldPicker.resetButton.label": "Reset ",
   "fieldPicker.filter.label": "Filter:",
   "fieldPicker.fieldColumn.label": "Field name",
