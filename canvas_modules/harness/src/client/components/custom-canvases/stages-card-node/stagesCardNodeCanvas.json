@@ -11,12 +11,12 @@
 			"type": "binding",
 			"op": "amazon_s3",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "First label"
 				},
 				"ui_data": {
 					"label": "Amazon S3",
-					"image": "/images/custom-canvases/detached-links/palette/AmazonS3PX.svg",
+					"image": "/images/custom-canvases/stages/palette/AmazonS3PX.svg",
 					"x_pos": 0,
 					"y_pos": 193.04999999999998,
 					"description": "Data in Aamzon S3"
@@ -39,12 +39,12 @@
 			"type": "execution_node",
 			"op": "sort",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "Second label"
 				},
 				"ui_data": {
 					"label": "Sort",
-					"image": "/images/custom-canvases/detached-links/palette/PxSort.svg",
+					"image": "/images/custom-canvases/stages/palette/PxSort.svg",
 					"x_pos": 400,
 					"y_pos": 193.04999999999998,
 					"description": "Sorts the data"
@@ -84,12 +84,12 @@
 			"type": "execution_node",
 			"op": "filter",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "Third label"
 				},
 				"ui_data": {
 					"label": "Filter",
-					"image": "/images/custom-canvases/detached-links/palette/PxFilter.svg",
+					"image": "/images/custom-canvases/stages/palette/PxFilter.svg",
 					"x_pos": 760,
 					"y_pos": 193.04999999999998,
 					"description": "Samples the data"
@@ -129,12 +129,12 @@
 			"type": "execution_node",
 			"op": "merge",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "Fourth label"
 				},
 				"ui_data": {
 					"label": "Merge",
-					"image": "/images/custom-canvases/detached-links/palette/PxMerge.svg",
+					"image": "/images/custom-canvases/stages/palette/PxMerge.svg",
 					"x_pos": 1160,
 					"y_pos": 193.04999999999998,
 					"description": "Combines data from multiple data sources"
@@ -174,12 +174,12 @@
 			"type": "binding",
 			"op": "peek",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "Fifth label"
 				},
 				"ui_data": {
 					"label": "Peek",
-					"image": "/images/custom-canvases/detached-links/palette/PxPeek.svg",
+					"image": "/images/custom-canvases/stages/palette/PxPeek.svg",
 					"x_pos": 1560,
 					"y_pos": 193.04999999999998,
 					"description": "Enables a peek at something."
@@ -207,12 +207,12 @@
 			"type": "binding",
 			"op": "remove_duplicates",
 			"app_data": {
-				"data_stage": {
+				"stages": {
 					"secondary_label": "Sixth label"
 				},
 				"ui_data": {
 					"label": "Remove Duplicates",
-					"image": "/images/custom-canvases/detached-links/palette/PxRemDup.svg",
+					"image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
 					"x_pos": 1560,
 					"y_pos": 386.09999999999997,
 					"description": "Removes duplcate rows"
