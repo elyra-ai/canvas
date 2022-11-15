@@ -17,11 +17,13 @@
 import React from "react";
 import Passwordfield from "./../../../src/common-properties/controls/passwordfield";
 import Controller from "./../../../src/common-properties/properties-controller";
+import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 
 import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_paramDef.json";
+import * as harnessMessages from "./../,,/../../../../harness/src/intl/locales/en.json";
 
 const controller = new Controller();
 
@@ -176,6 +178,7 @@ describe("Passwordfield renders correctly", () => {
 		expect(messageWrapper).to.have.length(1);
 	});
 	it("Passwordfield eyeIcon tooltip appear correctly", () => {
+
 		const wrapper = mount(
 			<Passwordfield
 				store={controller.getStore()}
@@ -184,14 +187,18 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
+
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
 		// Verify the eye icon
 		const eyeIcon = passwordWrapper.find("button span");
 		expect(eyeIcon).to.have.length(1);
 		// Verify the right message upon hover & click
 		expect(eyeIcon.at(0).text()).to.equal("Show");
+		// Verify custom tooltip label
+		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP]);
 		eyeIcon.simulate("click");
 		expect(eyeIcon.at(0).text()).to.equal("Hide");
+		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP]);
 	});
 });
 
