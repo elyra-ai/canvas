@@ -22,7 +22,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Search } from "carbon-components-react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
-import { SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
+import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import { has, isEmpty } from "lodash";
@@ -245,16 +245,14 @@ class FlexibleTable extends React.Component {
 			return;
 		}
 		let newHeight = this.state.tableHeight;
-		const rowHeight = 2; // in rem
-		const headerHeight = 2; // in rem
 		let dynamicH = this.state.dynamicHeight;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
-			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) + "rem";
 		} else if (this.state.rows > 0) {
-			const multiSelectTableHeight = rowHeight + headerHeight;
-			newHeight = (rowHeight * this.state.rows + headerHeight + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+			const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
+			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
 		} else if (this.state.rows === 0) { // only display header
-			newHeight = headerHeight + "rem";
+			newHeight = REM_HEADER_HEIGHT + "rem";
 		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
@@ -520,12 +518,14 @@ class FlexibleTable extends React.Component {
 			: null;
 
 		let tableHeight = 0;
+		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
+		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
-			const remHeight = Number(this.state.tableHeight.match(/^[0-9]{1,2}/i)[0]);
-			tableHeight = (remHeight - (this.props.selectedEditRow ? 4 : 0)) * 16;
+			const remHeight = parseInt(this.state.tableHeight.match(/^[0-9]{1,2}/i)[0], 10);
+			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0)) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === -1) {
 			if (this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
-				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? 64 : 0);
+				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
 			} // else how do we handle this.state.tableHeight = "100vh"?
 		}
 		return (
