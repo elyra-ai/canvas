@@ -61,17 +61,15 @@ class NumberfieldControl extends React.Component {
 			this.onDirection(direction);
 			return;
 		}
+
 		if (
 			evt.target.validity && evt.target.validity.badInput ||
-			(typeof evt.target.value === "string" && evt.target.value.indexOf("+") > 0) ||
-			(typeof evt.target.value === "string" && evt.target.value.indexOf("-") > 0) ||
-			(typeof evt.target.value === "string" && evt.target.value.indexOf("e") > -1) ||
-			(typeof evt.target.value === "string" && evt.target.value.indexOf("E") > -1)
+			(!isFinite(evt.target.value))
 		) {
 			// Note - When user enters an invalid number, evt.target.value is set to "".
 			// It is difficult to differentiate between empty value and invalid input because both return "".
 			// It's not possible to add a seaparte condition for invalid input because we never get the actual invalid number entered by the user.
-			// Thus, setting error message for invalid input here instead of using conditions.
+			// So, setting error message for invalid input here instead of using conditions.
 			if (this.props.controller.getErrorMessage(this.props.propertyId) === null) {
 				const errorMessage = {
 					type: "error",
@@ -84,13 +82,13 @@ class NumberfieldControl extends React.Component {
 			// Return without updating property value
 			return;
 		}
-		// Valid number entered by user
+		// Number is valid, clear invalid number error if it exists
 		const invalidNumberError = this.props.controller.getErrorMessage(this.props.propertyId) !== null &&
 		this.props.controller.getErrorMessage(this.props.propertyId).validation_id === "invalid_number";
-
 		if (invalidNumberError) {
 			this.props.controller.updateErrorMessage(this.props.propertyId, null);
 		}
+
 		const actualValue = evt.target.value;
 		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
 			this.props.controller.updatePropertyValue(this.props.propertyId, null);
