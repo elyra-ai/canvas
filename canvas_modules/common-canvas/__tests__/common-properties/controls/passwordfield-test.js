@@ -20,6 +20,7 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 
 import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_paramDef.json";
@@ -37,6 +38,19 @@ const control = {
 propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-password" };
 
+
+const validationHandler = sinon.spy();
+
+const callbacks = {
+	validationHandler: validationHandler
+};
+
+
+const propertiesConfig = { containerType: "Custom", rightFLyout: true };
+const propertiesInfo = {
+	appData: {},
+	additionalComponents: {},
+};
 
 describe("Passwordfield renders correctly", () => {
 	beforeEach(() => {
@@ -194,11 +208,20 @@ describe("Passwordfield renders correctly", () => {
 		expect(eyeIcon).to.have.length(1);
 		// Verify the right message upon hover & click
 		expect(eyeIcon.at(0).text()).to.equal("Show");
-		// Verify custom tooltip label
-		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP]);
 		eyeIcon.simulate("click");
 		expect(eyeIcon.at(0).text()).to.equal("Hide");
-		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP]);
+	});
+
+	it("Passwordfield eyeIcon tooltip appear correctly", () => {
+		const renderedObject = propertyUtils.flyoutEditorFormWithIntl(passwordfieldParamDef, propertiesConfig, callbacks, propertiesInfo);
+		const wrapper = renderedObject.wrapper;
+
+		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
+		// Verify the eye icon
+		const eyeIcon = passwordWrapper.find("button span");
+		expect(eyeIcon).to.have.length(1);
+		// Verify custom tooltip label
+		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP]);
 	});
 });
 
