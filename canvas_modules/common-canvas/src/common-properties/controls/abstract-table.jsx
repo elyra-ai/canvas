@@ -430,7 +430,7 @@ export default class AbstractTable extends React.Component {
 	}
 
 	isLightTheme() {
-		return this.props.controller.getLight() && !this.props.control.invertColor && !this.props.controller.isTearsheetContainer();
+		return this.props.controller.getLight() && this.props.control.light && !this.props.controller.isTearsheetContainer();
 	}
 
 	makeSelectedEditRow(selectedRows) {

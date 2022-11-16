@@ -184,6 +184,6 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
-		this.invertColor = settings.invertColor || false;
+		this.light = settings.light || false;
 	}
 }
