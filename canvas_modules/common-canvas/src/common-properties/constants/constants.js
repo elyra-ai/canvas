@@ -188,6 +188,10 @@ export const DEFAULT_LABEL_EDITABLE = true;
 
 export const ROW_HEIGHT = 32;
 
+export const ONE_REM_HEIGHT = 16;
+export const REM_ROW_HEIGHT = 2; // in rem
+export const REM_HEADER_HEIGHT = 2; // in rem
+
 export const EXPRESSION_TABLE_ROWS = 7;
 
 export const TABLE_SUBPANEL_BUTTON_WIDTH = "36px";
