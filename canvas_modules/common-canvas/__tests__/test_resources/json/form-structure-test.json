@@ -218,7 +218,7 @@
                       "description": {
                         "text": "Rename columns in the active dataset"
                       },
-                      "invertColor": false,
+                      "light": true,
                       "labelVisible": true,
                       "controlType": "structuretable",
                       "valueDef": {
@@ -234,7 +234,7 @@
                           "label": {
                             "text": "Input name"
                           },
-                          "invertColor": false,
+                          "light": true,
                           "labelVisible": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
@@ -251,7 +251,7 @@
                           "label": {
                             "text": "Output name"
                           },
-                          "invertColor": false,
+                          "light": true,
                           "labelVisible": true,
                           "controlType": "textfield",
                           "valueDef": {

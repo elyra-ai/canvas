@@ -59,7 +59,7 @@ describe("Correct form should be created", () => {
 										"label": {
 											"text": "boolean_param"
 										},
-										"invertColor": false,
+										"light": true,
 										"labelVisible": false,
 										"controlType": "checkbox",
 										"valueDef": {
