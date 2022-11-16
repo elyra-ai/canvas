@@ -265,6 +265,7 @@ class ExpressionControl extends React.Component {
 	_showBuilderButton() {
 		// only show the button if there are function lists available and
 		// not explicitly told not to by the this.props.builder
+		// TODO: Design: how to display builder outside of right flyout?
 		return this.props.builder && this.props.rightFlyout && this.expressionInfo.functionCategories && Object.keys(this.expressionInfo.functionCategories).length > 0;
 	}
 
@@ -339,7 +340,8 @@ class ExpressionControl extends React.Component {
 			</div>
 		</WideFlyout>) : null;
 
-		const className = classNames(`properties-expression-editor ${messageType}`, { "properties-light-disabled": this.props.control.light || !this.props.controller.getLight() });
+		const className = classNames(`properties-expression-editor ${messageType}`,
+			{ "properties-light-disabled": this.props.control.invertColor || !this.props.controller.getLight() || this.props.controller.isTearsheetContainer() });
 
 		const expressionLink = (<div className="properties-expression-link-container" >
 			{button}

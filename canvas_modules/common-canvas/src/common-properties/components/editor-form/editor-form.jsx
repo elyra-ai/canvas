@@ -170,7 +170,7 @@ class EditorForm extends React.Component {
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
 					tabContent.push(
-						<div key={"cat." + key} className="properties-category">
+						<div key={"cat." + key} className="properties-single-category">
 							{panelItems}
 							{additionalComponent}
 						</div>

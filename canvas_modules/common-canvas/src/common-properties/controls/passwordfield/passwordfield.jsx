@@ -51,7 +51,7 @@ class PasswordControl extends React.Component {
 						value={value}
 						labelText={this.props.controlItem}
 						hideLabel={this.props.tableControl}
-						light={this.props.controller.getLight() && !this.props.control.light}
+						light={this.props.controller.getLight() && !this.props.control.invertColor}
 						tooltipAlignment="end"
 					/>
 				</Form>

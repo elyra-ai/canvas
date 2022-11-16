@@ -514,8 +514,10 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
+		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
+
 		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
+			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
 				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>

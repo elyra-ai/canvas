@@ -78,7 +78,7 @@ class TextareaControl extends React.Component {
 					value={value}
 					labelText={this.props.controlItem}
 					hideLabel={this.props.tableControl}
-					light={this.props.controller.getLight() && !this.props.control.light}
+					light={this.props.controller.getLight() && !this.props.control.invertColor}
 				/>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly={!showValidationMessage} state={""} messageInfo={errorMessage} />
 			</div>);
@@ -92,7 +92,7 @@ class TextareaControl extends React.Component {
 				value={value}
 				labelText={this.props.controlItem}
 				hideLabel={this.props.tableControl}
-				light={this.props.controller.getLight() && !this.props.control.light}
+				light={this.props.controller.getLight() && !this.props.control.invertColor}
 			/>);
 		}
 

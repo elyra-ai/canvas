@@ -109,7 +109,7 @@ class SomeofselectControl extends React.Component {
 					updateRowSelections={this.updateSelections}
 					selectable
 					showHeader={false}
-					light={this.props.controller.getLight() && !this.props.control.light}
+					light={this.props.controller.getLight() && !this.props.control.invertColor}
 					emptyTablePlaceholder={this.props.control.additionalText}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
