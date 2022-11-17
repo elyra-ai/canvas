@@ -261,7 +261,7 @@ export default class AbstractTable extends React.Component {
 		const newSelectedSummaryRow = this.props.controller.getPropertyValue(summaryPropertyId);
 		if (newSelectedSummaryRow && Array.isArray(newSelectedSummaryRow)) {
 			newSelectedSummaryRow[0].forEach((cellValue, colIndex) => {
-				if (!isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
+				if (cellValue !== null && !isEqual(cellValue, this.selectedSummaryRowValue[0][colIndex])) {
 					// if a column does not have a value, the default value is null and the value returned
 					// from getPropertyValue is undefined causing unneccessary updates and an infinite loop during intialization
 					const testCell = (typeof cellValue === "undefined") ? null : cellValue;
@@ -353,8 +353,13 @@ export default class AbstractTable extends React.Component {
 			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
+			const factoryElem = ControlFactory.createControl(columnDefObj, propertyId, tableInfo);
+			if (selectSummaryRow && factoryElem.props.control.controlType === "oneofselect") {
+				factoryElem.props.control.clearAfterSelection = true;
+				factoryElem.props.control.additionalText = "Select";
+			}
 			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
-				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
+				{factoryElem}
 			</div>);
 
 		}
