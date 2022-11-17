@@ -59,10 +59,6 @@ const portsHorizontalDefaultLayout = {
 		labelMaxCharacters: null, // null allows unlimited characters
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
 
-		// An array of decorations to be applied to the node. For details see:
-		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
-		decorations: [],
-
 		// Positions and dimensions for 9 enumerated default decorator positions.
 		// decoratorWidth and decoratorHeight are the dimensions of the outline
 		// rectangle and decoratorPadding is the padding for the image within the
@@ -449,10 +445,6 @@ const portsVerticalDefaultLayout = {
 		labelOutline: false,
 		labelMaxCharacters: null, // null allows unlimited characters
 		labelAllowReturnKey: false, // true allows line feed to be inserted into label, "save" to make the return key save the label.
-
-		// An array of decorations to be applied to the node. For details see:
-		// https://github.com/elyra-ai/canvas/wiki/2.4.2-Decoration-Specification
-		decorations: [],
 
 		// Positions and dimensions for 9 enumerated default decorator positions.
 		// decoratorWidth and decoratorHeight are the dimensions of the outline
