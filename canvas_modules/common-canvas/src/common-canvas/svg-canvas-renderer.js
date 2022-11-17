@@ -3448,7 +3448,7 @@ export default class SVGCanvasRenderer {
 				.select("div")
 				.attr("class", this.decUtils.getDecLabelClass(dec, objType))
 				.select("span")
-				.html(escapeText(this.decUtils.getDecLabel(d, dec, objType)));
+				.html(escapeText(dec.label));
 		} else {
 			labelSel.remove();
 		}
@@ -5867,7 +5867,8 @@ export default class SVGCanvasRenderer {
 		// Update decorations on the node-node or association links.
 		joinedLinkGrps.each((d, i, linkGrps) => {
 			if (d.type === NODE_LINK || d.type === ASSOCIATION_LINK) {
-				this.displayDecorations(d, DEC_LINK, d3.select(linkGrps[i]).selectAll(".d3-link-decorations-group"), d.decorations);
+				const linkGrp = d3.select(linkGrps[i]).selectAll(".d3-link-decorations-group");
+				this.displayDecorations(d, DEC_LINK, linkGrp, d.decorations);
 			}
 		});
 
