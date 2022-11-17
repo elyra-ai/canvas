@@ -58,6 +58,7 @@ export const MESSAGE_KEYS = {
 	REQUIRED_ERROR: "required.error",
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
+	INVALID_NUMBER_ERROR: "invalid.number.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_VALIDATING_LABEL: "expression.validating.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
