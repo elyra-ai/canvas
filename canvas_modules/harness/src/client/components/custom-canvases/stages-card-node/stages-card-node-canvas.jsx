@@ -46,6 +46,31 @@ export default class DetachedCanvas extends React.Component {
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
 
+		this.canvasController.getNodes().forEach((n) => {
+			this.canvasController.setNodeDecorations(n.id, this.getDecorations(n));
+		});
+	}
+
+	getDecorations(data) {
+		return [
+			{
+				id: "toolbar_background",
+				path: "M 0 0 L 26 0 26 26 0 26 Z",
+				position: "topRight",
+				class_name: "toolbar-background",
+				x_pos: -35,
+				y_pos: -26,
+				temporary: true
+			},
+			{
+				id: "second_label",
+				label: get(data, "app_data.stages.secondary_label", ""),
+				position: "topLeft",
+				x_pos: 60,
+				y_pos: 28,
+				temporary: true
+			}
+		];
 	}
 
 	getConfig() {
@@ -112,26 +137,7 @@ export default class DetachedCanvas extends React.Component {
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
-				decorations: [
-					{
-						id: "second_label",
-						label: (data) => get(data, "app_data.stages.secondary_label", ""),
-						position: "topLeft",
-						x_pos: 60,
-						y_pos: 28,
-						temporary: true
-					},
-					{
-						id: "toolbar_background",
-						path: "M 0 0 L 26 0 26 26 0 26 Z",
-						position: "topRight",
-						class_name: "toolbar-background",
-						x_pos: -35,
-						y_pos: -26,
-						temporary: true
-					},
-				]
+				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				commentHighlightGap: 3,
