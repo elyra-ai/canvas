@@ -528,7 +528,6 @@ class FlexibleTable extends React.Component {
 				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
 			} // else how do we handle this.state.tableHeight = "100vh"?
 		}
-		console.log(tableHeight);
 
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
