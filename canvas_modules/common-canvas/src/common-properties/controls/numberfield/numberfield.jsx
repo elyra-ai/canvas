@@ -20,7 +20,8 @@ import { connect } from "react-redux";
 import { NumberInput, Button } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { formatMessage } from "./../../util/property-utils";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
 import { Shuffle16 } from "@carbon/icons-react";
@@ -32,6 +33,7 @@ class NumberfieldControl extends React.Component {
 		this.onDirection = this.onDirection.bind(this);
 		this.generateNumber = this.generateNumber.bind(this);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
+		this.reactIntl = props.controller.getReactIntl();
 	}
 
 	onDirection(direction) {
@@ -59,12 +61,34 @@ class NumberfieldControl extends React.Component {
 			this.onDirection(direction);
 			return;
 		}
-		if (evt.target.validity && evt.target.validity.badInput) {
-			this.setState({
-				invalid: true // TODO need to hook into validations
-			});
+
+		if (
+			evt.target.validity && evt.target.validity.badInput ||
+			(!isFinite(evt.target.value))
+		) {
+			// Note - When user enters an invalid number, evt.target.value is set to "".
+			// It is difficult to differentiate between empty value and invalid input because both return "".
+			// It's not possible to add a seaparte condition for invalid input because we never get the actual invalid number entered by the user.
+			// So, setting error message for invalid input here instead of using conditions.
+			if (this.props.controller.getErrorMessage(this.props.propertyId) === null) {
+				const errorMessage = {
+					type: "error",
+					text: formatMessage(this.reactIntl, MESSAGE_KEYS.INVALID_NUMBER_ERROR),
+					propertyId: this.props.propertyId,
+					validation_id: "invalid_number"
+				};
+				this.props.controller.updateErrorMessage(this.props.propertyId, errorMessage);
+			}
+			// Return without updating property value
 			return;
 		}
+		// Number is valid, clear invalid number error if it exists
+		const invalidNumberError = this.props.controller.getErrorMessage(this.props.propertyId) !== null &&
+		this.props.controller.getErrorMessage(this.props.propertyId).validation_id === "invalid_number";
+		if (invalidNumberError) {
+			this.props.controller.updateErrorMessage(this.props.propertyId, null);
+		}
+
 		const actualValue = evt.target.value;
 		if (typeof actualValue === "undefined" || actualValue === null || actualValue === "") {
 			this.props.controller.updatePropertyValue(this.props.propertyId, null);

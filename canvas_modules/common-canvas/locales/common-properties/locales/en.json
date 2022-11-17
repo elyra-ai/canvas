@@ -44,6 +44,7 @@
   "required.error": "You must provide your {label}.",
   "datetime.format.error": "Invalid {role}. Format should be {format}.",
   "invalid.field.error": "Invalid {label}, field not found in data set.",
+  "invalid.number.error": "Number is not valid.",
   "expression.validate.label": "Validate",
   "expression.validating.label": "Validating",
   "expression.builder.title": "Expression Builder",
