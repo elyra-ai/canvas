@@ -521,7 +521,7 @@ class FlexibleTable extends React.Component {
 		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
 		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
 		if (this.state.rows !== -1 && this.state.tableHeight) {
-			const remHeight = parseInt(this.state.tableHeight.match(/^[0-9]{1,2}/i)[0], 10);
+			const remHeight = parseInt(this.state.tableHeight, 10);
 			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0)) * ONE_REM_HEIGHT;
 		} else if (this.state.rows === -1) {
 			if (this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
