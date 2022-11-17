@@ -246,10 +246,10 @@ class FlexibleTable extends React.Component {
 		}
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
+		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
 		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
-			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT) + "rem";
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
 		} else if (this.state.rows > 0) {
-			const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
 			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
 		} else if (this.state.rows === 0) { // only display header
 			newHeight = REM_HEADER_HEIGHT + "rem";
@@ -528,6 +528,8 @@ class FlexibleTable extends React.Component {
 				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
 			} // else how do we handle this.state.tableHeight = "100vh"?
 		}
+		console.log(tableHeight);
+
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
