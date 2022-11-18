@@ -3,7 +3,5 @@
   "canvas.emptyText": "Welcome to the Common Canvas test harness.{br}Your flow is empty!",
   "canvas.emptyLink": "Click here to take a tour",
   "expression.value.column": "Custom Value",
-  "expression.value.column.description": "Testing custom desc from app",
-  "password.showPasswordLabel.tooltip": "Show custom",
-  "password.hidePasswordLabel.tooltip": "Hide"
+  "expression.value.column.description": "Testing custom desc from app"
 }
