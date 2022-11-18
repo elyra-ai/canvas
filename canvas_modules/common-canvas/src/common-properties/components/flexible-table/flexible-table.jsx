@@ -523,10 +523,8 @@ class FlexibleTable extends React.Component {
 		if (this.state.rows !== -1 && this.state.tableHeight) {
 			const remHeight = parseInt(this.state.tableHeight, 10);
 			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0)) * ONE_REM_HEIGHT;
-		} else if (this.state.rows === -1) {
-			if (this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
-				tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
-			} // else how do we handle this.state.tableHeight = "100vh"?
+		} else if (this.state.rows === -1 && this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
+			tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
 		}
 
 		return (
