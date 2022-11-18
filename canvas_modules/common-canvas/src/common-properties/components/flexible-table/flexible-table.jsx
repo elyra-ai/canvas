@@ -518,7 +518,7 @@ class FlexibleTable extends React.Component {
 			: null;
 
 		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
-    
+
 		let tableHeight = 0;
 		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
 		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
