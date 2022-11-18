@@ -41,17 +41,18 @@ export default class DetachedCanvas extends React.Component {
 		const pId = this.canvasController.getPrimaryPipelineId();
 		const pipelineLinkDecorations =
 			this.canvasController.getLinks().map((link) => {
-				const decs = this.getDecorationsArray(link.id);
+				const linkLabel = get(link, "app_data.stages.link_label", "");
+				const decs = this.getDecorationsArray(linkLabel);
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
 
 		this.canvasController.getNodes().forEach((n) => {
-			this.canvasController.setNodeDecorations(n.id, this.getDecorations(n));
+			this.canvasController.setNodeDecorations(n.id, this.getNodeDecorations(n));
 		});
 	}
 
-	getDecorations(data) {
+	getNodeDecorations(node) {
 		return [
 			{
 				id: "toolbar_background",
@@ -64,7 +65,7 @@ export default class DetachedCanvas extends React.Component {
 			},
 			{
 				id: "second_label",
-				label: get(data, "app_data.stages.secondary_label", ""),
+				label: get(node, "app_data.stages.secondary_label", ""),
 				position: "topLeft",
 				x_pos: 60,
 				y_pos: 28,

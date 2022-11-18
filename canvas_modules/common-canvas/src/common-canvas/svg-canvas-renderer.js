@@ -58,8 +58,6 @@ import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
-const showLinksTime = false;
-
 const NINETY_DEGREES = 90;
 
 const INPUT_TYPE = "input_type";
@@ -437,6 +435,12 @@ export default class SVGCanvasRenderer {
 			this.displayPortsForSubFlowFullPage();
 		}
 
+		this.displayCanvasAccoutrements();
+
+		this.logger.logEndTimer("displayCanvas");
+	}
+
+	displayCanvasAccoutrements() {
 		if (this.config.enableBoundingRectangles) {
 			this.displayBoundingRectangles();
 		}
@@ -444,8 +448,6 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableCanvasUnderlay !== "None" && this.dispUtils.isDisplayingPrimaryFlowFullPage()) {
 			this.setCanvasUnderlaySize();
 		}
-
-		this.logger.logEndTimer("displayCanvas");
 	}
 
 	// Ensures the binding ports for a full-page sub-flow are calculated
@@ -2330,6 +2332,12 @@ export default class SVGCanvasRenderer {
 		}
 
 		this.displayCanvas();
+		this.displayCanvasAccoutrements();
+
+		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
+			this.displaySVGToFitSupernode();
+		}
+
 
 		if (this.existingNodeInsertableIntoLink) {
 			const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
@@ -2556,6 +2564,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayMovedNodes() {
+		this.logger.logStartTimer("displayMovedNodes");
 		const nodeGroupSel = this.getAllNodeGroupsSelection();
 
 		nodeGroupSel
@@ -2574,6 +2583,7 @@ export default class SVGCanvasRenderer {
 					}
 				});
 		}
+		this.logger.logEndTimer("displayMovedNodes");
 	}
 
 	displayNodesSelectionStatus(nodeGroupSel) {
@@ -2591,8 +2601,32 @@ export default class SVGCanvasRenderer {
 	// Displays all the nodes on the canvas either by creating new nodes,
 	// updating existing nodes or removing unwanted nodes.
 	displayAllNodes() {
-		this.getAllNodeGroupsSelection()
-			.data(this.activePipeline.nodes, (d) => d.id)
+		this.logger.log("displayAllNodes");
+		const sel = this.getAllNodeGroupsSelection();
+		this.displayNodesSubset(sel, this.activePipeline.nodes);
+	}
+
+	displaySingleNode(d) {
+		this.logger.logStartTimer("displaySingleNode " + this.getFlags());
+
+		this.setPortPositionsForNode(d);
+
+		const selector = this.getSelectorForId("node_grp", d.id);
+		const sel = this.nodesLinksGrp.selectChildren(selector);
+		this.displayNodesSubset(sel, [d]);
+
+		this.logger.logEndTimer("displaySingleNode " + this.getFlags());
+	}
+
+	displayNodesSubset(selection, data) {
+		const ts = Date.now();
+		const inData = data.map((d) => {
+			d.ts = ts;
+			return d;
+		});
+
+		selection
+			.data(inData, (d) => d.id)
 			.join(
 				(enter) => this.createNodes(enter)
 			)
@@ -5094,9 +5128,13 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayMovedComments() {
+		this.logger.logStartTimer("displayMovedComments");
+
 		this.getAllCommentGroupsSelection()
 			.attr("transform", (c) => `translate(${c.x_pos}, ${c.y_pos})`)
 			.datum((d) => this.activePipeline.getComment(d.id));
+
+		this.logger.logEndTimer("displayMovedComments");
 	}
 
 	displayCommentsSelectionStatus() {
@@ -5557,9 +5595,13 @@ export default class SVGCanvasRenderer {
 				this.nodeSizingDetLinksInfo = Object.assign(this.nodeSizingDetLinksInfo, linksInfo);
 			}
 
-			this.displayComments();
-			this.displayNodes();
-			this.displayLinks();
+			this.logger.logStartTimer("displayObjects");
+
+			this.displayMovedComments();
+			this.displayMovedNodes();
+			this.displaySingleNode(resizeObj);
+			this.displayMovedLinks();
+			this.displayCanvasAccoutrements();
 
 			if (CanvasUtils.isSupernode(resizeObj)) {
 				if (this.dispUtils.isDisplayingSubFlow()) {
@@ -5567,6 +5609,7 @@ export default class SVGCanvasRenderer {
 				}
 				this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
 			}
+			this.logger.logEndTimer("displayObjects");
 		}
 	}
 
@@ -5578,7 +5621,7 @@ export default class SVGCanvasRenderer {
 		const resizeObj = this.activePipeline.getComment(d.id);
 		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
 		this.displayComments();
-		this.displayLinks();
+		this.displayMovedLinks();
 	}
 
 	// Sets the size and position of the object in the canvasInfo
@@ -5760,13 +5803,32 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayAllLinks() {
-		var startTimeDrawingLines = Date.now();
-
-		const timeAfterDelete = Date.now();
 		const linksArray = this.buildLinksArray();
-		const afterLineArray = Date.now();
+		const selection = this.getAllLinkGroupsSelection();
+		this.displayLinksSubset(selection, linksArray);
+	}
 
-		this.getAllLinkGroupsSelection()
+	displayMovedLinks() {
+		this.logger.logStartTimer("displayMovedLinks");
+
+		const linksArray = this.buildLinksArray();
+		const movedLinks = linksArray.filter((l) => l.coordsUpdated);
+
+		movedLinks.forEach((l) => {
+			this.displaySingleLink(l);
+		});
+
+		this.logger.logEndTimer("displayMovedLinks");
+	}
+
+	displaySingleLink(link) {
+		const selector = this.getSelectorForId("link_grp", link.id);
+		const sel = this.nodesLinksGrp.selectChildren(selector);
+		this.displayLinksSubset(sel, [link]);
+	}
+
+	displayLinksSubset(selection, linksArray) {
+		selection
 			.data(linksArray, (link) => link.id)
 			.join(
 				(enter) => this.createLinks(enter)
@@ -5777,13 +5839,6 @@ export default class SVGCanvasRenderer {
 			.call((joinedLinkGrps) => {
 				this.updateLinks(joinedLinkGrps, linksArray);
 			});
-
-		var endTimeDrawingLines = Date.now();
-
-		if (showLinksTime) {
-			this.logger.log("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
-			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
-		}
 	}
 
 	// Creates all newly created links specified in the enter selection.
@@ -6245,6 +6300,12 @@ export default class SVGCanvasRenderer {
 					: null;
 			const coords = this.linkUtils.getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
+			link.coordsUpdated =
+				link.x1 !== coords.x1 ||
+				link.y1 !== coords.y1 ||
+				link.x2 !== coords.x2 ||
+				link.y2 !== coords.y2;
+
 			link.assocLinkVariation = assocLinkVariation;
 			link.srcPortId = srcPortId;
 			link.trgPortId = trgPortId;
@@ -6314,6 +6375,12 @@ export default class SVGCanvasRenderer {
 				}
 			}
 		}
+
+		link.coordsUpdated =
+			link.x1 !== coords.x1 ||
+			link.y1 !== coords.y1 ||
+			link.x2 !== coords.x2 ||
+			link.y2 !== coords.y2;
 
 		link.srcPortId = srcPortId;
 		link.trgPortId = trgPortId;
