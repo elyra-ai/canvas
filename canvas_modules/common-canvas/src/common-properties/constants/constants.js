@@ -108,8 +108,8 @@ export const MESSAGE_KEYS = {
 	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text",
 	TOGGLE_ON_LABEL: "toggle.on.label",
 	TOGGLE_OFF_LABEL: "toggle.off.label",
-	SHOW_PASSWORD_TOOLTIP: "password.showPasswordLabel.tooltip",
-	HIDE_PASSWORD_TOOLTIP: "password.hidePasswordLabel.tooltip"
+	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
+	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip"
 };
 
 export const TRUNCATE_LIMIT = 10000;

@@ -17,18 +17,21 @@
 import React from "react";
 import Passwordfield from "./../../../src/common-properties/controls/passwordfield";
 import Controller from "./../../../src/common-properties/properties-controller";
-import { MESSAGE_KEYS } from "../../../src/common-properties/constants/constants";
 import { mount } from "enzyme";
 import { expect } from "chai";
-import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 
 import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_paramDef.json";
-import * as harnessMessages from "./../,,/../../../../harness/src/intl/locales/en.json";
 
 const controller = new Controller();
 
 const control = {
+	tooltip: {
+		defaultShow: "Show",
+		defaultHide: "Hide",
+		customShow: "Custom show",
+		customHide: "Custom hide"
+	},
 	name: "test-password",
 	additionalText: "Enter a password",
 	valueDef: {
@@ -38,19 +41,6 @@ const control = {
 propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-password" };
 
-
-const validationHandler = sinon.spy();
-
-const callbacks = {
-	validationHandler: validationHandler
-};
-
-
-const propertiesConfig = { containerType: "Custom", rightFLyout: true };
-const propertiesInfo = {
-	appData: {},
-	additionalComponents: {},
-};
 
 describe("Passwordfield renders correctly", () => {
 	beforeEach(() => {
@@ -191,8 +181,8 @@ describe("Passwordfield renders correctly", () => {
 		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
-	it("Passwordfield eyeIcon tooltip appear correctly", () => {
 
+	it("Passwordfield eyeIcon tooltip default content appears correctly", () => {
 		const wrapper = mount(
 			<Passwordfield
 				store={controller.getStore()}
@@ -201,28 +191,16 @@ describe("Passwordfield renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-
 		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
 		// Verify the eye icon
-		const eyeIcon = passwordWrapper.find("button span");
+		const eyeIcon = passwordWrapper.find("button");
 		expect(eyeIcon).to.have.length(1);
-		// Verify the right message upon hover & click
-		expect(eyeIcon.at(0).text()).to.equal("Show");
+		// Verify custom tooltip content
+		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultShow);
 		eyeIcon.simulate("click");
-		expect(eyeIcon.at(0).text()).to.equal("Hide");
+		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultHide);
 	});
 
-	it("Passwordfield eyeIcon tooltip appear correctly", () => {
-		const renderedObject = propertyUtils.flyoutEditorFormWithIntl(passwordfieldParamDef, propertiesConfig, callbacks, propertiesInfo);
-		const wrapper = renderedObject.wrapper;
-
-		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
-		// Verify the eye icon
-		const eyeIcon = passwordWrapper.find("button span");
-		expect(eyeIcon).to.have.length(1);
-		// Verify custom tooltip label
-		expect(eyeIcon.text()).to.equal(harnessMessages[MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP]);
-	});
 });
 
 describe("passwordfield classnames appear correctly", () => {
@@ -230,6 +208,17 @@ describe("passwordfield classnames appear correctly", () => {
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(passwordfieldParamDef);
 		wrapper = renderedObject.wrapper;
+	});
+
+	it("Passwordfield eyeIcon tooltip custom content appears correctly", () => {
+		const passwordWrapper = wrapper.find("div[data-id='properties-pwd']");
+		// Verify the eye icon
+		const eyeIcon = passwordWrapper.find("button");
+		expect(eyeIcon).to.have.length(1);
+		// Verify custom tooltip content
+		expect(eyeIcon.text()).to.equal(control.tooltip.customShow);
+		eyeIcon.simulate("click");
+		expect(eyeIcon.text()).to.equal(control.tooltip.customHide);
 	});
 
 	it("passwordfield should have custom classname defined", () => {
