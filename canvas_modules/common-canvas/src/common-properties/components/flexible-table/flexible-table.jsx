@@ -22,7 +22,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { Search } from "carbon-components-react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
-import { SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
+import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";
 import classNames from "classnames";
 import { has, isEmpty } from "lodash";
@@ -45,7 +45,9 @@ class FlexibleTable extends React.Component {
 			columnSortDir: sortDirs,
 			currentSortColumn: "",
 			tableWidth: 0,
-			tableHeight: 0
+			tableHeight: 0,
+			rows: typeof props.rows !== "undefined" ? props.rows : 5.5,
+			dynamicHeight: null
 		};
 
 		this.rowHeight = this.rowHeight.bind(this);
@@ -243,29 +245,30 @@ class FlexibleTable extends React.Component {
 			return;
 		}
 		let newHeight = this.state.tableHeight;
-		const rowHeight = 2; // in rem
-		const headerHeight = 2; // in rem
-		const rows = typeof this.props.rows !== "undefined" ? this.props.rows : 5.5;
-		if (Array.isArray(this.props.data) && this.props.data.length < rows) {
-			newHeight = (rowHeight * this.props.data.length + headerHeight) + "rem";
-		} else if (rows > 0) {
-			newHeight = (rowHeight * rows + headerHeight) + "rem";
-		} else if (rows === 0) { // only display header
-			newHeight = headerHeight + "rem";
-		} else if (rows === -1) {
+		let dynamicH = this.state.dynamicHeight;
+		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
+		if (Array.isArray(this.props.data) && this.props.data.length < this.state.rows) {
+			newHeight = (REM_ROW_HEIGHT * this.props.data.length + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+		} else if (this.state.rows > 0) {
+			newHeight = (REM_ROW_HEIGHT * this.state.rows + REM_HEADER_HEIGHT + (this.props.selectedEditRow ? multiSelectTableHeight : 0)) + "rem";
+		} else if (this.state.rows === 0) { // only display header
+			newHeight = REM_HEADER_HEIGHT + "rem";
+		} else if (this.state.rows === -1) {
 			if (this.flexibleTable) {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
 				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
 				if (flyoutHeight === 0) {
 					newHeight = "100vh"; // set full window height if flyout height not found
+					dynamicH = -1;
 				} else {
 					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
+					dynamicH = (flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
 				}
 			}
 		}
 		if (newHeight !== this.state.tableHeight) {
-			this.setState({ tableHeight: newHeight });
+			this.setState({ tableHeight: newHeight, dynamicHeight: dynamicH });
 		}
 	}
 
@@ -514,6 +517,16 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
+		let tableHeight = 0;
+		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
+		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
+		if (this.state.rows !== -1 && this.state.tableHeight) {
+			const remHeight = parseInt(this.state.tableHeight, 10);
+			tableHeight = (remHeight - (this.props.selectedEditRow ? multiSelectEditRowsRem : 0)) * ONE_REM_HEIGHT;
+		} else if (this.state.rows === -1 && this.state.dynamicHeight && this.state.dynamicHeight !== -1) {
+			tableHeight = this.state.dynamicHeight - (this.props.selectedEditRow ? multiSelectEditRowsPixels : 0);
+		}
+
 		return (
 			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
@@ -524,6 +537,7 @@ class FlexibleTable extends React.Component {
 								{this.props.selectedEditRow}
 								<VirtualizedTable
 									tableLabel={this.props.tableLabel}
+									tableHeight={tableHeight}
 									columns={headers}
 									onHeaderClick={this.sortHeaderClick}
 									rowCount={this.props.data.length}

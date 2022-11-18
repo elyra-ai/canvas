@@ -264,6 +264,19 @@ describe("numberfield control works correctly", () => {
 			expect(numberfieldInTableCell.find(".bx--number__controls")).to.have.length(0);
 		});
 	});
+	it("should display error when invalid number is entered", () => {
+		const numPropertyId = { name: "number_int" };
+		expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
+		const integerNumber = wrapper.find("div[data-id='properties-number_int'] input");
+		integerNumber.simulate("change", { target: { value: "44e+-" } });
+		// Verify error is displayed
+		const intergerWrapper = wrapper.find("div[data-id='properties-number_int']");
+		const messageWrapper = intergerWrapper.find(".bx--form-requirement");
+		expect(messageWrapper).to.have.length(1);
+		expect(messageWrapper.text()).to.eql("Number is not valid.");
+		// Verify property value is NOT updated to invalid number
+		expect(controller.getPropertyValue(numPropertyId)).to.equal(10);
+	});
 });
 
 describe("numberfield classnames appear correctly", () => {

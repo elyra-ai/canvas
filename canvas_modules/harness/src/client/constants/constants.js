@@ -81,7 +81,8 @@ _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_READ_ONLY", "Read Only");
 _defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
-_defineConstant("EXAMPLE_APP_DETACHED", "Detached Links");
+_defineConstant("EXAMPLE_APP_STAGES", "Stages");
+_defineConstant("EXAMPLE_APP_STAGES_CARD_NODE", "Stages Card Node");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
 _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
@@ -94,6 +95,7 @@ _defineConstant("PALETTE_NONE", "None");
 
 _defineConstant("PROPERTIES_FLYOUT", "Flyout");
 _defineConstant("PROPERTIES_MODAL", "Modal");
+_defineConstant("PROPERTIES_TEARSHEET", "Tearsheet");
 _defineConstant("CUSTOM", "Custom");
 _defineConstant("EDITING", "Editing");
 

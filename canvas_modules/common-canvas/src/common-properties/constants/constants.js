@@ -21,7 +21,7 @@ export const MESSAGE_KEYS = {
 	STRUCTURETABLE_ADDBUTTON_LABEL: "structureTable.addButton.label",
 	STRUCTURETABLE_REMOVEBUTTON_LABEL: "structureTable.removeButton.label",
 	FIELDPICKER_SAVEBUTTON_LABEL: "fieldPicker.saveButton.label",
-	FIELDPICKER_SAVEBUTTON_TOOLTIP: "fieldPicker.saveButton.tooltip",
+	FIELDPICKER_SAVEBUTTON_MODAL_LABEL: "fieldPicker.saveButton.modal.label",
 	FIELDPICKER_RESETBUTTON_LABEL: "fieldPicker.resetButton.label",
 	FIELDPICKER_FILTER_LABEL: "fieldPicker.filter.label",
 	FIELDPICKER_FIELDCOLUMN_LABEL: "fieldPicker.fieldColumn.label",
@@ -58,6 +58,7 @@ export const MESSAGE_KEYS = {
 	REQUIRED_ERROR: "required.error",
 	DATETIME_FORMAT_ERROR: "datetime.format.error",
 	INVALID_FIELD_ERROR: "invalid.field.error",
+	INVALID_NUMBER_ERROR: "invalid.number.error",
 	EXPRESSION_VALIDATE_LABEL: "expression.validate.label",
 	EXPRESSION_VALIDATING_LABEL: "expression.validating.label",
 	EXPRESSION_BUILDER_TITLE: "expression.builder.title",
@@ -86,6 +87,8 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_ALL_FUNCTIONS: "expression.all.functions",
 	EXPRESSION_MIN_LABEL: "expression.min.label",
 	EXPRESSION_MAX_LABEL: "expression.max.label",
+	EXPRESSION_MAXIMIZE_LABEL: "expression.maximize.label",
+	EXPRESSION_MINIMIZE_LABEL: "expression.minimize.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
 	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
@@ -189,6 +192,10 @@ export const ACTIONS = {
 export const DEFAULT_LABEL_EDITABLE = true;
 
 export const ROW_HEIGHT = 32;
+
+export const ONE_REM_HEIGHT = 16;
+export const REM_ROW_HEIGHT = 2; // in rem
+export const REM_HEADER_HEIGHT = 2; // in rem
 
 export const EXPRESSION_TABLE_ROWS = 7;
 

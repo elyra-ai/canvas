@@ -163,9 +163,6 @@ describe("Toolbar renders correctly", () => {
 		const defaultButtons = canvasToolbar.find(".toolbar-item.default button");
 
 		expect(defaultButtons).to.have.length(1);
-
-		// Verify if the buttons show up with icon-only carbon class
-		expect(defaultButtons.find(".bx--btn--icon-only")).to.have.length(1);
 	});
 
 	it("should render a Toolbar buttons with icon&label ", () => {

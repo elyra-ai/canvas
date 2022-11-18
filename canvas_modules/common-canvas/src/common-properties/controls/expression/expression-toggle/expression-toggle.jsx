@@ -20,14 +20,14 @@ import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
 import { Button } from "carbon-components-react";
 import { Maximize16, Minimize16 } from "@carbon/icons-react";
-
-const maximizeId = "expression.maximize.label";
-const minimizeId = "expression.minimize.label";
+import { formatMessage } from "../../../util/property-utils";
+import { MESSAGE_KEYS } from "../../../constants/constants";
 
 class ExpressionToggle extends React.Component {
 	constructor(props) {
 		super(props);
 		this.buttonHandler = props.controller.getHandlers().buttonHandler || (() => null);
+		this.reactIntl = props.controller.getReactIntl();
 	}
 	render() {
 		return (
@@ -40,7 +40,7 @@ class ExpressionToggle extends React.Component {
 						kind="ghost"
 						renderIcon={Maximize16}
 						hasIconOnly
-						iconDescription={this.props.intl.formatMessage({ id: maximizeId })}
+						iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_MAXIMIZE_LABEL)}
 						onClick={() => {
 							const handlerStatus = this.buttonHandler({
 								type: "maximize_tearsheet",
@@ -57,7 +57,7 @@ class ExpressionToggle extends React.Component {
 						kind="ghost"
 						hasIconOnly
 						renderIcon={Minimize16}
-						iconDescription={this.props.intl.formatMessage({ id: minimizeId })}
+						iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_MINIMIZE_LABEL)}
 						onClick={() => this.props.controller.clearActiveTearsheet()}
 					/>)
 					}
@@ -66,7 +66,6 @@ class ExpressionToggle extends React.Component {
 	}
 }
 ExpressionToggle.propTypes = {
-	intl: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	enableMaximize: PropTypes.bool

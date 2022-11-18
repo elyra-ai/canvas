@@ -18,6 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PropertiesModal from "./../components/properties-modal";
 import PropertiesEditor from "./../components/properties-editor";
+import TearSheet from "../panels/tearsheet";
 import MainEditorPropertiesButtons from "./../components/main-editor-properties-buttons";
 import EditorForm from "./../components/editor-form";
 import Form from "./../form/Form";
@@ -493,6 +494,20 @@ class PropertiesMain extends React.Component {
 					>
 						{editorForm}
 					</div>);
+			} else if (this.props.propertiesConfig.containerType === "Tearsheet") {
+				propertiesDialog = (<TearSheet
+					open
+					onCloseCallback={cancelHandler}
+					tearsheet={{
+						title: this.propertiesController.getTitle(),
+						content: editorForm
+					}}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					okHandler={this.applyPropertiesEditing.bind(this, true)}
+					cancelHandler={cancelHandler}
+					showPropertiesButtons={this.state.showPropertiesButtons}
+				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
