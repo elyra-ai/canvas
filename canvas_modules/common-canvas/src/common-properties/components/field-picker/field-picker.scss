@@ -95,6 +95,9 @@
 // This is for field-picker in properties-modal, containerType="Modal"
 .properties-modal, .properties-tearsheet-panel.bx--modal {
 	.properties-fp-table {
+		padding-bottom: $spacing-06;
+		margin-bottom: $spacing-10; // Accommodate footer buttons
+
 		.properties-fp-top-row {
 			display: flex;
 			justify-content: flex-end;
