@@ -200,7 +200,6 @@ describe("Passwordfield renders correctly", () => {
 		eyeIcon.simulate("click");
 		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultHide);
 	});
-
 });
 
 describe("passwordfield classnames appear correctly", () => {
@@ -220,7 +219,6 @@ describe("passwordfield classnames appear correctly", () => {
 		eyeIcon.simulate("click");
 		expect(eyeIcon.text()).to.equal(control.tooltip.customHide);
 	});
-
 	it("passwordfield should have custom classname defined", () => {
 		expect(wrapper.find(".passwordfield-control-class")).to.have.length(1);
 	});
