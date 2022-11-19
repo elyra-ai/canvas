@@ -2342,9 +2342,13 @@
 						"label": {
 							"resource_key": "ST_mse_table.dummy_entry_sport_name.label"
 						},
+						"control": "oneofselect",
 						"width": 8,
 						"edit_style": "inline",
-						"summary": true
+						"summary": true,
+						"place_holder_text": {
+							"resource_key": "ST_mse_table.dummy_entry_sport_name.placeholder"
+						}
 					},
 					{
 						"parameter_ref": "dummy_entry_invisble",
@@ -4008,6 +4012,7 @@
 		"ST_mse_table.field.label": "Field",
 		"ST_mse_table.override.label": "Override",
 		"ST_mse_table.dummy_entry_sport_name.label": "Sport",
+		"ST_mse_table.dummy_entry_sport_name.placeholder": "Select",
 		"ST_mse_table.checkit.label": "Check",
 		"ST_mse_table.sometext.label": "Text",
 		"ST_mse_table.dummy_entry_sport_name.Football.label": "Football",

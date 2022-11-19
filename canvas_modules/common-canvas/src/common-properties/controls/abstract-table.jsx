@@ -356,7 +356,6 @@ export default class AbstractTable extends React.Component {
 			const factoryElem = ControlFactory.createControl(columnDefObj, propertyId, tableInfo);
 			if (selectSummaryRow && factoryElem.props.control.controlType === "oneofselect") {
 				factoryElem.props.control.clearAfterSelection = true;
-				factoryElem.props.control.additionalText = "Select";
 			}
 			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
 				{factoryElem}
