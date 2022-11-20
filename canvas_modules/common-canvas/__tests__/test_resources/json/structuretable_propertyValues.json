@@ -235,6 +235,49 @@
 			"Canadian"
 		]
 	],
+	"ST_mse_table_II": [
+		[
+			"Age",
+			true,
+			"Soccer",
+			"Don't show",
+			false,
+			"American",
+			[
+				"a",
+				"b",
+				"c"
+			]
+		],
+		[
+			"BP",
+			false,
+			"Football",
+			"Don't show",
+			false,
+			"American",
+			[]
+		],
+		[
+			"K",
+			false,
+			"Soccer",
+			"Don't show",
+			true,
+			"Canadian",
+			[
+				"1"
+			]
+		],
+		[
+			"K",
+			true,
+			"Soccer",
+			"Don't show",
+			true,
+			"Canadian"
+		]
+	],
 	"structuretableObjectType": [
 		[
 			"Cholesterol",

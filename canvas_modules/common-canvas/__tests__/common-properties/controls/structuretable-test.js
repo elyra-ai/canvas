@@ -302,6 +302,7 @@ const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
 const propertyIdReadonlyControlStartValue = { name: "structuretableSortOrderStartValue" };
 const propertyIdMSE = { name: "ST_mse_table" };
+const propertyIdMSEII = { name: "ST_mse_table_II" };
 const propertyIdNestedStructureObject = { name: "nestedStructureObject" };
 const propertyIdNestedStructureObjectArray = { name: "nestedStructureObjectArray" };
 const propertyIdNestedStructureArrayArray = { name: "nestedStructureArrayArray" };
@@ -834,6 +835,67 @@ describe("structuretable multiselect edit works", () => {
 		const selectHeaderTable = wrapper.find("div.properties-at-selectedEditRows").find("div.properties-ft-container-wrapper");
 		const heightStyle = selectHeaderTable.prop("style");
 		expect(heightStyle).to.eql({ "height": "2rem" });
+	});
+});
+
+describe("structuretable multiselect edit works incrementally", () => {
+	const HEADER_CHECKBOX_SELECT_ALL = "div[data-role='properties-header-row'] div.properties-vt-header-checkbox input[type='checkbox']";
+	const HEADER_COLUMN_SELECT_DROPDOWN = "div.properties-vt-row-non-interactive div.ReactVirtualized__Table__rowColumn";
+	const SELECT_ALL_ROWS = "div[data-role='properties-data-row'] div.properties-vt-row-checkbox input[type='checkbox']";
+
+	const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+	const wrapper = renderedObject.wrapper;
+	const renderedController = renderedObject.controller;
+	jest.useFakeTimers();
+	it("Opens mse table II multiselect and selects two rows", () => {
+		// Open mse Summary Panel in structuretableParamDef
+		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
+
+		// Select the first two rows
+		tableUtils.selectCheckboxes(wrapper, [0, 1]);
+		for (const row of [0, 1]) {
+			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
+			expect(rowCheckbox.props().checked).to.be.true;
+		}
+	});
+	it("Checks & Sets MSE Value for first two", () => {
+		const oneOfSelect = wrapper.find(HEADER_COLUMN_SELECT_DROPDOWN)
+			.at(2);
+		const oneOfSelectOptions = oneOfSelect.find("option");
+		expect(oneOfSelectOptions.at(0).instance().selected).to.equal(true);
+		expect(oneOfSelectOptions.at(0).text()).to.equal("Select");
+		expect(oneOfSelectOptions).to.have.length(5);
+
+		oneOfSelect.find("select").simulate("change", { target: { value: "Baseball" } });
+
+		jest.runAllTimers(); // **execute timeout for redux to update selected to null via clearAfterSelection property **
+
+		const rowValues = renderedController.getPropertyValue(propertyIdMSEII);
+		for (const row of [0, 1]) {
+			expect(rowValues[row][2]).to.equal("Baseball");
+		}
+		for (const row of [2, 3]) {
+			expect(rowValues[row][2]).to.not.equal("Baseball");
+		}
+	});
+	it("Selects All using header shortcut", () => {
+		wrapper.find(HEADER_CHECKBOX_SELECT_ALL)
+			.simulate("change", { target: { checked: true } });
+
+		const headerCheckbox = wrapper.find(HEADER_CHECKBOX_SELECT_ALL);
+		expect(headerCheckbox.props().checked).to.be.true;
+		for (const row of [0, 1, 2, 3]) {
+			const rowCheckbox = wrapper.find(SELECT_ALL_ROWS).at(row);
+			expect(rowCheckbox.props().checked).to.be.true;
+		}
+	});
+	it("Sets MSE Value for selected", () => {
+		wrapper.find(HEADER_COLUMN_SELECT_DROPDOWN + " select")
+			.simulate("change", { target: { value: "Baseball" } });
+		const rowValues = renderedController.getPropertyValue(propertyIdMSEII);
+		for (const row of [0, 1, 2, 3]) {
+			expect(rowValues[row][2]).to.equal("Baseball");
+		}
 	});
 });
 
