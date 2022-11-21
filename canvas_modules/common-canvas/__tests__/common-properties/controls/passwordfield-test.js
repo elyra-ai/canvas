@@ -26,6 +26,12 @@ import passwordfieldParamDef from "../../test_resources/paramDefs/passwordfield_
 const controller = new Controller();
 
 const control = {
+	tooltip: {
+		defaultShow: "Show",
+		defaultHide: "Hide",
+		customShow: "Custom show",
+		customHide: "Custom hide"
+	},
 	name: "test-password",
 	additionalText: "Enter a password",
 	valueDef: {
@@ -175,6 +181,24 @@ describe("Passwordfield renders correctly", () => {
 		const messageWrapper = passwordWrapper.find("div.bx--form-requirement");
 		expect(messageWrapper).to.have.length(1);
 	});
+	it("Passwordfield eyeIcon tooltip default content appears correctly", () => {
+		const wrapper = mount(
+			<Passwordfield
+				store={controller.getStore()}
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const passwordWrapper = wrapper.find("div[data-id='properties-test-password']");
+		// Verify the eye icon
+		const eyeIcon = passwordWrapper.find("button");
+		expect(eyeIcon).to.have.length(1);
+		// Verify custom tooltip content
+		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultShow);
+		eyeIcon.simulate("click");
+		expect(eyeIcon.at(0).text()).to.equal(control.tooltip.defaultHide);
+	});
 });
 
 describe("passwordfield classnames appear correctly", () => {
@@ -186,6 +210,17 @@ describe("passwordfield classnames appear correctly", () => {
 
 	it("passwordfield should have custom classname defined", () => {
 		expect(wrapper.find(".passwordfield-control-class")).to.have.length(1);
+	});
+
+	it("Passwordfield eyeIcon tooltip custom content appears correctly", () => {
+		const passwordWrapper = wrapper.find("div[data-id='properties-pwd']");
+		// Verify the eye icon
+		const eyeIcon = passwordWrapper.find("button");
+		expect(eyeIcon).to.have.length(1);
+		// Verify custom tooltip content
+		expect(eyeIcon.text()).to.equal(control.tooltip.customShow);
+		eyeIcon.simulate("click");
+		expect(eyeIcon.text()).to.equal(control.tooltip.customHide);
 	});
 
 	it("passwordfield should have custom classname defined in table cells", () => {
