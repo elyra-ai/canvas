@@ -29,8 +29,8 @@ const control = {
 	tooltip: {
 		defaultShow: "Show password",
 		defaultHide: "Hide password",
-		customShow: "Custom show",
-		customHide: "Custom hide"
+		customShow: "Show password",
+		customHide: "Hide password.This value is encrypted when the connection is created or updated"
 	},
 	name: "test-password",
 	additionalText: "Enter a password",
