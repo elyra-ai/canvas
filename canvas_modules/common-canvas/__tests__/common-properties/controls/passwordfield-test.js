@@ -27,8 +27,8 @@ const controller = new Controller();
 
 const control = {
 	tooltip: {
-		defaultShow: "Show",
-		defaultHide: "Hide",
+		defaultShow: "Show password",
+		defaultHide: "Hide password",
 		customShow: "Custom show",
 		customHide: "Custom hide"
 	},
