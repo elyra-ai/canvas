@@ -155,7 +155,7 @@ class EditorForm extends React.Component {
 			// if total non-tearsheet tabs is 1; don't show any tabs
 			if (totalTabs.length === 1 && nonTearsheetTabs.length === 1) {
 				return (
-					<div key={"cat." + key} className="properties-category">
+					<div key={"cat." + key} className="properties-single-category">
 						{panelItems}
 						{additionalComponent}
 					</div>
@@ -202,6 +202,7 @@ class EditorForm extends React.Component {
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
 						label={tab.text}
+						title={tab.text}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
@@ -467,11 +468,14 @@ class EditorForm extends React.Component {
 			}
 			if (!this.FIRST_TEARSHEET_ID || this.FIRST_TEARSHEET_ID === panel.id) {
 				this.FIRST_TEARSHEET_ID = panel.id;
+				const onCloseCallback = () => {
+					this.props.controller.clearActiveTearsheet();
+				};
 				return (
 					<TearSheet
 						open={this.props.controller.getActiveTearsheet() !== null}
+						onCloseCallback={onCloseCallback}
 						key={panel.id}
-						controller={this.props.controller}
 						tearsheet={this.visibleTearsheet}
 					/>
 				);

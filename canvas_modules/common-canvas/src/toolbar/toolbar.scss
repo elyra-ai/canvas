@@ -35,6 +35,8 @@ $toolbar-divider-width: 1px;
 
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
+
+	/* Small size toolbar used by common-properties */
 	&.toolbar-size-small {
 		height: $spacing-07;
 		.toolbar-left-bar {
