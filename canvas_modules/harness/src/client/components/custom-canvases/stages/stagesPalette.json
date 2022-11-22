@@ -24,7 +24,7 @@
             "ui_data": {
               "label": "Amazon S3",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/AmazonS3PX.svg",
+              "image": "/images/custom-canvases/stages/palette/AmazonS3PX.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -50,7 +50,7 @@
             "ui_data": {
               "label": "Apache Hive",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/HiveConnectorPX.svg",
+              "image": "/images/custom-canvases/stages/palette/HiveConnectorPX.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -76,7 +76,7 @@
             "ui_data": {
               "label": "Cassandra",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/cassandra.svg",
+              "image": "/images/custom-canvases/stages/palette/cassandra.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -102,7 +102,7 @@
             "ui_data": {
               "label": "Cloud Object Storage",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/cloudobjectstoragePX.svg",
+              "image": "/images/custom-canvases/stages/palette/cloudobjectstoragePX.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -128,7 +128,7 @@
             "ui_data": {
               "label": "Data Set",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxDataSet.svg",
+              "image": "/images/custom-canvases/stages/palette/PxDataSet.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -154,7 +154,7 @@
             "ui_data": {
               "label": "Data Virtualization Manager for z/OS",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/dvm.svg",
+              "image": "/images/custom-canvases/stages/palette/dvm.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -180,7 +180,7 @@
             "ui_data": {
               "label": "Db2",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/db2.svg",
+              "image": "/images/custom-canvases/stages/palette/db2.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -206,7 +206,7 @@
             "ui_data": {
               "label": "HTTP",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/http.svg",
+              "image": "/images/custom-canvases/stages/palette/http.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -232,7 +232,7 @@
             "ui_data": {
               "label": "Netezza",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/netezza.svg",
+              "image": "/images/custom-canvases/stages/palette/netezza.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -278,7 +278,7 @@
             "ui_data": {
               "label": "Aggregator",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxAggregator.svg",
+              "image": "/images/custom-canvases/stages/palette/PxAggregator.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -318,7 +318,7 @@
             "ui_data": {
               "label": "Checksum",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxChecksum.svg",
+              "image": "/images/custom-canvases/stages/palette/PxChecksum.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -358,7 +358,7 @@
             "ui_data": {
               "label": "Copy",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxCopy.svg",
+              "image": "/images/custom-canvases/stages/palette/PxCopy.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -398,7 +398,7 @@
             "ui_data": {
               "label": "Filter",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxFilter.svg",
+              "image": "/images/custom-canvases/stages/palette/PxFilter.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -438,7 +438,7 @@
             "ui_data": {
               "label": "Funnel",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxFunnel.svg",
+              "image": "/images/custom-canvases/stages/palette/PxFunnel.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -478,7 +478,7 @@
             "ui_data": {
               "label": "Head",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxHead.svg",
+              "image": "/images/custom-canvases/stages/palette/PxHead.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -518,7 +518,7 @@
             "ui_data": {
               "label": "Join",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxJoin.svg",
+              "image": "/images/custom-canvases/stages/palette/PxJoin.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -558,7 +558,7 @@
             "ui_data": {
               "label": "Lookup",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxLookup.svg",
+              "image": "/images/custom-canvases/stages/palette/PxLookup.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -598,7 +598,7 @@
             "ui_data": {
               "label": "Merge",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxMerge.svg",
+              "image": "/images/custom-canvases/stages/palette/PxMerge.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -638,7 +638,7 @@
             "ui_data": {
               "label": "Modify",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxModify.svg",
+              "image": "/images/custom-canvases/stages/palette/PxModify.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -678,7 +678,7 @@
             "ui_data": {
               "label": "Peek",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxPeek.svg",
+              "image": "/images/custom-canvases/stages/palette/PxPeek.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -718,7 +718,7 @@
             "ui_data": {
               "label": "Remove Duplicates",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxRemDup.svg",
+              "image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -744,7 +744,7 @@
             "ui_data": {
               "label": "Row Generator",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxRowGenerator.svg",
+              "image": "/images/custom-canvases/stages/palette/PxRowGenerator.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -784,7 +784,7 @@
             "ui_data": {
               "label": "Sort",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxSort.svg",
+              "image": "/images/custom-canvases/stages/palette/PxSort.svg",
               "x_pos": 0,
               "y_pos": 0
             }
@@ -824,7 +824,7 @@
             "ui_data": {
               "label": "Tail",
               "description": "",
-              "image": "/images/custom-canvases/detached-links/palette/PxTail.svg",
+              "image": "/images/custom-canvases/stages/palette/PxTail.svg",
               "x_pos": 0,
               "y_pos": 0
             }
