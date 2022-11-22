@@ -160,11 +160,6 @@ class DropDown extends React.Component {
 			value = PropertyUtils.fieldStringToValue(value, this.props.control, this.props.controller);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
-		if (this.props.control.clearAfterSelection) {
-			setTimeout(() => { // queue a fast follower to reset value to null
-				this.props.controller.updatePropertyValue(this.props.propertyId, null);
-			}, 0);
-		}
 	}
 
 	handleComboOnChange(evt) {

@@ -846,7 +846,6 @@ describe("structuretable multiselect edit works incrementally", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 	const wrapper = renderedObject.wrapper;
 	const renderedController = renderedObject.controller;
-	jest.useFakeTimers();
 	it("Opens mse table II multiselect and selects two rows", () => {
 		// Open mse Summary Panel in structuretableParamDef
 		propertyUtils.openSummaryPanel(wrapper, "ST_mse_table_II-summary-panel");
@@ -867,8 +866,6 @@ describe("structuretable multiselect edit works incrementally", () => {
 		expect(oneOfSelectOptions).to.have.length(5);
 
 		oneOfSelect.find("select").simulate("change", { target: { value: "Baseball" } });
-
-		jest.runAllTimers(); // **execute timeout for redux to update selected to null via clearAfterSelection property **
 
 		const rowValues = renderedController.getPropertyValue(propertyIdMSEII);
 		for (const row of [0, 1]) {
