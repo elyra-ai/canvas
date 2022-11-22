@@ -127,11 +127,6 @@ class DropDown extends React.Component {
 				label: this.props.controlOpts.valueLabels[j]
 			});
 		}
-		if (this.props.control.clearAfterSelection) {
-			return {
-				options: options
-			};
-		}
 		const selectedOption = this.getSelectedOption(options, selectedValue);
 		return {
 			options: options,

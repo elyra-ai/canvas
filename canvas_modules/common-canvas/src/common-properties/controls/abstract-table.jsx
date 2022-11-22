@@ -357,12 +357,8 @@ export default class AbstractTable extends React.Component {
 			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
-			const factoryElem = ControlFactory.createControl(columnDefObj, propertyId, tableInfo);
-			if (selectSummaryRow && factoryElem.props.control.controlType === "oneofselect") {
-				factoryElem.props.control.clearAfterSelection = true;
-			}
 			cellContent = (<div className={classNames("properties-table-cell-control", cellClassName)}>
-				{factoryElem}
+				{ControlFactory.createControl(columnDefObj, propertyId, tableInfo)}
 			</div>);
 
 		}
