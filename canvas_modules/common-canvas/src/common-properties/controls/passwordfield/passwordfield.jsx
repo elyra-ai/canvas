@@ -35,14 +35,14 @@ class PasswordControl extends React.Component {
 	}
 
 	render() {
-		const overrideLabelKeyShow = `${this.props.control.name}.passwordShow.tooltip`;
-		const overrideLabelKeyHide = `${this.props.control.name}.passwordHide.tooltip`;
+		const overrideShowPasswordLabel = `${this.props.control.name}.passwordShow.tooltip`;
+		const overrideHidePasswordLabel = `${this.props.control.name}.passwordHide.tooltip`;
 
-		const defaultShowEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP);
-		const defaultHideEditLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP);
+		const defaultShowPasswordLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP);
+		const defaultHidePasswordLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP);
 
-		const showLabel = this.props.controller.getResource(overrideLabelKeyShow, defaultShowEditLabel);
-		const hideLabel = this.props.controller.getResource(overrideLabelKeyHide, defaultHideEditLabel);
+		const showPasswordLabel = this.props.controller.getResource(overrideShowPasswordLabel, defaultShowPasswordLabel);
+		const hidePasswordLabel = this.props.controller.getResource(overrideHidePasswordLabel, defaultHidePasswordLabel);
 		const value = this.props.value ? this.props.value : "";
 		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
@@ -62,8 +62,8 @@ class PasswordControl extends React.Component {
 						hideLabel={this.props.tableControl}
 						light={this.props.controller.getLight() && !this.props.control.light}
 						tooltipAlignment="end"
-						showPasswordLabel={showLabel}
-						hidePasswordLabel={hideLabel}
+						showPasswordLabel={showPasswordLabel}
+						hidePasswordLabel={hidePasswordLabel}
 					/>
 				</Form>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
