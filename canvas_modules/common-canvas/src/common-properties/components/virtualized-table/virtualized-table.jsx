@@ -465,6 +465,7 @@ class VirtualizedTable extends React.Component {
 		// It does a direct DOM manipulation to the parent, outside React's VirtualDOM.
 		// Since the actual DOM is not available when unit testing, we are passing in a default
 		// width of 500 and a default height of 300.
+		const tableHeight = this.props.tableHeight || defaultTestHeight;
 		return (
 			<div className="properties-vt">
 				<div className={classNames("properties-vt-autosizer",
@@ -476,7 +477,7 @@ class VirtualizedTable extends React.Component {
 							<Table
 								ref={this.virtualizedTableRef}
 								width={width ? width : 500}
-								height={height ? height : defaultTestHeight}
+								height={tableHeight}
 
 								className="properties-autosized-vt"
 								aria-label={this.props.tableLabel ? this.props.tableLabel : ""}
@@ -530,6 +531,7 @@ VirtualizedTable.defaultProps = {
 
 VirtualizedTable.propTypes = {
 	tableLabel: PropTypes.string,
+	tableHeight: PropTypes.number.isRequired,
 	selectable: PropTypes.bool,
 	summaryTable: PropTypes.bool,
 	rowSelection: PropTypes.string,

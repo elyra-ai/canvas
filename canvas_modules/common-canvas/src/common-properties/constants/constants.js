@@ -87,6 +87,8 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_ALL_FUNCTIONS: "expression.all.functions",
 	EXPRESSION_MIN_LABEL: "expression.min.label",
 	EXPRESSION_MAX_LABEL: "expression.max.label",
+	EXPRESSION_MAXIMIZE_LABEL: "expression.maximize.label",
+	EXPRESSION_MINIMIZE_LABEL: "expression.minimize.label",
 	EXPRESSION_NO_FUNCTIONS: "expression.no.functions",
 	MULTI_SELECTED_ROW_LABEL: "multi.selected.row.label",
 	MULTI_SELECTED_ROW_ACTION: "multi.selected.row.action",
@@ -108,7 +110,9 @@ export const MESSAGE_KEYS = {
 	MULTISELECT_DROPDOWN_OPTIONS_SELECTED_LABEL: "multiselect.dropdown.options.selected.label",
 	PROPERTIES_EMPTY_TABLE_TEXT: "properties.empty.table.text",
 	TOGGLE_ON_LABEL: "toggle.on.label",
-	TOGGLE_OFF_LABEL: "toggle.off.label"
+	TOGGLE_OFF_LABEL: "toggle.off.label",
+	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
+	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip"
 };
 
 export const TRUNCATE_LIMIT = 10000;
@@ -188,6 +192,10 @@ export const ACTIONS = {
 export const DEFAULT_LABEL_EDITABLE = true;
 
 export const ROW_HEIGHT = 32;
+
+export const ONE_REM_HEIGHT = 16;
+export const REM_ROW_HEIGHT = 2; // in rem
+export const REM_HEADER_HEIGHT = 2; // in rem
 
 export const EXPRESSION_TABLE_ROWS = 7;
 
