@@ -5621,6 +5621,7 @@ export default class SVGCanvasRenderer {
 		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
 		this.displaySingleComment(resizeObj);
 		this.displayMovedLinks();
+		this.displayCanvasAccoutrements();
 	}
 
 	// Sets the size and position of the object in the canvasInfo
@@ -5812,8 +5813,6 @@ export default class SVGCanvasRenderer {
 
 		const linksArray = this.buildLinksArray();
 		const movedLinks = linksArray.filter((l) => l.coordsUpdated);
-
-		this.logger.log("Moved links length = " + movedLinks.length);
 
 		movedLinks.forEach((l) => {
 			this.displaySingleLink(l);
