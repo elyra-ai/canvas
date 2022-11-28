@@ -76,6 +76,8 @@
   "expression.maximize.label": "Maximize",
   "toggle.on.label": "On",
   "toggle.off.label": "Off",
+  "passwordShow.tooltip":"Show password",
+  "passwordHide.tooltip":"Hide password",
   "expression.no.functions": "No functions found.",
   "multi.selected.row.label": "rows selected.",
   "multi.selected.row.action": "Changing a value in this row will change the value in all allowed selected rows.",

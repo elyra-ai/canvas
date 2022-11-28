@@ -20,8 +20,9 @@ import { connect } from "react-redux";
 import { PasswordInput, Form } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { STATES } from "./../../constants/constants.js";
+import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
+import { formatMessage } from "./../../util/property-utils";
 
 class PasswordControl extends React.Component {
 	constructor(props) {
@@ -34,6 +35,14 @@ class PasswordControl extends React.Component {
 	}
 
 	render() {
+		const overrideShowPasswordLabel = `${this.props.control.name}.passwordShow.tooltip`;
+		const overrideHidePasswordLabel = `${this.props.control.name}.passwordHide.tooltip`;
+
+		const defaultShowPasswordLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.SHOW_PASSWORD_TOOLTIP);
+		const defaultHidePasswordLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.HIDE_PASSWORD_TOOLTIP);
+
+		const showPasswordLabel = this.props.controller.getResource(overrideShowPasswordLabel, defaultShowPasswordLabel);
+		const hidePasswordLabel = this.props.controller.getResource(overrideHidePasswordLabel, defaultHidePasswordLabel);
 		const value = this.props.value ? this.props.value : "";
 		const className = classNames("properties-pwdfield", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
@@ -53,6 +62,8 @@ class PasswordControl extends React.Component {
 						hideLabel={this.props.tableControl}
 						light={this.props.controller.getLight() && this.props.control.light}
 						tooltipAlignment="end"
+						showPasswordLabel={showPasswordLabel}
+						hidePasswordLabel={hidePasswordLabel}
 					/>
 				</Form>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
