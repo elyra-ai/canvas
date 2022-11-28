@@ -87,7 +87,11 @@ export default class SvgCanvasLinks {
 	// Returns the lineArray passed in with connection path info added to it.
 	addConnectionPaths(links) {
 		links.forEach((link) => {
-			link.pathInfo = this.getConnectorPathInfo(link);
+			// Only necessary to get the path info, if the start and end coords of
+			// the link have changed.
+			if (link.coordsUpdated) {
+				link.pathInfo = this.getConnectorPathInfo(link);
+			}
 		});
 		return links;
 	}
