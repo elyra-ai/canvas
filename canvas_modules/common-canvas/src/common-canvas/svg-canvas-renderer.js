@@ -2610,14 +2610,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayNodesSubset(selection, data) {
-		const ts = Date.now();
-		const inData = data.map((d) => {
-			d.ts = ts;
-			return d;
-		});
-
 		selection
-			.data(inData, (d) => d.id)
+			.data(data, (d) => d.id)
 			.join(
 				(enter) => this.createNodes(enter)
 			)
