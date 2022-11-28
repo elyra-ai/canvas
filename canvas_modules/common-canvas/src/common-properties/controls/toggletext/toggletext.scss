@@ -35,5 +35,9 @@
 .properties-table-cell-control {
 	.properties-toggletext button {
 		padding: 0 $spacing-02;
+		svg {
+			height: $spacing-04;
+			width: $spacing-04;
+		}
 	}
 }
