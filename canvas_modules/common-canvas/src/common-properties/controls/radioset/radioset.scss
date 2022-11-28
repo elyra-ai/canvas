@@ -51,6 +51,7 @@
 			display: flex;
 			align-items: center;
 			margin: 2.5px 0 1.5px 1.5px;
+			margin-left: 0;
 		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;
@@ -62,6 +63,9 @@
 		.bx--radio-button-wrapper > label {
 			justify-content: left; // override carbon style to center justify radio-button labels
 			align-items: center;
+			span:nth-child(2) {
+				padding-bottom: $spacing-01;
+			}
 		}
 	}
 	&.error:not([disabled]) {
