@@ -683,9 +683,26 @@ export default class SVGCanvasRenderer {
 		return this.nodesLinksGrp.selectChildren(nodeGrpSelector);
 	}
 
-	getLinkGroupSelectionById(nodeId) {
-		const linkGrpSelector = this.getSelectorForId("link_grp", nodeId);
+	getLinkGroupSelectionById(linkId) {
+		const linkGrpSelector = this.getSelectorForId("link_grp", linkId);
 		return this.nodesLinksGrp.selectChildren(linkGrpSelector);
+	}
+
+	getCommentGroupSelectionById(comId) {
+		const selector = this.getSelectorForId("comment_grp", comId);
+		return this.commentsGrp.selectChildren(selector);
+	}
+
+	getNodeDecSelectionById(decId, nodeId) {
+		const nodeSel = this.getNodeGroupSelectionById(nodeId);
+		const selector = this.getSelectorForId("node_dec_group", decId);
+		return nodeSel.selectAll(selector);
+	}
+
+	getLinkDecSelectionById(decId, linkId) {
+		const linkSel = this.getLinkGroupSelectionById(linkId);
+		const selector = this.getSelectorForId("link_dec_group", decId);
+		return linkSel.selectAll(selector);
 	}
 
 	// Returns a selector for the ID string like one of the following:
@@ -1598,6 +1615,57 @@ export default class SVGCanvasRenderer {
 		var feMerge = dropShadowFilter.append("feMerge");
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+	}
+
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const node = this.activePipeline.getNode(nodeId);
+			if (node && node.layout.labelEditable && this.config.enableEditingActions) {
+				const nodeSel = this.getNodeGroupSelectionById(nodeId);
+				const nodeDomObj = nodeSel.node();
+				this.displayNodeLabelTextArea(node, nodeDomObj);
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setNodeLabelEditingMode(nodeId, pipelineId);
+			});
+		}
+	}
+
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const node = this.activePipeline.getNode(nodeId);
+			if (node && node.decorations) {
+				const dec = node.decorations.find((d) => d.id === decId);
+				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
+					const nodeDecSel = this.getNodeDecSelectionById(decId, nodeId);
+					const nodeDecDomObj = nodeDecSel.node();
+					this.displayDecLabelTextArea(dec, node, "node", nodeDecDomObj);
+				}
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setLinkDecorationLabelEditingMode(decId, nodeId, pipelineId);
+			});
+		}
+	}
+
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const link = this.activePipeline.getLink(linkId);
+			if (link && link.decorations) {
+				const dec = link.decorations.find((d) => d.id === decId);
+				if (dec && typeof dec.label !== "undefined" && dec.label_editable && this.config.enableEditingActions) {
+					const linkDecSel = this.getLinkDecSelectionById(decId, linkId);
+					const linkDecDomObj = linkDecSel.node();
+					this.displayDecLabelTextArea(dec, link, "link", linkDecDomObj);
+				}
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
+			});
+		}
 	}
 
 	// Restores the zoom of the canvas, if it has changed, based on the type
@@ -2602,8 +2670,7 @@ export default class SVGCanvasRenderer {
 
 		this.setPortPositionsForNode(d);
 
-		const selector = this.getSelectorForId("node_grp", d.id);
-		const selection = this.nodesLinksGrp.selectChildren(selector);
+		const selection = this.getNodeGroupSelectionById(d.id);
 		this.displayNodesSubset(selection, [d]);
 
 		this.logger.logEndTimer("displaySingleNode " + this.getFlags());
@@ -5132,8 +5199,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displaySingleComment(comment) {
-		const selector = this.getSelectorForId("comment_grp", comment.id);
-		const selection = this.commentsGrp.selectChildren(selector);
+		const selection = this.getCommentGroupSelectionById(comment.id);
 		this.displayCommentsSubset(selection, [comment]);
 	}
 
@@ -5816,8 +5882,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	displaySingleLink(link) {
-		const selector = this.getSelectorForId("link_grp", link.id);
-		const selection = this.nodesLinksGrp.selectChildren(selector);
+		const selection = this.getLinkGroupSelectionById(link.id);
 		this.displayLinksSubset(selection, [link]);
 	}
 
