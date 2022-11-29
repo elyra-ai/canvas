@@ -22,3 +22,9 @@ button.properties-subpanel-button {
 	display: flex;
 	justify-content: center;
 }
+
+.properties-subpanel-modal-in-tearsheet {
+	.properties-light-disabled {
+		background-color: $ui-01;
+	}
+}
