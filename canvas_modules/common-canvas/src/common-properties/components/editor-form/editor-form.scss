@@ -137,7 +137,7 @@ $primary-tab-height: $spacing-08;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container {
-		height: calc(100% - #{$primary-tab-height});
+		height: calc(100% - #{$primary-tab-height} - #{$spacing-05}); // Include padding
 		position: relative;
 		top: calc($primary-tab-height + $spacing-05); // Include padding
 		overflow-y: auto;
