@@ -67,6 +67,7 @@ $properties-buttons-height: $spacing-10;
 	.properties-tearsheet-body.with-buttons {
 		height: calc(100% - #{$properties-buttons-height});
 		padding: 0;
+		border-bottom: 1px solid $ui-03;
 
 		// Display the tabs in the Tearsheet header
 		.properties-editor-form {

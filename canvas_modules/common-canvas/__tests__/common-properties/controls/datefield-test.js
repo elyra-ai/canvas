@@ -34,7 +34,8 @@ describe("datefield-control renders correctly", () => {
 		valueDef: {
 			isList: false,
 			propType: "date"
-		}
+		},
+		light: true
 	};
 	const controlItem = <span>"Label"</span>;
 	propertyUtils.setControls(controller, [control]);

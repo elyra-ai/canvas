@@ -170,7 +170,7 @@ class EditorForm extends React.Component {
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
 					tabContent.push(
-						<div key={"cat." + key} className="properties-category">
+						<div key={"cat." + key} className="properties-single-category">
 							{panelItems}
 							{additionalComponent}
 						</div>
@@ -343,6 +343,10 @@ class EditorForm extends React.Component {
 		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
+			// All Subtabs will become a LeftNav if displayed inside a Tearsheet container
+			if (this.props.controller.isTearsheetContainer()) {
+				return <div>Tearsheet wip</div>;
+			}
 			return (<Subtabs key={"subtabs." + key}
 				tabs={uiItem.tabs}
 				className={uiItem.className}

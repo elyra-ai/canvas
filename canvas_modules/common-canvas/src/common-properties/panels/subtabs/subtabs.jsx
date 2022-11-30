@@ -55,6 +55,7 @@ class Subtabs extends React.Component {
 						className="properties-subtab"
 						tabIndex={tabIdx}
 						label={tab.text}
+						title={tab.text}
 						onClick={this.onClick.bind(this, tab.group)}
 						data-id={getDataId({ name: tab.group })}
 					>
