@@ -32,6 +32,7 @@ export default class ExplainCanvas extends React.Component {
 			enableLinkType: "Straight",
 			enablePaletteLayout: "None",
 			enableEditingActions: false,
+			enableNodeFormatType: "Horizontal",
 			enableNodeLayout:
 			{
 				defaultNodeWidth: 120,
