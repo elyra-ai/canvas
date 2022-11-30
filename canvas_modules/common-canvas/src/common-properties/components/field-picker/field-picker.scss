@@ -90,6 +90,11 @@
 			}
 		}
 	}
+
+	// This only happens when all rows of the table are filtered. The field-picker should never be empty elsewise
+	.properties-ft-empty-table {
+		display: none;
+	}
 }
 
 // This is for field-picker in properties-modal, containerType="Modal"
