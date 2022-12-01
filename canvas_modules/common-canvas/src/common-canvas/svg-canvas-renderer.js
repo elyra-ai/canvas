@@ -6221,7 +6221,8 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the node group object.
 	getNodeGroupClass(d) {
-		let customClass = "";
+		let customClass = " " + d.layout.className || "";
+
 		// If the node has a classname that isn't the default use it!
 		if (d.class_name &&
 				d.class_name !== "canvas-node" &&

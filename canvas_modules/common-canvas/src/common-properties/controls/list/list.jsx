@@ -150,7 +150,7 @@ class ListControl extends AbstractTable {
 				selectedRows={this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
 				updateRowSelections={this.updateRowSelections}
-				light={this.props.controller.getLight() && !this.props.control.light}
+				light={this.props.controller.getLight() && this.props.control.light && !this.props.controller.isTearsheetContainer()}
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 

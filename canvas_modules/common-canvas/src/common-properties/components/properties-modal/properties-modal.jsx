@@ -40,7 +40,7 @@ export default class PropertiesModal extends Component {
 		return (
 			<Portal>
 				<Modal
-					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false })}
+					className={classNames("properties-modal", { "noButtons": this.props.showPropertiesButtons === false }, this.props.classNames)}
 					open
 					modalHeading={this.props.title}
 					primaryButtonText={this.props.applyLabel}
@@ -68,4 +68,6 @@ PropertiesModal.propTypes = {
 	showPropertiesButtons: PropTypes.bool,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
+	classNames: PropTypes.string
 };
+

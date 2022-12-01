@@ -149,7 +149,7 @@ class NumberfieldControl extends React.Component {
 					label={this.props.controlItem}
 					hideLabel={this.props.tableControl}
 					allowEmpty
-					light={this.props.controller.getLight() && !this.props.control.light}
+					light={this.props.controller.getLight() && this.props.control.light}
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
 				/>
 				{numberGenerator}

@@ -264,16 +264,6 @@
         "summary": true
       }
     ],
-    "action_info": [{
-      "id": "openTearsheet",
-      "label": {
-        "default": "open tearsheet"
-      },
-      "control": "button",
-      "data": {
-        "tearsheet_ref": "tearsheetHidden"
-      }
-    }],
     "group_info": [
       {
         "id": "Primary",
@@ -334,13 +324,6 @@
                   "other"
                 ]
               }
-            ]
-          },
-          {
-            "id": "openTearsheet-action-panel",
-            "type": "actionPanel",
-            "action_refs": [
-              "openTearsheet"
             ]
           },
           {
@@ -444,23 +427,6 @@
             ]
           }
         ]
-      },
-      {
-        "id": "tearsheetHidden",
-        "label": {
-          "default": "Tearsheet"
-        },
-        "type": "tearsheetPanel",
-        "group_info":[{
-          "id": "orange",
-          "type": "textPanel",
-          "label": {
-            "default": "Oranges"
-          },
-          "description": {
-            "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
-          }
-				}]
       }
     ]
   },
