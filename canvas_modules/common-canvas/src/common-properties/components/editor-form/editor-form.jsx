@@ -632,7 +632,10 @@ class EditorForm extends React.Component {
 		}
 
 		return (
-			<div className={classNames("properties-editor-form", { "tearsheet-container": this.props.controller.isTearsheetContainer() })}>
+			<div className={classNames("properties-editor-form",
+				{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+				{ "field-picker": this.state.showFieldPicker })}
+			>
 				{content}
 				{wideFly}
 			</div>

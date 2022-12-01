@@ -497,7 +497,7 @@ class PropertiesMain extends React.Component {
 			} else if (this.props.propertiesConfig.containerType === "Tearsheet") {
 				propertiesDialog = (<TearSheet
 					open
-					onCloseCallback={cancelHandler}
+					onCloseCallback={this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
 					tearsheet={{
 						title: this.propertiesController.getTitle(),
 						content: editorForm
@@ -507,6 +507,7 @@ class PropertiesMain extends React.Component {
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
+					applyOnBlur={this.props.propertiesConfig.applyOnBlur}
 				/>);
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
