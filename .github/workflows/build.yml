@@ -21,6 +21,11 @@ on:
   pull_request:
     branches: '*'
 
+# Ensure build jobs for a PR are cancelled when a new commit is pushed to the PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
