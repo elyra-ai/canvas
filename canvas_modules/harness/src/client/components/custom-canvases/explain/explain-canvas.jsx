@@ -52,54 +52,18 @@ export default class ExplainCanvas extends React.Component {
 		});
 	}
 
-
-	layoutHandler(data) {
-		const labLen = data.label ? data.label.length : 0;
+	// Returns an object containing the bodyPath, selectionPath and a calculated
+	// width for the node passed in.
+	getPaths(node) {
+		const labLen = node.label ? node.label.length : 0;
 		let width = 120;
+
 		let bodyPath = "";
 		let selectionPath = "";
-		let className = "";
-
-		// Retrieve info from app_data of the node.
-		const category = get(data, "app_data.explain_data.category");
-		const index = get(data, "app_data.explain_data.index");
-		const cost = get(data, "app_data.explain_data.cost");
-
-		// Color the nodes based on the category information stored in
-		// app_data.explain_data of the node.
-		switch (category) {
-		case "a": {
-			className = "light_brown";
-			break;
-		}
-		case "b": {
-			className = "light_purple";
-			break;
-		}
-		case "c": {
-			className = "pink";
-			break;
-		}
-		case "d": {
-			className = "dark_purple";
-			break;
-		}
-		case "e": {
-			className = "gray";
-			break;
-		}
-		case "f": {
-			className = "light_green";
-			break;
-		}
-		case "g":
-		default:
-			className = "";
-		}
 
 		// Set the shape of the nodes based on the op field stored in
 		// the node.
-		switch (data.op) {
+		switch (node.op) {
 		case "rectangle": {
 			bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
 			selectionPath = "M -5 -5 L -5 65 125 65 125 -5 -5 -5 Z";
@@ -136,6 +100,55 @@ export default class ExplainCanvas extends React.Component {
 		default:
 			return {};
 		}
+
+		return { bodyPath, selectionPath, width };
+	}
+
+	// Returns a class name for coloring nodes based on the category passed in.
+	getClassNameForCategory(category) {
+		let className = "";
+
+		switch (category) {
+		case "a": {
+			className = "light_brown";
+			break;
+		}
+		case "b": {
+			className = "light_purple";
+			break;
+		}
+		case "c": {
+			className = "pink";
+			break;
+		}
+		case "d": {
+			className = "dark_purple";
+			break;
+		}
+		case "e": {
+			className = "gray";
+			break;
+		}
+		case "f": {
+			className = "light_green";
+			break;
+		}
+		case "g":
+		default:
+			className = "";
+		}
+
+		return className;
+	}
+
+	// Returns node layout properties for each node passed in the data parameter.
+	layoutHandler(node) {
+		const category = get(node, "app_data.explain_data.category");
+		const index = get(node, "app_data.explain_data.index");
+		const cost = get(node, "app_data.explain_data.cost");
+
+		const className = this.getClassNameForCategory(category);
+		const { bodyPath, selectionPath, width } = this.getPaths(node);
 
 		const nodeFormat = {
 			defaultNodeWidth: width, // Override default width with calculated width
@@ -176,7 +189,7 @@ export default class ExplainCanvas extends React.Component {
 			<CommonCanvas
 				canvasController={this.canvasController}
 				config={this.config}
-				layoutHandler={this.layoutHandler}
+				layoutHandler={this.layoutHandler.bind(this)}
 			/>
 		);
 	}
