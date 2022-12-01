@@ -16,6 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { get } from "lodash";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import ExplainCanvasFlow from "./explainCanvas.json";
 
@@ -57,7 +58,47 @@ export default class ExplainCanvas extends React.Component {
 		let width = 120;
 		let bodyPath = "";
 		let selectionPath = "";
+		let className = "";
 
+		// Retrieve info from app_data of the node.
+		const category = get(data, "app_data.explain_data.category");
+		const index = get(data, "app_data.explain_data.index");
+		const cost = get(data, "app_data.explain_data.cost");
+
+		// Color the nodes based on the category information stored in
+		// app_data.explain_data of the node.
+		switch (category) {
+		case "a": {
+			className = "light_brown";
+			break;
+		}
+		case "b": {
+			className = "light_purple";
+			break;
+		}
+		case "c": {
+			className = "pink";
+			break;
+		}
+		case "d": {
+			className = "dark_purple";
+			break;
+		}
+		case "e": {
+			className = "gray";
+			break;
+		}
+		case "f": {
+			className = "light_green";
+			break;
+		}
+		case "g":
+		default:
+			className = "";
+		}
+
+		// Set the shape of the nodes based on the op field stored in
+		// the node.
 		switch (data.op) {
 		case "rectangle": {
 			bodyPath = "     M  0 0  L  0 60 120 60 120  0  0  0 Z";
@@ -85,6 +126,7 @@ export default class ExplainCanvas extends React.Component {
 			break;
 		}
 		case "hexagon": {
+			// Hexagons can be sized to accommodate the size of long labels.
 			width = (labLen * 9) + 60; // Allow 9 pixels for each character
 			const corner = width - 30;
 			bodyPath = `     M   0 30 L 30 60 ${corner} 60 ${width}     30 ${corner}  0 30  0 Z`;
@@ -101,7 +143,29 @@ export default class ExplainCanvas extends React.Component {
 			labelWidth: width, // Set big enough so that label is not truncated and so no ... appears
 			ellipsisPosX: width - 25, // Always position 25px in from the right side
 			bodyPath: bodyPath,
-			selectionPath: selectionPath
+			selectionPath: selectionPath,
+			className: className,
+			decorations: [
+				{
+					id: "labelDecoration1",
+					x_pos: 10,
+					y_pos: 15,
+					width: 28,
+					label: "(" + index + ")",
+					class_name: "small_text",
+					temporary: true
+				},
+				{
+					id: "labelDecoration2",
+					position: "bottomCenter",
+					x_pos: -25,
+					y_pos: -19,
+					width: 50,
+					label: cost,
+					class_name: "small_text",
+					temporary: true
+				}
+			]
 		};
 
 		return nodeFormat;
