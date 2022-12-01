@@ -32,6 +32,7 @@ import SubPanelButton from "./../../panels/sub-panel/button";
 import ColumnPanel from "./../../panels/column";
 import ControlPanel from "./../../panels/control";
 import Subtabs from "./../../panels/subtabs";
+import LeftNav from "./../../panels/left-nav";
 
 import WideFlyout from "./../wide-flyout";
 import TearSheet from "../../panels/tearsheet";
@@ -349,6 +350,15 @@ class EditorForm extends React.Component {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
 			// All Subtabs will become a LeftNav if displayed inside a Tearsheet container
+			if (this.props.controller.isTearsheetContainer()) {
+				return (<LeftNav key={"leftnav." + key}
+					tabs={uiItem.tabs}
+					className={uiItem.className}
+					controller={this.props.controller}
+					genUIItem={this.genUIItem}
+					nestedPanel={uiItem.nestedPanel}
+				/>);
+			}
 			return (<Subtabs key={"subtabs." + key}
 				tabs={uiItem.tabs}
 				className={uiItem.className}
