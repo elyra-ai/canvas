@@ -2000,7 +2000,7 @@ export default class CanvasController {
 				{ divider: true }]);
 		}
 		// Rename node
-		if (source.type === "node" && source.targetObject.layout.labelEditable) {
+		if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
 			menuDefinition = menuDefinition.concat({ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode") });
 		}
 		// Disconnect node
