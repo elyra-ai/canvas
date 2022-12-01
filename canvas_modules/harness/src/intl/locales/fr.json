@@ -1,5 +1,7 @@
 {
   "dialog.nodePropertiesTitle": "Propriétés de noeuds",
   "canvas.emptyText": "Bienvenue dans l'élément harness de test de Common Canvas.{br}Votre flux est vide !",
-  "canvas.emptyLink": "Cliquez ici pour une visite guidée"
+  "canvas.emptyLink": "Cliquez ici pour une visite guidée",
+  "expression.value.column": "Valeur personnalisée",
+  "expression.value.column.description": "Test de la description personnalisée de l'application"
 }
