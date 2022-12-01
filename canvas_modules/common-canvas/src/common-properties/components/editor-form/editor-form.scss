@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+$primary-tab-height: $spacing-08;
+
 .properties-primaryTabs {
 	.bx--tabs__nav-item {
 		margin-left: 1rem;
@@ -107,8 +109,8 @@
 	svg {
 		margin-right: $spacing-05;
 		margin-top: 1px;
-		width: 16px;
-		height: 16px;
+		width: $spacing-05;
+		height: $spacing-05;
 		flex-shrink: 0;
 	}
 	.properties-link-text {
@@ -122,4 +124,22 @@
 
 .properties-custom-panel + .properties-control-panel {
 	padding-top: $spacing-05; // padding between the two classes
+}
+
+// Display in full height if inside a tearsheet
+.properties-editor-form.tearsheet-container {
+	height: 100%;
+	overflow: hidden;
+
+	.properties-primaryTabs {
+		position: absolute;
+		height: $primary-tab-height;
+	}
+
+	.properties-primary-tab-panel.tearsheet-container {
+		height: calc(100% - #{$primary-tab-height} - #{$spacing-05}); // Include padding
+		position: relative;
+		top: calc(#{$primary-tab-height} + #{$spacing-05}); // Include padding
+		overflow-y: auto;
+	}
 }
