@@ -134,12 +134,13 @@ $primary-tab-height: $spacing-08;
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
+		padding-left: $spacing-05;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container {
-		height: calc(100% - #{$primary-tab-height} - #{$spacing-05}); // Include padding
+		height: calc(100% - #{$primary-tab-height});
 		position: relative;
-		top: calc(#{$primary-tab-height} + #{$spacing-05}); // Include padding
+		top: $primary-tab-height;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}

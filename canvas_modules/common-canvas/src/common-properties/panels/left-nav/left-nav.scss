@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
+$parent-padding: calc(#{$spacing-05} + #{$spacing-05});
+
 .properties-left-nav-container {
 	display: flex;
 	border-top: px solid $ui-03;
+	height: calc(100% + #{$parent-padding}); // Include padding from parent
 	margin-top: -$spacing-05;
 	margin-left: -$spacing-05;
-	height: 100%;
+	margin-bottom: calc(-1 * #{$parent-padding});
 
 	.properties-leftnav-subtabs {
-		width: 350px;
+		width: 282px;
 		background-color: $ui-01;
 		border-right: 1px solid $ui-03;
+		padding-top: $spacing-02;
+		height: 100%;
 
 		ul.bx--tabs--scrollable__nav {
 			flex-direction: column;
-			width: 100%;
+			width: 282px;
 		}
 
 		li.bx--tabs--scrollable__nav-item--selected {
