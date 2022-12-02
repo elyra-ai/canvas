@@ -157,6 +157,18 @@ export default class SVGCanvasD3 {
 		return this.renderer ? this.renderer.getZoom() : null;
 	}
 
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		this.renderer.setNodeLabelEditingMode(nodeId, pipelineId);
+	}
+
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		this.renderer.setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+	}
+
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		this.renderer.setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
+	}
+
 	refreshOnSizeChange() {
 		if (this.renderer) {
 			this.renderer.refreshOnSizeChange();

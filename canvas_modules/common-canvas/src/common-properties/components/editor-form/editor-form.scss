@@ -141,5 +141,10 @@ $primary-tab-height: $spacing-08;
 		position: relative;
 		top: calc(#{$primary-tab-height} + #{$spacing-05}); // Include padding
 		overflow-y: auto;
+		overflow-x: hidden;
+	}
+
+	&.field-picker {
+		border-top: 1px solid $ui-03;
 	}
 }

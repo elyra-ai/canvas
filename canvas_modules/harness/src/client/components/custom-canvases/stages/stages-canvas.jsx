@@ -135,7 +135,7 @@ export default class DetachedCanvas extends React.Component {
 			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
 				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
+			{ id: "dec-4", position: "middle", label: linkLabel, label_editable: true, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -161,8 +161,10 @@ export default class DetachedCanvas extends React.Component {
 	editActionHandler(data, command) {
 		if (data.editType === "linkNodes") {
 			this.createDecorations(data.linkIds[0]);
+
 		} else if (data.editType === "redo" && command.data.editType === "linkNodes") {
 			this.createDecorations(command.data.linkIds[0]);
+
 		} else if (data.editType === "createSuperNode" ||
 								data.editType === "redo" && command.data.editType === "createSuperNode") {
 			const newNodeProps =
@@ -174,20 +176,31 @@ export default class DetachedCanvas extends React.Component {
 				command.supernode.id,
 				newNodeProps,
 				command.apiPipeline.pipelineId);
+
 		} else if (data.editType === "addPort") {
 			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
 			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+
+		} else if (data.editType === "renameLinkLabel") {
+			this.canvasController.setLinkDecorationLabelEditingMode("dec-4", data.id, data.pipelineId);
 		}
 	}
 
 	contextMenuHandler(source, defaultMenu) {
-		if (source.selectedObjectIds.length === 1) {
-			return defaultMenu.concat([
-				{ divider: true }, { action: "addPort", label: "Add port" }
-			]);
+		const newMenu = defaultMenu;
+		if (source.type === "link") {
+			newMenu.push(
+				{ action: "renameLinkLabel", label: "Rename" }
+			);
 		}
-		return defaultMenu;
+
+		if (source.type === "node" && source.selectedObjectIds.length === 1) {
+			newMenu.push(
+				{ divider: true }, { action: "addPort", label: "Add port" }
+			);
+		}
+		return newMenu;
 	}
 
 	clickActionHandler(source) {
