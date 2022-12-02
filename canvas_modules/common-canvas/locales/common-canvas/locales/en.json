@@ -30,6 +30,7 @@
   "node.deconstructSupernode": "Deconstruct supernode",
   "node.convertSupernodeExternalToLocal": "Convert external to local",
   "node.convertSupernodeLocalToExternal": "Convert local to external",
+  "node.renameNode": "Rename",
   "canvas.validateFlow": "Validate Flow",
   "node.editNode": "Open",
   "node.editMenu": "Edit",
