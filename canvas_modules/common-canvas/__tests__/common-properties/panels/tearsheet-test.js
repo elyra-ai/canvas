@@ -74,7 +74,7 @@ describe("tearsheet tests", () => {
 });
 
 describe("Tearsheet renders correctly", () => {
-	it("should display buttons in tearsheet if showPropertiesButtons is false", () => {
+	it("should not display buttons in tearsheet if showPropertiesButtons is false", () => {
 		const wrapper = mountWithIntl(<TearSheet
 			open
 			onCloseCallback={Sinon.spy()}
@@ -83,6 +83,7 @@ describe("Tearsheet renders correctly", () => {
 				content: "test content"
 			}}
 			showPropertiesButtons={false}
+			applyOnBlur
 		/>);
 		const tearsheet = wrapper.find("div.properties-tearsheet-panel");
 		expect(tearsheet).to.have.length(1);
@@ -92,12 +93,15 @@ describe("Tearsheet renders correctly", () => {
 		expect(tearsheet.find("div.properties-tearsheet-body").text()).to.equal("test content");
 		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(0);
 		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(0);
+
+		// Verify close button is visible
+		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(0);
 	});
 
-	it("should display buttons in tearsheet if showPropertiesButtons is true", () => {
+	it("should display buttons in tearsheet if showPropertiesButtons is true and applyOnBlur is false", () => {
 		const wrapper = mountWithIntl(<TearSheet
 			open
-			onCloseCallback={Sinon.spy()}
+			onCloseCallback={null}
 			tearsheet={{
 				title: "test title",
 				content: "test content"
@@ -112,5 +116,8 @@ describe("Tearsheet renders correctly", () => {
 		expect(tearsheet).to.have.length(1);
 		expect(tearsheet.find("div.properties-tearsheet-body.with-buttons")).to.have.length(1);
 		expect(tearsheet.find("div.properties-modal-buttons")).to.have.length(1);
+
+		// Verify close button is not visible
+		expect(tearsheet.find("div.properties-tearsheet-header.hide-close-button")).to.have.length(1);
 	});
 });
