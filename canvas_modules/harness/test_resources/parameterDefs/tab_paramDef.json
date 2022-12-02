@@ -264,6 +264,16 @@
         "summary": true
       }
     ],
+    "action_info": [{
+      "id": "openTearsheet",
+      "label": {
+        "default": "open tearsheet"
+      },
+      "control": "button",
+      "data": {
+        "tearsheet_ref": "tearsheetHidden"
+      }
+    }],
     "group_info": [
       {
         "id": "Primary",
@@ -273,6 +283,13 @@
         "type": "panels",
         "class_name": "maintab-panel-class",
         "group_info": [
+          {
+            "id": "openTearsheet-action-panel",
+            "type": "actionPanel",
+            "action_refs": [
+              "openTearsheet"
+            ]
+          },
           {
             "id": "conditions",
             "type": "controls",
@@ -322,6 +339,85 @@
                 "parameter_refs": [
                   "fruit",
                   "other"
+                ]
+              },
+              {
+                "id": "nested-subtabs",
+                "label": {
+                  "default": "Nested subtabs"
+                },
+                "type": "subTabs",
+                "class_name": "subtab-panel-nested-class",
+                "group_info": [
+                  {
+                    "id": "range-fields-subtab1",
+                    "type": "controls",
+                    "class_name": "range-fields-subtab1-control-class",
+                    "label": {
+                      "default": "Range Fields"
+                    },
+                    "parameter_refs": [
+                      "fromValue",
+                      "toValue"
+                    ]
+                  },
+                  {
+                    "id": "fruit-subtab1",
+                    "label": {
+                      "default": "Fruit"
+                    },
+                    "type": "controls",
+                    "class_name": "fruit-subtab-control-class2",
+                    "parameter_refs": [
+                      "fruit",
+                      "other"
+                    ]
+                  },
+                  {
+                    "id": "nested-subtabs2",
+                    "label": {
+                      "default": "Nested subtabs2"
+                    },
+                    "type": "subTabs",
+                    "class_name": "subtab-panel-nested-class",
+                    "group_info": [
+                      {
+                        "id": "range-fields-subtab2",
+                        "type": "controls",
+                        "class_name": "range-fields-subtab2-control-class1",
+                        "label": {
+                          "default": "Range Fields"
+                        },
+                        "parameter_refs": [
+                          "fromValue",
+                          "toValue"
+                        ]
+                      },
+                      {
+                        "id": "table-subtab2",
+                        "label": {
+                          "default": "Table SubTab"
+                        },
+                        "type": "controls",
+                        "class_name": "table-subtab-control-class2",
+                        "parameter_refs": [
+                          "fields"
+                        ]
+                      },
+                      {
+                        "id": "fruit-subtab2",
+                        "label": {
+                          "default": "Fruit"
+                        },
+                        "type": "controls",
+                        "class_name": "fruit-subtab-control-class3",
+                        "parameter_refs": [
+                          "fruit",
+                          "other"
+                        ]
+                      }
+                    ]
+                  }
                 ]
               }
             ]
@@ -383,6 +479,9 @@
         "label": {
           "default": "Tab Test2"
         },
+				"description": {
+          "default": "Display tabs in panel within group"
+        },
         "type": "panels",
         "group_info": [
           {
@@ -427,6 +526,67 @@
             ]
           }
         ]
+      },
+			{
+        "id": "Primary3",
+        "label": {
+          "default": "Tab Test3"
+        },
+				"description": {
+          "default": "Display tabs in primary group"
+        },
+        "type": "subTabs",
+				"group_info": [
+					{
+						"id": "range-fields-subtab2",
+						"type": "controls",
+						"label": {
+							"default": "Range Fields"
+						},
+						"parameter_refs": [
+							"fromValue2",
+							"toValue2"
+						]
+					},
+					{
+						"id": "table-subtab2",
+						"label": {
+							"default": "Table SubTab"
+						},
+						"type": "controls",
+						"parameter_refs": [
+							"fields2"
+						]
+					},
+					{
+						"id": "fruit-subtab2",
+						"label": {
+							"default": "Fruit"
+						},
+						"type": "controls",
+						"parameter_refs": [
+							"fruit2",
+							"other2"
+						]
+					}
+				]
+      },
+      {
+        "id": "tearsheetHidden",
+        "label": {
+          "default": "Tearsheet"
+        },
+        "type": "tearsheetPanel",
+        "group_info":[{
+          "id": "orange",
+          "type": "textPanel",
+          "label": {
+            "default": "Oranges"
+          },
+          "description": {
+            "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+          }
+        }]
       }
     ]
   },
