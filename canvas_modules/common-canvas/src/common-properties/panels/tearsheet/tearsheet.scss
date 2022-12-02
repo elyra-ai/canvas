@@ -60,14 +60,17 @@ $properties-buttons-height: $spacing-10;
 
 // These styles are to display editor-form in a Tearsheet
 .properties-tearsheet-panel.bx--modal {
-	.properties-tearsheet-header.with-buttons {
+	.properties-tearsheet-header.with-tabs {
 		border-bottom: 0;
 	}
 
-	.properties-tearsheet-body.with-buttons {
-		height: calc(100% - #{$properties-buttons-height});
-		padding: 0;
+	.properties-tearsheet-header.hide-close-button {
+		button.bx--modal-close {
+			display: none;
+		}
+	}
 
+	.properties-tearsheet-body {
 		// Display the tabs in the Tearsheet header
 		.properties-editor-form {
 			> div {
@@ -85,6 +88,15 @@ $properties-buttons-height: $spacing-10;
 				margin-bottom: $spacing-05;
 			}
 		}
+	}
+
+	.properties-tearsheet-body.with-buttons {
+		height: calc(100% - #{$properties-buttons-height});
+		border-bottom: 1px solid $ui-03;
+	}
+
+	.properties-tearsheet-body.with-tabs {
+		padding: 0;
 	}
 
 	.properties-modal-buttons {

@@ -170,7 +170,7 @@ class EditorForm extends React.Component {
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
 					tabContent.push(
-						<div key={"cat." + key} className="properties-category">
+						<div key={"cat." + key} className="properties-single-category">
 							{panelItems}
 							{additionalComponent}
 						</div>
@@ -221,7 +221,12 @@ class EditorForm extends React.Component {
 			);
 		}
 		return (
-			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected} light={this.props.controller.getLight()}>
+			<Tabs key={"tab." + key}
+				className="properties-primaryTabs"
+				selected={modalSelected}
+				light={this.props.controller.getLight()}
+				tabContentClassName={classNames("properties-primary-tab-panel", { "tearsheet-container": this.props.controller.isTearsheetContainer() })}
+			>
 				{tabContent}
 			</Tabs>
 		);
@@ -343,6 +348,7 @@ class EditorForm extends React.Component {
 		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
+			// All Subtabs will become a LeftNav if displayed inside a Tearsheet container
 			return (<Subtabs key={"subtabs." + key}
 				tabs={uiItem.tabs}
 				className={uiItem.className}
@@ -626,7 +632,10 @@ class EditorForm extends React.Component {
 		}
 
 		return (
-			<div className="properties-editor-form">
+			<div className={classNames("properties-editor-form",
+				{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+				{ "field-picker": this.state.showFieldPicker })}
+			>
 				{content}
 				{wideFly}
 			</div>

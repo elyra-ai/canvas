@@ -23,6 +23,11 @@
 		stroke-width: 2;
 	}
 
+	.d3-node-selection-highlight {
+		stroke-width: 2;
+		stroke-dasharray: 4;
+	}
+
 	.d3-node-label {
 		font-size: 13px;
 		font-weight: 600;

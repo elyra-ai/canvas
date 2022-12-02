@@ -126,6 +126,10 @@ export default class PropertiesController {
 		return this.propertiesConfig;
 	}
 
+	isTearsheetContainer() {
+		return this.propertiesConfig.containerType === "Tearsheet";
+	}
+
 	setParamDef(paramDef) {
 		const rightFlyout = get(this.getPropertiesConfig(), "rightFlyout", true);
 		const formData = Form.makeForm(paramDef, !rightFlyout);

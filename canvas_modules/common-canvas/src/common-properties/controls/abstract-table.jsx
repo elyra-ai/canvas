@@ -71,7 +71,7 @@ export default class AbstractTable extends React.Component {
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 		this.checkedAll = this.checkedAll.bind(this);
-
+		this.isLightTheme = this.isLightTheme.bind(this);
 
 		if (props.selectedRows && props.selectedRows.length > 0) {
 			this.scrollToRow = props.selectedRows[props.selectedRows.length - 1];
@@ -433,6 +433,10 @@ export default class AbstractTable extends React.Component {
 		}
 	}
 
+	isLightTheme() {
+		return this.props.controller.getLight() && this.props.control.light && !this.props.controller.isTearsheetContainer();
+	}
+
 	makeSelectedEditRow(selectedRows) {
 		if (selectedRows && Array.isArray(selectedRows) && selectedRows.length > 1) {
 			const rowsSelectedLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
@@ -461,7 +465,7 @@ export default class AbstractTable extends React.Component {
 					tableLabel={tableLabel}
 					summaryTable
 					rowSelection={ROW_SELECTION.MULTIPLE}
-					light={this.props.controller.getLight()}
+					light={this.isLightTheme()}
 					emptyTablePlaceholder={this.props.control.additionalText}
 				/>
 			</div>);
@@ -681,7 +685,7 @@ export default class AbstractTable extends React.Component {
 				updateRowSelections={rowClickCallback}
 				selectedRows= {this.props.selectedRows}
 				rowSelection={this.props.control.rowSelection}
-				light={this.props.controller.getLight()}
+				light={this.isLightTheme()}
 				emptyTablePlaceholder={this.props.control.additionalText}
 			/>);
 		return (

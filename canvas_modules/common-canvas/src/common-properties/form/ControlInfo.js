@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { get } from "lodash";
+
 import { EditStyle } from "../constants/form-constants";
 
 
@@ -184,6 +186,6 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
-		this.light = settings.light || false;
+		this.light = get(settings, "light", true);
 	}
 }
