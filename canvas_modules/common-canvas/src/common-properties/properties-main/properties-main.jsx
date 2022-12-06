@@ -188,7 +188,7 @@ class PropertiesMain extends React.Component {
 				return label;
 			}
 		}
-		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ACTION_LABEL);
+		return PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ACTION_LABEL, { node_label: this.propertiesController.getTitle() });
 	}
 
 	getEditorSize() {
