@@ -3,7 +3,7 @@
 	"action.arrangeLayout": "Arrange layout",
 	"action.attachNodeToLinks": "Attach {node_label} node to link",
 	"action.collapseSuperNodeInPlace": "Collapse supernode",
-	"action.commonProperties": "Save properties",
+	"action.commonProperties": "Save {node_label} node properties",
 	"action.colorComments": "Color {comments_count, plural, one {# comment} other {# comments} }",
 	"action.convertSuperNodeExternalToLocal": "Convert external supernode {node_label} to local",
 	"action.convertSuperNodeLocalToExternal": "Convert local supernode {node_label} to external",
