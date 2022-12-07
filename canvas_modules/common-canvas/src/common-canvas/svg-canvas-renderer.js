@@ -5761,6 +5761,7 @@ export default class SVGCanvasRenderer {
 		let resizeObj = this.activePipeline.getNode(node.id);
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			resizeObj = this.snapToGridObject(resizeObj);
+			resizeObj = this.restrictNodeSizingToMinimums(resizeObj);
 		}
 
 		// If the dimensions or position has changed, issue the command.
@@ -5834,6 +5835,16 @@ export default class SVGCanvasRenderer {
 			this.canvasController.editActionHandler(data);
 		}
 		this.commentSizing = false;
+	}
+
+	// Ensure the snap-to-grid does not make the width or height smaller than
+	// the minimums allowed.
+	restrictNodeSizingToMinimums(resizeObj) {
+		const minHeight = this.getMinHeight(resizeObj);
+		const minWidth = this.getMinWidth(resizeObj);
+		resizeObj.width = Math.max(resizeObj.width, minWidth);
+		resizeObj.height = Math.max(resizeObj.height, minHeight);
+		return resizeObj;
 	}
 
 	displayLinks() {
