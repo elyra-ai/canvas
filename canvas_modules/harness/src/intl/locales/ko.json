@@ -1,5 +1,7 @@
 {
   "dialog.nodePropertiesTitle": "노드 특성",
   "canvas.emptyText": "공통 캔버스 테스트 하니스에 오신 것을 환영합니다.{br}플로우가 비어 있습니다!",
-  "canvas.emptyLink": "둘러보려면 여기를 클릭하십시오."
+  "canvas.emptyLink": "둘러보려면 여기를 클릭하십시오.",
+  "expression.value.column": "사용자 정의 값",
+  "expression.value.column.description": "앱에서 사용자 정의 설명 테스트"
 }

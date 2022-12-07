@@ -124,12 +124,40 @@ export default class CanavasStore {
 		return null;
 	}
 
+	isEmpty(pipelineId) {
+		const pipeline = this.getNonClonedPipeline(pipelineId);
+
+		if (pipeline.nodes && pipeline.nodes.length === 0 &&
+				pipeline.comments && pipeline.comments.length === 0 &&
+				pipeline.links && pipeline.links.length === 0) {
+			return true;
+		}
+		return false;
+	}
+
 	// This is a service method for retrieving the internal pipeline. It does NOT
 	// clone the pipeline therefore it should NOT be called from outside this
 	// class because we don't want to surface the intenal data in redux to
 	// the outside world.
 	getNonClonedPipeline(pipelineId) {
 		return this.store.getState().canvasinfo.pipelines.find((p) => p.id === pipelineId);
+	}
+
+	// This is a service method for retrieving selected objects of the type passed
+	// in which can be "nodes", "comments" or "links". It does NOT clone the
+	// resultant array therefore it should NOT be called from outside this
+	// class because we don't want to surface the intenal data in redux to
+	// the outside world.
+	getNonClonedSelectedObjs(type) {
+		const selectedPipelineId = this.getSelectedPipelineId();
+		if (selectedPipelineId) {
+			const pipeline = this.getNonClonedPipeline(selectedPipelineId);
+			if (pipeline[type]) {
+				const selectedObjIds = this.getSelectedObjectIds();
+				return pipeline[type].filter((o) => selectedObjIds.includes(o.id));
+			}
+		}
+		return [];
 	}
 
 	getNodes(pipelineId) {
@@ -250,6 +278,33 @@ export default class CanavasStore {
 
 	getSelectionInfo() {
 		return this.cloneData(this.store.getState().selectioninfo);
+	}
+
+	getSelectedPipelineId() {
+		return this.getSelectionInfo().pipelineId;
+	}
+
+	getSelectedObjectIds() {
+		const selectedObjIds = this.store.getState().selectioninfo.selections || [];
+		return this.cloneData(selectedObjIds);
+	}
+
+	getSelectedNodes() {
+		return cloneDeep(this.getNonClonedSelectedObjs("nodes"));
+	}
+
+	getSelectedComments() {
+		return cloneDeep(this.getNonClonedSelectedObjs("comments"));
+	}
+
+	getSelectedLinks() {
+		return cloneDeep(this.getNonClonedSelectedObjs("links"));
+	}
+
+	// Returns true if all the selected objects are links. That is, if the
+	// number of selected links is the same as the number of selected objects.
+	areAllSelectedObjectsLinks() {
+		return this.getNonClonedSelectedObjs("links").length === this.getSelectedObjectIds().length;
 	}
 
 	getExternalPipelineFlows() {
