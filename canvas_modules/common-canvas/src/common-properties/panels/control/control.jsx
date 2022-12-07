@@ -33,6 +33,7 @@ class ControlPanel extends React.Component {
 						"properties-control-panel",
 						{ "hide": this.props.panelState === STATES.HIDDEN },
 						{ "properties-control-nested-panel": this.props.panel.nestedPanel },
+						{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
 						className
 					)}
 					disabled={this.props.panelState === STATES.DISABLED} data-id={ControlUtils.getDataId({ name: this.props.panel.id })}
