@@ -356,6 +356,7 @@ class EditorForm extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 				genUIItem={this.genUIItem}
 				nestedPanel={uiItem.nestedPanel}
+				leftnav={this.props.controller.isTearsheetContainer()}
 			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);

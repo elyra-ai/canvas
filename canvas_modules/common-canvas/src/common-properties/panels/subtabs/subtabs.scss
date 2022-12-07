@@ -21,3 +21,65 @@
 		padding-right: 0;
 	}
 }
+
+// The below styles are required to override the Carbon "Tab" component to look like a leftnav
+$parent-padding: calc(#{$spacing-05} + #{$spacing-05});
+$selected-tab-width: 3px;
+
+.properties-leftnav-container {
+	display: flex;
+	border-top: px solid $ui-03;
+	height: calc(100% + #{$parent-padding}); // Include padding from parent
+	margin-top: -$spacing-05;
+	margin-left: -$spacing-05;
+	margin-bottom: calc(-1 * #{$parent-padding});
+
+	.properties-leftnav-subtabs {
+		width: 282px;
+		background-color: $ui-01;
+		border-right: 1px solid $ui-03;
+		padding-top: $spacing-02;
+		height: 100%;
+
+		ul.bx--tabs--scrollable__nav {
+			flex-direction: column;
+			width: 282px;
+		}
+
+		li.bx--tabs--scrollable__nav-item--selected {
+			border-left: $selected-tab-width solid $interactive-04;
+			border-bottom: 0;
+			background-color: $selected-ui;
+
+			&:hover {
+				background-color: $hover-row;
+			}
+
+			&.properties-leftnav-subtab-item button {
+				border-left: 0;
+			}
+		}
+
+		li.properties-leftnav-subtab-item {
+			&:hover button {
+				border-bottom: 0;
+			}
+			button {
+				border-left: $selected-tab-width solid transparent;
+				border-bottom: 0;
+				transition: none; // Prevent border/outline from flickering
+
+				&:focus, &:active {
+					outline: 0;
+					border-bottom: 0;
+					transition: none; // Prevent border/outline from flickering
+				}
+			}
+		}
+	}
+
+	div.bx--tab-content {
+		width: 100%;
+		padding: $spacing-05; // Override padding set by subtab
+	}
+}

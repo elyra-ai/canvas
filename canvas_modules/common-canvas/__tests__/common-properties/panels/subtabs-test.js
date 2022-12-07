@@ -30,10 +30,10 @@ describe("subtabs renders correctly", () => {
 		wrapper.unmount();
 	});
 
-	it("should have displayed the 3 tabs created", () => {
+	it("should have displayed the 4 tabs created with 6 nested subtabs", () => {
 		const tabContainer = wrapper.find("div[data-id='properties-Primary'] div.properties-sub-tab-container");
 		// should render 1 control panel
-		expect(tabContainer.find("li.properties-subtab")).to.have.length(3);
+		expect(tabContainer.find("li.properties-subtab")).to.have.length(10);
 	});
 });
 
@@ -91,5 +91,29 @@ describe("subtabs classNames applied correctly", () => {
 		expect(subTabs.find(".range-fields-subtab-control-class")).to.have.length(1);
 		expect(subTabs.find(".table-subtab-control-class")).to.have.length(1);
 		expect(subTabs.find(".fruit-subtab-control-class")).to.have.length(1);
+	});
+});
+
+describe("subtabs renders correctly in a Tearsheet container", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { rightFlyout: false, containerType: "Tearsheet" });
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should have rendered subtabs with leftnav classnames", () => {
+		const primaryTabs = wrapper.find("div.properties-primary-tab-panel.tearsheet-container");
+		expect(primaryTabs).to.have.length(4);
+
+		const primaryTab = primaryTabs.at(2); // Tab Test2
+		expect(primaryTab.find("div.properties-sub-tab-container.vertical.properties-leftnav-container")).to.have.length(1);
+
+		const leftNav = primaryTab.find("div.properties-subtabs.properties-leftnav-subtabs");
+		expect(leftNav).to.have.length(1);
+		expect(leftNav.find("li.properties-leftnav-subtab-item")).to.have.length(3);
 	});
 });

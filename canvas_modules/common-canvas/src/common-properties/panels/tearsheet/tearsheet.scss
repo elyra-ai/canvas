@@ -73,10 +73,6 @@ $properties-buttons-height: $spacing-10;
 	.properties-tearsheet-body {
 		// Display the tabs in the Tearsheet header
 		.properties-editor-form {
-			> div {
-				padding: 0 $spacing-05;
-			}
-
 			// styling when there is only 1 tab
 			.properties-single-category {
 				padding: $spacing-05;
