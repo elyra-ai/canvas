@@ -5725,6 +5725,9 @@ export default class SVGCanvasRenderer {
 			width = CanvasUtils.snapToGrid(this.notSnappedWidth, this.canvasLayout.snapToGridXPx);
 			height = CanvasUtils.snapToGrid(this.notSnappedHeight, this.canvasLayout.snapToGridYPx);
 
+			width = Math.max(width, minWidth);
+			height = Math.max(height, minHeight);
+
 		} else {
 			xPos = canvasObj.x_pos + incrementX;
 			yPos = canvasObj.y_pos + incrementY;
