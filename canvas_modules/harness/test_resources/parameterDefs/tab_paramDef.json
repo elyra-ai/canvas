@@ -533,7 +533,7 @@
             "type": "subTabs",
             "group_info": [
               {
-                "id": "range-fields-subtab2",
+                "id": "range-fields-subtab22",
                 "type": "controls",
                 "label": {
                   "default": "Range Fields"
@@ -545,7 +545,7 @@
                 ]
               },
               {
-                "id": "table-subtab2",
+                "id": "table-subtab22",
                 "label": {
                   "default": "Table SubTab"
                 },
@@ -555,7 +555,7 @@
                 ]
               },
               {
-                "id": "fruit-subtab2",
+                "id": "fruit-subtab22",
                 "label": {
                   "default": "Fruit"
                 },
@@ -577,7 +577,7 @@
         "type": "subTabs",
         "group_info": [
           {
-            "id": "range-fields-subtab2",
+            "id": "range-fields-subtab3",
             "type": "controls",
             "label": {
               "default": "Range Fields"
@@ -589,7 +589,7 @@
             ]
           },
           {
-            "id": "table-subtab2",
+            "id": "table-subtab3",
             "label": {
               "default": "Table SubTab"
             },
@@ -599,7 +599,7 @@
             ]
           },
           {
-            "id": "fruit-subtab2",
+            "id": "fruit-subtab3",
             "label": {
               "default": "Fruit"
             },
@@ -618,7 +618,7 @@
             "class_name": "subtab-panel-nested-class",
             "group_info": [
               {
-                "id": "range-fields-subtab1",
+                "id": "range-fields-subtab33",
                 "type": "controls",
                 "class_name": "range-fields-subtab1-control-class",
                 "label": {
@@ -630,7 +630,7 @@
                 ]
               },
               {
-                "id": "fruit-subtab1",
+                "id": "fruit-subtab33",
                 "label": {
                   "default": "Fruit"
                 },
@@ -642,7 +642,7 @@
                 ]
               },
               {
-                "id": "nested-subtabs3",
+                "id": "nested-subtabs13",
                 "label": {
                   "default": "Nested subtabs3"
                 },
@@ -650,7 +650,7 @@
                 "class_name": "subtab-panel-nested-class",
                 "group_info": [
                   {
-                    "id": "range-fields-subtab3",
+                    "id": "range-fields-subtab13",
                     "type": "controls",
                     "class_name": "range-fields-subtab3-control-class1",
                     "label": {
@@ -662,7 +662,7 @@
                     ]
                   },
                   {
-                    "id": "table-subtab3",
+                    "id": "table-subtab13",
                     "label": {
                       "default": "Table SubTab"
                     },
@@ -673,7 +673,7 @@
                     ]
                   },
                   {
-                    "id": "fruit-subtab3",
+                    "id": "fruit-subtab13",
                     "label": {
                       "default": "Fruit"
                     },
