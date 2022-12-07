@@ -5764,7 +5764,7 @@ export default class SVGCanvasRenderer {
 			resizeObj = this.restrictNodeSizingToMinimums(resizeObj);
 		}
 
-		// If the dimensions or position has changed, issue the command.
+		// If the dimensions or position has changed, issue the "resizeObjects" command.
 		// Note: x_pos or y_pos might change on resize if the node is sized
 		// upwards or to the left.
 		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
