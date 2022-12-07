@@ -54,6 +54,8 @@ export default class DetachedCanvas extends React.Component {
 			enableLinkDirection: "LeftRight",
 			enableSaveZoom: "LocalStorage",
 			enableSnapToGridType: "After",
+			enableSnapToGridX: "33%",
+			enableSnapToGridY: "33%",
 			enableLinkSelection: "Detachable",
 			enableInsertNodeDroppedOnLink: true,
 			enableDropZoneOnExternalDrag: true,
