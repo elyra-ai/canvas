@@ -21,8 +21,8 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import { LINK_SELECTION_LINK_ONLY, PALETTE_LAYOUT_NONE,
 	STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
 	from "../../../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
-import DetachedCanvasFlow from "./detachedCanvas.json";
-import DetachedPalette from "./detachedPalette.json";
+import DetachedCanvasFlow from "./readOnlyCanvas.json";
+import DetachedPalette from "./readOnlyPalette.json";
 
 import { Edit16, EditOff16, Locked16 } from "@carbon/icons-react";
 
@@ -122,22 +122,22 @@ export default class ReadOnlyCanvas extends React.Component {
 				inputPortDisplay: false,
 				outputPortRightPosX: 4,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				dataLinkArrowHead: "M -5 5 L 0 0 -5 -5",
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
