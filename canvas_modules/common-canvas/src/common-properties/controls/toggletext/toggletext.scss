@@ -29,6 +29,10 @@
 			border-bottom: 2px solid $support-03;
 		}
 	}
+	button svg {
+		height: $spacing-04;
+		padding-left: $spacing-02;
+	}
 }
 
 // toggle control in table needs to fit within column
@@ -38,7 +42,6 @@
 		svg {
 			height: $spacing-04;
 			padding-left: $spacing-02;
-			color: $interactive-01;
 		}
 	}
 }
