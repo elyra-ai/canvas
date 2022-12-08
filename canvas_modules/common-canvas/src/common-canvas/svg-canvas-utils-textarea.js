@@ -237,9 +237,12 @@ export default class SvgCanvasTextArea {
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
-		d3.select(parentDomObj)
-			.selectAll("div")
-			.attr("style", "display:none;");
+		// Save the current style for the display <div> and set the style so the
+		// <div> is hidden while the text area is displayed on top of it. This
+		// prevents the <div> from protruding below the text area.
+		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-node-label div");
+		this.displayDivStyle = this.displayDiv.attr("style");
+		this.displayDiv.attr("style", "display:none;");
 
 		this.editingTextData = {
 			id: node.id,
@@ -295,21 +298,21 @@ export default class SvgCanvasTextArea {
 	}
 
 	// Called when the node label or decoration label text area is closing.
-	// Sets the style of the div that should display the text, so it is displayed
-	// by removing its inline style (because it was hidden when the entry text
-	// area opened).
+	// Resets the inline style of the <div>, that displays the text, back
+	// to what is was before it was hidden when the entry text area opened.
 	closeEntryTextArea() {
-		d3.select(this.editingTextData.parentDomObj)
-			.selectAll("div")
-			.attr("style", null);
+		this.displayDiv.attr("style", this.displayDivStyle);
 	}
 
 	// Displays a text area for an editable text decoration on either a node
 	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
-		d3.select(parentDomObj)
-			.selectAll("div")
-			.attr("style", "display:none;");
+		// Save the current style for the display <div> and set the style so the
+		// <div> is hidden while the text area is displayed on top of it. This
+		// prevents the <div> from protruding below the text area.
+		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-dec-label div");
+		this.displayDivStyle = this.displayDiv.attr("style");
+		this.displayDiv.attr("style", "display:none;");
 
 		this.editingTextData = {
 			id: dec.id,
