@@ -134,11 +134,11 @@ export default class DetachedCanvas extends React.Component {
 				outputPortRightPosX: 0,
 				outputPortRightPosY: 0,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				commentHighlightGap: 3,
@@ -146,11 +146,11 @@ export default class DetachedCanvas extends React.Component {
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
