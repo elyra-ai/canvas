@@ -6265,7 +6265,7 @@ export default class SVGCanvasRenderer {
 	// the side of the node and where those nodes may be positioned close to each
 	// other so it makes the ports appear on top of any adjacent node.
 	raiseNodeToTop(nodeGrp) {
-		if (this.drawingNewLinkData === null && !this.dragging && this.getSelectedLinks().length === 0) {
+		if (this.drawingNewLinkData === null && !this.dragging && this.getSelectedLinks().length === 0 && !this.isEditingText()) {
 			nodeGrp.raise();
 		}
 	}
