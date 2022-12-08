@@ -22,6 +22,7 @@ import sinon from "sinon";
 import Expression from "../../../src/common-properties/controls/expression";
 import ExpressionBuilder from "../../../src/common-properties/controls/expression/expression-builder/expression-builder";
 import ExpressionToggle from "../../../src/common-properties/controls/expression/expression-toggle/expression-toggle";
+import ExpressionSelectFieldFunctions from "../../../src/common-properties/controls/expression/expression-builder/expression-select-field-function";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
@@ -34,6 +35,7 @@ import { expect } from "chai";
 
 import ExpressionInfo from "../../test_resources/json/expression-function-list.json";
 import ExpressionParamdef from "../../test_resources/paramDefs/expressionControl_paramDef.json";
+import Sinon from "sinon";
 
 const control = {
 	name: "test-expression",
@@ -498,7 +500,7 @@ describe("expression-builder select from tables correctly", () => {
 		);
 		const fieldTable = wrapper.find("div.properties-field-table-container");
 		tableUtils.dblClickTableRows(fieldTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" 'Age'");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
 	});
 
 	it("expression builder select a field value", () => {
@@ -756,10 +758,10 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		dropDownList.at(3).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
 		tableUtils.dblClickTableRows(fieldTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet'");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet");
 		tableUtils.clickTableRows(fieldTable, [1]);
 		tableUtils.dblClickTableRows(valueTable, [0]);
-		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 'numberSet' 1");
+		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet 1");
 	});
 });
 
@@ -1127,5 +1129,34 @@ describe("expression toggle in tearsheet", () => {
 		controller.setActiveTearsheet("tearsheetX");
 		wrapper.find("button.minimize").simulate("click");
 		expect(controller.getActiveTearsheet()).to.equal(null);
+	});
+});
+
+describe("expression select field function tests", () => {
+	let wrapper;
+	beforeEach(() => {
+		reset();
+		wrapper = mountWithIntl(
+			<ExpressionSelectFieldFunctions
+				controller={controller}
+				language={control.language}
+				onChange={Sinon.spy()}
+				functionList={ExpressionInfo.actual.functionCategories}
+			/>
+		);
+	});
+
+	it("should return true if field name includes special characters", () => {
+		const instance = wrapper.find("ExpressionSelectFieldOrFunction").instance();
+		expect(instance.shouldQuoteField("field")).to.equal(false);
+		expect(instance.shouldQuoteField("FieldName")).to.equal(false);
+
+		expect(instance.shouldQuoteField("field space")).to.equal(true);
+		expect(instance.shouldQuoteField("field0")).to.equal(true);
+		expect(instance.shouldQuoteField("9field")).to.equal(true);
+		expect(instance.shouldQuoteField("field5number")).to.equal(true);
+		expect(instance.shouldQuoteField("field-dash")).to.equal(true);
+		expect(instance.shouldQuoteField("$field$")).to.equal(true);
+		expect(instance.shouldQuoteField("field_underscore")).to.equal(true);
 	});
 });
