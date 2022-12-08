@@ -501,7 +501,7 @@ class FlexibleTable extends React.Component {
 		}
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
-		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
+		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		const ftHeader = (searchBar || this.props.topRightPanel)
 			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}
@@ -534,7 +534,7 @@ class FlexibleTable extends React.Component {
 				{ftHeader}
 				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
-						<div className="properties-ft-container-wrapper" style={ heightStyle }>
+						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable

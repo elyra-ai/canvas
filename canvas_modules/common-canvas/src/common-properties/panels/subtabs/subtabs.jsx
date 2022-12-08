@@ -52,7 +52,7 @@ class Subtabs extends React.Component {
 					<Tab
 						key={"subtabs.tab." + i}
 						disabled={panelState === STATES.DISABLED}
-						className="properties-subtab"
+						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
 						tabIndex={tabIdx}
 						label={tab.text}
 						title={tab.text}
@@ -71,10 +71,14 @@ class Subtabs extends React.Component {
 					"properties-sub-tab-container",
 					{ vertical: !this.props.rightFlyout },
 					{ "properties-control-nested-panel": this.props.nestedPanel },
+					{ "properties-leftnav-container": this.props.leftnav },
 					className
 				)}
 			>
-				<Tabs className="properties-subtabs" selected={activeTab} light={this.props.controller.getLight()}>
+				<Tabs className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })}
+					selected={activeTab}
+					light={this.props.controller.getLight()}
+				>
 					{subTabs}
 				</Tabs>
 			</div>
@@ -88,7 +92,12 @@ Subtabs.propTypes = {
 	rightFlyout: PropTypes.bool,
 	genUIItem: PropTypes.func.isRequired,
 	className: PropTypes.string,
-	nestedPanel: PropTypes.bool
+	nestedPanel: PropTypes.bool,
+	leftnav: PropTypes.bool
+};
+
+Subtabs.defaultProps = {
+	leftnav: false
 };
 
 export default Subtabs;
