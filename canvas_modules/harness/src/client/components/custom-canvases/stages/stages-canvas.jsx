@@ -137,7 +137,8 @@ export default class DetachedCanvas extends React.Component {
 			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
 				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, label_editable: true, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
+			{ id: "link-label", position: "middle", label: linkLabel, label_editable: true, label_allow_return_key: "save",
+				x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -185,14 +186,14 @@ export default class DetachedCanvas extends React.Component {
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
 
 		} else if (data.editType === "renameLinkLabel") {
-			this.canvasController.setLinkDecorationLabelEditingMode("dec-4", data.id, data.pipelineId);
+			this.canvasController.setLinkDecorationLabelEditingMode("link-label", data.id, data.pipelineId);
 		}
 	}
 
 	contextMenuHandler(source, defaultMenu) {
 		const newMenu = defaultMenu;
 		if (source.type === "link") {
-			newMenu.push(
+			newMenu.unshift(
 				{ action: "renameLinkLabel", label: "Rename" }
 			);
 		}
