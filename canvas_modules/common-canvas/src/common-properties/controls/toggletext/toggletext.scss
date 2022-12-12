@@ -29,11 +29,9 @@
 			border-bottom: 2px solid $support-03;
 		}
 	}
-	button {
+	button svg {
 		padding-left: $spacing-02;
-		svg {
-			padding-right: $spacing-02;
-		}
+		padding-top: $spacing-02;
 	}
 }
 
