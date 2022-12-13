@@ -1614,6 +1614,21 @@ export default class ObjectModel {
 		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
 	}
 
+	// Simulates the selection of an object (identified by objId) in the
+	// pipeline identified by pipelineId with the augmentation keys pressed
+	// as indicated by isShiftKeyPressed and isCmndCtrlPressed.
+	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
+		if (!this.isSelected(objId, pipelineId)) {
+			if (isShiftKeyPressed) {
+				this.selectSubGraph(objId, pipelineId);
+			} else {
+				this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+			}
+		} else if (isCmndCtrlPressed) {
+			this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+		}
+	}
+
 	isSelected(objectId, pipelineId) {
 		return pipelineId === this.getSelectedPipelineId() &&
 			this.getSelectedObjectIds().indexOf(objectId) >= 0;

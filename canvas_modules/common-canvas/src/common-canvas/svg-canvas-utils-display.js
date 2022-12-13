@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-export default class SvgCanvasUtilsDisplay {
-	constructor(canvasController, isSubflow, pipelineId) {
+export default class SvgCanvasDisplay {
+	constructor(canvasController, isSubflow, pipelineId, breadcrumbs) {
 		this.canvasController = canvasController;
 		this.isSubflow = isSubflow;
 		this.pipelineId = pipelineId;
+		this.breadcrumbs = breadcrumbs;
 	}
 
 	isDisplayingCurrentPipeline() {
-		return this.canvasController.getCurrentBreadcrumb().pipelineId === this.pipelineId;
+		const currentBreadcrumb = this.breadcrumbs.at(-1);
+		return currentBreadcrumb.pipelineId === this.pipelineId;
 	}
 
 	setDisplayState() {
-		if (this.canvasController.getBreadcrumbs().length > 1 &&
+		if (this.breadcrumbs.length > 1 &&
 				this.isDisplayingCurrentPipeline()) {
 			this.displayState = "sub-flow-full-page";
 
