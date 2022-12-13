@@ -172,10 +172,6 @@ export default class SVGCanvasRenderer {
 		// be attached to a detached link.
 		this.existingNodeAttachableToDetachedLinks = false;
 
-		// Allow us to track when a selection is being made so there is
-		// no need to re-render whole canvas
-		this.selecting = false;
-
 		// Flag to indicate when the space key is down (used when dragging).
 		this.spaceKeyPressed = false;
 
@@ -2052,9 +2048,7 @@ export default class SVGCanvasRenderer {
 		// Also, don't clear selections if we have closed a context menu or
 		// closed text editing.
 		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
-			this.selecting = true;
 			this.canvasController.clearSelections();
-			this.selecting = false;
 		}
 	}
 
@@ -2082,9 +2076,7 @@ export default class SVGCanvasRenderer {
 				this.config.enableLinkSelection !== LINK_SELECTION_NONE,
 				this.config.enableLinkType,
 				this.config.enableAssocLinkType);
-		this.selecting = true;
 		this.canvasController.setSelections(selections, this.activePipeline.id);
-		this.selecting = false;
 	}
 
 	// Save the zoom amount. The canvas controller/object model will decide
@@ -2830,7 +2822,14 @@ export default class SVGCanvasRenderer {
 				ren = this.createSupernodeRenderer(d, supernodeD3Object); // Create will call displayCanvas
 				this.superRenderers.push(ren);
 			} else {
-				ren.setCanvasInfoRenderer(this.canvasInfo, this.selectionInfo, this.nodeLayout, this.canvasLayout); // Setting canvas info will call displayCanvas
+				// Setting canvas info will call displayCanvas for the sub-flow
+				ren.setCanvasInfoRenderer(
+					this.canvasInfo,
+					this.selectionInfo,
+					this.breadcrumbs,
+					this.nodeLayout,
+					this.canvasLayout
+				);
 			}
 		} else {
 			if (ren) {
@@ -3391,12 +3390,7 @@ export default class SVGCanvasRenderer {
 	// off. This method also sends a SINGLE_CLICK action to the
 	// clickActionHandler callback in the host application.
 	selectObject(d, d3EventType, isShiftKeyPressed, isCmndCtrlPressed) {
-		this.selecting = true;
-
 		this.canvasController.selectObject(d.id, isShiftKeyPressed, isCmndCtrlPressed, this.activePipeline.id);
-
-		// Ensure 'selecting' flag is off before calling click action callback.
-		this.selecting = false;
 
 		// Even though the single click message below should be emitted
 		// from common canvas for comments, if we uncomment this line it prevents
@@ -6878,7 +6872,7 @@ export default class SVGCanvasRenderer {
 
 	canOpenTip(tipType) {
 		return this.canvasController.isTipEnabled(tipType) &&
-			!this.selecting && !this.regionSelect && !this.dragging &&
+			!this.regionSelect && !this.dragging &&
 			!this.commentSizing && !this.nodeSizing && !this.drawingNewLinkData;
 	}
 
@@ -6916,9 +6910,6 @@ export default class SVGCanvasRenderer {
 		}
 		if (this.commentSizing) {
 			str += " commentSizing = true";
-		}
-		if (this.selecting) {
-			str += " selecting = true";
 		}
 		if (this.regionSelect) {
 			str += " regionSelect = true";
