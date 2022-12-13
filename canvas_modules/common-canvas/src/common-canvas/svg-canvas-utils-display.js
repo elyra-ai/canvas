@@ -23,7 +23,7 @@ export default class SvgCanvasDisplay {
 	}
 
 	isDisplayingCurrentPipeline() {
-		const currentBreadcrumb = this.breadcrumbs.at(-1);
+		const currentBreadcrumb = this.breadcrumbs[this.breadcrumbs.length - 1];
 		return currentBreadcrumb.pipelineId === this.pipelineId;
 	}
 
