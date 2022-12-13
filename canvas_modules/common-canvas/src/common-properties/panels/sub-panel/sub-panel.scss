@@ -27,4 +27,8 @@ button.properties-subpanel-button {
 	.properties-light-disabled {
 		background-color: $ui-01;
 	}
+
+	.properties-modal-children {
+		padding: 0 $spacing-05;
+	}
 }
