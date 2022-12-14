@@ -2064,12 +2064,6 @@ export default class SVGCanvasRenderer {
 
 		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
 
-		// Ensure the link objects in the active pipeline have their coordinate
-		// positions set. The coords might not be set if the last object model
-		// update was a change in selections or some other operation that does
-		// not redraw link lines.
-		this.buildLinksArray();
-
 		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
 		const selections =
 			CanvasUtils.selectInRegion(region, this.activePipeline,
