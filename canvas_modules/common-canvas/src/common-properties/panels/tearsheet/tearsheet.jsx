@@ -44,7 +44,7 @@ class TearSheet extends Component {
 		return (
 			<Portal>
 				<ComposedModal
-					className="properties-tearsheet-panel"
+					className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
 					open={this.props.open}
 					size="lg"
 					preventCloseOnClickOutside
@@ -72,6 +72,7 @@ class TearSheet extends Component {
 }
 TearSheet.propTypes = {
 	open: PropTypes.bool,
+	stacked: PropTypes.bool,
 	onCloseCallback: PropTypes.func,
 	tearsheet: PropTypes.shape({
 		title: PropTypes.string.isRequired,
@@ -92,7 +93,8 @@ TearSheet.propTypes = {
 TearSheet.defaultProps = {
 	open: false,
 	showPropertiesButtons: false,
-	applyOnBlur: false
+	applyOnBlur: false,
+	stacked: false
 };
 
 export default TearSheet;

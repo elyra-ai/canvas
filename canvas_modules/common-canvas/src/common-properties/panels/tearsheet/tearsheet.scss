@@ -16,6 +16,13 @@
 
 $properties-buttons-height: $spacing-10;
 
+.properties-tearsheet-panel.properties-tearsheet-stacked.bx--modal {
+	.bx--modal-container {
+		max-height: calc(100% - 104px);
+		width: calc(100% - 96px);
+	}
+}
+
 .properties-tearsheet-panel.bx--modal {
 	align-items: flex-end;
 	&.is-visible {
