@@ -614,22 +614,34 @@ class EditorForm extends React.Component {
 
 		let content = this.genUIContent(uiItems);
 		let wideFly = <div />;
+		let stackedTearsheet;
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
-		if (this.props.rightFlyout && this.state.showFieldPicker) {
-			wideFly = (<WideFlyout
-				showPropertiesButtons={false}
-				show
-				title={title}
-				light={this.props.controller.getLight()}
-			>
-				{this.fieldPicker(title)}
-			</WideFlyout>);
-		} else if (this.state.showFieldPicker) {
-			content = this.fieldPicker(title);
+		if (this.state.showFieldPicker) {
+			if (this.props.rightFlyout) {
+				wideFly = (<WideFlyout
+					showPropertiesButtons={false}
+					show
+					title={title}
+					light={this.props.controller.getLight()}
+				>
+					{this.fieldPicker(title)}
+				</WideFlyout>);
+			} else if (this.props.controller.isTearsheetContainer()) {
+				stackedTearsheet = (<TearSheet
+					open
+					stacked
+					tearsheet={{
+						title: title,
+						content: this.fieldPicker()
+					}}
+				/>);
+			} else {
+				content = this.fieldPicker(title);
+			}
 		}
 
 		return (
@@ -639,6 +651,7 @@ class EditorForm extends React.Component {
 			>
 				{content}
 				{wideFly}
+				{stackedTearsheet}
 			</div>
 		);
 	}
