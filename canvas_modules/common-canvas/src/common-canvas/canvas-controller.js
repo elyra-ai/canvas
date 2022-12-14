@@ -558,6 +558,10 @@ export default class CanvasController {
 		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
+	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
+		this.objectModel.selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Notification messages methods
 	// ---------------------------------------------------------------------------
@@ -1307,6 +1311,11 @@ export default class CanvasController {
 	// hierarchy that the user has currently navigated to.
 	getCurrentBreadcrumb() {
 		return this.objectModel.getCurrentBreadcrumb();
+	}
+
+	// Creates a breadcrumb from the supernode object and its parent pipleine ID.
+	createBreadcrumb(supernodeDatum, parentPipelineId) {
+		return this.objectModel.createBreadcrumb(supernodeDatum, parentPipelineId);
 	}
 
 	// ---------------------------------------------------------------------------

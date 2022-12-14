@@ -110,12 +110,10 @@ class CanvasContents extends React.Component {
 	componentDidMount() {
 		this.logger.log("componentDidMount");
 		this.svgCanvasD3 =
-			new SVGCanvasD3(this.props.canvasInfo,
+			new SVGCanvasD3(this.props.canvasInfo.id,
 				this.svgCanvasDivSelector,
-				this.props.canvasConfig,
 				this.props.canvasController);
-
-		this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
+		this.setCanvasInfo();
 
 		if (this.props.canvasConfig.enableBrowserEditMenu) {
 			this.addEventListeners();
@@ -123,12 +121,21 @@ class CanvasContents extends React.Component {
 		this.focusOnCanvas();
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
 		this.logger.log("componentDidUpdate");
 		if (this.svgCanvasD3 && !this.isDropZoneDisplayed()) {
-			this.svgCanvasD3.setCanvasInfo(this.props.canvasInfo, this.props.canvasConfig);
-			// Run the afterUpdateCallbacks.
-			this.afterUpdate();
+			if (prevProps.canvasInfo !== this.props.canvasInfo ||
+					prevProps.canvasConfig !== this.props.canvasConfig ||
+					prevProps.breadcrumbs !== this.props.breadcrumbs) {
+				this.setCanvasInfo();
+				// Run the afterUpdateCallbacks.
+				this.afterUpdate();
+
+			// If the only change is selectionInfo, we can call the special method
+			// setSelectionInfo, which will only update the selection highlighting.
+			} else if (prevProps.selectionInfo !== this.props.selectionInfo) {
+				this.svgCanvasD3.setSelectionInfo(this.props.selectionInfo);
+			}
 		}
 
 		// Manage the event browsers in case this config property changes.
@@ -256,6 +263,21 @@ class CanvasContents extends React.Component {
 		} else {
 			this.mousePos = null;
 		}
+	}
+
+	setCanvasInfo() {
+		// TODO - Eventually move nodeLayout and canvasLayout into redux and then
+		// pass them into this.svgCanvasD3() as props.
+		const nodeLayout = this.props.canvasController.objectModel.getNodeLayout();
+		const canvasLayout = this.props.canvasController.objectModel.getCanvasLayout();
+		this.svgCanvasD3.setCanvasInfo(
+			this.props.canvasInfo,
+			this.props.selectionInfo,
+			this.props.breadcrumbs,
+			nodeLayout,
+			canvasLayout,
+			this.props.canvasConfig
+		);
 	}
 
 	getLabel(labelId) {
@@ -554,15 +576,15 @@ CanvasContents.propTypes = {
 	// Provided by Redux
 	canvasConfig: PropTypes.object.isRequired,
 	canvasInfo: PropTypes.object,
-	bottomPanelIsOpen: PropTypes.bool
+	bottomPanelIsOpen: PropTypes.bool,
+	selectionInfo: PropTypes.object,
+	breadcrumbs: PropTypes.array
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	canvasInfo: state.canvasinfo,
 	canvasConfig: state.canvasconfig,
 	bottomPanelIsOpen: state.bottompanel.isOpen,
-	// These two fields are included here so they will trigger a render.
-	// The renderer will retrieve the data for them by calling the canvas controller.
 	selectionInfo: state.selectioninfo,
 	breadcrumbs: state.breadcrumbs
 });

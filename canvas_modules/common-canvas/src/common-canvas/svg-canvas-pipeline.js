@@ -22,18 +22,19 @@ import { COMMENT_LINK } from "./constants/canvas-constants";
 
 
 export default class SVGCanvasPipeline {
-	constructor(pipelineId, canvasInfo) {
+	constructor(pipelineId, canvasInfo, selectionInfo) {
 		this.logger = new Logger("SVGCanvasActivePipeline");
 		this.logger.log("constructor - start");
 
-		this.initialize(pipelineId, canvasInfo);
+		this.initialize(pipelineId, canvasInfo, selectionInfo);
 
 		this.logger.log("constructor - end");
 	}
 
-	initialize(pipelineId, canvasInfo) {
+	initialize(pipelineId, canvasInfo, selectionInfo) {
 		this.logger.logStartTimer("initialize");
 		this.canvasInfo = canvasInfo;
+		this.selections = selectionInfo.pipelineId === pipelineId ? selectionInfo.selections : [];
 		this.pipeline = this.getPipeline(pipelineId, canvasInfo);
 
 		// These variables are accessed directly by svg-canvas-renderer
@@ -204,5 +205,58 @@ export default class SVGCanvasPipeline {
 	// the id property of the element.
 	getMappedArray(array) {
 		return array.reduce((map, o) => { map[o.id] = o; return map; }, {});
+	}
+
+	// Returns the IDs of the selected objects for this pipeline.
+	getSelectedObjectIds() {
+		return this.selections;
+	}
+
+	// Returns an array of any currently selected nodes and comments.
+	getSelectedNodesAndComments() {
+		var objs = this.getSelectedNodes();
+
+		this.comments.forEach((comment) => {
+			if (this.getSelectedObjectIds().includes(comment.id)) {
+				objs.push(comment);
+			}
+		});
+		return objs;
+	}
+
+	// Returns an array of any currently selected nodes.
+	getSelectedNodes() {
+		var objs = [];
+		this.nodes.forEach((node) => {
+			if (this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+		return objs;
+	}
+
+	// Returns an array of any currently selected node IDs.
+	getSelectedNodeIds() {
+		return this.getSelectedNodes().map((n) => n.id);
+	}
+
+	// Returns an array of any currently selected links
+	getSelectedLinks() {
+		var objs = [];
+		this.links.forEach((link) => {
+			if (this.getSelectedObjectIds().includes(link.id)) {
+				objs.push(link);
+			}
+		});
+		return objs;
+	}
+
+	// Returns the number of selected links.
+	getSelectedLinksCount() {
+		return this.getSelectedLinks().length;
+	}
+
+	isSelected(objId) {
+		return this.getSelectedObjectIds().indexOf(objId) >= 0;
 	}
 }
