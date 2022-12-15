@@ -1338,21 +1338,6 @@ export default class SVGCanvasRenderer {
 		return false;
 	}
 
-	getNodePort(nodeId, portId, type) {
-		const node = this.activePipeline.getNode(nodeId);
-		if (node) {
-			let ports;
-			if (type === "input") {
-				ports = node.inputs;
-			} else {
-				ports = node.outputs;
-			}
-			const port = ports.find((p) => p.id === portId);
-			return (typeof port === "undefined") ? null : port;
-		}
-		return null;
-	}
-
 	// Sets the maximum zoom extent if we are the renderer of the top level flow
 	// or calls the same method on our parent renderer if we are a sub-flow. This
 	// means the factors will multiply as they percolate up to the top flow.
@@ -2064,12 +2049,6 @@ export default class SVGCanvasRenderer {
 
 		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
 
-		// Ensure the link objects in the active pipeline have their coordinate
-		// positions set. The coords might not be set if the last object model
-		// update was a change in selections or some other operation that does
-		// not redraw link lines.
-		this.buildLinksArray();
-
 		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
 		const selections =
 			CanvasUtils.selectInRegion(region, this.activePipeline,
@@ -2498,7 +2477,7 @@ export default class SVGCanvasRenderer {
 						editType: "moveObjects",
 						editSource: "canvas",
 						nodes: this.dragObjects.map((o) => o.id),
-						links: this.activePipeline.getSelectedLinks().filter((l) => l.srcPos || l.trgPos), // Filter detached links
+						links: this.activePipeline.getSelectedDetachedLinks(),
 						offsetX: dragFinalOffset.x,
 						offsetY: dragFinalOffset.y,
 						pipelineId: this.activePipeline.id });
@@ -5743,7 +5722,7 @@ export default class SVGCanvasRenderer {
 	// Finalises the sizing of a node by calling editActionHandler
 	// with an editNode action.
 	endNodeSizing(node) {
-		let resizeObj = this.activePipeline.getNode(node.id);
+		let resizeObj = node;
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			resizeObj = this.snapToGridObject(resizeObj);
 			resizeObj = this.restrictNodeSizingToMinimums(resizeObj);
@@ -5790,7 +5769,7 @@ export default class SVGCanvasRenderer {
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing(comment) {
-		let resizeObj = this.activePipeline.getComment(comment.id);
+		let resizeObj = comment;
 		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
 			resizeObj = this.snapToGridObject(resizeObj);
 		}

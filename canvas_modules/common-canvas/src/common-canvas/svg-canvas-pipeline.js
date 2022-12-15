@@ -251,6 +251,14 @@ export default class SVGCanvasPipeline {
 		return objs;
 	}
 
+	// Returns an array of selected detached links. Detached links are recognized
+	// if they have either a srcPos or trgPos field which holds the coordinates
+	// of the source or target of the link. If they have one of these fields they
+	// are semi-detached and if they have both they are fully detached.
+	getSelectedDetachedLinks() {
+		return this.getSelectedLinks().filter((l) => l.srcPos || l.trgPos);
+	}
+
 	// Returns the number of selected links.
 	getSelectedLinksCount() {
 		return this.getSelectedLinks().length;
