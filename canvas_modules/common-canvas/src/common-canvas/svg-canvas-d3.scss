@@ -906,6 +906,10 @@ g.bkg-col-cyan-50 {
 	stroke-width: 1;
 	stroke-dasharray: 0;
 }
+.d3-link-decorations-group g rect {
+	stroke: transparent;
+	 stroke-width: 0px;
+}
 
 /* 'object link' is the historical name for an association link */
 /* This styles is used for association links on a regular data flow canvas */
