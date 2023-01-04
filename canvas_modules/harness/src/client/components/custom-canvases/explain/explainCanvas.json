@@ -13,31 +13,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "a",
+              "index": 2,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "TBSCAN",
               "x_pos": 660,
               "y_pos": 132,
-              "class_name": "light_brown",
-              "description": "Scans the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(2)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Scans the data"
             }
           },
           "inputs": [
@@ -84,30 +69,15 @@
           "type": "execution_node",
           "op": "ellipse",
           "app_data": {
+            "explain_data": {
+              "category": "b",
+              "index": 1,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "RETURN",
               "x_pos": 660,
-              "y_pos": 24,
-              "class_name": "light_purple",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(1)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "y_pos": 24
             }
           },
           "inputs": [
@@ -154,31 +124,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "c",
+              "index": 3,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "SORT",
               "x_pos": 660,
               "y_pos": 252,
-              "class_name": "pink",
-              "description": "Sorts the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(3)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Sorts the data"
             }
           },
           "inputs": [
@@ -225,31 +180,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "d",
+              "index": 4,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "NLJOIN",
               "x_pos": 660,
               "y_pos": 360,
-              "class_name": "dark_purple",
-              "description": "Joins data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(4)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Joins data"
             }
           },
           "inputs": [
@@ -296,31 +236,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "d",
+              "index": 5,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "NLJOIN",
               "x_pos": 450,
               "y_pos": 444,
-              "class_name": "dark_purple",
-              "description": "Joins data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(5)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Joins data"
             }
           },
           "inputs": [
@@ -375,31 +300,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "d",
+              "index": 6,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "NLJOIN",
               "x_pos": 240,
               "y_pos": 516,
-              "class_name": "dark_purple",
-              "description": "Joins data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(6)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Joins data"
             }
           },
           "inputs": [
@@ -454,31 +364,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "a",
+              "index": 7,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "TBSCAN",
               "x_pos": 90,
               "y_pos": 600,
-              "class_name": "light_brown",
-              "description": "Scanns the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(7)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Scanns the data"
             }
           },
           "inputs": [
@@ -525,30 +420,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "g",
+              "index": 15,
+              "cost": "38.22"
+            },
             "ui_data": {
               "label": "FETCH",
               "x_pos": 420,
               "y_pos": 612,
-              "description": "Fetches the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(15)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "38.22",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Fetches the data"
             }
           },
           "inputs": [
@@ -595,30 +476,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "g",
+              "index": 18,
+              "cost": "-0.00"
+            },
             "ui_data": {
               "label": "IXSCAN",
               "x_pos": 420,
               "y_pos": 720,
-              "description": "Fetches the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(18)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "-0.00",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Fetches the data"
             }
           },
           "inputs": [
@@ -665,30 +532,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "g",
+              "index": 17,
+              "cost": "3.25"
+            },
             "ui_data": {
               "label": "FETCH",
               "x_pos": 720,
               "y_pos": 528,
-              "description": "Fetches the data",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(17)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "3.25",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Fetches the data"
             }
           },
           "inputs": [
@@ -725,31 +578,16 @@
           "type": "execution_node",
           "op": "rectangle",
           "app_data": {
+            "explain_data": {
+              "category": "e",
+              "index": 8,
+              "cost": "13.55"
+            },
             "ui_data": {
               "label": "TEMP",
               "x_pos": 90,
               "y_pos": 708,
-              "class_name": "gray",
-              "description": "Does some temporary stuff",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(8)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "13.55",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Does some temporary stuff"
             }
           },
           "inputs": [
@@ -796,31 +634,16 @@
           "type": "execution_node",
           "op": "octagon",
           "app_data": {
+            "explain_data": {
+              "category": "f",
+              "index": 9,
+              "cost": "-0.00"
+            },
             "ui_data": {
               "label": "GRBY",
               "x_pos": 90,
               "y_pos": 828,
-              "class_name": "light_green",
-              "description": "Green, Red, Blue and Yellow",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(9)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "-0.00",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "Green, Red, Blue and Yellow"
             }
           },
           "inputs": [
@@ -857,30 +680,16 @@
           "type": "execution_node",
           "op": "hexagon",
           "app_data": {
+            "explain_data": {
+              "category": "g",
+              "index": "o4",
+              "cost": "SYSIBM"
+            },
             "ui_data": {
               "label": "SQL180105160757660-1234567890-1234556768900",
               "x_pos": 370,
               "y_pos": 840,
-              "description": "SQL Table",
-              "decorations": [
-                {
-                  "x_pos": 13,
-                  "y_pos": 19,
-                  "width": 24,
-                  "id": "labelDecoration1",
-                  "label": "(o4)",
-                  "class_name": "small_text"
-                },
-                {
-                  "position" : "bottomCenter",
-                  "x_pos": -25,
-                  "y_pos": -19,
-                  "width": 50,
-                  "id": "labelDecoration2",
-                  "label": "SYSIBM",
-                  "class_name": "small_text"
-                }
-              ]
+              "description": "SQL Table"
             }
           },
           "inputs": [

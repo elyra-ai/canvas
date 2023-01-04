@@ -47,3 +47,15 @@
 .properties-control-nested-panel .properties-control-nested-panel {
 	border-left: 1px solid $ui-03;
 }
+
+// Set the height of the very first panel to be full width inside a tearsheet
+.properties-control-panel.tearsheet-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	flex-shrink: 10;
+
+	.properties-control-panel.tearsheet-container {
+		height: unset;
+	}
+}

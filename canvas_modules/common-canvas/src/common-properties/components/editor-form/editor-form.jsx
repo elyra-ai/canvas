@@ -170,7 +170,7 @@ class EditorForm extends React.Component {
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
 					tabContent.push(
-						<div key={"cat." + key} className="properties-category">
+						<div key={"cat." + key} className="properties-single-category">
 							{panelItems}
 							{additionalComponent}
 						</div>
@@ -221,7 +221,12 @@ class EditorForm extends React.Component {
 			);
 		}
 		return (
-			<Tabs key={"tab." + key} className="properties-primaryTabs" selected={modalSelected} light={this.props.controller.getLight()}>
+			<Tabs key={"tab." + key}
+				className="properties-primaryTabs"
+				selected={modalSelected}
+				light={this.props.controller.getLight()}
+				tabContentClassName={classNames("properties-primary-tab-panel", { "tearsheet-container": this.props.controller.isTearsheetContainer() })}
+			>
 				{tabContent}
 			</Tabs>
 		);
@@ -343,6 +348,7 @@ class EditorForm extends React.Component {
 		case ("tearsheet"):
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		case ("subTabs"):
+			// All Subtabs will become a LeftNav if displayed inside a Tearsheet container
 			return (<Subtabs key={"subtabs." + key}
 				tabs={uiItem.tabs}
 				className={uiItem.className}
@@ -350,6 +356,7 @@ class EditorForm extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 				genUIItem={this.genUIItem}
 				nestedPanel={uiItem.nestedPanel}
+				leftnav={this.props.controller.isTearsheetContainer()}
 			/>);
 		case ("primaryTabs"):
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
@@ -607,28 +614,44 @@ class EditorForm extends React.Component {
 
 		let content = this.genUIContent(uiItems);
 		let wideFly = <div />;
+		let stackedTearsheet;
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
 
-		if (this.props.rightFlyout && this.state.showFieldPicker) {
-			wideFly = (<WideFlyout
-				showPropertiesButtons={false}
-				show
-				title={title}
-				light={this.props.controller.getLight()}
-			>
-				{this.fieldPicker(title)}
-			</WideFlyout>);
-		} else if (this.state.showFieldPicker) {
-			content = this.fieldPicker(title);
+		if (this.state.showFieldPicker) {
+			if (this.props.rightFlyout) {
+				wideFly = (<WideFlyout
+					showPropertiesButtons={false}
+					show
+					title={title}
+					light={this.props.controller.getLight()}
+				>
+					{this.fieldPicker(title)}
+				</WideFlyout>);
+			} else if (this.props.controller.isTearsheetContainer()) {
+				stackedTearsheet = (<TearSheet
+					open
+					stacked
+					tearsheet={{
+						title: title,
+						content: this.fieldPicker()
+					}}
+				/>);
+			} else {
+				content = this.fieldPicker(title);
+			}
 		}
 
 		return (
-			<div className="properties-editor-form">
+			<div className={classNames("properties-editor-form",
+				{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+				{ "field-picker": this.state.showFieldPicker })}
+			>
 				{content}
 				{wideFly}
+				{stackedTearsheet}
 			</div>
 		);
 	}

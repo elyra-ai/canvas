@@ -461,11 +461,6 @@ class VirtualizedTable extends React.Component {
 	render() {
 		const defaultTestHeight = 2000; // 2000 is set to accommodate test data "category-selection-data" with all categories expanded
 
-		// AutoSizer manages width and height properties so the table fills the available space.
-		// It does a direct DOM manipulation to the parent, outside React's VirtualDOM.
-		// Since the actual DOM is not available when unit testing, we are passing in a default
-		// width of 500 and a default height of 300.
-		const tableHeight = this.props.tableHeight || defaultTestHeight;
 		return (
 			<div className="properties-vt">
 				<div className={classNames("properties-vt-autosizer",
@@ -477,7 +472,11 @@ class VirtualizedTable extends React.Component {
 							<Table
 								ref={this.virtualizedTableRef}
 								width={width ? width : 500}
-								height={tableHeight}
+								// AutoSizer manages width and height properties so the table fills the available space.
+								// It does a direct DOM manipulation to the parent, outside React's VirtualDOM.
+								// Since the actual DOM is not available when unit testing, we are passing in a default
+								// width of 500 and a default height of 300.
+								height={this.props.tableHeight || height || defaultTestHeight}
 
 								className="properties-autosized-vt"
 								aria-label={this.props.tableLabel ? this.props.tableLabel : ""}

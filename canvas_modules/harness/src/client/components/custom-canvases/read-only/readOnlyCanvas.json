@@ -15,7 +15,7 @@
           "app_data": {
             "ui_data": {
               "label": "Amazon S3",
-              "image": "/images/custom-canvases/detached-links/palette/AmazonS3PX.svg",
+              "image": "/images/custom-canvases/stages/palette/AmazonS3PX.svg",
               "x_pos": 18,
               "y_pos": 187.20000000000002,
               "description": "Data in Aamzon S3"
@@ -43,7 +43,7 @@
           "app_data": {
             "ui_data": {
               "label": "Sort",
-              "image": "/images/custom-canvases/detached-links/palette/PxSort.svg",
+              "image": "/images/custom-canvases/stages/palette/PxSort.svg",
               "x_pos": 288,
               "y_pos": 187.20000000000002,
               "description": "Sorts the data"
@@ -92,7 +92,7 @@
           "app_data": {
             "ui_data": {
               "label": "Filter",
-              "image": "/images/custom-canvases/detached-links/palette/PxFilter.svg",
+              "image": "/images/custom-canvases/stages/palette/PxFilter.svg",
               "x_pos": 540,
               "y_pos": 187.20000000000002,
               "description": "Samples the data"
@@ -141,7 +141,7 @@
           "app_data": {
             "ui_data": {
               "label": "Merge",
-              "image": "/images/custom-canvases/detached-links/palette/PxMerge.svg",
+              "image": "/images/custom-canvases/stages/palette/PxMerge.svg",
               "x_pos": 810,
               "y_pos": 187.20000000000002,
               "description": "Combines data from multiple data sources"
@@ -190,7 +190,7 @@
           "app_data": {
             "ui_data": {
               "label": "Peek",
-              "image": "/images/custom-canvases/detached-links/palette/PxPeek.svg",
+              "image": "/images/custom-canvases/stages/palette/PxPeek.svg",
               "x_pos": 1062,
               "y_pos": 187.20000000000002,
               "description": "Enables a peek at something."
@@ -225,7 +225,7 @@
           "app_data": {
             "ui_data": {
               "label": "Remove Duplicates",
-              "image": "/images/custom-canvases/detached-links/palette/PxRemDup.svg",
+              "image": "/images/custom-canvases/stages/palette/PxRemDup.svg",
               "x_pos": 1062,
               "y_pos": 388.8,
               "description": "Removes duplcate rows"

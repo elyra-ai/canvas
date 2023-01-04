@@ -52,7 +52,7 @@ setup_git_branch
 checkout_branch ${MAIN}
 
 cd ./canvas_modules/common-canvas
-npm version patch
+npm version minor
 NPM_VERSION=`node -p "require('./package.json').version"`
 echo "Updated main build $NPM_VERSION"
 commit_changes ${MAIN} "Update Elyra Canvas to version ${NPM_VERSION} [skip ci]"

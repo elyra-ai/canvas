@@ -38,10 +38,8 @@
 }
 
 .properties-error-content {
-	padding: 0 10px;
-	font-size: 14px;
-	font-weight: 300;
-	line-height: 16px;
+	@include carbon--type-style("label-02");
+	padding: 0 $spacing-06;
 }
 
 .properties-modal-container {

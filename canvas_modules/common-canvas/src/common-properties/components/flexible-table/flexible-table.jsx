@@ -501,7 +501,7 @@ class FlexibleTable extends React.Component {
 		}
 
 		const containerClass = this.props.showHeader ? "properties-ft-container-absolute " : "properties-ft-container-absolute-noheader ";
-		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass + this.props.messageInfo.type;
+		const messageClass = (!this.props.messageInfo) ? containerClass + STATES.INFO : containerClass;
 		const ftHeader = (searchBar || this.props.topRightPanel)
 			? (<div className="properties-ft-table-header" ref={ (ref) => (this.flexibleTableHeader = ref) }>
 				{searchBar}
@@ -517,6 +517,8 @@ class FlexibleTable extends React.Component {
 			)
 			: null;
 
+		const ftClassname = classNames("properties-ft-control-container", { "properties-light-disabled": !this.props.light });
+
 		let tableHeight = 0;
 		const multiSelectEditRowsRem = 2 * REM_HEADER_HEIGHT; // multi-select adds two rows when selectedEditRow
 		const multiSelectEditRowsPixels = multiSelectEditRowsRem * ONE_REM_HEIGHT;
@@ -528,11 +530,11 @@ class FlexibleTable extends React.Component {
 		}
 
 		return (
-			<div data-id={"properties-ft-" + this.props.scrollKey} className="properties-ft-control-container" ref={ (ref) => (this.flexibleTable = ref) }>
+			<div data-id={"properties-ft-" + this.props.scrollKey} className={ftClassname} ref={ (ref) => (this.flexibleTable = ref) }>
 				{ftHeader}
 				<div className="properties-ft-container-panel">
 					<ReactResizeDetector handleWidth onResize={this._updateTableWidth}>
-						<div className="properties-ft-container-wrapper" style={ heightStyle }>
+						<div className={classNames("properties-ft-container-wrapper", this.props.messageInfo ? this.props.messageInfo.type : "")} style={ heightStyle }>
 							<div className={messageClass}>
 								{this.props.selectedEditRow}
 								<VirtualizedTable

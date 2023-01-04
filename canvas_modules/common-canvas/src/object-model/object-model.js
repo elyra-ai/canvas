@@ -1573,54 +1573,23 @@ export default class ObjectModel {
 	// ---------------------------------------------------------------------------
 
 	getSelectedObjectIds() {
-		return this.getSelectionInfo().selections || [];
+		return this.store.getSelectedObjectIds();
 	}
 
 	getSelectedNodesIds() {
-		var objs = [];
-		const apiPipeline = this.getSelectedPipeline();
-		apiPipeline.getNodes().forEach((node) => {
-			if (this.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node.id);
-			}
-		});
-		return objs;
+		return this.getSelectedNodes().map((n) => n.id);
 	}
 
 	getSelectedNodes() {
-		const objs = [];
-		const apiPipeline = this.getSelectedPipeline();
-		apiPipeline.getNodes().forEach((node) => {
-			if (this.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node);
-			}
-		});
-
-		return objs;
+		return this.store.getSelectedNodes();
 	}
 
 	getSelectedComments() {
-		const objs = [];
-		const apiPipeline = this.getSelectedPipeline();
-		apiPipeline.getComments().forEach((com) => {
-			if (this.getSelectedObjectIds().includes(com.id)) {
-				objs.push(com);
-			}
-		});
-
-		return objs;
+		return this.store.getSelectedComments();
 	}
 
 	getSelectedLinks() {
-		const objs = [];
-		const apiPipeline = this.getSelectedPipeline();
-		apiPipeline.getLinks().forEach((lnk) => {
-			if (this.getSelectedObjectIds().includes(lnk.id)) {
-				objs.push(lnk);
-			}
-		});
-
-		return objs;
+		return this.store.getSelectedLinks();
 	}
 
 	getSelectedObjects() {
@@ -1638,11 +1607,26 @@ export default class ObjectModel {
 	}
 
 	getSelectedPipelineId() {
-		return this.getSelectionInfo().pipelineId;
+		return this.store.getSelectedPipelineId();
 	}
 
 	clearSelections() {
 		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
+	}
+
+	// Simulates the selection of an object (identified by objId) in the
+	// pipeline identified by pipelineId with the augmentation keys pressed
+	// as indicated by isShiftKeyPressed and isCmndCtrlPressed.
+	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
+		if (!this.isSelected(objId, pipelineId)) {
+			if (isShiftKeyPressed) {
+				this.selectSubGraph(objId, pipelineId);
+			} else {
+				this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+			}
+		} else if (isCmndCtrlPressed) {
+			this.toggleSelection(objId, isCmndCtrlPressed, pipelineId);
+		}
 	}
 
 	isSelected(objectId, pipelineId) {
@@ -1770,8 +1754,7 @@ export default class ObjectModel {
 
 	// Returns true if all the selected objects are links.
 	areAllSelectedObjectsLinks() {
-		const nonLinkIndex = this.getSelectedObjects().findIndex((selObj) => !this.isLink(selObj));
-		return nonLinkIndex === -1;
+		return this.store.areAllSelectedObjectsLinks();
 	}
 
 	// Recursive function to add all connected nodes into the group.

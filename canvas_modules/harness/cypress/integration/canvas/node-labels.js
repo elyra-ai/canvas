@@ -133,6 +133,14 @@ describe("Test editing node labels - Vertical node", function() {
 		cy.verifyNodeExists("New supernode label");
 	});
 
+	it("Vertical node - Test editing using the context menu 'Rename' action", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+		cy.getNodeWithLabel("Binding (entry) node").rightclick();
+		cy.clickOptionFromContextMenu("Rename");
+		cy.enterLabelForNode("Binding (entry) node", "A renamed label is better than a new label");
+		cy.verifyEditActionInConsole("setNodeLabel", "label", "A renamed label is better than a new label");
+		cy.verifyNodeExists("A renamed label is better than a new label");
+	});
 });
 
 describe("Test editing node labels - Horizontal node", function() {
@@ -239,5 +247,15 @@ describe("Test editing node labels - Horizontal node", function() {
 		cy.verifyEditActionInConsole("setNodeLabel", "label", "New supernode label");
 		cy.verifyNodeExists("New supernode label");
 	});
+
+	it("Horizontal node - Test editing using the context menu 'Rename' action", function() {
+		cy.setCanvasConfig({ "selectedNodeLayout": { labelEditable: true } });
+		cy.getNodeWithLabel("Binding (entry) node").rightclick();
+		cy.clickOptionFromContextMenu("Rename");
+		cy.enterLabelForNode("Binding (entry) node", "A renamed label is better than a new label");
+		cy.verifyEditActionInConsole("setNodeLabel", "label", "A renamed label is better than a new label");
+		cy.verifyNodeExists("A renamed label is better than a new label");
+	});
+
 
 });

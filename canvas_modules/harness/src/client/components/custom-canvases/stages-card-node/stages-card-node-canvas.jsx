@@ -41,17 +41,18 @@ export default class DetachedCanvas extends React.Component {
 		const pId = this.canvasController.getPrimaryPipelineId();
 		const pipelineLinkDecorations =
 			this.canvasController.getLinks().map((link) => {
-				const decs = this.getDecorationsArray(link.id);
+				const linkLabel = get(link, "app_data.stages.link_label", "");
+				const decs = this.getDecorationsArray(linkLabel);
 				return { linkId: link.id, pipelineId: pId, decorations: decs };
 			});
 		this.canvasController.setLinksMultiDecorations(pipelineLinkDecorations);
 
 		this.canvasController.getNodes().forEach((n) => {
-			this.canvasController.setNodeDecorations(n.id, this.getDecorations(n));
+			this.canvasController.setNodeDecorations(n.id, this.getNodeDecorations(n));
 		});
 	}
 
-	getDecorations(data) {
+	getNodeDecorations(node) {
 		return [
 			{
 				id: "toolbar_background",
@@ -64,7 +65,7 @@ export default class DetachedCanvas extends React.Component {
 			},
 			{
 				id: "second_label",
-				label: get(data, "app_data.stages.secondary_label", ""),
+				label: get(node, "app_data.stages.secondary_label", ""),
 				position: "topLeft",
 				x_pos: 60,
 				y_pos: 28,
@@ -133,11 +134,11 @@ export default class DetachedCanvas extends React.Component {
 				outputPortRightPosX: 0,
 				outputPortRightPosY: 0,
 				outputPortObject: "image",
-				outputPortImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				outputPortImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				outputPortWidth: 20,
 				outputPortHeight: 20,
 				outputPortGuideObject: "image",
-				outputPortGuideImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg"
+				outputPortGuideImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg"
 			},
 			enableCanvasLayout: {
 				commentHighlightGap: 3,
@@ -145,11 +146,11 @@ export default class DetachedCanvas extends React.Component {
 				linkGap: 4,
 				displayLinkOnOverlap: false,
 				linkStartHandleObject: "image",
-				linkStartHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateStart.svg",
+				linkStartHandleImage: "/images/custom-canvases/stages/decorations/dragStateStart.svg",
 				linkStartHandleWidth: 20,
 				linkStartHandleHeight: 20,
 				linkEndHandleObject: "image",
-				linkEndHandleImage: "/images/custom-canvases/detached-links/decorations/dragStateArrow.svg",
+				linkEndHandleImage: "/images/custom-canvases/stages/decorations/dragStateArrow.svg",
 				linkEndHandleWidth: 20,
 				linkEndHandleHeight: 20,
 				linkHandleRaiseToTop: true
@@ -166,7 +167,8 @@ export default class DetachedCanvas extends React.Component {
 			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
 				distance: -40, x_pos: -16, y_pos: -16, width: 36, height: 36, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
-			{ id: "dec-4", position: "middle", label: linkLabel, x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
+			{ id: "link-label", position: "middle", label: linkLabel, label_editable: true, label_allow_return_key: "save",
+				x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
 		];
 		return decs;
 	}
@@ -224,16 +226,26 @@ export default class DetachedCanvas extends React.Component {
 			const outputs = this.canvasController.getNodeOutputPorts(data.selectedObjects[0].id);
 			const newOutputs = outputs.concat(this.getNewPort(outputs.length + 1));
 			this.canvasController.setNodeOutputPorts(data.selectedObjects[0].id, newOutputs);
+		} else if (data.editType === "renameLinkLabel") {
+			this.canvasController.setLinkDecorationLabelEditingMode("link-label", data.id, data.pipelineId);
 		}
 	}
 
 	contextMenuHandler(source, defaultMenu) {
+		const newMenu = defaultMenu;
+
+		if (source.type === "link") {
+			newMenu.unshift(
+				{ action: "renameLinkLabel", label: "Rename" }
+			);
+		}
+
 		if (source.selectedObjectIds.length === 1) {
-			return defaultMenu.concat([
+			return newMenu.concat([
 				{ divider: true }, { action: "addPort", label: "Add port" }
 			]);
 		}
-		return defaultMenu;
+		return newMenu;
 	}
 
 	clickActionHandler(source) {

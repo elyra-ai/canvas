@@ -50,7 +50,7 @@
 		.properties-radioset-tooltip {
 			display: flex;
 			align-items: center;
-			margin: 2.5px 0 1.5px 1.5px;
+			margin: 2.5px 0 1.5px 0;
 		}
 		.properties-control-nested-panel{
 			flex-basis: 100%;
@@ -58,10 +58,6 @@
 		}
 		&:last-of-type {
 			margin-bottom: 0; // don't want margin when last radio button in group
-		}
-		.bx--radio-button-wrapper > label {
-			justify-content: left; // override carbon style to center justify radio-button labels
-			align-items: center;
 		}
 	}
 	&.error:not([disabled]) {

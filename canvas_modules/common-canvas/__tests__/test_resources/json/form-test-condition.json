@@ -98,7 +98,7 @@
                       "label": {
                         "text": "int_param"
                       },
-                      "light": false,
+                      "light": true,
                       "labelVisible": true,
                       "controlType": "numberfield",
                       "valueDef": {
@@ -116,7 +116,7 @@
                       "label": {
                         "text": "exp_param"
                       },
-                      "light": false,
+                      "light": true,
                       "labelVisible": true,
                       "controlType": "expression",
                       "valueDef": {

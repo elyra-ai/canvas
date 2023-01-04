@@ -558,6 +558,10 @@ export default class CanvasController {
 		return this.getCanvasConfig().enableSnapToGridType !== SNAP_TO_GRID_NONE;
 	}
 
+	selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId) {
+		this.objectModel.selectObject(objId, isShiftKeyPressed, isCmndCtrlPressed, pipelineId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Notification messages methods
 	// ---------------------------------------------------------------------------
@@ -763,7 +767,7 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).setNodeMessage(nodeId, message);
 	}
 
-	// Sets the lable for a node
+	// Sets the label for a node
 	// nodeId - The ID of the node
 	// ndeLabel - The label
 	// pipelineId - The ID of the pipeline
@@ -1309,6 +1313,11 @@ export default class CanvasController {
 		return this.objectModel.getCurrentBreadcrumb();
 	}
 
+	// Creates a breadcrumb from the supernode object and its parent pipleine ID.
+	createBreadcrumb(supernodeDatum, parentPipelineId) {
+		return this.objectModel.createBreadcrumb(supernodeDatum, parentPipelineId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Highlight methods
 	// ---------------------------------------------------------------------------
@@ -1524,6 +1533,32 @@ export default class CanvasController {
 	zoomToFit() {
 		if (this.canvasContents) {
 			this.getSVGCanvasD3().zoomToFit();
+		}
+	}
+
+	// Sets the label for the node identified to edit mode so the user can start
+	// editing the label, provided the node label is editable.
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setNodeLabelEditingMode(nodeId, pipelineId);
+		}
+	}
+
+	// Sets the decoration label for the decoration in the node identified to edit
+	// mode so the user can start editing the label, provided the node label is
+	// editable.
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+		}
+	}
+
+	// Sets the decoration label for the decoration in the link identified to edit
+	// mode so the user can start editing the label, provided the link label is
+	// editable.
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
 		}
 	}
 
@@ -1973,6 +2008,10 @@ export default class CanvasController {
 				{ action: "selectAll", label: this.labelUtil.getLabel("canvas.selectAll") },
 				{ divider: true }]);
 		}
+		// Rename node
+		if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
+			menuDefinition = menuDefinition.concat({ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode") });
+		}
 		// Disconnect node
 		if (source.type === "node" || source.type === "comment") {
 			const linksFound = this.objectModel.getAPIPipeline(source.pipelineId).getLinksContainingIds(source.selectedObjectIds);
@@ -2117,6 +2156,7 @@ export default class CanvasController {
 		return (
 			action === "createComment" ||
 			action === "disconnectNode" ||
+			action === "setNodeLabelEditingMode" ||
 			action === "cut" ||
 			action === "copy" ||
 			action === "paste" ||
@@ -2192,11 +2232,10 @@ export default class CanvasController {
 	contextMenuActionHandler(action, editParam) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
+		this.closeContextMenu();
+		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
-
-		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
-		this.closeContextMenu();
 	}
 
 	toolbarActionHandler(action) {
@@ -2314,6 +2353,10 @@ export default class CanvasController {
 		}
 		case "zoomToFit": {
 			this.zoomToFit();
+			break;
+		}
+		case "setNodeLabelEditingMode": {
+			this.setNodeLabelEditingMode(data.id, data.pipelineId);
 			break;
 		}
 		case "setZoom": {

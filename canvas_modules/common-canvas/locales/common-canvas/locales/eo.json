@@ -30,6 +30,7 @@
 	"node.deconstructSupernode": "[Esperanto~Deconstruct supernode~~~~eo]",
 	"node.convertSupernodeExternalToLocal": "[Esperanto~Convert external to local~~~~~~eo]",
 	"node.convertSupernodeLocalToExternal": "[Esperanto~Convert local to external~~~~~~eo]",
+	"node.renameNode": "[Esperanto~Rename~eo]",
 	"canvas.validateFlow": "[Esperanto~Validate Flow~eo]",
 	"node.editNode": "[Esperanto~Open~eo]",
 	"node.editMenu": "[Esperanto~Edit~eo]",

@@ -237,9 +237,12 @@ export default class SvgCanvasTextArea {
 	}
 
 	displayNodeLabelTextArea(node, parentDomObj) {
-		d3.select(parentDomObj)
-			.selectAll("div")
-			.attr("style", "display:none;");
+		// Save the current style for the display <div> and set the style so the
+		// <div> is hidden while the text area is displayed on top of it. This
+		// prevents the <div> from protruding below the text area.
+		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-node-label div");
+		this.displayDivStyle = this.displayDiv.attr("style");
+		this.displayDiv.attr("style", "display:none;");
 
 		this.editingTextData = {
 			id: node.id,
@@ -256,7 +259,7 @@ export default class SvgCanvasTextArea {
 			parentDomObj: parentDomObj,
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveNodeLabelChanges.bind(this),
-			closeTextAreaCallback: this.closeNodeLabelTextArea.bind(this)
+			closeTextAreaCallback: this.closeEntryTextArea.bind(this)
 		};
 		this.displayTextArea(this.editingTextData);
 	}
@@ -294,18 +297,23 @@ export default class SvgCanvasTextArea {
 		this.canvasController.editActionHandler(data);
 	}
 
-	// Called when the node label text area is closed. Sets the style of the
-	// div for the node label so the label is displayed (because it was hidden
-	// when the text area opened).
-	closeNodeLabelTextArea(nodeId) {
-		d3.select(this.editingTextData.parentDomObj)
-			.selectAll("div")
-			.attr("style", null);
+	// Called when the node label or decoration label text area is closing.
+	// Resets the inline style of the <div>, that displays the text, back
+	// to what is was before it was hidden when the entry text area opened.
+	closeEntryTextArea() {
+		this.displayDiv.attr("style", this.displayDivStyle);
 	}
 
 	// Displays a text area for an editable text decoration on either a node
 	// or link.
 	displayDecLabelTextArea(dec, obj, objType, parentDomObj) {
+		// Save the current style for the display <div> and set the style so the
+		// <div> is hidden while the text area is displayed on top of it. This
+		// prevents the <div> from protruding below the text area.
+		this.displayDiv = d3.select(parentDomObj).selectAll(".d3-foreign-object-dec-label div");
+		this.displayDivStyle = this.displayDiv.attr("style");
+		this.displayDiv.attr("style", "display:none;");
+
 		this.editingTextData = {
 			id: dec.id,
 			text: dec.label,
@@ -323,7 +331,7 @@ export default class SvgCanvasTextArea {
 			objType: objType,
 			autoSizeCallback: this.autoSizeMultiLineLabel.bind(this),
 			saveTextChangesCallback: this.saveDecLabelChanges.bind(this),
-			closeTextAreaCallback: null
+			closeTextAreaCallback: this.closeEntryTextArea.bind(this)
 		};
 		this.displayTextArea(this.editingTextData);
 	}
@@ -463,9 +471,7 @@ export default class SvgCanvasTextArea {
 		const newText = newValue; // Save the text before closing the foreign object
 		this.closeTextArea(data);
 		if (data.text !== newText || this.textAreaHeight !== data.height) {
-			this.isCommentBeingUpdated = true;
 			data.saveTextChangesCallback(data.id, newText, this.textAreaHeight, data);
-			this.isCommentBeingUpdatd = false;
 		}
 	}
 

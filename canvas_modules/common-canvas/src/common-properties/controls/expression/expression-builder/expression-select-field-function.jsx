@@ -24,8 +24,9 @@ import { formatMessage } from "./../../../util/property-utils";
 import { sortBy, get } from "lodash";
 import { v4 as uuid4 } from "uuid";
 
-export default class ExpressionSelectFieldOrFunction extends React.Component {
+const FIELDS_SPECIAL_CHARACTERS_REGEX = new RegExp("[0-9- _$]", "g");
 
+export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
@@ -76,6 +77,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		this.onValueTableDblClick = this.onValueTableDblClick.bind(this);
 
 		this.sortTableRows = this.sortTableRows.bind(this);
+		this.shouldQuoteField = this.shouldQuoteField.bind(this);
 	}
 
 	onSwitch(switchName, evt) {
@@ -125,7 +127,9 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		}
 		if (this.props.onChange) {
 			const quote = (this.language === "CLEM" && this.state.fieldCategory !== "globals") ? "'" : "";
-			value = quote + field.id + quote;
+			if (this.shouldQuoteField(field.id)) {
+				value = quote + field.id + quote;
+			}
 			this.props.onChange(value);
 		}
 	}
@@ -227,6 +231,11 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			return sortedData;
 		}
 		return data;
+	}
+
+	// Determine if field should be quoted - quote if the field name contains special characters
+	shouldQuoteField(field) {
+		return field.match(FIELDS_SPECIAL_CHARACTERS_REGEX) !== null;
 	}
 
 	createContentObject(label) {

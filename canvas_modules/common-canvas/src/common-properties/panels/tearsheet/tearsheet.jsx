@@ -28,31 +28,41 @@ class TearSheet extends Component {
 		const title = this.props.tearsheet ? this.props.tearsheet.title : null;
 		const description = this.props.tearsheet ? this.props.tearsheet.description : null;
 		const content = this.props.tearsheet ? this.props.tearsheet.content : null;
+		const displayFooterButtons = this.props.showPropertiesButtons && !this.props.applyOnBlur;
+		const displayTabs = !Array.isArray(content);
 
-		const buttons = (<PropertiesButtons
-			okHandler={this.props.okHandler}
-			cancelHandler={this.props.cancelHandler}
-			applyLabel={this.props.applyLabel}
-			rejectLabel={this.props.rejectLabel}
-			showPropertiesButtons={this.props.showPropertiesButtons}
-		/>);
+		const buttons = this.props.applyOnBlur
+			? null
+			: (<PropertiesButtons
+				okHandler={this.props.okHandler}
+				cancelHandler={this.props.cancelHandler}
+				applyLabel={this.props.applyLabel}
+				rejectLabel={this.props.rejectLabel}
+				showPropertiesButtons={this.props.showPropertiesButtons}
+			/>);
 
 		return (
 			<Portal>
 				<ComposedModal
-					className="properties-tearsheet-panel"
+					className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
 					open={this.props.open}
 					size="lg"
 					preventCloseOnClickOutside
 				>
 					<ModalHeader
-						className={classNames("properties-tearsheet-header", { "with-buttons": this.props.showPropertiesButtons })}
+						className={classNames("properties-tearsheet-header",
+							{ "with-buttons": displayFooterButtons },
+							{ "with-tabs": displayTabs },
+							{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
 						title={title}
 						buttonOnClick={this.props.onCloseCallback}
 					>
 						{description ? (<p>{description}</p>) : null}
 					</ModalHeader>
-					<ModalBody className={classNames("properties-tearsheet-body", { "with-buttons": this.props.showPropertiesButtons })}>
+					<ModalBody className={classNames("properties-tearsheet-body",
+						{ "with-buttons": displayFooterButtons },
+						{ "with-tabs": displayTabs })}
+					>
 						{content}
 					</ModalBody>
 					{buttons}
@@ -62,7 +72,8 @@ class TearSheet extends Component {
 }
 TearSheet.propTypes = {
 	open: PropTypes.bool,
-	onCloseCallback: PropTypes.func.isRequired,
+	stacked: PropTypes.bool,
+	onCloseCallback: PropTypes.func,
 	tearsheet: PropTypes.shape({
 		title: PropTypes.string.isRequired,
 		description: PropTypes.string,
@@ -75,12 +86,15 @@ TearSheet.propTypes = {
 	applyLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	rejectLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
-	cancelHandler: PropTypes.func // Required if showPropertiesButtons is true
+	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
+	applyOnBlur: PropTypes.bool.isRequired
 };
 
 TearSheet.defaultProps = {
 	open: false,
-	showPropertiesButtons: false
+	showPropertiesButtons: false,
+	applyOnBlur: false,
+	stacked: false
 };
 
 export default TearSheet;

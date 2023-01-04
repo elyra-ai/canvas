@@ -24,15 +24,15 @@ import Logger from "../logging/canvas-logger.js";
 
 export default class SVGCanvasD3 {
 
-	constructor(canvasInfo, canvasDivSelector, config, canvasController) {
-		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
+	constructor(canvasInfoId, canvasDivSelector, canvasController) {
+		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfoId]);
 		this.logger.logStartTimer("constructor");
 		this.canvasController = canvasController;
 		this.canvasDiv = d3.select(canvasDivSelector);
 		this.logger.logEndTimer("constructor", true);
 	}
 
-	setCanvasInfo(canvasInfo, config) {
+	setCanvasInfo(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger = new Logger(["SVGCanvasD3", "FlowId", canvasInfo.id]);
 		if (!this.config ||
 				!this.renderer ||
@@ -56,6 +56,10 @@ export default class SVGCanvasD3 {
 				this.canvasDiv,
 				this.canvasController,
 				this.canvasInfo,
+				selectionInfo,
+				breadcrumbs,
+				nodeLayout,
+				canvasLayout,
 				config,
 				{ id: currentBreadcrumb.supernodeId, // Will be null for primary pipeline
 					pipelineId: currentBreadcrumb.supernodeParentPipelineId // Will be null for primary pipeline
@@ -68,9 +72,15 @@ export default class SVGCanvasD3 {
 			this.logger.logStartTimer("set canvas info");
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
-			this.renderer.setCanvasInfoRenderer(this.canvasInfo);
+			this.renderer.setCanvasInfoRenderer(this.canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout);
 
 			this.logger.logEndTimer("set canvas info", true);
+		}
+	}
+
+	setSelectionInfo(selectionInfo) {
+		if (this.renderer) {
+			this.renderer.setSelectionInfo(selectionInfo);
 		}
 	}
 
@@ -155,6 +165,18 @@ export default class SVGCanvasD3 {
 
 	getZoom() {
 		return this.renderer ? this.renderer.getZoom() : null;
+	}
+
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		this.renderer.setNodeLabelEditingMode(nodeId, pipelineId);
+	}
+
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		this.renderer.setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+	}
+
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		this.renderer.setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
 	}
 
 	refreshOnSizeChange() {

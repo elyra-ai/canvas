@@ -57,12 +57,14 @@ export default class SubPanelInvoker extends React.Component {
 	render() {
 		let propertiesDialog = [];
 		if (this.state.subPanelVisible && !this.props.rightFlyout) {
+			const className = this.props.controller.isTearsheetContainer() ? "properties-subpanel-modal-in-tearsheet" : "";
 			propertiesDialog = (<PropertiesModal
 				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 				applyLabel={this.props.applyLabel}
 				rejectLabel={this.props.rejectLabel}
+				classNames={className}
 			>
 				{this.state.panel}
 			</PropertiesModal>);

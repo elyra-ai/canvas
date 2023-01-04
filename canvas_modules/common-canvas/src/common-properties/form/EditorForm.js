@@ -135,7 +135,7 @@ function makePrimaryTab(propertyDef, group, l10nProvider) {
 	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, propertyDef.actionMetadata, group, propertyDef.structureMetadata, l10nProvider));
 }
 
-function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
+function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = true) {
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
@@ -147,10 +147,10 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, groupClassName, nestedPanel,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider));
+			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -160,7 +160,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
 				const subGroupName = subGroup.name;
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 				subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			});
@@ -176,7 +176,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -186,7 +186,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -200,7 +200,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -232,7 +232,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, light);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -247,7 +247,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const panSubItems = [];
 		if (Array.isArray(group.subGroups)) {
 			group.subGroups.forEach(function(subGroup) {
-				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, true);
+				groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, false);
 				panSubItems.push(groupItem);
 			});
 		}
@@ -262,7 +262,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = false) {
+function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider, light = true) {
 	const uiItems = [];
 	const panelInsertedFor = [];
 	if (!Array.isArray(group.parameterNames())) {
@@ -415,7 +415,7 @@ function _makeStringControl(parameter, isSubControl) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl, light = false) {
+function _makeControl(parameterMetadata, paramName, group, structureDefinition, l10nProvider, actionMetadata, structureMetadata, subControl, light = true) {
 	const isSubControl = typeof subControl !== "undefined" && subControl;
 
 	// Assume the property is defined
