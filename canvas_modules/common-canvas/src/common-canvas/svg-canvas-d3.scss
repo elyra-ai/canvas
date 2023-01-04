@@ -996,3 +996,9 @@ g.bkg-col-cyan-50 {
 	fill: $data-link-color;
 	pointer-events: all;
 }
+
+// Remove border from icons within read-only
+.d3-link-decorations-group g rect {
+	stroke: transparent;
+	stroke-width: 0px;
+}
