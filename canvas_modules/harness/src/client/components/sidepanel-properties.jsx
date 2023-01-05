@@ -571,6 +571,10 @@ export default class SidePanelModal extends React.Component {
 				id: EDITOR_SIZE.LARGE,
 				label: EDITOR_SIZE.LARGE,
 			},
+			{
+				id: EDITOR_SIZE.MAX,
+				label: EDITOR_SIZE.MAX,
+			}
 		];
 
 		const persistEditorSize = (

@@ -152,5 +152,6 @@ _defineConstant("EDITOR_SIZE", {
 	UNSET: "unset",
 	SMALL: "small",
 	MEDIUM: "medium",
-	LARGE: "large"
+	LARGE: "large",
+	MAX: "max"
 });

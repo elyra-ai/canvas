@@ -34,6 +34,9 @@ $properties-modal-buttons-height: $spacing-10;
 	&.properties-large {
 		width: $common-properties-large-flyout-width;
 	}
+	&.properties-max {
+		width: $common-properties-max-flyout-width;
+	}
 	&:hover {
 		.properties-btn-resize {
 			visibility: visible;
