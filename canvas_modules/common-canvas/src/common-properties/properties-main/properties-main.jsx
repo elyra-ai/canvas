@@ -42,6 +42,7 @@ import styles from "./properties-main-widths.scss";
 const FLYOUT_WIDTH_SMALL = parseInt(styles.flyoutWidthSmall, 10);
 const FLYOUT_WIDTH_MEDIUM = parseInt(styles.flyoutWidthMedium, 10);
 const FLYOUT_WIDTH_LARGE = parseInt(styles.flyoutWidthLarge, 10);
+const FLYOUT_WIDTH_MAX = parseInt(styles.flyoutWidthMax, 10);
 
 class PropertiesMain extends React.Component {
 	constructor(props) {
@@ -195,11 +196,16 @@ class PropertiesMain extends React.Component {
 		// Determine whether to persist initialEditorSize or set the defaultEditorSize in certain cases
 		const defaultEditorSize = this.propertiesController.getForm().editorSize;
 		const initialEditorSize = this.props.propertiesInfo.initialEditorSize;
-		if (defaultEditorSize === Size.SMALL && initialEditorSize === Size.LARGE) {
+		// When defaultEditorSize="small", initialEditorSize can be "small" or "medium". For any other value, return defaultEditorSize.
+		// When defaultEditorSize="medium", initialEditorSize can be "medium" or "large". For any other value, return defaultEditorSize.
+		// When defaultEditorSize="large", initialEditorSize can be "large" or "max". For any other value, return defaultEditorSize.
+		if (defaultEditorSize === Size.SMALL && (initialEditorSize === Size.LARGE || initialEditorSize === Size.MAX)) {
 			return defaultEditorSize;
-		} else if (defaultEditorSize === Size.MEDIUM && initialEditorSize === Size.SMALL) {
+		} else if (defaultEditorSize === Size.MEDIUM && (initialEditorSize === Size.SMALL || initialEditorSize === Size.MAX)) {
 			return defaultEditorSize;
-		} else if (defaultEditorSize === Size.LARGE) {
+		} else if (defaultEditorSize === Size.LARGE && (initialEditorSize === Size.SMALL || initialEditorSize === Size.MEDIUM)) {
+			return defaultEditorSize;
+		} else if (defaultEditorSize === Size.MAX) {
 			return defaultEditorSize;
 		}
 		return (initialEditorSize ? initialEditorSize : defaultEditorSize);
@@ -227,7 +233,15 @@ class PropertiesMain extends React.Component {
 					overrideSize = pixelWidth.max;
 				}
 
-			} else if (editorSizeInForm === Size.LARGE && pixelWidth.max) {
+			} else if (editorSizeInForm === Size.LARGE) {
+				if (this.state.editorSize === Size.LARGE && pixelWidth.min) {
+					overrideSize = pixelWidth.min;
+
+				} else if (this.state.editorSize === Size.MAX && pixelWidth.max) {
+					overrideSize = pixelWidth.max;
+				}
+
+			} else if (editorSizeInForm === Size.MAX && pixelWidth.max) {
 				overrideSize = pixelWidth.max;
 			}
 		}
@@ -242,6 +256,10 @@ class PropertiesMain extends React.Component {
 			}
 		} else if (this.propertiesController.getForm().editorSize === Size.MEDIUM) {
 			if (this.state.editorSize === Size.LARGE) {
+				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
+			}
+		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			if (this.state.editorSize === Size.MAX) {
 				resizeButton = <Icon type={CARBON_ICONS.CHEVRONARROWS.RIGHT} className="properties-resize-caret-right" />;
 			}
 		}
@@ -282,6 +300,18 @@ class PropertiesMain extends React.Component {
 					}
 
 				} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+					if (pixelWidth.min && !pixelWidth.max && pixelWidth.min >= FLYOUT_WIDTH_MAX) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size: " + FLYOUT_WIDTH_MAX);
+						return false;
+					} else if (!pixelWidth.min && pixelWidth.max && pixelWidth.max <= FLYOUT_WIDTH_LARGE) {
+						logger.warn("No resize button shown. Pixel width max size is less than or equal to default min size: " + FLYOUT_WIDTH_LARGE);
+						return false;
+					} else if (pixelWidth.min >= pixelWidth.max) {
+						logger.warn("No resize button shown. Pixel width min size is greater than or equal to default max size.");
+						return false;
+					}
+
+				} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
 					if (pixelWidth.min) {
 						logger.warn("No resize button shown. Pixel width min size ignored.");
 						return false;
@@ -289,7 +319,7 @@ class PropertiesMain extends React.Component {
 					return false;
 				}
 
-			} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			} else if (this.propertiesController.getForm().editorSize === Size.MAX) {
 				return false;
 			}
 			return true;
@@ -402,6 +432,12 @@ class PropertiesMain extends React.Component {
 				this.updateEditorSize(Size.LARGE);
 			} else {
 				this.updateEditorSize(Size.MEDIUM);
+			}
+		} else if (this.propertiesController.getForm().editorSize === Size.LARGE) {
+			if (this.state.editorSize === Size.LARGE) {
+				this.updateEditorSize(Size.MAX);
+			} else {
+				this.updateEditorSize(Size.LARGE);
 			}
 		}
 	}

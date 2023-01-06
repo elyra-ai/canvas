@@ -36,6 +36,7 @@ const EditStyle = {
 };
 
 const Size = {
+	MAX: "max",
 	LARGE: "large",
 	MEDIUM: "medium",
 	SMALL: "small"

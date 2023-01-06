@@ -79,7 +79,7 @@
     "label": {
       "default": "Filter Test"
     },
-    "editor_size": "medium",
+    "editor_size": "max",
     "complex_type_info": [
       {
         "complex_type_ref": "fieldFilterEntry",

@@ -29,6 +29,7 @@ export default class PropertiesModal extends Component {
 		switch (this.props.bsSize) {
 		case Size.SMALL: return CARBON_MODAL_SIZE_XSMALL;
 		case Size.LARGE: return CARBON_MODAL_SIZE_LARGE;
+		case Size.MAX: return CARBON_MODAL_SIZE_LARGE;
 		case Size.MEDIUM:
 		default: return CARBON_MODAL_SIZE_SMALL;
 		}
@@ -70,4 +71,3 @@ PropertiesModal.propTypes = {
 	rejectLabel: PropTypes.string,
 	classNames: PropTypes.string
 };
-

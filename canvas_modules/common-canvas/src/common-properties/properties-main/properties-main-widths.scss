@@ -17,11 +17,13 @@
 $common-properties-small-flyout-width: 320px; // This aligns the right-flyout with the divider in DSX header
 $common-properties-medium-flyout-width: 480px; // This is an arbitrary width for medium sized flyout panels
 $common-properties-large-flyout-width: 640px; // This is an arbitrary width for large sized flyout panels
+$common-properties-max-flyout-width: 900px; // This is an arbitrary width for max sized flyout panels
 
 // sass-lint:disable no-misspelled-properties
 :export {
 	flyoutWidthSmall: $common-properties-small-flyout-width;
 	flyoutWidthMedium: $common-properties-medium-flyout-width;
 	flyoutWidthLarge: $common-properties-large-flyout-width;
+	flyoutWidthMax: $common-properties-max-flyout-width;
 }
 // sass-lint:enable no-misspelled-properties
