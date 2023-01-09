@@ -1051,7 +1051,7 @@ function _getState(refState, propertyId) {
 	return null;
 }
 
-function _injectRequiredDefinition(control, valDefinitions, requiredDefinitionsIds, keyName, controlValId, intl) {
+function _injectRequiredDefinition(control, valDefinitions, requiredDefinitionsIds, keyName, controlValId, intl, trimSpaces) {
 	// inject required validation definition
 	const label = (control.label && control.label.text) ? control.label.text : keyName;
 	const errorMsg = formatMessage(intl,

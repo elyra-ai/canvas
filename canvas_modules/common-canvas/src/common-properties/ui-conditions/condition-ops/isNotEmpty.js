@@ -19,7 +19,7 @@ import logger from "./../../../../utils/logger";
 function op() {
 	return "isNotEmpty";
 }
-function evaluate(paramInfo, param2Info, value, controller) {
+function evaluate(paramInfo, param2Info, value, controller, trimSpaces) {
 	const dataType = typeof paramInfo.value;
 	switch (dataType) {
 	case "undefined":
@@ -27,7 +27,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "boolean":
 		return true;
 	case "string":
-		return paramInfo.value.trim().length !== 0;
+		return trimSpaces && paramInfo.value.trim().length !== 0;
 	case "number":
 		return paramInfo.value !== null;
 	case "object":

@@ -186,6 +186,9 @@ export class Control {
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}
+		if (settings.trimSpaces) {
+			this.trimSpaces = settings.trimSpaces;
+		}
 		this.light = get(settings, "light", true);
 	}
 }

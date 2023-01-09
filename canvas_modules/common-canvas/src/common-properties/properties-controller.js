@@ -118,6 +118,10 @@ export default class PropertiesController {
 		return this.light;
 	}
 
+	setTrimSpaces(trimSpaces) {
+		this.trimSpaces = trimSpaces;
+	}
+
 	setPropertiesConfig(config) {
 		this.propertiesConfig = config;
 	}

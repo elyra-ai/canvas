@@ -237,6 +237,7 @@ class App extends React.Component {
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
+			trimSpaces: false,
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
@@ -1284,6 +1285,11 @@ class App extends React.Component {
 		this.log("set properties container", type);
 	}
 
+	setTrimSpaces(enabled) {
+		this.setState({ trimSpaces: enabled });
+		this.log("enable triming the space", enabled);
+	}
+
 	useHeading(enabled) {
 		this.setState({ heading: enabled });
 		this.log("show heading", enabled);
@@ -2026,6 +2032,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
@@ -2675,6 +2682,8 @@ class App extends React.Component {
 			applyOnBlur: this.state.applyOnBlur,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
+			trimSpaces: this.state.trimSpaces,
+			getTrimSpaces: this.getTrimSpaces,
 			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
 			useExpressionBuilder: this.useExpressionBuilder,
