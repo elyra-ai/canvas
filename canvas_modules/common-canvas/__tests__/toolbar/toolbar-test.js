@@ -155,7 +155,7 @@ describe("Toolbar renders correctly", () => {
 	it("should render a Toolbar buttons with only icons ", () => {
 		const toolbarConfig = {
 			leftBar: [
-				{ action: "cut", enable: true, incLabelWithIcon: "none" },
+				{ action: "cut", enable: true, incLabelWithIcon: "no" },
 			]
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
