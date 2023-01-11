@@ -131,8 +131,8 @@ export default class PropertiesController {
 	}
 
 	setParamDef(paramDef) {
-		const rightFlyout = get(this.getPropertiesConfig(), "rightFlyout", true);
-		const formData = Form.makeForm(paramDef, !rightFlyout);
+		const containerType = get(this.getPropertiesConfig(), "containerType", "Flyout");
+		const formData = Form.makeForm(paramDef, containerType);
 		this.setForm(formData);
 	}
 

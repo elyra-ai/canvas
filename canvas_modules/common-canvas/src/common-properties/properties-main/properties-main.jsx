@@ -144,7 +144,7 @@ class PropertiesMain extends React.Component {
 			if (this.props.propertiesConfig.schemaValidation) {
 				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
-			formData = Form.makeForm(propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
+			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {

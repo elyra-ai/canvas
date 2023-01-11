@@ -329,7 +329,7 @@ class ExpressionControl extends React.Component {
 			applyLabel={applyLabel}
 			rejectLabel={rejectLabel}
 			title={expressonTitle}
-			light={this.props.controller.getLight()}
+			light={this.props.controller.getLight() && this.props.control.light}
 		>
 			<div>
 				<ExpressionBuilder
@@ -341,7 +341,7 @@ class ExpressionControl extends React.Component {
 		</WideFlyout>) : null;
 
 		const className = classNames(`properties-expression-editor ${messageType}`,
-			{ "properties-light-disabled": !this.props.control.light || !this.props.controller.getLight() || this.props.controller.isTearsheetContainer() });
+			{ "properties-light-disabled": !this.props.control.light || !this.props.controller.getLight() });
 
 		const expressionLink = (<div className="properties-expression-link-container" >
 			{button}
