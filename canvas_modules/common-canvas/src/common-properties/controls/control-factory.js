@@ -17,7 +17,7 @@
 import React from "react";
 
 import { Type, ControlType } from "./../constants/form-constants";
-import { STATES } from "./../constants/constants";
+import { STATES, CONTAINER_TYPE } from "./../constants/constants";
 import classNames from "classnames";
 import { PropertyDef } from "./../form/PropertyDef";
 import { makeControl } from "./../form/EditorForm";
@@ -364,7 +364,7 @@ export default class ControlFactory {
 	* @param containerType - the type of container common properties is rendering in
 	* @return control object (form schema) used to create standard react controls
 	*/
-	createFormControl(paramDef, parameter, light = true, containerType = "Custom") {
+	createFormControl(paramDef, parameter, light = true, containerType = CONTAINER_TYPE.CUSTOM) {
 		if (!paramDef) {
 			return null;
 		}
