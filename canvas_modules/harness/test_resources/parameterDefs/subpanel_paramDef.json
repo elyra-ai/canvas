@@ -1,321 +1,319 @@
 {
-	"titleDefinition": {
-		"title": "StructureTable Test"
-	},
-	"current_parameters": {
-		"structuretableReadonlyColumnDefaultIndex": [
-			[
-				"Age",
-				"Age",
-				"blue",
-				"string",
-				"2018-02-16",
-				["red"],
-				""
-			],
-			[
-				"BP",
-				"BP-1",
-				"red",
-				"",
-				"1982-02-23",
-				["blue"],
-				"BP > 'BP_new'"
-			]
-		]
-	},
-	"parameters": [
-		{
-			"id": "structuretableReadonlyColumnDefaultIndex",
-			"type": "map[string, structuretableReadonlyColumnDefaultIndex]",
-			"role": "column",
-			"default": [],
-			"required": true
-		}
-	],
-	"complex_types": [
-		{
-			"id": "structuretableReadonlyColumnDefaultIndex",
-			"parameters": [
-				{
-					"id": "field",
-					"type": "string",
-					"role": "column"
-				},
-				{
-					"id": "new_name",
-					"type": "string",
-					"role": "new_column"
-				},
-				{
-					"id": "radioset_colors",
-					"enum": [
-						"red",
-						"green",
-						"blue",
-						"purple",
-						"orange",
-						"brown"
-					],
-					"default": "red"
-				},
-				{
-					"id": "new_type",
-					"enum": [
-						"string",
-						"integer",
-						"double",
-						"time",
-						"date",
-						"timestamp",
-						"binary",
-						"boolean"
-					],
-					"default": "string"
-				},
-				{
-					"id": "new_date",
-					"type": "date"
-				},
-				{
-					"id": "someofselectList",
-					"type": "array[string]",
-					"enum": [
-						"red",
-						"orange",
-						"yellow",
-						"green",
-						"blue",
-						"purple"
-					]
-				},
-				{
-					"id": "expression",
-					"type": "string",
-					"default": "",
-					"role": "expression"
-				}
-			]
-		}
-	],
-	"uihints": {
-		"id": "StructureTable.test",
-		"icon": "images/modelbuildspark.svg",
-		"label": {
-			"default": "StructureTable Test"
-		},
-		"description": {
-			"default": "Test readonly numbered column in a column structure table control"
-		},
-		"parameter_info": [
-			{
-				"parameter_ref": "structuretableReadonlyColumnDefaultIndex",
-				"label": {
-					"default": "Rename Field"
-				},
-				"description": {
-					"default": "The level column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
-				}
-			}
-		],
-		"complex_type_info": [
-			{
-				"complex_type_ref": "structuretableReadonlyColumnDefaultIndex",
-				"label": {
-					"default": "Rename Subpanel"
-				},
-				"parameters": [
-					{
-						"parameter_ref": "field",
-						"label": {
-							"resource_key": "structuretableReadonlyColumnDefaultIndex.field.label"
-						},
-						"width": 20,
-						"summary": true,
-						"dm_image": "measure"
-					},
-					{
-						"parameter_ref": "new_name",
-						"label": {
-							"resource_key": "structuretableReadonlyColumnDefaultIndex.new_name.label"
-						},
-						"description": {
-							"resource_key": "structuretableReadonlyColumnDefaultIndex.new_name.desc"
-						},
-						"width": 25,
-						"edit_style": "subpanel",
-						"filterable": true,
-						"summary": true
-					},
-					{
-						"parameter_ref": "radioset_colors",
-						"control": "radioset",
-						"label": {
-							"default": "color"
-						},
-						"description": {
-							"default": "color subpanel"
-						},
-						"width": 20,
-						"edit_style": "subpanel"
-					},
-					{
-						"parameter_ref": "new_type",
-						"label": {
-							"default": "Type"
-						},
-						"description": {
-							"default": "Select data type"
-						},
-						"width": 20,
-						"edit_style": "subpanel",
-						"dm_default": "type"
-					},
-					{
-						"parameter_ref": "new_date",
-						"label": {
-							"default": "Date"
-						},
-						"description": {
-							"default": "Enter a date in YYYY-M-D format"
-						},
-						"width": 25,
-						"edit_style": "subpanel"
-					},
-					{
-						"parameter_ref": "someofselectList",
-						"label": {
-							"default": "someofselect"
-						},
-						"width": 20,
-						"edit_style": "subpanel"
-					},
-					{
-						"parameter_ref": "expression",
-						"language": "CLEM",
-						"label": {
-							"default": "expression"
-						},
-						"description": {
-							"resource_key": "expression in subpanel"
-						},
-						"width": 30,
-						"edit_style": "subpanel"
-					}
-				]
-			}
-		],
-		"group_info": [
-			{
-				"id": "Tables",
-				"type": "panels",
-				"group_info": [
-					{
-						"id": "structuretableReadonlyColumnDefaultIndex-summary-panel",
-						"label": {
-							"default": "Configure Rename fields"
-						},
-						"type": "summaryPanel",
-						"group_info": [
-							{
-								"id": "structuretableReadonlyColumnDefaultIndex",
-								"label": {
-									"default": "Tables"
-								},
-								"type": "controls",
-								"parameter_refs": [
-									"structuretableReadonlyColumnDefaultIndex"
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"conditions": [],
-	"dataset_metadata": [
-		{
-			"fields": [
-				{
-					"name": "Age",
-					"type": "integer",
-					"metadata": {
-						"description": "",
-						"measure": "range",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Sex",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "ordered_set",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "BP",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Cholesterol",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "set",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Na",
-					"type": "double",
-					"metadata": {
-						"description": "",
-						"measure": "flag",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "K",
-					"type": "double",
-					"metadata": {
-						"description": "",
-						"measure": "collection",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Drug",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "geospatial",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Ag",
-					"type": "integer",
-					"metadata": {
-						"description": "",
-						"measure": "",
-						"modeling_role": "input"
-					}
-				}
-			]
-		}
-	],
-	"resources": {
-		"structuretableReadonlyColumnDefaultIndex.rename.label": "Rename Columns",
-		"structuretableReadonlyColumnDefaultIndex.field.label": "Input name",
-		"structuretableReadonlyColumnDefaultIndex.new_name.label": "Output name",
-		"structuretableReadonlyColumnDefaultIndex.new_name.desc": "New field name"
-	}
+  "titleDefinition": {
+    "title": "Subpanel Test"
+  },
+  "current_parameters": {
+    "subpanelTable": [
+      [
+        "Age",
+        "Age",
+        "blue",
+        "string",
+        "2018-02-16",
+        ["red"],
+        ""
+      ],
+      [
+        "BP",
+        "BP-1",
+        "red",
+        "",
+        "2023-01-11",
+        ["blue"],
+        "BP > 'BP_new'"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "subpanelTable",
+      "type": "map[string, subpanelTable]",
+      "role": "column",
+      "default": [],
+      "required": true
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "subpanelTable",
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "radioset_colors",
+          "enum": [
+            "red",
+            "green",
+            "blue",
+            "purple",
+            "orange",
+            "brown"
+          ],
+          "default": "red"
+        },
+        {
+          "id": "new_type",
+          "enum": [
+            "string",
+            "integer",
+            "double",
+            "time",
+            "date",
+            "timestamp",
+            "binary",
+            "boolean"
+          ],
+          "default": "string"
+        },
+        {
+          "id": "new_date",
+          "type": "date"
+        },
+        {
+          "id": "someofselectList",
+          "type": "array[string]",
+          "enum": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "purple"
+          ]
+        },
+        {
+          "id": "expression",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "Subpanel.test",
+    "label": {
+      "default": "Subpanel Test"
+    },
+    "description": {
+      "default": "Test readonly numbered column in a column structure table control"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "subpanelTable",
+        "label": {
+          "default": "Subpanel table"
+        },
+        "description": {
+          "default": "The columns in this table are configured in the subpanel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "subpanelTable",
+        "label": {
+          "default": "Subpanel table"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "resource_key": "subpanelTable.field.label"
+            },
+            "width": 20,
+            "summary": true,
+            "dm_image": "measure"
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "resource_key": "subpanelTable.new_name.label"
+            },
+            "description": {
+              "resource_key": "subpanelTable.new_name.desc"
+            },
+            "width": 25,
+            "edit_style": "subpanel",
+            "filterable": true,
+            "summary": true
+          },
+          {
+            "parameter_ref": "radioset_colors",
+            "control": "radioset",
+            "label": {
+              "default": "color"
+            },
+            "description": {
+              "default": "color subpanel"
+            },
+            "width": 20,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "new_type",
+            "label": {
+              "default": "Type"
+            },
+            "description": {
+              "default": "Select data type"
+            },
+            "width": 20,
+            "edit_style": "subpanel",
+            "dm_default": "type"
+          },
+          {
+            "parameter_ref": "new_date",
+            "label": {
+              "default": "Date"
+            },
+            "description": {
+              "default": "Enter a date in YYYY-M-D format"
+            },
+            "width": 25,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "someofselectList",
+            "label": {
+              "default": "someofselect"
+            },
+            "width": 20,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "expression",
+            "language": "CLEM",
+            "label": {
+              "default": "expression"
+            },
+            "description": {
+              "resource_key": "expression in subpanel"
+            },
+            "width": 30,
+            "edit_style": "subpanel"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Tables",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "subpanelTable-summary-panel",
+            "label": {
+              "default": "Subpanel table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "subpanelTable",
+                "label": {
+                  "default": "Tables"
+                },
+                "type": "controls",
+                "parameter_refs": [
+                  "subpanelTable"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "ordered_set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "flag",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "collection",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "geospatial",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "subpanelTable.field.label": "Input name",
+    "subpanelTable.new_name.label": "Output name",
+    "subpanelTable.new_name.desc": "New field name"
+  }
 }
