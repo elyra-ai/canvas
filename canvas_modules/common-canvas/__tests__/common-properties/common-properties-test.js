@@ -654,12 +654,12 @@ describe("Common properties modals return the correct Carbon modal size", () => 
 		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_LARGE);
 	});
 
-	it("should return 'xs' when editor_size is not set, defaults to 'small'", () => {
+	it("should return 'lg' when editor_size is not set and containerType is 'Modal", () => {
 		delete newPropertiesInfo.parameterDef.uihints.editor_size;
 		const renderedObject = propertyUtils.flyoutEditorForm(newPropertiesInfo.parameterDef, { containerType: "Modal" });
 		wrapper = renderedObject.wrapper;
 		const modalInstance = wrapper.find(PropertiesDialog).instance();
-		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_XSMALL);
+		expect(modalInstance.getCarbonModalSize()).to.equal(CARBON_MODAL_SIZE_LARGE);
 	});
 });
 

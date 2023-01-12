@@ -21,7 +21,7 @@ import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
 import { Size } from "../constants/form-constants";
-import { CONTAINER_TYPE  } from "../constants/constants";
+import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
 	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading) {
@@ -64,7 +64,7 @@ export default class Form {
 				uiCurrentParameters: propertyOf(paramDef)("current_ui_parameters"),
 				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
-			const isModal = containerType !== CONTAINER_TYPE.FLYOUT;
+			const isModal = containerType === CONTAINER_TYPE.TEARSHEET || containerType === CONTAINER_TYPE.MODAL;
 			const editorSizeDefault = isModal ? Size.LARGE : Size.SMALL;
 			return new Form(propDef.name,
 				propDef.label,

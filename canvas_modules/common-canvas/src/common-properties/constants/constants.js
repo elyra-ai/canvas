@@ -270,7 +270,7 @@ export const CARBON_BUTTON_SIZE = {
 };
 
 export const CONTAINER_TYPE = {
-	FLYOUT: "Flyout",
+	CUSTOM: "Custom",
 	TEARSHEET: "Tearsheet",
 	MODAL: "Modal"
 };

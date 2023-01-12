@@ -131,7 +131,7 @@ export default class PropertiesController {
 	}
 
 	setParamDef(paramDef) {
-		const containerType = get(this.getPropertiesConfig(), "containerType", "Flyout");
+		const containerType = get(this.getPropertiesConfig(), "containerType");
 		const formData = Form.makeForm(paramDef, containerType);
 		this.setForm(formData);
 	}
@@ -1754,7 +1754,8 @@ export default class PropertiesController {
 	* @param parameter (string) - name of the parameter to pull out of paramDef
 	*/
 	createControl(propertyId, paramDef, parameter) {
-		const control = this.controlFactory.createFormControl(paramDef, parameter);
+		const containerType = get(this.getPropertiesConfig(), "containerType");
+		const control = this.controlFactory.createFormControl(paramDef, parameter, this.getLight(), containerType);
 		const controls = [];
 		// need to preserve parentCategoryId which is set during initial parsing of all controls
 		const parentCategoryId = this.getControl(propertyId).parentCategoryId;

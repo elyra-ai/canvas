@@ -175,7 +175,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
-		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
+		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo);
 		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn, groupClassName);
 	}
 	case GroupType.PANELS: {
@@ -315,7 +315,7 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 							group.subGroups[i].dependsOn === control.control.name) {
 						panelInsertedFor.push(group.subGroups[i].dependsOn);
 						control.additionalItems =
-							_genPanelSelectorPanels(group.subGroups[i], parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
+							_genPanelSelectorPanels(group.subGroups[i], parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo);
 					}
 				}
 			}
@@ -354,12 +354,12 @@ function _hasPanelBeenInserted(panelInsertedFor, dependsOn) {
  * and its ID. The ID is subsequently used by the radioset control to decide
  * which panel is displayed with which radio button.
  */
-function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider) {
+function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider, additionalInfo) {
 	const panSelSubItems = [];
 	if (Array.isArray(group.subGroups)) {
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+			const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider, additionalInfo);
 			const groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});

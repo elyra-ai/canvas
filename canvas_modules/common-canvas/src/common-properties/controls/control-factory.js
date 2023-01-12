@@ -360,9 +360,11 @@ export default class ControlFactory {
 	* Allows users to user a standard control in a custom control/panel
 	* @param paramDef - see parameter-def schema
 	* @param parameter - name of the parameter to pull from paramDef
+	* @param light - if this control is light themed
+	* @param containerType - the type of container common properties is rendering in
 	* @return control object (form schema) used to create standard react controls
 	*/
-	createFormControl(paramDef, parameter) {
+	createFormControl(paramDef, parameter, light = true, containerType = "Custom") {
 		if (!paramDef) {
 			return null;
 		}
@@ -374,7 +376,11 @@ export default class ControlFactory {
 			if (prop.propType() === Type.STRUCTURE && propDef.structureMetadata) {
 				structureDef = propDef.structureMetadata.getStructure(prop.baseType());
 			}
-			const control = makeControl(propDef.parameterMetadata, parameter, null, structureDef, l10nProvider);
+			const additionalInfo = {
+				light: light,
+				containerType: containerType
+			};
+			const control = makeControl(propDef.parameterMetadata, parameter, null, structureDef, l10nProvider, null, null, null, additionalInfo);
 			return control;
 		}
 		return null;
