@@ -27,7 +27,7 @@
   "parameters": [
     {
       "id": "subpanelTable",
-      "type": "map[string, subpanelTable]",
+      "type": "array[complexSubpanelTable]",
       "role": "column",
       "default": [],
       "required": true
@@ -35,7 +35,7 @@
   ],
   "complex_types": [
     {
-      "id": "subpanelTable",
+      "id": "complexSubpanelTable",
       "parameters": [
         {
           "id": "field",
@@ -113,13 +113,14 @@
           "default": "Subpanel table"
         },
         "description": {
-          "default": "The columns in this table are configured in the subpanel"
+          "default": "The columns in this table are configured in the subpanel",
+          "placement": "on_panel"
         }
       }
     ],
     "complex_type_info": [
       {
-        "complex_type_ref": "subpanelTable",
+        "complex_type_ref": "complexSubpanelTable",
         "label": {
           "default": "Subpanel table"
         },
@@ -210,22 +211,13 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "subpanelTable-summary-panel",
+            "id": "subpanelTable",
             "label": {
-              "default": "Subpanel table"
+              "default": "Tables"
             },
-            "type": "summaryPanel",
-            "group_info": [
-              {
-                "id": "subpanelTable",
-                "label": {
-                  "default": "Tables"
-                },
-                "type": "controls",
-                "parameter_refs": [
-                  "subpanelTable"
-                ]
-              }
+            "type": "controls",
+            "parameter_refs": [
+              "subpanelTable"
             ]
           }
         ]
