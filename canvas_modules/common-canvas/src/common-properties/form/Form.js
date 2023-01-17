@@ -21,6 +21,7 @@ import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
 import { Size } from "../constants/form-constants";
+import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
 	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading) {
@@ -42,9 +43,9 @@ export default class Form {
 	/**
 	* Returns a new Form
 	* @param paramDef Parameter definition
-	* @param isModal True for modal dialogs
+	* @param containerType Type of container common properties will be displayed in, set in propertiesConfig
 	*/
-	static makeForm(paramDef, isModal) {
+	static makeForm(paramDef, containerType) {
 		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
 		const resources = propertyOf(paramDef)("resources");
@@ -54,7 +55,7 @@ export default class Form {
 			const tabs = [];
 			if (propDef.groupMetadata && propDef.groupMetadata.groups) {
 				for (const group of propDef.groupMetadata.groups) {
-					tabs.push(makePrimaryTab(propDef, group, l10nProvider, conditions));
+					tabs.push(makePrimaryTab(propDef, group, l10nProvider, containerType));
 				}
 			}
 
@@ -63,6 +64,7 @@ export default class Form {
 				uiCurrentParameters: propertyOf(paramDef)("current_ui_parameters"),
 				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
+			const isModal = containerType === CONTAINER_TYPE.TEARSHEET || containerType === CONTAINER_TYPE.MODAL;
 			const editorSizeDefault = isModal ? Size.LARGE : Size.SMALL;
 			return new Form(propDef.name,
 				propDef.label,

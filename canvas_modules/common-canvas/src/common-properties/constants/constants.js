@@ -268,3 +268,9 @@ export const CARBON_BUTTON_SIZE = {
 	EXTRA_LARGE: "xl",
 	DEFAULT: "default" // TODO: remove this after upgrading to carbon 11.x
 };
+
+export const CONTAINER_TYPE = {
+	CUSTOM: "Custom",
+	TEARSHEET: "Tearsheet",
+	MODAL: "Modal"
+};
