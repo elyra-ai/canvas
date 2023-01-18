@@ -31,10 +31,6 @@ _defineConstant("CONSOLE", {
 	MAXIMIXED: "200px"
 });
 
-_defineConstant("SIDE_PANEL", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "240px"
-});
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");

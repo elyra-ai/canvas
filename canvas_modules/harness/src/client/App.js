@@ -80,7 +80,6 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
-	SIDE_PANEL,
 	CHOOSE_FROM_LOCATION,
 	INTERACTION_MOUSE,
 	VERTICAL_FORMAT,
@@ -2608,7 +2607,7 @@ class App extends React.Component {
 			);
 		}
 
-		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
+		const sidePanelStateClass = this.isSidePanelOpen() === false ? "" : " side-panel-open";
 
 		let commonCanvas;
 		if (this.state.selectedExtraCanvasDisplayed === true) {
@@ -2617,7 +2616,7 @@ class App extends React.Component {
 				: this.getTempContent();
 
 			commonCanvas = (
-				<div className="harness-canvas-container double" style={{ width: canvasContainerWidth }}>
+				<div className={"harness-canvas-container double" + sidePanelStateClass}>
 					<div className="harness-canvas-single">
 						{firstCanvas}
 					</div>
@@ -2638,7 +2637,7 @@ class App extends React.Component {
 				</div>);
 		} else {
 			commonCanvas = (
-				<div className="harness-canvas-container" style={{ width: canvasContainerWidth }}>
+				<div className={"harness-canvas-container" + sidePanelStateClass}>
 					{firstCanvas}
 				</div>);
 		}
