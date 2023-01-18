@@ -21,7 +21,6 @@ import SidePanelModal from "./sidepanel-properties.jsx";
 import SidePanelAPI from "./sidepanel-api.jsx";
 
 import {
-	SIDE_PANEL,
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API
@@ -30,44 +29,45 @@ import {
 export default class SidePanel extends React.Component {
 
 	render() {
-		var panelSize = SIDE_PANEL.MINIMIZED;
+		let view = null;
+		let sidePanelStateClass = "";
+
 		if (this.props.openSidepanelCanvas ||
-			this.props.openSidepanelModal ||
-			this.props.openSidepanelAPI) {
-			panelSize = SIDE_PANEL.MAXIMIXED;
-		}
+				this.props.openSidepanelModal ||
+				this.props.openSidepanelAPI) {
+			sidePanelStateClass = " open";
 
-		var view = null;
-		switch (this.props.selectedPanel) {
-		case SIDE_PANEL_CANVAS:
-			view = (<SidePanelCanvas
-				canvasConfig={this.props.canvasConfig}
-				log={this.props.log}
-				setStateValue={this.props.setStateValue}
-				getStateValue={this.props.getStateValue}
-			/>);
-			break;
-		case SIDE_PANEL_MODAL:
-			view = (<SidePanelModal
-				log={this.props.log}
-				propertiesConfig={this.props.propertiesConfig}
-			/>);
-			break;
-		case SIDE_PANEL_API:
-			view = (<SidePanelAPI
-				log={this.props.log}
-				apiConfig={this.props.apiConfig}
-			/>);
-			break;
-		default:
+			switch (this.props.selectedPanel) {
+			case SIDE_PANEL_CANVAS:
+				view = (<SidePanelCanvas
+					canvasConfig={this.props.canvasConfig}
+					log={this.props.log}
+					setStateValue={this.props.setStateValue}
+					getStateValue={this.props.getStateValue}
+				/>);
+				break;
+			case SIDE_PANEL_MODAL:
+				view = (<SidePanelModal
+					log={this.props.log}
+					propertiesConfig={this.props.propertiesConfig}
+				/>);
+				break;
+			case SIDE_PANEL_API:
+				view = (<SidePanelAPI
+					log={this.props.log}
+					apiConfig={this.props.apiConfig}
+				/>);
+				break;
+			default:
+			}
 		}
-
-		const sidePanel = (<div className="harness-app-sidepanel" style={ { width: panelSize } } >
-			{view}
-		</div>);
 
 		return (
-			<aside aria-label="Right Side Panel" role="complementary">{sidePanel}</aside>
+			<aside aria-label="Right Side Panel" role="complementary">
+				<div className={"harness-app-sidepanel" + sidePanelStateClass}>
+					{view}
+				</div>
+			</aside>
 		);
 	}
 }

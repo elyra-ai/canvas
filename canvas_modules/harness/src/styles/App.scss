@@ -24,8 +24,13 @@ $harness-navbar-icon-width: 48px;
 
 .harness-canvas-container,
 .harness-canvas-container.double {
-	height: calc(100% - 52px);
-	transition: width 0.5s;
+	height: calc(100% - $harness-header-height);
+	width: 100%;
+	transition: width $harness-sidepanel-transition-time;
+
+	&.side-panel-open {
+		width: calc(100% - $harness-sidepanel-width);
+	}
 }
 
 .harness-canvas-single {

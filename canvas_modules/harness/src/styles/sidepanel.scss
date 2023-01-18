@@ -20,8 +20,9 @@
 	top: 50px;
 	position: fixed;
 	right: 0;
-	height: calc(100% - 50px);
-	transition: width 0.5s;
+	height: calc(100% - $harness-header-height);
+	width: 0;
+	transition: width $harness-sidepanel-transition-time;
 	color: $text-01;
 	overflow: auto;
 	z-index: 100;
@@ -33,6 +34,10 @@
 	border-left: 1px solid $ui-03;
 	.bx--fieldset {
 		margin-bottom: 0;
+	}
+
+	&.open {
+		width: $harness-sidepanel-width;
 	}
 }
 
