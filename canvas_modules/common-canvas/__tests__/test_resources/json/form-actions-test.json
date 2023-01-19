@@ -278,6 +278,7 @@
                             "light": true,
                             "labelVisible": true,
                             "controlType": "readonly",
+                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "integer",
                               "isList": false,
@@ -345,6 +346,7 @@
                             "light": true,
                             "labelVisible": true,
                             "controlType": "selectcolumns",
+                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "string",
                               "isList": true,

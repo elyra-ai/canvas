@@ -165,6 +165,9 @@ export class ParameterDef {
 		if (settings.className) {
 			this.className = settings.className;
 		}
+		if (settings.showRequiredLabel) {
+			this.showRequiredLabel = settings.showRequiredLabel;
+		}
 	}
 
 	isList() {
@@ -360,7 +363,8 @@ export class ParameterDef {
 				"uionly": propertyOf(param)("uionly"),
 				"actionRef": propertyOf(uihint)("action_ref"),
 				"customValueAllowed": propertyOf(uihint)("custom_value_allowed"),
-				"className": propertyOf(uihint)("class_name")
+				"className": propertyOf(uihint)("class_name"),
+				"showRequiredLabel": propertyOf(param)("showRequiredLabel")
 			});
 		}
 		return null;
@@ -404,6 +408,19 @@ export class ParameterMetadata {
 	// operation arguments
 	static makeParameterMetadata(parameters, uihintsParams, uihintsUiParams) {
 		const paramDefs = [];
+		if (parameters) {
+			// Add a new option for showing "required" or "optional" indicator in control-item
+			const requiredParameters = parameters.filter((parameter) => parameter.required === true);
+			const half = parameters.length / 2;
+			parameters.forEach((parameter) => {
+				if (requiredParameters.length <= half) {
+					parameter.showRequiredLabel = true;
+				} else {
+					parameter.showRequiredLabel = false;
+				}
+			});
+		}
+
 		if (Array.isArray(parameters)) {
 			for (const param of parameters) {
 				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.id, uihintsParams));

@@ -254,6 +254,7 @@
                           "light": true,
                           "labelVisible": true,
                           "controlType": "textfield",
+                          "showRequiredLabel": true,
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -272,7 +273,8 @@
                       ],
                       "addRemoveRows": true,
                       "header": true,
-                      "editStyle": "inline"
+                      "editStyle": "inline",
+                      "showRequiredLabel": true
                     }
                   }
                 ],

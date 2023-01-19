@@ -39,7 +39,8 @@ const control = {
 				something: "sampleData"
 			}
 		}
-	}
+	},
+	showRequiredLabel: false
 };
 
 const propertyId = {
@@ -89,7 +90,8 @@ describe("control-item renders correctly", () => {
 			description: {
 				text: "Control Description",
 				placement: "on_panel"
-			}
+			},
+			showRequiredLabel: false
 		};
 		const wrapper = mountWithIntl(
 			<ControlItem
@@ -103,6 +105,7 @@ describe("control-item renders correctly", () => {
 		);
 		expect(wrapper.find("label.properties-control-label").text()).to.equal(controlOnPanel.label.text);
 		expect(wrapper.find("div.properties-control-description").text()).to.equal(controlOnPanel.description.text);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
 	});
 
 	it("should create label and tooltip description", () => {
@@ -117,9 +120,10 @@ describe("control-item renders correctly", () => {
 				accessibleControls={accessibleControls}
 			/>
 		);
-		// should not have a required indicator
-		expect(wrapper.find("span.properties-required-indicator")).to.have.length(0);
+		// should have optional indicator because "showRequiredLabel: false"
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
 		expect(wrapper.find("label.properties-control-label").text()).to.equal(control.label.text);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
 		const tooltip = wrapper.find("div.tooltip-container");
 		expect(tooltip).to.have.length(1);
 		// tooltip icon
@@ -237,7 +241,8 @@ describe("control-item renders correctly", () => {
 			label: {
 				text: "Control Label"
 			},
-			required: true
+			required: true,
+			showRequiredLabel: true
 		};
 		const wrapper = mountWithIntl(
 			<ControlItem
@@ -249,7 +254,8 @@ describe("control-item renders correctly", () => {
 				accessibleControls={accessibleControls}
 			/>
 		);
-		expect(wrapper.find("span.properties-required-indicator")).to.have.length(1);
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(required)");
 	});
 
 	it("should be hidden", () => {

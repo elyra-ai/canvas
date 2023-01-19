@@ -112,7 +112,9 @@ export const MESSAGE_KEYS = {
 	TOGGLE_ON_LABEL: "toggle.on.label",
 	TOGGLE_OFF_LABEL: "toggle.off.label",
 	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
-	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip"
+	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip",
+	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
+	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional"
 };
 
 export const TRUNCATE_LIMIT = 10000;

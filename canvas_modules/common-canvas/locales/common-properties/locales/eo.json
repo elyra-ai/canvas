@@ -100,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "[Esperanto~options selected~~eo]",
   "virtualizedTable.header.checkbox.label": "[Esperanto~Select all {header_checkbox_label}~~~~~~eo]",
   "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index} from {table_label}~~~~~~~~~~eo]",
-  "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~eo]"
+  "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~eo]",
+  "label.indicator.required": "[Esperanto~(required)~~~~~~eo]",
+  "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]"
 }
