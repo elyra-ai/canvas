@@ -300,7 +300,7 @@ describe("Test new enableNodeLayout config parameter", function() {
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
-	it.only("Test node 's height & width upon enableNodeLayout update", function() {
+	it("Test node 's height & width upon enableNodeLayout update", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Database", 300, 200);
