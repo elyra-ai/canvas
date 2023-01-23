@@ -294,6 +294,30 @@ describe("Test from loaded file in legacy format", function() {
 	});
 });
 
+describe("Test new enableNodeLayout config parameter", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasPalette("modelerPalette.json");
+	});
+
+	it.only("Test node 's height & width upon enableNodeLayout update", function() {
+		cy.clickToolbarPaletteOpen();
+		cy.clickCategory("Import");
+		cy.dragNodeToPosition("Database", 300, 200);
+
+		// Verify node haight & width vefore updating enableNodeLayout
+		cy.verifyNodeTransform("Database", 8, 72);
+		cy.clickToolbarUndo();
+
+		// Override some of the enableNodeLayout config parameters
+		cy.setCanvasConfig({ "selectedNodeLayout": { defaultNodeWidth: 150, defaultNodeHeight: 150 } });
+		// Verify node haight & width after updating enableNodeLayout
+		cy.dragNodeToPosition("Database");
+		cy.verifyNodeTransform("Database", 368, 234);
+	});
+
+});
+
 function verifyNewPropertiesFlyoutTitleEntryInConsole(newTitle) {
 	cy.document().then((doc) => {
 		const lastEventLog = testUtils.getLastLogOfType(doc, "applyPropertyChanges()");
