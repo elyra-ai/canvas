@@ -306,14 +306,14 @@ describe("Test new enableNodeLayout config parameter", function() {
 		cy.dragNodeToPosition("Database", 300, 200);
 
 		// Verify node height & width before updating enableNodeLayout
-		cy.verifyNodeTransform("Database", 8, 72);
+		cy.verifyNodeWidthHeight("Database", 80, 83);
 		cy.clickToolbarUndo();
 
 		// Override some of the enableNodeLayout config parameters
 		cy.setCanvasConfig({ "selectedNodeLayout": { defaultNodeWidth: 150, defaultNodeHeight: 150 } });
 		// Verify node height & width after updating enableNodeLayout
 		cy.dragNodeToPosition("Database");
-		cy.verifyNodeTransform("Database", 368, 234);
+		cy.verifyNodeWidthHeight("Database", 160, 158);
 	});
 
 });

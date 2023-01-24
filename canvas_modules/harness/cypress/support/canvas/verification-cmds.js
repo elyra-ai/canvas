@@ -1313,6 +1313,13 @@ Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
 	}
 });
 
+Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeheight) => {
+	cy.getNodeWithLabel(nodeLabel).should((element) => {
+		expect(element).to.have.css("height", `${nodeheight}px`);
+		expect(element).to.have.css("width", `${nodeWidth}px`);
+	});
+});
+
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
 	if (typeof content === "string" && content.length > 0) {
 		cy.get(".notification-panel-" + id).should("contain", content);
