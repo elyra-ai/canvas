@@ -113,6 +113,9 @@ class FlexibleTable extends React.Component {
 		if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.propertyId")) {
 			// this is a nested control
 			rowIndex = this.getLastChildPropertyIdRow(row.columns[0].content.props.children.props.propertyId, index);
+		} else if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.index")) {
+			// for rows that have multi-select controls in them
+			rowIndex = row.columns[0].content.props.children.props.propertyId.index;
 		} else if (row.columns && has(row.columns[0], "content.props.children.props.propertyId.row")) {
 			rowIndex = row.columns[0].content.props.children.props.propertyId.row;
 		} else if (typeof row.rowKey === "number") { // expression tables uses rowKey
@@ -354,7 +357,7 @@ class FlexibleTable extends React.Component {
 		const checked = data.selected;
 		const overSelectOption = data.isOverSelectOption;
 
-		if (!this.props.data[displayedRowIndex].disabled) {
+		if (!this.props.data[displayedRowIndex].disabled && typeof this.props.updateRowSelections === "function") {
 			if (overSelectOption) { // Checkbox is clicked
 				let current = this.props.selectedRows ? this.props.selectedRows : [];
 				if (data.selectMultipleRows) { // multiple rows selected/deselected using shift key
@@ -372,7 +375,7 @@ class FlexibleTable extends React.Component {
 				// Sort ascending because we want to add selected rows in the same order as they're displayed in the table
 				current.sort((a, b) => a - b);
 				this.props.updateRowSelections(current);
-			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE && typeof this.props.updateRowSelections !== "undefined") { // Table row is clicked
+			} else if (this.props.rowSelection === ROW_SELECTION.SINGLE) { // Table row is clicked
 				this.props.updateRowSelections(data.index, evt, this.props.data[data.index].rowKey);
 			}
 		}
