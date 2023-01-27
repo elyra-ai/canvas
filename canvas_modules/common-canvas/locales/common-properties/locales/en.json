@@ -100,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "options selected",
   "virtualizedTable.header.checkbox.label": "Select all {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Select row {row_index} from {table_label}",
-  "properties.empty.table.text": "To begin, click \"{button_label}\""
+  "properties.empty.table.text": "To begin, click \"{button_label}\"",
+  "label.indicator.required": "(required)",
+  "label.indicator.optional": "(optional)"
 }

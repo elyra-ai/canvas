@@ -40,12 +40,13 @@
 	display: flex;
 	align-items: center;
 	padding-bottom: $spacing-03;
-	label, .properties-required-indicator {
+	label, .properties-indicator {
 		@include carbon--type-style("label-01");
 		color: $text-02;
+		padding-left: $spacing-02;
 	}
 	&.table-control {
-		label, .properties-required-indicator {
+		label, .properties-indicator {
 			@include carbon--type-style("productive-heading-01");
 			color: $text-01;
 		}

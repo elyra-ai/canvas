@@ -413,9 +413,18 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("selectcolumn control should have aria-label", () => {
-		const selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
-		const selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel*");
+		// Total properties - 21, required - 11, optional - 10
+		// Show "(optional)" indicator next to label
+
+		// aria-label for required property
+		let selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
+		let selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel");
+
+		// aria-label for optional property
+		selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field_placeholder']");
+		selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field with Placeholder text(optional)");
 	});
 
 	it("selectcolumn control should show warning for invalid selected values", () => {
