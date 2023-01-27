@@ -132,10 +132,18 @@ describe("selectschema works correctly in common-properties", () => {
 		expect(propertiesController.getPropertyValue({ name: "selectschema" })).to.equal("");
 	});
 	it("selectschema control should have aria-label", () => {
-		const dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
-		const dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema*");
+		// Total properties - 13, required - 9, optional - 4
+		// Show "(optional)" indicator next to label
 
+		// aria-label for required property
+		let dropDown = wrapper.find("div[data-id='properties-selectschema'] Dropdown");
+		let dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema");
+
+		// aria-label for optional property
+		dropDown = wrapper.find("div[data-id='properties-selectschema_placeholder'] Dropdown");
+		dropdownAriaLabelledby = dropDown.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropDown.find(`#${dropdownAriaLabelledby}`).text()).to.equal("selectschema with Placeholder text(optional)");
 	});
 });
 

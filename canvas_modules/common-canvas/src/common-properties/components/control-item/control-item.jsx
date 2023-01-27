@@ -18,13 +18,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
+import { STATES, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import Icon from "./../../../icons/icon.jsx";
 import ActionFactory from "./../../actions/action-factory.js";
+import { formatMessage } from "./../../util/property-utils";
 
 class ControlItem extends React.Component {
 	constructor(props) {
@@ -66,14 +67,24 @@ class ControlItem extends React.Component {
 					</Tooltip>);
 				}
 			}
-			let requiredIndicator;
-			if (this.props.control.required) {
-				requiredIndicator = <span className="properties-required-indicator">*</span>;
+			let indicator;
+			if (this.props.control.showRequiredLabel && this.props.control.required) {
+				indicator = (
+					<span className="properties-indicator">
+						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_REQUIRED)}
+					</span>
+				);
+			} else if (!this.props.control.showRequiredLabel && !("required" in this.props.control)) {
+				indicator = (
+					<span className="properties-indicator">
+						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_OPTIONAL)}
+					</span>
+				);
 			}
 			label = (
 				<div className={classNames("properties-label-container", { "table-control": this.props.tableControl === true })}>
 					<label className="properties-control-label">{this.props.control.label.text}</label>
-					{requiredIndicator}
+					{indicator}
 					{tooltip}
 				</div>);
 		}
