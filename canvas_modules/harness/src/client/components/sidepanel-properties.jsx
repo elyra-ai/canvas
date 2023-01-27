@@ -96,6 +96,7 @@ export default class SidePanelModal extends React.Component {
 		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
 		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
+		this.useConvertValueDataTypes = this.useConvertValueDataTypes.bind(this);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -330,6 +331,10 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.useHeading(checked);
 	}
 
+	useConvertValueDataTypes(checked) {
+		this.props.propertiesConfig.useConvertValueDataTypes(checked);
+	}
+
 	useLightOption(checked) {
 		this.props.propertiesConfig.useLightOption(checked);
 	}
@@ -498,6 +503,16 @@ export default class SidePanelModal extends React.Component {
 					labelText="Apply changes on blur"
 					toggled={this.props.propertiesConfig.applyOnBlur}
 					onToggle={this.useApplyOnBlur}
+				/>
+			</div>);
+
+		const convertValueDataTypes = (
+			<div className="harness-sidepanel-children">
+				<Toggle
+					id="harness-sidepanel-convertValueDataTypes-toggle"
+					labelText="Convert currentParameter values to data type defined in parameterDef, propertiesConfig option: 'convertValueDataTypes'"
+					toggled={this.props.propertiesConfig.convertValueDataTypes}
+					onToggle={this.useConvertValueDataTypes}
 				/>
 			</div>);
 
@@ -857,6 +872,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{applyOnBlur}
 				{divider}
+				{convertValueDataTypes}
+				{divider}
 				{setSaveButtonDisable}
 				{divider}
 				{expressionBuilder}
@@ -967,6 +984,8 @@ SidePanelModal.propTypes = {
 		wideFlyoutPrimaryButtonDisabled: PropTypes.bool,
 		disableWideFlyoutPrimaryButtonForPanelId: PropTypes.func,
 		setWideFlyoutPrimaryButtonDisabled: PropTypes.func,
-		disableWideFlyoutPrimaryButton: PropTypes.func
+		disableWideFlyoutPrimaryButton: PropTypes.func,
+		convertValueDataTypes: PropTypes.bool,
+		useConvertValueDataTypes: PropTypes.func
 	})
 };

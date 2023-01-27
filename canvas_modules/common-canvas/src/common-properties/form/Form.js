@@ -20,6 +20,7 @@ import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "../util/L10nProvider";
 import { translateMessages } from "./Conditions";
+import { convertValueDataTypes } from "../util/property-utils";
 import { Size } from "../constants/form-constants";
 import { CONTAINER_TYPE } from "../constants/constants";
 
@@ -44,8 +45,9 @@ export default class Form {
 	* Returns a new Form
 	* @param paramDef Parameter definition
 	* @param containerType Type of container common properties will be displayed in, set in propertiesConfig
+	* @param shouldConvertValueDataTypes Boolean, if true, convert the currentParameters values into the type defined in parameterDef
 	*/
-	static makeForm(paramDef, containerType) {
+	static makeForm(paramDef, containerType, shouldConvertValueDataTypes) {
 		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
 		const resources = propertyOf(paramDef)("resources");
@@ -59,8 +61,13 @@ export default class Form {
 				}
 			}
 
+			let currentParameters = propertyOf(paramDef)("current_parameters");
+			if (shouldConvertValueDataTypes) {
+				currentParameters = convertValueDataTypes(currentParameters, propDef.parameterMetadata.paramDefs);
+			}
+
 			const data = {
-				currentParameters: propertyOf(paramDef)("current_parameters"),
+				currentParameters: currentParameters,
 				uiCurrentParameters: propertyOf(paramDef)("current_ui_parameters"),
 				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
