@@ -15,12 +15,15 @@
  */
 
 import { expect } from "chai";
+import { propertyOf } from "lodash";
 import * as PropertyUtils from "./../../../src/common-properties/util/property-utils.js";
 import testUtils from "./../../_utils_/property-utils";
 import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
+import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
 
+import { ParameterMetadata } from "./../../../src/common-properties/form/ParameterInfo";
 
 describe("dynamic text with expressions", () => {
 	const controller = new Controller();
@@ -333,5 +336,40 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 
 		actual = PropertyUtils.convertArrayStructureToObject(true, subControlObj, nestedStructuresArray);
 		expect(actual).to.eql(currentValues);
+	});
+});
+
+describe("convertValueDataTypestests", () => {
+	const parameters = propertyOf(convertValuesDataTypesParamDef)("parameters");
+	const uihints = propertyOf(convertValuesDataTypesParamDef)("uihints");
+	const parameterMetadata = ParameterMetadata.makeParameterMetadata(
+		parameters,
+		propertyOf(uihints)("parameter_info"),
+		propertyOf(uihints)("ui_parameters"));
+
+	it("convertValueDataTypes correctly converts currentParameters data types to what is defined in parameter definitions", () => {
+		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
+		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, parameterMetadata.paramDefs);
+
+		const expectedValues = {
+			// eslint-disable-next-line max-len
+			"readonly_text": "This example parameterDef has currentParameters that are in the incorrect data type as defined in the paramter definition. There will be errors on the console where prop checks fail. ",
+			"string_value": "This is a string",
+			"string_value_convert": "true",
+			"integer_value": 0,
+			"integer_value_convert": 0,
+			"double_value": 1.25,
+			"double_value_convert": 1.25,
+			"boolean_value": true,
+			"boolean_value_convert": false,
+			"null_value": null,
+			"time_value": "05:45:09",
+			"timestamp_value": -1847548800000,
+			"dropdown_value": true,
+			"list_value": ["list item 1", "list item 2", "list item 3"],
+			"table_value": [["Age", "age", ""], ["BP", "BP-1", "number"]]
+		};
+
+		expect(actualValues).to.eql(expectedValues);
 	});
 });

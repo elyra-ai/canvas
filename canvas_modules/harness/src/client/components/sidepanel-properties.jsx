@@ -510,7 +510,7 @@ export default class SidePanelModal extends React.Component {
 			<div className="harness-sidepanel-children">
 				<Toggle
 					id="harness-sidepanel-convertValueDataTypes-toggle"
-					labelText="Convert currentParameter values to data type defined in parameterDef"
+					labelText="Convert currentParameter values to data type defined in parameterDef, propertiesConfig option: 'convertValueDataTypes'"
 					toggled={this.props.propertiesConfig.convertValueDataTypes}
 					onToggle={this.useConvertValueDataTypes}
 				/>
