@@ -19,7 +19,7 @@
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isUndefined, isString } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import defaultMessages1 from "../../../locales/common-properties/locales/en.json";
 import defaultMessages2 from "../../../locales/command-actions/locales/en.json";
@@ -532,6 +532,47 @@ function _findCorrespondingValue(input, values) {
 	return input;
 }
 
+// Convert the data types of currentParameters to the type defined in parameterDefs
+function convertValueDataTypes(currentParameters, paramDefs) {
+	const convertedCurrentParameters = {};
+	paramDefs.forEach((paramDef) => {
+		if (!isUndefined(currentParameters[paramDef.name])) {
+			const originalValue = currentParameters[paramDef.name];
+			if (originalValue) {
+				switch (paramDef.type) {
+				case "string": {
+					convertedCurrentParameters[paramDef.name] = originalValue.toString();
+					break;
+				}
+				case "integer": {
+					convertedCurrentParameters[paramDef.name] = parseInt(originalValue, 10);
+					break;
+				}
+				case "double": {
+					convertedCurrentParameters[paramDef.name] = parseFloat(originalValue);
+					break;
+				}
+				case "boolean": {
+					if (isString(originalValue)) {
+						convertedCurrentParameters[paramDef.name] = originalValue === "true";
+					} else { // Assume boolean
+						convertedCurrentParameters[paramDef.name] = Boolean(originalValue);
+					}
+					break;
+				}
+				default: { // arrays, objects, enum, password
+					convertedCurrentParameters[paramDef.name] = originalValue;
+					break;
+				}
+				}
+			} else { // null
+				convertedCurrentParameters[paramDef.name] = originalValue;
+			}
+		}
+	});
+	return convertedCurrentParameters;
+}
+
 export {
 	toType,
 	formatMessage,
@@ -541,6 +582,7 @@ export {
 	isSubControlStructureObjectType,
 	convertObjectStructureToArray,
 	convertArrayStructureToObject,
+	convertValueDataTypes,
 	getFieldsFromControlValues,
 	copy,
 	stringifyFieldValue,

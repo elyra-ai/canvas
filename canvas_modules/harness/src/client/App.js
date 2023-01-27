@@ -239,6 +239,7 @@ class App extends React.Component {
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
+			convertValueDataTypes: false,
 			hideEditButtonPropertyId: {},
 			hideEditButton: false,
 			tableButtonEnabledPropertyId: {},
@@ -346,6 +347,7 @@ class App extends React.Component {
 		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
 		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
+		this.useConvertValueDataTypes = this.useConvertValueDataTypes.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -987,6 +989,9 @@ class App extends React.Component {
 		}
 	}
 
+	useConvertValueDataTypes(enabled) {
+		this.setState({ convertValueDataTypes: enabled });
+	}
 
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
@@ -2032,7 +2037,8 @@ class App extends React.Component {
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
+			convertValueDataTypes: this.state.convertValueDataTypes
 		};
 	}
 
@@ -2721,7 +2727,9 @@ class App extends React.Component {
 			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
 			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
 			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
-			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton
+			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton,
+			convertValueDataTypes: this.state.convertValueDataTypes,
+			useConvertValueDataTypes: this.useConvertValueDataTypes
 		};
 
 		const sidePanelAPIConfig = {

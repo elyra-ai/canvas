@@ -144,7 +144,7 @@ class PropertiesMain extends React.Component {
 			if (this.props.propertiesConfig.schemaValidation) {
 				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
-			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
+			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType, this.props.propertiesConfig.convertValueDataTypes);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
@@ -613,7 +613,8 @@ PropertiesMain.propTypes = {
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
-		maxLengthForSingleLineControls: PropTypes.number
+		maxLengthForSingleLineControls: PropTypes.number,
+		convertValueDataTypes: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

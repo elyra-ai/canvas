@@ -132,7 +132,8 @@ export default class PropertiesController {
 
 	setParamDef(paramDef) {
 		const containerType = get(this.getPropertiesConfig(), "containerType");
-		const formData = Form.makeForm(paramDef, containerType);
+		const convertTypes = get(this.getPropertiesConfig(), "convertTypes");
+		const formData = Form.makeForm(paramDef, containerType, convertTypes);
 		this.setForm(formData);
 	}
 
