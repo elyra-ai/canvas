@@ -106,6 +106,46 @@ describe("textfield renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
+	it("Allow space trimming Handling when trimSpaces set to true", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef, { trimSpaces: true });
+		const wrapper2 = renderedObject.wrapper;
+		const controller2 = renderedObject.controller;
+
+		const actualErrors = controller2.getAllErrorMessages();
+		const expectedErrors = {
+			"string_empty": {
+				"type": "error",
+				"text": "You must provide your Empty.",
+				"validation_id": "required_string_empty_938.7063182960883",
+				"required": true,
+				"displayError": false,
+				"propertyId": {
+					"name": "string_empty"
+				}
+			}
+		};
+		const textWrapper = wrapper2.find("div[data-id='properties-string_empty']");
+		const input2 = textWrapper.find("input");
+		input2.simulate("change", { target: { value: "  " } });
+
+		expect(actualErrors).to.eql(expectedErrors);
+	});
+
+	it("Disable the space trimming when trimSpaces set to false", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef, { trimSpaces: false });
+		const wrapper = renderedObject.wrapper;
+		const rcontroller = renderedObject.controller;
+
+		const wrappers3 = wrapper.find("div.properties-ctrl-wrapper");
+		const inputWrapper2 = wrappers3.find("div[data-id='properties-ctrl-string_empty']");
+		const input = inputWrapper2.find("input");
+
+		input.simulate("change", { target: { value: "  " } });
+		const actualErrors = rcontroller.getAllErrorMessages();
+		expect(actualErrors).to.eql({}); // no error because space is a valid input
+
+	});
+
 	it("textfield should update text value", () => {
 		const wrapper = mount(
 			<Textfield

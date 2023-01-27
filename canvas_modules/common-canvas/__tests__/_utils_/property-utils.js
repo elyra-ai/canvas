@@ -54,6 +54,7 @@ function flyoutEditorForm(paramDef, propertiesConfigOverrides, callbacksOverride
 	let propertiesConfig = {
 		applyOnBlur: true,
 		rightFlyout: true,
+		trimSpaces: true,
 		containerType: "Custom"
 	};
 	if (propertiesConfigOverrides) {
@@ -99,6 +100,7 @@ function flyoutEditorFormWithIntl(paramDef, propertiesConfigOverrides, callbacks
 	let propertiesConfig = {
 		applyOnBlur: true,
 		rightFlyout: true,
+		trimSpaces: true,
 		containerType: "Custom"
 	};
 	if (propertiesConfigOverrides) {
