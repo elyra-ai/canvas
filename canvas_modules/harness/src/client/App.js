@@ -233,6 +233,7 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
+			trimSpaces: true,
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
@@ -326,6 +327,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
@@ -1298,6 +1300,11 @@ class App extends React.Component {
 		this.log("light option", enabled);
 	}
 
+	setTrimSpaces(enabled) {
+		this.setState({ trimSpaces: enabled });
+		this.log("trim spaces", enabled);
+	}
+
 	useEditorSize(editorSize) {
 		this.setState({ initialEditorSize: editorSize });
 		this.log("set editor size ", editorSize);
@@ -2030,6 +2037,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
@@ -2678,6 +2686,8 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
+			setTrimSpaces: this.setTrimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
 			useSaveButtonDisable: this.useSaveButtonDisable,

@@ -231,6 +231,7 @@ CommonProperties.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
+		trimSpaces: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
@@ -274,6 +275,7 @@ CommonProperties.defaultProps = {
 		containerType: "Custom",
 		rightFlyout: true,
 		applyOnBlur: false,
+		trimSpaces: true,
 		disableSaveOnRequiredErrors: false,
 		enableResize: true,
 		conditionReturnValueHandling: "value",

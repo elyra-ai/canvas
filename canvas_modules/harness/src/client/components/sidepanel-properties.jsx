@@ -74,6 +74,7 @@ export default class SidePanelModal extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
@@ -175,6 +176,10 @@ export default class SidePanelModal extends React.Component {
 	// Button to submit addRemoveRows data and call propertiesController
 	setAddRemoveRows(evt) {
 		this.props.propertiesConfig.setAddRemoveRows();
+	}
+
+	setTrimSpaces(checked) {
+		this.props.propertiesConfig.setTrimSpaces(checked);
 	}
 
 	// Textfield to enter the propertyId for hideEditButton
@@ -547,6 +552,17 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const setTrimSpaces = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-trimSpaces">
+				<Toggle
+					id="sidepanel-properties-trimSpaces-toggle"
+					labelText="Enable trimSpaces"
+					toggled={ this.props.propertiesConfig.trimSpaces }
+					onToggle={ this.setTrimSpaces }
+				/>
+			</div>
+		);
+
 		const useHeading = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-show-heading">
 				<Toggle
@@ -880,6 +896,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{validationHandler}
 				{divider}
+				{setTrimSpaces}
+				{divider}
 				{addtlCmpts}
 				{divider}
 				{useHeading}
@@ -951,6 +969,8 @@ SidePanelModal.propTypes = {
 		light: PropTypes.bool,
 		useLightOption: PropTypes.func,
 		useEditorSize: PropTypes.func,
+		trimSpaces: PropTypes.bool,
+		setTrimSpaces: PropTypes.func,
 		disableRowMoveButtons: PropTypes.func,
 		addRemoveRowsEnabled: PropTypes.bool,
 		setAddRemoveRowsPropertyId: PropTypes.func,
