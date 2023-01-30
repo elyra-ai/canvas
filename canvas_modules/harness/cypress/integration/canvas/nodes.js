@@ -300,20 +300,20 @@ describe("Test new enableNodeLayout config parameter", function() {
 		cy.openCanvasPalette("modelerPalette.json");
 	});
 
-	it("Test node 's height & width upon enableNodeLayout update", function() {
+	it("Test node's height & width upon enableNodeLayout update", function() {
 		cy.clickToolbarPaletteOpen();
 		cy.clickCategory("Import");
 		cy.dragNodeToPosition("Database", 300, 200);
 
 		// Verify node height & width before updating enableNodeLayout
-		cy.verifyNodeWidthHeight("Database", 80, 83);
+		cy.verifyNodeWidthHeight("Database", 70, 75);
 		cy.clickToolbarUndo();
 
 		// Override some of the enableNodeLayout config parameters
-		cy.setCanvasConfig({ "selectedNodeLayout": { defaultNodeWidth: 150, defaultNodeHeight: 150 } });
+		cy.setCanvasConfig({ "selectedNodeLayout": { defaultNodeWidth: 151, defaultNodeHeight: 176 } });
 		// Verify node height & width after updating enableNodeLayout
-		cy.dragNodeToPosition("Database");
-		cy.verifyNodeWidthHeight("Database", 160, 158);
+		cy.dragNodeToPosition("Database", 300, 200);
+		cy.verifyNodeWidthHeight("Database", 151, 176);
 	});
 
 });

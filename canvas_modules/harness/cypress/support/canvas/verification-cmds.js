@@ -1313,11 +1313,12 @@ Cypress.Commands.add("verifyNotificationCenterHidden", (hidden) => {
 	}
 });
 
-Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeheight) => {
-	cy.getNodeWithLabel(nodeLabel).should((element) => {
-		expect(element).to.have.css("height", `${nodeheight}px`);
-		expect(element).to.have.css("width", `${nodeWidth}px`);
-	});
+Cypress.Commands.add("verifyNodeWidthHeight", (nodeLabel, nodeWidth, nodeHeight) => {
+	cy.getNodeWithLabel(nodeLabel).get(".d3-node-body-outline")
+		.should((element) => {
+			expect(element).to.have.css("height", `${nodeHeight}px`);
+			expect(element).to.have.css("width", `${nodeWidth}px`);
+		});
 });
 
 Cypress.Commands.add("verifyNotificationCenterContent", (id, content) => {
