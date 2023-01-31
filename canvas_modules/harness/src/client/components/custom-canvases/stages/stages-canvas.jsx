@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCanvasFlow from "./stagesCanvas.json";
-import StagesPalette from "./stagesPalette.json";
+import StagesPalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {

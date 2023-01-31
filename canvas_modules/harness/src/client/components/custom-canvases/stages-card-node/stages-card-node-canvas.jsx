@@ -22,7 +22,7 @@ import { get } from "lodash";
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import StagesCardNodeFlow from "./stagesCardNodeCanvas.json";
-import StagesCardNodePalette from "./stagesCardNodePalette.json";
+import StagesCardNodePalette from "../../../../../test_resources/palettes/stagesPalette.json";
 
 export default class DetachedCanvas extends React.Component {
 	constructor(props) {
