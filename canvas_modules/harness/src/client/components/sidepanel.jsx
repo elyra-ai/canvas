@@ -29,13 +29,10 @@ import {
 export default class SidePanel extends React.Component {
 
 	render() {
-		let view = null;
-		let sidePanelStateClass = "";
-
 		if (this.props.openSidepanelCanvas ||
 				this.props.openSidepanelModal ||
 				this.props.openSidepanelAPI) {
-			sidePanelStateClass = " open";
+			let view = null;
 
 			switch (this.props.selectedPanel) {
 			case SIDE_PANEL_CANVAS:
@@ -60,14 +57,19 @@ export default class SidePanel extends React.Component {
 				break;
 			default:
 			}
+			return (
+				<aside aria-label="Right Side Panel" role="complementary">
+					<div className={"harness-app-sidepanel open"}>
+						{view}
+					</div>
+				</aside>
+			);
 		}
 
+		// Return just a div when flyout is closed. The div will allow
+		// the CSS annimation to work.
 		return (
-			<aside aria-label="Right Side Panel" role="complementary">
-				<div className={"harness-app-sidepanel" + sidePanelStateClass}>
-					{view}
-				</div>
-			</aside>
+			<div className={"harness-app-sidepanel"} />
 		);
 	}
 }

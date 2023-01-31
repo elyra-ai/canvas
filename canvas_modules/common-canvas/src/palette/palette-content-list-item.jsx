@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { has } from "lodash";
+import { get, has } from "lodash";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/palette/locales/en.json";
 import Icon from "../icons/icon.jsx";
@@ -118,9 +118,9 @@ class PaletteContentListItem extends React.Component {
 			this.props.nodeTypeInfo.occurrenceInfo.catLabelOccurrences);
 	}
 
-	getHighlightedLabel() {
+	getHighlightedLabel(labelText) {
 		return this.getHighlightedText(
-			this.props.nodeTypeInfo.nodeType.app_data.ui_data.label,
+			labelText,
 			this.props.nodeTypeInfo.occurrenceInfo.nodeLabelOccurrences);
 	}
 
@@ -246,6 +246,7 @@ class PaletteContentListItem extends React.Component {
 
 	render() {
 		let itemText = null;
+		let labelText = get(this.props, "nodeTypeInfo.nodeType.app_data.ui_data.label", "");
 		let draggable = this.props.isEditingEnabled ? "true" : "false";
 		let icon = null;
 
@@ -261,14 +262,13 @@ class PaletteContentListItem extends React.Component {
 			}
 			icon = image.endsWith(".svg")
 				? <SVG src={image} className="palette-list-item-icon" draggable="false" />
-				: <img src={image} className="palette-list-item-icon" draggable="false" />;
+				: <img src={image} className="palette-list-item-icon" draggable="false" alt={""} />;
 		}
 
-		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.label") &&
-				(this.props.isPaletteOpen || !icon)) {
+		if (labelText && (this.props.isPaletteOpen || !icon)) {
 			itemText = this.props.isDisplaySearchResult
-				? this.getHighlightedLabel()
-				: (<span>{this.props.nodeTypeInfo.nodeType.app_data.ui_data.label}</span>);
+				? this.getHighlightedLabel(labelText)
+				: (<span>{labelText}</span>);
 		}
 
 		const ranking = this.props.isShowRanking && this.props.isDisplaySearchResult && has(this.props.nodeTypeInfo, "occurrenceInfo.ranking")
@@ -278,8 +278,9 @@ class PaletteContentListItem extends React.Component {
 		// Special case for when there are no nodes in the category so we show
 		// a dummy node to include the empty text from the category.
 		if (this.props.nodeTypeInfo.category.node_types.length === 0 && this.props.nodeTypeInfo.category.empty_text) {
+			labelText = this.props.nodeTypeInfo.category.empty_text;
 			if (this.props.isPaletteOpen) {
-				itemText = this.props.nodeTypeInfo.category.empty_text;
+				itemText = (<span>{labelText}</span>);
 			}
 			draggable = "false";
 			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
@@ -303,9 +304,11 @@ class PaletteContentListItem extends React.Component {
 			: null;
 
 		return (
-			<div id={this.props.nodeTypeInfo.nodeType.id}
+			<div
 				data-id={this.props.nodeTypeInfo.nodeType.op}
 				tabIndex={0}
+				role={"button"}
+				aria-label={labelText}
 				draggable={draggable}
 				className={mainDivClass}
 				onMouseOver={this.onMouseOver}

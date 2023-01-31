@@ -2413,7 +2413,7 @@ class App extends React.Component {
 		const commonPropertiesModalLabel = "Common Properties Modal";
 		const commonCanvasLabel = "Common Canvas";
 
-		const navBar = (<header aria-label="Common Canvas Header" role="banner">
+		const navBar = (<div aria-label="Common Canvas Test Harness" role="banner">
 			<div className="harness-app-navbar">
 				<ul className="harness-app-navbar-items">
 					<li className="harness-navbar-li">
@@ -2455,7 +2455,7 @@ class App extends React.Component {
 					</li>
 				</ul>
 			</div>
-		</header>);
+		</div>);
 
 		const commonCanvasConfig = this.getCanvasConfig();
 		const commonCanvasConfig2 = this.getCanvasConfig2();
