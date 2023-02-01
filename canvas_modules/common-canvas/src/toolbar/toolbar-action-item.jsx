@@ -178,12 +178,16 @@ class ToolbarActionItem extends React.Component {
 
 		buttonContent = this.wrapInTooltip(buttonContent);
 
+		// Only specify an aria label for the button if a label is not displayed
+		// with the button icon.
+		const ariaLabel = actionObj.incLabelWithIcon ? null : actionObj.label;
+
 		buttonContent = (
 			<Button kind={kind}
 				onClick={this.actionClickHandler}
 				disabled={!actionObj.enable}
 				onFocus={this.props.onFocus}
-				aria-label={actionObj.label}
+				aria-label={ariaLabel}
 				size={this.props.size}
 			>
 				{buttonContent}
