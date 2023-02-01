@@ -358,9 +358,13 @@ describe("structureeditor control renders correctly with paramDef", () => {
 	it("structureeditor control can be hidden in one go", () => {
 		controller.updatePropertyValue({ name: "hider" }, true);
 		wrapper.update();
-		const structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
-		expect(structWrapper).not.to.be.null;
-		expect(structWrapper.hasClass("hide")).to.be.true;
+		let structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
+		expect(structWrapper).to.have.length(0);
+
+		controller.updatePropertyValue({ name: "hider" }, false);
+		wrapper.update();
+		structWrapper = wrapper.find("div[data-id='properties-layout_struct']");
+		expect(structWrapper).to.have.length(1);
 	});
 
 });

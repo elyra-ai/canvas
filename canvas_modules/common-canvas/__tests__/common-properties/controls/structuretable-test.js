@@ -517,7 +517,7 @@ describe("condition renders correctly with structure table control", () => {
 
 		// verify the table is HIDDEN
 		const tableControlDiv = wrapper.find("div[data-id='properties-ci-structuretableRenameFields']");
-		expect(tableControlDiv.hasClass("hide")).to.be.true;
+		expect(tableControlDiv).to.have.length(0);
 		expect(renderedController.getControlState({ name: "structuretableRenameFields" })).to.equal("hidden");
 	});
 	it("should disable a table", () => {

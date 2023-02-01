@@ -252,13 +252,13 @@ describe("error messages renders correctly for timefield controls", () => {
 	it("should reveal time field when checkbox is clicked", () => {
 		// First check the hidden field is not displayed
 		let timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
-		expect(timeWrapper.hasClass("hide")).to.equal(true);
+		expect(timeWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_time_field" }, false);
 		wrapper.update();
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the time field (which makes it be hidden).
 		timeWrapper = wrapper.find("div[data-id='properties-hidden_time']");
-		expect(timeWrapper.hasClass("hide")).to.equal(false);
+		expect(timeWrapper).to.have.length(1);
 	});
 
 	it("should enable time field when checkbox is clicked", () => {
