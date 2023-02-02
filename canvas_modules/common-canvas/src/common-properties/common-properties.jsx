@@ -231,6 +231,7 @@ CommonProperties.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
 	propertiesConfig: PropTypes.shape({
 		applyOnBlur: PropTypes.bool,
+		trimSpaces: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
 		containerType: PropTypes.string,
@@ -245,7 +246,8 @@ CommonProperties.propTypes = {
 		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "value"]),
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
-		maxLengthForSingleLineControls: PropTypes.number
+		maxLengthForSingleLineControls: PropTypes.number,
+		convertValueDataTypes: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -273,13 +275,15 @@ CommonProperties.defaultProps = {
 		containerType: "Custom",
 		rightFlyout: true,
 		applyOnBlur: false,
+		trimSpaces: true,
 		disableSaveOnRequiredErrors: false,
 		enableResize: true,
 		conditionReturnValueHandling: "value",
 		schemaValidation: false,
 		applyPropertiesWithoutEdit: false,
 		maxLengthForMultiLineControls: 1024,
-		maxLengthForSingleLineControls: 128
+		maxLengthForSingleLineControls: 128,
+		convertValueDataTypes: false
 	},
 	callbacks: {
 	},

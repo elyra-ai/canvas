@@ -63,7 +63,7 @@ describe("tearsheet tests", () => {
 		expect(wrapper.find("div.properties-tearsheet-panel.is-visible")).to.have.length(0);
 		expect(wrapper.find("div.properties-tearsheet-panel div[data-id='properties-ctrl-code_rows']")).to.have.length(0);
 		wrapper.update();
-		wrapper.find("div[data-id='properties-hide'] input[type='checkbox']").simulate("click");
+		controller.updatePropertyValue({ name: "hide" }, false);
 		wrapper.update();
 		wrapper.find("div[data-id='properties-ctrl-code_rows'] button.maximize").simulate("click");
 		wrapper.update();

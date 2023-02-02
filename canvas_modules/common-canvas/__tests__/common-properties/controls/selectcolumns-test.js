@@ -496,6 +496,36 @@ describe("selectcolumns control functions correctly in a table", () => {
 		expect(scController.getErrorMessage({ name: "structurelist_sub_panel" })).to.eql(null);
 	});
 
+	it("should select rows correctly in subpanel", () => {
+		// open the summary on_panel and add a row to the table
+		const summaryPanelWrapper = wrapper.find("div[data-id='properties-selectcolumns-tables-structurelist-summary']");
+		summaryPanelWrapper.find("button").simulate("click");
+
+		// select the add column button
+		let tableWrapper = wrapper.find("div[data-id='properties-ctrl-structurelist_sub_panel']");
+		expect(tableWrapper.length).to.equal(1);
+		const emptyTableButton = tableWrapper.find("button.properties-empty-table-button"); // add row button for empty table
+		emptyTableButton.simulate("click"); // add row button
+
+		// Need to reassign tableWrapper after adding row.
+		tableWrapper = wrapper.find("div[data-id='properties-ft-structurelist_sub_panel']");
+		const editButton = tableWrapper.find(".properties-subpanel-button").at(0);
+		editButton.simulate("click"); // open the subpanel for the added row
+
+		let fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		tableUtils.fieldPicker(fieldPicker, ["age", "Na"]);
+
+		let selectColumnsTable = wrapper.find("div.properties-column-select-table");
+		expect(selectColumnsTable.find("div.properties-vt-row-selected").length).to.equal(2);
+
+		fieldPicker = tableUtils.openFieldPicker(wrapper, "properties-ft-fields2");
+		tableUtils.fieldPicker(fieldPicker, ["age", "Na", "drug"]);
+
+		selectColumnsTable = wrapper.find("div.properties-column-select-table");
+		expect(selectColumnsTable.find("div.properties-vt-row-selected").length).to.equal(1); // make sure only 1 checkbox is checked now
+
+	});
+
 });
 
 describe("measurement & type icons should be rendered correctly in selectcolumns", () => {

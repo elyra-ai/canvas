@@ -211,14 +211,21 @@ describe("radio renders and works correctly with different enum types", () => {
 
 
 	it("radioset control hidden", () => {
-		const controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
-		const label = controlDiv.find("label.properties-control-label");
-		expect(label.text()).to.equal("Radio Hidden");
+		let controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		expect(controlDiv).to.have.length(0);
+
 		const checkboxsetWrapper = wrapper.find("div[data-id='properties-hide']");
 		const checkbox = checkboxsetWrapper.find("input");
-		// checked the hidden box
-		checkbox.getDOMNode().checked = true;
+
+		// unchecked the hidden box
+		checkbox.getDOMNode().checked = false;
 		checkbox.simulate("change");
+
+		wrapper.update();
+		controlDiv = wrapper.find("div[data-id='properties-ci-radioHidden']");
+		const label = controlDiv.find("label.properties-control-label");
+		expect(label.text()).to.equal("Radio Hidden");
+
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("gini");
 		const radioGroup = wrapper.find("div[data-id='properties-radioHidden']");
 		const radioHidden = radioGroup.find("input[value='entropy']");

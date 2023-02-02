@@ -36,7 +36,8 @@ describe("validating isEmpty operator works correctly", () => {
 		controller.setControlStates({});
 	});
 
-	it("Test isEmpty behaves as expected", () => {
+	it("Test isEmpty behaves as expected when trimSpaces set to true", () => {
+		controller.setPropertiesConfig({ trimSpaces: true });
 		expect(isEmpty(wrap(undefinedPlaceholder), null, null, controller)).to.equal(true);
 		expect(isEmpty(wrap(true), null, null, controller)).to.equal(false);
 		// string cases
@@ -49,6 +50,14 @@ describe("validating isEmpty operator works correctly", () => {
 		expect(isEmpty(wrap({ temp: "value" }), null, null, controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
 		expect(isEmpty(wrap(emptyFunc), null, null, controller)).to.equal(true);
+	});
+
+	it("Test isEmpty behaves as expected when trimSpaces set to false", () => {
+		controller.setPropertiesConfig({ trimSpaces: false });
+		// string cases
+		expect(isEmpty(wrap(""), null, null, controller)).to.equal(true);
+		expect(isEmpty(wrap("  "), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrap("not empty string"), null, null, controller)).to.equal(false);
 	});
 
 

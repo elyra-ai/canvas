@@ -39,7 +39,7 @@ class MoveableTableRows extends React.Component {
 	}
 
 	getMoveableTableRows() {
-		var moveCol = null;
+		let moveCol = null;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
 			const moveImages = this.getTableRowMoveImages();
 			moveCol = (
@@ -52,7 +52,7 @@ class MoveableTableRows extends React.Component {
 		}
 
 		// Added role presentation to fix a11y violation - no headers in the table
-		var content = (<table role="presentation" className="properties-mr-table-container">
+		const content = (<table role="presentation" className="properties-mr-table-container">
 			<tbody>
 				<tr className={classNames("properties-mr-table-content", { "disabled": this.props.disabled })}>
 					<td>

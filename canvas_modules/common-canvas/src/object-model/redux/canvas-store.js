@@ -152,7 +152,7 @@ export default class CanavasStore {
 		const selectedPipelineId = this.getSelectedPipelineId();
 		if (selectedPipelineId) {
 			const pipeline = this.getNonClonedPipeline(selectedPipelineId);
-			if (pipeline[type]) {
+			if (pipeline && pipeline[type]) {
 				const selectedObjIds = this.getSelectedObjectIds();
 				return pipeline[type].filter((o) => selectedObjIds.includes(o.id));
 			}

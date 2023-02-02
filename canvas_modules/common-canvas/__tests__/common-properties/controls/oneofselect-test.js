@@ -273,15 +273,23 @@ describe("oneofselect paramDef works correctly", () => {
 	});
 
 	it("oneofselect control should have aria-label", () => {
-		// Dropdown should have aria-label
-		const dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
-		const dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect*");
+		// Total properties - 24, required - 13, optional - 11
+		// Show "(optional)" indicator next to label
+
+		// Dropdown should have aria-label for "required" property
+		let dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect']");
+		let dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect");
 
 		// combobox should have aria-label
 		const comboboxWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_custom_value']");
 		const comboboxAriaLabel = comboboxWrapper.find(".bx--list-box__menu").prop("aria-label");
 		expect(comboboxAriaLabel).to.equal("oneofselect custom value allowed");
+
+		// Dropdown should have aria-label for "optional" property
+		dropdownWrapper = wrapper.find("div[data-id='properties-ctrl-oneofselect_null_empty_enum']");
+		dropdownAriaLabelledby = dropdownWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		expect(dropdownWrapper.find(`#${dropdownAriaLabelledby}`).text()).to.equal("oneofselect with 'null'(optional)");
 	});
 });
 

@@ -233,12 +233,14 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
+			trimSpaces: true,
 			propertiesContainerType: PROPERTIES_FLYOUT,
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
 			disableSaveOnRequiredErrors: true,
 			addRemoveRowsPropertyId: {},
 			addRemoveRowsEnabled: true,
+			convertValueDataTypes: false,
 			hideEditButtonPropertyId: {},
 			hideEditButton: false,
 			tableButtonEnabledPropertyId: {},
@@ -325,6 +327,7 @@ class App extends React.Component {
 		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
 		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
 		this.useHeading = this.useHeading.bind(this);
+		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
@@ -346,6 +349,7 @@ class App extends React.Component {
 		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
 		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
+		this.useConvertValueDataTypes = this.useConvertValueDataTypes.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
@@ -987,6 +991,9 @@ class App extends React.Component {
 		}
 	}
 
+	useConvertValueDataTypes(enabled) {
+		this.setState({ convertValueDataTypes: enabled });
+	}
 
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
@@ -1291,6 +1298,11 @@ class App extends React.Component {
 	useLightOption(enabled) {
 		this.setState({ light: enabled });
 		this.log("light option", enabled);
+	}
+
+	setTrimSpaces(enabled) {
+		this.setState({ trimSpaces: enabled });
+		this.log("trim spaces", enabled);
 	}
 
 	useEditorSize(editorSize) {
@@ -2025,6 +2037,7 @@ class App extends React.Component {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
@@ -2032,7 +2045,8 @@ class App extends React.Component {
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
+			convertValueDataTypes: this.state.convertValueDataTypes
 		};
 	}
 
@@ -2672,6 +2686,8 @@ class App extends React.Component {
 			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
 			applyOnBlur: this.state.applyOnBlur,
+			trimSpaces: this.state.trimSpaces,
+			setTrimSpaces: this.setTrimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
 			useApplyOnBlur: this.useApplyOnBlur,
 			useSaveButtonDisable: this.useSaveButtonDisable,
@@ -2721,7 +2737,9 @@ class App extends React.Component {
 			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
 			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
 			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
-			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton
+			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton,
+			convertValueDataTypes: this.state.convertValueDataTypes,
+			useConvertValueDataTypes: this.useConvertValueDataTypes
 		};
 
 		const sidePanelAPIConfig = {

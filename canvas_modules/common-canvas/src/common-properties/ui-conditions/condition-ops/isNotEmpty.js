@@ -20,6 +20,7 @@ function op() {
 	return "isNotEmpty";
 }
 function evaluate(paramInfo, param2Info, value, controller) {
+	const propertiesConfig = controller.getPropertiesConfig();
 	const dataType = typeof paramInfo.value;
 	switch (dataType) {
 	case "undefined":
@@ -27,7 +28,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "boolean":
 		return true;
 	case "string":
-		return paramInfo.value.trim().length !== 0;
+		return propertiesConfig.trimSpaces ? paramInfo.value.trim().length !== 0 : paramInfo.value.length !== 0;
 	case "number":
 		return paramInfo.value !== null;
 	case "object":
