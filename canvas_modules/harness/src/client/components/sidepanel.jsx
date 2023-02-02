@@ -58,11 +58,9 @@ export default class SidePanel extends React.Component {
 			default:
 			}
 			return (
-				<aside aria-label="Right Side Panel" role="complementary">
-					<div className={"harness-app-sidepanel open"}>
-						{view}
-					</div>
-				</aside>
+				<div className={"harness-app-sidepanel open"} aria-label="Right Side Panel" role="complementary">
+					{view}
+				</div>
 			);
 		}
 

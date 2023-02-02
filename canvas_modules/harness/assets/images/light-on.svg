@@ -1,11 +1,11 @@
-<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+<svg version="1.1"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32"
 	 style="enable-background:new 0 0 32 32;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;}
 </style>
 <switch>
-	<g i:extraneous="self">
+	<g>
 		<rect x="28" y="13" width="2" height="2"/>
 		<rect x="24.2" y="3.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 3.9792 19.2218)" width="2" height="2"/>
 		<rect x="15" width="2" height="2"/>
