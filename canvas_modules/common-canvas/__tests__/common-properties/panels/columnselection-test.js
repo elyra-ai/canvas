@@ -399,9 +399,7 @@ describe("column selection panel visible and enabled conditions work correctly",
 		const panel = wrapper.find("div[data-id='properties-hide-column-selection-panel']");
 		const hiddenPanel = panel.find("div.properties-control-panel").at(1);
 		const hiddenItems = hiddenPanel.find("div.properties-control-item");
-		expect(hiddenItems).to.have.length(2);
-		expect(hiddenItems.at(0).hasClass("hide")).to.be.true;
-		expect(hiddenItems.at(1).hasClass("hide")).to.be.true;
+		expect(hiddenItems).to.have.length(0);
 	});
 });
 

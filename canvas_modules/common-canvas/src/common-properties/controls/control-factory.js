@@ -113,8 +113,12 @@ export default class ControlFactory {
 	* @param tableInfo
 	*/
 	createControlItem(control, propertyId, tableInfo) {
-		const controlObj = this.createControl(control, propertyId, tableInfo);
 		const hidden = this.controller.getControlState(propertyId) === STATES.HIDDEN;
+		if (hidden) {
+			return null; // Do not render hidden controls
+		}
+
+		const controlObj = this.createControl(control, propertyId, tableInfo);
 		const className = control.className ? control.className : "";
 
 		/*
@@ -128,7 +132,7 @@ export default class ControlFactory {
 		// When control-item displays other controls, add padding on control-item
 		return (
 			<div key={"properties-ctrl-" + control.name} data-id={"properties-ctrl-" + control.name}
-				className={classNames("properties-ctrl-wrapper", { "hide": hidden }, className)}
+				className={classNames("properties-ctrl-wrapper", className)}
 			>
 				<ControlItem
 					key={"ctrl-item-" + control.name}
