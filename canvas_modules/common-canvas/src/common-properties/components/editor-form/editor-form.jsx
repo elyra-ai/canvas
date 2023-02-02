@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import { Tab, Tabs } from "carbon-components-react";
+import { Tab, Tabs, Link } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get } from "lodash";
@@ -338,9 +338,9 @@ class EditorForm extends React.Component {
 				icon = <Icon type={CONDITION_MESSAGE_TYPE.ERROR} />;
 			}
 			text = (
-				<a className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+				<Link className="properties-link-text" onClick={this._handleMessageClick.bind(this, uiItem.controlId)} >
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
-				</a>);
+				</Link>);
 			return <div key={"link-text." + key} className={textClass} >{icon}{text}</div>;
 		case ("hSeparator"):
 			return <hr key={"h-separator." + key} className="properties-h-separator" />;
