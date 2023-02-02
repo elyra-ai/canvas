@@ -49,7 +49,7 @@ import ReadonlyTableControl from "./readonlytable";
 
 import ControlItem from "./../components/control-item";
 import ActionFactory from "./../actions/action-factory.js";
-import { has } from "lodash";
+import { has, get } from "lodash";
 
 /*
 * <ControlItem /> should be called from every control.
@@ -93,7 +93,7 @@ const tableControls = [
 export default class ControlFactory {
 
 	constructor(controller) {
-		this.rightFlyout = true;
+		this.rightFlyout = controller ? get(controller.getPropertiesConfig(), "rightFlyout", false) : false;
 		this.controller = controller;
 		this.actionFactory = new ActionFactory(this.controller);
 	}
