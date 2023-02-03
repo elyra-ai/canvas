@@ -28,8 +28,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "HiveConnectorPX",
@@ -54,8 +53,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "cassandra",
@@ -80,8 +78,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "cloudobjectstoragePX",
@@ -106,8 +103,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxDataSet",
@@ -132,8 +128,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "dvm",
@@ -158,8 +153,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "db2",
@@ -184,8 +178,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "http",
@@ -210,8 +203,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "netezza",
@@ -236,8 +228,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         }
       ]
     },
@@ -282,8 +273,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": true
+          }
         },
         {
           "id": "PxChecksum",
@@ -322,8 +312,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxCopy",
@@ -362,8 +351,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxFilter",
@@ -402,8 +390,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxFunnel",
@@ -442,8 +429,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxHead",
@@ -482,8 +468,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxJoin",
@@ -522,8 +507,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxLookup",
@@ -562,8 +546,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxMerge",
@@ -602,8 +585,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxModify",
@@ -642,8 +624,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxPeek",
@@ -682,8 +663,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxRemDup",
@@ -722,8 +702,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxRowGenerator",
@@ -748,8 +727,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxSort",
@@ -788,8 +766,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         },
         {
           "id": "PxTail",
@@ -828,8 +805,7 @@
               "x_pos": 0,
               "y_pos": 0
             }
-          },
-          "checkProdAllowList": false
+          }
         }
       ]
     }
