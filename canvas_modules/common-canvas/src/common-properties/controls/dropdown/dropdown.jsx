@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { SelectItem, Select, Dropdown, ComboBox } from "carbon-components-react";
-import { isEqual } from "lodash";
+import { isEqual, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";
@@ -30,11 +30,22 @@ import { formatMessage } from "./../../util/property-utils";
 class DropDown extends React.Component {
 	constructor(props) {
 		super(props);
+		this.reactIntl = props.controller.getReactIntl();
 		this.emptyLabel = "...";
-		if (props.control.additionalText) {
+		this.disableEmptyListDropdown = false;
+		if (isEmpty(props.controlOpts)) {
+			// For empty dropdown, get placeholder text from resources
+			const overrideEmptyListPlaceholder = `${this.props.control.name}.emptyList.placeholder`;
+			const defaultEmptyListPlaceholder = formatMessage(this.reactIntl, MESSAGE_KEYS.EMPTY_LIST_PLACEHOLDER);
+			this.emptyLabel = props.controller.getResource(overrideEmptyListPlaceholder, defaultEmptyListPlaceholder);
+			// Disable empty dropdown when [property_id].emptyList.placeholder is set in resources
+			if (this.emptyLabel !== defaultEmptyListPlaceholder) {
+				this.disableEmptyListDropdown = true;
+			}
+		} else if (props.control.additionalText) {
+			// For non-empty dropdown, get placeholder text from place_holder_text in parameter_info
 			this.emptyLabel = props.control.additionalText;
 		}
-		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleComboOnChange = this.handleComboOnChange.bind(this);
@@ -205,7 +216,7 @@ class DropDown extends React.Component {
 				hideLabel
 				inline
 				labelText={this.props.control.label ? this.props.control.label.text : ""}
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 				onChange={this.handleChange}
 				value={selection}
 				light={this.props.controller.getLight() && this.props.control.light}
@@ -217,7 +228,7 @@ class DropDown extends React.Component {
 				{...validationProps}
 				ariaLabel={this.props.control.label ? this.props.control.label.text : ""}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 				placeholder={dropDown.selectedOption.label}
 				selectedItem={dropDown.selectedOption.label}
 				items={dropDown.options}
@@ -231,7 +242,7 @@ class DropDown extends React.Component {
 			dropdownComponent = (<Dropdown
 				{...validationProps}
 				id={`${ControlUtils.getDataId(this.props.propertyId)}-dropdown`}
-				disabled={this.props.state === STATES.DISABLED}
+				disabled={this.props.state === STATES.DISABLED || this.disableEmptyListDropdown}
 				type="default"
 				items={dropDown.options}
 				onChange={this.handleChange}
