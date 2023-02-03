@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 26 26" enable-background="new 0 0 26 26" xml:space="preserve">
 <font horiz-adv-x="1000">
 <!-- Hey there, greetings from Paul, Pieter, Diana, Barbara, Edgar, Jasper and Aleksandra. We miss Eliot! -->
@@ -758,29 +758,7 @@
 <glyph unicode="&#x17C;" horiz-adv-x="487" d="M244,605C292,605 311,629 311,662l0,18C311,713 292,737 244,737C196,737 177,713 177,680l0,-18C177,629 196,605 244,605M451,0l0,89l-290,0l283,347l0,84l-399,0l0,-89l270,0l-279,-343l0,-88z"/>
 <glyph unicode="0" horiz-adv-x="600" d="M300,-12C474,-12 553,121 553,349C553,577 474,710 300,710C126,710 47,577 47,349C47,121 126,-12 300,-12M300,84C203,84 167,166 167,288l0,122C167,532 203,614 300,614C397,614 433,532 433,410l0,-122C433,166 397,84 300,84z"/>
 </font>
-
-	<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>Asset 6</title>
-<title>extension_transform</title>
-<title>extension_transform</title>
 <rect fill="#00B6CB" width="26" height="26"/>
-<title>Asset 6</title>
 <g>
 	<g>
 		<rect id="SVGID_16_" x="5" y="3.5" fill-rule="evenodd" clip-rule="evenodd" fill="#F3F3F3" width="8.2" height="1.8"/>
@@ -888,7 +866,7 @@
 </g>
 <g>
 	<g>
-		<polygon id="SVGID_4_" fill-rule="evenodd" clip-rule="evenodd" fill="#F3F3F3" points="16.7,14.4 16,13.8 19.1,10.6 5.4,10.6 
+		<polygon id="SVGID_4_" fill-rule="evenodd" clip-rule="evenodd" fill="#F3F3F3" points="16.7,14.4 16,13.8 19.1,10.6 5.4,10.6
 			5.4,9.6 19.1,9.6 16,6.5 16.7,5.8 21,10.1 		"/>
 	</g>
 	<g>
@@ -913,7 +891,7 @@
 								<clipPath id="SVGID_24_">
 									<use xlink:href="#SVGID_23_"  overflow="visible"/>
 								</clipPath>
-								
+
 									<rect x="0.8" y="1.2" clip-path="url(#SVGID_24_)" fill="#F3F3F3" stroke="#F3F3F3" stroke-miterlimit="10" width="24.7" height="17.7"/>
 							</g>
 						</g>
@@ -926,7 +904,7 @@
 		</g>
 	</g>
 	<g>
-		<polygon fill="none" stroke="#F3F3F3" stroke-miterlimit="10" points="16.7,14.4 16,13.8 19.1,10.6 5.4,10.6 5.4,9.6 19.1,9.6 
+		<polygon fill="none" stroke="#F3F3F3" stroke-miterlimit="10" points="16.7,14.4 16,13.8 19.1,10.6 5.4,10.6 5.4,9.6 19.1,9.6
 			16,6.5 16.7,5.8 21,10.1 		"/>
 	</g>
 </g>
