@@ -223,14 +223,6 @@ $harness-navbar-icon-width: 48px;
 	}
 }
 
-.harness-side-panel-header {
-	padding: 0 20px;
-	color: $text-01;
-	font-size: 16px;
-	font-weight: bold;
-	pointer-events: none;
-}
-
 /* Provide animation key frames for sample progress indication in harness */
 @keyframes blink {
 	from {

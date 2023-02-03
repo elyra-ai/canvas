@@ -429,6 +429,7 @@ export default class SidePanelForms extends React.Component {
 				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
 				disabled={this.state.disabledControls}
+				value={this.props.canvasConfig.selectedCanvasDropdownFile}
 			>
 				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
 			</Select>
@@ -441,6 +442,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Palette"
 				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
+				value={this.props.canvasConfig.selectedPaletteDropdownFile}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
 			</Select>
@@ -498,6 +500,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Diagram"
 				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
+				value={this.props.canvasConfig.selectedCanvasDropdownFile2}
 			>
 				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
 			</Select>
@@ -511,6 +514,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Palette"
 				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
+				value={this.props.canvasConfig.selectedPaletteDropdownFile2}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
 			</Select>
