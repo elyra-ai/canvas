@@ -64,16 +64,16 @@ describe("Test of zoom operations", function() {
 	});
 });
 
-describe("should test zoomTo function sets the appropriate zoom object", function() {
+describe("should test zoomTo function sets the appropriate zoom object for a node", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("bigCanvas.json");
-		cy.openCanvasAPI("Zoom Canvas To Reveal");
+		cy.openCanvasAPI("Zoom To Reveal Node");
 	});
 
 	it("Test ZoomTo function with x,y parameters", function() {
 		cy.verifyCanvasTransform(undefined);
-		cy.selectNodeFromDropdown("Histogram");
+		cy.selectEntryFromDropdown("Histogram");
 		cy.setXPercentOffset(25);
 		cy.setYPercentOffset(25);
 		cy.submitAPI();
@@ -88,7 +88,7 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 		cy.panCanvasToPosition(350, 200);
 		cy.verifyCanvasTransform("translate(350,200) scale(1)");
 		// Test get Zoom to reveal & ZoomTo
-		cy.selectNodeFromDropdown("Histogram");
+		cy.selectEntryFromDropdown("Histogram");
 		cy.setXPercentOffset(55);
 		cy.setYPercentOffset(55);
 		cy.submitAPI();
@@ -101,11 +101,56 @@ describe("should test zoomTo function sets the appropriate zoom object", functio
 		cy.clickToolbarZoomOut();
 		cy.verifyCanvasTransform("translate(49.454545454545496,32.136363636363626) scale(0.9090909090909091)");
 		// Test get Zoom to reveal & ZoomTo
-		cy.selectNodeFromDropdown("Histogram");
+		cy.selectEntryFromDropdown("Histogram");
 		cy.setXPercentOffset(70);
 		cy.setYPercentOffset(60);
 		cy.submitAPI();
 		cy.verifyCanvasTransform("translate(-857.7210355957193,-359.30411245966366) scale(0.9090909090909091)");
+	});
+});
+
+describe("should test zoomTo function sets the appropriate zoom object for a link", function() {
+	beforeEach(() => {
+		cy.visit("/");
+		cy.openCanvasDefinition("allTypesCanvas.json");
+		cy.openCanvasAPI("Zoom To Reveal Link");
+	});
+
+	it("Test ZoomTo function with x,y parameters", function() {
+		cy.verifyCanvasTransform(undefined);
+		cy.selectEntryFromDropdown("Execution node-Super node");
+		cy.setXPercentOffset(25);
+		cy.setYPercentOffset(25);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-161.5,-15.75) scale(1)");
+	});
+
+	it("Test ZoomTo function with x,y parameters after panning the canvas", function() {
+		cy.setCanvasConfig({ "selectedInteractionType": "Carbon" });
+
+		cy.verifyCanvasTransform(undefined);
+		// Panning the canvas.
+		cy.panCanvasToPosition(350, 200);
+		cy.verifyCanvasTransform("translate(350,200) scale(1)");
+		// Test get Zoom to reveal & ZoomTo
+		cy.selectEntryFromDropdown("Super node-Binding (exit) node");
+		cy.setXPercentOffset(55);
+		cy.setYPercentOffset(55);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(-7.599999999999909,86.85000381469729) scale(1)");
+	});
+
+	it("Test ZoomTo function with x,y parameters after zooming out", function() {
+		cy.verifyCanvasTransform(undefined);
+		// Zooming the canvas.
+		cy.clickToolbarZoomOut();
+		cy.verifyCanvasTransform("translate(49.454545454545496,32.136363636363626) scale(0.9090909090909091)");
+		// Test get Zoom to reveal & ZoomTo
+		cy.selectEntryFromDropdown("Binding (entry) node-Execution node");
+		cy.setXPercentOffset(70);
+		cy.setYPercentOffset(60);
+		cy.submitAPI();
+		cy.verifyCanvasTransform("translate(554.3272727272725,289.6545454545455) scale(0.9090909090909091)");
 	});
 });
 

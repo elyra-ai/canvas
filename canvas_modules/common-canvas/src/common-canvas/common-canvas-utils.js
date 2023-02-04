@@ -957,7 +957,10 @@ export default class CanvasUtils {
 	// all properties set to zero if no valid objects were provided.
 	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
 	// nodeHighlightGap in the node's layout.
-	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap) {
+	// If allLinks is set to true we include the start and end position of all
+	// links passed in, if set to false (or is undefined) we only inlcude
+	// the ends of links that are not attached to a node.
+	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap, allLinks) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -988,17 +991,29 @@ export default class CanvasUtils {
 		// Take into account semi-detached and fully-detached links, if any.
 		if (links) {
 			links.forEach((link) => {
-				if (link.srcPos) {
-					canvLeft = Math.min(canvLeft, link.srcPos.x_pos);
-					canvTop = Math.min(canvTop, link.srcPos.y_pos);
-					canvRight = Math.max(canvRight, link.srcPos.x_pos);
-					canvBottom = Math.max(canvBottom, link.srcPos.y_pos);
-				}
-				if (link.trgPos) {
-					canvLeft = Math.min(canvLeft, link.trgPos.x_pos);
-					canvTop = Math.min(canvTop, link.trgPos.y_pos);
-					canvRight = Math.max(canvRight, link.trgPos.x_pos);
-					canvBottom = Math.max(canvBottom, link.trgPos.y_pos);
+				if (allLinks) {
+					canvLeft = Math.min(canvLeft, link.x1);
+					canvTop = Math.min(canvTop, link.y1);
+					canvRight = Math.max(canvRight, link.x1);
+					canvBottom = Math.max(canvBottom, link.y1);
+
+					canvLeft = Math.min(canvLeft, link.x2);
+					canvTop = Math.min(canvTop, link.y2);
+					canvRight = Math.max(canvRight, link.x2);
+					canvBottom = Math.max(canvBottom, link.y2);
+				} else {
+					if (link.srcPos) {
+						canvLeft = Math.min(canvLeft, link.srcPos.x_pos);
+						canvTop = Math.min(canvTop, link.srcPos.y_pos);
+						canvRight = Math.max(canvRight, link.srcPos.x_pos);
+						canvBottom = Math.max(canvBottom, link.srcPos.y_pos);
+					}
+					if (link.trgPos) {
+						canvLeft = Math.min(canvLeft, link.trgPos.x_pos);
+						canvTop = Math.min(canvTop, link.trgPos.y_pos);
+						canvRight = Math.max(canvRight, link.trgPos.x_pos);
+						canvBottom = Math.max(canvBottom, link.trgPos.y_pos);
+					}
 				}
 			});
 		}

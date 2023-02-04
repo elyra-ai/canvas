@@ -1595,8 +1595,10 @@ export default class CanvasController {
 		return null;
 	}
 
-	// Returns a zoom object required to pan the objects (nodes and/or comments)
-	// identified by the objectIds array to 'reveal' the objects in the viewport.
+	// Returns a zoom object required to pan the objects (nodes and/or comments
+	// and/or links) identified by the objectIds array to 'reveal' the objects
+	// in the viewport. Returns null if no nodes, comments or links can be found
+	// using the IDs passed in. Note: Node, comment and link IDs must be unique.
 	// The zoom object returned can be provided to the CanvasController.zoomTo()
 	// method to perform the zoom/pan action.
 	// If the xPos and yPos variables are provided it will return a zoom object

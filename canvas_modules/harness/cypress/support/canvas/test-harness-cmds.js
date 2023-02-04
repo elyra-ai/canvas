@@ -109,8 +109,8 @@ Cypress.Commands.add("setCanvasConfig", (config) => {
 	});
 });
 
-Cypress.Commands.add("selectNodeFromDropdown", (nodeName) => {
-	cy.dropdownSelect("#harness-sidepanel-api-nodeSelection", nodeName);
+Cypress.Commands.add("selectEntryFromDropdown", (nodeName) => {
+	cy.dropdownSelect("#harness-sidepanel-api-selection", nodeName);
 });
 
 Cypress.Commands.add("selectLinkForDecoration", (linkName) => {

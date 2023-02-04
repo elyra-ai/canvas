@@ -362,7 +362,8 @@ class App extends React.Component {
 		this.setNodeDecorations = this.setNodeDecorations.bind(this);
 		this.setLinkDecorations = this.setLinkDecorations.bind(this);
 		this.getZoomToReveal = this.getZoomToReveal.bind(this);
-		this.zoomCanvas = this.zoomCanvas.bind(this);
+		this.zoomCanvasForObj = this.zoomCanvasForObj.bind(this);
+		this.zoomCanvasForLink = this.zoomCanvasForLink.bind(this);
 		this.getPropertyDefName = this.getPropertyDefName.bind(this);
 
 		// common-canvas
@@ -1008,16 +1009,28 @@ class App extends React.Component {
 		}
 	}
 
-	zoomCanvas(zoomObject, nodeId) {
+	zoomCanvasForObj(zoomObject, objId) {
 		const pipelineId = this.canvasController.getPrimaryPipelineId();
 		const stylePipelineObj = {};
-		stylePipelineObj[pipelineId] = [nodeId];
+		stylePipelineObj[pipelineId] = [objId];
 		const styleSpec = { body: { default: "fill: coral; stroke: red;", hover: "fill: cornflowerblue; stroke: blue;" } };
 		this.canvasController.removeAllStyles(true);
 		this.canvasController.setObjectsStyle(stylePipelineObj, styleSpec, true);
 		this.canvasController.zoomTo(zoomObject);
 		this.log("Zoomed canvas");
 	}
+
+	zoomCanvasForLink(zoomObject, linkId) {
+		const pipelineId = this.canvasController.getPrimaryPipelineId();
+		const styleLink = {};
+		styleLink[pipelineId] = [linkId];
+		const styleSpec = { line: { default: "stroke: coral; stroke-width: 4px", hover: "stroke: blue; stroke-width: 4px" } };
+		this.canvasController.removeAllStyles(true);
+		this.canvasController.setLinksStyle(styleLink, styleSpec, true);
+		this.canvasController.zoomTo(zoomObject);
+		this.log("Zoomed canvas");
+	}
+
 
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
@@ -2753,7 +2766,8 @@ class App extends React.Component {
 			setNodeDecorations: this.setNodeDecorations,
 			setLinkDecorations: this.setLinkDecorations,
 			getZoomToReveal: this.getZoomToReveal,
-			zoomCanvas: this.zoomCanvas,
+			zoomCanvasForObj: this.zoomCanvasForObj,
+			zoomCanvasForLink: this.zoomCanvasForLink,
 			appendNotificationMessages: this.appendNotificationMessages,
 			clearNotificationMessages: this.clearNotificationMessages,
 			selectedOperation: this.state.apiSelectedOperation
