@@ -64,7 +64,7 @@ describe("Test of zoom operations", function() {
 	});
 });
 
-describe("should test zoomTo function sets the appropriate zoom object for a node", function() {
+describe("Test zoomToReveal function returns the appropriate zoom object for a node", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("bigCanvas.json");
@@ -109,7 +109,7 @@ describe("should test zoomTo function sets the appropriate zoom object for a nod
 	});
 });
 
-describe("should test zoomTo function sets the appropriate zoom object for a link", function() {
+describe("Test zoomToReveal function returns the appropriate zoom object for a link", function() {
 	beforeEach(() => {
 		cy.visit("/");
 		cy.openCanvasDefinition("allTypesCanvas.json");

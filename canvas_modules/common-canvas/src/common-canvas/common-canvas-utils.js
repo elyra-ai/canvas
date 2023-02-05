@@ -957,9 +957,10 @@ export default class CanvasUtils {
 	// all properties set to zero if no valid objects were provided.
 	// nodeHighlightGap may be 0 or undefined. If it is undefined we use the
 	// nodeHighlightGap in the node's layout.
-	// If allLinks is set to true we include the start and end position of all
-	// links passed in, if set to false (or is undefined) we only inlcude
-	// the ends of links that are not attached to a node.
+	// If allLinks is set to true, we include the start and end coordinates of all
+	// links passed in. If set to false (or is undefined), we only inlcude
+	// the unconnected ends of semi-detached or fully-detached links. That is,
+	//  where the link has a srcPos and/or a trgPos field.
 	static getCanvasDimensions(nodes, comments, links, commentHighlightGap, nodeHighlightGap, allLinks) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
