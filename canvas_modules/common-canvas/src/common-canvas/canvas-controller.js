@@ -1598,19 +1598,23 @@ export default class CanvasController {
 	// Returns a zoom object required to pan the objects (nodes and/or comments
 	// and/or links) identified by the objectIds array to 'reveal' the objects
 	// in the viewport. Returns null if no nodes, comments or links can be found
-	// using the IDs passed in. Note: Node, comment and link IDs must be unique.
+	// using the IDs passed in. Note: node, comment and link IDs must be unique.
 	// The zoom object returned can be provided to the CanvasController.zoomTo()
 	// method to perform the zoom/pan action.
-	// If the xPos and yPos variables are provided it will return a zoom object
-	// to pan the objects to a location specified by a percentage offset of the
-	// viewport width and height respectively.
+	// If the xPos and yPos parameters are provided it will return a zoom object
+	// to pan the center of the objects specified, to a location where, xPos
+	// is the percentage of the viewport width and yPos is the percentage of the
+	// viewport height. So if you want the center of the objects specified to be
+	// in the center of the viewport set xPos to 50 and yPos to 50.
 	// If the xPos and yPos parameters are undefined (omitted) and all the
-	// objects are fully within the canvas viewport, it will return null.
-	// This can be used to detect whether the objects are fully visible or not.
-	// Otherwise it will return a zoom object which can be used to pan the
-	// objects into the viewport so they appear at the nearest side of the
-	// viewport to where they are currently positioned.
-	// The zoom object has three fields:
+	// objects are currently fully within the canvas viewport, this method will
+	// return null. This can be used to detect whether the objects are fully
+	// visible or not.
+	// If the xPos and yPos parameters are undefined and the objects are outside
+	// the viewport, a zoom object will be returned that can be used to zoom them
+	// so they appear at the nearest side of the viewport to where they are
+	// currently positioned.
+	// The zoom object retuurned has three fields:
 	// x: Is the horizontal translate amount which is a number indicating the
 	//    pixel amount to move. Negative left and positive right
 	// y: Is the vertical translate amount which is a number indicating the
