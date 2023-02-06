@@ -184,7 +184,7 @@ export default class SVGCanvasRenderer {
 
 		// Keep track of when text editing has been closed, so we don't remove
 		// selections when that happens during a zoom gesture.
-		this.textEditingClosedfOnZoom = false;
+		this.textEditingClosedOnZoom = false;
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -1882,7 +1882,7 @@ export default class SVGCanvasRenderer {
 		// if the user clicks on the canvas background. So we set this flag to
 		// prevent the selection being lost in the zoomEnd (mouseup) event.
 		if (this.svgCanvasTextArea.isEditingText()) {
-			this.textEditingClosedfOnZoom = true;
+			this.textEditingClosedOnZoom = true;
 		}
 
 		this.regionSelect = this.shouldDoRegionSelect(d3Event);
@@ -1962,7 +1962,7 @@ export default class SVGCanvasRenderer {
 		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
 		this.contextMenuClosedOnZoom = false;
-		this.textEditingClosedfOnZoom = false;
+		this.textEditingClosedOnZoom = false;
 		this.regionSelect = false;
 	}
 
@@ -2032,7 +2032,7 @@ export default class SVGCanvasRenderer {
 		// Clicking the canvas of an expanded supernode will select that node.
 		// Also, don't clear selections if we have closed a context menu or
 		// closed text editing.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedOnZoom) {
 			this.canvasController.clearSelections();
 		}
 	}
