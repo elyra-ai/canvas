@@ -1789,41 +1789,46 @@ export default class SVGCanvasRenderer {
 		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
 	}
 
-	getZoomToReveal(nodeIDs, xPos, yPos) {
+	getZoomToReveal(objectIDs, xPos, yPos) {
 		const transformedSVGRect = this.getTransformedViewportDimensions();
-		const nodes = this.activePipeline.getNodes(nodeIDs);
-		const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, [], [], 0);
-		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
-		const xPosInt = parseInt(xPos, 10);
-		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
+		const nodes = this.activePipeline.getNodes(objectIDs);
+		const comments = this.activePipeline.getComments(objectIDs);
+		const links = this.activePipeline.getLinks(objectIDs);
 
-		if (canv) {
-			let xOffset;
-			let yOffset;
+		if (nodes.length > 0 || comments.length > 0 || links.length > 0) {
+			const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, comments, links, 0, 0, true);
+			const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
+			const xPosInt = parseInt(xPos, 10);
+			const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
 
-			if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
-				xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
-				yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
+			if (canv) {
+				let xOffset;
+				let yOffset;
 
-			} else {
-				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
-					xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
-				}
-				if (canv.left < transformedSVGRect.x) {
-					xOffset = transformedSVGRect.x - canv.left;
-				}
-				if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-					yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
-				}
-				if (canv.top < transformedSVGRect.y) {
-					yOffset = transformedSVGRect.y - canv.top;
-				}
-			}
+				if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
+					xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
+					yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
 
-			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
-				const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
-				const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
-				return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
+				} else {
+					if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+						xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
+					}
+					if (canv.left < transformedSVGRect.x) {
+						xOffset = transformedSVGRect.x - canv.left;
+					}
+					if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+						yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
+					}
+					if (canv.top < transformedSVGRect.y) {
+						yOffset = transformedSVGRect.y - canv.top;
+					}
+				}
+
+				if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
+					const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
+					const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
+					return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
+				}
 			}
 		}
 
