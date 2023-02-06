@@ -1895,15 +1895,15 @@ export default class SVGCanvasRenderer {
 		if (this.regionSelect) {
 			// Add a delay so, if the user just clicks, they don't see the crosshair.
 			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
-			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
+			this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
 
 		} else {
 			if (this.isDragActivated(d3Event)) {
-				this.addTempCursorOverlay("grabbing");
+				this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("grabbing"), 200);
 			} else {
-				this.addTempCursorOverlay("default");
+				this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("default"), 200);
 			}
 		}
 
@@ -1938,8 +1938,8 @@ export default class SVGCanvasRenderer {
 	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
-		// Clears the display of the crosshair cursor if the user clicks within 200 ms
-		clearTimeout(this.addingCrossHairCursor);
+		// Clears the display of the cursor overlay if the user clicks within 200 ms
+		clearTimeout(this.addingCursorOverlay);
 
 		const transPos = this.getTransformedMousePos(d3Event);
 
