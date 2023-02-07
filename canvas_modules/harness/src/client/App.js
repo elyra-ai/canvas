@@ -270,7 +270,10 @@ class App extends React.Component {
 				enable: true,
 				emptyMessage: "You don't have any notifications right now.",
 				clearAllMessage: "Clear all",
-				keepOpen: true
+				keepOpen: true,
+				secondaryButtonLabel: "Custom action",
+				secondaryButtonCallback: () => this.log("Secondary button clicked"),
+				secondaryButtonDisabled: false
 			},
 			notificationConfig2: {
 				action: "notification",
