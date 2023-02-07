@@ -60,7 +60,8 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
-	EXAMPLE_READ_ONLY,
+	EXAMPLE_APP_READ_ONLY,
+	EXAMPLE_APP_PROGRESS,
 	PALETTE_FLYOUT,
 	PALETTE_MODAL,
 	PALETTE_NONE,
@@ -1051,8 +1052,12 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_STAGES_CARD_NODE}
 					/>
 					<RadioButton
-						value={EXAMPLE_READ_ONLY}
-						labelText={EXAMPLE_READ_ONLY}
+						value={EXAMPLE_APP_READ_ONLY}
+						labelText={EXAMPLE_APP_READ_ONLY}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_PROGRESS}
+						labelText={EXAMPLE_APP_PROGRESS}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_LOGIC}
