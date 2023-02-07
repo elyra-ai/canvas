@@ -1348,6 +1348,12 @@ export default class SidePanelForms extends React.Component {
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
 				onToggle={this.notificationConfigToggle}
 			/>
+			<Toggle
+				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
+				labelText="Disable the notification center secondary button"
+				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
+				onToggle={this.notificationConfigToggle}
+			/>
 		</div>);
 
 		var configureNotificationCenter2 = (<div className="harness-sidepanel-children" id="harness-sidepanel-configure-notification-center2">

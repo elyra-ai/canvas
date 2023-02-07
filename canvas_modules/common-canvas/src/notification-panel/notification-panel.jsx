@@ -191,6 +191,22 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
+		const secondaryButton = this.props.notificationConfig &&
+			this.props.notificationConfig.secondaryButtonLabel &&
+			this.props.notificationConfig.secondaryButtonCallback
+			? (<div className="notification-panel-secondary-button-container">
+				<Button
+					className="notification-panel-secondary-button"
+					onClick={this.props.notificationConfig.secondaryButtonCallback.bind(this)}
+					kind="ghost"
+					size="small"
+					disabled={this.props.secondaryButtonDisabled}
+				>
+					{this.props.notificationConfig.secondaryButtonLabel}
+				</Button>
+			</div>)
+			: null;
+
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
 				<div className="notification-panel-header-container">
@@ -204,7 +220,10 @@ class NotificationPanel extends React.Component {
 					<div className="notification-panel-messages">
 						{notificationPanelMessages}
 					</div>
-					{clearAll}
+					<div className="notification-panel-button-container">
+						{clearAll}
+						{secondaryButton}
+					</div>
 				</div>
 			</div>
 		</div>);
@@ -234,14 +253,22 @@ NotificationPanel.propTypes = {
 			PropTypes.object
 		]),
 		clearAllCallback: PropTypes.func,
-		keepOpen: PropTypes.bool
+		keepOpen: PropTypes.bool,
+		secondaryButtonLabel: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		]),
+		secondaryButtonCallback: PropTypes.func,
+		secondaryButtonDisabled: PropTypes.bool
 	}),
+	secondaryButtonDisabled: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
+	secondaryButtonDisabled: state.notificationpanel.config ? state.notificationpanel.config.secondaryButtonDisabled : false,
 	isNotificationOpen: state.notificationpanel.isOpen,
 	messages: state.notifications
 });

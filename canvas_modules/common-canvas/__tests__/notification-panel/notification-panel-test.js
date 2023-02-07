@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -639,6 +639,58 @@ describe("notification center buttons work properly", () => {
 		wrapper.update();
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 
+	});
+
+	it("notification secondary button renders and works when specified", () => {
+		const spySecondaryButtonCallback = sinon.spy();
+		const notificationConfig = {
+			action: "notification",
+			label: "Notifications Panel",
+			enable: true,
+			notificationHeader: "Custom",
+			clearAllMessage: "clear all",
+			secondaryButtonLabel: "Custom action",
+			secondaryButtonCallback: spySecondaryButtonCallback,
+			secondaryButtonDisabled: false
+		};
+		wrapper = createIntlCommonCanvas(
+			canvasConfig,
+			contextMenuHandler,
+			beforeEditActionHandler,
+			editActionHandler,
+			clickActionHandler,
+			decorationActionHandler,
+			selectionChangeHandler,
+			tipHandler,
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
+			toolbarConfig,
+			notificationConfig,
+			contextMenuConfig,
+			canvasController
+		);
+		// open the notification center
+		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		notificationButton.simulate("click");
+		wrapper.update();
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+
+		// check that secondary button is enabled and callback works
+		let secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		expect(secondaryButton.prop("disabled")).to.equal(false);
+		expect(secondaryButton.text()).to.equal(notificationConfig.secondaryButtonLabel);
+		secondaryButton.simulate("click");
+		expect(spySecondaryButtonCallback.calledOnce).to.equal(true);
+
+		// disable secondary button
+		notificationConfig.secondaryButtonDisabled = true;
+		canvasController.setNotificationPanelConfig(notificationConfig);
+		wrapper.update();
+
+		// verify secondary button is disabled
+		secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		expect(secondaryButton.prop("disabled")).to.equal(true);
 	});
 });
 
