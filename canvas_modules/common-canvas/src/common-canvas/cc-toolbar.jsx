@@ -272,14 +272,14 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
 			canvasToolbar = (
-				<section aria-label={this.getLabel("toolbar.label")} role="toolbar">
+				<div aria-label={this.getLabel("toolbar.label")} role="navigation">
 					<Toolbar
 						config={toolbarConfig}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
 						additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
 					/>
-				</section>
+				</div>
 			);
 		}
 

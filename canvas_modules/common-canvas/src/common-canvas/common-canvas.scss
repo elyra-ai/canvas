@@ -197,7 +197,7 @@ $bottom-panel-border-color: $ui-03;
 
 .empty-canvas-image {
 	color: $text-03; // Picked up by fill attribute in the icon.
-	opacity: 0.4;
+	opacity: 0.75;
 	display: block;
 	text-align: center;
 	& svg {
@@ -209,7 +209,7 @@ $bottom-panel-border-color: $ui-03;
 .empty-canvas-text1 {
 	@include carbon--type-style("productive-heading-03");
 	padding-top: $spacing-02;
-	color: $text-03;
+	color: $text-02;
 	display: block;
 	text-align: center;
 }
@@ -217,7 +217,7 @@ $bottom-panel-border-color: $ui-03;
 .empty-canvas-text2 {
 	@include carbon--type-style("body-short-02");
 	padding-top: $spacing-03;
-	color: $text-03;
+	color: $text-02;
 	display: block;
 	text-align: center;
 }

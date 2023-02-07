@@ -184,7 +184,7 @@ export default class SVGCanvasRenderer {
 
 		// Keep track of when text editing has been closed, so we don't remove
 		// selections when that happens during a zoom gesture.
-		this.textEditingClosedfOnZoom = false;
+		this.textEditingClosedOnZoom = false;
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -1789,41 +1789,46 @@ export default class SVGCanvasRenderer {
 		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
 	}
 
-	getZoomToReveal(nodeIDs, xPos, yPos) {
+	getZoomToReveal(objectIDs, xPos, yPos) {
 		const transformedSVGRect = this.getTransformedViewportDimensions();
-		const nodes = this.activePipeline.getNodes(nodeIDs);
-		const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, [], [], 0);
-		const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
-		const xPosInt = parseInt(xPos, 10);
-		const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
+		const nodes = this.activePipeline.getNodes(objectIDs);
+		const comments = this.activePipeline.getComments(objectIDs);
+		const links = this.activePipeline.getLinks(objectIDs);
 
-		if (canv) {
-			let xOffset;
-			let yOffset;
+		if (nodes.length > 0 || comments.length > 0 || links.length > 0) {
+			const canvasDimensions = CanvasUtils.getCanvasDimensions(nodes, comments, links, 0, 0, true);
+			const canv = this.convertCanvasDimensionsAdjustedForScaleWithPadding(canvasDimensions, 1, 10);
+			const xPosInt = parseInt(xPos, 10);
+			const yPosInt = typeof yPos === "undefined" ? xPosInt : parseInt(yPos, 10);
 
-			if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
-				xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
-				yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
+			if (canv) {
+				let xOffset;
+				let yOffset;
 
-			} else {
-				if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
-					xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
-				}
-				if (canv.left < transformedSVGRect.x) {
-					xOffset = transformedSVGRect.x - canv.left;
-				}
-				if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
-					yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
-				}
-				if (canv.top < transformedSVGRect.y) {
-					yOffset = transformedSVGRect.y - canv.top;
-				}
-			}
+				if (!Number.isNaN(xPosInt) && !Number.isNaN(yPosInt)) {
+					xOffset = transformedSVGRect.x + (transformedSVGRect.width * (xPosInt / 100)) - (canv.left + (canv.width / 2));
+					yOffset = transformedSVGRect.y + (transformedSVGRect.height * (yPosInt / 100)) - (canv.top + (canv.height / 2));
 
-			if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
-				const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
-				const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
-				return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
+				} else {
+					if (canv.right > transformedSVGRect.x + transformedSVGRect.width) {
+						xOffset = transformedSVGRect.x + transformedSVGRect.width - canv.right;
+					}
+					if (canv.left < transformedSVGRect.x) {
+						xOffset = transformedSVGRect.x - canv.left;
+					}
+					if (canv.bottom > transformedSVGRect.y + transformedSVGRect.height) {
+						yOffset = transformedSVGRect.y + transformedSVGRect.height - canv.bottom;
+					}
+					if (canv.top < transformedSVGRect.y) {
+						yOffset = transformedSVGRect.y - canv.top;
+					}
+				}
+
+				if (typeof xOffset !== "undefined" || typeof yOffset !== "undefined") {
+					const x = this.zoomTransform.x + ((xOffset || 0)) * this.zoomTransform.k;
+					const y = this.zoomTransform.y + ((yOffset || 0)) * this.zoomTransform.k;
+					return { x: x || 0, y: y || 0, k: this.zoomTransform.k };
+				}
 			}
 		}
 
@@ -1882,7 +1887,7 @@ export default class SVGCanvasRenderer {
 		// if the user clicks on the canvas background. So we set this flag to
 		// prevent the selection being lost in the zoomEnd (mouseup) event.
 		if (this.svgCanvasTextArea.isEditingText()) {
-			this.textEditingClosedfOnZoom = true;
+			this.textEditingClosedOnZoom = true;
 		}
 
 		this.regionSelect = this.shouldDoRegionSelect(d3Event);
@@ -1890,15 +1895,15 @@ export default class SVGCanvasRenderer {
 		if (this.regionSelect) {
 			// Add a delay so, if the user just clicks, they don't see the crosshair.
 			// This will be cleared in zoomEnd if the user's click takes less than 200 ms.
-			this.addingCrossHairCursor = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
+			this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("crosshair"), 200);
 			this.regionStartTransformX = d3Event.transform.x;
 			this.regionStartTransformY = d3Event.transform.y;
 
 		} else {
 			if (this.isDragActivated(d3Event)) {
-				this.addTempCursorOverlay("grabbing");
+				this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("grabbing"), 200);
 			} else {
-				this.addTempCursorOverlay("default");
+				this.addingCursorOverlay = setTimeout(() => this.addTempCursorOverlay("default"), 200);
 			}
 		}
 
@@ -1933,8 +1938,8 @@ export default class SVGCanvasRenderer {
 	zoomEnd(d3Event) {
 		this.logger.log("zoomEnd - " + JSON.stringify(d3Event.transform));
 
-		// Clears the display of the crosshair cursor if the user clicks within 200 ms
-		clearTimeout(this.addingCrossHairCursor);
+		// Clears the display of the cursor overlay if the user clicks within 200 ms
+		clearTimeout(this.addingCursorOverlay);
 
 		const transPos = this.getTransformedMousePos(d3Event);
 
@@ -1962,7 +1967,7 @@ export default class SVGCanvasRenderer {
 		this.resetCanvasCursor(d3Event);
 		this.removeTempCursorOverlay();
 		this.contextMenuClosedOnZoom = false;
-		this.textEditingClosedfOnZoom = false;
+		this.textEditingClosedOnZoom = false;
 		this.regionSelect = false;
 	}
 
@@ -2032,7 +2037,7 @@ export default class SVGCanvasRenderer {
 		// Clicking the canvas of an expanded supernode will select that node.
 		// Also, don't clear selections if we have closed a context menu or
 		// closed text editing.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedfOnZoom) {
+		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedOnZoom) {
 			this.canvasController.clearSelections();
 		}
 	}

@@ -64,17 +64,23 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	getInlineLoadingRenderCategory() {
+
+		// TODO - This loading functionality should be replaced with a skeleton
+		// graphic to indicate the category is loading instead of using the
+		// InlineLoading component.
+
 		let description = "";
 		if (this.props.isPaletteOpen) {
 			description = this.props.category.loading_text;
 		}
 
+		// We do not specify an iconDescription below because doing so overrides
+		// the icon label which causes a problem with the accessibility checker.
 		const titleLoadingObj = (
 			<div className="palette-flyout-category">
 				<div className="palette-flyout-category-item-loading">
 					<InlineLoading
 						description={ description }
-						iconDescription={ description }
 						onSuccess={function noRefCheck() {
 							return null;
 						}}
@@ -159,7 +165,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 			} else {
 				itemImage = (
 					<div>
-						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" />
+						<img src={this.props.category.image} className="palette-flyout-category-item-icon" draggable="false" alt={this.props.category.label} />
 					</div>
 				);
 			}
