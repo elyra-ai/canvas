@@ -268,7 +268,7 @@ NotificationPanel.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
-	secondaryButtonDisabled: state.notificationpanel.config.secondaryButtonDisabled,
+	secondaryButtonDisabled: state.notificationpanel.config ? state.notificationpanel.config.secondaryButtonDisabled : false,
 	isNotificationOpen: state.notificationpanel.isOpen,
 	messages: state.notifications
 });
