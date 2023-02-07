@@ -2820,6 +2820,63 @@ _defineConstant("SELECTSCHEMA_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("SELECTSCHEMA_EMPTY_PROPS_INFO", {
+	"title": "SelectSchema Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: empty list selectschema",
+			"editable": false
+		},
+		"current_parameters": {
+		},
+		"parameters": [
+			{
+				"id": "selectschema"
+			},
+			{
+				"id": "selectschemaEmptyPlaceholder"
+			}
+		],
+		"uihints": {
+			"id": "selectschemaList",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectschema",
+					"label": {
+						"default": "SelectSchema Empty list Control"
+					},
+					"description": {
+						"default": "selectschema control without dataset_metadata."
+					},
+					"control": "selectschema"
+				},
+				{
+					"parameter_ref": "selectschemaEmptyPlaceholder",
+					"label": {
+						"default": "Disabled SelectSchema Empty list Control with custom placeholder"
+					},
+					"description": {
+						"default": "selectschema control without dataset_metadata. Showing custom placeholder text. This control should be disabled."
+					},
+					"control": "selectschema"
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectSchema Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectschema",
+						"selectschemaEmptyPlaceholder"
+					]
+				}
+			]
+		},
+		"resources": {
+			"selectschemaEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
+		}
+	}
+});
 _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 	"title": "Select Column Title",
 	"parameterDef": {
@@ -2866,6 +2923,68 @@ _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 				"fields": fields
 			}
 		]
+	}
+});
+_defineConstant("SELECTCOLUMN_EMPTY_PROPS_INFO", {
+	"title": "Select Column Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: empty selectcolumn",
+			"editable": false
+		},
+		"current_parameters": {
+			"selectcolumn": ""
+		},
+		"parameters": [
+			{
+				"id": "selectcolumn",
+				"type": "string",
+				"default": "",
+				"role": "column"
+			},
+			{
+				"id": "selectcolumnEmptyPlaceholder",
+				"type": "string",
+				"default": "",
+				"role": "column"
+			}
+		],
+		"uihints": {
+			"id": "selectcolumn",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectcolumn",
+					"label": {
+						"default": "Select Column Empty list Control"
+					},
+					"description": {
+						"default": "selectcolumn control without dataset_metadata."
+					}
+				},
+				{
+					"parameter_ref": "selectcolumnEmptyPlaceholder",
+					"label": {
+						"default": "Disabled Empty list Control with custom placeholder"
+					},
+					"description": {
+						"default": "selectcolumn control without dataset_metadata. Showing custom placeholder text. This control should be disabled."
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectColumn Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectcolumn",
+						"selectcolumnEmptyPlaceholder"
+					]
+				}
+			]
+		},
+		"resources": {
+			"selectcolumnEmptyPlaceholder.emptyList.placeholder": "Custom empty list placeholder text"
+		}
 	}
 });
 _defineConstant("SELECTCOLUMN_MULTI_INPUT_PROPS_INFO", {
