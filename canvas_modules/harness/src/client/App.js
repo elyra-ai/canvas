@@ -44,6 +44,7 @@ import StagesCanvas from "./components/custom-canvases/stages/stages-canvas";
 import StagesCardNodeCanvas from "./components/custom-canvases/stages-card-node/stages-card-node-canvas";
 import LogicCanvas from "./components/custom-canvases/logic/logic-canvas";
 import ReadOnlyCanvas from "./components/custom-canvases/read-only/read-only";
+import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
@@ -99,7 +100,8 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
-	EXAMPLE_READ_ONLY,
+	EXAMPLE_APP_READ_ONLY,
+	EXAMPLE_APP_PROGRESS,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -216,15 +218,6 @@ class App extends React.Component {
 			selectedBrowserEditMenu: true,
 			selectedBoundingRectangles: false,
 			selectedNodeLayout: null,
-			// Use these settings when enableResizableNodes is tested (these
-			// settings only work with vertical node format).
-			// selectedNodeLayout: {
-			// 	inputPortDisplay: false,
-			// 	outputPortDisplay: false,
-			// 	imagePosition: "middleCenter", imagePosX: -24, imagePosY: -30,
-			// 	labelPosition: "middleCenter", labelPosX: 0, labelPosY: 20,
-			// 	ellipsisPosition: "middleCenter", ellipsisPosX: 22, ellipsisPosY: -36
-			// },
 			selectedCanvasLayout: null,
 			selectedStateTagTip: "",
 
@@ -1623,13 +1616,6 @@ class App extends React.Component {
 			this.editNodeHandler(data.targetObject.id, data.pipelineId, inExtraCanvas);
 			break;
 		}
-		case "runit": {
-			if (this.state.selectedCanvasDropdownFile === "allTypesCanvas.json" ||
-					this.state.selectedCanvasDropdownFile === "stylesCanvas.json") {
-				this.runProgress();
-			}
-			break;
-		}
 		case "createSuperNodeExternal":
 		case "convertSuperNodeLocalToExternal": {
 			this.externalPipelineFlows[data.externalUrl] =
@@ -2307,110 +2293,6 @@ class App extends React.Component {
 		return toolbarConfig;
 	}
 
-	runProgress() {
-		const nodeAnimation =
-			"animation-duration:1000ms; animation-name:wiggle2; " +
-			"animation-iteration-count:infinite; fill: skyblue;";
-
-		const nodeStyle = {
-			body: { default: nodeAnimation, hover: "fill: orange; stroke: coralred; stroke-width: 5;" },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: "fill: blue" },
-			text: { default: "fill: white" }
-		};
-
-		const removeNodeStyle = {
-			body: { default: null, hover: null },
-			// selection_outline: { default: animation },
-			image: { default: null },
-			label: { default: null },
-			text: { default: null }
-		};
-
-		// Note: The pipelineId uses special characters for testing purposes.
-		const pipelineId = "`~!@#$%^&*()_+=-{}][|:;<,>.9?/";
-
-		const bindingEntryNode = "id8I6RH2V91XW";
-		const executionNode = "|:;<,>.9?/`~!@#$%^&*()_+=-{}]["; // The executiion node id uses special characters for testing.
-		const superNode = "nodeIDSuperNodePE";
-		const modelNode = "id125TTEEIK7V";
-		const bindingExitNode = "id5KIRGGJ3FYT";
-
-		const objects1 = [];
-		const objects2 = [];
-		const objects3 = [];
-		const objects4 = [];
-
-		objects1[pipelineId] = [bindingEntryNode];
-		objects2[pipelineId] = [executionNode];
-		objects3[pipelineId] = [superNode];
-		objects4[pipelineId] = [modelNode, bindingExitNode];
-
-		const linkAnimation =
-			"animation-duration:1000ms; animation-name:blink; " +
-			"animation-iteration-count:infinite; animation-direction: alternate";
-
-		const linkStyle = {
-			line: { default: linkAnimation, hover: "stroke: yellow; stroke-width: 2" }
-		};
-
-		const removeLinkStyle = {
-			line: { default: null, hover: null }
-		};
-
-		const lnk1 = this.canvasController.getNodeDataLinkFromInfo(bindingEntryNode, "outPort", executionNode, "inPort");
-		const lnk2 = this.canvasController.getNodeDataLinkFromInfo(executionNode, null, superNode, "input2SuperNodePE");
-		const lnk3 = this.canvasController.getNodeDataLinkFromInfo(superNode, null, modelNode, "inPort");
-		const lnk4 = this.canvasController.getNodeDataLinkFromInfo(superNode, "output1SuperNodePE", bindingExitNode, "inPort");
-
-		const link1 = [];
-		const link2 = [];
-		const link3 = [];
-
-		link1[pipelineId] = [lnk1.id];
-		link2[pipelineId] = [lnk2.id];
-		link3[pipelineId] = [lnk3.id, lnk4.id];
-
-		const that = this;
-
-		that.canvasController.setObjectsStyle(objects1, nodeStyle, true);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link1, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects2, nodeStyle, true);
-		}, 2000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects1, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link1, removeLinkStyle, true);
-		}, 4000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link2, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, nodeStyle, true);
-		}, 6000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects2, removeNodeStyle, true);
-			that.canvasController.setLinksStyle(link2, removeLinkStyle, true);
-		}, 8000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, linkStyle, true);
-			that.canvasController.setObjectsStyle(objects4, nodeStyle, true);
-		}, 10000);
-
-		setTimeout(() => {
-			that.canvasController.setLinksStyle(link3, removeLinkStyle, true);
-			that.canvasController.setObjectsStyle(objects3, removeNodeStyle, true);
-		}, 12000);
-
-		setTimeout(() => {
-			that.canvasController.setObjectsStyle(objects4, removeNodeStyle, true);
-		}, 14000);
-	}
-
 	getTempContent() {
 		const text1 = "Common Canvas panel.";
 		const text2 = "Some temporary content for common canvas panel. This panel can display content from the host application.";
@@ -2597,9 +2479,16 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_READ_ONLY) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_READ_ONLY) {
 			firstCanvas = (
 				<ReadOnlyCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_PROGRESS) {
+			firstCanvas = (
+				<ProgressCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
