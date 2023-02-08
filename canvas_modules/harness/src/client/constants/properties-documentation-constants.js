@@ -3076,6 +3076,49 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 		]
 	}
 });
+
+_defineConstant("TOGGLE_PROPS_INFO", {
+	"title": "Toggle Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: toggle",
+			"editable": false
+		},
+		"current_parameters": {
+			"toggle_default": false,
+		},
+		"parameters": [
+			{
+				"id": "toggle_default",
+				"default": false,
+				"type": "boolean"
+			}
+		],
+		"uihints": {
+			"id": "toggle_default",
+			"parameter_info": [
+				{
+					"parameter_ref": "toggle_default",
+					"control": "toggle",
+					"label": {
+						"default": "Toggle Control Name"
+					},
+					"description": {
+						"default": "toggle test"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Toggle Control",
+					"parameter_refs": [
+						"toggle_default"
+					]
+				}
+			]
+		}
+	},
+});
 _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 	"title": "Toggletext Title",
 	"parameterDef": {

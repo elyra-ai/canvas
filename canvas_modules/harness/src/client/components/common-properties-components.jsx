@@ -41,6 +41,7 @@ import {
 	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
 	TEXTAREA_PROPS_INFO,
+	TOGGLE_PROPS_INFO,
 	LIST_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
 	EXPRESSION_PROPS_INFO,
@@ -893,6 +894,26 @@ class CommonPropertiesComponents extends React.Component {
 							<pre className="harness-json-block">
 								{this.jsonReplacer(TEXTAREA_PROPS_INFO.parameterDef, "control")}
 							</pre>
+						</div>
+					</div>
+					<div className="harness-properties-documentation-panels-controls-component">
+						<h3 id="--textarea" className="harness-section-subtitle">Toggle</h3>
+						<p>A two-state control, They are commonly used for “on/off” switches.
+							The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
+						<div className="harness-section-row">
+							<div className="harness-section-column">
+								<CommonProperties
+									propertiesInfo={TOGGLE_PROPS_INFO}
+									propertiesConfig={this.propertiesConfig}
+									light={this.state.light}
+								/>
+								{this.renderRightFlyoutButton(TOGGLE_PROPS_INFO)}
+							</div>
+							<div className="harness-section-column harness-section-column-code">
+								<pre className="harness-json-block">
+									{this.jsonReplacer(TOGGLE_PROPS_INFO.parameterDef, "control")}
+								</pre>
+							</div>
 						</div>
 					</div>
 				</div>
