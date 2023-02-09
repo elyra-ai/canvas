@@ -19,7 +19,6 @@ import { Provider } from "react-redux";
 import NotificationPanel from "./../../src/notification-panel/notification-panel";
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
-import { mount } from "enzyme";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
