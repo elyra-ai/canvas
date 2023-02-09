@@ -386,6 +386,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--selectcolumn",
 					"--selectcolumns",
 					"--toggletext",
+					"--toggle",
 					"Complex",
 					"--structuretable",
 					"--structurelisteditor",
@@ -896,682 +897,682 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<div className="harness-properties-documentation-panels-controls-component">
-						<h3 id="--textarea" className="harness-section-subtitle">Toggle</h3>
-						<p>A two-state control, They are commonly used for “on/off” switches.
-							The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
-						<div className="harness-section-row">
-							<div className="harness-section-column">
-								<CommonProperties
-									propertiesInfo={TOGGLE_PROPS_INFO}
-									propertiesConfig={this.propertiesConfig}
-									light={this.state.light}
-								/>
-								{this.renderRightFlyoutButton(TOGGLE_PROPS_INFO)}
-							</div>
-							<div className="harness-section-column harness-section-column-code">
-								<pre className="harness-json-block">
-									{this.jsonReplacer(TOGGLE_PROPS_INFO.parameterDef, "control")}
-								</pre>
-							</div>
-						</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--list" className="harness-section-subtitle">list</h3>
+				<p>A list is rendered for a parameter of <span className="harness-highlight">type</span> array[string]
+					when <span className="harness-highlight">control</span> is set to <span className="harness-highlight">list</span> in
+					the <span className="harness-highlight">parameter_info</span> section. The array type can be one of:
+					string, integer, double, or long. This control cannot be embedded in a structure.</p>
+				<p>This example also shows the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--moveable_rows">moveable_rows</a>&nbsp;
+					and <span className="harness-highlight">rows</span> attributes. The <span className="harness-highlight">rows</span> option
+					sets the height of the list to show the number of rows specified. This defaults to 4.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={LIST_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(LIST_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(LIST_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--list" className="harness-section-subtitle">list</h3>
-					<p>A list is rendered for a parameter of <span className="harness-highlight">type</span> array[string]
-						when <span className="harness-highlight">control</span> is set to <span className="harness-highlight">list</span> in
-						the <span className="harness-highlight">parameter_info</span> section. The array type can be one of:
-						string, integer, double, or long. This control cannot be embedded in a structure.</p>
-					<p>This example also shows the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--moveable_rows">moveable_rows</a>&nbsp;
-						and <span className="harness-highlight">rows</span> attributes. The <span className="harness-highlight">rows</span> option
-						sets the height of the list to show the number of rows specified. This defaults to 4.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={LIST_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(LIST_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(LIST_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--password" className="harness-section-subtitle">password</h3>
+				<p>A masked single line text field is rendered for a parameter of <span className="harness-highlight">type</span> password.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(PASSWORD_FIELD_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(PASSWORD_FIELD_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--password" className="harness-section-subtitle">password</h3>
-					<p>A masked single line text field is rendered for a parameter of <span className="harness-highlight">type</span> password.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(PASSWORD_FIELD_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(PASSWORD_FIELD_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--expression" className="harness-section-subtitle">expression</h3>
+				<p>An expression editing field is rendered for a parameter of <span className="harness-highlight">type</span> string
+					and <span className="harness-highlight">role</span> expression.
+					The expression field provides syntax highlighting and text auto completion based on language.
+					Languages supported are <span className="harness-highlight">Spark SQL</span> and
+				<span className="harness-highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
+					text auto completion feature.</p>
+				<p>An expression builder is provided when the expression control is display in
+					the <span className="harness-highlight"> Flyout</span>. The expression builder provides an easy to use interface for
+					building expressions.  It is enabled by passing in the <span className="harness-highlight"> expressionInfo </span> field in the
+				<span className="harness-highlight"> propertiesInfo </span> object for <span className="harness-highlight"> CommonProperties </span>.
+						Press the <span className="harness-highlight"> "View in Flyout" </span> to see the expression builder button.
+				</p>
+				<p>Validation of expression field is performed when the <span className="harness-highlight"> Validate </span> link is clicked.
+					The user of the expression control can provide syntax checking of the expression by implementing
+					a custom condition operator that will get invoked when the <span className="harness-highlight"> Validate </span> link is clicked.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={expressionInfoProps}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(expressionInfoProps)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(expressionInfoProps.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--expression" className="harness-section-subtitle">expression</h3>
-					<p>An expression editing field is rendered for a parameter of <span className="harness-highlight">type</span> string
-						and <span className="harness-highlight">role</span> expression.
-						The expression field provides syntax highlighting and text auto completion based on language.
-						Languages supported are <span className="harness-highlight">Spark SQL</span> and
-					<span className="harness-highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
-						text auto completion feature.</p>
-					<p>An expression builder is provided when the expression control is display in
-						the <span className="harness-highlight"> Flyout</span>. The expression builder provides an easy to use interface for
-						building expressions.  It is enabled by passing in the <span className="harness-highlight"> expressionInfo </span> field in the
-					<span className="harness-highlight"> propertiesInfo </span> object for <span className="harness-highlight"> CommonProperties </span>.
-							Press the <span className="harness-highlight"> "View in Flyout" </span> to see the expression builder button.
-					</p>
-					<p>Validation of expression field is performed when the <span className="harness-highlight"> Validate </span> link is clicked.
-						The user of the expression control can provide syntax checking of the expression by implementing
-						a custom condition operator that will get invoked when the <span className="harness-highlight"> Validate </span> link is clicked.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={expressionInfoProps}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(expressionInfoProps)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(expressionInfoProps.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--code" className="harness-section-subtitle">code</h3>
+				<p>Identical to <span className="harness-highlight"> expression </span> control without the expressionBuilder option</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={CODE_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(CODE_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(CODE_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--code" className="harness-section-subtitle">code</h3>
-					<p>Identical to <span className="harness-highlight"> expression </span> control without the expressionBuilder option</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={CODE_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(CODE_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(CODE_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--hidden" className="harness-section-subtitle">hidden</h3>
+				<p>A hidden field is a field that can be used in common-properties but doesn't show up in the UI.  It has a parameter of attribute
+					<span className="harness-highlight"> control </span>and value <span className="harness-highlight">hidden</span></p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={HIDDEN_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(HIDDEN_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(HIDDEN_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--hidden" className="harness-section-subtitle">hidden</h3>
-					<p>A hidden field is a field that can be used in common-properties but doesn't show up in the UI.  It has a parameter of attribute
-						<span className="harness-highlight"> control </span>and value <span className="harness-highlight">hidden</span></p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={HIDDEN_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(HIDDEN_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(HIDDEN_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--readonly" className="harness-section-subtitle">readonly</h3>
+				<p>A readonly field is rendered for a parameter of attribute <span className="harness-highlight">control </span>
+				and value <span className="harness-highlight">readonly</span></p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={READONLY_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(READONLY_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(READONLY_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--readonly" className="harness-section-subtitle">readonly</h3>
-					<p>A readonly field is rendered for a parameter of attribute <span className="harness-highlight">control </span>
-					and value <span className="harness-highlight">readonly</span></p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={READONLY_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(READONLY_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(READONLY_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--numberfield" className="harness-section-subtitle">numberfield</h3>
+				<p>A numeric text field is rendered for a parameter of <span className="harness-highlight">type</span> number.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={NUMBERFIELD_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(NUMBERFIELD_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(NUMBERFIELD_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--numberfield" className="harness-section-subtitle">numberfield</h3>
-					<p>A numeric text field is rendered for a parameter of <span className="harness-highlight">type</span> number.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={NUMBERFIELD_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(NUMBERFIELD_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(NUMBERFIELD_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+				<p>Number fields can also optionally display a random number generator
+					next to the control label by adding a <span className="harness-highlight">number_generator</span> attribute
+					in the <span className="harness-highlight">parameter_info</span> section.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(NUMBERFIELD_GENERATOR_PROPS_INFO)}
 					</div>
-					<p>Number fields can also optionally display a random number generator
-						next to the control label by adding a <span className="harness-highlight">number_generator</span> attribute
-						in the <span className="harness-highlight">parameter_info</span> section.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(NUMBERFIELD_GENERATOR_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(NUMBERFIELD_GENERATOR_PROPS_INFO.parameterDef, "custom",
-									["uihints",
-										"id", "type", "parameter_info",
-										"number_generator",
-										"default", "label", "resource_key", "range", "min", "max",
-										"resources", "numberGenerator.label", "numberGenerator.desc"
-									])}
-							</pre>
-						</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(NUMBERFIELD_GENERATOR_PROPS_INFO.parameterDef, "custom",
+								["uihints",
+									"id", "type", "parameter_info",
+									"number_generator",
+									"default", "label", "resource_key", "range", "min", "max",
+									"resources", "numberGenerator.label", "numberGenerator.desc"
+								])}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--spinner" className="harness-section-subtitle">spinner</h3>
-					<p>A spinner control is rendered for a parameter of <span className="harness-highlight">increment</span> number.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SPINNER_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SPINNER_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SPINNER_PROPS_INFO.parameterDef, "all")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--spinner" className="harness-section-subtitle">spinner</h3>
+				<p>A spinner control is rendered for a parameter of <span className="harness-highlight">increment</span> number.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SPINNER_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SPINNER_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SPINNER_PROPS_INFO.parameterDef, "all")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--datefield" className="harness-section-subtitle">datefield</h3>
-					<p>A date field is rendered for a parameter of <span className="harness-highlight">type</span> date.
-							The current parameter should be provided as an 8601 format date. eg 2018-02-15. This is
-							how dates are stored internally. Note that, with the ISO format, single digits are preceded by
-							a 0. So 02 not 2 for Febrauary. The date_format field in the ui_hints can be used to
-							specify what date format is required for display and entry of the date. The default is YYYY-M-D.
-							This allows single digit month and day numbers for display and entry. Other dates formats can be
-							derived from here:
-					<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={DATEFIELD_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(DATEFIELD_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(DATEFIELD_PROPS_INFO.parameterDef, "datefield")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--datefield" className="harness-section-subtitle">datefield</h3>
+				<p>A date field is rendered for a parameter of <span className="harness-highlight">type</span> date.
+						The current parameter should be provided as an 8601 format date. eg 2018-02-15. This is
+						how dates are stored internally. Note that, with the ISO format, single digits are preceded by
+						a 0. So 02 not 2 for Febrauary. The date_format field in the ui_hints can be used to
+						specify what date format is required for display and entry of the date. The default is YYYY-M-D.
+						This allows single digit month and day numbers for display and entry. Other dates formats can be
+						derived from here:
+				<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={DATEFIELD_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(DATEFIELD_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(DATEFIELD_PROPS_INFO.parameterDef, "datefield")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--timefield" className="harness-section-subtitle">timefield</h3>
-					<p>A time field is rendered for a parameter of <span className="harness-highlight">type</span> time.
-							The current parameter should be provided as an 8601 format time. eg 09:10:05Z. This is
-							how times are stored internally. Note that, with the ISO format, single digits are
-							preceded by a 0. So 09 not 9 for nine hours. The time_format field in the ui_hints can
-							be used to specify what time format is required for display and entry of the time.
-							The default is H:m:s which is 24 hour time (for hours) and no preceding zeros on digits.
-							In the example below the default format has been overridden in the ui_hints to require
-							preceding zeros for digits in displayed and eneterd time values. Other time formats can
-							be derived from here:
-					<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={TIMEFIELD_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(TIMEFIELD_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(TIMEFIELD_PROPS_INFO.parameterDef, "timefield")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--timefield" className="harness-section-subtitle">timefield</h3>
+				<p>A time field is rendered for a parameter of <span className="harness-highlight">type</span> time.
+						The current parameter should be provided as an 8601 format time. eg 09:10:05Z. This is
+						how times are stored internally. Note that, with the ISO format, single digits are
+						preceded by a 0. So 09 not 9 for nine hours. The time_format field in the ui_hints can
+						be used to specify what time format is required for display and entry of the time.
+						The default is H:m:s which is 24 hour time (for hours) and no preceding zeros on digits.
+						In the example below the default format has been overridden in the ui_hints to require
+						preceding zeros for digits in displayed and eneterd time values. Other time formats can
+						be derived from here:
+				<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={TIMEFIELD_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(TIMEFIELD_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(TIMEFIELD_PROPS_INFO.parameterDef, "timefield")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--checkbox" className="harness-section-subtitle">checkbox</h3>
-					<p>A checkbox control is rendered for a parameter of <span className="harness-highlight">type</span> boolean.
-						The value in the <span className="harness-highlight">enum</span> array
-						sets the label for the checkbox control.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(CHECKBOX_SINGLE_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(CHECKBOX_SINGLE_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--checkbox" className="harness-section-subtitle">checkbox</h3>
+				<p>A checkbox control is rendered for a parameter of <span className="harness-highlight">type</span> boolean.
+					The value in the <span className="harness-highlight">enum</span> array
+					sets the label for the checkbox control.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(CHECKBOX_SINGLE_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(CHECKBOX_SINGLE_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--checkboxset" className="harness-section-subtitle">checkboxset</h3>
-					<p>For parameters of <span className="harness-highlight">type</span> array[string] with fewer than five elements,
-						a checkboxset is rendered. For five or more elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect"> someofselect </a> control is rendered.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={CHECKBOX_SET_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(CHECKBOX_SET_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(CHECKBOX_SET_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--checkboxset" className="harness-section-subtitle">checkboxset</h3>
+				<p>For parameters of <span className="harness-highlight">type</span> array[string] with fewer than five elements,
+					a checkboxset is rendered. For five or more elements,
+					a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect"> someofselect </a> control is rendered.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={CHECKBOX_SET_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(CHECKBOX_SET_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(CHECKBOX_SET_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--radioset" className="harness-section-subtitle">radioset</h3>
-					<p> A radio set where a parameter value is selected from up to four options.
-						For five or more options, a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
-						oneofselect
-					</a> control is rendered. Enums of <span className="harness-highlight">type</span> string and number (integer, double, long) are supported.
-						If enum is not defined, a boolean radio set can be rendered by setting <span className="harness-highlight">type</span> to boolean.
-						For type boolean and number, the control must be set to <span className="harness-highlight">radioset</span>.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(RADIOSET_HORIZONTAL_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(RADIOSET_HORIZONTAL_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--radioset" className="harness-section-subtitle">radioset</h3>
+				<p> A radio set where a parameter value is selected from up to four options.
+					For five or more options, a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
+					oneofselect
+				</a> control is rendered. Enums of <span className="harness-highlight">type</span> string and number (integer, double, long) are supported.
+					If enum is not defined, a boolean radio set can be rendered by setting <span className="harness-highlight">type</span> to boolean.
+					For type boolean and number, the control must be set to <span className="harness-highlight">radioset</span>.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(RADIOSET_HORIZONTAL_PROPS_INFO)}
 					</div>
-					<p>The orientation of the radio buttons is controled by the <span className="harness-highlight">orientation</span> value
-						in the parameter_info. If the attribute is not specified, the radio buttons will be layed out horizontally.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(RADIOSET_VERTICAL_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(RADIOSET_VERTICAL_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(RADIOSET_HORIZONTAL_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--oneofselect" className="harness-section-subtitle">oneofselect</h3>
-					<p>A dropdown list control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
-						with five or more elements. For fewer than five elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a> control is rendered.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={ONEOFSELECT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(ONEOFSELECT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(ONEOFSELECT_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+				<p>The orientation of the radio buttons is controled by the <span className="harness-highlight">orientation</span> value
+					in the parameter_info. If the attribute is not specified, the radio buttons will be layed out horizontally.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(RADIOSET_VERTICAL_PROPS_INFO)}
 					</div>
-					<p>When <span className="harness-highlight">custom_value_allowed</span> is specified in the uihints,
-						a dropdown with the option for users to enter a custom value is rendered. This option is not available
-						for dropdown controls within tables.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO.parameterDef, "custom",
-									["uihints", "parameter_info", "parameter_ref", "label", "description", "default", "custom_value_allowed"])}
-							</pre>
-						</div>
-					</div>
-					<p>A <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
-						oneofselect
-					</a> control can be forced to render as a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">
-							radioset
-					</a> by adding a <span className="harness-highlight">control</span> attribute set
-						to <span className="harness-highlight">radioset</span>. Similarly, a <span className="harness-highlight">radioset</span> control can
-						be forced to render as a <span className="harness-highlight">oneofselect</span>.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(FORCED_RADIOSET_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(FORCED_RADIOSET_PROPS_INFO.parameterDef, "custom",
-									["uihints", "parameter_info", "control", "orientation"])}
-							</pre>
-						</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(RADIOSET_VERTICAL_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--oneofselect" className="harness-section-subtitle">oneofselect</h3>
+				<p>A dropdown list control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
+					with five or more elements. For fewer than five elements,
+					a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a> control is rendered.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={ONEOFSELECT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(ONEOFSELECT_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(ONEOFSELECT_PROPS_INFO.parameterDef, "control")}
+						</pre>
+					</div>
+				</div>
+				<p>When <span className="harness-highlight">custom_value_allowed</span> is specified in the uihints,
+					a dropdown with the option for users to enter a custom value is rendered. This option is not available
+					for dropdown controls within tables.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(ONEOFSELECT_CUSTOM_VALUE_PROPS_INFO.parameterDef, "custom",
+								["uihints", "parameter_info", "parameter_ref", "label", "description", "default", "custom_value_allowed"])}
+						</pre>
+					</div>
+				</div>
+				<p>A <a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">
+					oneofselect
+				</a> control can be forced to render as a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">
+						radioset
+				</a> by adding a <span className="harness-highlight">control</span> attribute set
+					to <span className="harness-highlight">radioset</span>. Similarly, a <span className="harness-highlight">radioset</span> control can
+					be forced to render as a <span className="harness-highlight">oneofselect</span>.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(FORCED_RADIOSET_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(FORCED_RADIOSET_PROPS_INFO.parameterDef, "custom",
+								["uihints", "parameter_info", "control", "orientation"])}
+						</pre>
+					</div>
+				</div>
+			</div>
 
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--multiselect" className="harness-section-subtitle">multiselect</h3>
-					<p>A multi-selection dropdown control is rendered when the <span className="harness-highlight">control</span> is
-						set to <span className="harness-highlight">multiselect</span> in the <span className="harness-highlight">uihints</span> section
-						of the <span className="harness-highlight">parameter_info</span>.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={MULTISELECT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(MULTISELECT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(MULTISELECT_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--multiselect" className="harness-section-subtitle">multiselect</h3>
+				<p>A multi-selection dropdown control is rendered when the <span className="harness-highlight">control</span> is
+					set to <span className="harness-highlight">multiselect</span> in the <span className="harness-highlight">uihints</span> section
+					of the <span className="harness-highlight">parameter_info</span>.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={MULTISELECT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(MULTISELECT_PROPS_INFO)}
 					</div>
-					<p>If <span className="harness-highlight">filterable</span> is set to true, this dropdown selection can be filtered.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={MULTISELECT_FILTERABLE_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(MULTISELECT_FILTERABLE_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(MULTISELECT_FILTERABLE_PROPS_INFO.parameterDef, "custom",
-									["uihints",
-										"id", "parameter_info",
-										"parameter_info", "label", "description", "default", "control", "filterable"
-									])}
-							</pre>
-						</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(MULTISELECT_PROPS_INFO.parameterDef, "control")}
+						</pre>
 					</div>
 				</div>
+				<p>If <span className="harness-highlight">filterable</span> is set to true, this dropdown selection can be filtered.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={MULTISELECT_FILTERABLE_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(MULTISELECT_FILTERABLE_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(MULTISELECT_FILTERABLE_PROPS_INFO.parameterDef, "custom",
+								["uihints",
+									"id", "parameter_info",
+									"parameter_info", "label", "description", "default", "control", "filterable"
+								])}
+						</pre>
+					</div>
+				</div>
+			</div>
 
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--someofselect" className="harness-section-subtitle">someofselect</h3>
-					<p>A multi-selection control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
-						with five or more elements of <span className="harness-highlight">type</span> array[string].
-						For fewer than five elements,
-						a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkboxset">checkboxset</a> control is rendered.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SOMEOFSELECT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SOMEOFSELECT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SOMEOFSELECT_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--someofselect" className="harness-section-subtitle">someofselect</h3>
+				<p>A multi-selection control is rendered for a parameter with an <span className="harness-highlight">enum</span> list
+					with five or more elements of <span className="harness-highlight">type</span> array[string].
+					For fewer than five elements,
+					a <a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkboxset">checkboxset</a> control is rendered.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SOMEOFSELECT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SOMEOFSELECT_PROPS_INFO)}
 					</div>
-					<p>A <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect">
-						someofselect
-					</a> control can be forced to render as a <a className="harness-properties-documentation-page-intro-link"
-						href="#/properties#--checkboxset"
-					>checkboxset</a> by adding a <span className="harness-highlight">control</span> attribute set
-						to <span className="harness-highlight">checkboxset</span>. Similarly, a <span className="harness-highlight">checkboxset</span> control
-						can be forced to render as a <span className="harness-highlight">someofselect</span>.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(FORCED_CHECKBOX_SET_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(FORCED_CHECKBOX_SET_PROPS_INFO.parameterDef, "custom",
-									["uihints", "parameter_info", "control"])}
-							</pre>
-						</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SOMEOFSELECT_PROPS_INFO.parameterDef, "control")}
+						</pre>
+					</div>
+				</div>
+				<p>A <a className="harness-properties-documentation-page-intro-link" href="#/properties#--someofselect">
+					someofselect
+				</a> control can be forced to render as a <a className="harness-properties-documentation-page-intro-link"
+					href="#/properties#--checkboxset"
+				>checkboxset</a> by adding a <span className="harness-highlight">control</span> attribute set
+					to <span className="harness-highlight">checkboxset</span>. Similarly, a <span className="harness-highlight">checkboxset</span> control
+					can be forced to render as a <span className="harness-highlight">someofselect</span>.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(FORCED_CHECKBOX_SET_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(FORCED_CHECKBOX_SET_PROPS_INFO.parameterDef, "custom",
+								["uihints", "parameter_info", "control"])}
+						</pre>
+					</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--selectschema" className="harness-section-subtitle">selectschema</h3>
+				<p>A dropdown control that contains the available schemas in <span className="harness-highlight">dataset_metadata</span>.
+					The <span className="harness-highlight">name</span> of the schema will be displayed if provided.
+					If <span className="harness-highlight">name</span> is not provided, the index (zero-based) of the schema will
+					be used instead. If multiple schemas have the same <span className="harness-highlight">name</span>, the index
+					of the schema will be appended with an underscore.</p>
+				<p>Specify the control type of the parameter to <span className="harness-highlight">selectschema</span> to use this control.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SELECTSCHEMA_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SELECTSCHEMA_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SELECTSCHEMA_PROPS_INFO.parameterDef, "custom",
+								["current_parameters", "selectschemaList", "parameters",
+									"uihints", "id", "parameter_info", "parameter_ref", "label", "default", "description", "control",
+									"group_info", "type", "parameter_refs",
+									"dataset_metadata", "name"])}
+						</pre>
+					</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--selectcolumn" className="harness-section-subtitle">selectcolumn</h3>
+				<p>A dropdown control that contains the available fields provided in the <span className="harness-highlight">dataset_metadata</span>.
+					If there can be only a single input data link to the node using a selectColumn control, then the type of the parameter associated with the dropdown list
+					must be of <span className="harness-highlight">type string</span> and
+					the <span className="harness-highlight">role</span> must be set to <span className="harness-highlight">column</span>.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SELECTCOLUMN_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SELECTCOLUMN_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SELECTCOLUMN_PROPS_INFO.parameterDef, "all")}
+						</pre>
+					</div>
+				</div>
+				<p>If multiple input schemas are supported by a given node type, then the type of the parameter for the selectColumn control must be
+					of <span className="harness-highlight">type object</span>, and the role must be set to <span className="harness-highlight">column</span>.
+					The <span className="harness-highlight">selectcolumn</span> control will display all the fields from both schemas,
+					and field names displayed in the UI will be prefixed with the schema name followed by a period.
+				</p>
+				<p>For nodes with one or more field parameters that are of type: object and role: column,
+					field values in parameter sets are represented by objects instead of strings. Within these objects,
+					there is a link_ref attribute that corresponds to the data link / data schema for the field,
+					and a field_name attribute that corresponds to the field name within the dataset.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SELECTCOLUMN_MULTI_INPUT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
+								["dataset_metadata", "name", "fields"])}
+						</pre>
+					</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--selectcolumns" className="harness-section-subtitle">selectcolumns</h3>
+				<p>A multi-select control for column selections. The type of the parameter associated with this control
+					must be of <span className="harness-highlight">type</span> array[string] (for single input nodes) or array[object] (for multi-input nodes), and
+					the <span className="harness-highlight">role</span> must be set to <span className="harness-highlight">column</span>.
+					The <span className="harness-highlight">type</span> in <span className="harness-highlight">group_info</span> needs
+					to be set to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--columnSelection">columnSelection</a>.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SELECTCOLUMNS_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SELECTCOLUMNS_PROPS_INFO.parameterDef, "all")}
+						</pre>
+					</div>
+				</div>
+				<p>Similar to the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectcolumn">
+					selectcolumn</a> control above, if two or more datasets could be provided to a node type, then the operator
+					definition for field parameters in that node should be declared as type object rather than string.
+					The <span className="harness-highlight">selectcolumns</span> control
+					will display all the fields from both schemas.
+					Field names are prefixed with the schema name followed by a period.
+					The field-picker will display an additional column that shows the schema where the field came from.
+				</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
+								["dataset_metadata", "name", "fields"])}
+						</pre>
+					</div>
+				</div>
+			</div>
+			<div className="harness-properties-documentation-panels-controls-component">
+				<h3 id="--toggletext" className="harness-section-subtitle">toggletext</h3>
+				<p>A two-state control with optional icons that can exist on its own or within table cells.
+					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggletext</span>.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={TOGGLETEXT_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(TOGGLETEXT_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(TOGGLETEXT_PROPS_INFO.parameterDef, "control")}
+						</pre>
+					</div>
+				</div>
+				<p>Icons can be placed next to the <span className="harness-highlight">toggletext</span> by
+					adding a <span className="harness-highlight">value_icons</span> array of two images, one for each
+					corresponding enum options.</p>
+				<div className="harness-section-row">
+					<div className="harness-section-column">
+						<CommonProperties
+							propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
+							propertiesConfig={this.propertiesConfig}
+							light={this.state.light}
+						/>
+						{this.renderRightFlyoutButton(TOGGLETEXTICONS_PROPS_INFO)}
+					</div>
+					<div className="harness-section-column harness-section-column-code">
+						<pre className="harness-json-block">
+							{this.jsonReplacer(TOGGLETEXTICONS_PROPS_INFO.parameterDef, "custom",
+								["uihints", "parameter_info", "value_icons"])}
+						</pre>
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--selectschema" className="harness-section-subtitle">selectschema</h3>
-					<p>A dropdown control that contains the available schemas in <span className="harness-highlight">dataset_metadata</span>.
-						The <span className="harness-highlight">name</span> of the schema will be displayed if provided.
-						If <span className="harness-highlight">name</span> is not provided, the index (zero-based) of the schema will
-						be used instead. If multiple schemas have the same <span className="harness-highlight">name</span>, the index
-						of the schema will be appended with an underscore.</p>
-					<p>Specify the control type of the parameter to <span className="harness-highlight">selectschema</span> to use this control.</p>
+					<h3 id="--toggle" className="harness-section-subtitle">Toggle</h3>
+					<p>A two-state control, They are commonly used for “on/off” switches.
+					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
 							<CommonProperties
-								propertiesInfo={SELECTSCHEMA_PROPS_INFO}
+								propertiesInfo={TOGGLE_PROPS_INFO}
 								propertiesConfig={this.propertiesConfig}
 								light={this.state.light}
 							/>
-							{this.renderRightFlyoutButton(SELECTSCHEMA_PROPS_INFO)}
+							{this.renderRightFlyoutButton(TOGGLE_PROPS_INFO)}
 						</div>
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
-								{this.jsonReplacer(SELECTSCHEMA_PROPS_INFO.parameterDef, "custom",
-									["current_parameters", "selectschemaList", "parameters",
-										"uihints", "id", "parameter_info", "parameter_ref", "label", "default", "description", "control",
-										"group_info", "type", "parameter_refs",
-										"dataset_metadata", "name"])}
-							</pre>
-						</div>
-					</div>
-				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--selectcolumn" className="harness-section-subtitle">selectcolumn</h3>
-					<p>A dropdown control that contains the available fields provided in the <span className="harness-highlight">dataset_metadata</span>.
-						If there can be only a single input data link to the node using a selectColumn control, then the type of the parameter associated with the dropdown list
-						must be of <span className="harness-highlight">type string</span> and
-						the <span className="harness-highlight">role</span> must be set to <span className="harness-highlight">column</span>.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SELECTCOLUMN_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SELECTCOLUMN_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SELECTCOLUMN_PROPS_INFO.parameterDef, "all")}
-							</pre>
-						</div>
-					</div>
-					<p>If multiple input schemas are supported by a given node type, then the type of the parameter for the selectColumn control must be
-						of <span className="harness-highlight">type object</span>, and the role must be set to <span className="harness-highlight">column</span>.
-						The <span className="harness-highlight">selectcolumn</span> control will display all the fields from both schemas,
-						and field names displayed in the UI will be prefixed with the schema name followed by a period.
-					</p>
-					<p>For nodes with one or more field parameters that are of type: object and role: column,
-						field values in parameter sets are represented by objects instead of strings. Within these objects,
-						there is a link_ref attribute that corresponds to the data link / data schema for the field,
-						and a field_name attribute that corresponds to the field name within the dataset.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SELECTCOLUMN_MULTI_INPUT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
-									["dataset_metadata", "name", "fields"])}
-							</pre>
-						</div>
-					</div>
-				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--selectcolumns" className="harness-section-subtitle">selectcolumns</h3>
-					<p>A multi-select control for column selections. The type of the parameter associated with this control
-						must be of <span className="harness-highlight">type</span> array[string] (for single input nodes) or array[object] (for multi-input nodes), and
-						the <span className="harness-highlight">role</span> must be set to <span className="harness-highlight">column</span>.
-						The <span className="harness-highlight">type</span> in <span className="harness-highlight">group_info</span> needs
-						to be set to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--columnSelection">columnSelection</a>.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SELECTCOLUMNS_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SELECTCOLUMNS_PROPS_INFO.parameterDef, "all")}
-							</pre>
-						</div>
-					</div>
-					<p>Similar to the <a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectcolumn">
-						selectcolumn</a> control above, if two or more datasets could be provided to a node type, then the operator
-						definition for field parameters in that node should be declared as type object rather than string.
-						The <span className="harness-highlight">selectcolumns</span> control
-						will display all the fields from both schemas.
-						Field names are prefixed with the schema name followed by a period.
-						The field-picker will display an additional column that shows the schema where the field came from.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
-									["dataset_metadata", "name", "fields"])}
-							</pre>
-						</div>
-					</div>
-				</div>
-				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--toggletext" className="harness-section-subtitle">toggletext</h3>
-					<p>A two-state control with optional icons that can exist on its own or within table cells.
-						The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggletext</span>.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={TOGGLETEXT_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(TOGGLETEXT_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(TOGGLETEXT_PROPS_INFO.parameterDef, "control")}
-							</pre>
-						</div>
-					</div>
-					<p>Icons can be placed next to the <span className="harness-highlight">toggletext</span> by
-						adding a <span className="harness-highlight">value_icons</span> array of two images, one for each
-						corresponding enum options.</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(TOGGLETEXTICONS_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(TOGGLETEXTICONS_PROPS_INFO.parameterDef, "custom",
-									["uihints", "parameter_info", "value_icons"])}
+								{this.jsonReplacer(TOGGLE_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
@@ -1593,6 +1594,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggle">toggle</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
