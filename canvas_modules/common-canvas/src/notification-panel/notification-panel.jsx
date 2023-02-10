@@ -17,11 +17,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import Icon from "./../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
 import Logger from "../logging/canvas-logger.js";
 import { DEFAULT_NOTIFICATION_HEADER, NOTIFICATION_ICON_CLASS } from "./../common-canvas/constants/canvas-constants.js";
+import defaultMessages from "../../locales/notification-panel/locales/en.json";
 
 
 class NotificationPanel extends React.Component {
@@ -191,12 +193,41 @@ class NotificationPanel extends React.Component {
 			</div>)
 			: null;
 
+		const secondaryButton = this.props.notificationConfig &&
+			this.props.notificationConfig.secondaryButtonLabel &&
+			this.props.notificationConfig.secondaryButtonCallback
+			? (<div className="notification-panel-secondary-button-container">
+				<Button
+					className="notification-panel-secondary-button"
+					onClick={this.props.notificationConfig.secondaryButtonCallback.bind(this)}
+					kind="ghost"
+					size="small"
+					disabled={this.props.secondaryButtonDisabled}
+				>
+					{this.props.notificationConfig.secondaryButtonLabel}
+				</Button>
+			</div>)
+			: null;
+
 		return (<div className={"notification-panel-container " + notificationPanelClassName} >
 			<div className="notification-panel">
 				<div className="notification-panel-header-container">
 					<div className="notification-panel-header">
 						{notificationHeader}
-						<Close16 className="notification-panel-close-icon" onClick={this.closeNotificationPanel} />
+						<Button
+							className="notification-panel-close-button"
+							size="sm"
+							kind="ghost"
+							renderIcon={Close16}
+							hasIconOnly
+							iconDescription={this.props.intl.formatMessage({
+								id: "notification.panel.close.button.description",
+								defaultMessage: defaultMessages["notification.panel.close.button.description"]
+							})}
+							onClick={this.closeNotificationPanel}
+							tooltipAlignment="end"
+							tooltipPosition="bottom"
+						/>
 					</div>
 					{notificationSubtitle}
 				</div>
@@ -204,7 +235,10 @@ class NotificationPanel extends React.Component {
 					<div className="notification-panel-messages">
 						{notificationPanelMessages}
 					</div>
-					{clearAll}
+					<div className="notification-panel-button-container">
+						{clearAll}
+						{secondaryButton}
+					</div>
 				</div>
 			</div>
 		</div>);
@@ -234,16 +268,25 @@ NotificationPanel.propTypes = {
 			PropTypes.object
 		]),
 		clearAllCallback: PropTypes.func,
-		keepOpen: PropTypes.bool
+		keepOpen: PropTypes.bool,
+		secondaryButtonLabel: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
+		]),
+		secondaryButtonCallback: PropTypes.func,
+		secondaryButtonDisabled: PropTypes.bool
 	}),
+	secondaryButtonDisabled: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
-	messages: PropTypes.array
+	messages: PropTypes.array,
+	intl: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
+	secondaryButtonDisabled: state.notificationpanel.config ? state.notificationpanel.config.secondaryButtonDisabled : false,
 	isNotificationOpen: state.notificationpanel.isOpen,
 	messages: state.notifications
 });
 
-export default connect(mapStateToProps)(NotificationPanel);
+export default connect(mapStateToProps)(injectIntl(NotificationPanel));

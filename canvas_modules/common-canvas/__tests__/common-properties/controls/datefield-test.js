@@ -320,13 +320,13 @@ describe("error messages renders correctly for datefield controls", () => {
 		// First check the hidden field is not displayed (style.display should be
 		// set to 'none').
 		let dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
-		expect(dateWrapper.hasClass("hide")).to.equal(true);
+		expect(dateWrapper).to.have.length(0);
 		controller.updatePropertyValue({ name: "hide_date_field" }, false);
 		wrapper.update();
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it be hidden).
 		dateWrapper = wrapper.find("div[data-id='properties-hidden_date']");
-		expect(dateWrapper.hasClass("hide")).to.equal(false);
+		expect(dateWrapper).to.have.length(1);
 	});
 
 	it("should enable date field when checkbox is clicked", () => {

@@ -64,7 +64,9 @@ import {
 	SOMEOFSELECT_PROPS_INFO,
 	FORCED_CHECKBOX_SET_PROPS_INFO,
 	SELECTSCHEMA_PROPS_INFO,
+	SELECTSCHEMA_EMPTY_PROPS_INFO,
 	SELECTCOLUMN_PROPS_INFO,
+	SELECTCOLUMN_EMPTY_PROPS_INFO,
 	SELECTCOLUMN_MULTI_INPUT_PROPS_INFO,
 	SELECTCOLUMNS_PROPS_INFO,
 	SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO,
@@ -1421,6 +1423,25 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
+					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
+						selectschema control will display default placeholder text <span className="harness-highlight"> "No options available"</span>.
+						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
+						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SELECTSCHEMA_EMPTY_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SELECTSCHEMA_EMPTY_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SELECTSCHEMA_EMPTY_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="harness-section-subtitle">selectcolumn</h3>
@@ -1440,6 +1461,25 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="harness-section-column harness-section-column-code">
 							<pre className="harness-json-block">
 								{this.jsonReplacer(SELECTCOLUMN_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
+						selectcolumn control will display default placeholder text <span className="harness-highlight"> "No options available"</span>.
+						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
+						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SELECTCOLUMN_EMPTY_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMN_EMPTY_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SELECTCOLUMN_EMPTY_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
 					</div>
