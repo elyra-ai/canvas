@@ -23,7 +23,7 @@ import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
 import Logger from "../logging/canvas-logger.js";
 import { DEFAULT_NOTIFICATION_HEADER, NOTIFICATION_ICON_CLASS } from "./../common-canvas/constants/canvas-constants.js";
-import defaultMessages from "../../locales/common-properties/locales/en.json";
+import defaultMessages from "../../locales/notification-panel/locales/en.json";
 
 
 class NotificationPanel extends React.Component {

@@ -103,6 +103,5 @@
   "properties.empty.table.text": "To begin, click \"{button_label}\"",
   "label.indicator.required": "(required)",
   "label.indicator.optional": "(optional)",
-  "emptyList.placeholder": "No options available",
-  "notification.panel.close.button.description": "Close"
+  "emptyList.placeholder": "No options available"
 }
