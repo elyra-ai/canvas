@@ -225,6 +225,8 @@ class NotificationPanel extends React.Component {
 								defaultMessage: defaultMessages["notification.panel.close.button.description"]
 							})}
 							onClick={this.closeNotificationPanel}
+							tooltipAlignment="end"
+							tooltipPosition="bottom"
 						/>
 					</div>
 					{notificationSubtitle}
