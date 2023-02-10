@@ -19,11 +19,11 @@ import { Provider } from "react-redux";
 import NotificationPanel from "./../../src/notification-panel/notification-panel";
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
-import { mount } from "enzyme";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
+import { mountWithIntl } from "../_utils_/intl-utils";
 
 let canvasController = new CanvasController();
 
@@ -114,7 +114,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.openNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -135,7 +135,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -162,7 +162,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -213,7 +213,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages([]);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -632,8 +632,9 @@ describe("notification center buttons work properly", () => {
 		notificationButton.simulate("click");
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
 		wrapper.update();
+
 		// click the close button
-		wrapper.find(".notification-panel-container svg.notification-panel-close-icon").simulate("click");
+		wrapper.find(".notification-panel-close-button .bx--btn--sm").simulate("click");
 
 		// check that notification panel is closed
 		wrapper.update();

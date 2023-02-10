@@ -59,11 +59,9 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 		color: $text-02;
 		padding-top: $spacing-02;
 	}
-	.notification-panel-close-icon {
-		position: absolute;
-		right: $spacing-05;
-		top: ($spacing-05 + $spacing-02);
-		cursor: pointer;
+	.notification-panel-close-button {
+		bottom: $spacing-02;
+		left: calc(#{$spacing-06} + #{$spacing-12});
 	}
 }
 
