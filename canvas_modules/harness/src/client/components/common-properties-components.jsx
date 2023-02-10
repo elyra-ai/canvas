@@ -1519,7 +1519,7 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
-					<h3 id="--textarea" className="harness-section-subtitle">toggle</h3>
+					<h3 id="--toggle" className="harness-section-subtitle">toggle</h3>
 					<p>A two-state control, They are commonly used for “on/off” switches.
 					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
 					<div className="harness-section-row">
@@ -1594,7 +1594,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
-					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggle</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggle">toggle</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
