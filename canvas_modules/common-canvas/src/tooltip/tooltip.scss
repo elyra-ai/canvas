@@ -34,6 +34,7 @@
 	word-wrap: break-word;
 	max-width: 228px;
 	border-radius: 2px;
+	white-space: pre-wrap; // Add a line break for \n in tooltip
 	.bx--link {
 		display: block;
 		color: $inverse-link;
