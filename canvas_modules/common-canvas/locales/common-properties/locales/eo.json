@@ -102,6 +102,5 @@
   "virtualizedTable.row.checkbox.label": "[Esperanto~Select row {row_index} from {table_label}~~~~~~~~~~eo]",
   "properties.empty.table.text": "[Esperanto~To begin, click \"{button_label}\"~~~~~eo]",
   "label.indicator.required": "[Esperanto~(required)~~~~~~eo]",
-  "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]",
-  "emptyList.placeholder": "[Esperanto~No options available~~~~~~eo]"
+  "label.indicator.optional": "[Esperanto~(optional)~~~~~~eo]"
 }
