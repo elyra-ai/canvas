@@ -1424,7 +1424,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
-						selectschema control will display default placeholder text <span className="harness-highlight"> "No options available"</span>.
+						selectschema control will display default placeholder text <span className="harness-highlight">"..."</span>.
 						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
 						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
 					<div className="harness-section-row">
@@ -1465,7 +1465,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 					<p>When <span className="harness-highlight">dataset_metadata</span> is not provided,
-						selectcolumn control will display default placeholder text <span className="harness-highlight"> "No options available"</span>.
+						selectcolumn control will display default placeholder text <span className="harness-highlight">"..."</span>.
 						This placeholder text can be customized by setting <span className="harness-highlight">[parameter_id].emptyList.placeholder</span> in resources section.
 						When custom empty list placeholder text is provided, common-properties will disable the empty list control.</p>
 					<div className="harness-section-row">
