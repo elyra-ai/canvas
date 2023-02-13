@@ -90,7 +90,7 @@
         },
         {
           "label": "Export",
-          "image": "/images/palette-categories/sources_open.svg",
+          "image": "/images/palette-categories/operations_open.svg",
           "id": "export",
           "node_types": [
             {

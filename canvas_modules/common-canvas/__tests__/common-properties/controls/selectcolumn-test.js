@@ -413,18 +413,18 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("selectcolumn control should have aria-label", () => {
-		// Total properties - 21, required - 11, optional - 10
-		// Show "(optional)" indicator next to label
+		// Total properties - 23, required - 11, optional - 12
+		// Show "(required)" indicator next to label
 
 		// aria-label for required property
 		let selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
 		let selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel(required)");
 
 		// aria-label for optional property
 		selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field_placeholder']");
 		selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field with Placeholder text(optional)");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field with Placeholder text");
 	});
 
 	it("selectcolumn control should show warning for invalid selected values", () => {
@@ -600,5 +600,31 @@ describe("selectcolumn classnames appear correctly", () => {
 		expect(wrapper.find(".table-selectcolumn-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-on-panel-selectcolumn-control-class")).to.have.length(1);
 		expect(wrapper.find(".table-subpanel-selectcolumn-control-class")).to.have.length(1);
+	});
+});
+
+describe("Empty list selectcolumn control with default and custom placeholder text", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("should have default placeholder text when fields is empty", () => {
+		// No resource_key added for field_empty_list property
+		const dropdownWrapper = wrapper.find("div[data-id='properties-field_empty_list']");
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
+		// Verify dropdown is enabled
+		expect(dropdownWrapper.find("Dropdown").props()).to.have.property("disabled", false);
+	});
+
+	it("should have custom placeholder text when fields is empty and selectcolumn control should be disabled", () => {
+		// "field_empty_list_custom_placeholder.emptyList.placeholder" resource key is added in paramDef
+		const dropdownWrapper = wrapper.find("div[data-id='properties-field_empty_list_custom_placeholder']");
+		expect(dropdownWrapper.find("button > span").text()).to.equal("Custom empty list placeholder text");
+		// Verify dropdown is disabled
+		expect(dropdownWrapper.find("Dropdown").props()).to.have.property("disabled", true);
 	});
 });

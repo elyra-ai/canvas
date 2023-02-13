@@ -15,6 +15,7 @@
  */
 
 /* eslint no-undef: "error" */
+/* eslint complexity: ["error", 22] */
 
 import React from "react";
 import PropTypes from "prop-types";
@@ -29,7 +30,8 @@ import {
 	API_SET_NODE_DECORATIONS,
 	API_SET_LINK_DECORATIONS,
 	API_ADD_NOTIFICATION_MESSAGE,
-	API_ZOOM_CANVAS_TO_REVEAL,
+	API_ZOOM_TO_REVEAL_NODE,
+	API_ZOOM_TO_REVEAL_LINK,
 	INPUT_PORT,
 	OUTPUT_PORT,
 	NOTIFICATION_MESSAGE_TYPE
@@ -155,13 +157,20 @@ export default class SidePanelAPI extends React.Component {
 					newLabel = ports[0].label;
 				}
 			}
-		} else if (operation === API_ZOOM_CANVAS_TO_REVEAL) {
+		} else if (operation === API_ZOOM_TO_REVEAL_NODE) {
 			nodes = this.getNodePortList(this.props.apiConfig.getCanvasInfo().nodes);
 			if (!isEmpty(nodes)) {
 				const zoomObj = this.props.apiConfig.getZoomToReveal(nodes[0].value, this.state.zoomXPos, this.state.zoomYPos);
 				newZoomObj = zoomObj ? JSON.stringify(newZoomObj) : "";
 			}
+		} else if (operation === API_ZOOM_TO_REVEAL_LINK) {
+			links = this.getLinkList(this.props.apiConfig.getCanvasInfo().links);
+			if (!isEmpty(links)) {
+				const zoomObj = this.props.apiConfig.getZoomToReveal(links[0].value, this.state.zoomXPos, this.state.zoomYPos);
+				newZoomObj = zoomObj ? JSON.stringify(newZoomObj) : "";
+			}
 		}
+
 		this.props.apiConfig.setApiSelectedOperation(operation);
 		this.setState({
 			selectedOperation: operation,
@@ -214,7 +223,7 @@ export default class SidePanelAPI extends React.Component {
 					});
 					newState.newLabel = port.label;
 				}
-			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
+			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_NODE) {
 				// get list of output ports for the selected node and select the first one by default
 				const zoomObj = this.props.apiConfig.getZoomToReveal(existingNode.id, this.state.zoomXPos, this.state.zoomYPos);
 				newState.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
@@ -254,6 +263,10 @@ export default class SidePanelAPI extends React.Component {
 				} else {
 					newState.newDecorations = "[]";
 				}
+
+			} else if (this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_LINK) {
+				const zoomObj = this.props.apiConfig.getZoomToReveal(existingLink.id, this.state.zoomXPos, this.state.zoomYPos);
+				newState.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			}
 		}
 		this.setState(newState);
@@ -282,13 +295,19 @@ export default class SidePanelAPI extends React.Component {
 			break;
 		case "zoomXPos": {
 			stateObj.zoomXPos = evt.target.value;
-			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, stateObj.zoomXPos, this.state.zoomYPos);
+			const objId = this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_NODE
+				? this.state.nodeId
+				: this.state.linkId;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(objId, stateObj.zoomXPos, this.state.zoomYPos);
 			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			break;
 		}
 		case "zoomYPos": {
 			stateObj.zoomYPos = evt.target.value;
-			const zoomObj = this.props.apiConfig.getZoomToReveal(this.state.nodeId, this.state.zoomXPos, stateObj.zoomYPos);
+			const objId = this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_NODE
+				? this.state.nodeId
+				: this.state.linkId;
+			const zoomObj = this.props.apiConfig.getZoomToReveal(objId, this.state.zoomXPos, stateObj.zoomYPos);
 			stateObj.zoomObject = zoomObj ? JSON.stringify(zoomObj) : "";
 			break;
 		}
@@ -367,7 +386,8 @@ export default class SidePanelAPI extends React.Component {
 			return (this.state.linkId && this.state.newDecorations.length > 0);
 		case API_ADD_NOTIFICATION_MESSAGE:
 			return this.state.notificationMessage.length > 0;
-		case API_ZOOM_CANVAS_TO_REVEAL:
+		case API_ZOOM_TO_REVEAL_NODE:
+		case API_ZOOM_TO_REVEAL_LINK:
 			return this.state.zoomObject && this.state.zoomObject.length > 0;
 
 		default:
@@ -435,8 +455,12 @@ export default class SidePanelAPI extends React.Component {
 			this.props.apiConfig.appendNotificationMessages(message);
 			break;
 		}
-		case API_ZOOM_CANVAS_TO_REVEAL:
-			this.props.apiConfig.zoomCanvas(JSON.parse(this.state.zoomObject), this.state.nodeId);
+		case API_ZOOM_TO_REVEAL_NODE:
+			this.props.apiConfig.zoomCanvasForObj(JSON.parse(this.state.zoomObject), this.state.nodeId);
+			break;
+
+		case API_ZOOM_TO_REVEAL_LINK:
+			this.props.apiConfig.zoomCanvasForLink(JSON.parse(this.state.zoomObject), this.state.linkId);
 			break;
 
 		default:
@@ -505,7 +529,8 @@ export default class SidePanelAPI extends React.Component {
 			API_SET_NODE_DECORATIONS,
 			API_SET_LINK_DECORATIONS,
 			API_ADD_NOTIFICATION_MESSAGE,
-			API_ZOOM_CANVAS_TO_REVEAL
+			API_ZOOM_TO_REVEAL_NODE,
+			API_ZOOM_TO_REVEAL_LINK
 		]);
 		const operationSelection =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-list">
@@ -795,19 +820,31 @@ export default class SidePanelAPI extends React.Component {
 		}
 
 		let zoomCanvas = <div />;
-		if (this.props.apiConfig.selectedOperation === API_ZOOM_CANVAS_TO_REVEAL) {
+		if (this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_NODE ||
+				this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_LINK) {
+
+			let objects = this.state.nodes;
+			let onChange = this.onNodeSelect.bind(this);
+			let label = "Node Selection";
+
+			if (this.props.apiConfig.selectedOperation === API_ZOOM_TO_REVEAL_LINK) {
+				objects = this.state.links;
+				onChange = this.onLinkSelect.bind(this);
+				label = "Link Selection";
+			}
+
 			zoomCanvas = (<div className="harness-sidepanel-children"
 				id="harness-sidepanel-api-zoomCanvas"
 			>
-				<div id="harness-sidepanel-api-nodeSelection">
+				<div id="harness-sidepanel-api-selection">
 					<Dropdown
 						id="harness-sidepanel-api-zoom-dropdown"
-						disabled={isEmpty(this.state.nodes)}
-						onChange={this.onNodeSelect.bind(this)}
-						label="Node Selection"
-						ariaLabel="Node Selection"
-						titleText="Node Selection"
-						items={this.dropdownOptions(this.state.nodes)}
+						disabled={isEmpty(objects)}
+						onChange={onChange}
+						label={label}
+						ariaLabel={label}
+						titleText={label}
+						items={this.dropdownOptions(objects)}
 					/>
 				</div>
 				<div className="harness-sidepanel-spacer" id="harness-sidepanel-api-zoom-spacer1" />
@@ -881,6 +918,7 @@ SidePanelAPI.propTypes = {
 		appendNotificationMessages: PropTypes.func,
 		clearNotificationMessages: PropTypes.func,
 		getZoomToReveal: PropTypes.func,
-		zoomCanvas: PropTypes.func
+		zoomCanvasForObj: PropTypes.func,
+		zoomCanvasForLink: PropTypes.func
 	})
 };

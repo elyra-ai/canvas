@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ import { Provider } from "react-redux";
 import NotificationPanel from "./../../src/notification-panel/notification-panel";
 import CanvasController from "./../../src/common-canvas/canvas-controller";
 
-import { mount } from "enzyme";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
+import { mountWithIntl } from "../_utils_/intl-utils";
 
 let canvasController = new CanvasController();
 
@@ -114,7 +114,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.openNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -135,7 +135,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -162,7 +162,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -213,7 +213,7 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationMessages([]);
 		canvasController.closeNotificationPanel();
 
-		wrapper = mount(
+		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
 					canvasController={canvasController}
@@ -632,13 +632,66 @@ describe("notification center buttons work properly", () => {
 		notificationButton.simulate("click");
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
 		wrapper.update();
+
 		// click the close button
-		wrapper.find(".notification-panel-container svg.notification-panel-close-icon").simulate("click");
+		wrapper.find(".notification-panel-close-button .bx--btn--sm").simulate("click");
 
 		// check that notification panel is closed
 		wrapper.update();
 		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 
+	});
+
+	it("notification secondary button renders and works when specified", () => {
+		const spySecondaryButtonCallback = sinon.spy();
+		const notificationConfig = {
+			action: "notification",
+			label: "Notifications Panel",
+			enable: true,
+			notificationHeader: "Custom",
+			clearAllMessage: "clear all",
+			secondaryButtonLabel: "Custom action",
+			secondaryButtonCallback: spySecondaryButtonCallback,
+			secondaryButtonDisabled: false
+		};
+		wrapper = createIntlCommonCanvas(
+			canvasConfig,
+			contextMenuHandler,
+			beforeEditActionHandler,
+			editActionHandler,
+			clickActionHandler,
+			decorationActionHandler,
+			selectionChangeHandler,
+			tipHandler,
+			canvasParameters.showBottomPanel,
+			canvasParameters.showRightFlyout,
+			toolbarConfig,
+			notificationConfig,
+			contextMenuConfig,
+			canvasController
+		);
+		// open the notification center
+		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		notificationButton.simulate("click");
+		wrapper.update();
+		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+
+		// check that secondary button is enabled and callback works
+		let secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		expect(secondaryButton.prop("disabled")).to.equal(false);
+		expect(secondaryButton.text()).to.equal(notificationConfig.secondaryButtonLabel);
+		secondaryButton.simulate("click");
+		expect(spySecondaryButtonCallback.calledOnce).to.equal(true);
+
+		// disable secondary button
+		notificationConfig.secondaryButtonDisabled = true;
+		canvasController.setNotificationPanelConfig(notificationConfig);
+		wrapper.update();
+
+		// verify secondary button is disabled
+		secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		expect(secondaryButton.prop("disabled")).to.equal(true);
 	});
 });
 

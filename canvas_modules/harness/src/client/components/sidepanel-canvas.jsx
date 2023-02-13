@@ -60,7 +60,8 @@ import {
 	EXAMPLE_APP_STREAMS,
 	EXAMPLE_APP_TABLES,
 	EXAMPLE_APP_LOGIC,
-	EXAMPLE_READ_ONLY,
+	EXAMPLE_APP_READ_ONLY,
+	EXAMPLE_APP_PROGRESS,
 	PALETTE_FLYOUT,
 	PALETTE_MODAL,
 	PALETTE_NONE,
@@ -429,6 +430,7 @@ export default class SidePanelForms extends React.Component {
 				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect.bind(this)}
 				disabled={this.state.disabledControls}
+				value={this.props.canvasConfig.selectedCanvasDropdownFile}
 			>
 				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
 			</Select>
@@ -441,6 +443,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Palette"
 				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect.bind(this)}
+				value={this.props.canvasConfig.selectedPaletteDropdownFile}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
 			</Select>
@@ -498,6 +501,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Diagram"
 				aria-label="Canvas Diagram"
 				onChange={this.onCanvasDropdownSelect2.bind(this)}
+				value={this.props.canvasConfig.selectedCanvasDropdownFile2}
 			>
 				{this.dropdownOptions(this.state.canvasFiles, "Canvas")}
 			</Select>
@@ -511,6 +515,7 @@ export default class SidePanelForms extends React.Component {
 				labelText="Canvas Palette"
 				aria-label="Canvas Palette"
 				onChange={this.onPaletteDropdownSelect2.bind(this)}
+				value={this.props.canvasConfig.selectedPaletteDropdownFile2}
 			>
 				{this.dropdownOptions(this.state.paletteFiles, "Palette")}
 			</Select>
@@ -1047,8 +1052,12 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_STAGES_CARD_NODE}
 					/>
 					<RadioButton
-						value={EXAMPLE_READ_ONLY}
-						labelText={EXAMPLE_READ_ONLY}
+						value={EXAMPLE_APP_READ_ONLY}
+						labelText={EXAMPLE_APP_READ_ONLY}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_PROGRESS}
+						labelText={EXAMPLE_APP_PROGRESS}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_LOGIC}
@@ -1337,6 +1346,12 @@ export default class SidePanelForms extends React.Component {
 				id="keepOpen" // Set ID to corresponding field in App.js state
 				labelText="Keep Notification Center Open. When enabled, clicking outside the notification center will not close it"
 				toggled={this.props.getStateValue("notificationConfig").keepOpen}
+				onToggle={this.notificationConfigToggle}
+			/>
+			<Toggle
+				id="secondaryButtonDisabled" // Set ID to corresponding field in App.js state
+				labelText="Disable the notification center secondary button"
+				toggled={this.props.getStateValue("notificationConfig").secondaryButtonDisabled}
 				onToggle={this.notificationConfigToggle}
 			/>
 		</div>);

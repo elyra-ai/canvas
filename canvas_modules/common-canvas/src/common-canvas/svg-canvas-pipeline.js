@@ -106,6 +106,17 @@ export default class SVGCanvasPipeline {
 		return (typeof com === "undefined") ? null : com;
 	}
 
+	getComments(commentIds) {
+		const comments = [];
+		commentIds.forEach((cId) => {
+			const c = this.getComment(cId);
+			if (c) {
+				comments.push(c);
+			}
+		});
+		return comments;
+	}
+
 	getNodesAndComments() {
 		return this.pipeline.nodes.concat(this.pipeline.comments);
 	}
@@ -121,6 +132,17 @@ export default class SVGCanvasPipeline {
 	getLink(linkId) {
 		const link = this.mappedLinks[linkId];
 		return (typeof link === "undefined") ? null : link;
+	}
+
+	getLinks(linkIds) {
+		const links = [];
+		linkIds.forEach((lId) => {
+			const l = this.getLink(lId);
+			if (l) {
+				links.push(l);
+			}
+		});
+		return links;
 	}
 
 	// Replaces the link in the links array with the one passed in.

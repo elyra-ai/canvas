@@ -70,7 +70,6 @@ $harness-navbar-icon-width: 48px;
 .harness-empty-link {
 	display: block;
 	color: $text-02;
-	opacity: 0.5;
 	font-size: 20px;
 	text-align: center;
 	text-decoration: underline;
@@ -82,7 +81,6 @@ $harness-navbar-icon-width: 48px;
 .harness-empty-text {
 	display: block;
 	color: $text-02;
-	opacity: 0.5;
 	font-size: 20px;
 	text-align: center;
 	user-select: none;
@@ -216,85 +214,11 @@ $harness-navbar-icon-width: 48px;
 .harness-panel-temp-content {
 	background-color: $ui-01;
 	padding: 30px;
-	color: $text-03;
+	color: $text-02;
 	font-size: 20px;
 	pointer-events: none;
 	user-select: none;
 	& .text {
 		font-size: 16px;
-	}
-}
-
-.harness-side-panel-header {
-	padding: 0 20px;
-	color: $text-01;
-	font-size: 16px;
-	font-weight: bold;
-	pointer-events: none;
-}
-
-/* Provide animation key frames for sample progress indication in harness */
-@keyframes blink {
-	from {
-		stroke: #008000; // Green
-		stroke-width: 4;
-	}
-	to {
-		stroke: #FFA500; // Orange
-		stroke-width: 4;
-	}
-}
-
-@keyframes wiggle1 {
-	0% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
-	}
-	50% {
-		transform-origin: 35px 25px;
-		transform: rotate(-3deg);
-	}
-	100% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
-	}
-}
-
-@keyframes wiggle2 {
-	0% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
-	}
-	12% {
-		transform-origin: 35px 25px;
-		transform: rotate(-3deg);
-	}
-	25% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
-	}
-	37% {
-		transform-origin: 35px 50px;
-		transform: rotate(-3deg);
-	}
-	50% {
-		transform-origin: 35px 50px;
-		transform: rotate(3deg);
-	}
-	62% {
-		transform-origin: 35px 50px;
-		transform: rotate(-3deg);
-	}
-	75% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
-	}
-	87% {
-		transform-origin: 35px 25px;
-		transform: rotate(-3deg);
-	}
-	100% {
-		transform-origin: 35px 25px;
-		transform: rotate(3deg);
 	}
 }

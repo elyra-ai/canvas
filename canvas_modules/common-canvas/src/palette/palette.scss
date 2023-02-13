@@ -145,7 +145,10 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			margin-left: 25px;
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-02;
+			margin-left: 0;
 		}
 
 		.palette-list-item-description {
@@ -401,7 +404,11 @@ $palette-search-container-height: 41px;
 
 		.palette-list-item-icon-warning {
 			transform: scale(1.5);
-			margin-left: 25px;
+			width: 28px; /* Not specifying height preserves the image's aspect ratio. */
+			line-height: 46px;  /* Must be same as containing div height */
+			color: $text-02;
+			margin-left: 0;
+			margin-right: 10px;
 		}
 	}
 }
