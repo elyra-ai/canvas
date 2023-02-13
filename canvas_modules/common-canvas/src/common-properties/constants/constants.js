@@ -114,8 +114,7 @@ export const MESSAGE_KEYS = {
 	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
 	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip",
 	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
-	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional",
-	EMPTY_LIST_PLACEHOLDER: "emptyList.placeholder"
+	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional"
 };
 
 export const TRUNCATE_LIMIT = 10000;

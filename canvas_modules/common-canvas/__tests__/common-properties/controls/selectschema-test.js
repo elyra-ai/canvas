@@ -25,7 +25,7 @@ import selectschemaParamDef from "../../test_resources/paramDefs/selectschema_pa
 
 const controller = new Controller();
 
-const emptyValueIndicator = "No options available";
+const emptyValueIndicator = "...";
 
 const control = {
 	"name": "selectschema",
@@ -64,7 +64,7 @@ describe("selectschema renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
-	it("should have 'No options available' as first selected option for empty list", () => {
+	it("should have '...' as first selected option for empty list", () => {
 		controller.setPropertyValues(
 			{ "test-selectschema": null }
 		);

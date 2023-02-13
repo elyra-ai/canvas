@@ -22,7 +22,6 @@ import Controller from "../../../src/common-properties/properties-controller";
 
 import propertyUtils from "../../_utils_/property-utils";
 import selectcolumnParamDef from "../../test_resources/paramDefs/selectcolumn_paramDef.json";
-import selectcolumnEmptyListParamDef from "../../test_resources/paramDefs/selectcolumn_emptylist_paramDef.json";
 import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selectcolumn_multiInput_paramDef.json";
 
 const emptyValueIndicator = "...";
@@ -149,8 +148,7 @@ describe("selectcolumn control renders correctly", () => {
 		expect(dropdownList).to.be.length(4);
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
-	it("should have 'No options available' as first selected option when fields is empty", () => {
-		const defaultEmptyListPlaceholder = "No options available";
+	it("should have '...' as first selected option when fields is empty", () => {
 		controller.setDatasetMetadata([]);
 		controller.setPropertyValues(
 			{ "targetField": null }
@@ -164,7 +162,7 @@ describe("selectcolumn control renders correctly", () => {
 			/>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(defaultEmptyListPlaceholder);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
@@ -172,7 +170,7 @@ describe("selectcolumn control renders correctly", () => {
 		dropdownWrapper = wrapper.find("div[data-id='properties-targetField']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
-		expect(dropdownList.at(0).text()).to.equal(defaultEmptyListPlaceholder);
+		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
 
 	it("should allow empty string to be set as valid field in selectcolumn control", () => {
@@ -415,18 +413,18 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 	});
 
 	it("selectcolumn control should have aria-label", () => {
-		// Total properties - 21, required - 11, optional - 10
-		// Show "(optional)" indicator next to label
+		// Total properties - 23, required - 11, optional - 12
+		// Show "(required)" indicator next to label
 
 		// aria-label for required property
 		let selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field1_panel']");
 		let selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field1 Panel(required)");
 
 		// aria-label for optional property
 		selectColumnWrapper = wrapper.find("div[data-id='properties-ctrl-field_placeholder']");
 		selectColumnAriaLabelledby = selectColumnWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field with Placeholder text(optional)");
+		expect(selectColumnWrapper.find(`#${selectColumnAriaLabelledby}`).text()).to.equal("Field with Placeholder text");
 	});
 
 	it("selectcolumn control should show warning for invalid selected values", () => {
@@ -608,24 +606,24 @@ describe("selectcolumn classnames appear correctly", () => {
 describe("Empty list selectcolumn control with default and custom placeholder text", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnEmptyListParamDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 	afterEach(() => {
 		wrapper.unmount();
 	});
 	it("should have default placeholder text when fields is empty", () => {
-		// No resource_key added for field2_panel property
-		const dropdownWrapper = wrapper.find("div[data-id='properties-field2_panel']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal("No options available");
+		// No resource_key added for field_empty_list property
+		const dropdownWrapper = wrapper.find("div[data-id='properties-field_empty_list']");
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// Verify dropdown is enabled
 		expect(dropdownWrapper.find("Dropdown").props()).to.have.property("disabled", false);
 	});
 
 	it("should have custom placeholder text when fields is empty and selectcolumn control should be disabled", () => {
-		// "field1_panel.emptyList.placeholder" resource key is added in paramDef
-		const dropdownWrapper = wrapper.find("div[data-id='properties-field1_panel']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal("Empty list placeholder text");
+		// "field_empty_list_custom_placeholder.emptyList.placeholder" resource key is added in paramDef
+		const dropdownWrapper = wrapper.find("div[data-id='properties-field_empty_list_custom_placeholder']");
+		expect(dropdownWrapper.find("button > span").text()).to.equal("Custom empty list placeholder text");
 		// Verify dropdown is disabled
 		expect(dropdownWrapper.find("Dropdown").props()).to.have.property("disabled", true);
 	});

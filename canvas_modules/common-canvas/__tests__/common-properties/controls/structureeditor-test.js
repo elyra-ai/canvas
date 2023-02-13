@@ -176,8 +176,7 @@ describe("structureeditor control renders correctly", () => {
 		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
 
-	it("should have 'No options available' as first selected option when fields is empty", () => {
-		const defaultEmptyListPlaceholder = "No options available";
+	it("should have '...' as first selected option when fields is empty", () => {
 		controller.setDatasetMetadata([]);
 		controller.setPropertyValues(
 			{ "group-o-fields": null }
@@ -192,7 +191,7 @@ describe("structureeditor control renders correctly", () => {
 			</Provider>
 		);
 		let dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
-		expect(dropdownWrapper.find("button > span").text()).to.equal(defaultEmptyListPlaceholder);
+		expect(dropdownWrapper.find("button > span").text()).to.equal(emptyValueIndicator);
 		// open the dropdown
 		const dropdownButton = dropdownWrapper.find("button");
 		dropdownButton.simulate("click");
@@ -200,7 +199,7 @@ describe("structureeditor control renders correctly", () => {
 		dropdownWrapper = wrapper.find("div[data-id='properties-group-o-fields_0']");
 		const dropdownList = dropdownWrapper.find("div.bx--list-box__menu-item");
 		expect(dropdownList).to.be.length(1);
-		expect(dropdownList.at(0).text()).to.equal(defaultEmptyListPlaceholder);
+		expect(dropdownList.at(0).text()).to.equal(emptyValueIndicator);
 	});
 
 	it("should allow empty string to be set as valid field in structureeditor control", () => {

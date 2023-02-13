@@ -78,6 +78,16 @@
       "required": true
     },
     {
+      "id": "field_empty_list",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "field_empty_list_custom_placeholder",
+      "type": "string",
+      "role": "column"
+    },
+    {
       "id": "field_error",
       "type": "string",
       "role": "column",
@@ -248,6 +258,24 @@
         },
         "description": {
           "default": "selectcolumn with parameter shared with Field1 Panel"
+        }
+      },
+      {
+        "parameter_ref": "field_empty_list",
+        "label": {
+          "default": "Field with empty dropdown list"
+        },
+        "description": {
+          "default": "selectcolumn with empty dropdown list"
+        }
+      },
+      {
+        "parameter_ref": "field_empty_list_custom_placeholder",
+        "label": {
+          "default": "Empty dropdown list and custom placeholder"
+        },
+        "description": {
+          "default": "selectcolumn with empty dropdown list. This field shows custom placeholder text defined in resources. This field should be disabled."
         }
       },
       {
@@ -435,7 +463,9 @@
               "field_empty_string",
               "field_undefined",
               "field_default",
-              "field_placeholder"
+              "field_placeholder",
+              "field_empty_list",
+              "field_empty_list_custom_placeholder"
             ]
           }
         ]
@@ -582,6 +612,28 @@
               "integer",
               "double"
             ]
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "field_empty_list",
+        "evaluate": {
+          "condition": {
+            "op": "dmType",
+            "values": []
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "field_empty_list_custom_placeholder",
+        "evaluate": {
+          "condition": {
+            "op": "dmType",
+            "values": []
           }
         }
       }
@@ -860,5 +912,8 @@
         }
       ]
     }
-  ]
+  ],
+  "resources": {
+    "field_empty_list_custom_placeholder.emptyList.placeholder": "Custom empty list placeholder text"
+  }
 }

@@ -36,10 +36,10 @@ class DropDown extends React.Component {
 		if (isEmpty(props.controlOpts)) {
 			// For empty dropdown, get placeholder text from resources
 			const overrideEmptyListPlaceholder = `${this.props.control.name}.emptyList.placeholder`;
-			const defaultEmptyListPlaceholder = formatMessage(this.reactIntl, MESSAGE_KEYS.EMPTY_LIST_PLACEHOLDER);
-			this.emptyLabel = props.controller.getResource(overrideEmptyListPlaceholder, defaultEmptyListPlaceholder);
+			const emptyLabelOverride = props.controller.getResource(overrideEmptyListPlaceholder);
 			// Disable empty dropdown when [property_id].emptyList.placeholder is set in resources
-			if (this.emptyLabel !== defaultEmptyListPlaceholder) {
+			if (emptyLabelOverride) {
+				this.emptyLabel = emptyLabelOverride;
 				this.disableEmptyListDropdown = true;
 			}
 		} else if (props.control.additionalText) {
