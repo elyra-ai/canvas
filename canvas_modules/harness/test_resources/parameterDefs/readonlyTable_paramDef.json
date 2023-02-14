@@ -364,7 +364,7 @@
           "default": "ReadonlyTable - error"
         },
         "description": {
-          "default": "readonlyTable control that has a non-valid field. Click the edit button to trigger the conditions.",
+          "default": "readonlyTable control that has a non-valid field.\nClick the edit button to trigger the conditions.",
           "placement": "on_panel"
         },
         "control": "readonlyTable"
