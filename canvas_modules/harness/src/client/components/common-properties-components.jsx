@@ -70,6 +70,7 @@ import {
 	SELECTCOLUMN_MULTI_INPUT_PROPS_INFO,
 	SELECTCOLUMNS_PROPS_INFO,
 	SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO,
+	TOGGLE_PROPS_INFO,
 	TOGGLETEXT_PROPS_INFO,
 	TOGGLETEXTICONS_PROPS_INFO,
 	READONLYTABLE_PROPS_INFO,
@@ -386,6 +387,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--selectschema",
 					"--selectcolumn",
 					"--selectcolumns",
+					"--toggle",
 					"--toggletext",
 					"Complex",
 					"--structuretable",
@@ -1557,6 +1559,26 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--toggle" className="harness-section-subtitle">toggle</h3>
+					<p>A two-state control, They are commonly used for “on/off” switches.
+					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={TOGGLE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(TOGGLE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(TOGGLE_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--toggletext" className="harness-section-subtitle">toggletext</h3>
 					<p>A two-state control with optional icons that can exist on its own or within table cells.
 						The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggletext</span>.</p>
@@ -1612,6 +1634,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--code">code</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--toggle">toggle</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>

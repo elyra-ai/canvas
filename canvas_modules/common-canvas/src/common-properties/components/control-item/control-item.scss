@@ -67,6 +67,7 @@
 	@include carbon--type-style("helper-text-01");
 	color: $text-02;
 	padding-bottom: $spacing-03;
+	white-space: pre-wrap; // Add a line break for \n
 }
 
 // Removed padding in properties-label-container because .bx--label has margin-bottom: $spacing-03

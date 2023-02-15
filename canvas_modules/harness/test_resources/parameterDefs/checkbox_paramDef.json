@@ -136,7 +136,7 @@
           "default": "checkbox default"
         },
         "description": {
-          "default": "checkbox with a default value of 'true'"
+          "default": "checkbox with a default value of 'true'\nThis text should be on a new line.\nThis text should also be on a new line."
         }
       },
       {
