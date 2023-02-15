@@ -76,6 +76,8 @@ class CustomEffectsCtrl extends React.Component {
 	}
 
 	componentDidMount() {
+		this.controller.setAddRemoveRows(this.SOURCE_LIST_ID, false);
+		this.controller.setAddRemoveRows(this.UI_LIST_ID, false);
 		this.sourceListCtrl = this.makeSourceList();
 		this.updateEffectsList();
 		this.currentTermValue = this.emptyEffect();
