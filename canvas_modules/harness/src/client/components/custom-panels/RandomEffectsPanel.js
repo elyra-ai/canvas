@@ -324,8 +324,8 @@ class RandomEffectsPanel {
 		const propertyValue = this.controller.getPropertyValue({ name: "random_effects_list" });
 		const length = propertyValue ? propertyValue.length : 1;
 		const atEnd = this.arrayIndex === length - 1;
-		const hasIntercept = propertyValue ? propertyValue[this.arrayIndex][1] : false;
-		const effects = propertyValue ? propertyValue[this.arrayIndex][0] : null;
+		const hasIntercept = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][1] : false;
+		const effects = propertyValue && propertyValue[this.arrayIndex] ? propertyValue[this.arrayIndex][0] : null;
 		const effectsLen = effects ? effects.length : 0;
 		const disableNext = atEnd && !(hasIntercept || effectsLen);
 		const nextButton = (<Button

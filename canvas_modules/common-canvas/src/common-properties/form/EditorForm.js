@@ -508,7 +508,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			controlType = ControlType.TIMESTAMP;
 			break;
 		case Type.STRUCTURE: {
-			const structureDef = isSubControl ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
+			const structureDef = isSubControl && structureMetadata ? structureMetadata.getStructure(parameter.baseType()) : structureDefinition;
 
 			if (structureDef) {
 				if (structureDef.hasSubPanel()) {
@@ -716,7 +716,7 @@ function _makeSubControl(parameter, l10nProvider, structureMetadata, additionalI
 	const parameterMetadata = null;
 	const paramName = null;
 	const group = null;
-	const structureDef = parameter.propType() === Type.STRUCTURE ? structureMetadata.getStructure(parameter.baseType()) : null;
+	const structureDef = parameter.propType() === Type.STRUCTURE && structureMetadata ? structureMetadata.getStructure(parameter.baseType()) : null;
 	const actionMetadata = null;
 	const subControl = parameter;
 	return _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, actionMetadata, structureMetadata, subControl, additionalInfo);
