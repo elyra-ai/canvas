@@ -105,6 +105,7 @@ function createPalette() {
 			deleteTempNode={deleteTempNodeCallback}
 			parentDivId="parent-div-id"
 			canvasController={canvasController}
+			isEditingEnabled
 
 		/>
 	);
