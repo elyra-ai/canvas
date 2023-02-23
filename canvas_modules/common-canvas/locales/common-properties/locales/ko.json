@@ -55,8 +55,8 @@
   "expression.fields.empty.table.label": "필드가 없음",
   "expression.values.empty.table.label": "값을 찾을 수 없음",
   "expression.functions.table.label": "함수 테이블",
-  "expression.fields.dropdown": "필드",
-  "expression.fields.title": "필드",
+  "expression.fields.dropdown": "필드(E)",
+  "expression.fields.title": "필드(E)",
   "expression.values.title": "값",
   "expression.field.column": "필드",
   "expression.field.column.description": "",
@@ -66,7 +66,7 @@
   "expression.function.column": "함수",
   "expression.return.column": "반품",
   "expression.recently.used.column": "항목",
-  "expression.field.tab": "필드",
+  "expression.field.tab": "필드(E)",
   "expression.functions.tab": "함수",
   "expression.recently.used": "최근 사용",
   "expression.all.functions": "모든 함수",
@@ -76,6 +76,8 @@
   "expression.maximize.label": "최대화",
   "toggle.on.label": "On",
   "toggle.off.label": "해제",
+  "passwordShow.tooltip": "비밀번호 표시",
+  "passwordHide.tooltip": "비밀번호 숨기기",
   "expression.no.functions": "함수가 없습니다.",
   "multi.selected.row.label": "행이 선택되었습니다.",
   "multi.selected.row.action": "이 행의 값을 변경하면 허용되는 모든 선택된 행의 값이 변경됩니다.",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "옵션이 선택됨",
   "virtualizedTable.header.checkbox.label": "{header_checkbox_label} 모두 선택",
   "virtualizedTable.row.checkbox.label": "{table_label}에서 행 {row_index} 선택",
-  "properties.empty.table.text": "시작하려면 \"{button_label}\"을(를) 클릭하십시오."
+  "properties.empty.table.text": "시작하려면 \"{button_label}\"을(를) 클릭하십시오.",
+  "label.indicator.required": "(필수)",
+  "label.indicator.optional": "(선택사항)"
 }

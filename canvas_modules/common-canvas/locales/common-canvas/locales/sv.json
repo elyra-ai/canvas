@@ -30,6 +30,7 @@
   "node.deconstructSupernode": "Dekonstruera supernod",
   "node.convertSupernodeExternalToLocal": "Konvertera extern till lokal",
   "node.convertSupernodeLocalToExternal": "Konvertera lokal till extern",
+  "node.renameNode": "Byt namn",
   "canvas.validateFlow": "Validera flöde",
   "node.editNode": "Öppna",
   "node.editMenu": "Redigera",

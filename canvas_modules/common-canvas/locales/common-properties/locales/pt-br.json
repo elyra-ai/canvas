@@ -1,6 +1,6 @@
 {
   "subPanel.button.tooltip": "Editar",
-  "structureListEditor.addButton.label": "Incluir Valor",
+  "structureListEditor.addButton.label": "Incluir valor",
   "structureListEditor.removeButton.label": "Remover",
   "structureTable.addButton.label": "Incluir colunas",
   "structureTable.removeButton.label": "Remover",
@@ -45,7 +45,7 @@
   "datetime.format.error": "{role} inválida. Formato deve ser {format}.",
   "invalid.field.error": "{label} inválido, campo não localizado no conjunto de dados.",
   "invalid.number.error": "Número inválido.",
-  "expression.validate.label": "Validate",
+  "expression.validate.label": "Validar",
   "expression.validating.label": "Validando",
   "expression.builder.title": "Construtor de Expressões",
   "expression.builder.icon.description": "ativar construtor de expressões",
@@ -74,8 +74,10 @@
   "expression.minimize.label": "Minimizar",
   "expression.max.label": "Máx.",
   "expression.maximize.label": "Maximizar",
-  "toggle.on.label": "Aceso",
-  "toggle.off.label": "Desligado",
+  "toggle.on.label": "Ligado",
+  "toggle.off.label": "Desativado",
+  "passwordShow.tooltip": "Exibir a senha",
+  "passwordHide.tooltip": "Oculte a senha",
   "expression.no.functions": "Nenhuma função foi encontrada.",
   "multi.selected.row.label": "linhas selecionadas.",
   "multi.selected.row.action": "A mudança de um valor nesta linha mudará o valor em todas as linhas selecionadas permitidas.",
@@ -88,7 +90,7 @@
   "list.table.label": "Valores",
   "dropdown.tooltip.openMenu": "Abrir menu",
   "dropdown.tooltip.closeMenu": "Fechar o menu",
-  "dropdown.tooltip.clear.all": "Limpar todos",
+  "dropdown.tooltip.clear.all": "Limpar todas",
   "dropdown.tooltip.clear.selection": "Limpar seleção",
   "truncate.long.string.error": "Esses valores excedem o limite de exibição de {truncate_limit} caracteres e não podem ser editados.",
   "properties.label": "Propriedades",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "opções selecionadas",
   "virtualizedTable.header.checkbox.label": "Selecione todos os {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Selecionar linha {row_index} a partir de {table_label}",
-  "properties.empty.table.text": "Para iniciar, clique em \"{button_label}\""
+  "properties.empty.table.text": "Para iniciar, clique em \"{button_label}\"",
+  "label.indicator.required": "(necessário)",
+  "label.indicator.optional": "(opcional)"
 }

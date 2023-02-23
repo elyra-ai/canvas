@@ -70,12 +70,14 @@
   "expression.functions.tab": "Funktioner",
   "expression.recently.used": "Senast använda",
   "expression.all.functions": "Alla funktioner",
-  "expression.min.label": "Min",
+  "expression.min.label": "Kortaste",
   "expression.minimize.label": "Minimera",
-  "expression.max.label": "Max",
+  "expression.max.label": "Längsta",
   "expression.maximize.label": "Maximera",
   "toggle.on.label": "På",
   "toggle.off.label": "Av",
+  "passwordShow.tooltip": "Visa lösenord",
+  "passwordHide.tooltip": "Dölj lösenord",
   "expression.no.functions": "Inga funktioner hittades.",
   "multi.selected.row.label": "rader har valts.",
   "multi.selected.row.action": "Om du ändrar ett värde i den här raden ändras värdet i alla tillåtna valda rader.",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "valda alternativ",
   "virtualizedTable.header.checkbox.label": "Markera alla {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Välj rad {row_index} från {table_label}",
-  "properties.empty.table.text": "Klicka på \"{button_label}\" för att börja"
+  "properties.empty.table.text": "Klicka på \"{button_label}\" för att börja",
+  "label.indicator.required": "(obligatorisk)",
+  "label.indicator.optional": "(valfritt)"
 }

@@ -3,7 +3,7 @@
   "action.arrangeLayout": "레이아웃 배열",
   "action.attachNodeToLinks": "링크에 {node_label} 노드 연결",
   "action.collapseSuperNodeInPlace": "수퍼노드 접기",
-  "action.commonProperties": "특성 저장",
+  "action.commonProperties": "{node_label} 노드 특성 저장",
   "action.colorComments": "색상 {comments_count, plural, other {# comments}}",
   "action.convertSuperNodeExternalToLocal": "외부 수퍼노드 {node_label}을(를) 로컬로 변환",
   "action.convertSuperNodeLocalToExternal": "로컬 수퍼노드 {node_label}을(를) 외부로 변환",

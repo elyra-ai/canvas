@@ -6,7 +6,7 @@
   "structureTable.removeButton.label": "移除",
   "fieldPicker.saveButton.label": "選取欄位",
   "fieldPicker.saveButton.modal.label": "儲存並繼續",
-  "fieldPicker.resetButton.label": "重設(R) ",
+  "fieldPicker.resetButton.label": "重設 ",
   "fieldPicker.filter.label": "過濾器：",
   "fieldPicker.fieldColumn.label": "欄位名稱(F)",
   "fieldPicker.schemaColumn.label": "綱目名稱",
@@ -70,12 +70,14 @@
   "expression.functions.tab": "函數",
   "expression.recently.used": "最近使用",
   "expression.all.functions": "全部函數",
-  "expression.min.label": "最小值",
+  "expression.min.label": "下限",
   "expression.minimize.label": "最小化",
   "expression.max.label": "上限",
   "expression.maximize.label": "最大化",
   "toggle.on.label": "開啟",
   "toggle.off.label": "關閉",
+  "passwordShow.tooltip": "顯示密碼",
+  "passwordHide.tooltip": "隱藏密碼",
   "expression.no.functions": "找不到函數。",
   "multi.selected.row.label": "列已選定。",
   "multi.selected.row.action": "變更此列中的值將會變更所有容許的所選列中的值。",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "個選項已選取",
   "virtualizedTable.header.checkbox.label": "全選 {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "從 {table_label} 選取列 {row_index}",
-  "properties.empty.table.text": "若要開始，請按一下 \"{button_label}\""
+  "properties.empty.table.text": "若要開始，請按一下 \"{button_label}\"",
+  "label.indicator.required": "（必要）",
+  "label.indicator.optional": "（選用）"
 }
