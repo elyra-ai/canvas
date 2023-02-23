@@ -250,7 +250,6 @@
                           "light": true,
                           "labelVisible": true,
                           "controlType": "toggletext",
-                          "showRequiredLabel": true,
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -286,8 +285,7 @@
                       "moveableRows": true,
                       "addRemoveRows": true,
                       "header": true,
-                      "editStyle": "inline",
-                      "showRequiredLabel": true
+                      "editStyle": "inline"
                     }
                   }
                 ],

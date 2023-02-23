@@ -614,7 +614,8 @@ PropertiesMain.propTypes = {
 		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
-		convertValueDataTypes: PropTypes.bool
+		convertValueDataTypes: PropTypes.bool,
+		showRequiredIndicator: PropTypes.bool
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

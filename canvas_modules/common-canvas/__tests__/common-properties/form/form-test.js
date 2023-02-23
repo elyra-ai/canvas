@@ -62,7 +62,6 @@ describe("Correct form should be created", () => {
 										"light": true,
 										"labelVisible": false,
 										"controlType": "checkbox",
-										"showRequiredLabel": true,
 										"valueDef": {
 											"propType": "boolean",
 											"isList": false,

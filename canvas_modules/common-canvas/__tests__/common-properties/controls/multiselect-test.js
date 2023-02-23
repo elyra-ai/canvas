@@ -333,28 +333,14 @@ describe("multiselect paramDef works correctly", () => {
 	});
 
 	it("multiselect control should have aria-label", () => {
-		// Total properties - 18, required - 9, optional - 9
-		// Show "(required)" indicator next to label
-
-		// aria-label for required property
-		let multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_multiple_selected']");
-		let multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
+		const multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_multiple_selected']");
+		const multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
 		expect(
 			multiselectWrapper
 				.find(`#${multiselectAriaLabelledby}`)
 				.find(".properties-control-item")
 				.text()
 		).to.equal("multiselect multiple options selected(required)");
-
-		// aria-label for optional property
-		multiselectWrapper = wrapper.find("div[data-id='properties-ctrl-multiselect_empty']");
-		multiselectAriaLabelledby = multiselectWrapper.find(".bx--list-box__menu").prop("aria-labelledby");
-		expect(
-			multiselectWrapper
-				.find(`#${multiselectAriaLabelledby}`)
-				.find(".properties-control-item")
-				.text()
-		).to.equal("multiselect");
 	});
 });
 

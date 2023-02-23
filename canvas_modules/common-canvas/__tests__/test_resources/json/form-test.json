@@ -199,7 +199,6 @@
                             "light": true,
                             "labelVisible": true,
                             "controlType": "selectcolumn",
-                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
@@ -218,7 +217,6 @@
                             "light": true,
                             "labelVisible": true,
                             "controlType": "selectcolumns",
-                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -260,7 +258,6 @@
                       "light": true,
                       "labelVisible": true,
                       "controlType": "radioset",
-                      "showRequiredLabel": true,
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
@@ -310,7 +307,6 @@
                                   "light": true,
                                   "labelVisible": true,
                                   "controlType": "numberfield",
-                                  "showRequiredLabel": true,
                                   "valueDef": {
                                     "propType": "integer",
                                     "isList": false,
@@ -348,7 +344,6 @@
                                   "light": true,
                                   "labelVisible": true,
                                   "controlType": "numberfield",
-                                  "showRequiredLabel": true,
                                   "valueDef": {
                                     "propType": "double",
                                     "isList": false,
@@ -382,7 +377,6 @@
                             "light": true,
                             "labelVisible": false,
                             "controlType": "checkbox",
-                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "boolean",
                               "isList": false,
@@ -419,7 +413,6 @@
                             "light": true,
                             "labelVisible": true,
                             "controlType": "textfield",
-                            "showRequiredLabel": true,
                             "valueDef": {
                               "propType": "string",
                               "isList": false,

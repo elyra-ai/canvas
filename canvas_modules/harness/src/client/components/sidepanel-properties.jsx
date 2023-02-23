@@ -76,6 +76,7 @@ export default class SidePanelModal extends React.Component {
 		this.useHeading = this.useHeading.bind(this);
 		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
+		this.setShowRequiredIndicator = this.setShowRequiredIndicator.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
@@ -344,6 +345,10 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.useLightOption(checked);
 	}
 
+	setShowRequiredIndicator(checked) {
+		this.props.propertiesConfig.setShowRequiredIndicator(checked);
+	}
+
 	useEditorSize(evt) {
 		// If unset is selected, don't persist editorSize
 		const editorSize = evt.selectedItem.label;
@@ -581,6 +586,19 @@ export default class SidePanelModal extends React.Component {
 					labelText="Enable light option"
 					toggled={ this.props.propertiesConfig.light }
 					onToggle={ this.useLightOption }
+				/>
+			</div>
+		);
+
+		const setShowRequiredIndicator = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-show-required-indicator">
+				<Toggle
+					id="harness-sidepanel-show-required-indicator-toggle"
+					labelText="Show label indicator"
+					toggled={ this.props.propertiesConfig.showRequiredIndicator }
+					onToggle={ this.setShowRequiredIndicator }
+					labelA="(optional)"
+					labelB="(required)"
 				/>
 			</div>
 		);
@@ -904,6 +922,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{useLightOption}
 				{divider}
+				{setShowRequiredIndicator}
+				{divider}
 				{persistEditorSize}
 				{divider}
 				{conditionHiddenPropertyHandling}
@@ -968,6 +988,8 @@ SidePanelModal.propTypes = {
 		useHeading: PropTypes.func,
 		light: PropTypes.bool,
 		useLightOption: PropTypes.func,
+		showRequiredIndicator: PropTypes.bool,
+		setShowRequiredIndicator: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		trimSpaces: PropTypes.bool,
 		setTrimSpaces: PropTypes.func,
