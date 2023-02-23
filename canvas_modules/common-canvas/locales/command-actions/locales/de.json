@@ -3,7 +3,7 @@
   "action.arrangeLayout": "Layout anordnen",
   "action.attachNodeToLinks": "Verbindung zwischen {node_label}-Knoten und Link herstellen",
   "action.collapseSuperNodeInPlace": "Superknoten ausblenden",
-  "action.commonProperties": "Eigenschaften speichern",
+  "action.commonProperties": "Eigenschaften des Knotens {node_label} speichern",
   "action.colorComments": "Farbe {comments_count, plural, other {# Kommentare} one {# Kommentar}}",
   "action.convertSuperNodeExternalToLocal": "Externen Superknoten{node_label} in lokalen Knoten konvertieren",
   "action.convertSuperNodeLocalToExternal": "Lokalen Superknoten{node_label} in externen Knoten konvertieren",

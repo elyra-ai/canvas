@@ -67,7 +67,7 @@
   "expression.return.column": "復帰",
   "expression.recently.used.column": "アイテム",
   "expression.field.tab": "フィールド",
-  "expression.functions.tab": "機能",
+  "expression.functions.tab": "関数",
   "expression.recently.used": "最近使用したアイテム",
   "expression.all.functions": "すべての関数",
   "expression.min.label": "最小",
@@ -76,6 +76,8 @@
   "expression.maximize.label": "最大化",
   "toggle.on.label": "オン",
   "toggle.off.label": "オフ",
+  "passwordShow.tooltip": "パスワードの表示",
+  "passwordHide.tooltip": "パスワードの非表示",
   "expression.no.functions": "関数が見つかりません。",
   "multi.selected.row.label": "選択された行。",
   "multi.selected.row.action": "この行の値を変更すると、許可され選択されたすべての行の値が変更されます。",
@@ -88,7 +90,7 @@
   "list.table.label": "値",
   "dropdown.tooltip.openMenu": "メニューを開く",
   "dropdown.tooltip.closeMenu": "メニューを閉じる",
-  "dropdown.tooltip.clear.all": "すべてクリア",
+  "dropdown.tooltip.clear.all": "すべて消去",
   "dropdown.tooltip.clear.selection": "選択をクリア",
   "truncate.long.string.error": "これらの値は、表示制限の {truncate_limit} 文字を超えているため、編集できません。",
   "properties.label": "プロパティ－",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "選択されたオプション",
   "virtualizedTable.header.checkbox.label": "すべての {header_checkbox_label} を選択",
   "virtualizedTable.row.checkbox.label": "{table_label} から行 {row_index} を選択",
-  "properties.empty.table.text": "開始するには、「{button_label}」をクリックします"
+  "properties.empty.table.text": "開始するには、「{button_label}」をクリックします",
+  "label.indicator.required": "(必須)",
+  "label.indicator.optional": "(オプション)"
 }

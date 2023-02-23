@@ -3,5 +3,6 @@
   "canvas.emptyText": "欢迎使用 Common Canvas 测试装置。{br}您的流为空！",
   "canvas.emptyLink": "单击此处以观看导览",
   "expression.value.column": "定制值",
-  "expression.value.column.description": "从应用程序测试定制描述"
+  "expression.value.column.description": "从应用程序测试定制描述",
+  "expression.field.column.description": "定制描述"
 }

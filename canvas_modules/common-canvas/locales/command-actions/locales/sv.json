@@ -3,7 +3,7 @@
   "action.arrangeLayout": "Arrangera layout",
   "action.attachNodeToLinks": "Länka {node_label}-nod till länk",
   "action.collapseSuperNodeInPlace": "Dölj supernod",
-  "action.commonProperties": "Spara egenskaper",
+  "action.commonProperties": "Spara nodegenskaperna för {node_label}",
   "action.colorComments": "Färg {comments_count, plural, other {# kommentarer} one {# kommentar}}",
   "action.convertSuperNodeExternalToLocal": "Konvertera extern supernod {node_label} till lokal",
   "action.convertSuperNodeLocalToExternal": "Konvertera lokal supernod {node_label} till extern",

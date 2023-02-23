@@ -60,11 +60,11 @@
   "expression.values.title": "Valori",
   "expression.field.column": "Campo",
   "expression.field.column.description": "",
-  "expression.storage.column": "Spazio di archiviazione",
+  "expression.storage.column": "Archiviazione",
   "expression.value.column": "Valore",
   "expression.value.column.description": "",
   "expression.function.column": "Funzione",
-  "expression.return.column": "Risultato",
+  "expression.return.column": "Restituzione",
   "expression.recently.used.column": "Elemento",
   "expression.field.tab": "Campi",
   "expression.functions.tab": "Funzioni",
@@ -75,7 +75,9 @@
   "expression.max.label": "Massimo",
   "expression.maximize.label": "Ingrandisci",
   "toggle.on.label": "Attivo",
-  "toggle.off.label": "Disattivato",
+  "toggle.off.label": "Disattivo",
+  "passwordShow.tooltip": "Mostra password",
+  "passwordHide.tooltip": "Nascondi password",
   "expression.no.functions": "Nessuna funzione trovata.",
   "multi.selected.row.label": "righe selezionate.",
   "multi.selected.row.action": "La modifica di un valore in questa riga modificherà il valore in tutte le righe selezionate consentite.",
@@ -98,5 +100,7 @@
   "multiselect.dropdown.options.selected.label": "opzioni selezionate",
   "virtualizedTable.header.checkbox.label": "Seleziona tutto {header_checkbox_label}",
   "virtualizedTable.row.checkbox.label": "Selezionare la riga {row_index} da {table_label}",
-  "properties.empty.table.text": "Per iniziare, fare clic su \"{button_label}\""
+  "properties.empty.table.text": "Per iniziare, fare clic su \"{button_label}\"",
+  "label.indicator.required": "(obbligatorio)",
+  "label.indicator.optional": "(facoltativo)."
 }

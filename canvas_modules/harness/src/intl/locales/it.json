@@ -3,5 +3,6 @@
   "canvas.emptyText": "Benvenuto nel test Common Canvas harness.{br}Il flusso è vuoto.",
   "canvas.emptyLink": "Fare clic qui per fare un tour",
   "expression.value.column": "Valore personalizzato",
-  "expression.value.column.description": "Verifica della descrizione personalizzata dall'app"
+  "expression.value.column.description": "Verifica della descrizione personalizzata dall'app",
+  "expression.field.column.description": "Descrizione personalizzata"
 }

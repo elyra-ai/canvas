@@ -3,7 +3,7 @@
   "action.arrangeLayout": "安排佈置",
   "action.attachNodeToLinks": "將 {node_label} 節點連接至鏈結",
   "action.collapseSuperNodeInPlace": "收合超級節點",
-  "action.commonProperties": "儲存內容",
+  "action.commonProperties": "儲存 {node_label} 節點內容",
   "action.colorComments": "顏色 {comments_count, plural, other {# 則註解}}",
   "action.convertSuperNodeExternalToLocal": "將外部超級節點 {node_label} 轉換為本端",
   "action.convertSuperNodeLocalToExternal": "將本端超級節點 {node_label} 轉換為外部",
