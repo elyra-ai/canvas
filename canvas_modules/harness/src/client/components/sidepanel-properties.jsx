@@ -261,6 +261,10 @@ export default class SidePanelModal extends React.Component {
 		this.props.propertiesConfig.setWideFlyoutPrimaryButtonDisabled(disabled);
 	}
 
+	setShowRequiredIndicator(checked) {
+		this.props.propertiesConfig.setShowRequiredIndicator(checked);
+	}
+
 	// Textfield to enter the summary panelId for disabling OK button in Wide Flyout panel
 	disableWideFlyoutPrimaryButtonForPanelId(evt) {
 		try {
@@ -343,10 +347,6 @@ export default class SidePanelModal extends React.Component {
 
 	useLightOption(checked) {
 		this.props.propertiesConfig.useLightOption(checked);
-	}
-
-	setShowRequiredIndicator(checked) {
-		this.props.propertiesConfig.setShowRequiredIndicator(checked);
 	}
 
 	useEditorSize(evt) {
