@@ -183,9 +183,6 @@ export class Control {
 		if (settings.className) {
 			this.className = settings.className;
 		}
-		if (settings.showRequiredLabel) {
-			this.showRequiredLabel = settings.showRequiredLabel;
-		}
 		if (settings.buttons) {
 			this.buttons = settings.buttons;
 		}

@@ -39,8 +39,7 @@ const control = {
 				something: "sampleData"
 			}
 		}
-	},
-	showRequiredLabel: false
+	}
 };
 
 const propertyId = {
@@ -90,8 +89,7 @@ describe("control-item renders correctly", () => {
 			description: {
 				text: "Control Description",
 				placement: "on_panel"
-			},
-			showRequiredLabel: false
+			}
 		};
 		const wrapper = mountWithIntl(
 			<ControlItem
@@ -105,7 +103,6 @@ describe("control-item renders correctly", () => {
 		);
 		expect(wrapper.find("label.properties-control-label").text()).to.equal(controlOnPanel.label.text);
 		expect(wrapper.find("div.properties-control-description").text()).to.equal(controlOnPanel.description.text);
-		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
 	});
 
 	it("should create label and tooltip description", () => {
@@ -120,10 +117,9 @@ describe("control-item renders correctly", () => {
 				accessibleControls={accessibleControls}
 			/>
 		);
-		// should have optional indicator because "showRequiredLabel: false"
-		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		// should not have a required indicator
+		expect(wrapper.find("span.properties-required-indicator")).to.have.length(0);
 		expect(wrapper.find("label.properties-control-label").text()).to.equal(control.label.text);
-		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
 		const tooltip = wrapper.find("div.tooltip-container");
 		expect(tooltip).to.have.length(1);
 		// tooltip icon
@@ -241,8 +237,7 @@ describe("control-item renders correctly", () => {
 			label: {
 				text: "Control Label"
 			},
-			required: true,
-			showRequiredLabel: true
+			required: true
 		};
 		const wrapper = mountWithIntl(
 			<ControlItem
@@ -294,6 +289,96 @@ describe("control-item renders correctly", () => {
 		);
 		const controlItem = wrapper.find("div.properties-control-item");
 		expect(controlItem.prop("disabled")).to.equal(true);
+	});
+
+	it("show required indicator when showRequiredIndicator set to true", () => {
+		const controlRequired = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			},
+			required: true
+		};
+		const propertiesConfig = { showRequiredIndicator: true };
+		controller.setPropertiesConfig(propertiesConfig);
+		let wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlRequired}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For required control, show required indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(required)");
+
+		const controlOptional = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			}
+		};
+		wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlOptional}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For optional control, don't show any indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(0);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label");
+	});
+
+	it("show optional indicator when showRequiredIndicator set to false", () => {
+		const controlOptional = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			}
+		};
+		const propertiesConfig = { showRequiredIndicator: false };
+		controller.setPropertiesConfig(propertiesConfig);
+		let wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlOptional}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For optional control, show optional indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(1);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label(optional)");
+
+		const controlRequired = {
+			name: "test-control",
+			label: {
+				text: "Control Label"
+			},
+			required: true
+		};
+		wrapper = mountWithIntl(
+			<ControlItem
+				store={controller.getStore()}
+				control={controlRequired}
+				propertyId={propertyId}
+				controller={controller}
+				controlObj={controlObj}
+				accessibleControls={accessibleControls}
+			/>
+		);
+		// For required control, don't show any indicator
+		expect(wrapper.find("span.properties-indicator")).to.have.length(0);
+		expect(wrapper.find("div.properties-label-container").text()).to.equal("Control Label");
 	});
 
 });

@@ -21,7 +21,7 @@ import classNames from "classnames";
 import { STATES, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants.js";
 import { ControlType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { isEmpty } from "lodash";
+import { isEmpty, get } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import Icon from "./../../../icons/icon.jsx";
 import ActionFactory from "./../../actions/action-factory.js";
@@ -31,6 +31,7 @@ class ControlItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.actionFactory = new ActionFactory(this.props.controller);
+		this.showRequiredIndicator = props.controller ? get(props.controller.getPropertiesConfig(), "showRequiredIndicator", true) : true;
 		this.uuid = uuid4();
 	}
 
@@ -68,13 +69,13 @@ class ControlItem extends React.Component {
 				}
 			}
 			let indicator;
-			if (this.props.control.showRequiredLabel && this.props.control.required) {
+			if (this.showRequiredIndicator && this.props.control.required) {
 				indicator = (
 					<span className="properties-indicator">
 						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_REQUIRED)}
 					</span>
 				);
-			} else if (!this.props.control.showRequiredLabel && !("required" in this.props.control)) {
+			} else if (!this.showRequiredIndicator && !("required" in this.props.control)) {
 				indicator = (
 					<span className="properties-indicator">
 						{formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.LABEL_INDICATOR_OPTIONAL)}

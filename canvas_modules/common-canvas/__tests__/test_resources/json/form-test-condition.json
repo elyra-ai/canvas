@@ -101,7 +101,6 @@
                       "light": true,
                       "labelVisible": true,
                       "controlType": "numberfield",
-                      "showRequiredLabel": true,
                       "valueDef": {
                         "propType": "integer",
                         "isList": false,
@@ -120,7 +119,6 @@
                       "light": true,
                       "labelVisible": true,
                       "controlType": "expression",
-                      "showRequiredLabel": true,
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
