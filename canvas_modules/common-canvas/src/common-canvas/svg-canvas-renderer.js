@@ -2823,22 +2823,23 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayPorts(nodeGrp, d) {
-		// Empty inputs arrays are allowed because some apps support that when ports are deleted.
-		if (d.layout.inputPortDisplay && Array.isArray(d.inputs)) {
-			this.displayInputPorts(nodeGrp, d);
-		}
-
-		// Empty outputs arrays are allowed because some apps support that when ports are deleted.
-		if (d.layout.outputPortDisplay && Array.isArray(d.outputs)) {
-			this.displayOutputPorts(nodeGrp, d);
-		}
+		this.displayInputPorts(nodeGrp, d);
+		this.displayOutputPorts(nodeGrp, d);
 	}
 
 	displayInputPorts(nodeGrp, node) {
 		const inSelector = "." + this.getNodeInputPortClassName();
 
+		// Some applications may set inputs to undefined after inputs was
+		// previously set to an array, so use empty array in that case so any
+		// existing input ports are removed from the node.
+		let inputs = node.inputs || [];
+
+		// Don't display input ports if config says not to.
+		inputs = node.layout.inputPortDisplay ? inputs : [];
+
 		nodeGrp.selectChildren(inSelector)
-			.data(node.inputs, (p) => p.id)
+			.data(inputs, (p) => p.id)
 			.join(
 				(enter) => this.createInputPorts(enter, node)
 			)
@@ -2907,9 +2908,18 @@ export default class SVGCanvasRenderer {
 	displayOutputPorts(nodeGrp, node) {
 		const outSelector = "." + this.getNodeOutputPortClassName();
 
-		const outputs = this.config.enableSingleOutputPortDisplay && node.outputs.length > 1
-			? [node.outputs[node.outputs.length - 1]]
-			: node.outputs;
+		// Some applications may set outputs to undefined after outputs was
+		// previously set to an array, so use empty array in that case so any
+		// existing output ports are removed from the node.
+		let outputs = node.outputs || [];
+
+		// Don't display output ports if config says not to.
+		outputs = node.layout.outputPortDisplay ? outputs : [];
+
+		// Only show a single output port (the last one) if config tells us to.
+		outputs = this.config.enableSingleOutputPortDisplay && outputs.length > 1
+			? [outputs[outputs.length - 1]]
+			: outputs;
 
 		nodeGrp.selectChildren(outSelector)
 			.data(outputs, (p) => p.id)
