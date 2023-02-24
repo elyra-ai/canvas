@@ -246,6 +246,7 @@ class App extends React.Component {
 			expressionBuilder: true,
 			heading: false,
 			light: true,
+			showRequiredIndicator: true,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
 			propertiesValidationHandler: true,
@@ -325,6 +326,7 @@ class App extends React.Component {
 		this.useHeading = this.useHeading.bind(this);
 		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
+		this.setShowRequiredIndicator = this.setShowRequiredIndicator.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
@@ -1309,6 +1311,11 @@ class App extends React.Component {
 		this.log("light option", enabled);
 	}
 
+	setShowRequiredIndicator(enabled) {
+		this.setState({ showRequiredIndicator: enabled });
+		this.log("show Required Indicator", enabled);
+	}
+
 	setTrimSpaces(enabled) {
 		this.setState({ trimSpaces: enabled });
 		this.log("trim spaces", enabled);
@@ -2048,7 +2055,8 @@ class App extends React.Component {
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
-			convertValueDataTypes: this.state.convertValueDataTypes
+			convertValueDataTypes: this.state.convertValueDataTypes,
+			showRequiredIndicator: this.state.showRequiredIndicator
 		};
 	}
 
@@ -2604,6 +2612,8 @@ class App extends React.Component {
 			useHeading: this.useHeading,
 			light: this.state.light,
 			useLightOption: this.useLightOption,
+			showRequiredIndicator: this.state.showRequiredIndicator,
+			setShowRequiredIndicator: this.setShowRequiredIndicator,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,

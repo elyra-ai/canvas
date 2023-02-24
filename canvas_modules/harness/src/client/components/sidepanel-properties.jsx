@@ -76,6 +76,7 @@ export default class SidePanelModal extends React.Component {
 		this.useHeading = this.useHeading.bind(this);
 		this.setTrimSpaces = this.setTrimSpaces.bind(this);
 		this.useLightOption = this.useLightOption.bind(this);
+		this.setShowRequiredIndicator = this.setShowRequiredIndicator.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
@@ -258,6 +259,10 @@ export default class SidePanelModal extends React.Component {
 	// Toggle to set Ok button enabled or disabled for summary panel
 	setWideFlyoutPrimaryButtonDisabled(disabled) {
 		this.props.propertiesConfig.setWideFlyoutPrimaryButtonDisabled(disabled);
+	}
+
+	setShowRequiredIndicator(checked) {
+		this.props.propertiesConfig.setShowRequiredIndicator(checked);
 	}
 
 	// Textfield to enter the summary panelId for disabling OK button in Wide Flyout panel
@@ -585,6 +590,19 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const setShowRequiredIndicator = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-show-required-indicator">
+				<Toggle
+					id="harness-sidepanel-show-required-indicator-toggle"
+					labelText="Show label indicator"
+					toggled={ this.props.propertiesConfig.showRequiredIndicator }
+					onToggle={ this.setShowRequiredIndicator }
+					labelA="(optional)"
+					labelB="(required)"
+				/>
+			</div>
+		);
+
 		const editorSizes = [
 			{
 				id: EDITOR_SIZE.UNSET,
@@ -904,6 +922,8 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{useLightOption}
 				{divider}
+				{setShowRequiredIndicator}
+				{divider}
 				{persistEditorSize}
 				{divider}
 				{conditionHiddenPropertyHandling}
@@ -968,6 +988,8 @@ SidePanelModal.propTypes = {
 		useHeading: PropTypes.func,
 		light: PropTypes.bool,
 		useLightOption: PropTypes.func,
+		showRequiredIndicator: PropTypes.bool,
+		setShowRequiredIndicator: PropTypes.func,
 		useEditorSize: PropTypes.func,
 		trimSpaces: PropTypes.bool,
 		setTrimSpaces: PropTypes.func,
