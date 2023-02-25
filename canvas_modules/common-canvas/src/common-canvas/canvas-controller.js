@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,6 +169,11 @@ export default class CanvasController {
 	setBottomPanelConfig(config) {
 		this.logger.log("Setting Bottom Panel Config");
 		this.objectModel.setBottomPanelConfig(config);
+	}
+
+	setTopPanelConfig(config) {
+		this.logger.log("Setting Top Panel Config");
+		this.objectModel.setTopPanelConfig(config);
 	}
 
 	setContextMenuConfig(contextMenuConfig) {
@@ -1427,6 +1432,10 @@ export default class CanvasController {
 
 	setBottomPanelHeight(ht) {
 		this.objectModel.setBottomPanelHeight(ht);
+	}
+
+	isTopPanelOpen() {
+		return this.getObjectModel().isTopPanelOpen();
 	}
 
 	closeContextMenu() {

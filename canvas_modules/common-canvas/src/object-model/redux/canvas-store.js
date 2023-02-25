@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import canvasinfo from "./reducers/canvasinfo.js";
 import contextmenu from "./reducers/contextmenu.js";
 import rightflyout from "./reducers/rightflyout.js";
 import bottompanel from "./reducers/bottompanel.js";
+import toppanel from "./reducers/toppanel.js";
 import breadcrumbs from "./reducers/breadcrumbs.js";
 import canvasconfig from "./reducers/canvasconfig.js";
 import canvastoolbar from "./reducers/canvastoolbar.js";
@@ -54,7 +55,8 @@ export default class CanavasStore {
 			texttoolbar,
 			contextmenu,
 			rightflyout,
-			bottompanel
+			bottompanel,
+			toppanel
 		});
 
 		const initialState = {
@@ -71,7 +73,8 @@ export default class CanavasStore {
 			texttoolbar: { isOpen: false },
 			contextmenu: { menuDef: [] },
 			rightflyout: {},
-			bottompanel: { panelHeight: 393 }
+			bottompanel: { panelHeight: 393 },
+			toppanel: { }
 		};
 
 		let enableDevTools = false;
@@ -252,6 +255,10 @@ export default class CanavasStore {
 
 	isBottomPanelOpen() {
 		return this.store.getState().bottompanel.isOpen;
+	}
+
+	isTopPanelOpen() {
+		return this.store.getState().toppanel.isOpen;
 	}
 
 	getNotificationPanel() {

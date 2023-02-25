@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1444,6 +1444,18 @@ export default class ObjectModel {
 
 	setBottomPanelHeight(ht) {
 		this.store.dispatch({ type: "SET_BOTTOM_PANEL_CONFIG", data: { config: { panelHeight: ht } } });
+	}
+
+	// ---------------------------------------------------------------------------
+	// Top panel methods
+	// ---------------------------------------------------------------------------
+
+	setTopPanelConfig(config) {
+		this.store.dispatch({ type: "SET_TOP_PANEL_CONFIG", data: { config: config } });
+	}
+
+	isTopPanelOpen() {
+		return this.store.isTopPanelOpen();
 	}
 
 	// ---------------------------------------------------------------------------
