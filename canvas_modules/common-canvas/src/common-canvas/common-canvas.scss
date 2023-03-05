@@ -123,7 +123,7 @@ $panel-border-color: $ui-03;
 	left: 0;
 	right: 0;
 	top: $toolbar-button-height;
-	border-top: $panel-border-width solid $panel-border-color;
+	border-bottom: $panel-border-width solid $panel-border-color;
 
 	&.common-canvas-toolbar-none {
 		top: 0;
