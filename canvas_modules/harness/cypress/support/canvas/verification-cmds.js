@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -813,6 +813,19 @@ Cypress.Commands.add("verifyBottomPanelWidth", (width) => {
 		expect(element).to.have.css("width", `${width}px`);
 	});
 });
+
+Cypress.Commands.add("verifyTopPanelHeight", (height) => {
+	cy.get(".top-panel").should((element) => {
+		expect(element).to.have.css("height", `${height}px`);
+	});
+});
+
+Cypress.Commands.add("verifyTopPanelWidth", (width) => {
+	cy.get(".top-panel").should((element) => {
+		expect(element).to.have.css("width", `${width}px`);
+	});
+});
+
 
 Cypress.Commands.add("verifyCommentDimensions", (commentText, width, height) => {
 	cy.getCommentWithText(commentText)

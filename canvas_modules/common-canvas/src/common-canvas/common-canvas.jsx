@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,8 @@ class CommonCanvas extends React.Component {
 			{ content: props.rightFlyoutContent, isOpen: props.showRightFlyout });
 		props.canvasController.setBottomPanelConfig(
 			{ content: props.bottomPanelContent, isOpen: props.showBottomPanel });
+		props.canvasController.setTopPanelConfig(
+			{ content: props.topPanelContent, isOpen: props.showTopPanel });
 
 		props.canvasController.setHandlers({
 			contextMenuHandler: props.contextMenuHandler,
@@ -152,7 +154,9 @@ CommonCanvas.propTypes = {
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
 	bottomPanelContent: PropTypes.object,
-	showBottomPanel: PropTypes.bool
+	showBottomPanel: PropTypes.bool,
+	topPanelContent: PropTypes.object,
+	showTopPanel: PropTypes.bool
 };
 
 export default injectIntl(CommonCanvas);

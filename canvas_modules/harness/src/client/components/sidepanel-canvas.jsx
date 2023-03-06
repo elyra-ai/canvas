@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -625,6 +625,15 @@ export default class SidePanelForms extends React.Component {
 				id="selectedShowBottomPanel" // Set ID to corresponding field in App.js state
 				labelText="Open Bottom Panel"
 				toggled={this.props.getStateValue("selectedShowBottomPanel")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
+		var enableShowTopPanel = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedShowTopPanel" // Set ID to corresponding field in App.js state
+				labelText="Open Top Panel"
+				toggled={this.props.getStateValue("selectedShowTopPanel")}
 				onToggle={this.setStateValue}
 			/>
 		</div>);
@@ -1495,6 +1504,10 @@ export default class SidePanelForms extends React.Component {
 					<div className="harness-side-panel-header">Bottom Panel</div>
 					{divider}
 					{enableShowBottomPanel}
+					{divider}
+					<div className="harness-side-panel-header">Top Panel</div>
+					{divider}
+					{enableShowTopPanel}
 					{divider}
 					<div className="harness-side-panel-header">Context Menu</div>
 					{divider}

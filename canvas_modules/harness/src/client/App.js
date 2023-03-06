@@ -194,6 +194,7 @@ class App extends React.Component {
 				"stateTag": true
 			},
 			selectedShowBottomPanel: false,
+			selectedShowTopPanel: false,
 			selectedShowRightFlyout: false,
 			selectedRightFlyoutUnderToolbar: false,
 			selectedPanIntoViewOnOpen: false,
@@ -2421,6 +2422,7 @@ class App extends React.Component {
 		}
 
 		const bottomPanelContent = this.getTempContent();
+		const topPanelContent = this.getTempContent();
 
 		const rightFlyoutContent = rightFlyoutContentProperties
 			? rightFlyoutContentProperties
@@ -2446,6 +2448,8 @@ class App extends React.Component {
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
 				showBottomPanel={this.state.selectedShowBottomPanel}
+				topPanelContent={topPanelContent}
+				showTopPanel={this.state.selectedShowTopPanel}
 				canvasController={this.canvasController}
 			/>);
 
