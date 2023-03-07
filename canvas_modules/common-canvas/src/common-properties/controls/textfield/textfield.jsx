@@ -26,7 +26,6 @@ import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import classNames from "classnames";
 import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
-import Icon from "./../../../icons/icon";
 
 
 const arrayValueDelimiter = ", ";
@@ -110,23 +109,15 @@ class TextfieldControl extends React.Component {
 
 		let display = textInput;
 		if (this.props.tableControl) {
-			let content = textInput;
+			const content = textInput;
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
 			}
-			if (this.props.control.icon) {
-				content = (
-					<div className={"properties-field-textfield"}>
-						<div className={"properties-field-type-icon"}>
-							<Icon type={this.props.control.icon} />
-						</div>
-						{textInput}
-					</div>);
-			}
 			display = (
 				<TruncatedContentTooltip
 					content={content}
+					tooltipText={value}
 					disabled={disabled}
 				/>
 			);
