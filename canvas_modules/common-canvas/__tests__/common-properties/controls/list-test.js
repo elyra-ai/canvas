@@ -604,7 +604,7 @@ describe("All checkboxes in list must have labels", () => {
 		const headerCheckboxLabel = listOfStrings.find(".properties-vt-header-checkbox").text();
 		const secondColumnLabel = listOfStrings
 			.find("div[role='columnheader']")
-			.at(1)
+			.at(0)
 			.text();
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});

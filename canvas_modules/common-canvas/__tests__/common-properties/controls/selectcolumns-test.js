@@ -568,7 +568,7 @@ describe("All checkboxes in selectcolumns must have labels", () => {
 		const headerCheckboxLabel = tableHeaderRows.find(".properties-vt-header-checkbox").text();
 		const secondColumnLabel = tableHeaderRows
 			.find("div[role='columnheader']")
-			.at(1)
+			.at(0)
 			.text();
 		expect(headerCheckboxLabel).to.equal(`Select all ${secondColumnLabel}`);
 	});
