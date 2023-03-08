@@ -198,15 +198,16 @@ class VirtualizedTable extends React.Component {
 			{ id: "virtualizedTable.header.checkbox.label", defaultMessage: defaultMessages["virtualizedTable.header.checkbox.label"] },
 			{ header_checkbox_label: headerCheckboxLabel }
 		);
-		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE ? (<div role="columnheader" className="properties-vt-header-checkbox">
-			<Checkbox
-				id={`properties-vt-hd-cb-${scrollKey}`}
-				onChange={this.selectAll}
-				checked={this.props.checkedAll}
-				labelText={translatedHeaderCheckboxLabel}
-				hideLabel
-			/>
-		</div>)
+		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE
+			? (<div role="checkbox" aria-checked={this.props.checkedAll} className="properties-vt-header-checkbox">
+				<Checkbox
+					id={`properties-vt-hd-cb-${scrollKey}`}
+					onChange={this.selectAll}
+					checked={this.props.checkedAll}
+					labelText={translatedHeaderCheckboxLabel}
+					hideLabel
+				/>
+			</div>)
 			: "";
 
 		return (<div className={className} data-role="properties-header-row" role="row" style={style}>
@@ -499,6 +500,7 @@ class VirtualizedTable extends React.Component {
 
 								sort={this.props.onSort}
 								sortDirection={this.props.sortDirection}
+								tabIndex={-1}
 							>
 								{
 									this.state.columns.map((column) => (

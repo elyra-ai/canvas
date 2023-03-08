@@ -1067,7 +1067,7 @@ describe("structuretable columns sort correctly", () => {
 	});
 	it("should sort column alphabetically ascending and descending", () => {
 		// click on the column header to trigger the onClick sort
-		const sortableCol = tableHeader.find("div[role='columnheader']").at(1);
+		const sortableCol = tableHeader.find("div[role='columnheader']").at(0);
 		sortableCol.simulate("click");
 		tableRows = controller.getPropertyValue(propertyId);
 		expect(tableRows[0][0]).to.equal("Age");
