@@ -199,6 +199,7 @@ class EditorForm extends React.Component {
 				}
 				tabContent.push(
 					<Tab
+						id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
 						label={tab.text}
