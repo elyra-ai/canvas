@@ -132,10 +132,10 @@ export default class DetachedCanvas extends React.Component {
 	getDecorationsArray(linkLabel) {
 		const decs = [
 			{ id: "dec-0", position: "source", path: "M 0 -5 A 5 5 0 1 1 0 5 A 5 5 0 1 1 0 -5", class_name: "det-link-dot", temporary: true },
-			{ id: "dec-1", position: "source", image: "images/up-triangle.svg", class_name: "det-tri",
-				distance: 40, x_pos: -16, y_pos: -16, width: 36, height: 36, outline: true, tooltip: "Up Triangle", temporary: true },
-			{ id: "dec-2", position: "target", image: "images/down-triangle.svg", class_name: "det-tri",
-				distance: -40, x_pos: -16, y_pos: -16, width: 36, height: 36, outline: true, tooltip: "Down Triangle", temporary: true },
+			{ id: "dec-1", position: "source", image: "images/custom-canvases/stages/decorations/tri-up.svg", class_name: "det-tri",
+				distance: 40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Up Triangle", temporary: true },
+			{ id: "dec-2", position: "target", image: "images/custom-canvases/stages/decorations/tri-down.svg", class_name: "det-tri",
+				distance: -40, x_pos: -7, y_pos: -7, width: 14, height: 14, outline: true, tooltip: "Down Triangle", temporary: true },
 			{ id: "dec-3", position: "middle", path: "M -25 -20 L -25 20 25 20 25 -20 Z", class_name: "det-link-label-background", temporary: true },
 			{ id: "link-label", position: "middle", label: linkLabel, label_editable: true, label_allow_return_key: "save",
 				x_pos: -16, y_pos: -10, width: 30, height: 25, temporary: true }
