@@ -119,7 +119,8 @@ class ToolTip extends React.Component {
 	// (scrollWidth) value is equal to the minimum width the element would require
 	//  in order to fit all the content in the viewport without using a horizontal scrollbar
 	canDisplayFullText(elem) {
-		if (elem) {
+		const input = elem.getElementsByTagName("input")[0];
+		if (elem && !(input && input.scrollWidth > input.clientWidth)) {
 			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
 			const displayWidth = elem.offsetWidth;
 			let fullWidth = firstChildWidth;
