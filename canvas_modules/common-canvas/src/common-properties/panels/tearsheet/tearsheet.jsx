@@ -47,6 +47,7 @@ class TearSheet extends Component {
 					className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
 					open={this.props.open}
 					size="lg"
+					aria-label={title}
 					preventCloseOnClickOutside
 				>
 					<ModalHeader
