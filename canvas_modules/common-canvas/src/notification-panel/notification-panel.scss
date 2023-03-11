@@ -54,7 +54,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	.notification-panel-header {
 		@include carbon--type-style("productive-heading-02");
 		display: flex;
-		justify-content: flex-start;
+		justify-content: space-between;
 	}
 	.notification-panel-subtitle {
 		@include carbon--type-style("helper-text-01");
@@ -63,7 +63,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	}
 	.notification-panel-close-button {
 		bottom: $spacing-02;
-		left: calc(#{$spacing-06} + #{$spacing-12});
+		left: $spacing-02;
 	}
 }
 
