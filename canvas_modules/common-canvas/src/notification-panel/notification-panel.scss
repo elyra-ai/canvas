@@ -53,6 +53,8 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	padding: $spacing-05;
 	.notification-panel-header {
 		@include carbon--type-style("productive-heading-02");
+		display: flex;
+		justify-content: flex-start;
 	}
 	.notification-panel-subtitle {
 		@include carbon--type-style("helper-text-01");
