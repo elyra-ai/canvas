@@ -451,6 +451,7 @@ class PropertiesMain extends React.Component {
 		}
 		const applyLabel = this.getApplyButtonLabel();
 		const rejectLabel = this.getRejectButtonLabel();
+		const propertiesLabel = this.propertiesController.getTitle();
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
@@ -511,7 +512,7 @@ class PropertiesMain extends React.Component {
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					bsSize={this.state.editorSize}
-					title={this.propertiesController.getTitle()}
+					title={propertiesLabel}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
@@ -535,7 +536,7 @@ class PropertiesMain extends React.Component {
 					open
 					onCloseCallback={this.props.propertiesConfig.applyOnBlur ? this.applyPropertiesEditing.bind(this, true) : null}
 					tearsheet={{
-						title: this.propertiesController.getTitle(),
+						title: propertiesLabel,
 						content: editorForm
 					}}
 					applyLabel={applyLabel}
@@ -548,7 +549,7 @@ class PropertiesMain extends React.Component {
 			} else { // Modal
 				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
-					title={this.propertiesController.getTitle()}
+					title={propertiesLabel}
 					bsSize={this.state.editorSize}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -574,11 +575,10 @@ class PropertiesMain extends React.Component {
 			return (
 				<Provider store={this.propertiesController.getStore()}>
 					<aside
-						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL)}
+						aria-label={PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: propertiesLabel })}
 						role="complementary"
 						ref={ (ref) => (this.commonProperties = ref) }
 						className={className}
-						tabIndex="0"
 						onBlur={this.onBlur}
 						style={overrideStyle}
 					>
