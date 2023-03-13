@@ -102,7 +102,7 @@ class CommonProperties extends React.Component {
 		const closeFunction = this.props.callbacks.closePropertiesDialog;
 		const revertText = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REVERTBUTTON_LABEL);
 		const revertFunction = this.revertState;
-		const propertiesLandmarkRoleLabel = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL);
+		const propertiesLandmarkRoleLabel = formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_ERROR_LABEL);
 		let closeAndRevertContainer;
 		if (this.props.propertiesConfig.containerType === "Custom") { // Right flyout view or Custom
 			if (this.propertiesMainHasMounted === true) {

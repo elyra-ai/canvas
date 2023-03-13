@@ -103,6 +103,7 @@ export const MESSAGE_KEYS = {
 	DROPDOWN_TOOLTIP_CLEARSELECTION: "dropdown.tooltip.clear.selection",
 	TRUNCATE_LONG_STRING_ERROR: "truncate.long.string.error",
 	PROPERTIES_LABEL: "properties.label",
+	PROPERTIES_ERROR_LABEL: "properties.error.label",
 	PROPERTIES_ACTION_LABEL: "action.commonProperties",
 	READONLYTABLE_EDIT_BUTTON_LABEL: "readonlytable.edit.button.label",
 	TOGGLETEXT_ICON_DESCRIPTION: "toggletext.icon.description",
