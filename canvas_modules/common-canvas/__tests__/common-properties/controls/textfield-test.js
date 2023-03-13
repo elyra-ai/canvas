@@ -376,6 +376,29 @@ describe("textfield list works correctly", () => {
 		input.simulate("change", { target: { value: "" } });
 		expect(controller.getPropertyValue(propertyId)).to.eql([]);
 	});
+
+	it("textfield should tooltips for truncated textfiled & header labels in table cells", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(textfieldParamDef);
+		const wrapper = renderedObject.wrapper;
+		propertyUtils.openSummaryPanel(wrapper, "textfield-table-panels");
+		const tableControlDiv = wrapper.find("div[data-id='properties-textfield-table-summary-ctrls']");
+
+		const headerValues = tableControlDiv.find("div.ReactVirtualized__Table__headerColumn.properties-autosized-vt-header");
+		const textfiledValues = tableControlDiv.find(".ReactVirtualized__Table__row.properties-vt-row-class");
+
+		const standard = headerValues.at(0).find(".properties-vt-column-without-resize");
+		const hopper = textfiledValues.at(0).find(".properties-table-cell-control.table-textfield-control-class");
+
+		// Addtional header value wont show tooltip
+		expect(standard.find(".properties-tooltips")
+			.at(0)
+			.props()).to.have.property("showToolTipIfTruncated", false);
+
+		// Hopper textfiled will show  tooltip
+		expect(hopper.at(0).find(".properties-tooltips")
+			.at(0)
+			.props()).to.have.property("showToolTipIfTruncated", true);
+	});
 });
 
 

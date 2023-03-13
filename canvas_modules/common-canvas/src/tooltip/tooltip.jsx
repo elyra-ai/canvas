@@ -107,7 +107,7 @@ class ToolTip extends React.Component {
 		const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
 		const showToolTip = (
 			// show tooltip if not disabled and showToolTipIfTruncated is false
-			(!this.props.disable && !this.props.showToolTipIfTruncated) ||
+			(!this.props.disable && !this.props.showToolTipIfTruncated && !canDisplayFullText) ||
 			// show tooltip if not disabled and showToolTipIfTruncated is true and string is truncated
 			(!this.props.disable && this.props.showToolTipIfTruncated && !canDisplayFullText));
 		return showToolTip;
