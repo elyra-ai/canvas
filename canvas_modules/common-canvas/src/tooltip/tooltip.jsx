@@ -30,6 +30,7 @@ class ToolTip extends React.Component {
 		};
 
 		this.pendingTooltip = null;
+		this.truncatedElement = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 	}
 
@@ -107,7 +108,7 @@ class ToolTip extends React.Component {
 		const canDisplayFullText = this.canDisplayFullText(this.triggerRef);
 		const showToolTip = (
 			// show tooltip if not disabled and showToolTipIfTruncated is false
-			(!this.props.disable && !this.props.showToolTipIfTruncated && !canDisplayFullText) ||
+			(!this.props.disable && !this.props.showToolTipIfTruncated) ||
 			// show tooltip if not disabled and showToolTipIfTruncated is true and string is truncated
 			(!this.props.disable && this.props.showToolTipIfTruncated && !canDisplayFullText));
 		return showToolTip;
@@ -119,8 +120,7 @@ class ToolTip extends React.Component {
 	// (scrollWidth) value is equal to the minimum width the element would require
 	//  in order to fit all the content in the viewport without using a horizontal scrollbar
 	canDisplayFullText(elem) {
-		const input = elem.getElementsByTagName("input")[0];
-		if (elem && !(input && input.scrollWidth > input.clientWidth)) {
+		if (elem && this.truncatedElement) {
 			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
 			const displayWidth = elem.offsetWidth;
 			let fullWidth = firstChildWidth;
@@ -332,6 +332,8 @@ class ToolTip extends React.Component {
 	}
 
 	render() {
+		const inputTruncated = this.triggerRef && this.triggerRef.getElementsByTagName("input")[0];
+		this.truncatedElement = !(inputTruncated && inputTruncated.scrollWidth > inputTruncated.clientWidth);
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {
