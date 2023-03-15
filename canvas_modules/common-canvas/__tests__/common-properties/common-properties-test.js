@@ -922,7 +922,7 @@ describe("CommonProperties should setForm correctly", () => {
 });
 
 describe("CommonProperties should set propertiesConfig correctly", () => {
-	it("properties buttons should use a custom label if provided in propertiesConfig", () => {
+	it("propertiesConfig should get set if updated in props", () => {
 		const propertiesConfig = {
 			containerType: "Custom",
 			rightFlyout: true,
