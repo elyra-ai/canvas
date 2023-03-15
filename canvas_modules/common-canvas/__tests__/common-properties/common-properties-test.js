@@ -921,6 +921,43 @@ describe("CommonProperties should setForm correctly", () => {
 	});
 });
 
+describe("CommonProperties should set propertiesConfig correctly", () => {
+	it("properties buttons should use a custom label if provided in propertiesConfig", () => {
+		const propertiesConfig = {
+			containerType: "Custom",
+			rightFlyout: true,
+			applyOnBlur: false,
+			heading: true,
+			showRequiredIndicator: true,
+			trimSpaces: true
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, propertiesConfig);
+		const controller = renderedObject.controller;
+
+		let actualConfig = controller.getPropertiesConfig();
+		expect(actualConfig).to.eql(propertiesConfig);
+
+		const updatedPropertiesConfig = {
+			containerType: "Tearsheet",
+			rightFlyout: false,
+			applyOnBlur: false,
+			heading: true,
+			showRequiredIndicator: true,
+			trimSpaces: true
+		};
+
+		const newCommonProps = (<CommonProperties
+			propertiesInfo={propertiesInfo}
+			propertiesConfig={updatedPropertiesConfig}
+		/>);
+
+		// call "setProps" to update config: https://github.com/enzymejs/enzyme/issues/1925#issuecomment-445442480
+		renderedObject.wrapper.setProps({ children: newCommonProps });
+		actualConfig = controller.getPropertiesConfig();
+		expect(actualConfig).to.eql(updatedPropertiesConfig);
+	});
+});
+
 describe("PropertiesButtons should render with the correct labels", () => {
 	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });

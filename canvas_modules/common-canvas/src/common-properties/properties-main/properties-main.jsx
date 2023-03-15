@@ -123,6 +123,10 @@ class PropertiesMain extends React.Component {
 				}
 			}
 		}
+
+		if (newProps.propertiesConfig && !isEqual(newProps.propertiesConfig, this.propertiesController.getPropertiesConfig())) {
+			this.propertiesController.setPropertiesConfig(newProps.propertiesConfig);
+		}
 	}
 
 	onBlur(e) {
