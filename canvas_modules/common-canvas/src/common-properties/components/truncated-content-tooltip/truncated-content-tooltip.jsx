@@ -24,6 +24,8 @@ import { has } from "lodash";
 export default class TruncatedContentTooltip extends React.Component {
 
 	render() {
+		const input = this.triggerRef && this.triggerRef.getElementsByTagName("input")[0];
+		const truncatedInput = !(input && input.scrollWidth > input.clientWidth);
 		let tooltipText = this.props.tooltipText;
 		if (typeof this.props.tooltipText !== "object") {
 			tooltipText = String(this.props.tooltipText);
@@ -35,16 +37,20 @@ export default class TruncatedContentTooltip extends React.Component {
 		);
 		return (
 			<div className="properties-truncated-tooltip">
-				<Tooltip
-					id={`${uuid4()}-properties`}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-					disable={has(this.props, "disabled") ? this.props.disabled : true}
-					showToolTipIfTruncated
-				>
-					{this.props.content}
-				</Tooltip>
+				{truncatedInput
+					?	<Tooltip
+						id={`${uuid4()}-properties`}
+						tip={tooltip}
+						direction="bottom"
+						className="properties-tooltips"
+						disable={has(this.props, "disabled") ? this.props.disabled : true}
+						showToolTipIfTruncated
+					>
+						{this.props.content}
+					</Tooltip>
+					: <>
+						{this.props.content}
+					</>}
 			</div>
 		);
 	}

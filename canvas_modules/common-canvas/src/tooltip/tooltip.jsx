@@ -30,7 +30,6 @@ class ToolTip extends React.Component {
 		};
 
 		this.pendingTooltip = null;
-		this.truncatedElement = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 	}
 
@@ -120,7 +119,7 @@ class ToolTip extends React.Component {
 	// (scrollWidth) value is equal to the minimum width the element would require
 	//  in order to fit all the content in the viewport without using a horizontal scrollbar
 	canDisplayFullText(elem) {
-		if (elem && this.truncatedElement) {
+		if (elem) {
 			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
 			const displayWidth = elem.offsetWidth;
 			let fullWidth = firstChildWidth;
@@ -332,8 +331,6 @@ class ToolTip extends React.Component {
 	}
 
 	render() {
-		const inputTruncated = this.triggerRef && this.triggerRef.getElementsByTagName("input")[0];
-		this.truncatedElement = !(inputTruncated && inputTruncated.scrollWidth > inputTruncated.clientWidth);
 		let tooltipContent = null;
 		let triggerContent = null;
 		if (this.props.children) {

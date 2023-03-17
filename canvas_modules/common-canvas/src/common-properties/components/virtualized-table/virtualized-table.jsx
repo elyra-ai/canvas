@@ -22,6 +22,8 @@ import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
+import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
+
 
 import { isEmpty, differenceBy, mapValues } from "lodash";
 import { v4 as uuid4 } from "uuid";
@@ -255,7 +257,6 @@ class VirtualizedTable extends React.Component {
 				</Tooltip>
 			</div>);
 
-		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
@@ -276,21 +277,21 @@ class VirtualizedTable extends React.Component {
 				/>
 			</Draggable>)
 			: "";
-
+		let disabled = true;
+		if (label && this.props.state !== STATES.DISABLED) {
+			disabled = false;
+		}
 		const header = isEmpty(tooltip)
 			? (<div className="properties-vt-label-icon">
 				{label}
 				{infoIcon}
 			</div>)
 			: (<div className="properties-vt-label-tip-icon">
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-				>
-					{label}
-				</Tooltip>
+				<TruncatedContentTooltip
+					content={label}
+					tooltipText={label}
+					disabled={disabled}
+				/>
 				{infoIcon}
 			</div>);
 
@@ -540,6 +541,7 @@ VirtualizedTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	rowCount: PropTypes.number.isRequired,
 	rowGetter: PropTypes.func.isRequired,
+	state: PropTypes.string, // pass in by redux
 	rowHeight: PropTypes.oneOfType([
 		PropTypes.func.isRequired,
 		PropTypes.number.isRequired
