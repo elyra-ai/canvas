@@ -573,6 +573,18 @@ function convertValueDataTypes(currentParameters, paramDefs) {
 	return convertedCurrentParameters;
 }
 
+// Return string value for {name: string, row: integer, col: integer}
+function getPropertyIdOfTableControlString(propertyId) {
+	let propertyIdString = propertyId.name;
+	if (typeof propertyId.row !== "undefined") {
+		propertyIdString = `${propertyIdString}-${propertyId.row}`;
+	}
+	if (typeof propertyId.col !== "undefined") {
+		propertyIdString = `${propertyIdString}-${propertyId.col}`;
+	}
+	return propertyIdString;
+}
+
 export {
 	toType,
 	formatMessage,
@@ -590,5 +602,6 @@ export {
 	fieldStringToValue,
 	generateId,
 	getDMDefault,
-	getDMFieldIcon
+	getDMFieldIcon,
+	getPropertyIdOfTableControlString
 };

@@ -360,6 +360,10 @@ class ToolTip extends React.Component {
 				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
 				onBlur={this.props.showToolTipOnClick ? onBlur : null}
 				tabIndex={this.props.showToolTipOnClick ? 0 : null}
+				role={this.props.showToolTipOnClick ? "button" : null}
+				aria-labelledby={this.props.id}
+				aria-expanded={this.props.showToolTipOnClick ? this.state.isTooltipVisible : null}
+				aria-controls={this.props.showToolTipOnClick ? this.props.id : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
@@ -406,7 +410,7 @@ class ToolTip extends React.Component {
 		if (tooltipContent || link) {
 			tooltip = (
 				<Portal>
-					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
+					<div role="tooltip" id={this.props.id} data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
 						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />

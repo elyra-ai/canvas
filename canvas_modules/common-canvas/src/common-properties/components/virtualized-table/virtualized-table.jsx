@@ -245,7 +245,7 @@ class VirtualizedTable extends React.Component {
 			? null
 			: (<div className="properties-vt-info-icon-tip">
 				<Tooltip
-					id={`properties-tooltip-${columnData.headerLabel}-info`}
+					id={`properties-tooltip-${columnData.headerLabel.split(" ").join("")}-info`}
 					tip={columnData.description}
 					direction="bottom"
 					className="properties-tooltips"

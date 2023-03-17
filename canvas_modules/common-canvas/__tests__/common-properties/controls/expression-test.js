@@ -461,10 +461,10 @@ describe("expression-builder renders correctly", () => {
 		// Verify info icon
 		const headerInfoIcon = header.find(".properties-vt-info-icon-tip");
 		expect(headerInfoIcon).to.have.length(1);
-		let infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		let infoTip = wrapper.find("div[data-id='properties-tooltip-CustomValue-info']");
 		expect(infoTip.props()).to.have.property("aria-hidden", true);
-		headerInfoIcon.find("div[data-id='properties-tooltip-Custom Value-info-trigger']").simulate("click");
-		infoTip = wrapper.find("div[data-id='properties-tooltip-Custom Value-info']");
+		headerInfoIcon.find("div[data-id='properties-tooltip-CustomValue-info-trigger']").simulate("click");
+		infoTip = wrapper.find("div[data-id='properties-tooltip-CustomValue-info']");
 		expect(infoTip.props()).to.have.property("aria-hidden", false);
 	});
 });
