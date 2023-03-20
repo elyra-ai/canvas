@@ -53,6 +53,10 @@ class VirtualizedTable extends React.Component {
 			columns: this.props.columns,
 			columnResized: false
 		};
+		this.uuidForColumns = this.state.columns.reduce(function(prev, column) {
+			prev[column.key] = uuid4();
+			return prev;
+		}, {});
 		this.virtualizedTableRef = React.createRef();
 		this.lastChecked = isEmpty(props.rowsSelected) ? null : props.rowsSelected.slice(-1).pop();
 
@@ -245,7 +249,7 @@ class VirtualizedTable extends React.Component {
 			? null
 			: (<div className="properties-vt-info-icon-tip">
 				<Tooltip
-					id={`properties-tooltip-${columnData.headerLabel.split(" ").join("")}-info`}
+					id={`properties-tooltip-${this.uuidForColumns[dataKey]}-info`}
 					tip={columnData.description}
 					direction="bottom"
 					className="properties-tooltips"
@@ -255,7 +259,7 @@ class VirtualizedTable extends React.Component {
 				</Tooltip>
 			</div>);
 
-		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
+		const tooltipId = `${this.uuidForColumns[dataKey]}-tooltip-column-${dataKey}`;
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable

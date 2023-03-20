@@ -31,6 +31,7 @@ import SubPanelInvoker from "./invoker.jsx";
 export default class SubPanelCell extends React.Component {
 	constructor(props) {
 		super(props);
+		this.uuid = uuid4();
 		this.showSubPanel = this.showSubPanel.bind(this);
 		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
 	}
@@ -68,7 +69,7 @@ export default class SubPanelCell extends React.Component {
 				controller={this.props.controller}
 			>
 				<Tooltip
-					id={uuid4() + "-" + tooltipId}
+					id={`${this.uuid}-${tooltipId}`}
 					tip={subPanelToolTip}
 					direction="left"
 					className="properties-tooltips icon-tooltip"

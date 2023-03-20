@@ -24,6 +24,10 @@ import classNames from "classnames";
 
 
 export default class ExpressionSelectOperator extends React.Component {
+	constructor(props) {
+		super(props);
+		this.uuid = uuid4();
+	}
 
 	onOperatorClick(value, evt) {
 		if (this.props.onChange) {
@@ -35,7 +39,7 @@ export default class ExpressionSelectOperator extends React.Component {
 		if (this.props.operatorList) {
 			const operatorButtons = [];
 			this.props.operatorList.forEach((operator, index) => {
-				const tooltipId = uuid4() + "-tooltip-expression-operator";
+				const tooltipId = `${this.uuid}-tooltip-expression-operator-${index}`;
 				const tooltip = (
 					<div className="properties-tooltips">
 						{operator.help}

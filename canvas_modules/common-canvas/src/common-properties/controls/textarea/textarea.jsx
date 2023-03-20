@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { TextArea } from "carbon-components-react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
-import { formatMessage, getPropertyIdOfTableControlString } from "./../../util/property-utils";
+import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
 import classNames from "classnames";
@@ -34,7 +34,8 @@ class TextareaControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForMultiLineControls());
-		this.id = ControlUtils.getControlId(this.props.propertyId);
+		this.uuid = uuid4();
+		this.id = ControlUtils.getControlId(this.props.propertyId, this.uuid);
 	}
 
 	handleChange(evt) {
@@ -98,7 +99,7 @@ class TextareaControl extends React.Component {
 
 		let display = textArea;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + getPropertyIdOfTableControlString(this.props.propertyId);
+			const tooltipId = `${this.id}-tooltip-column-textarea`;
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
