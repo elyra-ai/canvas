@@ -104,6 +104,7 @@ class TextfieldControl extends React.Component {
 				labelText={this.props.controlItem}
 				hideLabel={this.props.tableControl}
 				light={this.props.controller.getLight() && this.props.control.light}
+				ref={(ref) => (this.triggerRef = ref)}
 			/>);
 		}
 
@@ -119,6 +120,7 @@ class TextfieldControl extends React.Component {
 					content={content}
 					tooltipText={value}
 					disabled={disabled}
+					truncatElem={this.triggerRef && (this.triggerRef.scrollWidth > this.triggerRef.clientWidth) && value}
 				/>
 			);
 		}

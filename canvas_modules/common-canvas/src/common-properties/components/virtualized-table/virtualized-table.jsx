@@ -26,7 +26,6 @@ import TruncatedContentTooltip from "./../../components/truncated-content-toolti
 
 
 import { isEmpty, differenceBy, mapValues } from "lodash";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 import PropTypes from "prop-types";

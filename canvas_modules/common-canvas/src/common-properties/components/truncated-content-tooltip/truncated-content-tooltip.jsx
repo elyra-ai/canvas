@@ -22,10 +22,27 @@ import { has } from "lodash";
 
 // Reusable component to show tooltip if the content is truncated
 export default class TruncatedContentTooltip extends React.Component {
+	// Return true if the string can be displayed in the available space
+	// Return false if the string is truncated and ellipsis is shown on the UI
+	// (offsetWidth) is a measurement in pixels of the element's CSS width, including any borders, padding, and vertical scrollbars
+	// (scrollWidth) value is equal to the minimum width the element would require
+	//  in order to fit all the content in the viewport without using a horizontal scrollbar
+	canDisplayFullText(elem) {
+		if (elem) {
+			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
+			const displayWidth = elem.offsetWidth;
+			let fullWidth = firstChildWidth;
+			if (firstChildWidth === 0) {
+				fullWidth = elem.scrollWidth;
+			}
+			const canDisplayFullText = fullWidth <= displayWidth;
+			return canDisplayFullText;
+		}
+		return false; // Show tooltip if we cannot read the width (Canvas objects)
+	}
 
 	render() {
-		const input = this.triggerRef && this.triggerRef.getElementsByTagName("input")[0];
-		const truncatedInput = !(input && input.scrollWidth > input.clientWidth);
+		const canDisplayFullText = this.canDisplayFullText(this.props.truncatElem);
 		let tooltipText = this.props.tooltipText;
 		if (typeof this.props.tooltipText !== "object") {
 			tooltipText = String(this.props.tooltipText);
@@ -37,7 +54,7 @@ export default class TruncatedContentTooltip extends React.Component {
 		);
 		return (
 			<div className="properties-truncated-tooltip">
-				{truncatedInput
+				{(!canDisplayFullText)
 					?	<Tooltip
 						id={`${uuid4()}-properties`}
 						tip={tooltip}
@@ -45,6 +62,7 @@ export default class TruncatedContentTooltip extends React.Component {
 						className="properties-tooltips"
 						disable={has(this.props, "disabled") ? this.props.disabled : true}
 						showToolTipIfTruncated
+						truncatElem={this.props.truncatElem}
 					>
 						{this.props.content}
 					</Tooltip>
@@ -58,6 +76,7 @@ export default class TruncatedContentTooltip extends React.Component {
 
 TruncatedContentTooltip.propTypes = {
 	content: PropTypes.element.isRequired,
+	truncatElem: PropTypes.truncatElem,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,
 		PropTypes.object.isRequired,
