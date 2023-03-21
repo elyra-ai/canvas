@@ -3797,9 +3797,7 @@ export default class SVGCanvasRenderer {
 				.on("mousedown", (d3Event) => {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					this.ellipsisClicked = true;
-					if (!this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
-					}
+					this.selectObjectD3Event(d3Event, d);
 					if (this.canvasController.isContextMenuDisplayed()) {
 						this.canvasController.closeContextMenu();
 					} else {
