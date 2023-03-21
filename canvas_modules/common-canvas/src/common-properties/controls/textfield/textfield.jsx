@@ -110,7 +110,7 @@ class TextfieldControl extends React.Component {
 
 		let display = textInput;
 		if (this.props.tableControl) {
-			const tooltipId = `${this.id}-tooltip-column-textfield`;
+			const tooltipId = "tooltip-column-textfield";
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;

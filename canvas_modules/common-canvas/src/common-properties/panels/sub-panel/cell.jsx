@@ -18,7 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 import { Settings16 } from "@carbon/icons-react";
-import { v4 as uuid4 } from "uuid";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";
@@ -31,7 +30,6 @@ import SubPanelInvoker from "./invoker.jsx";
 export default class SubPanelCell extends React.Component {
 	constructor(props) {
 		super(props);
-		this.uuid = uuid4();
 		this.showSubPanel = this.showSubPanel.bind(this);
 		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
 	}
@@ -69,7 +67,7 @@ export default class SubPanelCell extends React.Component {
 				controller={this.props.controller}
 			>
 				<Tooltip
-					id={`${this.uuid}-${tooltipId}`}
+					id={tooltipId}
 					tip={subPanelToolTip}
 					direction="left"
 					className="properties-tooltips icon-tooltip"

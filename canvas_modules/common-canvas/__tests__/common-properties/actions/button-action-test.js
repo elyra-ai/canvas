@@ -134,7 +134,9 @@ describe("action-button renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		const tooltipTrigger = wrapper.find(".tooltip-trigger");
+		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
+		const tooltip = wrapper.find(`div[data-id='${tooltipId}']`);
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Increment number by 1.");
 

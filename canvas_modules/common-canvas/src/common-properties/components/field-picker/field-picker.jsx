@@ -33,8 +33,6 @@ import { has, isEmpty, sortBy, isEqual } from "lodash";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 
-import { v4 as uuid4 } from "uuid";
-
 export default class FieldPicker extends React.Component {
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if (!isEqual(nextProps.fields, prevState.origFields)) {
@@ -57,7 +55,6 @@ export default class FieldPicker extends React.Component {
 			filterText: "",
 			selectedFields: this.props.currentFields // list of fields selected
 		};
-		this.uuid = uuid4();
 		this.multiSchema = props.controller.getDatasetMetadataSchemas() &&
 			props.controller.getDatasetMetadataSchemas().length > 1;
 		this.filterList = [];
@@ -344,7 +341,7 @@ export default class FieldPicker extends React.Component {
 					break;
 				}
 			}
-			const filterTooltipId = that.uuid + "-tooltip-filters-" + ind;
+			const filterTooltipId = "tooltip-filters-" + ind;
 			const dataTypeLabel = PropertyUtils.formatMessage(that.props.controller.getReactIntl(), MESSAGE_KEYS[`FIELDPICKER_${filter.type.toUpperCase()}_LABEL`]);
 			const tooltip = (
 				<div className="properties-tooltips">

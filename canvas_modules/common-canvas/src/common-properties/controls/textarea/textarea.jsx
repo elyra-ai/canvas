@@ -99,7 +99,7 @@ class TextareaControl extends React.Component {
 
 		let display = textArea;
 		if (this.props.tableControl) {
-			const tooltipId = `${this.id}-tooltip-column-textarea`;
+			const tooltipId = "tooltip-column-textarea";
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
