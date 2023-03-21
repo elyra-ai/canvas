@@ -373,13 +373,13 @@ class ToolTip extends React.Component {
 
 		if ((typeof this.props.tip) === "string") {
 			tooltipContent = (
-				<span id={`${this.uuid}-tooltipContainer`}>
+				<span className="tooltipContainer">
 					{this.props.tip}
 				</span>
 			);
 		} else if ((typeof this.props.tip) === "object") {
 			tooltipContent = (
-				<div id={`${this.uuid}-tooltipContainer`}>
+				<div className="tooltipContainer">
 					{this.props.tip}
 				</div>
 			);
@@ -419,7 +419,7 @@ class ToolTip extends React.Component {
 						aria-hidden={!this.state.isTooltipVisible}
 						direction={this.props.direction}
 					>
-						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
+						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
 						</svg>

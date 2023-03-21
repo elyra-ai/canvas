@@ -146,10 +146,9 @@ describe("control-item renders correctly", () => {
 		expect(tooltipLinkHandler.calledOnce).to.equal(true);
 		expect(tooltipLinkHandler.calledWith(control.description.link)).to.be.true;
 
-		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
-		const tooltip = wrapper.find(`div[data-id='${tooltipId}']`);
+		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.find("span").text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link in tooltip
 		expect(tooltip.find("Link")).to.have.length(1);
 		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(control.description.link).label);
@@ -203,10 +202,9 @@ describe("control-item renders correctly", () => {
 		tooltipTrigger.simulate("click");
 		expect(tooltipLinkHandler.calledOnce).to.equal(false);
 
-		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
-		const tooltip = wrapper.find(`div[data-id='${tooltipId}']`);
+		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link does not exist in tooltip
 		expect(tooltip.find("Link")).to.have.length(0);
 	});

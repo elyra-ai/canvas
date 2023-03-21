@@ -141,9 +141,7 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltipTrigger = wrapper.find(".tooltip-trigger");
-		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
-		const tooltip = wrapper.find(`div[data-id='${tooltipId}']`);
+		const tooltip = wrapper.find("div.tooltipContainer");
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Click to rotate through moon phases.");
 	});
