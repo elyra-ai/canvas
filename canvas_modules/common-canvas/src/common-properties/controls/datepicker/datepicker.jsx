@@ -47,8 +47,9 @@ class DatepickerControl extends React.Component {
 
 	handleChange(evt) {
 		if (evt.length > 0) {
+			const isoDate = getISODate(evt[0]);
 			this.value = getFormattedDateFromISO(evt[0], this.props.control.dateFormat); // display value
-			this.props.controller.updatePropertyValue(this.props.propertyId, getISODate(evt[0])); // internal format
+			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate); // internal format
 		} else {
 			this.value = "";
 			this.props.controller.updatePropertyValue(this.props.propertyId, "");

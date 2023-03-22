@@ -17,8 +17,8 @@
 // 'datepicker' and 'datepickerRange' uses flatpickr internally through Carbon
 // dateFormat tokens: https://flatpickr.js.org/formatting/#date-formatting-tokens
 // Gets the formatted date to display in the control
-function getFormattedDateFromISO(isoDate, dateFormat) {
-	const date = new Date(isoDate);
+function getFormattedDateFromISO(inDate, dateFormat) {
+	const date = new Date(inDate);
 	if (!isNaN(date)) {
 		const year = date.getFullYear().toString();
 		let month = (date.getMonth() + 1).toString(); // month is 0 indexed
@@ -27,7 +27,7 @@ function getFormattedDateFromISO(isoDate, dateFormat) {
 		}
 		let day = date.getDate().toString();
 		if (day.length === 1) {
-			day = "0" + month;
+			day = "0" + day;
 		}
 
 		let formattedDate = dateFormat;

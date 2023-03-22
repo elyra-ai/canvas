@@ -43,15 +43,15 @@ class DatepickerRangeControl extends React.Component {
 	// This handles changes for simple, single, and the start range date
 	handleDateRangeChange(evt) {
 		if (evt[0]) {
+			const isoStartDate = getISODate(evt[0]); // internal format
 			this.valueStart = getFormattedDateFromISO(evt[0], this.props.control.dateFormat); // display value
-			const valueStartInternal = getISODate(evt[0]); // internal format
-			let valueEndInternal = "";
+			let isoEndDate = "";
 
 			if (evt[1]) { // Cannot enter end date without specifying start date
+				isoEndDate = getISODate(evt[1]); // internal format
 				this.valueEnd = getFormattedDateFromISO(evt[1], this.props.control.dateFormat); // display value
-				valueEndInternal = getISODate(evt[1]); // internal format
 			}
-			this.props.controller.updatePropertyValue(this.props.propertyId, [valueStartInternal, valueEndInternal]);
+			this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 		}
 	}
 
