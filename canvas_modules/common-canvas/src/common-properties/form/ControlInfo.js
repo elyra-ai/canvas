@@ -94,6 +94,12 @@ export class Control {
 		if (settings.dateFormat) {
 			this.dateFormat = settings.dateFormat;
 		}
+		if (settings.datepickerType) {
+			this.datepickerType = settings.datepickerType;
+		}
+		if (settings.locale) {
+			this.locale = settings.locale;
+		}
 		if (settings.timeFormat) {
 			this.timeFormat = settings.timeFormat;
 		}

@@ -153,6 +153,14 @@ export const DATA_TYPE = {
 	TIMESTAMP: "timestamp"
 };
 
+export const DATEPICKER_TYPE = {
+	SIMPLE: "simple",
+	SINGLE: "single",
+	RANGE: "range"
+};
+
+export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d";
+
 export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
 
 export const DEFAULT_TIME_FORMAT = "H:m:s";
@@ -277,3 +285,5 @@ export const CONTAINER_TYPE = {
 	TEARSHEET: "Tearsheet",
 	MODAL: "Modal"
 };
+
+export const DEFAULT_LOCALE = "en";

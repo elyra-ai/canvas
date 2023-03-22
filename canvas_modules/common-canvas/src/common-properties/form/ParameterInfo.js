@@ -138,6 +138,9 @@ export class ParameterDef {
 		if (settings.dateFormat) {
 			this.dateFormat = settings.dateFormat;
 		}
+		if (settings.datepickerType) {
+			this.datepickerType = settings.datepickerType;
+		}
 		if (settings.timeFormat) {
 			this.timeFormat = settings.timeFormat;
 		}
@@ -352,6 +355,8 @@ export class ParameterDef {
 				"moveableRows": propertyOf(uihint)("moveable_rows"),
 				"generatedValues": propertyOf(uihint)("generated_values"),
 				"dateFormat": propertyOf(uihint)("date_format"),
+				"datepickerType": propertyOf(uihint)("datepicker_type"),
+				"locale": propertyOf(uihint)("locale"),
 				"timeFormat": propertyOf(uihint)("time_format"),
 				"customControlId": propertyOf(uihint)("custom_control_id"),
 				"data": propertyOf(uihint)("data"),
