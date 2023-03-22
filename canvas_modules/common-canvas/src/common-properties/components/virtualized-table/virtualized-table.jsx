@@ -24,7 +24,6 @@ import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
 
 import { isEmpty, differenceBy, mapValues } from "lodash";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 import PropTypes from "prop-types";
@@ -245,7 +244,7 @@ class VirtualizedTable extends React.Component {
 			? null
 			: (<div className="properties-vt-info-icon-tip">
 				<Tooltip
-					id={`properties-tooltip-${columnData.headerLabel}-info`}
+					id="properties-tooltip-info"
 					tip={columnData.description}
 					direction="bottom"
 					className="properties-tooltips"
@@ -255,7 +254,7 @@ class VirtualizedTable extends React.Component {
 				</Tooltip>
 			</div>);
 
-		const tooltipId = uuid4() + "-tooltip-column-" + dataKey;
+		const tooltipId = `tooltip-column-${dataKey}`;
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable

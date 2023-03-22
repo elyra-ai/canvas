@@ -148,7 +148,7 @@ describe("control-item renders correctly", () => {
 
 		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link in tooltip
 		expect(tooltip.find("Link")).to.have.length(1);
 		expect(tooltip.find("a").text()).to.equal(tooltipLinkHandlerFunction(control.description.link).label);
@@ -204,7 +204,7 @@ describe("control-item renders correctly", () => {
 
 		const tooltip = wrapper.find("div.common-canvas-tooltip");
 		// verify text in tooltip
-		expect(tooltip.find("span#tooltipContainer").text()).to.equal(control.description.text);
+		expect(tooltip.find("span.tooltipContainer").text()).to.equal(control.description.text);
 		// verify link does not exist in tooltip
 		expect(tooltip.find("Link")).to.have.length(0);
 	});

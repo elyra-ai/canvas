@@ -116,7 +116,7 @@ describe("checkboxset control tests", () => {
 				/>
 			</Provider>
 		);
-		const tooltipConatiner = wrapper.find("div#tooltipContainer");
+		const tooltipConatiner = wrapper.find("div.tooltipContainer");
 		for (let i = 0; i < tooltipConatiner.length; ++i) {
 			expect(tooltipConatiner.at(i).text()).to.equal(control.valueDescs[i]);
 		}

@@ -34,7 +34,8 @@ class TextareaControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForMultiLineControls());
-		this.id = ControlUtils.getControlId(this.props.propertyId);
+		this.uuid = uuid4();
+		this.id = ControlUtils.getControlId(this.props.propertyId, this.uuid);
 	}
 
 	handleChange(evt) {
@@ -98,7 +99,7 @@ class TextareaControl extends React.Component {
 
 		let display = textArea;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			const tooltipId = "tooltip-column-textarea";
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;

@@ -29,6 +29,7 @@ const FIELDS_SPECIAL_CHARACTERS_REGEX = new RegExp("[0-9- _$]", "g");
 export default class ExpressionSelectFieldOrFunction extends React.Component {
 	constructor(props) {
 		super(props);
+		this.uuid = uuid4();
 		this.reactIntl = props.controller.getReactIntl();
 		this.valueColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN);
 		this.valueColumnDesc = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN_DESCRIPTION);
@@ -549,7 +550,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-expression-function-select">
 				<Dropdown
-					id={"properties-expression-function-select-dropdown-" + uuid4()}
+					id={"properties-expression-function-select-dropdown-" + this.uuid}
 					light={this.props.controller.getLight()}
 					label={label}
 					items={items}
@@ -578,7 +579,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return (
 			<div className="properties-expression-field-select">
 				<Dropdown
-					id={"properties-expression-field-select-dropdown-" + uuid4()}
+					id={"properties-expression-field-select-dropdown-" + this.uuid}
 					light={this.props.controller.getLight()}
 					label={label}
 					items={newItems}

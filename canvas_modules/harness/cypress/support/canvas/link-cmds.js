@@ -274,7 +274,7 @@ Cypress.Commands.add("getNodePortSelectorInSupernode", (supernodeName, nodeName,
 
 Cypress.Commands.add("getNodePortTipSelector", (portId) => {
 	const inst = document.extraCanvas === true ? "1" : "0";
-	const portTipSelector = `[data-id='node_port_tip_${inst}_${portId}']`;
+	const portTipSelector = `[data-id*='node_port_tip_${inst}_${portId}']`;
 	return portTipSelector;
 });
 

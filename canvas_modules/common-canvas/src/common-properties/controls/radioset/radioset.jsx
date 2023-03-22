@@ -179,7 +179,7 @@ class RadiosetControl extends React.Component {
 				);
 				tooltipIcon = (
 					<Tooltip
-						id={`tooltip-${this.uuid}-${i}`}
+						id={`tooltip-${i}`}
 						tip={tooltip}
 						direction="bottom"
 						className="properties-tooltips"

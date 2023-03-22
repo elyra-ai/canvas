@@ -141,7 +141,7 @@ describe("action-image renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		const tooltip = wrapper.find("div.tooltipContainer");
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Click to rotate through moon phases.");
 	});

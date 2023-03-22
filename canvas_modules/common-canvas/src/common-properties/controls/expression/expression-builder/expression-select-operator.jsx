@@ -19,12 +19,10 @@ import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 
 import Tooltip from "./../../../../tooltip/tooltip";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 
 
 export default class ExpressionSelectOperator extends React.Component {
-
 	onOperatorClick(value, evt) {
 		if (this.props.onChange) {
 			this.props.onChange(value);
@@ -35,7 +33,7 @@ export default class ExpressionSelectOperator extends React.Component {
 		if (this.props.operatorList) {
 			const operatorButtons = [];
 			this.props.operatorList.forEach((operator, index) => {
-				const tooltipId = uuid4() + "-tooltip-expression-operator";
+				const tooltipId = `tooltip-expression-operator-${index}`;
 				const tooltip = (
 					<div className="properties-tooltips">
 						{operator.help}
