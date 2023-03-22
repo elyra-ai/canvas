@@ -35,7 +35,8 @@ class TextfieldControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.charLimit = ControlUtils.getCharLimit(props.control, props.controller.getMaxLengthForSingleLineControls());
-		this.id = ControlUtils.getControlId(props.propertyId);
+		this.uuid = uuid4();
+		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
 		this.isList = false;
 		if (this.props.control.valueDef) {
 			if (this.props.control.valueDef.isList) {
@@ -109,7 +110,7 @@ class TextfieldControl extends React.Component {
 
 		let display = textInput;
 		if (this.props.tableControl) {
-			const tooltipId = uuid4() + "-tooltip-column-" + this.props.propertyId.toString();
+			const tooltipId = "tooltip-column-textfield";
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;

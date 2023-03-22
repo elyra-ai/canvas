@@ -18,7 +18,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "carbon-components-react";
 import { Settings16 } from "@carbon/icons-react";
-import { v4 as uuid4 } from "uuid";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { cloneDeep } from "lodash";
@@ -68,7 +67,7 @@ export default class SubPanelCell extends React.Component {
 				controller={this.props.controller}
 			>
 				<Tooltip
-					id={uuid4() + "-" + tooltipId}
+					id={tooltipId}
 					tip={subPanelToolTip}
 					direction="left"
 					className="properties-tooltips icon-tooltip"

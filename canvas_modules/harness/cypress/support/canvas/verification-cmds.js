@@ -1067,7 +1067,7 @@ Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
 	cy.findCategory(categoryLabel)
 		.invoke("attr", "data-id")
 		.then((dataId) => {
-			cy.get(`div[data-id='paletteTip_${dataId}']`)
+			cy.get(`div[data-id*='paletteTip_${dataId}']`)
 				.should("have.attr", "aria-hidden", "true");
 		});
 });
@@ -1082,7 +1082,7 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 	// Verify the tip shows "below" the node "Define Types"
 	cy.getNodeWithLabel(nodeName)
 		.then((node) => {
-			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			const nodeTipSelector = "[data-id*='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
 			cy.get(nodeTipSelector)
 				.then((tip) => {
 					// Verify tip is displayed on canvas
@@ -1213,7 +1213,7 @@ Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, po
 });
 
 Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, targetNode, targetPort) => {
-	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
 		.then((tip) => {
 			// Verify tip is displayed on canvas
 			cy.wrap(tip).should("have.length", 1);
@@ -1237,12 +1237,12 @@ Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, target
 });
 
 Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
-	cy.get("[data-id*=link_tip_0_]") // Find tip with id that starts with 'link_tip_0_'
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
 		.should("not.exist");
 });
 
 Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
-	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that has 'dec_tip_0_'
 		.then((tip) => {
 			// Verify tip is displayed on canvas
 			cy.wrap(tip).should("have.length", 1);
@@ -1258,7 +1258,7 @@ Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
 });
 
 Cypress.Commands.add("verifyTipDoesNotShowForDecoration", () => {
-	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that starts with 'dec_tip_0_'
+	cy.get("[data-id*=dec_tip_0_]") // Find decoration tip with id that has 'dec_tip_0_'
 		.should("not.exist");
 });
 

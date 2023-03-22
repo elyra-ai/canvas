@@ -94,7 +94,7 @@ class CheckboxsetControl extends React.Component {
 					<span >{this.props.control.valueDescs[i]}</span>
 				);
 				tooltipIcon = (<Tooltip
-					id={`tooltip-${this.uuid}-${i}`}
+					id={`tooltip-${i}`}
 					tip={tooltip}
 					direction="bottom"
 					className="properties-tooltips"

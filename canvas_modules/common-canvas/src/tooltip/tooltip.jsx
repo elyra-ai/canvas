@@ -21,6 +21,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
 import { Link } from "carbon-components-react";
+import { v4 as uuid4 } from "uuid";
 
 class ToolTip extends React.Component {
 	constructor(props) {
@@ -28,7 +29,7 @@ class ToolTip extends React.Component {
 		this.state = {
 			isTooltipVisible: false
 		};
-
+		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
 	}
@@ -61,7 +62,7 @@ class ToolTip extends React.Component {
 
 
 		if (this.showTooltip()) {
-			const tooltip = document.querySelector("[data-id='" + this.props.id + "']");
+			const tooltip = document.querySelector(`[data-id='${this.uuid}-${this.props.id}']`);
 			this.pendingTooltip = null;
 			this.setState({
 				isTooltipVisible: visible
@@ -72,7 +73,7 @@ class ToolTip extends React.Component {
 				if (this.props.targetObj) {
 					tooltipTrigger = this.props.targetObj;
 				} else {
-					tooltipTrigger = document.querySelector("[data-id='" + this.props.id + "-trigger']");
+					tooltipTrigger = document.querySelector(`[data-id='${this.uuid}-${this.props.id}-trigger']`);
 				}
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
@@ -351,7 +352,7 @@ class ToolTip extends React.Component {
 			const click = (evt) => this.toggleTooltipOnClick(evt);
 
 			triggerContent = (<div
-				data-id={this.props.id + "-trigger"}
+				data-id={`${this.uuid}-${this.props.id}-trigger`}
 				className="tooltip-trigger"
 				onMouseOver={!this.props.showToolTipOnClick ? mouseover : null}
 				onMouseLeave={!this.props.showToolTipOnClick ? mouseleave : null}
@@ -360,6 +361,10 @@ class ToolTip extends React.Component {
 				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
 				onBlur={this.props.showToolTipOnClick ? onBlur : null}
 				tabIndex={this.props.showToolTipOnClick ? 0 : null}
+				role={this.props.showToolTipOnClick ? "button" : null}
+				aria-labelledby={`${this.uuid}-${this.props.id}`}
+				aria-expanded={this.props.showToolTipOnClick ? this.state.isTooltipVisible : null}
+				aria-controls={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
 			>
 				{this.props.children}
@@ -368,13 +373,13 @@ class ToolTip extends React.Component {
 
 		if ((typeof this.props.tip) === "string") {
 			tooltipContent = (
-				<span id="tooltipContainer">
+				<span className="tooltipContainer">
 					{this.props.tip}
 				</span>
 			);
 		} else if ((typeof this.props.tip) === "object") {
 			tooltipContent = (
-				<div id="tooltipContainer">
+				<div className="tooltipContainer">
 					{this.props.tip}
 				</div>
 			);
@@ -406,8 +411,15 @@ class ToolTip extends React.Component {
 		if (tooltipContent || link) {
 			tooltip = (
 				<Portal>
-					<div data-id={this.props.id} className={tipClass} aria-hidden={!this.state.isTooltipVisible} direction={this.props.direction}>
-						<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
+					<div
+						role="tooltip"
+						id={`${this.uuid}-${this.props.id}`}
+						data-id={`${this.uuid}-${this.props.id}`}
+						className={tipClass}
+						aria-hidden={!this.state.isTooltipVisible}
+						direction={this.props.direction}
+					>
+						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 							<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
 						</svg>

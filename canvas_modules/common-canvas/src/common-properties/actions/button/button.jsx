@@ -21,7 +21,6 @@ import { Button } from "carbon-components-react";
 import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";
-import { v4 as uuid4 } from "uuid";
 import { has } from "lodash";
 
 class ButtonAction extends React.Component {
@@ -30,7 +29,6 @@ class ButtonAction extends React.Component {
 		this.state = {
 		};
 		this.applyAction = this.applyAction.bind(this);
-		this.uuid = uuid4();
 	}
 
 	getActionButtonKind() {
@@ -90,7 +88,7 @@ class ButtonAction extends React.Component {
 
 		let display = button;
 		if (this.props.action.description) {
-			const tooltipId = this.uuid + "-tooltip-action-" + this.props.action.name;
+			const tooltipId = "tooltip-action-" + this.props.action.name;
 			const tooltip = (
 				<div className="properties-tooltips">
 					{this.props.action.description.text}
