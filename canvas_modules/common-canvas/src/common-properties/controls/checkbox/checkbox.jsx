@@ -23,7 +23,6 @@ import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, CARBON_ICONS } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
-import { v4 as uuid4 } from "uuid";
 import classNames from "classnames";
 import Icon from "./../../../icons/icon";
 
@@ -40,7 +39,7 @@ class CheckboxControl extends React.Component {
 
 	render() {
 		const label = this.props.control.label ? this.props.control.label.text : "";
-		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+		const tooltipId = "tooltip-" + this.props.control.name;
 		let tooltip = "";
 		if (this.props.control.description && !(this.props.state === STATES.DISABLED || this.props.state === STATES.HIDDEN) && !this.props.tableControl) {
 			tooltip = (

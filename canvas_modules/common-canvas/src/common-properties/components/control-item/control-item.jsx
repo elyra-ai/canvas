@@ -22,7 +22,6 @@ import { STATES, CARBON_ICONS, MESSAGE_KEYS } from "./../../constants/constants.
 import { ControlType } from "./../../constants/form-constants";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { isEmpty, get } from "lodash";
-import { v4 as uuid4 } from "uuid";
 import Icon from "./../../../icons/icon.jsx";
 import ActionFactory from "./../../actions/action-factory.js";
 import { formatMessage } from "./../../util/property-utils";
@@ -32,7 +31,6 @@ class ControlItem extends React.Component {
 		super(props);
 		this.actionFactory = new ActionFactory(this.props.controller);
 		this.showRequiredIndicator = props.controller ? get(props.controller.getPropertiesConfig(), "showRequiredIndicator", true) : true;
-		this.uuid = uuid4();
 	}
 
 	render() {
@@ -56,7 +54,7 @@ class ControlItem extends React.Component {
 						this.props.control.description.link.propertyId = this.props.propertyId;
 					}
 					tooltip = (<Tooltip
-						id={`${this.uuid}-tooltip-label-${this.props.control.name}`}
+						id={`tooltip-label-${this.props.control.name}`}
 						tip={this.props.control.description.text}
 						link={this.props.control.description.link ? this.props.control.description.link : null}
 						tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}

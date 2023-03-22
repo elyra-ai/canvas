@@ -20,7 +20,6 @@ import Icon from "./../../../icons/icon.jsx";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
 import classNames from "classnames";
-import { v4 as uuid4 } from "uuid";
 
 export default class ValidationMessage extends React.Component {
 
@@ -36,7 +35,7 @@ export default class ValidationMessage extends React.Component {
 		const msgIcon = this.props.inTable
 			? (<div className="properties-tooltips-container table-cell-msg-icon">
 				<Tooltip
-					id={uuid4() + "-table-cell-msg-icon"}
+					id="table-cell-msg-icon"
 					tip={this.props.messageInfo.text}
 					direction="bottom"
 					className="properties-tooltips"

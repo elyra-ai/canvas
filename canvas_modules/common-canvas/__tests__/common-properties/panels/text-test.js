@@ -63,8 +63,10 @@ describe("textPanel render correctly", () => {
 		expect(textPanel.find("div.panel-label").text()).to.equal("Avocados");
 		expect(textPanel.find("div.properties-label-container")).to.have.length(1);
 		// Show description in tooltip
-		textPanel.find("div[data-id='tooltip-label-avocado-trigger']").simulate("click");
-		const textPanelTooltip = wrapper.find("div[data-id='tooltip-label-avocado']");
+		const tooltipTrigger = textPanel.find(".tooltip-trigger");
+		const tooltipId = tooltipTrigger.props()["aria-labelledby"];
+		tooltipTrigger.simulate("click");
+		const textPanelTooltip = wrapper.find(`div[data-id='${tooltipId}']`);
 		expect(textPanelTooltip.props()).to.have.property("aria-hidden", false);
 		expect(textPanelTooltip.text()).to.equal("An avocado tree can range from 15 to 30 feet tall.");
 

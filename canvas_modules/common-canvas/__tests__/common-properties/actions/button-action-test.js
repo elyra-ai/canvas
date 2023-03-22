@@ -134,7 +134,7 @@ describe("action-button renders correctly", () => {
 				/>
 			</Provider>
 		);
-		const tooltip = wrapper.find("div[id='tooltipContainer']");
+		const tooltip = wrapper.find("div.tooltipContainer");
 		expect(tooltip).to.have.length(1);
 		expect(tooltip.text()).to.equal("Increment number by 1.");
 

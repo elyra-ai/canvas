@@ -72,31 +72,31 @@
 	padding: $spacing-03 $spacing-05;
 }
 
-.common-canvas-tooltip #tipArrow {
+.common-canvas-tooltip .tipArrow {
 	position: absolute;
 	width: 10px;
 	height: 14px;
 }
 
-.common-canvas-tooltip[direction="top"] #tipArrow {
+.common-canvas-tooltip[direction="top"] .tipArrow {
 	transform: rotate(-90deg);
 }
 
-.common-canvas-tooltip[direction="left"] #tipArrow {
+.common-canvas-tooltip[direction="left"] .tipArrow {
 	transform: rotate(180deg);
 }
 
-.common-canvas-tooltip[direction="bottom"] #tipArrow {
+.common-canvas-tooltip[direction="bottom"] .tipArrow {
 	transform: rotate(90deg);
 }
 
 
-.common-canvas-tooltip #tipArrow polyline {
+.common-canvas-tooltip .tipArrow polyline {
 	fill: $inverse-02;
 	stroke-width: 0;
 }
 
-.common-canvas-tooltip #tipArrow polygon {
+.common-canvas-tooltip .tipArrow polygon {
 	fill: $inverse-02;
 }
 
@@ -156,6 +156,6 @@
 	max-width: 250px;
 }
 
-.properties-tooltips #tipArrow polyline {
+.properties-tooltips .tipArrow polyline {
 	fill: $inverse-02;
 }

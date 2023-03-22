@@ -16,7 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { v4 as uuid4 } from "uuid";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { has } from "lodash";
 
@@ -56,7 +55,7 @@ export default class TruncatedContentTooltip extends React.Component {
 			<div className="properties-truncated-tooltip">
 				{(!canDisplayFullText)
 					?	<Tooltip
-						id={`${uuid4()}-properties`}
+						id="properties"
 						tip={tooltip}
 						direction="bottom"
 						className="properties-tooltips"
