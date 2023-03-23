@@ -22,7 +22,7 @@ import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDateFromISO, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE } from "../../constants/constants.js";
 
 class DatepickerControl extends React.Component {
@@ -30,7 +30,7 @@ class DatepickerControl extends React.Component {
 		super(props);
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.locale = ControlUtils.getLocale(props.control);
-		this.value = props.value ? getFormattedDateFromISO(props.value, this.props.control.dateFormat) : ""; // Assume default value is valid
+		this.value = props.value ? getFormattedDate(props.value, this.props.control.dateFormat) : ""; // Assume default value is valid
 
 		this.getDatepickerType = this.getDatepickerType.bind(this);
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
@@ -48,7 +48,7 @@ class DatepickerControl extends React.Component {
 	handleChange(evt) {
 		if (evt.length > 0) {
 			const isoDate = getISODate(evt[0]);
-			this.value = getFormattedDateFromISO(evt[0], this.props.control.dateFormat); // display value
+			this.value = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
 			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate); // internal format
 		} else {
 			this.value = "";

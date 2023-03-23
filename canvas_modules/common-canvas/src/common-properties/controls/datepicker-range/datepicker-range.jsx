@@ -22,7 +22,7 @@ import classNames from "classnames";
 
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
-import { getFormattedDateFromISO, getISODate } from "../../util/date-utils";
+import { getFormattedDate, getISODate } from "../../util/date-utils";
 import { STATES, DATEPICKER_TYPE } from "../../constants/constants.js";
 
 class DatepickerRangeControl extends React.Component {
@@ -30,8 +30,8 @@ class DatepickerRangeControl extends React.Component {
 		super(props);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
 		this.locale = ControlUtils.getLocale(props.control);
-		this.valueStart = props.value && props.value[0] ? getFormattedDateFromISO(props.value[0], this.props.control.dateFormat) : ""; // Assume default value is valid
-		this.valueEnd = props.value && props.value[1] ? getFormattedDateFromISO(props.value[1], this.props.control.dateFormat) : ""; // Assume default value is valid
+		this.valueStart = props.value && props.value[0] ? getFormattedDate(props.value[0], this.props.control.dateFormat) : ""; // Assume default value is valid
+		this.valueEnd = props.value && props.value[1] ? getFormattedDate(props.value[1], this.props.control.dateFormat) : ""; // Assume default value is valid
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
 	}
@@ -44,12 +44,12 @@ class DatepickerRangeControl extends React.Component {
 	handleDateRangeChange(evt) {
 		if (evt[0]) {
 			const isoStartDate = getISODate(evt[0]); // internal format
-			this.valueStart = getFormattedDateFromISO(evt[0], this.props.control.dateFormat); // display value
+			this.valueStart = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
 			let isoEndDate = "";
 
 			if (evt[1]) { // Cannot enter end date without specifying start date
 				isoEndDate = getISODate(evt[1]); // internal format
-				this.valueEnd = getFormattedDateFromISO(evt[1], this.props.control.dateFormat); // display value
+				this.valueEnd = getFormattedDate(evt[1], this.props.control.dateFormat); // display value
 			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 		}

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+// Don't use 'd' in regex to avoid problems with replacing date token 'd'
 const FLATPICKR_DATE_TOKENS_REGEX = {
-	Y: "([1-9]\\d{3})", // 4 digit year
+	Y: "([1-9][0-9][0-9][0-9])", // 4 digit year
 	y: "([0-9][0-9])", // 2 digit year
 	m: "([0][1-9]|[1][0-2])", // 2 digit month
 	n: "([1-9]|[1-2][0-2])", // month without leading 0
@@ -38,7 +39,7 @@ function getDateFormatRegex(dateFormat) {
 // 'datepicker' and 'datepickerRange' uses flatpickr internally through Carbon
 // dateFormat tokens: https://flatpickr.js.org/formatting/#date-formatting-tokens
 // Gets the formatted date to display in the control
-function getFormattedDateFromISO(inDate, dateFormat) {
+function getFormattedDate(inDate, dateFormat) {
 	const date = new Date(inDate);
 	if (!isNaN(date)) {
 		const year = date.getFullYear().toString();
@@ -120,7 +121,7 @@ function getYearMonthDay(dateString, dateRegex, dateFormat) {
 
 export {
 	getDateFormatRegex,
-	getFormattedDateFromISO,
+	getFormattedDate,
 	getISODate,
 	isValidDate,
 	getYearMonthDay
