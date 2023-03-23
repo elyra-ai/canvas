@@ -38,6 +38,14 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		}
 		throw new Error("Insufficient parameter for condition operation 'lessThan'");
 	case "object":
+		if (paramInfo.value instanceof Date) {
+			if (param2Info && param2Info.value instanceof Date) {
+				return new Date(paramInfo.value).getTime() < new Date(param2Info.value).getTime();
+			} else if (value instanceof Date) {
+				return new Date(paramInfo.value).getTime() < new Date(value).getTime();
+			}
+			throw new Error("Insufficient parameter for condition operation 'lessThan'");
+		}
 		if (paramInfo.value === null || param2Info.value === null || value === null) {
 			return true;
 		}

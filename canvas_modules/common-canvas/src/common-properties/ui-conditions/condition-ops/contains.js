@@ -22,7 +22,7 @@ function op() {
 }
 
 function evaluate(paramInfo, param2Info, value, controller) {
-	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
+	const unsupportedControls = ["checkbox", "numberfield", "passwordfield", "datepicker", "datepickerRange"];
 	if (unsupportedControls.indexOf(paramInfo.control.controlType) < 0) {
 		const dataType = typeof paramInfo.value;
 		if (typeof param2Info !== "undefined") {

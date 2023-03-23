@@ -32,6 +32,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "number":
 		return paramInfo.value !== null;
 	case "object":
+		if (paramInfo.value instanceof Date) {
+			return true;
+		}
 		return paramInfo.value === null ? false : paramInfo.value.length !== 0;
 	default:
 		logger.warn("Ignoring condition operation 'isNotEmpty' for parameter_ref " + paramInfo.param + " with input data type " + dataType);

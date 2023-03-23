@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,4 +73,36 @@ describe("validating equals operator works correctly", () => {
 	});
 
 
+});
+
+describe("validating equals operator works correctly for dates", () => {
+	const controller = new Controller();
+	const equals = controller.getConditionOp("equals");
+	let undefinedPlaceholder;
+
+	const dateStart1 = new Date("2023-03-22T00:00:00"); // ISO format
+	const dateStart1b = new Date(2023, 2, 22, 0, 0, 0);
+	const dateEnd1 = new Date("2023-03-23T00:00:00"); // ISO format
+
+	function wrap(val, role = null) {
+		return { value: val, control: { controlType: role } };
+	}
+
+	beforeEach(() => {
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
+
+	it("Test equals behaves as expected comparing paramInfo and paramInfo2", () => {
+		expect(equals(wrap(dateStart1), wrap(dateEnd1), null, controller)).to.equal(false);
+		expect(equals(wrap(dateStart1), wrap(dateStart1b), null, controller)).to.equal(true);
+		expect(equals(wrap(dateStart1), wrap(""), undefinedPlaceholder, controller)).to.equal(false);
+	});
+
+	it("Test equals behaves as expected comparing paramInfo and value", () => {
+		expect(equals(wrap(dateStart1), undefinedPlaceholder, dateEnd1, controller)).to.equal(false);
+		expect(equals(wrap(dateStart1), undefinedPlaceholder, dateStart1b, controller)).to.equal(true);
+		expect(equals(wrap(dateStart1), undefinedPlaceholder, "", controller)).to.equal(false);
+		expect(equals(wrap(dateStart1), undefinedPlaceholder, null, controller)).to.equal(false);
+	});
 });

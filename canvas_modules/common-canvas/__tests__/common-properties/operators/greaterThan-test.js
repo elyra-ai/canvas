@@ -23,6 +23,10 @@ describe("validating greaterThan operator works correctly", () => {
 	const greaterThan = controller.getConditionOp("greaterThan");
 	let undefinedPlaceholder;
 
+	const dateStart1 = new Date("2023-03-22T00:00:00"); // ISO format
+	const dateStart1b = new Date(2023, 2, 22, 0, 0, 0);
+	const dateEnd2 = new Date("2023-03-23T00:00:00"); // ISO format
+
 	function wrap(val, role = null) {
 		return { value: val, control: { controlType: role } };
 	}
@@ -52,6 +56,10 @@ describe("validating greaterThan operator works correctly", () => {
 		// type number paramInfo
 		expect(greaterThan(wrap(1), wrap(1), null, controller)).to.equal(false);
 		expect(greaterThan(wrap(1), wrap("bad string"), null, controller)).to.equal(false);
+		// type date
+		expect(greaterThan(wrap(dateStart1), wrap(dateEnd2), null, controller)).to.equal(false);
+		expect(greaterThan(wrap(dateEnd2), wrap(dateStart1), null, controller)).to.equal(true);
+		expect(greaterThan(wrap(dateStart1), wrap(dateStart1b), null, controller)).to.equal(false);
 	});
 	it("Test greaterThan behaves as expected comparing paramInfo and value", () => {
 		// type undefined paramInfo
@@ -60,6 +68,10 @@ describe("validating greaterThan operator works correctly", () => {
 		// type number paramInfo
 		expect(greaterThan(wrap(1), undefinedPlaceholder, 2, controller)).to.equal(false);
 		expect(greaterThan(wrap(1), undefinedPlaceholder, null, controller)).to.equal(true);
+		// type date
+		expect(greaterThan(wrap(dateStart1), undefinedPlaceholder, dateEnd2, controller)).to.equal(false);
+		expect(greaterThan(wrap(dateEnd2), undefinedPlaceholder, dateStart1, controller)).to.equal(true);
+		expect(greaterThan(wrap(dateStart1), undefinedPlaceholder, dateStart1b, controller)).to.equal(false);
 	});
 
 });
