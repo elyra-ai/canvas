@@ -67,19 +67,33 @@ function getFormattedDate(inDate, dateFormat) {
 // Get the ISO date format that is stored internally
 function getISODate(inDate) {
 	const date = new Date(inDate);
-	if (!isNaN(date)) {
-		return date.toISOString();
+	if (inDate instanceof Date && !isNaN(date)) {
+		return date.toISOString().substring(0, 10); // Discard the time since we only care about the date
 	}
 	return inDate;
 }
 
 // Date libraries are able to parse dates such as 2023-02-31 into an actual Date object: Jan 31 2023
-// This function compares the year, month, and day of the date to see if the date is valid
-function isValidDate(date, orgYear, orgMonth, orgDay) {
-	const year = date.getFullYear();
-	const month = date.getMonth() + 1;
-	const day = date.getDate();
-	return year === parseInt(orgYear, 10) && month === parseInt(orgMonth, 10) && day === parseInt(orgDay, 10);
+// Given a date string (internal ISO format) and dateFormat,
+// test to see if the date is valid byt first parsing the given date for the year, month, and day
+// then compare the values of the created Date object to see if it matches
+function isValidDate(dateString, dateFormat) {
+	const date = new Date(dateString);
+	if (isNaN(date)) {
+		return false;
+	}
+
+	const dateRegex = getDateFormatRegex(dateFormat);
+	const validRegex = new RegExp(dateRegex).test(dateString);
+	if (validRegex) {
+		const { year, month, day } = getYearMonthDay(dateString, dateRegex, dateFormat);
+		const newDate = new Date(`${year}-${month}-${day}T00:00:00`); // ISO format
+		const newYear = newDate.getFullYear();
+		const newMonth = newDate.getMonth() + 1;
+		const newDay = newDate.getDate();
+		return newYear === parseInt(year, 10) && newMonth === parseInt(month, 10) && newDay === parseInt(day, 10);
+	}
+	return false;
 }
 
 // Given the date in string format "03-22-2023" and corresponding dateFormat m-d-Y,

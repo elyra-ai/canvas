@@ -43,6 +43,12 @@ export class Control {
 		if (settings.additionalText) {
 			this.additionalText = settings.additionalText;
 		}
+		if (settings.datepickerRangeStartText) {
+			this.datepickerRangeStartText = settings.datepickerRangeStartText;
+		}
+		if (settings.datepickerRangeEndText) {
+			this.datepickerRangeEndText = settings.datepickerRangeEndText;
+		}
 		if (settings.orientation) {
 			this.orientation = settings.orientation;
 		}

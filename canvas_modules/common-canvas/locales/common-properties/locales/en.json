@@ -82,6 +82,8 @@
   "multi.selected.row.label": "rows selected.",
   "multi.selected.row.action": "Changing a value in this row will change the value in all allowed selected rows.",
   "datetimefield.format.error.message": "Invalid format object provided. Check input definitions.",
+  "datepickerRangeStart.default.label": "Start",
+  "datepickerRangeEnd.default.label": "End",
   "editorform.group.type.error": "(Unknown group type '{group.groupType()}')",
   "moveable.table.button.top": "Move to top",
   "moveable.table.button.up": "Move up",

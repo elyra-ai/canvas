@@ -76,38 +76,32 @@ describe("date util tests", () => {
 
 	it("date-utils getISODate() returns correct data", () => {
 		const date1 = new Date("2023-03-22T00:00:00"); // ISO format
-		expect(DateUtils.getISODate(date1)).to.equal(date1.toISOString());
+		expect(DateUtils.getISODate(date1)).to.equal(date1.toISOString().substring(0, 10));
 
 		const date2 = new Date(2023, 2, 22); // month is 0-index
-		expect(DateUtils.getISODate(date2)).to.equal(date2.toISOString());
+		expect(DateUtils.getISODate(date2)).to.equal(date2.toISOString().substring(0, 10));
 
 		const date3 = new Date(2023, 2, 22, 1, 2, 3); // month is 0-index with time
-		expect(DateUtils.getISODate(date3)).to.equal(date3.toISOString());
+		expect(DateUtils.getISODate(date3)).to.equal(date3.toISOString().substring(0, 10));
 
 		const date4 = new Date(); // ISO format
-		expect(DateUtils.getISODate(date4)).to.equal(date4.toISOString());
+		expect(DateUtils.getISODate(date4)).to.equal(date4.toISOString().substring(0, 10));
 
 		const bad = "random string";
 		expect(DateUtils.getISODate(bad)).to.equal(bad);
+		expect(DateUtils.getISODate(" ")).to.equal(" ");
 	});
 
 	it("date-utils isValidDate() returns correct data", () => {
-		const date1 = new Date("2023-03-22T00:00:00"); // ISO format
-		expect(DateUtils.isValidDate(date1, 2023, "03", 22)).to.equal(true);
-
-		const date2 = new Date("2023-02-29T00:00:00"); // ISO format
-		expect(DateUtils.isValidDate(date2, 2023, 2, 29)).to.equal(false);
-
-		const date3 = new Date("2020-02-29T00:00:00"); // ISO format, leap year
-		expect(DateUtils.isValidDate(date3, 2020, 2, 29)).to.equal(true);
-
-		const date4 = new Date("2023-01-02T00:00:00"); // ISO format
-		expect(DateUtils.isValidDate(date4, 2023, 1, "02")).to.equal(true);
-
-		const date5 = new Date("0000-00-00T00:00:00"); // ISO format
-		expect(DateUtils.isValidDate(date5, "0000", "00", "00")).to.equal(false);
-
-		const date6 = new Date("eeee-ee-eeT00:00:00"); // ISO format
-		expect(DateUtils.isValidDate(date6, "eeee", "ee", "ee")).to.equal(false);
+		expect(DateUtils.isValidDate("2023/03/22", DATE_FORMAT_SLASHES)).to.equal(true);
+		expect(DateUtils.isValidDate("2023/13/22", DATE_FORMAT_SLASHES)).to.equal(false);
+		expect(DateUtils.isValidDate("03-22-2023", DATE_FORMAT_MONTH)).to.equal(true);
+		expect(DateUtils.isValidDate("03-32-2023", DATE_FORMAT_MONTH)).to.equal(false);
+		expect(DateUtils.isValidDate("2023-03-22", DATE_FORMAT_ISO)).to.equal(true);
+		expect(DateUtils.isValidDate("2023-02-29", DATE_FORMAT_ISO)).to.equal(false);
+		expect(DateUtils.isValidDate("2020-02-29", DATE_FORMAT_ISO)).to.equal(true);
+		expect(DateUtils.isValidDate("2023-01-02", DATE_FORMAT_ISO)).to.equal(true);
+		expect(DateUtils.isValidDate("0000-00-00", DATE_FORMAT_ISO)).to.equal(false);
+		expect(DateUtils.isValidDate("eeee-ee-ee", DATE_FORMAT_ISO)).to.equal(false);
 	});
 });

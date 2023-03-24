@@ -442,6 +442,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			parameter.description ? parameter.description.link : null);
 	}
 
+	const datepickerRangeStartText = parameter.datepickerRangeStartText ? parameter.getDatepickerRangeStartText(l10nProvider) : null;
+	const datepickerRangeEndText = parameter.datepickerRangeEndText ? parameter.getDatepickerRangeEndText(l10nProvider) : null;
+
 	// The role is used to modify the behaviour of certain controls
 	let labelVisible = true;
 	let role;
@@ -644,6 +647,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.addRemoveRows = addRemoveRows;
 	settings.dateFormat = parameter.dateFormat;
 	settings.datepickerType = parameter.datepickerType;
+	settings.datepickerRangeStartText = datepickerRangeStartText;
+	settings.datepickerRangeEndText = datepickerRangeEndText;
 	settings.locale = parameter.locale;
 	settings.timeFormat = parameter.timeFormat;
 	settings.customControlId = parameter.customControlId;

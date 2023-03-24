@@ -18,7 +18,7 @@ import { isValid, parse } from "date-fns";
 import { DEFAULT_DATE_FORMAT, DATEPICKER_TYPE } from "../../constants/constants";
 import { ControlType } from "../../constants/form-constants";
 import { getDateTimeFormat } from "../../util/control-utils";
-import { isValidDate, getDateFormatRegex, getYearMonthDay } from "../../util/date-utils";
+import { isValidDate } from "../../util/date-utils";
 
 function op() {
 	return "isDateTime";
@@ -33,19 +33,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			return isValid(date);
 		} else if (paramInfo.control.datepickerType === DATEPICKER_TYPE.SIMPLE) { // SINGLE and RANGE doesn't allow for invalid format to be entered
 			const dateFormat = getDateTimeFormat(paramInfo.control);
-			const date = new Date(paramInfo.value);
-			if (isNaN(date)) {
-				return false;
-			}
-
-			const dateRegex = getDateFormatRegex(getDateTimeFormat(paramInfo.control));
-			const validRegex = new RegExp(dateRegex).test(paramInfo.value);
-			if (validRegex) {
-				const { year, month, day } = getYearMonthDay(paramInfo.value, dateRegex, dateFormat);
-				const parsedDate = new Date(`${year}-${month}-${day}T00:00:00`); // ISO format
-				return isValidDate(parsedDate, year, month, day);
-			}
-			return false;
+			return isValidDate(paramInfo.value, dateFormat);
 		}
 		return true;
 	}

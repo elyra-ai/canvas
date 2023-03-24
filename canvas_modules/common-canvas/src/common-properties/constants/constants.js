@@ -115,7 +115,9 @@ export const MESSAGE_KEYS = {
 	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
 	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip",
 	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
-	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional"
+	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional",
+	DATEPICKER_RANGE_START_LABEL: "datepickerRangeStart.default.label",
+	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;

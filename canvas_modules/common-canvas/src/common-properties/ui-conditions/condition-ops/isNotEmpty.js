@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ControlType } from "../../constants/form-constants";
 import logger from "./../../../../utils/logger";
 
 function op() {
@@ -34,6 +35,9 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "object":
 		if (paramInfo.value instanceof Date) {
 			return true;
+		}
+		if (paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
+			return paramInfo.value[0].trim() !== "" || paramInfo.value[1].trim() !== "";
 		}
 		return paramInfo.value === null ? false : paramInfo.value.length !== 0;
 	default:
