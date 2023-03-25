@@ -86,7 +86,8 @@ class DatepickerControl extends React.Component {
 						{...validationProps}
 						id={this.id}
 						placeholder={this.props.control.additionalText}
-						labelText={this.props.controlItem}
+						labelText={!this.props.tableControl && this.props.controlItem}
+						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
 						value={this.state.value}

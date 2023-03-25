@@ -88,21 +88,20 @@ class DatepickerRangeControl extends React.Component {
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{this.props.controlItem}
+				{!this.props.tableControl && this.props.controlItem}
 				<DatePicker
 					datePickerType={DATEPICKER_TYPE.RANGE}
 					dateFormat={this.props.control.dateFormat}
 					light={this.props.controller.getLight() && this.props.control.light}
 					onChange={this.handleDateRangeChange.bind(this)}
 					locale={this.locale}
-					labelText={this.props.controlItem}
 					allowInput
 				>
 					<DatePickerInput
 						{...validationProps}
 						id={`${this.id}-start`}
 						placeholder={this.props.control.additionalText}
-						labelText={this.startLabel}
+						labelText={!this.props.tableControl && this.startLabel}
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
@@ -112,7 +111,7 @@ class DatepickerRangeControl extends React.Component {
 						{...validationProps}
 						id={`${this.id}-end`}
 						placeholder={this.props.control.additionalText}
-						labelText={this.endLabel}
+						labelText={!this.props.tableControl && this.endLabel}
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}

@@ -19,7 +19,7 @@
 import { Control } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole, ORIENTATIONS } from "../constants/form-constants";
-import { CONTAINER_TYPE, DATEPICKER_TYPE } from "../constants/constants";
+import { CONTAINER_TYPE } from "../constants/constants";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
@@ -495,9 +495,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			role = Type.DATE;
 			if (parameter.control === ControlType.DATEPICKER) {
 				controlType = ControlType.DATEPICKER;
-				if (parameter.control.datepickerType === DATEPICKER_TYPE.RANGE) {
-					controlType = ControlType.DATEPICKERRANGE;
-				}
 			} else if (parameter.control === ControlType.DATEPICKERRANGE) {
 				controlType = ControlType.DATEPICKERRANGE;
 			} else if (parameter.isList()) {
