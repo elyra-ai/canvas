@@ -30,7 +30,10 @@ class DatepickerControl extends React.Component {
 		super(props);
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.locale = ControlUtils.getLocale(props.control);
-		this.value = props.value ? getFormattedDate(props.value, this.props.control.dateFormat) : ""; // Assume default value is valid
+
+		this.state = {
+			value: props.value ? getFormattedDate(props.value, this.props.control.dateFormat) : ""
+		};
 
 		this.getDatepickerType = this.getDatepickerType.bind(this);
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
@@ -48,19 +51,21 @@ class DatepickerControl extends React.Component {
 	handleChange(evt) {
 		if (evt.length > 0) {
 			const isoDate = getISODate(evt[0]);
-			this.value = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
+			const value = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
 			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate); // internal format
+			this.setState({ value });
 		} else {
-			this.value = "";
 			this.props.controller.updatePropertyValue(this.props.propertyId, "");
+			this.setState({ value: "" });
 		}
 	}
 
 	// Allows user to manually type in the input
 	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
 	handleInputChange(evt) {
-		this.value = evt.target.value; // Display value as what user enters
+		const value = evt.target.value; // Display value as what user enters
 		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
+		this.setState({ value });
 	}
 
 	render() {
@@ -84,7 +89,7 @@ class DatepickerControl extends React.Component {
 						labelText={this.props.controlItem}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
-						value={this.value}
+						value={this.state.value}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
