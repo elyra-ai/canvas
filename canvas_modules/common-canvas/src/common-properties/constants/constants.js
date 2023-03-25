@@ -161,7 +161,7 @@ export const DATEPICKER_TYPE = {
 	RANGE: "range"
 };
 
-export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d";
+export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d"; // ISO format
 
 export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
 

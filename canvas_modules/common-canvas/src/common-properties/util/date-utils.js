@@ -32,6 +32,7 @@ function getDateFormatRegex(dateFormat) {
 	dateRegex = dateRegex.replace("n", FLATPICKR_DATE_TOKENS_REGEX.n);
 	dateRegex = dateRegex.replace("d", FLATPICKR_DATE_TOKENS_REGEX.d);
 	dateRegex = dateRegex.replace("j", FLATPICKR_DATE_TOKENS_REGEX.j);
+	dateRegex = dateRegex.replaceAll(".", "[.]"); // escape decimals
 	dateRegex = "^" + dateRegex + "$";
 	return dateRegex;
 }

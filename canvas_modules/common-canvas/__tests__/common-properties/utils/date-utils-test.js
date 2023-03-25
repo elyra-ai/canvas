@@ -52,7 +52,7 @@ describe("date util tests", () => {
 		expect(DateUtils.getYearMonthDay(DATE_FORMAT_SINGLE_DIGITS_DATE, regex4, DATE_FORMAT_SINGLE_DIGITS)).to.eql(expected4);
 
 		const regex5 = DateUtils.getDateFormatRegex(DATE_FORMAT_DELIMITERS);
-		expect(regex5).to.equal("^([1-9][0-9][0-9][0-9])-([0][1-9]|[1][0-2]).([0][1-9]|[1-2][0-9]|3[01])$");
+		expect(regex5).to.equal("^([1-9][0-9][0-9][0-9])-([0][1-9]|[1][0-2])[.]([0][1-9]|[1-2][0-9]|3[01])$");
 		const expected5 = { year: "2023", month: "11", day: "02" };
 		expect(DateUtils.getYearMonthDay(DATE_FORMAT_DELIMITERS_DATE, regex5, DATE_FORMAT_DELIMITERS)).to.eql(expected5);
 	});
