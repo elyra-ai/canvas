@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,9 @@ import {
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
 	DATEFIELD_PROPS_INFO,
 	TIMEFIELD_PROPS_INFO,
+	DATEPICKER_PROPS_INFO,
+	DATEPICKER_SIMPLE_PROPS_INFO,
+	DATEPICKER_RANGE_PROPS_INFO,
 	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
 	CHECKBOX_SET_PROPS_INFO,
@@ -281,7 +284,25 @@ class CommonPropertiesComponents extends React.Component {
 				"parameter_info",
 				"parameter_ref", "label",
 				"description",
+				"control",
 				"date_format"
+			];
+			break;
+		case "datepicker":
+			jsonReplacer = [
+				"current_parameters",
+				"datepickerControlName",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"control",
+				"date_format",
+				"datepicker_type",
+				"datepicker_range_start_text",
+				"datepicker_range_end_text"
 			];
 			break;
 		case "timefield":
@@ -378,6 +399,8 @@ class CommonPropertiesComponents extends React.Component {
 					"--spinner",
 					"--datefield",
 					"--timefield",
+					"--datepicker",
+					"--datepickerrange",
 					"--checkbox",
 					"--checkboxset",
 					"--radioset",
@@ -1157,6 +1180,75 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--datepicker" className="harness-section-subtitle">datepicker</h3>
+					<p>A datepicker control is rendered for a parameter of <span className="harness-highlight">control=datepicker</span>.
+						The current parameter should be provided in the format specified in the parameter definition for uihint <span className="harness-highlight">date_format</span>.
+						This control is defined in Carbon and internally uses flatpickr, which has date tokens that differ from moment.js.
+					<a href="https://flatpickr.js.org/formatting/#date-formatting-tokens"> Flatpickr date formatting tokens </a>.
+						Common properties only support a subset list of tokens with numeric values only. The supported tokens include: <span className="harness-highlight">Y, y, m, n, d, and j</span>.
+						Only valid inputs are accepted. Any invalid dates will be adjusted to a valid date by flatpickr.
+						These same rules apply to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepickerrange">datepickerRange</a>.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={DATEPICKER_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(DATEPICKER_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(DATEPICKER_PROPS_INFO.parameterDef, "datepicker")}
+							</pre>
+						</div>
+					</div>
+					<p>When <span className="harness-highlight">datepicker_type=simple</span> is specified in the uihints,
+						a datepicker without a calendar will be rendered. Users will need to manually input a date.
+						There is internal validation to ensure the entered date is valid and matches the format specified in the parameter definition.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={DATEPICKER_SIMPLE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(DATEPICKER_SIMPLE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(DATEPICKER_SIMPLE_PROPS_INFO.parameterDef, "datepicker")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--datepickerrange" className="harness-section-subtitle">datepicker</h3>
+					<p>A datepickerRange control is rendered for a parameter of <span className="harness-highlight">control=datepickerRange</span>.
+						This control contains start and end inputs for a date range. In addition to the rules
+						from <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepicker">datepicker</a>,
+						the <span className="harness-highlight">datepickerRange</span> accepts additional uihints for the
+						start <span className="harness-highlight">datepicker_range_start_text</span> and end <span className="harness-highlight">datepicker_range_end_text</span> labels respectively.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={DATEPICKER_RANGE_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(DATEPICKER_RANGE_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(DATEPICKER_RANGE_PROPS_INFO.parameterDef, "datepicker")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--checkbox" className="harness-section-subtitle">checkbox</h3>
 					<p>A checkbox control is rendered for a parameter of <span className="harness-highlight">type</span> boolean.
 						The value in the <span className="harness-highlight">enum</span> array
@@ -1626,6 +1718,7 @@ class CommonPropertiesComponents extends React.Component {
 				<p>Complex types representing lists or maps of basic parameter types are supported
 					via complex type controls. Controls can appear as rows in tables or standing on
 					their own in panels. The following controls are supported for complex types:
+				</p>
 				<ul className="harness-properties-documentation-list-indent">
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
@@ -1640,12 +1733,13 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datefield">datefield</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--timefield">timefield</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepicker">datepicker</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepickerrange">datepicker</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--checkbox">checkbox</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
 				</ul>
-				</p>
 			</div>
 			<div className="harness-properties-documentation-section-content">
 				<div className="harness-properties-documentation-panels-controls-component">
