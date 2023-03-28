@@ -619,7 +619,8 @@ PropertiesMain.propTypes = {
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,
-		showRequiredIndicator: PropTypes.bool
+		showRequiredIndicator: PropTypes.bool,
+		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,

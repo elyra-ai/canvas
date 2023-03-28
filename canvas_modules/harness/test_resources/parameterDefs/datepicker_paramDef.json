@@ -3,24 +3,22 @@
     "title": "Datepicker"
   },
   "current_parameters": {
-    "datepicker": "03-17-2023",
-		"datepicker_required": "2023-03-22",
+    "datepicker": "2023-03-17T00:00:00",
+		"datepicker_required": "2023-03-17T00:00:00",
 		"datepicker_null": null,
-		"datepicker_simple": "03/17/2023",
-		"datepicker_simple_required": "2023.03.24",
 		"hide_datepicker": true,
-		"hidden_datepicker": "2023-03-24",
+		"hidden_datepicker": "2023-03-17T00:00:00",
 		"disable_datepicker": true,
-		"disabled_datepicker": "2023-03-25",
+		"disabled_datepicker": "2023-03-17T00:00:00",
 		"datepicker_table": [
 			[
-				"2023-03-01",
-				"2023-03-02",
-				"2023-03-03"
+				"2023-03-16T00:00:00",
+				"2023-03-17T00:00:00",
+				"2023-03-18T00:00:00"
 			],
 			[
 				null,
-				"2023-03-02",
+				"2023-03-17T00:00:00",
 				null
 			]
 		]
@@ -42,15 +40,6 @@
 		{
 			"id": "datepicker_null",
 			"type": "date"
-		},
-		{
-			"id": "datepicker_simple",
-			"type": "date"
-		},
-		{
-			"id": "datepicker_simple_required",
-			"type": "date",
-			"required": true
 		},
 		{
 			"id": "hide_datepicker",
@@ -102,10 +91,10 @@
       {
         "parameter_ref": "datepicker",
         "label": {
-          "default": "Single date format: m-d-Y"
+          "default": "Date format: m-d-Y"
         },
         "description": {
-          "default": "Datepicker with value set to '03-17-2023' in m-d-Y format. This defaults to the 'single' type."
+          "default": "Datepicker with value of '2023-03-17T00:00:00' in m-d-Y format."
         },
 				"control": "datepicker",
         "date_format": "m-d-Y",
@@ -117,7 +106,7 @@
 			{
 				"parameter_ref": "datepicker_required",
 				"label": {
-					"default": "Single date format: Date Y-m-d"
+					"default": "Date format: Date Y-m-d"
 				},
 				"description": {
 					"default": "Datepicker with no initial value, in Y-m-d format."
@@ -127,8 +116,7 @@
 				"class_name": "datepicker-control-class",
 				"place_holder_text": {
 					"default": "Date format: yyyy-mm-dd"
-				},
-				"locale": "en"
+				}
 			},
 			{
 				"parameter_ref": "datepicker_undefined",
@@ -159,40 +147,6 @@
 				"place_holder_text": {
 					"default": "yy-m-d"
 				}
-			},
-			{
-				"parameter_ref": "datepicker_simple",
-				"label": {
-					"default": "Simple: Date m/d/Y"
-				},
-				"description": {
-					"default": "Simple datepicker does not display calendar dropdown."
-				},
-				"control": "datepicker",
-				"date_format": "m/d/Y",
-				"datepicker_type": "simple",
-				"class_name": "datepicker-simple-control-class",
-				"place_holder_text": {
-					"default": "mm/dd/yyyy"
-				},
-				"locale": "en"
-			},
-			{
-				"parameter_ref": "datepicker_simple_required",
-				"label": {
-					"default": "Simple: Date Y.m.d"
-				},
-				"description": {
-					"default": "Simple datepicker does not display calendar dropdown."
-				},
-				"control": "datepicker",
-				"date_format": "Y.m.d",
-				"datepicker_type": "simple",
-				"class_name": "datepicker-simple-control-class",
-				"place_holder_text": {
-					"default": "yyyy.mm.dd"
-				},
-				"locale": "en"
 			},
 			{
 				"parameter_ref": "hide_datepicker",
@@ -302,9 +256,7 @@
 					"datepicker",
 					"datepicker_required",
 					"datepicker_undefined",
-					"datepicker_null",
-					"datepicker_simple",
-					"datepicker_simple_required"
+					"datepicker_null"
         ]
       },
 			{
@@ -375,5 +327,9 @@
 				}
 			}
 		}
-	]
+	],
+	"resources": {
+		"datepicker_required.helper": "A date is required.",
+		"datepicker_undefined.helper": "There is no initial value."
+	}
 }

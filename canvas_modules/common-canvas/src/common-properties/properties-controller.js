@@ -27,11 +27,11 @@ import * as PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYPE, UPDATE_TYPE } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
-import { Type, ParamRole, ControlType } from "./constants/form-constants";
+import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
 import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
-import { ItemType } from "./constants/form-constants";
+import { DEFAULT_LOCALE } from "./constants/constants";
 export default class PropertiesController {
 
 	constructor() {
@@ -124,6 +124,10 @@ export default class PropertiesController {
 
 	getPropertiesConfig() {
 		return this.propertiesConfig;
+	}
+
+	getLocale() {
+		return get(this.propertiesConfig, "locale", DEFAULT_LOCALE);
 	}
 
 	isTearsheetContainer() {

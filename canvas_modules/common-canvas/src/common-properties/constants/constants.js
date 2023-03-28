@@ -156,7 +156,6 @@ export const DATA_TYPE = {
 };
 
 export const DATEPICKER_TYPE = {
-	SIMPLE: "simple",
 	SINGLE: "single",
 	RANGE: "range"
 };

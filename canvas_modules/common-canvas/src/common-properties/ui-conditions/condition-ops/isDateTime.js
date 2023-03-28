@@ -15,10 +15,8 @@
  */
 
 import { isValid, parse } from "date-fns";
-import { DEFAULT_DATE_FORMAT, DATEPICKER_TYPE } from "../../constants/constants";
+import { DEFAULT_DATE_FORMAT } from "../../constants/constants";
 import { ControlType } from "../../constants/form-constants";
-import { getDateTimeFormat } from "../../util/control-utils";
-import { isValidDate } from "../../util/date-utils";
 
 function op() {
 	return "isDateTime";
@@ -31,9 +29,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			const timeDateFormat = (value === "time") ? "HH:mm:ss:xxx" : DEFAULT_DATE_FORMAT;
 			const date = parse(paramInfo.value, timeDateFormat, new Date());
 			return isValid(date);
-		} else if (paramInfo.control.datepickerType === DATEPICKER_TYPE.SIMPLE) { // SINGLE and RANGE doesn't allow for invalid format to be entered
-			const dateFormat = getDateTimeFormat(paramInfo.control);
-			return isValidDate(paramInfo.value, dateFormat);
 		}
 		return true;
 	}

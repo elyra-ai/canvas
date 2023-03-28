@@ -68,12 +68,6 @@ export class ParameterDef {
 		if (settings.placeHolderText) {
 			this.placeHolderText = ResourceDef.make(settings.placeHolderText);
 		}
-		if (settings.datepickerRangeStartText) {
-			this.datepickerRangeStartText = ResourceDef.make(settings.datepickerRangeStartText);
-		}
-		if (settings.datepickerRangeEndText) {
-			this.datepickerRangeEndText = ResourceDef.make(settings.datepickerRangeEndText);
-		}
 		if (settings.separator) {
 			this.separator = settings.separator;
 		}
@@ -143,9 +137,6 @@ export class ParameterDef {
 		}
 		if (settings.dateFormat) {
 			this.dateFormat = settings.dateFormat;
-		}
-		if (settings.datepickerType) {
-			this.datepickerType = settings.datepickerType;
 		}
 		if (settings.timeFormat) {
 			this.timeFormat = settings.timeFormat;
@@ -286,13 +277,6 @@ export class ParameterDef {
 		return this.textBefore ? this.textBefore.type : null;
 	}
 
-	getDatepickerRangeStartText(l10nProvider) {
-		return l10nProvider.l10nResource(this.datepickerRangeStartText);
-	}
-	getDatepickerRangeEndText(l10nProvider) {
-		return l10nProvider.l10nResource(this.datepickerRangeEndText);
-	}
-
 	/**
 	 * Returns the "control" attribute which can be used to define which control should be used
 	 * for editing a property. The control should be valid for the associated property.
@@ -347,8 +331,6 @@ export class ParameterDef {
 				"width": propertyOf(uihint)("width"),
 				"charLimit": propertyOf(uihint)("char_limit"),
 				"placeHolderText": propertyOf(uihint)("place_holder_text"),
-				"datepickerRangeStartText": propertyOf(uihint)("datepicker_range_start_text"),
-				"datepickerRangeEndText": propertyOf(uihint)("datepicker_range_end_text"),
 				"separator": propertyOf(uihint)("separator"),
 				"resource_key": propertyOf(uihint)("resource_key"),
 				"visible": propertyOf(uihint)("visible"),
@@ -370,8 +352,6 @@ export class ParameterDef {
 				"moveableRows": propertyOf(uihint)("moveable_rows"),
 				"generatedValues": propertyOf(uihint)("generated_values"),
 				"dateFormat": propertyOf(uihint)("date_format"),
-				"datepickerType": propertyOf(uihint)("datepicker_type"),
-				"locale": propertyOf(uihint)("locale"),
 				"timeFormat": propertyOf(uihint)("time_format"),
 				"customControlId": propertyOf(uihint)("custom_control_id"),
 				"data": propertyOf(uihint)("data"),

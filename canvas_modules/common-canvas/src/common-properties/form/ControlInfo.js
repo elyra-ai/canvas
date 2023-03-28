@@ -43,12 +43,6 @@ export class Control {
 		if (settings.additionalText) {
 			this.additionalText = settings.additionalText;
 		}
-		if (settings.datepickerRangeStartText) {
-			this.datepickerRangeStartText = settings.datepickerRangeStartText;
-		}
-		if (settings.datepickerRangeEndText) {
-			this.datepickerRangeEndText = settings.datepickerRangeEndText;
-		}
 		if (settings.orientation) {
 			this.orientation = settings.orientation;
 		}
@@ -99,12 +93,6 @@ export class Control {
 		}
 		if (settings.dateFormat) {
 			this.dateFormat = settings.dateFormat;
-		}
-		if (settings.datepickerType) {
-			this.datepickerType = settings.datepickerType;
-		}
-		if (settings.locale) {
-			this.locale = settings.locale;
 		}
 		if (settings.timeFormat) {
 			this.timeFormat = settings.timeFormat;

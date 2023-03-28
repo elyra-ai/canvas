@@ -66,10 +66,14 @@ function getFormattedDate(inDate, dateFormat) {
 }
 
 // Get the ISO date format that is stored internally
-function getISODate(inDate) {
+function getISODate(inDate, dateFormat) {
 	const date = new Date(inDate);
 	if (inDate instanceof Date && !isNaN(date)) {
-		return date.toISOString().substring(0, 10); // Discard the time since we only care about the date
+		return date.toISOString();
+	} else if (typeof inDate === "string") {
+		const dateRegex = getDateFormatRegex(dateFormat);
+		const { year, month, day } = getYearMonthDay(inDate, dateRegex, dateFormat);
+		return `${year}-${month}-${day}T00:00:00`;
 	}
 	return inDate;
 }

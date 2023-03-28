@@ -19,11 +19,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { DatePicker, DatePickerInput } from "carbon-components-react";
 import classNames from "classnames";
+import { v4 as uuid4 } from "uuid";
 
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import Icon from "./../../../icons/icon.jsx";
 import ValidationMessage from "../../components/validation-message";
 import * as ControlUtils from "../../util/control-utils";
 import { getFormattedDate, getISODate } from "../../util/date-utils";
-import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS } from "../../constants/constants.js";
+import { STATES, DATEPICKER_TYPE, MESSAGE_KEYS, CARBON_ICONS } from "../../constants/constants.js";
 import { formatMessage } from "./../../util/property-utils";
 
 class DatepickerRangeControl extends React.Component {
@@ -31,13 +34,8 @@ class DatepickerRangeControl extends React.Component {
 		super(props);
 		this.reactIntl = props.controller.getReactIntl();
 		this.id = ControlUtils.getControlId(this.props.propertyId);
-		this.locale = ControlUtils.getLocale(props.control);
-		this.startLabel = props.control.datepickerRangeStartText
-			? props.control.datepickerRangeStartText
-			: formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_START_LABEL);
-		this.endLabel = props.control.datepickerRangeEndText
-			? props.control.datepickerRangeEndText
-			: formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_END_LABEL);
+		this.locale = props.controller.getLocale();
+		this.uuid = uuid4();
 
 		this.state = {
 			valueStart: props.value && props.value[0] ? getFormattedDate(props.value[0], this.props.control.dateFormat) : "",
@@ -45,6 +43,19 @@ class DatepickerRangeControl extends React.Component {
 		};
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
+		this.createInfoDesc = this.createInfoDesc.bind(this);
+	}
+
+	onStartBlur(evt) {
+		const isoStartDate = getISODate(evt.target.value, this.props.control.dateFormat);
+		const isoEndDate = getISODate(this.state.valueEnd, this.props.control.dateFormat);
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
+	}
+
+	onEndBlur(evt) {
+		const isoStartDate = getISODate(evt.target.value, this.props.control.dateFormat);
+		const isoEndDate = getISODate(this.state.valueEnd, this.props.control.dateFormat);
+		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 	}
 
 	getDatepickerSize() {
@@ -71,24 +82,57 @@ class DatepickerRangeControl extends React.Component {
 	// Allows user to manually type in the input
 	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
 	handleInputStartChange(evt) {
-		const valueStart = evt.target.value; // Display value as what user enters
-		this.props.controller.updatePropertyValue(this.props.propertyId, [evt.target.value, getISODate(this.state.valueEnd)]);
-		this.setState({ valueStart });
+		this.setState({ valueStart: evt.target.value }); // Display value as what user enters
 	}
 	handleInputEndChange(evt) {
-		const valueEnd = evt.target.value; // Display value as what user enters
-		this.props.controller.updatePropertyValue(this.props.propertyId, [getISODate(this.state.valueStart), evt.target.value]);
-		this.setState({ valueEnd });
+		this.setState({ valueEnd: evt.target.value }); // Display value as what user enters
+	}
+
+	createInfoDesc(label, description, range) {
+		return description
+			? (<div className="properties-label-container">
+				{label}
+				<Tooltip
+					id={`${this.uuid}-tooltip-label-${this.props.control.name}-${range}`}
+					tip={description}
+					tooltipLinkHandler={this.props.controller.getHandlers().tooltipLinkHandler}
+					direction="bottom"
+					disable={this.props.state === STATES.DISABLED}
+					showToolTipOnClick
+				>
+					<Icon type={CARBON_ICONS.INFORMATION} className="properties-control-description-icon-info" />
+				</Tooltip>
+			</div>)
+			: label;
 	}
 
 	render() {
-		const className = classNames("properties-datepicker", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
+		const datepickerRangeStartLabel = `${this.props.control.name}.range.start.label`;
+		const datepickerRangeStartDesc = `${this.props.control.name}.range.start.desc`;
+		const datepickerRangeStartHelper = `${this.props.control.name}.range.start.helper`;
+		const datepickerRangeEndLabel = `${this.props.control.name}.range.end.label`;
+		const datepickerRangeEndDesc = `${this.props.control.name}.range.end.desc`;
+		const datepickerRangeEndHelper = `${this.props.control.name}.range.end.helper`;
+
+		const defaultDatepickerRangeStartLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_START_LABEL);
+		const defaultDatepickerRangeEndLabel = formatMessage(this.reactIntl, MESSAGE_KEYS.DATEPICKER_RANGE_END_LABEL);
+
+		let startLabel = this.props.controller.getResource(datepickerRangeStartLabel, defaultDatepickerRangeStartLabel);
+		const startDesc = this.props.controller.getResource(datepickerRangeStartDesc, null);
+		const startHelperText = this.props.controller.getResource(datepickerRangeStartHelper, null);
+		let endLabel = this.props.controller.getResource(datepickerRangeEndLabel, defaultDatepickerRangeEndLabel);
+		const endDesc = this.props.controller.getResource(datepickerRangeEndDesc, null);
+		const endHelperText = this.props.controller.getResource(datepickerRangeEndHelper, null);
+
+		startLabel = this.createInfoDesc(startLabel, startDesc, "start");
+		endLabel = this.createInfoDesc(endLabel, endDesc, "end");
+
+		const className = classNames("properties-datepicker-range", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				{!this.props.tableControl && this.props.controlItem}
 				<DatePicker
 					datePickerType={DATEPICKER_TYPE.RANGE}
 					dateFormat={this.props.control.dateFormat}
@@ -101,21 +145,25 @@ class DatepickerRangeControl extends React.Component {
 						{...validationProps}
 						id={`${this.id}-start`}
 						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && this.startLabel}
+						labelText={!this.props.tableControl && startLabel}
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputStartChange.bind(this)}
 						value={this.state.valueStart}
+						onBlur={this.onStartBlur.bind(this)}
+						helperText={!this.props.tableControl && startHelperText}
 					/>
 					<DatePickerInput
 						{...validationProps}
 						id={`${this.id}-end`}
 						placeholder={this.props.control.additionalText}
-						labelText={!this.props.tableControl && this.endLabel}
+						labelText={!this.props.tableControl && endLabel}
 						disabled={this.props.state === STATES.DISABLED}
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputEndChange.bind(this)}
 						value={this.state.valueEnd}
+						onBlur={this.onEndBlur.bind(this)}
+						helperText={!this.props.tableControl && endHelperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

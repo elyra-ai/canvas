@@ -29,19 +29,13 @@ class DatepickerControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.id = ControlUtils.getControlId(props.propertyId);
-		this.locale = ControlUtils.getLocale(props.control);
+		this.locale = props.controller.getLocale();
 
 		this.state = {
 			value: props.value ? getFormattedDate(props.value, this.props.control.dateFormat) : ""
 		};
 
-		this.getDatepickerType = this.getDatepickerType.bind(this);
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
-	}
-
-	// Datepicker can only be 'simple' or 'single'
-	getDatepickerType() {
-		return this.props.control.datepickerType === DATEPICKER_TYPE.SIMPLE ? DATEPICKER_TYPE.SIMPLE : DATEPICKER_TYPE.SINGLE;
 	}
 
 	getDatepickerSize() {
@@ -64,11 +58,11 @@ class DatepickerControl extends React.Component {
 	// Once the calendar closes, it will trigger an onChange evt that will correct any invalid dates
 	handleInputChange(evt) {
 		const value = evt.target.value; // Display value as what user enters
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
 		this.setState({ value });
 	}
 
 	render() {
+		const helperText = this.props.controller.getResource(`${this.props.control.name}.helper`, null);
 		const className = classNames("properties-datepicker", "properties-input-control", { "hide": this.props.state === STATES.HIDDEN },
 			this.props.messageInfo ? this.props.messageInfo.type : null);
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
@@ -76,7 +70,7 @@ class DatepickerControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
-					datePickerType={this.getDatepickerType()}
+					datePickerType={DATEPICKER_TYPE.SINGLE}
 					dateFormat={this.props.control.dateFormat}
 					light={this.props.controller.getLight() && this.props.control.light}
 					onChange={this.handleChange.bind(this)}
@@ -91,6 +85,7 @@ class DatepickerControl extends React.Component {
 						size={this.getDatepickerSize()}
 						onChange={this.handleInputChange.bind(this)}
 						value={this.state.value}
+						helperText={!this.props.tableControl && helperText}
 					/>
 				</DatePicker>
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />

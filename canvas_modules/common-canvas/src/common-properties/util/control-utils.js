@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import { v4 as uuid4 } from "uuid";
-import { TRUNCATE_LIMIT, DEFAULT_LOCALE,
-	DEFAULT_DATEPICKER_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
+import { TRUNCATE_LIMIT, DEFAULT_DATEPICKER_FORMAT, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
 import { ControlType } from "../constants/form-constants";
 
 /**
@@ -125,11 +124,6 @@ function getDateTimeFormat(control) {
 	return dtFormat;
 }
 
-function getLocale(control) {
-	const locale = control.locale ? control.locale : DEFAULT_LOCALE;
-	return locale;
-}
-
 export {
 	getCharLimit,
 	getControlId,
@@ -138,6 +132,5 @@ export {
 	joinNewlines,
 	truncateDisplayValue,
 	getValidationProps,
-	getDateTimeFormat,
-	getLocale
+	getDateTimeFormat
 };
