@@ -70,6 +70,7 @@ class DatepickerControl extends React.Component {
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
+					className="properties-datepicker-wrapper-parent"
 					datePickerType={DATEPICKER_TYPE.SINGLE}
 					dateFormat={this.props.control.dateFormat}
 					light={this.props.controller.getLight() && this.props.control.light}
@@ -79,6 +80,7 @@ class DatepickerControl extends React.Component {
 					<DatePickerInput
 						{...validationProps}
 						id={this.id}
+						className="properties-datepicker-wrapper-input"
 						placeholder={this.props.control.additionalText}
 						labelText={!this.props.tableControl && this.props.controlItem}
 						disabled={this.props.state === STATES.DISABLED}

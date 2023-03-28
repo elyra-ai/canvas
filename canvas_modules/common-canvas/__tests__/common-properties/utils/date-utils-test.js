@@ -72,6 +72,8 @@ describe("date util tests", () => {
 
 		const date5 = new Date("2023-11-02T00:00:00.00"); // ISO format
 		expect(DateUtils.getFormattedDate(date5, DATE_FORMAT_DELIMITERS)).to.equal(DATE_FORMAT_DELIMITERS_DATE);
+
+		expect(DateUtils.getFormattedDate("", DATE_FORMAT_ISO)).to.equal("");
 	});
 
 	it("date-utils getISODate() returns correct data", () => {
@@ -90,6 +92,7 @@ describe("date util tests", () => {
 		const bad = "random string";
 		expect(DateUtils.getISODate(bad)).to.equal(bad);
 		expect(DateUtils.getISODate(" ")).to.equal(" ");
+		expect(DateUtils.getISODate(" ", DATE_FORMAT_ISO)).to.equal(" ");
 	});
 
 	it("date-utils isValidDate() returns correct data", () => {

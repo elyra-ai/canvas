@@ -25,7 +25,7 @@ describe("validating lessThan operator works correctly", () => {
 	let undefinedPlaceholder;
 
 	const dateStart1 = "2023-03-22T00:00:00.00"; // ISO format
-	const dateStart1b = "2023-02-22T00:00:00.00";
+	const dateStart1b = "2023-02-22T00:00:00.00"; // ISO format
 	const dateEnd2 = "2023-03-23T00:00:00.00"; // ISO format
 
 	function wrap(val, role = null) {

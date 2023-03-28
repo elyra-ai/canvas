@@ -62,7 +62,7 @@ function getFormattedDate(inDate, dateFormat) {
 		formattedDate = formattedDate.replace("j", day.replaceAll("0", "")); // day without leading 0
 		return formattedDate;
 	}
-	return date;
+	return inDate;
 }
 
 // Get the ISO date format that is stored internally
@@ -70,7 +70,7 @@ function getISODate(inDate, dateFormat) {
 	const date = new Date(inDate);
 	if (inDate instanceof Date && !isNaN(date)) {
 		return date.toISOString();
-	} else if (typeof inDate === "string" && dateFormat) {
+	} else if (typeof inDate === "string" && inDate.trim().length > 0 && dateFormat) {
 		const dateRegex = getDateFormatRegex(dateFormat);
 		const { year, month, day } = getYearMonthDay(inDate, dateRegex, dateFormat);
 		return `${year}-${month}-${day}T00:00:00`;
@@ -109,33 +109,36 @@ function getYearMonthDay(dateString, dateRegex, dateFormat) {
 	let day = "";
 
 	const groups = dateString.match(dateRegex);
-	let groupIdx = 1; // Index 0 is the entire match
-	for (let formatIdx = 0; formatIdx < dateFormat.length; formatIdx++) {
-		const formatToken = dateFormat.charAt(formatIdx);
-		switch (formatToken) {
-		case "Y":
-		case "y": {
-			year = groups[groupIdx];
-			groupIdx++;
-			break;
+	if (groups) {
+		let groupIdx = 1; // Index 0 is the entire match
+		for (let formatIdx = 0; formatIdx < dateFormat.length; formatIdx++) {
+			const formatToken = dateFormat.charAt(formatIdx);
+			switch (formatToken) {
+			case "Y":
+			case "y": {
+				year = groups[groupIdx];
+				groupIdx++;
+				break;
+			}
+			case "m":
+			case "n": {
+				month = groups[groupIdx];
+				groupIdx++;
+				break;
+			}
+			case "d":
+			case "j": {
+				day = groups[groupIdx];
+				groupIdx++;
+				break;
+			}
+			default:
+				break;
+			}
 		}
-		case "m":
-		case "n": {
-			month = groups[groupIdx];
-			groupIdx++;
-			break;
-		}
-		case "d":
-		case "j": {
-			day = groups[groupIdx];
-			groupIdx++;
-			break;
-		}
-		default:
-			break;
-		}
+		return { year, month, day };
 	}
-	return { year, month, day };
+	return null;
 }
 
 export {
