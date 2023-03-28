@@ -3,22 +3,22 @@
     "title": "Datepicker"
   },
   "current_parameters": {
-    "datepicker": "2023-03-17T00:00:00",
-		"datepicker_required": "2023-03-17T00:00:00",
+    "datepicker": "2023-03-17T00:00:00.00",
+		"datepicker_required": "2023-03-17T00:00:00.00",
 		"datepicker_null": null,
 		"hide_datepicker": true,
-		"hidden_datepicker": "2023-03-17T00:00:00",
+		"hidden_datepicker": "2023-03-17T00:00:00.00",
 		"disable_datepicker": true,
-		"disabled_datepicker": "2023-03-17T00:00:00",
+		"disabled_datepicker": "2023-03-17T00:00:00.00",
 		"datepicker_table": [
 			[
-				"2023-03-16T00:00:00",
-				"2023-03-17T00:00:00",
-				"2023-03-18T00:00:00"
+				"2023-03-16T00:00:00.00",
+				"2023-03-17T00:00:00.00",
+				"2023-03-18T00:00:00.00"
 			],
 			[
 				null,
-				"2023-03-17T00:00:00",
+				"2023-03-17T00:00:00.00",
 				null
 			]
 		]

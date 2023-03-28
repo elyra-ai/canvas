@@ -78,9 +78,8 @@ describe("validating notEquals operator works correctly for dates", () => {
 	const notEquals = controller.getConditionOp("notEquals");
 	let undefinedPlaceholder;
 
-	const dateStart1 = new Date("2023-03-22T00:00:00"); // ISO format
-	const dateStart1b = new Date(2023, 2, 22, 0, 0, 0);
-	const dateEnd1 = new Date("2023-03-23T00:00:00"); // ISO format
+	const dateStart1 = "2023-03-22T00:00:00.00"; // ISO format
+	const dateEnd1 = "2023-03-23T00:00:00.00"; // ISO format
 
 	function wrap(val, role = null) {
 		return { value: val, control: { controlType: role } };
@@ -93,13 +92,13 @@ describe("validating notEquals operator works correctly for dates", () => {
 
 	it("Test notEquals behaves as expected comparing paramInfo and paramInfo2", () => {
 		expect(notEquals(wrap(dateStart1), wrap(dateEnd1), null, controller)).to.equal(true);
-		expect(notEquals(wrap(dateStart1), wrap(dateStart1b), null, controller)).to.equal(false);
+		expect(notEquals(wrap(dateStart1), wrap(dateStart1), null, controller)).to.equal(false);
 		expect(notEquals(wrap(dateStart1), wrap(""), undefinedPlaceholder, controller)).to.equal(true);
 	});
 
 	it("Test notEquals behaves as expected comparing paramInfo and value", () => {
 		expect(notEquals(wrap(dateStart1), undefinedPlaceholder, dateEnd1, controller)).to.equal(true);
-		expect(notEquals(wrap(dateStart1), undefinedPlaceholder, dateStart1b, controller)).to.equal(false);
+		expect(notEquals(wrap(dateStart1), undefinedPlaceholder, dateStart1, controller)).to.equal(false);
 		expect(notEquals(wrap(dateStart1), undefinedPlaceholder, "", controller)).to.equal(true);
 		expect(notEquals(wrap(dateStart1), undefinedPlaceholder, null, controller)).to.equal(true);
 	});

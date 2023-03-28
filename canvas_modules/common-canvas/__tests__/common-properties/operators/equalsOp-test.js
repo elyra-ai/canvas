@@ -80,9 +80,9 @@ describe("validating equals operator works correctly for dates", () => {
 	const equals = controller.getConditionOp("equals");
 	let undefinedPlaceholder;
 
-	const dateStart1 = new Date("2023-03-22T00:00:00"); // ISO format
-	const dateStart1b = new Date(2023, 2, 22, 0, 0, 0);
-	const dateEnd1 = new Date("2023-03-23T00:00:00"); // ISO format
+	const dateStart1 = "2023-03-22T00:00:00.00"; // ISO format
+	const dateStart1b = "2023-03-22T00:00:00.00"; // ISO format
+	const dateEnd1 = "2023-03-23T00:00:00.00"; // ISO format
 
 	function wrap(val, role = null) {
 		return { value: val, control: { controlType: role } };

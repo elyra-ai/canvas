@@ -2180,7 +2180,7 @@ _defineConstant("DATEPICKER_PROPS_INFO", {
 	"title": "Datepicker Title",
 	"parameterDef": {
 		"current_parameters": {
-			"datepickerControlName": "2023-03-25"
+			"datepickerControlName": "2023-03-25T00:00:00.00"
 		},
 		"parameters": [
 			{
@@ -2215,49 +2215,9 @@ _defineConstant("DATEPICKER_PROPS_INFO", {
 					]
 				}
 			]
-		}
-	}
-});
-_defineConstant("DATEPICKER_SIMPLE_PROPS_INFO", {
-	"title": "Datepicker Simple",
-	"parameterDef": {
-		"current_parameters": {
-			"datepickerControlName": "2023/03/25"
 		},
-		"parameters": [
-			{
-				"id": "datepickerControlName",
-				"type": "date"
-			}
-		],
-		"uihints": {
-			"id": "datepickers",
-			"parameter_info": [
-				{
-					"parameter_ref": "datepickerControlName",
-					"label": {
-						"default": "Datepicker Control Name"
-					},
-					"description": {
-						"default": "Datepicker simple test"
-					},
-					"control": "datepicker",
-					"date_format": "Y/m/d",
-					"datepicker_type": "simple",
-					"place_holder_text": {
-						"default": "yyyy/mm/dd"
-					}
-				}
-			],
-			"group_info": [
-				{
-					"id": "Datepicker simple Control",
-					"type": "controls",
-					"parameter_refs": [
-						"datepickerControlName"
-					]
-				}
-			]
+		"resources": {
+			"datepickerControlName.helper": "Helper text provided through resource label `{parameter_ref}.helper`."
 		}
 	}
 });
@@ -2265,7 +2225,7 @@ _defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
 	"title": "Datepicker Range",
 	"parameterDef": {
 		"current_parameters": {
-			"datepickerControlName": ["2023-03-25", "2023-03-30"]
+			"datepickerControlName": ["2023-03-25T00:00:00.00", "2023-03-30T00:00:00.00"]
 		},
 		"parameters": [
 			{
@@ -2286,12 +2246,6 @@ _defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
 					},
 					"control": "datepickerRange",
 					"date_format": "Y-m-d",
-					"datepicker_range_start_text": {
-						"default": "Start date:"
-					},
-					"datepicker_range_end_text": {
-						"default": "End date:"
-					},
 					"place_holder_text": {
 						"default": "yyyy-mm-dd"
 					}
@@ -2306,6 +2260,14 @@ _defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
 					]
 				}
 			]
+		},
+		"resources": {
+			"datepickerControlName.range.start.label": "Start",
+			"datepickerControlName.range.start.desc": "Start description provided through resource label `{parameter_ref}.range.start.desc`.",
+			"datepickerControlName.range.start.helper": "Start helper",
+			"datepickerControlName.range.end.label": "End",
+			"datepickerControlName.range.end.desc": "End description provided through resource label `{parameter_ref}.range.end.desc`.",
+			"datepickerControlName.range.end.helper": "End helper text."
 		}
 	}
 });

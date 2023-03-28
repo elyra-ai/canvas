@@ -53,11 +53,11 @@ describe("validating isNotEmpty operator works correctly", () => {
 		expect(isNotEmpty(wrap([]), null, null, controller)).to.equal(false);
 		expect(isNotEmpty(wrap({ temp: "value" }), null, null, controller)).to.equal(true);
 		// dates
-		expect(isNotEmpty(wrap(new Date("2023-03-22T00:00:00")), null, null, controller)).to.equal(true);
+		expect(isNotEmpty(wrap("2023-03-22T00:00:00.00"), null, null, controller)).to.equal(true);
 		expect(isNotEmpty(wrap(new Date(null)), null, null, controller)).to.equal(true);
-		expect(isNotEmpty(wrapDatepickerRange(["2023-03-22", "2023-03-22"]), null, null, controller)).to.equal(true);
-		expect(isNotEmpty(wrapDatepickerRange(["2023-03-22", ""]), null, null, controller)).to.equal(true);
-		expect(isNotEmpty(wrapDatepickerRange([" ", "2023-03-22"]), null, null, controller)).to.equal(true);
+		expect(isNotEmpty(wrapDatepickerRange(["2023-03-22T00:00:00.00", "2023-03-22T00:00:00.00"]), null, null, controller)).to.equal(true);
+		expect(isNotEmpty(wrapDatepickerRange(["2023-03-22T00:00:00.00", ""]), null, null, controller)).to.equal(true);
+		expect(isNotEmpty(wrapDatepickerRange([" ", "2023-03-22T00:00:00.00"]), null, null, controller)).to.equal(true);
 		expect(isNotEmpty(wrapDatepickerRange([" ", ""]), null, null, controller)).to.equal(false);
 		// pass in a function as a way to hit the default switch case
 		expect(isNotEmpty(wrap(emptyFunc), null, null, controller)).to.equal(true);

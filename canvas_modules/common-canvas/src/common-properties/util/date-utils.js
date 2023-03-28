@@ -70,7 +70,7 @@ function getISODate(inDate, dateFormat) {
 	const date = new Date(inDate);
 	if (inDate instanceof Date && !isNaN(date)) {
 		return date.toISOString();
-	} else if (typeof inDate === "string") {
+	} else if (typeof inDate === "string" && dateFormat) {
 		const dateRegex = getDateFormatRegex(dateFormat);
 		const { year, month, day } = getYearMonthDay(inDate, dateRegex, dateFormat);
 		return `${year}-${month}-${day}T00:00:00`;

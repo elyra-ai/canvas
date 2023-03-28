@@ -40,7 +40,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		if (paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
 			const startDate = paramInfo.value[0].trim();
 			const endDate = paramInfo.value[1].trim();
-			console.log("!!! start '" + startDate + "' end '" + endDate + "'" + (startDate === endDate === ""));
 			return startDate === "" && endDate === ""; // DATEPICKERRANGE is empty if both start and end dates are empty
 		}
 		return paramInfo.value === null ? true : paramInfo.value.length === 0;

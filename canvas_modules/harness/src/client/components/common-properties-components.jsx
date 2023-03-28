@@ -52,7 +52,6 @@ import {
 	DATEFIELD_PROPS_INFO,
 	TIMEFIELD_PROPS_INFO,
 	DATEPICKER_PROPS_INFO,
-	DATEPICKER_SIMPLE_PROPS_INFO,
 	DATEPICKER_RANGE_PROPS_INFO,
 	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
@@ -300,9 +299,14 @@ class CommonPropertiesComponents extends React.Component {
 				"description",
 				"control",
 				"date_format",
-				"datepicker_type",
-				"datepicker_range_start_text",
-				"datepicker_range_end_text"
+				"resources",
+				"datepickerControlName.helper",
+				"datepickerControlName.range.start.label",
+				"datepickerControlName.range.start.desc",
+				"datepickerControlName.range.start.helper",
+				"datepickerControlName.range.end.label",
+				"datepickerControlName.range.end.desc",
+				"datepickerControlName.range.end.helper"
 			];
 			break;
 		case "timefield":
@@ -1183,11 +1187,15 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--datepicker" className="harness-section-subtitle">datepicker</h3>
 					<p>A datepicker control is rendered for a parameter of <span className="harness-highlight">control=datepicker</span>.
 						The current parameter should be provided in the format specified in the parameter definition for uihint <span className="harness-highlight">date_format</span>.
-						This control is defined in Carbon and internally uses flatpickr, which has date tokens that differ from moment.js.
+						This control is defined in Carbon and internally uses flatpickr, which has date tokens that differ from moment.js and date-fns.
 					<a href="https://flatpickr.js.org/formatting/#date-formatting-tokens"> Flatpickr date formatting tokens </a>.
 						Common properties only support a subset list of tokens with numeric values only. The supported tokens include: <span className="harness-highlight">Y, y, m, n, d, and j</span>.
 						Only valid inputs are accepted. Any invalid dates will be adjusted to a valid date by flatpickr.
+						Common properties accepts ISO formatted dates in current parameters and also returns ISO formatted dates.
 						These same rules apply to <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepickerrange">datepickerRange</a>.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef. Helper text should not exceed 3 lines.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
@@ -1204,25 +1212,6 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>When <span className="harness-highlight">datepicker_type=simple</span> is specified in the uihints,
-						a datepicker without a calendar will be rendered. Users will need to manually input a date.
-						There is internal validation to ensure the entered date is valid and matches the format specified in the parameter definition.
-					</p>
-					<div className="harness-section-row">
-						<div className="harness-section-column">
-							<CommonProperties
-								propertiesInfo={DATEPICKER_SIMPLE_PROPS_INFO}
-								propertiesConfig={this.propertiesConfig}
-								light={this.state.light}
-							/>
-							{this.renderRightFlyoutButton(DATEPICKER_SIMPLE_PROPS_INFO)}
-						</div>
-						<div className="harness-section-column harness-section-column-code">
-							<pre className="harness-json-block">
-								{this.jsonReplacer(DATEPICKER_SIMPLE_PROPS_INFO.parameterDef, "datepicker")}
-							</pre>
-						</div>
-					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--datepickerrange" className="harness-section-subtitle">datepicker</h3>
@@ -1231,6 +1220,12 @@ class CommonPropertiesComponents extends React.Component {
 						from <a className="harness-properties-documentation-page-intro-link" href="#/properties#--datepicker">datepicker</a>,
 						the <span className="harness-highlight">datepickerRange</span> accepts additional uihints for the
 						start <span className="harness-highlight">datepicker_range_start_text</span> and end <span className="harness-highlight">datepicker_range_end_text</span> labels respectively.
+						Common properties accepts ISO formatted dates in current parameters and also returns ISO formatted dates.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef. Helper text should not exceed 3 lines.
+						Similarly, the start, end, and description labels are also available to customize through resource labels.
+						Look at the example json to see the format.
 					</p>
 					<div className="harness-section-row">
 						<div className="harness-section-column">
