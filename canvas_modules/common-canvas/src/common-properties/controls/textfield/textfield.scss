@@ -39,6 +39,7 @@ $textinput-bottom-padding: 5px;
 			margin: 0;
 			padding: 0;
 			height: 1.72rem;
+			text-overflow: ellipsis;
 			&:focus {
 				border-top: 0;
 				border-right: 0;
