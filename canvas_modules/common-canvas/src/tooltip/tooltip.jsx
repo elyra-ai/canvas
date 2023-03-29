@@ -124,7 +124,8 @@ class ToolTip extends React.Component {
 		if (triggerElem) {
 			const fullWidth = triggerElem.firstChild && triggerElem.firstChild.scrollWidth && triggerElem.firstChild.scrollWidth !== 0 ? triggerElem.firstChild.scrollWidth
 				: triggerElem.scrollWidth;
-			const displayWidth = triggerElem.offsetWidth;
+			const displayWidth = triggerElem.firstChild && triggerElem.firstChild.offsetWidth && triggerElem.firstChild.offsetWidth !== 0 ? triggerElem.firstChild.offsetWidth
+				: triggerElem.offsetWidth;
 			const canDisplayFullText = fullWidth <= displayWidth;
 			return canDisplayFullText;
 		}
