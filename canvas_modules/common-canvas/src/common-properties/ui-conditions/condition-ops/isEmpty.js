@@ -34,9 +34,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "number":
 		return paramInfo.value === null;
 	case "object":
-		if (paramInfo.value instanceof Date) {
-			return false;
-		}
 		if (paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
 			const startDate = paramInfo.value[0].trim();
 			const endDate = paramInfo.value[1].trim();

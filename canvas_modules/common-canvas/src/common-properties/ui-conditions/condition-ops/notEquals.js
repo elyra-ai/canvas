@@ -34,9 +34,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.trim() !== param2Info.value.trim();
 			case "object":
-				if (paramInfo.value instanceof Date) {
-					return new Date(paramInfo.value).getTime() !== new Date(param2Info.value).getTime();
-				}
 				return JSON.stringify(paramInfo.value) !== JSON.stringify(param2Info.value);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
@@ -54,9 +51,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			case "string":
 				return paramInfo.value.trim() !== value.trim();
 			case "object":
-				if (paramInfo.value instanceof Date) {
-					return new Date(paramInfo.value).getTime() !== new Date(value).getTime();
-				}
 				return JSON.stringify(paramInfo.value) !== JSON.stringify(value);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);

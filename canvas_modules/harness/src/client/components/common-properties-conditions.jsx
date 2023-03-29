@@ -335,7 +335,7 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
-			{ Control: "datepicker (date)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "yes", dmTypeEquals: "no", dmTypeNotEquals: "no",
+			{ Control: "datepicker (date)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "datepickerRange (date)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },

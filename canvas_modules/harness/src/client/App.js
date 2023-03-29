@@ -1860,9 +1860,6 @@ class App extends React.Component {
 
 	propertyListener(data) {
 		// This is an empty callback.  Logging creates a performance issue.
-		// if (data && data.action === "UPDATE_PROPERTY" && data.property.name === "datepicker_simple") {
-		// 	this.propertiesController.updatePropertyValue({ name: "datepicker_simple_required" }, "03/17/2023");
-		// }
 	}
 
 	propertyActionHandler(actionId, appData, data) {

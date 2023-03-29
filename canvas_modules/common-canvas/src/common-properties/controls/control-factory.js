@@ -61,8 +61,8 @@ const accessibleControls = [
 	ControlType.CHECKBOXSET,
 	ControlType.HIDDEN,
 	ControlType.DATEFIELD,
-	ControlType.DATEPICKER, // TODO: ask Neha
-	ControlType.DATEPICKERRANGE, // TODO: ask Neha
+	ControlType.DATEPICKER,
+	ControlType.DATEPICKERRANGE,
 	ControlType.NUMBERFIELD,
 	ControlType.SPINNER,
 	ControlType.PASSWORDFIELD,
