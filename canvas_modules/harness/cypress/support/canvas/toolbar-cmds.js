@@ -15,19 +15,19 @@
  */
 
 Cypress.Commands.add("clickToolbarPaletteOpen", () => {
-	cy.getToolbarAction(".togglePalette-action").click();
+	cy.getToolbarAction(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
-	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
+	cy.getToolbarActionInExtraCanvas(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
-	cy.getToolbarAction(".togglePalette-action").click();
+	cy.getToolbarAction(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
-	cy.getToolbarActionInExtraCanvas(".togglePalette-action").click();
+	cy.getToolbarActionInExtraCanvas(".paletteOpen-action").click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {
