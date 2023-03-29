@@ -2382,6 +2382,14 @@ export default class CanvasController {
 			this.togglePalette();
 			break;
 		}
+		case "paletteOpen": {
+			this.openPalette();
+			break;
+		}
+		case "paletteClose": {
+			this.closePalette();
+			break;
+		}
 		case "toggleNotificationPanel": {
 			this.toggleNotificationPanel();
 			break;

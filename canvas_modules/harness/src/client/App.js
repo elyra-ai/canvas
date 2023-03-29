@@ -1581,6 +1581,16 @@ class App extends React.Component {
 		}
 
 		switch (data.editType) {
+		case "commentsHide": {
+			const canvasLayout = { ...this.state.selectedCanvasLayout, commentDisplay: false };
+			this.setState({ selectedCanvasLayout: canvasLayout });
+			break;
+		}
+		case "commentsShow": {
+			const canvasLayout = { ...this.state.selectedCanvasLayout, commentDisplay: true };
+			this.setState({ selectedCanvasLayout: canvasLayout });
+			break;
+		}
 		case "displaySubPipeline":
 		case "displayPreviousPipeline": {
 			this.setFlowNotificationMessages();
@@ -2155,11 +2165,14 @@ class App extends React.Component {
 				{ divider: true },
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
-				{ action: "cut", label: "Cut", enable: true, tooltip: "Cut from clipboard" },
-				{ action: "copy", label: "Copy", enable: true, tooltip: "Copy from clipboard" },
-				{ action: "paste", label: "Paste", enable: true, tooltip: "Paste to canvas" },
+				{ divider: true },
 				{ action: "createAutoComment", label: "Add Comment", enable: true },
+				(this.state.selectedCanvasLayout && !this.state.selectedCanvasLayout.commentDisplay
+					? { action: "commentsShow", label: "Show comments", enable: true }
+					: { action: "commentsHide", label: "Hide comments", enable: true }),
+				{ divider: true },
 				{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+				{ divider: true },
 				{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 				{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 				{ divider: true },

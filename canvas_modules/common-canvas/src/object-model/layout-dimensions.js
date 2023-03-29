@@ -349,6 +349,9 @@ const portsHorizontalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
+		// Displays all comments when true or no comments when false.
+		commentDisplay: true,
+
 		// When sizing a comment this decides the size of the corner area for
 		// diagonal sizing.
 		commentCornerResizeArea: 10,
@@ -746,6 +749,9 @@ const portsVerticalDefaultLayout = {
 		// ---------------------------------------------------------------------------
 		// Layout values for comments
 		// ---------------------------------------------------------------------------
+		// Displays all comments when true or no comments when false.
+		commentDisplay: true,
+
 		// When sizing a comment this decides the size of the corner area for
 		// diagonal sizing.
 		commentCornerResizeArea: 10,

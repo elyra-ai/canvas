@@ -5185,8 +5185,9 @@ export default class SVGCanvasRenderer {
 	}
 
 	displayCommentsSubset(selection, data) {
+		const newData = this.canvasLayout.commentDisplay ? data : [];
 		selection
-			.data(data, (c) => c.id)
+			.data(newData, (c) => c.id)
 			.join(
 				(enter) => this.createComments(enter)
 			)
@@ -6481,9 +6482,15 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if a link should be displayed and false if not. The link
-	// should not be displayed if the displayLinkOnOverlap flag is false and the
-	// nodes are overlapping.
+	// should not be displayed if:
+	// * it is a comment link and comment links are switched off
+	// * the displayLinkOnOverlap flag is false and the objects at each end of
+	// the link are overlapping.
 	shouldDisplayLink(srcNode, trgNode, linkType) {
+		if (linkType === COMMENT_LINK && !this.canvasLayout.commentDisplay) {
+			return false;
+		}
+
 		if (this.canvasLayout.displayLinkOnOverlap === false) {
 			return !this.areLinkedObjectsOverlapping(srcNode, trgNode, linkType);
 		}
