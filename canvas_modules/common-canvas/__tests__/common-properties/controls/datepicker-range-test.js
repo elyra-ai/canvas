@@ -121,7 +121,7 @@ describe("datepicker-range-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.eql(["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"]);
 
 		const instance = wrapper.find("DatepickerRangeControl").instance();
-		instance.handleDateRangeChange([new Date("2023-02-28T00:00:00.00"), new Date("2024-02-28T00:00:00.00")]); // mock clicking on calendar to update value
+		instance.handleDateRangeChange([new Date("2023-02-28T08:00:00.000Z"), new Date("2024-02-28T08:00:00.000Z")]); // mock clicking on calendar to update value
 		expect(controller.getPropertyValue(propertyId)).to.eql(["2023-02-28T08:00:00.000Z", "2024-02-28T08:00:00.000Z"]);
 
 		wrapper.update();

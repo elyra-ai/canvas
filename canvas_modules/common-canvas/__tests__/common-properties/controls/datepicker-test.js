@@ -116,7 +116,7 @@ describe("datepicker-control renders correctly", () => {
 		expect(controller.getPropertyValue(propertyId)).to.equal("2023-03-23T00:00:00.00");
 
 		const instance = wrapper.find("DatepickerControl").instance();
-		instance.handleChange([new Date("2023-02-28T00:00:00.00")]); // mock clicking on calendar to update value
+		instance.handleChange([new Date("2023-02-28T08:00:00.000Z")]); // mock clicking on calendar to update value
 		expect(controller.getPropertyValue(propertyId)).to.equal("2023-02-28T08:00:00.000Z");
 
 		wrapper.update();
