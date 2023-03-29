@@ -19,6 +19,7 @@ import Draggable from "react-draggable";
 import { Checkbox, Loading } from "carbon-components-react";
 import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../../../locales/common-properties/locales/en.json";
@@ -28,6 +29,7 @@ import classNames from "classnames";
 
 import PropTypes from "prop-types";
 import React from "react";
+import { v4 as uuid4 } from "uuid";
 
 class VirtualizedTable extends React.Component {
 
@@ -65,6 +67,7 @@ class VirtualizedTable extends React.Component {
 		this.onRowClick = this.onRowClick.bind(this);
 		this.overSelectOption = this.overSelectOption.bind(this);
 		this.resizeColumn = this.resizeColumn.bind(this);
+		this.uuid = uuid4();
 	}
 
 	componentDidUpdate() {
@@ -200,7 +203,7 @@ class VirtualizedTable extends React.Component {
 		const checkbox = this.props.selectable && this.props.rowSelection !== ROW_SELECTION.SINGLE
 			? (<div role="checkbox" aria-checked={this.props.checkedAll} className="properties-vt-header-checkbox">
 				<Checkbox
-					id={`properties-vt-hd-cb-${scrollKey}`}
+					id={`properties-vt-hd-cb-${this.uuid}-${scrollKey}`}
 					onChange={this.selectAll}
 					checked={this.props.checkedAll}
 					labelText={translatedHeaderCheckboxLabel}
@@ -234,12 +237,6 @@ class VirtualizedTable extends React.Component {
 			</span>);
 		}
 
-		const tooltip = columnData.headerLabel
-			? (<div className="properties-tooltips">
-				<span style= {{ fontWeight: "bold" }}>{columnData.headerLabel}</span>
-			</div>)
-			: null;
-
 		const infoIcon = isEmpty(columnData.description)
 			? null
 			: (<div className="properties-vt-info-icon-tip">
@@ -253,8 +250,6 @@ class VirtualizedTable extends React.Component {
 					<Information16 className="properties-vt-info-icon" />
 				</Tooltip>
 			</div>);
-
-		const tooltipId = `tooltip-column-${dataKey}`;
 
 		const resizeElem = columnData.resizable && !this.isLastColumn(dataKey)
 			? (<Draggable
@@ -275,23 +270,15 @@ class VirtualizedTable extends React.Component {
 				/>
 			</Draggable>)
 			: "";
-
-		const header = isEmpty(tooltip)
-			? (<div className="properties-vt-label-icon">
-				{label}
-				{infoIcon}
-			</div>)
-			: (<div className="properties-vt-label-tip-icon">
-				<Tooltip
-					id={tooltipId}
-					tip={tooltip}
-					direction="bottom"
-					className="properties-tooltips"
-				>
-					{label}
-				</Tooltip>
-				{infoIcon}
-			</div>);
+		const headerDisplayLabel = typeof label === "string" ? (<span>{label}</span>) : label;
+		const header = (<div className="properties-vt-label-tip-icon">
+			<TruncatedContentTooltip
+				tooltipText={columnData.headerLabel}
+				content={headerDisplayLabel}
+				disabled={columnData.disabled}
+			/>
+			{infoIcon}
+		</div>);
 
 		return (
 			<div className={classNames({ "properties-vt-column-with-resize": resizeElem !== "", "properties-vt-column-without-resize": resizeElem === "" })}>
@@ -407,7 +394,7 @@ class VirtualizedTable extends React.Component {
 					}}
 				>
 					<Checkbox
-						id={`properties-vt-row-cb-${scrollKey}-${index}`}
+						id={`properties-vt-row-cb-${this.uuid}-${scrollKey}-${index}`}
 						key={`properties-vt-row-cb-${scrollKey}-${index}`}
 						labelText={translatedRowCheckboxLabel}
 						hideLabel

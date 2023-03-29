@@ -18,14 +18,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { has } from "lodash";
+import { Checkbox } from "carbon-components-react";
 
 // Reusable component to show tooltip if the content is truncated
 export default class TruncatedContentTooltip extends React.Component {
 
 	render() {
 		let tooltipText = this.props.tooltipText;
+		let truncatedRef = this.props.truncatedRef;
 		if (typeof this.props.tooltipText !== "object") {
 			tooltipText = String(this.props.tooltipText);
+		}
+		if (this.props.content.type === Checkbox && this.tooltipRef && this.tooltipRef.firstChild) {
+			truncatedRef = this.tooltipRef.firstChild.lastChild; // checkbox label is in div -> label -> span
 		}
 		const tooltip = (
 			<div className="properties-tooltips">
@@ -41,8 +46,11 @@ export default class TruncatedContentTooltip extends React.Component {
 					className="properties-tooltips"
 					disable={has(this.props, "disabled") ? this.props.disabled : true}
 					showToolTipIfTruncated
+					truncatedRef={truncatedRef}
 				>
-					{this.props.content}
+					<div ref={(ref) => (this.tooltipRef = ref)}>
+						{this.props.content}
+					</div>
 				</Tooltip>
 			</div>
 		);
@@ -51,6 +59,7 @@ export default class TruncatedContentTooltip extends React.Component {
 
 TruncatedContentTooltip.propTypes = {
 	content: PropTypes.element.isRequired,
+	truncatedRef: PropTypes.object,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,
 		PropTypes.object.isRequired,

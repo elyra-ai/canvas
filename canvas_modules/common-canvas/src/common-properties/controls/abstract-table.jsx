@@ -26,6 +26,7 @@ import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
 import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
 import { ControlType, EditStyle } from "./../constants/form-constants";
+import { v4 as uuid4 } from "uuid";
 
 import { MESSAGE_KEYS, STATES, TABLE_SUBPANEL_BUTTON_WIDTH, SORT_DIRECTION, ROW_SELECTION, UPDATE_TYPE } from "./../constants/constants";
 
@@ -80,6 +81,7 @@ export default class AbstractTable extends React.Component {
 		this.selectSummaryPropertyName = "table-multi-select-edit-property-" + props.control.name;
 		props.controller.saveControls([{ name: this.selectSummaryPropertyName }]);
 		this.setSelectedSummaryRowValue(props.selectedRows);
+		this.uuid = uuid4();
 	}
 
 	componentDidMount() {
@@ -697,9 +699,8 @@ export default class AbstractTable extends React.Component {
 
 	makeHeader(sortFields, filterFields) {
 		const headers = [];
-		for (var j = 0; j < this.props.control.subControls.length; j++) {
+		for (let j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
-			const checkboxName = this.props.control.name + j; // TODO might not be unique
 			// See if the entire column is disabled
 			const colState = this.props.controller.getControlState({ name: this.props.control.name, col: j });
 			const disabled = colState === STATES.DISABLED || colState === STATES.HIDDEN;
@@ -707,7 +708,7 @@ export default class AbstractTable extends React.Component {
 				? (
 					<Checkbox
 						disabled={disabled}
-						id={checkboxName}
+						id={`properties-at-header-cb-${this.uuid}-${this.props.control.name}=${j}`}
 						checked={this.checkedAll(j)}
 						onChange={this.checkedAllValue.bind(this, j)}
 						labelText={columnDef.label.text}
@@ -722,7 +723,9 @@ export default class AbstractTable extends React.Component {
 					"width": columnDef.width,
 					"description": (columnDef.description ? columnDef.description.text : null),
 					"resizable": columnDef.resizable ? columnDef.resizable : false,
-					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null) });
+					"operation": (columnDef.generatedValues && columnDef.generatedValues.operation ? columnDef.generatedValues.operation : null),
+					"disabled": disabled
+				});
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
