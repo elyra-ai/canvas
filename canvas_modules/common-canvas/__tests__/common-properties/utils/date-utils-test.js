@@ -27,6 +27,7 @@ const DATE_FORMAT_ISO_DATE = "2023-03-22";
 const DATE_FORMAT_SLASHES_DATE = "2023/03/20";
 const DATE_FORMAT_MONTH_DATE = "03-22-2023";
 const DATE_FORMAT_SINGLE_DIGITS_DATE = "1-2-23";
+const DATE_FORMAT_ENDING_ZERO_DATE = "10-30-20";
 const DATE_FORMAT_DELIMITERS_DATE = "2023-11.02";
 
 describe("date util tests", () => {
@@ -51,10 +52,15 @@ describe("date util tests", () => {
 		const expected4 = { year: "23", month: "1", day: "2" };
 		expect(DateUtils.getYearMonthDay(DATE_FORMAT_SINGLE_DIGITS_DATE, regex4, DATE_FORMAT_SINGLE_DIGITS)).to.eql(expected4);
 
-		const regex5 = DateUtils.getDateFormatRegex(DATE_FORMAT_DELIMITERS);
-		expect(regex5).to.equal("^([1-9][0-9][0-9][0-9])-([0][1-9]|[1][0-2])[.]([0][1-9]|[1-2][0-9]|3[01])$");
-		const expected5 = { year: "2023", month: "11", day: "02" };
-		expect(DateUtils.getYearMonthDay(DATE_FORMAT_DELIMITERS_DATE, regex5, DATE_FORMAT_DELIMITERS)).to.eql(expected5);
+		const regex5 = DateUtils.getDateFormatRegex(DATE_FORMAT_SINGLE_DIGITS);
+		expect(regex5).to.equal("^([1-9]|[1-2][0-2])-([1-9]|[1-2][0-9]|3[01])-([0-9][0-9])$");
+		const expected5 = { year: "20", month: "10", day: "30" };
+		expect(DateUtils.getYearMonthDay(DATE_FORMAT_ENDING_ZERO_DATE, regex5, DATE_FORMAT_SINGLE_DIGITS)).to.eql(expected5);
+
+		const regex6 = DateUtils.getDateFormatRegex(DATE_FORMAT_DELIMITERS);
+		expect(regex6).to.equal("^([1-9][0-9][0-9][0-9])-([0][1-9]|[1][0-2])[.]([0][1-9]|[1-2][0-9]|3[01])$");
+		const expected6 = { year: "2023", month: "11", day: "02" };
+		expect(DateUtils.getYearMonthDay(DATE_FORMAT_DELIMITERS_DATE, regex6, DATE_FORMAT_DELIMITERS)).to.eql(expected6);
 	});
 
 	it("date-utils getFormattedDate() returns correct data", () => {
@@ -70,8 +76,11 @@ describe("date util tests", () => {
 		const date4 = new Date("2023-01-02T00:00:00.00"); // ISO format
 		expect(DateUtils.getFormattedDate(date4, DATE_FORMAT_SINGLE_DIGITS)).to.equal(DATE_FORMAT_SINGLE_DIGITS_DATE);
 
-		const date5 = new Date("2023-11-02T00:00:00.00"); // ISO format
-		expect(DateUtils.getFormattedDate(date5, DATE_FORMAT_DELIMITERS)).to.equal(DATE_FORMAT_DELIMITERS_DATE);
+		const date5 = new Date("2020-10-30T00:00:00.00"); // ISO format
+		expect(DateUtils.getFormattedDate(date5, DATE_FORMAT_SINGLE_DIGITS)).to.equal(DATE_FORMAT_ENDING_ZERO_DATE);
+
+		const date6 = new Date("2023-11-02T00:00:00.00"); // ISO format
+		expect(DateUtils.getFormattedDate(date6, DATE_FORMAT_DELIMITERS)).to.equal(DATE_FORMAT_DELIMITERS_DATE);
 
 		expect(DateUtils.getFormattedDate("", DATE_FORMAT_ISO)).to.equal("");
 	});

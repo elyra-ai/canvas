@@ -57,9 +57,9 @@ function getFormattedDate(inDate, dateFormat) {
 		formattedDate = formattedDate.replace("Y", year); // 4 digit year
 		formattedDate = formattedDate.replace("y", year.substring(2)); // 2 digit year
 		formattedDate = formattedDate.replace("m", month); // 2 digit month
-		formattedDate = formattedDate.replace("n", month.replaceAll("0", "")); // month without leading 0
+		formattedDate = formattedDate.replace("n", parseInt(month, 10)); // month without leading 0
 		formattedDate = formattedDate.replace("d", day); // 2 digit day
-		formattedDate = formattedDate.replace("j", day.replaceAll("0", "")); // day without leading 0
+		formattedDate = formattedDate.replace("j", parseInt(day, 10)); // day without leading 0
 		return formattedDate;
 	}
 	return inDate;
