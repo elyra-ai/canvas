@@ -99,9 +99,9 @@ describe("date util tests", () => {
 		expect(DateUtils.getISODate(date4)).to.equal(date4.toISOString());
 
 		// User entered value, handled by onBlur
-		expect(DateUtils.getISODate("03/16/2023", "m/d/Y")).to.equal("2023-03-16T07:00:00.000Z");
-		expect(DateUtils.getISODate("03-10-2023", DATE_FORMAT_MONTH)).to.equal("2023-03-10T08:00:00.000Z");
-		expect(DateUtils.getISODate("2023-03-01", DATE_FORMAT_ISO)).to.equal("2023-03-01T08:00:00.000Z");
+		expect(DateUtils.getISODate("03/16/2023", "m/d/Y")).to.equal(new Date("2023-03-16T00:00:00.00").toISOString());
+		expect(DateUtils.getISODate("03-10-2023", DATE_FORMAT_MONTH)).to.equal(new Date("2023-03-10T00:00:00.00").toISOString());
+		expect(DateUtils.getISODate("2023-03-01", DATE_FORMAT_ISO)).to.equal(new Date("2023-03-01T00:00:00.000").toISOString());
 		expect(DateUtils.getISODate("  ", DATE_FORMAT_ISO)).to.equal("  ");
 
 		const bad = "random string";
