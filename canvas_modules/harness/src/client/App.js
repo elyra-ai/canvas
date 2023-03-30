@@ -2164,7 +2164,7 @@ class App extends React.Component {
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
 				{ divider: true },
-				{ action: "createAutoComment", label: "Add Comment", enable: !this.canvasController.isHidingComments() },
+				{ action: "createAutoComment", label: "Add Comment", enable: true },
 				(this.canvasController.isHidingComments()
 					? { action: "commentsShow", label: "Show comments", enable: true }
 					: { action: "commentsHide", label: "Hide comments", enable: true }),
