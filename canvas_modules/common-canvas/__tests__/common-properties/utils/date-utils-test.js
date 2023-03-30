@@ -98,10 +98,16 @@ describe("date util tests", () => {
 		const date4 = new Date(); // ISO format
 		expect(DateUtils.getISODate(date4)).to.equal(date4.toISOString());
 
+		// User entered value, handled by onBlur
+		expect(DateUtils.getISODate("03/16/2023", "m/d/Y")).to.equal("2023-03-16T07:00:00.000Z");
+		expect(DateUtils.getISODate("03-10-2023", DATE_FORMAT_MONTH)).to.equal("2023-03-10T08:00:00.000Z");
+		expect(DateUtils.getISODate("2023-03-01", DATE_FORMAT_ISO)).to.equal("2023-03-01T08:00:00.000Z");
+		expect(DateUtils.getISODate("  ", DATE_FORMAT_ISO)).to.equal("  ");
+
 		const bad = "random string";
 		expect(DateUtils.getISODate(bad)).to.equal(bad);
 		expect(DateUtils.getISODate(" ")).to.equal(" ");
-		expect(DateUtils.getISODate(" ", DATE_FORMAT_ISO)).to.equal(" ");
+		expect(DateUtils.getISODate(bad, DATE_FORMAT_ISO)).to.equal(bad);
 	});
 
 	it("date-utils isValidDate() returns correct data", () => {
