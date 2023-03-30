@@ -151,6 +151,14 @@ export default (state = {}, action) => {
 	case "SET_SUBDUE_STYLE":
 		return Object.assign({}, state, { subdueStyle: action.data.subdueStyle });
 
+	case "HIDE_COMMENTS": {
+		return { ...state, hideComments: true };
+	}
+
+	case "SHOW_COMMENTS": {
+		return { ...state, hideComments: false };
+	}
+
 	case "ADD_NODE":
 	case "REPLACE_NODES":
 	case "REPLACE_NODE":

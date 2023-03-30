@@ -162,12 +162,12 @@ class CommonCanvasToolbar extends React.Component {
 
 		// Add the new togglePalette icon if the palette is enabled.
 		if (this.props.isPaletteEnabled) {
+			const paletteOpenClose = this.props.isPaletteOpen
+				? { action: "paletteClose", label: paletteLabel, enable: true }
+				: { action: "paletteOpen", label: paletteLabel, enable: true };
+
 			const paletteTools = [
-				{ action: "togglePalette",
-					label: paletteLabel,
-					enable: true,
-					iconTypeOverride: this.props.isPaletteOpen ? "paletteClose" : "paletteOpen"
-				},
+				paletteOpenClose,
 				{ divider: true }
 			];
 			return paletteTools.concat(newLeftBar);
