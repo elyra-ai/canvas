@@ -1068,6 +1068,18 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
 	}
 
+	hideComments() {
+		this.objectModel.hideComments();
+	}
+
+	showComments() {
+		this.objectModel.showComments();
+	}
+
+	isHidingComments() {
+		return this.objectModel.isHidingComments();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Links methods
 	// ---------------------------------------------------------------------------

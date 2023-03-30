@@ -23,11 +23,11 @@ Cypress.Commands.add("clickToolbarPaletteOpenInExtraCanvas", () => {
 });
 
 Cypress.Commands.add("clickToolbarPaletteClose", () => {
-	cy.getToolbarAction(".paletteOpen-action").click();
+	cy.getToolbarAction(".paletteClose-action").click();
 });
 
 Cypress.Commands.add("clickToolbarPaletteCloseInExtraCanvas", () => {
-	cy.getToolbarActionInExtraCanvas(".paletteOpen-action").click();
+	cy.getToolbarActionInExtraCanvas(".paletteClose-action").click();
 });
 
 Cypress.Commands.add("clickToolbarStop", () => {

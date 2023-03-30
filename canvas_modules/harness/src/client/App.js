@@ -1582,13 +1582,11 @@ class App extends React.Component {
 
 		switch (data.editType) {
 		case "commentsHide": {
-			const canvasLayout = { ...this.state.selectedCanvasLayout, commentDisplay: false };
-			this.setState({ selectedCanvasLayout: canvasLayout });
+			this.canvasController.hideComments();
 			break;
 		}
 		case "commentsShow": {
-			const canvasLayout = { ...this.state.selectedCanvasLayout, commentDisplay: true };
-			this.setState({ selectedCanvasLayout: canvasLayout });
+			this.canvasController.showComments();
 			break;
 		}
 		case "displaySubPipeline":
@@ -2166,8 +2164,8 @@ class App extends React.Component {
 				{ action: "undo", label: "Undo", enable: true },
 				{ action: "redo", label: "Redo", enable: true },
 				{ divider: true },
-				{ action: "createAutoComment", label: "Add Comment", enable: true },
-				(this.state.selectedCanvasLayout && !this.state.selectedCanvasLayout.commentDisplay
+				{ action: "createAutoComment", label: "Add Comment", enable: !this.canvasController.isHidingComments() },
+				(this.canvasController.isHidingComments()
 					? { action: "commentsShow", label: "Show comments", enable: true }
 					: { action: "commentsHide", label: "Hide comments", enable: true }),
 				{ divider: true },
