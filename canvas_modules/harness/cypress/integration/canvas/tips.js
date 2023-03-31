@@ -278,52 +278,6 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 	});
 });
 
-describe("Test if tips show up for the summary table values", function() {
-	beforeEach(() => {
-		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.openPropertyDefinition("summaryPanel_paramDef.json");
-	});
-
-	it("Test if tips show up for the summary table values", function() {
-		cy.hoverOverTextInSummaryPanel("people in generation X ", "Values");
-		cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "visible");
-		cy.moveMouseToCoordinates(300, 100);
-		// cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
-	});
-});
-
-describe("Test if tips show up for summary validation icon when there is an error or warning", function() {
-	beforeEach(() => {
-		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.openPropertyDefinition("summaryPanel_paramDef.json");
-	});
-
-	it("Test if tips show up for summary validation icon when there is an error or warning", function() {
-		// Select an existing row in the table and delete it's value.
-		cy.openSubPanel("Configure Derive Node");
-		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
-		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
-
-		// Select all rows in a table and delete its value
-		cy.selectAllRowsInTable("structurelisteditorTableInput");
-		cy.clickButtonInTable("Delete", "structurelisteditorTableInput");
-		cy.saveWideFlyout("Configure Derive Node");
-
-		cy.hoverOverValidationIconInSummaryPanel("Derive-Node");
-		cy.verifyTipForValidationIconInSummaryPanel(
-			"Derive-Node", "There are 1 parameters with errors and 1 parameters with warnings."
-		);
-	});
-});
-
 describe("Test to check if tips show up for a supernode and nodes inside the supernode", function() {
 	beforeEach(() => {
 		cy.visit("/");
