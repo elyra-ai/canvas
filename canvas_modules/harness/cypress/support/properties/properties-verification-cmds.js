@@ -118,52 +118,6 @@ Cypress.Commands.add("verifyTip", (container, visible, text, direction) => {
 		});
 });
 
-/** Verify the tooltip over the given text is 'visible'
-* @param label: label of the container shown in the UI
-* @param text: text shown in the tip
-*/
-Cypress.Commands.add("verifyTipForLabelIsVisibleAtLocation", (label, tipLocation, text) => {
-	// Verify the tip for label "Mode" is visible on the "top" with text "Include or discard rows"
-	cy.getControlContainerFromName(label)
-		.then((container) => {
-			cy.verifyTip(container, "visible", text, tipLocation);
-		});
-});
-
-/** Verify the tooltip over the given text is 'hidden'
-* @param label: label of the container shown in the UI
-* @param text: text shown in the tip
-*/
-Cypress.Commands.add("verifyTipForLabelIsHidden", (label, text) => {
-	cy.getControlContainerFromName(label)
-		.then((container) => {
-			cy.verifyTip(container, "hidden", text);
-		});
-});
-
-/** Verify the tooltip over the given text in the summaryPanel is 'visible'
-* @param text: value displayed in summary panels
-* @param summaryName: name of summaryPanel
-* @param visible: string value of 'visible' when tooltip is showing, other values for tooltip hidden
-*/
-Cypress.Commands.add("verifyTipWithTextInSummaryPanel", (text, summaryName, visible) => {
-	cy.getSummaryFromName(summaryName)
-		.then((summary) => {
-			cy.verifyTip(summary, visible, text, "bottom");
-		});
-});
-
-Cypress.Commands.add("verifyTipForValidationIconInSummaryPanel", (summaryPanelId, text) => {
-	cy.findValidationIconInSummaryPanel(summaryPanelId)
-		.then((validationIcon) => {
-			cy.verifyTip(validationIcon, "visible", text, "bottom");
-		});
-});
-
-Cypress.Commands.add("verifyTipDirectionForAction", (actionName, text, direction) => {
-	cy.verifyTip(null, "visible", text, direction);
-});
-
 // Expression control verification commands
 Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, propertyId) => {
 	// Verify "is_real" is a "keyword" in ExpressionEditor
