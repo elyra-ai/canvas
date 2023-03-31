@@ -189,10 +189,16 @@ describe("Test to check if tips are hidden on scroll", function() {
 		cy.get("div[data-id='properties-ctrl-number']")
 			.find(".tooltip-container")
 			.click();
-		cy.verifyTipForLabelIsVisibleAtLocation("Integer", "bottom", "Try pressing Increment or Descrement buttons");
+		cy.getControlContainerFromName("Integer")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Try pressing Increment or Descrement buttons", "bottom");
+			});
 		cy.get(".properties-custom-container")
 			.scrollTo("bottom", { ensureScrollable: false });
-		cy.verifyTipForLabelIsHidden("Integer", "Try pressing Increment or Descrement buttons");
+		cy.getControlContainerFromName("Integer")
+			.then((container) => {
+				cy.verifyTip(container, "hidden", "Try pressing Increment or Descrement buttons");
+			});
 	});
 });
 
@@ -269,12 +275,15 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
 		cy.clickAtCoordinatesInCommonProperties(65, 92);
-		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "bottom", "Include or discard rows");
-
+		cy.getControlContainerFromName("Mode")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Include or discard rows", "bottom");
+			});
 		cy.clickAtCoordinatesInCommonProperties(300, 155);
-		cy.verifyTipForLabelIsVisibleAtLocation(
-			"Modeler CLEM Condition Expression", "bottom", "Enter a boolean expression to use for filtering rows"
-		);
+		cy.getControlContainerFromName("Modeler CLEM Condition Expression")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Enter a boolean expression to use for filtering rows", "bottom");
+			});
 	});
 });
 

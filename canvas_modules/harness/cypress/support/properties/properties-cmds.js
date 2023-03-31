@@ -278,3 +278,8 @@ Cypress.Commands.add("hoverOverControl", (propertyId) => {
 	cy.get(`div[data-id='properties-${propertyId}']`)
 		.trigger("mouseover");
 });
+
+Cypress.Commands.add("hoverOverHeader", (propertyId) => {
+	cy.get(`.properties-wf-children div[data-id='properties-vt-header-${propertyId}']`)
+		.trigger("mouseover");
+});

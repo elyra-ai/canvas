@@ -25,7 +25,10 @@ describe("Test if tips show up for the summary table values", function() {
 
 	it("Test if tips show up for the summary table values", function() {
 		cy.hoverOverTextInSummaryPanel("people in generation X ", "Values");
-		cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "visible");
+		cy.getSummaryFromName("Values")
+			.then((summary) => {
+				cy.verifyTip(summary, "visible", "people in generation X ", "bottom");
+			});
 		cy.moveMouseToCoordinates(300, 100);
 		// cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
 	});
@@ -54,9 +57,11 @@ describe("Test if tips show up for summary validation icon when there is an erro
 		cy.saveWideFlyout("Configure Derive Node");
 
 		cy.hoverOverValidationIconInSummaryPanel("Derive-Node");
-		cy.verifyTipForValidationIconInSummaryPanel(
-			"Derive-Node", "There are 1 parameters with errors and 1 parameters with warnings."
-		);
+		cy.findValidationIconInSummaryPanel("Derive-Node")
+			.then((validationIcon) => {
+				cy.verifyTip(validationIcon, "visible",
+					"There are 1 parameters with errors and 1 parameters with warnings.", "bottom");
+			});
 	});
 });
 
@@ -72,12 +77,12 @@ describe("Test if tips show up for textfields in tables when there is overflow",
 	it("Test if tips show up for the textfields with ellipsis", function() {
 		cy.toggleCategory("Table");
 		cy.openSubPanel("Edit textfield table");
-		cy.hoverOverControl("string_table_0_0");
-		// TODO verify tooltip with correct tip shows up
 		cy.hoverOverControl("string_table_0_1");
-		// TODO verify no tooltip shows up
+		cy.verifyTip(null, "hidden", "Turing");
+		cy.verifyTip(null, "hidden", "Hopper123456");
+		cy.hoverOverControl("string_table_0_0");
+		cy.verifyTip(null, "visible", "Hopper123456");
 		cy.saveWideFlyout("Edit textfield table");
-		// cy.moveMouseToCoordinates(300, 100);
 	});
 });
 
@@ -91,9 +96,22 @@ describe("Test if tips show up in table headers correctly", function() {
 	});
 
 	it("Test if tips show when simple header has ellipsis", function() {
-		cy.moveMouseToCoordinates(300, 100);
+		cy.toggleCategory("Table");
+		cy.openSubPanel("Configure Rename fields");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-field']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "hidden", "Input name");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-new_name']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "visible", "Output name");
+		cy.saveWideFlyout("Configure Rename fields");
 	});
 	it("Test if tips show when checkbox in header has ellipsis", function() {
-		cy.moveMouseToCoordinates(300, 100);
+		cy.toggleCategory("More Tables");
+		cy.openSubPanel("Configure Dummy Types");
+		cy.get(".properties-wf-children div[data-id='properties-vt-header-override']")
+			.trigger("mouseover");
+		cy.verifyTip(null, "visible", "Override");
+		cy.saveWideFlyout("Configure Dummy Types");
 	});
 });
