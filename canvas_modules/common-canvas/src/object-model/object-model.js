@@ -1239,6 +1239,18 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "REMOVE_ALL_STYLES", data: { temporary: temporary } });
 	}
 
+	hideComments() {
+		this.store.dispatch({ type: "HIDE_COMMENTS" });
+	}
+
+	showComments() {
+		this.store.dispatch({ type: "SHOW_COMMENTS" });
+	}
+
+	isHidingComments() {
+		return this.store.getCanvasInfo().hideComments;
+	}
+
 	findNode(nodeId, pipelineId, pipelines) {
 		const targetPipeline = pipelines.find((p) => p.id === pipelineId);
 

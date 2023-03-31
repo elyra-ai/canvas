@@ -1068,6 +1068,21 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getCommentStyle(commentId, temporary);
 	}
 
+	// Hides all comments on the canvas.
+	hideComments() {
+		this.objectModel.hideComments();
+	}
+
+	// Shows all comments on the canvas - if they were previously hiding.
+	showComments() {
+		this.objectModel.showComments();
+	}
+
+	// Returns true if comments are currently hiding.
+	isHidingComments() {
+		return this.objectModel.isHidingComments();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Links methods
 	// ---------------------------------------------------------------------------
@@ -2380,6 +2395,14 @@ export default class CanvasController {
 		}
 		case "togglePalette": {
 			this.togglePalette();
+			break;
+		}
+		case "paletteOpen": {
+			this.openPalette();
+			break;
+		}
+		case "paletteClose": {
+			this.closePalette();
 			break;
 		}
 		case "toggleNotificationPanel": {

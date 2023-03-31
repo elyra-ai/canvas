@@ -1005,6 +1005,7 @@ export default class APIPipeline {
 
 	addComment(data) {
 		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.pipelineId });
+		this.store.dispatch({ type: "SHOW_COMMENTS" });
 	}
 
 	// Returns a position for a new comment added by clicking the 'add comment'
