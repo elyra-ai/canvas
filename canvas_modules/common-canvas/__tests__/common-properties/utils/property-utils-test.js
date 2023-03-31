@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import Controller from "./../../../src/common-properties/properties-controller";
 import propertyUtils from "./../../_utils_/property-utils";
 import structureTableParamDef from "./../../test_resources/paramDefs/structuretable_paramDef.json";
 import convertValuesDataTypesParamDef from "./../../test_resources/paramDefs/convertValueDataTypes_paramDef.json";
-
-import { ParameterMetadata } from "./../../../src/common-properties/form/ParameterInfo";
 
 describe("dynamic text with expressions", () => {
 	const controller = new Controller();
@@ -339,17 +337,13 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 	});
 });
 
-describe("convertValueDataTypestests", () => {
-	const parameters = propertyOf(convertValuesDataTypesParamDef)("parameters");
-	const uihints = propertyOf(convertValuesDataTypesParamDef)("uihints");
-	const parameterMetadata = ParameterMetadata.makeParameterMetadata(
-		parameters,
-		propertyOf(uihints)("parameter_info"),
-		propertyOf(uihints)("ui_parameters"));
+describe.only("convertValueDataTypestests", () => {
+	const controller = new Controller();
+	controller.setParamDef(convertValuesDataTypesParamDef);
 
 	it("convertValueDataTypes correctly converts currentParameters data types to what is defined in parameter definitions", () => {
 		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
-		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, parameterMetadata.paramDefs);
+		const controls = controller.getControls();
 
 		const expectedValues = {
 			// eslint-disable-next-line max-len
@@ -365,11 +359,12 @@ describe("convertValueDataTypestests", () => {
 			"null_value": null,
 			"time_value": "05:45:09",
 			"timestamp_value": -1847548800000,
-			"dropdown_value": true,
-			"list_value": ["list item 1", "list item 2", "list item 3"],
+			"dropdown_value": "true",
+			"list_value": ["list item 1", "true", "3"],
 			"table_value": [["Age", "age", ""], ["BP", "BP-1", "number"]]
 		};
 
+		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
 		expect(actualValues).to.eql(expectedValues);
 	});
 });

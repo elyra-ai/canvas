@@ -533,40 +533,55 @@ function _findCorrespondingValue(input, values) {
 }
 
 // Convert the data types of currentParameters to the type defined in parameterDefs
-function convertValueDataTypes(currentParameters, paramDefs) {
+function convertValueDataTypes(currentParameters, controls) {
 	const convertedCurrentParameters = {};
-	paramDefs.forEach((paramDef) => {
-		if (!isUndefined(currentParameters[paramDef.name])) {
-			const originalValue = currentParameters[paramDef.name];
+	const currentParams = Object.keys(currentParameters);
+	currentParams.forEach((paramName) => {
+		const originalValue = currentParameters[paramName];
+		const valueType = controls[paramName].valueDef.propType;
+		const isList = controls[paramName].valueDef.isList;
+		if (!isUndefined(originalValue)) {
 			if (originalValue) {
-				switch (paramDef.type) {
+				switch (valueType) {
 				case "string": {
-					convertedCurrentParameters[paramDef.name] = originalValue.toString();
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => val.toString());
+					} else {
+						convertedCurrentParameters[paramName] = originalValue.toString();
+					}
 					break;
 				}
 				case "integer": {
-					convertedCurrentParameters[paramDef.name] = parseInt(originalValue, 10);
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => parseInt(val, 10));
+					} else {
+						convertedCurrentParameters[paramName] = parseInt(originalValue, 10);
+					}
 					break;
 				}
 				case "double": {
-					convertedCurrentParameters[paramDef.name] = parseFloat(originalValue);
+					if (isList) {
+						convertedCurrentParameters[paramName] = originalValue.map((val) => parseFloat(val));
+					} else {
+						convertedCurrentParameters[paramName] = parseFloat(originalValue);
+					}
 					break;
 				}
 				case "boolean": {
 					if (isString(originalValue)) {
-						convertedCurrentParameters[paramDef.name] = originalValue === "true";
+						convertedCurrentParameters[paramName] = originalValue === "true";
 					} else { // Assume boolean
-						convertedCurrentParameters[paramDef.name] = Boolean(originalValue);
+						convertedCurrentParameters[paramName] = Boolean(originalValue);
 					}
 					break;
 				}
 				default: { // arrays, objects, enum, password
-					convertedCurrentParameters[paramDef.name] = originalValue;
+					convertedCurrentParameters[paramName] = originalValue;
 					break;
 				}
 				}
 			} else { // null
-				convertedCurrentParameters[paramDef.name] = originalValue;
+				convertedCurrentParameters[paramName] = originalValue;
 			}
 		}
 	});
