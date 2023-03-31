@@ -27,12 +27,12 @@ import { isEmpty } from "lodash";
 import * as PropertyUtils from "./../../util/property-utils";
 import * as ControlUtils from "./../../util/control-utils";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
-import { v4 as uuid4 } from "uuid";
 import { STATES } from "./../../constants/constants.js";
 import { Type, ParamRole } from "./../../constants/form-constants.js";
 import classNames from "classnames";
 
 import Tooltip from "./../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "../../components/truncated-content-tooltip";
 
 class SummaryPanel extends React.Component {
 	constructor(props) {
@@ -44,9 +44,6 @@ class SummaryPanel extends React.Component {
 		this.hideWideFlyout = this.hideWideFlyout.bind(this);
 		this.cancelWideFlyout = this.cancelWideFlyout.bind(this);
 		this._getSummaryTables = this._getSummaryTables.bind(this);
-	}
-	_onMouseMove(evt) {
-		this.setState({ mousePos: { x: evt.clientX, y: evt.clientY } });
 	}
 
 	hideWideFlyout() {
@@ -137,11 +134,12 @@ class SummaryPanel extends React.Component {
 									<td key={"summary-table-data-" + colIdx}
 										className={"properties-summary-row-data "}
 										style={{ width: colWidth }}
-										onMouseMove={this._onMouseMove.bind(this)}
 									>
-										<Tooltip id="summary-table-data" tip={contentValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
-											<span id={"span_" + uuid4()}>{contentValue}</span>
-										</Tooltip>
+										<TruncatedContentTooltip
+											content={<span>{contentValue}</span>}
+											tooltipText={contentValue}
+											disabled={false}
+										/>
 									</td>);
 							}
 						}
@@ -149,9 +147,11 @@ class SummaryPanel extends React.Component {
 						const displayValue = this._getSummaryDisplayValue(rowValue, propertyId);
 						rowData.push(
 							<td key={"summary-table-row-data-" + rowIdx} className={"properties-summary-row-data "}>
-								<Tooltip id="summary-table-row-data" tip={displayValue} mousePos={this.state.mousePos} showToolTipIfTruncated>
-									<span id={"span_" + uuid4()}>{displayValue}</span>
-								</Tooltip>
+								<TruncatedContentTooltip
+									content={<span>{displayValue}</span>}
+									tooltipText={displayValue}
+									disabled={false}
+								/>
 							</td>);
 					}
 					if (rowData.length > 0) {
