@@ -419,9 +419,9 @@ describe("Test to check if tips show up for toolbar items", function() {
 	});
 
 	it("Test to check if tips show up for toolbar items", function() {
-		cy.hoverOverToolbarItem(".togglePalette-action");
-		cy.verifyTipForToolbarItem(".togglePalette-action", "Palette");
-		cy.mouseoutToolbarItem(".togglePalette-action");
+		cy.hoverOverToolbarItem(".paletteOpen-action");
+		cy.verifyTipForToolbarItem(".paletteOpen-action", "Palette");
+		cy.mouseoutToolbarItem(".paletteOpen-action");
 
 		cy.hoverOverToolbarItem(".createAutoComment-action");
 		cy.verifyTipForToolbarItem(".createAutoComment-action", "New comment");
