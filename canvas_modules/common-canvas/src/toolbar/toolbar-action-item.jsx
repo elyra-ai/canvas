@@ -28,13 +28,14 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Cut16, Copy16, Paste16,
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Cut16, Copy16, Paste16,
 	AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO, TOOLBAR_CUT,
 	TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CREATE_AUTO_COMMENT,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
 	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY, TOOLBAR_OPEN_PALETTE,
-	TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL }
+	TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS }
 	from "../common-canvas/constants/canvas-constants.js";
 
 class ToolbarActionItem extends React.Component {
@@ -44,14 +45,12 @@ class ToolbarActionItem extends React.Component {
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 	}
 
-	// Returns a default icon, if there is one, for the action passed in. The
-	// icon may be overridden by the iconTypeOverride field if it is provided.
+	// Returns a default icon, if there is one, for the action passed in.
 	// It also may be set to disabled state.
 	getDefaultIcon(actionObj) {
-		const iconType = actionObj.iconTypeOverride ? actionObj.iconTypeOverride : actionObj.action;
 		const disabled = !actionObj.enable;
 
-		switch (iconType) {
+		switch (actionObj.action) {
 		case (TOOLBAR_STOP):
 			return <StopFilledAlt16 disabled={disabled} />;
 		case (TOOLBAR_RUN):
@@ -68,6 +67,10 @@ class ToolbarActionItem extends React.Component {
 			return <Paste16 disabled={disabled} />;
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
 			return <AddComment16 disabled={disabled} />;
+		case (TOOLBAR_SHOW_COMMENTS):
+			return <Chat16 disabled={disabled} />;
+		case (TOOLBAR_HIDE_COMMENTS):
+			return <ChatOff16 disabled={disabled} />;
 		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
 			return <TrashCan16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_IN):
@@ -282,7 +285,6 @@ ToolbarActionItem.propTypes = {
 		]),
 		className: PropTypes.string,
 		textContent: PropTypes.string,
-		iconTypeOverride: PropTypes.string,
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		jsx: PropTypes.object,
