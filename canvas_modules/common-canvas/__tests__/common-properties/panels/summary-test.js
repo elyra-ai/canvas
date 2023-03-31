@@ -38,15 +38,15 @@ describe("summary renders correctly", () => {
 		const sortSummaryRows = sortSummary.find("tr.properties-summary-row");
 		expect(sortSummaryRows).to.have.length(1);
 
-		const sortRow1 = sortSummaryRows.at(0);
-		const sortRow1Texts = sortRow1.find("td.properties-summary-row-data").at(0)
-			.find("span");
-		expect(sortRow1Texts.at(0).text()
-			.trim()).to.equal("Cholesterol");
+		const sortRow1 = sortSummaryRows.at(0).find("td.properties-summary-row-data")
+			.at(0);
 
-		expect(sortRow1.find("td.properties-summary-row-data").at(0)
-			.find("span")
-			.at(1)
+		expect(sortRow1.find("span").at(0)
+			.text()
+			.trim()).to.equal("Cholesterol");
+		// validate tooltip content is correct
+		expect(sortRow1.find("div.properties-tooltips div")
+			.at(0)
 			.text()
 			.trim()).to.equal("Cholesterol");
 	});
