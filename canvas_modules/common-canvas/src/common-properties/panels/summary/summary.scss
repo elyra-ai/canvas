@@ -56,17 +56,11 @@
 	margin-bottom: $spacing-05;
 }
 
-.properties-summary-row-data > .tooltip-container {
-	margin: 1px 0;
-	> div:first-child {
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-	}
-}
-
 .properties-summary-row {
 	display: flex;
-	justify-content: space-between;
 	padding: 2px 0;
+	span {
+		cursor: text;
+		user-select: text;
+	}
 }
