@@ -910,7 +910,7 @@ describe("structuretable control displays with checkbox header", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.find("input#field_types2"); // find the table header
+		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-exclude'] input"); // find the table header
 		expect(tableCheckboxHeader).to.have.length(1);
 		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
 	});
@@ -963,7 +963,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 	});
 
 	it("should display header with checkbox", () => {
-		const tableCheckboxHeader = wrapper.find("input#globals1"); // find the table header
+		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-mean'] input"); // find the table header checkbox
 		expect(tableCheckboxHeader).to.have.length(1);
 		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
 	});
@@ -995,7 +995,7 @@ describe("structuretable control checkbox header ignores disabled rows", () => {
 		expect(columnValues[1][5]).to.be.equal(false);
 		expect(columnValues[2][5]).to.be.equal(true);
 		// set the column header checkbox to false-
-		const tableCheckboxHeader = wrapper.find("input#globals5"); // find the table header checkbox
+		const tableCheckboxHeader = wrapper.find("div[data-id='properties-vt-header-sdev'] input"); // find the table header checkbox
 		tableCheckboxHeader.getDOMNode().checked = false;
 		tableCheckboxHeader.simulate("change");
 		// validate that the header has set all checkboxes to false

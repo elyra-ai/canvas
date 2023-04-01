@@ -16,7 +16,7 @@
 
 .properties-truncated-tooltip {
 	overflow: hidden;
-	.tooltip-trigger {
+	.tooltip-trigger div {
 		width: inherit;
 		overflow: hidden;
 		text-overflow: ellipsis;

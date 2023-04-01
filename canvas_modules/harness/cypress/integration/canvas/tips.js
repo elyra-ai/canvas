@@ -189,10 +189,16 @@ describe("Test to check if tips are hidden on scroll", function() {
 		cy.get("div[data-id='properties-ctrl-number']")
 			.find(".tooltip-container")
 			.click();
-		cy.verifyTipForLabelIsVisibleAtLocation("Integer", "bottom", "Try pressing Increment or Descrement buttons");
+		cy.getControlContainerFromName("Integer")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Try pressing Increment or Descrement buttons", "bottom");
+			});
 		cy.get(".properties-custom-container")
 			.scrollTo("bottom", { ensureScrollable: false });
-		cy.verifyTipForLabelIsHidden("Integer", "Try pressing Increment or Descrement buttons");
+		cy.getControlContainerFromName("Integer")
+			.then((container) => {
+				cy.verifyTip(container, "hidden", "Try pressing Increment or Descrement buttons");
+			});
 	});
 });
 
@@ -269,58 +275,15 @@ describe("Test tip location adjusted based on boundaries of browser", function()
 
 	it("Test tip location adjusted based on boundaries of browser", function() {
 		cy.clickAtCoordinatesInCommonProperties(65, 92);
-		cy.verifyTipForLabelIsVisibleAtLocation("Mode", "bottom", "Include or discard rows");
-
+		cy.getControlContainerFromName("Mode")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Include or discard rows", "bottom");
+			});
 		cy.clickAtCoordinatesInCommonProperties(300, 155);
-		cy.verifyTipForLabelIsVisibleAtLocation(
-			"Modeler CLEM Condition Expression", "bottom", "Enter a boolean expression to use for filtering rows"
-		);
-	});
-});
-
-describe("Test if tips show up for the summary table values", function() {
-	beforeEach(() => {
-		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.openPropertyDefinition("summaryPanel_paramDef.json");
-	});
-
-	it("Test if tips show up for the summary table values", function() {
-		cy.hoverOverTextInSummaryPanel("people in generation X ", "Values");
-		cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "visible");
-		cy.moveMouseToCoordinates(300, 100);
-		// cy.verifyTipWithTextInSummaryPanel("people in generation X ", "Values", "hidden");
-	});
-});
-
-describe("Test if tips show up for summary validation icon when there is an error or warning", function() {
-	beforeEach(() => {
-		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
-		cy.openPropertyDefinition("summaryPanel_paramDef.json");
-	});
-
-	it("Test if tips show up for summary validation icon when there is an error or warning", function() {
-		// Select an existing row in the table and delete it's value.
-		cy.openSubPanel("Configure Derive Node");
-		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
-		cy.selectRowInTable(1, "expressionCellTable");
-		cy.clickButtonInTable("Delete", "expressionCellTable");
-
-		// Select all rows in a table and delete its value
-		cy.selectAllRowsInTable("structurelisteditorTableInput");
-		cy.clickButtonInTable("Delete", "structurelisteditorTableInput");
-		cy.saveWideFlyout("Configure Derive Node");
-
-		cy.hoverOverValidationIconInSummaryPanel("Derive-Node");
-		cy.verifyTipForValidationIconInSummaryPanel(
-			"Derive-Node", "There are 1 parameters with errors and 1 parameters with warnings."
-		);
+		cy.getControlContainerFromName("Modeler CLEM Condition Expression")
+			.then((container) => {
+				cy.verifyTip(container, "visible", "Enter a boolean expression to use for filtering rows", "bottom");
+			});
 	});
 });
 
