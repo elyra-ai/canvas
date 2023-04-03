@@ -751,9 +751,25 @@ describe("CommonProperties validates on close in flyout", () => {
 	it("Validate returned property values when conditionReturnValueHandling='null'", (done) => {
 		const myApplyPropertyChanges = function(values) {
 			expect(values.number_hidden).to.be.undefined;
+			expect(values.number_null).to.equal(null); // make sure null isn't filtered
 			done();
 		};
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { conditionReturnValueHandling: "null" },
+			{ applyPropertyChanges: myApplyPropertyChanges });
+		wrapper = renderedObject.wrapper;
+		wrapper.find("div.properties-close-button")
+			.find("button")
+			.simulate("click");
+	});
+
+	it("Validate returned property values when returnValueFiltering set", (done) => {
+		const myApplyPropertyChanges = function(values) {
+			expect(values.number_null).to.be.undefined;
+			expect(values.number_int).to.equal(10);
+			expect(values.number_random).to.be.undefined;
+			done();
+		};
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { returnValueFiltering: [null, 12345] },
 			{ applyPropertyChanges: myApplyPropertyChanges });
 		wrapper = renderedObject.wrapper;
 		wrapper.find("div.properties-close-button")
