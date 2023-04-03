@@ -43,6 +43,8 @@
 	label, .properties-indicator {
 		@include carbon--type-style("label-01");
 		color: $text-02;
+	}
+	.properties-indicator {
 		padding-left: $spacing-02;
 	}
 	&.table-control {
