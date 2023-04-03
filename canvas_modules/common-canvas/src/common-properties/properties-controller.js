@@ -1186,7 +1186,7 @@ export default class PropertiesController {
 	}
 
 	setPropertyValues(values, isInitProps) {
-		const inValues = cloneDeep(values);
+		let inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
 		if (values) {
@@ -1199,6 +1199,10 @@ export default class PropertiesController {
 					inValues[propertyName] = convertedValues;
 				}
 			});
+
+			if (get(this.getPropertiesConfig(), "convertValueDataTypes")) {
+				inValues = PropertyUtils.convertValueDataTypes(inValues, controls);
+			}
 		}
 
 		this.propertiesStore.setPropertyValues(inValues);
