@@ -273,3 +273,8 @@ Cypress.Commands.add("hoverOverActionImage", (actionName) => {
 		.find(`div[data-id='${actionName}']`)
 		.trigger("mouseover");
 });
+
+Cypress.Commands.add("hoverOverControl", (propertyId) => {
+	cy.get(`div[data-id='properties-${propertyId}']`)
+		.trigger("mouseover");
+});

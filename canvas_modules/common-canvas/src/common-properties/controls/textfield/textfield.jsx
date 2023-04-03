@@ -24,9 +24,10 @@ import * as ControlUtils from "./../../util/control-utils";
 import { formatMessage } from "./../../util/property-utils";
 import { STATES } from "./../../constants/constants.js";
 import { CONDITION_MESSAGE_TYPE, MESSAGE_KEYS, TRUNCATE_LIMIT } from "./../../constants/constants.js";
-import Tooltip from "./../../../tooltip/tooltip.jsx";
+import TruncatedContentTooltip from "./../../components/truncated-content-tooltip";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
+
 
 const arrayValueDelimiter = ", ";
 
@@ -105,30 +106,26 @@ class TextfieldControl extends React.Component {
 				labelText={this.props.controlItem}
 				hideLabel={this.props.tableControl}
 				light={this.props.controller.getLight() && this.props.control.light}
+				ref={(ref) => (this.textInputRef = ref)}
 			/>);
 		}
 
 		let display = textInput;
 		if (this.props.tableControl) {
-			const tooltipId = "tooltip-column-textfield";
+			const tooltipProps = {};
+			if (this.textInputRef) {
+				tooltipProps.truncatedRef = this.textInputRef;
+			}
 			let disabled = true;
 			if (value && this.props.state !== STATES.DISABLED) {
 				disabled = false;
 			}
-			const tooltip = (
-				<div className="properties-tooltips">
-					{String(value)}
-				</div>
-			);
-			display = (<Tooltip
-				id={tooltipId}
-				tip={tooltip}
-				direction="bottom"
-				className="properties-tooltips"
-				disable={disabled}
-			>
-				{textInput}
-			</Tooltip>);
+			display = (<TruncatedContentTooltip
+				{...tooltipProps}
+				content={textInput}
+				tooltipText={value}
+				disabled={disabled}
+			/>);
 		}
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>

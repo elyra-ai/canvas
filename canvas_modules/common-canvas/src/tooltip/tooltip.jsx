@@ -120,13 +120,13 @@ class ToolTip extends React.Component {
 	// (scrollWidth) value is equal to the minimum width the element would require
 	//  in order to fit all the content in the viewport without using a horizontal scrollbar
 	canDisplayFullText(elem) {
-		if (elem) {
-			const firstChildWidth = elem.firstChild && elem.firstChild.scrollWidth ? elem.firstChild.scrollWidth : 0;
-			const displayWidth = elem.offsetWidth;
-			let fullWidth = firstChildWidth;
-			if (firstChildWidth === 0) {
-				fullWidth = elem.scrollWidth;
-			}
+		const triggerElem = this.props.truncatedRef ? this.props.truncatedRef : elem;
+		if (triggerElem) {
+			const fullWidth = triggerElem.firstChild && triggerElem.firstChild.scrollWidth && triggerElem.firstChild.scrollWidth !== 0 ? triggerElem.firstChild.scrollWidth
+				: triggerElem.scrollWidth;
+			const childWidth = triggerElem.firstChild && triggerElem.firstChild.offsetWidth && triggerElem.firstChild.offsetWidth || 0;
+			// need different handling when content is within a span vs div
+			const displayWidth = childWidth !== 0 && childWidth < triggerElem.offsetWidth ? childWidth : triggerElem.offsetWidth;
 			const canDisplayFullText = fullWidth <= displayWidth;
 			return canDisplayFullText;
 		}
@@ -451,6 +451,7 @@ ToolTip.propTypes = {
 	mousePos: PropTypes.object,
 	disable: PropTypes.bool, // Tooltip will not show if disabled
 	showToolTipIfTruncated: PropTypes.bool, // Set to true to only display tooltip if full text does not fit in displayable width
+	truncatedRef: PropTypes.object,
 	delay: PropTypes.number,
 	showToolTipOnClick: PropTypes.bool
 };
