@@ -63,7 +63,7 @@
   "expression.storage.column": "Speichertyp",
   "expression.value.column": "Wert",
   "expression.value.column.description": "",
-  "expression.function.column": "Function",
+  "expression.function.column": "Funktion",
   "expression.return.column": "Zurück",
   "expression.recently.used.column": "Element",
   "expression.field.tab": "Felder",
