@@ -80,6 +80,7 @@ export default class SidePanelModal extends React.Component {
 		this.useEditorSize = this.useEditorSize.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.returnValueFiltering = this.returnValueFiltering.bind(this);
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
@@ -367,6 +368,14 @@ export default class SidePanelModal extends React.Component {
 			this.setState({ invalidPropertyId: false });
 		} catch (ex) {
 			this.setState({ invalidPropertyId: true });
+		}
+	}
+
+	returnValueFiltering(evt) {
+		try {
+			this.props.propertiesConfig.setReturnValueFiltering(JSON.parse(evt.target.value));
+		} catch (ex) {
+			console.error(ex);
 		}
 	}
 
@@ -664,6 +673,18 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		);
 
+		const returnValueFiltering = (
+			<div className="harness-sidepanel-children" id="sidepanel-properties-return-val-filtering">
+				<TextInput
+					labelText="Filter returned values when applying property changes"
+					id="sidepanel-properties-return-val-filtering-tf"
+					placeholder="Enter array of values"
+					onBlur={this.returnValueFiltering}
+					helperText='Array of values Format: [1, 4, "text"]'
+				/>
+			</div>
+		);
+
 		const disableRowMoveButtonsInTable = (
 			<div className="harness-sidepanel-children" id="sidepanel-properties-disable-row-move-buttons">
 				<TextInput
@@ -848,7 +869,6 @@ export default class SidePanelModal extends React.Component {
 
 		const submitStaticRows = (<div className="harness-sidepanel-children" id="sidepanel-properties-set-static-rows-submit">
 			<Button size="small"
-				disabled={this.state.invalidSetStaticRowIndexes}
 				disabled={this.state.invalidSetStaticRowPropertyId || this.state.invalidSetStaticRowIndexes}
 				onClick={this.props.propertiesConfig.setStaticRows}
 			>
@@ -929,6 +949,8 @@ export default class SidePanelModal extends React.Component {
 				{conditionHiddenPropertyHandling}
 				{divider}
 				{conditionDisabledPropertyHandling}
+				{divider}
+				{returnValueFiltering}
 				{divider}
 				{disableRowMoveButtonsInTable}
 				{divider}
@@ -1021,6 +1043,7 @@ SidePanelModal.propTypes = {
 		conditionHiddenPropertyHandling: PropTypes.string,
 		setConditionDisabledPropertyHandling: PropTypes.func,
 		conditionDisabledPropertyHandling: PropTypes.string,
+		setReturnValueFiltering: PropTypes.func,
 		enablePropertiesValidationHandler: PropTypes.func,
 		propertiesValidationHandler: PropTypes.bool,
 		wideFlyoutPrimaryButtonDisabled: PropTypes.bool,
