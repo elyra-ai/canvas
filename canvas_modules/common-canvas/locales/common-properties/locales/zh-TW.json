@@ -15,7 +15,7 @@
   "fieldPicker.double.label": "倍精準數",
   "fieldPicker.string.label": "字串",
   "fieldPicker.date.label": "日期",
-  "fieldPicker.time.label": "time",
+  "fieldPicker.time.label": "時間",
   "fieldPicker.timestamp.label": "時間戳記",
   "flyout.applyButton.label": "確定",
   "flyout.rejectButton.label": "取消",
