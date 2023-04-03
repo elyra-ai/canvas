@@ -237,14 +237,15 @@ CommonProperties.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.oneOf(["null", "value"]),
+		returnValueFiltering: PropTypes.array,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,
 			secondary: PropTypes.string
 		}),
 		schemaValidation: PropTypes.bool,
 		applyPropertiesWithoutEdit: PropTypes.bool,
-		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "value"]),
-		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "value"]),
+		conditionHiddenPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
+		conditionDisabledPropertyHandling: PropTypes.oneOf(["null", "undefined", "value"]),
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,

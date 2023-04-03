@@ -148,7 +148,7 @@ class PropertiesMain extends React.Component {
 			if (this.props.propertiesConfig.schemaValidation) {
 				validateParameterDefAgainstSchema(propertiesInfo.parameterDef);
 			}
-			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType, this.props.propertiesConfig.convertValueDataTypes);
+			formData = Form.makeForm(propertiesInfo.parameterDef, this.props.propertiesConfig.containerType);
 		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
@@ -337,7 +337,9 @@ class PropertiesMain extends React.Component {
 	_setValueInforProperties(valueInfo, options) {
 		const applyProperties = options && options.applyProperties === true;
 		const filterHiddenDisabled = this.props.propertiesConfig.conditionReturnValueHandling === CONDITION_RETURN_VALUE_HANDLING.NULL;
-		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties });
+
+		const properties = this.propertiesController.getPropertyValues({ filterHiddenDisabled: filterHiddenDisabled, applyProperties: applyProperties,
+			valueFilters: this.props.propertiesConfig.returnValueFiltering });
 		if (this.uiParameterKeys.length > 0) {
 			valueInfo.properties = omit(properties, this.uiParameterKeys);
 			valueInfo.uiProperties = pick(properties, this.uiParameterKeys);
@@ -607,6 +609,7 @@ PropertiesMain.propTypes = {
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,
+		returnValueFiltering: PropTypes.array,
 		heading: PropTypes.bool,
 		buttonLabels: PropTypes.shape({
 			primary: PropTypes.string,

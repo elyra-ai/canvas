@@ -1157,15 +1157,16 @@ export default class PropertiesController {
 	getPropertyValues(options) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		let returnValues = propertyValues;
-		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled || options.filterHiddenControls)) {
+		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled || options.filterHiddenControls || options.valueFilters)) {
 			const filteredValues = {};
 			for (const propKey in propertyValues) {
 				if (!has(propertyValues, propKey)) {
 					continue;
 				}
 				const filteredValue = this.getPropertyValue({ name: propKey }, options);
-				// only set parameters with values
-				if (typeof filteredValue !== "undefined") {
+				// only set parameters with values or filter out values specified in config
+				const valueFilters = Array.isArray(options.valueFilters) ? options.valueFilters : [];
+				if (typeof filteredValue !== "undefined" && !valueFilters.includes(filteredValue)) {
 					filteredValues[propKey] = filteredValue;
 				}
 			}
@@ -1189,7 +1190,7 @@ export default class PropertiesController {
 	}
 
 	setPropertyValues(values, isInitProps) {
-		const inValues = cloneDeep(values);
+		let inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
 		if (values) {
@@ -1202,6 +1203,10 @@ export default class PropertiesController {
 					inValues[propertyName] = convertedValues;
 				}
 			});
+
+			if (get(this.getPropertiesConfig(), "convertValueDataTypes")) {
+				inValues = PropertyUtils.convertValueDataTypes(inValues, controls);
+			}
 		}
 
 		this.propertiesStore.setPropertyValues(inValues);
