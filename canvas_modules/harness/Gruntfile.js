@@ -94,11 +94,28 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
+		sass: {
+			dist: {
+				options: {
+					loadPath: [".", "node_modules"],
+					style: "compressed"
+				},
+				files: [{
+					expand: true,
+					cwd: "./assets/styles",
+					src: ["*.scss"],
+					dest: ".build/css",
+					ext: ".css",
+					noCache: true
+				}]
+			}
+		},
 		webpack: {
 			client: IS_PRODUCTION ? require("./webpack.config.prod") : require("./webpack.config.dev")
 		}
 	});
 
+	grunt.loadNpmTasks("grunt-contrib-sass");
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
@@ -107,7 +124,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint"]);
 
-	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:fonts"];
+	var buildTasks = ["clean", "lint", "sass", "copy:graphics", "copy:styleguide", "copy:fonts"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}

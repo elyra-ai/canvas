@@ -1,4 +1,4 @@
-<!--
+/*
  * Copyright 2017-2022 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
+ */
+$font-prefix: "/fonts";
+@import "@ibm/plex/scss/ibm-plex.scss";
 
-<!doctype html>
-<html lang="en-150">
+@import "@carbon/themes/scss/themes";
 
-<head>
-  <title>Common Canvas</title>
-  <link href="/codemirror/addon/hint/show-hint.css" rel="stylesheet">
-  <link href="/codemirror/lib/codemirror.css" rel="stylesheet">
-  <link href="/react-virtualized/styles.css" rel="stylesheet">
-  <link href="/css/common.css" rel="stylesheet">
-</head>
+// Switch the themes below to get light or dark.
 
-<body>
-  <div id="root"></div>
-</body>
+$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
+// $carbon--theme: $carbon--theme--g90; // The dark theme
+@include carbon--theme;
 
-</html>
+@import "carbon-components/scss/globals/scss/styles";
+@import "carbon-components/scss/globals/grid/grid";

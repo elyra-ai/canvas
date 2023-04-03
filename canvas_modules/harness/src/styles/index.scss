@@ -23,7 +23,7 @@ $font-prefix: "/fonts";
 $carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
 // $carbon--theme: $carbon--theme--g90; // The dark theme
 @include carbon--theme;
-@import "carbon-components/scss/globals/scss/styles";
+@import "carbon-components/scss/globals/scss/vars";
 @import "carbon-components/scss/globals/scss/typography";
 
 // Common variables for App.scss and sidepanel.scss
