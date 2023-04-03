@@ -337,34 +337,48 @@ describe("convertObjectStructureToArray and convertArrayStructureToObject return
 	});
 });
 
-describe.only("convertValueDataTypestests", () => {
+describe("convertValueDataTypestests", () => {
 	const controller = new Controller();
 	controller.setParamDef(convertValuesDataTypesParamDef);
+
+	const expectedValues = {
+		// eslint-disable-next-line max-len
+		"readonly_text": "This example parameterDef has currentParameters that are in the incorrect data type as defined in the paramter definition. There will be errors on the console where prop checks fail. ",
+		"string_value": "This is a string",
+		"string_value_convert": "true",
+		"integer_value": 0,
+		"integer_value_convert": 0,
+		"double_value": 1.25,
+		"double_value_convert": 1.25,
+		"boolean_value": true,
+		"boolean_value_convert": false,
+		"null_value": null,
+		"time_value": "05:45:09",
+		"timestamp_value": -1847548800000,
+		"dropdown_value": "true",
+		"list_value": ["list item 1", "true", "3"],
+		"table_value": [["Age", "age", ""], ["BP", "BP-1", "number"]]
+	};
 
 	it("convertValueDataTypes correctly converts currentParameters data types to what is defined in parameter definitions", () => {
 		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
 		const controls = controller.getControls();
 
-		const expectedValues = {
-			// eslint-disable-next-line max-len
-			"readonly_text": "This example parameterDef has currentParameters that are in the incorrect data type as defined in the paramter definition. There will be errors on the console where prop checks fail. ",
-			"string_value": "This is a string",
-			"string_value_convert": "true",
-			"integer_value": 0,
-			"integer_value_convert": 0,
-			"double_value": 1.25,
-			"double_value_convert": 1.25,
-			"boolean_value": true,
-			"boolean_value_convert": false,
-			"null_value": null,
-			"time_value": "05:45:09",
-			"timestamp_value": -1847548800000,
-			"dropdown_value": "true",
-			"list_value": ["list item 1", "true", "3"],
-			"table_value": [["Age", "age", ""], ["BP", "BP-1", "number"]]
-		};
-
 		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
 		expect(actualValues).to.eql(expectedValues);
+	});
+
+	it("convertValueDataTypes correctly converts currentParameters data types when setting form", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(convertValuesDataTypesParamDef, { convertValueDataTypes: true });
+		const controller2 = renderedObject.controller;
+
+		const expected = Object.assign({}, expectedValues);
+		expected.table_value = [
+			["Age", "age", null], // Invalid option in dropdown will default to null
+			["BP", "BP-1", "number"]
+		];
+
+		const actualValues = controller2.getPropertyValues();
+		expect(actualValues).to.eql(expected);
 	});
 });
