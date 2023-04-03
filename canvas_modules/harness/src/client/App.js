@@ -406,6 +406,7 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
+		this.setReturnValueFiltering = this.setReturnValueFiltering.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -1317,6 +1318,11 @@ class App extends React.Component {
 		this.log("show Required Indicator", enabled);
 	}
 
+	setReturnValueFiltering(values) {
+		this.setState({ returnValueFiltering: values });
+		this.log("returnValueFiltering", values);
+	}
+
 	setTrimSpaces(enabled) {
 		this.setState({ trimSpaces: enabled });
 		this.log("trim spaces", enabled);
@@ -2065,7 +2071,8 @@ class App extends React.Component {
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			convertValueDataTypes: this.state.convertValueDataTypes,
-			showRequiredIndicator: this.state.showRequiredIndicator
+			showRequiredIndicator: this.state.showRequiredIndicator,
+			returnValueFiltering: this.state.returnValueFiltering
 		};
 	}
 
@@ -2629,6 +2636,7 @@ class App extends React.Component {
 			useLightOption: this.useLightOption,
 			showRequiredIndicator: this.state.showRequiredIndicator,
 			setShowRequiredIndicator: this.setShowRequiredIndicator,
+			setReturnValueFiltering: this.setReturnValueFiltering,
 			useEditorSize: this.useEditorSize,
 			disableRowMoveButtons: this.disableRowMoveButtons,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
