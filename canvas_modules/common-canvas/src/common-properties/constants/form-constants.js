@@ -79,6 +79,8 @@ const ControlType = {
 	EXPRESSION: "expression",
 	NUMBERFIELD: "numberfield",
 	DATEFIELD: "datefield",
+	DATEPICKER: "datepicker",
+	DATEPICKERRANGE: "datepickerRange",
 	TIMEFIELD: "timefield",
 	TIMESTAMP: "timestampfield",
 	CHECKBOX: "checkbox",

@@ -21,7 +21,7 @@ import PropertiesMain from "./properties-main";
 import PropertiesModal from "./components/properties-modal";
 import ValidationMessage from "./components/validation-message";
 import { formatMessage } from "./util/property-utils";
-import { MESSAGE_KEYS } from "./constants/constants";
+import { MESSAGE_KEYS, DEFAULT_LOCALE } from "./constants/constants";
 
 import { injectIntl } from "react-intl";
 
@@ -249,7 +249,8 @@ CommonProperties.propTypes = {
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,
-		showRequiredIndicator: PropTypes.bool
+		showRequiredIndicator: PropTypes.bool,
+		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
 		controllerHandler: PropTypes.func,
@@ -286,7 +287,8 @@ CommonProperties.defaultProps = {
 		maxLengthForMultiLineControls: 1024,
 		maxLengthForSingleLineControls: 128,
 		convertValueDataTypes: false,
-		showRequiredIndicator: true
+		showRequiredIndicator: true,
+		locale: DEFAULT_LOCALE
 	},
 	callbacks: {
 	},
