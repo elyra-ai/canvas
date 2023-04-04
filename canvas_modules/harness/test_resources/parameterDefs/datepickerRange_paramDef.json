@@ -95,10 +95,9 @@
           "default": "Datepicker Range: Y-m-d"
         },
         "description": {
-          "default": "Datepicker with value set to ['2023-03-17', '2023-03-23'] in Y-m-d format. Both start and end will use the same 'date_format'"
+          "default": "Datepicker with value set to ['2023-03-17', '2023-03-23'] in the default Y-m-d format. Both start and end will use the same 'date_format'"
         },
 				"control": "datepickerRange",
-        "date_format": "Y-m-d",
         "class_name": "datepicker-range-control-unique-class",
 				"place_holder_text": {
 					"default": "yyyy-mm-dd"

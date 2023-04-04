@@ -112,7 +112,6 @@
 					"default": "Datepicker with no initial value, in Y-m-d format."
 				},
 				"control": "datepicker",
-				"date_format": "Y-m-d",
 				"class_name": "datepicker-control-class",
 				"place_holder_text": {
 					"default": "Date format: yyyy-mm-dd"

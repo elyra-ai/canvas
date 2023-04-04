@@ -37,9 +37,11 @@ class DatepickerRangeControl extends React.Component {
 		this.locale = props.controller.getLocale();
 		this.uuid = uuid4();
 
+		this.dateFormat = ControlUtils.getDateTimeFormat(props.control);
+
 		this.state = {
-			valueStart: props.value && props.value[0] ? getFormattedDate(props.value[0], this.props.control.dateFormat) : "",
-			valueEnd: props.value && props.value[1] ? getFormattedDate(props.value[1], this.props.control.dateFormat) : ""
+			valueStart: props.value && props.value[0] ? getFormattedDate(props.value[0], this.dateFormat) : "",
+			valueEnd: props.value && props.value[1] ? getFormattedDate(props.value[1], this.dateFormat) : ""
 		};
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
@@ -47,14 +49,14 @@ class DatepickerRangeControl extends React.Component {
 	}
 
 	onStartBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.props.control.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.props.control.dateFormat);
+		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
+		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 	}
 
 	onEndBlur(evt) {
-		const isoStartDate = getISODate(evt.target.value, this.props.control.dateFormat);
-		const isoEndDate = getISODate(this.state.valueEnd, this.props.control.dateFormat);
+		const isoStartDate = getISODate(evt.target.value, this.dateFormat);
+		const isoEndDate = getISODate(this.state.valueEnd, this.dateFormat);
 		this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 	}
 
@@ -66,13 +68,13 @@ class DatepickerRangeControl extends React.Component {
 	handleDateRangeChange(evt) {
 		if (evt[0]) {
 			const isoStartDate = getISODate(evt[0]); // internal format
-			const valueStart = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
+			const valueStart = getFormattedDate(evt[0], this.dateFormat); // display value
 			let isoEndDate = "";
 			let valueEnd = "";
 
 			if (evt[1]) { // Cannot enter end date without specifying start date
 				isoEndDate = getISODate(evt[1]); // internal format
-				valueEnd = getFormattedDate(evt[1], this.props.control.dateFormat); // display value
+				valueEnd = getFormattedDate(evt[1], this.dateFormat); // display value
 			}
 			this.props.controller.updatePropertyValue(this.props.propertyId, [isoStartDate, isoEndDate]);
 			this.setState({ valueStart, valueEnd });
@@ -135,7 +137,7 @@ class DatepickerRangeControl extends React.Component {
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
 				<DatePicker
 					datePickerType={DATEPICKER_TYPE.RANGE}
-					dateFormat={this.props.control.dateFormat}
+					dateFormat={this.dateFormat}
 					light={this.props.controller.getLight() && this.props.control.light}
 					onChange={this.handleDateRangeChange.bind(this)}
 					locale={this.locale}
