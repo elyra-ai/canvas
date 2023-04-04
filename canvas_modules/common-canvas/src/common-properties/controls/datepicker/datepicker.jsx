@@ -31,8 +31,10 @@ class DatepickerControl extends React.Component {
 		this.id = ControlUtils.getControlId(props.propertyId);
 		this.locale = props.controller.getLocale();
 
+		this.dateFormat = ControlUtils.getDateTimeFormat(props.control);
+
 		this.state = {
-			value: props.value ? getFormattedDate(props.value, this.props.control.dateFormat) : ""
+			value: props.value ? getFormattedDate(props.value, this.dateFormat) : ""
 		};
 
 		this.getDatepickerSize = this.getDatepickerSize.bind(this);
@@ -45,7 +47,7 @@ class DatepickerControl extends React.Component {
 	handleChange(evt) {
 		if (evt.length > 0) {
 			const isoDate = getISODate(evt[0]);
-			const value = getFormattedDate(evt[0], this.props.control.dateFormat); // display value
+			const value = getFormattedDate(evt[0], this.dateFormat); // display value
 			this.props.controller.updatePropertyValue(this.props.propertyId, isoDate); // internal format
 			this.setState({ value });
 		} else {
@@ -72,7 +74,7 @@ class DatepickerControl extends React.Component {
 				<DatePicker
 					className="properties-datepicker-wrapper-parent"
 					datePickerType={DATEPICKER_TYPE.SINGLE}
-					dateFormat={this.props.control.dateFormat}
+					dateFormat={this.dateFormat}
 					light={this.props.controller.getLight() && this.props.control.light}
 					onChange={this.handleChange.bind(this)}
 					locale={this.locale}
