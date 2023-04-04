@@ -2037,9 +2037,9 @@ export default class SVGCanvasRenderer {
 		// * if the click was on the canvas of the current active pipeline. (This
 		//   is because clicking on the canvas background of an expanded supernode
 		//   should select that node.)
-		// * If we have closed a context menu
-		// * If we have closed text editing
-		// * If editing actions are enamed or the target is the canvas background.
+		// * if we have closed a context menu
+		// * if we have closed text editing
+		// * if editing actions are enamed or the target is the canvas background.
 		//   (This condition is necessary because when editing actions are disabled,
 		//   for a read-only canvas, the mouse-up over a node can cause this method
 		//   to be called.)
