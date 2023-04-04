@@ -19,7 +19,6 @@ import ReactDOM from "react-dom";
 
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
-import "../styles/index.scss";
 import App from "./App";
 import AppSmall from "./app-small.js";
 import AppTiny from "./app-tiny.js";

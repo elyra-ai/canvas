@@ -32,7 +32,9 @@ const entry = [
 	"react-hot-loader/patch",
 	"webpack-hot-middleware/client",
 	"@babel/polyfill",
-	"./src/client/index.js"
+	"./src/client/index.js",
+	"./assets/styles/harness.scss",
+	"../common-canvas/src/themes/light.scss"
 ];
 
 

@@ -17,6 +17,4 @@
 import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation }
 	from "../../common-canvas/src/index";
 
-import "../../common-canvas/src/themes/light.scss";
-
 export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };

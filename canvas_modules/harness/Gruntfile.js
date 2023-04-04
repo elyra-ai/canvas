@@ -76,21 +76,21 @@ module.exports = function(grunt) {
 					flatten: false,
 					cwd: "./node_modules/@elyra/canvas/dist/styles",
 					src: ["common-canvas*.css"],
-					dest: ".build"
+					dest: ".build/css/common-canvas"
 				},
 				{
 					expand: true,
 					flatten: false,
 					cwd: "./node_modules/codemirror/",
 					src: ["lib/codemirror.css", "addon/hint/show-hint.css"],
-					dest: ".build/codemirror"
+					dest: ".build/css/codemirror"
 				},
 				{
 					expand: true,
 					flatten: false,
 					cwd: "./node_modules/react-virtualized/",
 					src: ["styles.css"],
-					dest: ".build/react-virtualized"
+					dest: ".build/css/react-virtualized"
 				}]
 			}
 		},
