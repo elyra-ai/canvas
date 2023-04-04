@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+$font-prefix: "/fonts";
+@import "@ibm/plex/scss/ibm-plex.scss";
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation }
-	from "../../common-canvas/src/index";
+@import "@carbon/themes/scss/themes";
 
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
+// Switch the themes below to get light or dark.
+
+$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
+// $carbon--theme: $carbon--theme--g90; // The dark theme
+@include carbon--theme;
+
+@import "carbon-components/scss/globals/scss/styles";
