@@ -490,7 +490,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 			break;
 		case Type.DATE:
 			role = Type.DATE;
-			if (parameter.isList()) {
+			if (parameter.control === ControlType.DATEPICKER) {
+				controlType = ControlType.DATEPICKER;
+			} else if (parameter.control === ControlType.DATEPICKERRANGE) {
+				controlType = ControlType.DATEPICKERRANGE;
+			} else if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;
 			} else {
 				controlType = ControlType.DATEFIELD;

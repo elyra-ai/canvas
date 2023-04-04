@@ -33,6 +33,8 @@ import ExpressionControl from "./expression";
 import PasswordControl from "./passwordfield";
 import NumberfieldControl from "./numberfield";
 import DatefieldControl from "./datefield";
+import DatepickerControl from "./datepicker";
+import DatepickerRangeControl from "./datepicker-range";
 import TimefieldControl from "./timefield";
 import CheckboxControl from "./checkbox";
 import ToggleControl from "./toggle";
@@ -59,6 +61,8 @@ const accessibleControls = [
 	ControlType.CHECKBOXSET,
 	ControlType.HIDDEN,
 	ControlType.DATEFIELD,
+	ControlType.DATEPICKER,
+	ControlType.DATEPICKERRANGE,
 	ControlType.NUMBERFIELD,
 	ControlType.SPINNER,
 	ControlType.PASSWORDFIELD,
@@ -223,6 +227,12 @@ export default class ControlFactory {
 			break;
 		case (ControlType.DATEFIELD):
 			createdControl = (<DatefieldControl {...props} />);
+			break;
+		case (ControlType.DATEPICKER):
+			createdControl = (<DatepickerControl {...props} />);
+			break;
+		case (ControlType.DATEPICKERRANGE):
+			createdControl = (<DatepickerRangeControl {...props} />);
 			break;
 		case (ControlType.TIMEFIELD):
 			createdControl = (<TimefieldControl {...props} />);
