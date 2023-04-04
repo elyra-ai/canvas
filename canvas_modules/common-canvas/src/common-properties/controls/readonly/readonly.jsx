@@ -30,6 +30,7 @@ import Icon from "./../../../icons/icon";
 
 import { ControlType } from "./../../constants/form-constants";
 import { stringifyFieldValue } from "./../../util/property-utils";
+import { getFormattedDate } from "./../../util/date-utils";
 
 class ReadonlyControl extends React.Component {
 	constructor(props) {
@@ -96,6 +97,12 @@ class ReadonlyControl extends React.Component {
 			} else {
 				controlValue = ""; // invalid timestamp
 			}
+		} else if (this.props.control.controlType === ControlType.DATEPICKER) {
+			controlValue = controlValue ? getFormattedDate(controlValue, this.props.control.dateFormat) : "";
+		} else if (this.props.control.controlType === ControlType.DATEPICKERRANGE) {
+			const startDate = this.props.value && this.props.value[0] ? getFormattedDate(this.props.value[0], this.props.control.dateFormat) : "";
+			const endDate = this.props.value && this.props.value[1] ? getFormattedDate(this.props.value[1], this.props.control.dateFormat) : "";
+			controlValue = [startDate, endDate].toString();
 		}
 		const readOnly = <span className="properties-field-type" disabled={this.props.state === STATES.DISABLED}>{controlValue}</span>;
 		let display = readOnly;

@@ -115,7 +115,9 @@ export const MESSAGE_KEYS = {
 	SHOW_PASSWORD_TOOLTIP: "passwordShow.tooltip",
 	HIDE_PASSWORD_TOOLTIP: "passwordHide.tooltip",
 	LABEL_INDICATOR_REQUIRED: "label.indicator.required",
-	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional"
+	LABEL_INDICATOR_OPTIONAL: "label.indicator.optional",
+	DATEPICKER_RANGE_START_LABEL: "datepickerRangeStart.default.label",
+	DATEPICKER_RANGE_END_LABEL: "datepickerRangeEnd.default.label"
 };
 
 export const TRUNCATE_LIMIT = 10000;
@@ -152,6 +154,13 @@ export const DATA_TYPE = {
 	TIME: "time",
 	TIMESTAMP: "timestamp"
 };
+
+export const DATEPICKER_TYPE = {
+	SINGLE: "single",
+	RANGE: "range"
+};
+
+export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d"; // ISO format
 
 export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
 
@@ -277,3 +286,5 @@ export const CONTAINER_TYPE = {
 	TEARSHEET: "Tearsheet",
 	MODAL: "Modal"
 };
+
+export const DEFAULT_LOCALE = "en";

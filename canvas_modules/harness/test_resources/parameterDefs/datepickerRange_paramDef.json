@@ -1,0 +1,358 @@
+{
+  "titleDefinition": {
+    "title": "Datepicker"
+  },
+  "current_parameters": {
+		"datepicker_range": ["2023-03-17T00:00:00.00", "2023-03-30T00:00:00.00"],
+		"datepicker_range_required": ["2023-03-17T00:00:00.00", "2023-03-27T00:00:00.00"],
+		"datepicker_range_null": [null, null],
+		"hide_datepicker_range": true,
+		"hidden_datepicker_range": ["2023-03-17T00:00:00.00", "2023-03-20T00:00:00.00"],
+		"disable_datepicker_range": true,
+		"disabled_datepicker_range": ["2023-03-20T00:00:00.00", "2023-03-25T00:00:00.00"],
+		"datepicker_range_table": [
+			[
+				[ "2023-03-17T00:00:00.00", "2023-03-20T00:00:00.00" ],
+				[ "2023-03-17T00:00:00.00", "2023-03-20T00:00:00.00" ],
+				[ "2023-03-17T00:00:00.00", "2023-03-20T00:00:00.00" ]
+			],
+			[
+				null,
+				[],
+				[null, null]
+			]
+		]
+  },
+  "parameters": [
+		{
+			"id": "datepicker_range",
+			"type": "date"
+		},
+		{
+			"id": "datepicker_range_required",
+			"type": "date",
+			"required": true
+		},
+		{
+			"id": "datepicker_range_empty",
+			"type": "date"
+		},
+		{
+			"id": "datepicker_range_null",
+			"type": "date"
+		},
+		{
+			"id": "hide_datepicker_range",
+			"type": "boolean"
+		},
+		{
+			"id": "hidden_datepicker_range",
+			"type": "date",
+			"required": true
+		},
+		{
+			"id": "disable_datepicker_range",
+			"type": "boolean"
+		},
+		{
+			"id": "disabled_datepicker_range",
+			"type": "date"
+		},
+		{
+			"id": "datepicker_range_table",
+			"type": "array[datepicker_range_types]"
+		}
+  ],
+  "complex_types": [
+		{
+			"id": "datepicker_range_types",
+			"parameters": [
+				{
+					"id": "datepicker_range_cell",
+					"type": "date"
+				},
+				{
+					"id": "datepicker_range_on_panel",
+					"type": "date"
+				},
+				{
+					"id": "datepicker_range_sub_panel",
+					"type": "date"
+				}
+			]
+		}
+	],
+  "uihints": {
+    "id": "datepickerrange",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "DatepickerRange"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "datepicker_range",
+        "label": {
+          "default": "Datepicker Range: Y-m-d"
+        },
+        "description": {
+          "default": "Datepicker with value set to ['2023-03-17', '2023-03-23'] in Y-m-d format. Both start and end will use the same 'date_format'"
+        },
+				"control": "datepickerRange",
+        "date_format": "Y-m-d",
+        "class_name": "datepicker-range-control-unique-class",
+				"place_holder_text": {
+					"default": "yyyy-mm-dd"
+				}
+      },
+			{
+				"parameter_ref": "datepicker_range_required",
+				"label": {
+					"default": "Required date: Y/m/d"
+				},
+				"description": {
+					"default": "Datepicker as a required field in Y/m/d format."
+				},
+				"control": "datepickerRange",
+				"date_format": "Y/m/d",
+				"class_name": "datepicker-range-control-class",
+				"place_holder_text": {
+					"default": "yyyy/mm/dd"
+				}
+			},
+			{
+				"parameter_ref": "datepicker_range_empty",
+				"label": {
+					"default": "Date format: m/d/Y"
+				},
+				"description": {
+					"default": "Initial values are not specified."
+				},
+				"control": "datepickerRange",
+				"date_format": "m/d/Y",
+				"class_name": "datepicker-simple-control-class",
+				"place_holder_text": {
+					"default": "mm/dd/yyyy"
+				}
+			},
+			{
+				"parameter_ref": "datepicker_range_null",
+				"label": {
+					"default": "Date format 'm/d/Y', initial values set to null"
+				},
+				"description": {
+					"default": "Null values are given as the initial values. There is no placeholder text and will use the default start and end labels."
+				},
+				"control": "datepickerRange",
+				"date_format": "m/d/Y",
+				"class_name": "datepicker-control-class"
+			},
+			{
+				"parameter_ref": "hide_datepicker_range",
+				"label": {
+					"default": "Hide 'hidden_datepicker_range'"
+				}
+			},
+			{
+				"parameter_ref": "hidden_datepicker_range",
+				"label": {
+					"default": "Datepicker Range: Y-m-d"
+				},
+				"description": {
+					"default": "Datepicker range will be hidden if above checkbox is checked."
+				},
+				"control": "datepickerRange",
+				"date_format": "Y-m-d",
+				"class_name": "datepicker-control-class",
+				"place_holder_text": {
+					"default": "yyyy-mm-dd"
+				}
+			},
+			{
+				"parameter_ref": "disable_datepicker_range",
+				"label": {
+					"default": "Disable 'hidden_datepicker_range'"
+				}
+			},
+			{
+				"parameter_ref": "disabled_datepicker_range",
+				"label": {
+					"default": "Datepicker Range: Y-m-d"
+				},
+				"description": {
+					"default": "Datepicker range will be disabled if above checkbox is checked."
+				},
+				"control": "datepickerRange",
+				"date_format": "Y-m-d",
+				"class_name": "datepicker-control-class",
+				"place_holder_text": {
+					"default": "yyyy-mm-dd"
+				}
+			},
+			{
+				"parameter_ref": "datepicker_range_table",
+				"label": {
+					"default": "DatepickerRange table"
+				}
+			}
+    ],
+		"complex_type_info": [
+			{
+				"complex_type_ref": "datepicker_range_types",
+				"parameters": [
+					{
+						"parameter_ref": "datepicker_range_cell",
+						"label": {
+							"default": "table cell"
+						},
+						"control": "datepickerRange",
+						"date_format": "Y-m-d",
+						"class_name": "table-datepicker_range-control-class",
+						"datepicker_range_start_text": {
+							"default": "Should not be displayed in table cell"
+						},
+						"datepicker_range_end_text": {
+							"default": "Should not be displayed in table cell"
+						},
+						"place_holder_text": {
+							"default": "yyyy-mm-dd"
+						}
+					},
+					{
+						"parameter_ref": "datepicker_range_on_panel",
+						"label": {
+							"default": "on_panel"
+						},
+						"control": "datepickerRange",
+						"date_format": "Y-m-d",
+						"class_name": "table-on-panel-datepicker_range-control-class",
+						"edit_style": "on_panel",
+						"datepicker_range_start_text": {
+							"default": "Start date:"
+						},
+						"datepicker_range_end_text": {
+							"default": "End date:"
+						},
+						"place_holder_text": {
+							"default": "yyyy-mm-dd"
+						}
+					},
+					{
+						"parameter_ref": "datepicker_range_sub_panel",
+						"label": {
+							"default": "sub_panel"
+						},
+						"control": "datepickerRange",
+						"date_format": "Y-m-d",
+						"edit_style": "subpanel",
+						"class_name": "table-subpanel-datepicker_range-control-class",
+						"datepicker_range_start_text": {
+							"default": "Start date:"
+						},
+						"datepicker_range_end_text": {
+							"default": "End date:"
+						},
+						"place_holder_text": {
+							"default": "yyyy-mm-dd"
+						}
+					}
+				]
+			}
+		],
+    "group_info": [
+      {
+        "id": "datepicker-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+					"datepicker_range",
+					"datepicker_range_required",
+					"datepicker_range_empty",
+					"datepicker_range_null"
+        ]
+      },
+			{
+				"id": "datepicker-range-conditions",
+				"label": {
+					"default": "Conditions"
+				},
+				"type": "controls",
+				"parameter_refs": [
+					"hide_datepicker_range",
+					"hidden_datepicker_range",
+					"disable_datepicker_range",
+					"disabled_datepicker_range"
+				]
+			},
+			{
+				"id": "datepicker-range-table-panels",
+				"label": {
+					"default": "Table"
+				},
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "datepicker-range-table-summary",
+						"type": "summaryPanel",
+						"label": {
+							"default": "Edit datepickerRange table"
+						},
+						"group_info": [
+							{
+								"id": "datepicker-range-table-summary-ctrls",
+								"parameter_refs": [
+									"datepicker_range_table"
+								]
+							}
+						]
+					}
+				]
+			}
+    ]
+  },
+  "conditions": [
+		{
+			"visible": {
+				"parameter_refs": [
+					"hidden_datepicker_range"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "hide_datepicker_range",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"disabled_datepicker_range"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "disable_datepicker_range",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		}
+	],
+	"resources": {
+		"datepicker_range.range.start.label": "Start date:",
+		"datepicker_range.range.end.label": "End date:",
+		"datepicker_range_required.range.start.label": "Start on:",
+		"datepicker_range_required.range.start.desc": "Start description for this datepickerRange control",
+		"datepicker_range_required.range.end.label": "End on:",
+		"datepicker_range_required.range.end.helper": "Only the start range has a description, while end range has a helper text",
+		"datepicker_range_empty.range.start.label": "Begin date",
+		"datepicker_range_empty.range.start.desc": "This parameter does not have a current parameter value",
+		"datepicker_range_empty.range.start.helper": "Enter a start date",
+		"datepicker_range_empty.range.end.label": "End date",
+		"datepicker_range_empty.range.end.desc": "This parameter does not have a current parameter value",
+		"datepicker_range_empty.range.end.helper": "Enter an end date"
+	}
+}

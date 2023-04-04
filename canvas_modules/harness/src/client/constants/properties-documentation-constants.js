@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2176,6 +2176,101 @@ _defineConstant("TIMEFIELD_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("DATEPICKER_PROPS_INFO", {
+	"title": "Datepicker Title",
+	"parameterDef": {
+		"current_parameters": {
+			"datepickerControlName": "2023-03-25T00:00:00.00"
+		},
+		"parameters": [
+			{
+				"id": "datepickerControlName",
+				"type": "date"
+			}
+		],
+		"uihints": {
+			"id": "datepickers",
+			"parameter_info": [
+				{
+					"parameter_ref": "datepickerControlName",
+					"label": {
+						"default": "Datepicker Control Name"
+					},
+					"description": {
+						"default": "Datepicker test"
+					},
+					"control": "datepicker",
+					"date_format": "Y-m-d",
+					"place_holder_text": {
+						"default": "yyyy-mm-dd"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Datepicker Control",
+					"type": "controls",
+					"parameter_refs": [
+						"datepickerControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"datepickerControlName.helper": "Helper text provided through resource label `{parameter_ref}.helper`."
+		}
+	}
+});
+_defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
+	"title": "Datepicker Range",
+	"parameterDef": {
+		"current_parameters": {
+			"datepickerControlName": ["2023-03-25T00:00:00.00", "2023-03-30T00:00:00.00"]
+		},
+		"parameters": [
+			{
+				"id": "datepickerControlName",
+				"type": "date"
+			}
+		],
+		"uihints": {
+			"id": "datepickers",
+			"parameter_info": [
+				{
+					"parameter_ref": "datepickerControlName",
+					"label": {
+						"default": "Datepicker Control Name"
+					},
+					"description": {
+						"default": "Datepicker simple test"
+					},
+					"control": "datepickerRange",
+					"date_format": "Y-m-d",
+					"place_holder_text": {
+						"default": "yyyy-mm-dd"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Datepicker Range Control",
+					"type": "controls",
+					"parameter_refs": [
+						"datepickerControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"datepickerControlName.range.start.label": "Start",
+			"datepickerControlName.range.start.desc": "Start description provided through resource label `{parameter_ref}.range.start.desc`.",
+			"datepickerControlName.range.start.helper": "Start helper",
+			"datepickerControlName.range.end.label": "End",
+			"datepickerControlName.range.end.desc": "End description provided through resource label `{parameter_ref}.range.end.desc`.",
+			"datepickerControlName.range.end.helper": "End helper text."
+		}
+	}
+});
 _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {
@@ -2710,7 +2805,7 @@ _defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"someofselectList": ""
+			"someofselectList": []
 		},
 		"parameters": [
 			{
@@ -3153,7 +3248,7 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"toggletextOption": ["On"]
+			"toggletextOption": "On"
 		},
 		"parameters": [
 			{
@@ -3246,7 +3341,7 @@ _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"toggletextOption": ["On"]
+			"toggletextOption": "On"
 		},
 		"parameters": [
 			{

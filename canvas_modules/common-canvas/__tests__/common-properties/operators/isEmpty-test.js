@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import { expect } from "chai";
+import { ControlType } from "../../../src/common-properties/constants/form-constants";
 import Controller from "../../../src/common-properties/properties-controller";
 
 
@@ -24,7 +25,11 @@ describe("validating isEmpty operator works correctly", () => {
 	let undefinedPlaceholder;
 
 	function wrap(val) {
-		return { value: val };
+		return { value: val, control: { controlType: ControlType.TEXTFIELD } }; // controlType can be anything
+	}
+
+	function wrapDatepickerRange(val) {
+		return { value: val, control: { controlType: ControlType.DATEPICKERRANGE } };
 	}
 
 	function emptyFunc() {
@@ -48,6 +53,13 @@ describe("validating isEmpty operator works correctly", () => {
 		expect(isEmpty(wrap(1, "textfield"), null, null, controller)).to.equal(false);
 		expect(isEmpty(wrap([]), null, null, controller)).to.equal(true);
 		expect(isEmpty(wrap({ temp: "value" }), null, null, controller)).to.equal(false);
+		// dates
+		expect(isEmpty(wrap("2023-03-22T00:00:00.00"), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrap(new Date(null)), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrapDatepickerRange(["2023-03-22T00:00:00.00", "2023-03-22T00:00:00.00"]), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrapDatepickerRange(["2023-03-22T00:00:00.00", ""]), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrapDatepickerRange([" ", "2023-03-22T00:00:00.00"]), null, null, controller)).to.equal(false);
+		expect(isEmpty(wrapDatepickerRange([" ", ""]), null, null, controller)).to.equal(true);
 		// pass in a function as a way to hit the default switch case
 		expect(isEmpty(wrap(emptyFunc), null, null, controller)).to.equal(true);
 	});
@@ -59,6 +71,4 @@ describe("validating isEmpty operator works correctly", () => {
 		expect(isEmpty(wrap("  "), null, null, controller)).to.equal(false);
 		expect(isEmpty(wrap("not empty string"), null, null, controller)).to.equal(false);
 	});
-
-
 });
