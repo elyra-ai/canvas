@@ -1953,7 +1953,7 @@ export default class SVGCanvasRenderer {
 		} else if (transPos.x === this.zoomStartPoint.startX &&
 							transPos.y === this.zoomStartPoint.startY &&
 							!this.zoomChanged()) {
-			this.zoomClick();
+			this.zoomClick(d3Event);
 
 		} else if (this.regionSelect) {
 			this.zoomEndRegionSelect(d3Event);
@@ -2032,12 +2032,22 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Handles a zoom operation that is just a click on the canvas background.
-	zoomClick() {
-		// Only clear selections if clicked on the canvas of the current active pipeline.
-		// Clicking the canvas of an expanded supernode will select that node.
-		// Also, don't clear selections if we have closed a context menu or
-		// closed text editing.
-		if (this.dispUtils.isDisplayingCurrentPipeline() && !this.contextMenuClosedOnZoom && !this.textEditingClosedOnZoom) {
+	zoomClick(d3Event) {
+		// Only clear selections under these conditions:
+		// * if the click was on the canvas of the current active pipeline. (This
+		//   is because clicking on the canvas background of an expanded supernode
+		//   should select that node.)
+		// * If we have closed a context menu
+		// * If we have closed text editing
+		// * If editing actions are enamed or the target is the canvas background.
+		//   (This condition is necessary because when editing actions are disabled,
+		//   for a read-only canvas, the mouse-up over a node can cause this method
+		//   to be called.)
+		if (this.dispUtils.isDisplayingCurrentPipeline() &&
+				!this.contextMenuClosedOnZoom &&
+				!this.textEditingClosedOnZoom &&
+				(this.config.enableEditingActions ||
+				d3Event.sourceEvent.target.classList.contains("d3-svg-background"))) {
 			this.canvasController.clearSelections();
 		}
 	}
