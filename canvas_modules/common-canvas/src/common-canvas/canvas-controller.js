@@ -2385,6 +2385,14 @@ export default class CanvasController {
 			this.zoomToFit();
 			break;
 		}
+		case "commentsHide": {
+			this.hideComments();
+			break;
+		}
+		case "commentsShow": {
+			this.showComments();
+			break;
+		}
 		case "setNodeLabelEditingMode": {
 			this.setNodeLabelEditingMode(data.id, data.pipelineId);
 			break;
