@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import * as UiConditions from "./ui-conditions";
 import { formatMessage } from "../util/property-utils";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, PANEL_TREE_ROOT,
 	CONDITION_TYPE, CONDITION_DEFINITION_INDEX,
-	MESSAGE_KEYS, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants";
+	MESSAGE_KEYS
+} from "../constants/constants";
 import { isEmpty, cloneDeep, has, union, isEqual } from "lodash";
 import seedrandom from "seedrandom";
+import { getDateTimeFormat } from "../util/control-utils";
 
 
 // ========= APIs ==================
@@ -1089,9 +1091,7 @@ function _injectRequiredDefinition(control, valDefinitions, requiredDefinitionsI
 
 function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValId, intl) {
 	// inject date format validation definition
-	const format = (control.dateFormat) ? control.dateFormat : control.timeFormat;
-	const defaultFormat = (control.dateFormat) ? DEFAULT_DATE_FORMAT : DEFAULT_TIME_FORMAT;
-	const dtFormat = (format) ? format : defaultFormat;
+	const dtFormat = getDateTimeFormat(control);
 	const errorMsg = formatMessage(intl,
 		MESSAGE_KEYS.DATETIME_FORMAT_ERROR, { role: control.role, format: dtFormat });
 	const injectedDefinition = {

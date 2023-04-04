@@ -2072,6 +2072,7 @@ class App extends React.Component {
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			convertValueDataTypes: this.state.convertValueDataTypes,
 			showRequiredIndicator: this.state.showRequiredIndicator,
+			locale: this.locale,
 			returnValueFiltering: this.state.returnValueFiltering
 		};
 	}
