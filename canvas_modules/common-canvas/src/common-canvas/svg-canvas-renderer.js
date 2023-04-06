@@ -63,6 +63,12 @@ const NINETY_DEGREES = 90;
 const INPUT_TYPE = "input_type";
 const OUTPUT_TYPE = "output_type";
 
+const SPACE_KEY = 32;
+const LEFT_ARROW_KEY = 37;
+// const UP_ARROW_KEY = 38;
+const RIGHT_ARROW_KEY = 39;
+// const DOWN_ARROW_KEY = 40;
+
 
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
@@ -285,6 +291,50 @@ export default class SVGCanvasRenderer {
 	// from outside canvas via svg-canvas-d3 as well as internally.
 	isSpaceKeyPressed() {
 		return this.spaceKeyPressed;
+	}
+
+	focusNextTabGroup(evt) {
+		const nextObj = this.activePipeline.getNextTabGroupStartObject();
+		if (nextObj) {
+			this.moveFocusTo(nextObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusPreviousTabGroup(evt) {
+		const previousObj = this.activePipeline.getPreviousTabGroupStartObject();
+		if (previousObj) {
+			this.moveFocusTo(previousObj, evt);
+			return true;
+		}
+		return false;
+	}
+
+	focusSetOutsideCanvas() {
+		this.activePipeline.resetTabbedStatus();
+	}
+
+	moveFocusTo(target, evt) {
+		let objSel;
+		if (target.type === "node") {
+			objSel = this.getNodeGroupSelectionById(target.obj.id);
+
+		} else if (target.type === "comment") {
+			objSel = this.getCommentGroupSelectionById(target.obj.id);
+
+		} else if (target.type === "link") {
+			objSel = this.getLinkGroupSelectionById(target.obj.id);
+		}
+		const zoom = this.canvasController.getZoomToReveal([target.obj.id]);
+		if (zoom) {
+			this.zoomTo(zoom);
+		}
+		objSel.node().focus();
+		if (evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+		}
 	}
 
 	// Returns true if the event indicates that a drag is in action. This means
@@ -2683,6 +2733,7 @@ export default class SVGCanvasRenderer {
 
 		const newNodeGroups = enter
 			.append("g")
+			.attr("tabindex", -1)
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
@@ -2979,6 +3030,23 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the node groups.
 	attachNodeGroupListeners(nodeGrps) {
 		nodeGrps
+			.on("keydown", (d3Event, d) => {
+				if (d3Event.keyCode === RIGHT_ARROW_KEY) {
+					const linkInfos = this.activePipeline.getNextLinksFromNode(d);
+					if (linkInfos.length === 1) {
+						this.moveFocusTo({ obj: linkInfos[0].link, type: "link" }, d3Event);
+					} else if (linkInfos.length > 1) {
+						this.canvasController.openLinkFocusContextMenu(linkInfos, { x: 50, y: 50 });
+					}
+				} else if (d3Event.keyCode === LEFT_ARROW_KEY) {
+					const link = this.activePipeline.getPreviousLinkToNode(d);
+					if (link) {
+						this.moveFocusTo({ obj: link, type: "link" }, d3Event);
+					}
+				} else if (d3Event.keyCode === SPACE_KEY) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.raiseNodeToTop(nodeGrp);
@@ -3004,10 +3072,12 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Node Group - mouse down");
+				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					this.activePipeline.resetTabGroupForObj(d);
 					this.selectObjectD3Event(d3Event, d);
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
@@ -5209,6 +5279,7 @@ export default class SVGCanvasRenderer {
 	createComments(enter) {
 		const newCommentGroups = enter
 			.append("g")
+			.attr("tabindex", -1)
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
@@ -5297,6 +5368,18 @@ export default class SVGCanvasRenderer {
 	// Attaches the appropriate listeners to the comment groups.
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
+			.on("keydown", (d3Event, d) => {
+				if (d3Event.keyCode === RIGHT_ARROW_KEY) {
+					d3Event.stopPropagation();
+					if (this.spaceKeyPressed) {
+						window.console.log("comment: tab with space");
+					} else {
+						window.console.log("comment: tab without space");
+					}
+				} else if (d3Event.keyCode === SPACE_KEY) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+			})
 			.on("mouseenter", (d3Event, d) => {
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
@@ -5312,10 +5395,12 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
+				d3Event.stopPropagation();
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
+					this.activePipeline.resetTabGroupForObj(d);
 					this.selectObjectD3Event(d3Event, d);
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
@@ -5893,7 +5978,9 @@ export default class SVGCanvasRenderer {
 	// Creates all newly created links specified in the enter selection.
 	createLinks(enter) {
 		// Add groups for links
-		const newLinkGrps = enter.append("g")
+		const newLinkGrps = enter
+			.append("g")
+			.attr("tabindex", -1)
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
 			.call(this.attachLinkGroupListeners.bind(this));
 
@@ -5994,12 +6081,35 @@ export default class SVGCanvasRenderer {
 
 	attachLinkGroupListeners(linkGrps) {
 		linkGrps
+			.on("keydown", (d3Event, d) => {
+				if (d3Event.keyCode === RIGHT_ARROW_KEY) {
+					if (d.type === NODE_LINK) {
+						const node = this.activePipeline.getNextNodeFromDataLink(d);
+						this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+					} else if (d.type === ASSOCIATION_LINK) {
+						const node = this.activePipeline.getNextNodeFromAssocLink(d);
+						this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+					} else if (d.type === COMMENT_LINK) {
+						const comment = this.activePipeline.getNextCommentFromLink(d);
+						this.moveFocusTo({ obj: comment, type: "comment" }, d3Event);
+					}
+
+				} else if (d3Event.keyCode === LEFT_ARROW_KEY) {
+					const node = this.activePipeline.getPreviousNodeToLink(d);
+					if (node) {
+						this.moveFocusTo({ obj: node, type: "node" }, d3Event);
+					}
+				} else if (d3Event.keyCode === SPACE_KEY) {
+					this.selectObjectD3Event(d3Event, d);
+				}
+			})
 			.on("mousedown", (d3Event, d, index, links) => {
 				this.logger.log("Link Group - mouse down");
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
+					this.activePipeline.resetTabGroupForObj(d);
 					this.selectObjectD3Event(d3Event, d);
 				}
 				d3Event.stopPropagation();

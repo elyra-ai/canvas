@@ -108,10 +108,12 @@ export default class CanvasController {
 		// common-canvas.jsx.
 		this.labelUtil = new LabelUtil();
 
-		// The following two functions must bind to this so that the correct canvas
+		// The following three functions must bind to this so that the correct canvas
 		// controller context can be accessed in context menu wrapper component.
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
+		this.closeLinkFocusMenu = this.closeLinkFocusMenu.bind(this);
+		this.linkFocusActionHandler = this.linkFocusActionHandler.bind(this);
 
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
@@ -1267,6 +1269,27 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkDecorations(linkId);
 	}
 
+	openLinkFocusContextMenu(linkInfos, pos) {
+		const menuDef = [];
+		this.linkToFocusInfos = linkInfos;
+		linkInfos.forEach((linkInfo, index) => {
+			const label = (linkInfo.type === "comment" ? "comment" : linkInfo.obj.label);
+
+			menuDef.push({ action: index, label: this.labelUtil.getLabel("canvas.linkToObject", { linked_object: label }) });
+		});
+
+		this.objectModel.openLinkFocusMenu(menuDef, pos);
+	}
+
+	closeLinkFocusMenu() {
+		this.objectModel.closeLinkFocusMenu();
+	}
+
+	linkFocusActionHandler(linkIndex) {
+		const linkInfo = this.linkToFocusInfos[linkIndex];
+		this.getSVGCanvasD3().moveFocusTo({ type: "link", obj: linkInfo.link });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Command stack methods
 	// ---------------------------------------------------------------------------
@@ -2263,7 +2286,7 @@ export default class CanvasController {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
 		this.closeContextMenu();
-		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
+		// this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 	}
