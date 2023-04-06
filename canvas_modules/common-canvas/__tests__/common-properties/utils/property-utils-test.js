@@ -381,4 +381,14 @@ describe("convertValueDataTypestests", () => {
 		const actualValues = controller2.getPropertyValues();
 		expect(actualValues).to.eql(expected);
 	});
+
+	it("convertValueDataTypes correctly handles currentParameters where control is not defined", () => {
+		const initialValues = propertyOf(convertValuesDataTypesParamDef)("current_parameters");
+		initialValues.missingControl = "no control definition";
+		const controls = controller.getControls();
+
+		const actualValues = PropertyUtils.convertValueDataTypes(initialValues, controls);
+		const expected = Object.assign({}, expectedValues, { missingControl: "no control definition" });
+		expect(actualValues).to.eql(expected);
+	});
 });

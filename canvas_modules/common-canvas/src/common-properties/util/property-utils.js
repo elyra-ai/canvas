@@ -538,9 +538,9 @@ function convertValueDataTypes(currentParameters, controls) {
 	const currentParams = Object.keys(currentParameters);
 	currentParams.forEach((paramName) => {
 		const originalValue = currentParameters[paramName];
-		const valueType = controls[paramName].valueDef.propType;
-		const isList = controls[paramName].valueDef.isList;
-		if (!isUndefined(originalValue)) {
+		if (!isUndefined(originalValue) && controls[paramName]) {
+			const valueType = controls[paramName].valueDef.propType;
+			const isList = controls[paramName].valueDef.isList;
 			if (originalValue) {
 				switch (valueType) {
 				case "string": {
@@ -583,6 +583,8 @@ function convertValueDataTypes(currentParameters, controls) {
 			} else { // null
 				convertedCurrentParameters[paramName] = originalValue;
 			}
+		} else { // control is missing or current parameter is not set
+			convertedCurrentParameters[paramName] = originalValue;
 		}
 	});
 	return convertedCurrentParameters;

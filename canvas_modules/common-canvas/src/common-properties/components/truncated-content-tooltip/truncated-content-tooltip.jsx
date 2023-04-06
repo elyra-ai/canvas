@@ -29,7 +29,7 @@ export default class TruncatedContentTooltip extends React.Component {
 		if (typeof this.props.tooltipText !== "object") {
 			tooltipText = String(this.props.tooltipText);
 		}
-		if (this.props.content.type === Checkbox && this.tooltipRef && this.tooltipRef.firstChild) {
+		if (this.props.content && this.props.content.type === Checkbox && this.tooltipRef && this.tooltipRef.firstChild) {
 			truncatedRef = this.tooltipRef.firstChild.lastChild; // checkbox label is in div -> label -> span
 		}
 		const tooltip = (
@@ -58,7 +58,7 @@ export default class TruncatedContentTooltip extends React.Component {
 }
 
 TruncatedContentTooltip.propTypes = {
-	content: PropTypes.element.isRequired,
+	content: PropTypes.element,
 	truncatedRef: PropTypes.object,
 	tooltipText: PropTypes.oneOfType([
 		PropTypes.string.isRequired,
