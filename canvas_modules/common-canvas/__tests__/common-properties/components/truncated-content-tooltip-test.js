@@ -20,7 +20,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 
 
-describe("validation-message renders correctly", () => {
+describe("truncated-content-tooltip renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<TruncatedContentTooltip
@@ -34,7 +34,7 @@ describe("validation-message renders correctly", () => {
 		expect(wrapper.prop("disabled")).to.equal(true);
 	});
 
-	it("should render when no content specified", () => {
+	it("truncated-content-tooltip should render when no content specified", () => {
 		const wrapper = mount(
 			<TruncatedContentTooltip
 				tooltipText="tip"
