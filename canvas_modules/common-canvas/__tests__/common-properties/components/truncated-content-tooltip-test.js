@@ -24,9 +24,9 @@ describe("validation-message renders correctly", () => {
 	it("props should have been defined", () => {
 		const wrapper = mount(
 			<TruncatedContentTooltip
-                content={<span>test</span>}
+				content={<span>test</span>}
 				tooltipText="tip"
-                disabled
+				disabled
 			/>
 		);
 		expect(wrapper.prop("tooltipText")).to.equal("tip");
@@ -34,7 +34,7 @@ describe("validation-message renders correctly", () => {
 		expect(wrapper.prop("disabled")).to.equal(true);
 	});
 
-    it("should render when no content specified", () => {
+	it("should render when no content specified", () => {
 		const wrapper = mount(
 			<TruncatedContentTooltip
 				tooltipText="tip"
