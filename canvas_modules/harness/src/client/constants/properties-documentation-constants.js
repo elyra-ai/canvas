@@ -2185,7 +2185,8 @@ _defineConstant("DATEPICKER_PROPS_INFO", {
 		"parameters": [
 			{
 				"id": "datepickerControlName",
-				"type": "date"
+				"type": "date",
+				"required": true
 			}
 		],
 		"uihints": {
