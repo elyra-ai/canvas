@@ -329,6 +329,7 @@
 	],
 	"resources": {
 		"datepicker_required.helper": "A date is required.",
-		"datepicker_undefined.helper": "There is no initial value."
+		"datepicker_undefined.helper": "There is no initial value.",
+		"datepicker_null.helper": "Some really long text that will extend past the control. The helper text should wrap to next line."
 	}
 }
