@@ -417,7 +417,9 @@ export default class SVGCanvasRenderer {
 
 		if (this.config.enablePositionNodeOnRightFlyoutOpen &&
 				this.canvasController.isRightFlyoutOpen()) {
-			const posInfo = this.config.enablePositionNodeOnRightFlyoutOpen;
+			const posInfo = (typeof this.config.enablePositionNodeOnRightFlyoutOpen === "boolean")
+				? { x: 50, y: 50 }
+				: this.config.enablePositionNodeOnRightFlyoutOpen;
 			const x = posInfo.x ? posInfo.x : 50;
 			const y = posInfo.y ? posInfo.y : 50;
 			const selNodeIds = this.activePipeline.getSelectedNodeIds();
