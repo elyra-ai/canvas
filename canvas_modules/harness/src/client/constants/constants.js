@@ -72,7 +72,6 @@ _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_APP_READ_ONLY", "Read Only");
 _defineConstant("EXAMPLE_APP_PROGRESS", "Progress");
-_defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
 _defineConstant("EXAMPLE_APP_STAGES", "Stages");
 _defineConstant("EXAMPLE_APP_STAGES_CARD_NODE", "Stages Card Node");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
@@ -80,6 +79,7 @@ _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 _defineConstant("EXAMPLE_APP_LOGIC", "Logic");
+_defineConstant("EXAMPLE_APP_REACT_NODES", "React Nodes");
 
 _defineConstant("PALETTE_FLYOUT", "Flyout");
 _defineConstant("PALETTE_MODAL", "Modal");
