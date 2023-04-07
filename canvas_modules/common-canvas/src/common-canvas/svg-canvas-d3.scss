@@ -108,7 +108,9 @@ $link-highlight-color: $support-04;
 }
 
 .d3-svg-canvas-div:focus {
-	outline: none;
+	outline-color: 	$interactive-01;
+	// outline-style: dashed;
+	// outline-width: thick;
 }
 
 .d3-foreign-object-ghost-label,
@@ -218,6 +220,21 @@ $link-highlight-color: $support-04;
 	stroke: $node-body-stroke-hover;
 	stroke-width: 1;
 	fill: $node-body-fill-hover;
+}
+
+.d3-node-group:focus {
+	outline-width: 0;
+
+	& .d3-node-selection-highlight {
+		stroke-width: 3;
+		stroke: $interactive-01;
+	}
+
+	& .d3-node-selection-highlight[data-selected="yes"] {
+		stroke-width: 3;
+		stroke: $interactive-01;
+		stroke-dasharray: 5, 5;
+	}
 }
 
 .d3-node-unavailable .d3-node-body-outline,
@@ -613,11 +630,28 @@ $link-highlight-color: $support-04;
 
 /* Comment styles */
 
-.d3-comment-group:hover {
-	.d3-comment-rect {
+.d3-comment-group {
+	&:hover .d3-comment-rect {
 		stroke: $comment-outline-hover-color
 	}
+
+	&:focus {
+		outline-width: 0;
+
+		& .d3-comment-selection-highlight {
+			stroke-width: 3;
+			stroke: $interactive-01;
+		}
+
+		& .d3-comment-selection-highlight[data-selected="yes"] {
+			stroke-width: 3;
+			stroke: $interactive-01;
+			stroke-dasharray: 5, 5;
+		}
+	}
 }
+
+
 
 /* Style for default comment background rectangle */
 .d3-comment-rect {
@@ -964,6 +998,22 @@ g.bkg-col-cyan-50 {
 	stroke: $link-highlight-color;
 	stroke-width: 5;
 }
+
+.d3-link-group:focus {
+	outline-width: 0;
+
+	& .d3-link-selection-area {
+		stroke-width: 4;
+		stroke: $interactive-01;
+	}
+
+	& .d3-link-selection-area[data-selected] {
+		stroke-width: 3;
+		stroke: $interactive-01;
+		stroke-dasharray: 5, 5;
+	}
+}
+
 
 // Styles for link handles at the start of a link line
 .d3-link-handle-start {
