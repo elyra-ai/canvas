@@ -31,17 +31,7 @@ $harness-header-height: 52px;
 $harness-sidepanel-width: 240px;
 $harness-sidepanel-transition-time: 0.3s;
 
-@import "../../src/client/components/custom-canvases/tables/tables.scss";
-@import "../../src/client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
-@import "../../src/client/components/custom-canvases/stages/stages.scss";
-@import "../../src/client/components/custom-canvases/stages-card-node/stages-card-node.scss";
-@import "../../src/client/components/custom-canvases/explain/explain.scss";
-@import "../../src/client/components/custom-canvases/explain2/explain2.scss";
-@import "../../src/client/components/custom-canvases/flows/flows.scss";
-@import "../../src/client/components/custom-canvases/streams/streams.scss";
-@import "../../src/client/components/custom-canvases/logic/logic.scss";
-@import "../../src/client/components/custom-canvases/read-only/read-only.scss";
-@import "../../src/client/components/custom-canvases/progress/progress.scss";
+@import "../../src/styles/custom-canvases.scss";
 @import "../../src/styles/canvas-customization.scss";
 @import "../../src/styles/sidepanel.scss";
 @import "../../src/styles/App.scss";

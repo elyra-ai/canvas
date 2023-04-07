@@ -33,6 +33,10 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
+
+import React from "react";
+import ReactDOM from "react-dom";
+
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -891,6 +895,8 @@ export default class SVGCanvasRenderer {
 		// label or the default node width.
 		const ghostAreaWidth = Math.max(this.nodeLayout.labelWidth, node.width);
 
+		let xOffset = 0;
+
 		// Remove any existing SVG object from the div
 		ghostDivSel
 			.selectAll(".d3-ghost-svg")
@@ -917,61 +923,64 @@ export default class SVGCanvasRenderer {
 			.attr("width", node.width)
 			.attr("height", node.height);
 
-		ghostGrp
-			.append(nodeImageType)
-			.attr("class", "d3-node-image")
-			.each(function() { that.setNodeImageContent(this, node); })
-			.attr("x", this.nodeUtils.getNodeImagePosX(node))
-			.attr("y", this.nodeUtils.getNodeImagePosY(node))
-			.attr("width", this.nodeUtils.getNodeImageWidth(node))
-			.attr("height", this.nodeUtils.getNodeImageHeight(node));
+		if (!this.nodeLayout.reactObject) {
+			ghostGrp
+				.append(nodeImageType)
+				.attr("class", "d3-node-image")
+				.each(function() { that.setNodeImageContent(this, node); })
+				.attr("x", this.nodeUtils.getNodeImagePosX(node))
+				.attr("y", this.nodeUtils.getNodeImagePosY(node))
+				.attr("width", this.nodeUtils.getNodeImageWidth(node))
+				.attr("height", this.nodeUtils.getNodeImageHeight(node));
 
-		const fObject = ghostGrp
-			.append("foreignObject")
-			.attr("x", this.nodeUtils.getNodeLabelPosX(node))
-			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
-			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
-			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", "d3-foreign-object-ghost-label");
+			const fObject = ghostGrp
+				.append("foreignObject")
+				.attr("x", this.nodeUtils.getNodeLabelPosX(node))
+				.attr("y", this.nodeUtils.getNodeLabelPosY(node))
+				.attr("width", this.nodeUtils.getNodeLabelWidth(node))
+				.attr("height", this.nodeUtils.getNodeLabelHeight(node))
+				.attr("class", "d3-foreign-object-ghost-label");
 
-		const fObjectDiv = fObject
-			.append("xhtml:div")
-			.attr("class", this.nodeUtils.getNodeLabelClass(node));
+			const fObjectDiv = fObject
+				.append("xhtml:div")
+				.attr("class", this.nodeUtils.getNodeLabelClass(node));
 
-		const fObjectSpan = fObjectDiv
-			.append("xhtml:span")
-			.html(node.label);
+			const fObjectSpan = fObjectDiv
+				.append("xhtml:span")
+				.html(node.label);
 
-		// At the time of writing, Firefox takes the ghost image from only those
-		// objects that are visible (ignoring any invisible objects like the div
-		// and SVG area) consequently we position the node and label so the label
-		// (if bigger than the node width) is positioned up against the left edge
-		// of the invisible div and SVG area. If the label is shorter than the node
-		// width, the node is positioned up against the left edge of the SVG. We do
-		// this by translating the group object in the x direction.
+			// At the time of writing, Firefox takes the ghost image from only those
+			// objects that are visible (ignoring any invisible objects like the div
+			// and SVG area) consequently we position the node and label so the label
+			// (if bigger than the node width) is positioned up against the left edge
+			// of the invisible div and SVG area. If the label is shorter than the node
+			// width, the node is positioned up against the left edge of the SVG. We do
+			// this by translating the group object in the x direction.
 
-		// First calculate the display width of the label. The span will be the
-		// full text but it may be constricted by the label width in the layout.
-		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
-		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
-		const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
+			// First calculate the display width of the label. The span will be the
+			// full text but it may be constricted by the label width in the layout.
+			const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
+			const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
+			const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
 
-		// Next calculate the amount, if any, the label protrudes beyond the edge
-		// of the node width and move the ghost group by that amount.
-		const xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
-		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
+			// Next calculate the amount, if any, the label protrudes beyond the edge
+			// of the node width and move the ghost group by that amount.
+			xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
 
-		// If the label is center justified, restrict the label width to the
-		// display amount and adjust the x coordinate to compensate for the change
-		// in width.
-		if (node.layout.labelAlign === "center") {
-			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+			// If the label is center justified, restrict the label width to the
+			// display amount and adjust the x coordinate to compensate for the change
+			// in width.
+			if (node.layout.labelAlign === "center") {
+				const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
 
-			fObject
-				.attr("width", labelDisplayLength)
-				.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
-			fObjectDiv.attr("width", labelDisplayLength);
+				fObject
+					.attr("width", labelDisplayLength)
+					.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+				fObjectDiv.attr("width", labelDisplayLength);
+			}
 		}
+
+		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
 
 		// Get the amount the actual browser page is 'zoomed'. This is differet
 		// to the zoom amount for the canvas objects.
@@ -2672,7 +2681,9 @@ export default class SVGCanvasRenderer {
 		selection
 			.data(data, (d) => d.id)
 			.join(
-				(enter) => this.createNodes(enter)
+				(enter) => this.createNodes(enter),
+				null,
+				(remove) => this.removeNodes(remove)
 			)
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
@@ -2705,9 +2716,14 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-node-selection-highlight");
 
 		// Node Body
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.nodeShapeDisplay)
 			.append("path")
 			.attr("class", "d3-node-body-outline");
+
+		// Optional foreign object to contain a React object
+		newNodeGroups.filter((d) => d.layout.reactObject)
+			.append("foreignObject")
+			.attr("class", "d3-foreign-object-react-node");
 
 		// Node Image
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
@@ -2720,7 +2736,7 @@ export default class SVGCanvasRenderer {
 			});
 
 		// Node Label
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.labelDisplay)
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-node-label")
 			.call(this.attachNodeLabelListeners.bind(this))
@@ -2753,6 +2769,15 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
+
+		// Optional foreign object to contain a React object
+		joinedNodeGrps.selectChildren(".d3-foreign-object-react-node")
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("width", (d) => d.width)
+			.attr("height", (d) => d.height)
+			.attr("x", 0)
+			.attr("y", 0)
+			.each(this.addReactNode.bind(this));
 
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
@@ -2806,6 +2831,36 @@ export default class SVGCanvasRenderer {
 			}
 		});
 		this.logger.logEndTimer("updateNodes");
+	}
+
+	removeNodes(removeSel) {
+		// Remove any foreign objects for react nodes, if necessary.
+		removeSel
+			.selectChildren(".d3-foreign-object-react-node")
+			.selectChildren("div")
+			.each(this.removeReactNode.bind(this));
+
+		// Remove all nodes in the selection.
+		removeSel.remove();
+	}
+
+	addReactNode(d, i, foreignObjects) {
+		ReactDOM.render(
+			<d.layout.reactObject
+				nodeData={d}
+				onClick={this.onClick}
+				isSelected={this.activePipeline.isSelected(d.id)}
+			/>,
+			foreignObjects[i]
+		);
+	}
+
+	removeReactNode(d, i, foreignObjects) {
+		ReactDOM.unmountComponentAtNode(foreignObjects[i]);
+	}
+
+	onClick() {
+		window.console.log("onClick");
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -6861,7 +6916,8 @@ export default class SVGCanvasRenderer {
 	// "Curve" link to make it look presentable. I know, I tried!
 	getArrowHeadTransform(d) {
 		const angle =
-			this.canvasLayout.linkType === LINK_TYPE_ELBOW
+			this.canvasLayout.linkType === LINK_TYPE_ELBOW ||
+			this.canvasLayout.linkType === LINK_TYPE_CURVE
 				? this.getAngleBasedOnLinkDirection()
 				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 

@@ -1,0 +1,169 @@
+/*
+ * Copyright 2023 Elyra Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* Override styles for react-nodes sample application. */
+.react-nodes {
+
+	.d3-node-group {
+		.d3-node-body-outline {
+			fill: transparent;
+			stroke: transparent;
+		}
+
+		.d3-node-selection-highlight[data-selected="yes"] {
+			stroke: $ui-05;
+			stroke-dasharray: 4, 4;
+			stroke-width: 1;
+			fill: transparent;
+			pointer-events: none;
+		}
+
+		.d3-node-port-output {
+			opacity: 0;
+			transform: translateX(-8px);
+			transition: opacity 0.1s cubic-bezier(0.4, 0.14, 0.3, 1), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			transition-delay: 0.125s;
+		}
+
+		.d3-node-ellipsis-group {
+			.d3-node-ellipsis {
+				fill: $icon-01;
+			}
+
+			.d3-node-ellipsis-background {
+				fill: #FFFFFF;
+			}
+
+			&:hover {
+				.d3-node-ellipsis-background {
+					fill: $ui-03;
+				}
+			}
+		}
+
+		// Set the outline/background for decorations. This will only affect the
+		// zoom-in decorations on supernode since that is th eonly one with an
+		// outline.
+		.d3-node-dec-group {
+			.d3-node-dec-outline {
+				fill: transparent;
+				stroke-width: 0;
+			}
+
+			.d3-node-dec-image[data-id*="supernode-zoom"] {
+				display: none;
+				fill: transparent;
+				stroke-width: 0;
+			}
+		}
+
+		/* Hover over d3-node-group */
+		&:hover {
+			.d3-node-port-output {
+				opacity: 1;
+				transform: translateX(0);
+				transition: opacity 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				transition-delay: 0.125s;
+			}
+
+			// Set the outline/background for decorations. This will only affect the
+			// zoom-in decorations on supernode since that is the only one with an
+			// outline.
+			.d3-node-dec-group {
+				.d3-node-dec-image[data-id*="supernode-zoom"] {
+					display: block;
+					fill: $icon-01;
+					stroke-width: 0;
+				}
+
+				&:hover {
+					.d3-node-dec-outline {
+						fill: $ui-03;
+						stroke-width: 0;
+					}
+				}
+			}
+		}
+
+		// Align the image and label for an expanded supernode correctly
+		&.d3-node-supernode-expanded {
+			.bx--cc--card-node {
+				padding-top: 2px;
+				.bx--cc--card-node__title {
+					padding-top: 2px;
+				}
+			}
+		}
+	}
+
+	.d3-data-link .d3-link-line,
+	.d3-data-link .d3-link-line-arrow-head {
+		fill: none;
+		stroke: $ui-05;
+		stroke-width: 1;
+	}
+
+	/* For association link */
+	.d3-object-link  .d3-link-line {
+		stroke: $ui-04;
+		stroke-width: 2;
+		fill: none;
+		stroke-dasharray: 5.5;
+	}
+
+	.d3-comment-link  .d3-link-line {
+		stroke: $ui-04;
+		stroke-width: 1;
+		fill: none;
+		stroke-dasharray: 10.5;
+	}
+
+
+	.d3-link-group:hover .d3-link-line,
+	.d3-link-group:hover .d3-link-line-arrow-head {
+		stroke: $interactive-01;
+		stroke-width: 2;
+	}
+
+	.d3-new-connection-line[linkType="nodeLink"] {
+		stroke: $interactive-01;
+		stroke-width: 2;
+		stroke-dasharray: 1 0;
+		fill: none;
+	}
+
+	.d3-comment-selection-highlight[data-selected="yes"] {
+		stroke: $gray-50;
+		stroke-dasharray: 5, 5;
+		stroke-width: 1;
+		fill: transparent;
+		pointer-events: none;
+	}
+
+	/* Decoration Styles */
+
+	.node-cache-empty {
+		fill: $ui-01;
+	}
+
+	.node-cache-full {
+		fill: $ui-01;
+	}
+
+	.node-sql-pushback {
+		fill: $ui-01;
+	}
+}
