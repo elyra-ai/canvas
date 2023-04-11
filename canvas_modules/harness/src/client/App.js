@@ -2361,17 +2361,17 @@ class App extends React.Component {
 						<span className="harness-version">{"v" + CommonCanvasPackage.version}</span>
 					</li>
 					<li className="harness-navbar-li harness-nav-divider" data-tip={consoleLabel}>
-						<a onClick={this.openConsole.bind(this) } aria-label={consoleLabel}>
+						<a onClick={this.openConsole.bind(this) }>
 							<Isvg src={listview32} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tip={downloadFlowLabel}>
-						<a onClick={this.downloadPipelineFlow.bind(this) } aria-label={downloadFlowLabel}>
+						<a onClick={this.downloadPipelineFlow.bind(this) }>
 							<Isvg src={download32} />
 						</a>
 					</li>
 					<li className="harness-navbar-li" data-tip={downloadPaletteLabel}>
-						<a onClick={this.downloadPalette.bind(this) } aria-label={downloadPaletteLabel}>
+						<a onClick={this.downloadPalette.bind(this) }>
 							<Isvg src={download32} />
 						</a>
 					</li>
@@ -2379,17 +2379,17 @@ class App extends React.Component {
 						{breadcrumbs}
 					</li>
 					<li id="harness-action-bar-sidepanel-api" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={apiLabel}>
-						<a onClick={this.sidePanelAPI.bind(this) } aria-label={apiLabel}>
+						<a onClick={this.sidePanelAPI.bind(this) }>
 							<Isvg src={api32} />
 						</a>
 					</li>
 					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
-						<a onClick={this.sidePanelModal.bind(this) } aria-label={commonPropertiesModalLabel}>
+						<a onClick={this.sidePanelModal.bind(this) }>
 							<Isvg src={template32} />
 						</a>
 					</li>
 					<li id="harness-action-bar-sidepanel-canvas" className="harness-navbar-li harness-nav-divider harness-action-bar-sidepanel" data-tip={commonCanvasLabel}>
-						<a onClick={this.sidePanelCanvas.bind(this) } aria-label={commonCanvasLabel}>
+						<a onClick={this.sidePanelCanvas.bind(this) }>
 							<Isvg src={justify32} />
 						</a>
 					</li>
