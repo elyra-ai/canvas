@@ -13,7 +13,7 @@
 		"heading": false,
 		"light": true,
 		"showRequiredIndicator": true,
-		"useEditorSize": "unset",
+		"initialEditorSize": "unset",
 		"conditionHiddenPropertyHandling": "null",
 		"conditionDisabledPropertyHandling": "null",
 		"returnValueFiltering": "",
@@ -103,7 +103,7 @@
 			"type": "boolean"
 		},
 		{
-			"id": "useEditorSize",
+			"id": "initialEditorSize",
 			"enum": [
 				"unset",
 				"small",
@@ -296,7 +296,7 @@
 				"control": "toggle"
 			},
 			{
-				"parameter_ref": "useEditorSize",
+				"parameter_ref": "initialEditorSize",
 				"label": {
 					"default": "Select editor size"
 				}
@@ -572,7 +572,7 @@
 							"heading",
 							"light",
 							"showRequiredIndicator",
-							"useEditorSize",
+							"initialEditorSize",
 							"conditionHiddenPropertyHandling",
 							"conditionDisabledPropertyHandling",
 							"returnValueFiltering",

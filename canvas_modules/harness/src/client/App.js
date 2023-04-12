@@ -227,14 +227,29 @@ class App extends React.Component {
 			propertiesInfo2: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			trimSpaces: true,
+			propertiesValidationHandler: true,
+			// Common properties configurable options in the sidepanel
 			propertiesContainerType: PROPERTIES_FLYOUT,
-			displayAdditionalComponents: false,
+			propertiesSchemaValidation: true,
+			applyPropertiesWithoutEdit: false,
 			applyOnBlur: false,
+			convertValueDataTypes: false,
 			disableSaveOnRequiredErrors: true,
+			expressionBuilder: true,
+			trimSpaces: true,
+			displayAdditionalComponents: false,
+			heading: false,
+			light: true,
+			showRequiredIndicator: true,
+			initialEditorSize: "unset",
+			conditionHiddenPropertyHandling: "null",
+			conditionDisabledPropertyHandling: "null",
+			returnValueFiltering: "[]", // parse to array before passing to config
+			disableRowMoveButtonsPropertyIds: "{ \"name\": \"parameterName\"}",
+			maxLengthForMultiLineControls: 1024,
+			maxLengthForSingleLineControls: 128,
 			addRemoveRowsPropertyId: "{ \"name\": \"parameterName\"}",
 			addRemoveRowsEnabled: true,
-			convertValueDataTypes: false,
 			hideEditButtonPropertyId: "{ \"name\": \"parameterName\"}",
 			hideEditButton: false,
 			tableButtonEnabledPropertyId: "{ \"name\": \"parameterName\"}",
@@ -242,16 +257,8 @@ class App extends React.Component {
 			tableButtonEnabled: true,
 			staticRowsPropertyId: "{ \"name\": \"parameterName\"}",
 			staticRowsIndexes: "",
-			disableRowMoveButtonsPropertyIds: "{ \"name\": \"parameterName\"}",
 			disableWideFlyoutPrimaryButtonForPanelId: "{ \"name\": \"panelName\"}",
 			wideFlyoutPrimaryButtonDisabled: false,
-			expressionBuilder: true,
-			heading: false,
-			light: true,
-			showRequiredIndicator: true,
-			propertiesSchemaValidation: true,
-			applyPropertiesWithoutEdit: false,
-			propertiesValidationHandler: true,
 
 			apiSelectedOperation: "",
 			selectedPropertiesDropdownFile: "",
@@ -321,39 +328,14 @@ class App extends React.Component {
 
 		this.setStateValue = this.setStateValue.bind(this);
 		this.getStateValue = this.getStateValue.bind(this);
-		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
-		this.useSaveButtonDisable = this.useSaveButtonDisable.bind(this);
-		this.useExpressionBuilder = this.useExpressionBuilder.bind(this);
-		this.useDisplayAdditionalComponents = this.useDisplayAdditionalComponents.bind(this);
-		this.useHeading = this.useHeading.bind(this);
-		this.setTrimSpaces = this.setTrimSpaces.bind(this);
-		this.useLightOption = this.useLightOption.bind(this);
-		this.setShowRequiredIndicator = this.setShowRequiredIndicator.bind(this);
-		this.useEditorSize = this.useEditorSize.bind(this);
 		this.setDisableRowMoveButtons = this.setDisableRowMoveButtons.bind(this);
-		this.setDisableRowMoveButtonsPropertyIds = this.setDisableRowMoveButtonsPropertyIds.bind(this);
-		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
-		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
 		this.setHideEditButton = this.setHideEditButton.bind(this);
-		this.setHideEditButtonDisabled = this.setHideEditButtonDisabled.bind(this);
-		this.setHideEditButtonPropertyId = this.setHideEditButtonPropertyId.bind(this);
-		this.setTableButtonPropertyId = this.setTableButtonPropertyId.bind(this);
-		this.setTableButtonId = this.setTableButtonId.bind(this);
-		this.setTableButtonIdEnabled = this.setTableButtonIdEnabled.bind(this);
 		this.setTableButtonEnabled = this.setTableButtonEnabled.bind(this);
-		this.setStaticRowsPropertyId = this.setStaticRowsPropertyId.bind(this);
-		this.setStaticRowsIndexes = this.setStaticRowsIndexes.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
-		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
-		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
-		this.setDisableWideFlyoutPrimaryButtonForPanelId = this.setDisableWideFlyoutPrimaryButtonForPanelId.bind(this);
-		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
-		this.useConvertValueDataTypes = this.useConvertValueDataTypes.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
-		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
@@ -389,18 +371,14 @@ class App extends React.Component {
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog2 = this.closePropertiesEditorDialog2.bind(this);
 		this.setPropertiesDropdownSelect = this.setPropertiesDropdownSelect.bind(this);
-		this.enablePropertiesSchemaValidation = this.enablePropertiesSchemaValidation.bind(this);
-		this.enableApplyPropertiesWithoutEdit = this.enableApplyPropertiesWithoutEdit.bind(this);
-		this.setConditionHiddenPropertyHandling = this.setConditionHiddenPropertyHandling.bind(this);
-		this.setConditionDisabledPropertyHandling = this.setConditionDisabledPropertyHandling.bind(this);
 		this.validateProperties = this.validateProperties.bind(this);
+		this.setPropertiesConfigOption = this.setPropertiesConfigOption.bind(this);
 		// properties callbacks
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.buttonHandler = this.buttonHandler.bind(this);
 		this.buttonIconHandler = this.buttonIconHandler.bind(this);
 		this.validationHandler = this.validationHandler.bind(this);
 		this.titleChangeHandler = this.titleChangeHandler.bind(this);
-		this.enablePropertiesValidationHandler = this.enablePropertiesValidationHandler.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
@@ -408,7 +386,6 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
-		this.setReturnValueFiltering = this.setReturnValueFiltering.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -875,14 +852,6 @@ class App extends React.Component {
 		this.log("Set new node decorations", { nodeId: nodeId, newDecorations: newDecs });
 	}
 
-	setConditionHiddenPropertyHandling(value) {
-		this.setState({ conditionHiddenPropertyHandling: value });
-	}
-
-	setConditionDisabledPropertyHandling(value) {
-		this.setState({ conditionDisabledPropertyHandling: value });
-	}
-
 	setLinkDecorations(linkId, newDecorations) {
 		let newDecs = JSON.parse(newDecorations);
 		if (isEmpty(newDecs)) {
@@ -897,26 +866,6 @@ class App extends React.Component {
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
 	}
 
-	setMaxLengthForMultiLineControls(maxLengthForMultiLineControls) {
-		this.setState({ maxLengthForMultiLineControls: maxLengthForMultiLineControls });
-		this.log("set maxLengthForMultiLineControls ", maxLengthForMultiLineControls);
-	}
-
-	setMaxLengthForSingleLineControls(maxLengthForSingleLineControls) {
-		this.setState({ maxLengthForSingleLineControls: maxLengthForSingleLineControls });
-		this.log("set maxLengthForSingleLineControls ", maxLengthForSingleLineControls);
-	}
-
-	// Textfield to set the propertyId for addRemoveRows
-	setAddRemoveRowsPropertyId(propertyId) {
-		this.setState({ addRemoveRowsPropertyId: propertyId });
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setAddRemoveRowsEnabled(enabled) {
-		this.setState({ addRemoveRowsEnabled: enabled });
-	}
-
 	// Button to call propertiesController to set addRemoveRows
 	setAddRemoveRows() {
 		if (this.propertiesController) {
@@ -927,14 +876,6 @@ class App extends React.Component {
 				console.error(ex);
 			}
 		}
-	}
-
-	setHideEditButtonPropertyId(propertyId) {
-		this.setState({ hideEditButtonPropertyId: propertyId });
-	}
-
-	setHideEditButtonDisabled(disabled) {
-		this.setState({ hideEditButton: disabled });
 	}
 
 	setHideEditButton() {
@@ -948,21 +889,6 @@ class App extends React.Component {
 		}
 	}
 
-	// Textfield to enter the propertyId for custom table buttons
-	setTableButtonPropertyId(propertyId) {
-		this.setState({ tableButtonEnabledPropertyId: propertyId });
-	}
-
-	// Textfield to enter the buttonId for custom table buttons
-	setTableButtonId(buttonId) {
-		this.setState({ tableButtonEnabledButtonId: buttonId });
-	}
-
-	// Toggle to set addRemoveRows enabled or disabled
-	setTableButtonIdEnabled(enabled) {
-		this.setState({ tableButtonEnabled: enabled });
-	}
-
 	// Button to call propertiesController to setTableButtonEnabled
 	setTableButtonEnabled() {
 		if (this.propertiesController) {
@@ -973,16 +899,6 @@ class App extends React.Component {
 				console.error(ex);
 			}
 		}
-	}
-
-	// Textfield to set the propertyId for staticRows
-	setStaticRowsPropertyId(propertyId) {
-		this.setState({ staticRowsPropertyId: propertyId });
-	}
-
-	// Toggle to set staticRows enabled or disabled
-	setStaticRowsIndexes(indexes) {
-		this.setState({ staticRowsIndexes: indexes });
 	}
 
 	// Button to call propertiesController to set staticRows
@@ -998,16 +914,6 @@ class App extends React.Component {
 		}
 	}
 
-	// Textfield to disable Ok button for given summary panel Id
-	setDisableWideFlyoutPrimaryButtonForPanelId(panelId) {
-		this.setState({ disableWideFlyoutPrimaryButtonForPanelId: panelId });
-	}
-
-	// Toggle to set OK button enabled or disabled
-	setWideFlyoutPrimaryButtonDisabled(disabled) {
-		this.setState({ wideFlyoutPrimaryButtonDisabled: disabled });
-	}
-
 	// Button to call propertiesController to set addRemoveRows
 	disableWideFlyoutPrimaryButton() {
 		if (this.propertiesController) {
@@ -1018,10 +924,6 @@ class App extends React.Component {
 				console.error(ex);
 			}
 		}
-	}
-
-	useConvertValueDataTypes(enabled) {
-		this.setState({ convertValueDataTypes: enabled });
 	}
 
 	initLocale() {
@@ -1303,66 +1205,16 @@ class App extends React.Component {
 		JavascriptFileDownload(palette, "palette.json");
 	}
 
-	useApplyOnBlur(enabled) {
-		this.setState({ applyOnBlur: enabled });
-		if (enabled) {
-			this.setState({ disableSaveOnRequiredErrors: false });
+	setPropertiesConfigOption(option, value) {
+		const newState = {};
+		newState[option] = value;
+
+		if (option === "applyOnBlur") {
+			newState.disableSaveOnRequiredErrors = false;
 		}
-		this.log("apply changes on blur", enabled);
-	}
 
-	useSaveButtonDisable(disabled) {
-		this.setState({ disableSaveOnRequiredErrors: disabled });
-		this.log("save button disabled", disabled);
-	}
-
-	useExpressionBuilder(enabled) {
-		this.setState({ expressionBuilder: enabled });
-		this.log("use expression builder", enabled);
-	}
-
-	useDisplayAdditionalComponents(enabled) {
-		this.setState({ displayAdditionalComponents: enabled });
-		this.log("additional components display", enabled);
-	}
-
-	usePropertiesContainerType(type) {
-		this.setState({ propertiesContainerType: type });
-		this.log("set properties container", type);
-	}
-
-	useHeading(enabled) {
-		this.setState({ heading: enabled });
-		this.log("show heading", enabled);
-	}
-
-	useLightOption(enabled) {
-		this.setState({ light: enabled });
-		this.log("light option", enabled);
-	}
-
-	setShowRequiredIndicator(enabled) {
-		this.setState({ showRequiredIndicator: enabled });
-		this.log("show Required Indicator", enabled);
-	}
-
-	setReturnValueFiltering(values) {
-		this.setState({ returnValueFiltering: values });
-		this.log("returnValueFiltering", values);
-	}
-
-	setTrimSpaces(enabled) {
-		this.setState({ trimSpaces: enabled });
-		this.log("trim spaces", enabled);
-	}
-
-	useEditorSize(editorSize) {
-		this.setState({ initialEditorSize: editorSize });
-		this.log("set editor size ", editorSize);
-	}
-
-	setDisableRowMoveButtonsPropertyIds(propertyIds) {
-		this.setState({ disableRowMoveButtonsPropertyIds: propertyIds });
+		this.setState(newState);
+		this.log("set properties option", newState);
 	}
 
 	setDisableRowMoveButtons() {
@@ -1881,17 +1733,6 @@ class App extends React.Component {
 		}
 	}
 
-	enablePropertiesSchemaValidation() {
-		this.setState({ propertiesSchemaValidation: !this.state.propertiesSchemaValidation });
-	}
-
-	enableApplyPropertiesWithoutEdit() {
-		this.setState({ applyPropertiesWithoutEdit: !this.state.applyPropertiesWithoutEdit });
-	}
-	enablePropertiesValidationHandler() {
-		this.setState({ propertiesValidationHandler: !this.state.propertiesValidationHandler });
-	}
-
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -2095,23 +1936,30 @@ class App extends React.Component {
 	}
 
 	getPropertiesConfig() {
+		let returnValueFilters = this.state.returnValueFiltering;
+		try {
+			returnValueFilters = JSON.parse(this.state.returnValueFiltering);
+		} catch (ex) {
+			console.error(ex);
+		}
+
 		return {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
-			applyOnBlur: this.state.applyOnBlur,
-			trimSpaces: this.state.trimSpaces,
-			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			heading: this.state.heading,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
+			applyOnBlur: this.state.applyOnBlur,
+			convertValueDataTypes: this.state.convertValueDataTypes,
+			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
+			trimSpaces: this.state.trimSpaces,
+			heading: this.state.heading,
+			showRequiredIndicator: this.state.showRequiredIndicator,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
+			returnValueFiltering: returnValueFilters,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
-			convertValueDataTypes: this.state.convertValueDataTypes,
-			showRequiredIndicator: this.state.showRequiredIndicator,
-			locale: this.locale,
-			returnValueFiltering: this.state.returnValueFiltering
+			locale: this.locale
 		};
 	}
 
@@ -2655,84 +2503,54 @@ class App extends React.Component {
 		};
 
 		const sidePanelPropertiesConfig = {
+			setPropertiesConfigOption: this.setPropertiesConfigOption,
 			closePropertiesEditorDialog: this.closePropertiesEditorDialog,
 			openPropertiesEditorDialog: this.openPropertiesEditorDialog,
 			validateProperties: this.validateProperties,
 			setPropertiesJSON: this.setPropertiesJSON,
-			showPropertiesDialog: this.state.showPropertiesDialog,
-			usePropertiesContainerType: this.usePropertiesContainerType,
-			propertiesContainerType: this.state.propertiesContainerType,
 			closeSidePanelModal: this.closeSidePanelModal,
+			showPropertiesDialog: this.state.showPropertiesDialog,
+			propertiesContainerType: this.state.propertiesContainerType,
 			applyOnBlur: this.state.applyOnBlur,
 			trimSpaces: this.state.trimSpaces,
-			setTrimSpaces: this.setTrimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
-			useApplyOnBlur: this.useApplyOnBlur,
-			useSaveButtonDisable: this.useSaveButtonDisable,
 			expressionBuilder: this.state.expressionBuilder,
-			useExpressionBuilder: this.useExpressionBuilder,
 			displayAdditionalComponents: this.state.displayAdditionalComponents,
-			useDisplayAdditionalComponents: this.useDisplayAdditionalComponents,
 			heading: this.state.heading,
-			useHeading: this.useHeading,
 			light: this.state.light,
-			useLightOption: this.useLightOption,
 			showRequiredIndicator: this.state.showRequiredIndicator,
-			setShowRequiredIndicator: this.setShowRequiredIndicator,
-			setReturnValueFiltering: this.setReturnValueFiltering,
 			returnValueFiltering: this.state.returnValueFiltering,
-			useEditorSize: this.useEditorSize,
 			initialEditorSize: this.state.initialEditorSize,
-			setDisableRowMoveButtonsPropertyIds: this.setDisableRowMoveButtonsPropertyIds,
 			setDisableRowMoveButtons: this.setDisableRowMoveButtons,
 			disableRowMoveButtonsPropertyIds: this.state.disableRowMoveButtonsPropertyIds,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
-			hideEditButtonEnabled: this.state.hideEditButton,
-			tableButtonEnabled: this.state.tableButtonEnabled,
-			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
 			addRemoveRowsPropertyId: this.state.addRemoveRowsPropertyId,
-			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
-			setHideEditButtonEnabled: this.setHideEditButtonDisabled,
-			setHideEditButton: this.setHideEditButton,
-			setHideEditButtonPropertyId: this.setHideEditButtonPropertyId,
+			hideEditButtonEnabled: this.state.hideEditButton,
 			hideEditButtonPropertyId: this.state.hideEditButtonPropertyId,
-			setTableButtonPropertyId: this.setTableButtonPropertyId,
+			setHideEditButton: this.setHideEditButton,
+			tableButtonEnabled: this.state.tableButtonEnabled,
 			tableButtonEnabledPropertyId: this.state.tableButtonEnabledPropertyId,
-			setTableButtonId: this.setTableButtonId,
-			setTableButtonIdEnabled: this.setTableButtonIdEnabled,
-			setTableButtonEnabled: this.setTableButtonEnabled,
 			tableButtonEnabledButtonId: this.state.tableButtonEnabledButtonId,
-			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
+			setTableButtonEnabled: this.setTableButtonEnabled,
 			staticRowsPropertyId: this.state.staticRowsPropertyId,
-			setStaticRowsIndexes: this.setStaticRowsIndexes,
 			staticRowsIndexes: this.state.staticRowsIndexes,
 			setStaticRows: this.setStaticRows,
-			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
-			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
 			setPropertiesDropdownSelect: this.setPropertiesDropdownSelect,
-			enablePropertiesSchemaValidation: this.enablePropertiesSchemaValidation,
 			propertiesSchemaValidation: this.state.propertiesSchemaValidation,
-			enableApplyPropertiesWithoutEdit: this.enableApplyPropertiesWithoutEdit,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
-			setConditionHiddenPropertyHandling: this.setConditionHiddenPropertyHandling,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
-			setConditionDisabledPropertyHandling: this.setConditionDisabledPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
-			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
 			propertiesValidationHandler: this.state.propertiesValidationHandler,
 			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
-			setDisableWideFlyoutPrimaryButtonForPanelId: this.setDisableWideFlyoutPrimaryButtonForPanelId,
 			disableWideFlyoutPrimaryButtonForPanelId: this.state.disableWideFlyoutPrimaryButtonForPanelId,
-			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
 			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton,
-			convertValueDataTypes: this.state.convertValueDataTypes,
-			useConvertValueDataTypes: this.useConvertValueDataTypes
+			convertValueDataTypes: this.state.convertValueDataTypes
 		};
 
 		const sidePanelAPIConfig = {
