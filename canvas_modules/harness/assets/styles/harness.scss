@@ -28,7 +28,7 @@ $carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
 
 // Common variables for App.scss and sidepanel.scss
 $harness-header-height: 52px;
-$harness-sidepanel-width: 240px;
+$harness-sidepanel-width: 320px;
 $harness-sidepanel-transition-time: 0.3s;
 
 @import "../../src/client/components/custom-canvases/tables/tables.scss";

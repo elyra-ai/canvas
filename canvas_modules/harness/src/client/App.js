@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console.jsx";
-import SidePanel from "./components/sidepanel.jsx";
+import SidePanel from "./components/sidepanel/sidepanel.jsx";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
@@ -232,17 +232,18 @@ class App extends React.Component {
 			displayAdditionalComponents: false,
 			applyOnBlur: false,
 			disableSaveOnRequiredErrors: true,
-			addRemoveRowsPropertyId: {},
+			addRemoveRowsPropertyId: "{ \"name\": \"parameterName\"}",
 			addRemoveRowsEnabled: true,
 			convertValueDataTypes: false,
-			hideEditButtonPropertyId: {},
+			hideEditButtonPropertyId: "{ \"name\": \"parameterName\"}",
 			hideEditButton: false,
-			tableButtonEnabledPropertyId: {},
+			tableButtonEnabledPropertyId: "{ \"name\": \"parameterName\"}",
 			tableButtonEnabledButtonId: "",
 			tableButtonEnabled: true,
-			staticRowsPropertyId: {},
-			staticRowsIndexes: [],
-			disableWideFlyoutPrimaryButtonForPanelId: {},
+			staticRowsPropertyId: "{ \"name\": \"parameterName\"}",
+			staticRowsIndexes: "",
+			disableRowMoveButtonsPropertyIds: "{ \"name\": \"parameterName\"}",
+			disableWideFlyoutPrimaryButtonForPanelId: "{ \"name\": \"panelName\"}",
 			wideFlyoutPrimaryButtonDisabled: false,
 			expressionBuilder: true,
 			heading: false,
@@ -329,7 +330,8 @@ class App extends React.Component {
 		this.useLightOption = this.useLightOption.bind(this);
 		this.setShowRequiredIndicator = this.setShowRequiredIndicator.bind(this);
 		this.useEditorSize = this.useEditorSize.bind(this);
-		this.disableRowMoveButtons = this.disableRowMoveButtons.bind(this);
+		this.setDisableRowMoveButtons = this.setDisableRowMoveButtons.bind(this);
+		this.setDisableRowMoveButtonsPropertyIds = this.setDisableRowMoveButtonsPropertyIds.bind(this);
 		this.setAddRemoveRowsPropertyId = this.setAddRemoveRowsPropertyId.bind(this);
 		this.setAddRemoveRowsEnabled = this.setAddRemoveRowsEnabled.bind(this);
 		this.setAddRemoveRows = this.setAddRemoveRows.bind(this);
@@ -345,7 +347,7 @@ class App extends React.Component {
 		this.setStaticRows = this.setStaticRows.bind(this);
 		this.setMaxLengthForMultiLineControls = this.setMaxLengthForMultiLineControls.bind(this);
 		this.setMaxLengthForSingleLineControls = this.setMaxLengthForSingleLineControls.bind(this);
-		this.disableWideFlyoutPrimaryButtonForPanelId = this.disableWideFlyoutPrimaryButtonForPanelId.bind(this);
+		this.setDisableWideFlyoutPrimaryButtonForPanelId = this.setDisableWideFlyoutPrimaryButtonForPanelId.bind(this);
 		this.setWideFlyoutPrimaryButtonDisabled = this.setWideFlyoutPrimaryButtonDisabled.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 		this.useConvertValueDataTypes = this.useConvertValueDataTypes.bind(this);
@@ -447,13 +449,13 @@ class App extends React.Component {
 				<Isvg src={BlankCanvasImage} className="harness-empty-image" />
 				<span className="harness-empty-text">
 					<FormattedMessage
-						id={ "canvas.emptyText" }
+						id={"canvas.emptyText"}
 						values={{ br: <br /> }}
 					/>
 				</span>
 				<span className="harness-empty-link"
 					onClick={this.handleEmptyCanvasLinkClick}
-				><FormattedMessage id={ "canvas.emptyLink"} /></span>
+				><FormattedMessage id={"canvas.emptyLink"} /></span>
 			</div>
 		);
 
@@ -613,7 +615,7 @@ class App extends React.Component {
 	}
 
 	getLabel(labelId, defaultLabel) {
-		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
+		return (<FormattedMessage id={labelId} defaultMessage={defaultLabel} />);
 	}
 
 	getPropertyDefName(node) {
@@ -918,7 +920,12 @@ class App extends React.Component {
 	// Button to call propertiesController to set addRemoveRows
 	setAddRemoveRows() {
 		if (this.propertiesController) {
-			this.propertiesController.setAddRemoveRows(this.state.addRemoveRowsPropertyId, this.state.addRemoveRowsEnabled);
+			try {
+				const addRemovePropertyId = JSON.parse(this.state.addRemoveRowsPropertyId);
+				this.propertiesController.setAddRemoveRows(addRemovePropertyId, this.state.addRemoveRowsEnabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
@@ -932,7 +939,12 @@ class App extends React.Component {
 
 	setHideEditButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setHideEditButton(this.state.hideEditButtonPropertyId, this.state.hideEditButton);
+			try {
+				const editButtonPropertyId = JSON.parse(this.state.hideEditButtonPropertyId);
+				this.propertiesController.setHideEditButton(editButtonPropertyId, this.state.hideEditButton);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
@@ -954,7 +966,12 @@ class App extends React.Component {
 	// Button to call propertiesController to setTableButtonEnabled
 	setTableButtonEnabled() {
 		if (this.propertiesController) {
-			this.propertiesController.setTableButtonEnabled(this.state.tableButtonEnabledPropertyId, this.state.tableButtonEnabledButtonId, this.state.tableButtonEnabled);
+			try {
+				const tableButtonPropertyId = JSON.parse(this.state.tableButtonEnabledPropertyId);
+				this.propertiesController.setTableButtonEnabled(tableButtonPropertyId, this.state.tableButtonEnabledButtonId, this.state.tableButtonEnabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
@@ -971,12 +988,18 @@ class App extends React.Component {
 	// Button to call propertiesController to set staticRows
 	setStaticRows() {
 		if (this.propertiesController) {
-			this.propertiesController.updateStaticRows(this.state.staticRowsPropertyId, this.state.staticRowsIndexes);
+			try {
+				const staticRowsPropertyId = JSON.parse(this.state.staticRowsPropertyId);
+				const staticRows = JSON.parse(this.state.staticRowsIndexes);
+				this.propertiesController.updateStaticRows(staticRowsPropertyId, staticRows);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
 	// Textfield to disable Ok button for given summary panel Id
-	disableWideFlyoutPrimaryButtonForPanelId(panelId) {
+	setDisableWideFlyoutPrimaryButtonForPanelId(panelId) {
 		this.setState({ disableWideFlyoutPrimaryButtonForPanelId: panelId });
 	}
 
@@ -988,7 +1011,12 @@ class App extends React.Component {
 	// Button to call propertiesController to set addRemoveRows
 	disableWideFlyoutPrimaryButton() {
 		if (this.propertiesController) {
-			this.propertiesController.setWideFlyoutPrimaryButtonDisabled(this.state.disableWideFlyoutPrimaryButtonForPanelId, this.state.wideFlyoutPrimaryButtonDisabled);
+			try {
+				const wideFlyoutPropertyId = JSON.parse(this.state.disableWideFlyoutPrimaryButtonForPanelId);
+				this.propertiesController.setWideFlyoutPrimaryButtonDisabled(wideFlyoutPropertyId, this.state.wideFlyoutPrimaryButtonDisabled);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
@@ -1333,9 +1361,18 @@ class App extends React.Component {
 		this.log("set editor size ", editorSize);
 	}
 
-	disableRowMoveButtons(propertyIds) {
+	setDisableRowMoveButtonsPropertyIds(propertyIds) {
+		this.setState({ disableRowMoveButtonsPropertyIds: propertyIds });
+	}
+
+	setDisableRowMoveButtons() {
 		if (this.propertiesController) {
-			this.propertiesController.setDisableRowMoveButtons(propertyIds);
+			try {
+				const disableRowMovePropertyIds = JSON.parse(this.state.disableRowMoveButtonsPropertyIds);
+				this.propertiesController.setDisableRowMoveButtons(disableRowMovePropertyIds);
+			} catch (ex) {
+				console.error(ex);
+			}
 		}
 	}
 
@@ -1352,11 +1389,11 @@ class App extends React.Component {
 		// canvas to refresh.
 		// this.log("clickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.selectedDragWithoutSelect &&
-					source.clickType === "SINGLE_CLICK" &&
-					this.canvasController.getSelectedObjectIds().length === 1) ||
-					(!this.state.selectedDragWithoutSelect &&
-						source.clickType === "DOUBLE_CLICK"))) {
+			((this.state.selectedDragWithoutSelect &&
+				source.clickType === "SINGLE_CLICK" &&
+				this.canvasController.getSelectedObjectIds().length === 1) ||
+				(!this.state.selectedDragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
@@ -1370,11 +1407,11 @@ class App extends React.Component {
 		// canvas to refresh.
 		// this.log("extraCanvasClickActionHandler()", source);
 		if (source.objectType === "node" &&
-				((this.state.selectedDragWithoutSelect &&
-					source.clickType === "SINGLE_CLICK" &&
-					this.canvasController2.getSelectedObjectIds().length === 1) ||
-					(!this.state.selectedDragWithoutSelect &&
-						source.clickType === "DOUBLE_CLICK"))) {
+			((this.state.selectedDragWithoutSelect &&
+				source.clickType === "SINGLE_CLICK" &&
+				this.canvasController2.getSelectedObjectIds().length === 1) ||
+				(!this.state.selectedDragWithoutSelect &&
+					source.clickType === "DOUBLE_CLICK"))) {
 			this.editNodeHandler(source.id, source.pipelineId, true);
 		}
 	}
@@ -1513,10 +1550,9 @@ class App extends React.Component {
 		const testAsyncExecution = false; // Set to true to test asynchronous activity
 
 		switch (data.editType) {
-
 		case "editComment": {
-		// Uncomment to play with setting the command data.
-		// 	data.content += " -- Added text";
+			// Uncomment to play with setting the command data.
+			// 	data.content += " -- Added text";
 			break;
 		}
 		case "createSuperNodeExternal":
@@ -1566,7 +1602,7 @@ class App extends React.Component {
 		}
 		case "undo": {
 			if (command && command.data &&
-					command.data.editType === "convertSuperNodeExternalToLocal") {
+				command.data.editType === "convertSuperNodeExternalToLocal") {
 				// App needs to make decision here if this command deletes the
 				// external pipeline flow in the repository.
 				window.alert("Reinstate external pipeline flow.");
@@ -1680,13 +1716,15 @@ class App extends React.Component {
 			decorators.push({
 				className: "supernode-zoom-in",
 				position: "top-left",
-				actionHandler: this.decorationAction.bind(this, node, "supernodeZoomIn") });
+				actionHandler: this.decorationAction.bind(this, node, "supernodeZoomIn")
+			});
 		}
 
 		if (node.cacheState !== "disabled") {
 			decorators.push({
 				className: "cache-" + node.cacheState,
-				position: "top-right" });
+				position: "top-right"
+			});
 		}
 		return decorators;
 	}
@@ -1713,7 +1751,7 @@ class App extends React.Component {
 				const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 				const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 				const propsInfo = {
-					title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 					messages: messages,
 					formData: properties.formData,
 					parameterDef: properties,
@@ -1738,7 +1776,7 @@ class App extends React.Component {
 		if (this.currentEditorId) {
 			// don't apply changes if node has been removed
 			if (this.canvasController.getNode(this.currentEditorId, data.selectedPipelineId) &&
-					this.CommonProperties) {
+				this.CommonProperties) {
 				this.CommonProperties.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog: false });
@@ -1752,7 +1790,7 @@ class App extends React.Component {
 		if (this.currentEditorId2) {
 			// don't apply changes if node has been removed
 			if (this.canvasController2.getNode(this.currentEditorId2, data.selectedPipelineId) &&
-					this.CommonProperties2) {
+				this.CommonProperties2) {
 				this.CommonProperties2.applyPropertiesEditing(false);
 			}
 			this.setState({ showPropertiesDialog2: false });
@@ -1811,7 +1849,7 @@ class App extends React.Component {
 		const additionalComponents = this.state.displayAdditionalComponents ? { "toggle-panel": <AddtlCmptsTest /> } : properties.additionalComponents;
 		const expressionInfo = this.state.expressionBuilder ? ExpressionInfo : null;
 		const propsInfo = {
-			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+			title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
 			formData: properties.formData,
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
@@ -1928,13 +1966,13 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			switch (value) {
-			case "Full" :
+			case "Full":
 				value = "Waning";
 				break;
-			case "Waning" :
+			case "Waning":
 				value = "New";
 				break;
-			case "New" :
+			case "New":
 				value = "Waxing";
 				break;
 			default:
@@ -1946,16 +1984,16 @@ class App extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = propertiesController.getPropertyValue(propertyId);
 			switch (value) {
-			case "Perseids" :
+			case "Perseids":
 				value = "Orionids";
 				break;
-			case "Orionids" :
+			case "Orionids":
 				value = "Leonids";
 				break;
-			case "Leonids" :
+			case "Leonids":
 				value = "Geminids";
 				break;
-			case "Geminids" :
+			case "Geminids":
 				value = "Lyrids";
 				break;
 
@@ -2007,7 +2045,7 @@ class App extends React.Component {
 			<CommonProperties
 				ref={(instance) => {
 					this.CommonProperties = instance;
-				} }
+				}}
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel,
@@ -2042,7 +2080,7 @@ class App extends React.Component {
 			<CommonProperties
 				ref={(instance) => {
 					this.CommonProperties2 = instance;
-				} }
+				}}
 				propertiesInfo={this.state.propertiesInfo2}
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomButtonPanel, CustomDatasetsPanel,
@@ -2256,7 +2294,8 @@ class App extends React.Component {
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
 					{ divider: true },
-					{ action: "custom-loading",
+					{
+						action: "custom-loading",
 						tooltip: "A custom loading!",
 						jsx: (
 							<div style={{ padding: "4px 11px" }}>
@@ -2265,7 +2304,8 @@ class App extends React.Component {
 						)
 					},
 					{ divider: true },
-					{ action: "custom-checkbox",
+					{
+						action: "custom-checkbox",
 						tooltip: "A custom checkbox!",
 						jsx: (
 							<div style={{ padding: "5px 11px" }}>
@@ -2274,7 +2314,8 @@ class App extends React.Component {
 						)
 					},
 					{ divider: true },
-					{ action: "custom-button",
+					{
+						action: "custom-button",
 						tooltip: "A custom button of type primary!",
 						jsx: (
 							<div className="toolbar-custom-button">
@@ -2283,7 +2324,8 @@ class App extends React.Component {
 						)
 					},
 					{ divider: true },
-					{ action: "custom-dropdown",
+					{
+						action: "custom-dropdown",
 						tooltip: () => (this.suppressTooltip ? null : "A drop down using the overflow menu!"),
 						jsx: (
 							<div className="toolbar-custom-button">
@@ -2451,10 +2493,10 @@ class App extends React.Component {
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
-				beforeEditActionHandler= {this.beforeEditActionHandler}
-				editActionHandler= {this.editActionHandler}
-				clickActionHandler= {this.clickActionHandler}
-				decorationActionHandler= {this.decorationActionHandler}
+				beforeEditActionHandler={this.beforeEditActionHandler}
+				editActionHandler={this.editActionHandler}
+				clickActionHandler={this.clickActionHandler}
+				decorationActionHandler={this.decorationActionHandler}
 				selectionChangeHandler={this.selectionChangeHandler}
 				layoutHandler={this.layoutHandler}
 				tipHandler={this.tipHandler}
@@ -2574,8 +2616,8 @@ class App extends React.Component {
 						<CommonCanvas
 							config={commonCanvasConfig2}
 							contextMenuHandler={this.contextMenuHandler}
-							editActionHandler= {this.extraCanvasEditActionHandler}
-							clickActionHandler= {this.extraCanvasClickActionHandler}
+							editActionHandler={this.extraCanvasEditActionHandler}
+							clickActionHandler={this.extraCanvasClickActionHandler}
 							toolbarConfig={this.toolbarConfig}
 							canvasController={this.canvasController2}
 							notificationConfig={this.state.notificationConfig2}
@@ -2638,27 +2680,38 @@ class App extends React.Component {
 			showRequiredIndicator: this.state.showRequiredIndicator,
 			setShowRequiredIndicator: this.setShowRequiredIndicator,
 			setReturnValueFiltering: this.setReturnValueFiltering,
+			returnValueFiltering: this.state.returnValueFiltering,
 			useEditorSize: this.useEditorSize,
-			disableRowMoveButtons: this.disableRowMoveButtons,
+			initialEditorSize: this.state.initialEditorSize,
+			setDisableRowMoveButtonsPropertyIds: this.setDisableRowMoveButtonsPropertyIds,
+			setDisableRowMoveButtons: this.setDisableRowMoveButtons,
+			disableRowMoveButtonsPropertyIds: this.state.disableRowMoveButtonsPropertyIds,
 			addRemoveRowsEnabled: this.state.addRemoveRowsEnabled,
 			hideEditButtonEnabled: this.state.hideEditButton,
 			tableButtonEnabled: this.state.tableButtonEnabled,
 			setAddRemoveRowsPropertyId: this.setAddRemoveRowsPropertyId,
+			addRemoveRowsPropertyId: this.state.addRemoveRowsPropertyId,
 			setAddRemoveRowsEnabled: this.setAddRemoveRowsEnabled,
 			setAddRemoveRows: this.setAddRemoveRows,
 			setHideEditButtonEnabled: this.setHideEditButtonDisabled,
 			setHideEditButton: this.setHideEditButton,
 			setHideEditButtonPropertyId: this.setHideEditButtonPropertyId,
+			hideEditButtonPropertyId: this.state.hideEditButtonPropertyId,
 			setTableButtonPropertyId: this.setTableButtonPropertyId,
+			tableButtonEnabledPropertyId: this.state.tableButtonEnabledPropertyId,
 			setTableButtonId: this.setTableButtonId,
 			setTableButtonIdEnabled: this.setTableButtonIdEnabled,
 			setTableButtonEnabled: this.setTableButtonEnabled,
-			staticRowsIndexes: this.state.staticRowsIndexes,
+			tableButtonEnabledButtonId: this.state.tableButtonEnabledButtonId,
 			setStaticRowsPropertyId: this.setStaticRowsPropertyId,
+			staticRowsPropertyId: this.state.staticRowsPropertyId,
 			setStaticRowsIndexes: this.setStaticRowsIndexes,
+			staticRowsIndexes: this.state.staticRowsIndexes,
 			setStaticRows: this.setStaticRows,
 			setMaxLengthForMultiLineControls: this.setMaxLengthForMultiLineControls,
+			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			setMaxLengthForSingleLineControls: this.setMaxLengthForSingleLineControls,
+			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
 			selectedPropertiesFileCategory: this.state.selectedPropertiesFileCategory,
 			fileChooserVisible: this.state.propertiesFileChooserVisible,
@@ -2674,7 +2727,8 @@ class App extends React.Component {
 			enablePropertiesValidationHandler: this.enablePropertiesValidationHandler,
 			propertiesValidationHandler: this.state.propertiesValidationHandler,
 			wideFlyoutPrimaryButtonDisabled: this.state.wideFlyoutPrimaryButtonDisabled,
-			disableWideFlyoutPrimaryButtonForPanelId: this.disableWideFlyoutPrimaryButtonForPanelId,
+			setDisableWideFlyoutPrimaryButtonForPanelId: this.setDisableWideFlyoutPrimaryButtonForPanelId,
+			disableWideFlyoutPrimaryButtonForPanelId: this.state.disableWideFlyoutPrimaryButtonForPanelId,
 			setWideFlyoutPrimaryButtonDisabled: this.setWideFlyoutPrimaryButtonDisabled,
 			disableWideFlyoutPrimaryButton: this.disableWideFlyoutPrimaryButton,
 			convertValueDataTypes: this.state.convertValueDataTypes,
@@ -2723,7 +2777,7 @@ class App extends React.Component {
 				setStateValue={this.setStateValue}
 				getStateValue={this.getStateValue}
 			/>
-			{ !isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null }
+			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
 			{commonCanvas}
 			{consoleView}
 
