@@ -38,6 +38,10 @@
 
 	&.open {
 		width: $harness-sidepanel-width;
+
+		.properties-title-editor {
+			display: none; // Do not display title within right flyout
+		}
 	}
 }
 

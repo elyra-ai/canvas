@@ -241,7 +241,7 @@ class App extends React.Component {
 			heading: false,
 			light: true,
 			showRequiredIndicator: true,
-			initialEditorSize: "unset",
+			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",
 			returnValueFiltering: "[]", // parse to array before passing to config

@@ -13,7 +13,7 @@
 		"heading": false,
 		"light": true,
 		"showRequiredIndicator": true,
-		"initialEditorSize": "unset",
+		"initialEditorSize": "small",
 		"conditionHiddenPropertyHandling": "null",
 		"conditionDisabledPropertyHandling": "null",
 		"returnValueFiltering": "",
@@ -105,13 +105,12 @@
 		{
 			"id": "initialEditorSize",
 			"enum": [
-				"unset",
 				"small",
 				"medium",
 				"large",
 				"max"
 			],
-			"default": "unset"
+			"default": "small"
 		},
 		{
 			"id": "conditionHiddenPropertyHandling",
@@ -200,12 +199,15 @@
 			{
 				"parameter_ref": "propertiesContainerType",
 				"label": {
-					"default": "Container Type"
+					"default": "containerType"
 				}
 			},
 			{
 				"parameter_ref": "propertiesSchemaValidation",
 				"label": {
+					"default": "schemaValidation"
+				},
+				"description": {
 					"default": "Enable parameterDef schema validation"
 				},
 				"control": "toggle"
@@ -213,6 +215,9 @@
 			{
 				"parameter_ref": "applyPropertiesWithoutEdit",
 				"label": {
+					"default": "applyPropertiesWithoutEdit"
+				},
+				"description": {
 					"default": "Apply properties without changes"
 				},
 				"control": "toggle"
@@ -220,6 +225,9 @@
 			{
 				"parameter_ref": "applyOnBlur",
 				"label": {
+					"default": "applyOnBlur"
+				},
+				"description": {
 					"default": "Apply changes on blur"
 				},
 				"control": "toggle"
@@ -230,8 +238,7 @@
 					"default": "convertValueDataTypes"
 				},
 				"description": {
-					"default": "Convert currentParameter values to data type defined in parameterDef, propertiesConfig option: 'convertValueDataTypes'",
-					"placement": "on_panel"
+					"default": "Convert currentParameter values to data type defined in parameterDef, propertiesConfig option: 'convertValueDataTypes'"
 				},
 				"control": "toggle"
 			},
@@ -241,14 +248,16 @@
 					"default": "disableSaveOnRequiredErrors"
 				},
 				"description": {
-					"default": "Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true",
-					"placement": "on_panel"
+					"default": "Set save button disabled if required properties is empty. Should not be enabled if 'applyOnBlur' is set to true"
 				},
 				"control": "toggle"
 			},
 			{
 				"parameter_ref": "expressionBuilder",
 				"label": {
+					"default": "expressionInfo"
+				},
+				"description": {
 					"default": "Show Expression Builder"
 				},
 				"control": "toggle"
@@ -263,6 +272,9 @@
 			{
 				"parameter_ref": "trimSpaces",
 				"label": {
+					"default": "trimSpaces"
+				},
+				"description": {
 					"default": "Enable trimSpaces"
 				},
 				"control": "toggle"
@@ -270,6 +282,9 @@
 			{
 				"parameter_ref": "displayAdditionalComponents",
 				"label": {
+					"default": "additionalComponents"
+				},
+				"description": {
 					"default": "Display additional components"
 				},
 				"control": "toggle"
@@ -277,6 +292,9 @@
 			{
 				"parameter_ref": "heading",
 				"label": {
+					"default": "heading"
+				},
+				"description": {
 					"default": "Show panel heading (icon and label)"
 				},
 				"control": "toggle"
@@ -284,6 +302,9 @@
 			{
 				"parameter_ref": "light",
 				"label": {
+					"default": "light"
+				},
+				"description": {
 					"default": "Enable light option"
 				},
 				"control": "toggle"
@@ -291,6 +312,9 @@
 			{
 				"parameter_ref": "showRequiredIndicator",
 				"label": {
+					"default": "showRequiredIndicator"
+				},
+				"description": {
 					"default": "Show required label indicator"
 				},
 				"control": "toggle"
@@ -298,30 +322,34 @@
 			{
 				"parameter_ref": "initialEditorSize",
 				"label": {
+					"default": "initialEditorSize"
+				},
+				"description": {
 					"default": "Select editor size"
-				}
+				},
+				"control": "oneofselect"
 			},
 			{
 				"parameter_ref": "conditionHiddenPropertyHandling",
 				"label": {
-					"default": "Select conditionHiddenPropertyHandling"
+					"default": "conditionHiddenPropertyHandling"
 				},
 				"control": "oneofselect"
 			},
 			{
 				"parameter_ref": "conditionDisabledPropertyHandling",
 				"label": {
-					"default": "Select conditionDisabledPropertyHandling"
+					"default": "conditionDisabledPropertyHandling"
 				},
 				"control": "oneofselect"
 			},
 			{
 				"parameter_ref": "returnValueFiltering",
 				"label": {
-					"default": "Filter returned values when applying property changes"
+					"default": "returnValueFiltering"
 				},
 				"description": {
-					"default": "Enter array of values in the format: [1, 4, \"text\"]"
+					"default": "Filter returned values when applying property changes. Enter array of values in the format: [1, 4, \"text\"]"
 				},
 				"place_holder_text": {
 					"default": "[1, 4, \"text\"]"
@@ -330,19 +358,19 @@
 			{
 				"parameter_ref": "disableRowMoveButtonsPropertyIds",
 				"label": {
-					"default": "Disable row move buttons for propertyId array"
+					"default": "setDisableRowMoveButtons"
 				},
 				"description": {
-					"default": "Enter an array of PropertyIds Format: [{\"name\": \"unique_id_for_control\"}]"
+					"default": "Disable row move buttons for propertyId array. Enter an array of PropertyIds Format: [{\"name\": \"unique_id_for_control\"}]"
 				}
 			},
 			{
 				"parameter_ref": "maxLengthForMultiLineControls",
 				"label": {
-					"default": "Maximum characters allowed for multi-line string controls like textarea"
+					"default": "maxLengthForMultiLineControls"
 				},
 				"description": {
-					"default": ""
+					"default": "Maximum characters allowed for multi-line string controls like textarea"
 				},
 				"range": {
 					"min": 0
@@ -351,6 +379,9 @@
 			{
 				"parameter_ref": "maxLengthForSingleLineControls",
 				"label": {
+					"default": "maxLengthForSingleLineControls"
+				},
+				"description": {
 					"default": "Maximum characters allowed for single-line string controls like textfield"
 				},
 				"range": {
@@ -360,6 +391,9 @@
 			{
 				"parameter_ref": "addRemoveRowsPropertyId",
 				"label": {
+					"default": "setAddRemoveRows"
+				},
+				"description": {
 					"default": "Set the propertyId for enabling/disabling addRemoveRows"
 				},
 				"place_holder_text": {
@@ -376,6 +410,9 @@
 			{
 				"parameter_ref": "hideEditButtonPropertyId",
 				"label": {
+					"default": "setHideEditButton"
+				},
+				"description": {
 					"default": "Set the propertyId for hide/show hideEditButton"
 				},
 				"place_holder_text": {
@@ -392,6 +429,9 @@
 			{
 				"parameter_ref": "tableButtonEnabledPropertyId",
 				"label": {
+					"default": "setTableButtonEnabled"
+				},
+				"description": {
 					"default": "Set the propertyId for enabling/disabling a custom table button"
 				},
 				"place_holder_text": {
@@ -417,6 +457,9 @@
 			{
 				"parameter_ref": "staticRowsPropertyId",
 				"label": {
+					"default": "updateStaticRows"
+				},
+				"description": {
 					"default": "Set the propertyId for setting static rows"
 				},
 				"place_holder_text": {
@@ -438,6 +481,9 @@
 			{
 				"parameter_ref": "disableWideFlyoutPrimaryButtonForPanelId",
 				"label": {
+					"default": "setWideFlyoutPrimaryButtonDisabled"
+				},
+				"description": {
 					"default": "Set the summary panel id for enabling/disabling OK button in Wide Flyout"
 				},
 				"place_holder_text": {
@@ -552,34 +598,52 @@
 		],
 		"group_info": [
 			{
-				"id": "properties-controller-actions",
+				"id": "Config Options",
+				"type": "controls",
+				"parameter_refs": [
+					"propertiesContainerType",
+					"propertiesSchemaValidation",
+					"applyPropertiesWithoutEdit",
+					"applyOnBlur",
+					"convertValueDataTypes",
+					"disableSaveOnRequiredErrors",
+					"trimSpaces",
+					"heading",
+					"showRequiredIndicator",
+					"conditionHiddenPropertyHandling",
+					"conditionDisabledPropertyHandling",
+					"returnValueFiltering",
+					"maxLengthForMultiLineControls",
+					"maxLengthForSingleLineControls"
+				]
+			},
+			{
+				"id": "Props info",
+				"type": "controls",
+				"parameter_refs": [
+					"initialEditorSize",
+					"expressionBuilder",
+					"displayAdditionalComponents"
+				]
+			},
+			{
+				"id": "Common Properties Props",
+				"type": "controls",
+				"parameter_refs": [
+					"light"
+				]
+			},
+			{
+				"id": "Harness options",
+				"type": "controls",
+				"parameter_refs": [
+					"enablePropertiesValidationHandler"
+				]
+			},
+			{
+				"id": "Controller Actions",
 				"type": "panels",
 				"group_info": [
-					{
-						"id": "properties-options",
-						"type": "controls",
-						"parameter_refs": [
-							"propertiesContainerType",
-							"propertiesSchemaValidation",
-							"applyPropertiesWithoutEdit",
-							"applyOnBlur",
-							"convertValueDataTypes",
-							"disableSaveOnRequiredErrors",
-							"expressionBuilder",
-							"enablePropertiesValidationHandler",
-							"trimSpaces",
-							"displayAdditionalComponents",
-							"heading",
-							"light",
-							"showRequiredIndicator",
-							"initialEditorSize",
-							"conditionHiddenPropertyHandling",
-							"conditionDisabledPropertyHandling",
-							"returnValueFiltering",
-							"maxLengthForMultiLineControls",
-							"maxLengthForSingleLineControls"
-						]
-					},
 					{
 						"id": "disabled-row-move-buttons-controls",
 						"type": "controls",

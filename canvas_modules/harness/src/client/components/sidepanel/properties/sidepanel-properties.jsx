@@ -103,7 +103,7 @@ export default class SidePanelProperties extends React.Component {
 
 		const propertiesConfig = {
 			containerType: "Custom",
-			rightFlyout: false,
+			rightFlyout: true,
 			applyOnBlur: true
 		};
 
