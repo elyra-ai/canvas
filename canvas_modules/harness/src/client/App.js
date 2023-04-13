@@ -824,7 +824,6 @@ class App extends React.Component {
 		}
 	}
 
-
 	getCanvasInfo() {
 		return this.canvasController.getObjectModel().getCanvasInfoPipeline();
 	}
@@ -864,6 +863,19 @@ class App extends React.Component {
 	getZoomToReveal(nodeId, xOffset, yOffset) {
 		this.log("Zoom object requested");
 		return this.canvasController.getZoomToReveal([nodeId], xOffset, yOffset); // Need to pass node Id in an array
+	}
+
+	// Called by properties sidepanel to set state variables
+	setPropertiesConfigOption(option, value) {
+		const newState = {};
+		newState[option] = value;
+
+		if (option === "applyOnBlur") {
+			newState.disableSaveOnRequiredErrors = false;
+		}
+
+		this.setState(newState);
+		this.log("set properties option", newState);
 	}
 
 	// Button to call propertiesController to set addRemoveRows
@@ -926,6 +938,17 @@ class App extends React.Component {
 		}
 	}
 
+	setDisableRowMoveButtons() {
+		if (this.propertiesController) {
+			try {
+				const disableRowMovePropertyIds = JSON.parse(this.state.disableRowMoveButtonsPropertyIds);
+				this.propertiesController.setDisableRowMoveButtons(disableRowMovePropertyIds);
+			} catch (ex) {
+				console.error(ex);
+			}
+		}
+	}
+
 	initLocale() {
 		const languages = { "en": "en", "eo": "eo" };
 		// Get locale from browser
@@ -960,7 +983,6 @@ class App extends React.Component {
 		this.canvasController.zoomTo(zoomObject);
 		this.log("Zoomed canvas");
 	}
-
 
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
@@ -1203,29 +1225,6 @@ class App extends React.Component {
 		const paletteData = this.getPaletteData();
 		const palette = JSON.stringify(paletteData, null, 2);
 		JavascriptFileDownload(palette, "palette.json");
-	}
-
-	setPropertiesConfigOption(option, value) {
-		const newState = {};
-		newState[option] = value;
-
-		if (option === "applyOnBlur") {
-			newState.disableSaveOnRequiredErrors = false;
-		}
-
-		this.setState(newState);
-		this.log("set properties option", newState);
-	}
-
-	setDisableRowMoveButtons() {
-		if (this.propertiesController) {
-			try {
-				const disableRowMovePropertyIds = JSON.parse(this.state.disableRowMoveButtonsPropertyIds);
-				this.propertiesController.setDisableRowMoveButtons(disableRowMovePropertyIds);
-			} catch (ex) {
-				console.error(ex);
-			}
-		}
 	}
 
 	clickActionHandler(source) {

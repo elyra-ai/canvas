@@ -398,7 +398,8 @@
 				},
 				"place_holder_text": {
 					"default": "{\"name\": \"parameterName\"}"
-				}
+				},
+				"separator": "before"
 			},
 			{
 				"parameter_ref": "addRemoveRowsEnabled",
@@ -417,7 +418,8 @@
 				},
 				"place_holder_text": {
 					"default": "{\"name\": \"parameterName\"}"
-				}
+				},
+				"separator": "before"
 			},
 			{
 				"parameter_ref": "hideEditButton",
@@ -436,7 +438,8 @@
 				},
 				"place_holder_text": {
 					"default": "{\"name\": \"parameterName\"}"
-				}
+				},
+				"separator": "before"
 			},
 			{
 				"parameter_ref": "tableButtonEnabledButtonId",
@@ -464,7 +467,8 @@
 				},
 				"place_holder_text": {
 					"default": "{\"name\": \"parameterName\"}"
-				}
+				},
+				"separator": "before"
 			},
 			{
 				"parameter_ref": "staticRowsIndexes",
@@ -488,7 +492,8 @@
 				},
 				"place_holder_text": {
 					"default": "{\"name\": \"panelId\"}"
-				}
+				},
+				"separator": "before"
 			},
 			{
 				"parameter_ref": "wideFlyoutPrimaryButtonDisabled",

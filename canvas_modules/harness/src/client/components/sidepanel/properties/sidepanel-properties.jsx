@@ -104,7 +104,8 @@ export default class SidePanelProperties extends React.Component {
 		const propertiesConfig = {
 			containerType: "Custom",
 			rightFlyout: true,
-			applyOnBlur: true
+			applyOnBlur: true,
+			enableResize: false
 		};
 
 		const callbacks = {
@@ -238,15 +239,12 @@ export default class SidePanelProperties extends React.Component {
 	}
 
 	propertyListener(data) {
-		console.log("!!! propertyListener " + JSON.stringify(data));
 		const parameter = get(data, "property.name", null);
 		const value = data.value;
 		this.props.propertiesConfig.setPropertiesConfigOption(parameter, value);
 	}
 
 	propertyActionHandler(actionId, appData, data) {
-		console.log("!!! propertyActionHandler " + actionId);
-		console.log("!!! propertyActionHandler " + data.actionCallback);
 		const actionCallback = data.actionCallback;
 		if (actionCallback) {
 			this.props.propertiesConfig[actionCallback]();
@@ -254,7 +252,6 @@ export default class SidePanelProperties extends React.Component {
 	}
 
 	applyPropertyChanges(data, appData, additionalInfo, undoInfo, uiProperties) {
-		// console.log("!!! applyPropertyChanges " + JSON.stringify(data));
 		// No action required, everything will be handled in propertyListener as changes are made
 	}
 
