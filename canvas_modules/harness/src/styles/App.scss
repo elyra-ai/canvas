@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,40 +174,29 @@ $harness-navbar-icon-width: 48px;
 
 /*Console*/
 .harness-app-console {
-	font-size: small;
-	border-top: 1px solid $text-01;
-	background-color: $ui-02;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	transition: height 2s;
+	@include carbon--type-style("code-01");
 	overflow-y: auto;
-	z-index: 1;
-	padding-left: 1em;
-	line-height: 1.1;
+	padding: $spacing-04;
 	word-wrap: break-word;
+	height: 100%;
 }
 
 .harness-console-pretty-json {
-	margin: 0 10px 10px 0;
-	border: 0;
-	border-bottom: 1px dashed $ui-05;
+	margin: 0 $spacing-04 $spacing-04 0;
 }
 
 .harness-console-entry {
-	list-style: none;
-
 	&::before {
-		content: "• ";
-		padding-right: 10px;
+		content: "-";
+		padding-right: $spacing-04;
 	}
 	&:hover {
-		background-color: $ui-03;
+		background-color: $ui-02;
 		cursor: pointer;
 	}
 	&:hover::before {
 		content: "+";
-		padding-right: 12px;
+		padding-right: $spacing-04;
 	}
 }
 

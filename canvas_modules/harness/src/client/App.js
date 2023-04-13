@@ -2329,7 +2329,7 @@ class App extends React.Component {
 				</div>);
 		}
 
-		const bottomPanelContent = this.getTempContent();
+		const bottomPanelContent = this.state.consoleOpened ? <Console logs={this.state.consoleout} /> : this.getTempContent();
 		const topPanelContent = this.getTempContent();
 
 		const rightFlyoutContent = rightFlyoutContentProperties
@@ -2355,7 +2355,7 @@ class App extends React.Component {
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
-				showBottomPanel={this.state.selectedShowBottomPanel}
+				showBottomPanel={this.state.selectedShowBottomPanel || this.state.consoleOpened}
 				topPanelContent={topPanelContent}
 				showTopPanel={this.state.selectedShowTopPanel}
 				canvasController={this.canvasController}
@@ -2570,16 +2570,6 @@ class App extends React.Component {
 			selectedOperation: this.state.apiSelectedOperation
 		};
 
-		let consoleView = null;
-		if (this.state.consoleOpened) {
-			consoleView = (
-				<Console
-					consoleOpened={this.state.consoleOpened}
-					logs={this.state.consoleout}
-				/>
-			);
-		}
-
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
@@ -2596,7 +2586,6 @@ class App extends React.Component {
 			/>
 			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
 			{commonCanvas}
-			{consoleView}
 
 			<ReactTooltip place="bottom" effect="solid" />
 		</div>);

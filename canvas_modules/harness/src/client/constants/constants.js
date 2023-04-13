@@ -26,10 +26,6 @@ function _defineConstant(name, value) {
 }
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("CONSOLE", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "200px"
-});
 
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
