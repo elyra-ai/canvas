@@ -30,7 +30,7 @@ export default class SidePanel extends React.Component {
 
 	render() {
 		if (this.props.openSidepanelCanvas ||
-				this.props.openSidepanelModal ||
+				this.props.openSidepanelProperties ||
 				this.props.openSidepanelAPI) {
 			let view = null;
 
@@ -77,7 +77,7 @@ SidePanel.propTypes = {
 	propertiesConfig: PropTypes.object,
 	apiConfig: PropTypes.object,
 	openSidepanelCanvas: PropTypes.bool,
-	openSidepanelModal: PropTypes.bool,
+	openSidepanelProperties: PropTypes.bool,
 	openSidepanelAPI: PropTypes.bool,
 	selectedPanel: PropTypes.string,
 	log: PropTypes.func,

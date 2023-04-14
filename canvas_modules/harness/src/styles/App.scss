@@ -33,6 +33,10 @@ $harness-navbar-icon-width: 48px;
 	}
 }
 
+.harness-canvas-container.console-panel-open {
+	height: calc(100% - $harness-header-height - $harness-console-height);
+}
+
 .harness-canvas-single {
 	height: 50%;
 }
@@ -100,7 +104,7 @@ $harness-navbar-icon-width: 48px;
 	padding: 0;
 	overflow: hidden;
 	background-color: $ui-01;
-	border-bottom: 2px solid $ui-03;
+	border-bottom: 1px solid $ui-03;
 }
 
 .harness-navbar-li {
@@ -129,7 +133,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-nav-divider {
-	border-left: 2px solid $ui-03;
+	border-left: 1px solid $ui-03;
 }
 
 /* Navbar Breadcrumbs */
@@ -169,34 +173,6 @@ $harness-navbar-icon-width: 48px;
 
 	.harness-pipeline-breadcrumbs-separator {
 		font-size: 13px;
-	}
-}
-
-/*Console*/
-.harness-app-console {
-	@include carbon--type-style("code-01");
-	overflow-y: auto;
-	padding: $spacing-04;
-	word-wrap: break-word;
-	height: 100%;
-}
-
-.harness-console-pretty-json {
-	margin: 0 $spacing-04 $spacing-04 0;
-}
-
-.harness-console-entry {
-	&::before {
-		content: "-";
-		padding-right: $spacing-04;
-	}
-	&:hover {
-		background-color: $ui-02;
-		cursor: pointer;
-	}
-	&:hover::before {
-		content: "+";
-		padding-right: $spacing-04;
 	}
 }
 

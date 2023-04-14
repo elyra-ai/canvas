@@ -42,6 +42,9 @@
 		.properties-title-editor {
 			display: none; // Do not display title within right flyout
 		}
+		.properties-right-flyout {
+			border-left: 0;
+		}
 	}
 }
 

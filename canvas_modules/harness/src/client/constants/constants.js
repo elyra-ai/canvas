@@ -26,7 +26,6 @@ function _defineConstant(name, value) {
 }
 
 // Public Methods ------------------------------------------------------------->
-
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");

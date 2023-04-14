@@ -44,14 +44,14 @@ export default class Console extends React.Component {
 			);
 		});
 
-		return (
-			<div className="harness-app-console">
-				<ul>{logs}</ul>
-			</div>
-		);
+		return (<div className={"harness-app-console " + this.props.classname}>
+			<ul>{logs}</ul>
+		</div>);
 	}
 }
 
 Console.propTypes = {
+	classname: PropTypes.string,
+	consoleOpened: PropTypes.bool,
 	logs: PropTypes.array
 };

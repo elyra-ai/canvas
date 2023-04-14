@@ -26,6 +26,7 @@ import JavascriptFileDownload from "js-file-download";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
+import classNames from "classnames";
 
 import { getMessages } from "../intl/intl-utils";
 import * as HarnessBundles from "../intl/locales";
@@ -51,7 +52,7 @@ import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
 import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
-import Console from "./components/console.jsx";
+import Console from "./components/console/console.jsx";
 import SidePanel from "./components/sidepanel/sidepanel.jsx";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
@@ -145,7 +146,7 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			openSidepanelCanvas: false,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelAPI: false,
 
 			// Common canvas state variables
@@ -586,7 +587,6 @@ class App extends React.Component {
 							that.setPropertiesJSON(res);
 						});
 				}
-				that.closeSidePanelModal();
 			});
 		}
 	}
@@ -1149,7 +1149,7 @@ class App extends React.Component {
 	sidePanelCanvas() {
 		this.setState({
 			openSidepanelCanvas: !this.state.openSidepanelCanvas,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_CANVAS
 		});
@@ -1157,7 +1157,7 @@ class App extends React.Component {
 
 	sidePanelModal() {
 		this.setState({
-			openSidepanelModal: !this.state.openSidepanelModal,
+			openSidepanelProperties: !this.state.openSidepanelProperties,
 			openSidepanelCanvas: false,
 			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_MODAL
@@ -1168,18 +1168,18 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelAPI: !this.state.openSidepanelAPI,
 			openSidepanelCanvas: false,
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			selectedPanel: SIDE_PANEL_API
 		});
 	}
 
 	isSidePanelOpen() {
-		return this.state.openSidepanelCanvas || this.state.openSidepanelModal || this.state.openSidepanelAPI;
+		return this.state.openSidepanelCanvas || this.state.openSidepanelProperties || this.state.openSidepanelAPI;
 	}
 
 	closeSidePanelModal() {
 		this.setState({
-			openSidepanelModal: false,
+			openSidepanelProperties: false,
 			openSidepanelCanvas: false,
 			openSidepanelAPI: false,
 			selectedPanel: null
@@ -2329,7 +2329,7 @@ class App extends React.Component {
 				</div>);
 		}
 
-		const bottomPanelContent = this.state.consoleOpened ? <Console logs={this.state.consoleout} /> : this.getTempContent();
+		const bottomPanelContent = this.getTempContent();
 		const topPanelContent = this.getTempContent();
 
 		const rightFlyoutContent = rightFlyoutContentProperties
@@ -2355,7 +2355,7 @@ class App extends React.Component {
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties || this.state.selectedShowRightFlyout}
 				bottomPanelContent={bottomPanelContent}
-				showBottomPanel={this.state.selectedShowBottomPanel || this.state.consoleOpened}
+				showBottomPanel={this.state.selectedShowBottomPanel}
 				topPanelContent={topPanelContent}
 				showTopPanel={this.state.selectedShowTopPanel}
 				canvasController={this.canvasController}
@@ -2446,39 +2446,33 @@ class App extends React.Component {
 			);
 		}
 
-		const sidePanelStateClass = this.isSidePanelOpen() === false ? "" : " side-panel-open";
-
 		let commonCanvas;
-		if (this.state.selectedExtraCanvasDisplayed === true) {
+		if (this.state.selectedExtraCanvasDisplayed) {
 			const rightFlyoutContent2 = rightFlyoutContentProperties2
 				? rightFlyoutContentProperties2
 				: this.getTempContent();
 
-			commonCanvas = (
-				<div className={"harness-canvas-container double" + sidePanelStateClass}>
-					<div className="harness-canvas-single">
-						{firstCanvas}
-					</div>
-					<div className="harness-canvas-single">
-						<CommonCanvas
-							config={commonCanvasConfig2}
-							contextMenuHandler={this.contextMenuHandler}
-							editActionHandler={this.extraCanvasEditActionHandler}
-							clickActionHandler={this.extraCanvasClickActionHandler}
-							toolbarConfig={this.toolbarConfig}
-							canvasController={this.canvasController2}
-							notificationConfig={this.state.notificationConfig2}
-							rightFlyoutContent={rightFlyoutContent2}
-							showRightFlyout={showRightFlyoutProperties2}
-							selectionChangeHandler={this.selectionChangeHandler2}
-						/>
-					</div>
-				</div>);
-		} else {
-			commonCanvas = (
-				<div className={"harness-canvas-container" + sidePanelStateClass}>
+			commonCanvas = (<React.Fragment>
+				<div className="harness-canvas-single">
 					{firstCanvas}
-				</div>);
+				</div>
+				<div className="harness-canvas-single">
+					<CommonCanvas
+						config={commonCanvasConfig2}
+						contextMenuHandler={this.contextMenuHandler}
+						editActionHandler={this.extraCanvasEditActionHandler}
+						clickActionHandler={this.extraCanvasClickActionHandler}
+						toolbarConfig={this.toolbarConfig}
+						canvasController={this.canvasController2}
+						notificationConfig={this.state.notificationConfig2}
+						rightFlyoutContent={rightFlyoutContent2}
+						showRightFlyout={showRightFlyoutProperties2}
+						selectionChangeHandler={this.selectionChangeHandler2}
+					/>
+				</div>
+			</React.Fragment>);
+		} else {
+			commonCanvas = firstCanvas;
 		}
 
 		const sidePanelCanvasConfig = {
@@ -2570,6 +2564,17 @@ class App extends React.Component {
 			selectedOperation: this.state.apiSelectedOperation
 		};
 
+		let consoleView = null;
+		if (this.state.consoleOpened) {
+			consoleView = (
+				<Console
+					classname={classNames({ "side-panel-open": this.isSidePanelOpen() })}
+					consoleOpened={this.state.consoleOpened}
+					logs={this.state.consoleout}
+				/>
+			);
+		}
+
 		const mainView = (<div id="harness-app-container">
 			{navBar}
 			<SidePanel
@@ -2577,7 +2582,7 @@ class App extends React.Component {
 				propertiesConfig={sidePanelPropertiesConfig}
 				apiConfig={sidePanelAPIConfig}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
-				openSidepanelModal={this.state.openSidepanelModal}
+				openSidepanelProperties={this.state.openSidepanelProperties}
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				selectedPanel={this.state.selectedPanel}
 				log={this.log}
@@ -2585,14 +2590,20 @@ class App extends React.Component {
 				getStateValue={this.getStateValue}
 			/>
 			{!isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null}
-			{commonCanvas}
-
+			<div className={classNames("harness-canvas-container",
+				{ "double": this.state.selectedExtraCanvasDisplayed },
+				{ "side-panel-open": this.isSidePanelOpen() },
+				{ "console-panel-open": this.state.consoleOpened })}
+			>
+				{commonCanvas}
+			</div>
+			{consoleView}
 			<ReactTooltip place="bottom" effect="solid" />
 		</div>);
 
 		return (
 			<IntlProvider locale={this.locale} defaultLocale="en" messages={this.messages}>
-				<div>{mainView}</div>
+				{mainView}
 			</IntlProvider>
 		);
 	}
