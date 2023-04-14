@@ -362,7 +362,7 @@ class ToolTip extends React.Component {
 				onBlur={this.props.showToolTipOnClick ? onBlur : null}
 				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				role={this.props.showToolTipOnClick ? "button" : null}
-				aria-labelledby={`${this.uuid}-${this.props.id}`}
+				aria-labelledby={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
 				aria-expanded={this.props.showToolTipOnClick ? this.state.isTooltipVisible : null}
 				aria-controls={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
 				ref={(ref) => (this.triggerRef = ref)}
