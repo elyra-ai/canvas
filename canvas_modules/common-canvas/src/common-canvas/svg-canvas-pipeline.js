@@ -18,7 +18,7 @@
 import { isEmpty } from "lodash";
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { COMMENT_LINK } from "./constants/canvas-constants";
+import { COMMENT_LINK, NODE_LINK } from "./constants/canvas-constants";
 
 
 export default class SVGCanvasPipeline {
@@ -171,14 +171,20 @@ export default class SVGCanvasPipeline {
 				link.trgNode = this.getNode(link.trgNodeId);
 
 			} else {
+				// For node (port) and association links, we need to set the srcObj
+				// and trgNode field for the link.
 				link.srcObj = this.getNode(link.srcNodeId);
 				link.trgNode = this.getNode(link.trgNodeId);
 
-				if (link.srcObj) {
-					this.setOutputPortConnected(link.srcObj, link.srcNodePortId);
-				}
-				if (link.trgNode) {
-					this.setInputPortConnected(link.trgNode, link.trgNodePortId);
+				// For node (port) links, we need to set the isPosrtConnected field
+				// for each port.
+				if (link.type === NODE_LINK) {
+					if (link.srcObj) {
+						this.setOutputPortConnected(link.srcObj, link.srcNodePortId);
+					}
+					if (link.trgNode) {
+						this.setInputPortConnected(link.trgNode, link.trgNodePortId);
+					}
 				}
 			}
 		});
