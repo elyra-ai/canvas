@@ -34,12 +34,12 @@ Cypress.Commands.add("verifyNoTextOverflow", (propertyId) => {
 });
 
 Cypress.Commands.add("verifyPropertiesFlyoutTitle", (givenTitle) => {
-	cy.get(".properties-title-editor-input input")
+	cy.get(".common-canvas-right-side-items .properties-title-editor-input input")
 		.should("have.value", givenTitle);
 });
 
 Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => {
-	cy.get(".properties-title-editor")
+	cy.get(".common-canvas-right-side-items .properties-title-editor")
 		.find(".bx--form-requirement")
 		.should("have.text", message);
 

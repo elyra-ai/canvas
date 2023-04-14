@@ -54,7 +54,7 @@ describe("Test of custom panels", function() {
 
 function verifySliderDropDown(elements) {
 	cy.get("div[data-id='properties-color']").click();
-	cy.get("#downshift-1-menu > div")
+	cy.get("#downshift-4-menu > div")
 		.should("have.length", elements);
 	cy.get("div[data-id='properties-color']").click();
 }

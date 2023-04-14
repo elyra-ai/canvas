@@ -36,7 +36,7 @@ Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 });
 
 Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
-	cy.get("#harness-action-bar-sidepanel-modal").click();
+	cy.get("#harness-action-bar-sidepanel-properties").click();
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
@@ -295,5 +295,5 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 });
 
 Cypress.Commands.add("toggleApplyOnBlur", () => {
-	cy.get("label[for='harness-sidepanel-applyOnBlur-toggle']").click();
+	cy.get("div[data-id='properties-applyOnBlur'] label.bx--toggle-input__label").click();
 });

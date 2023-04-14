@@ -319,7 +319,7 @@ class App extends React.Component {
 
 		this.setBreadcrumbsDefinition = this.setBreadcrumbsDefinition.bind(this);
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
-		this.sidePanelModal = this.sidePanelModal.bind(this);
+		this.sidePanelProperties = this.sidePanelProperties.bind(this);
 		this.sidePanelAPI = this.sidePanelAPI.bind(this);
 		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
 		this.setCanvasDropdownFile = this.setCanvasDropdownFile.bind(this);
@@ -1155,7 +1155,7 @@ class App extends React.Component {
 		});
 	}
 
-	sidePanelModal() {
+	sidePanelProperties() {
 		this.setState({
 			openSidepanelProperties: !this.state.openSidepanelProperties,
 			openSidepanelCanvas: false,
@@ -2272,8 +2272,8 @@ class App extends React.Component {
 							<Isvg src={api32} />
 						</a>
 					</li>
-					<li id="harness-action-bar-sidepanel-modal" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
-						<a onClick={this.sidePanelModal.bind(this) }>
+					<li id="harness-action-bar-sidepanel-properties" className="harness-navbar-li harness-action-bar-sidepanel" data-tip={commonPropertiesModalLabel}>
+						<a onClick={this.sidePanelProperties.bind(this) }>
 							<Isvg src={template32} />
 						</a>
 					</li>
