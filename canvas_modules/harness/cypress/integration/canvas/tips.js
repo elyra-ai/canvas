@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ describe("Test to check if tips are hidden on scroll", function() {
 			.then((container) => {
 				cy.verifyTip(container, "visible", "Try pressing Increment or Descrement buttons", "bottom");
 			});
-		cy.get(".properties-custom-container")
+		cy.get(".common-canvas-right-side-items .properties-custom-container")
 			.scrollTo("bottom", { ensureScrollable: false });
 		cy.getControlContainerFromName("Integer")
 			.then((container) => {

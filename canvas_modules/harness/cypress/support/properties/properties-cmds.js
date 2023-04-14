@@ -15,7 +15,7 @@
  */
 
 Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
-	cy.get("#harness-action-bar-sidepanel-properties").click();
+	cy.toggleCommonPropertiesSidePanel();
 	cy.get("#common-properties-select-item").select(propertyFileName);
 });
 
@@ -26,7 +26,7 @@ Cypress.Commands.add("toggleCategory", (categoryName) => {
 });
 
 Cypress.Commands.add("saveFlyout", () => {
-	cy.get(".common-canvas-right-side-items" +
+	cy.get(".common-canvas-right-side-items " +
 		".properties-modal-buttons button[data-id='properties-apply-button']").click();
 });
 

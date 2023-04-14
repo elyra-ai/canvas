@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,11 +44,11 @@ Cypress.Commands.add("verifyMessageInPropertiesTitleEditor", (message, type) => 
 		.should("have.text", message);
 
 	if (type === "warning") {
-		cy.get(".properties-title-editor")
+		cy.get(".common-canvas-right-side-items .properties-title-editor")
 			.find(".bx--text-input__field-wrapper--warning")
 			.should("have.length", 1);
 	} else if (type === "error") {
-		cy.get(".properties-title-editor")
+		cy.get(".common-canvas-right-side-items .properties-title-editor")
 			.find(".bx--text-input__field-wrapper")
 			.should("have.attr", "data-invalid", "true");
 	}

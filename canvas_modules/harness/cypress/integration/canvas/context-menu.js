@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ describe("Test of context menu", function() {
 
 		// Test the context menu is pushed upwards when user clicks near bottom of the page
 		cy.rightClickToDisplayContextMenu(1000, 500);
-		cy.verifyContextMenuPosition("1000px", "339px");
+		cy.verifyContextMenuPosition("1000px", "340px");
 
 		// Test the context menu is pushed to the left correctly even when the palette is open
 		cy.clickCanvasAt(1, 1);
