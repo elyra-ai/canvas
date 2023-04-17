@@ -22,7 +22,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { get } from "lodash";
-import { CommonProperties } from "../../../../common-canvas";
+import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
 import propertiesParamDef from "./sidepanel-properties-param-def.json";
 
@@ -63,11 +63,11 @@ export default class SidePanelProperties extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.getSelectedFile = this.getSelectedFile.bind(this);
 
-		const propsInfo = {
+		this.propsInfo = {
 			parameterDef: propertiesParamDef
 		};
 
-		propsInfo.parameterDef.current_parameters = {
+		this.propsInfo.parameterDef.current_parameters = {
 			"propertiesContainerType": this.props.propertiesConfig.propertiesContainerType,
 			"propertiesSchemaValidation": this.props.propertiesConfig.propertiesSchemaValidation,
 			"applyPropertiesWithoutEdit": this.props.propertiesConfig.applyPropertiesWithoutEdit,
@@ -101,25 +101,19 @@ export default class SidePanelProperties extends React.Component {
 			"wideFlyoutPrimaryButtonDisabled": this.props.propertiesConfig.wideFlyoutPrimaryButtonDisabled
 		};
 
-		const propertiesConfig = {
+		this.commonPropertiesConfig = {
 			containerType: "Custom",
 			rightFlyout: true,
 			applyOnBlur: true,
 			enableResize: false
 		};
 
-		const callbacks = {
+		this.callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
 			propertyListener: this.propertyListener,
 			actionHandler: this.propertyActionHandler,
 			applyPropertyChanges: this.applyPropertyChanges
 		};
-
-		this.commonPropertiesOptions = (<CommonProperties
-			propertiesInfo={propsInfo}
-			propertiesConfig={propertiesConfig}
-			callbacks={callbacks}
-		/>);
 	}
 	// should be changed to componentDidMount but causes FVT tests to fail
 	UNSAFE_componentWillMount() { // eslint-disable-line camelcase, react/sort-comp
@@ -242,6 +236,10 @@ export default class SidePanelProperties extends React.Component {
 		const parameter = get(data, "property.name", null);
 		const value = data.value;
 		this.props.propertiesConfig.setPropertiesConfigOption(parameter, value);
+
+		if (parameter === "applyOnBlur" && value === true) {
+			this.propertiesController.updatePropertyValue({ name: "disableSaveOnRequiredErrors" }, false);
+		}
 	}
 
 	propertyActionHandler(actionId, appData, data) {
@@ -256,6 +254,12 @@ export default class SidePanelProperties extends React.Component {
 	}
 
 	render() {
+		const commonPropertiesOptions = (<CommonProperties
+			propertiesInfo={this.propsInfo}
+			propertiesConfig={this.commonPropertiesConfig}
+			callbacks={this.callbacks}
+		/>);
+
 		const space = (<div className="harness-sidepanel-spacer" />);
 		let fileChooser = <br />;
 		if (this.props.propertiesConfig.fileChooserVisible) {
@@ -312,7 +316,7 @@ export default class SidePanelProperties extends React.Component {
 				{divider}
 				{validateProperties}
 				{divider}
-				{this.commonPropertiesOptions}
+				{commonPropertiesOptions}
 			</div>
 		);
 	}

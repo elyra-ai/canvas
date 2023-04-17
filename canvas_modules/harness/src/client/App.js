@@ -870,7 +870,7 @@ class App extends React.Component {
 		const newState = {};
 		newState[option] = value;
 
-		if (option === "applyOnBlur") {
+		if (option === "applyOnBlur" && value === true) {
 			newState.disableSaveOnRequiredErrors = false;
 		}
 
