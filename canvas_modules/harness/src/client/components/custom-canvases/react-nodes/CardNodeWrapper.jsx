@@ -26,11 +26,6 @@ import CardNode, { CardNodeColumn,
 import "@carbon/charts/styles-g10.css";
 
 class CardNodeWrapper extends React.Component {
-	constructor() {
-		super();
-		this.onClick = this.onClick.bind(this);
-	}
-
 	componentDidMount() {
 		window.console.log("CardNodeWrapper - componentDidMount");
 	}
@@ -43,17 +38,15 @@ class CardNodeWrapper extends React.Component {
 		window.console.log("CardNodeWrapper - componentWillUnmount");
 	}
 
-	onClick() {
-		this.props.onClick();
-	}
-
 	render() {
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 
 		if (this.props.nodeData.type === "super_node" &&
 				this.props.nodeData.is_expanded) {
+			// The SVG area that shows the sub-flow will overlay this Card Node that
+			// forms the background for the supernode.
 			return (
-				<CardNode onClick={this.props.onClick}>
+				<CardNode>
 					<CardNodeColumn>
 						<SVG src={this.props.nodeData.image} style={styleImage} />
 					</CardNodeColumn>
@@ -65,7 +58,7 @@ class CardNodeWrapper extends React.Component {
 		}
 
 		return (
-			<CardNode onClick={this.onClick}>
+			<CardNode>
 				<CardNodeColumn>
 					<SVG src={this.props.nodeData.image} style={styleImage} />
 				</CardNodeColumn>
@@ -79,9 +72,7 @@ class CardNodeWrapper extends React.Component {
 }
 
 CardNodeWrapper.propTypes = {
-	nodeData: PropTypes.object,
-	onClick: PropTypes.func,
-	canvasController: PropTypes.object
+	nodeData: PropTypes.object
 };
 
 export default CardNodeWrapper;

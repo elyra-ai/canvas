@@ -22,11 +22,6 @@ import ShapeNode from "@carbon/charts-react/diagrams/ShapeNode";
 import "@carbon/charts/styles-g10.css";
 
 class ShapeNodeWrapper extends React.Component {
-	constructor() {
-		super();
-		this.onClick = this.onClick.bind(this);
-	}
-
 	componentDidMount() {
 		window.console.log("ShapeNodeWrapper - componentDidMount");
 	}
@@ -37,10 +32,6 @@ class ShapeNodeWrapper extends React.Component {
 
 	componentWillUnmount() {
 		window.console.log("ShapeNodeWrapper - componentWillUnmount");
-	}
-
-	onClick() {
-		this.props.onClick();
 	}
 
 	render() {
@@ -58,9 +49,7 @@ class ShapeNodeWrapper extends React.Component {
 }
 
 ShapeNodeWrapper.propTypes = {
-	nodeData: PropTypes.object,
-	onClick: PropTypes.func,
-	canvasController: PropTypes.object
+	nodeData: PropTypes.object
 };
 
 export default ShapeNodeWrapper;
