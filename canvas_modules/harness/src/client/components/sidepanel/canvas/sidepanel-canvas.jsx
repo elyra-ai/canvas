@@ -80,12 +80,12 @@ import {
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
-} from "../constants/constants.js";
+} from "../../../constants/constants.js";
 
 import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
-import FormsService from "../services/FormsService";
+import FormsService from "../../../services/FormsService";
 
 export default class SidePanelForms extends React.Component {
 	constructor(props) {

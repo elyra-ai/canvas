@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ describe("Test of custom panels", function() {
 
 function verifySliderDropDown(elements) {
 	cy.get("div[data-id='properties-color']").click();
-	cy.get("#downshift-1-menu > div")
+	cy.get("#downshift-4-menu > div")
 		.should("have.length", elements);
 	cy.get("div[data-id='properties-color']").click();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,28 @@
  */
 
 Cypress.Commands.add("openPropertyDefinition", (propertyFileName) => {
-	cy.get("#harness-action-bar-sidepanel-modal").click();
+	cy.toggleCommonPropertiesSidePanel();
 	cy.get("#common-properties-select-item").select(propertyFileName);
 });
 
 Cypress.Commands.add("toggleCategory", (categoryName) => {
-	cy.get(".properties-category-title")
+	cy.get(".common-canvas-right-side-items .properties-category-title")
 		.contains(categoryName)
 		.click();
 });
 
 Cypress.Commands.add("saveFlyout", () => {
-	cy.get(".properties-modal-buttons button[data-id='properties-apply-button']").click();
+	cy.get(".common-canvas-right-side-items " +
+		".properties-modal-buttons button[data-id='properties-apply-button']").click();
 });
 
 Cypress.Commands.add("closeFlyout", () => {
 	// When applyOnBlur set to true, show Close icon in properties title
-	cy.get(".properties-close-button > button").click({ force: true });
+	cy.get(".common-canvas-right-side-items .properties-close-button > button").click({ force: true });
 });
 
 Cypress.Commands.add("openSubPanel", (title) => {
-	cy.get(".properties-summary-link-button").contains(title)
+	cy.get(".common-canvas-right-side-items .properties-summary-link-button").contains(title)
 		.click();
 });
 
@@ -89,11 +90,11 @@ Cypress.Commands.add("saveWideFlyout", (panelName) => {
 });
 
 Cypress.Commands.add("clickPropertiesFlyoutTitleEditIcon", () => {
-	cy.get("button.properties-title-editor-btn.edit").click();
+	cy.get(".common-canvas-right-side-items button.properties-title-editor-btn.edit").click();
 });
 
 Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
-	cy.get("div.properties-title-editor-input")
+	cy.get(".common-canvas-right-side-items div.properties-title-editor-input")
 		.find("input")
 		.focus()
 		.type("{selectall}")
@@ -102,7 +103,7 @@ Cypress.Commands.add("enterNewPropertiesFlyoutTitle", (newTitle) => {
 
 Cypress.Commands.add("clickAtCoordinatesInCommonProperties", (x, y) => {
 	// common-properties tooltip will be displayed onclick
-	cy.get(".right-flyout-panel")
+	cy.get(".common-canvas-right-side-items .right-flyout-panel")
 		.trigger("click", x, y);
 });
 
@@ -123,7 +124,7 @@ Cypress.Commands.add("getControlContainerFromName", (givenName) => {
 
 Cypress.Commands.add("selectPropertiesContainerType", (containerType) => {
 	if (containerType === "Custom" || containerType === "Flyout") {
-		cy.get("#harness-sidepanel-properties-container-type")
+		cy.get("div[data-id='properties-propertiesContainerType']")
 			.find(".bx--radio-button-wrapper")
 			.eq(0)
 			.find("label")

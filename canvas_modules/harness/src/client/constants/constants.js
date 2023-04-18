@@ -26,11 +26,6 @@ function _defineConstant(name, value) {
 }
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("CONSOLE", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "200px"
-});
-
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");
@@ -145,11 +140,3 @@ _defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
-
-_defineConstant("EDITOR_SIZE", {
-	UNSET: "unset",
-	SMALL: "small",
-	MEDIUM: "medium",
-	LARGE: "large",
-	MAX: "max"
-});

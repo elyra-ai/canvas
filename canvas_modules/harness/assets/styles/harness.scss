@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,10 @@ $carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
 @import "carbon-components/scss/globals/scss/typography";
 
 // Common variables for App.scss and sidepanel.scss
-$harness-header-height: 52px;
-$harness-sidepanel-width: 240px;
+$harness-header-height: 50px;
+$harness-sidepanel-width: 320px;
 $harness-sidepanel-transition-time: 0.3s;
+$harness-console-height: 200px;
 
 @import "../../src/client/components/custom-canvases/tables/tables.scss";
 @import "../../src/client/components/custom-canvases/blue-ellipses/blue-ellipses.scss";
@@ -42,6 +43,7 @@ $harness-sidepanel-transition-time: 0.3s;
 @import "../../src/client/components/custom-canvases/logic/logic.scss";
 @import "../../src/client/components/custom-canvases/read-only/read-only.scss";
 @import "../../src/client/components/custom-canvases/progress/progress.scss";
+@import "../../src/client/components/console/console.scss";
 @import "../../src/styles/canvas-customization.scss";
 @import "../../src/styles/sidepanel.scss";
 @import "../../src/styles/App.scss";

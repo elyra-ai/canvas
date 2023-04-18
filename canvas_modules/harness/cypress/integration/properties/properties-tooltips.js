@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 describe("Test if tips show up for the summary table values", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("summaryPanel_paramDef.json");
 	});
 
@@ -37,9 +37,9 @@ describe("Test if tips show up for the summary table values", function() {
 describe("Test if tips show up for summary validation icon when there is an error or warning", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("summaryPanel_paramDef.json");
 	});
 
@@ -68,9 +68,9 @@ describe("Test if tips show up for summary validation icon when there is an erro
 describe("Test if tips show up for textfields in tables when there is overflow", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("textfield_paramDef.json");
 	});
 
@@ -89,9 +89,9 @@ describe("Test if tips show up for textfields in tables when there is overflow",
 describe("Test if tips show up in table headers correctly", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("Conditions_paramDef.json");
 	});
 
