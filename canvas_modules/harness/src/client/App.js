@@ -246,7 +246,7 @@ class App extends React.Component {
 			conditionHiddenPropertyHandling: "null",
 			conditionDisabledPropertyHandling: "null",
 			returnValueFiltering: "[]", // parse to array before passing to config
-			disableRowMoveButtonsPropertyIds: "{ \"name\": \"parameterName\"}",
+			disableRowMoveButtonsPropertyIds: "[{ \"name\": \"parameterName\"}]",
 			maxLengthForMultiLineControls: 1024,
 			maxLengthForSingleLineControls: 128,
 			addRemoveRowsPropertyId: "{ \"name\": \"parameterName\"}",

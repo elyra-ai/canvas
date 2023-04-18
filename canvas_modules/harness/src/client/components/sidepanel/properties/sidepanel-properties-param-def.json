@@ -749,6 +749,8 @@
 		"hideEditButton.toggle.on.label": "show",
 		"hideEditButton.toggle.off.label": "hide",
 		"tableButtonEnabled.toggle.on.label": "enable",
-		"tableButtonEnabled.toggle.off.label": "disable"
+		"tableButtonEnabled.toggle.off.label": "disable",
+		"showRequiredIndicator.toggle.on.label": "required",
+		"showRequiredIndicator.toggle.off.label": "optional"
 	}
 }
