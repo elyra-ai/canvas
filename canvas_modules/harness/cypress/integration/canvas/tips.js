@@ -294,24 +294,34 @@ describe("Test to check if tips show up for a supernode and nodes inside the sup
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
 
-	it("Test to check if tips show up for a supernode and nodes inside the supernode", function() {
+	it.only("Test to check if tips show up for a supernode and nodes inside the supernode", function() {
 		// Create a supernode
 		cy.getNodeWithLabel("Discard Fields").click();
+		cy.log("!!! line 300");
 		cy.ctrlOrCmdClickNode("Define Types");
+		cy.log("!!! line 302");
 		cy.rightClickNode("Define Types");
+		cy.log("!!! line 304");
 		cy.clickOptionFromContextMenu("Create supernode");
+		cy.log("!!! line 306");
 
 		// Check the collapsed supernode shows a tip
 		cy.hoverOverNode("Supernode");
+		cy.log("!!! line 310");
 		cy.verifyTipForNodeAtLocation("Supernode", "below");
+		cy.log("!!! line 312");
 
 		// Expand the supernode
 		cy.rightClickNode("Supernode");
+		cy.log("!!! line 316");
 		cy.clickOptionFromContextMenu("Expand supernode");
+		cy.log("!!! line 318");
 
 		// Check the expanded supernode shows a tip
 		cy.hoverOverNode("Supernode");
+		cy.log("!!! line 322");
 		cy.verifyTipForNodeAtLocation("Supernode", "below");
+		cy.log("!!! line 324 test done");
 
 		// Check one of the nodes in the subflow shows a tip
 		// TODO: cy.hoverOverNodeInSupernode() is not showing the tooltip
