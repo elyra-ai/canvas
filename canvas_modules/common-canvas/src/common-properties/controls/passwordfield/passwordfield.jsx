@@ -49,7 +49,7 @@ class PasswordControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 		return (
 			<div className={className} data-id={ControlUtils.getDataId(this.props.propertyId)}>
-				<Form>
+				<Form onSubmit={(evt) => evt.preventDefault()}>
 					<PasswordInput
 						{...validationProps}
 						autoComplete="off"
