@@ -33,8 +33,8 @@ const entry = [
 	"webpack-hot-middleware/client",
 	"@babel/polyfill",
 	"./src/client/index.js",
-	"./assets/styles/harness.scss",
-	"../common-canvas/src/themes/light.scss"
+	"../common-canvas/src/themes/light.scss",
+	"./assets/styles/harness.scss"
 ];
 
 
