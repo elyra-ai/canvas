@@ -25,7 +25,10 @@ const portsHorizontalDefaultLayout = {
 		// DOM element for the node.
 		className: "",
 
-		// Default node shape. Can be "rectangle" or "port-arcs"
+		// Displays the node outline shape underneath the image and label.
+		nodeShapeDisplay: true,
+
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "port-arcs",
 
 		// SVG path strings to define the shape of your node and its
@@ -33,6 +36,9 @@ const portsHorizontalDefaultLayout = {
 		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
+
+		// Displays the react object specified in the body of the node
+		reactObject: false,
 
 		// Display image
 		imageDisplay: true,
@@ -45,6 +51,9 @@ const portsHorizontalDefaultLayout = {
 		imagePosition: "topLeft",
 		imagePosX: 6,
 		imagePosY: 7,
+
+		// Display label
+		labelDisplay: true,
 
 		// Label dimensions
 		labelWidth: 112,
@@ -422,7 +431,10 @@ const portsVerticalDefaultLayout = {
 		// DOM element for the node.
 		className: "",
 
-		// Default node shape. Can be "rectangle" or "port-arcs"
+		// Displays the node outline shape underneath the image and label.
+		nodeShapeDisplay: true,
+
+		// Default node shape. Can be "rectangle" or "port-arcs". Used when nodeOutlineDisplay is true.
 		nodeShape: "rectangle",
 
 		// SVG path strings to define the shape of your node and its
@@ -430,6 +442,9 @@ const portsVerticalDefaultLayout = {
 		// based on the nodeShape setting.
 		bodyPath: null,
 		selectionPath: null,
+
+		// Displays the react object specified in the body of the node
+		reactObject: false,
 
 		// Display image
 		imageDisplay: true,
@@ -442,6 +457,9 @@ const portsVerticalDefaultLayout = {
 		imagePosition: "topLeft",
 		imagePosX: 11,
 		imagePosY: 6,
+
+		// Display label
+		labelDisplay: true,
 
 		// Label dimensions
 		labelWidth: 72,

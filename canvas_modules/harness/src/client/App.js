@@ -49,7 +49,7 @@ import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
-import BlueEllipsesCanvas from "./components/custom-canvases/blue-ellipses/blue-ellipses-canvas";
+import ReactNodesCanvas from "./components/custom-canvases/react-nodes/react-nodes";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -93,7 +93,6 @@ import {
 	UNDERLAY_NONE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
-	EXAMPLE_APP_BLUE_ELLIPSES,
 	EXAMPLE_APP_STAGES,
 	EXAMPLE_APP_STAGES_CARD_NODE,
 	EXAMPLE_APP_EXPLAIN,
@@ -103,6 +102,7 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_REACT_NODES,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -805,7 +805,10 @@ class App extends React.Component {
 	}
 
 	getPipelineFlow(canvController) {
-		const canvasController = canvController ? canvController : this.canvasController;
+		let canvasController = canvController ? canvController : this.canvasController;
+		// If we're displaying a sample app, get its canvas controller.
+		canvasController = this.canvasRef ? this.canvasRef.current.canvasController : this.canvasController;
+
 		try {
 			return canvasController.getPipelineFlow();
 		} catch (err) {
@@ -2437,9 +2440,9 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_APP_BLUE_ELLIPSES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES) {
 			firstCanvas = (
-				<BlueEllipsesCanvas
+				<ReactNodesCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
