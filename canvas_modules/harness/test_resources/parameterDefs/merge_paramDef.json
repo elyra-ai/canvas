@@ -785,28 +785,29 @@
                 }
             }
         },
-				{
-					"filter": {
-						"parameter_ref": "key_fields",
-						"evaluate": {
-							"condition": {
-								"op": "customFilterDuplicates"
-							}
-						}
-					}
-				},
-				{
-					"filter": {
-						"parameter_ref": "existing_sort_keys",
-						"evaluate": {
-							"condition": {
-								"parameter_ref": "existing_sort_keys",
-								"parameter_2_ref": "key_fields",
-								"op": "customFilterKeys"
-							}
-						}
-					}
-				}
+        {
+          "filter": {
+            "parameter_ref": "key_fields",
+            "evaluate": {
+              "condition": {
+                "parameter_ref": "key_fields",
+                "op": "customFilterDuplicates"
+              }
+            }
+          }
+        },
+        {
+          "filter": {
+            "parameter_ref": "existing_sort_keys",
+            "evaluate": {
+              "condition": {
+                "parameter_ref": "existing_sort_keys",
+                "parameter_2_ref": "key_fields",
+                "op": "customFilterKeys"
+              }
+            }
+          }
+        }
     ],
     "resources": {
         "merge.label": "Merge",
