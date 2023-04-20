@@ -155,13 +155,31 @@
         "some long text description"
       ]
     ],
-    "expressionCellTable": [
-      [
-        "BabyBoomer",
-        "Age >= 55"
-      ]
+    "expPlaceHolder": "",
+    "readonly_primary_panel": "Tearsheet: Display subtabs in primary group will flush the leftnav to the footer buttons.",
+    "fromValue2": 2,
+    "toValue2": 1,
+    "fields2": [
+      "Age",
+      "Drug"
     ],
-    "expPlaceHolder": ""
+    "fruit2": "apple",
+    "other2": "lemon",
+    "fromValue": 2,
+    "toValue": 1,
+    "fruit": "apple",
+    "other": "lemon",
+    "fields": [
+      "Age",
+      "Drug"
+    ],
+    "date_mdy": "11-05-2018",
+    "datepicker": "2023-03-17T00:00:00.00",
+    "datepicker_range": [
+      "2023-03-17T00:00:00.00",
+      "2023-03-30T00:00:00.00"
+    ],
+    "toggletext": "On"
   },
   "parameters": [
     {
@@ -388,11 +406,6 @@
       "default": []
     },
     {
-      "id": "expressionCellTable",
-      "type": "array[expressionCellTable]",
-      "default": []
-    },
-    {
       "id": "expPlaceHolder",
       "type": "string",
       "role": "expression"
@@ -402,7 +415,96 @@
       "type": "string",
       "default": "SELECT * FROM __THIS__",
       "role": "expression"
-    }
+    },
+    {
+      "id": "readonly_primary_panel",
+      "type": "string"
+    },
+    {
+      "id": "fromValue2",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "toValue2",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "fields2",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "other2",
+      "type": "string"
+    },
+    {
+      "id": "fruit2",
+      "type": "string",
+      "enum": [
+        "apple",
+        "orange",
+        "pear",
+        "blueberry"
+      ]
+    },
+    {
+      "id": "fromValue",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "toValue",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "other",
+      "type": "string"
+    },
+    {
+      "id": "fruit",
+      "type": "string",
+      "enum": [
+        "apple",
+        "orange",
+        "pear",
+        "blueberry"
+      ]
+    },
+    {
+      "id": "fields",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "date_mdy",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "datepicker",
+      "type": "date"
+    },
+    {
+      "id": "datepicker_range",
+      "type": "date"
+    },
+    {
+     "id": "toggle_default",
+     "type": "boolean",
+     "default": false
+   },
+   {
+     "id": "toggletext",
+     "enum": [
+       "On",
+       "Off"
+     ]
+   }
   ],
   "complex_types": [
     {
@@ -534,23 +636,6 @@
             "recordId",
             "flag"
           ]
-        }
-      ]
-    },
-    {
-      "id": "expressionCellTable",
-      "parameters": [
-        {
-          "id": "valueName",
-          "type": "string",
-          "default": "Value",
-          "role": "new_column"
-        },
-        {
-          "id": "condition",
-          "type": "string",
-          "default": "",
-          "role": "expression"
         }
       ]
     },
@@ -934,15 +1019,6 @@
         "rows": 12
       },
       {
-        "parameter_ref": "expressionCellTable",
-        "label": {
-          "default": "Values"
-        },
-        "description": {
-          "default": "Complex table control list editor table input"
-        }
-      },
-      {
         "parameter_ref": "dummy_types",
         "label": {
           "default": "Some Dummy Types"
@@ -972,6 +1048,157 @@
         "description": {
           "default": "Expression box with default value"
         }
+      },
+      {
+        "parameter_ref": "readonly_primary_panel",
+        "label": {
+          "default": "Subtabs in primary panel"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "fromValue2",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue2",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        }
+      },
+      {
+        "parameter_ref": "fields2",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      },
+      {
+        "parameter_ref": "fruit2",
+        "label": {
+          "default": "Fruit"
+        }
+      },
+      {
+        "parameter_ref": "other2",
+        "label": {
+          "default": "Other Fruit"
+        }
+      },
+      {
+        "parameter_ref": "fromValue",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        }
+      },
+      {
+        "parameter_ref": "fruit",
+        "label": {
+          "default": "Fruit"
+        }
+      },
+      {
+        "parameter_ref": "other",
+        "label": {
+          "default": "Other Fruit"
+        }
+      },
+      {
+        "parameter_ref": "fields",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      },
+      {
+        "parameter_ref": "date_mdy",
+        "label": {
+          "default": "Required Date M-D-Y"
+        },
+        "description": {
+          "default": "Required datefield with value set to '2018-5-11' with M-D-Y format"
+        },
+        "date_format": "M-D-Y",
+        "class_name": "datefield-control-class"
+      },
+      {
+        "parameter_ref": "datepicker",
+        "label": {
+          "default": "Date format: m-d-Y"
+        },
+        "description": {
+          "default": "Datepicker with value of '2023-03-17T00:00:00' in m-d-Y format."
+        },
+        "control": "datepicker",
+        "date_format": "m-d-Y",
+        "class_name": "datepicker-control-unique-class",
+        "place_holder_text": {
+          "default": "Enter a date: mm-dd-yyyy"
+        }
+      },
+      {
+        "parameter_ref": "datepicker_range",
+        "label": {
+          "default": "Datepicker Range: Y-m-d"
+        },
+        "description": {
+          "default": "Datepicker with value set to ['2023-03-17', '2023-03-23'] in the default Y-m-d format. Both start and end will use the same 'date_format'"
+        },
+        "control": "datepickerRange",
+        "class_name": "datepicker-range-control-unique-class",
+        "place_holder_text": {
+          "default": "yyyy-mm-dd"
+        }
+      },
+      {
+        "parameter_ref": "toggle_default",
+        "control": "toggle",
+        "label": {
+          "default": "Toggle Control"
+        },
+        "description": {
+          "default": "toggle test"
+        }
+      },
+      {
+        "parameter_ref": "toggletext",
+        "label": {
+          "default": "toggletext"
+        },
+        "control": "toggletext",
+        "value_icons": [
+          "/images/light-on.svg",
+          "/images/light-off.svg"
+        ],
+        "class_name": "toggletext-control-class"
       }
     ],
     "complex_type_info": [
@@ -1171,40 +1398,6 @@
         ]
       },
       {
-        "complex_type_ref": "expressionCellTable",
-        "row_selection": "single",
-        "parameters": [
-          {
-            "parameter_ref": "valueName",
-            "label": {
-              "default": "Structure Name",
-              "resource_key": "expressionCellTable.name.label"
-            },
-            "description": {
-              "resource_key": "expressionCellTable.name.desc"
-            },
-            "width": 15,
-            "edit_style": "inline",
-            "summary": true
-          },
-          {
-            "parameter_ref": "condition",
-            "language": "CLEM",
-            "label": {
-              "resource_key": "expressionCellTable.description.label"
-            },
-            "description": {
-              "resource_key": "expressionCellTable.description.desc"
-            },
-            "width": 15,
-            "edit_style": "on_panel",
-            "place_holder_text": {
-              "default": "Enter condition expression"
-            }
-          }
-        ]
-      },
-      {
         "complex_type_ref": "DummyEntry",
         "key_definition": {
           "parameter_ref": "field",
@@ -1383,6 +1576,29 @@
         ]
       },
       {
+        "id": "Dates",
+        "label": {
+          "default": "Dates"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "date_mdy",
+          "datepicker",
+          "datepicker_range"
+        ]
+      },
+      {
+        "id": "Toggle",
+        "label": {
+          "default": "Toggle"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "toggle_default",
+          "toggletext"
+        ]
+      },
+      {
         "id": "expressions",
         "label": {
           "default": "Expressions"
@@ -1503,23 +1719,120 @@
         ]
       },
       {
-        "id": "expressionCellTable-summary-panel",
+        "id": "Tabs",
         "label": {
-          "default": "Configure Derive Node"
+          "default": "Tab and SubTab"
         },
-        "type": "summaryPanel",
+        "type": "subTabs",
         "group_info": [
           {
-            "id": "Derive-Node",
-            "type": "panels",
+            "id": "range-fields-subtab3",
+            "type": "controls",
             "label": {
-              "default": "Derive Node"
+              "default": "Range Fields"
             },
+            "parameter_refs": [
+              "readonly_primary_panel",
+              "fromValue2",
+              "toValue2"
+            ]
+          },
+          {
+            "id": "table-subtab3",
+            "label": {
+              "default": "Table SubTab"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "fields2"
+            ]
+          },
+          {
+            "id": "fruit-subtab3",
+            "label": {
+              "default": "Fruit"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "fruit2",
+              "other2"
+            ]
+          },
+          {
+            "id": "nested-subtabs",
+            "label": {
+              "default": "Nested subtabs"
+            },
+            "type": "subTabs",
+            "class_name": "subtab-panel-nested-class",
             "group_info": [
               {
-                "id": "Expression Control Cell",
+                "id": "range-fields-subtab33",
+                "type": "controls",
+                "class_name": "range-fields-subtab1-control-class",
+                "label": {
+                  "default": "Range Fields"
+                },
                 "parameter_refs": [
-                  "expressionCellTable"
+                  "fromValue",
+                  "toValue"
+                ]
+              },
+              {
+                "id": "fruit-subtab33",
+                "label": {
+                  "default": "Fruit"
+                },
+                "type": "controls",
+                "class_name": "fruit-subtab-control-class2",
+                "parameter_refs": [
+                  "fruit",
+                  "other"
+                ]
+              },
+              {
+                "id": "nested-subtabs13",
+                "label": {
+                  "default": "Nested subtabs3"
+                },
+                "type": "subTabs",
+                "class_name": "subtab-panel-nested-class",
+                "group_info": [
+                  {
+                    "id": "range-fields-subtab13",
+                    "type": "controls",
+                    "class_name": "range-fields-subtab3-control-class1",
+                    "label": {
+                      "default": "Range Fields"
+                    },
+                    "parameter_refs": [
+                      "fromValue",
+                      "toValue"
+                    ]
+                  },
+                  {
+                    "id": "table-subtab13",
+                    "label": {
+                      "default": "Table SubTab"
+                    },
+                    "type": "controls",
+                    "class_name": "table-subtab-control-class3",
+                    "parameter_refs": [
+                      "fields"
+                    ]
+                  },
+                  {
+                    "id": "fruit-subtab13",
+                    "label": {
+                      "default": "Fruit"
+                    },
+                    "type": "controls",
+                    "class_name": "fruit-subtab-control-class3",
+                    "parameter_refs": [
+                      "fruit",
+                      "other"
+                    ]
+                  }
                 ]
               }
             ]
@@ -2190,24 +2503,6 @@
           "condition": {
             "parameter_ref": "structurelisteditorTableInput",
             "op": "isNotEmpty"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "expressionCellTable",
-          "message": {
-            "default": "table cannot be empty"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "expressionCellTable",
-            "op": "notEquals",
-            "value": []
           }
         }
       }
