@@ -1,0 +1,1350 @@
+{
+    "parameters": [
+        {
+            "id": "input_tags",
+            "type": "array[inputsTable]"
+        },
+        {
+            "id": "method",
+            "enum": [
+                "Order",
+                "Keys",
+                "Condition"
+            ],
+            "default": "Order"
+        },
+        {
+            "id": "key_fields",
+            "type": "array[string]",
+            "role": "column"
+        },
+        {
+            "id": "common_keys",
+            "type": "boolean",
+            "default": true
+        },
+        {
+            "id": "rename_duplicate_fields",
+            "type": "boolean",
+            "default": true
+        },
+        {
+            "id": "condition",
+            "type": "string",
+            "role": "expression",
+            "required": true
+        },
+        {
+            "id": "join",
+            "enum": [
+                "Inner",
+                "FullOuter",
+                "PartialOuter",
+                "Anti"
+            ],
+            "default": "Inner"
+        },
+        {
+            "id": "outer_join_tags",
+            "type": "array[string]",
+            "default": []
+        },
+        {
+            "id": "single_large_input",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "id": "single_large_input_tag",
+            "type": "string",
+            "default": []
+        },
+        {
+            "id": "existing_sort_keys",
+            "type": "array[SortEntry]",
+            "role": "column"
+        },
+        {
+            "id": "use_existing_sort_keys",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "id": "filter_table_group",
+            "type": "array[FilterEntry]"
+        },
+        {
+            "id": "default_sort_order",
+            "enum": [
+                "Ascending",
+                "Descending"
+            ],
+            "default": "Ascending"
+        },
+        {
+            "id": "use_custom_name",
+            "type": "boolean",
+            "default": false
+        },
+        {
+            "id": "custom_name",
+            "type": "string"
+        },
+        {
+            "id": "annotation",
+            "type": "string"
+        }
+    ],
+    "complex_types": [
+        {
+            "id": "inputsTable",
+            "parameters": [
+                {
+                    "id": "tag",
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "id": "source",
+                    "type": "string"
+                },
+                {
+                    "id": "connected",
+                    "type": "string"
+                },
+                {
+                    "id": "fields",
+                    "type": "integer"
+                }
+            ]
+        },
+        {
+            "id": "SortEntry",
+            "key_definition": {
+                "id": "field",
+                "type": "string",
+                "role": "column",
+                "default": ""
+            },
+            "parameters": [
+                {
+                    "id": "sort_order",
+                    "enum": [
+                        "Ascending",
+                        "Descending"
+                    ],
+                    "type": "string",
+                    "default": {
+                        "parameter_ref": "default_sort_order"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "FilterEntry",
+            "key_definition": {
+                "id": "field",
+                "type": "string"
+            },
+            "parameters": [
+                {
+                    "id": "tag",
+                    "type": "string"
+                },
+                {
+                    "id": "source",
+                    "type": "string"
+                },
+                {
+                    "id": "connected",
+                    "type": "string"
+                },
+                {
+                    "id": "filter_out",
+                    "type": "boolean"
+                },
+                {
+                    "id": "output",
+                    "type": "string",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "uihints": {
+        "id": "merge",
+        "label": {
+            "resource_key": "merge.label"
+        },
+        "description": {
+            "resource_key": "merge.desc"
+        },
+        "help": {
+            "data": {
+                "url": "merge.html"
+            }
+        },
+        "icon": "/canvas/flowassets/spss-modeler/images/merge.svg",
+        "editor_size": "large",
+        "complex_type_info": [
+            {
+                "complex_type_ref": "inputsTable",
+                "moveable_rows": true,
+                "add_remove_rows": false,
+                "parameters": [
+                    {
+                        "parameter_ref": "tag",
+                        "label": {
+                            "resource_key": "inputsTable.tag.label"
+                        },
+                        "width": 20,
+                        "edit_style": "inline",
+                        "summary": true
+                    },
+                    {
+                        "parameter_ref": "source",
+                        "label": {
+                            "resource_key": "inputsTable.source.label"
+                        },
+                        "width": 20,
+                        "edit_style": "inline",
+                        "control": "readonly",
+                        "summary": true
+                    },
+                    {
+                        "parameter_ref": "connected",
+                        "label": {
+                            "resource_key": "inputsTable.connected.label"
+                        },
+                        "width": 20,
+                        "edit_style": "inline",
+                        "control": "readonly",
+                        "summary": true
+                    },
+                    {
+                        "parameter_ref": "fields",
+                        "label": {
+                            "resource_key": "inputsTable.fields.label"
+                        },
+                        "width": 20,
+                        "edit_style": "inline",
+                        "control": "readonly"
+                    }
+                ]
+            },
+            {
+                "complex_type_ref": "SortEntry",
+                "moveable_rows": true,
+                "key_definition": {
+                    "parameter_ref": "field",
+                    "sortable": true,
+                    "resource_key": "SortEntry.field",
+                    "label": {
+                        "resource_key": "SortEntry.field.label"
+                    },
+                    "width": 28,
+                    "summary": true
+                },
+                "parameters": [
+                    {
+                        "parameter_ref": "sort_order",
+                        "sortable": true,
+                        "edit_style": "inline",
+                        "resource_key": "SortEntry.sort_order",
+                        "label": {
+                            "resource_key": "SortEntry.sort_order.label"
+                        },
+                        "width": 16,
+                        "summary": true
+                    }
+                ]
+            },
+            {
+                "complex_type_ref": "FilterEntry",
+                "add_remove_rows": false,
+                "row_selection": "single",
+                "key_definition": {
+                    "parameter_ref": "field",
+                    "control": "readonly",
+                    "width": 25,
+                    "filterable": true,
+                    "label": {
+                        "resource_key": "Field_label"
+                    },
+                    "resizable": true,
+                    "sortable": true
+                },
+                "parameters": [
+                    {
+                        "parameter_ref": "tag",
+                        "control": "readonly",
+                        "width": 20,
+                        "label": {
+                            "resource_key": "merge_Tag_label"
+                        }
+                    },
+                    {
+                        "parameter_ref": "source",
+                        "control": "readonly",
+                        "width": 20,
+                        "filterable": true,
+                        "label": {
+                            "resource_key": "merge_Source_label"
+                        }
+                    },
+                    {
+                        "parameter_ref": "connected",
+                        "control": "readonly",
+                        "visible": false
+                    },
+                    {
+                        "parameter_ref": "filter_out",
+                        "edit_style": "inline",
+                        "width": 10,
+                        "label": {
+                            "resource_key": "merge_Filter_label"
+                        }
+                    },
+                    {
+                        "parameter_ref": "output",
+                        "edit_style": "inline",
+                        "width": 25,
+                        "filterable": true,
+                        "label": {
+                            "resource_key": "merge_Output_label"
+                        }
+                    }
+                ]
+            }
+        ],
+        "parameter_info": [
+            {
+                "parameter_ref": "input_tags",
+                "label": {
+                    "resource_key": "input_tags.label"
+                },
+                "description": {
+                    "resource_key": "input_tags.desc"
+                },
+                "summary": true
+            },
+            {
+                "parameter_ref": "method",
+                "resource_key": "merge_method",
+                "control": "oneofselect",
+                "label": {
+                    "resource_key": "merge_method.label"
+                },
+                "description": {
+                    "resource_key": "merge_method.desc"
+                }
+            },
+            {
+                "parameter_ref": "key_fields",
+                "label": {
+                    "resource_key": "join_keys.label"
+                },
+                "description": {
+                    "resource_key": "join_keys.desc"
+                }
+            },
+            {
+                "parameter_ref": "join",
+                "resource_key": "join",
+                "control": "oneofselect",
+                "label": {
+                    "resource_key": "join.label"
+                },
+                "description": {
+                    "resource_key": "join.desc"
+                }
+            },
+            {
+                "parameter_ref": "outer_join_tags",
+                "resource_key": "outer_join_tags",
+                "control": "custom",
+                "custom_control_id": "custom-input-tags-selection",
+                "data": {
+                    "parameter_ref": "input_tags",
+                    "choice": "Multiple"
+                },
+                "label": {
+                    "resource_key": "PartialOuter.label"
+                },
+                "description": {
+                    "resource_key": "merge_inputtags_full_outer_join_info_label",
+                    "placement": "on_panel"
+                },
+                "class_name": "custom-input-tags-selection"
+            },
+            {
+                "parameter_ref": "common_keys",
+                "label": {
+                    "resource_key": "join_common_keys.label"
+                },
+                "description": {
+                    "resource_key": "join_common_keys.desc"
+                }
+            },
+            {
+                "parameter_ref": "rename_duplicate_fields",
+                "label": {
+                    "resource_key": "rename_duplicate_fields.label"
+                },
+                "description": {
+                    "resource_key": "rename_duplicate_fields.desc"
+                }
+            },
+            {
+                "parameter_ref": "condition",
+                "language": "CLEM",
+                "label": {
+                    "resource_key": "join_condition.label"
+                },
+                "description": {
+                    "resource_key": "join_condition.desc"
+                }
+            },
+            {
+                "parameter_ref": "single_large_input",
+                "label": {
+                    "resource_key": "single_large_input.label"
+                },
+                "description": {
+                    "resource_key": "single_large_input.desc"
+                }
+            },
+            {
+                "parameter_ref": "single_large_input_tag",
+                "resource_key": "single_large_input_tag",
+                "control": "custom",
+                "custom_control_id": "custom-input-tags-selection",
+                "data": {
+                    "parameter_ref": "input_tags",
+                    "choice": "Single"
+                },
+                "label_visible": false
+            },
+            {
+                "parameter_ref": "use_existing_sort_keys",
+                "label": {
+                    "resource_key": "use_existing_sort_keys.label"
+                },
+                "description": {
+                    "resource_key": "use_existing_sort_keys.desc"
+                }
+            },
+            {
+                "parameter_ref": "existing_sort_keys",
+                "label": {
+                    "resource_key": "existing_sort_keys.label"
+                },
+                "description": {
+                    "resource_key": "existing_sort_keys.desc"
+                }
+            },
+            {
+                "parameter_ref": "filter_table_group",
+                "rows": 8,
+                "resource_key": "inputsTable",
+                "label": {
+                    "resource_key": "filter_fields_label"
+                }
+            },
+            {
+                "parameter_ref": "default_sort_order",
+                "resource_key": "default_sort_order",
+                "label": {
+                    "resource_key": "default_sort_order.label"
+                },
+                "description": {
+                    "resource_key": "default_sort_order.desc"
+                }
+            },
+            {
+                "parameter_ref": "use_custom_name",
+                "label": {
+                    "default": "Custom name",
+                    "resource_key": "BUILTIN.prop.use_custom_name.label"
+                },
+                "control": "hidden"
+            },
+            {
+                "parameter_ref": "custom_name",
+                "label": {
+                    "default": "",
+                    "resource_key": "BUILTIN.prop.custom_name.label"
+                },
+                "control": "hidden"
+            },
+            {
+                "parameter_ref": "annotation",
+                "label": {
+                    "default": "Annotation",
+                    "resource_key": "BUILTIN.prop.annotation.label"
+                },
+                "control": "textarea"
+            },
+            {
+                "parameter_ref": "node_id",
+                "label": {
+                    "resource_key": "BUILTIN.prop.node_id.label"
+                },
+                "description": {
+                    "resource_key": "BUILTIN.prop.node_id.desc"
+                },
+                "control": "readonly"
+            }
+        ],
+        "group_info": [
+            {
+                "id": "input-settings",
+                "parameter_refs": [
+                    "input_tags"
+                ]
+            },
+            {
+                "id": "basic-settings",
+                "type": "panels",
+                "group_info": [
+                    {
+                        "id": "method-settings",
+                        "parameter_refs": [
+                            "method"
+                        ]
+                    },
+                    {
+                        "id": "method-detail-settings",
+                        "type": "panelSelector",
+                        "depends_on_ref": "method",
+                        "group_info": [
+                            {
+                                "id": "Order",
+                                "parameter_refs": []
+                            },
+                            {
+                                "id": "Keys",
+                                "type": "panels",
+                                "group_info": [
+                                    {
+                                        "id": "key-allocation-settings",
+                                        "type": "columnSelection",
+                                        "parameter_refs": [
+                                            "key_fields"
+                                        ]
+                                    },
+                                    {
+                                        "id": "common-keys-settings",
+                                        "parameter_refs": [
+                                            "common_keys"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "Condition",
+                                "parameter_refs": [
+                                    "rename_duplicate_fields",
+                                    "condition"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "join-settings",
+                        "parameter_refs": [
+                            "join"
+                        ]
+                    },
+                    {
+                        "id": "join-detail-settings",
+                        "type": "panelSelector",
+                        "depends_on_ref": "join",
+                        "group_info": [
+                            {
+                                "id": "Inner",
+                                "parameter_refs": []
+                            },
+                            {
+                                "id": "FullOuter",
+                                "parameter_refs": []
+                            },
+                            {
+                                "id": "PartialOuter",
+                                "parameter_refs": [
+                                    "outer_join_tags"
+                                ]
+                            },
+                            {
+                                "id": "Anti",
+                                "parameter_refs": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "filter-settings",
+                "parameter_refs": [
+                    "filter_table_group"
+                ]
+            },
+            {
+                "id": "optimization-settings",
+                "type": "panels",
+                "group_info": [
+                    {
+                        "id": "single_large_input",
+                        "parameter_refs": [
+                            "single_large_input",
+                            "single_large_input_tag",
+                            "use_existing_sort_keys",
+                            "existing_sort_keys",
+                            "default_sort_order"
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "annotations",
+                "label": {
+                    "resource_key": "BUILTIN.tab.annotations.label"
+                },
+                "parameter_refs": [
+                    "use_custom_name",
+                    "custom_name",
+                    "annotation",
+                    "node_id"
+                ]
+            }
+        ],
+        "ui_parameters": [
+            {
+                "id": "node_id",
+                "type": "string"
+            }
+        ]
+    },
+    "conditions": [
+        {
+            "enabled": {
+                "parameter_refs": [
+                    "existing_sort_keys"
+                ],
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "use_existing_sort_keys",
+                        "op": "equals",
+                        "value": true
+                    }
+                }
+            }
+        },
+        {
+            "enabled": {
+                "parameter_refs": [
+                    "single_large_input",
+                    "sort-existing-keys"
+                ],
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "method",
+                        "op": "equals",
+                        "value": "Keys"
+                    }
+                }
+            }
+        },
+        {
+            "enabled": {
+                "parameter_refs": [
+                    "PartialOuter"
+                ],
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "join",
+                        "op": "equals",
+                        "value": "PartialOuter"
+                    }
+                }
+            }
+        },
+        {
+            "visible": {
+                "parameter_refs": [
+                    "single_large_input_tag"
+                ],
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "single_large_input",
+                        "op": "equals",
+                        "value": true
+                    }
+                }
+            }
+        },
+        {
+            "enabled": {
+                "parameter_refs": [
+                    "join"
+                ],
+                "evaluate": {
+                    "or": [
+                        {
+                            "condition": {
+                                "parameter_ref": "method",
+                                "op": "equals",
+                                "value": "Condition"
+                            }
+                        },
+                        {
+                            "condition": {
+                                "parameter_ref": "method",
+                                "op": "equals",
+                                "value": "Keys"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "visible": {
+                "parameter_refs": [
+                    "outer_join_tags"
+                ],
+                "evaluate": {
+                    "or": [
+                        {
+                            "condition": {
+                                "parameter_ref": "method",
+                                "op": "equals",
+                                "value": "Condition"
+                            }
+                        },
+                        {
+                            "condition": {
+                                "parameter_ref": "method",
+                                "op": "equals",
+                                "value": "Keys"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "enabled": {
+                "parameter_refs": [
+                    "filter_table_group[0]",
+                    "filter_table_group[1]",
+                    "filter_table_group[2]",
+                    "filter_table_group[3]",
+                    "filter_table_group[5]"
+                ],
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "filter_table_group[4]",
+                        "op": "notEquals",
+                        "value": true
+                    }
+                }
+            }
+        },
+        {
+            "validation": {
+                "fail_message": {
+                    "type": "error",
+                    "focus_parameter_ref": "filter_table_group[5]",
+                    "message": {
+                        "resource_key": "merge_warning_label"
+                    }
+                },
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "filter_table_group[5]",
+                        "op": "customTableUniqueValue"
+                    }
+                }
+            }
+        },
+        {
+            "validation": {
+                "fail_message": {
+                    "type": "error",
+                    "focus_parameter_ref": "input_tags[0]",
+                    "message": {
+                        "resource_key": "inputsTable.tag.error"
+                    }
+                },
+                "evaluate": {
+                    "condition": {
+                        "parameter_ref": "input_tags[0]",
+                        "op": "customTableUniqueValue"
+                    }
+                }
+            }
+        },
+				{
+					"filter": {
+						"parameter_ref": "key_fields",
+						"evaluate": {
+							"condition": {
+								"op": "customFilterDuplicates"
+							}
+						}
+					}
+				},
+				{
+					"filter": {
+						"parameter_ref": "existing_sort_keys",
+						"evaluate": {
+							"condition": {
+								"parameter_ref": "existing_sort_keys",
+								"parameter_2_ref": "key_fields",
+								"op": "customFilterKeys"
+							}
+						}
+					}
+				}
+    ],
+    "resources": {
+        "merge.label": "Merge",
+        "merge.desc": "Take multiple input records and create a single output record containing all or some of the input fields.",
+        "input-settings.label": "Inputs",
+        "basic-settings.label": "Merge",
+        "filter-settings.label": "Filter",
+        "optimization-settings.label": "Optimization",
+        "input-summary-panel.label": "Configure Inputs",
+        "input_tags.label": "Input Order and Tags",
+        "input_tags.desc": "Specify the order of input data sources and make any changes to the tag name for each source. Tags are a unique identifier for the data links entering the node.",
+        "inputsTable.tag.label": "Tag",
+        "inputsTable.source.label": "Source node",
+        "inputsTable.connected.label": "Connected node",
+        "inputsTable.fields.label": "Fields",
+        "inputsTable.tag.error": "The tag is already being used",
+        "merge_method.label": "Merge method",
+        "merge_method.desc": "Select the method to be used for merging records. 'Order' merges the nth record of each dataset, 'Keys' merges records based on a key field with identical values, 'Condition' allows you to specify a condition for the merge.",
+        "merge_method.Order.label": "Order",
+        "merge_method.Keys.label": "Keys",
+        "merge_method.Condition.label": "Condition",
+        "merge_method.Gtt.label": "Ranked condition",
+        "join.label": "Join",
+        "join.desc": "Specify the join type. 'Inner join' merges only complete records. 'Full outer join' means that if values for the key field are not present in all inputs, incomplete records are still retained. 'Partial out join' mean you can select which datasets can contribute incomplete records. 'Anti-join means only nonmatching records from the first dataset are passed downstream.'",
+        "join.Inner.label": "Inner join",
+        "join.FullOuter.label": "Full outer join",
+        "join.PartialOuter.label": "Partial outer join",
+        "join.Anti.label": "Anti-join",
+        "join_keys.label": "Keys",
+        "join_keys.desc": "Add one or more fields to this list to use them as keys for the merge. These fields must be present in all input datasets and the values for these fields will be used as keys to match records.",
+        "join_common_keys.label": "Combine duplicate key fields",
+        "join_common_keys.desc": "When more than one key field is selected above, this option ensures that there is only one output field of that name. This option is enabled by default except in the case when streams have been imported from earlier versions of IBM® SPSS® Modeler.",
+        "rename_duplicate_fields.label": "Add tags to duplicate fields to avoid merge conflicts",
+        "rename_duplicate_fields.desc": "If two or more of the datasets to be merged contain the same field names, select this check box to add a different prefix tag to the start of the field column headers. For example, if there are two fields called Name the result of the merge would contain 1_Name and 2_Name.",
+        "join_condition.label": "Condition",
+        "join_condition.desc": "You can either enter the conditions directly into the Condition field, or build them with the aid of the Expression Builder by clicking the calculator symbol to the right of the field. ",
+        "condition_not_empty": "The condition value cannot be empty",
+        "PartialOuter.label": "Dataset for Outer Join",
+        "select-summary.label": "Select Dataset",
+        "SortEntry.label": "Sort",
+        "SortEntry.field.label": "Field",
+        "SortEntry.sort_order.label": "Order",
+        "SortEntry.sort_order.Ascending.label": "Ascending",
+        "SortEntry.sort_order.Descending.label": "Descending",
+        "default_sort_order.desc": "Specify whether, by default, records are sorted in Ascending or Descending order of the sort key values.",
+        "default_sort_order.label": "Default sort order",
+        "default_sort_order.Ascending.label": "Ascending",
+        "default_sort_order.Descending.label": "Descending",
+        "single_large_input.label": "One input dataset is relatively large",
+        "single_large_input.desc": "Select to indicate that one of the input datasets is much larger than the others. The system will cache the smaller datasets in memory and then perform the merge by processing the large dataset without caching or sorting it.",
+        "use_existing_sort_keys.label": "All inputs are already sorted by key field(s)",
+        "use_existing_sort_keys.desc": "Select to indicate that the input data are already sorted by one or more of the key fields that you are using for the merge. Make sure all your input datasets are sorted.",
+        "existing_sort_keys.label": "Specify Existing Sort Order",
+        "existing_sort_keys.desc": "Specify the fields that are already sorted. Using the field picker, add fields to the list. You should only add key fields that are being used for the merge (specified in the Merge tab). In the Order column, specify whether each field is sorted in ascending or descending order. If you are specifying multiple fields, make sure that you list them in the correct sorting order.",
+        "sort-existing-keys.label": "Configure Sort Order",
+        "filter-summary-panel.label": "Configure Fields",
+        "filter-summary-panel.desc": "You can rename or exclude fields at any point in a stream.",
+        "Merge_label": "Merge",
+        "inputtags_Datasets_label": "Selected Datasets",
+        "merge_warning_label": "The given column name is already in use",
+        "merge_placeholder_label": "Search...",
+        "filter_fields_label": "Filter Fields",
+        "inputtags_dataset_label": "Large dataset",
+        "inputtags_outerjoin_label": "Outer join",
+        "merge_Tag_label": "Tag",
+        "merge_Source_label": "Source",
+        "merge_Connected_label": "Connected",
+        "merge_Filter_label": "Filter",
+        "merge_Output_label": "Output Field",
+        "mergefilter_renamed_label": "renamed",
+        "mergefilter_in_label": "in",
+        "mergefilter_filtered_label": "filtered",
+        "mergefilter_out_label": "out",
+        "Field_label": "Field",
+        "Fields_label": "Fields",
+        "tag_label": "Tag",
+        "source_node_label": "Source node",
+        "connected_node_label": "Connected node",
+        "merge_inputtags_full_outer_join_info_label": "Checked datasets will contribute incomplete records. If all datasets are checked, this becomes a full outer join. At least one dataset must be selected to include incomplete records for a Partial Outer Join.",
+        "BUILTIN.tab.annotations.label": "Annotations",
+        "BUILTIN.prop.use_custom_name.label": "Custom name",
+        "BUILTIN.prop.custom_name.label": "",
+        "BUILTIN.prop.annotation.label": "Annotation",
+        "BUILTIN.tab.empty-settings.label": "(No editable settings)",
+        "BUILTIN.prop.node_id.label": "Node ID",
+        "BUILTIN.prop.node_id.desc": "You can use this ID in scripts to select this node.",
+        "type.unknown.label": "Unknown",
+        "type.boolean.label": "Boolean",
+        "type.double.label": "Real",
+        "type.string.label": "String",
+        "type.integer.label": "Integer",
+        "type.date.label": "Date",
+        "type.time.label": "Time",
+        "type.timestamp.label": "Timestamp",
+        "type.datetime.label": "Datetime"
+    },
+    "componentId": "merge",
+    "titleDefinition": {
+        "editable": true,
+        "title": "Merge"
+    },
+    "label": "Merge",
+    "current_parameters": {
+        "method": "Order",
+        "join": "Inner",
+        "input_tags": [
+            [
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                7
+            ],
+            [
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                7
+            ],
+            [
+                "3",
+                "bank.csv",
+                "bank.csv",
+                3
+            ]
+        ],
+        "annotation": "",
+        "default_sort_order": "Ascending",
+        "filter_table_group": [
+            [
+                "Age",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "Age"
+            ],
+            [
+                "Sex",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "Sex"
+            ],
+            [
+                "BP",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "BP"
+            ],
+            [
+                "Cholesterol",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "Cholesterol"
+            ],
+            [
+                "Na",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "Na"
+            ],
+            [
+                "K",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "K"
+            ],
+            [
+                "Drug",
+                "1",
+                "DRUG1n.csv",
+                "DRUG1n.csv",
+                false,
+                "Drug"
+            ],
+            [
+                "Age2",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "Age2"
+            ],
+            [
+                "Sex",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "Sex"
+            ],
+            [
+                "BP",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "BP"
+            ],
+            [
+                "Cholesterol",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "Cholesterol"
+            ],
+            [
+                "Na",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "Na"
+            ],
+            [
+                "K2",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "K2"
+            ],
+            [
+                "Drug",
+                "2",
+                "DRUG1n merge.csv",
+                "DRUG1n merge.csv",
+                false,
+                "Drug"
+            ],
+            [
+                "gender",
+                "3",
+                "bank.csv",
+                "bank.csv",
+                false,
+                "gender"
+            ],
+            [
+                "salbegin",
+                "3",
+                "bank.csv",
+                "bank.csv",
+                false,
+                "salbegin"
+            ],
+            [
+                "salary",
+                "3",
+                "bank.csv",
+                "bank.csv",
+                false,
+                "salary"
+            ]
+        ],
+        "outer_join_tags": [],
+        "common_keys": true,
+        "existing_sort_keys": [],
+        "condition": "",
+        "rename_duplicate_fields": true,
+        "single_large_input": false,
+        "use_custom_name": false,
+        "use_existing_sort_keys": false,
+        "single_large_input_tag": "",
+        "custom_name": "",
+        "key_fields": []
+    },
+    "dataset_metadata": [
+        {
+            "id": "1",
+            "name": "DRUG1n.csv",
+            "upstream_node_type": "dataassetimport",
+            "upstream_node_label": "DRUG1n.csv",
+            "fields": [
+                {
+                    "name": "Age",
+                    "type": "integer",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.integer.label"
+                    }
+                },
+                {
+                    "name": "Sex",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "BP",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "Cholesterol",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "Na",
+                    "type": "double",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.double.label"
+                    }
+                },
+                {
+                    "name": "K",
+                    "type": "double",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.double.label"
+                    }
+                },
+                {
+                    "name": "Drug",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "name": "DRUG1n merge.csv",
+            "upstream_node_type": "dataassetimport",
+            "upstream_node_label": "DRUG1n merge.csv",
+            "fields": [
+                {
+                    "name": "Age2",
+                    "type": "integer",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.integer.label"
+                    }
+                },
+                {
+                    "name": "Sex",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "BP",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "Cholesterol",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "Na",
+                    "type": "double",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.double.label"
+                    }
+                },
+                {
+                    "name": "K2",
+                    "type": "double",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.double.label"
+                    }
+                },
+                {
+                    "name": "Drug",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "3",
+            "name": "bank.csv",
+            "upstream_node_type": "dataassetimport",
+            "upstream_node_label": "bank.csv",
+            "fields": [
+                {
+                    "name": "gender",
+                    "type": "string",
+                    "metadata": {
+                        "description": "",
+                        "measure": "discrete",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.string.label"
+                    }
+                },
+                {
+                    "name": "salbegin",
+                    "type": "integer",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.integer.label"
+                    }
+                },
+                {
+                    "name": "salary",
+                    "type": "integer",
+                    "metadata": {
+                        "description": "",
+                        "measure": "range",
+                        "modeling_role": "input"
+                    },
+                    "type_label": {
+                        "resource_key": "type.integer.label"
+                    }
+                }
+            ]
+        }
+    ],
+    "flow_parameters": {
+        "globals_table": [
+            []
+        ],
+        "parameters_table": [
+            [
+                [
+                    "test-name",
+                    "test-label",
+                    "String",
+                    "test value",
+                    "Typeless",
+                    false
+                ],
+                [
+                    "test2-name",
+                    "test2-label",
+                    "String",
+                    "test2 value",
+                    "Typeless",
+                    false
+                ],
+                [
+                    "test",
+                    "hello",
+                    "Date",
+                    "hello",
+                    "Typeless",
+                    false
+                ]
+            ]
+        ]
+    }
+}

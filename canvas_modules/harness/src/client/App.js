@@ -71,6 +71,8 @@ import CustomSubjectsPanel from "./components/custom-panels/CustomSubjectsPanel"
 import * as CustomOpMax from "./custom/condition-ops/customMax";
 import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmptyListLessThan";
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
+import * as CustomOpFilterKeys from "./custom/condition-ops/customFilterKeys";
+import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDuplicates";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -1896,7 +1898,7 @@ class App extends React.Component {
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates]}
 				light={this.state.light}
 			/>);
 
