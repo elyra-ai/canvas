@@ -241,11 +241,11 @@
 				"comments": [{
 					"id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
 					"x_pos": 50,
-					"y_pos": 0,
+					"y_pos": 20,
 					"width": 400,
 					"height": 112,
-					"class_name": "d3-comment-rect bkg-col-yellow-20",
-					"content": "## React Objects forming body of nodes\n\nThis sample app shows the CardNode and ShapeNode from Carbon-Charts being used to display Canvas nodes",
+					"class_name": "bkg-col-green-20",
+					"content": "## React Objects Canvas\n\nThis sample app shows the React objects, CardNode and ShapeNode, from the Carbon-Charts library being used to display the body of canvas nodes. The selection highlighting, ports, overflow icon and tip for the nodes are provided by common-canvas.",
 					"associated_id_refs": []
 				}]
 			}

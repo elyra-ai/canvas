@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,7 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
-
-import React from "react";
-import ReactDOM from "react-dom";
-
+import { addNodeExternalObject, removeNodeExternalObject } from "./svg-canvas-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -923,7 +920,7 @@ export default class SVGCanvasRenderer {
 			.attr("width", node.width)
 			.attr("height", node.height);
 
-		if (!this.nodeLayout.reactObject) {
+		if (!this.nodeLayout.nodeExternalObject) {
 			ghostGrp
 				.append(nodeImageType)
 				.attr("class", "d3-node-image")
@@ -2721,9 +2718,9 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-node-body-outline");
 
 		// Optional foreign object to contain a React object
-		newNodeGroups.filter((d) => d.layout.reactObject)
+		newNodeGroups.filter((d) => d.layout.nodeExternalObject)
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object-react-node");
+			.attr("class", "d3-foreign-object-external-node");
 
 		// Node Image
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
@@ -2771,13 +2768,13 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
 		// Optional foreign object to contain a React object
-		joinedNodeGrps.selectChildren(".d3-foreign-object-react-node")
+		joinedNodeGrps.selectChildren(".d3-foreign-object-external-node")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.each(this.addReactNode.bind(this));
+			.each(addNodeExternalObject.bind(this));
 
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
@@ -2836,27 +2833,11 @@ export default class SVGCanvasRenderer {
 	removeNodes(removeSel) {
 		// Remove any foreign objects for react nodes, if necessary.
 		removeSel
-			.selectChildren(".d3-foreign-object-react-node")
-			.selectChildren("div")
-			.each(this.removeReactNode.bind(this));
+			.selectChildren(".d3-foreign-object-external-node")
+			.each(removeNodeExternalObject.bind(this));
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
-	}
-
-	addReactNode(d, i, foreignObjects) {
-		ReactDOM.render(
-			<d.layout.reactObject
-				nodeData={d}
-				onClick={this.onClick}
-				isSelected={this.activePipeline.isSelected(d.id)}
-			/>,
-			foreignObjects[i]
-		);
-	}
-
-	removeReactNode(d, i, foreignObjects) {
-		ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 	}
 
 	onClick() {

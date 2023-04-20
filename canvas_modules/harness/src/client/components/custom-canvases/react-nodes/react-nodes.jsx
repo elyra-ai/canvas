@@ -51,7 +51,6 @@ export default class ReactNodesCanvas extends React.Component {
 			enableMarkdownInComments: true,
 			enableDropZoneOnExternalDrag: true,
 			enableHighlightNodeOnNewLinkDrag: true,
-			enableReactObject: CardNodeWrapper,
 			tipConfig: {
 				palette: true,
 				nodes: true,
@@ -62,9 +61,9 @@ export default class ReactNodesCanvas extends React.Component {
 				drawNodeLinkLineFromTo: "node_center",
 				drawCommentLinkLineTo: "node_center",
 				nodeShapeDisplay: false,
-				reactObject: CardNodeWrapper,
-				defaultNodeWidth: 200,
-				defaultNodeHeight: 70,
+				nodeExternalObject: CardNodeWrapper,
+				defaultNodeWidth: 220,
+				defaultNodeHeight: 100,
 				ellipsisPosition: "topRight",
 				ellipsisWidth: 30,
 				ellipsisHeight: 30,
@@ -85,7 +84,6 @@ export default class ReactNodesCanvas extends React.Component {
 			enableCanvasLayout: {
 				dataLinkArrowHead: true,
 				linkGap: 4,
-				displayLinkOnOverlap: false,
 				supernodeTopAreaHeight: 28,
 				supernodeSVGAreaPadding: 5
 			}
@@ -98,10 +96,9 @@ export default class ReactNodesCanvas extends React.Component {
 	}
 
 	layoutHandler(node) {
-		if (node.app_data && node.app_data.react_nodes &&
-				node.app_data.react_nodes.type === "shape-node") {
+		if (node.op === "shape-node") {
 			const config = {
-				reactObject: ShapeNodeWrapper,
+				nodeExternalObject: ShapeNodeWrapper,
 				defaultNodeWidth: 28,
 				defaultNodeHeight: 70
 			};

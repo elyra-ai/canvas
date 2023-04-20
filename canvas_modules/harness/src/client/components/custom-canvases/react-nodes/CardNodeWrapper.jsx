@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import SVG from "react-inlinesvg";
+import { get } from "lodash";
 
 import CardNode, { CardNodeColumn,
 	CardNodeSubtitle,
@@ -46,7 +47,7 @@ class CardNodeWrapper extends React.Component {
 			// The SVG area that shows the sub-flow will overlay this Card Node that
 			// forms the background for the supernode.
 			return (
-				<CardNode>
+				<CardNode className={"card-node-div"}>
 					<CardNodeColumn>
 						<SVG src={this.props.nodeData.image} style={styleImage} />
 					</CardNodeColumn>
@@ -57,8 +58,15 @@ class CardNodeWrapper extends React.Component {
 			);
 		}
 
+		const type = get(this, "props.nodeData.op"); // Derive the type from the operator
+		const color = get(this, "props.nodeData.app_data.react_nodes_data.color");
+		const shape = get(this, "props.nodeData.app_data.react_nodes_data.shape");
+
+		let className = type === "card-node-with-outline" ? "card-node-outline-div" : "";
+		className += shape === "curved-corners" ? " card-node-curved-corners" : "";
+
 		return (
-			<CardNode>
+			<CardNode className={className} color={color}>
 				<CardNodeColumn>
 					<SVG src={this.props.nodeData.image} style={styleImage} />
 				</CardNodeColumn>
