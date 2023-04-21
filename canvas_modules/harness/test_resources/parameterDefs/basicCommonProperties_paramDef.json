@@ -1,0 +1,70 @@
+{
+  "titleDefinition": {
+    "title": "Common properties"
+  },
+  "current_parameters": {
+    "color": "Blue"
+  },
+  "parameters": [
+    {
+      "id": "color",
+      "enum": [
+        "Red",
+        "Blue",
+        "Green"
+      ],
+      "default": "Blue"
+    }
+  ],
+  "uihints": {
+    "id": "basicCommonProperties",
+    "parameter_info": [
+      {
+        "parameter_ref": "color",
+        "label": {
+          "default": "Color"
+        },
+        "description": {
+          "resource_key": "color.description"
+        },
+        "orientation": "vertical"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "color"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "color",
+          "message": {
+            "default": "Error message after selecting 'Red' color"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "color",
+            "op": "notEquals",
+            "value": "Red"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [],
+  "resources": {
+    "color.description": "Select color"
+  }
+}
