@@ -16,11 +16,12 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { injectIntl } from "react-intl";
 import classNames from "classnames";
-
+import { formatMessage } from "./../../util/property-utils";
 import { ComposedModal, ModalHeader, ModalBody } from "carbon-components-react";
 import { Portal } from "react-portal";
-
+import { MESSAGE_KEYS } from "./../../constants/constants";
 import PropertiesButtons from "../../components/properties-buttons";
 
 class TearSheet extends Component {
@@ -47,19 +48,22 @@ class TearSheet extends Component {
 					className={classNames("properties-tearsheet-panel", { "properties-tearsheet-stacked": this.props.stacked })}
 					open={this.props.open}
 					size="lg"
-					aria-label={title}
+					aria-label={formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIES_LABEL, { label: title })}
 					preventCloseOnClickOutside
 				>
-					<ModalHeader
-						className={classNames("properties-tearsheet-header",
-							{ "with-buttons": displayFooterButtons },
-							{ "with-tabs": displayTabs },
-							{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
-						title={title}
-						buttonOnClick={this.props.onCloseCallback}
-					>
-						{description ? (<p>{description}</p>) : null}
-					</ModalHeader>
+					{title === null
+						? null
+						: (<ModalHeader
+							className={classNames("properties-tearsheet-header",
+								{ "with-buttons": displayFooterButtons },
+								{ "with-tabs": displayTabs },
+								{ "hide-close-button": typeof this.props.onCloseCallback !== "function" })}
+							title={title}
+							buttonOnClick={this.props.onCloseCallback}
+						>
+							{description ? (<p>{description}</p>) : null}
+						</ModalHeader>)
+					}
 					<ModalBody className={classNames("properties-tearsheet-body",
 						{ "with-buttons": displayFooterButtons },
 						{ "with-tabs": displayTabs })}
@@ -76,7 +80,7 @@ TearSheet.propTypes = {
 	stacked: PropTypes.bool,
 	onCloseCallback: PropTypes.func,
 	tearsheet: PropTypes.shape({
-		title: PropTypes.string.isRequired,
+		title: PropTypes.string,
 		description: PropTypes.string,
 		content: PropTypes.oneOfType([
 			PropTypes.array,
@@ -88,7 +92,8 @@ TearSheet.propTypes = {
 	rejectLabel: PropTypes.string, // Required if showPropertiesButtons is true
 	okHandler: PropTypes.func, // Required if showPropertiesButtons is true
 	cancelHandler: PropTypes.func, // Required if showPropertiesButtons is true
-	applyOnBlur: PropTypes.bool.isRequired
+	applyOnBlur: PropTypes.bool.isRequired,
+	intl: PropTypes.object.isRequired
 };
 
 TearSheet.defaultProps = {
@@ -98,4 +103,4 @@ TearSheet.defaultProps = {
 	stacked: false
 };
 
-export default TearSheet;
+export default injectIntl(TearSheet);
