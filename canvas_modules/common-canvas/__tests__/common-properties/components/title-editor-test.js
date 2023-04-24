@@ -352,4 +352,21 @@ describe("title-editor renders correctly", () => {
 		expect(helpButton).to.have.length(1);
 
 	});
+
+	it("Don't render TitleEditor when title is null", () => {
+		controller.setTitle(null);
+		helpClickHandler.resetHistory();
+		const wrapper = mountWithIntl(
+			<TitleEditor
+				store={controller.getStore()}
+				controller={controller}
+				labelEditable
+				help={help}
+			/>
+		);
+
+		// Verify TitleEditor isn't rendered
+		const titleEditor = wrapper.find(".properties-title-editor");
+		expect(titleEditor).to.have.length(0);
+	});
 });
