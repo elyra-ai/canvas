@@ -41,7 +41,7 @@
   "control.summary.error": "[Esperanto~There are {errorMsgCount} parameters with errors. ~~~~~~~~~~~~~~~~eo]",
   "control.summary.warning": "[Esperanto~There are {warningMsgCount} parameters with warnings. ~~~~~~~eo]",
   "control.summary.error.warning": "[Esperanto~There are {errorMsgCount} parameters with errors and {warningMsgCount} parameters with warnings.~~~~~~~~~~~~~~eo]",
-  "required.error": "[Esperanto~You must provide your {label}.~~~~~~~~~~eo]",
+  "required.error": "[Esperanto~You must enter a value for {label}.~~~~~~~eo]",
   "datetime.format.error": "[Esperanto~Invalid {role}. Format should be {format}.~~~~~~~~~~~eo]",
   "invalid.field.error": "[Esperanto~Invalid {label}, field not found in data set.~~~~~~~~~~~~~eo]",
   "invalid.number.error": "[Esperanto~Number is not valid.~~~~~~eo]",

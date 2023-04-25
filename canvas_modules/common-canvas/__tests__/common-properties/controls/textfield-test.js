@@ -115,7 +115,7 @@ describe("textfield renders correctly", () => {
 		const expectedErrors = {
 			"string_empty": {
 				"type": "error",
-				"text": "You must provide your Empty.",
+				"text": "You must enter a value for Empty.",
 				"validation_id": "required_string_empty_938.7063182960883",
 				"required": true,
 				"displayError": false,

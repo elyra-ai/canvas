@@ -220,7 +220,7 @@ describe("error messages renders correctly for timefield controls", () => {
 			"required": true,
 			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
-			"text": "You must provide your Required Time H:m:s.",
+			"text": "You must enter a value for Required Time H:m:s.",
 		};
 		const actual = controller.getErrorMessage({ name: "time_hms" });
 
