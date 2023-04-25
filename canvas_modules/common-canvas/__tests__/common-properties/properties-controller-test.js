@@ -1230,7 +1230,7 @@ describe("Properties Controller handlers", () => {
 		const expectedRequiredMessages = {
 			"number_undefined": {
 				"type": "error",
-				"text": "You must provide your Undefined.",
+				"text": "You must enter a value for Undefined.",
 				"validation_id": "required_number_undefined_272.9520234285945",
 				"propertyId": {
 					"name": "number_undefined"
@@ -1240,7 +1240,7 @@ describe("Properties Controller handlers", () => {
 			},
 			"number_null": {
 				"type": "error",
-				"text": "You must provide your Null.",
+				"text": "You must enter a value for Null.",
 				"validation_id": "required_number_null_401.11526920064296",
 				"propertyId": {
 					"name": "number_null"
@@ -1785,7 +1785,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 	const requiredErrors = {
 		"hidden_required_control": {
 			"type": "error",
-			"text": "You must provide your hidden_required_control.",
+			"text": "You must enter a value for hidden_required_control.",
 			"validation_id": "required_hidden_required_control_424.43891381281946",
 			"required": true,
 			"propertyId": { "name": "hidden_required_control" },
@@ -1793,7 +1793,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		},
 		"numberfieldMaxBins": {
 			"type": "error",
-			"text": "You must provide your Maximum number of bins.",
+			"text": "You must enter a value for Maximum number of bins.",
 			"validation_id": "required_numberfieldMaxBins_823.4996625010101",
 			"required": true,
 			"propertyId": { "name": "numberfieldMaxBins" },
@@ -1817,7 +1817,7 @@ describe("Properties Controller getRequiredErrorMessages", () => {
 		},
 		"textareaDescription": {
 			"type": "error",
-			"text": "You must provide your Description.",
+			"text": "You must enter a value for Description.",
 			"validation_id": "required_textareaDescription_708.576019526482",
 			"required": false,
 			"propertyId": { "name": "textareaDescription" },

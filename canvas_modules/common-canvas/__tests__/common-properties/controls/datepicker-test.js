@@ -154,7 +154,7 @@ describe("error messages renders correctly for datepicker controls", () => {
 			"required": true,
 			"validation_id": "required_datepicker_required_821.7135172867598",
 			"type": "error",
-			"text": "You must provide your Date format: Date Y-m-d.",
+			"text": "You must enter a value for Date format: Date Y-m-d.",
 		};
 		const actual = controller.getErrorMessage(propertyId);
 		expect(actual).to.eql(expectedDatepickerErrorMessages);
