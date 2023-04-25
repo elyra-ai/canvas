@@ -321,7 +321,7 @@ Cypress.Commands.add("verifyNumberOfNodes", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-image").length) {
+		if ($body.find(".d3-canvas-group .d3-node-image").length) {
 			cy.get(nodesInSubFlowSelector)
 				.should("have.length", noOfNodes);
 		} else {
@@ -333,7 +333,7 @@ Cypress.Commands.add("verifyNumberOfNodesInSubFlow", (noOfNodes) => {
 
 Cypress.Commands.add("verifyNumberOfNodesInSubFlowInSubFlow", (noOfNodes) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-image").length) {
+		if ($body.find(".d3-canvas-group .d3-node-image").length) {
 			cy.get(nodesInSubFlowInSubFlowSelector)
 				.should("have.length", noOfNodes);
 		} else {
@@ -345,7 +345,7 @@ Cypress.Commands.add("verifyNumberOfNodesInSubFlowInSubFlow", (noOfNodes) => {
 
 
 Cypress.Commands.add("verifyNumberOfNodesInExtraCanvas", (noOfNodes) => {
-	cy.get("#canvas-div-1").find(".d3-node-image")
+	cy.get("#canvas-div-1").find(".d3-canvas-group .d3-node-image")
 		.should("have.length", noOfNodes);
 
 	// verify the number of nodes in the internal object model
