@@ -42,6 +42,10 @@ class CardNodeWrapper extends React.Component {
 	render() {
 		const styleImage = { height: "24px", width: "24px", y: 0 };
 
+		const image = this.props.nodeData.image === "useDefaultIcon"
+			? "images/custom-canvases/flows/palette/icons/supernode.svg"
+			: this.props.nodeData.image;
+
 		if (this.props.nodeData.type === "super_node" &&
 				this.props.nodeData.is_expanded) {
 			// The SVG area that shows the sub-flow will overlay this Card Node that
@@ -49,7 +53,7 @@ class CardNodeWrapper extends React.Component {
 			return (
 				<CardNode className={"card-node-div"}>
 					<CardNodeColumn>
-						<SVG src={this.props.nodeData.image} style={styleImage} />
+						<SVG src={image} style={styleImage} />
 					</CardNodeColumn>
 					<CardNodeColumn>
 						<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
@@ -68,7 +72,7 @@ class CardNodeWrapper extends React.Component {
 		return (
 			<CardNode className={className} color={color}>
 				<CardNodeColumn>
-					<SVG src={this.props.nodeData.image} style={styleImage} />
+					<SVG src={image} style={styleImage} />
 				</CardNodeColumn>
 				<CardNodeColumn>
 					<CardNodeTitle>{this.props.nodeData.label}</CardNodeTitle>
