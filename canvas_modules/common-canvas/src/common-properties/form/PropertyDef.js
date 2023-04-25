@@ -62,7 +62,7 @@ export class PropertyDef {
 		const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
 		const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"), parameterMetadata.getParameters());
 
-		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
+		const label = titleDefinition && titleDefinition.title ? titleDefinition.title : null;
 		const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
 
 		return new PropertyDef(
