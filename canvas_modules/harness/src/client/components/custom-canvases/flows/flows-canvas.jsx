@@ -16,51 +16,27 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { FormattedMessage } from "react-intl";
-import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import { isEmpty } from "lodash";
+
+import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
+
 import FlowsCanvasFlow from "./flowsCanvas.json";
 import FlowsPalette from "./flowsPalette.json";
 import FlowsLoadingPalette from "./flowsLoadingPalette.json";
-import FormsService from "../../../services/FormsService";
-import { FORMS, PARAMETER_DEFS, CUSTOM } from "../../../constants/constants.js";
-import CustomTableControl from "../../../components/custom-controls/CustomTableControl";
+import FlowsProperties from "./flows-properties";
 
 export default class FlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			showPropertiesDialog: false,
-			propertiesInfo: {},
-			light: true
-		};
+		this.propertiesRef = React.createRef();
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
 		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
-		this.availableForms = [];
-		this.availableParamDefs = [];
 
 		this.activateLoadingCanvas();
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
-		this.getNodeForm = this.getNodeForm.bind(this);
-		this.getPropertyDefName = this.getPropertyDefName.bind(this);
-		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
-		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
-	}
-
-	componentDidMount() {
-		const that = this;
-		FormsService.getFiles(FORMS)
-			.then(function(res) {
-				that.availableForms = res;
-			});
-		FormsService.getFiles(PARAMETER_DEFS)
-			.then(function(res) {
-				that.availableParamDefs = res;
-			});
 	}
 
 	getConfig() {
@@ -121,109 +97,6 @@ export default class FlowsCanvas extends React.Component {
 		return config;
 	}
 
-	getNodeForm(nodeId, pipelineId, canvasController, callback) {
-		// set current parameterSet
-		// get the current parameters for the node from the internal ObjectModel
-		const node = canvasController.getNode(nodeId, pipelineId);
-		const propertyDef = this.getPropertyDefName(node);
-		FormsService.getFileContent(propertyDef.type, propertyDef.fileName)
-			.then(function(res) {
-				const response = res;
-				if (node) {
-					if (response.formData) {
-						if (!isEmpty(node.parameters)) {
-							response.formData.data.currentParameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.formData.data.uiCurrentParameters = node.uiParameters;
-						}
-						response.formData.label = node.label;
-					} else {
-						if (!isEmpty(node.parameters)) {
-							response.current_parameters = node.parameters;
-						}
-						if (!isEmpty(node.uiParameters)) {
-							response.current_ui_parameters = node.uiParameters;
-						}
-						if (!response.titleDefinition) {
-							response.titleDefinition = {};
-						}
-						response.titleDefinition.title = node.label;
-					}
-				}
-				callback(response);
-			});
-	}
-
-	getPropertyDefName(node) {
-		if (node.op) {
-			let foundName = this.availableForms.find((name) => name.startsWith(node.op));
-			if (foundName) {
-				return {
-					fileName: foundName,
-					type: FORMS
-				};
-			}
-			foundName = this.availableParamDefs.find((name) => name.startsWith(node.op));
-			if (foundName) {
-				return {
-					fileName: foundName,
-					type: PARAMETER_DEFS
-				};
-			}
-		}
-		return {
-			fileName: "default.json",
-			type: FORMS
-		};
-	}
-
-	getPropertiesConfig() {
-		return {
-			containerType: CUSTOM,
-			rightFlyout: true,
-			schemaValidation: true,
-			applyPropertiesWithoutEdit: false,
-			applyOnBlur: false,
-			convertValueDataTypes: false,
-			disableSaveOnRequiredErrors: true,
-			trimSpaces: true,
-			heading: true,
-			showRequiredIndicator: true,
-			returnValueFiltering: [],
-			maxLengthForMultiLineControls: 1024,
-			maxLengthForSingleLineControls: 128,
-			locale: "en"
-		};
-	}
-
-	getCommonProperties() {
-		if (isEmpty(this.state.propertiesInfo)) {
-			return null;
-		}
-
-		const propertiesConfig = this.getPropertiesConfig();
-
-		const callbacks = {
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog
-		};
-
-		const commonProperties = (
-			<CommonProperties
-				ref={(instance) => {
-					this.CommonProperties = instance;
-				}}
-				propertiesInfo={this.state.propertiesInfo}
-				propertiesConfig={propertiesConfig}
-				customControls={[CustomTableControl]}
-				callbacks={callbacks}
-				light={this.state.light}
-			/>);
-
-		return commonProperties;
-	}
-
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
@@ -232,57 +105,11 @@ export default class FlowsCanvas extends React.Component {
 	}
 
 	clickActionHandler(source) {
-		if (source.objectType === "node" &&
+		if (this.propertiesRef.current && source.objectType === "node" &&
 			((source.clickType === "SINGLE_CLICK" &&
 				this.canvasController.getSelectedObjectIds().length === 1) ||
 				(source.clickType === "DOUBLE_CLICK"))) {
-			this.editNodeHandler(source.id, source.pipelineId);
-		}
-	}
-
-	editNodeHandler(nodeId, activePipelineId) {
-		const canvasController = this.canvasController;
-		const currentEditorNodeId = this.currentEditorId;
-		const commonPropertiesRef = this.CommonProperties;
-		if (nodeId && currentEditorNodeId !== nodeId) {
-			// apply properties from previous node if node selection has changed w/o closing editor
-			if (currentEditorNodeId && canvasController.getNode(currentEditorNodeId, activePipelineId)) {
-				commonPropertiesRef.applyPropertiesEditing(false);
-			}
-
-			this.currentEditorId = nodeId;
-			const appData = { nodeId: nodeId, inExtraCanvas: false, pipelineId: activePipelineId };
-			this.getNodeForm(nodeId, activePipelineId, canvasController, (properties) => {
-				const messages = canvasController.getNodeMessages(nodeId, activePipelineId);
-				const propsInfo = {
-					title: <FormattedMessage id={"dialog.nodePropertiesTitle"} />,
-					messages: messages,
-					formData: properties.formData,
-					parameterDef: properties,
-					appData: appData,
-					initialEditorSize: "small"
-				};
-
-				this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
-			});
-		}
-	}
-
-	closePropertiesEditorDialog() {
-		this.currentEditorId = null;
-		this.canvasController.setSelections([]); // clear selection
-		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
-	}
-
-	applyPropertyChanges(form, appData, additionalInfo, undoInfo, uiProperties) {
-		if (appData && appData.nodeId) {
-			const canvasController = this.canvasController;
-
-			// store parameters in case properties were opened from canvas
-			canvasController.setNodeParameters(appData.nodeId, form, appData.pipelineId);
-			canvasController.setNodeLabel(appData.nodeId, additionalInfo.title, appData.pipelineId);
-			canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages, appData.pipelineId);
-			canvasController.setNodeUiParameters(appData.nodeId, uiProperties, appData.pipelineId);
+			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
 
@@ -302,24 +129,22 @@ export default class FlowsCanvas extends React.Component {
 
 	render() {
 		const config = this.getConfig();
-		let rightFlyoutContentProperties = null;
-		const showRightFlyoutProperties = this.state.showPropertiesDialog;
-		if (showRightFlyoutProperties) {
-			rightFlyoutContentProperties = this.getCommonProperties();
-		}
 
-		const rightFlyoutContent = rightFlyoutContentProperties
-			? rightFlyoutContentProperties
-			: null;
+		const rightFlyoutContent = (
+			<FlowsProperties
+				ref={this.propertiesRef}
+				canvasController={this.canvasController}
+			/>
+		);
 
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				config={config}
-				clickActionHandler={this.clickActionHandler}
-				showRightFlyout={showRightFlyoutProperties}
 				rightFlyoutContent={rightFlyoutContent}
+				clickActionHandler={this.clickActionHandler}
+				showRightFlyout
 			/>
 		);
 	}

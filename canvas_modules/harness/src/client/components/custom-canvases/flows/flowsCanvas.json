@@ -59,7 +59,7 @@
         {
           "id": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
           "type": "binding",
-          "op": "glmm_paramDef",
+          "op": "selectcolumn_multiInput_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Sim Gen",
