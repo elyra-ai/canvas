@@ -98,9 +98,16 @@ export default class ReactNodesCanvas extends React.Component {
 	layoutHandler(node) {
 		if (node.op === "shape-node") {
 			const config = {
+				selectionPath: "M -4 -4 h 36 v 36 h -36 Z",
 				nodeExternalObject: ShapeNodeWrapper,
 				defaultNodeWidth: 28,
-				defaultNodeHeight: 70
+				defaultNodeHeight: 70,
+				className: "shape-node",
+				inputPortDisplay: false,
+				inputPortLeftPosX: -12,
+				inputPortLeftPosY: 15,
+				outputPortRightPosX: 12,
+				outputPortRightPosY: 15
 			};
 			return config;
 		}

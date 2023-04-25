@@ -34,6 +34,14 @@
 			width: 28px;
 		}
 
+		// Allow the labels of ShapeNodes to be visible outside the
+		// boundaries of the containing foreignObject.
+		&.shape-node {
+			foreignObject {
+				overflow: visible;
+			}
+		}
+
 		.d3-node-selection-highlight[data-selected="yes"] {
 			stroke: $ui-05;
 			stroke-dasharray: 4, 4;

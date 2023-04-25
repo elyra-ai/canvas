@@ -706,7 +706,7 @@ export default class ObjectModel {
 
 	// Returns a copy of the node passed in with additional fields which contain
 	// layout, dimension and supernode binding status info. This uses the redux
-	// layout information. This is called from the api-pipeline class.
+	// layout information.
 	setNodeAttributes(node) {
 		return this.setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
 	}

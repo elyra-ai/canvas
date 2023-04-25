@@ -63,7 +63,7 @@ class PaletteContentListItem extends React.Component {
 		// We cannot use the dataTransfer object for the nodeTemplate because
 		// the dataTransfer data is not available during dragOver events so we set
 		// the nodeTemplate into the canvas controller.
-		this.props.canvasController.nodeTemplateDragStart(this.props.nodeTypeInfo.nodeType);
+		this.props.canvasController.nodeTemplateDragStart(this.ghostData.nodeTemplate);
 
 		// On firefox, the drag will not start unless something is written to
 		// the dataTransfer object so just write an empty string
@@ -88,7 +88,8 @@ class PaletteContentListItem extends React.Component {
 
 	onDoubleClick() {
 		if (this.props.canvasController.createAutoNode) {
-			this.props.canvasController.createAutoNode(this.props.nodeTypeInfo.nodeType);
+			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
+			this.props.canvasController.createAutoNode(nodeTemplate);
 		}
 	}
 

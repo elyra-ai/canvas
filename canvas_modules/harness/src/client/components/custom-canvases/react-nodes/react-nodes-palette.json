@@ -136,7 +136,7 @@
             }
           }
         },
-				{
+        {
           "id": "",
           "type": "execution_node",
           "op": "card-node-regular",
@@ -279,7 +279,7 @@
             }
           }
         },
-				{
+        {
           "id": "",
           "type": "execution_node",
           "op": "shape-node",
@@ -324,7 +324,7 @@
             }
           }
         }
-			]
+      ]
     }
   ]
 }
