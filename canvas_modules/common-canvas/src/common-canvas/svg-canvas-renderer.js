@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,7 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
-
-import React from "react";
-import ReactDOM from "react-dom";
-
+import { addNodeExternalObject, removeNodeExternalObject } from "./svg-canvas-utils-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -872,23 +869,8 @@ export default class SVGCanvasRenderer {
 	// plus its width and height. This needs to be called each time a new node
 	// is dragged from the palette, in case the dimensions of the ghost node
 	// have changed because the canvas has been zoomed.
-	getGhostNode(nodeTemplate) {
+	getGhostNode(node) {
 		const that = this;
-		const ghost = this.getGhostDimensions();
-		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
-		node.layout = this.nodeLayout;
-		if (node.is_expanded) {
-			node.width = node.expanded_width;
-			node.height = node.expanded_height;
-		} else if (node.isResized) {
-			node.width = node.resizeWidth;
-			node.height = node.resizeHeight;
-		} else {
-			node.width = ghost.width;
-			node.height = ghost.height;
-		}
-		const nodeImage = this.getNodeImage(node);
-		const nodeImageType = this.getImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();
 
 		// Calculate the ghost area width which is the maximum of either the node
@@ -923,7 +905,10 @@ export default class SVGCanvasRenderer {
 			.attr("width", node.width)
 			.attr("height", node.height);
 
-		if (!this.nodeLayout.reactObject) {
+		if (!this.nodeLayout.nodeExternalObject) {
+			const nodeImage = this.getNodeImage(node);
+			const nodeImageType = this.getImageType(nodeImage);
+
 			ghostGrp
 				.append(nodeImageType)
 				.attr("class", "d3-node-image")
@@ -965,7 +950,7 @@ export default class SVGCanvasRenderer {
 
 			// Next calculate the amount, if any, the label protrudes beyond the edge
 			// of the node width and move the ghost group by that amount.
-			xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
+			xOffset = Math.max(0, (labelDisplayLength - node.width) / 2) * this.zoomTransform.k;
 
 			// If the label is center justified, restrict the label width to the
 			// display amount and adjust the x coordinate to compensate for the change
@@ -988,13 +973,14 @@ export default class SVGCanvasRenderer {
 
 		// Calculate the center of the node area for positioning the mouse pointer
 		// on the image when it is being dragged.
-		const centerX = (xOffset + ((ghost.width / 2) * this.zoomTransform.k)) * browserZoom;
-		const centerY = ((ghost.height / 2) * this.zoomTransform.k) * browserZoom;
+		const centerX = (xOffset + ((node.width / 2) * this.zoomTransform.k)) * browserZoom;
+		const centerY = ((node.height / 2) * this.zoomTransform.k) * browserZoom;
 
 		return {
 			element: ghostDivSel.node(),
 			centerX: centerX,
-			centerY: centerY
+			centerY: centerY,
+			nodeTemplate: node
 		};
 	}
 
@@ -1019,17 +1005,6 @@ export default class SVGCanvasRenderer {
 		}
 
 		return browserZoom;
-	}
-
-	// Returns an object containing the dimensions of the ghost node that hovers
-	// over canvas when a node is being dragged from the palette. The ghost node
-	// is based on the default node width and height so any change to these values
-	// that might be made to a node by the layoutHandler will not be reflected here.
-	getGhostDimensions() {
-		return {
-			width: this.nodeLayout.defaultNodeWidth,
-			height: this.nodeLayout.defaultNodeHeight
-		};
 	}
 
 	nodeTemplateDragStart(nodeTemplate) {
@@ -1060,12 +1035,11 @@ export default class SVGCanvasRenderer {
 
 		if (this.isNodeTemplateAttachableToDetachedLinks(nodeTemplate)) {
 			const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
-			const ghost = this.getGhostDimensions();
 			const ghostArea = {
-				x1: mousePos.x - (ghost.width / 2),
-				y1: mousePos.y - (ghost.height / 2),
-				x2: mousePos.x + (ghost.width / 2),
-				y2: mousePos.y + (ghost.height / 2)
+				x1: mousePos.x - (nodeTemplate.width / 2),
+				y1: mousePos.y - (nodeTemplate.height / 2),
+				x2: mousePos.x + (nodeTemplate.width / 2),
+				y2: mousePos.y + (nodeTemplate.height / 2)
 			};
 			const template = this.canvasController.convertNodeTemplate(nodeTemplate);
 			const links = this.getAttachableLinksForNodeAtPos(template, ghostArea);
@@ -1215,12 +1189,13 @@ export default class SVGCanvasRenderer {
 		this.dragNewLinkOverNode = null;
 	}
 
-	// Processes the drop of a palette node template onto the canvas.
+	// Processes the drop of a palette node template onto the canvas. The
+	// nodeTemplate is in internal format.
 	nodeTemplateDropped(nodeTemplate, x, y) {
 		if (nodeTemplate === null) {
 			return;
 		}
-		const transPos = this.transformMousePosForNode(x, y);
+		const transPos = this.transformMousePosForNode(x, y, nodeTemplate);
 
 		// If the node template was dropped on a link
 		if (this.dragOverLink) {
@@ -1253,13 +1228,17 @@ export default class SVGCanvasRenderer {
 
 	// Transforms the mouse position passed in to be appropriate for a palette
 	// node or external object being dragged over the canvas.
-	transformMousePosForNode(x, y) {
+	transformMousePosForNode(x, y, node) {
 		const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
 
 		// Offset mousePos so new node appears in center of mouse location.
-		const ghost = this.getGhostDimensions();
-		mousePos.x -= ghost.width / 2;
-		mousePos.y -= ghost.height / 2;
+		if (node && node.width && node.height) {
+			mousePos.x -= node.width / 2;
+			mousePos.y -= node.height / 2;
+		} else {
+			mousePos.x -= this.nodeLayout.defaultNodeWidth / 2;
+			mousePos.y -= this.nodeLayout.defaultNodeHeight / 2;
+		}
 
 		return this.getMousePosSnapToGrid(mousePos);
 	}
@@ -2721,9 +2700,9 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-node-body-outline");
 
 		// Optional foreign object to contain a React object
-		newNodeGroups.filter((d) => d.layout.reactObject)
+		newNodeGroups.filter((d) => d.layout.nodeExternalObject)
 			.append("foreignObject")
-			.attr("class", "d3-foreign-object-react-node");
+			.attr("class", "d3-foreign-object-external-node");
 
 		// Node Image
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
@@ -2771,13 +2750,13 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
 		// Optional foreign object to contain a React object
-		joinedNodeGrps.selectChildren(".d3-foreign-object-react-node")
+		joinedNodeGrps.selectChildren(".d3-foreign-object-external-node")
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.each(this.addReactNode.bind(this));
+			.each(addNodeExternalObject.bind(this));
 
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
@@ -2836,27 +2815,11 @@ export default class SVGCanvasRenderer {
 	removeNodes(removeSel) {
 		// Remove any foreign objects for react nodes, if necessary.
 		removeSel
-			.selectChildren(".d3-foreign-object-react-node")
-			.selectChildren("div")
-			.each(this.removeReactNode.bind(this));
+			.selectChildren(".d3-foreign-object-external-node")
+			.each(removeNodeExternalObject.bind(this));
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
-	}
-
-	addReactNode(d, i, foreignObjects) {
-		ReactDOM.render(
-			<d.layout.reactObject
-				nodeData={d}
-				onClick={this.onClick}
-				isSelected={this.activePipeline.isSelected(d.id)}
-			/>,
-			foreignObjects[i]
-		);
-	}
-
-	removeReactNode(d, i, foreignObjects) {
-		ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 	}
 
 	onClick() {

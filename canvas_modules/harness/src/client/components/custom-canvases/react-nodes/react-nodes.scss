@@ -18,9 +18,28 @@
 .react-nodes {
 
 	.d3-node-group {
-		.d3-node-body-outline {
-			fill: transparent;
-			stroke: transparent;
+		.card-node-outline-div {
+			border-top: thin solid;
+			border-bottom: thin solid;
+			border-right: thin solid;
+		}
+
+		.card-node-curved-corners {
+			border: thin solid;
+			border-radius: 10px;
+		}
+
+		.shape-node-div {
+			border: thin solid;
+			width: 28px;
+		}
+
+		// Allow the labels of ShapeNodes to be visible outside the
+		// boundaries of the containing foreignObject.
+		&.shape-node {
+			foreignObject {
+				overflow: visible;
+			}
 		}
 
 		.d3-node-selection-highlight[data-selected="yes"] {

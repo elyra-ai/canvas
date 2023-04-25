@@ -1,470 +1,665 @@
 {
-	"doc_type": "pipeline",
-	"version": "3.0",
-	"json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-	"id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
-	"primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
-	"pipelines": [{
-		"id": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
-		"nodes": [{
-			"id": "428a247b-e126-452c-bd10-5970af945dcd",
-			"type": "execution_node",
-			"op": "dvcharts",
-			"app_data": {
-				"ui_data": {
-					"label": "Charts",
-					"image": "images/custom-canvases/flows/palette/icons/dvcharts.svg",
-					"x_pos": 900,
-					"y_pos": 112,
-					"description": "Launch the chart builder and create chart definitions to save with your flow."
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "9b19d248-39f2-4363-938f-e6b15b25e1c2",
-					"node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
-					"port_id_ref": "outPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
-			"type": "binding",
-			"op": "simgen",
-			"app_data": {
-				"react_nodes": {
-					"type": "shape-node"
-				},
-				"ui_data": {
-					"label": "Sim Gen",
-					"image": "images/custom-canvases/flows/palette/icons/simgen.svg",
-					"x_pos": 0,
-					"y_pos": 182,
-					"description": "Generate simulated data automatically or with user-specified statistical distributions."
-				}
-			},
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "bef59803-c593-478f-93d4-d1bd0deaf14e",
-			"type": "binding",
-			"op": "autocluster",
-			"app_data": {
-				"ui_data": {
-					"label": "Auto Cluster",
-					"image": "images/custom-canvases/flows/palette/icons/autocluster.svg",
-					"x_pos": 900,
-					"y_pos": 368,
-					"description": "Estimates and compares clustering models that identify groups of records with similar characteristics.",
-					"associations": [{
-						"id": "223278ed-3037-41c7-ade4-ed7fc279c693",
-						"node_ref": "140c34a1-63be-4aa9-865c-47160a48d804"
-					}]
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "a837d7da-2341-462e-a43f-ea2a0a467d5a",
-					"node_id_ref": "1af18594-86db-4b21-8f40-16afad1ece0b",
-					"port_id_ref": "outPort"
-				}]
-			}]
-		}, {
-			"id": "140c34a1-63be-4aa9-865c-47160a48d804",
-			"type": "binding",
-			"op": "applyautocluster",
-			"app_data": {
-				"ui_data": {
-					"label": "Auto Cluster",
-					"image": "images/custom-canvases/flows/palette/icons/applyautocluster.svg",
-					"x_pos": 900,
-					"y_pos": 550,
-					"description": "Estimates and compares clustering models that identify groups of records with similar characteristics."
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				}
-			}]
-		}, {
-			"id": "1af18594-86db-4b21-8f40-16afad1ece0b",
-			"type": "execution_node",
-			"op": "type",
-			"app_data": {
-				"ui_data": {
-					"label": "Type",
-					"image": "images/custom-canvases/flows/palette/icons/type.svg",
-					"x_pos": 600,
-					"y_pos": 182,
-					"description": "Specify field metadata and properties that are invaluable to modeling."
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "f4a06a4c-6a33-40ce-b364-885cd629a1cf",
-					"node_id_ref": "00035b26-230a-4d60-ab69-631877207b23",
-					"port_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "00035b26-230a-4d60-ab69-631877207b23",
-			"type": "super_node",
-			"subflow_ref": {
-				"pipeline_id_ref": "75ed071a-ba8d-4212-a2ad-41a54198dd6b"
-			},
-			"app_data": {
-				"ui_data": {
-					"label": "Supernode",
-					"image": "images/custom-canvases/flows/palette/icons/supernode.svg",
-					"x_pos": 250,
-					"y_pos": 182,
-					"description": "This supernode was created by common-canvas.",
-					"is_expanded": true,
-					"expanded_width": 300,
-					"expanded_height": 200,
-					"decorations": [{
-						"position": "topLeft",
-						"x_pos": -10,
-						"y_pos": -20,
-						"image": "images/custom-canvases/flows/decorations/drillIntoSupernode.svg",
-						"outline": true,
-						"hotspot": true,
-						"id": "supernode-zoom"
-					}]
-				}
-			},
-			"inputs": [{
-				"id": "1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort",
-				"subflow_node_ref": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Binding port for supernode"
-					}
-				},
-				"links": [{
-					"id": "903665ce-cfea-43b5-80c6-c147d8030b29",
-					"node_id_ref": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
-					"port_id_ref": "outPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort",
-				"subflow_node_ref": "7b6cf855-244b-4017-a062-e37832f95642",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Binding port for supernode"
-					}
-				}
-			}]
-		}],
-		"app_data": {
-			"ui_data": {
-				"comments": [{
-					"id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
-					"x_pos": 50,
-					"y_pos": 0,
-					"width": 400,
-					"height": 112,
-					"class_name": "d3-comment-rect bkg-col-yellow-20",
-					"content": "## React Objects forming body of nodes\n\nThis sample app shows the CardNode and ShapeNode from Carbon-Charts being used to display Canvas nodes",
-					"associated_id_refs": []
-				}]
-			}
-		},
-		"runtime_ref": ""
-	}, {
-		"id": "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-		"nodes": [{
-			"id": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0",
-			"type": "execution_node",
-			"op": "balance",
-			"app_data": {
-				"ui_data": {
-					"label": "Balance",
-					"image": "images/custom-canvases/flows/palette/icons/balance.svg",
-					"x_pos": 350,
-					"y_pos": 420,
-					"description": "Correct imbalances in datasets so they conform to specified test criteria.",
-					"decorations": [{
-						"position": "topLeft",
-						"x_pos": -10,
-						"y_pos": -20,
-						"image": "images/custom-canvases/flows/decorations/cacheWithNoData.svg",
-						"outline": false,
-						"id": "463528be-1099-496c-a458-b6364e6dc449"
-					}]
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "84170189-9fb3-4400-bb75-d469b7903664",
-					"node_id_ref": "04a6ca7a-d6ef-4bc6-b64c-5a7c7b5caa5c",
-					"port_id_ref": "outPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "04a6ca7a-d6ef-4bc6-b64c-5a7c7b5caa5c",
-			"type": "execution_node",
-			"op": "distinct",
-			"app_data": {
-				"ui_data": {
-					"label": "Distinct",
-					"image": "images/custom-canvases/flows/palette/icons/distinct.svg",
-					"x_pos": 350,
-					"y_pos": 238,
-					"description": "Find or remove duplicate records in your data, or create a single, composite record from a group of duplicate records.",
-					"decorations": [{
-						"position": "topLeft",
-						"x_pos": -10,
-						"y_pos": -20,
-						"image": "images/custom-canvases/flows/decorations/cacheWithData.svg",
-						"outline": false,
-						"id": "c542c7ec-5777-4dcc-b466-2e411a554487"
-					}]
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "23dbd3c3-ef69-47dc-97a5-61ec7cc15434",
-					"node_id_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1",
-					"port_id_ref": "outPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "1b4c8250-fc73-4357-a84c-bed175ab1cf1",
-			"type": "execution_node",
-			"op": "filler",
-			"app_data": {
-				"ui_data": {
-					"label": "Filler",
-					"image": "images/custom-canvases/flows/palette/icons/filler.svg",
-					"x_pos": 50,
-					"y_pos": 308,
-					"description": "Replace field values and change storage. Often used with a Type node to replace missing values."
-				}
-			},
-			"inputs": [{
-				"id": "inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Input Port"
-					}
-				},
-				"links": [{
-					"id": "c512ed88-857a-4b77-9507-f9c66129b1a5",
-					"node_id_ref": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
-					"port_id_ref": "output_1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort"
-				}]
-			}],
-			"outputs": [{
-				"id": "outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Output Port"
-					}
-				}
-			}]
-		}, {
-			"id": "aa0f90c5-441d-4bf1-ab35-5cadb7c32510",
-			"type": "binding",
-			"app_data": {
-				"ui_data": {
-					"label": "Binding",
-					"x_pos": 0,
-					"y_pos": 266,
-					"description": "Supernode binding node"
-				}
-			},
-			"outputs": [{
-				"id": "output_1b4c8250-fc73-4357-a84c-bed175ab1cf1_inPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": 1
-						},
-						"label": "Binding port for supernode"
-					}
-				}
-			}]
-		}, {
-			"id": "7b6cf855-244b-4017-a062-e37832f95642",
-			"type": "binding",
-			"app_data": {
-				"ui_data": {
-					"label": "Binding",
-					"x_pos": 600,
-					"y_pos": 266,
-					"description": "Supernode binding node"
-				}
-			},
-			"inputs": [{
-				"id": "input_3ee97ab2-bdc0-4151-abd6-7dcd907432c0_outPort",
-				"app_data": {
-					"ui_data": {
-						"cardinality": {
-							"min": 0,
-							"max": -1
-						},
-						"label": "Binding port for supernode"
-					}
-				},
-				"links": [{
-					"id": "316f85fb-b09c-482c-b739-8a2692a3960f",
-					"node_id_ref": "3ee97ab2-bdc0-4151-abd6-7dcd907432c0",
-					"port_id_ref": "outPort"
-				}]
-			}]
-		}],
-		"app_data": {
-			"ui_data": {
-				"comments": [{
-					"id": "0b123469-7d21-43a5-ae84-cbc999990033",
-					"x_pos": 50,
-					"y_pos": 210,
-					"width": 175,
-					"height": 42,
-					"class_name": "d3-comment-rect",
-					"content": "A connected comment",
-					"associated_id_refs": [{
-						"id": "bb7ceb40-2a41-412e-b756-0634908145ea",
-						"node_ref": "1b4c8250-fc73-4357-a84c-bed175ab1cf1"
-					}]
-				}]
-			}
-		},
-		"runtime_ref": ""
-	}],
-	"schemas": []
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
+  "primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+  "pipelines": [
+    {
+      "id": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
+      "nodes": [
+        {
+          "id": "178a4e3c-6cdf-4465-914d-b9d71c5ef6b8",
+          "type": "execution_node",
+          "op": "shape-node",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "square"
+            },
+            "ui_data": {
+              "label": "Square",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 55,
+              "y_pos": 340,
+              "description": "A square shape node from the carbon charts library"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "8a9fbf9d-88b0-4ccc-a0bb-55e2defcb973",
+          "type": "execution_node",
+          "op": "shape-node",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "circle"
+            },
+            "ui_data": {
+              "label": "Circle",
+              "image": "images/custom-canvases/flows/palette/icons/sort.svg",
+              "x_pos": 165,
+              "y_pos": 340,
+              "description": "A circle shape node from the carbon charts library"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "bbbb64c8-d1eb-4f3f-bd85-0ffa258dba4c",
+                  "node_id_ref": "178a4e3c-6cdf-4465-914d-b9d71c5ef6b8",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
+          "type": "execution_node",
+          "op": "shape-node",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "rounded-square"
+            },
+            "ui_data": {
+              "label": "Rounded square",
+              "image": "images/custom-canvases/flows/palette/icons/sample.svg",
+              "x_pos": 275,
+              "y_pos": 340,
+              "description": "A rounded-square shape node from the carbon charts library"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "fb317c2d-6937-4852-85eb-167fb54ee4a2",
+                  "node_id_ref": "8a9fbf9d-88b0-4ccc-a0bb-55e2defcb973",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "504aa60b-7422-4adb-adf4-2b6215f46a15",
+          "type": "execution_node",
+          "op": "card-node-regular",
+          "app_data": {
+            "ui_data": {
+              "label": "Regular Card Node",
+              "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
+              "x_pos": 440,
+              "y_pos": 160,
+              "description": "Card node from Carbon Charts library."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "e43fbe63-2759-4977-9df4-4f83074e3c75",
+                  "node_id_ref": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1388ce99-b453-4b35-9aa9-3cde04cdb3bb",
+          "type": "execution_node",
+          "op": "card-node-with-outline",
+          "app_data": {
+            "ui_data": {
+              "label": "Card Node with outline",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 770,
+              "y_pos": 160,
+              "description": "Card node with an outline."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "bfb136a5-9c7c-42c6-aa80-a46daf0c1a36",
+                  "node_id_ref": "504aa60b-7422-4adb-adf4-2b6215f46a15",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "5d47eb47-bac4-4f47-a279-01d39133f118",
+          "type": "execution_node",
+          "op": "regular-card-node",
+          "app_data": {
+            "react_nodes_data": {
+              "color": "#EAC348"
+            },
+            "ui_data": {
+              "label": "Card Node with color",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": 440,
+              "y_pos": 320,
+              "description": "Color can be used to shows status."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "96b4e642-7808-4fb8-86e2-43d13505d5a1",
+                  "node_id_ref": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "54cc0a7e-abf0-496e-992d-573a73ace37d",
+          "type": "execution_node",
+          "op": "card-node-regular",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "curved-corners"
+            },
+            "ui_data": {
+              "label": "Card Node with curved corners",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": 770,
+              "y_pos": 320,
+              "description": "Curves are cool."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "b10405ff-79e4-4816-8e17-e98bdb67807e",
+                  "node_id_ref": "5d47eb47-bac4-4f47-a279-01d39133f118",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "3248f99f-30b9-441f-8c81-931122a0bfce",
+          "type": "execution_node",
+          "op": "shape-node",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "rounded-square"
+            },
+            "ui_data": {
+              "label": "Rounded square",
+              "image": "images/custom-canvases/flows/palette/icons/sample.svg",
+              "x_pos": 825,
+              "y_pos": 580,
+              "description": "A rounded-square shape node from the carbon charts library"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "374b56cc-91d2-4bce-8e74-149c3d09daec",
+                  "node_id_ref": "df6ba34d-aedb-4be1-a671-3530866650f0",
+                  "port_id_ref": "08384753-ad6e-4ee7-abab-e7ede93d3b50_outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "df6ba34d-aedb-4be1-a671-3530866650f0",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "11760d45-34fb-4e0b-a292-b20448f5d6e1"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "Supernode",
+              "image": "useDefaultIcon",
+              "x_pos": 440,
+              "y_pos": 480,
+              "description": "This supernode was created by common-canvas.",
+              "is_expanded": true,
+              "expanded_width": 300,
+              "expanded_height": 200
+            }
+          },
+          "inputs": [
+            {
+              "id": "b134fd69-1ea8-4f0e-8ead-3ada4914b654_inPort",
+              "subflow_node_ref": "5e10f397-3435-4233-bcf7-359fe652d971",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "id": "58d35699-9396-4280-9288-5c924a3089d3",
+                  "node_id_ref": "d904953e-ca2f-4c4d-b593-f71dbd99fe5d",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "08384753-ad6e-4ee7-abab-e7ede93d3b50_outPort",
+              "subflow_node_ref": "24ffe511-a3b3-4b8e-933f-a83a426b02df",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "0bcaa069-7d21-43a5-ae84-cbc9680cb135",
+              "x_pos": 55,
+              "y_pos": 20,
+              "width": 400,
+              "height": 112,
+              "class_name": "bkg-col-green-20",
+              "content": "## React Objects Canvas\n\nThis sample app shows the React objects, CardNode and ShapeNode, from the Carbon-Charts library being used to display the body of canvas nodes. The selection highlighting, ports, overflow icon and tip for the nodes are provided by common-canvas.",
+              "associated_id_refs": []
+            }
+          ]
+        }
+      },
+      "runtime_ref": ""
+    },
+    {
+      "id": "11760d45-34fb-4e0b-a292-b20448f5d6e1",
+      "nodes": [
+        {
+          "id": "b134fd69-1ea8-4f0e-8ead-3ada4914b654",
+          "type": "execution_node",
+          "op": "shape-node",
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "circle"
+            },
+            "ui_data": {
+              "label": "Circle",
+              "image": "images/custom-canvases/flows/palette/icons/sort.svg",
+              "x_pos": 440,
+              "y_pos": 520,
+              "description": "A circle shape node from the carbon charts library"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "d2c572d5-c495-4428-b1c4-440e8cd19a08",
+                  "node_id_ref": "5e10f397-3435-4233-bcf7-359fe652d971",
+                  "port_id_ref": "output_b134fd69-1ea8-4f0e-8ead-3ada4914b654_inPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "08384753-ad6e-4ee7-abab-e7ede93d3b50",
+          "type": "execution_node",
+          "op": "regular-card-node",
+          "app_data": {
+            "react_nodes_data": {
+              "color": "#EAC348"
+            },
+            "ui_data": {
+              "label": "Card Node with color",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": 550,
+              "y_pos": 520,
+              "description": "Color can be used to shows status."
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "50448d24-cd81-4a18-8f86-2b93c666d13a",
+                  "node_id_ref": "b134fd69-1ea8-4f0e-8ead-3ada4914b654",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "5e10f397-3435-4233-bcf7-359fe652d971",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 275,
+              "y_pos": 520,
+              "description": "Supernode binding node"
+            }
+          },
+          "outputs": [
+            {
+              "id": "output_b134fd69-1ea8-4f0e-8ead-3ada4914b654_inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "24ffe511-a3b3-4b8e-933f-a83a426b02df",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "Binding",
+              "x_pos": 825,
+              "y_pos": 520,
+              "description": "Supernode binding node"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input_08384753-ad6e-4ee7-abab-e7ede93d3b50_outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Binding port for supernode"
+                }
+              },
+              "links": [
+                {
+                  "id": "60639a89-d30d-443f-925b-8f3eeb61de93",
+                  "node_id_ref": "08384753-ad6e-4ee7-abab-e7ede93d3b50",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
 }

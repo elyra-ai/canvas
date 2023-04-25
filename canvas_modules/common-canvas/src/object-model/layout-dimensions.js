@@ -37,8 +37,8 @@ const portsHorizontalDefaultLayout = {
 		bodyPath: null,
 		selectionPath: null,
 
-		// Displays the react object specified in the body of the node
-		reactObject: false,
+		// Displays the external object specified as the body of the node
+		nodeExternalObject: false,
 
 		// Display image
 		imageDisplay: true,
@@ -443,8 +443,8 @@ const portsVerticalDefaultLayout = {
 		bodyPath: null,
 		selectionPath: null,
 
-		// Displays the react object specified in the body of the node
-		reactObject: false,
+		// Displays the external object specified as the body of the node
+		nodeExternalObject: false,
 
 		// Display image
 		imageDisplay: true,
