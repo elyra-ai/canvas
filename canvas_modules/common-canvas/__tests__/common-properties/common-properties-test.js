@@ -49,7 +49,7 @@ const localMessages = {
 const validationErrorMessages = {
 	"number_undefined": {
 		"type": "error",
-		"text": "You must provide your Undefined.",
+		"text": "You must enter a value for Undefined.",
 		"validation_id": "required_number_undefined_272.9520234285945",
 		"propertyId": {
 			"name": "number_undefined"
@@ -58,7 +58,7 @@ const validationErrorMessages = {
 	},
 	"number_null": {
 		"type": "error",
-		"text": "You must provide your Null.",
+		"text": "You must enter a value for Null.",
 		"validation_id": "required_number_null_401.11526920064296",
 		"propertyId": {
 			"name": "number_null"

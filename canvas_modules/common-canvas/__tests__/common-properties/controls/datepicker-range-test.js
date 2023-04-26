@@ -169,7 +169,7 @@ describe("error messages renders correctly for datepickerRange controls", () => 
 			"required": true,
 			"validation_id": "required_datepicker_range_required_74.16775457638104",
 			"type": "error",
-			"text": "You must provide your Required date: Y/m/d.",
+			"text": "You must enter a value for Required date: Y/m/d.",
 		};
 		const actual = controller.getErrorMessage(propertyId);
 		expect(actual).to.eql(expectedDatepickerErrorMessages);

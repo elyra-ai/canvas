@@ -50,8 +50,8 @@ describe("condition messages should add alerts tab", () => {
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
-		expect(alertList.at(0).text()).to.equal("You must provide your Integer.");
-		expect(alertList.at(1).text()).to.equal("You must provide your Random.");
+		expect(alertList.at(0).text()).to.equal("You must enter a value for Integer.");
+		expect(alertList.at(1).text()).to.equal("You must enter a value for Random.");
 
 		// go to Values tab by clicking on error message
 		alertList.at(0).find("a.properties-link-text")
@@ -73,7 +73,7 @@ describe("condition messages should add alerts tab", () => {
 
 		alertList = alertCategory.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
-		expect(alertList.at(0).text()).to.equal("You must provide your Integer.");
+		expect(alertList.at(0).text()).to.equal("You must enter a value for Integer.");
 		alertList.at(0).find("a.properties-link-text")
 			.simulate("click");
 
@@ -121,7 +121,7 @@ describe("condition messages should add alerts tab", () => {
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
-		expect(alertList.at(0).text()).to.equal("You must provide your Number Hidden.");
+		expect(alertList.at(0).text()).to.equal("You must enter a value for Number Hidden.");
 
 		// hide the number field
 		checkbox.getDOMNode().checked = true;

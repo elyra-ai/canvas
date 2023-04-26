@@ -288,7 +288,7 @@ describe("error messages renders correctly for datefield controls", () => {
 			"required": true,
 			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
-			"text": "You must provide your Required Date M-D-Y.",
+			"text": "You must enter a value for Required Date M-D-Y.",
 		};
 		const actual = controller.getErrorMessage({ name: "date_mdy" });
 		expect(datefieldErrorMessages).to.eql(actual);
