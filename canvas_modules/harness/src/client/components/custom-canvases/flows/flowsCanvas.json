@@ -11,7 +11,7 @@
         {
           "id": "428a247b-e126-452c-bd10-5970af945dcd",
           "type": "execution_node",
-          "op": "dvcharts",
+          "op": "columnSelectionPanel_multiInput_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Charts",
@@ -59,7 +59,7 @@
         {
           "id": "bf082e34-bf1c-4927-9f87-89d2d9033b55",
           "type": "binding",
-          "op": "simgen",
+          "op": "selectcolumn_multiInput_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Sim Gen",
@@ -87,7 +87,7 @@
         {
           "id": "bef59803-c593-478f-93d4-d1bd0deaf14e",
           "type": "binding",
-          "op": "autocluster",
+          "op": "displayRows_paramDef",
           "app_data": {
             "ui_data": {
               "label": "Auto Cluster",
@@ -127,7 +127,7 @@
         {
           "id": "140c34a1-63be-4aa9-865c-47160a48d804",
           "type": "binding",
-          "op": "applyautocluster",
+          "op": "neuralnetwork",
           "app_data": {
             "ui_data": {
               "label": "Auto Cluster",
