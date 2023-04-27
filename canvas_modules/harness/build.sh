@@ -20,7 +20,7 @@ set -e
 
 WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
-
+NODE_OPTIONS=--max_old_space_size=8192
 echo "cd $SCRIPT_DIR"
 cd $SCRIPT_DIR
 # install require modules

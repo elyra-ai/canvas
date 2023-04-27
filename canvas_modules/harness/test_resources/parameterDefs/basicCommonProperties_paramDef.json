@@ -1,6 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Common properties"
+    "title": "Cars"
   },
   "current_parameters": {
     "color": "Blue"
@@ -50,7 +50,7 @@
           "type": "error",
           "focus_parameter_ref": "color",
           "message": {
-            "default": "Error message after selecting 'Red' color"
+            "default": "Low inventory of 'Red' cars."
           }
         },
         "evaluate": {
@@ -65,6 +65,6 @@
   ],
   "dataset_metadata": [],
   "resources": {
-    "color.description": "Select color"
+    "color.description": "Select color of car"
   }
 }
