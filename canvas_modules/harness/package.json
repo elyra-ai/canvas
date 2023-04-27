@@ -9,7 +9,7 @@
     "test": "npx cypress open",
     "bundle-report": "NODE_ENV=production BUNDLE_REPORT=true grunt",
     "start-prod": "NODE_ENV=production node index.js",
-    "build-prod": "npx stylelint 'src/**/*.scss' && NODE_ENV=production grunt"
+    "build-prod": "npx stylelint 'src/**/*.scss' && NODE_ENV=production grunt --max-old-space-size=8192"
   },
   "engines": {
     "node": "16.x"
