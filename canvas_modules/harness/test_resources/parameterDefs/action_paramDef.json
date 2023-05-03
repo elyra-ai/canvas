@@ -376,7 +376,8 @@
         },
         "data": {
           "parameter_ref": "number"
-        }
+        },
+        "class_name": "custom-class-for-action-button"
       },
       {
         "id": "increment1",
@@ -492,7 +493,8 @@
             "width": 60
           },
           "tooltip_direction": "left"
-        }
+        },
+        "class_name": "custom-class-for-action-image"
       },
       {
         "id": "spring",

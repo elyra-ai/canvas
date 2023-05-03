@@ -47,7 +47,8 @@ const action = {
 	"button": {
 		"kind": "secondary",
 		"size": "xl"
-	}
+	},
+	"class_name": "custom-class-for-action-button"
 };
 
 describe("action-button renders correctly", () => {
@@ -187,9 +188,16 @@ describe("action-button renders correctly", () => {
 });
 
 describe("actions using paramDef", () => {
+	let wrapper;
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF);
+		wrapper = renderedObject.wrapper;
+	});
+
 	it("should fire action when button clicked", (done) => {
-		const renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
-		const wrapper = renderedObject.wrapper;
+		renderedObject = propertyUtils.flyoutEditorForm(ACTION_PARAMDEF, null, { actionHandler: callback }, { appData: appData });
+		wrapper = renderedObject.wrapper;
 		function callback(id, inAppData, data) {
 			expect(id).to.equal("increment");
 			expect(inAppData).to.eql(appData);
@@ -200,4 +208,13 @@ describe("actions using paramDef", () => {
 		button.simulate("click");
 	});
 
+	it("action button should have custom classname defined", () => {
+		// class_name defined in uiHints action_info
+		const incrementButton = wrapper.find("div[data-id='increment']");
+		expect(incrementButton.prop("className")).to.equal("properties-action-button custom-class-for-action-button");
+
+		// class_name not defined in uiHints action_info
+		const decrementButton = wrapper.find("div[data-id='decrement']");
+		expect(decrementButton.prop("className")).to.equal("properties-action-button");
+	});
 });

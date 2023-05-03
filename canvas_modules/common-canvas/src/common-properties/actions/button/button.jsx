@@ -70,7 +70,8 @@ class ButtonAction extends React.Component {
 	}
 
 	render() {
-		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN });
+		const customClassName = this.props.action.className ? this.props.action.className : "";
+		const className = classNames("properties-action-button", { "hide": this.props.state === STATES.HIDDEN }, customClassName);
 		const disabled = this.props.state === STATES.DISABLED;
 		const actionButtonKind = this.getActionButtonKind();
 		const actionButtonSize = this.getActionButtonSize();
