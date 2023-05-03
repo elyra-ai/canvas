@@ -177,7 +177,6 @@ export default class SidePanelProperties extends React.Component {
 		} else {
 			this.getSelectedFile();
 		}
-		this.props.propertiesConfig.closeSidePanelModal();
 	}
 
 	isReadyToSubmitProperties() {
