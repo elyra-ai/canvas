@@ -692,6 +692,22 @@ Cypress.Commands.add("verifyLabelDecorationOnLink", (linkLabel, decoratorId, lab
 		});
 });
 
+Cypress.Commands.add("verifyJsxDecorationOnNode", (nodeName, decoratorId, xPos, yPos) => {
+	cy.verifyDecorationTransformOnNode(nodeName, decoratorId, xPos, yPos)
+		.then((jsxDecorator) => {
+			cy.wrap(jsxDecorator)
+				.find(".d3-foreign-object-dec-jsx");
+		});
+});
+
+Cypress.Commands.add("verifyJsxDecorationOnLink", (linkLabel, decoratorId, xPos, yPos) => {
+	cy.verifyDecorationTransformOnLink(linkLabel, decoratorId, xPos, yPos)
+		.then((jsxDecorator) => {
+			cy.wrap(jsxDecorator)
+				.find(".d3-foreign-object-dec-jsx");
+		});
+});
+
 Cypress.Commands.add("verifyDecorationTransformOnNode", (nodeName, decoratorId, xPos, yPos) => {
 	cy.getNodeWithLabel(nodeName)
 		.find(".d3-node-dec-group")
