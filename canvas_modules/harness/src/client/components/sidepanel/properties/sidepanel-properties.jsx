@@ -69,6 +69,7 @@ export default class SidePanelProperties extends React.Component {
 
 		this.propsInfo.parameterDef.current_parameters = {
 			"propertiesContainerType": this.props.propertiesConfig.propertiesContainerType,
+			"categoryView": this.props.propertiesConfig.categoryView,
 			"propertiesSchemaValidation": this.props.propertiesConfig.propertiesSchemaValidation,
 			"applyPropertiesWithoutEdit": this.props.propertiesConfig.applyPropertiesWithoutEdit,
 			"applyOnBlur": this.props.propertiesConfig.applyOnBlur,
@@ -333,6 +334,7 @@ SidePanelProperties.propTypes = {
 		closeSidePanelModal: PropTypes.func,
 		showPropertiesDialog: PropTypes.bool,
 		propertiesContainerType: PropTypes.string,
+		categoryView: PropTypes.string,
 		applyOnBlur: PropTypes.bool,
 		trimSpaces: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,

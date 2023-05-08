@@ -1,6 +1,7 @@
 {
 	"current_parameters": {
 		"propertiesContainerType": "Flyout",
+		"categoryView": "accordions",
 		"propertiesSchemaValidation": true,
 		"applyPropertiesWithoutEdit": false,
 		"applyOnBlur": false,
@@ -42,6 +43,14 @@
 				"Tearsheet"
 			],
 			"default": "Flyout"
+		},
+		{
+			"id": "categoryView",
+			"enum": [
+				"accordions",
+				"tabs"
+			],
+			"default": "accordions"
 		},
 		{
 			"id": "propertiesSchemaValidation",
@@ -206,6 +215,15 @@
 				"parameter_ref": "propertiesContainerType",
 				"label": {
 					"default": "containerType"
+				}
+			},
+			{
+				"parameter_ref": "categoryView",
+				"label": {
+					"default": "categoryView"
+				},
+				"description": {
+					"default": "View categories in right flyout. Set this option when containerType: Custom and rightFlyout: true."
 				}
 			},
 			{
@@ -623,6 +641,7 @@
 				"type": "controls",
 				"parameter_refs": [
 					"propertiesContainerType",
+					"categoryView",
 					"propertiesSchemaValidation",
 					"applyPropertiesWithoutEdit",
 					"applyOnBlur",
@@ -760,6 +779,22 @@
 			}
 		]
 	},
+	"conditions": [
+		{
+			"visible": {
+			  "parameter_refs": [
+				"categoryView"
+			  ],
+			  "evaluate": {
+				"condition": {
+				  "parameter_ref": "propertiesContainerType",
+				  "op": "equals",
+				  "value": "Flyout"
+				}
+			  }
+			}
+		}
+	],
 	"resources": {
 		"addRemoveRowsEnabled.toggle.on.label": "enable",
 		"addRemoveRowsEnabled.toggle.off.label": "disable",

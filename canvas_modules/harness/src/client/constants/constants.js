@@ -141,3 +141,7 @@ _defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
+
+_defineConstant("CATEGORY_VIEW_ACCORDIONS", "accordions");
+_defineConstant("CATEGORY_VIEW_TABS", "tabs");
+

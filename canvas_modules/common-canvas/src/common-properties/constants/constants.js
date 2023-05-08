@@ -288,3 +288,8 @@ export const CONTAINER_TYPE = {
 };
 
 export const DEFAULT_LOCALE = "en";
+
+export const CATEGORY_VIEW = { // Category view ONLY for right flyout
+	ACCORDIONS: "accordions",
+	TABS: "tabs"
+};
