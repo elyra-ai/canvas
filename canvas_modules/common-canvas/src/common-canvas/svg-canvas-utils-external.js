@@ -25,6 +25,10 @@ export const addNodeExternalObject = (node, i, foreignObjects) => {
 	);
 };
 
-export const removeNodeExternalObject = (node, i, foreignObjects) => {
+export const addDecExternalObject = (dec, i, foreignObjects) => {
+	ReactDOM.render(dec.jsx, foreignObjects[i]);
+};
+
+export const removeExternalObject = (obj, i, foreignObjects) => {
 	ReactDOM.unmountComponentAtNode(foreignObjects[i]);
 };

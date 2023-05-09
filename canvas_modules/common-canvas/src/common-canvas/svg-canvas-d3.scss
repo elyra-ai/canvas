@@ -438,6 +438,11 @@ $link-highlight-color: $support-04;
 	color: $icon-01;
 }
 
+// Remove the foreign object outline when the foreign object has focus.
+.d3-foreign-object-dec-ext:focus {
+	outline: none;
+}
+
 /* Node ellipsis styles */
 
 .d3-node-ellipsis-group {

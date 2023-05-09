@@ -33,7 +33,7 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
-import { addNodeExternalObject, removeNodeExternalObject } from "./svg-canvas-utils-external.js";
+import { addNodeExternalObject, addDecExternalObject, removeExternalObject } from "./svg-canvas-utils-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -2816,7 +2816,7 @@ export default class SVGCanvasRenderer {
 		// Remove any foreign objects for react nodes, if necessary.
 		removeSel
 			.selectChildren(".d3-foreign-object-external-node")
-			.each(removeNodeExternalObject.bind(this));
+			.each(removeExternalObject.bind(this));
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
@@ -3472,12 +3472,13 @@ export default class SVGCanvasRenderer {
 		this.updateDecPaths(dec, decSel, objType);
 		this.updateDecImages(dec, decSel, objType, d);
 		this.updateDecLabels(dec, decSel, objType, d);
+		this.updateDecJsxObjs(dec, decSel, objType, d);
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
 		let outlnSel = decSel.selectChild("rect");
 
-		if (!dec.label && !dec.path && dec.outline !== false) {
+		if (!dec.label && !dec.path && !dec.jsx && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
 			outlnSel
 				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-outline`))
@@ -3525,7 +3526,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecLabels(dec, decSel, objType, d) {
-		let labelSel = decSel.selectChild("foreignObject");
+		let labelSel = decSel.selectChild(".d3-foreign-object-dec-label");
 
 		if (dec.label) {
 			if (labelSel.empty()) {
@@ -3549,6 +3550,29 @@ export default class SVGCanvasRenderer {
 				.html(escapeText(dec.label));
 		} else {
 			labelSel.remove();
+		}
+	}
+
+	updateDecJsxObjs(dec, decSel, objType, d) {
+		let extSel = decSel.selectChild(".d3-foreign-object-dec-jsx");
+
+		if (dec.jsx) {
+			if (extSel.empty()) {
+				extSel = decSel
+					.append("foreignObject")
+					.attr("class", "d3-foreign-object-dec-jsx")
+					.attr("tabindex", -1)
+					.attr("x", 0)
+					.attr("y", 0)
+					.call(this.attachDecLabelListeners.bind(this, d, objType));
+			}
+			extSel
+				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
+				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
+				.each(addDecExternalObject.bind(this));
+		} else {
+			extSel.each(removeExternalObject.bind(this));
+			extSel.remove();
 		}
 	}
 
