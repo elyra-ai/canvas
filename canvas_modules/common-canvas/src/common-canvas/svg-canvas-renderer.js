@@ -3159,6 +3159,7 @@ export default class SVGCanvasRenderer {
 		inputPorts
 			.on("mousedown", (d3Event, port) => {
 				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					return;
 				}
 				if (this.config.enableAssocLinkCreation) {
@@ -3221,6 +3222,7 @@ export default class SVGCanvasRenderer {
 		outputPorts
 			.on("mousedown", (d3Event, port) => {
 				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 					return;
 				}
 				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
