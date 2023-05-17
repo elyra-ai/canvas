@@ -120,7 +120,8 @@ _defineConstant("API_ZOOM_TO_REVEAL_LINK", "Zoom To Reveal Link");
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
 
-_defineConstant("TIP_PALETTE", "Palette");
+_defineConstant("TIP_PALETTE_CATEGORIES", "Palette Categories");
+_defineConstant("TIP_PALETTE_NODE_TEMPLATES", "Palette Node Templates");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_DECORATIONS", "Decorations");

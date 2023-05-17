@@ -96,7 +96,10 @@ export default class CanvasUtils {
 			enableCanvasLayout: {}, // Not documented
 			enableUseCardFromOriginalPorts: false, // Not documented
 			tipConfig: {
-				"palette": true,
+				"palette": {
+					categories: true,
+					nodes_templates: true
+				},
 				"nodes": true,
 				"ports": true,
 				"decorations": true,

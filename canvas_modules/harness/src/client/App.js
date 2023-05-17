@@ -189,7 +189,10 @@ class App extends React.Component {
 			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
-				"palette": true,
+				"palette": {
+					categories: true,
+					node_templates: true
+				},
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
