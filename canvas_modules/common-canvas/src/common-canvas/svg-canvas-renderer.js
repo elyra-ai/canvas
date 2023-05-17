@@ -3158,6 +3158,10 @@ export default class SVGCanvasRenderer {
 	attachInputPortListeners(inputPorts, node) {
 		inputPorts
 			.on("mousedown", (d3Event, port) => {
+				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					return;
+				}
 				if (this.config.enableAssocLinkCreation) {
 					// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 					if (d3Event.button === 0) {
@@ -3217,6 +3221,10 @@ export default class SVGCanvasRenderer {
 	attachOutputPortListeners(outputPorts, node) {
 		outputPorts
 			.on("mousedown", (d3Event, port) => {
+				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					return;
+				}
 				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 				if (d3Event.button === 0) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
