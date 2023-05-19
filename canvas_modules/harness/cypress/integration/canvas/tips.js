@@ -22,40 +22,46 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 	});
 
 	it("Test to check if tips show up for the palette, nodes, ports and links", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": { "palette": true, "nodes": true, "ports": true,
+				"decorations": true, "links": true }
+		});
+
 		cy.clickToolbarPaletteOpen();
 
 		cy.hoverOverCategory("Import");
 		cy.verifyTipForCategory("Import");
 
-		// TODO: cy.hoverOverNodeInCategory() is not showing the tooltip
 		cy.clickCategory("Import");
-		cy.hoverOverNodeInCategory("Var. File");
-		// cy.verifyTipForNodeInCategory("Var. File");
-
-		// TODO: cy.moveMouseToCoordinates() is not removing the tooltip
-		// after fixing this, uncomment cy.verifyTipDoesNotShowForNode() and cy.verifyTipDoesNotShowForInputPortId()
-		// and cy.verifyTipWithTextInSummaryPanel()
-		cy.moveMouseToCoordinates(300, 100);
-		cy.verifyTipDoesNotShowForNodeInCategory("Var. File");
+		cy.hoverOverNodeInCategory("Var. File", "Import");
+		cy.verifyTipForNodeTemplateInCategory("Var. File", "Import");
 
 		cy.hoverOverNode("Define Types");
 		cy.verifyTipForNodeAtLocation("Define Types", "below");
 
-		cy.moveMouseToCoordinates(300, 100);
-		// cy.verifyTipDoesNotShowForNode("Define Types");
+		cy.hoverOverInputPortOfNode("Na_to_K", "inPort2");
+		cy.verifyTipForInputPortOfNode("Na_to_K", "inPort2", "Input Port2");
 
-		cy.hoverOverInputPortOfNode("Define Types", "inPort2");
-		cy.verifyTipForInputPortOfNode("Define Types", "inPort2", "Input Port 2");
-
-		cy.moveMouseToCoordinates(300, 100);
-		// cy.verifyTipDoesNotShowForInputPortId("inPort2");
-
-		// TODO: cy.hoverOverLinkName() is not showing the tooltip
 		cy.hoverOverLinkName("Discard Fields-Define Types");
-		// cy.verifyTipForLink(260, "Discard Fields", "Output Port Two", "Define Types", "Input Port 2");
+		cy.verifyTipForLink("Discard Fields", "Output Port Two", "Define Types", "Input Port 2");
+	});
 
-		cy.moveMouseToCoordinates(300, 100);
-		cy.verifyTipDoesNotShowForLink();
+	it("Test to check if palette tips show up with palette object specified", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": {
+				"palette": { categories: true, node_templates: true },
+				"nodes": true, "ports": true,
+				"decorations": true, "links": true }
+		});
+
+		cy.clickToolbarPaletteOpen();
+
+		cy.hoverOverCategory("Import");
+		cy.verifyTipForCategory("Import");
+
+		cy.clickCategory("Import");
+		cy.hoverOverNodeInCategory("Var. File", "Import");
+		cy.verifyTipForNodeTemplateInCategory("Var. File", "Import");
 	});
 
 	it("Test to check if tip show up for link image decoration.", function() {
@@ -128,28 +134,35 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 		cy.hoverOverNodeDecoration("DRUG1n", "123");
 		cy.verifyTipForDecoration("A tooltip for a label decoration!");
 	});
-
-
 });
 
 describe("Test to check if tips don't show up for the palette, nodes, ports and links " +
 "after disabling tips", function() {
 	beforeEach(() => {
 		cy.visit("/");
-		cy.setCanvasConfig({
-			"selectedTipConfig": { "palette": false, "nodes": false, "ports": false, "links": false }
-		});
 		cy.openCanvasPalette("modelerPalette.json");
 		cy.openCanvasDefinition("multiPortsCanvas.json");
 	});
 
 	it("Test to check if tips don't show up for the palette, nodes, ports and links " +
 	"after disabling tips", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": {
+				"palette": false,
+				"nodes": false, "ports": false,
+				"decorations": true, "links": false }
+		});
+
 		cy.clickToolbarPaletteOpen();
 
+		cy.hoverOverCategory("Import");
+		cy.wait(500);
+		cy.verifyTipDoesNotShowForCategory("Import");
+
 		cy.clickCategory("Import");
-		cy.hoverOverNodeInCategory("Var. File");
-		cy.verifyTipDoesNotShowForNodeInCategory("Var. File");
+		cy.hoverOverNodeInCategory("Var. File", "Import");
+		cy.wait(500);
+		cy.verifyTipDoesNotShowForNodeTemplate("Var. File", "Import");
 
 		cy.hoverOverNode("Define Types");
 		cy.verifyTipDoesNotShowForNode("Define Types");
@@ -160,7 +173,28 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 		cy.hoverOverLinkName("Discard Fields-Define Types");
 		cy.verifyTipDoesNotShowForLink();
 	});
+
+	it("Test to check if palete tips DON'T show up with palette object fields specified as false", function() {
+		cy.setCanvasConfig({
+			"selectedTipConfig": {
+				"palette": { categories: false, node_templates: false },
+				"nodes": true, "ports": true,
+				"decorations": true, "links": true }
+		});
+
+		cy.clickToolbarPaletteOpen();
+
+		cy.hoverOverCategory("Import");
+		cy.wait(500);
+		cy.verifyTipDoesNotShowForCategory("Import");
+
+		cy.clickCategory("Import");
+		cy.hoverOverNodeInCategory("Var. File", "Import");
+		cy.wait(500);
+		cy.verifyTipDoesNotShowForNodeTemplate("Var. File", "Import");
+	});
 });
+
 
 describe("Test to check if tips are hidden on scroll", function() {
 	beforeEach(() => {
@@ -182,6 +216,7 @@ describe("Test to check if tips are hidden on scroll", function() {
 
 		cy.get(".palette-flyout-categories")
 			.scrollTo("bottom", { ensureScrollable: false });
+		cy.wait(500);
 		cy.verifyTipDoesNotShowForCategory("Import");
 	});
 
