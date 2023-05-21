@@ -478,6 +478,31 @@ export default class CanvasController {
 		return this.objectModel.convertNodeTemplate(nodeTemplate);
 	}
 
+	// Opens the palette category idetified by the category ID passed in.
+	openPaletteCategory(categoryId) {
+		this.objectModel.setIsOpenCategory(categoryId, true);
+	}
+
+	// Closes the palette category idetified by the category ID passed in.
+	closePaletteCategory(categoryId) {
+		this.objectModel.setIsOpenCategory(categoryId, false);
+	}
+
+	// Opens all the palette categories.
+	openAllPaletteCategories() {
+		this.objectModel.setIsOpenAllCategories(true);
+	}
+
+	// Closes all the palette categories.
+	closeAllPaletteCategories() {
+		this.objectModel.setIsOpenAllCategories(false);
+	}
+
+	// Returns true or false to indicate whether a palette category is open or not.
+	isPaletteCategoryOpen(categoryId) {
+		return this.objectModel.isPaletteCategoryOpen(categoryId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Selections methods
 	// ---------------------------------------------------------------------------

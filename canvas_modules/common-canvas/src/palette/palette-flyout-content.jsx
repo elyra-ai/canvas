@@ -39,13 +39,11 @@ class PaletteFlyoutContent extends React.Component {
 		// debounce and after the debounce unwinds it sets searchString in this
 		// class which causes the filtered result set to be calculated and displayed.
 		this.state = {
-			selectedCategoryIds: [],
 			searchString: ""
 		};
 
 		this.categories = [];
 
-		this.categorySelected = this.categorySelected.bind(this);
 		this.getUniqueCategories = this.getUniqueCategories.bind(this);
 		this.setSearchString = this.setSearchString.bind(this);
 		this.handleSearchStringChange = this.handleSearchStringChange.bind(this);
@@ -77,7 +75,6 @@ class PaletteFlyoutContent extends React.Component {
 					<PaletteFlyoutContentCategory
 						key={category.id}
 						category={category}
-						categorySelectedMethod={this.categorySelected}
 						canvasController={this.props.canvasController}
 						isPaletteOpen={this.props.isPaletteOpen}
 						isEditingEnabled={this.props.isEditingEnabled}
@@ -121,18 +118,6 @@ class PaletteFlyoutContent extends React.Component {
 	handleSearchStringChange(s) {
 		this.ss = s;
 		this.setSearchStringThrottled();
-	}
-
-	categorySelected(catSelId) {
-		const selCatIds = this.isCategorySelected(catSelId)
-			? this.state.selectedCategoryIds.filter((catId) => catId !== catSelId)
-			: this.state.selectedCategoryIds.concat(catSelId);
-
-		this.setState({ selectedCategoryIds: selCatIds });
-	}
-
-	isCategorySelected(categoryId) {
-		return this.state.selectedCategoryIds.some((cId) => cId === categoryId);
 	}
 
 	render() {

@@ -78,6 +78,20 @@ export default (state = [], action) => {
 		});
 	}
 
+	case "SET_IS_OPEN_CATEGORY": {
+		return state.map((category) => {
+			if (category.id === action.data.categoryId) {
+				return Object.assign({}, category, { is_open: action.data.isOpen });
+			}
+			return category;
+		});
+	}
+
+	case "SET_IS_OPEN_ALL_CATEGORIES": {
+		return state.map((category) => {
+			return Object.assign({}, category, { is_open: action.data.isOpen });
+		});
+	}
 	default:
 		return state;
 	}
