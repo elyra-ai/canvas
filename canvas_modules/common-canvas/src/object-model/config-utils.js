@@ -98,7 +98,7 @@ export default class CanvasUtils {
 			tipConfig: {
 				"palette": {
 					categories: true,
-					nodes_templates: true
+					nodesTemplates: true
 				},
 				"nodes": true,
 				"ports": true,

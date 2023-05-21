@@ -1848,7 +1848,7 @@ export default class CanvasController {
 		case constants.TIP_TYPE_PALETTE_CATEGORY:
 			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.categories", false);
 		case constants.TIP_TYPE_PALETTE_ITEM:
-			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.node_templates", false);
+			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.nodeTemplates", false);
 		case constants.TIP_TYPE_NODE:
 			return canvasConfig.tipConfig.nodes;
 		case constants.TIP_TYPE_PORT:

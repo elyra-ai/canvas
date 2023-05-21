@@ -264,7 +264,7 @@ export default class SidePanelForms extends React.Component {
 			set(tipConf, "palette.categories", checked);
 			break;
 		case "tip_palette_node_templates":
-			set(tipConf, "palette.node_templates", checked);
+			set(tipConf, "palette.nodeTemplates", checked);
 			break;
 		case "tip_nodes":
 			tipConf.nodes = checked;
@@ -1249,7 +1249,7 @@ export default class SidePanelForms extends React.Component {
 					id="tip_palette_node_templates"
 					labelText={TIP_PALETTE_NODE_TEMPLATES}
 					onChange={this.tipConfigChange}
-					checked={get(this.props.getStateValue("selectedTipConfig"), "palette.node_templates", false)}
+					checked={get(this.props.getStateValue("selectedTipConfig"), "palette.nodeTemplates", false)}
 				/>
 				<Checkbox
 					id="tip_nodes"

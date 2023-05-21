@@ -191,7 +191,7 @@ class App extends React.Component {
 			selectedTipConfig: {
 				"palette": {
 					categories: true,
-					node_templates: true
+					nodeTemplates: true
 				},
 				"nodes": true,
 				"ports": true,
