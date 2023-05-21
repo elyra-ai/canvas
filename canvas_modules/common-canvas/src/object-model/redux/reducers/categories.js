@@ -88,9 +88,7 @@ export default (state = [], action) => {
 	}
 
 	case "SET_IS_OPEN_ALL_CATEGORIES": {
-		return state.map((category) => {
-			return Object.assign({}, category, { is_open: action.data.isOpen });
-		});
+		return state.map((category) => Object.assign({}, category, { is_open: action.data.isOpen }));
 	}
 	default:
 		return state;

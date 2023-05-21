@@ -351,7 +351,7 @@ export default class ObjectModel {
 	}
 
 	isPaletteCategoryOpen(categoryId) {
-		const category = this.store.getPaletteCategory(categoryId)
+		const category = this.store.getPaletteCategory(categoryId);
 		if (category) {
 			return category.is_open;
 		}

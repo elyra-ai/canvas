@@ -191,10 +191,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return null;
 	}
 
-	categoryClicked(event) {
+	categoryClicked(evt) {
 		// Stopping event propagation prevents an extra refresh of the node icons when
 		// a category is opened.
-		event.stopPropagation();
+		evt.stopPropagation();
 
 		if (this.props.canvasController.isPaletteCategoryOpen(this.props.category.id)) {
 			this.props.canvasController.closePaletteCategory(this.props.category.id);
