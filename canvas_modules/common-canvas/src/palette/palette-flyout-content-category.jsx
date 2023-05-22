@@ -196,7 +196,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		// a category is opened.
 		evt.stopPropagation();
 
-		if (this.props.canvasController.isPaletteCategoryOpen(this.props.category.id)) {
+		if (this.props.category.is_open) {
 			this.props.canvasController.closePaletteCategory(this.props.category.id);
 		} else {
 			this.props.canvasController.openPaletteCategory(this.props.category.id);

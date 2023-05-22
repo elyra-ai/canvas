@@ -105,8 +105,7 @@ describe("Palette search renders correctly", () => {
 	it("should filter nodes based on search text when no node descriptions are present", () => {
 		const config = {
 			showPalette: true,
-			palette: testPalette3NoDesc,
-			paletteWidth: 250
+			palette: testPalette3NoDesc
 		};
 		const wrapper = createMountedPalette(config);
 
@@ -172,9 +171,13 @@ describe("Palette renders correctly", () => {
 	});
 
 	it("should leave currently opened category open when a new category is opened", () => {
-		const wrapper = createMountedPalette();
+		const canvasController = new CanvasController();
+		const wrapper = createMountedPalette({ canvasController });
+
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(1);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(3);
 
@@ -182,7 +185,10 @@ describe("Palette renders correctly", () => {
 		expect(counts).to.have.length(1);
 
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
+
 		outputsCat.simulate("click");
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
 
@@ -191,11 +197,16 @@ describe("Palette renders correctly", () => {
 	});
 
 	it("should close a category when two categories are currently open", () => {
-		const wrapper = createMountedPalette();
+		const canvasController = new CanvasController();
+		const wrapper = createMountedPalette({ canvasController });
+
 		const importCat = findCategoryElement(wrapper, "Import");
 		importCat.simulate("click");
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
 		const outputsCat = findCategoryElement(wrapper, "Outputs");
 		outputsCat.simulate("click");
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
 
 		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
 		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
@@ -205,6 +216,7 @@ describe("Palette renders correctly", () => {
 		// We now click the Import category again to close it
 		const importCat2 = findCategoryElement(wrapper, "Import");
 		importCat2.simulate("click");
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
 
 		// When the Import category is closed and the Outputs category is opened
 		// we should have 1 palette flyout content list object because
@@ -214,6 +226,28 @@ describe("Palette renders correctly", () => {
 
 		const counts2 = getOpenCategories(wrapper);
 		expect(counts2).to.have.length(1);
+
+	});
+
+	it("should open/close all categories when calling openAllPaletteCategories/closeAllPaletteCategories", () => {
+		const canvasController = new CanvasController();
+		const wrapper = createMountedPalette({ canvasController });
+
+		canvasController.openAllPaletteCategories();
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(2);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(5);
+		const counts = getOpenCategories(wrapper);
+		expect(counts).to.have.length(2);
+
+		canvasController.closeAllPaletteCategories();
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
+		expect(wrapper.find(PaletteFlyoutContentList)).to.have.length(0);
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(0);
+		const counts2 = getOpenCategories(wrapper);
+		expect(counts2).to.have.length(0);
 
 	});
 
@@ -253,64 +287,69 @@ describe("Palette renders correctly", () => {
 	it("palette should be hidden", () => {
 		const config = {
 			showNarrowPalette: false,
-			showPalette: false,
-			paletteWidth: 0
+			showPalette: false
 		};
 		const palette = createMountedPalette(config).find(".palette-flyout-div-closed");
 		expect(palette).to.have.length(1);
 	});
 
 	it("open palette should show correct values for category and node with and without an image", () => {
+		const canvasController = new CanvasController();
 		const config = {
 			showPalette: true,
 			palette: imageTestPalette,
-			paletteWidth: 250
+			canvasController
 		};
-		const palette = createMountedPalette(config);
-		const categories = palette.find(PaletteFlyoutContentCategory);
+		const wrapper = createMountedPalette(config);
+		const categories = wrapper.find(PaletteFlyoutContentCategory);
 		expect(categories).to.have.length(2);
 
-		const category = findCategoryElement(palette, "Category1");
+		const category = findCategoryElement(wrapper, "Category1");
 		category.simulate("click");
-		expect(palette.find(PaletteContentListItem)).to.have.length(2);
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 	});
 
 	it("narrow palette should show correct values for category and node with and without an image", () => {
+		const canvasController = new CanvasController();
 		const config = {
 			showPalette: false,
 			palette: imageTestPalette,
-			paletteWidth: 64
+			canvasController
 		};
-		const palette = createMountedPalette(config);
+		const wrapper = createMountedPalette(config);
 
 		// 2 categories should be rendered
-		const categories = palette.find(PaletteFlyoutContentCategory);
+		const categories = wrapper.find(PaletteFlyoutContentCategory);
 		expect(categories).to.have.length(2);
 
 		// Category1 should show `Cat` when no image provided
-		const category = findCategoryElement(palette, "Category1");
+		const category = findCategoryElement(wrapper, "Category1");
 		expect(category.find("span").text()).to.equal("Cat");
 		category.simulate("click");
-		expect(palette.find(PaletteContentListItem)).to.have.length(2);
+		wrapper.setProps({ paletteJSON: canvasController.getPaletteData() });
+
+		expect(wrapper.find(PaletteContentListItem)).to.have.length(2);
 
 		// Category2 should show image when provided
-		const category2 = findCategoryElement(palette, "Category2");
+		const category2 = findCategoryElement(wrapper, "Category2");
 		expect(category2.find("img")).to.have.length(1);
 	});
 });
 
 function createMountedPalette(config) {
-	const canvasController = new CanvasController();
-	const showPalette = config ? config.showPalette : true;
-	const paletteWidth = config ? config.paletteWidth : 64;
+	const canvasController = (config && config.canvasController) ? config.canvasController : new CanvasController();
+	const showPalette = (config && typeof config.showPalette === "boolean") ? config.showPalette : true;
 	const palette = (config && config.palette) ? config.palette : testPalette2;
+
+	canvasController.setPipelineFlowPalette(palette);
 
 	const wrapper = mountWithIntl(
 		<PaletteFlyout
 			paletteJSON={palette}
 			showPalette={showPalette}
 			canvasController={canvasController}
-			paletteWidth={paletteWidth}
 			isEditingEnabled
 			enableNarrowPalette
 		/>

@@ -478,7 +478,7 @@ export default class CanvasController {
 		return this.objectModel.convertNodeTemplate(nodeTemplate);
 	}
 
-	// Opens the palette category idetified by the category ID passed in.
+	// Opens the palette category identified by the category ID passed in.
 	openPaletteCategory(categoryId) {
 		this.objectModel.setIsOpenCategory(categoryId, true);
 	}

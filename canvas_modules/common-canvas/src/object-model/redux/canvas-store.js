@@ -108,7 +108,7 @@ export default class CanavasStore {
 	}
 
 	getPaletteCategory(categoryId) {
-		return this.store.getState().palette.content.categories.find((c) => c.id === categoryId);
+		return cloneDeep(this.store.getState().palette.content.categories.find((c) => c.id === categoryId));
 	}
 
 	getCanvasInfo() {
