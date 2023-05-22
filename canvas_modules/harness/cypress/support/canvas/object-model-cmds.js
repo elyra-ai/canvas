@@ -224,3 +224,17 @@ Cypress.Commands.add("setLinkDecorations", (linkName, decorations) => {
 			});
 	});
 });
+
+Cypress.Commands.add("getCategory", (categoryLabel) => {
+	cy.document().then((doc) => {
+		const palData = doc.canvasController.getPaletteData();
+		return palData.categories.find((cat) => cat.label === categoryLabel);
+	});
+});
+
+Cypress.Commands.add("getNodeTemplate", (nodeLabel, categoryLabel) => {
+	cy.getCategory(categoryLabel).then((cat) => {
+		const nodeTypes = cat.node_types;
+		return nodeTypes.find((nt) => nt.app_data.ui_data.label === nodeLabel);
+	});
+});

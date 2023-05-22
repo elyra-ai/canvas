@@ -189,7 +189,10 @@ class App extends React.Component {
 			selectedPaletteLayout: PALETTE_FLYOUT,
 			selectedStateTag: STATE_TAG_NONE,
 			selectedTipConfig: {
-				"palette": true,
+				"palette": {
+					categories: true,
+					nodeTemplates: true
+				},
 				"nodes": true,
 				"ports": true,
 				"decorations": true,
@@ -1656,20 +1659,32 @@ class App extends React.Component {
 
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
-			let sourceString = data.link.type === "commentLink" ? "comment" : "detached source";
-			if (data.link.src && data.link.src.outputs) {
-				const srcPort = !data.link.src.outputs ? null : data.link.src.outputs.find(function(port) {
-					return port.id === data.link.srcPortId;
-				});
-				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
-			}
+			let sourceString = "";
+			let targetString = "";
+			if (data.link.type === "commentLink") {
+				sourceString = "comment";
+				targetString = data.link.trgNode.label;
 
-			let targetString = "detached target";
-			if (data.link.trg && data.link.trg.inputs) {
-				const trgPort = data.link.trg.inputs.find(function(port) {
-					return port.id === data.link.trgPortId;
-				});
-				targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+			} else if (data.link.type === "associationLink") {
+				sourceString = data.link.srcObj.label;
+				targetString = data.link.trgNode.label;
+
+			} else {
+				sourceString = "detached source";
+				if (data.link.srcObj && data.link.srcObj.outputs) {
+					const srcPort = !data.link.srcObj.outputs ? null : data.link.srcObj.outputs.find(function(port) {
+						return port.id === data.link.srcPortId;
+					});
+					sourceString = `'${data.link.srcObj.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
+				}
+
+				targetString = "detached target";
+				if (data.link.trgNode && data.link.trgNode.inputs) {
+					const trgPort = data.link.trgNode.inputs.find(function(port) {
+						return port.id === data.link.trgPortId;
+					});
+					targetString = `'${data.link.trgNode.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
+				}
 			}
 
 			return `Link from ${sourceString} to ${targetString}`;
