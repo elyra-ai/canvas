@@ -49,7 +49,7 @@ describe("Test to check if tips show up for the palette, nodes, ports and links"
 	it("Test to check if palette tips show up with palette object specified", function() {
 		cy.setCanvasConfig({
 			"selectedTipConfig": {
-				"palette": { categories: true, node_templates: true },
+				"palette": { categories: true, nodeTemplates: true },
 				"nodes": true, "ports": true,
 				"decorations": true, "links": true }
 		});
@@ -177,7 +177,7 @@ describe("Test to check if tips don't show up for the palette, nodes, ports and 
 	it("Test to check if palete tips DON'T show up with palette object fields specified as false", function() {
 		cy.setCanvasConfig({
 			"selectedTipConfig": {
-				"palette": { categories: false, node_templates: false },
+				"palette": { categories: false, nodeTemplates: false },
 				"nodes": true, "ports": true,
 				"decorations": true, "links": true }
 		});
