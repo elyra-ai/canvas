@@ -1845,9 +1845,10 @@ export default class CanvasController {
 	isTipEnabled(tipType) {
 		const canvasConfig = this.getCanvasConfig();
 		switch (tipType) {
-		case constants.TIP_TYPE_PALETTE_ITEM:
 		case constants.TIP_TYPE_PALETTE_CATEGORY:
-			return canvasConfig.tipConfig.palette;
+			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.categories", false);
+		case constants.TIP_TYPE_PALETTE_ITEM:
+			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.nodeTemplates", false);
 		case constants.TIP_TYPE_NODE:
 			return canvasConfig.tipConfig.nodes;
 		case constants.TIP_TYPE_PORT:

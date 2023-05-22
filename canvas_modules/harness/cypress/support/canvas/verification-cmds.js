@@ -1045,53 +1045,35 @@ Cypress.Commands.add("verifyTipForToolbarItemNotDisplayed", (toolbarItem) => {
 });
 
 Cypress.Commands.add("verifyTipForCategory", (categoryLabel) => {
-	// Verify the tip shows next to given category
+	// Verify the tip shows
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
 	// Verify tip label
 	cy.get(".tip-palette-item")
 		.find(".tip-palette-label")
 		.should("have.text", categoryLabel);
-	// Verify tip description
-	cy.get(".tip-palette-item")
-		.find(".tip-palette-desc")
-		.should("have.text", "Description for " + categoryLabel);
+	cy.getCategory(categoryLabel).then((cat) => {
+		// Verify tip description
+		cy.get(".tip-palette-item")
+			.find(".tip-palette-desc")
+			.should("have.text", cat.description);
+	});
 });
 
-Cypress.Commands.add("verifyTipForNodeInCategory", (nodeName, categoryLabel) => {
-	// Verify the tip shows next to the node in category
+Cypress.Commands.add("verifyTipForNodeTemplateInCategory", (nodeLabel, categoryLabel) => {
+	// Verify the tip shows
 	cy.get(".tip-palette-item")
 		.should("not.eq", null);
 	// Verify tip label
-	cy.findNodeIndexInPalette(nodeName)
-		.then((nodeIndex) => {
-			cy.get(".palette-list-item")
-				.eq(nodeIndex)
-				.then((paletteItem) => {
-					// get node dimensions
-					const nodeRight = paletteItem[0].getBoundingClientRect().x + paletteItem[0].getBoundingClientRect().width;
-					cy.get(".tip-palette-item")
-						.then((tip) => {
-							const tipLeft = tip[0].getBoundingClientRect().x;
-							expect(tipLeft).to.be.greaterThan(nodeRight);
-						});
-				});
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
-	cy.findCategory(categoryLabel)
-		.invoke("attr", "data-id")
-		.then((dataId) => {
-			cy.get(`div[data-id*='paletteTip_${dataId}']`)
-				.should("have.attr", "aria-hidden", "true");
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForNodeInCategory", (nodeName) => {
-	// Verify the tip doesn't show for node in category
 	cy.get(".tip-palette-item")
-		.should("not.exist");
+		.find(".tip-palette-label")
+		.should("have.text", nodeLabel);
+	cy.getNodeTemplate(nodeLabel, categoryLabel).then((nt) => {
+		// Verify tip description
+		cy.get(".tip-palette-item")
+			.find(".tip-palette-desc")
+			.should("have.text", nt.app_data.ui_data.description);
+	});
 });
 
 Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
@@ -1120,16 +1102,6 @@ Cypress.Commands.add("verifyTipForNodeAtLocation", (nodeName, tipLocation) => {
 					// Verify node tip class
 					cy.verifyTipClass(tip, "definition-tooltip");
 				});
-		});
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
-	// Verify the tip doesn't show for node on canvas
-	cy.getNodeWithLabel(nodeName)
-		.then((node) => {
-			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
-			cy.get(nodeTipSelector)
-				.should("not.exist");
 		});
 });
 
@@ -1192,12 +1164,6 @@ Cypress.Commands.add("verifyTipForInputPortOfNode", (nodeName, inputPortId, port
 		});
 });
 
-Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
-	// Verify the tip doesn't show for input port id "inPort2"
-	cy.getNodePortTipSelector(inputPortId)
-		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
-});
-
 Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, portName) => {
 	cy.getNodePortSelector(nodeName, "output", outputPortId)
 		.then((portSelector) => {
@@ -1228,33 +1194,24 @@ Cypress.Commands.add("verifyTipForOutputPortOfNode", (nodeName, outputPortId, po
 		});
 });
 
-Cypress.Commands.add("verifyTipForLink", (mouseY, sourceNode, sourcePort, targetNode, targetPort) => {
+Cypress.Commands.add("verifyTipForLink", (sourceNode, sourcePort, targetNode, targetPort) => {
 	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
 		.then((tip) => {
 			// Verify tip is displayed on canvas
 			cy.wrap(tip).should("have.length", 1);
-
-			// Verify tip location
-			const tipTop = tip[0].offsetTop;
-			expect(tipTop).to.be.greaterThan(mouseY);
 
 			// Verify tip label
 			const sourceString = `'${sourceNode}', port '${sourcePort}'`;
 			const targetString = `'${targetNode}', port '${targetPort}'`;
 			const linkLabel = `Link from ${sourceString} to ${targetString}`;
 			cy.wrap(tip)
-				.find("#tooltipContainer")
+				.find(".tooltipContainer")
 				.should("have.text", linkLabel);
 
 			// Verify link tip class
 			cy.verifyTipClass(tip, "definition-tooltip");
 		});
 
-});
-
-Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
-	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
-		.should("not.exist");
 });
 
 Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
@@ -1271,6 +1228,46 @@ Cypress.Commands.add("verifyTipForDecoration", (tipText) => {
 			// Verify node tip class
 			cy.verifyTipClass(tip, "definition-tooltip");
 		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForCategory", (categoryLabel) => {
+	cy.findCategory(categoryLabel)
+		.then((category) => {
+			const id = category[0].getAttribute("data-id");
+			const categoryTipSelector = "div[data-id$=paletteTip_" + id + "][aria-hidden=false]";
+			cy.get(categoryTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNodeTemplate", (nodeLabel, categoryLabel) => {
+	cy.getNodeTemplate(nodeLabel, categoryLabel)
+		.then((nt) => {
+			const categoryTipSelector = "div[data-id$=paletteTip_" + nt.op + "][aria-hidden=false]";
+			cy.get(categoryTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForNode", (nodeName) => {
+	// Verify the tip doesn't show for node on canvas
+	cy.getNodeWithLabel(nodeName)
+		.then((node) => {
+			const nodeTipSelector = "[data-id='" + node[0].getAttribute("data-id").replace("grp", "tip") + "']";
+			cy.get(nodeTipSelector)
+				.should("not.exist");
+		});
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForInputPortId", (inputPortId) => {
+	// Verify the tip doesn't show for input port id "inPort2"
+	cy.getNodePortTipSelector(inputPortId)
+		.then((portTipSelector) => cy.get(portTipSelector).should("not.exist"));
+});
+
+Cypress.Commands.add("verifyTipDoesNotShowForLink", () => {
+	cy.get("[data-id*=link_tip_0_]") // Find tip with id that has 'link_tip_0_'
+		.should("not.exist");
 });
 
 Cypress.Commands.add("verifyTipDoesNotShowForDecoration", () => {

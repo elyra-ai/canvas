@@ -6081,6 +6081,7 @@ export default class SVGCanvasRenderer {
 
 				if (this.canOpenTip(TIP_TYPE_LINK) &&
 						!this.draggingLinkData) {
+					this.canvasController.closeTip();
 					this.canvasController.openTip({
 						id: this.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
