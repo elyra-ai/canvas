@@ -107,6 +107,10 @@ export default class CanavasStore {
 		return cloneDeep(this.store.getState().palette.content);
 	}
 
+	getPaletteCategory(categoryId) {
+		return cloneDeep(this.store.getState().palette.content.categories.find((c) => c.id === categoryId));
+	}
+
 	getCanvasInfo() {
 		return cloneDeep(this.store.getState().canvasinfo);
 	}
