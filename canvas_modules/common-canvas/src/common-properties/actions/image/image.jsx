@@ -49,9 +49,10 @@ class ImageAction extends React.Component {
 		}
 
 		const disabled = this.props.state === STATES.DISABLED;
+		const customClassName = this.props.action.className ? this.props.action.className : "";
 		const className = classNames("properties-action-image", { "left": this.props.action.image.placement === "left" },
 			{ "right": this.props.action.image.placement === "right" }, { "hide": this.props.state === STATES.HIDDEN },
-			{ "disabled": disabled });
+			{ "disabled": disabled }, customClassName);
 
 		const image = (
 			<div data-id={this.props.action.name}>

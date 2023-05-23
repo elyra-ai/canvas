@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ describe("Test of expression editor control", function() {
 		verifyConditionExpressionInConsole("first_index");
 
 		// placeholder text and validation
+		cy.toggleCommonPropertiesSidePanel(); // Close sidepanel before reopening
 		cy.openPropertyDefinition("Javascript_FilterRows_paramDef.json");
 		cy.verifyPlaceholderTextInExpressionEditor("Enter JavaScript text");
 		cy.selectFirstAutoCompleteForText("i", "conditionExpr");
@@ -159,6 +160,7 @@ describe("Test of Python and R expression controls", function() {
 		cy.verifyTypeOfEnteredTextInExpressionEditor("this is a string", "string", "conditionExpr");
 
 		// placeholder text and validation
+		cy.toggleCommonPropertiesSidePanel(); // Close sidepanel before reopening
 		cy.openPropertyDefinition("R_ExpressionControl_paramDef.json");
 
 		// test R autocomplete and syntax highlighting

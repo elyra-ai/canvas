@@ -342,6 +342,22 @@ export default class ObjectModel {
 		return pal;
 	}
 
+	setIsOpenCategory(categoryId, isOpen) {
+		this.store.dispatch({ type: "SET_IS_OPEN_CATEGORY", data: { categoryId: categoryId, isOpen } });
+	}
+
+	setIsOpenAllCategories(isOpen) {
+		this.store.dispatch({ type: "SET_IS_OPEN_ALL_CATEGORIES", data: { isOpen } });
+	}
+
+	isPaletteCategoryOpen(categoryId) {
+		const category = this.store.getPaletteCategory(categoryId);
+		if (category) {
+			return category.is_open;
+		}
+		return null;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Pipeline Flow and Canvas methods
 	// ---------------------------------------------------------------------------
@@ -706,7 +722,7 @@ export default class ObjectModel {
 
 	// Returns a copy of the node passed in with additional fields which contain
 	// layout, dimension and supernode binding status info. This uses the redux
-	// layout information. This is called from the api-pipeline class.
+	// layout information.
 	setNodeAttributes(node) {
 		return this.setNodeAttributesWithLayout(node, this.getNodeLayout(), this.getCanvasLayout());
 	}

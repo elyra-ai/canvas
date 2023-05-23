@@ -1,0 +1,330 @@
+{
+  "version": "3.0",
+  "categories": [
+    {
+      "label": "Card Nodes",
+      "description": "Contains the various Card Nodes from the Carbon Charts library",
+      "image": "images/custom-canvases/flows/palette/icons/palette-output.svg",
+      "id": "card_nodes",
+      "node_types": [
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "card-node-regular",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Regular Card Node",
+              "description": "Card node from Carbon Charts library.",
+              "image": "images/custom-canvases/flows/palette/icons/dataassetimport.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "card-node-with-outline",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "ui_data": {
+              "label": "Card Node with outline",
+              "description": "Card node with an outline.",
+              "image": "images/custom-canvases/flows/palette/icons/userinput.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "regular-card-node",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "react_nodes_data": {
+              "color": "#EAC348"
+            },
+            "ui_data": {
+              "label": "Card Node with color",
+              "description": "Color can be used to shows status.",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "card-node-regular",
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "curved-corners"
+            },
+            "ui_data": {
+              "label": "Card Node with curved corners",
+              "description": "Curves are cool.",
+              "image": "images/custom-canvases/flows/palette/icons/simgen.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "Shape nodes",
+      "description": "This category defines Shape Nodes from the Carbon Charts library.",
+      "image": "images/custom-canvases/flows/palette/icons/palette-modeling.svg",
+      "id": "shape-nodes",
+      "node_types": [
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "shape-node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "square"
+            },
+            "ui_data": {
+              "label": "Square",
+              "description": "A square shape node from the carbon charts library",
+              "image": "images/custom-canvases/flows/palette/icons/select.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "shape-node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "circle"
+             },
+            "ui_data": {
+              "label": "Circle",
+              "description": "A circle shape node from the carbon charts library",
+              "image": "images/custom-canvases/flows/palette/icons/sort.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        },
+        {
+          "id": "",
+          "type": "execution_node",
+          "op": "shape-node",
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "app_data": {
+            "react_nodes_data": {
+              "shape": "rounded-square"
+             },
+            "ui_data": {
+              "label": "Rounded square",
+              "description": "A rounded-square shape node from the carbon charts library",
+              "image": "images/custom-canvases/flows/palette/icons/sample.svg",
+              "x_pos": 0,
+              "y_pos": 0
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
+import { addNodeExternalObject, addDecExternalObject, removeExternalObject } from "./svg-canvas-utils-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -918,28 +919,15 @@ export default class SVGCanvasRenderer {
 	// plus its width and height. This needs to be called each time a new node
 	// is dragged from the palette, in case the dimensions of the ghost node
 	// have changed because the canvas has been zoomed.
-	getGhostNode(nodeTemplate) {
+	getGhostNode(node) {
 		const that = this;
-		const ghost = this.getGhostDimensions();
-		const node = this.canvasController.convertNodeTemplate(nodeTemplate);
-		node.layout = this.nodeLayout;
-		if (node.is_expanded) {
-			node.width = node.expanded_width;
-			node.height = node.expanded_height;
-		} else if (node.isResized) {
-			node.width = node.resizeWidth;
-			node.height = node.resizeHeight;
-		} else {
-			node.width = ghost.width;
-			node.height = ghost.height;
-		}
-		const nodeImage = this.getNodeImage(node);
-		const nodeImageType = this.getImageType(nodeImage);
 		const ghostDivSel = this.getGhostDivSel();
 
 		// Calculate the ghost area width which is the maximum of either the node
 		// label or the default node width.
 		const ghostAreaWidth = Math.max(this.nodeLayout.labelWidth, node.width);
+
+		let xOffset = 0;
 
 		// Remove any existing SVG object from the div
 		ghostDivSel
@@ -967,61 +955,67 @@ export default class SVGCanvasRenderer {
 			.attr("width", node.width)
 			.attr("height", node.height);
 
-		ghostGrp
-			.append(nodeImageType)
-			.attr("class", "d3-node-image")
-			.each(function() { that.setNodeImageContent(this, node); })
-			.attr("x", this.nodeUtils.getNodeImagePosX(node))
-			.attr("y", this.nodeUtils.getNodeImagePosY(node))
-			.attr("width", this.nodeUtils.getNodeImageWidth(node))
-			.attr("height", this.nodeUtils.getNodeImageHeight(node));
+		if (!this.nodeLayout.nodeExternalObject) {
+			const nodeImage = this.getNodeImage(node);
+			const nodeImageType = this.getImageType(nodeImage);
 
-		const fObject = ghostGrp
-			.append("foreignObject")
-			.attr("x", this.nodeUtils.getNodeLabelPosX(node))
-			.attr("y", this.nodeUtils.getNodeLabelPosY(node))
-			.attr("width", this.nodeUtils.getNodeLabelWidth(node))
-			.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-			.attr("class", "d3-foreign-object-ghost-label");
+			ghostGrp
+				.append(nodeImageType)
+				.attr("class", "d3-node-image")
+				.each(function() { that.setNodeImageContent(this, node); })
+				.attr("x", this.nodeUtils.getNodeImagePosX(node))
+				.attr("y", this.nodeUtils.getNodeImagePosY(node))
+				.attr("width", this.nodeUtils.getNodeImageWidth(node))
+				.attr("height", this.nodeUtils.getNodeImageHeight(node));
 
-		const fObjectDiv = fObject
-			.append("xhtml:div")
-			.attr("class", this.nodeUtils.getNodeLabelClass(node));
+			const fObject = ghostGrp
+				.append("foreignObject")
+				.attr("x", this.nodeUtils.getNodeLabelPosX(node))
+				.attr("y", this.nodeUtils.getNodeLabelPosY(node))
+				.attr("width", this.nodeUtils.getNodeLabelWidth(node))
+				.attr("height", this.nodeUtils.getNodeLabelHeight(node))
+				.attr("class", "d3-foreign-object-ghost-label");
 
-		const fObjectSpan = fObjectDiv
-			.append("xhtml:span")
-			.html(node.label);
+			const fObjectDiv = fObject
+				.append("xhtml:div")
+				.attr("class", this.nodeUtils.getNodeLabelClass(node));
 
-		// At the time of writing, Firefox takes the ghost image from only those
-		// objects that are visible (ignoring any invisible objects like the div
-		// and SVG area) consequently we position the node and label so the label
-		// (if bigger than the node width) is positioned up against the left edge
-		// of the invisible div and SVG area. If the label is shorter than the node
-		// width, the node is positioned up against the left edge of the SVG. We do
-		// this by translating the group object in the x direction.
+			const fObjectSpan = fObjectDiv
+				.append("xhtml:span")
+				.html(node.label);
 
-		// First calculate the display width of the label. The span will be the
-		// full text but it may be constricted by the label width in the layout.
-		const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
-		const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
-		const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
+			// At the time of writing, Firefox takes the ghost image from only those
+			// objects that are visible (ignoring any invisible objects like the div
+			// and SVG area) consequently we position the node and label so the label
+			// (if bigger than the node width) is positioned up against the left edge
+			// of the invisible div and SVG area. If the label is shorter than the node
+			// width, the node is positioned up against the left edge of the SVG. We do
+			// this by translating the group object in the x direction.
 
-		// Next calculate the amount, if any, the label protrudes beyond the edge
-		// of the node width and move the ghost group by that amount.
-		const xOffset = Math.max(0, (labelDisplayLength - ghost.width) / 2) * this.zoomTransform.k;
-		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
+			// First calculate the display width of the label. The span will be the
+			// full text but it may be constricted by the label width in the layout.
+			const labelSpanWidth = fObjectSpan.node().getBoundingClientRect().width + 4; // Include border for label
+			const nodeLabelWidth = this.nodeUtils.getNodeLabelWidth(node);
+			const labelDisplayLength = Math.min(nodeLabelWidth, labelSpanWidth);
 
-		// If the label is center justified, restrict the label width to the
-		// display amount and adjust the x coordinate to compensate for the change
-		// in width.
-		if (node.layout.labelAlign === "center") {
-			const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+			// Next calculate the amount, if any, the label protrudes beyond the edge
+			// of the node width and move the ghost group by that amount.
+			xOffset = Math.max(0, (labelDisplayLength - node.width) / 2) * this.zoomTransform.k;
 
-			fObject
-				.attr("width", labelDisplayLength)
-				.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
-			fObjectDiv.attr("width", labelDisplayLength);
+			// If the label is center justified, restrict the label width to the
+			// display amount and adjust the x coordinate to compensate for the change
+			// in width.
+			if (node.layout.labelAlign === "center") {
+				const labelDiff = Math.max(0, (nodeLabelWidth - labelDisplayLength) / 2);
+
+				fObject
+					.attr("width", labelDisplayLength)
+					.attr("x", this.nodeUtils.getNodeLabelPosX(node) + labelDiff);
+				fObjectDiv.attr("width", labelDisplayLength);
+			}
 		}
+
+		ghostGrp.attr("transform", `translate(${xOffset}, 0) scale(${this.zoomTransform.k})`);
 
 		// Get the amount the actual browser page is 'zoomed'. This is differet
 		// to the zoom amount for the canvas objects.
@@ -1029,13 +1023,14 @@ export default class SVGCanvasRenderer {
 
 		// Calculate the center of the node area for positioning the mouse pointer
 		// on the image when it is being dragged.
-		const centerX = (xOffset + ((ghost.width / 2) * this.zoomTransform.k)) * browserZoom;
-		const centerY = ((ghost.height / 2) * this.zoomTransform.k) * browserZoom;
+		const centerX = (xOffset + ((node.width / 2) * this.zoomTransform.k)) * browserZoom;
+		const centerY = ((node.height / 2) * this.zoomTransform.k) * browserZoom;
 
 		return {
 			element: ghostDivSel.node(),
 			centerX: centerX,
-			centerY: centerY
+			centerY: centerY,
+			nodeTemplate: node
 		};
 	}
 
@@ -1060,17 +1055,6 @@ export default class SVGCanvasRenderer {
 		}
 
 		return browserZoom;
-	}
-
-	// Returns an object containing the dimensions of the ghost node that hovers
-	// over canvas when a node is being dragged from the palette. The ghost node
-	// is based on the default node width and height so any change to these values
-	// that might be made to a node by the layoutHandler will not be reflected here.
-	getGhostDimensions() {
-		return {
-			width: this.nodeLayout.defaultNodeWidth,
-			height: this.nodeLayout.defaultNodeHeight
-		};
 	}
 
 	nodeTemplateDragStart(nodeTemplate) {
@@ -1101,12 +1085,11 @@ export default class SVGCanvasRenderer {
 
 		if (this.isNodeTemplateAttachableToDetachedLinks(nodeTemplate)) {
 			const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
-			const ghost = this.getGhostDimensions();
 			const ghostArea = {
-				x1: mousePos.x - (ghost.width / 2),
-				y1: mousePos.y - (ghost.height / 2),
-				x2: mousePos.x + (ghost.width / 2),
-				y2: mousePos.y + (ghost.height / 2)
+				x1: mousePos.x - (nodeTemplate.width / 2),
+				y1: mousePos.y - (nodeTemplate.height / 2),
+				x2: mousePos.x + (nodeTemplate.width / 2),
+				y2: mousePos.y + (nodeTemplate.height / 2)
 			};
 			const template = this.canvasController.convertNodeTemplate(nodeTemplate);
 			const links = this.getAttachableLinksForNodeAtPos(template, ghostArea);
@@ -1256,12 +1239,13 @@ export default class SVGCanvasRenderer {
 		this.dragNewLinkOverNode = null;
 	}
 
-	// Processes the drop of a palette node template onto the canvas.
+	// Processes the drop of a palette node template onto the canvas. The
+	// nodeTemplate is in internal format.
 	nodeTemplateDropped(nodeTemplate, x, y) {
 		if (nodeTemplate === null) {
 			return;
 		}
-		const transPos = this.transformMousePosForNode(x, y);
+		const transPos = this.transformMousePosForNode(x, y, nodeTemplate);
 
 		// If the node template was dropped on a link
 		if (this.dragOverLink) {
@@ -1294,13 +1278,17 @@ export default class SVGCanvasRenderer {
 
 	// Transforms the mouse position passed in to be appropriate for a palette
 	// node or external object being dragged over the canvas.
-	transformMousePosForNode(x, y) {
+	transformMousePosForNode(x, y, node) {
 		const mousePos = this.convertPageCoordsToCanvasCoords(x, y);
 
 		// Offset mousePos so new node appears in center of mouse location.
-		const ghost = this.getGhostDimensions();
-		mousePos.x -= ghost.width / 2;
-		mousePos.y -= ghost.height / 2;
+		if (node && node.width && node.height) {
+			mousePos.x -= node.width / 2;
+			mousePos.y -= node.height / 2;
+		} else {
+			mousePos.x -= this.nodeLayout.defaultNodeWidth / 2;
+			mousePos.y -= this.nodeLayout.defaultNodeHeight / 2;
+		}
 
 		return this.getMousePosSnapToGrid(mousePos);
 	}
@@ -2722,7 +2710,9 @@ export default class SVGCanvasRenderer {
 		selection
 			.data(data, (d) => d.id)
 			.join(
-				(enter) => this.createNodes(enter)
+				(enter) => this.createNodes(enter),
+				null,
+				(remove) => this.removeNodes(remove)
 			)
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
@@ -2756,9 +2746,14 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-node-selection-highlight");
 
 		// Node Body
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.nodeShapeDisplay)
 			.append("path")
 			.attr("class", "d3-node-body-outline");
+
+		// Optional foreign object to contain a React object
+		newNodeGroups.filter((d) => d.layout.nodeExternalObject)
+			.append("foreignObject")
+			.attr("class", "d3-foreign-object-external-node");
 
 		// Node Image
 		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
@@ -2771,7 +2766,7 @@ export default class SVGCanvasRenderer {
 			});
 
 		// Node Label
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
+		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.labelDisplay)
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-node-label")
 			.call(this.attachNodeLabelListeners.bind(this))
@@ -2804,6 +2799,15 @@ export default class SVGCanvasRenderer {
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
+
+		// Optional foreign object to contain a React object
+		joinedNodeGrps.selectChildren(".d3-foreign-object-external-node")
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("width", (d) => d.width)
+			.attr("height", (d) => d.height)
+			.attr("x", 0)
+			.attr("y", 0)
+			.each(addNodeExternalObject.bind(this));
 
 		// Node Image
 		joinedNodeGrps.selectChildren(".d3-node-image")
@@ -2857,6 +2861,20 @@ export default class SVGCanvasRenderer {
 			}
 		});
 		this.logger.logEndTimer("updateNodes");
+	}
+
+	removeNodes(removeSel) {
+		// Remove any foreign objects for react nodes, if necessary.
+		removeSel
+			.selectChildren(".d3-foreign-object-external-node")
+			.each(removeExternalObject.bind(this));
+
+		// Remove all nodes in the selection.
+		removeSel.remove();
+	}
+
+	onClick() {
+		window.console.log("onClick");
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -3210,6 +3228,10 @@ export default class SVGCanvasRenderer {
 	attachInputPortListeners(inputPorts, node) {
 		inputPorts
 			.on("mousedown", (d3Event, port) => {
+				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					return;
+				}
 				if (this.config.enableAssocLinkCreation) {
 					// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 					if (d3Event.button === 0) {
@@ -3269,6 +3291,10 @@ export default class SVGCanvasRenderer {
 	attachOutputPortListeners(outputPorts, node) {
 		outputPorts
 			.on("mousedown", (d3Event, port) => {
+				if (!this.config.enableEditingActions) {
+					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+					return;
+				}
 				// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 				if (d3Event.button === 0) {
 					CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stops the node drag behavior when clicking on the handle/circle
@@ -3524,12 +3550,13 @@ export default class SVGCanvasRenderer {
 		this.updateDecPaths(dec, decSel, objType);
 		this.updateDecImages(dec, decSel, objType, d);
 		this.updateDecLabels(dec, decSel, objType, d);
+		this.updateDecJsxObjs(dec, decSel, objType, d);
 	}
 
 	updateDecOutlines(dec, decSel, objType, d) {
 		let outlnSel = decSel.selectChild("rect");
 
-		if (!dec.label && !dec.path && dec.outline !== false) {
+		if (!dec.label && !dec.path && !dec.jsx && dec.outline !== false) {
 			outlnSel = outlnSel.empty() ? decSel.append("rect") : outlnSel;
 			outlnSel
 				.attr("class", this.decUtils.getDecClass(dec, `d3-${objType}-dec-outline`))
@@ -3577,7 +3604,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	updateDecLabels(dec, decSel, objType, d) {
-		let labelSel = decSel.selectChild("foreignObject");
+		let labelSel = decSel.selectChild(".d3-foreign-object-dec-label");
 
 		if (dec.label) {
 			if (labelSel.empty()) {
@@ -3601,6 +3628,29 @@ export default class SVGCanvasRenderer {
 				.html(escapeText(dec.label));
 		} else {
 			labelSel.remove();
+		}
+	}
+
+	updateDecJsxObjs(dec, decSel, objType, d) {
+		let extSel = decSel.selectChild(".d3-foreign-object-dec-jsx");
+
+		if (dec.jsx) {
+			if (extSel.empty()) {
+				extSel = decSel
+					.append("foreignObject")
+					.attr("class", "d3-foreign-object-dec-jsx")
+					.attr("tabindex", -1)
+					.attr("x", 0)
+					.attr("y", 0)
+					.call(this.attachDecLabelListeners.bind(this, d, objType));
+			}
+			extSel
+				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
+				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
+				.each(addDecExternalObject.bind(this));
+		} else {
+			extSel.each(removeExternalObject.bind(this));
+			extSel.remove();
 		}
 	}
 
@@ -6141,6 +6191,7 @@ export default class SVGCanvasRenderer {
 
 				if (this.canOpenTip(TIP_TYPE_LINK) &&
 						!this.draggingLinkData) {
+					this.canvasController.closeTip();
 					this.canvasController.openTip({
 						id: this.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
@@ -6971,7 +7022,8 @@ export default class SVGCanvasRenderer {
 	// "Curve" link to make it look presentable. I know, I tried!
 	getArrowHeadTransform(d) {
 		const angle =
-			this.canvasLayout.linkType === LINK_TYPE_ELBOW
+			this.canvasLayout.linkType === LINK_TYPE_ELBOW ||
+			this.canvasLayout.linkType === LINK_TYPE_CURVE
 				? this.getAngleBasedOnLinkDirection()
 				: Math.atan2((d.y2 - d.y1), (d.x2 - d.x1)) * (180 / Math.PI);
 

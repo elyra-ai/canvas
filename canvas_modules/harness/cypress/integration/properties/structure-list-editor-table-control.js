@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 describe("Test of subpanel editing of selectcolumns in a structurelisteditor", function() {
 	before(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("selectcolumns_paramDef.json");
 	});
 
@@ -51,9 +51,9 @@ describe("Test of subpanel editing of selectcolumns in a structurelisteditor", f
 describe("Test the feature to have tables use the available vertical space", function() {
 	before(() => {
 		cy.visit("/");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.selectPropertiesContainerType("Flyout");
-		cy.get("#harness-action-bar-sidepanel-modal").click();
+		cy.toggleCommonPropertiesSidePanel();
 		cy.openPropertyDefinition("selectcolumns_paramDef.json");
 	});
 

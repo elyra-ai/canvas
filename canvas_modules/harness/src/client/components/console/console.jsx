@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import {
-	CONSOLE
-} from "../constants/constants.js";
 
 export default class Console extends React.Component {
 	showDetails(event) {
@@ -32,15 +29,10 @@ export default class Console extends React.Component {
 	}
 
 	render() {
-		var consoleHeight = CONSOLE.MINIMIZED;
-		if (this.props.consoleOpened) {
-			consoleHeight = CONSOLE.MAXIMIXED;
-		}
-
-		var that = this;
+		const that = this;
 		const logs = this.props.logs.map(function(log, ind) {
-			var formatted = JSON.stringify(log, null, 2);
-			var entry = log.timestamp + ": " + log.event;
+			const formatted = JSON.stringify(log, null, 2);
+			const entry = log.timestamp + ": " + log.event;
 
 			return (
 				<li className="harness-console-entry" key={ind} onClick={that.showDetails.bind(that) }>
@@ -52,20 +44,14 @@ export default class Console extends React.Component {
 			);
 		});
 
-		var consoleWindow = (
-			<div className="harness-app-console"
-				style={{ height: consoleHeight }}
-			>
-				<ul>{logs}</ul>
-			</div>);
-
-		return (
-			<div>{consoleWindow}</div>
-		);
+		return (<div className={"harness-app-console " + this.props.classname}>
+			<ul>{logs}</ul>
+		</div>);
 	}
 }
 
 Console.propTypes = {
+	classname: PropTypes.string,
 	consoleOpened: PropTypes.bool,
 	logs: PropTypes.array
 };

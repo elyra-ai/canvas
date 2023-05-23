@@ -480,6 +480,31 @@ export default class CanvasController {
 		return this.objectModel.convertNodeTemplate(nodeTemplate);
 	}
 
+	// Opens the palette category identified by the category ID passed in.
+	openPaletteCategory(categoryId) {
+		this.objectModel.setIsOpenCategory(categoryId, true);
+	}
+
+	// Closes the palette category idetified by the category ID passed in.
+	closePaletteCategory(categoryId) {
+		this.objectModel.setIsOpenCategory(categoryId, false);
+	}
+
+	// Opens all the palette categories.
+	openAllPaletteCategories() {
+		this.objectModel.setIsOpenAllCategories(true);
+	}
+
+	// Closes all the palette categories.
+	closeAllPaletteCategories() {
+		this.objectModel.setIsOpenAllCategories(false);
+	}
+
+	// Returns true or false to indicate whether a palette category is open or not.
+	isPaletteCategoryOpen(categoryId) {
+		return this.objectModel.isPaletteCategoryOpen(categoryId);
+	}
+
 	// ---------------------------------------------------------------------------
 	// Selections methods
 	// ---------------------------------------------------------------------------
@@ -724,7 +749,8 @@ export default class CanvasController {
 	// "top-level" pipeline.
 	createNodeCommand(data, pipelineId) {
 		const pId = pipelineId || this.getCurrentPipelineId();
-		this.createNodeFromTemplateAt(data.nodeTemplate, { x: data.offsetX, y: data.offsetY }, pId);
+		const nodeTemplate = this.convertNodeTemplate(data.nodeTemplate);
+		this.createNodeFromTemplateAt(nodeTemplate, { x: data.offsetX, y: data.offsetY }, pId);
 	}
 
 	// Deletes the node specified.
@@ -1693,7 +1719,9 @@ export default class CanvasController {
 
 	getGhostNode(nodeTemplate) {
 		if (this.canvasContents) {
-			return this.getSVGCanvasD3().getGhostNode(nodeTemplate);
+			let node = this.convertNodeTemplate(nodeTemplate);
+			node = this.objectModel.setNodeAttributes(node);
+			return this.getSVGCanvasD3().getGhostNode(node);
 		}
 		return null;
 	}
@@ -1865,9 +1893,10 @@ export default class CanvasController {
 	isTipEnabled(tipType) {
 		const canvasConfig = this.getCanvasConfig();
 		switch (tipType) {
-		case constants.TIP_TYPE_PALETTE_ITEM:
 		case constants.TIP_TYPE_PALETTE_CATEGORY:
-			return canvasConfig.tipConfig.palette;
+			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.categories", false);
+		case constants.TIP_TYPE_PALETTE_ITEM:
+			return canvasConfig.tipConfig.palette === true || get(canvasConfig, "tipConfig.palette.nodeTemplates", false);
 		case constants.TIP_TYPE_NODE:
 			return canvasConfig.tipConfig.nodes;
 		case constants.TIP_TYPE_PORT:
@@ -1911,27 +1940,28 @@ export default class CanvasController {
 		}
 	}
 
+	// Called when a node is double clicked in the palette and added to the canvas.
+	// The nodeTemplate is in the internal format.
 	createAutoNode(nodeTemplate) {
 		const selApiPipeline = this.objectModel.getSelectionAPIPipeline();
 		const apiPipeline = selApiPipeline ? selApiPipeline : this.objectModel.getAPIPipeline();
-		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createAutoNode",
 			editSource: "canvas",
-			nodeTemplate: newNodeTemplate,
+			nodeTemplate: nodeTemplate,
 			pipelineId: apiPipeline.pipelineId
 		};
 
 		this.editActionHandler(data);
 	}
 
-	// Called when a node is dragged from the palette onto the canvas
+	// Called when a node is dragged from the palette onto the canvas. The
+	// nodeTemplate is in the internal format.
 	createNodeFromTemplateAt(nodeTemplate, pos, pipelineId) {
-		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		var data = {
 			editType: "createNode",
 			editSource: "canvas",
-			nodeTemplate: newNodeTemplate,
+			nodeTemplate: nodeTemplate,
 			offsetX: pos.x,
 			offsetY: pos.y,
 			pipelineId: pipelineId
@@ -1941,14 +1971,14 @@ export default class CanvasController {
 	}
 
 	// Called when a node is dragged from the palette onto the canvas and dropped
-	// onto an existing link between two data nodes.
+	// onto an existing link between two data nodes. The nodeTemplate
+	// is in the internal format.
 	createNodeFromTemplateOnLinkAt(nodeTemplate, link, pos, pipelineId) {
-		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
-		if (this.canNewNodeBeDroppedOnLink(newNodeTemplate)) {
+		if (this.canNewNodeBeDroppedOnLink(nodeTemplate)) {
 			var data = {
 				editType: "createNodeOnLink",
 				editSource: "canvas",
-				nodeTemplate: newNodeTemplate,
+				nodeTemplate: nodeTemplate,
 				offsetX: pos.x,
 				offsetY: pos.y,
 				link: link,
@@ -1960,15 +1990,15 @@ export default class CanvasController {
 	}
 
 	// Called when a node is dragged from the palette onto the canvas and dropped
-	// onto one or more semi-detached or fully-detached links.
+	// onto one or more semi-detached or fully-detached links. The nodeTemplate
+	// is in the internal format.
 	createNodeFromTemplateAttachLinks(nodeTemplate, detachedLinks, pos, pipelineId) {
-		const newNodeTemplate = this.convertNodeTemplate(nodeTemplate);
 		if (detachedLinks &&
-				this.canNewNodeBeAttachedToLinks(newNodeTemplate)) {
+				this.canNewNodeBeAttachedToLinks(nodeTemplate)) {
 			var data = {
 				editType: "createNodeAttachLinks",
 				editSource: "canvas",
-				nodeTemplate: newNodeTemplate,
+				nodeTemplate: nodeTemplate,
 				offsetX: pos.x,
 				offsetY: pos.y,
 				detachedLinks: detachedLinks,

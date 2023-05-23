@@ -28,13 +28,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isOpen: false
-		};
-
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
-		this.categorySelected = this.categorySelected.bind(this);
+		this.categoryClicked = this.categoryClicked.bind(this);
 	}
 
 	onMouseOver(ev) {
@@ -102,7 +98,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} onHeadingClick={({ isOpen }) => this.setState({ isOpen })}>
+			<AccordionItem title={titleObj} open={this.props.category.is_open}>
 				{content}
 			</AccordionItem>
 		);
@@ -115,7 +111,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return (
 			<div className="palette-flyout-category"
 				data-id={get(this.props.category, "id", "")}
-				onClick={this.categorySelected}
+				onClick={this.categoryClicked}
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
@@ -174,12 +170,12 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	// Returns the content object for the AccordionItem. This is only set to
-	// something if the category is open (that is: isOpen is true). It is useful
-	// to remove the nodes from the DOM when the category is closed because this
-	// can help inline SVG icons on the canvas, that reference elements in the
-	// <defs> element, to appear correclty.
+	// something if the category is open (that is: this.props.category.is_open
+	// is true). We remove the nodes from the DOM, when the category
+	// is closed, because this helps inline SVG icons on the canvas, that
+	// reference elements in the <defs> element, to appear correctly.
 	getContent() {
-		if (this.state.isOpen) {
+		if (this.props.category.is_open) {
 			const nodeTypeInfos = this.props.category.node_types.map((nt) => ({ nodeType: nt, category: this.props.category }));
 			return (
 				<PaletteContentList
@@ -195,8 +191,16 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return null;
 	}
 
-	categorySelected() {
-		this.props.categorySelectedMethod(this.props.category.id);
+	categoryClicked(evt) {
+		// Stopping event propagation prevents an extra refresh of the node icons when
+		// a category is opened.
+		evt.stopPropagation();
+
+		if (this.props.category.is_open) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
+		} else {
+			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		}
 	}
 
 	render() {
@@ -208,7 +212,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 
 PaletteFlyoutContentCategory.propTypes = {
 	category: PropTypes.object.isRequired,
-	categorySelectedMethod: PropTypes.func.isRequired,
 	canvasController: PropTypes.object.isRequired,
 	isPaletteOpen: PropTypes.bool.isRequired,
 	isEditingEnabled: PropTypes.bool.isRequired,

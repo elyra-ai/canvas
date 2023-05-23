@@ -26,11 +26,6 @@ function _defineConstant(name, value) {
 }
 
 // Public Methods ------------------------------------------------------------->
-_defineConstant("CONSOLE", {
-	MINIMIZED: "0px",
-	MAXIMIXED: "200px"
-});
-
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 _defineConstant("SIDE_PANEL_API", "sidepanel-api");
@@ -77,7 +72,6 @@ _defineConstant("EXAMPLE_APP_NONE", "None - use options below");
 _defineConstant("EXAMPLE_APP_FLOWS", "Flows");
 _defineConstant("EXAMPLE_APP_READ_ONLY", "Read Only");
 _defineConstant("EXAMPLE_APP_PROGRESS", "Progress");
-_defineConstant("EXAMPLE_APP_BLUE_ELLIPSES", "Blue Ellipses");
 _defineConstant("EXAMPLE_APP_STAGES", "Stages");
 _defineConstant("EXAMPLE_APP_STAGES_CARD_NODE", "Stages Card Node");
 _defineConstant("EXAMPLE_APP_EXPLAIN", "Explain");
@@ -85,6 +79,7 @@ _defineConstant("EXAMPLE_APP_EXPLAIN2", "Explain2");
 _defineConstant("EXAMPLE_APP_STREAMS", "Streams");
 _defineConstant("EXAMPLE_APP_TABLES", "Tables");
 _defineConstant("EXAMPLE_APP_LOGIC", "Logic");
+_defineConstant("EXAMPLE_APP_REACT_NODES", "React Nodes");
 
 _defineConstant("PALETTE_FLYOUT", "Flyout");
 _defineConstant("PALETTE_MODAL", "Modal");
@@ -125,7 +120,8 @@ _defineConstant("API_ZOOM_TO_REVEAL_LINK", "Zoom To Reveal Link");
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
 
-_defineConstant("TIP_PALETTE", "Palette");
+_defineConstant("TIP_PALETTE_CATEGORIES", "Palette Categories");
+_defineConstant("TIP_PALETTE_NODE_TEMPLATES", "Palette Node Templates");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_DECORATIONS", "Decorations");
@@ -145,11 +141,3 @@ _defineConstant("FORMS", "forms");
 _defineConstant("PARAMETER_DEFS", "parameterDefs");
 
 _defineConstant("PRIMARY", "Primary");
-
-_defineConstant("EDITOR_SIZE", {
-	UNSET: "unset",
-	SMALL: "small",
-	MEDIUM: "medium",
-	LARGE: "large",
-	MAX: "max"
-});

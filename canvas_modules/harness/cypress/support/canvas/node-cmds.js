@@ -16,7 +16,7 @@
 
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
 	cy.get("body").then(($body) => {
-		if ($body.find(".d3-node-group").length) {
+		if ($body.find(".d3-canvas-group .d3-node-group").length) {
 			cy.get(getNodeGrpSelector())
 				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
 		}
@@ -312,11 +312,15 @@ Cypress.Commands.add("dragNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
 			// drag the node to the canvas
 			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
+				.trigger("mousedown");
+			cy.get(".palette-grid-node-inner > .palette-grid-node-text").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
 				.trigger("drop", canvasX, canvasY, { dataTransfer });
 		} else {
 			// Palette Layout - Flyout
+			cy.get(".palette-list-item-text-div").contains(nodeLabel)
+				.trigger("mousedown");
 			cy.get(".palette-list-item-text-div").contains(nodeLabel)
 				.trigger("dragstart", { dataTransfer });
 			cy.get("#harness-app-container")
@@ -390,7 +394,7 @@ Cypress.Commands.add("getNodeDimensions", (nodeLabel) => {
 });
 
 Cypress.Commands.add("selectAllNodesUsingCtrlOrCmdKey", () => {
-	cy.get("#canvas-div-0").find(".d3-node-image")
+	cy.get("#canvas-div-0").find(".d3-canvas-group .d3-node-image")
 		.then((nodes) => {
 			cy.useCtrlOrCmdKey()
 				.then((selectedKey) => {

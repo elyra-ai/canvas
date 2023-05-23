@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import SidePanelCanvas from "./sidepanel-canvas.jsx";
-import SidePanelModal from "./sidepanel-properties.jsx";
-import SidePanelAPI from "./sidepanel-api.jsx";
+import SidePanelCanvas from "./canvas/sidepanel-canvas.jsx";
+import SidePanelProperties from "./properties/sidepanel-properties.jsx";
+import SidePanelAPI from "./api/sidepanel-api.jsx";
 
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API
-} from "../constants/constants.js";
+} from "../../constants/constants.js";
 
 export default class SidePanel extends React.Component {
 
 	render() {
 		if (this.props.openSidepanelCanvas ||
-				this.props.openSidepanelModal ||
+				this.props.openSidepanelProperties ||
 				this.props.openSidepanelAPI) {
 			let view = null;
 
@@ -44,7 +44,7 @@ export default class SidePanel extends React.Component {
 				/>);
 				break;
 			case SIDE_PANEL_MODAL:
-				view = (<SidePanelModal
+				view = (<SidePanelProperties
 					log={this.props.log}
 					propertiesConfig={this.props.propertiesConfig}
 				/>);
@@ -77,7 +77,7 @@ SidePanel.propTypes = {
 	propertiesConfig: PropTypes.object,
 	apiConfig: PropTypes.object,
 	openSidepanelCanvas: PropTypes.bool,
-	openSidepanelModal: PropTypes.bool,
+	openSidepanelProperties: PropTypes.bool,
 	openSidepanelAPI: PropTypes.bool,
 	selectedPanel: PropTypes.string,
 	log: PropTypes.func,

@@ -464,8 +464,8 @@ export default class SvgCanvasTextArea {
 		// If there is no text for the label and textCanBeEmpty is false
 		// just return, so label returns to what it was before editing started.
 		if (!newValue && !data.textCanBeEmpty) {
-			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			this.closeTextArea(data);
+			CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 			return;
 		}
 		const newText = newValue; // Save the text before closing the foreign object

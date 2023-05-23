@@ -56,7 +56,7 @@ const expectedNode3Messages = [
 	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest3", "type": "error", "text": "There are {errorMsgCount} error cells. " },
 	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
 	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
-	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "You must provide your {label}." }
+	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "You must enter a value for {label}." }
 ];
 const expectedFlowMessages = {
 	"formNode": expectedNode2Messages,

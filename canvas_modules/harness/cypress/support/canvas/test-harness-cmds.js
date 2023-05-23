@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ Cypress.Commands.add("toggleCommonCanvasSidePanel", () => {
 });
 
 Cypress.Commands.add("toggleCommonPropertiesSidePanel", () => {
-	cy.get("#harness-action-bar-sidepanel-modal").click();
+	cy.get("#harness-action-bar-sidepanel-properties").click();
 });
 
 Cypress.Commands.add("openCanvasDefinition", (canvasFileName, checkForComment) => {
@@ -295,5 +295,5 @@ Cypress.Commands.add("clickBreadcrumb", (breadCrumb) => {
 });
 
 Cypress.Commands.add("toggleApplyOnBlur", () => {
-	cy.get("label[for='harness-sidepanel-applyOnBlur-toggle']").click();
+	cy.get("div[data-id='properties-applyOnBlur'] label.bx--toggle-input__label").click();
 });

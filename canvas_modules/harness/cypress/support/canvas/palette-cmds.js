@@ -98,13 +98,8 @@ Cypress.Commands.add("doubleClickNodeInCategory", (nodeLabel, categoryLabel) => 
 	cy.findNodeInCategory(nodeLabel, categoryLabel).dblclick();
 });
 
-Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel) => {
-	cy.findNodeIndexInPalette(nodeLabel)
-		.then((nodeIndex) => {
-			cy.get(".palette-list-item")
-				.eq(nodeIndex)
-				.trigger("mouseover");
-		});
+Cypress.Commands.add("hoverOverNodeInCategory", (nodeLabel, categoryLabel) => {
+	cy.findNodeInCategory(nodeLabel, categoryLabel).trigger("mouseover", { buttons: 0 });
 });
 
 Cypress.Commands.add("searchForNodeUsing", (filterText) => {

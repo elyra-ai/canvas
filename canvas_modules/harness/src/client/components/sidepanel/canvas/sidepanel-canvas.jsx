@@ -21,7 +21,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
 	from "carbon-components-react";
-
+import { get, set } from "lodash";
 import {
 	NONE_SAVE_ZOOM,
 	LOCAL_STORAGE,
@@ -52,7 +52,6 @@ import {
 	UNDERLAY_VARIABLE,
 	EXAMPLE_APP_NONE,
 	EXAMPLE_APP_FLOWS,
-	EXAMPLE_APP_BLUE_ELLIPSES,
 	EXAMPLE_APP_STAGES,
 	EXAMPLE_APP_STAGES_CARD_NODE,
 	EXAMPLE_APP_EXPLAIN,
@@ -62,10 +61,12 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
+	EXAMPLE_APP_REACT_NODES,
 	PALETTE_FLYOUT,
 	PALETTE_MODAL,
 	PALETTE_NONE,
-	TIP_PALETTE,
+	TIP_PALETTE_CATEGORIES,
+	TIP_PALETTE_NODE_TEMPLATES,
 	TIP_NODES,
 	TIP_PORTS,
 	TIP_DECORATIONS,
@@ -80,12 +81,12 @@ import {
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
 	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
-} from "../constants/constants.js";
+} from "../../../constants/constants.js";
 
 import { STATE_TAG_NONE, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY }
-	from "../../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
+	from "@elyra/canvas/src/common-canvas/constants/canvas-constants.js";
 
-import FormsService from "../services/FormsService";
+import FormsService from "../../../services/FormsService";
 
 export default class SidePanelForms extends React.Component {
 	constructor(props) {
@@ -259,8 +260,11 @@ export default class SidePanelForms extends React.Component {
 	tipConfigChange(checked, target) {
 		const tipConf = Object.assign({}, this.props.getStateValue("selectedTipConfig"));
 		switch (target) {
-		case "tip_palette":
-			tipConf.palette = checked;
+		case "tip_palette_categories":
+			set(tipConf, "palette.categories", checked);
+			break;
+		case "tip_palette_node_templates":
+			set(tipConf, "palette.nodeTemplates", checked);
 			break;
 		case "tip_nodes":
 			tipConf.nodes = checked;
@@ -1089,8 +1093,8 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_TABLES}
 					/>
 					<RadioButton
-						value={EXAMPLE_APP_BLUE_ELLIPSES}
-						labelText={EXAMPLE_APP_BLUE_ELLIPSES}
+						value={EXAMPLE_APP_REACT_NODES}
+						labelText={EXAMPLE_APP_REACT_NODES}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_NONE}
@@ -1236,10 +1240,16 @@ export default class SidePanelForms extends React.Component {
 			<fieldset className="bx--fieldset">
 				<legend className="bx--label">Tips</legend>
 				<Checkbox
-					id="tip_palette"
-					labelText={TIP_PALETTE}
+					id="tip_palette_categories"
+					labelText={TIP_PALETTE_CATEGORIES}
 					onChange={this.tipConfigChange}
-					checked={this.props.getStateValue("selectedTipConfig").palette}
+					checked={get(this.props.getStateValue("selectedTipConfig"), "palette.categories", false)}
+				/>
+				<Checkbox
+					id="tip_palette_node_templates"
+					labelText={TIP_PALETTE_NODE_TEMPLATES}
+					onChange={this.tipConfigChange}
+					checked={get(this.props.getStateValue("selectedTipConfig"), "palette.nodeTemplates", false)}
 				/>
 				<Checkbox
 					id="tip_nodes"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ describe("Test of action image tooltip direction", function() {
 
 	it("When tooltip_direction is not specified, default direction is bottom", function() {
 		// Click "Conditions" catgeory
-		cy.get(".properties-category-title").eq(2)
+		cy.get(".common-canvas-right-side-items .properties-category-title").eq(2)
 			.click();
 		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");

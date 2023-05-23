@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ $harness-navbar-icon-width: 48px;
 	&.side-panel-open {
 		width: calc(100% - $harness-sidepanel-width);
 	}
+}
+
+.harness-canvas-container.console-panel-open {
+	height: calc(100% - $harness-header-height - $harness-console-height);
 }
 
 .harness-canvas-single {
@@ -129,7 +133,7 @@ $harness-navbar-icon-width: 48px;
 }
 
 .harness-nav-divider {
-	border-left: 2px solid $ui-03;
+	border-left: 1px solid $ui-03;
 }
 
 /* Navbar Breadcrumbs */
@@ -169,45 +173,6 @@ $harness-navbar-icon-width: 48px;
 
 	.harness-pipeline-breadcrumbs-separator {
 		font-size: 13px;
-	}
-}
-
-/*Console*/
-.harness-app-console {
-	font-size: small;
-	border-top: 1px solid $text-01;
-	background-color: $ui-02;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	transition: height 2s;
-	overflow-y: auto;
-	z-index: 1;
-	padding-left: 1em;
-	line-height: 1.1;
-	word-wrap: break-word;
-}
-
-.harness-console-pretty-json {
-	margin: 0 10px 10px 0;
-	border: 0;
-	border-bottom: 1px dashed $ui-05;
-}
-
-.harness-console-entry {
-	list-style: none;
-
-	&::before {
-		content: "• ";
-		padding-right: 10px;
-	}
-	&:hover {
-		background-color: $ui-03;
-		cursor: pointer;
-	}
-	&:hover::before {
-		content: "+";
-		padding-right: 12px;
 	}
 }
 

@@ -171,11 +171,9 @@
 			margin-left: 0;
 		}
 
-		// Override padding for sortable columns to show space between column label and sort icon
 		.ReactVirtualized__Table__sortableHeaderColumn {
-			.properties-tooltips-container {
-				padding: 0;
-				padding-left: $spacing-05;
+			.properties-vt-label-tip-icon {
+				padding-right: $spacing-03; // spacing between column label and sort icon
 			}
 			&:hover {
 				background-color: $active-ui;

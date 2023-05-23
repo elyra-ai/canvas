@@ -22,11 +22,12 @@ import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disabl
 import FlowsCanvasFlow from "./flowsCanvas.json";
 import FlowsPalette from "./flowsPalette.json";
 import FlowsLoadingPalette from "./flowsLoadingPalette.json";
-
+import FlowsProperties from "./flows-properties";
 
 export default class FlowsCanvas extends React.Component {
 	constructor(props) {
 		super(props);
+		this.propertiesRef = React.createRef();
 		this.canvasController = new CanvasController();
 		this.canvasController.setPipelineFlow(FlowsCanvasFlow);
 		this.canvasController.setPipelineFlowPalette(FlowsLoadingPalette);
@@ -35,6 +36,7 @@ export default class FlowsCanvas extends React.Component {
 
 		this.getConfig = this.getConfig.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 	}
 
 	getConfig() {
@@ -102,6 +104,15 @@ export default class FlowsCanvas extends React.Component {
 		});
 	}
 
+	clickActionHandler(source) {
+		if (this.propertiesRef.current && source.objectType === "node" &&
+			((source.clickType === "SINGLE_CLICK" &&
+				this.canvasController.getSelectedObjectIds().length === 1) ||
+				(source.clickType === "DOUBLE_CLICK"))) {
+			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
+		}
+	}
+
 	activateLoadingCanvas() {
 		this.canvasController.setCategoryLoadingText("recordOp", "Loading record ops");
 		this.canvasController.setCategoryLoadingText("fieldOp", "Loading field ops");
@@ -118,11 +129,22 @@ export default class FlowsCanvas extends React.Component {
 
 	render() {
 		const config = this.getConfig();
+
+		const rightFlyoutContent = (
+			<FlowsProperties
+				ref={this.propertiesRef}
+				canvasController={this.canvasController}
+			/>
+		);
+
 		return (
 			<CommonCanvas
 				canvasController={this.canvasController}
 				decorationActionHandler={this.decorationActionHandler}
 				config={config}
+				rightFlyoutContent={rightFlyoutContent}
+				clickActionHandler={this.clickActionHandler}
+				showRightFlyout
 			/>
 		);
 	}

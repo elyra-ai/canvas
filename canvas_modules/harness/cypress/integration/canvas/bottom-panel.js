@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2022, 2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
@@ -23,30 +23,30 @@ describe("Testing bottom panel", function() {
 	it("Testing bottom panel sizing", function() {
 		// Test bottom panel is reduced in size successfully
 		cy.moveBottomPanelDivider(500);
-		cy.verifyBottomPanelHeight(209);
+		cy.verifyBottomPanelHeight(211);
 		cy.verifyBottomPanelWidth(1328);
 
 		// Test bottom panel is increased in size successfully
 		cy.moveBottomPanelDivider(200);
-		cy.verifyBottomPanelHeight(509);
+		cy.verifyBottomPanelHeight(511);
 		cy.verifyBottomPanelWidth(1328);
 
 		// Test bottom panel is increased in size successfully with right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(200);
-		cy.verifyBottomPanelHeight(509);
+		cy.verifyBottomPanelHeight(511);
 		cy.verifyBottomPanelWidth(807.4375);
 	});
 
 	it("Testing bottom panel max height", function() {
 		// Test bottom panel does not exceed max-size successfully
 		cy.moveBottomPanelDivider(50);
-		cy.verifyBottomPanelHeight(648);
+		cy.verifyBottomPanelHeight(650);
 
 		// Test bottom panel does not exceed max-size successfully with the right flyout open
 		cy.setCanvasConfig({ "selectedShowRightFlyout": true });
 		cy.moveBottomPanelDivider(50);
-		cy.verifyBottomPanelHeight(648);
+		cy.verifyBottomPanelHeight(650);
 		cy.verifyBottomPanelWidth(807.4375);
 	});
 

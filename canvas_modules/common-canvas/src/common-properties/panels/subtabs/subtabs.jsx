@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { Tabs, Tab } from "carbon-components-react";
 import { getDataId } from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
+import { v4 as uuid4 } from "uuid";
 
 class Subtabs extends React.Component {
 	constructor(props) {
@@ -27,6 +28,7 @@ class Subtabs extends React.Component {
 		this.state = {
 			activeTabId: ""
 		};
+		this.uuid = uuid4();
 	}
 
 	onClick(tabId) {
@@ -50,8 +52,8 @@ class Subtabs extends React.Component {
 
 				subTabs.push(
 					<Tab
-						id={"subtabs.tab." + i}
-						key={"subtabs.tab." + i}
+						id={`subtabs.tab.${i}-${this.uuid}`}
+						key={`subtabs.tab.${i}-${this.uuid}`}
 						disabled={panelState === STATES.DISABLED}
 						className={classNames("properties-subtab", { "properties-leftnav-subtab-item": this.props.leftnav })}
 						tabIndex={tabIdx}

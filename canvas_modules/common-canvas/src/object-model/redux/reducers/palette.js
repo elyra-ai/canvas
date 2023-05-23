@@ -28,6 +28,8 @@ export default (state = {}, action) => {
 
 	case "ADD_NODE_TYPES_TO_PALETTE":
 	case "REMOVE_NODE_TYPES_FROM_PALETTE":
+	case "SET_IS_OPEN_CATEGORY":
+	case "SET_IS_OPEN_ALL_CATEGORIES":
 	case "SET_CATEGORY_LOADING_TEXT":
 	case "SET_CATEGORY_EMPTY_TEXT": {
 		const newContent = Object.assign({}, state.content, { categories: categories(state.content.categories, action) });
@@ -37,6 +39,7 @@ export default (state = {}, action) => {
 
 	case "SET_PALETTE_OPEN_STATE":
 		return Object.assign({}, state, { isOpen: action.data.isOpen });
+
 
 	default:
 		return state;
