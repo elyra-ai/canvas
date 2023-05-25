@@ -21,7 +21,7 @@ import { setActiveTab } from "./../../actions";
 import { Tab, Tabs, Link } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
-import { cloneDeep, isEmpty, sortBy, get } from "lodash";
+import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
@@ -202,8 +202,8 @@ class EditorForm extends React.Component {
 						id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
-						label={tab.text}
-						title={tab.text}
+						label={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>

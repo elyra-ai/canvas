@@ -150,12 +150,12 @@ $primary-tab-height: $spacing-08;
 // Display in full height if inside a tearsheet
 .properties-editor-form.tearsheet-container, .properties-editor-form.right-flyout-tabs-view {
 	height: 100%;
-	overflow: hidden;
 
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
 		padding-left: $spacing-05;
+		border-bottom: 1px solid $ui-03;
 	}
 
 	.properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {
