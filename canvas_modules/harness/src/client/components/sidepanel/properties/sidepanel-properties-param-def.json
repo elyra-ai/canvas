@@ -13,6 +13,7 @@
 		"heading": false,
 		"light": true,
 		"showRequiredIndicator": true,
+		"enableResize": true,
 		"initialEditorSize": "small",
 		"conditionHiddenPropertyHandling": "null",
 		"conditionDisabledPropertyHandling": "null",
@@ -99,6 +100,11 @@
 		},
 		{
 			"id": "showRequiredIndicator",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "enableResize",
 			"default": true,
 			"type": "boolean"
 		},
@@ -316,6 +322,16 @@
 				},
 				"description": {
 					"default": "Show required label indicator"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "enableResize",
+				"label": {
+					"default": "enableResize"
+				},
+				"description": {
+					"default": "Adds a button that allows the right side flyout to expand/collapse between two sizes"
 				},
 				"control": "toggle"
 			},
@@ -615,6 +631,7 @@
 					"trimSpaces",
 					"heading",
 					"showRequiredIndicator",
+					"enableResize",
 					"conditionHiddenPropertyHandling",
 					"conditionDisabledPropertyHandling",
 					"returnValueFiltering",
