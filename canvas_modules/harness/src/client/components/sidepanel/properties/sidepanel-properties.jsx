@@ -81,6 +81,7 @@ export default class SidePanelProperties extends React.Component {
 			"heading": this.props.propertiesConfig.heading,
 			"light": this.props.propertiesConfig.light,
 			"showRequiredIndicator": this.props.propertiesConfig.showRequiredIndicator,
+			"enableResize": this.props.propertiesConfig.enableResize,
 			"initialEditorSize": this.props.propertiesConfig.initialEditorSize,
 			"conditionHiddenPropertyHandling": this.props.propertiesConfig.conditionHiddenPropertyHandling,
 			"conditionDisabledPropertyHandling": this.props.propertiesConfig.conditionDisabledPropertyHandling,
@@ -340,6 +341,7 @@ SidePanelProperties.propTypes = {
 		heading: PropTypes.bool,
 		light: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
+		enableResize: PropTypes.bool,
 		returnValueFiltering: PropTypes.string,
 		initialEditorSize: PropTypes.string,
 		setDisableRowMoveButtons: PropTypes.func, // action
