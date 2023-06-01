@@ -261,12 +261,14 @@ class FlexibleTable extends React.Component {
 				const labelAndDescriptionHeight = 50; // possible dynamically set this in the future
 				const ftHeaderHeight = (typeof this.flexibleTableHeader !== "undefined") ? ReactDOM.findDOMNode(this.flexibleTableHeader).getBoundingClientRect().height : 0;
 				const flyoutHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-wf-children");
-				if (flyoutHeight === 0) {
-					newHeight = "100vh"; // set full window height if flyout height not found
+				const tearsheetHeight = this.findPropertyNodeHeight(this.flexibleTable, "properties-primary-tab-panel");
+				if (flyoutHeight === 0 && tearsheetHeight === 0) {
+					newHeight = "100vh"; // set full window height if flyout & tearsheet height not found
 					dynamicH = -1;
 				} else {
-					newHeight = `calc(${flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
-					dynamicH = (flyoutHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
+					const totalHeight = flyoutHeight !== 0 ? flyoutHeight : tearsheetHeight;
+					newHeight = `calc(${totalHeight - ftHeaderHeight - labelAndDescriptionHeight}px - 3.5rem)`; // 3.5rem to adjust padding
+					dynamicH = (totalHeight - ftHeaderHeight - labelAndDescriptionHeight) - (3.5 * 16);
 				}
 			}
 		}
