@@ -1225,7 +1225,7 @@ describe("Properties Controller handlers", () => {
 			action: "UPDATE_PROPERTY",
 			property: propertyId,
 			value: returnValue,
-			oldValue: initialValue,
+			previousValue: initialValue,
 			type
 		})).to.be.true;
 	});

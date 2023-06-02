@@ -1055,7 +1055,7 @@ export default class PropertiesController {
 				action: ACTIONS.UPDATE_PROPERTY,
 				property: propertyId,
 				value: convertedValue,
-				oldValue: initialValue
+				previousValue: initialValue
 			};
 			if (typeof type !== "undefined") {
 				data.type = type;
