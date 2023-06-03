@@ -1054,7 +1054,8 @@ export default class PropertiesController {
 			const data = {
 				action: ACTIONS.UPDATE_PROPERTY,
 				property: propertyId,
-				value: convertedValue
+				value: convertedValue,
+				previousValue: initialValue
 			};
 			if (typeof type !== "undefined") {
 				data.type = type;
