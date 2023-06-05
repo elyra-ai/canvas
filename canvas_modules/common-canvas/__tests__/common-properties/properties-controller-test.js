@@ -1217,9 +1217,17 @@ describe("Properties Controller handlers", () => {
 		const type = {
 			type: "initial_load"
 		};
-		controller.updatePropertyValue({ name: "structurelisteditorObjectType" }, internalValue, true, type);
+		const propertyId = { name: "structurelisteditorObjectType" };
+		const initialValue = controller.getPropertyValue(propertyId);
+		controller.updatePropertyValue(propertyId, internalValue, true, type);
 		expect(propertyListener).to.have.property("callCount", 4);
-		expect(propertyListener.calledWith({ action: "UPDATE_PROPERTY", property: { name: "structurelisteditorObjectType" }, value: returnValue, type })).to.be.true;
+		expect(propertyListener.calledWith({
+			action: "UPDATE_PROPERTY",
+			property: propertyId,
+			value: returnValue,
+			previousValue: initialValue,
+			type
+		})).to.be.true;
 	});
 	it("should callback after all properties are loaded", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef, null, { propertyListener: propertyListener });
