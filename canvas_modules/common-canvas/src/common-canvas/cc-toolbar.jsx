@@ -177,7 +177,6 @@ class CommonCanvasToolbar extends React.Component {
 
 	optionallyAddNotificationTool(rightBar) {
 		if (this.props.notificationConfig &&
-			this.props.notificationConfig.enable !== false &&
 			typeof this.props.notificationConfig.action !== "undefined" &&
 			typeof this.props.notificationConfig.enable !== "undefined") {
 			const notificationCount = this.props.notificationMessages.length;
@@ -185,7 +184,7 @@ class CommonCanvasToolbar extends React.Component {
 				{ divider: true },
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfig.label,
-					enable: true,
+					enable: this.props.notificationConfig.enable,
 					isSelected: this.props.isNotificationOpen,
 					className: this.getNotificationClassName(),
 					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString()
