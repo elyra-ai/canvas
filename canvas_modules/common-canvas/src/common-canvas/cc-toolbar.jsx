@@ -177,6 +177,7 @@ class CommonCanvasToolbar extends React.Component {
 
 	optionallyAddNotificationTool(rightBar) {
 		if (this.props.notificationConfig &&
+			this.props.notificationConfig.enable !== false &&
 			typeof this.props.notificationConfig.action !== "undefined" &&
 			typeof this.props.notificationConfig.enable !== "undefined") {
 			const notificationCount = this.props.notificationMessages.length;
