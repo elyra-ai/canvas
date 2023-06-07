@@ -75,7 +75,7 @@
     "react-dom": "18.2.0",
     "react-hot-loader": "4.13.1",
     "react-inlinesvg": "3.0.2",
-    "react-intl": "6.4.3",
+    "react-intl": "5.8.2",
     "react-redux": "7.2.8",
     "react-router-dom": "5.2.0",
     "react-tooltip": "4.2.10",
