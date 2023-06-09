@@ -2822,10 +2822,6 @@ export default class SVGCanvasRenderer {
 		removeSel.remove();
 	}
 
-	onClick() {
-		window.console.log("onClick");
-	}
-
 	// Handles the display of a supernode sub-flow contents or hides the contents
 	// as necessary.
 	displaySupernodeContents(d, supernodeD3Object) {
@@ -3003,7 +2999,11 @@ export default class SVGCanvasRenderer {
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.raiseNodeToTop(nodeGrp);
 				this.setNodeStyles(d, "hover", nodeGrp);
-				this.addDynamicNodeIcons(d, nodeGrp);
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, d, "node");
+				} else {
+					this.addDynamicNodeIcons(d3Event, d, nodeGrp);
+				}
 				if (this.canOpenTip(TIP_TYPE_NODE)) {
 					this.canvasController.closeTip(); // Ensure existing tip is removed when moving pointer within an in-place supernode
 					this.canvasController.openTip({
@@ -3018,7 +3018,11 @@ export default class SVGCanvasRenderer {
 			.on("mouseleave", (d3Event, d) => {
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.setNodeStyles(d, "default", nodeGrp);
-				this.removeDynamicNodeIcons(d, nodeGrp);
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				} else {
+					this.removeDynamicNodeIcons(d3Event, d, nodeGrp);
+				}
 				this.canvasController.closeTip();
 			})
 			// Use mouse down instead of click because it gets called before drag start.
@@ -3848,82 +3852,102 @@ export default class SVGCanvasRenderer {
 		return this.canvasLayout.supernodeBindingPortRadius / this.zoomTransform.k;
 	}
 
-	addDynamicNodeIcons(d, nodeGrp) {
+	addDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (!this.nodeSizing && !CanvasUtils.isSuperBindingNode(d)) {
-
-			const ellipsisGrp = nodeGrp
-				.append("g")
-				.filter(() => d.layout.ellipsisDisplay)
-				.attr("class", "d3-node-ellipsis-group")
-				.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
-				.on("mousedown", (d3Event) => {
-					CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-					this.ellipsisClicked = true;
-					this.selectObjectD3Event(d3Event, d);
-					if (this.canvasController.isContextMenuDisplayed()) {
-						this.canvasController.closeContextMenu();
-					} else {
-						const rect = ellipsisGrp.node().getBoundingClientRect();
-						const rect2 = this.canvasSVG.node().getBoundingClientRect();
-						const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
-						this.openContextMenu(d3Event, "node", d, null, pos);
-					}
-				});
-
-			ellipsisGrp
-				.append("rect")
-				.attr("class", "d3-node-ellipsis-background")
-				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisWidth(nd))
-				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisHeight(nd))
-				.attr("x", 0)
-				.attr("y", 0);
-
-			ellipsisGrp
-				.append("svg")
-				.attr("class", "d3-node-ellipsis")
-				.html(NODE_MENU_ICON)
-				.attr("width", (nd) => this.nodeUtils.getNodeEllipsisIconWidth(nd))
-				.attr("height", (nd) => this.nodeUtils.getNodeEllipsisIconHeight(nd))
-				.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
-				.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
-
+			this.addEllipsisIcon(d, nodeGrp);
 
 			// Add Supernode expansion icon and background for expanded supernodes
 			if (CanvasUtils.isExpandedSupernode(d)) {
-				const expGrp = nodeGrp
-					.append("g")
-					.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
-					.attr("class", "d3-node-super-expand-icon-group")
-					.on("mousedown", (d3Event) => {
-						CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-						const breadcrumbs = this.getSupernodeBreadcrumbs(d3Event.currentTarget);
-						this.canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
-					})
-					.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "yes");
-					})
-					.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
-						d3.select(this).attr("data-pointer-hover", "no");
-					});
-
-				expGrp
-					.append("rect")
-					.attr("class", "d3-node-super-expand-icon-background")
-					.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
-					.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
-					.attr("x", 0)
-					.attr("y", 0);
-
-				expGrp
-					.append("svg")
-					.attr("class", "d3-node-super-expand-icon")
-					.html(SUPER_NODE_EXPAND_ICON)
-					.attr("width", this.canvasLayout.supernodeExpansionIconWidth - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
-					.attr("height", this.canvasLayout.supernodeExpansionIconHeight - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
-					.attr("x", this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
-					.attr("y", this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
+				this.addSuperNodeFullPageIcon(nodeGrp);
 			}
 		}
+	}
+
+	addContextToolbar(d3Event, d, objType) {
+		if (!this.nodeSizing && !this.dragging && !this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
+			let pos = objType === "link" ? d.pathInfo.centerPoint : { x: d.x_pos + d.width, y: d.y_pos };
+			pos = this.unTransformPos(pos);
+			this.canvasController.setMouseInObject(true);
+			this.openContextMenu(d3Event, objType, d, null, pos);
+		}
+	}
+
+	removeContextToolbar() {
+		this.canvasController.setMouseInObject(false);
+		setTimeout(() => this.canvasController.closeContextToolbar(), 200);
+	}
+
+	addEllipsisIcon(d, nodeGrp) {
+		const ellipsisGrp = nodeGrp
+			.append("g")
+			.filter(() => d.layout.ellipsisDisplay)
+			.attr("class", "d3-node-ellipsis-group")
+			.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
+			.on("mousedown", (d3Event) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				this.ellipsisClicked = true;
+				this.selectObjectD3Event(d3Event, d);
+				if (this.canvasController.isContextMenuDisplayed()) {
+					this.canvasController.closeContextMenu();
+				} else {
+					const rect = ellipsisGrp.node().getBoundingClientRect();
+					const rect2 = this.canvasSVG.node().getBoundingClientRect();
+					const pos = { x: rect.left - rect2.left, y: rect.bottom - rect2.top };
+					this.openContextMenu(d3Event, "node", d, null, pos);
+				}
+			});
+
+		ellipsisGrp
+			.append("rect")
+			.attr("class", "d3-node-ellipsis-background")
+			.attr("width", (nd) => this.nodeUtils.getNodeEllipsisWidth(nd))
+			.attr("height", (nd) => this.nodeUtils.getNodeEllipsisHeight(nd))
+			.attr("x", 0)
+			.attr("y", 0);
+
+		ellipsisGrp
+			.append("svg")
+			.attr("class", "d3-node-ellipsis")
+			.html(NODE_MENU_ICON)
+			.attr("width", (nd) => this.nodeUtils.getNodeEllipsisIconWidth(nd))
+			.attr("height", (nd) => this.nodeUtils.getNodeEllipsisIconHeight(nd))
+			.attr("x", (nd) => nd.layout.ellipsisHoverAreaPadding)
+			.attr("y", (nd) => nd.layout.ellipsisHoverAreaPadding);
+	}
+
+	addSuperNodeFullPageIcon(nodeGrp) {
+		const expGrp = nodeGrp
+			.append("g")
+			.attr("transform", (nd) => this.nodeUtils.getNodeExpansionIconTranslate(nd))
+			.attr("class", "d3-node-super-expand-icon-group")
+			.on("mousedown", (d3Event) => {
+				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
+				const breadcrumbs = this.getSupernodeBreadcrumbs(d3Event.currentTarget);
+				this.canvasController.displaySubPipelineForBreadcrumbs(breadcrumbs);
+			})
+			.on("mouseenter", function() { // Use function keyword so 'this' pointer references the DOM text object
+				d3.select(this).attr("data-pointer-hover", "yes");
+			})
+			.on("mouseleave", function() { // Use function keyword so 'this' pointer references the DOM text object
+				d3.select(this).attr("data-pointer-hover", "no");
+			});
+
+		expGrp
+			.append("rect")
+			.attr("class", "d3-node-super-expand-icon-background")
+			.attr("width", this.canvasLayout.supernodeExpansionIconWidth)
+			.attr("height", this.canvasLayout.supernodeExpansionIconHeight)
+			.attr("x", 0)
+			.attr("y", 0);
+
+		expGrp
+			.append("svg")
+			.attr("class", "d3-node-super-expand-icon")
+			.html(SUPER_NODE_EXPAND_ICON)
+			.attr("width", this.canvasLayout.supernodeExpansionIconWidth - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
+			.attr("height", this.canvasLayout.supernodeExpansionIconHeight - (2 * this.canvasLayout.supernodeExpansionIconHoverAreaPadding))
+			.attr("x", this.canvasLayout.supernodeExpansionIconHoverAreaPadding)
+			.attr("y", this.canvasLayout.supernodeExpansionIconHoverAreaPadding);
 	}
 
 	// Returns an array of breadcrumbs for the DOM element passed in. The DOM
@@ -3984,7 +4008,11 @@ export default class SVGCanvasRenderer {
 		return (get(port, "app_data.ui_data.cardinality.max", 1) === 0);
 	}
 
-	removeDynamicNodeIcons(d, nodeGrp) {
+	isMouseOverContextToolbar(d3Event) {
+		return this.getElementWithClassAtMousePos(d3Event, "context-toolbar");
+	}
+
+	removeDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (d.layout.ellipsisDisplay) {
 			nodeGrp.selectChildren(".d3-node-ellipsis-group").remove();
 		}
@@ -5354,9 +5382,15 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
 				}
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, d, "comment");
+				}
 			})
 			.on("mouseleave", (d3Event, d) => {
 				this.setCommentStyles(d, "default", d3.select(d3Event.currentTarget));
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				}
 				if (this.config.enableEditingActions) {
 					this.deleteCommentPort(d3Event.currentTarget);
 				}
@@ -6079,6 +6113,10 @@ export default class SVGCanvasRenderer {
 				}
 				this.setLinkLineStyles(targetObj, link, "hover");
 
+				if (this.config.enableContextToolbar) {
+					this.addContextToolbar(d3Event, link, "link");
+				}
+
 				if (this.canOpenTip(TIP_TYPE_LINK) &&
 						!this.draggingLinkData) {
 					this.canvasController.closeTip();
@@ -6100,6 +6138,10 @@ export default class SVGCanvasRenderer {
 				}
 				this.setLinkLineStyles(targetObj, link, "default");
 				this.canvasController.closeTip();
+
+				if (this.config.enableContextToolbar) {
+					this.removeContextToolbar();
+				}
 			});
 	}
 

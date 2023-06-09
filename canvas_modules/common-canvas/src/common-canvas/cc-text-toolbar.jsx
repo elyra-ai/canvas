@@ -32,7 +32,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		super(props);
 
 		this.getLabel = this.getLabel.bind(this);
-		this.logger = new Logger("CC-Toolbar");
+		this.logger = new Logger("CC-Text-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {

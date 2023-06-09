@@ -651,6 +651,15 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var enableContextToolbar = (<div className="harness-sidepanel-children">
+			<Toggle
+				id="selectedContextToolbar" // Set ID to corresponding field in App.js state
+				labelText="Enable Context Toolbar"
+				toggled={this.props.getStateValue("selectedContextToolbar")}
+				onToggle={this.setStateValue}
+			/>
+		</div>);
+
 		var enablePanIntoViewOnOpen = (<div className="harness-sidepanel-children">
 			<Toggle
 				id="selectedPanIntoViewOnOpen" // Set ID to corresponding field in App.js state
@@ -1544,6 +1553,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableContextToolbar}
 					{divider}
 					{enableEditingActions}
 					{divider}

@@ -912,11 +912,6 @@ export default class CanvasUtils {
 		return regionSelections;
 	}
 
-	// Returns true if the ID passed in is in the array.
-	static isSelected(nodeId, array) {
-		return array.findIndex((id) => id === nodeId) !== -1;
-	}
-
 	// Return true if the position provided is within the area provided.
 	static isPosInArea(pos, area, pad) {
 		return pos.x_pos > area.x1 - pad &&

@@ -24,7 +24,7 @@ import Logger from "../logging/canvas-logger.js";
 class CommonCanvasContextMenu extends React.Component {
 	constructor(props) {
 		super(props);
-		this.logger = new Logger("CC-ContextMenu");
+		this.logger = new Logger("CC-Context-Menu");
 	}
 
 	render() {

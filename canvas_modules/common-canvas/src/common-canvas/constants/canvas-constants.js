@@ -181,6 +181,7 @@ export const TOOLBAR_PASTE = "paste";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
 export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
 export const TOOLBAR_HIDE_COMMENTS = "commentsHide";
+export const TOOLBAR_DELETE_LINK = "deleteLink";
 export const TOOLBAR_DELETE_SELECTED_OBJECTS = "deleteSelectedObjects";
 export const TOOLBAR_ZOOM_IN = "zoomIn";
 export const TOOLBAR_ZOOM_OUT = "zoomOut";
@@ -190,6 +191,10 @@ export const TOOLBAR_ARRANGE_VERTICALLY = "arrangeVertically";
 export const TOOLBAR_TOGGLE_NOTIFICATION_PANEL = "toggleNotificationPanel";
 export const TOOLBAR_OPEN_PALETTE = "paletteOpen";
 export const TOOLBAR_CLOSE_PALETTE = "paletteClose";
+export const TOOLBAR_EXPAND_SUPERNODE_IN_PLACE = "expandSuperNodeInPlace";
+export const TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE = "collapseSuperNodeInPlace";
+export const TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE = "displaySubPipeline";
+export const TOOLBAR_SET_NODE_LABEL_EDIT = "setNodeLabelEditingMode";
 
 export const EDIT_ICON =
 	"<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\">" +
