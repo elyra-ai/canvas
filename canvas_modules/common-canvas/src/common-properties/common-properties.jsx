@@ -21,7 +21,7 @@ import PropertiesMain from "./properties-main";
 import PropertiesModal from "./components/properties-modal";
 import ValidationMessage from "./components/validation-message";
 import { formatMessage } from "./util/property-utils";
-import { MESSAGE_KEYS, DEFAULT_LOCALE } from "./constants/constants";
+import { MESSAGE_KEYS, DEFAULT_LOCALE, CATEGORY_VIEW } from "./constants/constants";
 
 import { injectIntl } from "react-intl";
 
@@ -234,6 +234,7 @@ CommonProperties.propTypes = {
 		trimSpaces: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
+		categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.oneOf(["null", "value"]),
@@ -277,6 +278,7 @@ CommonProperties.defaultProps = {
 	propertiesConfig: {
 		containerType: "Custom",
 		rightFlyout: true,
+		categoryView: CATEGORY_VIEW.ACCORDIONS,
 		applyOnBlur: false,
 		trimSpaces: true,
 		disableSaveOnRequiredErrors: false,

@@ -19,6 +19,7 @@ import { expect } from "chai";
 import TAB_PARAM_DEF from "../../test_resources/paramDefs/tab_paramDef.json";
 import PARAMS_ONLY_DEF from "../../test_resources/paramDefs/paramsOnly_paramDef.json";
 import CODE_PARAM_DEF from "../../test_resources/paramDefs/code_paramDef.json";
+import DATEFIELD_PARAM_DEF from "../../test_resources/paramDefs/datefield_paramDef.json";
 
 describe("tabs and subtabs should be rendered correctly", () => {
 	let wrapper;
@@ -114,5 +115,64 @@ describe("controls should be rendered correctly when no uihints are provided", (
 		expect(wrapper.find(".bx--form-requirement")).to.have.length(1);
 		// valide no catagories(tabs) are created
 		expect(wrapper.find(".properties-categories")).to.have.length(0);
+	});
+});
+
+describe("Right flyout category views", () => {
+	let wrapper;
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("For custom container in right flyout, when categoryView=tabs categories should be displayed as tabs", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(DATEFIELD_PARAM_DEF, { containerType: "Custom", rightFlyout: true, categoryView: "tabs" });
+		wrapper = renderedObject.wrapper;
+		const editorForm = wrapper.find(".properties-editor-form");
+		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(true);
+		// Verify primary tabs
+		const primaryTabs = editorForm.find("Tab");
+		expect(primaryTabs).to.have.length(3);
+
+		const tabPanels = editorForm.find("div[role='tabpanel']");
+		expect(tabPanels).to.have.length(3);
+
+		// Verify properties title doesn't have bottom border
+		const titleEditor = wrapper.find(".properties-title-editor");
+		expect(titleEditor.prop("className").includes("properties-title-right-flyout-tabs-view")).to.equal(true);
+	});
+
+	it("For custom container in right flyout, when categoryView=accordions categories should be displayed as accordions", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(DATEFIELD_PARAM_DEF, { containerType: "Custom", rightFlyout: true, categoryView: "accordions" });
+		wrapper = renderedObject.wrapper;
+		const editorForm = wrapper.find(".properties-editor-form");
+		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(false);
+
+		const propertiesCategories = editorForm.find(".properties-categories");
+		expect(propertiesCategories).to.have.length(1);
+
+		const categoryContainers = propertiesCategories.find(".properties-category-container");
+		expect(categoryContainers).to.have.length(3);
+
+		// Verify properties title has bottom border
+		const titleEditor = wrapper.find(".properties-title-editor");
+		expect(titleEditor.prop("className").includes("properties-title-right-flyout-tabs-view")).to.equal(false);
+	});
+
+	it("For custom container in right flyout, when categoryView is not set, categories should be displayed as accordions by default", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(DATEFIELD_PARAM_DEF, { containerType: "Custom", rightFlyout: true });
+		wrapper = renderedObject.wrapper;
+		const editorForm = wrapper.find(".properties-editor-form");
+		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(false);
+
+		const propertiesCategories = editorForm.find(".properties-categories");
+		expect(propertiesCategories).to.have.length(1);
+
+		const categoryContainers = propertiesCategories.find(".properties-category-container");
+		expect(categoryContainers).to.have.length(3);
+
+		// Verify properties title has bottom border
+		const titleEditor = wrapper.find(".properties-title-editor");
+		expect(titleEditor.prop("className").includes("properties-title-right-flyout-tabs-view")).to.equal(false);
 	});
 });

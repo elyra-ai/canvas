@@ -81,6 +81,7 @@ class Subtabs extends React.Component {
 				<Tabs className={classNames("properties-subtabs", { "properties-leftnav-subtabs": this.props.leftnav })}
 					selected={activeTab}
 					light={this.props.controller.getLight()}
+					tabContentClassName="properties-subtab-panel"
 				>
 					{subTabs}
 				</Tabs>

@@ -27,6 +27,30 @@ $primary-tab-height: $spacing-08;
 	padding: $spacing-05;
 }
 
+.properties-right-flyout {
+	.properties-editor-form {
+		height: 100%;
+	}
+	.properties-single-category {
+		height: 100%;
+		.properties-sub-tab-container {
+			height: 100%;
+		}
+		.properties-subtabs {
+			position: absolute;
+			height: $primary-tab-height;
+			border-bottom: 1px solid $ui-03;
+		}
+		.properties-subtab-panel {
+			height: calc(100% - #{$primary-tab-height});
+			position: relative;
+			top: $primary-tab-height;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+	}
+}
+
 .properties-category-container {
 	position: relative;
 	&:last-of-type {
@@ -124,17 +148,16 @@ $primary-tab-height: $spacing-08;
 }
 
 // Display in full height if inside a tearsheet
-.properties-editor-form.tearsheet-container {
+.properties-editor-form.tearsheet-container, .properties-editor-form.right-flyout-tabs-view {
 	height: 100%;
-	overflow: hidden;
 
 	.properties-primaryTabs {
 		position: absolute;
 		height: $primary-tab-height;
-		padding-left: $spacing-05;
+		border-bottom: 1px solid $ui-03;
 	}
 
-	.properties-primary-tab-panel.tearsheet-container {
+	.properties-primary-tab-panel.tearsheet-container, .properties-primary-tab-panel.right-flyout-tabs-view {
 		height: calc(100% - #{$primary-tab-height});
 		position: relative;
 		top: $primary-tab-height;

@@ -20,8 +20,8 @@ import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs, Link } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
-import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES } from "./../../constants/constants";
-import { cloneDeep, isEmpty, sortBy, get } from "lodash";
+import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
+import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";
 import logger from "./../../../../utils/logger";
 import classNames from "classnames";
 
@@ -161,7 +161,7 @@ class EditorForm extends React.Component {
 					</div>
 				);
 			}
-			if (this.props.rightFlyout) {
+			if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 				let panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} className="properties-category-caret-down" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
@@ -202,8 +202,8 @@ class EditorForm extends React.Component {
 						id={"tab." + this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
 						tabIndex={i}
-						label={tab.text}
-						title={tab.text}
+						label={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
+						title={filter([tab.text, this._getMessageCountForCategory(tab)]).join("")}
 						className={classNames({ "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						onClick={this._modalTabsOnClick.bind(this, tab.group)}
 					>
@@ -214,7 +214,7 @@ class EditorForm extends React.Component {
 			}
 		}
 
-		if (this.props.rightFlyout) {
+		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
 				<div key={"cat." + key} className="properties-categories">
 					{tabContent}
@@ -226,7 +226,9 @@ class EditorForm extends React.Component {
 				className="properties-primaryTabs"
 				selected={modalSelected}
 				light={this.props.controller.getLight()}
-				tabContentClassName={classNames("properties-primary-tab-panel", { "tearsheet-container": this.props.controller.isTearsheetContainer() })}
+				tabContentClassName={classNames("properties-primary-tab-panel",
+					{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+					{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS })}
 			>
 				{tabContent}
 			</Tabs>
@@ -648,6 +650,7 @@ class EditorForm extends React.Component {
 		return (
 			<div className={classNames("properties-editor-form",
 				{ "tearsheet-container": this.props.controller.isTearsheetContainer() },
+				{ "right-flyout-tabs-view": this.props.rightFlyout && this.props.categoryView === CATEGORY_VIEW.TABS },
 				{ "field-picker": this.state.showFieldPicker })}
 			>
 				{content}
@@ -664,6 +667,7 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
+	categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
 	activeTab: PropTypes.string, // set by redux
 	setActiveTab: PropTypes.func, // set by redux
 	messages: PropTypes.array // set by redux
