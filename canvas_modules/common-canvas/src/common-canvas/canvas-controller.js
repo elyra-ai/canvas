@@ -2085,8 +2085,7 @@ export default class CanvasController {
 		return false;
 	}
 
-	createDefaultMenu() {
-		const source = this.contextMenuSource;
+	createDefaultMenu(source) {
 		let menuDefinition = [];
 
 		const menuForNonSelectedObj = this.isContextMenuForNonSelectedObj();
@@ -2281,7 +2280,7 @@ export default class CanvasController {
 
 	contextMenuHandler(source) {
 		this.contextMenuSource = source;
-		const defMenu = this.createDefaultMenu();
+		const defMenu = this.createDefaultMenu(source);
 		let menuDefinition;
 
 		if (typeof this.handlers.contextMenuHandler === "function") {
