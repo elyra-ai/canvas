@@ -179,6 +179,7 @@ export const TOOLBAR_CUT = "cut";
 export const TOOLBAR_COPY = "copy";
 export const TOOLBAR_PASTE = "paste";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
+export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";
 export const TOOLBAR_SHOW_COMMENTS = "commentsShow";
 export const TOOLBAR_HIDE_COMMENTS = "commentsHide";
 export const TOOLBAR_DELETE_LINK = "deleteLink";

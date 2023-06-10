@@ -997,6 +997,23 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).isSuperNodeExpandedInPlace(nodeId);
 	}
 
+	// Sets the label, for the node identified, to edit mode, provided the node
+	// label is editable. This allows the user to edite the label text.
+	setNodeLabelEditingMode(nodeId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setNodeLabelEditingMode(nodeId, pipelineId);
+		}
+	}
+
+	// Sets the decoration label, for the decoration in the node identified, to edit
+	// mode, provided the node label is editable. This allows the user to edit the
+	// label text.
+	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
+		}
+	}
+
 	// ---------------------------------------------------------------------------
 	// Comments methods
 	// ---------------------------------------------------------------------------
@@ -1109,6 +1126,14 @@ export default class CanvasController {
 	// Returns true if comments are currently hiding.
 	isHidingComments() {
 		return this.objectModel.isHidingComments();
+	}
+
+	// Sets the comment identified, to edit mode so the user can
+	// edit the comment.
+	setCommentEditingMode(commentId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setCommentEditingMode(commentId, pipelineId);
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1293,6 +1318,15 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getLinkDecorations(linkId, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkDecorations(linkId);
+	}
+
+	// Sets the decoration label, for the decoration in the link identified, to edit
+	// mode provided the link label is editable. This allows the user to edit the
+	// label text.
+	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
+		if (this.canvasContents) {
+			this.getSVGCanvasD3().setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1599,32 +1633,6 @@ export default class CanvasController {
 	zoomToFit() {
 		if (this.canvasContents) {
 			this.getSVGCanvasD3().zoomToFit();
-		}
-	}
-
-	// Sets the label for the node identified to edit mode so the user can start
-	// editing the label, provided the node label is editable.
-	setNodeLabelEditingMode(nodeId, pipelineId) {
-		if (this.canvasContents) {
-			this.getSVGCanvasD3().setNodeLabelEditingMode(nodeId, pipelineId);
-		}
-	}
-
-	// Sets the decoration label for the decoration in the node identified to edit
-	// mode so the user can start editing the label, provided the node label is
-	// editable.
-	setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId) {
-		if (this.canvasContents) {
-			this.getSVGCanvasD3().setNodeDecorationLabelEditingMode(decId, nodeId, pipelineId);
-		}
-	}
-
-	// Sets the decoration label for the decoration in the link identified to edit
-	// mode so the user can start editing the label, provided the link label is
-	// editable.
-	setLinkDecorationLabelEditingMode(decId, linkId, pipelineId) {
-		if (this.canvasContents) {
-			this.getSVGCanvasD3().setLinkDecorationLabelEditingMode(decId, linkId, pipelineId);
 		}
 	}
 
@@ -2109,6 +2117,11 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat({ divider: true });
 			}
 		}
+		// Edit comment
+		if (source.type === "comment") {
+			menuDefinition = menuDefinition.concat({ action: "setCommentEditingMode", label: this.labelUtil.getLabel("comment.editComment"), toolbarItem: true });
+		}
+
 		// Color objects
 		if (source.type === "comment" &&
 				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
@@ -2248,6 +2261,7 @@ export default class CanvasController {
 			action === "createComment" ||
 			action === "disconnectNode" ||
 			action === "setNodeLabelEditingMode" ||
+			action === "setCommentEditingMode" ||
 			action === "cut" ||
 			action === "copy" ||
 			action === "paste" ||
@@ -2456,6 +2470,10 @@ export default class CanvasController {
 		}
 		case "commentsShow": {
 			this.showComments();
+			break;
+		}
+		case "setCommentEditingMode": {
+			this.setCommentEditingMode(data.id, data.pipelineId);
 			break;
 		}
 		case "setNodeLabelEditingMode": {

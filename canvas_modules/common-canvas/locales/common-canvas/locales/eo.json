@@ -22,6 +22,7 @@
 	"canvas.stateTagTipLocked": "[Esperanto~This flow is locked and cannot be edited.~~~~~~~~~eo]",
 	"canvas.stateTagTipReadOnly": "[Esperanto~This flow cannot be edited.~~~~~~~~~eo]",
 	"comment.colorBackground": "[Esperanto~Color background~~~~~~~~~eo]",
+	"comment.editComment": "[Esperanto~Edit comment~~~~~~~eo]",
 	"node.createSupernode": "[Esperanto~Create supernode~~eo]",
 	"node.createSupernodeExternal": "[Esperanto~Create external supernode~~~~~~eo]",
 	"node.expandSupernode": "[Esperanto~Expand supernode~~eo]",

@@ -130,9 +130,14 @@ $panel-border-color: $ui-03;
 	}
 }
 
+.common-canvas-toolbar {
+	border-bottom: $toolbar-divider-width solid $ui-04;
+}
+
 .text-toolbar {
 	.toolbar-div {
 		animation: raise-toolbar 0.3s linear;
+		border: 1px solid $ui-04;
 	}
 }
 
@@ -150,7 +155,6 @@ $panel-border-color: $ui-03;
 		// opening by adjusting its 'height' and 'top' values.
 		position: relative;
 		left: 0;
-		border: 1px solid $ui-04;
 		padding-right: 0px;
 
 		.toolbar-left-bar {

@@ -1608,6 +1608,20 @@ export default class SVGCanvasRenderer {
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
+	setCommentEditingMode(commentId, pipelineId) {
+		if (this.pipelineId === pipelineId) {
+			const comment = this.activePipeline.getComment(commentId);
+			if (comment && this.config.enableEditingActions) {
+				const comSel = this.getCommentGroupSelectionById(commentId);
+				const comDomObj = comSel.node();
+				this.displayCommentTextArea(comment, comDomObj);
+			}
+		} else {
+			this.superRenderers.forEach((renderer) => {
+				renderer.setCommentEditingMode(commentId, pipelineId);
+			});
+		}
+	}
 	setNodeLabelEditingMode(nodeId, pipelineId) {
 		if (this.pipelineId === pipelineId) {
 			const node = this.activePipeline.getNode(nodeId);
