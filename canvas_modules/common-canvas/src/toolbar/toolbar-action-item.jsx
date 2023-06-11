@@ -28,10 +28,9 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import Icon from "../icons/icon.jsx";
 import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
-	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -41,8 +40,7 @@ import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
 	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
-	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE,
-	CONTEXT_MENU_CARBON_ICONS }
+	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 class ToolbarActionItem extends React.Component {
@@ -206,7 +204,7 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = actionObj.subMenu ? this.generateChevronIcon() : null;
+		const chevronIcon = actionObj.subMenu ? (<ChevronRight16 />) : null;
 
 		let buttonContent = (
 			<div className={itemContentClassName}>
@@ -237,10 +235,6 @@ class ToolbarActionItem extends React.Component {
 		);
 
 		return buttonContent;
-	}
-
-	generateChevronIcon() {
-		return <Icon type={CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT} disabled={false} className={"react-contextmenu-submenu-icon"} />;
 	}
 
 	generateActionName(actionObj) {
