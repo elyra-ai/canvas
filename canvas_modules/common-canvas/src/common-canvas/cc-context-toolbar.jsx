@@ -70,7 +70,7 @@ class CommonCanvasContextToolbar extends React.Component {
 				if (option.divider) {
 					return { divider: true };
 				}
-				return { action: option.action, label: option.label, enable: this.getEnable(menuItem), iconEnabled: option.icon };
+				return { action: option.action, label: option.label, enable: this.getEnable(option), iconEnabled: option.icon };
 			});
 		}
 		return null;

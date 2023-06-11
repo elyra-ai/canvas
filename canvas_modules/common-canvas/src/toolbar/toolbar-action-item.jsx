@@ -29,10 +29,12 @@ import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
 import Icon from "../icons/icon.jsx";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Cut16, Copy16, Paste16, Edit16,
-	Maximize16, Minimize16, Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
-import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO, TOOLBAR_CUT,
-	TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CREATE_AUTO_COMMENT,
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
+	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
+import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
+	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE,
+	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
 	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY,
@@ -90,12 +92,15 @@ class ToolbarActionItem extends React.Component {
 			return <Copy16 disabled={disabled} />;
 		case (TOOLBAR_PASTE):
 			return <Paste16 disabled={disabled} />;
+		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
 			return <AddComment16 disabled={disabled} />;
 		case (TOOLBAR_SHOW_COMMENTS):
 			return <Chat16 disabled={disabled} />;
 		case (TOOLBAR_HIDE_COMMENTS):
 			return <ChatOff16 disabled={disabled} />;
+		case (TOOLBAR_COLOR_BACKGROUND):
+			return <ColorPalette16 disabled={disabled} />;
 		case (TOOLBAR_DELETE_LINK):
 		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
 			return <TrashCan16 disabled={disabled} />;

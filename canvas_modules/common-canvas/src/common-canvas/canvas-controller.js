@@ -2100,13 +2100,16 @@ export default class CanvasController {
 
 		// Select all & add comment: canvas only
 		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat([{ action: "createComment", label: this.labelUtil.getLabel("canvas.addComment") },
+			menuDefinition = menuDefinition.concat([
+				{ action: "createComment", label: this.labelUtil.getLabel("canvas.addComment"), toolbarItem: true },
 				{ action: "selectAll", label: this.labelUtil.getLabel("canvas.selectAll") },
-				{ divider: true }]);
+				{ divider: true }
+			]);
 		}
 		// Rename node
 		if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
-			menuDefinition = menuDefinition.concat({ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode"), toolbarItem: true });
+			menuDefinition = menuDefinition.concat(
+				{ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode"), toolbarItem: true });
 		}
 		// Disconnect node
 		if (source.type === "node" || source.type === "comment") {
@@ -2125,7 +2128,8 @@ export default class CanvasController {
 		// Color objects
 		if (source.type === "comment" &&
 				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
-			menuDefinition = menuDefinition.concat({ action: "colorBackground", submenu: true, menu: "colorPicker", label: this.labelUtil.getLabel("comment.colorBackground") });
+			menuDefinition = menuDefinition.concat({ action: "colorBackground", submenu: true, menu: "colorPicker",
+				label: this.labelUtil.getLabel("comment.colorBackground") });
 			menuDefinition = menuDefinition.concat({ divider: true });
 		}
 		// Edit submenu (cut, copy, paste)

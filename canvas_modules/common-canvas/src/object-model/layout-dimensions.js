@@ -378,7 +378,7 @@ const portsHorizontalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
@@ -784,7 +784,7 @@ const portsVerticalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations

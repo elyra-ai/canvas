@@ -219,8 +219,14 @@ $toolbar-divider-width: 1px;
 	}
 }
 
+.toolbar-size-small {
+	.toolbar-jsx-item {
+		height: $toolbar-button-sm-height;
+	}
+}
+
 .toolbar-jsx-item {
-	height: 40px;
+	height: $toolbar-button-height;
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;
