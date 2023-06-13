@@ -2342,6 +2342,10 @@ export default class CanvasController {
 		return this.contextMenuSource.type;
 	}
 
+	getContextMenuTargetObject() {
+		return this.contextMenuSource.targetObject;
+	}
+
 	contextMenuActionHandler(action, editParam) {
 		this.logger.log("contextMenuActionHandler - action: " + action);
 		this.logger.log(this.contextMenuSource);
