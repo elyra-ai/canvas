@@ -3877,9 +3877,20 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	getContextToolbarPos(objType, d) {
+		if (objType === "link") {
+			return d.pathInfo.centerPoint;
+
+		} else if (objType === "node" && this.config.enableNodeFormatType === "Vertical") {
+			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
+
+		}
+		return { x: d.x_pos + d.width, y: d.y_pos };
+	}
+
 	addContextToolbar(d3Event, d, objType) {
 		if (!this.nodeSizing && !this.dragging && !this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
-			let pos = objType === "link" ? d.pathInfo.centerPoint : { x: d.x_pos + d.width, y: d.y_pos };
+			let pos = this.getContextToolbarPos(objType, d);
 			pos = this.unTransformPos(pos);
 			this.canvasController.setMouseInObject(true);
 			this.openContextMenu(d3Event, objType, d, null, pos);

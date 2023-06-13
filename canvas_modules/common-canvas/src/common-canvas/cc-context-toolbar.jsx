@@ -22,6 +22,10 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
 
+const CM_TOOLBAR_GAP = 4;
+const CM_ICON_SIZE = 32;
+const CM_ICON_PAD = 2;
+
 class CommonCanvasContextToolbar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -42,12 +46,12 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.props.canvasController.setMouseInContextToolbar(true);
 	}
 
-	getToolbarConfig({ toolbarItems, menuItems }) {
+	getToolbarConfig({ toolbarItems, overflowMenuItems }) {
 		const leftBar = [];
 		toolbarItems.forEach((item) => {
 			leftBar.push(this.getMenuItem(item));
 		});
-		menuItems.forEach((item) => {
+		overflowMenuItems.forEach((item) => {
 			if (item.divider) {
 				leftBar.push({ divider: true });
 			} else {
@@ -94,6 +98,19 @@ class CommonCanvasContextToolbar extends React.Component {
 		return menuItem.enable;
 	}
 
+	// Returns the width of the context toolbar.
+	getContextToolbarWidth(toolbarItems, overflowMenuItems) {
+		// If there is at least one overflow item, we will need an overflow
+		// icon which will increase the toolbar items by one.
+		const overflowItemCount = overflowMenuItems.length > 0 ? 1 : 0;
+		const toolbarItemsCount = toolbarItems.length + overflowItemCount;
+
+		// If we have an overflow icon we reduce the with by one pixel which will
+		// force the overflow menu to be created and the overflow icon to be shown.
+		const reduction = overflowMenuItems.length > 0 ? 1 : 0;
+		return (toolbarItemsCount * (CM_ICON_SIZE + CM_ICON_PAD)) - reduction;
+	}
+
 	toolbarActionHandler(action, editParam) {
 		this.props.canvasController.setMouseInContextToolbar(false);
 		this.props.canvasController.closeContextToolbar();
@@ -110,26 +127,37 @@ class CommonCanvasContextToolbar extends React.Component {
 		);
 	}
 
+	shouldCenterJustifyToolbar() {
+		const objType = this.props.canvasController.getContextMenuTargetType();
+		return (
+			objType === "link" ||
+			objType === "canvas" ||
+			objType === "node" &&
+				this.props.canvasController.getCanvasConfig().enableNodeFormatType === "Vertical");
+	}
+
 	render() {
 		this.logger.log("render");
 
 		let contextToolbar = null;
 
 		if (!isEmpty(this.props.contextMenuDef)) {
-			const pos = this.props.canvasController.getContextMenuPos();
 			const toolbarItems = this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem && !cmItem.divider);
-			const menuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
-			const toolbarConfig = this.getToolbarConfig({ toolbarItems, menuItems });
+			const overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
+			const toolbarConfig = this.getToolbarConfig({ toolbarItems, overflowMenuItems });
 
-			const overflowItemCount = menuItems.length > 0 ? 1 : 0;
-			const toolbarItemsCount = toolbarItems.length + overflowItemCount;
-			const reduction = menuItems.length > 0 ? 1 : 0;
-			const width = (toolbarItemsCount * 34) - reduction;
-			const x = pos.x - width;
-			const y = (pos.y - 32) - 4;
+			const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
+
+			// Note: pos is already adjusted as a starting point for calculating the
+			// toolbar position in svg-canvas-renderer.js.
+			const pos = this.props.canvasController.getContextMenuPos();
+			const x = this.shouldCenterJustifyToolbar()
+				? pos.x - (toolbarWidth / 2)
+				: pos.x - toolbarWidth;
+			const y = (pos.y - CM_ICON_SIZE) - CM_TOOLBAR_GAP;
 
 			contextToolbar = (
-				<div className={"context-toolbar"} style={{ left: x, top: y, width }}
+				<div className={"context-toolbar"} style={{ left: x, top: y, width: toolbarWidth }}
 					onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}
 				>
 					<Toolbar
