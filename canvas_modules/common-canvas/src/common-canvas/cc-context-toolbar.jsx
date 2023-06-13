@@ -51,11 +51,21 @@ class CommonCanvasContextToolbar extends React.Component {
 		toolbarItems.forEach((item) => {
 			leftBar.push(this.getMenuItem(item));
 		});
+
+		// Records if we have just displayed a divider. This is useful because we
+		// only want to display one divider if there is a divider element
+		// immediately after another divider element in the overflowMenuItems array.
+		let previousDivider = false;
+
 		overflowMenuItems.forEach((item) => {
 			if (item.divider) {
-				leftBar.push({ divider: true });
+				if (!previousDivider) {
+					leftBar.push({ divider: true });
+					previousDivider = true;
+				}
 			} else {
 				leftBar.push(this.getMenuItem(item));
+				previousDivider = false;
 			}
 		});
 
@@ -148,8 +158,8 @@ class CommonCanvasContextToolbar extends React.Component {
 
 			const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
 
-			// Note: pos is already adjusted as a starting point for calculating the
-			// toolbar position in svg-canvas-renderer.js.
+			// Note: pos is already adjusted as a starting point for the context
+			// toolbar position by a calculation in svg-canvas-renderer.js.
 			const pos = this.props.canvasController.getContextMenuPos();
 			const x = this.shouldCenterJustifyToolbar()
 				? pos.x - (toolbarWidth / 2)

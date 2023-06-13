@@ -263,7 +263,6 @@ class CommonCanvasToolbar extends React.Component {
 		return tool;
 	}
 
-
 	render() {
 		this.logger.log("render");
 
@@ -284,7 +283,6 @@ class CommonCanvasToolbar extends React.Component {
 				</div>
 			);
 		}
-
 		return canvasToolbar;
 	}
 }
