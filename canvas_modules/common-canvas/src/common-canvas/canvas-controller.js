@@ -2128,8 +2128,7 @@ export default class CanvasController {
 		// Color objects
 		if (source.type === "comment" &&
 				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
-			menuDefinition = menuDefinition.concat({ action: "colorBackground", submenu: true, menu: "colorPicker",
-				label: this.labelUtil.getLabel("comment.colorBackground") });
+			menuDefinition = menuDefinition.concat({ action: "colorBackground", label: this.labelUtil.getLabel("comment.colorBackground") });
 			menuDefinition = menuDefinition.concat({ divider: true });
 		}
 		// Edit submenu (cut, copy, paste)
@@ -2263,6 +2262,7 @@ export default class CanvasController {
 	isEditingAction(action) {
 		return (
 			action === "createComment" ||
+			action === "colorBackground" ||
 			action === "disconnectNode" ||
 			action === "setNodeLabelEditingMode" ||
 			action === "setCommentEditingMode" ||

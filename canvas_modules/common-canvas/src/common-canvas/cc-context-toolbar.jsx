@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { isEmpty } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
+import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
 
 class CommonCanvasContextToolbar extends React.Component {
 	constructor(props) {
@@ -29,6 +30,7 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
+		this.colorClicked = this.colorClicked.bind(this);
 	}
 
 	onMouseLeave(evt) {
@@ -60,9 +62,18 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	getMenuItem(menuItem) {
-		const subMenu = menuItem.submenu ? this.getSubMenu(menuItem) : null;
-		return { action: menuItem.action, label: menuItem.label, subMenu, enable: this.getEnable(menuItem), iconEnabled: menuItem.icon };
+		const subPanel = this.getSubPanel(menuItem);
+		const subMenu = !subPanel && menuItem.submenu ? this.getSubMenu(menuItem) : null;
+		return { action: menuItem.action, label: menuItem.label, subMenu, subPanel, enable: this.getEnable(menuItem), iconEnabled: menuItem.icon };
 	}
+
+	getSubPanel(menuItem) {
+		if (menuItem.action === "colorBackground") {
+			return this.buildColorPickerPanel();
+		}
+		return null;
+	}
+
 
 	getSubMenu(menuItem) {
 		if (typeof menuItem.menu === "object") {
@@ -87,6 +98,16 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.props.canvasController.setMouseInContextToolbar(false);
 		this.props.canvasController.closeContextToolbar();
 		this.props.canvasController.contextMenuActionHandler(action, editParam);
+	}
+
+	colorClicked(color) {
+		this.toolbarActionHandler("colorSelectedObjects", { color });
+	}
+
+	buildColorPickerPanel() {
+		return (
+			<ColorPickerPanel clickActionHandler={this.colorClicked} />
+		);
 	}
 
 	render() {

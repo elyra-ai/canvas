@@ -292,4 +292,12 @@ $toolbar-divider-width: 1px;
 		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
 		top: -34px; // 32px minus 2px
 	}
+
+	& .subpanel {
+		position: relative;
+		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
+		top: -34px; // 32px minus 2px
+		width: fit-content;
+	}
+
 }

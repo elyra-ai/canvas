@@ -28,7 +28,7 @@ class Toolbar extends React.Component {
 
 		this.state = {
 			showExtendedMenuIndex: -1,
-			subMenuDisplayedForAction: ""
+			subAreaDisplayedForAction: ""
 		};
 
 		this.leftBar = [];
@@ -177,7 +177,7 @@ class Toolbar extends React.Component {
 	}
 
 	subMenuActionHandler(action) {
-		this.setState({ subMenuDisplayedForAction: action });
+		this.setState({ subAreaDisplayedForAction: action });
 	}
 
 	generateToolbarItems(actionDefinitions, overflow, withSpacer) {
@@ -206,7 +206,7 @@ class Toolbar extends React.Component {
 					/>
 				);
 			} else {
-				const displaySubMenu = overflow && this.state.subMenuDisplayedForAction === actionObj.action;
+				const displaySubArea = overflow && this.state.subAreaDisplayedForAction === actionObj.action;
 				jsx = (
 					<ToolbarActionItem
 						key={"toolbar-item-key-" + i}
@@ -215,7 +215,7 @@ class Toolbar extends React.Component {
 						toolbarActionHandler={this.props.toolbarActionHandler}
 						subMenuActionHandler={this.subMenuActionHandler}
 						generateToolbarItems={this.generateToolbarItems}
-						displaySubMenu={displaySubMenu}
+						displaySubArea={displaySubArea}
 						overflow={overflow}
 						instanceId={this.props.instanceId}
 						onFocus={this.onFocus}

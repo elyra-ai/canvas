@@ -53,13 +53,13 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	onMouseEnter(evt) {
-		if (this.props.actionObj.subMenu) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
 			this.props.subMenuActionHandler(this.props.actionObj.action);
 		}
 	}
 
 	onMouseLeave(evt) {
-		if (this.props.actionObj.subMenu) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
 			this.props.subMenuActionHandler("");
 		}
 	}
@@ -174,7 +174,7 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	actionClickHandler(evt) {
-		if (!this.props.actionObj.subMenu) {
+		if (!this.props.actionObj.subMenu && !this.props.actionObj.subPanel) {
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		}
 	}
@@ -204,7 +204,7 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = actionObj.subMenu ? (<ChevronRight16 />) : null;
+		const chevronIcon = actionObj.subMenu || this.props.actionObj.subPanel ? (<ChevronRight16 />) : null;
 
 		let buttonContent = (
 			<div className={itemContentClassName}>
@@ -272,6 +272,31 @@ class ToolbarActionItem extends React.Component {
 		return false;
 	}
 
+	// Returns a sub-area for a cascading menu item. The sub-area can be either a
+	// sub-panel which is a div contaiing whatever the caller passes in within the
+	// supPanel field  OR a sub-menu which is a list of options which is created
+	// from the array of items the caller passes in the subMenu field.
+	generateSubArea() {
+		if (this.props.displaySubArea) {
+			if (this.props.actionObj.subPanel) {
+				return (
+					<div className={"toolbar-popover-list subpanel"}>
+						{this.props.actionObj.subPanel}
+					</div>
+				);
+			}
+			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
+
+			return (
+				<div className={"toolbar-popover-list submenu"}>
+					{subMenuItems}
+				</div>
+			);
+		}
+
+		return null;
+	}
+
 	render() {
 		const actionObj = this.props.actionObj;
 		const actionName = this.generateActionName();
@@ -295,21 +320,12 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
-		let subMenu = null;
-		if (this.props.displaySubMenu) {
-			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
-
-			subMenu = (
-				<div className={"toolbar-popover-list submenu"}>
-					{subMenuItems}
-				</div>
-			);
-		}
+		const subArea = this.generateSubArea();
 
 		return (
 			<div className={itemClassName} data-toolbar-item={isToolbarItem} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
 				{divContent}
-				{subMenu}
+				{subArea}
 			</div>
 		);
 	}
@@ -337,6 +353,7 @@ ToolbarActionItem.propTypes = {
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		subMenu: PropTypes.array,
+		subPanel: PropTypes.object,
 		jsx: PropTypes.object,
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
@@ -349,7 +366,7 @@ ToolbarActionItem.propTypes = {
 	subMenuActionHandler: PropTypes.func.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
-	displaySubMenu: PropTypes.bool,
+	displaySubArea: PropTypes.bool,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])

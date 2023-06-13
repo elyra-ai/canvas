@@ -30,9 +30,10 @@ class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.logger = new Logger("CC-Toolbar");
+
 		this.getLabel = this.getLabel.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
-		this.logger = new Logger("CC-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -261,6 +262,7 @@ class CommonCanvasToolbar extends React.Component {
 		}
 		return tool;
 	}
+
 
 	render() {
 		this.logger.log("render");
