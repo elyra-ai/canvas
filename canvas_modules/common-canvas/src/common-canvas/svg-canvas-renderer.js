@@ -3881,7 +3881,7 @@ export default class SVGCanvasRenderer {
 		if (objType === "link") {
 			return d.pathInfo.centerPoint;
 
-		} else if (objType === "node" && this.config.enableNodeFormatType === "Vertical" && !d.is_expanded) {
+		} else if (objType === "node" && d.layout.contextToolbarPosition === "topCenter" && !d.is_expanded) {
 			return { x: d.x_pos + (d.width / 2), y: d.y_pos };
 
 		}

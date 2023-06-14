@@ -143,7 +143,7 @@ class CommonCanvasContextToolbar extends React.Component {
 			objType === "link" ||
 			objType === "canvas" ||
 			objType === "node" &&
-				this.props.canvasController.getCanvasConfig().enableNodeFormatType === "Vertical" &&
+				this.props.canvasController.getContextMenuTargetObject().layout.contextToolbarPosition === "topCenter" &&
 				!this.props.canvasController.getContextMenuTargetObject().is_expanded);
 	}
 
