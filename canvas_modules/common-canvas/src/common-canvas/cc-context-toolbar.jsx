@@ -115,8 +115,8 @@ class CommonCanvasContextToolbar extends React.Component {
 		const overflowItemCount = overflowMenuItems.length > 0 ? 1 : 0;
 		const toolbarItemsCount = toolbarItems.length + overflowItemCount;
 
-		// If we have an overflow icon we reduce the with by one pixel which will
-		// force the overflow menu to be created and the overflow icon to be shown.
+		// If we have some overflow menu items, we reduce the width by one pixel
+		// which forces the overflow menu and the overflow icon to be shown.
 		const reduction = overflowMenuItems.length > 0 ? 1 : 0;
 		return (toolbarItemsCount * (CM_ICON_SIZE + CM_ICON_PAD)) - reduction;
 	}

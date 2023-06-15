@@ -141,6 +141,19 @@ $panel-border-color: $ui-03;
 	}
 }
 
+// Below, we have to override the Carbon button's focus highlighting in the
+// context toolbar to get a complete border around the overflow icon. This is
+// necessary because the width allocated to the context toolbar is reduced by
+// one pixel to force the overflow icon to be displayed. 
+.context-toolbar  {
+	.toolbar-overflow-item {
+		button:focus {
+			border-color: transparent;
+			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $interactive-01
+		}
+	}
+}
+
 .text-toolbar,
 .context-toolbar  {
 	position: absolute;
