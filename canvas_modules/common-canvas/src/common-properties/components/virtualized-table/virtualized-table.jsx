@@ -38,9 +38,15 @@ class VirtualizedTable extends React.Component {
 		if (nextProps.rowCount !== prevState.rowCount) {
 			updatedState.rowCount = nextProps.rowCount;
 		}
-		// Only get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+
+		const prevStateTableWidth = prevState.columns.reduce((totalWidth, column) => column.width + totalWidth, 0);
+		const nextPropsTableWidth = nextProps.columns.reduce((totalWidth, column) => column.width + totalWidth, 0);
+		const editorSizeUpdated = (prevStateTableWidth !== nextPropsTableWidth);
+
+		// Get new columns if column label (headerLabel) is different. This is useful when changing "View in tables" dropdown in Expression control.
+		// Also when right flyout is expanded/collapsed, width of all columns changes, in this case get new columns with updated widths.
 		// We're not comparing all properties in columns object because width can be different after resizing.
-		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel"))) {
+		if (!prevState.columnResized || !isEmpty(differenceBy(nextProps.columns, prevState.columns, "headerLabel")) || editorSizeUpdated) {
 			updatedState.columns = nextProps.columns;
 		}
 		return (updatedState);

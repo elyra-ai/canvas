@@ -25,7 +25,7 @@ import Form from "./../form/Form";
 import CommonPropertiesAction from "./../../command-actions/commonPropertiesAction";
 import PropertiesController from "./../properties-controller";
 import * as PropertyUtils from "./../util/property-utils";
-import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS } from "./../constants/constants";
+import { MESSAGE_KEYS, CONDITION_RETURN_VALUE_HANDLING, CARBON_ICONS, APPLY, CANCEL, ACTIONS, CATEGORY_VIEW } from "./../constants/constants";
 import { Size } from "./../constants/form-constants";
 import { validateParameterDefAgainstSchema } from "../schema-validator/properties-schema-validator.js";
 import { has, isEqual, omit, pick, cloneDeep } from "lodash";
@@ -477,6 +477,7 @@ class PropertiesMain extends React.Component {
 					icon={formData.icon}
 					heading={formData.heading}
 					showHeading={this.props.propertiesConfig.heading}
+					rightFlyoutTabsView={this.props.propertiesConfig.categoryView === CATEGORY_VIEW.TABS}
 				/>);
 
 				hasHeading = this.props.propertiesConfig.heading && (formData.icon || formData.heading);
@@ -511,6 +512,7 @@ class PropertiesMain extends React.Component {
 				showPropertiesButtons={this.showPropertiesButtons}
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
+				categoryView={this.props.propertiesConfig.categoryView}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
@@ -606,6 +608,7 @@ PropertiesMain.propTypes = {
 		applyOnBlur: PropTypes.bool,
 		disableSaveOnRequiredErrors: PropTypes.bool,
 		rightFlyout: PropTypes.bool,
+		categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
 		containerType: PropTypes.string,
 		enableResize: PropTypes.bool,
 		conditionReturnValueHandling: PropTypes.string,

@@ -167,7 +167,8 @@ class TitleEditor extends Component {
 
 		return (
 			<div className={classNames("properties-title-editor",
-				{ "properties-title-with-heading": this.headingEnabled })}
+				{ "properties-title-with-heading": this.headingEnabled },
+				{ "properties-title-right-flyout-tabs-view": this.props.rightFlyoutTabsView })}
 			>
 				{closeButton}
 				{heading}
@@ -216,6 +217,7 @@ TitleEditor.propTypes = {
 	icon: PropTypes.string,
 	heading: PropTypes.string,
 	showHeading: PropTypes.bool,
+	rightFlyoutTabsView: PropTypes.bool,
 	title: PropTypes.string, // set by redux
 	setTitle: PropTypes.func // set by redux
 };

@@ -122,7 +122,8 @@ import {
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
 	TOOLBAR_TYPE_CARBON_BUTTONS,
 	TOOLBAR_TYPE_CUSTOM_ACTIONS,
-	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE
+	TOOLBAR_TYPE_OVERRIDE_AUTO_ENABLE_DISABLE,
+	CATEGORY_VIEW_ACCORDIONS
 } from "./constants/constants.js";
 
 import { STATE_TAG_NONE } from "../../../common-canvas/src/common-canvas/constants/canvas-constants.js";
@@ -237,6 +238,7 @@ class App extends React.Component {
 			propertiesValidationHandler: true,
 			// Common properties configurable options in the sidepanel
 			propertiesContainerType: PROPERTIES_FLYOUT,
+			categoryView: CATEGORY_VIEW_ACCORDIONS,
 			propertiesSchemaValidation: true,
 			applyPropertiesWithoutEdit: false,
 			applyOnBlur: false,
@@ -1968,6 +1970,7 @@ class App extends React.Component {
 		return {
 			containerType: this.state.propertiesContainerType === PROPERTIES_FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === PROPERTIES_FLYOUT,
+			categoryView: this.state.categoryView,
 			schemaValidation: this.state.propertiesSchemaValidation,
 			applyPropertiesWithoutEdit: this.state.applyPropertiesWithoutEdit,
 			applyOnBlur: this.state.applyOnBlur,
@@ -2529,6 +2532,7 @@ class App extends React.Component {
 			closeSidePanelModal: this.closeSidePanelModal,
 			showPropertiesDialog: this.state.showPropertiesDialog,
 			propertiesContainerType: this.state.propertiesContainerType,
+			categoryView: this.state.categoryView,
 			applyOnBlur: this.state.applyOnBlur,
 			trimSpaces: this.state.trimSpaces,
 			disableSaveOnRequiredErrors: this.state.disableSaveOnRequiredErrors,
