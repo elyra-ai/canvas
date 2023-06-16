@@ -52,7 +52,8 @@ import LabelUtil from "./label-util.js";
 import Logger from "../logging/canvas-logger.js";
 import ObjectModel from "../object-model/object-model.js";
 import SizeAndPositionObjectsAction from "../command-actions/sizeAndPositionObjectsAction.js";
-import { get, has, isEmpty } from "lodash";
+import getContextMenuDefiniton from "./canvas-controller-menu-utils.js";
+import { get, isEmpty } from "lodash";
 import { LINK_SELECTION_NONE, LINK_SELECTION_DETACHABLE, SNAP_TO_GRID_NONE, SUPER_NODE } from "./constants/canvas-constants";
 
 // Global instance ID counter
@@ -1450,6 +1451,10 @@ export default class CanvasController {
 		return highlightObjectIds;
 	}
 
+	isHighlighted() {
+		return this.highlight;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Operational methods
 	// ---------------------------------------------------------------------------
@@ -2058,34 +2063,6 @@ export default class CanvasController {
 		return false;
 	}
 
-	createEditMenu(source, includePaste) {
-		const editSubMenu = [
-			{ action: "cut", label: this.labelUtil.getLabel("edit.cutSelection"), enable: source.selectedObjectIds.length > 0 },
-			{ action: "copy", label: this.labelUtil.getLabel("edit.copySelection"), enable: source.selectedObjectIds.length > 0 }
-		];
-		if (includePaste) {
-			editSubMenu.push({ action: "paste", label: this.labelUtil.getLabel("edit.pasteSelection"), enable: !this.isClipboardEmpty() });
-		}
-		return editSubMenu;
-	}
-
-	createHighlightMenu(source) {
-		const highlightSubMenu = [
-			{ action: "highlightBranch", label: this.labelUtil.getLabel("menu.highlightBranch") },
-			{ action: "highlightUpstream", label: this.labelUtil.getLabel("menu.highlightUpstream") },
-			{ action: "highlightDownstream", label: this.labelUtil.getLabel("menu.highlightDownstream") }
-		];
-		return highlightSubMenu;
-	}
-
-	// This should only appear in menu if highlight is true.
-	createUnhighlightMenu(source) {
-		const unhighlightSubMenu = [
-			{ action: "unhighlight", label: this.labelUtil.getLabel("menu.unhighlight"), enable: this.highlight }
-		];
-		return unhighlightSubMenu;
-	}
-
 	// Returns true if the context toolbar is switched on and the node over which
 	// the mouse cursor is hovering is NOT in the list of selected objects.
 	isContextMenuForNonSelectedObj(source) {
@@ -2097,266 +2074,13 @@ export default class CanvasController {
 		return false;
 	}
 
-	createDefaultMenu(source) {
-		let menuDefinition = [];
-
-		const menuForNonSelectedObj = this.isContextMenuForNonSelectedObj(source);
-
-		// Select all & add comment: canvas only
-		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat([
-				{ action: "createComment", label: this.labelUtil.getLabel("canvas.addComment"), toolbarItem: true },
-				{ action: "selectAll", label: this.labelUtil.getLabel("canvas.selectAll") },
-				{ divider: true }
-			]);
-		}
-		// Rename node
-		if (source.type === "node" && get(source, "targetObject.layout.labelEditable", false)) {
-			menuDefinition = menuDefinition.concat(
-				{ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode"), toolbarItem: true });
-		}
-		// Edit comment
-		if (source.type === "comment") {
-			menuDefinition = menuDefinition.concat({ action: "setCommentEditingMode", label: this.labelUtil.getLabel("comment.editComment"), toolbarItem: true });
-		}
-		// Color objects
-		if (source.type === "comment" &&
-				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
-			menuDefinition = menuDefinition.concat({ action: "colorBackground", label: this.labelUtil.getLabel("comment.colorBackground") });
-			menuDefinition = menuDefinition.concat({ divider: true });
-		}
-		// Disconnect node
-		if (source.type === "node" || source.type === "comment") {
-			const objectAry = menuForNonSelectedObj ? [source.targetObject.id] : source.selectedObjectIds;
-			const linksFound = this.objectModel.getAPIPipeline(source.pipelineId).getLinksContainingIds(objectAry);
-			if (linksFound.length > 0) {
-				menuDefinition = menuDefinition.concat({ action: "disconnectNode", label: this.labelUtil.getLabel("node.disconnectNode") });
-				menuDefinition = menuDefinition.concat({ divider: true });
-			}
-		}
-		// Edit submenu (cut, copy, paste)
-		if (source.type === "node" ||
-				source.type === "comment" ||
-				(source.type === "link" && this.areDetachableLinksInUse()) ||
-				source.type === "canvas") {
-			const editSubMenu = this.createEditMenu(source, source.type === "canvas");
-			menuDefinition = menuDefinition.concat({ action: "clipboard", submenu: true, menu: editSubMenu, label: this.labelUtil.getLabel("node.editMenu") });
-			menuDefinition = menuDefinition.concat({ divider: true });
-		}
-		// Undo and redo
-		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat([{ action: "undo", label: this.labelUtil.getLabel("canvas.undo"), enable: this.canUndo() },
-				{ action: "redo", label: this.labelUtil.getLabel("canvas.redo"), enable: this.canRedo() },
-				{ divider: true }]);
-		}
-		// Delete objects
-		if (source.type === "node" || source.type === "comment" ||
-				(this.getCanvasConfig().enableLinkSelection !== LINK_SELECTION_NONE && source.type === "link")) {
-			menuDefinition = menuDefinition.concat([
-				{ action: "deleteSelectedObjects", label: this.labelUtil.getLabel("canvas.deleteObject"), toolbarItem: true },
-				{ divider: true }]);
-		}
-		// Create supernode
-		if (source.type === "node" || source.type === "comment") {
-			if (this.isCreateSupernodeCMOptionRequired() &&
-					(this.areSelectedNodesContiguous() ||
-						get(this, "contextMenuConfig.enableCreateSupernodeNonContiguous", false) ||
-						(menuForNonSelectedObj && source.type === "node"))) {
-				menuDefinition = menuDefinition.concat([{ action: "createSuperNode", label: this.labelUtil.getLabel("node.createSupernode") }]);
-				if (this.getCanvasConfig().enableExternalPipelineFlows) {
-					menuDefinition = menuDefinition.concat([{ action: "createSuperNodeExternal", label: this.labelUtil.getLabel("node.createSupernodeExternal") }]);
-				}
-				menuDefinition = menuDefinition.concat([{ divider: true }]);
-			}
-		}
-		// Supernode options - only applicable with a single supernode selected
-		// which is opened by the "canvas" (default) editor.
-		if (source.type === "node" &&
-				source.targetObject.type === SUPER_NODE &&
-				(source.selectedObjectIds.length === 1 || menuForNonSelectedObj) &&
-					(source.targetObject.open_with_tool === "canvas" || typeof source.targetObject.open_with_tool === "undefined")) {
-			// Deconstruct supernode
-			menuDefinition = menuDefinition.concat({ action: "deconstructSuperNode",
-				label: this.labelUtil.getLabel("node.deconstructSupernode") });
-
-			menuDefinition = menuDefinition.concat({ divider: true });
-
-			// Collapse supernode
-			if (this.isSuperNodeExpandedInPlace(source.targetObject.id, source.pipelineId)) {
-				menuDefinition = menuDefinition.concat({ action: "collapseSuperNodeInPlace",
-					label: this.labelUtil.getLabel("node.collapseSupernodeInPlace") });
-			// Expand supernode
-			} else {
-				menuDefinition = menuDefinition.concat({ action: "expandSuperNodeInPlace",
-					label: this.labelUtil.getLabel("node.expandSupernode") });
-			}
-
-			// Expand supernode to full page display
-			if (get(this, "contextMenuConfig.defaultMenuEntries.displaySupernodeFullPage")) {
-				menuDefinition = menuDefinition.concat({ action: "displaySubPipeline",
-					label: this.labelUtil.getLabel("node.displaySupernodeFullPage"), toolbarItem: true });
-			}
-
-			menuDefinition = menuDefinition.concat({ divider: true });
-
-			// Convert supernode
-			if (this.getCanvasConfig().enableExternalPipelineFlows) {
-				// Convert External to Local
-				if (source.targetObject.subflow_ref.url) {
-					// Supernodes inside an external sub-flow cannot be made local.
-					if (!this.isPipelineExternal(source.pipelineId)) {
-						menuDefinition = menuDefinition.concat({ action: "convertSuperNodeExternalToLocal",
-							label: this.labelUtil.getLabel("node.convertSupernodeExternalToLocal") }, { divider: true });
-					}
-				// Convert Local to External
-				} else {
-					menuDefinition = menuDefinition.concat({ action: "convertSuperNodeLocalToExternal",
-						label: this.labelUtil.getLabel("node.convertSupernodeLocalToExternal") }, { divider: true });
-				}
-			}
-		}
-		// Delete link
-		if (this.getCanvasConfig().enableLinkSelection === LINK_SELECTION_NONE &&
-				source.type === "link") {
-			menuDefinition = menuDefinition.concat([{ action: "deleteLink", label: this.labelUtil.getLabel("canvas.deleteObject"), toolbarItem: true }]);
-		}
-		// Highlight submenu (Highlight Branch | Upstream | Downstream, Unhighlight)
-		if (source.type === "node") {
-			let highlightSubMenuDef = this.createHighlightMenu(source);
-			highlightSubMenuDef.push({ divider: true });
-			highlightSubMenuDef = highlightSubMenuDef.concat(this.createUnhighlightMenu(source));
-			menuDefinition = menuDefinition.concat({ action: "highlight", submenu: true, menu: highlightSubMenuDef, label: this.labelUtil.getLabel("menu.highlight") });
-		}
-		if (source.type === "canvas") {
-			menuDefinition = menuDefinition.concat({ action: "unhighlight", label: this.labelUtil.getLabel("menu.unhighlight"), enable: this.highlight });
-		}
-		if (source.type === "node" &&
-				has(this, "contextMenuConfig.defaultMenuEntries.saveToPalette") &&
-				this.contextMenuConfig.defaultMenuEntries.saveToPalette) {
-			menuDefinition = menuDefinition.concat({ divider: true },
-				{ action: "saveToPalette", label: this.labelUtil.getLabel("node.saveToPalette") });
-		}
-
-		return menuDefinition;
-	}
-
-	// Returns a new menu based, on the menu passed in, where all actions that
-	// might alter the canvas have been removed.
-	filterOutEditingActions(menuDefinition) {
-		const newMenuDefinition = [];
-		menuDefinition.forEach((menuEntry) => {
-			if (menuEntry.submenu) {
-				const newSubMenu = this.filterOutEditingActions(menuEntry.menu);
-				if (newSubMenu && newSubMenu.length > 0) {
-					menuEntry.menu = newSubMenu;
-					newMenuDefinition.push(menuEntry);
-				}
-
-			} else if (!this.isEditingAction(menuEntry.action)) {
-				newMenuDefinition.push(menuEntry);
-			}
-		});
-		return newMenuDefinition;
-	}
-
-	filterOutUnwantedDividers(menuDef) {
-		const newMenuDef = [];
-		let previousDivider = true;
-		menuDef.forEach((item) => {
-			if (item.divider) {
-				if (!previousDivider) {
-					newMenuDef.push(item);
-					previousDivider = true;
-				}
-			} else {
-				newMenuDef.push(item);
-				previousDivider = false;
-			}
-		});
-		return newMenuDef;
-	}
-
-	// Returns true if the action string passed in is one of the actions
-	// that would alter the canvas objects. This is useful for filtering
-	// out editing actions that should be unavailable with a read-only canvas.
-	isEditingAction(action) {
-		return (
-			action === "createComment" ||
-			action === "colorBackground" ||
-			action === "disconnectNode" ||
-			action === "setNodeLabelEditingMode" ||
-			action === "setCommentEditingMode" ||
-			action === "cut" ||
-			action === "copy" ||
-			action === "paste" ||
-			action === "undo" ||
-			action === "redo" ||
-			action === "deleteSelectedObjects" ||
-			action === "createSuperNode" ||
-			action === "createSuperNodeExternal" ||
-			action === "deconstructSuperNode" ||
-			action === "collapseSuperNodeInPlace" ||
-			action === "expandSuperNodeInPlace" ||
-			action === "convertSuperNodeExternalToLocal" ||
-			action === "convertSuperNodeLocalToExternal" ||
-			action === "deleteLink" ||
-			action === "saveToPalette"
-		);
-	}
-
-	// Returns whether the 'Create Supernode' context menu option is required or
-	// not. The default is true.
-	isCreateSupernodeCMOptionRequired() {
-		let required = true;
-		if (has(this, "contextMenuConfig.defaultMenuEntries.createSupernode") &&
-				this.contextMenuConfig.defaultMenuEntries.createSupernode === false) {
-			required = false;
-		}
-
-		return required;
-	}
-
 	contextMenuHandler(source) {
-		const defMenu = this.createDefaultMenu(source);
-		let menuDefinition;
-
-		if (typeof this.handlers.contextMenuHandler === "function") {
-			const menuCustom = this.handlers.contextMenuHandler(source, defMenu);
-			if (menuCustom && menuCustom.length > 0) {
-				menuDefinition = menuCustom;
-			}
-		} else {
-			menuDefinition = defMenu;
-		}
-
-		// If we are NOT allowing editing actions (perhaps because we are showing a
-		// read-only canvas), remove any actions from the context menu that might
-		// alter the canvas objects.
-		if (menuDefinition && menuDefinition.length > 0 &&
-				this.getCanvasConfig().enableEditingActions === false) {
-			menuDefinition = this.filterOutEditingActions(menuDefinition);
-		}
-
-		// We need to remove any unwanted dividers. These might be dividers at
-		// the top of the array that are there after editing actions have been
-		// removed or doubled-up dividers in the menu which might be there after
-		// removing editing actions or in the menu def returtned by the host app.
-		if (menuDefinition && menuDefinition.length > 0) {
-			menuDefinition = this.filterOutUnwantedDividers(menuDefinition);
-		}
+		const menuDefinition = getContextMenuDefiniton(source, this);
 
 		// Open the context menu if we still have one!
-		if (menuDefinition && menuDefinition.length > 0 &&
-				!this.allDividers(menuDefinition)) {
+		if (menuDefinition && menuDefinition.length > 0) {
 			this.openContextMenu(menuDefinition, source);
 		}
-	}
-
-	// Returns true if the menu only contains dividers. This might happen if
-	// action items have been removed from a menu and left only dividers behind.
-	allDividers(menu) {
-		const dividers = menu.filter((m) => m.divider);
-		return menu.length === dividers.length;
 	}
 
 	contextMenuActionHandler(action, editParam) {

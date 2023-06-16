@@ -23,6 +23,7 @@ import sinon from "sinon";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
+import getContextMenuDefiniton from "../../src/common-canvas/canvas-controller-menu-utils";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
 import canvasObj from "../test_resources/json/context-menu-test_canvasObject.json";
 import oneNodeObj from "../test_resources/json/context-menu-test_oneNodeObject.json";
@@ -116,7 +117,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "redo", "label": "Redo" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(canvasObj);
+		const menuDef = getContextMenuDefiniton(canvasObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays one node menu when only one node is selected", () => {
@@ -128,7 +129,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(oneNodeObj);
+		const menuDef = getContextMenuDefiniton(oneNodeObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays multiple node menu when multiple nodes are selected", () => {
@@ -140,7 +141,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(multNodeObj);
+		const menuDef = getContextMenuDefiniton(multNodeObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays single, collapsed supernode menu when a single, collapsed supernode is selected", () => {
@@ -154,7 +155,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "expandSuperNodeInPlace", "label": "Expand supernode" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(supernodeCollObj);
+		const menuDef = getContextMenuDefiniton(supernodeCollObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 
@@ -169,7 +170,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "collapseSuperNodeInPlace", "label": "Collapse supernode" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(supernodeExpObj);
+		const menuDef = getContextMenuDefiniton(supernodeExpObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment menu when a single comment is selected", () => {
@@ -181,7 +182,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(commentObj);
+		const menuDef = getContextMenuDefiniton(commentObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment menu when multiple comments are selected", () => {
@@ -193,14 +194,14 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(multipleCommentsObj);
+		const menuDef = getContextMenuDefiniton(multipleCommentsObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays delete link when a single link is selected", () => {
 		const defMenu = [
 			{ "action": "deleteLink", "label": "Delete" }
 		];
-		const menuDef = canvasController.createDefaultMenu(linkObj);
+		const menuDef = getContextMenuDefiniton(linkObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment + node menu when a comment and a node are selected", () => {
@@ -213,7 +214,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete"	},
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(commentPlusNodeObj);
+		const menuDef = getContextMenuDefiniton(commentPlusNodeObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment + node menu when multiple comments and nodes are selected", () => {
@@ -226,7 +227,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(manyNodesCommentsObj);
+		const menuDef = getContextMenuDefiniton(manyNodesCommentsObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment + node menu when an expanded supernode and a comment are selected", () => {
@@ -239,7 +240,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(expSupernodeCommentObj);
+		const menuDef = getContextMenuDefiniton(expSupernodeCommentObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 	it("correctly displays comment + node menu when a collapsed supernode and a comment are selected", () => {
@@ -252,7 +253,7 @@ describe("DefaultMenu renders correctly", () => {
 			{ "action": "deleteObjects", "label": "Delete" },
 			{ "divider": true }
 		];
-		const menuDef = canvasController.createDefaultMenu(collSupernodeCommentObj);
+		const menuDef = getContextMenuDefiniton(collSupernodeCommentObj, canvasController);
 		expect(menuDef, defMenu).to.be.equal;
 	});
 });
@@ -270,7 +271,7 @@ describe("create supernode renders correctly", () => {
 			enableCreateSupernodeNonContiguous: false
 		};
 		createCommonCanvas(config, canvasController, contextMenuConfig);
-		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
+		const menuDef = getContextMenuDefiniton(nonContiguousSelection, canvasController);
 		const isCreateSupernode = isCreateSupernodeThere(menuDef);
 		expect(isCreateSupernode).to.be.false;
 	});
@@ -287,7 +288,7 @@ describe("create supernode renders correctly", () => {
 		};
 		const canvasParams = {};
 		createCommonCanvas(config, canvasController, canvasParams, contextMenuConfig);
-		const menuDef = canvasController.createDefaultMenu(nonContiguousSelection);
+		const menuDef = getContextMenuDefiniton(nonContiguousSelection, canvasController);
 		const isCreateSupernode = isCreateSupernodeThere(menuDef);
 		expect(isCreateSupernode).to.be.true;
 	});
@@ -353,7 +354,7 @@ function getNestedMenuDefinition() {
 }
 
 function createCommonCanvas(config, canvasController, canvasParams, contextMenuConfig) {
-	const contextMenuHandler = sinon.spy();
+	const contextMenuHandler = (source, defaultMenu) => defaultMenu;
 	const beforeEditActionHandler = null; // If sepcified, must return data
 	const editActionHandler = sinon.spy();
 	const clickActionHandler = sinon.spy();
