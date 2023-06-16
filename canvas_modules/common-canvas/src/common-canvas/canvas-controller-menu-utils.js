@@ -319,7 +319,7 @@ const createHighlightSubMenu = (source) => {
 // This should only appear in menu if highlight is true.
 const createUnhighlightMenu = (source) => {
 	const unhighlightSubMenu = [
-		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.highlight }
+		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isHighlighted() }
 	];
 	return unhighlightSubMenu;
 };
