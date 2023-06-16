@@ -1434,16 +1434,20 @@ export default class ObjectModel {
 	// Context menu methods
 	// ---------------------------------------------------------------------------
 
-	openContextMenu(menuDef) {
-		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: menuDef } });
+	openContextMenu(menuDef, source) {
+		this.store.dispatch({ type: "OPEN_CONTEXT_MENU", data: { menuDef, source } });
 	}
 
 	closeContextMenu() {
-		this.store.dispatch({ type: "SET_CONTEXT_MENU_DEF", data: { menuDef: [] } });
+		this.store.dispatch({ type: "CLOSE_CONTEXT_MENU" });
 	}
 
 	isContextMenuDisplayed() {
 		return this.store.isContextMenuDisplayed();
+	}
+
+	getContextMenuSource() {
+		return this.store.getContextMenuSource();
 	}
 
 	// ---------------------------------------------------------------------------

@@ -2268,6 +2268,11 @@ export default class SVGCanvasRenderer {
 
 		this.closeContextMenuIfOpen();
 
+		if (this.config.enableContextToolbar) {
+			this.removeContextToolbar();
+		}
+
+
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		if (this.commentSizing) {
 			this.initializeResizeVariables(d);
@@ -3046,7 +3051,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "node");
 				}
 				this.logger.logEndTimer("Node Group - mouse down");
 			})
@@ -3087,7 +3092,7 @@ export default class SVGCanvasRenderer {
 					// With enableDragWithoutSelect set to true, the object for which the
 					// context menu is being requested needs to be implicitely selected.
 					if (this.config.enableDragWithoutSelect) {
-						this.selectObjectD3Event(d3Event, d);
+						this.selectObjectD3Event(d3Event, d, "node");
 					}
 					this.openContextMenu(d3Event, "node", d);
 				}
@@ -3229,7 +3234,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node);
+					this.selectObjectD3Event(d3Event, node, "node");
 				}
 
 				this.openContextMenu(d3Event, "input_port", node, port);
@@ -3295,7 +3300,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, node);
+					this.selectObjectD3Event(d3Event, node, "node");
 				}
 				this.openContextMenu(d3Event, "output_port", node, port);
 			});
@@ -3416,12 +3421,16 @@ export default class SVGCanvasRenderer {
 
 	// Adds the object passed in to the set of selected objects using
 	// the d3Event object passed in.
-	selectObjectD3Event(d3Event, d) {
+	selectObjectD3Event(d3Event, d, objType) {
 		this.selectObject(
 			d,
 			d3Event.type,
 			d3Event.shiftKey,
 			CanvasUtils.isCmndCtrlPressed(d3Event));
+		// If the selection has changed we need to recreate any currently displayed
+		// context toolbar because the context actions may have changed based on
+		// the new selection.
+		this.recreateContextToolbar(d3Event, d, objType);
 	}
 
 	// Adds the object passed in to the set of selected objects using
@@ -3889,10 +3898,11 @@ export default class SVGCanvasRenderer {
 	}
 
 	addContextToolbar(d3Event, d, objType) {
-		if (!this.nodeSizing && !this.dragging && !this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
+		if (!this.nodeSizing && !this.dragging && !this.draggingLinkData &&
+				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
+			this.canvasController.setMouseInObject(true);
 			let pos = this.getContextToolbarPos(objType, d);
 			pos = this.unTransformPos(pos);
-			this.canvasController.setMouseInObject(true);
 			this.openContextMenu(d3Event, objType, d, null, pos);
 		}
 	}
@@ -3900,6 +3910,13 @@ export default class SVGCanvasRenderer {
 	removeContextToolbar() {
 		this.canvasController.setMouseInObject(false);
 		setTimeout(() => this.canvasController.closeContextToolbar(), 200);
+	}
+
+	recreateContextToolbar(d3Event, d, objType) {
+		if (this.config.enableContextToolbar) {
+			this.removeContextToolbar();
+			this.addContextToolbar(d3Event, d, objType);
+		}
 	}
 
 	addEllipsisIcon(d, nodeGrp) {
@@ -3911,7 +3928,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event) => {
 				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
 				this.ellipsisClicked = true;
-				this.selectObjectD3Event(d3Event, d);
+				this.selectObjectD3Event(d3Event, d, "node");
 				if (this.canvasController.isContextMenuDisplayed()) {
 					this.canvasController.closeContextMenu();
 				} else {
@@ -4094,7 +4111,7 @@ export default class SVGCanvasRenderer {
 				? pos
 				: this.getMousePos(d3Event, this.canvasDiv.selectAll("svg")), // Get mouse pos relative to top most SVG area even in a subflow.
 			mousePos: this.getMousePosSnapToGrid(this.getTransformedMousePos(d3Event)),
-			selectedObjectIds: this.activePipeline.getSelectedObjectIds(),
+			selectedObjectIds: this.canvasController.getSelectedObjectIds(),
 			addBreadcrumbs: (d && d.type === SUPER_NODE) ? this.getSupernodeBreadcrumbs(d3Event.currentTarget) : null,
 			port: port,
 			zoom: this.zoomTransform.k });
@@ -4103,6 +4120,9 @@ export default class SVGCanvasRenderer {
 	closeContextMenuIfOpen() {
 		if (this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.closeContextMenu();
+		}
+		if (this.config.enableContextToolbar) {
+			this.removeContextToolbar();
 		}
 	}
 
@@ -5427,7 +5447,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.logger.logEndTimer("Comment Group - mouse down");
 			})
@@ -5456,7 +5476,7 @@ export default class SVGCanvasRenderer {
 				// With enableDragWithoutSelect set to true, the object for which the
 				// context menu is being requested needs to be implicitely selected.
 				if (this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "comment");
 				}
 				this.openContextMenu(d3Event, "comment", d);
 			});
@@ -6111,7 +6131,7 @@ export default class SVGCanvasRenderer {
 					this.svgCanvasTextArea.completeEditing();
 				}
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				d3Event.stopPropagation();
 			})
@@ -6125,7 +6145,7 @@ export default class SVGCanvasRenderer {
 			.on("contextmenu", (d3Event, d) => {
 				this.logger.log("Link Group - context menu");
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				this.openContextMenu(d3Event, "link", d);
 			})
@@ -6180,7 +6200,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link start handle - mouse down");
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				this.logger.log("Link end handle - finished mouse down");
 			});
@@ -6196,7 +6216,7 @@ export default class SVGCanvasRenderer {
 			.on("mousedown", (d3Event, d) => {
 				this.logger.log("Link end handle - mouse down");
 				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d);
+					this.selectObjectD3Event(d3Event, d, "link");
 				}
 				this.logger.log("Link end handle - finished mouse down");
 			});

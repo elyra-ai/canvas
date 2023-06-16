@@ -98,8 +98,6 @@ export default class CanvasController {
 			actionLabelHandler: null
 		};
 
-		this.contextMenuSource = null;
-
 		this.objectModel = new ObjectModel();
 		this.commandStack = new CommandStack();
 
@@ -1499,8 +1497,8 @@ export default class CanvasController {
 		return this.getObjectModel().isPaletteOpen();
 	}
 
-	openContextMenu(menuDef) {
-		this.objectModel.openContextMenu(menuDef);
+	openContextMenu(menuDef, source) {
+		this.objectModel.openContextMenu(menuDef, source);
 	}
 
 	isBottomPanelOpen() {
@@ -1521,6 +1519,10 @@ export default class CanvasController {
 
 	isContextMenuDisplayed() {
 		return this.objectModel.isContextMenuDisplayed();
+	}
+
+	getContextMenuSource() {
+		return this.objectModel.getContextMenuSource();
 	}
 
 	closeContextToolbar() {
@@ -2084,10 +2086,12 @@ export default class CanvasController {
 		return unhighlightSubMenu;
 	}
 
-	isContextMenuForNonSelectedObj() {
+	// Returns true if the context toolbar is switched on and the node over which
+	// the mouse cursor is hovering is NOT in the list of selected objects.
+	isContextMenuForNonSelectedObj(source) {
 		if (this.getCanvasConfig().enableContextToolbar) {
-			if (this.contextMenuSource.targetObject) {
-				return !this.contextMenuSource.selectedObjectIds.includes(this.contextMenuSource.targetObject.id);
+			if (source.targetObject) {
+				return !source.selectedObjectIds.includes(source.targetObject.id);
 			}
 		}
 		return false;
@@ -2096,7 +2100,7 @@ export default class CanvasController {
 	createDefaultMenu(source) {
 		let menuDefinition = [];
 
-		const menuForNonSelectedObj = this.isContextMenuForNonSelectedObj();
+		const menuForNonSelectedObj = this.isContextMenuForNonSelectedObj(source);
 
 		// Select all & add comment: canvas only
 		if (source.type === "canvas") {
@@ -2111,6 +2115,16 @@ export default class CanvasController {
 			menuDefinition = menuDefinition.concat(
 				{ action: "setNodeLabelEditingMode", label: this.labelUtil.getLabel("node.renameNode"), toolbarItem: true });
 		}
+		// Edit comment
+		if (source.type === "comment") {
+			menuDefinition = menuDefinition.concat({ action: "setCommentEditingMode", label: this.labelUtil.getLabel("comment.editComment"), toolbarItem: true });
+		}
+		// Color objects
+		if (source.type === "comment" &&
+				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
+			menuDefinition = menuDefinition.concat({ action: "colorBackground", label: this.labelUtil.getLabel("comment.colorBackground") });
+			menuDefinition = menuDefinition.concat({ divider: true });
+		}
 		// Disconnect node
 		if (source.type === "node" || source.type === "comment") {
 			const objectAry = menuForNonSelectedObj ? [source.targetObject.id] : source.selectedObjectIds;
@@ -2119,17 +2133,6 @@ export default class CanvasController {
 				menuDefinition = menuDefinition.concat({ action: "disconnectNode", label: this.labelUtil.getLabel("node.disconnectNode") });
 				menuDefinition = menuDefinition.concat({ divider: true });
 			}
-		}
-		// Edit comment
-		if (source.type === "comment") {
-			menuDefinition = menuDefinition.concat({ action: "setCommentEditingMode", label: this.labelUtil.getLabel("comment.editComment"), toolbarItem: true });
-		}
-
-		// Color objects
-		if (source.type === "comment" &&
-				get(this, "contextMenuConfig.defaultMenuEntries.colorBackground", true)) {
-			menuDefinition = menuDefinition.concat({ action: "colorBackground", label: this.labelUtil.getLabel("comment.colorBackground") });
-			menuDefinition = menuDefinition.concat({ divider: true });
 		}
 		// Edit submenu (cut, copy, paste)
 		if (source.type === "node" ||
@@ -2256,6 +2259,23 @@ export default class CanvasController {
 		return newMenuDefinition;
 	}
 
+	filterOutUnwantedDividers(menuDef) {
+		const newMenuDef = [];
+		let previousDivider = true;
+		menuDef.forEach((item) => {
+			if (item.divider) {
+				if (!previousDivider) {
+					newMenuDef.push(item);
+					previousDivider = true;
+				}
+			} else {
+				newMenuDef.push(item);
+				previousDivider = false;
+			}
+		});
+		return newMenuDef;
+	}
+
 	// Returns true if the action string passed in is one of the actions
 	// that would alter the canvas objects. This is useful for filtering
 	// out editing actions that should be unavailable with a read-only canvas.
@@ -2297,12 +2317,11 @@ export default class CanvasController {
 	}
 
 	contextMenuHandler(source) {
-		this.contextMenuSource = source;
 		const defMenu = this.createDefaultMenu(source);
 		let menuDefinition;
 
 		if (typeof this.handlers.contextMenuHandler === "function") {
-			const menuCustom = this.handlers.contextMenuHandler(this.contextMenuSource, defMenu);
+			const menuCustom = this.handlers.contextMenuHandler(source, defMenu);
 			if (menuCustom && menuCustom.length > 0) {
 				menuDefinition = menuCustom;
 			}
@@ -2318,6 +2337,15 @@ export default class CanvasController {
 			menuDefinition = this.filterOutEditingActions(menuDefinition);
 		}
 
+		// We need to remove any unwanted dividers. These might be dividers at
+		// the top of the array that are there after editing actions have been
+		// removed or doubled-up dividers in the menu which might be there after
+		// removing editing actions or in the menu def returtned by the host app.
+		if (menuDefinition && menuDefinition.length > 0) {
+			menuDefinition = this.filterOutUnwantedDividers(menuDefinition);
+		}
+
+		// Open the context menu if we still have one!
 		if (menuDefinition && menuDefinition.length > 0 &&
 				!this.allDividers(menuDefinition)) {
 			this.openContextMenu(menuDefinition, source);
@@ -2331,31 +2359,19 @@ export default class CanvasController {
 		return menu.length === dividers.length;
 	}
 
-	getContextMenuPos() {
-		if (this.contextMenuSource) {
-			return this.contextMenuSource.cmPos;
-		}
-		return { x: 0, y: 0 };
-	}
-
-	getContextMenuTargetType() {
-		return this.contextMenuSource.type;
-	}
-
-	getContextMenuTargetObject() {
-		return this.contextMenuSource.targetObject;
-	}
-
 	contextMenuActionHandler(action, editParam) {
+		const source = this.getContextMenuSource();
+
 		this.logger.log("contextMenuActionHandler - action: " + action);
-		this.logger.log(this.contextMenuSource);
+		this.logger.log(source);
+
 		this.closeContextMenu();
 		if (this.getCanvasConfig().enableContextToolbar &&
-				this.isContextMenuForNonSelectedObj()) {
-			this.setSelections([this.contextMenuSource.targetObject.id]);
+				this.isContextMenuForNonSelectedObj(source)) {
+			this.setSelections([source.targetObject.id]);
 		}
 		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
-		const data = Object.assign({}, this.contextMenuSource, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
+		const data = Object.assign({}, source, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 	}
 

@@ -17,7 +17,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { isEmpty } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
@@ -138,13 +137,13 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	shouldCenterJustifyToolbar() {
-		const objType = this.props.canvasController.getContextMenuTargetType();
+		const objType = this.props.contextSource.type;
 		return (
 			objType === "link" ||
 			objType === "canvas" ||
 			objType === "node" &&
-				this.props.canvasController.getContextMenuTargetObject().layout.contextToolbarPosition === "topCenter" &&
-				!this.props.canvasController.getContextMenuTargetObject().is_expanded);
+				this.props.contextSource.targetObject.layout.contextToolbarPosition === "topCenter" &&
+				!this.props.contextSource.targetObject.is_expanded);
 	}
 
 	render() {
@@ -152,16 +151,16 @@ class CommonCanvasContextToolbar extends React.Component {
 
 		let contextToolbar = null;
 
-		if (!isEmpty(this.props.contextMenuDef)) {
+		if (this.props.showContextMenu) {
 			const toolbarItems = this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem && !cmItem.divider);
 			const overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
 			const toolbarConfig = this.getToolbarConfig({ toolbarItems, overflowMenuItems });
 
 			const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
 
-			// Note: pos is already adjusted as a starting point for the context
+			// Note: cmPos is already adjusted as a starting point for the context
 			// toolbar position by a calculation in svg-canvas-renderer.js.
-			const pos = this.props.canvasController.getContextMenuPos();
+			const pos = this.props.contextSource.cmPos || { x: 0, y: 0 };
 			const x = this.shouldCenterJustifyToolbar()
 				? pos.x - (toolbarWidth / 2)
 				: pos.x - toolbarWidth;
@@ -192,11 +191,15 @@ CommonCanvasContextToolbar.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
-	contextMenuDef: PropTypes.array.isRequired
+	contextMenuDef: PropTypes.array.isRequired,
+	contextSource: PropTypes.object.isRequired,
+	showContextMenu: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	contextMenuDef: state.contextmenu.menuDef
+	contextMenuDef: state.contextmenu.menuDef,
+	contextSource: state.contextmenu.source,
+	showContextMenu: state.contextmenu.isOpen
 });
 
 export default connect(mapStateToProps)(CommonCanvasContextToolbar);
