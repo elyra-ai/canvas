@@ -32,7 +32,7 @@ class CommonCanvasTextToolbar extends React.Component {
 		super(props);
 
 		this.getLabel = this.getLabel.bind(this);
-		this.logger = new Logger("CC-Toolbar");
+		this.logger = new Logger("CC-Text-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -63,14 +63,14 @@ class CommonCanvasTextToolbar extends React.Component {
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
 		const headerOptions = (
 			<div>
-				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} >
+				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} size={"sm"}>
 					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={(evt) => this.props.actionHandler("title", evt)} />
 					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={(evt) => this.props.actionHandler("header", evt)} />
 					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={(evt) => this.props.actionHandler("subheader", evt)} />
 					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={(evt) => this.props.actionHandler("body", evt)} />
 				</OverflowMenu>
 				<svg className="text-toolbar-tick-svg">
-					<path d="M 39 39 L 39 33 33 39 Z" className="text-toolbar-tick-mark" />
+					<path d="M 31 31 L 31 25 25 31 Z" className="text-toolbar-tick-mark" />
 				</svg>
 			</div>
 		);
@@ -108,6 +108,7 @@ class CommonCanvasTextToolbar extends React.Component {
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.props.actionHandler}
 						tooltipDirection={"top"}
+						size={"sm"}
 					/>
 				</div>
 			);

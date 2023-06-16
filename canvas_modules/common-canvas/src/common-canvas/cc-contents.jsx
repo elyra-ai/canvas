@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Elyra Authors
+ * Copyright 2017-2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import defaultMessages from "../../locales/common-canvas/locales/en.json";
 import CommonCanvasContextMenu from "./cc-context-menu.jsx";
+import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
@@ -333,6 +334,13 @@ class CanvasContents extends React.Component {
 	}
 
 	getContextMenu() {
+		if (this.props.canvasConfig.enableContextToolbar) {
+			return (
+				<CommonCanvasContextToolbar
+					canvasController={this.props.canvasController}
+					containingDivId={this.mainCanvasDivId}
+				/>);
+		}
 		return (
 			<CommonCanvasContextMenu
 				canvasController={this.props.canvasController}

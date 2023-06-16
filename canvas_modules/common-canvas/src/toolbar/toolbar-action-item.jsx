@@ -28,14 +28,19 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Cut16, Copy16, Paste16,
-	AddComment16, TrashCan16, ZoomIn16, ZoomOut16 } from "@carbon/icons-react";
-import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO, TOOLBAR_CUT,
-	TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CREATE_AUTO_COMMENT,
-	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
-	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY, TOOLBAR_OPEN_PALETTE,
-	TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
-	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS }
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
+	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
+import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
+	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE,
+	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
+	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
+	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
+	TOOLBAR_ARRANGE_HORIZONALLY, TOOLBAR_ARRANGE_VERTICALLY,
+	TOOLBAR_OPEN_PALETTE, TOOLBAR_CLOSE_PALETTE, TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
+	TOOLBAR_SHOW_COMMENTS, TOOLBAR_HIDE_COMMENTS,
+	TOOLBAR_EXPAND_SUPERNODE_IN_PLACE, TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE,
+	TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE, TOOLBAR_SET_NODE_LABEL_EDIT, TOOLBAR_SET_COMMENT_EDIT_MODE }
 	from "../common-canvas/constants/canvas-constants.js";
 
 class ToolbarActionItem extends React.Component {
@@ -43,6 +48,20 @@ class ToolbarActionItem extends React.Component {
 		super(props);
 
 		this.actionClickHandler = this.actionClickHandler.bind(this);
+		this.onMouseEnter = this.onMouseEnter.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
+	}
+
+	onMouseEnter(evt) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			this.props.subMenuActionHandler(this.props.actionObj.action);
+		}
+	}
+
+	onMouseLeave(evt) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			this.props.subMenuActionHandler("");
+		}
 	}
 
 	// Returns a default icon, if there is one, for the action passed in.
@@ -55,6 +74,12 @@ class ToolbarActionItem extends React.Component {
 			return <StopFilledAlt16 disabled={disabled} />;
 		case (TOOLBAR_RUN):
 			return <Play16 disabled={disabled} />;
+		case (TOOLBAR_EXPAND_SUPERNODE_IN_PLACE):
+			return <Maximize16 disabled={disabled} />;
+		case (TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE):
+			return <Minimize16 disabled={disabled} />;
+		case (TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE):
+			return <Launch16 disabled={disabled} />;
 		case (TOOLBAR_UNDO):
 			return <Undo16 disabled={disabled} />;
 		case (TOOLBAR_REDO):
@@ -65,14 +90,21 @@ class ToolbarActionItem extends React.Component {
 			return <Copy16 disabled={disabled} />;
 		case (TOOLBAR_PASTE):
 			return <Paste16 disabled={disabled} />;
+		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
 			return <AddComment16 disabled={disabled} />;
 		case (TOOLBAR_SHOW_COMMENTS):
 			return <Chat16 disabled={disabled} />;
 		case (TOOLBAR_HIDE_COMMENTS):
 			return <ChatOff16 disabled={disabled} />;
+		case (TOOLBAR_COLOR_BACKGROUND):
+			return <ColorPalette16 disabled={disabled} />;
+		case (TOOLBAR_DELETE_LINK):
 		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
 			return <TrashCan16 disabled={disabled} />;
+		case (TOOLBAR_SET_COMMENT_EDIT_MODE):
+		case (TOOLBAR_SET_NODE_LABEL_EDIT):
+			return <Edit16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_IN):
 			return <ZoomIn16 disabled={disabled} />;
 		case (TOOLBAR_ZOOM_OUT):
@@ -142,7 +174,9 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	actionClickHandler(evt) {
-		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
+		if (!this.props.actionObj.subMenu && !this.props.actionObj.subPanel) {
+			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
+		}
 	}
 
 	generateButton(actionObj) {
@@ -170,12 +204,15 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
+		const chevronIcon = actionObj.subMenu || this.props.actionObj.subPanel ? (<ChevronRight16 />) : null;
+
 		let buttonContent = (
 			<div className={itemContentClassName}>
 				{labelBefore}
 				{icon}
 				{labelAfter}
 				{textContent}
+				{chevronIcon}
 			</div>
 		);
 
@@ -235,6 +272,31 @@ class ToolbarActionItem extends React.Component {
 		return false;
 	}
 
+	// Returns a sub-area for a cascading menu item. The sub-area can be either a
+	// sub-panel which is a div contaiing whatever the caller passes in within the
+	// supPanel field  OR a sub-menu which is a list of options which is created
+	// from the array of items the caller passes in the subMenu field.
+	generateSubArea() {
+		if (this.props.displaySubArea) {
+			if (this.props.actionObj.subPanel) {
+				return (
+					<div className={"toolbar-popover-list subpanel"}>
+						{this.props.actionObj.subPanel}
+					</div>
+				);
+			}
+			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
+
+			return (
+				<div className={"toolbar-popover-list submenu"}>
+					{subMenuItems}
+				</div>
+			);
+		}
+
+		return null;
+	}
+
 	render() {
 		const actionObj = this.props.actionObj;
 		const actionName = this.generateActionName();
@@ -258,9 +320,12 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
+		const subArea = this.generateSubArea();
+
 		return (
-			<div className={itemClassName} data-toolbar-item={isToolbarItem}>
+			<div className={itemClassName} data-toolbar-item={isToolbarItem} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
 				{divContent}
+				{subArea}
 			</div>
 		);
 	}
@@ -287,6 +352,8 @@ ToolbarActionItem.propTypes = {
 		textContent: PropTypes.string,
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
+		subMenu: PropTypes.array,
+		subPanel: PropTypes.object,
 		jsx: PropTypes.object,
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
@@ -296,7 +363,10 @@ ToolbarActionItem.propTypes = {
 	}),
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
+	subMenuActionHandler: PropTypes.func.isRequired,
+	generateToolbarItems: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
+	displaySubArea: PropTypes.bool,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])

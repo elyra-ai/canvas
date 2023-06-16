@@ -77,6 +77,7 @@ export default class CanvasUtils {
 			enableBrowserEditMenu: true,
 			enableMarkdownInComments: false,
 			enableAutoLinkOnlyFromSelNodes: false,
+			enableContextToolbar: false,
 			enableSaveZoom: "None",
 			enableSnapToGridType: "None",
 			enableSnapToGridX: null,

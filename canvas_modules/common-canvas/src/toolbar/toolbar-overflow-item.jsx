@@ -31,16 +31,16 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	render() {
-		const menuItems = this.props.showExtendedMenu ? this.props.generateExtensionMenuItems(this.props.index) : [];
-		const subMenuClassName = this.props.showExtendedMenu ? "" : "toolbar-popover-list-hide";
-
 		let overflowMenu = null;
-		if (menuItems.length > 0) {
-			overflowMenu = (
-				<div className={"toolbar-popover-list " + subMenuClassName}>
-					{menuItems}
-				</div>
-			);
+		if (this.props.showExtendedMenu) {
+			const menuItems = this.props.generateExtensionMenuItems(this.props.index);
+			if (menuItems.length > 0) {
+				overflowMenu = (
+					<div className={"toolbar-popover-list"}>
+						{menuItems}
+					</div>
+				);
+			}
 		}
 
 		const className = "toolbar-spacer toolbar-index-" + this.props.index;

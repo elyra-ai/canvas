@@ -167,6 +167,10 @@ export default class SVGCanvasD3 {
 		return this.renderer ? this.renderer.getZoom() : null;
 	}
 
+	setCommentEditingMode(commentId, pipelineId) {
+		this.renderer.setCommentEditingMode(commentId, pipelineId);
+	}
+
 	setNodeLabelEditingMode(nodeId, pipelineId) {
 		this.renderer.setNodeLabelEditingMode(nodeId, pipelineId);
 	}

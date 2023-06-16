@@ -30,9 +30,10 @@ class CommonCanvasToolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.logger = new Logger("CC-Toolbar");
+
 		this.getLabel = this.getLabel.bind(this);
 		this.toolbarActionHandler = this.toolbarActionHandler.bind(this);
-		this.logger = new Logger("CC-Toolbar");
 	}
 
 	getLabel(labelId, substituteObj) {
@@ -272,7 +273,7 @@ class CommonCanvasToolbar extends React.Component {
 
 		if (this.props.enableToolbarLayout === TOOLBAR_LAYOUT_TOP) {
 			canvasToolbar = (
-				<div aria-label={this.getLabel("toolbar.label")} role="navigation">
+				<div aria-label={this.getLabel("toolbar.label")} role="navigation" className={"common-canvas-toolbar"} >
 					<Toolbar
 						config={toolbarConfig}
 						instanceId={this.props.canvasController.getInstanceId()}
@@ -282,7 +283,6 @@ class CommonCanvasToolbar extends React.Component {
 				</div>
 			);
 		}
-
 		return canvasToolbar;
 	}
 }

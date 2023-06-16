@@ -71,7 +71,7 @@ export default class CanavasStore {
 			tooltip: {},
 			canvastoolbar: {},
 			texttoolbar: { isOpen: false },
-			contextmenu: { menuDef: [] },
+			contextmenu: { isOpen: false, menuDef: [], source: {} },
 			rightflyout: {},
 			bottompanel: { panelHeight: 393 },
 			toppanel: { }
@@ -279,12 +279,12 @@ export default class CanavasStore {
 		return this.getNotificationPanel().isOpen;
 	}
 
-	getContextMenu() {
-		return this.cloneData(this.store.getState().contextmenu);
+	getContextMenuSource() {
+		return this.cloneData(this.store.getState().contextmenu.source);
 	}
 
 	isContextMenuDisplayed() {
-		return !isEmpty(this.store.getState().contextmenu.menuDef);
+		return this.store.getState().contextmenu.isOpen;
 	}
 
 	getSelectionInfo() {

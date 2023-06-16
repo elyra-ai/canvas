@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "This flow is locked and cannot be edited.",
   "canvas.stateTagTipReadOnly": "This flow cannot be edited.",
   "comment.colorBackground": "Color background",
+  "comment.editComment": "Edit comment",
   "node.createSupernode": "Create supernode",
   "node.createSupernodeExternal": "Create external supernode",
   "node.expandSupernode": "Expand supernode",

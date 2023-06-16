@@ -1985,7 +1985,7 @@ describe("Subtypes enumerated for supernodes OK", () => {
 
 
 function createCommonCanvas(config, canvasController, canvasParams) {
-	const contextMenuHandler = sinon.spy();
+	const contextMenuHandler = (src, defMenu) => defMenu;
 	const beforeEditActionHandler = null; // If sepcified, must return data
 	const editActionHandler = sinon.spy();
 	const clickActionHandler = sinon.spy();

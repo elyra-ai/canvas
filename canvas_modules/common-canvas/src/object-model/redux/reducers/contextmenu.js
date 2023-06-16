@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Elyra Authors
+ * Copyright 2023 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,16 @@
 
 export default (state = {}, action) => {
 	switch (action.type) {
-	case "SET_CONTEXT_MENU_DEF": {
+	case "OPEN_CONTEXT_MENU": {
 		const menuDef = action.data.menuDef.map((m) => Object.assign({}, m));
-		return Object.assign({}, state, { menuDef: menuDef });
+		if (menuDef.length > 0) {
+			return Object.assign({}, state, { isOpen: true, menuDef, source: action.data.source });
+		}
+		return state;
+	}
+
+	case "CLOSE_CONTEXT_MENU": {
+		return Object.assign({}, state, { isOpen: false });
 	}
 
 	default:

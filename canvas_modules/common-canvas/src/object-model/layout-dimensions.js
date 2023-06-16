@@ -240,6 +240,10 @@ const portsHorizontalDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 3,
 
+		// Position of the context toolbar realtive to the node. Some adjustment
+		// will be made to account for the width of the toolbar.
+		contextToolbarPosition: "topRight",
+
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
 		ellipsisPosition: "topLeft",
@@ -378,7 +382,7 @@ const portsHorizontalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations
@@ -646,6 +650,10 @@ const portsVerticalDefaultLayout = {
 		// Spacing between the port arcs around the ports.
 		portArcSpacing: 0,
 
+		// Position of the context toolbar realtive to the node. Some adjustment
+		// will be made to account for the width of the toolbar.
+		contextToolbarPosition: "topCenter",
+
 		// Display of vertical ellipsis to show context menu
 		ellipsisDisplay: true,
 		ellipsisPosition: "topLeft",
@@ -784,7 +792,7 @@ const portsVerticalDefaultLayout = {
 		// Position of the comment toolbar as an offset from the comment position
 		// (which is the top left corner of the comment bounding box).
 		commentToolbarPosX: -2,
-		commentToolbarPosY: -44,
+		commentToolbarPosY: -36,
 
 		// ---------------------------------------------------------------------------
 		// Layout values for operations

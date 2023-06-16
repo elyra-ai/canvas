@@ -18,8 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
-import Icon from "../icons/icon.jsx";
-import { CONTEXT_MENU_CARBON_ICONS } from "../common-canvas/constants/canvas-constants";
+import { ChevronRight16 } from "@carbon/icons-react";
 import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
 
 // context-menu sizing
@@ -139,31 +138,29 @@ class CommonContextMenu extends React.Component {
 					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 					previousDivider = true;
 				}
+			} else if (menuDefinition[i].action === "colorBackground") {
+				previousDivider = false;
+				const disabled = false;
+				const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
+				const subMenuContent = this.buildColorPickerPanel();
+
+				const subMenu = this.buildSubMenu(
+					menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+				menuItems.push(subMenu);
+
+				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 
 			} else if (submenu) {
 				previousDivider = false;
-				if (menuDefinition[i].menu === "colorPicker") {
-					const disabled = false;
-					const subMenuSize = { width: CONTEXT_MENU_WIDTH, height: 50 };
-					const subMenuContent = this.buildColorPickerPanel();
+				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
+				const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
+				const subMenuContent = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
 
-					const subMenu = this.buildSubMenu(
-						menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
-					menuItems.push(subMenu);
+				const subMenu = this.buildSubMenu(
+					menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
+				menuItems.push(subMenu);
 
-					runningYPos += CONTEXT_MENU_LINK_HEIGHT;
-
-				} else {
-					const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
-					const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
-					const subMenuContent = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
-
-					const subMenu = this.buildSubMenu(
-						menuDefinition, i, subMenuContent, runningYPos, menuPos, menuSize, subMenuSize, canvasRect, disabled);
-					menuItems.push(subMenu);
-
-					runningYPos += CONTEXT_MENU_LINK_HEIGHT;
-				}
+				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 
 			} else {
 				previousDivider = false;
@@ -181,7 +178,7 @@ class CommonContextMenu extends React.Component {
 
 	buildColorPickerPanel() {
 		return (
-			<ColorPickerPanel clickActionHandler={this.colorPickHandler} clickActionHandler={this.colorClicked} />
+			<ColorPickerPanel clickActionHandler={this.colorClicked} />
 		);
 	}
 
@@ -190,7 +187,7 @@ class CommonContextMenu extends React.Component {
 		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);
 		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect);
 
-		const icon = <Icon type={CONTEXT_MENU_CARBON_ICONS.CHEVRONARROWS.RIGHT} disabled={false} className={"react-contextmenu-submenu-icon"} />;
+		const icon = (<ChevronRight16 />);
 		const menuItem = <div>{menuDefinition[index].label}{icon} </div>;
 
 		return (

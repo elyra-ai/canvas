@@ -20,13 +20,14 @@ $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;
 $toolbar-button-height: 40px;
 $toolbar-button-width: 40px;
+$toolbar-button-sm-height: 32px;
+$toolbar-button-sm-width: 32px;
 $toolbar-divider-width: 1px;
 
 .toolbar-div {
 	height: $toolbar-button-height;
 	width: 100%;
 	background-color: $ui-01;
-	border-bottom: $toolbar-divider-width solid $ui-04;
 	box-sizing: content-box;
 	position: relative;
 
@@ -38,19 +39,20 @@ $toolbar-divider-width: 1px;
 
 	/* Small size toolbar used by common-properties */
 	&.toolbar-size-small {
-		height: $spacing-07;
+		height: $toolbar-button-sm-height;
 		.toolbar-left-bar {
 			padding: 0;
 		}
 		.toolbar-item button,
 		.toolbar-overflow-item > button {
 			padding: 0;
-			height: $spacing-07;
+			height: $toolbar-button-sm-height;
 		}
 		.toolbar-item-content {
 			padding: $spacing-02 $spacing-03;
-			height: $spacing-07;
+			height: $toolbar-button-sm-height;
 			align-items: center;
+			min-width: 32px;
 		}
 		.toolbar-popover-list button {
 			padding: 0;
@@ -149,11 +151,15 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-overflow-menu-item button {
-	width: 100%;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	min-height: 20px;
+.toolbar-overflow-menu-item {
+	height: $toolbar-button-sm-height;
+
+	& button {
+		width: 100%;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		min-height: 20px;
+	}
 }
 
 .toolbar-item-content {
@@ -213,8 +219,14 @@ $toolbar-divider-width: 1px;
 	}
 }
 
+.toolbar-size-small {
+	.toolbar-jsx-item {
+		height: $toolbar-button-sm-height;
+	}
+}
+
 .toolbar-jsx-item {
-	height: 40px;
+	height: $toolbar-button-height;
 	display: inline-flex;
 	align-items: center;
 	vertical-align: top;
@@ -258,6 +270,12 @@ $toolbar-divider-width: 1px;
 	border-bottom: $toolbar-divider-width solid $ui-03;
 }
 
+.toolbar-size-small {
+	.toolbar-popover-list {
+		top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width});
+	}
+}
+
 .toolbar-popover-list {
 	width: 200px;
 	z-index: 1;
@@ -268,8 +286,18 @@ $toolbar-divider-width: 1px;
 	padding: 0;
 	border: $toolbar-divider-width solid $ui-03;
 	background-color: $ui-01;
-}
 
-.toolbar-popover-list-hide {
-	display: none;
+	& .submenu {
+		position: relative;
+		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
+		top: -34px; // 32px minus 2px
+	}
+
+	& .subpanel {
+		position: relative;
+		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
+		top: -34px; // 32px minus 2px
+		width: fit-content;
+	}
+
 }
