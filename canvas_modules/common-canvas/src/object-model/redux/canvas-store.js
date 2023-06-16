@@ -284,7 +284,7 @@ export default class CanavasStore {
 	}
 
 	isContextMenuDisplayed() {
-		return this.store.getState().isOpen;
+		return this.store.getState().contextmenu.isOpen;
 	}
 
 	getSelectionInfo() {
