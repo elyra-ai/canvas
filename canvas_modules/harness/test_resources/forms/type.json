@@ -795,6 +795,7 @@
 																			"name": "measure_type",
 																			"sortable": true,
 																			"visible": true,
+																			"resizable": true,
 																			"description": {
 																				"text": "This is the measurement level, used to describe characteristics of the data in a given field."
 																			},
