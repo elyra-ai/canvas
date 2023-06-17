@@ -33,7 +33,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "number":
 		return paramInfo.value !== null;
 	case "object":
-		if (paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
+		if (paramInfo.control && paramInfo.control.controlType === ControlType.DATEPICKERRANGE) {
 			return paramInfo.value[0].trim() !== "" || paramInfo.value[1].trim() !== "";
 		}
 		return paramInfo.value === null ? false : paramInfo.value.length !== 0;

@@ -80,4 +80,8 @@ describe("validating greaterThan operator works correctly", () => {
 		expect(greaterThan(wrapDatepickerRange(dateStart1), undefinedPlaceholder, dateStart1b, controller)).to.equal(true);
 	});
 
+	it("Test greaterThan string when no control is defined", () => {
+		const paramInfo = { value: "" };
+		expect(greaterThan(paramInfo, null, null, controller)).to.equal(true);
+	});
 });

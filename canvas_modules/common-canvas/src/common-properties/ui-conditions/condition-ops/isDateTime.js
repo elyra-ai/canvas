@@ -24,7 +24,7 @@ function op() {
 
 function evaluate(paramInfo, param2Info, value, controller) {
 	if (paramInfo.value) { // only check if there is a value.
-		if (paramInfo.control.controlType !== ControlType.DATEPICKER && paramInfo.control.controlType !== ControlType.DATEPICKERRANGE) {
+		if (paramInfo.control && paramInfo.control.controlType !== ControlType.DATEPICKER && paramInfo.control.controlType !== ControlType.DATEPICKERRANGE) {
 			// always use iso format for time
 			const timeDateFormat = (value === "time") ? "HH:mm:ss:xxx" : DEFAULT_DATE_FORMAT;
 			const date = parse(paramInfo.value, timeDateFormat, new Date());
