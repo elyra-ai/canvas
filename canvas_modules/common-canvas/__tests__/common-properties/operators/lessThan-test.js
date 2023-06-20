@@ -81,4 +81,8 @@ describe("validating lessThan operator works correctly", () => {
 		expect(lessThan(wrapDatepickerRange(dateStart1), undefinedPlaceholder, dateStart1b, controller)).to.equal(false);
 	});
 
+	it("Test lessThan string when no control is defined", () => {
+		const paramInfo = { value: "" };
+		expect(lessThan(paramInfo, null, null, controller)).to.equal(true);
+	});
 });

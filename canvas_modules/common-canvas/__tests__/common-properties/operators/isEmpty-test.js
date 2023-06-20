@@ -71,4 +71,9 @@ describe("validating isEmpty operator works correctly", () => {
 		expect(isEmpty(wrap("  "), null, null, controller)).to.equal(false);
 		expect(isEmpty(wrap("not empty string"), null, null, controller)).to.equal(false);
 	});
+
+	it("Test isEmpty object when no control is defined", () => {
+		const paramInfo = { value: [] };
+		expect(isEmpty(paramInfo, null, null, controller)).to.equal(true);
+	});
 });

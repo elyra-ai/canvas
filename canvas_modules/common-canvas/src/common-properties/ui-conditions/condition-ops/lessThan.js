@@ -44,7 +44,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 		}
 		return false;
 	case "string": {
-		if (paramInfo.control.controlType === ControlType.DATEPICKER) {
+		if (paramInfo.control && paramInfo.control.controlType === ControlType.DATEPICKER) {
 			const param1Date = new Date(paramInfo.value);
 			if (!isNaN(param1Date) && param2Info) {
 				const param2Date = new Date(param2Info.value);
