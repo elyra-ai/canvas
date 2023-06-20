@@ -261,6 +261,7 @@ export default class CanvasInHandler {
 				label: cat.label,
 				description: cat.description,
 				image: cat.image,
+				is_open: cat.is_open,
 				nodetypes: this.convertNodeTypes(cat.nodetypes)
 			})
 		);
