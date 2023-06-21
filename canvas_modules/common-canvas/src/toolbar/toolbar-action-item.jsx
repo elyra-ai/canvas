@@ -278,9 +278,11 @@ class ToolbarActionItem extends React.Component {
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
 		if (this.props.displaySubArea) {
+			const style = this.calcSubAreaStyle();
+
 			if (this.props.actionObj.subPanel) {
 				return (
-					<div className={"toolbar-popover-list subpanel"}>
+					<div style={style} className={"toolbar-popover-list subpanel"}>
 						{this.props.actionObj.subPanel}
 					</div>
 				);
@@ -288,13 +290,21 @@ class ToolbarActionItem extends React.Component {
 			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
 
 			return (
-				<div className={"toolbar-popover-list submenu"}>
+				<div style={style} className={"toolbar-popover-list submenu"}>
 					{subMenuItems}
 				</div>
 			);
 		}
 
 		return null;
+	}
+
+	calcSubAreaStyle() {
+		const className = this.generateActionName();
+		const elements = document.getElementsByClassName(className);
+		const rect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
+		const style = { top: rect.top - 1, left: rect.left + rect.width };
+		return style;
 	}
 
 	render() {

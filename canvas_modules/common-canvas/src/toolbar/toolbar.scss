@@ -48,6 +48,9 @@ $toolbar-divider-width: 1px;
 			padding: 0;
 			height: $toolbar-button-sm-height;
 		}
+		.toolbar-overflow-menu-item {
+			height: fit-content;
+		}
 		.toolbar-item-content {
 			padding: $spacing-02 $spacing-03;
 			height: $toolbar-button-sm-height;
@@ -152,12 +155,12 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-overflow-menu-item {
-	height: $toolbar-button-sm-height;
+	height: fit-content;
 
 	& button {
 		width: 100%;
-		padding-top: 2px;
-		padding-bottom: 2px;
+		padding-top: 0;
+		padding-bottom: 0;
 		min-height: 20px;
 	}
 }
@@ -288,13 +291,13 @@ $toolbar-divider-width: 1px;
 	background-color: $ui-01;
 
 	& .submenu {
-		position: relative;
+		position: fixed;
 		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
 		top: -34px; // 32px minus 2px
 	}
 
 	& .subpanel {
-		position: relative;
+		position: fixed;
 		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
 		top: -34px; // 32px minus 2px
 		width: fit-content;
