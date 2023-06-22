@@ -106,10 +106,9 @@ export default class FlowsCanvas extends React.Component {
 	}
 
 	clickActionHandler(source) {
-		if (this.propertiesRef.current && source.objectType === "node" &&
-			((source.clickType === "SINGLE_CLICK" &&
-				this.canvasController.getSelectedObjectIds().length === 1) ||
-				(source.clickType === "DOUBLE_CLICK"))) {
+		if (this.propertiesRef.current &&
+				source.objectType === "node" &&
+				source.clickType === "DOUBLE_CLICK") {
 			this.propertiesRef.current.editNodeHandler(source.id, source.pipelineId);
 		}
 	}
