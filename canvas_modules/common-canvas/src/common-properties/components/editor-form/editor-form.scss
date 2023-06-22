@@ -32,8 +32,8 @@ $primary-tab-height: $spacing-08;
 		height: 100%;
 	}
 	.properties-single-category {
-		height: 100%;
 		.properties-sub-tab-container {
+			position: relative;
 			height: 100%;
 		}
 		.properties-subtabs {
