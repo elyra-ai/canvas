@@ -93,6 +93,7 @@ export default class DetachedCanvas extends React.Component {
 			enableAutoLinkOnlyFromSelNodes: true,
 			enableSingleOutputPortDisplay: true,
 			enableMarkdownInComments: true,
+			enableContextToolbar: true,
 			enableResizableNodes: true,
 			enableNarrowPalette: false,
 			paletteInitialState: true,
@@ -242,11 +243,6 @@ export default class DetachedCanvas extends React.Component {
 			);
 		}
 
-		if (source.selectedObjectIds.length === 1) {
-			return newMenu.concat([
-				{ divider: true }, { action: "addPort", label: "Add port" }
-			]);
-		}
 		return newMenu;
 	}
 
