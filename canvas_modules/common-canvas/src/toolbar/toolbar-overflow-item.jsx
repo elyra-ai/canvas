@@ -19,11 +19,51 @@ import PropTypes from "prop-types";
 
 import { Button } from "carbon-components-react";
 import { OverflowMenuVertical16 } from "@carbon/icons-react";
+import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.containingDivId && this.props.showExtendedMenu) {
+			this.setSubAreaStyle(prevProps);
+		}
+	}
+
+	setSubAreaStyle(prevProps) {
+		const containingDiv = document.getElementById(this.props.containingDivId);
+		const containingDivRect = containingDiv.getBoundingClientRect();
+
+		const mainMenu = genElementByClass("toolbar-popover-list", containingDiv);
+		const mainMenuRect = genRectByClass("toolbar-popover-list", containingDiv);
+
+		if (mainMenuRect) {
+			const overflowButtonRect = genRectByClass(this.genOverflowButtonsClass(), containingDiv);
+
+			if (overflowButtonRect) {
+				const contextToolbaRect = genRectByClass("context-toolbar", containingDiv);
+
+				if (contextToolbaRect) {
+					const outsideRight = mainMenuRect.right - containingDivRect.right;
+					if (outsideRight > 0) {
+						const overflowIconOffsetX = overflowButtonRect.left - contextToolbaRect.left;
+						mainMenu.style.left = (overflowIconOffsetX - outsideRight - 2) + "px";
+					}
+
+					const outsideBottom = mainMenuRect.bottom - containingDivRect.bottom;
+					if (outsideBottom > 0) {
+						mainMenu.style.top = -mainMenuRect.height + "px";
+					}
+				}
+			}
+		}
+	}
+
+	genOverflowButtonsClass() {
+		return "toolbar-spacer toolbar-index-" + this.props.index;
 	}
 
 	toggleExtendedMenu() {
@@ -43,10 +83,8 @@ class ToolbarOverflowItem extends React.Component {
 			}
 		}
 
-		const className = "toolbar-spacer toolbar-index-" + this.props.index;
-
 		return (
-			<div className={className} >
+			<div className={this.genOverflowButtonsClass()} >
 				<div className={"toolbar-overflow-item"}>
 					<Button kind="ghost"
 						tabIndex={-1}
@@ -73,6 +111,7 @@ ToolbarOverflowItem.propTypes = {
 	toggleExtendedMenu: PropTypes.func.isRequired,
 	index: PropTypes.number.isRequired,
 	generateExtensionMenuItems: PropTypes.func,
+	containingDivId: PropTypes.string,
 	onFocus: PropTypes.func,
 	label: PropTypes.string,
 	size: PropTypes.oneOf(["md", "sm"])

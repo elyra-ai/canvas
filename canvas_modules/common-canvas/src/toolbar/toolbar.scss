@@ -275,7 +275,7 @@ $toolbar-divider-width: 1px;
 
 .toolbar-size-small {
 	.toolbar-popover-list {
-		top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width});
+		top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width} - 1px);
 	}
 }
 

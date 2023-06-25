@@ -173,6 +173,7 @@ class CommonCanvasContextToolbar extends React.Component {
 					<Toolbar
 						config={toolbarConfig}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}

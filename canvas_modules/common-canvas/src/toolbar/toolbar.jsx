@@ -27,8 +27,7 @@ class Toolbar extends React.Component {
 		super(props);
 
 		this.state = {
-			showExtendedMenuIndex: -1,
-			subAreaDisplayedForAction: ""
+			showExtendedMenuIndex: -1
 		};
 
 		this.leftBar = [];
@@ -39,7 +38,6 @@ class Toolbar extends React.Component {
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
-		this.subMenuActionHandler = this.subMenuActionHandler.bind(this);
 	}
 
 	// When the toolbar is initially opened the tabindex for each element may not
@@ -176,10 +174,6 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	subMenuActionHandler(action) {
-		this.setState({ subAreaDisplayedForAction: action });
-	}
-
 	generateToolbarItems(actionDefinitions, overflow, withSpacer) {
 		const newItems = [];
 
@@ -206,18 +200,16 @@ class Toolbar extends React.Component {
 					/>
 				);
 			} else {
-				const displaySubArea = overflow && this.state.subAreaDisplayedForAction === actionObj.action;
 				jsx = (
 					<ToolbarActionItem
 						key={"toolbar-item-key-" + i}
 						actionObj={actionObj}
 						tooltipDirection={this.props.tooltipDirection}
 						toolbarActionHandler={this.props.toolbarActionHandler}
-						subMenuActionHandler={this.subMenuActionHandler}
 						generateToolbarItems={this.generateToolbarItems}
-						displaySubArea={displaySubArea}
 						overflow={overflow}
 						instanceId={this.props.instanceId}
+						containingDivId={this.props.containingDivId}
 						onFocus={this.onFocus}
 						size={this.props.size}
 					/>
@@ -236,6 +228,7 @@ class Toolbar extends React.Component {
 				showExtendedMenu={this.state.showExtendedMenuIndex === index}
 				toggleExtendedMenu={this.toggleExtendedMenu}
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
+				containingDivId={this.props.containingDivId}
 				onFocus={this.onFocus}
 				label={label}
 				size={this.props.size}
@@ -312,7 +305,8 @@ class Toolbar extends React.Component {
 
 Toolbar.propTypes = {
 	config: PropTypes.object.isRequired,
-	instanceId: PropTypes.number,
+	instanceId: PropTypes.number.isRequired,
+	containingDivId: PropTypes.string,
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,

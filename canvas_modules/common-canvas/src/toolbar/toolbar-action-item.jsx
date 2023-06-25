@@ -28,6 +28,7 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
+import ToolbarSubArea from "./toolbar-sub-area.jsx";
 import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
 	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
@@ -47,6 +48,10 @@ class ToolbarActionItem extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			subAreaDisplayed: false
+		};
+
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -54,13 +59,13 @@ class ToolbarActionItem extends React.Component {
 
 	onMouseEnter(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.props.subMenuActionHandler(this.props.actionObj.action);
+			this.setState({ subAreaDisplayed: true });
 		}
 	}
 
 	onMouseLeave(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.props.subMenuActionHandler("");
+			this.setState({ subAreaDisplayed: false });
 		}
 	}
 
@@ -277,34 +282,17 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		if (this.props.displaySubArea) {
-			const style = this.calcSubAreaStyle();
+		const elements = document.getElementsByClassName(this.generateActionName());
+		const parentItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
 
-			if (this.props.actionObj.subPanel) {
-				return (
-					<div style={style} className={"toolbar-popover-list subpanel"}>
-						{this.props.actionObj.subPanel}
-					</div>
-				);
-			}
-			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
-
-			return (
-				<div style={style} className={"toolbar-popover-list submenu"}>
-					{subMenuItems}
-				</div>
-			);
-		}
-
-		return null;
-	}
-
-	calcSubAreaStyle() {
-		const className = this.generateActionName();
-		const elements = document.getElementsByClassName(className);
-		const rect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
-		const style = { top: rect.top - 1, left: rect.left + rect.width };
-		return style;
+		return (
+			<ToolbarSubArea
+				actionObj={this.props.actionObj}
+				generateToolbarItems={this.props.generateToolbarItems}
+				parentItemRect={parentItemRect}
+				containingDivId={this.props.containingDivId}
+			/>
+		);
 	}
 
 	render() {
@@ -330,7 +318,7 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
-		const subArea = this.generateSubArea();
+		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
 
 		return (
 			<div className={itemClassName} data-toolbar-item={isToolbarItem} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
@@ -373,10 +361,9 @@ ToolbarActionItem.propTypes = {
 	}),
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
-	subMenuActionHandler: PropTypes.func.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
-	displaySubArea: PropTypes.bool,
+	containingDivId: PropTypes.string,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
