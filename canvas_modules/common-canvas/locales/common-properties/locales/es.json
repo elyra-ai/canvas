@@ -35,7 +35,7 @@
   "summary.longTable.placeholder": "Más de diez campos...",
   "alerts.tab.title": "Alertas",
   "title.editor.label": "editar título",
-  "title.editor.helpButton.label": "help",
+  "title.editor.helpButton.label": "ayuda",
   "table.summary.error": "Hay {errorMsgCount} celdas con errores. ",
   "table.summary.warning": "Hay {warningMsgCount} celdas con avisos. ",
   "control.summary.error": "Hay {errorMsgCount} parámetros con errores. ",
