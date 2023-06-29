@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import Logger from "../logging/canvas-logger.js";
 
 
-class ColorPickerPanel extends React.Component {
+class ColorPicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("CC-ContextMenu");
@@ -35,7 +35,7 @@ class ColorPickerPanel extends React.Component {
 	render() {
 		this.logger.log("render");
 		return (
-			<div className={"color-picker"} onClick={this.onClick}>
+			<div className="color-picker" onClick={this.onClick}>
 				<div tabIndex="0" data-color={"col-white-0"} className="color-picker-item white-0" />
 				<div tabIndex="0" data-color={"col-yellow-20"} className="color-picker-item yellow-20" />
 				<div tabIndex="0" data-color={"col-gray-20"} className="color-picker-item gray-20" />
@@ -53,9 +53,9 @@ class ColorPickerPanel extends React.Component {
 	}
 }
 
-ColorPickerPanel.propTypes = {
+ColorPicker.propTypes = {
 	clickActionHandler: PropTypes.func.isRequired,
 	closeMenu: PropTypes.func
 };
 
-export default ColorPickerPanel;
+export default ColorPicker;

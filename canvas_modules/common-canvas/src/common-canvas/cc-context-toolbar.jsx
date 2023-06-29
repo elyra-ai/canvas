@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
-import ColorPicker from "../color-picker/";
+import ColorPicker from "../color-picker";
 
 const CM_TOOLBAR_GAP = 4;
 const CM_ICON_SIZE = 32;
