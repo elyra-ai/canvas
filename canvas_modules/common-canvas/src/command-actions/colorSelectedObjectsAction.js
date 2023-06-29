@@ -26,11 +26,12 @@ export default class ColorSelectedObjectsAction extends Action {
 		this.oldIds = this.data.selectedObjects.map((o) => o.id); // Copy the IDs
 		this.oldColors = this.getOldColors();
 		this.actionLabel = this.createActionLabel();
+		this.newBackgroundColor = "bkg-" + this.data.editParam.color;
 	}
 
 	// Standard methods
 	do() {
-		this.apiPipeline.setObjectsColorClassName(this.oldIds, this.data.editParam.color);
+		this.apiPipeline.setObjectsColorClassName(this.oldIds, this.newBackgroundColor);
 	}
 
 	undo() {
