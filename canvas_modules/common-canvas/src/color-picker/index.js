@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-import ColorPicker from "./color-picker.jsx";
+import ColorPicker from "./color-picker";
 export default ColorPicker;
