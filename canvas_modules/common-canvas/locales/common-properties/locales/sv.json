@@ -41,7 +41,7 @@
   "control.summary.error": "Det finns {errorMsgCount} parametrar med fel. ",
   "control.summary.warning": "Det finns {warningMsgCount} parametrar med varningar. ",
   "control.summary.error.warning": "Det finns {errorMsgCount} parametrar med fel och {warningMsgCount} parametrar med varningar.",
-  "required.error": "Du måste ange din {label}.",
+  "required.error": "Du måste ange ett värde för {label}.",
   "datetime.format.error": "Ogiltig {role}. Formatet ska vara {format}.",
   "invalid.field.error": "Ogiltig {label}, fältet finns inte i datauppsättningen.",
   "invalid.number.error": "Siffran är ogiltig.",

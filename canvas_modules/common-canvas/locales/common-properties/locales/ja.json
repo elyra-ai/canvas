@@ -41,7 +41,7 @@
   "control.summary.error": "エラーが発生した {errorMsgCount} 個のパラメーターがあります。 ",
   "control.summary.warning": "警告が発生した {warningMsgCount} 個のパラメーターがあります。 ",
   "control.summary.error.warning": "エラーが発生した {errorMsgCount} 個のパラメーターと、警告が発生した {warningMsgCount} 個のパラメーターがあります。",
-  "required.error": "{label} を指定する必要があります。",
+  "required.error": "{label} の値を入力する必要があります。",
   "datetime.format.error": "{role} が無効です。 形式は {format} でなければなりません。",
   "invalid.field.error": "{label} が無効です。フィールドがデータ・セットに見つかりません。",
   "invalid.number.error": "数値が無効です。",

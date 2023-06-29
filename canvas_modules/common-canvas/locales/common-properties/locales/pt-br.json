@@ -41,7 +41,7 @@
   "control.summary.error": "Há {errorMsgCount} parâmetros com erros. ",
   "control.summary.warning": "Há {warningMsgCount} parâmetros com avisos. ",
   "control.summary.error.warning": "Há {errorMsgCount} parâmetros com erros e {warningMsgCount} parâmetros com avisos.",
-  "required.error": "Deve-se fornecer seu {label}.",
+  "required.error": "Você deve inserir um valor para {label}.",
   "datetime.format.error": "{role} inválida. Formato deve ser {format}.",
   "invalid.field.error": "{label} inválido, campo não localizado no conjunto de dados.",
   "invalid.number.error": "Número inválido.",
