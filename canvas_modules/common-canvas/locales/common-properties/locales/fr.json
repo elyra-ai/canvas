@@ -41,7 +41,7 @@
   "control.summary.error": "{errorMsgCount} paramètres comportent des erreurs. ",
   "control.summary.warning": "{warningMsgCount} paramètres comportent des avertissements. ",
   "control.summary.error.warning": "{errorMsgCount} paramètres comportent des erreurs et {warningMsgCount} paramètres comportent des avertissements.",
-  "required.error": "Vous devez fournir votre {label}.",
+  "required.error": "Vous devez entrer une valeur pour {label}.",
   "datetime.format.error": "Rôle {role} non valide. Le format doit être {format}.",
   "invalid.field.error": "La zone {label} non valide est introuvable dans l'ensemble de données.",
   "invalid.number.error": "Nombre non valide.",

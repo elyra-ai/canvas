@@ -41,7 +41,7 @@
   "control.summary.error": "Sono presenti {errorMsgCount} parametri con errori. ",
   "control.summary.warning": "Sono presenti {warningMsgCount} parametri con avvertenze. ",
   "control.summary.error.warning": "Sono presenti {errorMsgCount} parametri con errori e {warningMsgCount} parametri con avvertenze.",
-  "required.error": "È necessario fornire la propria {label}.",
+  "required.error": "È necessario immettere un valore per {label}.",
   "datetime.format.error": "{role} non valido. Il formato deve essere {format}.",
   "invalid.field.error": "{label} non valido, campo non trovato nel dataset.",
   "invalid.number.error": "Il numero non è valido.",

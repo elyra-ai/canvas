@@ -41,7 +41,7 @@
   "control.summary.error": "Es gibt {errorMsgCount} Parameter mit Fehlern. ",
   "control.summary.warning": "Es gibt {warningMsgCount} Parameter mit Warnungen. ",
   "control.summary.error.warning": "Es gibt {errorMsgCount} Parameter mit Fehlern und {warningMsgCount} Parameter mit Warnungen.",
-  "required.error": "Sie müssen Ihre {label}angeben.",
+  "required.error": "Sie müssen einen Wert für {label} eingeben.",
   "datetime.format.error": "Ungültige {role}. Das Format sollte {format} lauten.",
   "invalid.field.error": "{label} ungültig, Feld nicht in Dataset gefunden.",
   "invalid.number.error": "Die Nummer ist nicht gültig.",
