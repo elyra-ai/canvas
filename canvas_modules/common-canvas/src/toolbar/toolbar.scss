@@ -37,28 +37,46 @@ $toolbar-divider-width: 1px;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
-	/* Small size toolbar used by common-properties */
+	/* Small size toolbar  */
 	&.toolbar-size-small {
 		height: $toolbar-button-sm-height;
+
 		.toolbar-left-bar {
 			padding: 0;
 		}
+
 		.toolbar-item button,
 		.toolbar-overflow-item > button {
 			padding: 0;
 			height: $toolbar-button-sm-height;
 		}
+
 		.toolbar-overflow-menu-item {
 			height: fit-content;
 		}
+
 		.toolbar-item-content {
 			padding: $spacing-02 $spacing-03;
 			height: $toolbar-button-sm-height;
 			align-items: center;
 			min-width: 32px;
 		}
+
 		.toolbar-popover-list button {
 			padding: 0;
+		}
+
+		.toolbar-popover-list {
+			top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width} - 1px);
+		}
+
+		.toolbar-jsx-item {
+			height: $toolbar-button-sm-height;
+		}
+
+		.toolbar-tick-svg {
+			height: $toolbar-button-sm-height;
+			width: $toolbar-button-sm-height;
 		}
 	}
 }
@@ -86,7 +104,6 @@ $toolbar-divider-width: 1px;
 
 	& button {
 		padding: 0;
-		height: $toolbar-button-height;
 		min-height: 30px;
 	}
 
@@ -155,12 +172,12 @@ $toolbar-divider-width: 1px;
 }
 
 .toolbar-overflow-menu-item {
-	height: fit-content;
-
 	& button {
 		width: 100%;
 		padding-top: 0;
 		padding-bottom: 0;
+		padding-left: 16px;
+		padding-right: 16px;
 		min-height: 20px;
 	}
 }
@@ -222,10 +239,18 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-size-small {
-	.toolbar-jsx-item {
-		height: $toolbar-button-sm-height;
-	}
+// Triangular tick mark in bottom right corner of an expandable icon
+.toolbar-tick-svg {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	height: $toolbar-button-height;
+	width: $toolbar-button-height;
+	pointer-events: none;
+}
+
+.toolbar-tick-mark {
+	fill: $interactive-02;
 }
 
 .toolbar-jsx-item {
@@ -273,12 +298,6 @@ $toolbar-divider-width: 1px;
 	border-bottom: $toolbar-divider-width solid $ui-03;
 }
 
-.toolbar-size-small {
-	.toolbar-popover-list {
-		top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width} - 1px);
-	}
-}
-
 .toolbar-popover-list {
 	width: 200px;
 	z-index: 1;
@@ -290,17 +309,15 @@ $toolbar-divider-width: 1px;
 	border: $toolbar-divider-width solid $ui-03;
 	background-color: $ui-01;
 
-	& .submenu {
+	&.submenu {
+		// Position will be calculated in the code
 		position: fixed;
-		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
-		top: -34px; // 32px minus 2px
+		min-width: 100px;
 	}
 
-	& .subpanel {
+	&.subpanel {
+		// Position will be calculated in the code
 		position: fixed;
-		left: 198px; // 200px minus 2px so no gap is left between menu and submenu
-		top: -34px; // 32px minus 2px
 		width: fit-content;
 	}
-
 }

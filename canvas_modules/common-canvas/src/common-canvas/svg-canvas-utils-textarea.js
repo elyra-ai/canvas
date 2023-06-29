@@ -184,7 +184,7 @@ export default class SvgCanvasTextArea {
 
 		const mdObj = SvgCanvasMarkdown.processMarkdownAction(action, text, start, end);
 		if (mdObj) {
-			CanvasUtils.stopPropagationAndPreventDefault(evt);
+			evt.preventDefault();
 			this.addTextToTextArea(mdObj, commentEntryElement);
 		}
 	}

@@ -19,9 +19,24 @@ import PropTypes from "prop-types";
 import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
 
 class ToolbarSubArea extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.onClick = this.onClick.bind(this);
+	}
+
 	componentDidMount() {
 		if (this.props.containingDivId) {
 			this.adjustSubAreaPosition();
+		}
+	}
+
+	// If we are given a closeSubArea function then call it. We will only have
+	// such a function if the user has specified the closeSubAreaOnClick prop for
+	// the parent action AND provided the user has not stopped event propogation.
+	onClick() {
+		if (this.props.closeSubArea) {
+			this.props.closeSubArea();
 		}
 	}
 
@@ -29,33 +44,42 @@ class ToolbarSubArea extends React.Component {
 	// outside the containing divs boundary. We need to do this after the subarea
 	// has been mounted so we can query its size and position.
 	adjustSubAreaPosition() {
-		const containingDiv = document.getElementById(this.props.containingDivId);
-		const containingDivRect = containingDiv.getBoundingClientRect();
+		if (this.props.expandDirection === "vertical") {
+			//
+		} else {
+			const containingDiv = document.getElementById(this.props.containingDivId);
+			const containingDivRect = containingDiv.getBoundingClientRect();
 
-		const classToGet = this.props.actionObj.subPanel ? "subpanel" : "submenu";
+			const classToGet = this.props.actionObj.subPanel ? "subpanel" : "submenu";
 
-		const thisArea = genElementByClass(classToGet, containingDiv);
-		const thisAreaRect = genRectByClass(classToGet, containingDiv);
+			const thisArea = genElementByClass(classToGet, containingDiv);
+			const thisAreaRect = genRectByClass(classToGet, containingDiv);
 
-		const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
-		if (outsideBottom > 0) {
-			const newTop = thisAreaRect.top - outsideBottom - 2;
-			thisArea.style.top = newTop + "px";
-		}
+			const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
+			if (outsideBottom > 0) {
+				const newTop = thisAreaRect.top - outsideBottom - 2;
+				thisArea.style.top = newTop + "px";
+			}
 
-		const outsideRight = thisAreaRect.right - containingDivRect.right;
-		if (outsideRight > 0) {
-			const newLeft = this.props.parentItemRect.left - thisAreaRect.width;
-			thisArea.style.left = newLeft + "px";
+			const outsideRight = thisAreaRect.right - containingDivRect.right;
+			if (outsideRight > 0) {
+				const newLeft = this.props.actionItemRect.left - thisAreaRect.width;
+				thisArea.style.left = newLeft + "px";
+			}
 		}
 	}
 
 	generateSubAreaStyle() {
-		const style = {
-			top: this.props.parentItemRect.top - 1,
-			left: this.props.parentItemRect.left + this.props.parentItemRect.width
+		if (this.props.expandDirection === "vertical") {
+			return {
+				top: this.props.actionItemRect.bottom,
+				left: this.props.actionItemRect.left
+			};
+		}
+		return {
+			top: this.props.actionItemRect.top - 1,
+			left: this.props.actionItemRect.left + this.props.actionItemRect.width
 		};
-		return style;
 	}
 
 	render() {
@@ -63,25 +87,29 @@ class ToolbarSubArea extends React.Component {
 
 		if (this.props.actionObj.subPanel) {
 			return (
-				<div style={style} className={"toolbar-popover-list subpanel"}>
+				<div style={style} className={"toolbar-popover-list subpanel"} onClick={this.onClick}>
 					{this.props.actionObj.subPanel}
 				</div>
 			);
-		}
-		const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
+		} else if (this.props.actionObj.subMenu) {
+			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
 
-		return (
-			<div style={style} className={"toolbar-popover-list submenu"}>
-				{subMenuItems}
-			</div>
-		);
+			return (
+				<div style={style} className={"toolbar-popover-list submenu"} onClick={this.onClick}>
+					{subMenuItems}
+				</div>
+			);
+		}
+		return null;
 	}
 }
 
 ToolbarSubArea.propTypes = {
 	actionObj: PropTypes.object.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
-	parentItemRect: PropTypes.object.isRequired,
+	closeSubArea: PropTypes.func,
+	actionItemRect: PropTypes.object.isRequired,
+	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string
 };
 

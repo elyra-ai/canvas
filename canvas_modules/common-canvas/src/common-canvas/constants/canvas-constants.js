@@ -178,6 +178,7 @@ export const TOOLBAR_REDO = "redo";
 export const TOOLBAR_CUT = "cut";
 export const TOOLBAR_COPY = "copy";
 export const TOOLBAR_PASTE = "paste";
+export const TOOLBAR_CLIPBOARD = "clipboard";
 export const TOOLBAR_CREATE_COMMENT = "createComment";
 export const TOOLBAR_CREATE_AUTO_COMMENT = "createAutoComment";
 export const TOOLBAR_SET_COMMENT_EDIT_MODE = "setCommentEditingMode";

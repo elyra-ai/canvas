@@ -38,6 +38,7 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
+import ColorPicker from "../../../common-canvas/src/color-picker/";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -76,7 +77,8 @@ import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDu
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
+import { Add32, Calculation32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
+	StopFilledAlt32, Subtract32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 
@@ -117,6 +119,7 @@ import {
 	PRIMARY,
 	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -2073,6 +2076,72 @@ class App extends React.Component {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
 			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
+			const subMenuMaths = [
+				{ action: "add", label: "Add", iconEnabled: (<Add32 />), enable: true },
+				{ action: "subtract", label: "Subtract", iconEnabled: (<Subtract32 />), enable: true },
+				{ divider: true },
+				{ action: "multiply", label: "Multiply", enable: true },
+				{ action: "divide", label: "Divide", enable: true }
+			];
+
+			const subMenuSize = [
+				{ action: "increase", label: "Increase", enable: true },
+				{ action: "decrease", label: "Decrease", enable: true }
+			];
+
+			const subPanelCheck = (
+				<div style={{ padding: 10 }}>
+					<Checkbox id={"chkItOut"} defaultChecked labelText={"Check it out"} />
+					<Checkbox id={"chkSomeMore"} labelText={"Check some more"} />
+					<Checkbox id={"chkToEnd"} labelText={"Check to the end"} />
+				</div>
+			);
+
+			const subPanelColor = (
+				<ColorPicker clickActionHandler={(c) => {
+					window.alert("Color selected = " + c);
+					return true;
+				}}
+				/>
+			);
+
+			toolbarConfig = {
+				leftBar: [
+					{ action: "palette", label: "Palette", enable: true },
+					{ divider: true },
+					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+					{ divider: true },
+					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play32 />) },
+					{ divider: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ divider: true },
+					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck },
+					{ divider: true },
+					{ action: "maths-submenu", incLabelWithIcon: "after", iconEnabled: (<Calculation32 />), label: "Maths", enable: true, subMenu: subMenuMaths, closeSubAreaOnClick: true },
+					{ divider: true },
+					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
+					{ divider: true },
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true, subPanel: subPanelColor, closeSubAreaOnClick: true },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true }
+				],
+				rightBar: [
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
 			toolbarConfig = [

@@ -23,7 +23,6 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
 	TextBold32, TextItalic32, TextScale32, TextStrikethrough32 } from "@carbon/icons-react";
 
@@ -61,23 +60,17 @@ class CommonCanvasTextToolbar extends React.Component {
 		const quoteLabel = this.getJsxLabel("texttoolbar.quoteAction", "shift + >");
 		const numberedListLabel = this.getJsxLabel("texttoolbar.numberedListAction", "shift + 7");
 		const bulletedListLabel = this.getJsxLabel("texttoolbar.bulletedListAction", "shift + 8");
-		const headerOptions = (
-			<div>
-				<OverflowMenu id={"headerMenu"} iconDescription={""} renderIcon={TextScale32} size={"sm"}>
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.titleAction")} onClick={(evt) => this.props.actionHandler("title", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.headerAction")} onClick={(evt) => this.props.actionHandler("header", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.subheaderAction")} onClick={(evt) => this.props.actionHandler("subheader", evt)} />
-					<OverflowMenuItem itemText={this.getLabel("texttoolbar.bodyAction")} onClick={(evt) => this.props.actionHandler("body", evt)} />
-				</OverflowMenu>
-				<svg className="text-toolbar-tick-svg">
-					<path d="M 31 31 L 31 25 25 31 Z" className="text-toolbar-tick-mark" />
-				</svg>
-			</div>
-		);
+
+		const headerOptions = [
+			{ action: "title", label: this.getLabel("texttoolbar.titleAction"), enable: true },
+			{ action: "header", label: this.getLabel("texttoolbar.headerAction"), enable: true },
+			{ action: "subheader", label: this.getLabel("texttoolbar.subheaderAction"), enable: true },
+			{ action: "body", label: this.getLabel("texttoolbar.bodyAction"), enable: true }
+		];
 
 		return {
 			leftBar: [
-				{ action: "header", tooltip: headerLabel, jsx: headerOptions },
+				{ action: "header", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale32 />) },
 				{ divider: true },
 				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
 				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },

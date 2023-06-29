@@ -29,11 +29,11 @@ import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
 import ToolbarSubArea from "./toolbar-sub-area.jsx";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
 	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
-	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE,
+	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
@@ -55,17 +55,26 @@ class ToolbarActionItem extends React.Component {
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.openSubArea = this.openSubArea.bind(this);
+		this.closeSubArea = this.closeSubArea.bind(this);
+		this.clickOutside = this.clickOutside.bind(this);
+	}
+
+	// We must remove the eventListener in case this class is unmounted due
+	// to the toolbar getting redrawn.
+	componentWillUnmount() {
+		document.removeEventListener("click", this.clickOutside, false);
 	}
 
 	onMouseEnter(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.setState({ subAreaDisplayed: true });
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.overflow) {
+			this.openSubArea();
 		}
 	}
 
 	onMouseLeave(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.setState({ subAreaDisplayed: false });
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.overflow) {
+			this.closeSubArea();
 		}
 	}
 
@@ -89,6 +98,8 @@ class ToolbarActionItem extends React.Component {
 			return <Undo16 disabled={disabled} />;
 		case (TOOLBAR_REDO):
 			return <Redo16 disabled={disabled} />;
+		case (TOOLBAR_CLIPBOARD):
+			return <Result16 disabled={disabled} />;
 		case (TOOLBAR_CUT):
 			return <Cut16 disabled={disabled} />;
 		case (TOOLBAR_COPY):
@@ -178,8 +189,45 @@ class ToolbarActionItem extends React.Component {
 		return null;
 	}
 
+	clickOutside(evt) {
+		if (this.state.subAreaDisplayed) {
+			const items = document.getElementsByClassName(this.generateActionName());
+			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
+
+			if (!isOver) {
+				this.closeSubArea();
+			}
+		}
+	}
+
+	openSubArea() {
+		this.setState({ subAreaDisplayed: true });
+	}
+
+	closeSubArea() {
+		this.setState({ subAreaDisplayed: false });
+	}
+
 	actionClickHandler(evt) {
-		if (!this.props.actionObj.subMenu && !this.props.actionObj.subPanel) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			if (this.state.showExtendedMenu) {
+				document.removeEventListener("click", this.clickOutside, false);
+			} else {
+				document.addEventListener("click", this.clickOutside, false);
+			}
+
+			if (this.props.setResizeHandler) {
+				if (this.state.subAreaDisplayed) {
+					this.props.setResizeHandler(null);
+				} else {
+					this.props.setResizeHandler(this.closeSubArea);
+				}
+			}
+
+			if (!this.props.overflow) {
+				this.setState({ subAreaDisplayed: !this.state.subAreaDisplayed });
+			}
+		} else {
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		}
 	}
@@ -209,15 +257,19 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = actionObj.subMenu || this.props.actionObj.subPanel ? (<ChevronRight16 />) : null;
+		const chevronIcon = (actionObj.subMenu || actionObj.subPanel) && this.props.overflow
+			? (<ChevronRight16 />) : null;
+
+		const tick = (actionObj.subMenu || actionObj.subPanel) && !this.props.overflow ? this.generateTick() : null;
 
 		let buttonContent = (
-			<div className={itemContentClassName}>
+			<div id={"open-action-item"} className={itemContentClassName}>
 				{labelBefore}
 				{icon}
 				{labelAfter}
 				{textContent}
 				{chevronIcon}
+				{tick}
 			</div>
 		);
 
@@ -240,6 +292,15 @@ class ToolbarActionItem extends React.Component {
 		);
 
 		return buttonContent;
+	}
+
+	generateTick() {
+		const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
+		return (
+			<svg className="toolbar-tick-svg">
+				<path d={path} className="toolbar-tick-mark" />
+			</svg>
+		);
 	}
 
 	generateActionName(actionObj) {
@@ -283,14 +344,16 @@ class ToolbarActionItem extends React.Component {
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
 		const elements = document.getElementsByClassName(this.generateActionName());
-		const parentItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
+		const actionItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
 
 		return (
 			<ToolbarSubArea
 				actionObj={this.props.actionObj}
 				generateToolbarItems={this.props.generateToolbarItems}
-				parentItemRect={parentItemRect}
+				closeSubArea={this.props.actionObj.closeSubAreaOnClick ? this.closeSubArea : null}
+				actionItemRect={actionItemRect}
 				containingDivId={this.props.containingDivId}
+				expandDirection={this.props.overflow ? "horizontal" : "vertical" }
 			/>
 		);
 	}
@@ -350,6 +413,7 @@ ToolbarActionItem.propTypes = {
 		textContent: PropTypes.string,
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
+		closeSubAreaOnClick: PropTypes.bool,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.object,
 		jsx: PropTypes.object,
@@ -362,6 +426,7 @@ ToolbarActionItem.propTypes = {
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
+	setResizeHandler: PropTypes.func,
 	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
 	overflow: PropTypes.bool,
