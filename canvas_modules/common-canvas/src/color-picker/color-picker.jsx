@@ -49,7 +49,8 @@ class ColorPicker extends React.Component {
 				<div tabIndex="0" data-color={"col-green-50"} className="color-picker-item green-50" />
 				<div tabIndex="0" data-color={"col-teal-50"} className="color-picker-item teal-50" />
 				<div tabIndex="0" data-color={"col-cyan-50"} className="color-picker-item cyan-50" />
-			</div>);
+			</div>
+		);
 	}
 }
 
