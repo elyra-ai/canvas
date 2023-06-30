@@ -38,7 +38,8 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
-import ColorPicker from "@elyra/canvas/src/color-picker";
+import ColorPicker from "@elyra/canvas/src/color-picker/color-picker.jsx";
+// import ColorPicker from "../../../common-canvas/src/color-picker/color-picker.jsx";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";

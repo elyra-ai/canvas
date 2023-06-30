@@ -260,7 +260,7 @@ class ToolbarActionItem extends React.Component {
 		const chevronIcon = (actionObj.subMenu || actionObj.subPanel) && this.props.overflow
 			? (<ChevronRight16 />) : null;
 
-		const tick = (actionObj.subMenu || actionObj.subPanel) && !this.props.overflow ? this.generateTick() : null;
+		const chevronMini = (actionObj.subMenu || actionObj.subPanel) && !this.props.overflow ? this.generateChevronMini() : null;
 
 		let buttonContent = (
 			<div id={"open-action-item"} className={itemContentClassName}>
@@ -269,7 +269,7 @@ class ToolbarActionItem extends React.Component {
 				{labelAfter}
 				{textContent}
 				{chevronIcon}
-				{tick}
+				{chevronMini}
 			</div>
 		);
 
@@ -294,7 +294,9 @@ class ToolbarActionItem extends React.Component {
 		return buttonContent;
 	}
 
-	generateTick() {
+	// Returns an svg to display the little triangle that appears in the bottom
+	// right corner of icons that, when clicked, show a drop down menu.
+	generateChevronMini() {
 		const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
 		return (
 			<svg className="toolbar-tick-svg">
