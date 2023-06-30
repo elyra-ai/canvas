@@ -15,27 +15,16 @@
  */
 
 Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
-	cy.getTextToolbarAction("." + action + "-action").click();
+	cy.getTextToolbarAction(action).click();
 
 	// The header action causes a menu to appear so we handle that usng menuAction.
-	if (action === "header") {
-		cy.get(".bx--overflow-menu-options__btn")
-			.then((options) => {
-				if (menuAction === "title") {
-					options[0].click();
-				} else if (menuAction === "header") {
-					options[1].click();
-				} else if (menuAction === "subheader") {
-					options[2].click();
-				} else if (menuAction === "body") {
-					options[3].click();
-				}
-			});
+	if (action === "headerStyle") {
+		cy.getTextToolbarAction(menuAction).click();
 	}
 });
 
 Cypress.Commands.add("getTextToolbarAction", (action) => {
-	cy.getTextToolbar().find(action);
+	cy.getTextToolbar().find("." + action + "-action");
 });
 
 Cypress.Commands.add("getTextToolbar", () => {

@@ -70,7 +70,7 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		return {
 			leftBar: [
-				{ action: "header", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale32 />) },
+				{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale32 />) },
 				{ divider: true },
 				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
 				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },
