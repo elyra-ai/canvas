@@ -35,7 +35,7 @@ class ColorPicker extends React.Component {
 	render() {
 		this.logger.log("render");
 		return (
-			<div className="color-picker" onClick={this.onClick}>
+			<div>
 				<div tabIndex="0" data-color={"col-white-0"} className="color-picker-item white-0" />
 				<div tabIndex="0" data-color={"col-yellow-20"} className="color-picker-item yellow-20" />
 				<div tabIndex="0" data-color={"col-gray-20"} className="color-picker-item gray-20" />
