@@ -34,7 +34,7 @@ class ColorPicker extends React.Component {
 
 	render() {
 		this.logger.log("render");
-		return (<div />);
+		return null;
 	}
 }
 
