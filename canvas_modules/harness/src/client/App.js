@@ -38,8 +38,6 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
-import ColorPicker from "@elyra/canvas/src/color-picker/color-picker.jsx";
-// import ColorPicker from "../../../common-canvas/src/color-picker/color-picker.jsx";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -78,8 +76,8 @@ import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDu
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Add32, Calculation32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
-	StopFilledAlt32, Subtract32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
+import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
+	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 
@@ -2079,21 +2077,21 @@ class App extends React.Component {
 			toolbarConfig = null;
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
-			const subMenuMaths = [
-				{ action: "add", label: "Add", iconEnabled: (<Add32 />), enable: true },
-				{ action: "subtract", label: "Subtract", iconEnabled: (<Subtract32 />), enable: true },
-				{ divider: true },
-				{ action: "multiply", label: "Multiply", enable: true },
-				{ action: "divide", label: "Divide", enable: true }
+			const subMenuTextSize = [
+				{ action: "title", label: "Title", enable: true },
+				{ action: "header", label: "Header", enable: true },
+				{ action: "subheader", label: "Subheader", enable: true },
+				{ action: "body", label: "Body", enable: true }
 			];
 
 			const subMenuSize = [
-				{ action: "increase", label: "Increase", enable: true },
-				{ action: "decrease", label: "Decrease", enable: true }
+				{ action: "increase", label: "Increase", enable: true, iconEnabled: (<Add32 />) },
+				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract32 />) }
 			];
 
 			const subPanelCheck = (
 				<div style={{ padding: 10 }}>
+					<div style={{ paddingTop: 10, paddingBottom: 15 }}>Small panel with interaction:</div>
 					<Checkbox id={"chkItOut"} defaultChecked labelText={"Check it out"} />
 					<Checkbox id={"chkSomeMore"} labelText={"Check some more"} />
 					<Checkbox id={"chkToEnd"} labelText={"Check to the end"} />
@@ -2101,11 +2099,17 @@ class App extends React.Component {
 			);
 
 			const subPanelColor = (
-				<ColorPicker clickActionHandler={(c) => {
-					window.alert("Color selected = " + c);
-					return true;
-				}}
-				/>
+				<div className="harness-color-picker" onClick={(c) => window.alert("Color selected = " + c)}>
+					<div tabIndex="0" data-color={"col-yellow-20"} className="harness-color-picker-item yellow-20" />
+					<div tabIndex="0" data-color={"col-green-20"} className="harness-color-picker-item green-20" />
+					<div tabIndex="0" data-color={"col-teal-20"} className="harness-color-picker-item teal-20" />
+					<div tabIndex="0" data-color={"col-cyan-20"} className="harness-color-picker-item cyan-20" />
+					<div tabIndex="0" data-color={"col-red-50"} className="harness-color-picker-item red-50" />
+					<div tabIndex="0" data-color={"col-orange-40"} className="harness-color-picker-item orange-40" />
+					<div tabIndex="0" data-color={"col-green-50"} className="harness-color-picker-item green-50" />
+					<div tabIndex="0" data-color={"col-teal-50"} className="harness-color-picker-item teal-50" />
+					<div tabIndex="0" data-color={"col-cyan-50"} className="harness-color-picker-item cyan-50" />
+				</div>
 			);
 
 			toolbarConfig = {
@@ -2123,7 +2127,7 @@ class App extends React.Component {
 					{ divider: true },
 					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck },
 					{ divider: true },
-					{ action: "maths-submenu", incLabelWithIcon: "after", iconEnabled: (<Calculation32 />), label: "Maths", enable: true, subMenu: subMenuMaths, closeSubAreaOnClick: true },
+					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },
 					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
 					{ divider: true },
