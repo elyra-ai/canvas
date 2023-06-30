@@ -49,7 +49,7 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 		expect(wrapper.find(".toolbar-item")).to.have.length(9);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(5);
 
-		expect(wrapper.find(".toolbar-item.header-action")).to.have.length(1);
+		expect(wrapper.find(".toolbar-item.headerStyle-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.bold-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.italics-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.strikethrough-action")).to.have.length(1);
