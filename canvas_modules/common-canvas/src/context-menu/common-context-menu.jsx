@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import { ChevronRight16 } from "@carbon/icons-react";
-import ColorPicker from "../color-picker/color-picker.jsx";
+import ColorPicker from "../color-picker";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin

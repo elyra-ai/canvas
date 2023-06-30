@@ -38,7 +38,7 @@ import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
 import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
-// import ColorPicker from "../../../common-canvas/src/color-picker/color-picker";
+import ColorPicker from "@elyra/canvas/src/color-picker";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
 import TablesCanvas from "./components/custom-canvases/tables/tables-canvas";
@@ -2099,14 +2099,13 @@ class App extends React.Component {
 				</div>
 			);
 
-			const subPanelColor = null;
-			// const subPanelColor = (
-			// 	<ColorPicker clickActionHandler={(c) => {
-			// 		window.alert("Color selected = " + c);
-			// 		return true;
-			// 	}}
-			// 	/>
-			// );
+			const subPanelColor = (
+				<ColorPicker clickActionHandler={(c) => {
+					window.alert("Color selected = " + c);
+					return true;
+				}}
+				/>
+			);
 
 			toolbarConfig = {
 				leftBar: [
