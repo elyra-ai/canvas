@@ -44,24 +44,34 @@ class ToolbarSubArea extends React.Component {
 	// outside the containing divs boundary. We need to do this after the subarea
 	// has been mounted so we can query its size and position.
 	adjustSubAreaPosition() {
+		const containingDiv = document.getElementById(this.props.containingDivId);
+		const containingDivRect = containingDiv.getBoundingClientRect();
+
+		const classToGet = this.props.actionObj.subPanel ? "subpanel" : "submenu";
+
+		const thisArea = genElementByClass(classToGet, containingDiv);
+		const thisAreaRect = genRectByClass(classToGet, containingDiv);
+
+		const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
+		const outsideRight = thisAreaRect.right - containingDivRect.right;
+
 		if (this.props.expandDirection === "vertical") {
-			//
+			if (outsideBottom > 0) {
+				const newTop = this.props.actionItemRect.top - thisAreaRect.height;
+				thisArea.style.top = newTop + "px";
+			}
+
+			if (outsideRight > 0) {
+				const newLeft = this.props.actionItemRect.left - outsideRight - 2;
+				thisArea.style.left = newLeft + "px";
+			}
+
 		} else {
-			const containingDiv = document.getElementById(this.props.containingDivId);
-			const containingDivRect = containingDiv.getBoundingClientRect();
-
-			const classToGet = this.props.actionObj.subPanel ? "subpanel" : "submenu";
-
-			const thisArea = genElementByClass(classToGet, containingDiv);
-			const thisAreaRect = genRectByClass(classToGet, containingDiv);
-
-			const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
 			if (outsideBottom > 0) {
 				const newTop = thisAreaRect.top - outsideBottom - 2;
 				thisArea.style.top = newTop + "px";
 			}
 
-			const outsideRight = thisAreaRect.right - containingDivRect.right;
 			if (outsideRight > 0) {
 				const newLeft = this.props.actionItemRect.left - thisAreaRect.width;
 				thisArea.style.left = newLeft + "px";

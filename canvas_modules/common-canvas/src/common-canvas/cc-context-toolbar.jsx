@@ -60,8 +60,15 @@ class CommonCanvasContextToolbar extends React.Component {
 			return { divider: true };
 		}
 		const subPanel = this.getSubPanel(menuItem);
-		const subMenu = !subPanel && menuItem.submenu ? this.getSubMenu(menuItem) : null;
-		return { action: menuItem.action, label: menuItem.label, subMenu, subPanel, enable: this.getEnable(menuItem), iconEnabled: menuItem.icon };
+		const subMenu = !subPanel && menuItem.menu ? this.getSubMenu(menuItem) : null;
+		return {
+			action: menuItem.action,
+			label: menuItem.label,
+			subMenu: subMenu,
+			subPanel: subPanel,
+			enable: this.getEnable(menuItem),
+			iconEnabled: menuItem.icon
+		};
 	}
 
 	getSubPanel(menuItem) {
