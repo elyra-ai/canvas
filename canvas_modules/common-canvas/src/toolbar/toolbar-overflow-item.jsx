@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { v4 as uuid4 } from "uuid";
 import { Button } from "carbon-components-react";
 import { OverflowMenuVertical16 } from "@carbon/icons-react";
-import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
+import ToolbarOverflowMenu from "./toolbar-overflow-menu.jsx";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
@@ -34,48 +34,13 @@ class ToolbarOverflowItem extends React.Component {
 		this.clickOutside = this.clickOutside.bind(this);
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.containingDivId && this.state.showExtendedMenu) {
-			this.setSubAreaStyle(prevProps);
-		}
-	}
-
 	// We must remove the eventListener in case this class is unmounted due
 	// to the toolbar getting redrawn.
 	componentWillUnmount() {
 		document.removeEventListener("click", this.clickOutside, false);
 	}
 
-	setSubAreaStyle(prevProps) {
-		const containingDiv = document.getElementById(this.props.containingDivId);
-		const containingDivRect = containingDiv.getBoundingClientRect();
-
-		const mainMenu = genElementByClass("toolbar-popover-list", containingDiv);
-		const mainMenuRect = genRectByClass("toolbar-popover-list", containingDiv);
-
-		if (mainMenuRect) {
-			const overflowButtonRect = genRectByClass(this.genOverflowButtonsClass(), containingDiv);
-
-			if (overflowButtonRect) {
-				const contextToolbaRect = genRectByClass("context-toolbar", containingDiv);
-
-				if (contextToolbaRect) {
-					const outsideRight = mainMenuRect.right - containingDivRect.right;
-					if (outsideRight > 0) {
-						const overflowIconOffsetX = overflowButtonRect.left - contextToolbaRect.left;
-						mainMenu.style.left = (overflowIconOffsetX - outsideRight - 2) + "px";
-					}
-
-					const outsideBottom = mainMenuRect.bottom - containingDivRect.bottom;
-					if (outsideBottom > 0) {
-						mainMenu.style.top = -mainMenuRect.height + "px";
-					}
-				}
-			}
-		}
-	}
-
-	genOverflowButtonsClass() {
+	genOverflowButtonClass() {
 		return "toolbar-spacer toolbar-index-" + this.props.index + " toolbar-uuid-" + this.uuid;
 	}
 
@@ -114,17 +79,17 @@ class ToolbarOverflowItem extends React.Component {
 		let overflowMenu = null;
 		if (this.state.showExtendedMenu) {
 			const menuItems = this.props.generateExtensionMenuItems(this.props.index);
-			if (menuItems.length > 0) {
-				overflowMenu = (
-					<div className={"toolbar-popover-list"}>
-						{menuItems}
-					</div>
-				);
-			}
+			overflowMenu = (
+				<ToolbarOverflowMenu
+					menuItems={menuItems}
+					containingDivId={this.props.containingDivId}
+					buttonClass={"toolbar-uuid-" + this.uuid}
+				/>
+			);
 		}
 
 		return (
-			<div className={this.genOverflowButtonsClass()} >
+			<div className={this.genOverflowButtonClass()} >
 				<div className={"toolbar-overflow-item"}>
 					<Button kind="ghost"
 						tabIndex={-1}

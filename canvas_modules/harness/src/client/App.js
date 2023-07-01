@@ -173,7 +173,7 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
-			selectedContextToolbar: false,
+			selectedContextToolbar: true,
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
@@ -2126,7 +2126,7 @@ class App extends React.Component {
 			);
 
 			const subPanelColor = (
-				<div className="harness-color-picker" onClick={(c) => window.alert("Color selected = " + c)}>
+				<div className="harness-color-picker" onClick={(e) => window.alert("Color selected = " + e.target.dataset.color)}>
 					<div tabIndex="0" data-color={"col-yellow-20"} className="harness-color-picker-item yellow-20" />
 					<div tabIndex="0" data-color={"col-green-20"} className="harness-color-picker-item green-20" />
 					<div tabIndex="0" data-color={"col-teal-20"} className="harness-color-picker-item teal-20" />

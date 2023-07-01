@@ -28,7 +28,7 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import ToolbarSubArea from "./toolbar-sub-area.jsx";
+import ToolbarActionSubArea from "./toolbar-action-sub-area.jsx";
 import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
 	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
@@ -349,7 +349,7 @@ class ToolbarActionItem extends React.Component {
 		const actionItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
 
 		return (
-			<ToolbarSubArea
+			<ToolbarActionSubArea
 				actionObj={this.props.actionObj}
 				generateToolbarItems={this.props.generateToolbarItems}
 				closeSubArea={this.props.actionObj.closeSubAreaOnClick ? this.closeSubArea : null}

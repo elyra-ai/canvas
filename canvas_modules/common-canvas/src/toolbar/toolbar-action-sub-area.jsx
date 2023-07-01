@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
 
-class ToolbarSubArea extends React.Component {
+class ToolbarActionSubArea extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -114,7 +114,7 @@ class ToolbarSubArea extends React.Component {
 	}
 }
 
-ToolbarSubArea.propTypes = {
+ToolbarActionSubArea.propTypes = {
 	actionObj: PropTypes.object.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
 	closeSubArea: PropTypes.func,
@@ -123,4 +123,4 @@ ToolbarSubArea.propTypes = {
 	containingDivId: PropTypes.string
 };
 
-export default ToolbarSubArea;
+export default ToolbarActionSubArea;
