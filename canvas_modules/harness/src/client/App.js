@@ -173,7 +173,7 @@ class App extends React.Component {
 			selectedDragWithoutSelect: false,
 			selectedAssocLinkCreation: false,
 			selectedMarkdownInComments: false,
-			selectedContextToolbar: true,
+			selectedContextToolbar: false,
 			selectedSnapToGridType: NONE_DRAG,
 			enteredSnapToGridX: "",
 			enteredSnapToGridY: "",
