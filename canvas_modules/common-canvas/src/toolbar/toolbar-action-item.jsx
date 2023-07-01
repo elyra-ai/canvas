@@ -31,7 +31,8 @@ import classNames from "classnames";
 import ToolbarActionSubArea from "./toolbar-action-sub-area.jsx";
 import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
-	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16,
+	ChevronRight16, ChevronDown16, ChevronUp16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -257,10 +258,7 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = (actionObj.subMenu || actionObj.subPanel) && this.props.overflow
-			? (<ChevronRight16 />) : null;
-
-		const chevronMini = (actionObj.subMenu || actionObj.subPanel) && !this.props.overflow ? this.generateChevronMini() : null;
+		const chevronIcon = this.generateChevronIcon(actionObj);
 
 		let buttonContent = (
 			<div id={"open-action-item"} className={itemContentClassName}>
@@ -269,7 +267,6 @@ class ToolbarActionItem extends React.Component {
 				{labelAfter}
 				{textContent}
 				{chevronIcon}
-				{chevronMini}
 			</div>
 		);
 
@@ -292,6 +289,30 @@ class ToolbarActionItem extends React.Component {
 		);
 
 		return buttonContent;
+	}
+
+	// Returns a chevron icon if the action icon is displaying a sub-menu or
+	// sub-panel. The chevron will:
+	//  * point right if this action item is in a drop down menu
+	//  * point down if this action item is displayed with text in the toolbar
+	//    and the menu isn't displayed
+	//  * point up if this action item is displayed with text in the toolbar
+	//    and the menu is displayed
+	//  * be a mini-chevron (small triangle in the bottom right of icon) if this
+	//    action item isn't displayed with text.
+	generateChevronIcon(actionObj) {
+		if (actionObj.subMenu || actionObj.subPanel) {
+			if (this.props.overflow) {
+				return (<ChevronRight16 />);
+			}
+			if (actionObj.incLabelWithIcon === "before" ||
+					actionObj.incLabelWithIcon === "after") {
+				const chev = this.state.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
+				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
+			}
+			return this.generateChevronMini();
+		}
+		return null;
 	}
 
 	// Returns an svg to display the little triangle that appears in the bottom

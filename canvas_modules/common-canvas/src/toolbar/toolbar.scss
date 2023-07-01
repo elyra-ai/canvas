@@ -239,6 +239,11 @@ $toolbar-divider-width: 1px;
 	}
 }
 
+.toolbar-up-down-chevron {
+	padding-left: 8px;
+	pointer-events: none;
+}
+
 // Triangular tick mark in bottom right corner of an expandable icon
 .toolbar-tick-svg {
 	position: absolute;
