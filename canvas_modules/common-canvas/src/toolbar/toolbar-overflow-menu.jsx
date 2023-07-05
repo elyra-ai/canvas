@@ -24,13 +24,13 @@ import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
 
 class ToolbarOverflowMenu extends React.Component {
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.containingDivId) {
-			this.setSubAreaStyle(prevProps);
+	componentDidMount() {
+		if (this.props.containingDivId) {
+			this.setSubAreaStyle();
 		}
 	}
 
-	setSubAreaStyle(prevProps) {
+	setSubAreaStyle() {
 		const containingDiv = document.getElementById(this.props.containingDivId);
 		const containingDivRect = containingDiv.getBoundingClientRect();
 

@@ -77,8 +77,7 @@ import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDu
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
-	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32,
-	CharacterSentenceCase32, CharacterWholeNumber32 } from "@carbon/icons-react";
+	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 
@@ -1409,32 +1408,6 @@ class App extends React.Component {
 		} else if (source.type === "output_port") {
 			const portName = source.port.label ? source.port.label : source.port.id;
 			defMenu = defMenu.concat({ action: "outputPortAction", label: this.getLabel("canvas_outputPortAction", "CMI: Output Port action for '" + portName + "'") });
-
-		} else if (source.type === "comment") {
-			const lettersSubMenu = [
-				{ action: "A", label: "Aaaaaaaa" },
-				{ action: "B", label: "Bbbb" },
-				{ action: "C", label: "Cccccccccc" },
-				{ action: "D", label: "Ddd" },
-				{ action: "E", label: "Eeeeee" },
-				{ action: "F", label: "Ffffffff" },
-				{ action: "G", label: "Gg" },
-				{ action: "H", label: "Hhhhh" },
-				{ action: "I", label: "Iiiiiii" }
-			];
-			const numbersSubMenu = [
-				{ action: "1", label: "One 1" },
-				{ action: "2", label: "Two Two" },
-				{ action: "3", label: "Three Three" },
-				{ action: "4", label: "Four" },
-				{ action: "5", label: "Five 555" },
-				{ action: "6", label: "Sixes" },
-				{ action: "7", label: "Seven" },
-				{ action: "8", label: "Eight" },
-				{ action: "9", label: "Niners 9" }
-			];
-			defMenu.push({ action: "letter", label: "Letters", submenu: true, menu: lettersSubMenu, icon: (<CharacterSentenceCase32 />), toolbarItem: true });
-			defMenu.push({ action: "number", label: "Numbers", submenu: true, menu: numbersSubMenu, icon: (<CharacterWholeNumber32 />) });
 		}
 		return defMenu;
 	}
