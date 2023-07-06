@@ -187,3 +187,26 @@ $harness-navbar-icon-width: 48px;
 		font-size: 16px;
 	}
 }
+
+.harness-color-picker {
+	width: 80px;
+	height: 85px;
+	display: flex;
+	flex-wrap: wrap;
+
+	.harness-color-picker-item {
+		width: 20px;
+		height: 20px;
+		margin: 5px 0 0 5px;
+		cursor: pointer;
+		&.yellow-20 { background-color: $yellow-20; }
+		&.green-20 { background-color: $green-20; }
+		&.teal-20 { background-color: $teal-20; }
+		&.cyan-20 { background-color: $cyan-20; }
+		&.red-50 { background-color: $red-50; }
+		&.orange-40 { background-color: $orange-40; }
+		&.green-50 { background-color: $green-50; }
+		&.teal-50 { background-color: $teal-50; }
+		&.cyan-50 { background-color: $cyan-50; }
+	}
+}

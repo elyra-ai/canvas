@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
-	cy.getTextToolbarAction(action).click();
+export const genElementByClass = (className, containingDiv) => {
+	const elements = containingDiv.getElementsByClassName(className);
 
-	// The header action causes a menu to appear so we handle that usng menuAction.
-	if (action === "headerStyle") {
-		cy.getTextToolbarAction(menuAction).click();
+	if (elements && elements.length > 0) {
+		return elements[0];
 	}
-});
+	return null;
+};
 
-Cypress.Commands.add("getTextToolbarAction", (action) => {
-	cy.getTextToolbar().find("." + action + "-action");
-});
+export const genRectByClass = (className, containingDiv) => {
+	const element = genElementByClass(className, containingDiv);
 
-Cypress.Commands.add("getTextToolbar", () => {
-	cy.get(".text-toolbar");
-});
+	if (element) {
+		return element.getBoundingClientRect();
+	}
+	return null;
+};

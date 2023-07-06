@@ -26,20 +26,15 @@ class Toolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			showExtendedMenuIndex: -1,
-			subAreaDisplayedForAction: ""
-		};
-
 		this.leftBar = [];
 		this.rightBar = [];
 
+		this.resizeHandler = null;
 		this.onFocus = this.onFocus.bind(this);
 		this.onToolbarResize = this.onToolbarResize.bind(this);
-		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.generateExtensionMenuItems = this.generateExtensionMenuItems.bind(this);
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
-		this.subMenuActionHandler = this.subMenuActionHandler.bind(this);
+		this.setResizeHandler = this.setResizeHandler.bind(this);
 	}
 
 	// When the toolbar is initially opened the tabindex for each element may not
@@ -64,12 +59,19 @@ class Toolbar extends React.Component {
 	// Close the overflow menu, if it is open, when the toolbar is resized in
 	// case a new menu needs to be displayed with the new toolbar width.
 	onToolbarResize() {
-		if (this.state.showExtendedMenuIndex > -1) {
-			this.setState({ showExtendedMenuIndex: -1 });
+		if (this.resizeHandler) {
+			this.resizeHandler();
 		}
 
 		this.setLeftBarItemsTabIndex();
 		this.setRightBarItemsTabIndex();
+	}
+
+	// Allows the overflow item or action item to set a function that will be
+	// called when the toolbar is resized. This function causes the menu that
+	// is currently open to be closed.
+	setResizeHandler(resizeHandler) {
+		this.resizeHandler = resizeHandler;
 	}
 
 	// Sets the tabindex on all left bar items so tabbing works correctly. This
@@ -176,10 +178,6 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	subMenuActionHandler(action) {
-		this.setState({ subAreaDisplayedForAction: action });
-	}
-
 	generateToolbarItems(actionDefinitions, overflow, withSpacer) {
 		const newItems = [];
 
@@ -206,18 +204,17 @@ class Toolbar extends React.Component {
 					/>
 				);
 			} else {
-				const displaySubArea = overflow && this.state.subAreaDisplayedForAction === actionObj.action;
 				jsx = (
 					<ToolbarActionItem
 						key={"toolbar-item-key-" + i}
 						actionObj={actionObj}
 						tooltipDirection={this.props.tooltipDirection}
 						toolbarActionHandler={this.props.toolbarActionHandler}
-						subMenuActionHandler={this.subMenuActionHandler}
 						generateToolbarItems={this.generateToolbarItems}
-						displaySubArea={displaySubArea}
+						setResizeHandler={this.setResizeHandler}
 						overflow={overflow}
 						instanceId={this.props.instanceId}
+						containingDivId={this.props.containingDivId}
 						onFocus={this.onFocus}
 						size={this.props.size}
 					/>
@@ -233,9 +230,9 @@ class Toolbar extends React.Component {
 			<ToolbarOverflowItem
 				key={"toolbar-overflow-item-key-" + index}
 				index={index}
-				showExtendedMenu={this.state.showExtendedMenuIndex === index}
-				toggleExtendedMenu={this.toggleExtendedMenu}
 				generateExtensionMenuItems={this.generateExtensionMenuItems}
+				setResizeHandler={this.setResizeHandler}
+				containingDivId={this.props.containingDivId}
 				onFocus={this.onFocus}
 				label={label}
 				size={this.props.size}
@@ -280,11 +277,6 @@ class Toolbar extends React.Component {
 		return newDefItems;
 	}
 
-	toggleExtendedMenu(index) {
-		const newIndex = index === this.state.showExtendedMenuIndex ? -1 : index;
-		this.setState({ showExtendedMenuIndex: newIndex });
-	}
-
 	render() {
 		this.leftBar = this.props.config.leftBar || [];
 		this.rightBar = this.props.config.rightBar || [];
@@ -312,7 +304,8 @@ class Toolbar extends React.Component {
 
 Toolbar.propTypes = {
 	config: PropTypes.object.isRequired,
-	instanceId: PropTypes.number,
+	instanceId: PropTypes.number.isRequired,
+	containingDivId: PropTypes.string,
 	toolbarActionHandler: PropTypes.func,
 	tooltipDirection: PropTypes.string,
 	additionalText: PropTypes.object,

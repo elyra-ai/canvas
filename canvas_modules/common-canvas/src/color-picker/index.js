@@ -14,19 +14,5 @@
  * limitations under the License.
  */
 
-Cypress.Commands.add("clickTextToolbarOption", (action, menuAction) => {
-	cy.getTextToolbarAction(action).click();
-
-	// The header action causes a menu to appear so we handle that usng menuAction.
-	if (action === "headerStyle") {
-		cy.getTextToolbarAction(menuAction).click();
-	}
-});
-
-Cypress.Commands.add("getTextToolbarAction", (action) => {
-	cy.getTextToolbar().find("." + action + "-action");
-});
-
-Cypress.Commands.add("getTextToolbar", () => {
-	cy.get(".text-toolbar");
-});
+import ColorPicker from "./color-picker.jsx";
+export default ColorPicker;

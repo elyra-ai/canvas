@@ -95,6 +95,7 @@ _defineConstant("TOOLBAR_LAYOUT_NONE", "None");
 _defineConstant("TOOLBAR_LAYOUT_TOP", "Top");
 
 _defineConstant("TOOLBAR_TYPE_DEFAULT", "Default");
+_defineConstant("TOOLBAR_TYPE_SUB_AREAS", "SubAreas");
 _defineConstant("TOOLBAR_TYPE_SINGLE_BAR", "SingleLeftBarArray");
 _defineConstant("TOOLBAR_TYPE_BEFORE_AFTER", "TextBeforeAndAfter");
 _defineConstant("TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE", "CustomizedRightSide");
@@ -144,4 +145,3 @@ _defineConstant("PRIMARY", "Primary");
 
 _defineConstant("CATEGORY_VIEW_ACCORDIONS", "accordions");
 _defineConstant("CATEGORY_VIEW_TABS", "tabs");
-

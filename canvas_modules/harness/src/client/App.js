@@ -76,7 +76,8 @@ import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDu
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import { Edit32, Play32, SelectWindow32, StopFilledAlt32, TouchInteraction32, TextScale32 } from "@carbon/icons-react";
+import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
+	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
 
 import { InlineLoading, Checkbox, Button, OverflowMenu, OverflowMenuItem } from "carbon-components-react";
 
@@ -117,6 +118,7 @@ import {
 	PRIMARY,
 	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -396,6 +398,8 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
+
+		this.closeSubPanel = this.closeSubPanel.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -2069,10 +2073,93 @@ class App extends React.Component {
 		return parentClass;
 	}
 
+	// This is a dummy function that is overwritten by the getSubPanelCloseFn
+	// provided to toolbar items.
+	closeSubPanel() {
+		// Dummy functions.
+	}
+
 	getToolbarConfig() {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
 			toolbarConfig = null;
+
+		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SUB_AREAS) {
+			const subMenuTextSize = [
+				{ action: "title", label: "Title", enable: true },
+				{ action: "header", label: "Header", enable: true },
+				{ action: "subheader", label: "Subheader", enable: true },
+				{ action: "body", label: "Body", enable: true }
+			];
+
+			const subMenuSize = [
+				{ action: "increase", label: "Increase", enable: true, iconEnabled: (<Add32 />) },
+				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract32 />) }
+			];
+
+			const subPanelCheck = (
+				<div style={{ padding: 10 }}>
+					<div style={{ display: "flex", paddingTop: 10, paddingBottom: 15, justifyContent: "space-between" }}>
+						Small panel:
+						<button style={{ display: "inline-flex", cursor: "pointer", minHeight: "20px", border: 0, padding: "0 10px" }}
+							onClick={this.closeSubPanel}
+						>X</button>
+					</div>
+					<Checkbox id={"chkItOut"} defaultChecked labelText={"Check it out"} />
+					<Checkbox id={"chkSomeMore"} labelText={"Check some more"} />
+					<Checkbox id={"chkToEnd"} labelText={"Check to the end"} />
+				</div>
+			);
+
+			const subPanelColor = (
+				<div className="harness-color-picker" onClick={(e) => window.alert("Color selected = " + e.target.dataset.color)}>
+					<div tabIndex="0" data-color={"col-yellow-20"} className="harness-color-picker-item yellow-20" />
+					<div tabIndex="0" data-color={"col-green-20"} className="harness-color-picker-item green-20" />
+					<div tabIndex="0" data-color={"col-teal-20"} className="harness-color-picker-item teal-20" />
+					<div tabIndex="0" data-color={"col-cyan-20"} className="harness-color-picker-item cyan-20" />
+					<div tabIndex="0" data-color={"col-red-50"} className="harness-color-picker-item red-50" />
+					<div tabIndex="0" data-color={"col-orange-40"} className="harness-color-picker-item orange-40" />
+					<div tabIndex="0" data-color={"col-green-50"} className="harness-color-picker-item green-50" />
+					<div tabIndex="0" data-color={"col-teal-50"} className="harness-color-picker-item teal-50" />
+					<div tabIndex="0" data-color={"col-cyan-50"} className="harness-color-picker-item cyan-50" />
+				</div>
+			);
+
+			toolbarConfig = {
+				leftBar: [
+					{ action: "palette", label: "Palette", enable: true },
+					{ divider: true },
+					{ action: "stopit", label: "Stop", enable: false, incLabelWithIcon: "before", iconEnabled: (<StopFilledAlt32 />) },
+					{ divider: true },
+					{ action: "run", label: "Run", enable: true, iconEnabled: (<Play32 />) },
+					{ divider: true },
+					{ action: "deleteSelectedObjects", label: "Delete", enable: true },
+					{ divider: true },
+					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
+					{ divider: true },
+					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck, getSubPanelCloseFn: (fn) => (this.closeSubPanel = fn) },
+					{ divider: true },
+					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
+					{ divider: true },
+					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
+					{ divider: true },
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true, subPanel: subPanelColor, closeSubAreaOnClick: true },
+					{ divider: true },
+					{ action: "undo", label: "Undo", enable: true },
+					{ action: "redo", label: "Redo", enable: true },
+					{ divider: true }
+				],
+				rightBar: [
+					{ divider: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
+					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
+					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
+					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
+				]
+			};
 
 		} else if (this.state.selectedToolbarType === TOOLBAR_TYPE_SINGLE_BAR) {
 			toolbarConfig = [

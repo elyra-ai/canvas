@@ -46,10 +46,10 @@ describe("Common Canvas Text Toolbar renders correctly", () => {
 		expect(wrapper.find(".toolbar-left-bar")).to.have.length(1);
 		expect(wrapper.find(".toolbar-right-bar")).to.have.length(1);
 
-		expect(wrapper.find(".toolbar-jsx-item")).to.have.length(1); // One JSX item for the Header options menu
-		expect(wrapper.find(".toolbar-item")).to.have.length(8); // Eight regular toolbar buttons for other markdown actions
+		expect(wrapper.find(".toolbar-item")).to.have.length(9);
 		expect(wrapper.find(".toolbar-divider")).to.have.length(5);
 
+		expect(wrapper.find(".toolbar-item.headerStyle-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.bold-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.italics-action")).to.have.length(1);
 		expect(wrapper.find(".toolbar-item.strikethrough-action")).to.have.length(1);

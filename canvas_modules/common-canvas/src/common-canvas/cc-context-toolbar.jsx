@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
-import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
+import ColorPicker from "../color-picker";
 
 const CM_TOOLBAR_GAP = 4;
 const CM_ICON_SIZE = 32;
@@ -47,27 +47,8 @@ class CommonCanvasContextToolbar extends React.Component {
 
 	getToolbarConfig({ toolbarItems, overflowMenuItems }) {
 		const leftBar = [];
-		toolbarItems.forEach((item) => {
-			leftBar.push(this.getMenuItem(item));
-		});
-
-		// Records if we have just displayed a divider. This is useful because we
-		// only want to display one divider if there is a divider element
-		// immediately after another divider element in the overflowMenuItems array.
-		let previousDivider = false;
-
-		overflowMenuItems.forEach((item) => {
-			if (item.divider) {
-				if (!previousDivider) {
-					leftBar.push({ divider: true });
-					previousDivider = true;
-				}
-			} else {
-				leftBar.push(this.getMenuItem(item));
-				previousDivider = false;
-			}
-		});
-
+		toolbarItems.forEach((item) => leftBar.push(this.getMenuItem(item)));
+		overflowMenuItems.forEach((item) => leftBar.push(this.getMenuItem(item)));
 		return {
 			leftBar: leftBar,
 			rightBar: []
@@ -75,18 +56,27 @@ class CommonCanvasContextToolbar extends React.Component {
 	}
 
 	getMenuItem(menuItem) {
+		if (menuItem.divider) {
+			return { divider: true };
+		}
 		const subPanel = this.getSubPanel(menuItem);
-		const subMenu = !subPanel && menuItem.submenu ? this.getSubMenu(menuItem) : null;
-		return { action: menuItem.action, label: menuItem.label, subMenu, subPanel, enable: this.getEnable(menuItem), iconEnabled: menuItem.icon };
+		const subMenu = !subPanel && menuItem.menu ? this.getSubMenu(menuItem) : null;
+		return {
+			action: menuItem.action,
+			label: menuItem.label,
+			subMenu: subMenu,
+			subPanel: subPanel,
+			enable: this.getEnable(menuItem),
+			iconEnabled: menuItem.icon
+		};
 	}
 
 	getSubPanel(menuItem) {
 		if (menuItem.action === "colorBackground") {
-			return this.buildColorPickerPanel();
+			return this.buildColorPicker();
 		}
 		return null;
 	}
-
 
 	getSubMenu(menuItem) {
 		if (typeof menuItem.menu === "object") {
@@ -114,10 +104,39 @@ class CommonCanvasContextToolbar extends React.Component {
 		const overflowItemCount = overflowMenuItems.length > 0 ? 1 : 0;
 		const toolbarItemsCount = toolbarItems.length + overflowItemCount;
 
-		// If we have some overflow menu items, we reduce the width by one pixel
-		// which forces the overflow menu and the overflow icon to be shown.
-		const reduction = overflowMenuItems.length > 0 ? 1 : 0;
+		// If we have some overflow menu items, we reduce the width by five pixels
+		// which forces the overflow menu and the overflow icon to be shown. We
+		// use 5 pixels because this is how many are needed to make the toolbar
+		// work correcty with differnet browser magnificaitons.
+		const reduction = overflowMenuItems.length > 0 ? 5 : 0;
 		return (toolbarItemsCount * (CM_ICON_SIZE + CM_ICON_PAD)) - reduction;
+	}
+
+	// Removes leading and trailing dividers from the items array and any
+	// remaining places where there are consecutive dividers are reduced to a
+	// single divider. These unecessary dividers may occur because the app's
+	// contextMenuHandler may return an array which result in these being left
+	// in the overflowItems array.
+	removeUnnecessaryDividers(items) {
+		const start = items.findIndex((item) => !item.divider);
+		const end = items.findLastIndex((item) => !item.divider);
+		const trimmedItems = items.slice(start, end + 1);
+
+		const outItems = [];
+		let previousDivider = false;
+
+		trimmedItems.forEach((item) => {
+			if (item.divider) {
+				if (!previousDivider) {
+					outItems.push(item);
+				}
+				previousDivider = true;
+			} else {
+				outItems.push(item);
+				previousDivider = false;
+			}
+		});
+		return outItems;
 	}
 
 	toolbarActionHandler(action, editParam) {
@@ -130,9 +149,9 @@ class CommonCanvasContextToolbar extends React.Component {
 		this.toolbarActionHandler("colorSelectedObjects", { color });
 	}
 
-	buildColorPickerPanel() {
+	buildColorPicker() {
 		return (
-			<ColorPickerPanel clickActionHandler={this.colorClicked} />
+			<ColorPicker clickActionHandler={this.colorClicked} />
 		);
 	}
 
@@ -153,9 +172,9 @@ class CommonCanvasContextToolbar extends React.Component {
 
 		if (this.props.showContextMenu) {
 			const toolbarItems = this.props.contextMenuDef.filter((cmItem) => cmItem.toolbarItem && !cmItem.divider);
-			const overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
+			let overflowMenuItems = this.props.contextMenuDef.filter((cmItem) => !cmItem.toolbarItem);
+			overflowMenuItems = this.removeUnnecessaryDividers(overflowMenuItems);
 			const toolbarConfig = this.getToolbarConfig({ toolbarItems, overflowMenuItems });
-
 			const toolbarWidth = this.getContextToolbarWidth(toolbarItems, overflowMenuItems);
 
 			// Note: cmPos is already adjusted as a starting point for the context
@@ -173,6 +192,7 @@ class CommonCanvasContextToolbar extends React.Component {
 					<Toolbar
 						config={toolbarConfig}
 						instanceId={this.props.canvasController.getInstanceId()}
+						containingDivId={this.props.containingDivId}
 						toolbarActionHandler={this.toolbarActionHandler}
 						tooltipDirection={"top"}
 						size={"sm"}

@@ -233,7 +233,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 		addMarkdownWithToolbar({
 			initialText: "Some title text!",
 			textToHighlight: "title",
-			action: "header",
+			action: "headerStyle",
 			menuAction: "title",
 			markdownText: "# Some title text!",
 			html: "<h1>Some title text!</h1>\n"
@@ -244,7 +244,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 		addMarkdownWithToolbar({
 			initialText: "Some header text!",
 			textToHighlight: "header",
-			action: "header",
+			action: "headerStyle",
 			menuAction: "header",
 			markdownText: "## Some header text!",
 			html: "<h2>Some header text!</h2>\n"
@@ -255,7 +255,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 		addMarkdownWithToolbar({
 			initialText: "Some subheader text!",
 			textToHighlight: "subheader",
-			action: "header",
+			action: "headerStyle",
 			menuAction: "subheader",
 			markdownText: "### Some subheader text!",
 			html: "<h3>Some subheader text!</h3>\n"
@@ -266,7 +266,7 @@ describe("Test edting a comment using the text toolbar to add markdown syntax", 
 		addMarkdownWithToolbar({
 			initialText: "## Some body text!", // Set initial text to be a header so it can change to body.
 			textToHighlight: "body",
-			action: "header",
+			action: "headerStyle",
 			menuAction: "body",
 			markdownText: "Some body text!",
 			html: "<p>Some body text!</p>\n"
@@ -464,7 +464,7 @@ describe("Test edting a comment using keyboard shortcuts to add markdown syntax"
 function addMarkdownWithToolbar(d) {
 	cy.clickToolbarAddComment();
 	cy.verifyNumberOfComments(1);
-	cy.editTextInComment("", d.initialText);
+	cy.editTextInComment("", d.initialText, false);
 
 	cy.selectTextInComment(d.textToHighlight, d.initialText);
 	cy.clickTextToolbarOption(d.action, d.menuAction);
@@ -476,7 +476,7 @@ function addMarkdownWithToolbar(d) {
 function addMarkdownWithKeyboard(d) {
 	cy.clickToolbarAddComment();
 	cy.verifyNumberOfComments(1);
-	cy.editTextInComment("", d.initialText);
+	cy.editTextInComment("", d.initialText, false);
 
 	cy.selectTextInComment(d.textToHighlight, d.initialText);
 	cy.shortcutKeysMarkdown(d.action);

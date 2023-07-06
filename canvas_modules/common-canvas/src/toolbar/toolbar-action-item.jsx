@@ -28,11 +28,13 @@ import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 import { Button } from "carbon-components-react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16,
+import ToolbarActionSubArea from "./toolbar-action-sub-area.jsx";
+import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
 	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
-	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16, ChevronRight16 } from "@carbon/icons-react";
+	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16,
+	ChevronRight16, ChevronDown16, ChevronUp16 } from "@carbon/icons-react";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
-	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE,
+	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
 	TOOLBAR_DELETE_SELECTED_OBJECTS, TOOLBAR_DELETE_LINK,
 	TOOLBAR_ZOOM_IN, TOOLBAR_ZOOM_OUT, TOOLBAR_ZOOM_FIT,
@@ -47,20 +49,39 @@ class ToolbarActionItem extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			subAreaDisplayed: false
+		};
+
 		this.actionClickHandler = this.actionClickHandler.bind(this);
 		this.onMouseEnter = this.onMouseEnter.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
+		this.openSubArea = this.openSubArea.bind(this);
+		this.closeSubArea = this.closeSubArea.bind(this);
+		this.clickOutside = this.clickOutside.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.props.actionObj.getSubPanelCloseFn) {
+			this.props.actionObj.getSubPanelCloseFn(this.closeSubArea);
+		}
+	}
+
+	// We must remove the eventListener in case this class is unmounted due
+	// to the toolbar getting redrawn.
+	componentWillUnmount() {
+		document.removeEventListener("click", this.clickOutside, false);
 	}
 
 	onMouseEnter(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.props.subMenuActionHandler(this.props.actionObj.action);
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.overflow) {
+			this.openSubArea();
 		}
 	}
 
 	onMouseLeave(evt) {
-		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			this.props.subMenuActionHandler("");
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.overflow) {
+			this.closeSubArea();
 		}
 	}
 
@@ -84,6 +105,8 @@ class ToolbarActionItem extends React.Component {
 			return <Undo16 disabled={disabled} />;
 		case (TOOLBAR_REDO):
 			return <Redo16 disabled={disabled} />;
+		case (TOOLBAR_CLIPBOARD):
+			return <Result16 disabled={disabled} />;
 		case (TOOLBAR_CUT):
 			return <Cut16 disabled={disabled} />;
 		case (TOOLBAR_COPY):
@@ -173,8 +196,45 @@ class ToolbarActionItem extends React.Component {
 		return null;
 	}
 
+	clickOutside(evt) {
+		if (this.state.subAreaDisplayed) {
+			const items = document.getElementsByClassName(this.generateActionName());
+			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
+
+			if (!isOver) {
+				this.closeSubArea();
+			}
+		}
+	}
+
+	openSubArea() {
+		this.setState({ subAreaDisplayed: true });
+	}
+
+	closeSubArea() {
+		this.setState({ subAreaDisplayed: false });
+	}
+
 	actionClickHandler(evt) {
-		if (!this.props.actionObj.subMenu && !this.props.actionObj.subPanel) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			if (this.state.showExtendedMenu) {
+				document.removeEventListener("click", this.clickOutside, false);
+			} else {
+				document.addEventListener("click", this.clickOutside, false);
+			}
+
+			if (this.props.setResizeHandler) {
+				if (this.state.subAreaDisplayed) {
+					this.props.setResizeHandler(null);
+				} else {
+					this.props.setResizeHandler(this.closeSubArea);
+				}
+			}
+
+			if (!this.props.overflow) {
+				this.setState({ subAreaDisplayed: !this.state.subAreaDisplayed });
+			}
+		} else {
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		}
 	}
@@ -204,10 +264,10 @@ class ToolbarActionItem extends React.Component {
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
 
-		const chevronIcon = actionObj.subMenu || this.props.actionObj.subPanel ? (<ChevronRight16 />) : null;
+		const chevronIcon = this.generateChevronIcon(actionObj);
 
 		let buttonContent = (
-			<div className={itemContentClassName}>
+			<div id={"open-action-item"} className={itemContentClassName}>
 				{labelBefore}
 				{icon}
 				{labelAfter}
@@ -235,6 +295,41 @@ class ToolbarActionItem extends React.Component {
 		);
 
 		return buttonContent;
+	}
+
+	// Returns a chevron icon if the action icon is displaying a sub-menu or
+	// sub-panel. The chevron will:
+	//  * point right if this action item is in a drop down menu
+	//  * point down if this action item is displayed with text in the toolbar
+	//    and the menu isn't displayed
+	//  * point up if this action item is displayed with text in the toolbar
+	//    and the menu is displayed
+	//  * be a mini-chevron (small triangle in the bottom right of icon) if this
+	//    action item isn't displayed with text.
+	generateChevronIcon(actionObj) {
+		if (actionObj.subMenu || actionObj.subPanel) {
+			if (this.props.overflow) {
+				return (<ChevronRight16 />);
+			}
+			if (actionObj.incLabelWithIcon === "before" ||
+					actionObj.incLabelWithIcon === "after") {
+				const chev = this.state.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
+				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
+			}
+			return this.generateChevronMini();
+		}
+		return null;
+	}
+
+	// Returns an svg to display the little triangle that appears in the bottom
+	// right corner of icons that, when clicked, show a drop down menu.
+	generateChevronMini() {
+		const path = this.props.size === "sm" ? "M 29 29 L 29 23 23 29 Z" : "M 37 37 L 37 30 30 37 Z";
+		return (
+			<svg className="toolbar-tick-svg">
+				<path d={path} className="toolbar-tick-mark" />
+			</svg>
+		);
 	}
 
 	generateActionName(actionObj) {
@@ -277,34 +372,19 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		if (this.props.displaySubArea) {
-			const style = this.calcSubAreaStyle();
+		const elements = document.getElementsByClassName(this.generateActionName());
+		const actionItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
 
-			if (this.props.actionObj.subPanel) {
-				return (
-					<div style={style} className={"toolbar-popover-list subpanel"}>
-						{this.props.actionObj.subPanel}
-					</div>
-				);
-			}
-			const subMenuItems = this.props.generateToolbarItems(this.props.actionObj.subMenu, true, false);
-
-			return (
-				<div style={style} className={"toolbar-popover-list submenu"}>
-					{subMenuItems}
-				</div>
-			);
-		}
-
-		return null;
-	}
-
-	calcSubAreaStyle() {
-		const className = this.generateActionName();
-		const elements = document.getElementsByClassName(className);
-		const rect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
-		const style = { top: rect.top - 1, left: rect.left + rect.width };
-		return style;
+		return (
+			<ToolbarActionSubArea
+				actionObj={this.props.actionObj}
+				generateToolbarItems={this.props.generateToolbarItems}
+				closeSubArea={this.props.actionObj.closeSubAreaOnClick ? this.closeSubArea : null}
+				actionItemRect={actionItemRect}
+				containingDivId={this.props.containingDivId}
+				expandDirection={this.props.overflow ? "horizontal" : "vertical" }
+			/>
+		);
 	}
 
 	render() {
@@ -330,7 +410,7 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
-		const subArea = this.generateSubArea();
+		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
 
 		return (
 			<div className={itemClassName} data-toolbar-item={isToolbarItem} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
@@ -362,6 +442,8 @@ ToolbarActionItem.propTypes = {
 		textContent: PropTypes.string,
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
+		closeSubAreaOnClick: PropTypes.bool,
+		getSubPanelCloseFn: PropTypes.func,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.object,
 		jsx: PropTypes.object,
@@ -373,10 +455,10 @@ ToolbarActionItem.propTypes = {
 	}),
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
-	subMenuActionHandler: PropTypes.func.isRequired,
 	generateToolbarItems: PropTypes.func.isRequired,
+	setResizeHandler: PropTypes.func,
 	instanceId: PropTypes.number.isRequired,
-	displaySubArea: PropTypes.bool,
+	containingDivId: PropTypes.string,
 	overflow: PropTypes.bool,
 	onFocus: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])

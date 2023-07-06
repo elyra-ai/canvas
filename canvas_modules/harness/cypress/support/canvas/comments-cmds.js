@@ -132,7 +132,7 @@ Cypress.Commands.add("isCommentSelected", (commentText) => {
 		});
 });
 
-Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) => {
+Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText, saveComment = true) => {
 	cy.getCommentWithText(originalCommentText)
 		.dblclick()
 		.get("textarea")
@@ -140,7 +140,9 @@ Cypress.Commands.add("editTextInComment", (originalCommentText, newCommentText) 
 		.type(newCommentText);
 
 	// Click somewhere on canvas to save comment
-	cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
+	if (saveComment) {
+		cy.get(`#canvas-div-${document.instanceId}`).click(2, 2);
+	}
 });
 
 Cypress.Commands.add("editTextInCommentInSubFlow", (originalCommentText, newCommentText) => {
@@ -321,7 +323,6 @@ Cypress.Commands.add("selectAllCommentsUsingCtrlOrCmdKey", () => {
 
 Cypress.Commands.add("selectTextInComment", (textToSelect, commentText) => {
 	cy.getCommentWithText(commentText)
-		.dblclick()
 		.get("textarea")
 		.then((tas) => {
 			const start = commentText.indexOf(textToSelect);

@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
 import { ChevronRight16 } from "@carbon/icons-react";
-import ColorPickerPanel from "../color-picker/color-picker-panel.jsx";
+import ColorPicker from "../color-picker";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
@@ -178,7 +178,7 @@ class CommonContextMenu extends React.Component {
 
 	buildColorPickerPanel() {
 		return (
-			<ColorPickerPanel clickActionHandler={this.colorClicked} />
+			<ColorPicker clickActionHandler={this.colorClicked} />
 		);
 	}
 

@@ -75,6 +75,7 @@ import {
 	TOOLBAR_LAYOUT_NONE,
 	TOOLBAR_LAYOUT_TOP,
 	TOOLBAR_TYPE_DEFAULT,
+	TOOLBAR_TYPE_SUB_AREAS,
 	TOOLBAR_TYPE_SINGLE_BAR,
 	TOOLBAR_TYPE_BEFORE_AFTER,
 	TOOLBAR_TYPE_CUSTOM_RIGHT_SIDE,
@@ -1216,6 +1217,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={TOOLBAR_TYPE_DEFAULT}
 						labelText={TOOLBAR_TYPE_DEFAULT}
+					/>
+					<RadioButton
+						value={TOOLBAR_TYPE_SUB_AREAS}
+						labelText={TOOLBAR_TYPE_SUB_AREAS}
 					/>
 					<RadioButton
 						value={TOOLBAR_TYPE_SINGLE_BAR}
