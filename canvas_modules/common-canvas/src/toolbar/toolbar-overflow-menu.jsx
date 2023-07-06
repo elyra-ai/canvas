@@ -16,10 +16,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-
-// import { v4 as uuid4 } from "uuid";
-// import { Button } from "carbon-components-react";
-// import { OverflowMenuVertical16 } from "@carbon/icons-react";
 import { genElementByClass, genRectByClass } from "./toolbar-utils.js";
 
 class ToolbarOverflowMenu extends React.Component {
