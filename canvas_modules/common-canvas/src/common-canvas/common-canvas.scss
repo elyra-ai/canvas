@@ -151,6 +151,12 @@ $panel-border-color: $ui-03;
 			border-color: transparent;
 			box-shadow: inset 2px 2px $interactive-01, inset -6px -2px $interactive-01;
 		}
+		// Set padding so overflow icon appears in the center (horizontally). This
+		// offsets the 5px which are set in the code to make the overflow icon
+		// be generated correctly.
+		.toolbar-item-content {
+			padding-left: 4px;
+		}
 	}
 }
 

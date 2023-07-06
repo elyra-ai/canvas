@@ -76,6 +76,10 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	render() {
+		if (this.props.setResizeHandler && !this.state.showExtendedMenu) {
+			this.props.setResizeHandler(null);
+		}
+
 		let overflowMenu = null;
 		if (this.state.showExtendedMenu) {
 			const menuItems = this.props.generateExtensionMenuItems(this.props.index);
