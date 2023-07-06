@@ -82,7 +82,7 @@ class ToolbarActionSubArea extends React.Component {
 	generateSubAreaStyle() {
 		if (this.props.expandDirection === "vertical") {
 			return {
-				top: this.props.actionItemRect.bottom,
+				top: this.props.actionItemRect.bottom + 1,
 				left: this.props.actionItemRect.left
 			};
 		}

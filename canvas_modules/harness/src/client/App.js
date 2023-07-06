@@ -399,6 +399,8 @@ class App extends React.Component {
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
 
+		this.closeSubPanel = this.closeSubPanel.bind(this);
+
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
 		this.externalPipelineFlows = [];
@@ -2071,6 +2073,12 @@ class App extends React.Component {
 		return parentClass;
 	}
 
+	// This is a dummy function that is overwritten by the getSubPanelCloseFn
+	// provided to toolbar items.
+	closeSubPanel() {
+		// Dummy functions.
+	}
+
 	getToolbarConfig() {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
@@ -2091,7 +2099,12 @@ class App extends React.Component {
 
 			const subPanelCheck = (
 				<div style={{ padding: 10 }}>
-					<div style={{ paddingTop: 10, paddingBottom: 15 }}>Small panel with interaction:</div>
+					<div style={{ display: "flex", paddingTop: 10, paddingBottom: 15, justifyContent: "space-between" }}>
+						Small panel:
+						<button style={{ display: "inline-flex", cursor: "pointer", minHeight: "20px", border: 0, padding: "0 10px" }}
+							onClick={this.closeSubPanel}
+						>X</button>
+					</div>
 					<Checkbox id={"chkItOut"} defaultChecked labelText={"Check it out"} />
 					<Checkbox id={"chkSomeMore"} labelText={"Check some more"} />
 					<Checkbox id={"chkToEnd"} labelText={"Check to the end"} />
@@ -2125,7 +2138,7 @@ class App extends React.Component {
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck },
+					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck, getSubPanelCloseFn: (fn) => (this.closeSubPanel = fn) },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },

@@ -61,6 +61,12 @@ class ToolbarActionItem extends React.Component {
 		this.clickOutside = this.clickOutside.bind(this);
 	}
 
+	componentDidMount() {
+		if (this.props.actionObj.getSubPanelCloseFn) {
+			this.props.actionObj.getSubPanelCloseFn(this.closeSubArea);
+		}
+	}
+
 	// We must remove the eventListener in case this class is unmounted due
 	// to the toolbar getting redrawn.
 	componentWillUnmount() {
@@ -437,6 +443,7 @@ ToolbarActionItem.propTypes = {
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		closeSubAreaOnClick: PropTypes.bool,
+		getSubPanelCloseFn: PropTypes.func,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.object,
 		jsx: PropTypes.object,
