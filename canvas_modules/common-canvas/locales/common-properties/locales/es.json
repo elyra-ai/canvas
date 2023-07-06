@@ -41,7 +41,7 @@
   "control.summary.error": "Hay {errorMsgCount} parámetros con errores. ",
   "control.summary.warning": "Hay {warningMsgCount} parámetros con avisos. ",
   "control.summary.error.warning": "Hay {errorMsgCount} parámetros con errores y {warningMsgCount} parámetros con avisos.",
-  "required.error": "Debe proporcionar la {label}.",
+  "required.error": "Debe especificar un valor para {label}.",
   "datetime.format.error": "{role} no válido. El formato debe ser {format}.",
   "invalid.field.error": "No se ha encontrado el campo {label} no válido en el conjunto de datos.",
   "invalid.number.error": "El número no es válido.",

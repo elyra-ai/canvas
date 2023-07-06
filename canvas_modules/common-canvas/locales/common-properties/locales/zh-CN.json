@@ -41,7 +41,7 @@
   "control.summary.error": "存在 {errorMsgCount} 个带有错误的参数。 ",
   "control.summary.warning": "存在 {warningMsgCount} 个带有警告的参数。 ",
   "control.summary.error.warning": "存在 {errorMsgCount} 个带有错误的参数和 {warningMsgCount} 个带有警告的参数。",
-  "required.error": "您必须提供 {label}。",
+  "required.error": "必须输入 {label} 的值。",
   "datetime.format.error": "{role} 无效。 格式应该为 {format}。",
   "invalid.field.error": "{label} 无效，在数据集中找不到字段。",
   "invalid.number.error": "数字无效。",
