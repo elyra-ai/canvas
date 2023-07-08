@@ -1,19 +1,21 @@
-const { defineConfig } = require('cypress')
+"use strict";
+const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  viewportWidth: 1400,
-  viewportHeight: 800,
+	viewportWidth: 1400,
+	viewportHeight: 800,
 	numTestsKeptInMemory: 0,
-  video: false,
-  env: {
-    compareRange: 2,
-  },
-  e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config)
-    },
-    baseUrl: 'http://localhost:3001',
-  },
-})
+	video: false,
+	env: {
+		compareRange: 2,
+	},
+	e2e: {
+		// We've imported your old cypress plugins here.
+		// You may want to clean this up later by importing these.
+		setupNodeEvents(on, config) {
+			/* eslint global-require: "off" */
+			return require("./cypress/plugins/index.js")(on, config);
+		},
+		baseUrl: "http://localhost:3001",
+	},
+});
