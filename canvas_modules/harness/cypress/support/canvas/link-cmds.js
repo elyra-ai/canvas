@@ -84,6 +84,10 @@ Cypress.Commands.add("enterLabelForLinkDecHitReturn", (linkLabel, decId, newLabe
 		.type("{enter}");
 });
 
+Cypress.Commands.add("checkLinkDoesntExist", (linkId) => {
+	cy.get(getLinkSelector(linkId, "grp"))
+		.should("not.exist");
+});
 
 function getLinkSelector(linkId, element) {
 	const inst = document.extraCanvas === true ? "1" : "0";

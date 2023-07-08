@@ -69,6 +69,11 @@ Cypress.Commands.add("enterLabelForNodeHitReturn", (nodeLabel, newLabel) => {
 		.type("{enter}");
 });
 
+Cypress.Commands.add("checkNodeDoesntExist", (nodeLabel) => {
+	cy.get(".d3-nodes-links-group")
+		.contains(nodeLabel)
+		.should("not.exist");
+});
 
 Cypress.Commands.add("setNodeImage", (nodeLabel, nodeImage) =>
 	cy.getNodeIdForLabel(nodeLabel)
@@ -142,15 +147,17 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
+function isGrpNotForLabel(grpArray, nodeLabel) {
+	for (let idx = 0; idx < grpArray.length; idx++) {
+		expect(grpArray[idx].__data__.label).to.not.equal(nodeLabel);
+	}
+}
+
 // posX and posY parameters is optional
 Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
-
-Cypress.Commands.add("rightClickNode", (nodeName) => {
-	cy.getNodeWithLabel(nodeName).rightClick();
-});
 
 // posX and posY parameters is optional
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, posX, posY) => {

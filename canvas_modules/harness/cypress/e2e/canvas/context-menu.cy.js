@@ -32,7 +32,7 @@ describe("Test of context menu", function() {
 		cy.verifyOptionInContextMenu("Undo");
 
 		// Test the node context menu has an enabled Edit menu
-		cy.rightClickNode("DRUG1n");
+		cy.getNodeWithLabel("DRUG1n").rightclick();
 		cy.clickOptionFromContextSubmenu("Edit", "Copy");
 
 		// Test the context menu is pushed to the left when user clicks near right side of the page

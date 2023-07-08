@@ -36,6 +36,12 @@ Cypress.Commands.add("getCommentWithTextInSupernode", (commentText, supernodeNam
 		});
 });
 
+Cypress.Commands.add("checkCommentDoesntExist", (commentText) => {
+	cy.get(".d3-comments-group")
+		.contains(commentText)
+		.should("not.exist");
+});
+
 function getCommentGrpSelector() {
 	const inst = document.extraCanvas === true ? "1" : "0";
 	const selector = `div > svg > g > g > g[data-id^=comment_grp_${inst}]`;
