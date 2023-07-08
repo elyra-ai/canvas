@@ -10,11 +10,14 @@ module.exports = defineConfig({
 		compareRange: 2,
 	},
 	e2e: {
-		// We've imported your old cypress plugins here.
-		// You may want to clean this up later by importing these.
 		setupNodeEvents(on, config) {
-			/* eslint global-require: "off" */
-			return require("./cypress/plugins/index.js")(on, config);
+			// `cy.log()` command's output can be seen on the screen along with test steps
+			on("task", {
+				log(message) {
+					console.log(message); /* eslint no-console: "off" */
+					return null;
+				}
+			});
 		},
 		baseUrl: "http://localhost:3001",
 	},
