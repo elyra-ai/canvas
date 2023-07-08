@@ -838,7 +838,9 @@ Cypress.Commands.add("verifyTopPanelHeight", (height) => {
 
 Cypress.Commands.add("verifyTopPanelWidth", (width) => {
 	cy.get(".top-panel").should((element) => {
-		expect(element).to.have.css("width", `${width}px`);
+		// Use compareCloseTo here because top-panel width is slighyly different
+		// on the build machine to its width when running tests on a local machine.
+		compareCloseTo(element[0].offsetWidth, width);
 	});
 });
 
