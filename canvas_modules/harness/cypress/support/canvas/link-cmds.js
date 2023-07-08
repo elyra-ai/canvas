@@ -370,14 +370,8 @@ Cypress.Commands.add("hoverOverLinkName", (linkName) => {
 });
 
 Cypress.Commands.add("getLinkUsingLinkId", (linkId) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(".d3-link-group").length) {
-			cy.get(getLinkGrpSelector())
-				.then((grpArray) => findGrpForLinkId(grpArray, linkId));
-		}
-		// No nodes found on canvas
-		return null;
-	});
+	cy.get(getLinkGrpSelector())
+		.then((grpArray) => findGrpForLinkId(grpArray, linkId));
 });
 
 function getLinkGrpSelector() {

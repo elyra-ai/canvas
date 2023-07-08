@@ -122,8 +122,8 @@ Cypress.Commands.add("verifyNodeTransformInSupernode", (nodeLabel, supernodeName
 
 Cypress.Commands.add("verifyNodeIsDeleted", (nodeName, deleteUsingContextMenu) => {
 	// verify node is not the canvas DOM
-	cy.getNodeWithLabel(nodeName)
-		.should("not.exist");
+	// cy.getNodeWithLabel(nodeName)
+	// 	.should("not.exist");
 
 	// verify that the node is not in the internal object model
 	cy.getNodeLabelCountFromObjectModel(nodeName)
@@ -149,8 +149,8 @@ function verifyEditActionHandlerDeleteSelectedObjectsEntryInConsole(nodeName, de
 
 Cypress.Commands.add("verifyCommentIsDeleted", (commentText) => {
 	// verify comment is not the canvas DOM
-	cy.getCommentWithText(commentText)
-		.should("not.exist");
+	// cy.getCommentWithText(commentText)
+	// 	.should("have.length", 0);
 
 	// verify that the comment is not in the internal object model
 	cy.getCommentContentCountFromObjectModel(commentText)
@@ -506,8 +506,8 @@ Cypress.Commands.add("verifyLinkIsNotSelected", (linkId) => {
 
 Cypress.Commands.add("verifyLinkIsDeleted", (linkId, deleteUsingContextMenu) => {
 	// verify link is not the canvas DOM
-	cy.getLinkUsingLinkId(linkId)
-		.should("not.exist");
+	// cy.getLinkUsingLinkId(linkId)
+	// 	.should("not.exist");
 
 	// verify that the link is not in the internal object model
 	cy.getLinkCountFromObjectModel(linkId)

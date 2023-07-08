@@ -15,14 +15,8 @@
  */
 
 Cypress.Commands.add("getNodeWithLabel", (nodeLabel) => {
-	cy.get("body").then(($body) => {
-		if ($body.find(".d3-canvas-group .d3-node-group").length) {
-			cy.get(getNodeGrpSelector())
-				.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
-		}
-		// No nodes found on canvas
-		return null;
-	});
+	cy.get(getNodeGrpSelector())
+		.then((grpArray) => findGrpForLabel(grpArray, nodeLabel));
 });
 
 Cypress.Commands.add("getNodeIdForLabel", (nodeLabel) =>
@@ -151,6 +145,11 @@ function findGrpForLabel(grpArray, nodeLabel) {
 // posX and posY parameters is optional
 Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
+});
+
+
+Cypress.Commands.add("rightClickNode", (nodeName) => {
+	cy.getNodeWithLabel(nodeName).rightClick();
 });
 
 // posX and posY parameters is optional
