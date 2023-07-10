@@ -1,9 +1,0 @@
-{
-	"baseUrl": "http://localhost:3001",
-	"viewportWidth": 1400,
-	"viewportHeight": 800,
-	"video": false,
-	"env": {
-		"compareRange": 2
-	}
-}

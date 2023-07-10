@@ -20,32 +20,41 @@ describe("Test of action image tooltip direction", function() {
 		cy.openPropertyDefinition("action_paramDef.json");
 	});
 
-	it("action image tooltip direction left", function() {
+	it("action image tooltip directions", function() {
+
+		// Test: action image tooltip direction left
+		// ------------------------------------------
+
 		// For "fall" image, tooltip_direction is set to "left" in paramDef
 		cy.hoverOverActionImage("fall");
 		cy.verifyTip(null, "visible",
 			"This is a long tooltip for action image. Adding this line makes it a multi-line tooltip.", "left");
-	});
 
-	it("action image tooltip direction right", function() {
+		// Test: action image tooltip direction right
+		// ------------------------------------------
+
 		// For "spring" image, tooltip_direction is set to "right" in paramDef
 		cy.hoverOverActionImage("spring");
 		cy.verifyTip(null, "visible", "Spring", "right");
-	});
 
-	it("action image tooltip direction top", function() {
+
+		// Test: action image tooltip direction top
+		// ----------------------------------------
+
 		// For "summer" image, tooltip_direction is set to "top" in paramDef
 		cy.hoverOverActionImage("summer");
 		cy.verifyTip(null, "visible", "Summer", "top");
-	});
 
-	it("action image tooltip direction bottom", function() {
+		// Test: action image tooltip direction bottom
+		// -------------------------------------------
+
 		// For "winter" image, tooltip_direction is set to "bottom" in paramDef
 		cy.hoverOverActionImage("winter");
 		cy.verifyTip(null, "visible", "Winter", "bottom");
-	});
 
-	it("When tooltip_direction is not specified, default direction is bottom", function() {
+		// Test: "When tooltip_direction is not specified, default direction is bottom
+		// ---------------------------------------------------------------------------
+
 		// Click "Conditions" catgeory
 		cy.get(".common-canvas-right-side-items .properties-category-title").eq(2)
 			.click();
