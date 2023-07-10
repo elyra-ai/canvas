@@ -15,17 +15,9 @@
  */
 /* eslint max-len: "off" */
 
-Cypress.Commands.add("getCommentWithText", (commentText) => {
-	cy.get("body").then(($body) => {
-		const len = $body.find(".d3-comment-group").length;
-		if (len) {
-			cy.get(getCommentGrpSelector())
-				.then((grpArray) => findGrpForText(grpArray, commentText));
-		}
-		// No comments found on canvas
-		return null;
-	});
-});
+Cypress.Commands.add("getCommentWithText", (commentText) =>
+	cy.get(getCommentGrpSelector())
+		.then((grpArray) => findGrpForText(grpArray, commentText)));
 
 Cypress.Commands.add("getCommentWithTextInSubFlow", (commentText) =>
 	cy.get(getCommentGrpSelectorInSubFlow())
@@ -42,6 +34,12 @@ Cypress.Commands.add("getCommentWithTextInSupernode", (commentText, supernodeNam
 			cy.get(getCommentGrpSelectorInSupernode(supernodeId))
 				.then((grpArray) => findGrpForText(grpArray, commentText));
 		});
+});
+
+Cypress.Commands.add("checkCommentDoesntExist", (commentText) => {
+	cy.get(".d3-comments-group")
+		.contains(commentText)
+		.should("not.exist");
 });
 
 function getCommentGrpSelector() {
