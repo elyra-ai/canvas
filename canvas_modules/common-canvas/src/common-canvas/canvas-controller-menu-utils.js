@@ -296,8 +296,8 @@ const createDefaultContextMenu = (source) => {
 
 const createEditMenu = (source, includePaste) => {
 	const editSubMenu = [
-		{ action: "cut", label: getLabel("edit.cutSelection"), enable: source.selectedObjectIds.length > 0 },
-		{ action: "copy", label: getLabel("edit.copySelection"), enable: source.selectedObjectIds.length > 0 }
+		{ action: "cut", label: getLabel("edit.cutSelection"), enable: source.type === "canvas" ? source.selectedObjectIds.length > 0 : true },
+		{ action: "copy", label: getLabel("edit.copySelection"), enable: source.type === "canvas" ? source.selectedObjectIds.length > 0 : true }
 	];
 	if (includePaste) {
 		editSubMenu.push({ action: "paste", label: getLabel("edit.pasteSelection"), enable: !cc.isClipboardEmpty() });
