@@ -25,7 +25,10 @@ export default class PipelineOutHandler {
 	// in the canvasInfo are the same as those for the pipelineFlow.
 	static createPipelineFlow(canvasInfo) {
 		const copyCanvasInfo = cloneDeep(canvasInfo);
+		// Remove these transitory fields before creating the pipelineFlow.
 		delete copyCanvasInfo.subdueStyle;
+		delete copyCanvasInfo.hideComments;
+
 		const pipelineFlow = Object.assign({}, copyCanvasInfo,
 			{
 				"pipelines": this.createPipelinesFromCanvasInfo(copyCanvasInfo)
