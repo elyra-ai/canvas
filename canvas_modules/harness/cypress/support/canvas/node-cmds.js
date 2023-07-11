@@ -347,6 +347,9 @@ Cypress.Commands.add("moveNodeToPosition", (nodeLabel, canvasX, canvasY) => {
 					.then((transform) => {
 						cy.get(srcSelector)
 							.trigger("mousedown", "topLeft", { which: 1, view: win });
+						// Need to wait for the setTimeout to complete at start of node
+						// drag (before inserting node into a link).
+						cy.wait(300); /* eslint cypress/no-unnecessary-waiting: "off" */
 						cy.get("#canvas-div-0")
 							.trigger("mousemove", canvasX + transform.x, canvasY + transform.y, { view: win })
 							.trigger("mouseup", { which: 1, view: win });
