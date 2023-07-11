@@ -2337,21 +2337,31 @@ export default class SVGCanvasRenderer {
 		// If we are dragging an 'insertable' node, set it to be translucent so
 		// that, when it is dragged over a link line, the highlightd line can be seen OK.
 		if (this.isExistingNodeInsertableIntoLink()) {
-			this.existingNodeInsertableIntoLink = true;
-			this.setNodeTranslucentState(this.dragObjects[0].id, true);
-			this.setDataLinkSelectionAreaWider(true);
+			// Only style the node to be translucent if this action isn't cancelled
+			// by the user releasing the mouse button within 200 ms of pressing it.
+			// This stops the node flashing when the user is only selecting it.
+			this.startNodeInsertingInLink = setTimeout(() => {
+				this.existingNodeInsertableIntoLink = true;
+				this.setNodeTranslucentState(this.dragObjects[0].id, true);
+				this.setDataLinkSelectionAreaWider(true);
+			}, 200);
 		}
 
 		// If we are dragging an 'attachable' node, set it to be translucent so
 		// that, when it is dragged over link lines, the highlightd lines can be seen OK.
 		if (this.isExistingNodeAttachableToDetachedLinks()) {
-			this.existingNodeAttachableToDetachedLinks = true;
-			const mousePos = this.getTransformedMousePos(d3Event);
-			this.dragPointerOffsetInNode = {
-				x: mousePos.x - this.dragObjects[0].x_pos,
-				y: mousePos.y - this.dragObjects[0].y_pos
-			};
-			this.setNodeTranslucentState(this.dragObjects[0].id, true);
+			// Only style the node to be translucent if this action isn't cancelled
+			// by the user releasing the mouse button within 200 ms of pressing it.
+			// This stops the node from when the user is only selecting it.
+			this.startNodeAttachingToDetachedLinks = setTimeout(() => {
+				this.existingNodeAttachableToDetachedLinks = true;
+				const mousePos = this.getTransformedMousePos(d3Event);
+				this.dragPointerOffsetInNode = {
+					x: mousePos.x - this.dragObjects[0].x_pos,
+					y: mousePos.y - this.dragObjects[0].y_pos
+				};
+				this.setNodeTranslucentState(this.dragObjects[0].id, true);
+			}, 200);
 		}
 	}
 
@@ -2452,6 +2462,12 @@ export default class SVGCanvasRenderer {
 	dragObjectsEnd(d3Event, d) {
 		// Set to false before updating object model so main body of displayNodes is run.
 		this.dragging = false;
+
+		// Cancels the styling of insertable/attachable nodes if the user releases
+		// the mouse button with 200 milliseconds of pressing it on the node. This
+		// stops the node flashing when the user just selets the node.
+		clearTimeout(this.startNodeInsertingInLink);
+		clearTimeout(this.startNodeAttachingToDetachedLinks);
 
 		// If the pointer hasn't moved and enableDragWithoutSelect we interpret
 		// that as a select on the object.
