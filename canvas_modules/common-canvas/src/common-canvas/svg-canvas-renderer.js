@@ -2465,7 +2465,7 @@ export default class SVGCanvasRenderer {
 
 		// Cancels the styling of insertable/attachable nodes if the user releases
 		// the mouse button with 200 milliseconds of pressing it on the node. This
-		// stops the node flashing when the user just selets the node.
+		// stops the node flashing when the user just selects the node.
 		clearTimeout(this.startNodeInsertingInLink);
 		clearTimeout(this.startNodeAttachingToDetachedLinks);
 
