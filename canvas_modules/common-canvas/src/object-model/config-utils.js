@@ -153,7 +153,7 @@ export default class CanvasUtils {
 		return state;
 	}
 
-	// Some fields can be ommitted from the config comparison becuase they do not
+	// Some fields can be omitted from the config comparison becuase they do not
 	// need to cause a full canvas refresh.
 	// TODO - It would probably be better to go through the config fields and
 	// decide which require a full refresh of the canvas and only compare those
