@@ -39,7 +39,7 @@ export default class SVGCanvasD3 {
 				!this.canvasInfo ||
 				canvasInfo.id !== this.canvasInfo.id ||
 				(this.renderer && this.renderer.pipelineId !== this.canvasController.getCurrentBreadcrumb().pipelineId) ||
-				!ConfigUtils.compareCanvasConfigs(this.config, config)) {
+				!ConfigUtils.compareCanvasConfigsOmitFields(this.config, config)) {
 			this.logger.logStartTimer("initializing");
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);

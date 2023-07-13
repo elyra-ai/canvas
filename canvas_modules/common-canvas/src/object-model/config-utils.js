@@ -17,7 +17,7 @@
 // This class contains utility functions that may be used for working with
 // the canvas config object.
 
-import { isMatch, isMatchWith } from "lodash";
+import { isMatch, isMatchWith, omit } from "lodash";
 import LayoutDimensions from "./layout-dimensions.js";
 import { ASSOC_STRAIGHT, LINK_SELECTION_NONE } from "../common-canvas/constants/canvas-constants";
 
@@ -116,6 +116,16 @@ export default class CanvasUtils {
 		return config;
 	}
 
+	// Returns true if the two canvas config object compare the same. This is
+	// used to decide if a full refresh of the canvas is required. It omits
+	// some fields that do not need to be taken into account when deciding
+	// if a full refresh of the canvas is required.
+	static compareCanvasConfigsOmitFields(c1, c2) {
+		const config1 = this.omitFields(c1);
+		const config2 = this.omitFields(c2);
+		return this.compareCanvasConfigs(config1, config2);
+	}
+
 	// Returns true if the two canvas config object compare the same.
 	static compareCanvasConfigs(config1, config2) {
 		let state = false;
@@ -146,6 +156,15 @@ export default class CanvasUtils {
 		}
 
 		return state;
+	}
+
+	// Some fields can be omitted from the config comparison becuase they do not
+	// need to cause a full canvas refresh.
+	// TODO - It would probably be better to go through the config fields and
+	// decide which require a full refresh of the canvas and only compare those
+	// fields rather than omitting certain fields.
+	static omitFields(config) {
+		return omit(config, ["enableEditingActions", "enableDropZoneOnExternalDrag", "enableStateTag"]);
 	}
 
 	// Returns true if the contents of enablePositionNode1 and enablePositionNode2 are
