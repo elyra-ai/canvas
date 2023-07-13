@@ -30,7 +30,7 @@
   "properties.support.message": "問題が解決しない場合は、サポートにお問い合わせください。",
   "properties.unexpected.message": "申し訳ありません。ペインをロードできませんでした。",
   "table.search.header": "表に表示",
-  "table.search.placeholder": "列 {column_name} で検索",
+  "table.search.placeholder": "列 で検索",
   "table.search.label": "{table_name} 表で検索",
   "summary.longTable.placeholder": "10 フィールドを超えています ...",
   "alerts.tab.title": "アラート",

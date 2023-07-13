@@ -30,7 +30,7 @@
   "properties.support.message": "Si el problema persiste, póngase en contacto con el servicio de soporte.",
   "properties.unexpected.message": "Lo sentimos, el panel no se ha cargado.",
   "table.search.header": "Ver en tablas",
-  "table.search.placeholder": "Buscar en la columna {column_name}",
+  "table.search.placeholder": "Buscar en la columna",
   "table.search.label": "Buscar en la tabla {table_name}",
   "summary.longTable.placeholder": "Más de diez campos...",
   "alerts.tab.title": "Alertas",

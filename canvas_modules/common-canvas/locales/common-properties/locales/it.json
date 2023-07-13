@@ -30,7 +30,7 @@
   "properties.support.message": "Se il problema persiste, contattare l'assistenza.",
   "properties.unexpected.message": "Il riquadro non si è caricato.",
   "table.search.header": "Visualizza nelle tabelle",
-  "table.search.placeholder": "Trova nella colonna {column_name}",
+  "table.search.placeholder": "Trova nella colonna",
   "table.search.label": "Ricerca nella tabella {table_name}",
   "summary.longTable.placeholder": "Più di dieci campi...",
   "alerts.tab.title": "Avvisi",

@@ -30,7 +30,7 @@
   "properties.support.message": "Se o problema persistir, entre em contato com o suporte.",
   "properties.unexpected.message": "A área de janela não foi carregada.",
   "table.search.header": "Visualizar em tabelas",
-  "table.search.placeholder": "Localizar na coluna {column_name}",
+  "table.search.placeholder": "Localizar na coluna",
   "table.search.label": "Procurar na tabela {table_name}",
   "summary.longTable.placeholder": "Mais de dez campos...",
   "alerts.tab.title": "Alertas",

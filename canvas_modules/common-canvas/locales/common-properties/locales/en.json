@@ -30,7 +30,7 @@
   "properties.support.message": "If the problem persists, contact support.",
   "properties.unexpected.message": "Oops, the pane didn't load.",
   "table.search.header": "View in tables",
-  "table.search.placeholder": "Find in column {column_name}",
+  "table.search.placeholder": "Find in column",
   "table.search.label": "Search in {table_name} table",
   "summary.longTable.placeholder": "More than ten fields...",
   "alerts.tab.title": "Alerts",

@@ -30,7 +30,7 @@
   "properties.support.message": "Si le problème persiste, prenez contact avec le support.",
   "properties.unexpected.message": "Le panneau ne s'est pas chargé.",
   "table.search.header": "Afficher dans les tables",
-  "table.search.placeholder": "Rechercher dans la colonne {column_name}",
+  "table.search.placeholder": "Rechercher dans la colonne",
   "table.search.label": "Rechercher dans la table {table_name}",
   "summary.longTable.placeholder": "Plus de dix champs...",
   "alerts.tab.title": "Alertes",

@@ -30,7 +30,7 @@
   "properties.support.message": "Kontakta supporten om problemet kvarstår.",
   "properties.unexpected.message": "Hoppsan, fönstret laddades inte.",
   "table.search.header": "Visa i tabeller",
-  "table.search.placeholder": "Sök i kolumn {column_name}",
+  "table.search.placeholder": "Sök i kolumn",
   "table.search.label": "Sök i tabellen {table_name}",
   "summary.longTable.placeholder": "Mer än tio fält...",
   "alerts.tab.title": "Varningar",

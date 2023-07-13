@@ -30,7 +30,7 @@
   "properties.support.message": "Tritt der Fehler weiterhin auf, wenden Sie sich an den Support.",
   "properties.unexpected.message": "Das Teilfenster konnte nicht geladen werden.",
   "table.search.header": "In Tabellen anzeigen",
-  "table.search.placeholder": "In Spalte {column_name} suchen",
+  "table.search.placeholder": "In Spalte suchen",
   "table.search.label": "In Tabelle {table_name} suchen",
   "summary.longTable.placeholder": "Mehr als zehn Felder...",
   "alerts.tab.title": "Alerts",

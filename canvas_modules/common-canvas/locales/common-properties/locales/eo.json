@@ -30,7 +30,7 @@
   "properties.support.message": "[Esperanto~If the problem persists, contact support.~~~~~~~~~~eo]",
   "properties.unexpected.message": "[Esperanto~Oops, the pane didn't load.~~~~~~~eo]",
   "table.search.header": "[Esperanto~View in tables~eo]",
-  "table.search.placeholder": "[Esperanto~Find in column {column_name}~~~~~~~~eo]",
+  "table.search.placeholder": "[Esperanto~Find in column~~~~~~~~eo]",
   "table.search.label": "[Esperanto~Search in {table_name} table~~~~~~~~eo]",
   "summary.longTable.placeholder": "[Esperanto~More than ten fields...~~~~eo]",
   "alerts.tab.title": "[Esperanto~Alerts~eo]",
