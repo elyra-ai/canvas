@@ -465,6 +465,7 @@ class FlexibleTable extends React.Component {
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
 
 		const headers = headerInfo.headers;
+		const searchLabel = headerInfo.searchLabel;
 		const disabled = this.props.tableState === STATES.DISABLED;
 
 		let searchBar = null;
@@ -472,7 +473,7 @@ class FlexibleTable extends React.Component {
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = typeof this.props.searchPlaceholder !== "undefined"
 				? this.props.searchPlaceholder
-				: this.props.intl.formatMessage({ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] });
+				: this.props.intl.formatMessage({ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] }, { column_name: searchLabel });
 			const searchBarLabel = this.props.intl.formatMessage(
 				{ id: "table.search.label", defaultMessage: defaultMessages["table.search.label"] },
 				{ table_name: this.props.tableLabel }

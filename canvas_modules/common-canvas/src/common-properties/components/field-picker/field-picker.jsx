@@ -418,7 +418,6 @@ export default class FieldPicker extends React.Component {
 				updateRowSelections={this.updateFieldSelections}
 				rowSelection={ROW_SELECTION.MULTIPLE}
 				light={this.props.controller.getLight() && !this.props.controller.isTearsheetContainer()}
-				searchPlaceholder="Custom search placeholder"
 			/>
 		);
 	}

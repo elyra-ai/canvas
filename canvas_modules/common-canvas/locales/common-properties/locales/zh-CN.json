@@ -30,7 +30,7 @@
   "properties.support.message": "如果该问题仍存在，请与支持人员联系。",
   "properties.unexpected.message": "抱歉，该窗格未装入。",
   "table.search.header": "在表中查看",
-  "table.search.placeholder": "在列 中查找",
+  "table.search.placeholder": "在列 {column_name} 中查找",
   "table.search.label": "在 {table_name} 表中搜索",
   "summary.longTable.placeholder": "超过 10 个字段...",
   "alerts.tab.title": "警报",

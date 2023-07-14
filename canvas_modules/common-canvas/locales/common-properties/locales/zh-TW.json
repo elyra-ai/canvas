@@ -30,7 +30,7 @@
   "properties.support.message": "如果問題持續發生，請聯絡「支援中心」。",
   "properties.unexpected.message": "糟糕，窗格未載入。",
   "table.search.header": "在表格中檢視",
-  "table.search.placeholder": "在直欄 中尋找",
+  "table.search.placeholder": "在直欄 {column_name} 中尋找",
   "table.search.label": "在 {table_name} 表格中搜尋",
   "summary.longTable.placeholder": "超過十個欄位...",
   "alerts.tab.title": "警示",

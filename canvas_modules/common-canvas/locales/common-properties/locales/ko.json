@@ -30,7 +30,7 @@
   "properties.support.message": "문제가 지속될 경우 지원 센터에 문의하십시오.",
   "properties.unexpected.message": "분할창이 로드되지 않았습니다.",
   "table.search.header": "테이블에서 보기",
-  "table.search.placeholder": "열에서 찾기",
+  "table.search.placeholder": "{column_name} 열에서 찾기",
   "table.search.label": "{table_name} 테이블에서 검색",
   "summary.longTable.placeholder": "10개가 넘는 필드...",
   "alerts.tab.title": "경보",

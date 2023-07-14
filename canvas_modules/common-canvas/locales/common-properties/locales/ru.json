@@ -81,7 +81,7 @@
 	"summary.longTable.placeholder": "Более десяти полей...",
 	"table.search.header": "Просмотр в таблицах",
 	"table.search.label": "Поиск в таблице {table_name}",
-	"table.search.placeholder": "Найти в столбце",
+	"table.search.placeholder": "Найти в столбце {column_name}",
 	"table.summary.error": "Есть {errorMsgCount} ячеек с ошибками ",
 	"table.summary.warning": "Есть {warningMsgCount} ячеек с предупреждениями ",
 	"title.editor.helpButton.label": "справка",

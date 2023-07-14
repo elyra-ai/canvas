@@ -298,7 +298,7 @@ describe("FlexibleTable renders correctly", () => {
 		);
 
 		const searchBar = wrapper.find("div.properties-ft-search-container").find("input");
-		expect(searchBar.props()).to.have.property("placeholder", "Find in column");
+		expect(searchBar.props()).to.have.property("placeholder", "Find in column Filter Field");
 	});
 
 
