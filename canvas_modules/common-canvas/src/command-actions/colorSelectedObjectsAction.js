@@ -26,7 +26,7 @@ export default class ColorSelectedObjectsAction extends Action {
 		this.oldIds = this.data.selectedObjects.map((o) => o.id); // Copy the IDs
 		this.oldColors = this.getOldColors();
 		this.actionLabel = this.createActionLabel();
-		this.newBackgroundColor = "bkg-" + this.data.editParam.color;
+		this.newBackgroundColor = this.data.editParam.color;
 	}
 
 	// Standard methods
