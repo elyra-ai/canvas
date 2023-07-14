@@ -471,10 +471,9 @@ class FlexibleTable extends React.Component {
 		let searchBar = null;
 
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = this.props.intl.formatMessage(
-				{ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] },
-				{ column_name: searchLabel }
-			);
+			const placeHolder = typeof this.props.searchPlaceholder !== "undefined"
+				? this.props.searchPlaceholder
+				: this.props.intl.formatMessage({ id: "table.search.placeholder", defaultMessage: defaultMessages["table.search.placeholder"] }, { column_name: searchLabel });
 			const searchBarLabel = this.props.intl.formatMessage(
 				{ id: "table.search.label", defaultMessage: defaultMessages["table.search.label"] },
 				{ table_name: this.props.tableLabel }
@@ -588,7 +587,11 @@ FlexibleTable.propTypes = {
 	sortable: PropTypes.array,
 	columns: PropTypes.array.isRequired,
 	data: PropTypes.array.isRequired,
-	emptyTablePlaceholder: PropTypes.string,
+	emptyTablePlaceholder: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.element
+	]),
+	searchPlaceholder: PropTypes.string,
 	filterable: PropTypes.array,
 	filterBy: PropTypes.string,
 	filterKeyword: PropTypes.string,
