@@ -1,0 +1,393 @@
+{
+  "titleDefinition": {
+    "title": "Data stage tabs example"
+  },
+  "uihints": {
+    "editor_size": "medium",
+    "id": "stagePanels",
+    "group_info": [
+      {
+        "id": "detailsPanels",
+        "type": "subTabs",
+        "group_info": [
+          {
+            "id": "StageSubTab",
+            "label": {
+              "default": "STAGE"
+            },
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "PropertiesTab",
+                "type": "twistyPanel",
+                "label": {
+                  "default": "Properties"
+                },
+                "group_info": [
+                  
+                  {
+                    "id": "Sorting KeysProps",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "checkbox",
+                      "keyProperties",
+                      "structuretableErrors",
+                      "list_string_error"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "checkbox",
+        "label": {
+          "default": "checkbox"
+        },
+        "description": {
+          "default": "checkbox",
+          "link": {
+            "id": "link_for_checkbox",
+            "data": {
+              "something": "option data"
+            }
+          }
+        },
+        "class_name": "checkbox-control-class"
+      },
+      {
+        "description": {
+          "default": "The key column that the sort will be carried out on."
+        },
+        "parameter_ref": "keyProperties",
+        "label": {
+          "default": "Key"
+        },
+        "resource_key": "keyPropertiesRKey"
+      },
+      {
+				"parameter_ref": "structuretableErrors",
+				"label": {
+					"default": "Error table"
+				},
+				"description": {
+					"default": "Set ascending to descending to generate error.",
+					"placement": "on_panel"
+				},
+				"rows": 12
+			},
+      {
+        "parameter_ref": "list_string_error",
+        "label": {
+          "default": "list of strings"
+        },
+        "description": {
+          "default": "list with show error if empty"
+        },
+        "control": "list",
+        "moveable_rows": true
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "keySubProperties",
+        "label": {
+          "default": "Add keySubProperties"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "key",
+            "label": {
+              "default": "Key"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "keyRKey"
+          },
+          {
+            "parameter_ref": "sorted-clustered",
+            "label": {
+              "default": "Sort Key Mode"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "resource_key": "sorted-clusteredRKey",
+            "control": "oneofselect"
+          }
+        ]
+      },
+      {
+				"complex_type_ref": "structuretableErrors",
+				"moveable_rows": true,
+				"key_definition": {
+					"parameter_ref": "field",
+					"width": 28,
+					"label": {
+						"resource_key": "structuretableErrors.field.label"
+					},
+					"summary": true
+				},
+				"parameters": [
+					{
+						"parameter_ref": "structuretable_error_readonly_int",
+						"width": 16,
+						"label": {
+							"resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.label"
+						},
+						"description": {
+							"resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.desc"
+						},
+						"generated_values": {
+							"operation": "index",
+							"start_value": 5
+						},
+						"control": "readonly"
+					},
+					{
+						"parameter_ref": "structuretable_error",
+						"width": 16,
+						"label": {
+							"resource_key": "structuretableErrors.sort_order.label"
+						},
+						"description": {
+							"resource_key": "structuretableErrors.sort_order.desc"
+						},
+						"control": "toggletext",
+						"value_icons": [
+							"/images/up-triangle.svg",
+							"/images/down-triangle.svg"
+						]
+					}
+				]
+			}
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Please provide value for Key column"
+          },
+          "focus_parameter_ref": "keyProperties[0]"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkbox",
+            "parameter_2_ref": "keyProperties[0]",
+            "op": "customRequiredColumn"
+          }
+        }
+      }
+    },
+    {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "structuretableErrors[2]",
+					"message": {
+						"default": "order cannot be descending"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "structuretableErrors[2]",
+						"op": "notEquals",
+						"value": "Descending"
+					}
+				}
+			}
+		},
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "list_string_error",
+          "message": {
+            "default": "List must have at least two non-empty elements"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "list_string_error",
+            "op": "customNonEmptyListLessThan",
+            "value": 2
+          }
+        }
+      }
+    }
+  ],
+  "resources": {
+    "inputPort.label": "inPort",
+    "outputPort.label": "outPort",
+    "sorted-clusteredRKey.clustered.label": "Don't Sort (Previously Grouped)",
+    "sorted-clusteredRKey. .label": "Sort",
+    "sorted-clusteredRKey.sorted.label": "Don't Sort (Previously Sorted)",
+    "ci-csRKey.cs.label": "True",
+    "ci-csRKey.ci.label": "False",
+    "ebcdicRKey.ebcdic.label": "True",
+    "ebcdicRKey. .label": "False",
+    "nullsRKey.last.label": "Last",
+    "nullsRKey.first.label": "First",
+    "asc-descRKey.desc.label": "Descending",
+    "asc-descRKey.asc.label": "Ascending",
+    "operatorRKey.psort -sorter unix.label": "Unix",
+    "operatorRKey.tsort.label": "DataStage",
+    "statsRKey.stats.label": "True",
+    "statsRKey. .label": "False",
+    "stableRKey.stable.label": "True",
+    "stableRKey. .label": "False",
+    "uniqueRKey. .label": "True",
+    "uniqueRKey.unique.label": "False",
+    "flagClusterRKey.flagCluster.label": "True",
+    "flagClusterRKey. .label": "False",
+    "flagKeyRKey.flagKey.label": "True",
+    "flagKeyRKey. .label": "False",
+    "execmodeRKey.label": "Execution mode",
+    "execmodeRKey.default_par.label": "Default (Parallel)",
+    "execmodeRKey.par.label": "Parallel",
+    "execmodeRKey.seq.label": "Sequential",
+    "combinabilityRKey.label": "Combinability mode",
+    "combinabilityRKey.auto.label": "(Auto)",
+    "combinabilityRKey.combine.label": "Combinable",
+    "combinabilityRKey.nocombine.label": "Don't Combine",
+    "preserveRKey.label": "Preserve partitioning",
+    "preserveRKey.-2.label": "Default (Set)",
+    "preserveRKey.0.label": "Clear",
+    "preserveRKey.1.label": "Set",
+    "structuretableErrors.label": "ErorTable",
+		"structuretableErrors.field.label": "Field",
+		"structuretableErrors.sort_order.label": "Order",
+		"structuretableErrors.sort_order.desc": "Update sort order",
+		"structuretableErrors.structuretable_sort_order_readonly_int.label": "Index From 5",
+		"structuretableErrors.structuretable_sort_order_readonly_int.desc": "Auto generated integers starting at 5",
+		"structuretableErrors.sort_order.Ascending.label": "Ascending",
+		"structuretableErrors.sort_order.Descending.label": "Descending"
+  },
+  "parameters": [
+    {
+      "id": "checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "keyProperties",
+      "type": "array[keySubProperties]",
+      "default": []
+    },
+    {
+			"id": "structuretableErrors",
+			"type": "array[structuretableErrors]",
+			"role": "column",
+      "required": true
+		},
+    {
+      "id": "list_string_error",
+      "type": "array[string]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "keySubProperties",
+      "parameters": [
+        {
+          "id": "key",
+          "type": "string"
+        },
+        {
+          "id": "sorted-clustered",
+          "type": "string",
+          "enum": [
+            "clustered",
+            " ",
+            "sorted"
+          ],
+          "default": " "
+        }
+      ]
+    },
+    {
+			"id": "structuretableErrors",
+			"key_definition": {
+				"id": "field",
+				"type": "string",
+				"role": "column",
+				"default": ""
+			},
+			"parameters": [
+				{
+					"id": "structuretable_error_readonly_int",
+					"type": "integer",
+					"default": "5"
+				},
+				{
+					"id": "structuretable_error",
+					"enum": [
+						"Ascending",
+						"Descending"
+					],
+					"default": "Ascending"
+				}
+			]
+		}
+  ],
+  "current_parameters": {
+    "structuretableErrors": [
+			[
+				"Cholesterol",
+				1,
+				"Ascending"
+			]
+		],
+    "list_string_error": [
+      "not empty",
+      " "
+    ]
+  },
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+					"name": "Cholesterol",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "set",
+						"modeling_role": "input"
+					}
+				},
+        {
+					"name": "Age",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "range",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Sex",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "ordered_set",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "BP",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				}
+      ]
+    }
+  ]
+}
