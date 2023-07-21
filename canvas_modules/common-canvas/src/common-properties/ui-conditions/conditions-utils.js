@@ -713,8 +713,6 @@ function _validateInput(propertyId, controller, control, showErrors) {
 				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
 					const tablePropertyId = controller.convertPropertyId(msgPropertyId.name);
 					const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
-					console.log("Existing table error message");
-					console.log(tableErrorMessage);
 					if (tableErrorMessage !== null) {
 						controller.updateErrorMessage(tablePropertyId, null);
 					}

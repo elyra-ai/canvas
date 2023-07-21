@@ -27,8 +27,11 @@ function op() {
  * @return {Boolean}
  */
 function evaluate(paramInfo, param2Info, value, controller) {
+	// Check if table is empty
+	const tableValue = controller.getPropertyValue({ name: param2Info.id.name });
+	const emptyTable = tableValue.length === 0;
 	// When checkbox is checked, show error message if param2Info value is empty
-	if (paramInfo.value) {
+	if (paramInfo.value && !emptyTable) {
 		const dataType = typeof param2Info.value;
 		switch (dataType) {
 		case "undefined":
@@ -41,7 +44,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			if (param2Info.value === null) {
 				return false;
 			}
-			const column = param2Info.id.col;
+			const column = param2Info.id.col; // eslint-disable-line  no-case-declarations
 			return param2Info.value[column] !== null && typeof param2Info.value[column] !== "undefined";
 		default:
 			// console.log("Ignoring condition operation 'customRequiredColumn' for parameter_ref " + param2Info.param + " with input data type " + dataType);

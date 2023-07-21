@@ -365,7 +365,6 @@ export default class PropertiesStore {
 		if (!isEqual(this.getErrorMessage(propertyId), value)) {
 			console.log("updating error message in redux store for...");
 			console.log(propertyId);
-			console.log(value);
 			this.store.dispatch(updateErrorMessage({ propertyId: propertyId, value: value }));
 		}
 	}

@@ -47,6 +47,8 @@ function messages(state = {}, action) {
 		} else {
 			newState[propertyId.name] = Object.assign({}, action.message.value);
 		}
+		console.log("UPDATE_ERROR_MESSAGE returning...");
+		console.log(newState);
 		return Object.assign({}, state, newState);
 	}
 	case CLEAR_ERROR_MESSAGE: {
@@ -70,6 +72,8 @@ function messages(state = {}, action) {
 				}
 			}
 		}
+		console.log("CLEAR_ERROR_MESSAGE returning...");
+		console.log(newState);
 		return Object.assign({}, state, newState);
 	}
 	case SET_ERROR_MESSAGES: {
