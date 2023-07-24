@@ -476,7 +476,7 @@ export default class SidePanelAPI extends React.Component {
 
 		if (this.state.appendLink) {
 			messageLink = (<div>
-				<a href="https://github.com/elyra-ai/canvas/wiki/2.0-Common-Canvas-Documentation" target="_blank">Visit Common Canvas Wiki!</a>
+				<a href="https://github.com/elyra-ai/canvas/tree/main/guide/2.0-Common-Canvas-Documentation.md" target="_blank">Visit Common Canvas Wiki!</a>
 			</div>);
 		}
 

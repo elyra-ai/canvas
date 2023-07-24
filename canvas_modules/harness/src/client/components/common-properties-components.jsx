@@ -504,7 +504,7 @@ class CommonPropertiesComponents extends React.Component {
 					to <span className="harness-highlight">Custom</span> and <span className="harness-highlight">rightFlyout</span> set to true.
 					Below is the minimum specifications to render CommonProperties. More options and details are listed in the&nbsp;
 				<a className="harness-properties-documentation-page-intro-link"
-					href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation"}
+					href={"https://github.com/elyra-ai/canvas/tree/main/guide/3.0-Common-properties-documentation.md"}
 				>
 					Common Properties wiki
 				</a>.
@@ -527,7 +527,7 @@ class CommonPropertiesComponents extends React.Component {
 				</pre>
 				<p>For more information with using CommonCanvas right-flyout for the properties editor, refer to the documentation in the&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href={"https://github.com/elyra-ai/canvas/wiki/3.0-Common-properties-documentation" +
+						href={"https://github.com/elyra-ai/canvas/tree/main/guide/3.0-Common-properties-documentation.md" +
 						"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
 					>
 						Common Properties wiki
@@ -2069,7 +2069,7 @@ class CommonPropertiesComponents extends React.Component {
 						to <span className="harness-highlight">More than ten fields...</span> This placeholder text can be configured through
 						&nbsp;
 					<a className="harness-properties-documentation-page-intro-link"
-						href="https://github.com/elyra-ai/canvas/wiki/3.0-Common-Properties-documentation#step-3--display-the-properties-editor"
+						href="https://github.com/elyra-ai/canvas/tree/main/guide/3.0-Common-Properties-documentation#step-3--display-the-properties-editor.md"
 					>custom labels</a>.
 					</p>
 					<div className="harness-section-row">

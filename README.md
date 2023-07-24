@@ -37,7 +37,7 @@ npm install -g grunt-cli sass
 ```
 In your application's package.json replace  
 ```
-"@elyra/canvas": "<verson>"
+"@elyra/canvas": "<version>"
 ```
 with
 ```  
