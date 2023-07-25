@@ -47,7 +47,6 @@ function evaluate(paramInfo, param2Info, value, controller) {
 			const column = param2Info.id.col; // eslint-disable-line  no-case-declarations
 			return param2Info.value[column] !== null && typeof param2Info.value[column] !== "undefined";
 		default:
-			// console.log("Ignoring condition operation 'customRequiredColumn' for parameter_ref " + param2Info.param + " with input data type " + dataType);
 			return true;
 		}
 	}

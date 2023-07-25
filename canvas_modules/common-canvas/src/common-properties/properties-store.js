@@ -295,9 +295,6 @@ export default class PropertiesStore {
 		} else if (controlMessage === null) {
 			controlMessage = returnMessage;
 		}
-		// console.log("getErrorMessage in propertiesStore");
-		// console.log(propertyId);
-		// console.log(controlMsg);
 		return controlMessage;
 	}
 
@@ -363,15 +360,11 @@ export default class PropertiesStore {
 	}
 	updateErrorMessage(propertyId, value) {
 		if (!isEqual(this.getErrorMessage(propertyId), value)) {
-			console.log("updating error message in redux store for...");
-			console.log(propertyId);
 			this.store.dispatch(updateErrorMessage({ propertyId: propertyId, value: value }));
 		}
 	}
 	clearErrorMessage(propertyId) {
 		if (this.getErrorMessage(propertyId) !== null) {
-			console.log("clearing error message in redux store for...");
-			console.log(propertyId);
 			this.store.dispatch(clearErrorMessage({ propertyId: propertyId }));
 		}
 	}
