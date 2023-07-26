@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+let cachedCheckbox = null;
+let cachedTableData = null;
+
 function op() {
 	return "customRequiredColumn";
 }
@@ -30,6 +33,17 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	// Check if table is empty
 	const tableValue = controller.getPropertyValue({ name: param2Info.id.name });
 	const emptyTable = tableValue.length === 0;
+
+	let runAllCellValidation = (cachedCheckbox !== paramInfo.value) || (cachedTableData !== JSON.stringify(tableValue));
+	cachedCheckbox = paramInfo.value;
+	cachedTableData = JSON.stringify(tableValue);
+
+	if (runAllCellValidation && Array.isArray(tableValue)) {
+		tableValue.forEach((row, idx) => {
+			controller.validateInput({ name: param2Info.id.name, row: idx, col: param2Info.id.col }); // validate all fields in table
+		});
+	}
+
 	// When checkbox is checked, show error message if param2Info value is empty
 	if (paramInfo.value && !emptyTable) {
 		const dataType = typeof param2Info.value;
