@@ -327,10 +327,6 @@ class ToolTip extends React.Component {
 		}
 	}
 
-	tooltipLinkOnClick(url) {
-		window.open(url, "_blank", "noopener");
-	}
-
 	render() {
 		let tooltipContent = null;
 		let triggerContent = null;
@@ -344,8 +340,7 @@ class ToolTip extends React.Component {
 			const onFocus = () => this.showTooltipWithDelay();
 			const onBlur = (evt) => {
 				// Keep tooltip visible when clicked on a link.
-				// Since link is an anchor tag without "href" attribute, it has relatedTarget=null
-				if (evt.relatedTarget !== null) {
+				if (evt.relatedTarget === null) {
 					this.setTooltipVisible(false);
 				}
 			};
@@ -400,7 +395,10 @@ class ToolTip extends React.Component {
 				link = (<Link
 					className="tooltip-link"
 					id={this.props.link.id}
-					onClick={this.tooltipLinkOnClick.bind(this, linkInformation.url)}
+					href={linkInformation.url}
+					target="_blank"
+					rel="noopener"
+					visited={false}
 				>
 					{linkInformation.label}
 				</Link>);
