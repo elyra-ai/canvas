@@ -34,7 +34,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	const tableValue = controller.getPropertyValue({ name: param2Info.id.name });
 	const emptyTable = tableValue.length === 0;
 
-	let runAllCellValidation = (cachedCheckbox !== paramInfo.value) || (cachedTableData !== JSON.stringify(tableValue));
+	const runAllCellValidation = (cachedCheckbox !== paramInfo.value) || (cachedTableData !== JSON.stringify(tableValue));
 	cachedCheckbox = paramInfo.value;
 	cachedTableData = JSON.stringify(tableValue);
 
