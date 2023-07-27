@@ -82,6 +82,8 @@
   "multi.selected.row.label": "選択された行。",
   "multi.selected.row.action": "この行の値を変更すると、許可され選択されたすべての行の値が変更されます。",
   "datetimefield.format.error.message": "無効なフォーマットのオブジェクトが指定されました。 入力定義を確認してください。",
+  "datepickerRangeStart.default.label": "開始",
+  "datepickerRangeEnd.default.label": "語末",
   "editorform.group.type.error": "(不明なグループ・タイプ「{group.groupType()}」)",
   "moveable.table.button.top": "一番上に移動",
   "moveable.table.button.up": "上へ移動",

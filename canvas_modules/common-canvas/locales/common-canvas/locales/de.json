@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "Dieser Ablauf ist gesperrt und kann nicht bearbeitet werden.",
   "canvas.stateTagTipReadOnly": "Dieser Ablauf kann nicht bearbeitet werden.",
   "comment.colorBackground": "Farbhintergrund",
+  "comment.editComment": "Kommentar bearbeiten",
   "node.createSupernode": "Superknoten erstellen",
   "node.createSupernodeExternal": "Externen Superknoten erstellen",
   "node.expandSupernode": "Superknoten einblenden",

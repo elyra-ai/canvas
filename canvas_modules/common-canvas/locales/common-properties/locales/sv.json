@@ -82,6 +82,8 @@
   "multi.selected.row.label": "rader har valts.",
   "multi.selected.row.action": "Om du ändrar ett värde i den här raden ändras värdet i alla tillåtna valda rader.",
   "datetimefield.format.error.message": "Ett ogiltigt formatobjekt har angetts. Kontrollera indatadefinitioner.",
+  "datepickerRangeStart.default.label": "Start",
+  "datepickerRangeEnd.default.label": "Slut",
   "editorform.group.type.error": "(Okänd grupptyp \"{group.groupType()}\")",
   "moveable.table.button.top": "Flytta överst",
   "moveable.table.button.up": "Flytta upp",

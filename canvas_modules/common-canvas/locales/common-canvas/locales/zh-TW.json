@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "此流程已鎖定且無法編輯。",
   "canvas.stateTagTipReadOnly": "無法編輯此流程。",
   "comment.colorBackground": "顏色背景",
+  "comment.editComment": "編輯註解",
   "node.createSupernode": "建立超級節點",
   "node.createSupernodeExternal": "建立外部超級節點",
   "node.expandSupernode": "展開超級節點",

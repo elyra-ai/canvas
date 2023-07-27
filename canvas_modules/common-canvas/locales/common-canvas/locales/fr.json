@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "Ce flux est verrouillé et ne peut pas être modifié.",
   "canvas.stateTagTipReadOnly": "Ce flux ne peut pas être modifié.",
   "comment.colorBackground": "Couleur d'arrière-plan",
+  "comment.editComment": "Modifier le commentaire",
   "node.createSupernode": "Créer un super noeud",
   "node.createSupernodeExternal": "Créer un super noeud externe",
   "node.expandSupernode": "Développer le super noeud",

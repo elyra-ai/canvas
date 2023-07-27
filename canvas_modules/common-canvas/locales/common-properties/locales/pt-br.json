@@ -82,6 +82,8 @@
   "multi.selected.row.label": "linhas selecionadas.",
   "multi.selected.row.action": "A mudança de um valor nesta linha mudará o valor em todas as linhas selecionadas permitidas.",
   "datetimefield.format.error.message": "Objeto de formato inválido fornecido. Verifique as definições de entrada.",
+  "datepickerRangeStart.default.label": "Iniciar",
+  "datepickerRangeEnd.default.label": "Terminar",
   "editorform.group.type.error": "(Tipo de grupo desconhecido '{group.groupType()}')",
   "moveable.table.button.top": "Mover para o topo",
   "moveable.table.button.up": "Mover para cima",

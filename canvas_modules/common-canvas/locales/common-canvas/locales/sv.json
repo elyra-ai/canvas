@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "Det här flödet är låst och kan inte redigeras.",
   "canvas.stateTagTipReadOnly": "Det här flödet kan inte redigeras.",
   "comment.colorBackground": "Färgbakgrund",
+  "comment.editComment": "Redigera kommentar",
   "node.createSupernode": "Skapa supernod",
   "node.createSupernodeExternal": "Skapa extern supernod",
   "node.expandSupernode": "Expandera supernod",
