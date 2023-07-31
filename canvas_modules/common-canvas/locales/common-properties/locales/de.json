@@ -82,6 +82,8 @@
   "multi.selected.row.label": "Zeilen ausgewählt.",
   "multi.selected.row.action": "Durch die Änderung eines Werts in dieser Zeile wird der Wert in allen zulässigen ausgewählten Zeilen geändert.",
   "datetimefield.format.error.message": "Ungültiges Formatobjekt angegeben. Überprüfen Sie die Eingabedefinitionen.",
+  "datepickerRangeStart.default.label": "Starten",
+  "datepickerRangeEnd.default.label": "Ende",
   "editorform.group.type.error": "(Unbekannter Gruppentyp '{group.groupType()}')",
   "moveable.table.button.top": "An  den Anfang",
   "moveable.table.button.up": "Nach oben",

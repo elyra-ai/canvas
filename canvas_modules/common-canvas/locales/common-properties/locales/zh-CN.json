@@ -82,6 +82,8 @@
   "multi.selected.row.label": "行已选定。",
   "multi.selected.row.action": "如果更改此行中的值，就会更改所有允许的选定行中的值。",
   "datetimefield.format.error.message": "提供的对象格式无效。 请检查输入定义。",
+  "datepickerRangeStart.default.label": "启动",
+  "datepickerRangeEnd.default.label": "结束",
   "editorform.group.type.error": "（未知组类型“{group.groupType()}”）",
   "moveable.table.button.top": "移至顶部",
   "moveable.table.button.up": "上移",

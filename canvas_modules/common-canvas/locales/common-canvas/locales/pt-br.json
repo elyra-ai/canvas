@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "Esse fluxo está bloqueado e não pode ser editado.",
   "canvas.stateTagTipReadOnly": "Este fluxo não pode ser editado.",
   "comment.colorBackground": "Plano de fundo colorido",
+  "comment.editComment": "Editar comentário",
   "node.createSupernode": "Criar o supernó",
   "node.createSupernodeExternal": "Criar supernó externo",
   "node.expandSupernode": "Expandir supernó",

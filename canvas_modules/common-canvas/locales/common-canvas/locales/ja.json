@@ -22,6 +22,7 @@
   "canvas.stateTagTipLocked": "このフローはロックされており、編集できません。",
   "canvas.stateTagTipReadOnly": "このフローは編集できません。",
   "comment.colorBackground": "色付きの背景",
+  "comment.editComment": "コメントの編集",
   "node.createSupernode": "スーパーノードの作成",
   "node.createSupernodeExternal": "外部スーパーノードの作成",
   "node.expandSupernode": "スーパーノードの展開",

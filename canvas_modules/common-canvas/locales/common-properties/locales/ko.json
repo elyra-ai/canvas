@@ -82,6 +82,8 @@
   "multi.selected.row.label": "행이 선택되었습니다.",
   "multi.selected.row.action": "이 행의 값을 변경하면 허용되는 모든 선택된 행의 값이 변경됩니다.",
   "datetimefield.format.error.message": "제공된 형식 오브젝트가 올바르지 않습니다. 입력 정의를 확인하십시오.",
+  "datepickerRangeStart.default.label": "시작",
+  "datepickerRangeEnd.default.label": "종료",
   "editorform.group.type.error": "(알 수 없는 그룹 유형 '{group.groupType()}')",
   "moveable.table.button.top": "맨 위로 이동",
   "moveable.table.button.up": "위로 이동",

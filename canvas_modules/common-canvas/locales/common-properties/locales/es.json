@@ -82,6 +82,8 @@
   "multi.selected.row.label": "filas seleccionadas.",
   "multi.selected.row.action": "Si se cambia un valor en esta fila se cambiará el valor en todas las filas seleccionadas permitidas.",
   "datetimefield.format.error.message": "Se ha proporcionado un objeto con formato no válido. Compruebe las definiciones de entrada.",
+  "datepickerRangeStart.default.label": "Iniciar",
+  "datepickerRangeEnd.default.label": "Fin",
   "editorform.group.type.error": "(Tipo de grupo desconocido '{group.groupType()}')",
   "moveable.table.button.top": "Subir al principio",
   "moveable.table.button.up": "Subir",
