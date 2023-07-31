@@ -20,7 +20,8 @@ function op() {
 
 function evaluate(paramInfo, param2Info, value, controller) {
 	const supportedControls = ["textarea", "list"];
-	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
+	const emptyTable = paramInfo.value.length === 0;
+	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0 && !emptyTable) {
 		let nonEmptyCount = 0;
 		paramInfo.value.forEach((item) => {
 			if (typeof item !== "undefined" && item.length > 0) {
