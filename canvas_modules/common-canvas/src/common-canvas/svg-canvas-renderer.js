@@ -3729,26 +3729,7 @@ export default class SVGCanvasRenderer {
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
 				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
-					const imageId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
-					const imageSelector = "#" + imageId;
-					const imageSymbol = this.canvasDefs.selectChildren(imageSelector);
-					// If no symbol exists in <defs> for this image add a place holder
-					// <symbol> for it.
-					if (imageSymbol.empty()) {
-						this.canvasDefs.append("symbol").attr("id", imageId);
-
-						d3.svg(image, { cache: "force-cache" }).then((data) => {
-							// Populate placeholder <symbol> with SVG file contents.
-							this.canvasDefs.selectChildren(imageSelector)
-								.node()
-								.append(data.documentElement);
-						});
-					}
-
-					// Use <symbol> containing our SVG image from <defs>
-					imageSel.selectChild("use").remove();
-					imageSel.append("use").attr("href", imageSelector);
-
+					this.loadSVGToDefs(imageSel, image);
 				} else {
 					imageSel.selectChild("svg").remove();
 					d3.svg(image, { cache: "force-cache" }).then((data) => {
@@ -3759,6 +3740,37 @@ export default class SVGCanvasRenderer {
 				imageSel.attr("xlink:href", image);
 			}
 		}
+	}
+
+	// The default behavior for SVG files is to load them in-line regardless
+	// of how many times a unique image is used for a particular flow. This
+	// can be unnecessarily slow if an image is referenced many times. This
+	// method provides a performance enhancement for displaying SVG images.
+	// It stores each unique SVG file encountered in the <defs> element for the
+	// canvas as <symbol> elements. It then adds <use> elemets to each place
+	// where that image is referenced. So, if the same image is referenced many
+	// times there is just one SVG file stored in the <defs> element. This is
+	// faster but can restrict customization capabilities of the canvas images.
+	loadSVGToDefs(imageSel, image) {
+		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
+		const symbolSelector = "#" + symbolId;
+		const symbol = this.canvasDefs.selectChildren(symbolSelector);
+		// If no symbol exists in <defs> for this image, add a place holder
+		// <symbol> for it.
+		if (symbol.empty()) {
+			this.canvasDefs.append("symbol").attr("id", symbolId);
+
+			d3.svg(image, { cache: "force-cache" }).then((data) => {
+				// Asynchronously, populate placeholder <symbol> with SVG file contents.
+				this.canvasDefs.selectChildren(symbolSelector)
+					.node()
+					.append(data.documentElement);
+			});
+		}
+
+		// Use <symbol> containing our SVG image from <defs>
+		imageSel.selectChild("use").remove();
+		imageSel.append("use").attr("href", symbolSelector);
 	}
 
 	// Returns the appropriate image from the object (either node or decoration)
