@@ -3730,6 +3730,7 @@ export default class SVGCanvasRenderer {
 			if (nodeImageType === "svg") {
 				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
 					this.loadSVGToDefs(imageSel, image);
+
 				} else {
 					imageSel.selectChild("svg").remove();
 					d3.svg(image, { cache: "force-cache" }).then((data) => {
@@ -3793,7 +3794,7 @@ export default class SVGCanvasRenderer {
 	// Returns the type of image passed in, either "svg" or "image". This will
 	// be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
-		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
+		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
 	}
 
 	setNodeStyles(d, type, nodeGrp) {

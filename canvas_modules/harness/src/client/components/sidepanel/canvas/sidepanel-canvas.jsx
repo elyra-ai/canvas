@@ -44,6 +44,7 @@ import {
 	DIRECTION_BOTTOM_TOP,
 	IMAGE_DISPLAY_SVG_INLINE,
 	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
+	IMAGE_DISPLAY_SVG_AS_IMAGE,
 	LINK_SELECTION_NONE,
 	LINK_SELECTION_LINK_ONLY,
 	LINK_SELECTION_HANDLES,
@@ -752,6 +753,10 @@ export default class SidePanelForms extends React.Component {
 					<RadioButton
 						value={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
 						labelText={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
+					/>
+					<RadioButton
+						value={IMAGE_DISPLAY_SVG_AS_IMAGE}
+						labelText={IMAGE_DISPLAY_SVG_AS_IMAGE}
 					/>
 				</RadioButtonGroup>
 			</FormGroup>
