@@ -3748,10 +3748,11 @@ export default class SVGCanvasRenderer {
 	// can be unnecessarily slow if an image is referenced many times. This
 	// method provides a performance enhancement for displaying SVG images.
 	// It stores each unique SVG file encountered in the <defs> element for the
-	// canvas as <symbol> elements. It then adds <use> elemets to each place
+	// canvas as a <symbol> element. It then adds <use> elements to each place
 	// where that image is referenced. So, if the same image is referenced many
-	// times there is just one SVG file stored in the <defs> element. This is
-	// faster but can restrict customization capabilities of the canvas images.
+	// times there is just one symbol for the SVG file stored in the <defs>
+	// element. This is faster but can restrict customization capabilities of
+	// the canvas images.
 	loadSVGToDefs(imageSel, image) {
 		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
 		const symbolSelector = "#" + symbolId;
