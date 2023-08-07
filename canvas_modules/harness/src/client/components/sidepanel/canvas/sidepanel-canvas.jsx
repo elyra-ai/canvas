@@ -42,6 +42,9 @@ import {
 	DIRECTION_LEFT_RIGHT,
 	DIRECTION_TOP_BOTTOM,
 	DIRECTION_BOTTOM_TOP,
+	IMAGE_DISPLAY_SVG_INLINE,
+	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
+	IMAGE_DISPLAY_SVG_AS_IMAGE,
 	LINK_SELECTION_NONE,
 	LINK_SELECTION_LINK_ONLY,
 	LINK_SELECTION_HANDLES,
@@ -731,6 +734,32 @@ export default class SidePanelForms extends React.Component {
 				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
 				onToggle={this.setStateValue}
 			/>
+		</div>);
+
+		var enableImageDisplay = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
+			<FormGroup
+				legendText="Enable Image Display"
+			>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedImageDisplay" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedImageDisplay")}
+				>
+					<RadioButton
+						value={IMAGE_DISPLAY_SVG_INLINE}
+						labelText={IMAGE_DISPLAY_SVG_INLINE}
+					/>
+					<RadioButton
+						value={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
+						labelText={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
+					/>
+					<RadioButton
+						value={IMAGE_DISPLAY_SVG_AS_IMAGE}
+						labelText={IMAGE_DISPLAY_SVG_AS_IMAGE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var enableLinkSelection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
@@ -1558,6 +1587,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableImageDisplay}
 					{divider}
 					{enableContextToolbar}
 					{divider}

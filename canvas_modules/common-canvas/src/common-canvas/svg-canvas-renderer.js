@@ -237,6 +237,7 @@ export default class SVGCanvasRenderer {
 		this.initializeGhostDiv();
 
 		this.canvasSVG = this.createCanvasSVG();
+		this.canvasDefs = this.canvasSVG.selectChildren("defs");
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
 		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group"); // Group to always position comments under nodes and links
@@ -3727,14 +3728,51 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				imageSel.selectChild("svg").remove();
-				d3.svg(image, { cache: "force-cache" }).then((data) => {
-					imageSel.node().append(data.documentElement);
-				});
+				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
+					this.loadSVGToDefs(imageSel, image);
+
+				} else {
+					imageSel.selectChild("svg").remove();
+					d3.svg(image, { cache: "force-cache" }).then((data) => {
+						imageSel.node().append(data.documentElement);
+					});
+				}
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
 		}
+	}
+
+	// The default behavior for SVG files is to load them in-line regardless
+	// of how many times a unique image is used for a particular flow. This
+	// can be unnecessarily slow if an image is referenced many times. This
+	// method provides a performance enhancement for displaying SVG images.
+	// It stores each unique SVG file encountered in the <defs> element for the
+	// canvas as a <symbol> element. It then adds <use> elements to each place
+	// where that image is referenced. So, if the same image is referenced many
+	// times there is just one symbol for the SVG file stored in the <defs>
+	// element. This is faster but can restrict customization capabilities of
+	// the canvas images.
+	loadSVGToDefs(imageSel, image) {
+		const symbolId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
+		const symbolSelector = "#" + symbolId;
+		const symbol = this.canvasDefs.selectChildren(symbolSelector);
+		// If no symbol exists in <defs> for this image, add a place holder
+		// <symbol> for it.
+		if (symbol.empty()) {
+			this.canvasDefs.append("symbol").attr("id", symbolId);
+
+			d3.svg(image, { cache: "force-cache" }).then((data) => {
+				// Asynchronously, populate placeholder <symbol> with SVG file contents.
+				this.canvasDefs.selectChildren(symbolSelector)
+					.node()
+					.append(data.documentElement);
+			});
+		}
+
+		// Use <symbol> containing our SVG image from <defs>
+		imageSel.selectChild("use").remove();
+		imageSel.append("use").attr("href", symbolSelector);
 	}
 
 	// Returns the appropriate image from the object (either node or decoration)
@@ -3757,7 +3795,7 @@ export default class SVGCanvasRenderer {
 	// Returns the type of image passed in, either "svg" or "image". This will
 	// be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
-		return nodeImage && nodeImage.endsWith(".svg") ? "svg" : "image";
+		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
 	}
 
 	setNodeStyles(d, type, nodeGrp) {

@@ -60,6 +60,10 @@ _defineConstant("DIRECTION_LEFT_RIGHT", "LeftRight");
 _defineConstant("DIRECTION_TOP_BOTTOM", "TopBottom");
 _defineConstant("DIRECTION_BOTTOM_TOP", "BottomTop");
 
+_defineConstant("IMAGE_DISPLAY_SVG_INLINE", "SVGInline");
+_defineConstant("IMAGE_DISPLAY_LOAD_SVG_TO_DEFS", "LoadSVGToDefs");
+_defineConstant("IMAGE_DISPLAY_SVG_AS_IMAGE", "SVGAsImage");
+
 _defineConstant("LINK_SELECTION_NONE", "None");
 _defineConstant("LINK_SELECTION_LINK_ONLY", "LinkOnly");
 _defineConstant("LINK_SELECTION_HANDLES", "Handles");
