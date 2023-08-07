@@ -237,6 +237,7 @@ export default class SVGCanvasRenderer {
 		this.initializeGhostDiv();
 
 		this.canvasSVG = this.createCanvasSVG();
+		this.canvasDefs = this.canvasSVG.selectChildren("defs");
 		this.canvasGrp = this.createCanvasGroup(this.canvasSVG, "d3-canvas-group"); // Group to contain all canvas objects
 		this.canvasUnderlay = this.createCanvasUnderlay(this.canvasGrp, "d3-canvas-underlay"); // Put underlay rectangle under comments, nodes and links
 		this.commentsGrp = this.createCanvasGroup(this.canvasGrp, "d3-comments-group"); // Group to always position comments under nodes and links
@@ -3727,10 +3728,33 @@ export default class SVGCanvasRenderer {
 			// Save image field in DOM object to avoid unnecessary image refreshes.
 			imageSel.attr("data-image", image);
 			if (nodeImageType === "svg") {
-				imageSel.selectChild("svg").remove();
-				d3.svg(image, { cache: "force-cache" }).then((data) => {
-					imageSel.node().append(data.documentElement);
-				});
+				if (this.config.enableImageDisplay === "LoadSVGToDefs") {
+					const imageId = "img" + image.replaceAll(/[/.]/g, "-"); // Replace all / and . characters with -
+					const imageSelector = "#" + imageId;
+					const imageSymbol = this.canvasDefs.selectChildren(imageSelector);
+					// If no symbol exists in <defs> for this image add a place holder
+					// <symbol> for it.
+					if (imageSymbol.empty()) {
+						this.canvasDefs.append("symbol").attr("id", imageId);
+
+						d3.svg(image, { cache: "force-cache" }).then((data) => {
+							// Populate placeholder <symbol> with SVG file contents.
+							this.canvasDefs.selectChildren(imageSelector)
+								.node()
+								.append(data.documentElement);
+						});
+					}
+
+					// Use <symbol> containing our SVG image from <defs>
+					imageSel.selectChild("use").remove();
+					imageSel.append("use").attr("href", imageSelector);
+
+				} else {
+					imageSel.selectChild("svg").remove();
+					d3.svg(image, { cache: "force-cache" }).then((data) => {
+						imageSel.node().append(data.documentElement);
+					});
+				}
 			} else {
 				imageSel.attr("xlink:href", image);
 			}
