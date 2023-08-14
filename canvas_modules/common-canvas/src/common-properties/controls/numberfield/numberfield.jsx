@@ -30,6 +30,10 @@ import { has } from "lodash";
 class NumberfieldControl extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			invalidNumber: false
+		};
 		this.onDirection = this.onDirection.bind(this);
 		this.generateNumber = this.generateNumber.bind(this);
 		this.id = ControlUtils.getControlId(this.props.propertyId);
@@ -56,6 +60,15 @@ class NumberfieldControl extends React.Component {
 		}
 	}
 
+	onInput(evt) {
+		// There's a specific case when manually deleting negative number (eg. -1), 1 is deleted first and then - becomes an invalid number
+		// After user deletes - sign , onInput is called however onChange event isn't triggered.
+		// At this time, invalidNumber state variable is true but the evt.target.value will be a valid "empty" number because - sign was deleted.
+		if (this.state.invalidNumber && evt.target.validity && !evt.target.validity.badInput) {
+			this.handleChange(evt);
+		}
+	}
+
 	handleChange(evt, direction) {
 		if (typeof direction === "string") {
 			this.onDirection(direction);
@@ -79,11 +92,16 @@ class NumberfieldControl extends React.Component {
 				};
 				this.props.controller.updateErrorMessage(this.props.propertyId, errorMessage);
 			}
+			this.setState({ invalidNumber: true });
 			// Return without updating property value
 			return;
 		}
 		// Number is valid, clear invalid number error if it exists
-		const invalidNumberError = this.props.controller.getErrorMessage(this.props.propertyId) !== null &&
+		if (this.state.invalidNumber) {
+			this.setState({ invalidNumber: false });
+		}
+
+		const invalidNumberError = this.props.controller.getErrorMessage(this.props.propertyId) &&
 		this.props.controller.getErrorMessage(this.props.propertyId).validation_id === "invalid_number";
 		if (invalidNumberError) {
 			this.props.controller.updateErrorMessage(this.props.propertyId, null);
@@ -151,6 +169,7 @@ class NumberfieldControl extends React.Component {
 					allowEmpty
 					light={this.props.controller.getLight() && this.props.control.light}
 					hideSteppers={this.props.tableControl || (this.props.control.controlType === ControlType.NUMBERFIELD)}
+					onInput={this.onInput.bind(this)}
 				/>
 				{numberGenerator}
 				<ValidationMessage inTable={this.props.tableControl} tableOnly state={this.props.state} messageInfo={this.props.messageInfo} />
