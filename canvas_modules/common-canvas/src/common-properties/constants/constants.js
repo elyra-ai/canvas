@@ -162,7 +162,7 @@ export const DATEPICKER_TYPE = {
 
 export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d"; // ISO format
 
-export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
+export const DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 export const DEFAULT_TIME_FORMAT = "H:m:s";
 
