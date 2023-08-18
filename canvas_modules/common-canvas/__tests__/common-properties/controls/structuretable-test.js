@@ -831,10 +831,10 @@ describe("structuretable multiselect edit works", () => {
 		selectedEditRow = wrapper.find("div.properties-at-selectedEditRows").find(".properties-vt-row-checkbox");
 		expect(selectedEditRow).to.have.length(1);
 
-		// verify the select header row is 2rem in height
+		// verify the select header row is 32px in height
 		const selectHeaderTable = wrapper.find("div.properties-at-selectedEditRows").find("div.properties-ft-container-wrapper");
 		const heightStyle = selectHeaderTable.prop("style");
-		expect(heightStyle).to.eql({ "height": "2rem" });
+		expect(heightStyle).to.eql({ "height": 32 });
 	});
 });
 
