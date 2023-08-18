@@ -6629,6 +6629,7 @@ export default class SVGCanvasRenderer {
 					: null;
 			const coords = this.linkUtils.getLinkCoords(link, srcObj, srcPortId, trgNode, trgPortId, assocLinkVariation);
 
+			// Set additional calculated fields on link object.
 			link.coordsUpdated =
 				link.x1 !== coords.x1 ||
 				link.y1 !== coords.y1 ||
@@ -6636,8 +6637,6 @@ export default class SVGCanvasRenderer {
 				link.y2 !== coords.y2;
 
 			link.assocLinkVariation = assocLinkVariation;
-			link.srcNodePortId = srcPortId;
-			link.trgNodePortId = trgPortId;
 			link.x1 = coords.x1;
 			link.y1 = coords.y1;
 			link.x2 = coords.x2;
@@ -6705,14 +6704,13 @@ export default class SVGCanvasRenderer {
 			}
 		}
 
+		// Set additional calculated fields on link object.
 		link.coordsUpdated =
 			link.x1 !== coords.x1 ||
 			link.y1 !== coords.y1 ||
 			link.x2 !== coords.x2 ||
 			link.y2 !== coords.y2;
 
-		link.srcNodePortId = srcPortId;
-		link.trgNodePortId = trgPortId;
 		link.x1 = coords.x1;
 		link.y1 = coords.y1;
 		link.x2 = coords.x2;
