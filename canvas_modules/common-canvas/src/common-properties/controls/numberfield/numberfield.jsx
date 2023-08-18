@@ -195,7 +195,7 @@ NumberfieldControl.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	value: ownProps.controller.getPropertyValue(ownProps.propertyId),
 	state: ownProps.controller.getControlState(ownProps.propertyId),
-	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId)
+	messageInfo: ownProps.controller.getErrorMessage(ownProps.propertyId, true) // Filter error messages for hidden/disabled controls
 });
 
 export default connect(mapStateToProps, null)(NumberfieldControl);
