@@ -1686,7 +1686,7 @@ class App extends React.Component {
 				sourceString = "detached source";
 				if (data.link.srcObj && data.link.srcObj.outputs) {
 					const srcPort = !data.link.srcObj.outputs ? null : data.link.srcObj.outputs.find(function(port) {
-						return port.id === data.link.srcPortId;
+						return port.id === data.link.srcNodePortId;
 					});
 					sourceString = `'${data.link.srcObj.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 				}
@@ -1694,7 +1694,7 @@ class App extends React.Component {
 				targetString = "detached target";
 				if (data.link.trgNode && data.link.trgNode.inputs) {
 					const trgPort = data.link.trgNode.inputs.find(function(port) {
-						return port.id === data.link.trgPortId;
+						return port.id === data.link.trgNodePortId;
 					});
 					targetString = `'${data.link.trgNode.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
 				}
