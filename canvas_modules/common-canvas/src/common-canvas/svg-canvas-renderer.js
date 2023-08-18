@@ -4685,7 +4685,7 @@ export default class SVGCanvasRenderer {
 		const oldLink = this.draggingLinkData.oldLink;
 
 		if (oldLink.srcNodeId && !newLink.srcNodeId) {
-			return "detachFromScrNode";
+			return "detachFromSrcNode";
 
 		} else if (oldLink.trgNodeId && !newLink.trgNodeId) {
 			return "detachFromTrgNode";
