@@ -4639,14 +4639,26 @@ export default class SVGCanvasRenderer {
 		const newLink = this.getNewLinkOnDrag(d3Event);
 
 		if (newLink) {
-			this.canvasController.editActionHandler({
-				editType: "updateLink",
-				editSource: "canvas",
-				newLink: newLink,
-				pipelineId: this.pipelineId });
+			const editSubType = this.getLinkEditSubType(newLink);
+			// If editSubType is set the user did a gesture that requires a change
+			// to the object model.
+			if (editSubType) {
+				this.canvasController.editActionHandler({
+					editType: "updateLink",
+					editSubType: editSubType,
+					editSource: "canvas",
+					newLink: newLink,
+					pipelineId: this.pipelineId });
+			// If editSubType is null, the user performed a gesture which should
+			// not be executed as an action so draw the link back in its old position.
+			} else {
+				this.snapBackOldLink();
+			}
+		// newLink might be null when we are dragging a link handle with
+		// enableLinkSelection not set to detachable. If that's the case the
+		// link needs to snap back (redrawn) to its original position.
 		} else {
-			this.activePipeline.replaceLink(this.draggingLinkData.oldLink);
-			this.displayLinks();
+			this.snapBackOldLink();
 		}
 
 		// Switch 'new link over node' highlighting off
@@ -4658,6 +4670,70 @@ export default class SVGCanvasRenderer {
 		this.stopDraggingLink();
 	}
 
+	// Resets and redraws the link being dragged back to its original position.
+	// This is necessary when the user performs a link drag gesture which should
+	// NOT be executed as an action -- therefore the link need to be drawn back
+	// in its original position.
+	snapBackOldLink() {
+		this.activePipeline.replaceLink(this.draggingLinkData.oldLink);
+		this.displayLinks();
+	}
+
+	// Returns the edit sub-type for the link action being performed to further
+	// explain the updateLink action.
+	getLinkEditSubType(newLink) {
+		const oldLink = this.draggingLinkData.oldLink;
+
+		if (oldLink.srcNodeId && !newLink.srcNodeId) {
+			return "detachFromScrNode";
+
+		} else if (oldLink.trgNodeId && !newLink.trgNodeId) {
+			return "detachFromTrgNode";
+
+		} else if (!oldLink.srcNodeId && newLink.srcNodeId) {
+			return "attachToSrcNode";
+
+		} else if (!oldLink.trgNodeId && newLink.trgNodeId) {
+			return "attachToTrgNode";
+
+		} else if (!oldLink.srcNodeId && !newLink.srcNodeId &&
+								(oldLink.srcPos.x_pos !== newLink.srcPos.x_pos ||
+									oldLink.srcPos.y_pos !== newLink.srcPos.y_pos)) {
+			return "moveSrcPosition";
+
+		} else if (!oldLink.trgNodeId && !newLink.trgNodeId &&
+								(oldLink.trgPos.x_pos !== newLink.trgPos.x_pos ||
+									oldLink.trgPos.y_pos !== newLink.trgPos.y_pos)) {
+			return "moveTrgPosition";
+
+		} else if (oldLink.srcNodeId && newLink.srcNodeId &&
+							oldLink.srcNodeId !== newLink.srcNodeId) {
+			return "switchSrcNode";
+
+		} else if (oldLink.trgNodeId && newLink.trgNodeId &&
+							oldLink.trgNodeId !== newLink.trgNodeId) {
+			return "switchTrgNode";
+
+		} else if (oldLink.srcNodeId && newLink.srcNodeId &&
+							oldLink.srcNodeId === newLink.srcNodeId &&
+							oldLink.srcNodePortId !== newLink.srcNodePortId) {
+			return "switchSrcNodePort";
+
+		} else if (oldLink.trgNodeId && newLink.trgNodeId &&
+							oldLink.trgNodeId === newLink.trgNodeId &&
+							oldLink.trgNodePortId !== newLink.trgNodePortId) {
+			return "switchTrgNodePort";
+		}
+		// We arrive here, in two ways:
+		// 1. if the user dragged a link handle from a node/port and dropped it
+		//    back on the same node/port.
+		// 2. If the user clicked on the unattached end of a detached link but did
+		//    not move it anywhere
+		// In these cases, the updateLink action should NOT be performed and
+		// consequently NO command should be added to the command stack.
+		return null;
+	}
+
 	// Returns a new link if one can be created given the current data in the
 	// this.draggingLinkData object. Returns null if a link cannot be created.
 	getNewLinkOnDrag(d3Event, nodeProximity) {
@@ -4665,6 +4741,7 @@ export default class SVGCanvasRenderer {
 		const newLink = cloneDeep(oldLink);
 
 		if (this.draggingLinkData.endBeingDragged === "start") {
+			delete newLink.srcObj;
 			delete newLink.srcNodeId;
 			delete newLink.srcNodePortId;
 			delete newLink.srcPos;
@@ -4675,6 +4752,7 @@ export default class SVGCanvasRenderer {
 
 			if (srcNode) {
 				newLink.srcNodeId = srcNode.id;
+				newLink.srcObj = this.activePipeline.getNode(srcNode.id);
 				newLink.srcNodePortId = nodeProximity
 					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
 					: this.getOutputNodePortId(d3Event, srcNode);
@@ -4683,6 +4761,7 @@ export default class SVGCanvasRenderer {
 			}
 
 		} else {
+			delete newLink.trgNode;
 			delete newLink.trgNodeId;
 			delete newLink.trgNodePortId;
 			delete newLink.trgPos;
@@ -4693,6 +4772,7 @@ export default class SVGCanvasRenderer {
 
 			if (trgNode) {
 				newLink.trgNodeId = trgNode.id;
+				newLink.trgNode = this.activePipeline.getNode(trgNode.id);
 				newLink.trgNodePortId = nodeProximity
 					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
 					: this.getInputNodePortId(d3Event, trgNode);
@@ -6556,8 +6636,8 @@ export default class SVGCanvasRenderer {
 				link.y2 !== coords.y2;
 
 			link.assocLinkVariation = assocLinkVariation;
-			link.srcPortId = srcPortId;
-			link.trgPortId = trgPortId;
+			link.srcNodePortId = srcPortId;
+			link.trgNodePortId = trgPortId;
 			link.x1 = coords.x1;
 			link.y1 = coords.y1;
 			link.x2 = coords.x2;
@@ -6631,8 +6711,8 @@ export default class SVGCanvasRenderer {
 			link.x2 !== coords.x2 ||
 			link.y2 !== coords.y2;
 
-		link.srcPortId = srcPortId;
-		link.trgPortId = trgPortId;
+		link.srcNodePortId = srcPortId;
+		link.trgNodePortId = trgPortId;
 		link.x1 = coords.x1;
 		link.y1 = coords.y1;
 		link.x2 = coords.x2;
