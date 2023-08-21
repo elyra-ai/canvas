@@ -267,7 +267,7 @@ class ToolbarActionItem extends React.Component {
 		const chevronIcon = this.generateChevronIcon(actionObj);
 
 		let buttonContent = (
-			<div id={"open-action-item"} className={itemContentClassName}>
+			<div className={itemContentClassName}>
 				{labelBefore}
 				{icon}
 				{labelAfter}
