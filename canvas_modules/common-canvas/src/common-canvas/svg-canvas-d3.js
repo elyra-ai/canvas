@@ -73,7 +73,7 @@ export default class SVGCanvasD3 {
 
 			this.canvasInfo = this.cloneCanvasInfo(canvasInfo);
 			this.config = this.cloneConfig(config);
-			this.renderer.setCanvasInfoRenderer(this.canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config);
+			this.renderer.setCanvasInfoRenderer(this.canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, this.config);
 
 			this.logger.logEndTimer("set canvas info", true);
 		}
