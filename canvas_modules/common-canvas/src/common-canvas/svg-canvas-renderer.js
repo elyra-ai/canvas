@@ -210,18 +210,34 @@ export default class SVGCanvasRenderer {
 		// no link is currently being drawn.
 		this.drawingNewLinkData = null;
 
-		// Create a drag object for use with nodes and comments.
-		this.drag = d3.drag()
+		// Create a drag handler for use with nodes and comments.
+		this.dragHandler = d3.drag()
 			.on("start", this.dragStart.bind(this))
 			.on("drag", this.dragMove.bind(this))
 			.on("end", this.dragEnd.bind(this));
 
+		// Create a drag handler that will switch off the drag behavior of nodes
+		// and comments, for use when editing actions are not allowed.
+		this.noDragHandler = d3.drag()
+			.on("start", null)
+			.on("drag", null)
+			.on("end", null);
+
 		this.draggingLinkData = null;
 
-		this.dragSelectionHandle = d3.drag()
+		// Create a drag handler that can be used with draggable ends of
+		// detached links.
+		this.dragLinkHandler = d3.drag()
 			.on("start", this.dragStartLinkHandle.bind(this))
 			.on("drag", this.dragMoveLinkHandle.bind(this))
 			.on("end", this.dragEndLinkHandle.bind(this));
+
+		// Create a drag handler that will switch off the drag behavior of
+		// detached links, for use when editing actions are not allowed.
+		this.noDragLinkHandler = d3.drag()
+			.on("start", null)
+			.on("drag", null)
+			.on("end", null);
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -328,8 +344,9 @@ export default class SVGCanvasRenderer {
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 	}
 
-	setCanvasInfoRenderer(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout) {
+	setCanvasInfoRenderer(canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config) {
 		this.logger.logStartTimer("setCanvasInfoRenderer" + this.pipelineId.substring(0, 5));
+		this.config = config;
 		this.canvasInfo = canvasInfo;
 		this.selectionInfo = selectionInfo;
 		this.breadcrumbs = breadcrumbs;
@@ -337,6 +354,23 @@ export default class SVGCanvasRenderer {
 		this.canvasLayout = canvasLayout;
 
 		this.activePipeline.initialize(this.pipelineId, canvasInfo, selectionInfo);
+
+		// Must recreate these utils objects because they use the config object
+		// which may have changed.
+		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
+		this.svgCanvasTextArea = new SvgCanvasTextArea(
+			this.config,
+			this.dispUtils,
+			this.nodeUtils,
+			this.decUtils,
+			this.canvasController,
+			this.canvasDiv,
+			this.activePipeline,
+			this.displayComments.bind(this), // Function
+			this.displayLinks.bind(this), // Function
+			this.getCommentToolbarPos.bind(this) // Function
+		);
+
 
 		// Set the display state incase we changed from in-place to full-page
 		// sub-flow display.
@@ -2714,11 +2748,6 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
-		if (this.config.enableEditingActions) {
-			newNodeGroups
-				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-		}
-
 		// Node Sizing Area.
 		newNodeGroups.filter((d) => this.shouldDisplayNodeSizingArea(d))
 			.append("path")
@@ -2845,6 +2874,16 @@ export default class SVGCanvasRenderer {
 				this.displayDecorations(d, DEC_NODE, nodeGrp, decorations);
 			}
 		});
+
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			joinedNodeGrps
+				.call(this.dragHandler);
+		} else {
+			joinedNodeGrps
+				.call(this.noDragHandler);
+		}
+
 		this.logger.logEndTimer("updateNodes");
 	}
 
@@ -2874,7 +2913,8 @@ export default class SVGCanvasRenderer {
 					this.selectionInfo,
 					this.breadcrumbs,
 					this.nodeLayout,
-					this.canvasLayout
+					this.canvasLayout,
+					this.config
 				);
 			}
 		} else {
@@ -5471,11 +5511,6 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (c) => this.getId("comment_grp", c.id))
 			.call(this.attachCommentGroupListeners.bind(this));
 
-		if (this.config.enableEditingActions) {
-			newCommentGroups
-				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-		}
-
 		// Comment Sizing Area
 		newCommentGroups
 			.append("rect")
@@ -5551,6 +5586,15 @@ export default class SVGCanvasRenderer {
 				this.config.enableMarkdownInComments
 					? markdownIt.render(c.content)
 					: escapeText(c.content)));
+
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			joinedCommentGrps
+				.call(this.dragHandler);
+		} else {
+			joinedCommentGrps
+				.call(this.noDragHandler);
+		}
 	}
 
 	// Attaches the appropriate listeners to the comment groups.
@@ -6327,7 +6371,7 @@ export default class SVGCanvasRenderer {
 	// Creates a new start handle and a new end handle for the link groups
 	// passed in.
 	createNewHandles(handlesGrp) {
-		const startHandle = handlesGrp
+		handlesGrp
 			.append(this.canvasLayout.linkStartHandleObject)
 			.attr("class", (d) => "d3-link-handle-start")
 			// Use mouse down instead of click because it gets called before drag start.
@@ -6339,11 +6383,7 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Link end handle - finished mouse down");
 			});
 
-		if (this.config.enableEditingActions) {
-			startHandle.call(this.dragSelectionHandle);
-		}
-
-		const endHandle = handlesGrp
+		handlesGrp
 			.append(this.canvasLayout.linkEndHandleObject)
 			.attr("class", (d) => "d3-link-handle-end")
 			// Use mouse down instead of click because it gets called before drag start.
@@ -6355,14 +6395,11 @@ export default class SVGCanvasRenderer {
 				this.logger.log("Link end handle - finished mouse down");
 			});
 
-		if (this.config.enableEditingActions) {
-			endHandle.call(this.dragSelectionHandle);
-		}
 	}
 
 	// Updates the start and end link handles for the handle groups passed in.
 	updateHandles(handlesGrp, lineArray) {
-		handlesGrp
+		const startHandle = handlesGrp
 			.selectAll(".d3-link-handle-start")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -6383,7 +6420,14 @@ export default class SVGCanvasRenderer {
 				}
 			});
 
-		handlesGrp
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			startHandle.call(this.dragLinkHandler);
+		} else {
+			startHandle.call(this.noDragLinkHandler);
+		}
+
+		const endHandle = handlesGrp
 			.selectAll(".d3-link-handle-end")
 			.datum((d) => this.activePipeline.getLink(d.id))
 			.each((datum, index, linkHandles) => {
@@ -6404,6 +6448,13 @@ export default class SVGCanvasRenderer {
 						.attr("cy", (d) => d.y2);
 				}
 			});
+
+		// Add or remove drag behavior as appropriate
+		if (this.config.enableEditingActions) {
+			endHandle.call(this.dragLinkHandler);
+		} else {
+			endHandle.call(this.noDragLinkHandler);
+		}
 	}
 
 	// Sets the custom inline styles on the link object passed in.
