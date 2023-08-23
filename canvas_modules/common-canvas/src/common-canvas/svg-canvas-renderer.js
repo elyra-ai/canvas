@@ -2913,7 +2913,8 @@ export default class SVGCanvasRenderer {
 					this.selectionInfo,
 					this.breadcrumbs,
 					this.nodeLayout,
-					this.canvasLayout
+					this.canvasLayout,
+					this.config
 				);
 			}
 		} else {
