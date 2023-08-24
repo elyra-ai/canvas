@@ -40,6 +40,9 @@ $panel-border-color: $ui-03;
 	height: 100%;
 	position: relative;
 	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	/* grid-template-rows is set dynamically in cc-central-items */
 }
 
 .common-canvas-right-side-items {
@@ -47,37 +50,20 @@ $panel-border-color: $ui-03;
 	display: flex;
 }
 
-.common-canvas-main {
-	width: 100%;
-	height: 100%;
-}
-
-.common-canvas-with-bottom-panel {
-	width: 100%;
-	position: relative;
-
-	.top-panel {
-		top: 0;
-	}
+.bottom-panel {
+	// Make the bottom panel appear above the empty canvas content (when
+	// displayed in the flow editor div.
+	z-index: 1;
 }
 
 .common-canvas-drop-div {
-	height: calc(100% - #{$toolbar-button-height});
+	height: 100%;
 	width: 100%;
 	min-width: inherit;
-	position: absolute;
 	cursor: default;
-	top: $toolbar-button-height;
 	overflow: hidden;
+	position: relative; // This allows the State Tag to have positio: absolute
 
-	&.common-canvas-toolbar-none {
-		height: 100%;
-		top: 0;
-	}
-
-	&.common-canvas-toolbar-none.common-canvas-bottom-panel-is-open {
-		top: 0;
-	}
 }
 
 .right-flyout-panel {
@@ -90,10 +76,6 @@ $panel-border-color: $ui-03;
 .bottom-panel {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
 	border-top: $panel-border-width solid $panel-border-color;
 }
 
@@ -119,15 +101,7 @@ $panel-border-color: $ui-03;
 .top-panel {
 	display: flex;
 	flex-direction: column;
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: $toolbar-button-height;
 	border-bottom: $panel-border-width solid $panel-border-color;
-
-	&.common-canvas-toolbar-none {
-		top: 0;
-	}
 }
 
 .common-canvas-toolbar {
@@ -208,22 +182,27 @@ $panel-border-color: $ui-03;
  * enableRightFlyoutUnderToolbar is true. */
 
 .common-canvas-right-side-items-under-toolbar {
+	display: grid;
+	/* grid-template-rows is set dynamically in cc-central-items */
+	grid-template-columns: 1fr;
 	width: 100%;
 }
 
 .common-canvas-items-container-under-toolbar {
-	height: calc(100% - #{$toolbar-button-height});
-	width: 100%;
-	display: flex;
-}
-
-.common-canvas-drop-div-under-toolbar {
 	height: 100%;
 	width: 100%;
-	position: relative; // Needed to allow textarea (for commnt editing) to be positiond OK.
-	cursor: default;
-	overflow: hidden;
+	display: grid;
+	grid-template-rows: 1fr auto;
+	/* grid-template-columns is set dynamically in cc-central-items */
 }
+
+.common-canvas-with-top-and-bottom-panel {
+	width: 100%;
+	display: grid;
+	/* grid-template-rows is set dynamically in cc-central-items */
+	grid-template-columns: 1fr;
+}
+
 
 /* Styles for empty canvas objects */
 
@@ -310,8 +289,9 @@ $panel-border-color: $ui-03;
 	@include carbon--type-style("productive-heading-01");
 	color: $inverse-01;
 	background-color: $background-inverse;
+	width: fit-content;
 	height: 40px;
-	position: absolute;
+	position: absolute; /* Positioned relative to the common-canvas-drop-div */
 	left: 50%;
 	top: 16px;
 	transform: translate(-50%, 0%);

@@ -536,39 +536,23 @@ class CanvasContents extends React.Component {
 		const dropZoneCanvas = this.getDropZone();
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
-		const mainClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-main"
-			: null;
-
-		let dropDivClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-drop-div-under-toolbar"
-			: "common-canvas-drop-div";
-
-		dropDivClassName = this.props.canvasConfig.enableToolbarLayout === "None"
-			? dropDivClassName + " common-canvas-toolbar-none"
-			: dropDivClassName;
-
-		dropDivClassName = this.props.bottomPanelIsOpen
-			? dropDivClassName + " common-canvas-bottom-panel-is-open"
-			: dropDivClassName;
-
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
+			<main aria-label={this.getLabel("canvas.label")} role="main">
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
 						id={this.mainCanvasDivId}
-						className={dropDivClassName}
+						className="common-canvas-drop-div"
 						onDrop={this.drop}
 						onDragOver={this.dragOver}
 						onDragEnter={this.dragEnter}
 						onDragLeave={this.dragLeave}
 					>
+						{stateTag}
 						{emptyCanvas}
 						{svgCanvasDiv}
 						{contextMenu}
 						{textToolbar}
 						{dropZoneCanvas}
-						{stateTag}
 					</div>
 				</ReactResizeDetector>
 			</main>

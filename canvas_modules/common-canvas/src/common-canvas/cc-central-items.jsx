@@ -43,30 +43,38 @@ class CommonCanvasCentralItems extends React.Component {
 
 		let centralItems = null;
 		if (this.props.enableRightFlyoutUnderToolbar) {
+			const templateRows = this.props.toolbarIsOpen ? "auto 1fr" : "1fr";
+			const templateCols = this.props.rightFlyoutIsOpen ? "1fr auto" : "1fr";
+			let templateRows2 = this.props.topPanelIsOpen ? "auto 1fr" : "1fr";
+			templateRows2 += this.props.bottomPanelIsOpen ? " auto" : "";
 			centralItems = (
-				<div className="common-canvas-right-side-items-under-toolbar">
+				<div className="common-canvas-right-side-items-under-toolbar" style={{ gridTemplateRows: templateRows }}>
 					{canvasToolbar}
-					<div id={this.props.containingDivId} className="common-canvas-items-container-under-toolbar">
-						<div className="common-canvas-with-bottom-panel">
-							{canvasContents}
+					<div id={this.props.containingDivId} className="common-canvas-items-container-under-toolbar" style={{ gridTemplateColumns: templateCols }}>
+						<div className="common-canvas-with-top-and-bottom-panel" style={{ gridTemplateRows: templateRows2 }}>
 							{topPanel}
+							{canvasContents}
 							{bottomPanel}
 						</div>
-						<div>
-							{rightFlyout}
-						</div>
-						{notificationPanel}
+						{rightFlyout}
 					</div>
+					{notificationPanel}
 				</div>
 			);
 
 		} else {
+			let templateRows = "";
+			templateRows += this.props.toolbarIsOpen ? "auto" : "";
+			templateRows += this.props.topPanelIsOpen ? " auto" : "";
+			templateRows += " 1fr"; // For canvas contents
+			templateRows += this.props.bottomPanelIsOpen ? " auto" : "";
+
 			centralItems = (
 				<div className="common-canvas-right-side-items">
-					<div id={this.props.containingDivId} className="common-canvas-items-container">
+					<div id={this.props.containingDivId} className="common-canvas-items-container" style={{ gridTemplateRows: templateRows }}>
 						{canvasToolbar}
-						{canvasContents}
 						{topPanel}
+						{canvasContents}
 						{bottomPanel}
 						{notificationPanel}
 					</div>
@@ -85,11 +93,19 @@ CommonCanvasCentralItems.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by Redux
-	enableRightFlyoutUnderToolbar: PropTypes.bool
+	enableRightFlyoutUnderToolbar: PropTypes.bool,
+	toolbarIsOpen: PropTypes.bool,
+	topPanelIsOpen: PropTypes.bool,
+	bottomPanelIsOpen: PropTypes.bool,
+	rightFlyoutIsOpen: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar
+	enableRightFlyoutUnderToolbar: state.canvasconfig.enableRightFlyoutUnderToolbar,
+	toolbarIsOpen: (state.canvasconfig.enableToolbarLayout !== "None"),
+	topPanelIsOpen: state.toppanel.isOpen,
+	bottomPanelIsOpen: state.bottompanel.isOpen,
+	rightFlyoutIsOpen: state.rightflyout.isOpen
 });
 
 export default connect(mapStateToProps)(CommonCanvasCentralItems);
