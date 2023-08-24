@@ -50,12 +50,6 @@ $panel-border-color: $ui-03;
 	display: flex;
 }
 
-.bottom-panel {
-	// Make the bottom panel appear above the empty canvas content (when
-	// displayed in the flow editor div.
-	z-index: 1;
-}
-
 .common-canvas-drop-div {
 	height: 100%;
 	width: 100%;
@@ -77,6 +71,10 @@ $panel-border-color: $ui-03;
 	display: flex;
 	flex-direction: column;
 	border-top: $panel-border-width solid $panel-border-color;
+	// Make sure the bottom panel appear above the empty canvas content
+	// (when displayed) in the flow editor div.
+	z-index: 1;
+
 }
 
 .bottom-panel-drag {
