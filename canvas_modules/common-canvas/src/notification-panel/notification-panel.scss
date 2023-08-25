@@ -24,6 +24,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	transition: 0.25s ease-in-out;
 	opacity: 1;
 	margin-top: 0;
+	z-index: 2; // Ensure panel appears on top of bottom panel.
 
 	&.panel-hidden {
 		transition: 0.25s ease-in-out;
