@@ -2769,25 +2769,6 @@ export default class SVGCanvasRenderer {
 			.append("foreignObject")
 			.attr("class", "d3-foreign-object-external-node");
 
-		// Node Image
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
-			.each((node, i, nodeGrps) => {
-				const nodeImage = this.getNodeImage(node);
-				const nodeImageType = this.getImageType(nodeImage);
-				d3.select(nodeGrps[i])
-					.append(nodeImageType)
-					.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
-			});
-
-		// Node Label
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.labelDisplay)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-node-label")
-			.call(this.attachNodeLabelListeners.bind(this))
-			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
-			.call(this.attachNodeLabelSpanListeners.bind(this));
-
 		this.logger.logEndTimer("createNodes");
 
 		return newNodeGroups;
@@ -2824,27 +2805,66 @@ export default class SVGCanvasRenderer {
 			.each(addNodeExternalObject.bind(this));
 
 		// Node Image
-		joinedNodeGrps.selectChildren(".d3-node-image")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.each((d, i, nodeGrps) => this.setNodeImageContent(nodeGrps[i], d))
-			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
-			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
-			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
-			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
-			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
+		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
+			.each((node, i, nodeGrps) => {
+				const grpSel = d3.select(nodeGrps[i]);
+				let image = grpSel.selectChildren(".d3-node-image");
+
+				if (node.layout.imageDisplay) {
+					if (image.empty()) {
+						const nodeImage = this.getNodeImage(node);
+						const nodeImageType = this.getImageType(nodeImage);
+						image = grpSel
+							.append(nodeImageType)
+							.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
+					}
+					image
+						.datum((d) => this.activePipeline.getNode(d.id))
+						.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
+						.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
+						.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
+						.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
+						.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
+						.attr("style", (d) => this.getNodeImageStyle(d, "default"));
+
+				} else {
+					image.remove();
+				}
+			});
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
-			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
-			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
-			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-			.select("div")
-			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
-			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
-			.select("span")
-			.html((d) => escapeText(d.label));
+		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
+			.each((node, i, nodeGrps) => {
+				const grpSel = d3.select(nodeGrps[i]);
+				let labelFO = grpSel.selectChildren(".d3-foreign-object-node-label");
+
+				if (node.layout.labelDisplay) {
+					if (labelFO.empty()) {
+						labelFO = grpSel
+							.append("foreignObject")
+							.attr("class", "d3-foreign-object-node-label")
+							.call(this.attachNodeLabelListeners.bind(this));
+						labelFO
+							.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+							.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+							.call(this.attachNodeLabelSpanListeners.bind(this));
+					}
+					labelFO
+						.datum((d) => this.activePipeline.getNode(d.id))
+						.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
+						.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
+						.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
+						.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
+						.select("div")
+						.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
+						.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
+						.select("span")
+						.html((d) => escapeText(d.label));
+
+				} else {
+					labelFO.remove();
+				}
+			});
 
 		// Node Ellipsis Icon - if one exists
 		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
