@@ -2808,7 +2808,7 @@ export default class SVGCanvasRenderer {
 		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
 			.each((node, i, nodeGrps) => {
 				const grpSel = d3.select(nodeGrps[i]);
-				let image = grpSel.selectChildren(".d3-node-image");
+				let image = grpSel.selectChild(".d3-node-image");
 
 				if (node.layout.imageDisplay) {
 					if (image.empty()) {
@@ -2836,7 +2836,7 @@ export default class SVGCanvasRenderer {
 		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
 			.each((node, i, nodeGrps) => {
 				const grpSel = d3.select(nodeGrps[i]);
-				let labelFO = grpSel.selectChildren(".d3-foreign-object-node-label");
+				let labelFO = grpSel.selectChild(".d3-foreign-object-node-label");
 
 				if (node.layout.labelDisplay) {
 					if (labelFO.empty()) {
