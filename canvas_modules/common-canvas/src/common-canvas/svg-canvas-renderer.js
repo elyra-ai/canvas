@@ -216,13 +216,6 @@ export default class SVGCanvasRenderer {
 			.on("drag", this.dragMove.bind(this))
 			.on("end", this.dragEnd.bind(this));
 
-		// Create a drag handler that will switch off the drag behavior of nodes
-		// and comments, for use when editing actions are not allowed.
-		this.noDragHandler = d3.drag()
-			.on("start", null)
-			.on("drag", null)
-			.on("end", null);
-
 		this.draggingLinkData = null;
 
 		// Create a drag handler that can be used with draggable ends of
@@ -231,13 +224,6 @@ export default class SVGCanvasRenderer {
 			.on("start", this.dragStartLinkHandle.bind(this))
 			.on("drag", this.dragMoveLinkHandle.bind(this))
 			.on("end", this.dragEndLinkHandle.bind(this));
-
-		// Create a drag handler that will switch off the drag behavior of
-		// detached links, for use when editing actions are not allowed.
-		this.noDragLinkHandler = d3.drag()
-			.on("start", null)
-			.on("drag", null)
-			.on("end", null);
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -2748,27 +2734,6 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
-		// Node Sizing Area.
-		newNodeGroups.filter((d) => this.shouldDisplayNodeSizingArea(d))
-			.append("path")
-			.attr("class", "d3-node-sizing")
-			.call(this.attachNodeSizingListeners.bind(this));
-
-		// Node Selection Highlighting Outline.
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			.append("path")
-			.attr("class", "d3-node-selection-highlight");
-
-		// Node Body
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.nodeShapeDisplay)
-			.append("path")
-			.attr("class", "d3-node-body-outline");
-
-		// Optional foreign object to contain a React object
-		newNodeGroups.filter((d) => d.layout.nodeExternalObject)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-external-node");
-
 		this.logger.logEndTimer("createNodes");
 
 		return newNodeGroups;
@@ -2777,101 +2742,142 @@ export default class SVGCanvasRenderer {
 	updateNodes(joinedNodeGrps) {
 		this.logger.logStartTimer("updateNodes");
 
-		// Node Sizing Area
-		joinedNodeGrps.selectChildren(".d3-node-sizing")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("d", (d) => this.getNodeShapePathSizing(d));
+		const nonBindingNodeGrps = joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node));
 
-		// Node Selection Highlighting Outline.
-		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("d", (d) => this.getNodeSelectionOutline(d))
-			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? "yes" : "no"))
-			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
+		nonBindingNodeGrps.each((node, i, nodeGrps) => {
+			const grpSel = d3.select(nodeGrps[i]);
+			const datum = this.activePipeline.getNode(node.id);
 
-		// Node Body
-		joinedNodeGrps.selectChildren(".d3-node-body-outline")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("d", (d) => this.getNodeShapePath(d))
-			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
+			// Node Sizing Area
+			let sizingSel = grpSel.selectChild(".d3-node-sizing");
 
-		// Optional foreign object to contain a React object
-		joinedNodeGrps.selectChildren(".d3-foreign-object-external-node")
-			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("width", (d) => d.width)
-			.attr("height", (d) => d.height)
-			.attr("x", 0)
-			.attr("y", 0)
-			.each(addNodeExternalObject.bind(this));
-
-		// Node Image
-		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
-			.each((node, i, nodeGrps) => {
-				const grpSel = d3.select(nodeGrps[i]);
-				let image = grpSel.selectChild(".d3-node-image");
-
-				if (node.layout.imageDisplay) {
-					if (image.empty()) {
-						const nodeImage = this.getNodeImage(node);
-						const nodeImageType = this.getImageType(nodeImage);
-						image = grpSel
-							.append(nodeImageType)
-							.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
-					}
-					image
-						.datum((d) => this.activePipeline.getNode(d.id))
-						.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
-						.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
-						.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
-						.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
-						.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
-						.attr("style", (d) => this.getNodeImageStyle(d, "default"));
-
-				} else {
-					image.remove();
+			if (this.shouldDisplayNodeSizingArea(node)) {
+				if (sizingSel.empty()) {
+					sizingSel = grpSel
+						.append("path")
+						.attr("class", "d3-node-sizing")
+						.call(this.attachNodeSizingListeners.bind(this));
 				}
-			});
+				sizingSel
+					.datum(datum)
+					.attr("d", this.getNodeShapePathSizing(node));
 
-		// Node Label
-		joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node))
-			.each((node, i, nodeGrps) => {
-				const grpSel = d3.select(nodeGrps[i]);
-				let labelFO = grpSel.selectChild(".d3-foreign-object-node-label");
+			} else {
+				sizingSel.remove();
+			}
 
-				if (node.layout.labelDisplay) {
-					if (labelFO.empty()) {
-						labelFO = grpSel
-							.append("foreignObject")
-							.attr("class", "d3-foreign-object-node-label")
-							.call(this.attachNodeLabelListeners.bind(this));
-						labelFO
-							.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-							.append("xhtml:span") // Provide a namespace when span is inside foreignObject
-							.call(this.attachNodeLabelSpanListeners.bind(this));
-					}
-					labelFO
-						.datum((d) => this.activePipeline.getNode(d.id))
-						.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
-						.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
-						.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
-						.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
-						.select("div")
-						.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
-						.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
-						.select("span")
-						.html((d) => escapeText(d.label));
+			// Node Selection Highlighting Outline.
+			let highlightSel = grpSel.selectChild(".d3-node-selection-highlight");
 
-				} else {
-					labelFO.remove();
+			if (highlightSel.empty()) {
+				highlightSel = grpSel
+					.append("path")
+					.attr("class", "d3-node-selection-highlight");
+			}
+			highlightSel
+				.datum(datum)
+				.attr("d", this.getNodeSelectionOutline(node))
+				.attr("data-selected", (this.activePipeline.isSelected(node.id) ? "yes" : "no"))
+				.attr("style", this.getNodeSelectionOutlineStyle(node, "default"));
+
+
+			// Node Body
+			let bodySel = grpSel.selectChild(".d3-node-body-outline");
+
+			if (node.layout.nodeShapeDisplay) {
+				if (bodySel.empty()) {
+					bodySel = grpSel
+						.append("path")
+						.attr("class", "d3-node-body-outline");
 				}
-			});
+				bodySel
+					.datum(datum)
+					.attr("d", this.getNodeShapePath(node))
+					.attr("style", this.getNodeBodyStyle(node, "default"));
+			} else {
+				bodySel.remove();
+			}
+
+			// Optional foreign object to contain a React object
+			let extSel = grpSel.selectChild(".d3-foreign-object-external-node");
+
+			if (node.layout.nodeExternalObject) {
+				if (extSel.empty()) {
+					extSel = grpSel
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-external-node");
+				}
+				extSel
+					.datum(datum)
+					.attr("width", node.width)
+					.attr("height", node.height)
+					.attr("x", 0)
+					.attr("y", 0)
+					.each(addNodeExternalObject.bind(this));
+			} else {
+				extSel.each(removeExternalObject.bind(this));
+				extSel.remove();
+			}
+
+			// Node Image
+			let imageSel = grpSel.selectChild(".d3-node-image");
+
+			if (node.layout.imageDisplay) {
+				if (imageSel.empty()) {
+					const nodeImage = this.getNodeImage(node);
+					const nodeImageType = this.getImageType(nodeImage);
+					imageSel = grpSel
+						.append(nodeImageType)
+						.attr("class", this.nodeUtils.getNodeImageClass(node));
+				}
+				imageSel
+					.datum(datum)
+					.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
+					.attr("x", this.nodeUtils.getNodeImagePosX(node))
+					.attr("y", this.nodeUtils.getNodeImagePosY(node))
+					.attr("width", this.nodeUtils.getNodeImageWidth(node))
+					.attr("height", this.nodeUtils.getNodeImageHeight(node))
+					.attr("style", this.getNodeImageStyle(node, "default"));
+			} else {
+				imageSel.remove();
+			}
+
+			// Node Label
+			let labelFOSel = grpSel.selectChild(".d3-foreign-object-node-label");
+
+			if (node.layout.labelDisplay) {
+				if (labelFOSel.empty()) {
+					labelFOSel = grpSel
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-node-label")
+						.call(this.attachNodeLabelListeners.bind(this));
+					labelFOSel
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+						.call(this.attachNodeLabelSpanListeners.bind(this));
+				}
+				labelFOSel
+					.datum(datum)
+					.attr("x", this.nodeUtils.getNodeLabelPosX(node))
+					.attr("y", this.nodeUtils.getNodeLabelPosY(node))
+					.attr("width", this.nodeUtils.getNodeLabelWidth(node))
+					.attr("height", this.nodeUtils.getNodeLabelHeight(node))
+					.select("div")
+					.attr("class", this.nodeUtils.getNodeLabelClass(node))
+					.attr("style", this.getNodeLabelStyle(node, "default"))
+					.select("span")
+					.html((d) => escapeText(node.label));
+			} else {
+				labelFOSel.remove();
+			}
+		});
 
 		// Node Ellipsis Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-ellipsis-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
 
 		// Node (Supernode) Expansion Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
 		// Ports display; Supernode sub-flow display; Error marker display; and
@@ -2897,11 +2903,11 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
-			joinedNodeGrps
+			nonBindingNodeGrps
 				.call(this.dragHandler);
 		} else {
-			joinedNodeGrps
-				.call(this.noDragHandler);
+			nonBindingNodeGrps
+				.on(".drag", null);
 		}
 
 		this.logger.logEndTimer("updateNodes");
@@ -5613,7 +5619,7 @@ export default class SVGCanvasRenderer {
 				.call(this.dragHandler);
 		} else {
 			joinedCommentGrps
-				.call(this.noDragHandler);
+				.on(".drag", null);
 		}
 	}
 
@@ -6444,7 +6450,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			startHandle.call(this.dragLinkHandler);
 		} else {
-			startHandle.call(this.noDragLinkHandler);
+			startHandle.on(".drag", null);
 		}
 
 		const endHandle = handlesGrp
@@ -6473,7 +6479,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			endHandle.call(this.dragLinkHandler);
 		} else {
-			endHandle.call(this.noDragLinkHandler);
+			endHandle.on(".drag", null);
 		}
 	}
 
