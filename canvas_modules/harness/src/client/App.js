@@ -374,6 +374,7 @@ class App extends React.Component {
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
+		this.layoutHandler = this.layoutHandler.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 		this.actionLabelHandler = this.actionLabelHandler.bind(this);
 		this.propertiesActionLabelHandler = this.propertiesActionLabelHandler.bind(this);
@@ -1668,6 +1669,12 @@ class App extends React.Component {
 			this.setState({ showPropertiesDialog2: false });
 			this.currentEditorId2 = null;
 		}
+	}
+
+	// The layout handler can be modified to provide node layout overrides
+	// while testing and debugging.
+	layoutHandler() {
+		return {};
 	}
 
 	tipHandler(tipType, data) {

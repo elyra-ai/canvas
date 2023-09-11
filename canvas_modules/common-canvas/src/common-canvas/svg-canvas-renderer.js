@@ -216,6 +216,13 @@ export default class SVGCanvasRenderer {
 			.on("drag", this.dragMove.bind(this))
 			.on("end", this.dragEnd.bind(this));
 
+		// Create a drag handler that will switch off the drag behavior of nodes
+		// and comments, for use when editing actions are not allowed.
+		this.noDragHandler = d3.drag()
+			.on("start", null)
+			.on("drag", null)
+			.on("end", null);
+
 		this.draggingLinkData = null;
 
 		// Create a drag handler that can be used with draggable ends of
@@ -224,6 +231,13 @@ export default class SVGCanvasRenderer {
 			.on("start", this.dragStartLinkHandle.bind(this))
 			.on("drag", this.dragMoveLinkHandle.bind(this))
 			.on("end", this.dragEndLinkHandle.bind(this));
+
+		// Create a drag handler that will switch off the drag behavior of
+		// detached links, for use when editing actions are not allowed.
+		this.noDragLinkHandler = d3.drag()
+			.on("start", null)
+			.on("drag", null)
+			.on("end", null);
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -2723,7 +2737,7 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
-			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
 	createNodes(enter) {
@@ -2739,115 +2753,102 @@ export default class SVGCanvasRenderer {
 		return newNodeGroups;
 	}
 
-	updateNodes(joinedNodeGrps) {
+	updateNodes(joinedNodeGrps, data) {
 		this.logger.logStartTimer("updateNodes");
 
 		const nonBindingNodeGrps = joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node));
 
-		nonBindingNodeGrps.each((node, i, nodeGrps) => {
-			const grpSel = d3.select(nodeGrps[i]);
-			const datum = this.activePipeline.getNode(node.id);
-
-			// Node Sizing Area
-			let sizingSel = grpSel.selectChild(".d3-node-sizing");
-
-			if (this.shouldDisplayNodeSizingArea(node)) {
-				if (sizingSel.empty()) {
-					sizingSel = grpSel
+		// Node Sizing Area
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-sizing")
+			.data((d) => (this.shouldDisplayNodeSizingArea(d) ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
 						.append("path")
 						.attr("class", "d3-node-sizing")
-						.call(this.attachNodeSizingListeners.bind(this));
-				}
-				sizingSel
-					.datum(datum)
-					.attr("d", this.getNodeShapePathSizing(node));
-
-			} else {
-				sizingSel.remove();
-			}
-
-			// Node Selection Highlighting Outline.
-			let highlightSel = grpSel.selectChild(".d3-node-selection-highlight");
-
-			if (highlightSel.empty()) {
-				highlightSel = grpSel
-					.append("path")
-					.attr("class", "d3-node-selection-highlight");
-			}
-			highlightSel
-				.datum(datum)
-				.attr("d", this.getNodeSelectionOutline(node))
-				.attr("data-selected", (this.activePipeline.isSelected(node.id) ? "yes" : "no"))
-				.attr("style", this.getNodeSelectionOutlineStyle(node, "default"));
+						.call(this.attachNodeSizingListeners.bind(this))
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 
-			// Node Body
-			let bodySel = grpSel.selectChild(".d3-node-body-outline");
-
-			if (node.layout.nodeShapeDisplay) {
-				if (bodySel.empty()) {
-					bodySel = grpSel
+		// Node Selection Highlighting Outline.
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-selection-highlight")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
 						.append("path")
-						.attr("class", "d3-node-body-outline");
-				}
-				bodySel
-					.datum(datum)
-					.attr("d", this.getNodeShapePath(node))
-					.attr("style", this.getNodeBodyStyle(node, "default"));
-			} else {
-				bodySel.remove();
-			}
+						.attr("class", "d3-node-selection-highlight")
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("d", (d) => this.getNodeSelectionOutline(d))
+			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? "yes" : "no"))
+			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
-			// Optional foreign object to contain a React object
-			let extSel = grpSel.selectChild(".d3-foreign-object-external-node");
+		// Node Body
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-body-outline")
+			.data((d) => (d.layout.nodeShapeDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-body-outline")
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("d", (d) => this.getNodeShapePath(d))
+			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
-			if (node.layout.nodeExternalObject) {
-				if (extSel.empty()) {
-					extSel = grpSel
+		// Optional foreign object to contain a React object
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-external-node")
+			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
 						.append("foreignObject")
-						.attr("class", "d3-foreign-object-external-node");
+						.attr("class", "d3-foreign-object-external-node"),
+				null,
+				(exit) => {
+					exit.each(removeExternalObject.bind(this));
+					exit.remove();
 				}
-				extSel
-					.datum(datum)
-					.attr("width", node.width)
-					.attr("height", node.height)
-					.attr("x", 0)
-					.attr("y", 0)
-					.each(addNodeExternalObject.bind(this));
-			} else {
-				extSel.each(removeExternalObject.bind(this));
-				extSel.remove();
-			}
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("width", (d) => d.width)
+			.attr("height", (d) => d.height)
+			.attr("x", 0)
+			.attr("y", 0)
+			.each(addNodeExternalObject.bind(this));
 
-			// Node Image
-			let imageSel = grpSel.selectChild(".d3-node-image");
+		// Node Image
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-image")
+			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append((d) => this.getImageElement(d))
+						.attr("class", "d3-node-image")
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
+			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
+			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
+			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
+			.attr("height", (d) => this.nodeUtils.getNodeImageHeight(d))
+			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
-			if (node.layout.imageDisplay) {
-				if (imageSel.empty()) {
-					const nodeImage = this.getNodeImage(node);
-					const nodeImageType = this.getImageType(nodeImage);
-					imageSel = grpSel
-						.append(nodeImageType)
-						.attr("class", this.nodeUtils.getNodeImageClass(node));
-				}
-				imageSel
-					.datum(datum)
-					.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
-					.attr("x", this.nodeUtils.getNodeImagePosX(node))
-					.attr("y", this.nodeUtils.getNodeImagePosY(node))
-					.attr("width", this.nodeUtils.getNodeImageWidth(node))
-					.attr("height", this.nodeUtils.getNodeImageHeight(node))
-					.attr("style", this.getNodeImageStyle(node, "default"));
-			} else {
-				imageSel.remove();
-			}
-
-			// Node Label
-			let labelFOSel = grpSel.selectChild(".d3-foreign-object-node-label");
-
-			if (node.layout.labelDisplay) {
-				if (labelFOSel.empty()) {
-					labelFOSel = grpSel
+		// Node Label
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-node-label")
+			.data((d) => (d.layout.labelDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) => {
+					const labelFOSel = enter
 						.append("foreignObject")
 						.attr("class", "d3-foreign-object-node-label")
 						.call(this.attachNodeLabelListeners.bind(this));
@@ -2855,22 +2856,19 @@ export default class SVGCanvasRenderer {
 						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
 						.append("xhtml:span") // Provide a namespace when span is inside foreignObject
 						.call(this.attachNodeLabelSpanListeners.bind(this));
+					return labelFOSel;
 				}
-				labelFOSel
-					.datum(datum)
-					.attr("x", this.nodeUtils.getNodeLabelPosX(node))
-					.attr("y", this.nodeUtils.getNodeLabelPosY(node))
-					.attr("width", this.nodeUtils.getNodeLabelWidth(node))
-					.attr("height", this.nodeUtils.getNodeLabelHeight(node))
-					.select("div")
-					.attr("class", this.nodeUtils.getNodeLabelClass(node))
-					.attr("style", this.getNodeLabelStyle(node, "default"))
-					.select("span")
-					.html((d) => escapeText(node.label));
-			} else {
-				labelFOSel.remove();
-			}
-		});
+			)
+			.datum((d) => this.activePipeline.getNode(d.id))
+			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
+			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
+			.attr("width", (d) => this.nodeUtils.getNodeLabelWidth(d))
+			.attr("height", (d) => this.nodeUtils.getNodeLabelHeight(d))
+			.select("div")
+			.attr("class", (d) => this.nodeUtils.getNodeLabelClass(d))
+			.attr("style", (d) => this.getNodeLabelStyle(d, "default"))
+			.select("span")
+			.html((d) => escapeText(d.label));
 
 		// Node Ellipsis Icon - if one exists
 		nonBindingNodeGrps.selectChildren(".d3-node-ellipsis-group")
@@ -2907,7 +2905,7 @@ export default class SVGCanvasRenderer {
 				.call(this.dragHandler);
 		} else {
 			nonBindingNodeGrps
-				.on(".drag", null);
+				.call(this.noDragHandler);
 		}
 
 		this.logger.logEndTimer("updateNodes");
@@ -3862,6 +3860,16 @@ export default class SVGCanvasRenderer {
 	// be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
 		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+	}
+
+	// Returns a DOM element for the image of the node passed in.
+	getImageElement(node) {
+		const nodeImage = this.getNodeImage(node);
+		const imageType = this.getImageType(nodeImage);
+		if (imageType === "image") {
+			return d3.create("svg:image").node();
+		}
+		return d3.create("svg").node();
 	}
 
 	setNodeStyles(d, type, nodeGrp) {
@@ -5619,7 +5627,7 @@ export default class SVGCanvasRenderer {
 				.call(this.dragHandler);
 		} else {
 			joinedCommentGrps
-				.on(".drag", null);
+				.call(this.noDragHandler);
 		}
 	}
 
@@ -6450,7 +6458,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			startHandle.call(this.dragLinkHandler);
 		} else {
-			startHandle.on(".drag", null);
+			startHandle.call(this.noDragLinkHandler);
 		}
 
 		const endHandle = handlesGrp
@@ -6479,7 +6487,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			endHandle.call(this.dragLinkHandler);
 		} else {
-			endHandle.on(".drag", null);
+			endHandle.call(this.noDragLinkHandler);
 		}
 	}
 
