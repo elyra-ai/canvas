@@ -2737,7 +2737,7 @@ export default class SVGCanvasRenderer {
 			.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 			.attr("class", (d) => this.getNodeGroupClass(d))
 			.attr("style", (d) => this.getNodeGrpStyle(d))
-			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps));
+			.call((joinedNodeGrps) => this.updateNodes(joinedNodeGrps, data));
 	}
 
 	createNodes(enter) {
@@ -2748,74 +2748,75 @@ export default class SVGCanvasRenderer {
 			.attr("data-id", (d) => this.getId("node_grp", d.id))
 			.call(this.attachNodeGroupListeners.bind(this));
 
-		// Node Sizing Area.
-		newNodeGroups.filter((d) => this.shouldDisplayNodeSizingArea(d))
-			.append("path")
-			.attr("class", "d3-node-sizing")
-			.call(this.attachNodeSizingListeners.bind(this));
-
-		// Node Selection Highlighting Outline.
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d))
-			.append("path")
-			.attr("class", "d3-node-selection-highlight");
-
-		// Node Body
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.nodeShapeDisplay)
-			.append("path")
-			.attr("class", "d3-node-body-outline");
-
-		// Optional foreign object to contain a React object
-		newNodeGroups.filter((d) => d.layout.nodeExternalObject)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-external-node");
-
-		// Node Image
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.imageDisplay)
-			.each((node, i, nodeGrps) => {
-				const nodeImage = this.getNodeImage(node);
-				const nodeImageType = this.getImageType(nodeImage);
-				d3.select(nodeGrps[i])
-					.append(nodeImageType)
-					.attr("class", (d) => this.nodeUtils.getNodeImageClass(d));
-			});
-
-		// Node Label
-		newNodeGroups.filter((d) => !CanvasUtils.isSuperBindingNode(d) && d.layout.labelDisplay)
-			.append("foreignObject")
-			.attr("class", "d3-foreign-object-node-label")
-			.call(this.attachNodeLabelListeners.bind(this))
-			.append("xhtml:div") // Provide a namespace when div is inside foreignObject
-			.append("xhtml:span") // Provide a namespace when span is inside foreignObject
-			.call(this.attachNodeLabelSpanListeners.bind(this));
-
 		this.logger.logEndTimer("createNodes");
 
 		return newNodeGroups;
 	}
 
-	updateNodes(joinedNodeGrps) {
+	updateNodes(joinedNodeGrps, data) {
 		this.logger.logStartTimer("updateNodes");
 
+		const nonBindingNodeGrps = joinedNodeGrps.filter((node) => !CanvasUtils.isSuperBindingNode(node));
+
 		// Node Sizing Area
-		joinedNodeGrps.selectChildren(".d3-node-sizing")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-sizing")
+			.data((d) => (this.shouldDisplayNodeSizingArea(d) ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-sizing")
+						.call(this.attachNodeSizingListeners.bind(this))
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
+
 		// Node Selection Highlighting Outline.
-		joinedNodeGrps.selectChildren(".d3-node-selection-highlight")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-selection-highlight")
+			.data((d) => ([d]), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-selection-highlight")
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeSelectionOutline(d))
 			.attr("data-selected", (d) => (this.activePipeline.isSelected(d.id) ? "yes" : "no"))
 			.attr("style", (d) => this.getNodeSelectionOutlineStyle(d, "default"));
 
 		// Node Body
-		joinedNodeGrps.selectChildren(".d3-node-body-outline")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-body-outline")
+			.data((d) => (d.layout.nodeShapeDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("path")
+						.attr("class", "d3-node-body-outline")
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("d", (d) => this.getNodeShapePath(d))
 			.attr("style", (d) => this.getNodeBodyStyle(d, "default"));
 
 		// Optional foreign object to contain a React object
-		joinedNodeGrps.selectChildren(".d3-foreign-object-external-node")
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-external-node")
+			.data((d) => (d.layout.nodeExternalObject ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-external-node"),
+				null,
+				(exit) => {
+					exit.each(removeExternalObject.bind(this));
+					exit.remove();
+				}
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
@@ -2824,9 +2825,17 @@ export default class SVGCanvasRenderer {
 			.each(addNodeExternalObject.bind(this));
 
 		// Node Image
-		joinedNodeGrps.selectChildren(".d3-node-image")
+		nonBindingNodeGrps
+			.selectChildren(".d3-node-image")
+			.data((d) => (d.layout.imageDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) =>
+					enter
+						.append((d) => this.getImageElement(d))
+						.attr("class", "d3-node-image")
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
-			.each((d, i, nodeGrps) => this.setNodeImageContent(nodeGrps[i], d))
+			.each((d, idx, imgs) => this.setNodeImageContent(imgs[idx], d))
 			.attr("x", (d) => this.nodeUtils.getNodeImagePosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeImagePosY(d))
 			.attr("width", (d) => this.nodeUtils.getNodeImageWidth(d))
@@ -2834,7 +2843,22 @@ export default class SVGCanvasRenderer {
 			.attr("style", (d) => this.getNodeImageStyle(d, "default"));
 
 		// Node Label
-		joinedNodeGrps.selectChildren(".d3-foreign-object-node-label")
+		nonBindingNodeGrps
+			.selectChildren(".d3-foreign-object-node-label")
+			.data((d) => (d.layout.labelDisplay ? [d] : []), (d) => d.id)
+			.join(
+				(enter) => {
+					const labelFOSel = enter
+						.append("foreignObject")
+						.attr("class", "d3-foreign-object-node-label")
+						.call(this.attachNodeLabelListeners.bind(this));
+					labelFOSel
+						.append("xhtml:div") // Provide a namespace when div is inside foreignObject
+						.append("xhtml:span") // Provide a namespace when span is inside foreignObject
+						.call(this.attachNodeLabelSpanListeners.bind(this));
+					return labelFOSel;
+				}
+			)
 			.datum((d) => this.activePipeline.getNode(d.id))
 			.attr("x", (d) => this.nodeUtils.getNodeLabelPosX(d))
 			.attr("y", (d) => this.nodeUtils.getNodeLabelPosY(d))
@@ -2847,11 +2871,11 @@ export default class SVGCanvasRenderer {
 			.html((d) => escapeText(d.label));
 
 		// Node Ellipsis Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-ellipsis-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-ellipsis-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeEllipsisTranslate(d));
 
 		// Node (Supernode) Expansion Icon - if one exists
-		joinedNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
+		nonBindingNodeGrps.selectChildren(".d3-node-super-expand-icon-group")
 			.attr("transform", (d) => this.nodeUtils.getNodeExpansionIconTranslate(d));
 
 		// Ports display; Supernode sub-flow display; Error marker display; and
@@ -2877,10 +2901,10 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
-			joinedNodeGrps
+			nonBindingNodeGrps
 				.call(this.dragHandler);
 		} else {
-			joinedNodeGrps
+			nonBindingNodeGrps
 				.call(this.noDragHandler);
 		}
 
@@ -3836,6 +3860,16 @@ export default class SVGCanvasRenderer {
 	// be used to append an svg or image element to the DOM.
 	getImageType(nodeImage) {
 		return nodeImage && nodeImage.endsWith(".svg") && this.config.enableImageDisplay !== "SVGAsImage" ? "svg" : "image";
+	}
+
+	// Returns a DOM element for the image of the node passed in.
+	getImageElement(node) {
+		const nodeImage = this.getNodeImage(node);
+		const imageType = this.getImageType(nodeImage);
+		if (imageType === "image") {
+			return d3.create("svg:image").node();
+		}
+		return d3.create("svg").node();
 	}
 
 	setNodeStyles(d, type, nodeGrp) {

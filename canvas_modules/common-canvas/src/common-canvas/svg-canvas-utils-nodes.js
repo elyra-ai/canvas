@@ -30,10 +30,6 @@ export default class SvgCanvasNodes {
 			pos.y <= node.y_pos + node.height;
 	}
 
-	getNodeImageClass(node) {
-		return "d3-node-image";
-	}
-
 	getNodeLabelClass(node) {
 		if (CanvasUtils.isExpandedSupernode(node)) {
 			return "d3-node-label d3-label-single-line " + this.getMessageLabelClass(node.messages);
