@@ -4005,7 +4005,10 @@ export default class SVGCanvasRenderer {
 
 	addDynamicNodeIcons(d3Event, d, nodeGrp) {
 		if (!this.nodeSizing && !CanvasUtils.isSuperBindingNode(d)) {
-			this.addEllipsisIcon(d, nodeGrp);
+			// Add the ellipsis icon if requested by layout config.
+			if (d.layout.ellipsisDisplay) {
+				this.addEllipsisIcon(d, nodeGrp);
+			}
 
 			// Add Supernode expansion icon and background for expanded supernodes
 			if (CanvasUtils.isExpandedSupernode(d)) {
@@ -4050,7 +4053,6 @@ export default class SVGCanvasRenderer {
 	addEllipsisIcon(d, nodeGrp) {
 		const ellipsisGrp = nodeGrp
 			.append("g")
-			.filter(() => d.layout.ellipsisDisplay)
 			.attr("class", "d3-node-ellipsis-group")
 			.attr("transform", (nd) => this.nodeUtils.getNodeEllipsisTranslate(nd))
 			.on("mousedown", (d3Event) => {
