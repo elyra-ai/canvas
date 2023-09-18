@@ -178,7 +178,14 @@ class DropDown extends React.Component {
 
 	// evt is null when onBlur, empty string when clicking the 'x' to clear input
 	handleOnInputChange(evt) {
-		if (evt !== null) {
+		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
+
+		// Don't update property value during initial render
+		if ((typeof currentValue === "undefined" || currentValue === null) && evt === "") {
+			return;
+		}
+
+		if (evt !== null && evt !== currentValue) {
 			const value = evt;
 			this.props.controller.updatePropertyValue(this.props.propertyId, value);
 		}

@@ -5,6 +5,7 @@
   "current_parameters": {
     "oneofselect": "blue",
     "oneofselect_custom_value": "custom",
+    "oneofselect_custom_value_null": null,
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_placeholder": "",
@@ -48,6 +49,30 @@
     },
     {
       "id": "oneofselect_custom_value",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value_null",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value_undefined",
       "enum": [
         "red",
         "orange",
@@ -358,6 +383,26 @@
         "custom_value_allowed": true
       },
       {
+        "parameter_ref": "oneofselect_custom_value_null",
+        "label": {
+          "default": "oneofselect custom value allowed with parameter value set to 'null'"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value_undefined",
+        "label": {
+          "default": "oneofselect custom value allowed with parameter value not set"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true
+      },
+      {
         "parameter_ref": "oneofselect_null",
         "label": {
           "default": "oneofselect null"
@@ -618,6 +663,8 @@
         "parameter_refs": [
           "oneofselect",
           "oneofselect_custom_value",
+          "oneofselect_custom_value_null",
+          "oneofselect_custom_value_undefined",
           "oneofselect_null",
           "oneofselect_empty_string",
           "oneofselect_undefined",
