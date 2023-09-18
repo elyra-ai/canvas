@@ -181,7 +181,7 @@ class DropDown extends React.Component {
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
 
 		// Don't update property value during initial render
-		if (typeof currentValue === "undefined" && evt === "") {
+		if ((typeof currentValue === "undefined" && evt === "") || evt === null) {
 			return;
 		}
 
