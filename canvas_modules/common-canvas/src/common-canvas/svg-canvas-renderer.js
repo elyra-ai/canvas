@@ -6616,12 +6616,17 @@ export default class SVGCanvasRenderer {
 	// the side of the node and where those nodes may be positioned close to each
 	// other so it makes the ports appear on top of any adjacent node. We don't
 	// raise the nodes for various conditions:
+	// * The enableRaiseNodesToTopOnHover config option is set to false
 	// * We are currently drawing a new link
 	// * We are dragging some object(s) around
 	// * There are one or more selected links
 	// * We are editing text
 	raiseNodeToTop(nodeGrp) {
-		if (this.drawingNewLinkData === null && !this.dragging && this.activePipeline.getSelectedLinksCount() === 0 && !this.isEditingText()) {
+		if (this.config.enableRaiseNodesToTopOnHover &&
+				this.drawingNewLinkData === null &&
+				!this.dragging &&
+				this.activePipeline.getSelectedLinksCount() === 0 &&
+				!this.isEditingText()) {
 			nodeGrp.raise();
 		}
 	}
