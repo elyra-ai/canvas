@@ -181,6 +181,7 @@ export default (state = {}, action) => {
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 	case "ADD_LINK":
+	case "SET_LINKS":
 	case "SET_LINK_PROPERTIES":
 	case "SET_LINK_SRC_INFO":
 	case "SET_LINK_TRG_INFO":

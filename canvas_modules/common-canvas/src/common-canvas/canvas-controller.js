@@ -1205,11 +1205,18 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(id1, id2);
 	}
 
-	// Adds links to a pipeline
+	// Adds links to the current links array for a pipeline.
 	// linkList - An array of links
 	// pipelineId - The ID of the pipeline
 	addLinks(linkList, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addLinks(linkList);
+	}
+
+	// Sets the current linkks array for a pipeline to the list passed in.
+	// linkList - An array of links to replace the current array.
+	// pipelineId - The ID of the pipeline
+	setLinks(linkList, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinks(linkList);
 	}
 
 	// Deletes a link

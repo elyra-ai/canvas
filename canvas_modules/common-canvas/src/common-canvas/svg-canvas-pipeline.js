@@ -161,7 +161,7 @@ export default class SVGCanvasPipeline {
 	}
 
 	// Preprocesses the pipeline to set the connected attribute of the ports
-	// for each node. This is used when rendering the connection satus of ports.
+	// for each node. This is used when rendering the connection status of ports.
 	preProcessPipeline(pipeline) {
 		this.setAllPortsDisconnected(pipeline);
 
@@ -176,7 +176,7 @@ export default class SVGCanvasPipeline {
 				link.srcObj = this.getNode(link.srcNodeId);
 				link.trgNode = this.getNode(link.trgNodeId);
 
-				// For node (port) links, we need to set the isPosrtConnected field
+				// For node (port) links, we need to set the isConnected field
 				// for each port.
 				if (link.type === NODE_LINK) {
 					if (link.srcObj) {

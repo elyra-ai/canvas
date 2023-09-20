@@ -67,12 +67,16 @@ export default (state = [], action) => {
 		];
 	}
 
-	case "ADD_LINKS": {
+	case "ADD_LINKS":
 		return [
 			...state,
 			...action.data.linksToAdd
 		];
-	}
+
+	case "SET_LINKS":
+		return [
+			...action.data,
+		];
 
 	case "MOVE_OBJECTS":
 		return state.map((link) => {

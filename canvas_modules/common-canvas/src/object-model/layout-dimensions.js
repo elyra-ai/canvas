@@ -37,7 +37,7 @@ const portsHorizontalDefaultLayout = {
 		bodyPath: null,
 		selectionPath: null,
 
-		// Displays the external object specified as the body of the node
+		// Displays the external object specified, as the body of the node
 		nodeExternalObject: false,
 
 		// Display image
@@ -447,7 +447,7 @@ const portsVerticalDefaultLayout = {
 		bodyPath: null,
 		selectionPath: null,
 
-		// Displays the external object specified as the body of the node
+		// Displays the external object specified, as the body of the node
 		nodeExternalObject: false,
 
 		// Display image
