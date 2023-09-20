@@ -1235,6 +1235,10 @@ export default class APIPipeline {
 		this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.pipelineId });
 	}
 
+	setLinks(linkList) {
+		this.store.dispatch({ type: "SET_LINKS", data: linkList, pipelineId: this.pipelineId });
+	}
+
 	getLinks() {
 		return this.store.getLinks(this.pipelineId);
 	}
