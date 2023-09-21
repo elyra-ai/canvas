@@ -226,6 +226,11 @@ const portsHorizontalDefaultLayout = {
 		// If output port guide object is "image" use this image.
 		outputPortGuideImage: "",
 
+		// Automatically increases the node size to accommodate its ports so both
+		// input and output ports can be shown within the dimensions of
+		// the node.
+		autoSizeNode: true,
+
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 3,
 
@@ -635,6 +640,11 @@ const portsVerticalDefaultLayout = {
 
 		// If output port guide object is "image" use this image.
 		outputPortGuideImage: "",
+
+		// Automatically increases the node size to accommodate its ports so both
+		// input and output ports can be shown within the dimensions of
+		// the node.
+		autoSizeNode: true,
 
 		// Radius of the either the input or output ports when they are set to "circle"
 		portRadius: 6,
