@@ -794,14 +794,14 @@ export default class ObjectModel {
 			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 			: 0;
 
-		node.width = node.layout.defaultNodeWidth;
-
 		if (node.layout.autoSizeNode) {
 			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
 
 		} else {
 			node.height = node.layout.defaultNodeHeight;
 		}
+
+		node.width = node.layout.defaultNodeWidth;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.height += canvasLayout.supernodeTopAreaHeight + canvasLayout.supernodeSVGAreaPadding;
