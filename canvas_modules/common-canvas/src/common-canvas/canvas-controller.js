@@ -1212,7 +1212,7 @@ export default class CanvasController {
 		this.objectModel.getAPIPipeline(pipelineId).addLinks(linkList);
 	}
 
-	// Sets the current linkks array for a pipeline to the list passed in.
+	// Sets the current links array for a pipeline to the list passed in.
 	// linkList - An array of links to replace the current array.
 	// pipelineId - The ID of the pipeline
 	setLinks(linkList, pipelineId) {

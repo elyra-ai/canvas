@@ -794,7 +794,13 @@ export default class ObjectModel {
 			? (node.outputs.length * (node.layout.portArcRadius * 2)) + ((node.outputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
 			: 0;
 
-		node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+		if (node.layout.autoSizeNode) {
+			node.height = Math.max(node.inputPortsHeight, node.outputPortsHeight, node.layout.defaultNodeHeight);
+
+		} else {
+			node.height = node.layout.defaultNodeHeight;
+		}
+
 		node.width = node.layout.defaultNodeWidth;
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
@@ -817,8 +823,8 @@ export default class ObjectModel {
 	}
 
 	// Returns the node passed in with additional fields which contains
-	// the height occupied by the input ports and output ports, based on the
-	// layout info passed in, as well as the node width.
+	// the width occupied by the input ports and output ports, based on the
+	// layout info passed in, as well as the node height.
 	setNodeDimensionAttributesVertical(node, canvasLayout) {
 		node.inputPortsWidth = node.inputs
 			? (node.inputs.length * (node.layout.portArcRadius * 2)) + ((node.inputs.length - 1) * node.layout.portArcSpacing) + (node.layout.portArcOffset * 2)
@@ -829,7 +835,13 @@ export default class ObjectModel {
 			: 0;
 
 		node.height = node.layout.defaultNodeHeight;
-		node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
+
+		if (node.layout.autoSizeNode) {
+			node.width = Math.max(node.inputPortsWidth, node.outputPortsWidth, node.layout.defaultNodeWidth);
+
+		} else {
+			node.width = node.layout.defaultNodeWidth;
+		}
 
 		if (node.type === SUPER_NODE && node.is_expanded) {
 			node.width += (2 * canvasLayout.supernodeSVGAreaPadding);
