@@ -2096,7 +2096,8 @@ export default class SVGCanvasRenderer {
 				!this.contextMenuClosedOnZoom &&
 				!this.textEditingClosedOnZoom &&
 				(this.config.enableEditingActions ||
-				d3Event.sourceEvent.target.classList.contains("d3-svg-background"))) {
+				(d3Event.sourceEvent &&
+					d3Event.sourceEvent.target.classList.contains("d3-svg-background")))) {
 			this.canvasController.clearSelections();
 		}
 	}
