@@ -1737,13 +1737,15 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	// Zooms the canvas to amount specified in zoomTransform. Zooming the canvas
-	// in this way will invoke the zoom behavior methods (zoomStart, zoomAction
-	// and zoomEnd).
+	// Zooms the canvas to the amount specified in newZoomTransform. Zooming the
+	// canvas in this way will invoke the zoom behavior methods: zoomStart,
+	// zoomAction and zoomEnd. It does not perform a zoom if newZoomTransform
+	// is the same as the current zoom transform.
 	zoomCanvasInvokeZoomBehavior(newZoomTransform, animateTime) {
 		if (isFinite(newZoomTransform.x) &&
 				isFinite(newZoomTransform.y) &&
-				isFinite(newZoomTransform.k)) {
+				isFinite(newZoomTransform.k) &&
+				this.zoomHasChanged(newZoomTransform)) {
 			this.zoomingAction = true;
 			const zoomTransform = d3.zoomIdentity.translate(newZoomTransform.x, newZoomTransform.y).scale(newZoomTransform.k);
 			if (animateTime) {
@@ -1755,6 +1757,14 @@ export default class SVGCanvasRenderer {
 			}
 			this.zoomingAction = false;
 		}
+	}
+
+	// Return true if the new zoom transform passed in is different from the
+	// current zoom transform.
+	zoomHasChanged(newZoomTransform) {
+		return newZoomTransform.k !== this.zoomTransform.k ||
+			newZoomTransform.x !== this.zoomTransform.x ||
+			newZoomTransform.y !== this.zoomTransform.y;
 	}
 
 	zoomToFit() {
