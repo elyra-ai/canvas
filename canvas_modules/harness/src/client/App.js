@@ -27,6 +27,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
 import classNames from "classnames";
+import { v4 as uuid4 } from "uuid";
 
 import { getMessages } from "../intl/intl-utils";
 import * as HarnessBundles from "../intl/locales";
@@ -1746,7 +1747,8 @@ class App extends React.Component {
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
-			initialEditorSize: this.state.initialEditorSize
+			initialEditorSize: this.state.initialEditorSize,
+			parameterDefId: uuid4()
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });

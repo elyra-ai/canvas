@@ -58,6 +58,7 @@ class PropertiesMain extends React.Component {
 		this.propertiesController.setLight(props.light);
 		this.propertiesController.setAppData(props.propertiesInfo.appData);
 		this.propertiesController.setExpressionInfo(props.propertiesInfo.expressionInfo);
+		this.propertiesController.setParameterDefId(props.propertiesInfo.parameterDefId);
 		this.propertiesController.setHandlers({
 			controllerHandler: props.callbacks.controllerHandler,
 			propertyListener: props.callbacks.propertyListener,
@@ -107,6 +108,9 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
+				// Save oldParameterDefId first before setting the new one from propertiesInfo
+				this.propertiesController.setOldParameterDefId(this.propertiesController.getParameterDefId());
+				this.propertiesController.setParameterDefId(newProps.propertiesInfo.parameterDefId);
 				this.setForm(newProps.propertiesInfo);
 				const newEditorSize = this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
