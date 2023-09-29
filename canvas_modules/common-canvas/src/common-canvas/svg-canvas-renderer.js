@@ -216,13 +216,6 @@ export default class SVGCanvasRenderer {
 			.on("drag", this.dragMove.bind(this))
 			.on("end", this.dragEnd.bind(this));
 
-		// Create a drag handler that will switch off the drag behavior of nodes
-		// and comments, for use when editing actions are not allowed.
-		this.noDragHandler = d3.drag()
-			.on("start", null)
-			.on("drag", null)
-			.on("end", null);
-
 		this.draggingLinkData = null;
 
 		// Create a drag handler that can be used with draggable ends of
@@ -231,13 +224,6 @@ export default class SVGCanvasRenderer {
 			.on("start", this.dragStartLinkHandle.bind(this))
 			.on("drag", this.dragMoveLinkHandle.bind(this))
 			.on("end", this.dragEndLinkHandle.bind(this));
-
-		// Create a drag handler that will switch off the drag behavior of
-		// detached links, for use when editing actions are not allowed.
-		this.noDragLinkHandler = d3.drag()
-			.on("start", null)
-			.on("drag", null)
-			.on("end", null);
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -2916,7 +2902,7 @@ export default class SVGCanvasRenderer {
 				.call(this.dragHandler);
 		} else {
 			nonBindingNodeGrps
-				.call(this.noDragHandler);
+				.on(".drag", null);
 		}
 
 		this.logger.logEndTimer("updateNodes");
@@ -3139,6 +3125,7 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Node Group - mouse down");
+				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
@@ -3153,8 +3140,8 @@ export default class SVGCanvasRenderer {
 				// propagate to canvas zoom operation.
 			})
 			.on("mouseup", (d3Event, d) => {
-				d3Event.stopPropagation();
 				this.logger.log("Node Group - mouse up");
+				d3Event.stopPropagation();
 				if (this.drawingNewLinkData) {
 					this.completeNewLink(d3Event);
 				}
@@ -5640,7 +5627,7 @@ export default class SVGCanvasRenderer {
 				.call(this.dragHandler);
 		} else {
 			joinedCommentGrps
-				.call(this.noDragHandler);
+				.on(".drag", null);
 		}
 	}
 
@@ -5668,6 +5655,7 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
+				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
 				if (this.svgCanvasTextArea.isEditingText()) {
 					this.svgCanvasTextArea.completeEditing();
 				}
@@ -6358,7 +6346,7 @@ export default class SVGCanvasRenderer {
 				if (this.config.enableLinkSelection !== LINK_SELECTION_NONE) {
 					this.selectObjectD3Event(d3Event, d, "link");
 				}
-				d3Event.stopPropagation();
+				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
 			})
 			.on("mouseup", () => {
 				this.logger.log("Link Group - mouse up");
@@ -6471,7 +6459,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			startHandle.call(this.dragLinkHandler);
 		} else {
-			startHandle.call(this.noDragLinkHandler);
+			startHandle.on(".drag", null);
 		}
 
 		const endHandle = handlesGrp
@@ -6500,7 +6488,7 @@ export default class SVGCanvasRenderer {
 		if (this.config.enableEditingActions) {
 			endHandle.call(this.dragLinkHandler);
 		} else {
-			endHandle.call(this.noDragLinkHandler);
+			endHandle.on(".drag", null);
 		}
 	}
 
