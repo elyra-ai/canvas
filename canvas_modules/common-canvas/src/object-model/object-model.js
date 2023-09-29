@@ -814,7 +814,7 @@ export default class ObjectModel {
 			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
 
-		} else {
+		} else if (node.isResized) {
 			node.height = node.resizeHeight ? node.resizeHeight : node.height;
 			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
@@ -854,7 +854,7 @@ export default class ObjectModel {
 			node.width = CanvasUtils.getSupernodeExpandedWidth(node, canvasLayout);
 			node.height = CanvasUtils.getSupernodeExpandedHeight(node, canvasLayout);
 
-		} else {
+		} else if (node.isResized) {
 			node.height = node.resizeHeight ? node.resizeHeight : node.height;
 			node.width = node.resizeWidth ? node.resizeWidth : node.width;
 		}
