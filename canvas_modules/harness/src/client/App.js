@@ -1748,7 +1748,7 @@ class App extends React.Component {
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
 			initialEditorSize: this.state.initialEditorSize,
-			parameterDefId: uuid4()
+			id: uuid4()
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });

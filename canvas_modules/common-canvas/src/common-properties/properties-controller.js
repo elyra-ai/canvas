@@ -55,7 +55,7 @@ export default class PropertiesController {
 		this.allowChangeDefinitions = {};
 		this.conditionalDefaultDefinitions = {};
 		this.panelTree = {};
-		this.oldControls = {};
+		this.prevControls = {};
 		this.controls = {};
 		this.actions = {};
 		this.customControls = [];
@@ -111,23 +111,15 @@ export default class PropertiesController {
 		return this.editorSize;
 	}
 
-	setOldParameterDefId(oldParameterDefId) {
-		this.oldParameterDefId = oldParameterDefId;
-	}
-
-	getOldParameterDefId() {
-		return this.oldParameterDefId;
-	}
-
 	/**
-	* @param {string} parameterDefId - Optional ID from propertiesInfo
+	* @param {string} id - Optional ID from propertiesInfo
 	*/
-	setParameterDefId(parameterDefId) {
-		this.parameterDefId = parameterDefId;
+	setId(id) {
+		this.id = id;
 	}
 
-	getParameterDefId() {
-		return this.parameterDefId;
+	getId() {
+		return this.id;
 	}
 
 	setLight(light) {
@@ -154,16 +146,6 @@ export default class PropertiesController {
 		return this.propertiesConfig.containerType === "Tearsheet";
 	}
 
-	// Compare old & new controls, set an array of different properties
-	setDifferentProperties() {
-		const differentProperties = PropertyUtils.getObjectDifference(this.controls, this.oldControls);
-		this.differentProperties = differentProperties;
-	}
-
-	getDifferentProperties() {
-		return this.differentProperties;
-	}
-
 	setParamDef(paramDef) {
 		const containerType = get(this.getPropertiesConfig(), "containerType");
 		const convertTypes = get(this.getPropertiesConfig(), "convertTypes");
@@ -180,7 +162,7 @@ export default class PropertiesController {
 		this.reactIntl = intl;
 		// set initial property values
 		if (this.form) {
-			this.oldControls = this.controls;
+			this.prevControls = this.controls;
 			this.controls = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
@@ -191,10 +173,6 @@ export default class PropertiesController {
 			const controls = [];
 			UiConditionsParser.parseControls(controls, this.actions, this.form);
 			this.saveControls(controls); // saves controls without the subcontrols
-			if (this.getOldParameterDefId() === this.getParameterDefId()) {
-				// When a parameterDef is dynamically updated, set difference between old and new controls
-				this.setDifferentProperties();
-			}
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
 			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions, this.requiredDefinitionsIds, intl);
@@ -445,8 +423,14 @@ export default class PropertiesController {
 				}
 
 				// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
-				const sameParameterDefRendered = this.getOldParameterDefId() === this.getParameterDefId();
-				if (sameParameterDefRendered && this.getDifferentProperties().indexOf(control.name) === -1) {
+				const sameParameterDefRendered = this.prevId === this.getId();
+				let differentProperties = [];
+				if (sameParameterDefRendered) {
+					// When a parameterDef is dynamically updated, set difference between old and new controls
+					differentProperties = PropertyUtils.getObjectDifference(this.controls, this.prevControls);
+				}
+
+				if (sameParameterDefRendered && differentProperties.indexOf(control.name) === -1) {
 					this.updatePropertyValue(propertyId, controlValue, true);
 				} else {
 					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
