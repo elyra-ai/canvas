@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 import { DEFAULT_LOCALE } from "./constants/constants";
@@ -427,7 +427,7 @@ export default class PropertiesController {
 				let differentProperties = [];
 				if (sameParameterDefRendered) {
 					// When a parameterDef is dynamically updated, set difference between old and new controls
-					differentProperties = PropertyUtils.getObjectDifference(this.controls, this.prevControls);
+					differentProperties = difference(Object.keys(this.controls), Object.keys(this.prevControls));
 				}
 
 				if (sameParameterDefRendered && differentProperties.indexOf(control.name) === -1) {

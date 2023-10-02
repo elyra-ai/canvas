@@ -19,7 +19,7 @@
 import logger from "../../../utils/logger";
 import { ParamRole } from "../constants/form-constants";
 import { DATA_TYPE, CARBON_ICONS } from "../constants/constants";
-import { cloneDeep, isUndefined, isString, isEqual } from "lodash";
+import { cloneDeep, isUndefined, isString } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import defaultMessages1 from "../../../locales/common-properties/locales/en.json";
 import defaultMessages2 from "../../../locales/command-actions/locales/en.json";
@@ -590,19 +590,6 @@ function convertValueDataTypes(currentParameters, controls) {
 	return convertedCurrentParameters;
 }
 
-// Returns an array of keys whose values are different in two objects
-function getObjectDifference(obj1, obj2) {
-	return Object.keys(obj1).reduce((result, key, val) => {
-		if (!(key in obj2)) {
-			result.push(key);
-		} else if (isEqual(obj1[key], obj2[key])) {
-			const resultKeyIndex = result.indexOf(key);
-			result.splice(resultKeyIndex, 1);
-		}
-		return result;
-	}, Object.keys(obj2));
-}
-
 export {
 	toType,
 	formatMessage,
@@ -620,6 +607,5 @@ export {
 	fieldStringToValue,
 	generateId,
 	getDMDefault,
-	getDMFieldIcon,
-	getObjectDifference
+	getDMFieldIcon
 };
