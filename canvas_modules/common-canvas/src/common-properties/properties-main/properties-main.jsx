@@ -110,13 +110,18 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
 				// Save prevId first before setting the new one from propertiesInfo
 				this.propertiesController.prevId = this.propertiesController.getId();
-				this.propertiesController.setId(newProps.propertiesInfo.id);
+				if (has(newProps.propertiesInfo, "id")) {
+					this.propertiesController.setId(newProps.propertiesInfo.id);
+				}
 				this.setForm(newProps.propertiesInfo);
 				const newEditorSize = this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
 					this.setState({ editorSize: newEditorSize });
 				}
-				this.currentParameters = this.propertiesController.getPropertyValues();
+				// Reset property values for new parameterDef
+				if (has(newProps.propertiesInfo, "id") && (this.propertiesController.prevId !== this.propertiesController.getId())) {
+					this.currentParameters = this.propertiesController.getPropertyValues();
+				}
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
