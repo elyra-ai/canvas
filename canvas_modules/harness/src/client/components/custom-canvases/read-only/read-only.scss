@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-.writable {
+.read-only {
 
 	&.config-editing-actions-false {
 		.d3-node-group {
 			& .d3-node-label,
 			& svg path {
-				color: $disabled-02;
-				stroke: $disabled-02;
+				color: $disabled-03;
 				fill: $disabled-03;
 			}
 		}

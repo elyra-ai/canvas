@@ -262,9 +262,9 @@
               "x_pos": 18,
               "y_pos": 14.4,
               "width": 175,
-              "height": 76,
+              "height": 80,
               "class_name": "d3-comment-rect",
-              "content": "This canvas shows a flow of data processing nodes where enableDetachableLinks is switched on.",
+              "content": "This canvas allows the user to switch between edit, read-only and locked mode. Click the icons the toolbar.",
               "associated_id_refs": []
             }
           ]

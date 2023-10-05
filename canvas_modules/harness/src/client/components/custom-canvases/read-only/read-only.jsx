@@ -76,7 +76,7 @@ export default class ReadOnlyCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "writable",
+			enableParentClass: "read-only",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
