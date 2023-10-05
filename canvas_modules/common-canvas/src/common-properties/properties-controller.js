@@ -111,17 +111,6 @@ export default class PropertiesController {
 		return this.editorSize;
 	}
 
-	/**
-	* @param {string} id - Optional ID from propertiesInfo
-	*/
-	setId(id) {
-		this.id = id;
-	}
-
-	getId() {
-		return this.id;
-	}
-
 	setLight(light) {
 		this.light = light;
 	}
@@ -156,7 +145,7 @@ export default class PropertiesController {
 	//
 	// Form and parsing Methods
 	//
-	setForm(form, intl) {
+	setForm(form, intl, sameParameterDefRendered) {
 		this.form = form;
 		// console.log(JSON.stringify(form, null, 2));
 		this.reactIntl = intl;
@@ -186,14 +175,19 @@ export default class PropertiesController {
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
 			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
+			this.differentProperties = [];
+			if (sameParameterDefRendered) {
+				// When a parameterDef is dynamically updated, set difference between old and new controls
+				this.differentProperties = difference(Object.keys(this.controls), Object.keys(this.prevControls));
+			}
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
-			this._addToControlValues();
+			this._addToControlValues(sameParameterDefRendered);
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
 			// default value set in the above loop.
-			this._addToControlValues(true);
+			this._addToControlValues(sameParameterDefRendered, true);
 
 			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
@@ -396,7 +390,7 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(resolveParameterRefs) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs) {
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
 				continue;
@@ -423,14 +417,7 @@ export default class PropertiesController {
 				}
 
 				// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
-				const sameParameterDefRendered = this.prevId === this.getId();
-				let differentProperties = [];
-				if (sameParameterDefRendered) {
-					// When a parameterDef is dynamically updated, set difference between old and new controls
-					differentProperties = difference(Object.keys(this.controls), Object.keys(this.prevControls));
-				}
-
-				if (sameParameterDefRendered && differentProperties.indexOf(control.name) === -1) {
+				if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
 					this.updatePropertyValue(propertyId, controlValue, true);
 				} else {
 					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
