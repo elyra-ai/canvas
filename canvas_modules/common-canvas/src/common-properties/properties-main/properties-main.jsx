@@ -68,7 +68,7 @@ class PropertiesMain extends React.Component {
 			titleChangeHandler: props.callbacks.titleChangeHandler,
 			tooltipLinkHandler: props.callbacks.tooltipLinkHandler
 		});
-		this.setForm(props.propertiesInfo);
+		this.setForm(props.propertiesInfo, false);
 		this.previousErrorMessages = {};
 		// this has to be after setForm because setForm clears all error messages.
 		// Validate all validationDefinitions but show warning messages for "colDoesExists" condition only
@@ -107,12 +107,16 @@ class PropertiesMain extends React.Component {
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.props.propertiesInfo.parameterDef)) ||
 				(newProps.propertiesInfo.appData && !isEqual(newProps.propertiesInfo.appData, this.props.propertiesInfo.appData))) {
-				this.setForm(newProps.propertiesInfo);
+				const sameParameterDefRendered = newProps.propertiesInfo.id === this.props.propertiesInfo.id;
+				this.setForm(newProps.propertiesInfo, sameParameterDefRendered);
 				const newEditorSize = this.propertiesController.getForm().editorSize;
 				if (this.state.editorSize !== newEditorSize) {
 					this.setState({ editorSize: newEditorSize });
 				}
-				this.currentParameters = this.propertiesController.getPropertyValues();
+				// Reset property values for new parameterDef
+				if (newProps.propertiesInfo.id && !sameParameterDefRendered) {
+					this.currentParameters = this.propertiesController.getPropertyValues();
+				}
 				this.propertiesController.setAppData(newProps.propertiesInfo.appData);
 				this.propertiesController.setCustomControls(newProps.customControls);
 				this.propertiesController.setConditionOps(newProps.customConditionOps);
@@ -139,7 +143,7 @@ class PropertiesMain extends React.Component {
 		}
 	}
 
-	setForm(propertiesInfo) {
+	setForm(propertiesInfo, sameParameterDefRendered) {
 		let formData = null;
 
 		if (propertiesInfo.formData && Object.keys(propertiesInfo.formData).length !== 0) {
@@ -155,7 +159,7 @@ class PropertiesMain extends React.Component {
 			formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
 		}
 
-		this.propertiesController.setForm(formData, this.props.intl);
+		this.propertiesController.setForm(formData, this.props.intl, sameParameterDefRendered);
 		if (formData) {
 			this.originalTitle = formData.label;
 		}

@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 import { DEFAULT_LOCALE } from "./constants/constants";
@@ -55,6 +55,7 @@ export default class PropertiesController {
 		this.allowChangeDefinitions = {};
 		this.conditionalDefaultDefinitions = {};
 		this.panelTree = {};
+		this.prevControls = {};
 		this.controls = {};
 		this.actions = {};
 		this.customControls = [];
@@ -144,12 +145,13 @@ export default class PropertiesController {
 	//
 	// Form and parsing Methods
 	//
-	setForm(form, intl) {
+	setForm(form, intl, sameParameterDefRendered) {
 		this.form = form;
 		// console.log(JSON.stringify(form, null, 2));
 		this.reactIntl = intl;
 		// set initial property values
 		if (this.form) {
+			this.prevControls = this.controls;
 			this.controls = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
@@ -173,14 +175,19 @@ export default class PropertiesController {
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
 			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
+			this.differentProperties = [];
+			if (sameParameterDefRendered) {
+				// When a parameterDef is dynamically updated, set difference between old and new controls
+				this.differentProperties = difference(Object.keys(this.controls), Object.keys(this.prevControls));
+			}
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
-			this._addToControlValues();
+			this._addToControlValues(sameParameterDefRendered);
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
 			// default value set in the above loop.
-			this._addToControlValues(true);
+			this._addToControlValues(sameParameterDefRendered, true);
 
 			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
@@ -383,7 +390,7 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(resolveParameterRefs) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs) {
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
 				continue;
@@ -409,7 +416,12 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
+				// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
+				if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+					this.updatePropertyValue(propertyId, controlValue, true);
+				} else {
+					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
+				}
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
@@ -1243,7 +1255,7 @@ export default class PropertiesController {
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
-					action: ACTIONS.SET_PROPERTIES
+					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
 		}
