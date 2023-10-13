@@ -547,9 +547,9 @@ class CanvasContents extends React.Component {
 						onDragEnter={this.dragEnter}
 						onDragLeave={this.dragLeave}
 					>
-						{stateTag}
-						{emptyCanvas}
 						{svgCanvasDiv}
+						{emptyCanvas}
+						{stateTag}
 						{contextMenu}
 						{textToolbar}
 						{dropZoneCanvas}
