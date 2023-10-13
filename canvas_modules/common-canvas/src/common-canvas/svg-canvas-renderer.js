@@ -6409,27 +6409,12 @@ export default class SVGCanvasRenderer {
 		handlesGrp
 			.append(this.canvasLayout.linkStartHandleObject)
 			.attr("class", (d) => "d3-link-handle-start")
-			// Use mouse down instead of click because it gets called before drag start.
-			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link start handle - mouse down");
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "link");
-				}
-				this.logger.log("Link end handle - finished mouse down");
-			});
+			.call(this.attachStartHandleListeners.bind(this));
 
 		handlesGrp
 			.append(this.canvasLayout.linkEndHandleObject)
 			.attr("class", (d) => "d3-link-handle-end")
-			// Use mouse down instead of click because it gets called before drag start.
-			.on("mousedown", (d3Event, d) => {
-				this.logger.log("Link end handle - mouse down");
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "link");
-				}
-				this.logger.log("Link end handle - finished mouse down");
-			});
-
+			.call(this.attachEndHandleListeners.bind(this));
 	}
 
 	// Updates the start and end link handles for the handle groups passed in.
@@ -6490,6 +6475,32 @@ export default class SVGCanvasRenderer {
 		} else {
 			endHandle.on(".drag", null);
 		}
+	}
+
+	// Attaches any required event listeners to the start handles of the links.
+	attachStartHandleListeners(startHandles) {
+		startHandles
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link start handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			});
+	}
+
+	// Attaches any required event listeners to the end handles of the links.
+	attachEndHandleListeners(endHandles) {
+		endHandles
+			// Use mouse down instead of click because it gets called before drag start.
+			.on("mousedown", (d3Event, d) => {
+				this.logger.log("Link end handle - mouse down");
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "link");
+				}
+				this.logger.log("Link end handle - finished mouse down");
+			});
 	}
 
 	// Sets the custom inline styles on the link object passed in.
