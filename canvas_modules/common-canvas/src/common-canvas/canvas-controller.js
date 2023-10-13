@@ -2045,13 +2045,15 @@ export default class CanvasController {
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
 	createNodeFromDataAt(x, y, dropData, pipelineId) {
-		const data = dropData.data;
-		data.offsetX = x;
-		data.offsetY = y;
-		data.pipelineId = pipelineId;
-		data.editSource = "canvas";
+		if (dropData?.data) {
+			const data = dropData.data;
+			data.offsetX = x;
+			data.offsetY = y;
+			data.pipelineId = pipelineId;
+			data.editSource = "canvas";
 
-		this.editActionHandler(data);
+			this.editActionHandler(data);
+		}
 	}
 
 	canNewNodeBeDroppedOnLink(nodeType) {

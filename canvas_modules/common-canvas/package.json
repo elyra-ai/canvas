@@ -70,7 +70,7 @@
     "deep-freeze": "0.0.1",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.5",
-    "eslint": "7.9.0",
+    "eslint": "^7.32.0",
     "eslint-config-canvas": "file:../eslint-config-canvas",
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-react": "7.21.2",
