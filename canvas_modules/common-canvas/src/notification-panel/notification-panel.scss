@@ -41,6 +41,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	position: absolute;
 	width: 320px;
 	height: 100%;
+	max-height: 635px;
 	right: 0;
 	top: $toolbar-button-height;
 }
@@ -85,7 +86,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 .notification-panel-messages-container {
 	width: inherit;
-	max-height: calc(100% - #{$notification-panel-header-height});
+	max-height: calc(100% - #{$notification-panel-header-height} - 10px); // Extra 10px makes sure full height of notification-panel-button-container is visible in narrow window
 	height: 100%;
 }
 .notification-panel-messages {
