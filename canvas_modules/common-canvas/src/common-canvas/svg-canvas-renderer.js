@@ -4038,7 +4038,9 @@ export default class SVGCanvasRenderer {
 
 	removeContextToolbar() {
 		this.canvasController.setMouseInObject(false);
-		setTimeout(() => this.canvasController.closeContextToolbar(), 200);
+		if (this.canvasController.isContextMenuDisplayed()) {
+			setTimeout(() => this.canvasController.closeContextToolbar(), 200);
+		}
 	}
 
 	recreateContextToolbar(d3Event, d, objType) {
