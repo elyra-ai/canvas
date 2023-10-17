@@ -3205,6 +3205,9 @@ export default class SVGCanvasRenderer {
 	attachNodeGroupListeners(nodeGrps) {
 		nodeGrps
 			.on("mouseenter", (d3Event, d) => {
+				if (this.drawingNewLinkData || this.dragging || this.draggingLinkData) {
+					return;
+				}
 				const nodeGrp = d3.select(d3Event.currentTarget);
 				this.raiseNodeToTop(nodeGrp);
 				this.setNodeStyles(d, "hover", nodeGrp);
@@ -4064,7 +4067,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	addContextToolbar(d3Event, d, objType) {
-		if (!this.nodeSizing && !this.dragging && !this.draggingLinkData &&
+		if (!this.nodeSizing && !this.dragging && !this.draggingLinkData && !this.drawingNewLinkData &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			this.canvasController.setMouseInObject(true);
 			let pos = this.getContextToolbarPos(objType, d);
@@ -5662,6 +5665,9 @@ export default class SVGCanvasRenderer {
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
 			.on("mouseenter", (d3Event, d) => {
+				if (this.drawingNewLinkData || this.dragging || this.draggingLinkData) {
+					return;
+				}
 				this.setCommentStyles(d, "hover", d3.select(d3Event.currentTarget));
 				if (this.config.enableEditingActions && d.id !== this.svgCanvasTextArea.getEditingTextId()) {
 					this.createCommentPort(d3Event.currentTarget, d);
@@ -6382,6 +6388,10 @@ export default class SVGCanvasRenderer {
 				this.openContextMenu(d3Event, "link", d);
 			})
 			.on("mouseenter", (d3Event, link) => {
+				if (this.drawingNewLinkData || this.dragging || this.draggingLinkData) {
+					return;
+				}
+
 				const targetObj = d3Event.currentTarget;
 
 				if (this.config.enableLinkSelection === LINK_SELECTION_HANDLES ||
@@ -6394,8 +6404,7 @@ export default class SVGCanvasRenderer {
 					this.addContextToolbar(d3Event, link, "link");
 				}
 
-				if (this.canOpenTip(TIP_TYPE_LINK) &&
-						!this.draggingLinkData) {
+				if (this.canOpenTip(TIP_TYPE_LINK)) {
 					this.canvasController.closeTip();
 					this.canvasController.openTip({
 						id: this.getId("link_tip", link.id),
@@ -6648,14 +6657,16 @@ export default class SVGCanvasRenderer {
 	// * The enableRaiseNodesToTopOnHover config option is set to false
 	// * We are currently drawing a new link
 	// * We are dragging some object(s) around
+	// * We are dragging a detachable link handle
 	// * There are one or more selected links
 	// * We are editing text
 	raiseNodeToTop(nodeGrp) {
 		if (this.config.enableRaiseNodesToTopOnHover &&
-				this.drawingNewLinkData === null &&
-				!this.dragging &&
-				this.activePipeline.getSelectedLinksCount() === 0 &&
-				!this.isEditingText()) {
+			!this.drawingNewLinkData &&
+			!this.dragging &&
+			!this.draggingLinkData &&
+			this.activePipeline.getSelectedLinksCount() === 0 &&
+			!this.isEditingText()) {
 			nodeGrp.raise();
 		}
 	}
