@@ -119,6 +119,7 @@ export default class FlowsProperties extends React.Component {
 			trimSpaces: true,
 			heading: true,
 			showRequiredIndicator: true,
+			showAlertsTab: true,
 			returnValueFiltering: [],
 			maxLengthForMultiLineControls: 1024,
 			maxLengthForSingleLineControls: 128,

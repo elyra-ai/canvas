@@ -630,6 +630,7 @@ PropertiesMain.propTypes = {
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
+		showAlertsTab: PropTypes.bool,
 		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({

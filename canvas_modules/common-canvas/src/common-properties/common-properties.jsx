@@ -251,6 +251,7 @@ CommonProperties.propTypes = {
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
+		showAlertsTab: PropTypes.bool,
 		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
@@ -290,6 +291,7 @@ CommonProperties.defaultProps = {
 		maxLengthForSingleLineControls: 128,
 		convertValueDataTypes: false,
 		showRequiredIndicator: true,
+		showAlertsTab: true,
 		locale: DEFAULT_LOCALE
 	},
 	callbacks: {
