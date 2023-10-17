@@ -51,7 +51,6 @@ class EditorForm extends React.Component {
 		this.state = {
 			showFieldPicker: false
 		};
-		this.showAlertsTab = props.controller ? get(props.controller.getPropertiesConfig(), "showAlertsTab", true) : true;
 
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
@@ -88,7 +87,7 @@ class EditorForm extends React.Component {
 	}
 
 	_getMessageCountForCategory(tab) {
-		if (!this.showAlertsTab) {
+		if (!this.props.showAlertsTab) {
 			return null;
 		}
 		if (tab.group === ALERT_TAB_GROUP) {
@@ -613,7 +612,7 @@ class EditorForm extends React.Component {
 
 	render() {
 		let uiItems = this.props.controller.getUiItems();
-		if (this.showAlertsTab && !isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
+		if (this.props.showAlertsTab && !isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
 			// create a new copy for uiItems object so that alerts are not added multiple times
 			uiItems = cloneDeep(uiItems);
 			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array
@@ -672,6 +671,7 @@ EditorForm.propTypes = {
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
 	categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
+	showAlertsTab: PropTypes.bool,
 	activeTab: PropTypes.string, // set by redux
 	setActiveTab: PropTypes.func, // set by redux
 	messages: PropTypes.array // set by redux

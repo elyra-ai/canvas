@@ -517,6 +517,7 @@ class PropertiesMain extends React.Component {
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
 				categoryView={this.props.propertiesConfig.categoryView}
+				showAlertsTab={(typeof this.props.propertiesConfig.showAlertsTab !== "undefined") ? this.props.propertiesConfig.showAlertsTab : true}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
