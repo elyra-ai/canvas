@@ -2596,6 +2596,71 @@ export default class SVGCanvasRenderer {
 		return d3.select(d3Event.sourceEvent?.currentTarget?.parentNode).datum();
 	}
 
+	// Initialize this.drawingNewLinkData when dragging a comment port.
+	startCommentNewLink(comment) {
+		this.drawingNewLinkData = {
+			srcObjId: comment.id,
+			action: COMMENT_LINK,
+			startPos: {
+				x: comment.x_pos - this.canvasLayout.commentHighlightGap,
+				y: comment.y_pos - this.canvasLayout.commentHighlightGap
+			},
+			linkArray: []
+		};
+	}
+
+	// Initialize this.drawingNewLinkData when dragging an input port. This gesture
+	// is only supported for association link creation.
+	startInputPortNewLink(port, node) {
+		if (this.config.enableAssocLinkCreation) {
+			const srcNode = this.activePipeline.getNode(node.id);
+			this.drawingNewLinkData = {
+				srcObjId: node.id,
+				srcPortId: port.id,
+				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+				srcNode: srcNode,
+				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+				portType: "input",
+				portObject: node.layout.inputPortObject,
+				portImage: node.layout.inputPortImage,
+				portWidth: node.layout.inputPortWidth,
+				portHeight: node.layout.inputPortHeight,
+				portRadius: this.getPortRadius(srcNode),
+				minInitialLine: srcNode.layout.minInitialLine,
+				guideObject: node.layout.inputPortGuideObject,
+				guideImage: node.layout.inputPortGuideImage,
+				linkArray: []
+			};
+		}
+	}
+
+	// Initialize this.drawingNewLinkData when dragging an output port.
+	startOutputPortNewLink(port, node) {
+		const srcNode = this.activePipeline.getNode(node.id);
+		if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
+			this.drawingNewLinkData = {
+				srcObjId: node.id,
+				srcPortId: port.id,
+				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
+				srcNode: srcNode,
+				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
+				portType: "output",
+				portObject: node.layout.outputPortObject,
+				portImage: node.layout.outputPortImage,
+				portWidth: node.layout.outputPortWidth,
+				portHeight: node.layout.outputPortHeight,
+				portRadius: this.getPortRadius(srcNode),
+				minInitialLine: srcNode.layout.minInitialLine,
+				guideObject: node.layout.outputPortGuideObject,
+				guideImage: node.layout.outputPortGuideImage,
+				linkArray: []
+			};
+			if (this.config.enableHighlightUnavailableNodes) {
+				this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
+			}
+		}
+	}
+
 	// Begins the dragging of a link handle of a detachable link.
 	dragStartLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartLinkHandle");
@@ -5709,67 +5774,6 @@ export default class SVGCanvasRenderer {
 		d3.select(commentObj)
 			.selectChildren(".d3-comment-port-circle")
 			.remove();
-	}
-
-	startCommentNewLink(comment) {
-		this.drawingNewLinkData = {
-			srcObjId: comment.id,
-			action: COMMENT_LINK,
-			startPos: {
-				x: comment.x_pos - this.canvasLayout.commentHighlightGap,
-				y: comment.y_pos - this.canvasLayout.commentHighlightGap
-			},
-			linkArray: []
-		};
-	}
-
-	startInputPortNewLink(port, node) {
-		if (this.config.enableAssocLinkCreation) {
-			const srcNode = this.activePipeline.getNode(node.id);
-			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
-				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
-				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "input",
-				portObject: node.layout.inputPortObject,
-				portImage: node.layout.inputPortImage,
-				portWidth: node.layout.inputPortWidth,
-				portHeight: node.layout.inputPortHeight,
-				portRadius: this.getPortRadius(srcNode),
-				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.inputPortGuideObject,
-				guideImage: node.layout.inputPortGuideImage,
-				linkArray: []
-			};
-		}
-	}
-
-	startOutputPortNewLink(port, node) {
-		const srcNode = this.activePipeline.getNode(node.id);
-		if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
-			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
-				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
-				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "output",
-				portObject: node.layout.outputPortObject,
-				portImage: node.layout.outputPortImage,
-				portWidth: node.layout.outputPortWidth,
-				portHeight: node.layout.outputPortHeight,
-				portRadius: this.getPortRadius(srcNode),
-				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.outputPortGuideObject,
-				guideImage: node.layout.outputPortGuideImage,
-				linkArray: []
-			};
-			if (this.config.enableHighlightUnavailableNodes) {
-				this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
-			}
-		}
 	}
 
 	setCommentStyles(d, type, comGrp) {
