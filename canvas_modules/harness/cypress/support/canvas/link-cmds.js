@@ -186,13 +186,13 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPort", (srcNodeName, srcPortI
 		.then((srcSelector) => {
 			cy.getNodePortSelector(trgNodeName, "input", trgPortId)
 				.then((trgSelector) => {
-					// We're using { force: true } on mousemove and mouseup triggers
-					// to disable element visibility errorCheck from Cypress
-					cy.get(srcSelector)
-						.trigger("mousedown", { button: 0 });
-					cy.get(trgSelector)
-						.trigger("mousemove", { force: true })
-						.trigger("mouseup", { force: true });
+					cy.window().then((win) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", { which: 1, view: win });
+						cy.get(trgSelector)
+							.trigger("mousemove", { view: win })
+							.trigger("mouseup", { which: 1, view: win, force: true });
+					});
 				});
 		});
 });
@@ -203,13 +203,13 @@ Cypress.Commands.add("linkNodeOutputPortToNodeInputPortInSupernode",
 			.then((srcSelector) => {
 				cy.getNodePortSelectorInSupernode(supernodeName, trgNodeName, "input", trgPortId)
 					.then((trgSelector) => {
-						// We're using { force: true } on mousemove and mouseup triggers
-						// to disable element visibility errorCheck from Cypress
-						cy.get(srcSelector)
-							.trigger("mousedown", { button: 0 });
-						cy.get(trgSelector)
-							.trigger("mousemove", { force: true })
-							.trigger("mouseup", { force: true });
+						cy.window().then((win) => {
+							cy.get(srcSelector)
+								.trigger("mousedown", { which: 1, view: win });
+							cy.get(trgSelector)
+								.trigger("mousemove", { view: win })
+								.trigger("mouseup", { which: 1, view: win, force: true });
+						});
 					});
 			});
 	});
@@ -222,11 +222,13 @@ Cypress.Commands.add("linkNodeOutputPortToNode", (srcNodeName, srcPortId, trgNod
 		.then((srcSelector) => {
 			cy.getNodeWithLabel(trgNodeName)
 				.then((trgSelector) => {
-					cy.get(srcSelector)
-						.trigger("mousedown", { button: 0 });
-					cy.get(trgSelector)
-						.trigger("mousemove", { force: true })
-						.trigger("mouseup", { force: true });
+					cy.window().then((win) => {
+						cy.get(srcSelector)
+							.trigger("mousedown", { which: 1, view: win });
+						cy.get(trgSelector)
+							.trigger("mousemove", { view: win })
+							.trigger("mouseup", { which: 1, view: win, force: true });
+					});
 				});
 		});
 });
@@ -237,11 +239,13 @@ Cypress.Commands.add("linkNodeOutputPortToPointOnCanvas", (srcNodeName, srcPortI
 	// is set to true.
 	cy.getNodePortSelector(srcNodeName, "output", srcPortId)
 		.then((srcSelector) => {
-			cy.get(srcSelector)
-				.trigger("mousedown", { button: 0 });
-			cy.get(".d3-svg-canvas-div > .svg-area")
-				.trigger("mousemove", { force: true })
-				.trigger("mouseup", xPos, yPos, { force: true });
+			cy.window().then((win) => {
+				cy.get(srcSelector)
+					.trigger("mousedown", { which: 1, view: win });
+				cy.get(".d3-svg-canvas-div > .svg-area")
+					.trigger("mousemove", { view: win })
+					.trigger("mouseup", xPos, yPos, { which: 1, view: win, force: true });
+			});
 		});
 });
 

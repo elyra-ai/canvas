@@ -4301,7 +4301,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	drawNewLink(d3Event) {
-		if (this.config.enableEditingActions === false) {
+		if (this.config.enableEditingActions === false || !this.drawingNewLinkData) {
 			return;
 		}
 
@@ -4495,7 +4495,7 @@ export default class SVGCanvasRenderer {
 
 	// Handles the completion of a new link being drawn from a source node.
 	completeNewLink(d3Event) {
-		if (this.config.enableEditingActions === false) {
+		if (this.config.enableEditingActions === false || !this.drawingNewLinkData) {
 			return;
 		}
 
