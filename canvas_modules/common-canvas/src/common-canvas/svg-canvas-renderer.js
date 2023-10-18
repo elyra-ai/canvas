@@ -2474,7 +2474,7 @@ export default class SVGCanvasRenderer {
 		// calling the canvas-controller. This means the this.draggingObjectData object will
 		// be null when the canvas is refreshed.
 		const draggingObjectData = this.draggingObjectData;
-		this.draggingObjectData = null;
+		// this.draggingObjectData = null;
 
 		// Cancels the styling of insertable/attachable nodes if the user releases
 		// the mouse button with 200 milliseconds of pressing it on the node. This
@@ -4500,7 +4500,7 @@ export default class SVGCanvasRenderer {
 		// calling the canvas-controller. This means the this.drawingNewLinkData object will
 		// be null when the canvas is refreshed.
 		const drawingNewLinkData = this.drawingNewLinkData;
-		this.drawingNewLinkData = null;
+		// this.drawingNewLinkData = null;
 
 		if (this.config.enableHighlightUnavailableNodes) {
 			this.unsetUnavailableNodesHighlighting();
@@ -4739,7 +4739,7 @@ export default class SVGCanvasRenderer {
 		// calling the canvas-controller. This means the this.draggingLinkData object will
 		// be null when the canvas is refreshed.
 		const draggingLinkData = this.draggingLinkData;
-		this.draggingLinkData = null;
+		// this.draggingLinkData = null;
 
 		if (newLink) {
 			const editSubType = this.getLinkEditSubType(draggingLinkData.oldLink, newLink);
