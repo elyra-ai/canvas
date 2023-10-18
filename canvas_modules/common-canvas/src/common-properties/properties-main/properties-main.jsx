@@ -517,6 +517,7 @@ class PropertiesMain extends React.Component {
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
 				categoryView={this.props.propertiesConfig.categoryView}
+				showAlertsTab={this.props.propertiesConfig.showAlertsTab !== false}
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
@@ -630,6 +631,7 @@ PropertiesMain.propTypes = {
 		maxLengthForSingleLineControls: PropTypes.number,
 		convertValueDataTypes: PropTypes.bool,
 		showRequiredIndicator: PropTypes.bool,
+		showAlertsTab: PropTypes.bool,
 		locale: PropTypes.string
 	}),
 	callbacks: PropTypes.shape({
