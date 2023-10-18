@@ -2393,7 +2393,7 @@ export default class SVGCanvasRenderer {
 			let	increment = { x: 0, y: 0 };
 
 			if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-				const stgPos = this.snapToGridDraggedNode();
+				const stgPos = this.snapToGridDraggedNode(this.draggingObjectData);
 
 				increment = {
 					x: stgPos.x - this.draggingObjectData.dragObjects[0].x_pos,
@@ -2494,7 +2494,7 @@ export default class SVGCanvasRenderer {
 				draggingObjectData.dragRunningY !== 0) {
 				let dragFinalOffset = null;
 				if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-					const stgPos = this.snapToGridDraggedNode();
+					const stgPos = this.snapToGridDraggedNode(draggingObjectData);
 					dragFinalOffset = {
 						x: stgPos.x - draggingObjectData.dragStartX,
 						y: stgPos.y - draggingObjectData.dragStartY
@@ -2739,9 +2739,9 @@ export default class SVGCanvasRenderer {
 	// Returns the snap-to-grid position of the object positioned at
 	// this.draggingObjectData.dragStartX and this.draggingObjectData.dragStartY after applying the current offset of
 	// this.draggingObjectData.dragOffsetX and this.draggingObjectData.dragOffsetY.
-	snapToGridDraggedNode() {
-		const objPosX = this.draggingObjectData.dragStartX + this.draggingObjectData.dragOffsetX;
-		const objPosY = this.draggingObjectData.dragStartY + this.draggingObjectData.dragOffsetY;
+	snapToGridDraggedNode(draggingObjectData) {
+		const objPosX = draggingObjectData.dragStartX + draggingObjectData.dragOffsetX;
+		const objPosY = draggingObjectData.dragStartY + draggingObjectData.dragOffsetY;
 
 		return this.snapToGridPosition({ x: objPosX, y: objPosY });
 	}
@@ -4510,7 +4510,7 @@ export default class SVGCanvasRenderer {
 			this.completeNewLinkOnNode(d3Event, trgNode, drawingNewLinkData);
 		} else {
 			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-					this.drawingNewLinkData.action === NODE_LINK &&
+					drawingNewLinkData.action === NODE_LINK &&
 					!this.config.enableAssocLinkCreation) {
 				this.completeNewDetachedLink(d3Event, drawingNewLinkData);
 			} else {
