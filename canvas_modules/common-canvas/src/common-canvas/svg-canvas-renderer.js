@@ -206,17 +206,23 @@ export default class SVGCanvasRenderer {
 		// Object to store variables for dynamically drawing detachable links.
 		this.draggingLinkData = null;
 
-		// Create a drag handler for use with nodes and comments.
+		// Create a drag handler for moving nodes and comments.
 		this.dragMoveObjectHandler = d3.drag()
 			.on("start", this.dragStartMoveObject.bind(this))
 			.on("drag", this.dragMoveObject.bind(this))
 			.on("end", this.dragEndMoveObject.bind(this));
 
-		// Create a drag handler for use with nodes and comments.
-		this.dragResizeObjectHandler = d3.drag()
-			.on("start", this.dragStartResizeObject.bind(this))
-			.on("drag", this.dragResizeObject.bind(this))
-			.on("end", this.dragEndResizeObject.bind(this));
+		// Create a drag handler for resizing nodes.
+		this.dragResizeNodeHandler = d3.drag()
+			.on("start", this.dragStartResizeNode.bind(this))
+			.on("drag", this.dragResizeNode.bind(this))
+			.on("end", this.dragEndResizeNode.bind(this));
+
+		// Create a drag handler for resizing comments.
+		this.dragResizeCommentHandler = d3.drag()
+			.on("start", this.dragStartResizeComment.bind(this))
+			.on("drag", this.dragResizeComment.bind(this))
+			.on("end", this.dragEndResizeComment.bind(this));
 
 		// Create a drag handler that can be used with draggable ports
 		// to create a new link.
@@ -2277,42 +2283,62 @@ export default class SVGCanvasRenderer {
 		return selectedObjects;
 	}
 
-	dragStartResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragStartResizeObject");
+	dragStartResizeNode(d3Event, d) {
+		this.logger.logStartTimer("dragStartResizeNode");
 
 		this.closeContextMenuIfOpen();
+		this.nodeSizing = true;
 
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		this.initializeResizeVariables(d);
 
-		this.logger.logEndTimer("dragStartResizeObject", true);
+		this.logger.logEndTimer("dragStartResizeNode", true);
 	}
 
-	dragResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragResizeObject");
-		if (this.commentSizing) {
-			this.resizeComment(d3Event, d);
+	dragResizeNode(d3Event, d) {
+		this.logger.logStartTimer("dragResizeNode");
 
-		} else if (this.nodeSizing) {
-			this.resizeNode(d3Event, d);
-		}
+		this.resizeNode(d3Event, d);
 
-		this.logger.logEndTimer("dragResizeObject", true);
+		this.logger.logEndTimer("dragResizeNode", true);
 	}
 
-	dragEndResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragEndResizeObject");
+	dragEndResizeNode(d3Event, d) {
+		this.logger.logStartTimer("dragEndResizeNode");
 
 		this.removeTempCursorOverlay();
+		this.endNodeSizing(d);
 
-		if (this.commentSizing) {
-			this.endCommentSizing(d);
+		this.logger.logEndTimer("dragEndResizeNode", true);
+	}
 
-		} else if (this.nodeSizing) {
-			this.endNodeSizing(d);
-		}
+	dragStartResizeComment(d3Event, d) {
+		this.logger.logStartTimer("dragStartResizeComment");
 
-		this.logger.logEndTimer("dragEndResizeObject", true);
+		this.closeContextMenuIfOpen();
+		this.commentSizing = true;
+
+		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
+		this.initializeResizeVariables(d);
+
+		this.logger.logEndTimer("dragStartResizeComment", true);
+	}
+
+	dragResizeComment(d3Event, d) {
+		this.logger.logStartTimer("dragResizeComment");
+
+		this.resizeComment(d3Event, d);
+
+		this.logger.logEndTimer("dragResizeComment", true);
+	}
+
+	dragEndResizeComment(d3Event, d) {
+		this.logger.logStartTimer("dragEndResizeComment");
+
+		this.removeTempCursorOverlay();
+		this.endCommentSizing(d);
+
+		this.logger.logEndTimer("dragEndResizeComment", true);
 	}
 
 	dragStartMoveObject(d3Event, d) {
@@ -2884,7 +2910,7 @@ export default class SVGCanvasRenderer {
 			.each((c, i, nodeSizeAreas) => {
 				if (this.config.enableEditingActions) {
 					d3.select(nodeSizeAreas[i])
-						.call(this.dragResizeObjectHandler);
+						.call(this.dragResizeNodeHandler);
 				} else {
 					d3.select(nodeSizeAreas[i])
 						.on(".drag", null);
@@ -5643,7 +5669,7 @@ export default class SVGCanvasRenderer {
 			.each((c, i, comSizeAreas) => {
 				if (this.config.enableEditingActions) {
 					d3.select(comSizeAreas[i])
-						.call(this.dragResizeObjectHandler);
+						.call(this.dragResizeCommentHandler);
 				} else {
 					d3.select(comSizeAreas[i])
 						.on(".drag", null);
