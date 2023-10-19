@@ -212,17 +212,11 @@ export default class SVGCanvasRenderer {
 			.on("drag", this.dragMoveObject.bind(this))
 			.on("end", this.dragEndMoveObject.bind(this));
 
-		// Create a drag handler for resizing nodes.
-		this.dragResizeNodeHandler = d3.drag()
-			.on("start", this.dragStartResizeNode.bind(this))
-			.on("drag", this.dragResizeNode.bind(this))
-			.on("end", this.dragEndResizeNode.bind(this));
-
-		// Create a drag handler for resizing comments.
-		this.dragResizeCommentHandler = d3.drag()
-			.on("start", this.dragStartResizeComment.bind(this))
-			.on("drag", this.dragResizeComment.bind(this))
-			.on("end", this.dragEndResizeComment.bind(this));
+		// Create a drag handler for resizing nodes and comments.
+		this.dragResizeObjectHandler = d3.drag()
+			.on("start", this.dragStartResizeObject.bind(this))
+			.on("drag", this.dragResizeObject.bind(this))
+			.on("end", this.dragEndResizeObject.bind(this));
 
 		// Create a drag handler that can be used with draggable ports
 		// to create a new link.
@@ -2283,62 +2277,50 @@ export default class SVGCanvasRenderer {
 		return selectedObjects;
 	}
 
-	dragStartResizeNode(d3Event, d) {
-		this.logger.logStartTimer("dragStartResizeNode");
+	dragStartResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragStartResizeObject");
 
 		this.closeContextMenuIfOpen();
-		this.nodeSizing = true;
 
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		this.initializeResizeVariables(d);
 
-		this.logger.logEndTimer("dragStartResizeNode", true);
+		if (this.activePipeline.getObjectTypeName(d) === "comment") {
+			this.commentSizing = true;
+			this.addTempCursorOverlay(this.commentSizingCursor);
+		} else {
+			this.nodeSizing = true;
+			this.addTempCursorOverlay(this.nodeSizingCursor);
+		}
+
+		this.logger.logEndTimer("dragStartResizeObject", true);
 	}
 
-	dragResizeNode(d3Event, d) {
-		this.logger.logStartTimer("dragResizeNode");
+	dragResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragResizeObject");
+		if (this.commentSizing) {
+			this.resizeComment(d3Event, d);
 
-		this.resizeNode(d3Event, d);
+		} else if (this.nodeSizing) {
+			this.resizeNode(d3Event, d);
+		}
 
-		this.logger.logEndTimer("dragResizeNode", true);
+		this.logger.logEndTimer("dragResizeObject", true);
 	}
 
-	dragEndResizeNode(d3Event, d) {
-		this.logger.logStartTimer("dragEndResizeNode");
+	dragEndResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragEndResizeObject");
 
 		this.removeTempCursorOverlay();
-		this.endNodeSizing(d);
 
-		this.logger.logEndTimer("dragEndResizeNode", true);
-	}
+		if (this.commentSizing) {
+			this.endCommentSizing(d);
 
-	dragStartResizeComment(d3Event, d) {
-		this.logger.logStartTimer("dragStartResizeComment");
+		} else if (this.nodeSizing) {
+			this.endNodeSizing(d);
+		}
 
-		this.closeContextMenuIfOpen();
-		this.commentSizing = true;
-
-		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
-		this.initializeResizeVariables(d);
-
-		this.logger.logEndTimer("dragStartResizeComment", true);
-	}
-
-	dragResizeComment(d3Event, d) {
-		this.logger.logStartTimer("dragResizeComment");
-
-		this.resizeComment(d3Event, d);
-
-		this.logger.logEndTimer("dragResizeComment", true);
-	}
-
-	dragEndResizeComment(d3Event, d) {
-		this.logger.logStartTimer("dragEndResizeComment");
-
-		this.removeTempCursorOverlay();
-		this.endCommentSizing(d);
-
-		this.logger.logEndTimer("dragEndResizeComment", true);
+		this.logger.logEndTimer("dragEndResizeObject", true);
 	}
 
 	dragStartMoveObject(d3Event, d) {
@@ -2910,7 +2892,7 @@ export default class SVGCanvasRenderer {
 			.each((c, i, nodeSizeAreas) => {
 				if (this.config.enableEditingActions) {
 					d3.select(nodeSizeAreas[i])
-						.call(this.dragResizeNodeHandler);
+						.call(this.dragResizeObjectHandler);
 				} else {
 					d3.select(nodeSizeAreas[i])
 						.on(".drag", null);
@@ -3332,13 +3314,6 @@ export default class SVGCanvasRenderer {
 
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
-			.on("mousedown", (d3Event, d) => {
-				if (this.isNodeResizable(d)) {
-					this.nodeSizing = true;
-					// Note - node resizing and finalization of size is handled by drag functions.
-					this.addTempCursorOverlay(this.nodeSizingCursor);
-				}
-			})
 			// Use mousemove as well as mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
@@ -5669,7 +5644,7 @@ export default class SVGCanvasRenderer {
 			.each((c, i, comSizeAreas) => {
 				if (this.config.enableEditingActions) {
 					d3.select(comSizeAreas[i])
-						.call(this.dragResizeCommentHandler);
+						.call(this.dragResizeObjectHandler);
 				} else {
 					d3.select(comSizeAreas[i])
 						.on(".drag", null);
@@ -5785,11 +5760,6 @@ export default class SVGCanvasRenderer {
 
 	attachCommentSizingListeners(commentGrps) {
 		commentGrps
-			.on("mousedown", (d3Event, d) => {
-				this.commentSizing = true;
-				// Note - comment resizing and finalization of size is handled by drag functions.
-				this.addTempCursorOverlay(this.commentSizingCursor);
-			})
 			// Use mousemove here rather than mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
