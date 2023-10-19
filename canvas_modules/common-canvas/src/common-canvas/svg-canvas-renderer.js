@@ -207,10 +207,16 @@ export default class SVGCanvasRenderer {
 		this.draggingLinkData = null;
 
 		// Create a drag handler for use with nodes and comments.
-		this.dragObjectHandler = d3.drag()
-			.on("start", this.dragStartObject.bind(this))
+		this.dragMoveObjectHandler = d3.drag()
+			.on("start", this.dragStartMoveObject.bind(this))
 			.on("drag", this.dragMoveObject.bind(this))
-			.on("end", this.dragEndObject.bind(this));
+			.on("end", this.dragEndMoveObject.bind(this));
+
+		// Create a drag handler for use with nodes and comments.
+		this.dragResizeObjectHandler = d3.drag()
+			.on("start", this.dragStartResizeObject.bind(this))
+			.on("drag", this.dragResizeObject.bind(this))
+			.on("end", this.dragEndResizeObject.bind(this));
 
 		// Create a drag handler that can be used with draggable ports
 		// to create a new link.
@@ -2271,44 +2277,31 @@ export default class SVGCanvasRenderer {
 		return selectedObjects;
 	}
 
-	dragStartObject(d3Event, d) {
-		this.logger.logStartTimer("dragStartObject");
+	dragStartResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragStartResizeObject");
 
 		this.closeContextMenuIfOpen();
 
-		if (this.config.enableContextToolbar) {
-			this.removeContextToolbar();
-		}
-
-
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
-		if (this.commentSizing) {
-			this.initializeResizeVariables(d);
+		this.initializeResizeVariables(d);
 
-		} else if (this.nodeSizing) {
-			this.initializeResizeVariables(d);
-
-		} else {
-			this.dragObjectsStart(d3Event, d);
-		}
-		this.logger.logEndTimer("dragStartObject", true);
+		this.logger.logEndTimer("dragStartResizeObject", true);
 	}
 
-	dragMoveObject(d3Event, d) {
-		this.logger.logStartTimer("dragMoveObject");
+	dragResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragResizeObject");
 		if (this.commentSizing) {
 			this.resizeComment(d3Event, d);
+
 		} else if (this.nodeSizing) {
 			this.resizeNode(d3Event, d);
-		} else {
-			this.dragObjectsAction(d3Event);
 		}
 
-		this.logger.logEndTimer("dragMoveObject", true);
+		this.logger.logEndTimer("dragResizeObject", true);
 	}
 
-	dragEndObject(d3Event, d) {
-		this.logger.logStartTimer("dragEndObject");
+	dragEndResizeObject(d3Event, d) {
+		this.logger.logStartTimer("dragEndResizeObject");
 
 		this.removeTempCursorOverlay();
 
@@ -2317,12 +2310,37 @@ export default class SVGCanvasRenderer {
 
 		} else if (this.nodeSizing) {
 			this.endNodeSizing(d);
-
-		} else if (this.draggingObjectData) {
-			this.dragObjectsEnd(d3Event, d);
 		}
 
-		this.logger.logEndTimer("dragEndObject", true);
+		this.logger.logEndTimer("dragEndResizeObject", true);
+	}
+
+	dragStartMoveObject(d3Event, d) {
+		this.logger.logStartTimer("dragStartMoveObject");
+
+		this.closeContextMenuIfOpen();
+
+		this.dragObjectsStart(d3Event, d);
+
+		this.logger.logEndTimer("dragStartMoveObject", true);
+	}
+
+	dragMoveObject(d3Event, d) {
+		this.logger.logStartTimer("dragMoveObject");
+
+		this.dragObjectsAction(d3Event);
+
+		this.logger.logEndTimer("dragMoveObject", true);
+	}
+
+	dragEndMoveObject(d3Event, d) {
+		this.logger.logStartTimer("dragEndMoveObject");
+
+		this.removeTempCursorOverlay();
+
+		this.dragObjectsEnd(d3Event, d);
+
+		this.logger.logEndTimer("dragEndMoveObject", true);
 	}
 
 	// Starts the dragging action for canvas objects (nodes and comments).
@@ -2861,8 +2879,17 @@ export default class SVGCanvasRenderer {
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("d", (d) => this.getNodeShapePathSizing(d));
-
+			.attr("d", (d) => this.getNodeShapePathSizing(d))
+			// Add or remove a resize handler.
+			.each((c, i, nodeSizeAreas) => {
+				if (this.config.enableEditingActions) {
+					d3.select(nodeSizeAreas[i])
+						.call(this.dragResizeObjectHandler);
+				} else {
+					d3.select(nodeSizeAreas[i])
+						.on(".drag", null);
+				}
+			});
 
 		// Node Selection Highlighting Outline.
 		nonBindingNodeGrps
@@ -2993,7 +3020,7 @@ export default class SVGCanvasRenderer {
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
 			nonBindingNodeGrps
-				.call(this.dragObjectHandler);
+				.call(this.dragMoveObjectHandler);
 		} else {
 			nonBindingNodeGrps
 				.on(".drag", null);
@@ -5611,7 +5638,17 @@ export default class SVGCanvasRenderer {
 			.attr("y", -this.canvasLayout.commentSizingArea)
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
-			.attr("class", "d3-comment-sizing");
+			.attr("class", "d3-comment-sizing")
+			// Add or remove a resize handler.
+			.each((c, i, comSizeAreas) => {
+				if (this.config.enableEditingActions) {
+					d3.select(comSizeAreas[i])
+						.call(this.dragResizeObjectHandler);
+				} else {
+					d3.select(comSizeAreas[i])
+						.on(".drag", null);
+				}
+			});
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
@@ -5643,10 +5680,10 @@ export default class SVGCanvasRenderer {
 					? markdownIt.render(c.content)
 					: escapeText(c.content)));
 
-		// Add or remove drag behavior as appropriate
+		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
 			joinedCommentGrps
-				.call(this.dragObjectHandler);
+				.call(this.dragMoveObjectHandler);
 		} else {
 			joinedCommentGrps
 				.on(".drag", null);
