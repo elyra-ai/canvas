@@ -2285,14 +2285,6 @@ export default class SVGCanvasRenderer {
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		this.initializeResizeVariables(d);
 
-		if (this.activePipeline.getObjectTypeName(d) === "comment") {
-			this.commentSizing = true;
-			this.addTempCursorOverlay(this.commentSizingCursor);
-		} else {
-			this.nodeSizing = true;
-			this.addTempCursorOverlay(this.nodeSizingCursor);
-		}
-
 		this.logger.logEndTimer("dragStartResizeObject", true);
 	}
 
@@ -3269,13 +3261,7 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Node Group - mouse down");
-				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
-				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
-				}
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "node");
-				}
+				this.handleNodeMouseDown(d3Event, d);
 				this.logger.logEndTimer("Node Group - mouse down");
 			})
 			.on("mousemove", (d3Event, d) => {
@@ -3314,6 +3300,15 @@ export default class SVGCanvasRenderer {
 
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
+			.on("mousedown", (d3Event, d) => {
+				if (this.isNodeResizable(d)) {
+					this.nodeSizing = true;
+					// Note - node resizing and finalization of size is handled by drag functions.
+					this.addTempCursorOverlay(this.nodeSizingCursor);
+
+					this.handleNodeMouseDown(d3Event, d);
+				}
+			})
 			// Use mousemove as well as mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
@@ -3445,6 +3440,17 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu(d3Event, "output_port", node, port);
 			});
+	}
+
+	// Handles mouse down on node group and node resizing <rect>
+	handleNodeMouseDown(d3Event, d) {
+		d3Event.stopPropagation();
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.svgCanvasTextArea.completeEditing();
+		}
+		if (!this.config.enableDragWithoutSelect) {
+			this.selectObjectD3Event(d3Event, d, "node");
+		}
 	}
 
 	// Sets the d3-node-unavailable class on any node that is currently not
@@ -5718,13 +5724,7 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
-				d3Event.stopPropagation(); // Stop event going to canvas when enableEditingActions is false
-				if (this.svgCanvasTextArea.isEditingText()) {
-					this.svgCanvasTextArea.completeEditing();
-				}
-				if (!this.config.enableDragWithoutSelect) {
-					this.selectObjectD3Event(d3Event, d, "comment");
-				}
+				this.handleCommentMouseDown(d3Event, d);
 				this.logger.logEndTimer("Comment Group - mouse down");
 			})
 			.on("click", (d3Event, d) => {
@@ -5760,6 +5760,13 @@ export default class SVGCanvasRenderer {
 
 	attachCommentSizingListeners(commentGrps) {
 		commentGrps
+			.on("mousedown", (d3Event, d) => {
+				this.commentSizing = true;
+				// Note - comment resizing and finalization of size is handled by drag functions.
+				this.addTempCursorOverlay(this.commentSizingCursor);
+
+				this.handleCommentMouseDown(d3Event, d);
+			})
 			// Use mousemove here rather than mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
 			// (eg. from east area to north-east area) without exiting the node outline.
@@ -5805,6 +5812,17 @@ export default class SVGCanvasRenderer {
 		d3.select(commentObj)
 			.selectChildren(".d3-comment-port-circle")
 			.remove();
+	}
+
+	// Handles mouse down on node group and node resizing <rect>
+	handleCommentMouseDown(d3Event, d) {
+		d3Event.stopPropagation();
+		if (this.svgCanvasTextArea.isEditingText()) {
+			this.svgCanvasTextArea.completeEditing();
+		}
+		if (!this.config.enableDragWithoutSelect) {
+			this.selectObjectD3Event(d3Event, d, "comment");
+		}
 	}
 
 	setCommentStyles(d, type, comGrp) {
@@ -6381,7 +6399,7 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		if (!this.isDragging()) {
+		if (!this.draggingObjectData && !this.nodeSizing && !this.commentSizing) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
 	}
