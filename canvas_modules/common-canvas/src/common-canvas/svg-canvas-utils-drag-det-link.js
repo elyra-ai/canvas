@@ -61,6 +61,11 @@ export default class SVGCanvasUtilsDragDetLink {
 		return this.draggingLinkData;
 	}
 
+	// Returns true if the link passed in is currently being dragged.
+	isLinkBeingDragged(link) {
+		return this.draggingLinkData && this.draggingLinkData.link.id === link.id;
+	}
+
 	// Begins the dragging of a link handle of a detachable link.
 	dragStartDetLinkHandle(d3Event, d) {
 		this.logger.logStartTimer("dragStartDetLinkHandle");

@@ -4990,10 +4990,6 @@ export default class SVGCanvasRenderer {
 		return link.decorations && link.decorations.length > 0;
 	}
 
-	isLinkBeingDragged(link) {
-		return this.draggingLinkData && this.draggingLinkData.link.id === link.id;
-	}
-
 	buildLinksArray() {
 		let linksArray = [];
 
@@ -5004,8 +5000,9 @@ export default class SVGCanvasRenderer {
 		this.activePipeline.links.forEach((link) => {
 			let linkObj = null;
 
-			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES && this.isLinkBeingDragged(link)) ||
-						this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
+			if (((this.config.enableLinkSelection === LINK_SELECTION_HANDLES &&
+					this.dragDetLinkUtils.isLinkBeingDragged(link)) ||
+					this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) &&
 					(!link.srcObj || !link.trgNode)) {
 				linkObj = this.getDetachedLineObj(link);
 
