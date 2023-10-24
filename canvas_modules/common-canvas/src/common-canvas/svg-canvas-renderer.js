@@ -32,7 +32,7 @@ const markdownIt = require("markdown-it")({
 	typographer: true
 });
 
-import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
+import { escape as escapeText, forOwn, get } from "lodash";
 import { addNodeExternalObject, addDecExternalObject, removeExternalObject } from "./svg-canvas-utils-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
@@ -40,7 +40,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
 	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
-	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_CIRCLE, PORT_OBJECT_IMAGE,
+	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	INTERACTION_MOUSE, INTERACTION_TRACKPAD, INTERACTION_CARBON,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
@@ -57,13 +57,12 @@ import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
+import SvgCanvasDragObject from "./svg-canvas-utils-drag-objects.js";
+import SvgCanvasDragNewLink from "./svg-canvas-utils-drag-new-link.js";
+import SvgCanvasDragDetLink from "./svg-canvas-utils-drag-det-link.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
 const NINETY_DEGREES = 90;
-
-const INPUT_TYPE = "input_type";
-const OUTPUT_TYPE = "output_type";
-
 
 export default class SVGCanvasRenderer {
 	constructor(pipelineId, canvasDiv, canvasController, canvasInfo, selectionInfo, breadcrumbs, nodeLayout, canvasLayout, config, supernodeInfo = {}) {
@@ -92,6 +91,9 @@ export default class SVGCanvasRenderer {
 		this.commentUtils = new SvgCanvasComments();
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
+		this.dragObjectUtils = new SvgCanvasDragObject(this);
+		this.dragNewLinkUtils = new SvgCanvasDragNewLink(this);
+		this.dragDetLinkUtils = new SvgCanvasDragDetLink(this);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
@@ -115,27 +117,6 @@ export default class SVGCanvasRenderer {
 		this.minScaleExtent = 0.2;
 		this.maxScaleExtent = 1.8;
 
-		// Allows us to track the sizing behavior of comments
-		this.commentSizing = false;
-		this.commentSizingDirection = "";
-
-		// Allows us to track the sizing behavior of nodes
-		this.nodeSizing = false;
-		this.nodeSizingDirection = "";
-		this.nodeSizingObjectsInfo = {};
-		this.nodeSizingDetLinksInfo = {};
-
-		// Keeps track of the size and position, at the start of the sizing event,
-		// of the object (node or comment) being sized.
-		this.resizeObjInitialInfo = null;
-
-		// Keeps track of the size and position, during a sizing event, of the
-		// object (node or comment) being sized, before it is snapped to grid.
-		this.notSnappedXPos = 0;
-		this.notSnappedYPos = 0;
-		this.notSnappedWidth = 0;
-		this.notSnappedHeight = 0;
-
 		// The data link a node is currently being dragged over. It will be null
 		// when the node being dragged is not over a data link.
 		this.dragOverLink = null;
@@ -154,14 +135,6 @@ export default class SVGCanvasRenderer {
 		// is being dragged. Used when enableHighlightNodeOnNewLinkDrag config
 		// option is switched on.
 		this.dragNewLinkOverNode = null;
-
-		// Flag to indicate if the current drag operation is for a node that can
-		// be inserted into a link. Such a node would need input and output ports.
-		this.existingNodeInsertableIntoLink = false;
-
-		// Flag to indicate if the current drag operation is for a node that can
-		// be attached to a detached link.
-		this.existingNodeAttachableToDetachedLinks = false;
 
 		// Flag to indicate when the space key is down (used when dragging).
 		this.spaceKeyPressed = false;
@@ -194,43 +167,6 @@ export default class SVGCanvasRenderer {
 		// the region selection.
 		this.regionStartTransformX = 0;
 		this.regionStartTransformY = 0;
-
-		// Object to store variables for drag behavior or nodes and comments.
-		this.draggingObjectData = null;
-
-		// Object to store variables for dynamically drawing a new link line. The
-		// existence of this object means a new link is being drawn. A null means
-		// no link is currently being drawn.
-		this.drawingNewLinkData = null;
-
-		// Object to store variables for dynamically drawing detachable links.
-		this.draggingLinkData = null;
-
-		// Create a drag handler for moving nodes and comments.
-		this.dragMoveObjectHandler = d3.drag()
-			.on("start", this.dragStartMoveObject.bind(this))
-			.on("drag", this.dragMoveObject.bind(this))
-			.on("end", this.dragEndMoveObject.bind(this));
-
-		// Create a drag handler for resizing nodes and comments.
-		this.dragResizeObjectHandler = d3.drag()
-			.on("start", this.dragStartResizeObject.bind(this))
-			.on("drag", this.dragResizeObject.bind(this))
-			.on("end", this.dragEndResizeObject.bind(this));
-
-		// Create a drag handler that can be used with draggable ports
-		// to create a new link.
-		this.dragNewLinkHandler = d3.drag()
-			.on("start", this.dragStartNewLink.bind(this))
-			.on("drag", this.dragMoveNewLink.bind(this))
-			.on("end", this.dragEndNewLink.bind(this));
-
-		// Create a drag handler that can be used with draggable ends of
-		// detached links.
-		this.dragLinkHandler = d3.drag()
-			.on("start", this.dragStartLinkHandle.bind(this))
-			.on("drag", this.dragMoveLinkHandle.bind(this))
-			.on("end", this.dragEndLinkHandle.bind(this));
 
 		// Create a zoom object for use with the canvas.
 		this.zoom =
@@ -690,20 +626,17 @@ export default class SVGCanvasRenderer {
 
 	// Returns true when we are dragging objects. Called by svg-canvas-d3.
 	isDragging() {
-		return this.draggingObjectData || this.drawingNewLinkData || this.draggingLinkData;
+		return this.dragObjectUtils.isMoving() || this.dragNewLinkUtils.isDragging() || this.dragDetLinkUtils.isDragging();
 	}
 
-	// Returns true if the node should be resizeable. Expanded supernodes are
-	// always resizabele and all other nodes, except collapsed supernodes, are
-	// resizeable when enableResizableNodes is switched on.
-	isNodeResizable(node) {
-		if (!this.config.enableEditingActions ||
-				CanvasUtils.isSuperBindingNode(node) ||
-				CanvasUtils.isCollapsedSupernode(node) ||
-				(!this.config.enableResizableNodes && !CanvasUtils.isExpandedSupernode(node))) {
-			return false;
-		}
-		return true;
+	// Returns true whenever a node or comment is being resized.
+	isSizing() {
+		this.dragObjectUtils.isSizing();
+	}
+
+	// Returns true whenever a node or comment is being moved.
+	isMoving() {
+		this.dragObjectUtils.isMoving();
 	}
 
 	// Returns true if the node should have a resizing area. We should display
@@ -788,17 +721,6 @@ export default class SVGCanvasRenderer {
 			transPos = this.snapToGridPosition(transPos);
 		}
 		return transPos;
-	}
-
-	// Returns the object passed in with its position and size snapped to
-	// the current grid dimensions.
-	snapToGridObject(inResizeObj) {
-		const resizeObj = inResizeObj;
-		resizeObj.x_pos = CanvasUtils.snapToGrid(resizeObj.x_pos, this.canvasLayout.snapToGridXPx);
-		resizeObj.y_pos = CanvasUtils.snapToGrid(resizeObj.y_pos, this.canvasLayout.snapToGridYPx);
-		resizeObj.width = CanvasUtils.snapToGrid(resizeObj.width, this.canvasLayout.snapToGridXPx);
-		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.canvasLayout.snapToGridYPx);
-		return resizeObj;
 	}
 
 	// Returns the current mouse position transformed by the current zoom
@@ -1147,62 +1069,33 @@ export default class SVGCanvasRenderer {
 			.attr("data-drag-node-over", state ? true : null); // true will add the attr, null will remove it
 	}
 
-	// Switches on or off node port highlighting depending on the node
+	// Switches on or off node highlighting depending on the node
 	// passed in and keeps track of the currently highlighted node. This is
-	// called as a new link is being drawn towards a target node to highlight
-	// the target node.
-	setNewLinkOverNode(d3Event) {
-		const nodeNearMouse = this.getNodeNearMousePos(d3Event, this.canvasLayout.nodeProximity);
-		if (nodeNearMouse && this.isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse)) {
+	// called as a new link or a detached link is being dragged towards or
+	// away from a target node to highlight or unhighlight the target node.
+	setHighlightingOverNode(state, nodeNearMouse) {
+		if (state) {
 			if (!this.dragNewLinkOverNode) {
 				this.dragNewLinkOverNode = nodeNearMouse;
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setLinkOverNode(this.dragNewLinkOverNode, true);
 
 			} else if (nodeNearMouse.id !== this.dragNewLinkOverNode.id) {
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setLinkOverNode(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = nodeNearMouse;
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, true);
+				this.setLinkOverNode(this.dragNewLinkOverNode, true);
 			}
 
 		} else {
 			if (this.dragNewLinkOverNode) {
-				this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+				this.setLinkOverNode(this.dragNewLinkOverNode, false);
 				this.dragNewLinkOverNode = null;
 			}
 		}
 	}
 
-	isConnectionAllowedToNearbyNode(d3Event, nodeNearMouse) {
-		if (this.drawingNewLinkData) {
-			if (this.drawingNewLinkData.action === NODE_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
-				const trgNode = nodeNearMouse;
-				const srcNodePortId = this.drawingNewLinkData.srcNodePortId;
-				const trgNodePortId = CanvasUtils.getDefaultInputPortId(trgNode); // TODO - make specific to nodes.
-				return CanvasUtils.isDataConnectionAllowed(srcNodePortId, trgNodePortId, srcNode, trgNode, this.activePipeline.links);
-
-			} else if (this.drawingNewLinkData.action === ASSOCIATION_LINK) {
-				const srcNode = this.drawingNewLinkData.srcNode;
-				const trgNode = nodeNearMouse;
-				return CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links);
-
-			} else if (this.drawingNewLinkData.action === COMMENT_LINK) {
-				const srcObjId = this.drawingNewLinkData.srcObjId;
-				const trgNodeId = nodeNearMouse.id;
-				return CanvasUtils.isCommentLinkConnectionAllowed(srcObjId, trgNodeId, this.activePipeline.links);
-			}
-		} else if (this.draggingLinkData) {
-			const newLink = this.getNewLinkOnDrag(d3Event, this.canvasLayout.nodeProximity);
-			if (newLink) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// Switches on or off the input-port highlighting on the node passed in.
-	// This is called when the user drags a new link towards a target node.
-	setNewLinkOverNodeHighlighting(node, state) {
+	// Switches on or off the highlighting on the node passed in.
+	// This is called when the user drags a link towards a target node.
+	setLinkOverNode(node, state) {
 		if (node) {
 			this.getNodeGroupSelectionById(node.id)
 				.attr("data-new-link-over", state ? "yes" : "no");
@@ -1211,8 +1104,8 @@ export default class SVGCanvasRenderer {
 
 	// Removes the data-new-link-over attribute used for highlighting a node
 	// that a new link is being dragged towards or over.
-	setNewLinkOverNodeCancel() {
-		this.setNewLinkOverNodeHighlighting(this.dragNewLinkOverNode, false);
+	setLinkOverNodeCancel() {
+		this.setLinkOverNode(this.dragNewLinkOverNode, false);
 		this.dragNewLinkOverNode = null;
 	}
 
@@ -1281,25 +1174,6 @@ export default class SVGCanvasRenderer {
 			!this.isPortMaxCardinalityZero(nodeTemplate.outputs[0]);
 	}
 
-	// Returns true if the current drag objects array has a single node which
-	// is 'insertable' into a data link between nodes on the canvas.  Returns
-	// false otherwise, including if a single comment is being dragged.
-	isExistingNodeInsertableIntoLink() {
-		return (this.config.enableInsertNodeDroppedOnLink &&
-			this.draggingObjectData.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.draggingObjectData.dragObjects[0]) &&
-			CanvasUtils.hasInputAndOutputPorts(this.draggingObjectData.dragObjects[0]) &&
-			!CanvasUtils.isNodeDefaultPortsCardinalityAtMax(this.draggingObjectData.dragObjects[0], this.activePipeline.links));
-	}
-
-	// Returns true if the current drag objects array has a single node which
-	// is 'attachable' to any detached link on the canvas. Returns false otherwise,
-	// including if a single comment is being dragged.
-	isExistingNodeAttachableToDetachedLinks() {
-		return (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-			this.draggingObjectData.dragObjects.length === 1 &&
-			CanvasUtils.isNode(this.draggingObjectData.dragObjects[0]));
-	}
 
 	// Returns true if the current node template being dragged from the palette
 	// is 'attachable' to any detached link on the canvas. Returns false otherwise.
@@ -1334,7 +1208,6 @@ export default class SVGCanvasRenderer {
 		});
 
 		if (attachableLinks.length > 0) {
-
 			// Make sure the attachable links can be attached to the node based on
 			// the availability of ports and whether they are maxed out or not.
 			const linkArrays =
@@ -2250,520 +2123,6 @@ export default class SVGCanvasRenderer {
 		return { startX, startY, width, height };
 	}
 
-	// Records the initial starting position of the object being sized so
-	// that drag increments can be added to the original starting
-	// position to aid calculating the snap-to-grid position.
-	initializeResizeVariables(resizeObj) {
-		this.resizeObjInitialInfo = {
-			x_pos: resizeObj.x_pos, y_pos: resizeObj.y_pos, width: resizeObj.width, height: resizeObj.height };
-		this.notSnappedXPos = resizeObj.x_pos;
-		this.notSnappedYPos = resizeObj.y_pos;
-		this.notSnappedWidth = resizeObj.width;
-		this.notSnappedHeight = resizeObj.height;
-	}
-
-	// Returns an array of objects to drag. If enableDragWithoutSelect is true,
-	// and the object on which this drag start has initiated is not in the
-	// set of selected objects, then just that object is to be dragged. Otherwise,
-	// the selected objects are the objects to be dragged.
-	getDragObjects(d) {
-		const selectedObjects = this.activePipeline.getSelectedNodesAndComments();
-
-		if (this.config.enableDragWithoutSelect &&
-				selectedObjects.findIndex((o) => o.id === d.id) === -1) {
-			return [d];
-		}
-
-		return selectedObjects;
-	}
-
-	dragStartResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragStartResizeObject");
-
-		this.closeContextMenuIfOpen();
-
-		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
-		this.initializeResizeVariables(d);
-
-		this.logger.logEndTimer("dragStartResizeObject", true);
-	}
-
-	dragResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragResizeObject");
-		if (this.commentSizing) {
-			this.resizeComment(d3Event, d);
-
-		} else if (this.nodeSizing) {
-			this.resizeNode(d3Event, d);
-		}
-
-		this.logger.logEndTimer("dragResizeObject", true);
-	}
-
-	dragEndResizeObject(d3Event, d) {
-		this.logger.logStartTimer("dragEndResizeObject");
-
-		this.removeTempCursorOverlay();
-
-		if (this.commentSizing) {
-			this.endCommentSizing(d);
-
-		} else if (this.nodeSizing) {
-			this.endNodeSizing(d);
-		}
-
-		this.logger.logEndTimer("dragEndResizeObject", true);
-	}
-
-	dragStartMoveObject(d3Event, d) {
-		this.logger.logStartTimer("dragStartMoveObject");
-
-		this.closeContextMenuIfOpen();
-
-		this.dragObjectsStart(d3Event, d);
-
-		this.logger.logEndTimer("dragStartMoveObject", true);
-	}
-
-	dragMoveObject(d3Event, d) {
-		this.logger.logStartTimer("dragMoveObject");
-
-		this.dragObjectsAction(d3Event);
-
-		this.logger.logEndTimer("dragMoveObject", true);
-	}
-
-	dragEndMoveObject(d3Event, d) {
-		this.logger.logStartTimer("dragEndMoveObject");
-
-		this.removeTempCursorOverlay();
-
-		this.dragObjectsEnd(d3Event, d);
-
-		this.logger.logEndTimer("dragEndMoveObject", true);
-	}
-
-	// Starts the dragging action for canvas objects (nodes and comments).
-	dragObjectsStart(d3Event, d) {
-		// Ensure flags are false before staring a new drag.
-		this.existingNodeInsertableIntoLink = false;
-		this.existingNodeAttachableToDetachedLinks = false;
-
-		this.draggingObjectData = {
-			dragOffsetX: 0,
-			dragOffsetY: 0,
-			dragRunningX: 0,
-			dragRunningY: 0,
-			dragObjects: this.getDragObjects(d)
-		};
-
-		if (this.draggingObjectData.dragObjects?.length > 0) {
-			this.draggingObjectData.dragStartX = this.draggingObjectData.dragObjects[0].x_pos;
-			this.draggingObjectData.dragStartY = this.draggingObjectData.dragObjects[0].y_pos;
-		}
-
-		// If we are dragging an 'insertable' node, set it to be translucent so
-		// that, when it is dragged over a link line, the highlightd line can be seen OK.
-		if (this.isExistingNodeInsertableIntoLink()) {
-			// Only style the node to be translucent if this action isn't cancelled
-			// by the user releasing the mouse button within 200 ms of pressing it.
-			// This stops the node flashing when the user is only selecting it.
-			this.startNodeInsertingInLink = setTimeout(() => {
-				this.existingNodeInsertableIntoLink = true;
-				this.setNodeTranslucentState(this.draggingObjectData.dragObjects[0].id, true);
-				this.setDataLinkSelectionAreaWider(true);
-			}, 200);
-		}
-
-		// If we are dragging an 'attachable' node, set it to be translucent so
-		// that, when it is dragged over link lines, the highlightd lines can be seen OK.
-		if (this.isExistingNodeAttachableToDetachedLinks()) {
-			// Only style the node to be translucent if this action isn't cancelled
-			// by the user releasing the mouse button within 200 ms of pressing it.
-			// This stops the node from when the user is only selecting it.
-			this.startNodeAttachingToDetachedLinks = setTimeout(() => {
-				this.existingNodeAttachableToDetachedLinks = true;
-				const mousePos = this.getTransformedMousePos(d3Event);
-				this.dragPointerOffsetInNode = {
-					x: mousePos.x - this.draggingObjectData.dragObjects[0].x_pos,
-					y: mousePos.y - this.draggingObjectData.dragObjects[0].y_pos
-				};
-				this.setNodeTranslucentState(this.draggingObjectData.dragObjects[0].id, true);
-			}, 200);
-		}
-	}
-
-	// Performs the dragging action for canvas objects (nodes and comments).
-	dragObjectsAction(d3Event) {
-		this.draggingObjectData.dragOffsetX += d3Event.dx;
-		this.draggingObjectData.dragOffsetY += d3Event.dy;
-
-		// Limit the size a drag can be so, when the user is dragging objects in
-		// an in-place subflow they do not drag them too far.
-		// this.logger.log("Drag offset X = " + this.dragOffsetX + " y = " + this.draggingObjectData.dragOffsetY);
-		if (this.dispUtils.isDisplayingSubFlowInPlace() &&
-				(this.draggingObjectData.dragOffsetX > 1000 || this.draggingObjectData.dragOffsetX < -1000 ||
-					this.draggingObjectData.dragOffsetY > 1000 || this.draggingObjectData.dragOffsetY < -1000)) {
-			this.draggingObjectData.dragOffsetX -= d3Event.dx;
-			this.draggingObjectData.dragOffsetY -= d3Event.dy;
-
-		} else {
-			let	increment = { x: 0, y: 0 };
-
-			if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-				const stgPos = this.snapToGridDraggedNode(this.draggingObjectData);
-
-				increment = {
-					x: stgPos.x - this.draggingObjectData.dragObjects[0].x_pos,
-					y: stgPos.y - this.draggingObjectData.dragObjects[0].y_pos
-				};
-
-			} else {
-				increment = {
-					x: d3Event.dx,
-					y: d3Event.dy
-				};
-			}
-
-			this.draggingObjectData.dragRunningX += increment.x;
-			this.draggingObjectData.dragRunningY += increment.y;
-
-			this.draggingObjectData.dragObjects.forEach((d) => {
-				d.x_pos += increment.x;
-				d.y_pos += increment.y;
-			});
-
-			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
-				this.activePipeline.getSelectedLinks().forEach((link) => {
-					if (link.srcPos) {
-						link.srcPos.x_pos += increment.x;
-						link.srcPos.y_pos += increment.y;
-					}
-					if (link.trgPos) {
-						link.trgPos.x_pos += increment.x;
-						link.trgPos.y_pos += increment.y;
-					}
-				});
-			}
-		}
-
-		this.displayMovedComments();
-		this.displayMovedNodes();
-		this.displayMovedLinks();
-		this.displayCanvasAccoutrements();
-
-		if (this.dispUtils.isDisplayingSubFlowInPlace()) {
-			this.displaySVGToFitSupernode();
-		}
-
-
-		if (this.existingNodeInsertableIntoLink) {
-			const link = this.getLinkAtMousePos(d3Event.sourceEvent.clientX, d3Event.sourceEvent.clientY);
-			// Set highlighting when there is no link because this will turn
-			// current highlighting off. And only switch on highlighting when we are
-			// over a fully attached link (not a detached link) and provided the
-			// link is not to/from the node being dragged (which is possible in
-			// some odd situations).
-			if (!link ||
-					(this.isLinkFullyAttached(link) &&
-						this.draggingObjectData.dragObjects[0].id !== link.srcNodeId &&
-						this.draggingObjectData.dragObjects[0].id !== link.trgNodeId)) {
-				this.setInsertNodeIntoLinkHighlighting(link);
-			}
-		}
-
-		if (this.existingNodeAttachableToDetachedLinks) {
-			const mousePos = this.getTransformedMousePos(d3Event);
-			const node = this.draggingObjectData.dragObjects[0];
-			const ghostArea = {
-				x1: mousePos.x - this.dragPointerOffsetInNode.x,
-				y1: mousePos.y - this.dragPointerOffsetInNode.y,
-				x2: mousePos.x - this.dragPointerOffsetInNode.x + node.width,
-				y2: mousePos.y - this.dragPointerOffsetInNode.y + node.height
-			};
-			const links = this.getAttachableLinksForNodeAtPos(node, ghostArea);
-			this.setDetachedLinkHighlighting(links);
-		}
-	}
-
-	// Ends the dragging action for canvas objects (nodes and comments).
-	dragObjectsEnd(d3Event, d) {
-		// Save a local reference to this.draggingObjectData so we can set it to null before
-		// calling the canvas-controller. This means the this.draggingObjectData object will
-		// be null when the canvas is refreshed.
-		const draggingObjectData = this.draggingObjectData;
-		this.draggingObjectData = null;
-
-		// Cancels the styling of insertable/attachable nodes if the user releases
-		// the mouse button with 200 milliseconds of pressing it on the node. This
-		// stops the node flashing when the user just selects the node.
-		clearTimeout(this.startNodeInsertingInLink);
-		clearTimeout(this.startNodeAttachingToDetachedLinks);
-
-		// If the pointer hasn't moved and enableDragWithoutSelect we interpret
-		// that as a select on the object.
-		if (draggingObjectData.dragOffsetX === 0 &&
-				draggingObjectData.dragOffsetY === 0 &&
-				this.config.enableDragWithoutSelect) {
-			this.selectObjectSourceEvent(d3Event, d);
-
-		} else {
-			if (draggingObjectData.dragRunningX !== 0 ||
-				draggingObjectData.dragRunningY !== 0) {
-				let dragFinalOffset = null;
-				if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-					const stgPos = this.snapToGridDraggedNode(draggingObjectData);
-					dragFinalOffset = {
-						x: stgPos.x - draggingObjectData.dragStartX,
-						y: stgPos.y - draggingObjectData.dragStartY
-					};
-				} else {
-					dragFinalOffset = { x: draggingObjectData.dragRunningX, y: draggingObjectData.dragRunningY };
-				}
-
-				if (this.existingNodeInsertableIntoLink &&
-						this.dragOverLink) {
-					this.canvasController.editActionHandler({
-						editType: "insertNodeIntoLink",
-						editSource: "canvas",
-						node: draggingObjectData.dragObjects[0],
-						link: this.dragOverLink,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-
-				} else if (this.existingNodeAttachableToDetachedLinks &&
-										this.dragOverDetachedLinks.length > 0) {
-					this.canvasController.editActionHandler({
-						editType: "attachNodeToLinks",
-						editSource: "canvas",
-						node: draggingObjectData.dragObjects[0],
-						detachedLinks: this.dragOverDetachedLinks,
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-
-				} else {
-					this.canvasController.editActionHandler({
-						editType: "moveObjects",
-						editSource: "canvas",
-						nodes: draggingObjectData.dragObjects.map((o) => o.id),
-						links: this.activePipeline.getSelectedDetachedLinks(),
-						offsetX: dragFinalOffset.x,
-						offsetY: dragFinalOffset.y,
-						pipelineId: this.activePipeline.id });
-				}
-			}
-		}
-
-		// Switch off any drag highlighting
-		this.setDataLinkSelectionAreaWider(false);
-		this.unsetNodeTranslucentState(draggingObjectData.dragObjects);
-		this.unsetInsertNodeIntoLinkHighlighting();
-		this.unsetDetachedLinkHighlighting();
-	}
-
-	// Initialize new link creation info when a port node is dragged.
-	dragStartNewLink(d3Event, d) {
-		if (this.isEventForOutputPort(d3Event)) {
-			const node = this.getNodeForPort(d3Event);
-			this.startOutputPortNewLink(d, node);
-
-		} else if (this.isEventForInputPort(d3Event)) {
-			const node = this.getNodeForPort(d3Event);
-			this.startInputPortNewLink(d, node);
-
-		} else if (this.activePipeline.getObjectTypeName(d) === "comment") {
-			this.startCommentNewLink(d);
-		}
-	}
-
-	// Draws an appropriate new link line when a port is being dragged.
-	dragMoveNewLink(d3Event) {
-		this.drawNewLink(d3Event);
-	}
-
-	// Completes the creation (or not) of a new link line when a port has
-	// finished being dragged.
-	dragEndNewLink(d3Event) {
-		this.completeNewLink(d3Event);
-	}
-
-	// Return true if the d3Event passed in is for an input port.
-	isEventForInputPort(d3Event) {
-		return this.targetContainsClass(d3Event, "d3-node-port-input") ||
-			this.targetContainsClass(d3Event, "d3-node-port-input-assoc");
-	}
-
-	// Return true if the d3Event passed in is for an output port.
-	isEventForOutputPort(d3Event) {
-		return this.targetContainsClass(d3Event, "d3-node-port-output") ||
-			this.targetContainsClass(d3Event, "d3-node-port-output-assoc");
-	}
-
-	// Returns true if the d3Event contains a current target with the spcified class name.
-	targetContainsClass(d3Event, className) {
-		return d3Event.sourceEvent?.currentTarget?.classList?.contains(className);
-	}
-
-	// Returns the node data for the target of the event passed in.
-	getNodeForPort(d3Event) {
-		return d3.select(d3Event.sourceEvent?.currentTarget?.parentNode).datum();
-	}
-
-	// Initialize this.drawingNewLinkData when dragging a comment port.
-	startCommentNewLink(comment) {
-		this.drawingNewLinkData = {
-			srcObjId: comment.id,
-			action: COMMENT_LINK,
-			startPos: {
-				x: comment.x_pos - this.canvasLayout.commentHighlightGap,
-				y: comment.y_pos - this.canvasLayout.commentHighlightGap
-			},
-			linkArray: []
-		};
-	}
-
-	// Initialize this.drawingNewLinkData when dragging an input port. This gesture
-	// is only supported for association link creation.
-	startInputPortNewLink(port, node) {
-		if (this.config.enableAssocLinkCreation) {
-			const srcNode = this.activePipeline.getNode(node.id);
-			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
-				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
-				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "input",
-				portObject: node.layout.inputPortObject,
-				portImage: node.layout.inputPortImage,
-				portWidth: node.layout.inputPortWidth,
-				portHeight: node.layout.inputPortHeight,
-				portRadius: this.getPortRadius(srcNode),
-				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.inputPortGuideObject,
-				guideImage: node.layout.inputPortGuideImage,
-				linkArray: []
-			};
-		}
-	}
-
-	// Initialize this.drawingNewLinkData when dragging an output port.
-	startOutputPortNewLink(port, node) {
-		const srcNode = this.activePipeline.getNode(node.id);
-		if (!CanvasUtils.isSrcCardinalityAtMax(port.id, srcNode, this.activePipeline.links)) {
-			this.drawingNewLinkData = {
-				srcObjId: node.id,
-				srcPortId: port.id,
-				action: this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK,
-				srcNode: srcNode,
-				startPos: { x: srcNode.x_pos + port.cx, y: srcNode.y_pos + port.cy },
-				portType: "output",
-				portObject: node.layout.outputPortObject,
-				portImage: node.layout.outputPortImage,
-				portWidth: node.layout.outputPortWidth,
-				portHeight: node.layout.outputPortHeight,
-				portRadius: this.getPortRadius(srcNode),
-				minInitialLine: srcNode.layout.minInitialLine,
-				guideObject: node.layout.outputPortGuideObject,
-				guideImage: node.layout.outputPortGuideImage,
-				linkArray: []
-			};
-			if (this.config.enableHighlightUnavailableNodes) {
-				this.setUnavailableTargetNodesHighlighting(srcNode, port.id, this.activePipeline.links);
-			}
-		}
-	}
-
-	// Begins the dragging of a link handle of a detachable link.
-	dragStartLinkHandle(d3Event, d) {
-		this.logger.logStartTimer("dragStartLinkHandle");
-
-		this.closeContextMenuIfOpen();
-
-		const handleSelection = d3.select(d3Event.sourceEvent.currentTarget);
-		const link = this.activePipeline.getLink(d.id);
-		const oldLink = cloneDeep(link);
-
-		const linkGrpSelector = this.getLinkGroupSelectionById(d.id);
-
-		this.draggingLinkData = {
-			lineInfo: d,
-			link: link,
-			oldLink: oldLink,
-			linkGrpSelection: d3.select(linkGrpSelector)
-		};
-
-		if (handleSelection.attr("class").includes("d3-link-handle-end")) {
-			this.draggingLinkData.endBeingDragged = "end";
-
-		} else if (handleSelection.attr("class").includes("d3-link-handle-start")) {
-			this.draggingLinkData.endBeingDragged = "start";
-		}
-
-		if (this.config.enableHighlightUnavailableNodes) {
-			if (this.draggingLinkData.endBeingDragged === "end") {
-				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
-				this.setUnavailableTargetNodesHighlighting(
-					this.activePipeline.getNode(this.draggingLinkData.link.srcNodeId),
-					this.draggingLinkData.link.srcNodePortId,
-					links
-				);
-			} else if (this.draggingLinkData.endBeingDragged === "start") {
-				const links = this.activePipeline.links.filter((lnk) => lnk.id !== link.id);
-				this.setUnavailableSourceNodesHighlighting(
-					this.activePipeline.getNode(this.draggingLinkData.oldLink.trgNodeId),
-					this.draggingLinkData.link.trgNodePortId,
-					links
-				);
-			}
-		}
-
-		this.dragLinkHandle(d3Event);
-		this.logger.logEndTimer("dragStartLinkHandle", true);
-	}
-
-	// Display a link when its handle is being dragged.
-	dragMoveLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragMoveLinkHandle");
-		this.dragLinkHandle(d3Event);
-		this.logger.logEndTimer("dragMoveLinkHandle", true);
-	}
-
-	// Completes the dragging of a link handle.
-	dragEndLinkHandle(d3Event) {
-		this.logger.logStartTimer("dragEndLinkHandle");
-		this.completeDraggedLink(d3Event);
-		this.logger.logEndTimer("dragEndLinkHandle", true);
-	}
-
-	// Switches on or off the translucent state of the node identified by the
-	// node ID passed in. This is used when an 'insertable' node is dragged on
-	// the canvas. It makes is easier for the user to see the highlighted link
-	// when the node is dragged over it.
-	setNodeTranslucentState(nodeId, state) {
-		this.getNodeGroupSelectionById(nodeId).classed("d3-node-group-translucent", state);
-	}
-
-	// Switched off the translucent state of the objects being dragged (if
-	// there are any).
-	unsetNodeTranslucentState(dragObjects) {
-		if (dragObjects?.length > 0) {
-			this.setNodeTranslucentState(dragObjects[0].id, false);
-		}
-	}
-
-	// Returns the snap-to-grid position of the object positioned at
-	// this.draggingObjectData.dragStartX and this.draggingObjectData.dragStartY after applying the current offset of
-	// this.draggingObjectData.dragOffsetX and this.draggingObjectData.dragOffsetY.
-	snapToGridDraggedNode(draggingObjectData) {
-		const objPosX = draggingObjectData.dragStartX + draggingObjectData.dragOffsetX;
-		const objPosY = draggingObjectData.dragStartY + draggingObjectData.dragOffsetY;
-
-		return this.snapToGridPosition({ x: objPosX, y: objPosY });
-	}
-
 	// Returns the snap-to-grid position of the object positioned at objPos.x
 	// and objPos.y. The grid that is snapped to is defined by this.snapToGridXPx
 	// and this.snapToGridYPx values which are pixel values.
@@ -2879,17 +2238,7 @@ export default class SVGCanvasRenderer {
 						.call(this.attachNodeSizingListeners.bind(this))
 			)
 			.datum((d) => this.activePipeline.getNode(d.id))
-			.attr("d", (d) => this.getNodeShapePathSizing(d))
-			// Add or remove a resize handler.
-			.each((c, i, nodeSizeAreas) => {
-				if (this.config.enableEditingActions) {
-					d3.select(nodeSizeAreas[i])
-						.call(this.dragResizeObjectHandler);
-				} else {
-					d3.select(nodeSizeAreas[i])
-						.on(".drag", null);
-				}
-			});
+			.attr("d", (d) => this.getNodeShapePathSizing(d));
 
 		// Node Selection Highlighting Outline.
 		nonBindingNodeGrps
@@ -3019,8 +2368,9 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
+			const handler = this.dragObjectUtils.getDragObjectHandler();
 			nonBindingNodeGrps
-				.call(this.dragMoveObjectHandler);
+				.call(handler);
 		} else {
 			nonBindingNodeGrps
 				.on(".drag", null);
@@ -3149,7 +2499,8 @@ export default class SVGCanvasRenderer {
 			});
 
 		if (this.config.enableEditingActions) {
-			joinedInputPortGrps.call(this.dragNewLinkHandler);
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			joinedInputPortGrps.call(handler);
 		} else {
 			joinedInputPortGrps.on(".drag", null);
 		}
@@ -3216,7 +2567,8 @@ export default class SVGCanvasRenderer {
 			});
 
 		if (this.config.enableEditingActions) {
-			joinedOutputPortGrps.call(this.dragNewLinkHandler);
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			joinedOutputPortGrps.call(handler);
 		} else {
 			joinedOutputPortGrps.on(".drag", null);
 		}
@@ -3261,7 +2613,13 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Node Group - mouse down");
-				this.handleNodeMouseDown(d3Event, d);
+				d3Event.stopPropagation();
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "node");
+				}
 				this.logger.logEndTimer("Node Group - mouse down");
 			})
 			.on("mousemove", (d3Event, d) => {
@@ -3301,13 +2659,7 @@ export default class SVGCanvasRenderer {
 	attachNodeSizingListeners(nodeGrps) {
 		nodeGrps
 			.on("mousedown", (d3Event, d) => {
-				if (this.isNodeResizable(d)) {
-					this.nodeSizing = true;
-					// Note - node resizing and finalization of size is handled by drag functions.
-					this.addTempCursorOverlay(this.nodeSizingCursor);
-
-					this.handleNodeMouseDown(d3Event, d);
-				}
+				this.dragObjectUtils.mouseDownNodeSizingArea(d);
 			})
 			// Use mousemove as well as mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
@@ -3316,19 +2668,10 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.isNodeResizable(d) &&
-						!this.isRegionSelectOrSizingInProgress()) { // Don't switch sizing direction if we are already sizing
-					let cursorType = "default";
-					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
-						this.nodeSizingDirection = this.getSizingDirection(d3Event, d, d.layout.nodeCornerResizeArea);
-						this.nodeSizingCursor = this.getCursorBasedOnDirection(this.nodeSizingDirection);
-						cursorType = this.nodeSizingCursor;
-					}
-					d3.select(d3Event.currentTarget).style("cursor", cursorType);
-				}
+				this.dragObjectUtils.mouseEnterNodeSizingArea(d3Event, d);
 			})
 			.on("mouseleave", (d3Event, d) => {
-				d3.select(d3Event.currentTarget).style("cursor", "default");
+				this.dragObjectUtils.mouseLeaveNodeSizingArea(d3Event, d);
 			});
 	}
 
@@ -3440,17 +2783,6 @@ export default class SVGCanvasRenderer {
 				}
 				this.openContextMenu(d3Event, "output_port", node, port);
 			});
-	}
-
-	// Handles mouse down on node group and node resizing <rect>
-	handleNodeMouseDown(d3Event, d) {
-		d3Event.stopPropagation();
-		if (this.svgCanvasTextArea.isEditingText()) {
-			this.svgCanvasTextArea.completeEditing();
-		}
-		if (!this.config.enableDragWithoutSelect) {
-			this.selectObjectD3Event(d3Event, d, "node");
-		}
 	}
 
 	// Sets the d3-node-unavailable class on any node that is currently not
@@ -4070,7 +3402,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	addDynamicNodeIcons(d3Event, d, nodeGrp) {
-		if (!this.nodeSizing && !CanvasUtils.isSuperBindingNode(d)) {
+		if (!this.isSizing() && !CanvasUtils.isSuperBindingNode(d)) {
 			// Add the ellipsis icon if requested by layout config.
 			if (d.layout.ellipsisDisplay) {
 				this.addEllipsisIcon(d, nodeGrp);
@@ -4095,7 +3427,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	addContextToolbar(d3Event, d, objType) {
-		if (!this.nodeSizing && !this.isDragging() &&
+		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
 			this.canvasController.setMouseInObject(true);
 			let pos = this.getContextToolbarPos(objType, d);
@@ -4331,126 +3663,6 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
-	drawNewLink(d3Event) {
-		if (this.config.enableEditingActions === false || !this.drawingNewLinkData) {
-			return;
-		}
-
-		this.closeContextMenuIfOpen();
-
-		const transPos = this.getTransformedMousePos(d3Event);
-
-		if (this.drawingNewLinkData.action === COMMENT_LINK) {
-			this.drawNewCommentLinkForPorts(transPos);
-		} else {
-			this.drawNewNodeLinkForPorts(transPos);
-		}
-		// Switch on an attribute to indicate a new link is being dragged
-		// towards and over a target node.
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNode(d3Event);
-		}
-	}
-
-	drawNewNodeLinkForPorts(transPos) {
-		var that = this;
-		const linkType = this.config.enableAssocLinkCreation ? ASSOCIATION_LINK : NODE_LINK;
-
-		let startPos;
-		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			startPos = this.linkUtils.getNewStraightNodeLinkStartPos(this.drawingNewLinkData.srcNode, transPos);
-		} else {
-			startPos = {
-				x: this.drawingNewLinkData.startPos.x,
-				y: this.drawingNewLinkData.startPos.y };
-		}
-
-		this.drawingNewLinkData.linkArray = [{
-			"x1": startPos.x,
-			"y1": startPos.y,
-			"x2": transPos.x,
-			"y2": transPos.y,
-			"originX": startPos.originX,
-			"originY": startPos.originY,
-			"type": linkType }];
-
-		if (this.config.enableAssocLinkCreation) {
-			this.drawingNewLinkData.linkArray[0].assocLinkVariation =
-				this.getNewLinkAssocVariation(
-					this.drawingNewLinkData.linkArray[0].x1,
-					this.drawingNewLinkData.linkArray[0].x2,
-					this.drawingNewLinkData.portType);
-		}
-
-		const pathInfo = this.linkUtils.getConnectorPathInfo(
-			this.drawingNewLinkData.linkArray[0], this.drawingNewLinkData.minInitialLine);
-
-		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
-		const connectionStartSel = this.nodesLinksGrp.selectAll(".d3-new-connection-start");
-		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
-
-		// For a straight node line, don't draw the new link line when the guide
-		// icon or object is inside the node boundary.
-		if (linkType === NODE_LINK &&
-				this.canvasLayout.linkType === LINK_TYPE_STRAIGHT &&
-				this.nodeUtils.isPointInNodeBoundary(transPos, this.drawingNewLinkData.srcNode)) {
-			this.removeNewLinkLine();
-
-		} else {
-			connectionLineSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append("path")
-				.attr("class", "d3-new-connection-line")
-				.attr("linkType", linkType)
-				.merge(connectionLineSel)
-				.attr("d", pathInfo.path)
-				.attr("transform", pathInfo.transform);
-		}
-
-		if (this.canvasLayout.linkType !== LINK_TYPE_STRAIGHT) {
-			connectionStartSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append(this.drawingNewLinkData.portObject)
-				.attr("class", "d3-new-connection-start")
-				.attr("linkType", linkType)
-				.merge(connectionStartSel)
-				.each(function(d) {
-					// No need to draw the starting object of the new line if it is an image.
-					if (that.drawingNewLinkData.portObject === PORT_OBJECT_CIRCLE) {
-						d3.select(this)
-							.attr("cx", d.x1)
-							.attr("cy", d.y1)
-							.attr("r", that.drawingNewLinkData.portRadius);
-					}
-				});
-		}
-
-		connectionGuideSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append(this.drawingNewLinkData.guideObject)
-			.attr("class", "d3-new-connection-guide")
-			.attr("linkType", linkType)
-			.merge(connectionGuideSel)
-			.each(function(d) {
-				if (that.drawingNewLinkData.guideObject === PORT_OBJECT_IMAGE) {
-					d3.select(this)
-						.attr("xlink:href", that.drawingNewLinkData.guideImage)
-						.attr("x", d.x2 - (that.drawingNewLinkData.portWidth / 2))
-						.attr("y", d.y2 - (that.drawingNewLinkData.portHeight / 2))
-						.attr("width", that.drawingNewLinkData.portWidth)
-						.attr("height", that.drawingNewLinkData.portHeight)
-						.attr("transform", that.getLinkImageTransform(d));
-				} else {
-					d3.select(this)
-						.attr("cx", d.x2)
-						.attr("cy", d.y2)
-						.attr("r", that.drawingNewLinkData.portRadius);
-				}
-			});
-	}
 
 	getLinkImageTransform(d) {
 		let angle = 0;
@@ -4471,541 +3683,6 @@ export default class SVGCanvasRenderer {
 			return `rotate(${angle},${d.x2},${d.y2})`;
 		}
 		return null;
-	}
-
-	drawNewCommentLinkForPorts(transPos) {
-		const that = this;
-		const srcComment = this.activePipeline.getComment(this.drawingNewLinkData.srcObjId);
-		const startPos = this.linkUtils.getNewStraightCommentLinkStartPos(srcComment, transPos);
-		const linkType = COMMENT_LINK;
-
-		this.drawingNewLinkData.linkArray = [{
-			"x1": startPos.x,
-			"y1": startPos.y,
-			"x2": transPos.x,
-			"y2": transPos.y,
-			"type": linkType }];
-
-		const connectionLineSel = this.nodesLinksGrp.selectAll(".d3-new-connection-line");
-		const connectionGuideSel = this.nodesLinksGrp.selectAll(".d3-new-connection-guide");
-
-		connectionLineSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("path")
-			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType)
-			.merge(connectionLineSel)
-			.attr("d", (d) => that.linkUtils.getConnectorPathInfo(d).path);
-
-		connectionGuideSel
-			.data(this.drawingNewLinkData.linkArray)
-			.enter()
-			.append("circle")
-			.attr("class", "d3-new-connection-guide")
-			.attr("linkType", linkType)
-			.merge(connectionGuideSel)
-			.attr("cx", (d) => d.x2)
-			.attr("cy", (d) => d.y2)
-			.attr("r", this.canvasLayout.commentPortRadius);
-
-		if (this.canvasLayout.commentLinkArrowHead) {
-			const connectionArrowHeadSel = this.nodesLinksGrp.selectAll(".d3-new-connection-arrow");
-
-			connectionArrowHeadSel
-				.data(this.drawingNewLinkData.linkArray)
-				.enter()
-				.append("path")
-				.attr("class", "d3-new-connection-arrow")
-				.attr("linkType", linkType)
-				.merge(connectionArrowHeadSel)
-				.attr("d", (d) => this.getArrowHead(d))
-				.attr("transform", (d) => this.getArrowHeadTransform(d));
-		}
-	}
-
-	// Handles the completion of a new link being drawn from a source node.
-	completeNewLink(d3Event) {
-		if (this.config.enableEditingActions === false || !this.drawingNewLinkData) {
-			return;
-		}
-
-		// Save a local reference to this.drawingNewLinkData so we can set it to null before
-		// calling the canvas-controller. This means the this.drawingNewLinkData object will
-		// be null when the canvas is refreshed.
-		const drawingNewLinkData = this.drawingNewLinkData;
-		this.drawingNewLinkData = null;
-
-		if (this.config.enableHighlightUnavailableNodes) {
-			this.unsetUnavailableNodesHighlighting();
-		}
-		var trgNode = this.getNodeAtMousePos(d3Event);
-		if (trgNode !== null) {
-			this.completeNewLinkOnNode(d3Event, trgNode, drawingNewLinkData);
-		} else {
-			if (this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE &&
-					drawingNewLinkData.action === NODE_LINK &&
-					!this.config.enableAssocLinkCreation) {
-				this.completeNewDetachedLink(d3Event, drawingNewLinkData);
-			} else {
-				this.stopDrawingNewLink(drawingNewLinkData);
-			}
-		}
-	}
-
-	// Handles the completion of a new link when the end is dropped on a node.
-	completeNewLinkOnNode(d3Event, trgNode, drawingNewLinkData) {
-		// If we completed a connection remove the new line objects.
-		this.removeNewLink();
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		if (trgNode !== null) {
-			const type = drawingNewLinkData.action;
-			if (type === NODE_LINK) {
-				const srcNode = this.activePipeline.getNode(drawingNewLinkData.srcObjId);
-				const srcPortId = drawingNewLinkData.srcPortId;
-				const trgPortId = this.getInputNodePortId(d3Event, trgNode);
-
-				if (CanvasUtils.isDataConnectionAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": drawingNewLinkData.srcObjId, "portId": drawingNewLinkData.srcPortId }],
-						targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-						type: type,
-						linkType: "data", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.pipelineId });
-
-				} else if (this.config.enableLinkReplaceOnNewConnection &&
-										CanvasUtils.isDataLinkReplacementAllowed(srcPortId, trgPortId, srcNode, trgNode, this.activePipeline.links)) {
-					const linksToTrgPort = CanvasUtils.getDataLinksConnectedTo(trgPortId, trgNode, this.activePipeline.links);
-					// We only replace a link to a maxed out cardinality port if there
-					// is only one link. i.e. the input port cardinality is 0:1
-					if (linksToTrgPort.length === 1) {
-						this.canvasController.editActionHandler({
-							editType: "linkNodesAndReplace",
-							editSource: "canvas",
-							nodes: [{ "id": drawingNewLinkData.srcObjId, "portId": drawingNewLinkData.srcPortId }],
-							targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
-							type: type,
-							pipelineId: this.pipelineId,
-							replaceLink: linksToTrgPort[0]
-						});
-					}
-				}
-
-			} else if (type === ASSOCIATION_LINK) {
-				const srcNode = this.activePipeline.getNode(drawingNewLinkData.srcObjId);
-
-				if (CanvasUtils.isAssocConnectionAllowed(srcNode, trgNode, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkNodes",
-						editSource: "canvas",
-						nodes: [{ "id": drawingNewLinkData.srcObjId }],
-						targetNodes: [{ "id": trgNode.id }],
-						type: type,
-						pipelineId: this.pipelineId });
-				}
-
-			} else {
-				if (CanvasUtils.isCommentLinkConnectionAllowed(drawingNewLinkData.srcObjId, trgNode.id, this.activePipeline.links)) {
-					this.canvasController.editActionHandler({
-						editType: "linkComment",
-						editSource: "canvas",
-						nodes: [drawingNewLinkData.srcObjId],
-						targetNodes: [trgNode.id],
-						type: COMMENT_LINK,
-						linkType: "comment", // Added for historical purposes - for WML Canvas support
-						pipelineId: this.pipelineId });
-				}
-			}
-		}
-	}
-
-	// Handles the completion of a new link when the end is dropped away from
-	// a node (when enableLinkSelection is set to LINK_SELECTION_DETACHABLE)
-	// which creates a  new detached link.
-	completeNewDetachedLink(d3Event, drawingNewLinkData) {
-		// If we completed a connection remove the new line objects.
-		this.removeNewLink();
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		const endPoint = this.getTransformedMousePos(d3Event);
-		this.canvasController.editActionHandler({
-			editType: "createDetachedLink",
-			editSource: "canvas",
-			srcNodeId: drawingNewLinkData.srcObjId,
-			srcNodePortId: drawingNewLinkData.srcPortId,
-			trgPos: endPoint,
-			type: NODE_LINK,
-			pipelineId: this.pipelineId });
-	}
-
-	stopDrawingNewLink(drawingNewLinkData) {
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		this.stopDrawingNewLinkForPorts(drawingNewLinkData);
-	}
-
-	stopDrawingNewLinkForPorts(drawingNewLinkData) {
-		const saveX1 = drawingNewLinkData.linkArray[0].x1;
-		const saveY1 = drawingNewLinkData.linkArray[0].y1;
-		const saveX2 = drawingNewLinkData.linkArray[0].x2;
-		const saveY2 = drawingNewLinkData.linkArray[0].y2;
-
-		const saveNewLinkData = Object.assign({}, drawingNewLinkData);
-
-		// If we completed a connection successfully just remove the new line
-		// objects.
-		let newPath = "";
-		let duration = 350;
-
-		if (this.canvasLayout.linkType === LINK_TYPE_CURVE) {
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"C " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2;
-
-		} else if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
-			if (saveX1 < saveX2) {
-				duration = 0;
-			}
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"L " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2 +
-								" " + saveX2 + " " + saveY2;
-
-		} else {
-			newPath = "M " + saveX1 + " " + saveY1 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2 +
-								"Q " + saveX2 + " " + saveY2 + " " + saveX2 + " " + saveY2 +
-								"L " + saveX2 + " " + saveY2;
-		}
-
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line")
-			.transition()
-			.duration(duration)
-			.attr("d", newPath)
-			.on("end", () => {
-				this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
-
-				this.nodesLinksGrp.selectAll(".d3-new-connection-guide")
-					.transition()
-					.duration(1000)
-					.ease(d3.easeElastic)
-					// The lines below set all attributes for images AND circles even
-					// though some attributes will not be relevant. This is done
-					// because I could not get the .each() method to work here (which
-					// would be necessary to have an if statement based on guide object)
-					.attr("x", saveX1 - (saveNewLinkData.portWidth / 2))
-					.attr("y", saveY1 - (saveNewLinkData.portHeight / 2))
-					.attr("cx", saveX1)
-					.attr("cy", saveY1)
-					.attr("transform", null);
-				this.nodesLinksGrp.selectAll(".d3-new-connection-line")
-					.transition()
-					.duration(1000)
-					.ease(d3.easeElastic)
-					.attr("d", "M " + saveX1 + " " + saveY1 +
-											"L " + saveX1 + " " + saveY1)
-					.on("end", this.removeNewLink.bind(this));
-			});
-	}
-
-	removeNewLink() {
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-start").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-guide").remove();
-		this.nodesLinksGrp.selectAll(".d3-new-connection-arrow").remove();
-	}
-
-	removeNewLinkLine() {
-		this.nodesLinksGrp.selectAll(".d3-new-connection-line").remove();
-	}
-
-	dragLinkHandle(d3Event) {
-		const transPos = this.getTransformedMousePos(d3Event);
-		const link = this.draggingLinkData.link;
-
-		if (this.draggingLinkData.endBeingDragged === "start") {
-			link.srcPos = { x_pos: transPos.x, y_pos: transPos.y };
-			delete link.srcNodeId;
-			delete link.srcNodePortId;
-			delete link.srcObj;
-
-		} else {
-			link.trgPos = { x_pos: transPos.x, y_pos: transPos.y };
-			delete link.trgNodeId;
-			delete link.trgNodePortId;
-			delete link.trgNode;
-		}
-
-		this.displayLinks();
-
-		// Switch on an attribute to indicate a new link is being dragged
-		// towards and over a target node.
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNode(d3Event);
-		}
-	}
-
-	completeDraggedLink(d3Event) {
-		const newLink = this.getNewLinkOnDrag(d3Event);
-
-		// Save a local reference to this.draggingLinkData so we can set it to null before
-		// calling the canvas-controller. This means the this.draggingLinkData object will
-		// be null when the canvas is refreshed.
-		const draggingLinkData = this.draggingLinkData;
-		this.draggingLinkData = null;
-
-		if (newLink) {
-			const editSubType = this.getLinkEditSubType(draggingLinkData.oldLink, newLink);
-			// If editSubType is set the user did a gesture that requires a change
-			// to the object model.
-			if (editSubType) {
-				this.canvasController.editActionHandler({
-					editType: "updateLink",
-					editSubType: editSubType,
-					editSource: "canvas",
-					newLink: newLink,
-					pipelineId: this.pipelineId });
-			// If editSubType is null, the user performed a gesture which should
-			// not be executed as an action so draw the link back in its old position.
-			} else {
-				this.snapBackOldLink(draggingLinkData.oldLink);
-			}
-		// newLink might be null when we are dragging a link handle with
-		// enableLinkSelection not set to detachable. If that's the case the
-		// link needs to snap back (redrawn) to its original position.
-		} else {
-			this.snapBackOldLink(draggingLinkData.oldLink);
-		}
-
-		// Switch 'new link over node' highlighting off
-		if (this.config.enableHighlightNodeOnNewLinkDrag) {
-			this.setNewLinkOverNodeCancel();
-		}
-
-		this.unsetUnavailableNodesHighlighting();
-	}
-
-	// Resets and redraws the link being dragged back to its original position.
-	// This is necessary when the user performs a link drag gesture which should
-	// NOT be executed as an action -- therefore the link need to be drawn back
-	// in its original position.
-	snapBackOldLink(oldLink) {
-		this.activePipeline.replaceLink(oldLink);
-		this.displayLinks();
-	}
-
-	// Returns the edit sub-type for the link action being performed to further
-	// explain the updateLink action.
-	getLinkEditSubType(oldLink, newLink) {
-		if (oldLink.srcNodeId && !newLink.srcNodeId) {
-			return "detachFromSrcNode";
-
-		} else if (oldLink.trgNodeId && !newLink.trgNodeId) {
-			return "detachFromTrgNode";
-
-		} else if (!oldLink.srcNodeId && newLink.srcNodeId) {
-			return "attachToSrcNode";
-
-		} else if (!oldLink.trgNodeId && newLink.trgNodeId) {
-			return "attachToTrgNode";
-
-		} else if (!oldLink.srcNodeId && !newLink.srcNodeId &&
-								(oldLink.srcPos.x_pos !== newLink.srcPos.x_pos ||
-									oldLink.srcPos.y_pos !== newLink.srcPos.y_pos)) {
-			return "moveSrcPosition";
-
-		} else if (!oldLink.trgNodeId && !newLink.trgNodeId &&
-								(oldLink.trgPos.x_pos !== newLink.trgPos.x_pos ||
-									oldLink.trgPos.y_pos !== newLink.trgPos.y_pos)) {
-			return "moveTrgPosition";
-
-		} else if (oldLink.srcNodeId && newLink.srcNodeId &&
-							oldLink.srcNodeId !== newLink.srcNodeId) {
-			return "switchSrcNode";
-
-		} else if (oldLink.trgNodeId && newLink.trgNodeId &&
-							oldLink.trgNodeId !== newLink.trgNodeId) {
-			return "switchTrgNode";
-
-		} else if (oldLink.srcNodeId && newLink.srcNodeId &&
-							oldLink.srcNodeId === newLink.srcNodeId &&
-							oldLink.srcNodePortId !== newLink.srcNodePortId) {
-			return "switchSrcNodePort";
-
-		} else if (oldLink.trgNodeId && newLink.trgNodeId &&
-							oldLink.trgNodeId === newLink.trgNodeId &&
-							oldLink.trgNodePortId !== newLink.trgNodePortId) {
-			return "switchTrgNodePort";
-		}
-		// We arrive here, in two ways:
-		// 1. if the user dragged a link handle from a node/port and dropped it
-		//    back on the same node/port.
-		// 2. If the user clicked on the unattached end of a detached link but did
-		//    not move it anywhere
-		// In these cases, the updateLink action should NOT be performed and
-		// consequently NO command should be added to the command stack.
-		return null;
-	}
-
-	// Returns a new link if one can be created given the current data in the
-	// this.draggingLinkData object. Returns null if a link cannot be created.
-	getNewLinkOnDrag(d3Event, nodeProximity) {
-		const oldLink = this.draggingLinkData.oldLink;
-		const newLink = cloneDeep(oldLink);
-
-		if (this.draggingLinkData.endBeingDragged === "start") {
-			delete newLink.srcObj;
-			delete newLink.srcNodeId;
-			delete newLink.srcNodePortId;
-			delete newLink.srcPos;
-
-			const srcNode = nodeProximity
-				? this.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.getNodeAtMousePos(d3Event);
-
-			if (srcNode) {
-				newLink.srcNodeId = srcNode.id;
-				newLink.srcObj = this.activePipeline.getNode(srcNode.id);
-				newLink.srcNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, OUTPUT_TYPE, srcNode)
-					: this.getOutputNodePortId(d3Event, srcNode);
-			}	else {
-				newLink.srcPos = this.draggingLinkData.link.srcPos;
-			}
-
-		} else {
-			delete newLink.trgNode;
-			delete newLink.trgNodeId;
-			delete newLink.trgNodePortId;
-			delete newLink.trgPos;
-
-			const trgNode = nodeProximity
-				? this.getNodeNearMousePos(d3Event, nodeProximity)
-				: this.getNodeAtMousePos(d3Event);
-
-			if (trgNode) {
-				newLink.trgNodeId = trgNode.id;
-				newLink.trgNode = this.activePipeline.getNode(trgNode.id);
-				newLink.trgNodePortId = nodeProximity
-					? this.getNodePortIdNearMousePos(d3Event, INPUT_TYPE, trgNode)
-					: this.getInputNodePortId(d3Event, trgNode);
-			}	else {
-				newLink.trgPos = this.draggingLinkData.link.trgPos;
-			}
-		}
-
-		// If links are not detachable, we cannot create a link if srcPos
-		// or trgPos are set because that would create a detached link unconnected
-		// to either a source node or a target node or both.
-		if (this.config.enableLinkSelection !== LINK_SELECTION_DETACHABLE &&
-				(newLink.srcPos || newLink.trgPos)) {
-			return null;
-		}
-
-		if (this.canExecuteUpdateLinkCommand(newLink, oldLink)) {
-			return newLink;
-		}
-		return null;
-	}
-
-	// Returns true if the update command for a dragged link can be executed.
-	// It might be prevented from executing if either the course
-	canExecuteUpdateLinkCommand(newLink, oldLink) {
-		const srcNode = this.activePipeline.getNode(newLink.srcNodeId);
-		const trgNode = this.activePipeline.getNode(newLink.trgNodeId);
-		const linkSrcChanged = this.hasLinkSrcChanged(newLink, oldLink);
-		const linkTrgChanged = this.hasLinkTrgChanged(newLink, oldLink);
-		const links = this.activePipeline.links;
-		let executeCommand = true;
-
-		if (linkSrcChanged && srcNode &&
-				!CanvasUtils.isSrcConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, srcNode, links)) {
-			executeCommand = false;
-		}
-		if (linkTrgChanged && trgNode &&
-				!CanvasUtils.isTrgConnectionAllowedWithDetachedLinks(newLink.trgNodePortId, trgNode, links)) {
-			executeCommand = false;
-		}
-		if (srcNode && trgNode &&
-				!CanvasUtils.isConnectionAllowedWithDetachedLinks(newLink.srcNodePortId, newLink.trgNodePortId, srcNode, trgNode, links)) {
-			executeCommand = false;
-		}
-		return executeCommand;
-	}
-
-	// Returns true if the source information has changed between
-	// the two links.
-	hasLinkSrcChanged(newLink, oldLink) {
-		let linkUpdated = false;
-
-		if (newLink.srcNodeId) {
-			if (newLink.srcNodeId !== oldLink.srcNodeId) {
-				linkUpdated = true;
-			}
-
-			if (newLink.srcNodePortId !== oldLink.srcNodePortId) {
-				linkUpdated = true;
-			}
-
-		}	else {
-			if (oldLink.srcPos) {
-				if (newLink.srcPos.x_pos !== oldLink.srcPos.x_pos ||
-						newLink.srcPos.y_pos !== oldLink.srcPos.y_pos) {
-					linkUpdated = true;
-				}
-			} else {
-				linkUpdated = true;
-			}
-		}
-		return linkUpdated;
-	}
-
-	// Returns true if the target information has changed between
-	// the two links.
-	hasLinkTrgChanged(newLink, oldLink) {
-		let linkUpdated = false;
-
-		if (newLink.trgNodeId) {
-			if (newLink.trgNodeId !== oldLink.trgNodeId) {
-				linkUpdated = true;
-			}
-
-			if (newLink.trgNodePortId !== oldLink.trgNodePortId) {
-				linkUpdated = true;
-			}
-
-		}	else {
-			if (oldLink.trgPos) {
-				if (newLink.trgPos.x_pos !== oldLink.trgPos.x_pos ||
-						newLink.trgPos.y_pos !== oldLink.trgPos.y_pos) {
-					linkUpdated = true;
-				}
-			} else {
-				linkUpdated = true;
-			}
-		}
-		return linkUpdated;
 	}
 
 	// Returns a link, if one can be found, at the position indicated by x and y
@@ -5148,75 +3825,6 @@ export default class SVGCanvasRenderer {
 				}
 			});
 		return node;
-	}
-
-	getNodePortIdNearMousePos(d3Event, portType, node) {
-		const pos = this.getTransformedMousePos(d3Event);
-		let portId = null;
-		let defaultPortId = null;
-
-		if (node) {
-			if (portType === OUTPUT_TYPE) {
-				const portObjs = this.getAllNodeGroupsSelection()
-					.selectChildren("." + this.getNodeOutputPortClassName())
-					.selectChildren(".d3-node-port-output-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.outputPortObject,
-					node.width);
-				defaultPortId = CanvasUtils.getDefaultOutputPortId(node);
-
-			} else {
-				const portObjs = this.getAllNodeGroupsSelection()
-					.selectChildren("." + this.getNodeInputPortClassName())
-					.selectChildren(".d3-node-port-input-main");
-
-				portId = this.searchForPortNearMouse(
-					node, pos, portObjs,
-					node.layout.inputPortObject,
-					0);
-				defaultPortId = CanvasUtils.getDefaultInputPortId(node);
-			}
-		}
-
-		if (!portId) {
-			portId = defaultPortId;
-		}
-		return portId;
-	}
-
-	// Returns a port ID for the port identified by the position (pos) on the
-	// node (node) further specified by the other parameters.
-	searchForPortNearMouse(node, pos, portObjs, portObjectType, nodeWidthOffset) {
-		let portId = null;
-		portObjs
-			.each((p, i, portGrps) => {
-				const portSel = d3.select(portGrps[i]);
-				if (portObjectType === PORT_OBJECT_IMAGE) {
-					const xx = node.x_pos + Number(portSel.attr("x"));
-					const yy = node.y_pos + Number(portSel.attr("y"));
-					const wd = Number(portSel.attr("width"));
-					const ht = Number(portSel.attr("height"));
-					if (pos.x >= xx &&
-							pos.x <= xx + nodeWidthOffset + wd &&
-							pos.y >= yy &&
-							pos.y <= yy + ht) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				} else { // Port must be a circle
-					const cx = node.x_pos + Number(portSel.attr("cx"));
-					const cy = node.y_pos + Number(portSel.attr("cy"));
-					if (pos.x >= cx - node.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + node.layout.portRadius &&
-							pos.y >= cy - node.layout.portRadius &&
-							pos.y <= cy + node.layout.portRadius) {
-						portId = portGrps[i].getAttribute("data-port-id");
-					}
-				}
-			});
-
-		return portId;
 	}
 
 	// Returns a sizing rectangle for nodes and comments. This extends an
@@ -5645,17 +4253,7 @@ export default class SVGCanvasRenderer {
 			.attr("y", -this.canvasLayout.commentSizingArea)
 			.attr("height", (c) => c.height + (2 * this.canvasLayout.commentSizingArea))
 			.attr("width", (c) => c.width + (2 * this.canvasLayout.commentSizingArea))
-			.attr("class", "d3-comment-sizing")
-			// Add or remove a resize handler.
-			.each((c, i, comSizeAreas) => {
-				if (this.config.enableEditingActions) {
-					d3.select(comSizeAreas[i])
-						.call(this.dragResizeObjectHandler);
-				} else {
-					d3.select(comSizeAreas[i])
-						.on(".drag", null);
-				}
-			});
+			.attr("class", "d3-comment-sizing");
 
 		// Comment Selection Highlighting Outline
 		joinedCommentGrps.selectChildren(".d3-comment-selection-highlight")
@@ -5689,8 +4287,9 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag object behavior for the comment groups.
 		if (this.config.enableEditingActions) {
+			const handler = this.dragObjectUtils.getDragObjectHandler();
 			joinedCommentGrps
-				.call(this.dragMoveObjectHandler);
+				.call(handler);
 		} else {
 			joinedCommentGrps
 				.on(".drag", null);
@@ -5724,7 +4323,13 @@ export default class SVGCanvasRenderer {
 			// Use mouse down instead of click because it gets called before drag start.
 			.on("mousedown", (d3Event, d) => {
 				this.logger.logStartTimer("Comment Group - mouse down");
-				this.handleCommentMouseDown(d3Event, d);
+				d3Event.stopPropagation();
+				if (this.svgCanvasTextArea.isEditingText()) {
+					this.svgCanvasTextArea.completeEditing();
+				}
+				if (!this.config.enableDragWithoutSelect) {
+					this.selectObjectD3Event(d3Event, d, "comment");
+				}
 				this.logger.logEndTimer("Comment Group - mouse down");
 			})
 			.on("click", (d3Event, d) => {
@@ -5761,11 +4366,7 @@ export default class SVGCanvasRenderer {
 	attachCommentSizingListeners(commentGrps) {
 		commentGrps
 			.on("mousedown", (d3Event, d) => {
-				this.commentSizing = true;
-				// Note - comment resizing and finalization of size is handled by drag functions.
-				this.addTempCursorOverlay(this.commentSizingCursor);
-
-				this.handleCommentMouseDown(d3Event, d);
+				this.dragObjectUtils.mouseDownCommentSizingArea();
 			})
 			// Use mousemove here rather than mouseenter so the cursor will change
 			// if the pointer moves from one area of the node outline to another
@@ -5774,17 +4375,10 @@ export default class SVGCanvasRenderer {
 			// pointer leaves the temporary overlay (which is removed) and enters
 			// the node outline.
 			.on("mousemove mouseenter", (d3Event, d) => {
-				if (this.config.enableEditingActions && // Only set cursor when we are able to edit comments
-					!this.isRegionSelectOrSizingInProgress()) // Don't switch sizing direction if we are already sizing
-				{
-					let cursorType = "default";
-					if (!this.isPointerCloseToBodyEdge(d3Event, d)) {
-						this.commentSizingDirection = this.getSizingDirection(d3Event, d, this.canvasLayout.commentCornerResizeArea);
-						this.commentSizingCursor = this.getCursorBasedOnDirection(this.commentSizingDirection);
-						cursorType = this.commentSizingCursor;
-					}
-					d3.select(d3Event.currentTarget).style("cursor", cursorType);
-				}
+				this.dragObjectUtils.mouseEnterCommentSizingArea(d3Event, d);
+			})
+			.on("mouseleave", (d3Event, d) => {
+				this.dragObjectUtils.mouseLeaveCommentSizingArea(d3Event, d);
 			});
 	}
 
@@ -5802,7 +4396,8 @@ export default class SVGCanvasRenderer {
 			.attr("class", "d3-comment-port-circle");
 
 		if (this.config.enableEditingActions) {
-			commentPort.call(this.dragNewLinkHandler);
+			const handler = this.dragNewLinkUtils.getDragNewLinkHandler();
+			commentPort.call(handler);
 		} else {
 			commentPort.on(".drag", null);
 		}
@@ -5812,17 +4407,6 @@ export default class SVGCanvasRenderer {
 		d3.select(commentObj)
 			.selectChildren(".d3-comment-port-circle")
 			.remove();
-	}
-
-	// Handles mouse down on node group and node resizing <rect>
-	handleCommentMouseDown(d3Event, d) {
-		d3Event.stopPropagation();
-		if (this.svgCanvasTextArea.isEditingText()) {
-			this.svgCanvasTextArea.completeEditing();
-		}
-		if (!this.config.enableDragWithoutSelect) {
-			this.selectObjectD3Event(d3Event, d, "comment");
-		}
 	}
 
 	setCommentStyles(d, type, comGrp) {
@@ -5906,7 +4490,7 @@ export default class SVGCanvasRenderer {
 	// Returns true if this renderer or any of its ancestors are currently in the
 	// process of selecting a region or sizing a node or comment.
 	isRegionSelectOrSizingInProgress() {
-		if (this.regionSelect || this.nodeSizing || this.commentSizing) {
+		if (this.regionSelect || this.isSizing()) {
 			return true;
 		}
 		if (this.supernodeInfo.renderer) {
@@ -5915,336 +4499,6 @@ export default class SVGCanvasRenderer {
 			}
 		}
 		return false;
-	}
-
-	// This method allows us to avoid a strange behavior which only appears in the
-	// Chrome browser. That is, when the mouse pointer is inside the
-	// node/comment selection highlight area but is close to either the
-	// right or bottom side of the node/comment body, any mousedown events will go
-	// to the body instead of the highlight area. We use this method to detect
-	// this situation and use the result to decide whether to display the sizing
-	// cursor or not.
-	isPointerCloseToBodyEdge(d3Event, d) {
-		const pos = this.getTransformedMousePos(d3Event);
-		const rightEdge = d.x_pos + d.width;
-		const bottomEdge = d.y_pos + d.height;
-
-		// Is the pointer within 1 pixel of the right edge of the node or comment
-		const rightEdgeState =
-			pos.x >= rightEdge && pos.x <= rightEdge + 1 &&
-			pos.y >= 0 && pos.y <= bottomEdge;
-
-		// Is the pointer within 1 pixel of the bottom edge of the node or comment
-		const bottomEdgeState =
-			pos.y >= bottomEdge && pos.y <= bottomEdge + 1 &&
-			pos.x >= 0 && pos.x <= rightEdge;
-
-		return rightEdgeState || bottomEdgeState;
-	}
-
-	// Returns the comment or supernode sizing direction (i.e. one of n, s, e, w, nw, ne,
-	// sw or se) based on the current mouse position and the position and
-	// dimensions of the comment or node outline.
-	getSizingDirection(d3Event, d, cornerResizeArea) {
-		var xPart = "";
-		var yPart = "";
-
-		const transPos = this.getTransformedMousePos(d3Event);
-		if (transPos.x < d.x_pos + cornerResizeArea) {
-			xPart = "w";
-		} else if (transPos.x > d.x_pos + d.width - cornerResizeArea) {
-			xPart = "e";
-		}
-		if (transPos.y < d.y_pos + cornerResizeArea) {
-			yPart = "n";
-		} else if (transPos.y > d.y_pos + d.height - cornerResizeArea) {
-			yPart = "s";
-		}
-
-		return yPart + xPart;
-	}
-
-	// Returns a cursor type based on the currect comment sizing direction.
-	// Possible values are: ns-resize, ew-resize, nwse-resize or nesw-resize.
-	getCursorBasedOnDirection(direction) {
-		var cursorType;
-		switch (direction) {
-		case "n":
-		case "s":
-			cursorType = "ns-resize";
-			break;
-		case "e":
-		case "w":
-			cursorType = "ew-resize";
-			break;
-		case "nw":
-		case "se":
-			cursorType = "nwse-resize";
-			break;
-		case "ne":
-		case "sw":
-			cursorType = "nesw-resize";
-			break;
-		default:
-			cursorType = "";
-		}
-
-		return cursorType;
-	}
-
-	// Returns the minimum allowed height for the node passed in. For supernodes
-	// this means combining the bigger of the space for the inputs and output ports
-	// with some space for the top of the display frame and the padding at the
-	// bottom of the frame. Then the bigger of that height versus the default
-	// supernode minimum height is retunred.
-	getMinHeight(node) {
-		if (CanvasUtils.isSupernode(node)) {
-			const minHt = Math.max(node.inputPortsHeight, node.outputPortsHeight) +
-				this.canvasLayout.supernodeTopAreaHeight + this.canvasLayout.supernodeSVGAreaPadding;
-			return Math.max(this.canvasLayout.supernodeMinHeight, minHt);
-		}
-		return node.layout.defaultNodeHeight;
-	}
-
-	// Returns the minimum allowed width for the node passed in.
-	getMinWidth(node) {
-		if (CanvasUtils.isSupernode(node)) {
-			return this.canvasLayout.supernodeMinWidth;
-		}
-		return node.layout.defaultNodeWidth;
-	}
-
-	// Sets the size and position of the node in the canvasInfo.nodes
-	// array based on the position of the pointer during the resize action
-	// then redraws the nodes and links (the link positions may move based
-	// on the node size change).
-	resizeNode(d3Event, resizeObj) {
-		const oldSupernode = Object.assign({}, resizeObj);
-		const minHeight = this.getMinHeight(resizeObj);
-		const minWidth = this.getMinWidth(resizeObj);
-
-		const delta = this.resizeObject(d3Event, resizeObj,
-			this.nodeSizingDirection, minWidth, minHeight);
-
-		if (delta && (delta.x_pos !== 0 || delta.y_pos !== 0 || delta.width !== 0 || delta.height !== 0)) {
-			if (CanvasUtils.isSupernode(resizeObj) &&
-					this.config.enableMoveNodesOnSupernodeResize) {
-				const objectsInfo = CanvasUtils.moveSurroundingObjects(
-					oldSupernode,
-					this.activePipeline.getNodesAndComments(),
-					this.nodeSizingDirection,
-					resizeObj.width,
-					resizeObj.height,
-					true // Pass true to indicate that object positions should be updated.
-				);
-
-				const linksInfo = CanvasUtils.moveSurroundingDetachedLinks(
-					oldSupernode,
-					this.activePipeline.links,
-					this.nodeSizingDirection,
-					resizeObj.width,
-					resizeObj.height,
-					true // Pass true to indicate that link positions should be updated.
-				);
-
-				// Overwrite the object and link info with any new info.
-				this.nodeSizingObjectsInfo = Object.assign(this.nodeSizingObjectsInfo, objectsInfo);
-				this.nodeSizingDetLinksInfo = Object.assign(this.nodeSizingDetLinksInfo, linksInfo);
-			}
-
-			this.logger.logStartTimer("displayObjects");
-
-			this.displayMovedComments();
-			this.displayMovedNodes();
-			this.displaySingleNode(resizeObj);
-			this.displayMovedLinks();
-			this.displayCanvasAccoutrements();
-
-			if (CanvasUtils.isSupernode(resizeObj)) {
-				if (this.dispUtils.isDisplayingSubFlow()) {
-					this.displayBindingNodesToFitSVG();
-				}
-				this.superRenderers.forEach((renderer) => renderer.displaySVGToFitSupernode());
-			}
-			this.logger.logEndTimer("displayObjects");
-		}
-	}
-
-	// Sets the size and position of the comment in the canvasInfo.comments
-	// array based on the position of the pointer during the resize action
-	// then redraws the comment and links (the link positions may move based
-	// on the comment size change).
-	resizeComment(d3Event, resizeObj) {
-		this.resizeObject(d3Event, resizeObj, this.commentSizingDirection, 20, 20);
-		this.displaySingleComment(resizeObj);
-		this.displayMovedLinks();
-		this.displayCanvasAccoutrements();
-	}
-
-	// Sets the size and position of the object in the canvasInfo
-	// array based on the position of the pointer during the resize action.
-	resizeObject(d3Event, canvasObj, direction, minWidth, minHeight) {
-		let incrementX = 0;
-		let incrementY = 0;
-		let incrementWidth = 0;
-		let incrementHeight = 0;
-
-		if (direction.indexOf("e") > -1) {
-			incrementWidth += d3Event.dx;
-		}
-		if (direction.indexOf("s") > -1) {
-			incrementHeight += d3Event.dy;
-		}
-		if (direction.indexOf("n") > -1) {
-			incrementY += d3Event.dy;
-			incrementHeight -= d3Event.dy;
-		}
-		if (direction.indexOf("w") > -1) {
-			incrementX += d3Event.dx;
-			incrementWidth -= d3Event.dx;
-		}
-
-		let xPos = 0;
-		let yPos = 0;
-		let width = 0;
-		let height = 0;
-
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_DURING) {
-			// Calculate where the object being resized would be and its size given
-			// current increments.
-			this.notSnappedXPos += incrementX;
-			this.notSnappedYPos += incrementY;
-			this.notSnappedWidth += incrementWidth;
-			this.notSnappedHeight += incrementHeight;
-
-			xPos = CanvasUtils.snapToGrid(this.notSnappedXPos, this.canvasLayout.snapToGridXPx);
-			yPos = CanvasUtils.snapToGrid(this.notSnappedYPos, this.canvasLayout.snapToGridYPx);
-			width = CanvasUtils.snapToGrid(this.notSnappedWidth, this.canvasLayout.snapToGridXPx);
-			height = CanvasUtils.snapToGrid(this.notSnappedHeight, this.canvasLayout.snapToGridYPx);
-
-			width = Math.max(width, minWidth);
-			height = Math.max(height, minHeight);
-
-		} else {
-			xPos = canvasObj.x_pos + incrementX;
-			yPos = canvasObj.y_pos + incrementY;
-			width = canvasObj.width + incrementWidth;
-			height = canvasObj.height + incrementHeight;
-		}
-
-		// Don't allow the object area to shrink below the min width and height.
-		// For comment sizing, errors may occur especially if the width becomes
-		// less that one character's width. For node sizing we want at least some
-		// area to display the sub-flow.
-		if (width < minWidth || height < minHeight) {
-			return null;
-		}
-
-		const delta = {
-			width: width - canvasObj.width,
-			height: height - canvasObj.height,
-			x_pos: xPos - canvasObj.x_pos,
-			y_pos: yPos - canvasObj.y_pos
-		};
-
-		canvasObj.x_pos = xPos;
-		canvasObj.y_pos = yPos;
-		canvasObj.width = width;
-		canvasObj.height = height;
-
-		return delta;
-	}
-
-	// Finalises the sizing of a node by calling editActionHandler
-	// with an editNode action.
-	endNodeSizing(node) {
-		let resizeObj = node;
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			resizeObj = this.snapToGridObject(resizeObj);
-			resizeObj = this.restrictNodeSizingToMinimums(resizeObj);
-		}
-
-		// If the dimensions or position has changed, issue the "resizeObjects" command.
-		// Note: x_pos or y_pos might change on resize if the node is sized
-		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== resizeObj.width ||
-				this.resizeObjInitialInfo.height !== resizeObj.height) {
-			// Add the dimensions of the object being resized to the array of object infos.
-			this.nodeSizingObjectsInfo[resizeObj.id] = {
-				width: resizeObj.width,
-				height: resizeObj.height,
-				x_pos: resizeObj.x_pos,
-				y_pos: resizeObj.y_pos
-			};
-
-			// If the node has been resized set the resize properties appropriately.
-			// We use some padding because sometimes, when a node is sized back to its
-			// original dimensions, it isn't retunred to EXACTLY its default width/height.
-			if (resizeObj.height > resizeObj.layout.defaultNodeHeight + 2 ||
-					resizeObj.width > resizeObj.layout.defaultNodeWidth + 2) {
-				this.nodeSizingObjectsInfo[resizeObj.id].isResized = true;
-				this.nodeSizingObjectsInfo[resizeObj.id].resizeWidth = resizeObj.width;
-				this.nodeSizingObjectsInfo[resizeObj.id].resizeHeight = resizeObj.height;
-			}
-
-			this.canvasController.editActionHandler({
-				editType: "resizeObjects",
-				editSource: "canvas",
-				objectsInfo: this.nodeSizingObjectsInfo,
-				detachedLinksInfo: this.nodeSizingDetLinksInfo,
-				pipelineId: this.pipelineId
-			});
-		}
-		this.nodeSizing = false;
-		this.nodeSizingObjectsInfo = {};
-		this.nodeSizingDetLinksInfo = {};
-	}
-
-	// Finalises the sizing of a comment by calling editActionHandler
-	// with an editComment action.
-	endCommentSizing(comment) {
-		let resizeObj = comment;
-		if (this.config.enableSnapToGridType === SNAP_TO_GRID_AFTER) {
-			resizeObj = this.snapToGridObject(resizeObj);
-		}
-
-		// If the dimensions or position has changed, issue the command.
-		// Note: x_pos or y_pos might change on resize if the node is sized
-		// upwards or to the left.
-		if (this.resizeObjInitialInfo.x_pos !== resizeObj.x_pos ||
-				this.resizeObjInitialInfo.y_pos !== resizeObj.y_pos ||
-				this.resizeObjInitialInfo.width !== resizeObj.width ||
-				this.resizeObjInitialInfo.height !== resizeObj.height) {
-			const commentSizingObjectsInfo = [];
-			commentSizingObjectsInfo[resizeObj.id] = {
-				width: resizeObj.width,
-				height: resizeObj.height,
-				x_pos: resizeObj.x_pos,
-				y_pos: resizeObj.y_pos
-			};
-
-			const data = {
-				editType: "resizeObjects",
-				editSource: "canvas",
-				objectsInfo: commentSizingObjectsInfo,
-				detachedLinksInfo: {}, // Comments cannot have detached links
-				pipelineId: this.pipelineId
-			};
-			this.canvasController.editActionHandler(data);
-		}
-		this.commentSizing = false;
-	}
-
-	// Ensure the snap-to-grid does not make the width or height smaller than
-	// the minimums allowed.
-	restrictNodeSizingToMinimums(resizeObj) {
-		const minHeight = this.getMinHeight(resizeObj);
-		const minWidth = this.getMinWidth(resizeObj);
-		resizeObj.width = Math.max(resizeObj.width, minWidth);
-		resizeObj.height = Math.max(resizeObj.height, minHeight);
-		return resizeObj;
 	}
 
 	// Displays all the links on the canvas either by creating new links,
@@ -6399,7 +4653,7 @@ export default class SVGCanvasRenderer {
 			});
 		}
 
-		if (!this.draggingObjectData && !this.nodeSizing && !this.commentSizing) {
+		if (!this.isMoving() && !this.isSizing()) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
 	}
@@ -6513,7 +4767,8 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
-			startHandle.call(this.dragLinkHandler);
+			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+			startHandle.call(handler);
 		} else {
 			startHandle.on(".drag", null);
 		}
@@ -6542,7 +4797,8 @@ export default class SVGCanvasRenderer {
 
 		// Add or remove drag behavior as appropriate
 		if (this.config.enableEditingActions) {
-			endHandle.call(this.dragLinkHandler);
+			const handler = this.dragDetLinkUtils.getDragDetachedLinkHandler();
+			endHandle.call(handler);
 		} else {
 			endHandle.on(".drag", null);
 		}
@@ -7325,8 +5581,7 @@ export default class SVGCanvasRenderer {
 
 	canOpenTip(tipType) {
 		return this.canvasController.isTipEnabled(tipType) &&
-			!this.regionSelect && !this.isDragging() &&
-			!this.commentSizing && !this.nodeSizing;
+			!this.regionSelect && !this.isDragging() && !this.isSizing();
 	}
 
 	// Return the x,y coordinates of the svg group relative to the window's viewport
@@ -7358,11 +5613,8 @@ export default class SVGCanvasRenderer {
 		if (this.isDragging()) {
 			str += " dragging = true";
 		}
-		if (this.nodeSizing) {
-			str += " nodeSizing = true";
-		}
-		if (this.commentSizing) {
-			str += " commentSizing = true";
+		if (this.isSizing()) {
+			str += " sizing = true";
 		}
 		if (this.regionSelect) {
 			str += " regionSelect = true";
