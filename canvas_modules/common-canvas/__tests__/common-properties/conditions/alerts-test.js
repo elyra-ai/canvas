@@ -18,6 +18,7 @@ import propertyUtils from "../../_utils_/property-utils";
 import { expect } from "chai";
 import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
+import actionParamDef from "../../test_resources/paramDefs/action_paramDef.json";
 import tableUtils from "./../../_utils_/table-utils";
 
 describe("condition messages should add alerts tab", () => {
@@ -272,6 +273,58 @@ describe("condition messages should add alerts tab for tables", () => {
 
 	it("alerts should not show messages for hidden table cell controls", () => {
 		// TODO when issue 1555 is implemented
+	});
+
+});
+
+describe("Show/hide Alerts tab based on showAlertsTab boolean in propertiesConfig", () => {
+
+	it("Hide Alerts tab when showAlertsTab=false in propertiesConfig", () => {
+		// No "Alerts" tab. Also no messageCount next to Summary Panel Actions.
+		const categoryLabels = ["Actions", "Conditions", "Summary Panel Actions"];
+
+		const renderedObject = propertyUtils.flyoutEditorForm(actionParamDef, { showAlertsTab: false });
+		const wrapper = renderedObject.wrapper;
+
+		const allCategories = wrapper.find("div.properties-category-container");
+		expect(allCategories).to.have.length(3);
+
+		allCategories.forEach((category, idx) => {
+			const categoryTitle = category.find("button.properties-category-title").text();
+			expect(categoryTitle).to.equal(categoryLabels[idx]);
+		});
+	});
+
+	it("Show Alerts tab when showAlertsTab=true in propertiesConfig", () => {
+		// Shows "Alerts" tab and messageCount next to Summary Panel Actions.
+		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)"];
+
+		const renderedObject = propertyUtils.flyoutEditorForm(actionParamDef, { showAlertsTab: true });
+		const wrapper = renderedObject.wrapper;
+
+		const allCategories = wrapper.find("div.properties-category-container");
+		expect(allCategories).to.have.length(4);
+
+		allCategories.forEach((category, idx) => {
+			const categoryTitle = category.find("button.properties-category-title").text();
+			expect(categoryTitle).to.equal(categoryLabels[idx]);
+		});
+	});
+
+	it("Show Alerts tab when showAlertsTab is not set in propertiesConfig", () => {
+		// Shows "Alerts" tab and messageCount next to Summary Panel Actions.
+		const categoryLabels = ["Alerts (1)", "Actions", "Conditions", "Summary Panel Actions (1)"];
+
+		const renderedObject = propertyUtils.flyoutEditorForm(actionParamDef);
+		const wrapper = renderedObject.wrapper;
+
+		const allCategories = wrapper.find("div.properties-category-container");
+		expect(allCategories).to.have.length(4);
+
+		allCategories.forEach((category, idx) => {
+			const categoryTitle = category.find("button.properties-category-title").text();
+			expect(categoryTitle).to.equal(categoryLabels[idx]);
+		});
 	});
 
 });
