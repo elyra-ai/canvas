@@ -30,8 +30,8 @@ import { LINK_SELECTION_DETACHABLE, PORT_OBJECT_IMAGE }
 const INPUT_TYPE = "input_type";
 const OUTPUT_TYPE = "output_type";
 
-// This utility files provides a drag handler which manages drag operations to
-// create new links either between nodes or from a comment to a node.
+// This utility files provides a drag handler which manages drag operations on
+// the start and end points of detached links.
 
 export default class SVGCanvasUtilsDragDetLink {
 	constructor(renderer) {

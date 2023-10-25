@@ -829,5 +829,4 @@ export default class SVGCanvasUtilsDragObjects {
 		resizeObj.height = CanvasUtils.snapToGrid(resizeObj.height, this.ren.canvasLayout.snapToGridYPx);
 		return resizeObj;
 	}
-
 }
