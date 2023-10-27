@@ -16,10 +16,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-export const addNodeExternalObject = (node, i, foreignObjects) => {
+export const addNodeExternalObject = (canvasController, nodes, setPortPositions, setNodesProperties, raiseNodeToTopById, node, i, foreignObjects) => {
 	ReactDOM.render(
 		<node.layout.nodeExternalObject
 			nodeData={node}
+			nodes={nodes}
+			canvasController={canvasController}
+			setPortPositions={setPortPositions}
+			setNodesProperties={setNodesProperties}
+			raiseNodeToTopById={raiseNodeToTopById}
 		/>,
 		foreignObjects[i]
 	);

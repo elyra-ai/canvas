@@ -2304,7 +2304,6 @@ export default class SVGCanvasRenderer {
 			this.removeContextToolbar();
 		}
 
-
 		// Note: Comment and Node resizing is started by the comment/node highlight rectangle.
 		if (this.commentSizing) {
 			this.initializeResizeVariables(d);
@@ -2819,7 +2818,14 @@ export default class SVGCanvasRenderer {
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.each(addNodeExternalObject.bind(this));
+			.each(addNodeExternalObject.bind(
+				this,
+				this.canvasController,
+				this.activePipeline.nodes,
+				this.setPortPositions.bind(this),
+				this.setNodesProperties.bind(this),
+				this.raiseNodeToTopById.bind(this)
+			));
 
 		// Node Image
 		nonBindingNodeGrps
@@ -2916,6 +2922,54 @@ export default class SVGCanvasRenderer {
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
+	}
+
+	setPortPositions(info) {
+		const node = this.activePipeline.getNode(info.nodeId);
+
+		if (info.inputPositions) {
+			info.inputPositions.forEach((inputPos) => {
+				const inp = node.inputs.find((input) => input.id === inputPos.id);
+
+				// TODO - Decide if zoomTransform should be passed to react object or not.
+				inp.cx = inputPos.cx / this.zoomTransform.k;
+				inp.cy = inputPos.cy / this.zoomTransform.k;
+			});
+		}
+		if (info.outputPositions) {
+			info.outputPositions.forEach((outputPos) => {
+				const out = node.outputs.find((output) => output.id === outputPos.id);
+				out.cx = outputPos.cx / this.zoomTransform.k;
+				out.cy = outputPos.cy / this.zoomTransform.k;
+			});
+		}
+		this.displayLinks();
+	}
+
+	setNodesProperties(newProps) {
+		if (newProps) {
+			newProps.forEach((np) => {
+				const node = this.activePipeline.getNode(np.id);
+				if (np.height) {
+					node.height = np.height;
+				}
+				if (np.width) {
+					node.width = np.width;
+				}
+				if (np.x_pos) {
+					node.x_pos = np.x_pos;
+				}
+				if (np.y_pos) {
+					node.y_pos = np.y_pos;
+				}
+			});
+
+			this.displayNodes();
+		}
+	}
+
+	raiseNodeToTopById(nodeId) {
+		this.getNodeGroupSelectionById(nodeId).raise();
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -6238,6 +6292,7 @@ export default class SVGCanvasRenderer {
 
 	// Creates all newly created links specified in the enter selection.
 	createLinks(enter) {
+		this.logger.logStartTimer("createLinks");
 		// Add groups for links
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
@@ -6281,6 +6336,8 @@ export default class SVGCanvasRenderer {
 				});
 		}
 
+		this.logger.logEndTimer("createLinks");
+
 		return newLinkGrps;
 	}
 
@@ -6288,6 +6345,7 @@ export default class SVGCanvasRenderer {
 	// selection object. The selection object will contain newly created links
 	// as well as existing links.
 	updateLinks(joinedLinkGrps, lineArray) {
+		this.logger.logStartTimer("updateLinks");
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
@@ -6336,6 +6394,8 @@ export default class SVGCanvasRenderer {
 		if (!this.dragging) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
+
+		this.logger.logEndTimer("updateLinks");
 	}
 
 	attachLinkGroupListeners(linkGrps) {
@@ -6672,6 +6732,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	buildLinksArray() {
+		this.logger.logStartTimer("buildLinksArray");
+
 		let linksArray = [];
 
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
@@ -6702,6 +6764,8 @@ export default class SVGCanvasRenderer {
 
 		// Add connection path info to the links.
 		linksArray = this.linkUtils.addConnectionPaths(linksArray);
+
+		this.logger.logEndTimer("buildLinksArray");
 
 		return linksArray;
 	}
