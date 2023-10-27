@@ -3686,11 +3686,11 @@ export default class SVGCanvasRenderer {
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
-				.each((d, idx, exts) =>
-					this.externalUtils.addDecExternalObject(d, idx, exts));
+				.each((decData, idx, exts) =>
+					this.externalUtils.addDecExternalObject(decData, idx, exts));
 		} else {
-			extSel.each((d, idx, exts) =>
-				this.externalUtils.removeExternalObject(d, idx, exts));
+			extSel.each((decData, idx, exts) =>
+				this.externalUtils.removeExternalObject(decData, idx, exts));
 			extSel.remove();
 		}
 	}
