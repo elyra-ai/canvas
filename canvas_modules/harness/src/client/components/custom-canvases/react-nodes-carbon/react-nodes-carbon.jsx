@@ -19,14 +19,14 @@ import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
-import CardNodeWrapper from "./CardNodeWrapper.jsx";
-import ShapeNodeWrapper from "./ShapeNodeWrapper.jsx";
+import CardNodeWrapper from "./wrapper-card-node.jsx";
+import ShapeNodeWrapper from "./wrapper-shape-node.jsx";
 
-import ReactNodesFlow from "./react-nodes-flow.json";
-import ReactNodesPalette from "./react-nodes-palette.json";
+import ReactNodesFlow from "./react-nodes-carbon-flow.json";
+import ReactNodesPalette from "./react-nodes-carbon-palette.json";
 
 
-export default class ReactNodesCanvas extends React.Component {
+export default class ReactNodesCarbonCanvas extends React.Component {
 	constructor(props) {
 		super(props);
 		this.canvasController = new CanvasController();
@@ -39,7 +39,7 @@ export default class ReactNodesCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "react-nodes",
+			enableParentClass: "react-nodes-carbon",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Curve",
 			enableLinkDirection: "LeftRight",
@@ -128,6 +128,6 @@ export default class ReactNodesCanvas extends React.Component {
 	}
 }
 
-ReactNodesCanvas.propTypes = {
+ReactNodesCarbonCanvas.propTypes = {
 	config: PropTypes.object
 };
