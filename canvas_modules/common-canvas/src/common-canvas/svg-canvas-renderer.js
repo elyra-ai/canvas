@@ -33,7 +33,6 @@ const markdownIt = require("markdown-it")({
 });
 
 import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
-import { addNodeExternalObject, addDecExternalObject, removeExternalObject } from "./svg-canvas-utils-external.js";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -56,6 +55,7 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
+import SvgCanvasExternal from "./svg-canvas-utils-external.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SVGCanvasPipeline from "./svg-canvas-pipeline";
 
@@ -92,6 +92,7 @@ export default class SVGCanvasRenderer {
 		this.commentUtils = new SvgCanvasComments();
 		this.linkUtils = new SvgCanvasLinks(this.config, this.canvasLayout, this.nodeUtils, this.commentUtils);
 		this.decUtils = new SvgCanvasDecs(this.canvasLayout);
+		this.externalUtils = new SvgCanvasExternal(this);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
@@ -2809,7 +2810,8 @@ export default class SVGCanvasRenderer {
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
-					exit.each(removeExternalObject.bind(this));
+					exit.each((d, idx, exts) =>
+						this.externalUtils.removeExternalObject(d, idx, exts));
 					exit.remove();
 				}
 			)
@@ -2818,14 +2820,8 @@ export default class SVGCanvasRenderer {
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.each(addNodeExternalObject.bind(
-				this,
-				this.canvasController,
-				this.activePipeline.nodes,
-				this.setPortPositions.bind(this),
-				this.setNodesProperties.bind(this),
-				this.raiseNodeToTopById.bind(this)
-			));
+			.each((d, idx, exts) =>
+				this.externalUtils.addNodeExternalObject(d, idx, exts));
 
 		// Node Image
 		nonBindingNodeGrps
@@ -2918,58 +2914,11 @@ export default class SVGCanvasRenderer {
 		// Remove any foreign objects for react nodes, if necessary.
 		removeSel
 			.selectChildren(".d3-foreign-object-external-node")
-			.each(removeExternalObject.bind(this));
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
-	}
-
-	setPortPositions(info) {
-		const node = this.activePipeline.getNode(info.nodeId);
-
-		if (info.inputPositions) {
-			info.inputPositions.forEach((inputPos) => {
-				const inp = node.inputs.find((input) => input.id === inputPos.id);
-
-				// TODO - Decide if zoomTransform should be passed to react object or not.
-				inp.cx = inputPos.cx / this.zoomTransform.k;
-				inp.cy = inputPos.cy / this.zoomTransform.k;
-			});
-		}
-		if (info.outputPositions) {
-			info.outputPositions.forEach((outputPos) => {
-				const out = node.outputs.find((output) => output.id === outputPos.id);
-				out.cx = outputPos.cx / this.zoomTransform.k;
-				out.cy = outputPos.cy / this.zoomTransform.k;
-			});
-		}
-		this.displayLinks();
-	}
-
-	setNodesProperties(newProps) {
-		if (newProps) {
-			newProps.forEach((np) => {
-				const node = this.activePipeline.getNode(np.id);
-				if (np.height) {
-					node.height = np.height;
-				}
-				if (np.width) {
-					node.width = np.width;
-				}
-				if (np.x_pos) {
-					node.x_pos = np.x_pos;
-				}
-				if (np.y_pos) {
-					node.y_pos = np.y_pos;
-				}
-			});
-
-			this.displayNodes();
-		}
-	}
-
-	raiseNodeToTopById(nodeId) {
-		this.getNodeGroupSelectionById(nodeId).raise();
 	}
 
 	// Handles the display of a supernode sub-flow contents or hides the contents
@@ -3737,9 +3686,11 @@ export default class SVGCanvasRenderer {
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
-				.each(addDecExternalObject.bind(this));
+				.each((d, idx, exts) =>
+					this.externalUtils.addDecExternalObject(d, idx, exts));
 		} else {
-			extSel.each(removeExternalObject.bind(this));
+			extSel.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
 			extSel.remove();
 		}
 	}
@@ -6681,6 +6632,12 @@ export default class SVGCanvasRenderer {
 				this.config.enableLinkSelection === LINK_SELECTION_DETACHABLE) {
 			this.raiseSelectedLinksToTop();
 		}
+	}
+
+	// Raises the node, specified by the node ID, above other nodes and objects.
+	// Called by external utils.
+	raiseNodeToTopById(nodeId) {
+		this.getNodeGroupSelectionById(nodeId).raise();
 	}
 
 	// Raises the node above other nodes and objects (on the mouse entering

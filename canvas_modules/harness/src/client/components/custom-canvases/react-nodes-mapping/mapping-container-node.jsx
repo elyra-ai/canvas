@@ -50,7 +50,7 @@ class MappingContainerNode extends React.Component {
 		this.onFieldMoveDragStart = this.onFieldMoveDragStart.bind(this);
 		this.onFieldDrop = this.onFieldDrop.bind(this);
 		this.onDragStartOnContainerDataIcon = this.onDragStartOnContainerDataIcon.bind(this);
-		this.setPortPositions = this.setPortPositions.bind(this);
+		this.setContainerPortPositions = this.setContainerPortPositions.bind(this);
 		this.getFieldElementId = this.getFieldElementId.bind(this);
 		this.resizeNode = this.resizeNode.bind(this);
 		this.resizeNodeEnd = this.resizeNodeEnd.bind(this);
@@ -58,12 +58,12 @@ class MappingContainerNode extends React.Component {
 
 	componentDidMount() {
 		window.console.log("TableNode - componentDidMount");
-		setTimeout(this.setPortPositions, 500);
+		setTimeout(this.setContainerPortPositions, 500);
 	}
 
 	componentDidUpdate() {
 		window.console.log("TableNode - componentDidUpdate");
-		this.setPortPositions();
+		this.setContainerPortPositions();
 	}
 
 	onMouseDownOnHeaderChevron(evt) {
@@ -84,7 +84,7 @@ class MappingContainerNode extends React.Component {
 
 		const nodeSizingObjectsInfo = {};
 
-		this.props.nodes.forEach((n) => {
+		this.props.externalUtils.getActiveNodes().forEach((n) => {
 			const newNodeProp = newNodesProps.find((np) => np.id === n.id);
 			if (newNodeProp) {
 				const nodeSizingObj = {
@@ -125,7 +125,7 @@ class MappingContainerNode extends React.Component {
 		// common-canvas otherwise scroll doesn't work.
 		evt.stopPropagation();
 
-		this.setPortPositions();
+		this.setContainerPortPositions();
 	}
 
 	onDragStartOnContainerDataIcon(evt) {
@@ -241,8 +241,8 @@ class MappingContainerNode extends React.Component {
 			}
 		}
 
-		this.props.setNodesProperties(newNodesProps);
-		this.props.raiseNodeToTopById(this.props.nodeData.id);
+		this.props.externalUtils.setNodesProperties(newNodesProps);
+		this.props.externalUtils.raiseNodeToTopById(this.props.nodeData.id);
 	}
 
 	onSortRightNodes() {
@@ -315,7 +315,7 @@ class MappingContainerNode extends React.Component {
 		document.addEventListener("mouseup", this.resizeNodeEnd, true);
 	}
 
-	setPortPositions() {
+	setContainerPortPositions() {
 		const nodeDivRect = this.getNodeDivRect();
 		const headerDivRect = this.getHeaderDivRect();
 		const scrollDivRect = this.isContainerResized() ? this.getScrollDivRect() : {};
@@ -338,7 +338,7 @@ class MappingContainerNode extends React.Component {
 					cy: this.isContainerResized() ? this.getFieldElementPortPosY(port.id, nodeDivRect, scrollDivRect) : (headerDivRect.height / 2)
 				}));
 
-		this.props.setPortPositions({
+		this.props.externalUtils.setPortPositions({
 			nodeId: this.props.nodeData.id,
 			inputPositions,
 			outputPositions
@@ -401,11 +401,11 @@ class MappingContainerNode extends React.Component {
 	}
 
 	getLeftNodes() {
-		return this.props.nodes.filter((n) => n.op !== "output_link");
+		return this.props.externalUtils.getActiveNodes().filter((n) => n.op !== "output_link");
 	}
 
 	getRightNodes() {
-		return this.props.nodes.filter((n) => n.op === "output_link");
+		return this.props.externalUtils.getActiveNodes().filter((n) => n.op === "output_link");
 	}
 
 	getContainerLabel() {
@@ -435,8 +435,7 @@ class MappingContainerNode extends React.Component {
 		const mappingLink = this.props.canvasController.getLinks()
 			.find((l) => l.trgNodeId === this.props.nodeData.id && l.trgNodePortId === field.id);
 		if (mappingLink) {
-			const sourceNode = this.props.nodes
-				.find((n) => n.id === mappingLink.srcNodeId);
+			const sourceNode = this.props.externalUtils.getActiveNode(mappingLink.srcNodeId);
 			const sourceField = sourceNode.app_data.table_data.fields
 				.find((f) => f.id === mappingLink.srcNodePortId);
 			return sourceNode.label + "." + sourceField.label;
@@ -454,8 +453,8 @@ class MappingContainerNode extends React.Component {
 		evt.preventDefault();
 
 		const newNodesProps = this.adjustContainerPositions(evt.movementX, evt.movementY);
-		this.props.setNodesProperties(newNodesProps);
-		this.setPortPositions();
+		this.props.externalUtils.setNodesProperties(newNodesProps);
+		this.setContainerPortPositions();
 	}
 
 	resizeNodeEnd() {
@@ -466,7 +465,7 @@ class MappingContainerNode extends React.Component {
 
 		const nodeSizingObjectsInfo = {};
 
-		this.props.nodes.forEach((n) => {
+		this.props.externalUtils.getActiveNodes().forEach((n) => {
 			const nodeSizingObj = {
 				id: n.id,
 				height: n.height,
@@ -678,11 +677,8 @@ class MappingContainerNode extends React.Component {
 
 MappingContainerNode.propTypes = {
 	nodeData: PropTypes.object,
-	nodes: PropTypes.array,
-	setPortPositions: PropTypes.func,
-	setNodesProperties: PropTypes.func,
-	raiseNodeToTopById: PropTypes.func,
-	canvasController: PropTypes.object
+	canvasController: PropTypes.object,
+	externalUtils: PropTypes.object
 };
 
 export default MappingContainerNode;

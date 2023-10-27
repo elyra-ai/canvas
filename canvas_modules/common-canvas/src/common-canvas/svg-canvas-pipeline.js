@@ -76,7 +76,13 @@ export default class SVGCanvasPipeline {
 		return (typeof node === "undefined") ? null : node;
 	}
 
+	// Returns nodes from the active pipeline. If nodeIds is
+	// provided as an array the nodes correspondong to those IDs
+	// are returned otherwise all nodes are retunred.
 	getNodes(nodeIds) {
+		if (!nodeIds) {
+			return this.pipeline.nodes;
+		}
 		const nodes = [];
 		nodeIds.forEach((nId) => {
 			const n = this.getNode(nId);
