@@ -1,0 +1,97 @@
+{
+	"input_link": {
+		"id": "11111",
+		"label": "Link_1",
+		"x_pos": 110,
+		"y_pos": 180,
+		"width": 320,
+		"height": 200,
+		"minimized": false,
+		"fields": [
+			{ "id": "111", "name": "Transaction Status" },
+			{ "id": "222", "name": "Quantity" },
+			{ "id": "333", "name": "other_OrderEvent" },
+			{ "id": "444", "name": "ActualDateTime" },
+			{ "id": "555", "name": "BusinessDayDate" },
+			{ "id": "666", "name": "SpecialOrderNum" },
+			{ "id": "777", "name": "other" },
+			{ "id": "888", "name": "TransactionId" },
+			{ "id": "999", "name": "TransactionDate" },
+			{ "id": "000", "name": "Status" }
+		]
+	},
+	"stage_variables": {
+		"id": "22222",
+		"label": "Stage Variables",
+		"x_pos": 110,
+		"y_pos": 400,
+		"width": 320,
+		"height": 200,
+		"minimized": false,
+		"fields": [
+			{ "id": "111", "name": "svOrderStatus" },
+			{ "id": "222", "name": "svOrderEvent" },
+			{ "id": "333", "name": "svItemType" },
+			{ "id": "444", "name": "svMandateConfederation" },
+			{ "id": "555", "name": "svUpc" },
+			{ "id": "666", "name": "svOrderNull" },
+			{ "id": "777", "name": "NEWSTAGEVAR" },
+			{ "id": "888", "name": "NEWSTAGETOP" },
+			{ "id": "999", "name": "NEWSTAGECONST" },
+			{ "id": "000", "name": "pmAssociate" },
+			{ "id": "123", "name": "pmAgreed" },
+			{ "id": "456", "name": "fnOut" },
+			{ "id": "789", "name": "fnIngress" },
+			{ "id": "012", "name": "pxTopical" },
+			{ "id": "345", "name": "pxReduction" }
+		]
+	},
+	"loop_condition": {
+		"id": "33333",
+		"label": "Loop condition",
+		"x_pos": 110,
+		"y_pos": 640,
+		"width": 320,
+		"height": 200,
+		"minimized": false,
+		"fields": [
+		]
+	},
+	"output_links": [
+		{
+			"id": "44444",
+			"label": "Link_2",
+			"x_pos": 540,
+			"y_pos": 180,
+			"width": 320,
+			"height": 200,
+			"minimized": false,
+			"fields": [
+				{ "id": "111", "name": "Transaction Status" },
+				{ "id": "222", "name": "Quantity" },
+				{ "id": "333", "name": "other_OrderEvent" },
+				{ "id": "444", "name": "ActualDateTime" },
+				{ "id": "555", "name": "BusinessDayDate" },
+				{ "id": "666", "name": "SpecialOrderNum" },
+				{ "id": "777", "name": "other" },
+				{ "id": "888", "name": "TransactionId" },
+				{ "id": "999", "name": "TransactionDate" },
+				{ "id": "000", "name": "Status" }
+			]
+		},
+		{
+			"id": "55555",
+			"label": "Link_3",
+			"x_pos": 540,
+			"y_pos": 400,
+			"width": 320,
+			"height": 200,
+			"minimized": false,
+			"fields": [
+			]
+		}
+	],
+	"mappings": [
+		{ "srcContainerId": "11111", "srcFieldId": "777", "trgContainerId": "44444", "trgFieldId": "888"  }
+	]
+}
