@@ -17,21 +17,22 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { MenuItem, SubMenu } from "react-contextmenu";
 import { ChevronRight16 } from "@carbon/icons-react";
 import ColorPicker from "../color-picker";
 
 // context-menu sizing
-const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
-const CONTEXT_MENU_LINK_HEIGHT = 30; // see context-menu.css .react-context-menu-item height
-const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // see context-menu.css .react-context-menu-item height
+const CONTEXT_MENU_WIDTH = 160; // See context-menu.scss
+const CONTEXT_MENU_LINK_HEIGHT = 30; // See context-menu.scss
+const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // See context-menu.scss
 const EXTRA_OFFSET = 5; // Extra offset for vertical menu positioning
 
 
 class CommonContextMenu extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			displaySubMenuAction: ""
+		};
 		this.itemSelected = this.itemSelected.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
 	}
@@ -116,10 +117,6 @@ class CommonContextMenu extends React.Component {
 	}
 
 	buildMenu(menuDefinition, menuSize, menuPos, canvasRect) {
-		const customDivider = {
-			className: "contextmenu-divider"
-		};
-
 		const menuItems = [];
 
 		let runningYPos = 0;
@@ -134,7 +131,8 @@ class CommonContextMenu extends React.Component {
 
 			if (divider) {
 				if (!previousDivider) {
-					menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
+					// menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
+					menuItems.push(<div key={i + 1} className={"context-menu-divider"} />);
 					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 					previousDivider = true;
 				}
@@ -152,7 +150,7 @@ class CommonContextMenu extends React.Component {
 
 			} else if (submenu) {
 				previousDivider = false;
-				const disabled = { disabled: this.areAllSubmenuItemsDisabled(menuDefinition[i].menu) };
+				const disabled = this.areAllSubmenuItemsDisabled(menuDefinition[i].menu);
 				const subMenuSize = this.calculateMenuSize(menuDefinition[i].menu);
 				const subMenuContent = this.buildMenu(menuDefinition[i].menu, menuSize, menuPos, canvasRect);
 
@@ -164,12 +162,18 @@ class CommonContextMenu extends React.Component {
 
 			} else {
 				previousDivider = false;
-				const disabled = { disabled: menuDefinition[i].enable === false };
-				menuItems.push(
-					<MenuItem onClick={this.itemSelected.bind(null, menuDefinition[i].action)} key={i + 1} {...disabled}>
+				const className = "context-menu-item" +
+					(menuDefinition[i].enable === false ? " disabled" : "");
+
+				const onClickFunction = menuDefinition[i].enable === false
+					? null
+					: this.itemSelected.bind(null, menuDefinition[i].action)
+
+				menuItems.push((
+					<div key={i + 1} className={className} onClick={onClickFunction} role="menuitem">
 						{menuDefinition[i].label}
-					</MenuItem>
-				);
+					</div>
+				));
 				runningYPos += CONTEXT_MENU_LINK_HEIGHT;
 			}
 		}
@@ -182,20 +186,39 @@ class CommonContextMenu extends React.Component {
 		);
 	}
 
+	subMenuMouseEnter(action) {
+		this.setState({ displaySubMenuAction: action });
+	}
+
+	subMenuMouseLeave(action) {
+		this.setState({ displaySubMenuAction: "" });
+	}
+
+	// Builds a sub-menu for the menuitem identified by the index into the menudefintion.
 	buildSubMenu(menuDefinition, index, subMenuContent, runningYPos, menuPos,
 		menuSize, subMenuSize, canvasRect, disabled) {
 		const rtl = this.buildRtlState(menuPos, menuSize, subMenuSize, canvasRect);
-		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect);
+		const subMenuPosStyle = this.buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl);
+		const menuItem = menuDefinition[index];
 
 		const icon = (<ChevronRight16 />);
-		const menuItem = <div>{menuDefinition[index].label}{icon} </div>;
+		const menuItemContent = <div>{menuItem.label}{icon} </div>;
+		const menuItemClass = "context-menu-item " + (disabled ? " disabled" : "");
+		const subMenuClass = "context-menu-popover context-menu-submenu" +
+			(this.state.displaySubMenuAction === menuItem.action ? " context-menu--visible" : "");
+		const onMouseEnter = (disabled ? null : this.subMenuMouseEnter.bind(this, menuItem.action));
+		const onMouseLeave = (disabled ? null : this.subMenuMouseLeave.bind(this));
 
 		return (
-			<SubMenu title={menuItem} key={index + 1} className="contextmenu-submenu" rtl={rtl} {...disabled}>
-				<div key={index + 1} style={subMenuPosStyle} className="context-menu-popover">
+			<div key={index + 1} className={menuItemClass} aria-haspopup role="menuitem"
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+			>
+				{menuItemContent}
+				<div style={subMenuPosStyle} className={subMenuClass}>
 					{subMenuContent}
 				</div>
-			</SubMenu>
+			</div>
 		);
 	}
 
@@ -206,13 +229,12 @@ class CommonContextMenu extends React.Component {
 		// Ensure that the combined menu position, plus the menu width,
 		//  plus the submenu width, does not exceed the viewport bounds.
 		return (menuPos.x + menuSize.width + subMenuSize.width > canvasRect.right);
-
 	}
 
 	// Returns a style object that can be applied to the sub-menu to adjust
 	// its vertical (y) position. This may be necessary if the submenu is tall
 	// enough that it would be displayed off the bottom of the canvas area.
-	buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect) {
+	buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl) {
 		// Does the submenu go below the bottom of the viewport?
 		const y = canvasRect.bottom - (menuPos.y + runningYPos + subMenuSize.height);
 
@@ -224,6 +246,11 @@ class CommonContextMenu extends React.Component {
 		const subMenuPosStyle = {
 			top: offset + "px" // Use negative to push the menu up
 		};
+
+		if (rtl) {
+			subMenuPosStyle.left = -CONTEXT_MENU_WIDTH + "px";
+		}
+
 		return subMenuPosStyle;
 	}
 
