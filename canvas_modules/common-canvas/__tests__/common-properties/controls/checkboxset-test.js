@@ -19,7 +19,7 @@ import { Provider } from "react-redux";
 import { expect } from "chai";
 import Controller from "./../../../src/common-properties/properties-controller";
 import Checkboxset from "./../../../src/common-properties/controls/checkboxset";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
 

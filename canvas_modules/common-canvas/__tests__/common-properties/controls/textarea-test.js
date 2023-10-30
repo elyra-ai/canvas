@@ -17,7 +17,7 @@
 import React from "react";
 import TextArea from "../../../src/common-properties/controls/textarea";
 import { TRUNCATE_LIMIT } from "../../../src/common-properties/constants/constants.js";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";

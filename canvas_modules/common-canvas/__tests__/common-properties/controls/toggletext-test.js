@@ -16,7 +16,7 @@
 
 import React from "react";
 import Toggletext from "../../../src/common-properties/controls/toggletext";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";

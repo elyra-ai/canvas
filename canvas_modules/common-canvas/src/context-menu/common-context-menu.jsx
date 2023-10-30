@@ -169,7 +169,7 @@ class CommonContextMenu extends React.Component {
 
 				const onClickFunction = menuDefinition[i].enable === false
 					? null
-					: this.itemSelected.bind(null, menuDefinition[i].action)
+					: this.itemSelected.bind(null, menuDefinition[i].action);
 
 				menuItems.push((
 					<div key={i + 1} className={className} onClick={onClickFunction} role="menuitem">

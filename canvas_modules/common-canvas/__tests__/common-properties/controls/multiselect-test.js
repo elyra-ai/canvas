@@ -18,7 +18,7 @@ import React from "react";
 import MultiSelectControl from "../../../src/common-properties/controls/multiselect";
 import propertyUtils from "../../_utils_/property-utils";
 import tableUtils from "./../../_utils_/table-utils";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 

@@ -16,7 +16,7 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { mount } from "enzyme";
+import { mount } from "../_utils_/mount-utils.js";
 import { IntlProvider } from "react-intl";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 

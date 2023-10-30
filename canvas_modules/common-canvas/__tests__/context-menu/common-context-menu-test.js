@@ -16,11 +16,10 @@
 
 import React from "react";
 import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "../_utils_/mount-utils.js";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
-import { MenuItem, SubMenu } from "react-contextmenu";
 import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import getContextMenuDefiniton from "../../src/common-canvas/canvas-controller-menu-utils";
@@ -53,22 +52,14 @@ describe("CommonContextMenu renders correctly", () => {
 		expect(wrapper.prop("mousePos")).to.equal(_mousePos);
 	});
 
-	it("should render three <MenuItem/> components", () => {
+	it("should render two context menu items and one divider components", () => {
 		const _contextHandler = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		expect(wrapper.find(MenuItem)).to.have.length(3);
-	});
-
-	it("should render a <div>", () => {
-		const _contextHandler = sinon.spy();
-		const _menuDefinition = getMenuDefinition();
-		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
-		const _mousePos = { x: 20, y: 20 };
-		const wrapper = shallow(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		expect(wrapper.find("div")).to.have.length(1);
+		expect(wrapper.find(".context-menu-item")).to.have.length(2);
+		expect(wrapper.find(".context-menu-divider")).to.have.length(1);
 	});
 
 	it("simulates click events", () => {
@@ -77,7 +68,7 @@ describe("CommonContextMenu renders correctly", () => {
 		const _canvasRect = { width: 1000, height: 800, top: 0, bottom: 800, left: 0, right: 1000 };
 		const _mousePos = { x: 20, y: 20 };
 		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
-		wrapper.find(MenuItem).at(0)
+		wrapper.find(".context-menu-item").at(0)
 			.simulate("click");
 		expect(_contextHandler.calledOnce).to.equal(true);
 	});
@@ -90,8 +81,12 @@ describe("CommonContextMenu renders correctly", () => {
 		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} canvasRect={_canvasRect} mousePos={_mousePos} />);
 		expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
 		expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
-		const subMenuItem = wrapper.find(SubMenu);
-		expect(isEqual(subMenuItem.props().rtl, true)).to.be.true;
+
+		const subMenuItems = wrapper.find(".context-menu-submenu");
+		const subMenuItem = subMenuItems.at(0);
+		const style = subMenuItem.prop("style");
+		// If left property is negative, the submenu is on the left of the main menu.
+		expect(style.left).to.equal("-160px");
 	});
 });
 
