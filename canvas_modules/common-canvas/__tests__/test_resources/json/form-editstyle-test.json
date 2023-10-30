@@ -476,6 +476,25 @@
         }
       }
     ],
+    "groupMetadata": {
+      "groups": [
+				{
+          "name": "basic-settings",
+          "type": "panels",
+          "label": {
+            "default": "Settings"
+          },
+          "subGroups": [
+            {
+              "parameters": [
+                "renamed_fields"
+              ],
+              "type": "columnSelection"
+            }
+          ]
+        }
+			]
+    },
     "resources": {
       "rename.label": "Rename Columns",
       "RenameFieldEntry.field": "Input name",

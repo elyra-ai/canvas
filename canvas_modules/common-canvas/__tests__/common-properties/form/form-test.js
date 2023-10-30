@@ -93,11 +93,21 @@ describe("Correct form should be created", () => {
 				"boolean_param": true
 			}
 		};
+		const groupMetadata = {
+			"groups": [
+				{
+					"name": "settings",
+					"parameters": [
+						"boolean_param"
+					]
+				}
+			]
+		};
 		let help;
 		let pixelWidth; // Pass in an undefined pixelWidth to simulate it missing from ParamDefs.
 		let conditions;
 		let resources;
-		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data, conditions, resources, "./test.svg");
+		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", pixelWidth, [primaryTabs], buttons, data, conditions, groupMetadata, resources, "./test.svg");
 
 		const paramSpec = {
 			"current_parameters": {

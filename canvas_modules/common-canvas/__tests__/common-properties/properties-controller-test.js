@@ -27,6 +27,8 @@ import structureTableParamDef from "../test_resources/paramDefs/structuretable_p
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
+import textfieldParamDef from "../test_resources/paramDefs/textfield_paramDef.json";
+import tabParamDef from "../test_resources/paramDefs/tab_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 import readonlyTableParamDef from "../test_resources/paramDefs/readonlyTable_paramDef.json";
@@ -589,6 +591,102 @@ describe("Properties Controller property values", () => {
 		};
 		const actualFilteredValues = controller.getPropertyValues({ filterHiddenControls: true, filterHiddenDisabled: true });
 		expect(expectedFilteredValues).to.eql(actualFilteredValues);
+	});
+
+	it("should get properties in active tab correctly", () => {
+		let renderedObject = testUtils.flyoutEditorForm(textfieldParamDef);
+		controller = renderedObject.controller;
+		let wrapper = renderedObject.wrapper;
+
+		// Open "Conditions" category
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
+		const conditionsButton = conditionsCategory.find("button.properties-category-title");
+		expect(conditionsButton.text()).to.equal("Conditions");
+		conditionsButton.simulate("click");
+
+		// Get all properties in active tab ("Conditions" tab)
+		let expectedAllPropertiesInActiveTab = {
+			string_error: "testing",
+			string_warning: "testing",
+			hide: true,
+			string_hidden: "testing",
+			disable: true,
+			string_disabled: "testing",
+			string_condition_handling: "testing"
+		};
+		let actualAllPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true });
+		expect(expectedAllPropertiesInActiveTab).to.eql(actualAllPropertiesInActiveTab);
+
+		// getActiveTabControls: return all properties under selected tab/category
+		// filterHiddenDisabled: filter controls having state "hidden" or "disabled"
+		const expectedFilteredHiddenDisabledPropertiesInActiveTab = {
+			string_error: "testing",
+			string_warning: "testing",
+			hide: true,
+			disable: true,
+			string_condition_handling: "testing"
+		};
+		const actualFilteredHiddenDisabledPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterHiddenDisabled: true });
+		expect(expectedFilteredHiddenDisabledPropertiesInActiveTab).to.eql(actualFilteredHiddenDisabledPropertiesInActiveTab);
+
+		// getActiveTabControls: return all properties under selected tab/category
+		// filterHidden: filter controls having state "hidden"
+		const expectedFilteredHiddenPropertiesInActiveTab = {
+			string_error: "testing",
+			string_warning: "testing",
+			hide: true,
+			disable: true,
+			string_disabled: "testing",
+			string_condition_handling: "testing"
+		};
+		const actualFilteredHiddenPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterHidden: true });
+		expect(expectedFilteredHiddenPropertiesInActiveTab).to.eql(actualFilteredHiddenPropertiesInActiveTab);
+
+		// getActiveTabControls: return all properties under selected tab/category
+		// filterDisabled: filter controls having state "disabled"
+		const expectedFilteredDisabledPropertiesInActiveTab = {
+			string_error: "testing",
+			string_warning: "testing",
+			hide: true,
+			string_hidden: "testing",
+			disable: true,
+			string_condition_handling: "testing"
+		};
+		const actualFilteredDisabledPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterDisabled: true });
+		expect(expectedFilteredDisabledPropertiesInActiveTab).to.eql(actualFilteredDisabledPropertiesInActiveTab);
+
+
+		// Verify getActiveTabControls: true returns all properties in nested subtabs as well
+		renderedObject = testUtils.flyoutEditorForm(tabParamDef);
+		controller = renderedObject.controller;
+		wrapper = renderedObject.wrapper;
+
+		// Get all properties in active tab ("Tab Test" tab)
+		expectedAllPropertiesInActiveTab = {
+			hide: false,
+			disable: false,
+			fromValue: 2,
+			toValue: 1,
+			fields: [
+				"Age",
+				"Drug"
+			],
+			fruit: "apple",
+			other: "lemon",
+			readonly_double_subtabs: "If multiple subtabs are defined in a tearsheet, additional padding is required to avoid overlay.",
+			fromValue_summary: 2,
+			toValue_summary: 1,
+			fields_summary: [
+				"Age",
+				"Drug"
+			],
+			fruit_summary: "apple",
+			other_summary: "lemon",
+			openTearsheet: undefined
+		};
+		actualAllPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true });
+		expect(expectedAllPropertiesInActiveTab).to.eql(actualAllPropertiesInActiveTab);
+
 	});
 });
 

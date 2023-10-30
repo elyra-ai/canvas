@@ -188,6 +188,20 @@
         }
       }
     ],
+    "groupMetadata": {
+      "groups": [
+				{
+          "name": "basic-settings",
+          "parameters": [
+            "int_param",
+            "exp_param"
+          ],
+          "label": {
+            "default": "Settings"
+          }
+				}
+			]
+    },
     "resources": {
       "exp_param_not_empty": "Expression cannot be empty: Resource"
     }

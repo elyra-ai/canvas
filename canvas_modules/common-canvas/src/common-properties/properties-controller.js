@@ -227,6 +227,42 @@ export default class PropertiesController {
 		return this.appData;
 	}
 
+	getActiveTabPropertyValues() {
+		const activeTab = this.propertiesStore.getActiveTab();
+		const allPropertyValues = this.propertiesStore.getPropertyValues();
+		const activeTabPropertyValues = {};
+		let activeTabPropertyIds = [];
+
+		for (const group of this.form.groupMetadata.groups) {
+			if (group.name === activeTab) {
+				activeTabPropertyIds = this.getGroupProperties(group);
+				break;
+			}
+		}
+
+		activeTabPropertyIds.forEach((propertyId) => {
+			activeTabPropertyValues[propertyId] = allPropertyValues[propertyId];
+		});
+
+		return activeTabPropertyValues;
+	}
+
+	// Recursively get all properties under given uiGroup
+	getGroupProperties(uiGroup) {
+		const parameters = typeof uiGroup.parameterNames() !== "undefined" ? uiGroup.parameterNames() : [];
+		const actions = typeof uiGroup.actionIds() !== "undefined" ? uiGroup.actionIds() : [];
+		let groupProperties = [...parameters, ...actions];
+
+		if (has(uiGroup, "subGroups") && uiGroup.subGroups) {
+			for (const subGrp of uiGroup.subGroups) {
+				const subGroupProperties = this.getGroupProperties(subGrp);
+				groupProperties = groupProperties.concat(subGroupProperties);
+			}
+		}
+
+		return groupProperties;
+	}
+
 	_parseUiConditions() {
 		this.visibleDefinitions = { controls: {}, refs: {} };
 		this.enabledDefinitions = { controls: {}, refs: {} };
@@ -1166,9 +1202,15 @@ export default class PropertiesController {
 	*   filterHidden: true - filter out values from controls having state "hidden"
 	*   filterDisabled: true - filter out values from controls having state "disabled"
 	*   filterHiddenControls: true - filter out values from controls having type "hidden"
+	*   getActiveTabControls: true - return all properties under selected tab/category
 	*/
 	getPropertyValues(options) {
-		const propertyValues = this.propertiesStore.getPropertyValues();
+		// All property values
+		let propertyValues = this.propertiesStore.getPropertyValues();
+
+		if (options && options.getActiveTabControls) {
+			propertyValues = this.getActiveTabPropertyValues();
+		}
 		let returnValues = propertyValues;
 		if (options && (options.filterHiddenDisabled || options.filterHidden || options.filterDisabled || options.filterHiddenControls || options.valueFilters)) {
 			const filteredValues = {};

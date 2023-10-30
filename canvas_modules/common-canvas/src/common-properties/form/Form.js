@@ -24,7 +24,7 @@ import { Size } from "../constants/form-constants";
 import { CONTAINER_TYPE } from "../constants/constants";
 
 export default class Form {
-	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, resources, icon, heading) {
+	constructor(componentId, label, labelEditable, help, editorSize, pixelWidth, uiItems, buttons, data, conditions, groupMetadata, resources, icon, heading) {
 		this.componentId = componentId;
 		this.label = label;
 		this.labelEditable = labelEditable;
@@ -35,6 +35,7 @@ export default class Form {
 		this.buttons = buttons;
 		this.data = data;
 		this.conditions = conditions;
+		this.groupMetadata = groupMetadata;
 		this.resources = resources;
 		this.icon = icon;
 		this.heading = heading;
@@ -77,6 +78,7 @@ export default class Form {
 				_defaultButtons(),
 				data,
 				translateMessages(conditions, l10nProvider),
+				propDef.groupMetadata,
 				resources,
 				propDef.icon,
 				l10nProvider.l10nResource(propDef.heading)

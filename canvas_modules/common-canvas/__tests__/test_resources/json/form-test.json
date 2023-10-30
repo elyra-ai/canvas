@@ -449,6 +449,65 @@
       }
     ],
     "data": {},
+    "groupMetadata":{
+      "groups":[
+        {
+          "name":"fields-settings",
+          "type":"panels",
+          "label":{
+            "default":"Field Settings label: default",
+            "resource_key":"column-settings.label"
+          },
+          "subGroups":[
+            {
+              "name":"field-allocation",
+              "parameters":[
+                "target",
+                "inputs"
+              ],
+              "type":"columnSelection"
+            }
+          ]
+        },
+        {
+          "name":"settings",
+          "parameters":[
+            "enum_param"
+          ],
+          "label":{
+            "default":"Parameter Settings label: default"
+          },
+          "subGroups":[
+            {
+              "name":"enum-settings",
+              "type":"panelSelector",
+              "dependsOn":"enum_param",
+              "subGroups":[
+                {
+                  "name":"Include",
+                  "parameters":[
+                    "int_param"
+                  ]
+                },
+                {
+                  "name":"Discard",
+                  "parameters":[
+                    "double_param"
+                  ]
+                }
+              ]
+            },
+            {
+              "name":"boolean-settings",
+              "parameters":[
+                "boolean_param",
+                "str_param"
+              ]
+            }
+          ]
+        }
+      ]
+  },
     "resources": {
       "target.label": "Target label: resource",
       "target.desc": "Target field description: resource",

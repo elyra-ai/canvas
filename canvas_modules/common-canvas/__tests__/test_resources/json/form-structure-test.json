@@ -398,6 +398,20 @@
         }
       }
     ],
+    "groupMetadata": {
+      "groups": [
+				{
+          "name": "basic-settings",
+          "parameters": [
+            "renamed_fields"
+          ],
+          "type": "columnSelection",
+          "label": {
+            "default": "Settings"
+          }
+				}
+			]
+    },
     "resources": {
       "rename.label": "Rename Columns",
       "field.label": "Input name",

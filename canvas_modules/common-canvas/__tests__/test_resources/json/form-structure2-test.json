@@ -398,6 +398,20 @@
         ]
       }
     },
+    "groupMetadata": {
+      "groups": [
+				{
+          "name": "basic-settings",
+          "parameters": [
+            "keys"
+          ],
+          "type": "columnSelection",
+          "label": {
+            "default": "Settings"
+          }
+				}
+			]
+    },
     "resources": {
       "sort.label": "Sort",
       "sort.desc": "Sorts the data",

@@ -303,6 +303,20 @@
         ]
       }
     },
+    "groupMetadata": {
+      "groups": [
+				{
+          "name": "settings",
+          "parameters": [
+            "cols"
+          ],
+          "type": "columnSelection",
+          "label": {
+            "default": "Settings"
+          }
+        }
+      ]
+    },
     "resources": {
       "select.label": "Select Columns",
       "mode.label": "Mode",
