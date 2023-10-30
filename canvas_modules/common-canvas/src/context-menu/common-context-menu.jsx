@@ -54,6 +54,7 @@ class CommonContextMenu extends React.Component {
 		this.props.contextHandler("colorSelectedObjects", { color });
 	}
 
+	// Returns the size of the menu passed in.
 	calculateMenuSize(menu) {
 		var numDividers = 0;
 		for (let i = 0; i < menu.length; ++i) {
@@ -102,6 +103,7 @@ class CommonContextMenu extends React.Component {
 		return menuPos;
 	}
 
+	// Returns true of all the items in a sub-menu are disabled.
 	areAllSubmenuItemsDisabled(submenuItems) {
 		let itemCount = 0;
 		let disabledCount = 0;
@@ -116,6 +118,7 @@ class CommonContextMenu extends React.Component {
 		return disabledCount === itemCount;
 	}
 
+	// Builds a new menu based on the menu defintion passed in.
 	buildMenu(menuDefinition, menuSize, menuPos, canvasRect) {
 		const menuItems = [];
 
@@ -131,7 +134,6 @@ class CommonContextMenu extends React.Component {
 
 			if (divider) {
 				if (!previousDivider) {
-					// menuItems.push(<MenuItem attributes={customDivider} key={i + 1} onClick={() => {}} divider />);
 					menuItems.push(<div key={i + 1} className={"context-menu-divider"} />);
 					runningYPos += CONTEXT_MENU_DIVIDER_HEIGHT;
 					previousDivider = true;
@@ -231,9 +233,11 @@ class CommonContextMenu extends React.Component {
 		return (menuPos.x + menuSize.width + subMenuSize.width > canvasRect.right);
 	}
 
-	// Returns a style object that can be applied to the sub-menu to adjust
-	// its vertical (y) position. This may be necessary if the submenu is tall
-	// enough that it would be displayed off the bottom of the canvas area.
+	// Returns a style object that can be applied to the sub-menu to adjust its:
+	// * vertical (y) position: If the submenu is tall enough that it would be
+	// displayed off the bottom of the canvas area.
+	// * horizontal (x) position: If the sub-menu needs to appear on the left
+	// side of the main menu (rtl === true).
 	buildSubMenuPosStyle(runningYPos, menuPos, subMenuSize, canvasRect, rtl) {
 		// Does the submenu go below the bottom of the viewport?
 		const y = canvasRect.bottom - (menuPos.y + runningYPos + subMenuSize.height);
