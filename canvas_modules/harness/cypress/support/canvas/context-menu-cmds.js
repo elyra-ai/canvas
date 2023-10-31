@@ -35,40 +35,24 @@ Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
 });
 
 Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".context-menu-submenu:not(.context-menu-divider)")
-		.then((contextMenuOptions) => {
-			contextMenuOptions.each((idx) => {
-				if (contextMenuOptions[idx].outerText === submenuName) {
-					cy.wrap(contextMenuOptions[idx]).click();
-					cy.get(".contextmenu-submenu").find(".context-menu-item")
-						.then((submenuOptions) => {
-							submenuOptions.each((index) => {
-								if (submenuOptions[index].outerText === optionName) {
-									submenuOptions[index].click();
-								}
-							});
-						});
+	cy.get(".context-menu-popover").find(".context-menu-item:not(.contextmenu-divider)")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				if (options[idx].outerText === optionName) {
+					options[idx].click();
 				}
-			});
+			}
 		});
 });
 
 Cypress.Commands.add("clickColorFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".context-menu-submenu:not(.context-menu-divider)")
-		.then((contextMenuOptions) => {
-			contextMenuOptions.each((idx) => {
-				if (contextMenuOptions[idx].outerText === submenuName) {
-					cy.wrap(contextMenuOptions[idx]).click();
-					cy.get(".color-picker-item")
-						.then((colorOptions) => {
-							colorOptions.each((index) => {
-								if (colorOptions[index].className === "color-picker-item " + optionName) {
-									colorOptions[index].click();
-								}
-							});
-						});
+	cy.get(".context-menu-popover").find(".color-picker-item")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				if (options[idx].className === "color-picker-item " + optionName) {
+					options[idx].click();
 				}
-			});
+			}
 		});
 });
 
