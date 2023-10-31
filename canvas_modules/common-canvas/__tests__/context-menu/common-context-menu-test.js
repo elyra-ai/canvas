@@ -20,7 +20,6 @@ import { mount } from "../_utils_/mount-utils.js";
 import { createIntlCommonCanvas } from "../_utils_/common-canvas-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
-import isEqual from "lodash/isEqual";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import getContextMenuDefiniton from "../../src/common-canvas/canvas-controller-menu-utils";
 import supernodeFlow from "../../../harness/test_resources/diagrams/supernodeCanvas.json";
