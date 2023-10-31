@@ -87,7 +87,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (this.props.canvasController.createAutoNode) {
+		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
 			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
 			this.props.canvasController.createAutoNode(nodeTemplate);
 		}
@@ -256,17 +256,17 @@ class PaletteContentListItem extends React.Component {
 		this.setState({ showFullDescription: false });
 	}
 
-	// Returns true if this item should be draggable and false if either editing actions
-	// are switched off or the palette item has a field that makes it disabled.
-	isItemDraggable() {
+	// Returns true if this item is disabled and should not be draggable or double-clicked
+	// from the palette.
+	isItemDisabled() {
 		const disabled = this.props.nodeTypeInfo.nodeType?.app_data?.ui_data?.palette_disabled;
-		return this.props.isEditingEnabled && !disabled;
+		return !this.props.isEditingEnabled || disabled;
 	}
 
 	render() {
 		let itemText = null;
 		let labelText = get(this.props, "nodeTypeInfo.nodeType.app_data.ui_data.label", "");
-		let draggable = this.isItemDraggable() ? "true" : "false";
+		let draggable = this.isItemDisabled() ? "false" : "true";
 		let icon = null;
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
