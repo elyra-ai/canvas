@@ -50,7 +50,8 @@ import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
-import ReactNodesCanvas from "./components/custom-canvases/react-nodes/react-nodes";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -108,7 +109,8 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
-	EXAMPLE_APP_REACT_NODES,
+	EXAMPLE_APP_REACT_NODES_CARBON,
+	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -224,7 +226,7 @@ class App extends React.Component {
 			selectedExternalPipelineFlows: true,
 			selectedEditingActions: true,
 			selectedMoveNodesOnSupernodeResize: true,
-			selectedRaiseNodesToTopOnHover: false,
+			selectedRaiseNodesToTopOnHover: true,
 			selectedResizableNodes: false,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -2570,9 +2572,16 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
-				<ReactNodesCanvas
+				<ReactNodesCarbonCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_MAPPING) {
+			firstCanvas = (
+				<ReactNodesMappingCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>

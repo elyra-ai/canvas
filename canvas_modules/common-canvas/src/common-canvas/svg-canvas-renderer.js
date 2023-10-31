@@ -33,7 +33,7 @@ const markdownIt = require("markdown-it")({
 });
 
 import { escape as escapeText, forOwn, get } from "lodash";
-import { addNodeExternalObject, addDecExternalObject, removeExternalObject } from "./svg-canvas-utils-external.js";
+import { cloneDeep, escape as escapeText, forOwn, get } from "lodash";
 import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	ASSOC_VAR_CURVE_LEFT, ASSOC_VAR_CURVE_RIGHT, ASSOC_VAR_DOUBLE_BACK_RIGHT,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
@@ -56,6 +56,7 @@ import SvgCanvasNodes from "./svg-canvas-utils-nodes.js";
 import SvgCanvasComments from "./svg-canvas-utils-comments.js";
 import SvgCanvasLinks from "./svg-canvas-utils-links.js";
 import SvgCanvasDecs from "./svg-canvas-utils-decs.js";
+import SvgCanvasExternal from "./svg-canvas-utils-external.js";
 import SvgCanvasTextArea from "./svg-canvas-utils-textarea.js";
 import SvgCanvasDragObject from "./svg-canvas-utils-drag-objects.js";
 import SvgCanvasDragNewLink from "./svg-canvas-utils-drag-new-link.js";
@@ -94,6 +95,7 @@ export default class SVGCanvasRenderer {
 		this.dragObjectUtils = new SvgCanvasDragObject(this);
 		this.dragNewLinkUtils = new SvgCanvasDragNewLink(this);
 		this.dragDetLinkUtils = new SvgCanvasDragDetLink(this);
+		this.externalUtils = new SvgCanvasExternal(this);
 		this.svgCanvasTextArea = new SvgCanvasTextArea(
 			this.config,
 			this.dispUtils,
@@ -2280,7 +2282,8 @@ export default class SVGCanvasRenderer {
 						.attr("class", "d3-foreign-object-external-node"),
 				null,
 				(exit) => {
-					exit.each(removeExternalObject.bind(this));
+					exit.each((d, idx, exts) =>
+						this.externalUtils.removeExternalObject(d, idx, exts));
 					exit.remove();
 				}
 			)
@@ -2289,7 +2292,8 @@ export default class SVGCanvasRenderer {
 			.attr("height", (d) => d.height)
 			.attr("x", 0)
 			.attr("y", 0)
-			.each(addNodeExternalObject.bind(this));
+			.each((d, idx, exts) =>
+				this.externalUtils.addNodeExternalObject(d, idx, exts));
 
 		// Node Image
 		nonBindingNodeGrps
@@ -2383,7 +2387,8 @@ export default class SVGCanvasRenderer {
 		// Remove any foreign objects for react nodes, if necessary.
 		removeSel
 			.selectChildren(".d3-foreign-object-external-node")
-			.each(removeExternalObject.bind(this));
+			.each((d, idx, exts) =>
+				this.externalUtils.removeExternalObject(d, idx, exts));
 
 		// Remove all nodes in the selection.
 		removeSel.remove();
@@ -3083,9 +3088,11 @@ export default class SVGCanvasRenderer {
 			extSel
 				.attr("width", this.decUtils.getDecWidth(dec, d, objType))
 				.attr("height", this.decUtils.getDecHeight(dec, d, objType))
-				.each(addDecExternalObject.bind(this));
+				.each((decData, idx, exts) =>
+					this.externalUtils.addDecExternalObject(decData, idx, exts));
 		} else {
-			extSel.each(removeExternalObject.bind(this));
+			extSel.each((decData, idx, exts) =>
+				this.externalUtils.removeExternalObject(decData, idx, exts));
 			extSel.remove();
 		}
 	}
@@ -4558,6 +4565,7 @@ export default class SVGCanvasRenderer {
 
 	// Creates all newly created links specified in the enter selection.
 	createLinks(enter) {
+		this.logger.logStartTimer("createLinks");
 		// Add groups for links
 		const newLinkGrps = enter.append("g")
 			.attr("data-id", (d) => this.getId("link_grp", d.id))
@@ -4601,6 +4609,8 @@ export default class SVGCanvasRenderer {
 				});
 		}
 
+		this.logger.logEndTimer("createLinks");
+
 		return newLinkGrps;
 	}
 
@@ -4608,6 +4618,7 @@ export default class SVGCanvasRenderer {
 	// selection object. The selection object will contain newly created links
 	// as well as existing links.
 	updateLinks(joinedLinkGrps, lineArray) {
+		this.logger.logStartTimer("updateLinks");
 		// Update link selection area
 		joinedLinkGrps
 			.selectAll(".d3-link-selection-area")
@@ -4656,6 +4667,8 @@ export default class SVGCanvasRenderer {
 		if (!this.isMoving() && !this.isSizing()) {
 			this.setDisplayOrder(joinedLinkGrps);
 		}
+
+		this.logger.logEndTimer("updateLinks");
 	}
 
 	attachLinkGroupListeners(linkGrps) {
@@ -4948,6 +4961,12 @@ export default class SVGCanvasRenderer {
 		}
 	}
 
+	// Raises the node, specified by the node ID, above other nodes and objects.
+	// Called by external utils.
+	raiseNodeToTopById(nodeId) {
+		this.getNodeGroupSelectionById(nodeId).raise();
+	}
+
 	// Raises the node above other nodes and objects (on the mouse entering
 	// the node). This is necessary for apps that have ports that protrude from
 	// the side of the node and where those nodes may be positioned close to each
@@ -4991,6 +5010,8 @@ export default class SVGCanvasRenderer {
 	}
 
 	buildLinksArray() {
+		this.logger.logStartTimer("buildLinksArray");
+
 		let linksArray = [];
 
 		if (this.canvasLayout.linkType === LINK_TYPE_STRAIGHT) {
@@ -5022,6 +5043,8 @@ export default class SVGCanvasRenderer {
 
 		// Add connection path info to the links.
 		linksArray = this.linkUtils.addConnectionPaths(linksArray);
+
+		this.logger.logEndTimer("buildLinksArray");
 
 		return linksArray;
 	}
