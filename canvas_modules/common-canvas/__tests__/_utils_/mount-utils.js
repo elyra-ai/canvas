@@ -16,8 +16,8 @@
 
 import { mount as enzymeMount } from "enzyme";
 
-function mount(param1, param2) {
-	// Workaround for problem using latest version of react-resize-detector.
+export function mount(param1, param2) {
+	// Workaround for problem using latest version (9.1.0) of react-resize-detector.
 	// This mocks the ResizeObserver constructor that otherwise causes an error
 	// when using the mount keyword.
 	// https://github.com/maslianok/react-resize-detector/issues/145
@@ -28,12 +28,5 @@ function mount(param1, param2) {
 		disconnect: jest.fn(),
 	}));
 
-	const wrapper = enzymeMount(param1, param2);
-
-	return wrapper;
+	return enzymeMount(param1, param2);
 }
-
-
-module.exports = {
-	mount: mount
-};
