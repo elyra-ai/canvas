@@ -17,7 +17,7 @@
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
 import DatepickerControl from "../../../src/common-properties/controls/datepicker";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import datepickerParamDef from "../../test_resources/paramDefs/datepicker_paramDef.json";

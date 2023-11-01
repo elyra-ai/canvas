@@ -17,7 +17,7 @@
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
 import DatepickerRangeControl from "../../../src/common-properties/controls/datepicker-range";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import datepickerRangeParamDef from "../../test_resources/paramDefs/datepickerRange_paramDef.json";

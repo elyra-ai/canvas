@@ -19,7 +19,7 @@ Cypress.Commands.add("rightClickToDisplayContextMenu", (distFromLeft, distFromTo
 });
 
 Cypress.Commands.add("getOptionFromContextMenu", (optionName) => {
-	cy.get(".context-menu-popover").find(".react-contextmenu-item:not(.contextmenu-divider)")
+	cy.get(".context-menu-popover").find(".context-menu-item:not(.contextmenu-divider)")
 		.then((options) => {
 			for (let idx = 0; idx < options.length; idx++) {
 				if (options[idx].outerText === optionName) {
@@ -35,40 +35,24 @@ Cypress.Commands.add("clickOptionFromContextMenu", (optionName) => {
 });
 
 Cypress.Commands.add("clickOptionFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".react-contextmenu-submenu:not(.contextmenu-divider)")
-		.then((contextMenuOptions) => {
-			contextMenuOptions.each((idx) => {
-				if (contextMenuOptions[idx].outerText === submenuName) {
-					cy.wrap(contextMenuOptions[idx]).click();
-					cy.get(".contextmenu-submenu").find(".react-contextmenu-item")
-						.then((submenuOptions) => {
-							submenuOptions.each((index) => {
-								if (submenuOptions[index].outerText === optionName) {
-									submenuOptions[index].click();
-								}
-							});
-						});
+	cy.get(".context-menu-popover").find(".context-menu-item:not(.contextmenu-divider)")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				if (options[idx].outerText === optionName) {
+					options[idx].click();
 				}
-			});
+			}
 		});
 });
 
 Cypress.Commands.add("clickColorFromContextSubmenu", (submenuName, optionName) => {
-	cy.get(".context-menu-popover").find(".react-contextmenu-submenu:not(.contextmenu-divider)")
-		.then((contextMenuOptions) => {
-			contextMenuOptions.each((idx) => {
-				if (contextMenuOptions[idx].outerText === submenuName) {
-					cy.wrap(contextMenuOptions[idx]).click();
-					cy.get(".color-picker-item")
-						.then((colorOptions) => {
-							colorOptions.each((index) => {
-								if (colorOptions[index].className === "color-picker-item " + optionName) {
-									colorOptions[index].click();
-								}
-							});
-						});
+	cy.get(".context-menu-popover").find(".color-picker-item")
+		.then((options) => {
+			for (let idx = 0; idx < options.length; idx++) {
+				if (options[idx].className === "color-picker-item " + optionName) {
+					options[idx].click();
 				}
-			});
+			}
 		});
 });
 

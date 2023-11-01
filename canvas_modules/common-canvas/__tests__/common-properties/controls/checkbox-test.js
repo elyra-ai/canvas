@@ -17,7 +17,7 @@ import React from "react";
 import { expect } from "chai";
 import Controller from "./../../../src/common-properties/properties-controller";
 import Checkbox from "./../../../src/common-properties/controls/checkbox";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import propertyUtils from "../../_utils_/property-utils";
 import checkboxParamDef from "../../test_resources/paramDefs/checkbox_paramDef.json";
 

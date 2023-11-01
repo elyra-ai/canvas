@@ -21,42 +21,29 @@
 	cursor: pointer;
 	min-width: 160px;
 	background-color: $ui-01;
+	-webkit-background-clip: padding-box;
 	background-clip: padding-box;
 	border: 0;
 	outline: none;
+	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 	position: absolute;
-	z-index: 2;
-	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+
+	// For cascaded sub-menu
+	&.context-menu-submenu {
+		top: 0;
+		left: 100%;
+		display: none;
+
+		// Makes the cascaded sub-menu visible.
+		&.context-menu--visible {
+			display: inline-grid;
+		}
+	}
 }
 
-.context-menu-popover.popover>.arrow {
-	display: none;
-}
-.context-menu-popover.popover>.popover-content {
-	padding: 0;
-}
-
-.react-contextmenu {
-	min-width: 160px;
-	text-align: left;
-	background-color: $ui-02;
-	-webkit-background-clip: padding-box;
-	background-clip: padding-box;
-	border-radius: 0.25rem;
-	outline: none;
-	display: none;
-	-moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	-webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-.react-contextmenu--visible {
-	display: inline-grid;
-}
-
-.react-contextmenu-item {
+.context-menu-item {
 	height: 30px;
 	padding: 0 1em;
 	clear: both;
@@ -67,38 +54,31 @@
 	border: 0;
 	display: flex;
 	align-items: center;
+	position: relative; // Needed to allow sub-menu, if there is one,  to be positioned correctly
+
+	&.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	&:active,
+	&:focus,
+	&:hover {
+		background: $hover-ui;
+		text-decoration: none;
+		border: 0;
+		outline: none; /* Suppress Chrome's blue active border */
+	}
+
+	/* Style for the chevron '>' in menu item that opens a submenu. */
+	& svg {
+		color: $text-01;
+		position: absolute;
+		right: 12px;
+	}
 }
 
-.react-contextmenu-item.react-contextmenu-item--disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
-
-.react-contextmenu-item:active,
-.react-contextmenu-item:focus,
-.react-contextmenu-item:hover {
-	background: $hover-ui;
-	text-decoration: none;
-	border: 0;
-	outline: none; /* Suppress Chrome's blue active border */
-}
-
-.react-contextmenu-item.react-contextmenu-submenu {
-	padding: 0;
-}
-
-.react-contextmenu-item.react-contextmenu-submenu > div {
-	padding-right: 27px;
-}
-
-/* Style for the chevron '>' in menu item that opens a submenu. */
-.react-contextmenu-item svg {
-	color: $text-01;
-	position: absolute;
-	right: 12px;
-}
-
-.react-contextmenu-item.contextmenu-divider {
+.context-menu-divider {
 	height: 1px;
 	display: block;
 	overflow: hidden;
