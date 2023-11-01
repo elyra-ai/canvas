@@ -250,11 +250,13 @@ export default class CanvasController {
 	// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
 	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
+		this.logger.logStartTimer("setPipelineFlow");
 		this.objectModel.setPipelineFlow(flow);
 		// When a pipeline flow is loaded it may have expanded supernodes which
 		// refer to external pipelines and these need to be loaded for the
 		// pipeline to display correctly.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+		this.logger.logEndTimer("setPipelineFlow");
 	}
 
 	// Clears the pipleine flow and displays an empty canvas.
