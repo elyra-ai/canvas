@@ -20,7 +20,7 @@ import PropertiesDialog from "../../src/common-properties/components/properties-
 import PropertiesEditing from "../../src/common-properties/components/properties-editor";
 import propertyUtils from "../_utils_/property-utils";
 import tableUtils from "../_utils_/table-utils";
-import { mount } from "enzyme";
+import { mount } from "../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";

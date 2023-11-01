@@ -16,7 +16,7 @@
 
 import React from "react";
 import TruncatedContentTooltip from "../../../src/common-properties/components/truncated-content-tooltip";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 
 

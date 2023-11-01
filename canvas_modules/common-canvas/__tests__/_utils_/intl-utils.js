@@ -15,7 +15,8 @@
  */
 
 import { IntlProvider } from "react-intl";
-import { mount, shallow } from "enzyme";
+import { shallow } from "enzyme";
+import { mount } from "./mount-utils.js";
 
 import { getMessages } from "../../../harness/src/intl/intl-utils";
 import * as HarnessBundles from "../../../harness/src/intl/locales";
