@@ -98,6 +98,8 @@ export default class SVGCanvasUtilsZoom {
 
 	}
 
+	// Saves the state when the user presses and holds the space bar. This
+	// can be used for gestures that require the space bar to be held down.
 	setSpaceKeyPressed(state) {
 		this.spaceKeyPressed = state;
 	}

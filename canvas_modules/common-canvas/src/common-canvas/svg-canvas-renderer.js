@@ -1319,7 +1319,7 @@ export default class SVGCanvasRenderer {
 				}
 			})
 			.on("click.zoom", (d3Event) => {
-				// Control comes here aftre the zoomClick action has been perfoemd in zoomUtils.
+				// Control comes here after the zoomClick action has been perfoemd in zoomUtils.
 				this.logger.log("Canvas - click-zoom");
 
 				this.canvasController.clickActionHandler({
