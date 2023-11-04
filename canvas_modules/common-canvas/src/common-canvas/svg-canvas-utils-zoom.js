@@ -126,6 +126,11 @@ export default class SVGCanvasUtilsZoom {
 		return this.zoomTransform.k;
 	}
 
+	// Resets the local zoom transform object to the default (identity) zoom.
+	resetZoomTransform() {
+		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
+	}
+
 	// Zooms the canvas to the extent specified in the zoom object.
 	zoomTo(zoomObject) {
 		const animateTime = 500;
@@ -176,11 +181,6 @@ export default class SVGCanvasUtilsZoom {
 		const newMaxExtent = this.maxScaleExtent * factor;
 		this.zoomHandler = this.zoomHandler.scaleExtent([this.minScaleExtent, newMaxExtent]);
 		this.ren.resetCanvasSVGBehaviors();
-	}
-
-	// Initializes the local zoom transform object to the default (identity) zoom.
-	initializeZoomVariables() {
-		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 	}
 
 	// Transforms the x and y fields passed in by the current zoom

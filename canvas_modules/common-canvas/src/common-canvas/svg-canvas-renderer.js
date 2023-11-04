@@ -350,7 +350,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	clearCanvas() {
-		this.zoomUtils.initializeZoomVariables();
+		this.zoomUtils.resetZoomTransform();
 		this.canvasSVG.remove();
 	}
 
