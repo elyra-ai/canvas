@@ -26,8 +26,8 @@ import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD,
 	LINK_SELECTION_NONE }
 	from "./constants/canvas-constants.js";
 
-// This utility files provides a drag handler which manages drag operations to move
-// and resize nodes and comments.
+// This utility file provides a d3-zoom handler which manages zoom operations
+// on the canvas as well as various utility functions to handle zoom behavior.
 
 export default class SVGCanvasUtilsZoom {
 
@@ -98,19 +98,6 @@ export default class SVGCanvasUtilsZoom {
 
 	}
 
-	// Returns the dragObjectsHandler
-	getZoomHandler() {
-		return this.zoomHandler;
-	}
-
-	getZoomTransform() {
-		return this.zoomTransform;
-	}
-
-	getZoomScale() {
-		return this.zoomTransform.k;
-	}
-
 	setSpaceKeyPressed(state) {
 		this.spaceKeyPressed = state;
 	}
@@ -118,6 +105,64 @@ export default class SVGCanvasUtilsZoom {
 	// Returns true if the space bar is pressed and held down.
 	isSpaceKeyPressed() {
 		return this.spaceKeyPressed;
+	}
+
+	// Returns the dragObjectsHandler
+	getZoomHandler() {
+		return this.zoomHandler;
+	}
+
+	// Returns the zoom transform object.
+	getZoomTransform() {
+		return this.zoomTransform;
+	}
+
+	// Returns a copy of the zoom transform object.
+	getZoom() {
+		return { ...this.zoomTransform };
+	}
+
+	getZoomScale() {
+		return this.zoomTransform.k;
+	}
+
+	// Zooms the canvas to the extent specified in the zoom object.
+	zoomTo(zoomObject) {
+		const animateTime = 500;
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
+	}
+
+	// Pans the canvas by the x and y amount specified in the time specified.
+	translateBy(x, y, animateTime) {
+		const z = this.getZoomTransform();
+		const zoomObject = d3.zoomIdentity.translate(z.x + x, z.y + y).scale(z.k);
+		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
+	}
+
+	// Zooms in the canvas by an increment amount.
+	zoomIn() {
+		if (this.zoomTransform.k < this.maxScaleExtent) {
+			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
+			this.ren.canvasSVG.call(this.zoomHandler.scaleTo, newScale);
+		}
+	}
+
+	// Zooms out the canvas by an increment amount.
+	zoomOut() {
+		if (this.zoomTransform.k > this.minScaleExtent) {
+			const newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
+			this.ren.canvasSVG.call(this.zoomHandler.scaleTo, newScale);
+		}
+	}
+
+	// Returns true if the canvas is currently zoomed to the maximum amount.
+	isZoomedToMax() {
+		return this.zoomTransform ? this.zoomTransform.k === this.maxScaleExtent : false;
+	}
+
+	// Returns true if the canvas is currently zoomed to the minimum amount.
+	isZoomedToMin() {
+		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
 	}
 
 	// Sets the maximum zoom extent by multiplying the current extent by
@@ -618,50 +663,6 @@ export default class SVGCanvasUtilsZoom {
 		}
 
 		return null;
-	}
-
-	// Zooms the canvas to the extent specified in the zoom object.
-	zoomTo(zoomObject) {
-		const animateTime = 500;
-		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
-	}
-
-	// Returns a copy of the zoom transform object.
-	getZoom() {
-		return { x: this.zoomTransform.x, y: this.zoomTransform.y, k: this.zoomTransform.k };
-	}
-
-	// Pans the canvas by the x and y amount specified in the time specified.
-	translateBy(x, y, animateTime) {
-		const z = this.getZoomTransform();
-		const zoomObject = d3.zoomIdentity.translate(z.x + x, z.y + y).scale(z.k);
-		this.zoomCanvasInvokeZoomBehavior(zoomObject, animateTime);
-	}
-
-	// Zooms in the canvas by an increment amount.
-	zoomIn() {
-		if (this.zoomTransform.k < this.maxScaleExtent) {
-			const newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
-			this.ren.canvasSVG.call(this.zoomHandler.scaleTo, newScale);
-		}
-	}
-
-	// Zooms out the canvas by an increment amount.
-	zoomOut() {
-		if (this.zoomTransform.k > this.minScaleExtent) {
-			const newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
-			this.ren.canvasSVG.call(this.zoomHandler.scaleTo, newScale);
-		}
-	}
-
-	// Returns true if the canvas is currently zoomed to the maximum amount.
-	isZoomedToMax() {
-		return this.zoomTransform ? this.zoomTransform.k === this.maxScaleExtent : false;
-	}
-
-	// Returns true if the canvas is currently zoomed to the minimum amount.
-	isZoomedToMin() {
-		return this.zoomTransform ? this.zoomTransform.k === this.minScaleExtent : false;
 	}
 
 	// Returns the padding space for the canvas objects to be zoomed which takes

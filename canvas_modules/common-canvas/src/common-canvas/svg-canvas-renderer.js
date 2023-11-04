@@ -159,7 +159,7 @@ export default class SVGCanvasRenderer {
 		// Show the 'Back to Parent' control, if we are showing a sub-flow
 		// in full screen mode or, the alwaysDisplayBackToParentFlow option is
 		// switched on to always display it (used by apps that manage their own
-		// supernodes/sub-flows.
+		// supernodes/sub-flows).
 		if (this.dispUtils.isDisplayingSubFlowFullPage() ||
 				this.canvasLayout.alwaysDisplayBackToParentFlow) {
 			this.addBackToParentFlowArrow(this.canvasSVG);
@@ -191,7 +191,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	// Returns true if the space bar is pressed and held down. This is called
-	// from outside canvas via svg-canvas-d3 as well as internally.
+	// from outside canvas via svg-canvas-d3.
 	isSpaceKeyPressed() {
 		return this.zoomUtils.isSpaceKeyPressed();
 	}
@@ -201,7 +201,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	translateBy(x, y, animateTime) {
-		this.zoomUtils.refreshOnSizeChange.translateBy(x, y, animateTime);
+		this.zoomUtils.translateBy(x, y, animateTime);
 	}
 
 	zoomIn() {
