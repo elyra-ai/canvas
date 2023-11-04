@@ -107,9 +107,7 @@ export default class SVGCanvasD3 {
 	}
 
 	convertPageCoordsToSnappedCanvasCoords(pos) {
-		let positon = this.renderer.convertPageCoordsToCanvasCoords(pos.x, pos.y);
-		positon = this.renderer.getMousePosSnapToGrid(positon);
-		return positon;
+		return this.renderer.conveconvertPageCoordsToSnappedCanvasCoords(pos);
 	}
 
 	nodeTemplateDragStart(nodeTemplate) {
