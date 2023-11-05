@@ -1468,6 +1468,7 @@ export default class SVGCanvasRenderer {
 			});
 		}
 	}
+
 	setNodeLabelEditingMode(nodeId, pipelineId) {
 		if (this.pipelineId === pipelineId) {
 			const node = this.activePipeline.getNode(nodeId);
