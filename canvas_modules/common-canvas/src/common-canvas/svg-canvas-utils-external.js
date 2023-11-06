@@ -53,20 +53,20 @@ export default class SvgCanvasExternal {
 
 	setPortPositions(info) {
 		const node = this.ren.activePipeline.getNode(info.nodeId);
-		const zoomTransform = this.ren.getZoomTransform();
+		const k = this.ren.zoomUtils.getZoomScale();
 
 		if (info.inputPositions) {
 			info.inputPositions.forEach((inputPos) => {
 				const inp = node.inputs.find((input) => input.id === inputPos.id);
-				inp.cx = inputPos.cx / zoomTransform.k;
-				inp.cy = inputPos.cy / zoomTransform.k;
+				inp.cx = inputPos.cx / k;
+				inp.cy = inputPos.cy / k;
 			});
 		}
 		if (info.outputPositions) {
 			info.outputPositions.forEach((outputPos) => {
 				const out = node.outputs.find((output) => output.id === outputPos.id);
-				out.cx = outputPos.cx / zoomTransform.k;
-				out.cy = outputPos.cy / zoomTransform.k;
+				out.cx = outputPos.cx / k;
+				out.cy = outputPos.cy / k;
 			});
 		}
 		this.ren.displayLinks();
