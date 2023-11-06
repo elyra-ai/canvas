@@ -543,8 +543,8 @@ export default class SVGCanvasRenderer {
 		}
 		const svgRect = this.zoomUtils.getViewportDimensions();
 		const transformedSVGRect = this.zoomUtils.getTransformedRect(svgRect, 1);
-		const canv = this.zoomUtils.getCanvasDimensionsAdjustedForScale(1);
-		const canvWithPadding = this.zoomUtils.getCanvasDimensionsAdjustedForScale(1, this.zoomUtils.getZoomToFitPadding());
+		const canv = this.zoomUtils.getCanvasDimensions();
+		const canvWithPadding = this.zoomUtils.getCanvasDimensionsWithPadding();
 
 		this.boundingRectsGrp.selectChildren(".d3-bounding").remove();
 
@@ -1366,7 +1366,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	setCanvasUnderlaySize(x = 0, y = 0) {
-		const canv = this.zoomUtils.getCanvasDimensionsAdjustedForScale(1, this.zoomUtils.getZoomToFitPadding());
+		const canv = this.zoomUtils.getCanvasDimensionsWithPadding();
 		if (canv) {
 			this.canvasUnderlay
 				.attr("x", canv.left - 50)

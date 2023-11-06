@@ -547,7 +547,7 @@ export default class SVGCanvasUtilsZoom {
 		// If there's no saved zoom, and enablePanIntoViewOnOpen is set, pan so
 		// the canvas area (containing nodes and comments) is visible in the viewport.
 		if (!newZoom && this.ren.config.enablePanIntoViewOnOpen) {
-			const canvWithPadding = this.getCanvasDimensionsAdjustedForScale(1, this.getZoomToFitPadding());
+			const canvWithPadding = this.getCanvasDimensionsWithPadding();
 			if (canvWithPadding) {
 				newZoom = { x: -canvWithPadding.left, y: -canvWithPadding.top, k: 1 };
 			}
@@ -599,8 +599,7 @@ export default class SVGCanvasUtilsZoom {
 
 	// Zooms the canvas to fit in the current viewport.
 	zoomToFit() {
-		const padding = this.getZoomToFitPadding();
-		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, padding);
+		const canvasDimensions = this.getCanvasDimensionsWithPadding();
 		const viewPortDimensions = this.getViewportDimensions();
 
 		if (canvasDimensions) {
@@ -665,20 +664,6 @@ export default class SVGCanvasUtilsZoom {
 		}
 
 		return null;
-	}
-
-	// Returns the padding space for the canvas objects to be zoomed which takes
-	// into account any connections that need to be made to/from any sub-flow
-	// binding nodes plus any space needed for the binding nodes ports.
-	getZoomToFitPadding() {
-		let padding = this.ren.canvasLayout.zoomToFitPadding;
-
-		if (this.ren.dispUtils.isDisplayingSubFlow()) {
-			// Allocate some space for connecting lines and the binding node ports
-			const newPadding = this.getMaxZoomToFitPaddingForConnections() + (2 * this.ren.canvasLayout.supernodeBindingPortRadius);
-			padding = Math.max(padding, newPadding);
-		}
-		return padding;
 	}
 
 	// Returns the maximum amount for padding, when zooming to fit the canvas
@@ -758,11 +743,19 @@ export default class SVGCanvasUtilsZoom {
 	// based on the position and width and height of the nodes and comments. It
 	// does not include the 'super binding nodes' which are the binding nodes in
 	// a sub-flow that map to a port in the containing supernode. The dimensions
-	// are scaled by k and padded by pad (if provided).
-	getCanvasDimensionsAdjustedForScale(k, pad) {
+	// include an appropriate padding amount.
+	getCanvasDimensionsWithPadding() {
+		return this.getCanvasDimensions();
+	}
+
+	// Returns the dimensions in SVG coordinates of the canvas area. This is
+	// based on the position and width and height of the nodes and comments. It
+	// does not include the 'super binding nodes' which are the binding nodes in
+	// a sub-flow that map to a port in the containing supernode.
+	getCanvasDimensions() {
 		const gap = this.ren.canvasLayout.commentHighlightGap;
 		const canvasDimensions = this.ren.activePipeline.getCanvasDimensions(gap);
-		return this.convertRectAdjustedForScaleWithPadding(canvasDimensions, k, pad);
+		return this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, this.getZoomToFitPadding());
 	}
 
 	// Returns a rect object describing the rect passed in but
@@ -780,5 +773,19 @@ export default class SVGCanvasUtilsZoom {
 			};
 		}
 		return null;
+	}
+
+	// Returns the padding space for the canvas objects to be zoomed which takes
+	// into account any connections that need to be made to/from any sub-flow
+	// binding nodes plus any space needed for the binding nodes ports.
+	getZoomToFitPadding() {
+		let padding = this.ren.canvasLayout.zoomToFitPadding;
+
+		if (this.ren.dispUtils.isDisplayingSubFlow()) {
+			// Allocate some space for connecting lines and the binding node ports
+			const newPadding = this.getMaxZoomToFitPaddingForConnections() + (2 * this.ren.canvasLayout.supernodeBindingPortRadius);
+			padding = Math.max(padding, newPadding);
+		}
+		return padding;
 	}
 }
