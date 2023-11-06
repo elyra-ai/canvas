@@ -370,14 +370,14 @@ export default class SVGCanvasUtilsZoom {
 
 	drawRegionSelector(d3Event) {
 		this.removeRegionSelector();
-		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
+		const { x, y, width, height } = this.getRegionDimensions(d3Event);
 
 		this.ren.canvasGrp
 			.append("rect")
 			.attr("width", width)
 			.attr("height", height)
-			.attr("x", startX)
-			.attr("y", startY)
+			.attr("x", x)
+			.attr("y", y)
 			.attr("class", "d3-region-selector");
 	}
 
@@ -391,15 +391,8 @@ export default class SVGCanvasUtilsZoom {
 		d3Event.transform.x = this.regionStartTransformX;
 		d3Event.transform.y = this.regionStartTransformY;
 
-		const { startX, startY, width, height } = this.getRegionDimensions(d3Event);
-
-		const region = { x1: startX, y1: startY, x2: startX + width, y2: startY + height };
-		const selections =
-			CanvasUtils.selectInRegion(region, this.ren.activePipeline,
-				this.ren.config.enableLinkSelection !== LINK_SELECTION_NONE,
-				this.ren.config.enableLinkType,
-				this.ren.config.enableAssocLinkType);
-		this.ren.canvasController.setSelections(selections, this.ren.activePipeline.id);
+		this.ren.selectObjsInRegion(
+			this.getRegionDimensions(d3Event));
 	}
 
 	// Removes the region selection graphic rectangle.
@@ -407,26 +400,26 @@ export default class SVGCanvasUtilsZoom {
 		this.ren.canvasGrp.selectAll(".d3-region-selector").remove();
 	}
 
-	// Returns the startX, startY, width and height of the selection region
-	// where startX and startY are always the top left corner of the region
+	// Returns the x, y, width and height of the selection region
+	// where x and y are always the top left corner of the region
 	// and width and height are therefore always positive.
 	getRegionDimensions(d3Event) {
 		const transPos = this.ren.getTransformedMousePos(d3Event);
-		let startX = this.zoomStartPoint.startX;
-		let startY = this.zoomStartPoint.startY;
-		let width = transPos.x - startX;
-		let height = transPos.y - startY;
+		let x = this.zoomStartPoint.startX;
+		let y = this.zoomStartPoint.startY;
+		let width = transPos.x - x;
+		let height = transPos.y - y;
 
 		if (width < 0) {
 			width = Math.abs(width);
-			startX -= width;
+			x -= width;
 		}
 		if (height < 0) {
 			height = Math.abs(height);
-			startY -= height;
+			y -= height;
 		}
 
-		return { startX, startY, width, height };
+		return { x, y, width, height };
 	}
 
 	// Performs zoom behaviors for each incremental zoom action.
@@ -461,8 +454,7 @@ export default class SVGCanvasUtilsZoom {
 				!this.contextMenuClosedOnZoom &&
 				!this.textEditingClosedOnZoom &&
 				(this.ren.config.enableEditingActions ||
-				(d3Event.sourceEvent &&
-					d3Event.sourceEvent.target.classList.contains("d3-svg-background")))) {
+				(d3Event.sourceEvent?.target?.classList?.contains("d3-svg-background")))) {
 			this.ren.canvasController.clearSelections();
 		}
 	}
