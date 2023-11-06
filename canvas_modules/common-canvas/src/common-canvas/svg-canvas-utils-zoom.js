@@ -269,11 +269,9 @@ export default class SVGCanvasUtilsZoom {
 		this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k, startX: transPos.x, startY: transPos.y };
 		this.previousD3Event = { ...d3Event.transform };
 
-		// Calculate the canvas dimensions here, so we don't have to recalculate
+		// Store the canvas dimensions so we don't have to recalculate
 		// them for every zoom action event.
-		this.zoomCanvasDimensions = CanvasUtils.getCanvasDimensions(
-			this.ren.activePipeline.nodes, this.ren.activePipeline.comments,
-			this.ren.activePipeline.links, this.ren.canvasLayout.commentHighlightGap);
+		this.zoomCanvasDimensions = this.getCanvasDimensions();
 	}
 
 	// Handles each increment of a zoom action
@@ -761,16 +759,15 @@ export default class SVGCanvasUtilsZoom {
 
 	// Returns a rect object describing the rect passed in but
 	// scaled by k and with padding added.
-	convertRectAdjustedForScaleWithPadding(rect, k, pad) {
-		const padding = pad || 0;
+	convertRectAdjustedForScaleWithPadding(rect, k, pad = 0) {
 		if (rect) {
 			return {
-				left: (rect.left * k) - padding,
-				top: (rect.top * k) - padding,
-				right: (rect.right * k) + padding,
-				bottom: (rect.bottom * k) + padding,
-				width: (rect.width * k) + (2 * padding),
-				height: (rect.height * k) + (2 * padding)
+				left: (rect.left * k) - pad,
+				top: (rect.top * k) - pad,
+				right: (rect.right * k) + pad,
+				bottom: (rect.bottom * k) + pad,
+				width: (rect.width * k) + (2 * pad),
+				height: (rect.height * k) + (2 * pad)
 			};
 		}
 		return null;
