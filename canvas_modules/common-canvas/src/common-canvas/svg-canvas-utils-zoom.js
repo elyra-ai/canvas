@@ -22,8 +22,7 @@ const d3 = Object.assign({}, d3Selection, d3Zoom);
 
 import Logger from "../logging/canvas-logger.js";
 import CanvasUtils from "./common-canvas-utils.js";
-import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD,
-	LINK_SELECTION_NONE }
+import { INTERACTION_CARBON, INTERACTION_MOUSE, INTERACTION_TRACKPAD }
 	from "./constants/canvas-constants.js";
 
 // This utility file provides a d3-zoom handler which manages zoom operations
