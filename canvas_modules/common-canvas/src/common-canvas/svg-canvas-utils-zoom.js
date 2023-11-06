@@ -745,17 +745,18 @@ export default class SVGCanvasUtilsZoom {
 	// a sub-flow that map to a port in the containing supernode. The dimensions
 	// include an appropriate padding amount.
 	getCanvasDimensionsWithPadding() {
-		return this.getCanvasDimensions();
+		return this.getCanvasDimensions(this.getZoomToFitPadding());
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
 	// based on the position and width and height of the nodes and comments. It
 	// does not include the 'super binding nodes' which are the binding nodes in
-	// a sub-flow that map to a port in the containing supernode.
-	getCanvasDimensions() {
+	// a sub-flow that map to a port in the containing supernode. If a pad is
+	// provided, it is also added in to the dimensions.
+	getCanvasDimensions(pad) {
 		const gap = this.ren.canvasLayout.commentHighlightGap;
 		const canvasDimensions = this.ren.activePipeline.getCanvasDimensions(gap);
-		return this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, this.getZoomToFitPadding());
+		return this.convertRectAdjustedForScaleWithPadding(canvasDimensions, 1, pad);
 	}
 
 	// Returns a rect object describing the rect passed in but
