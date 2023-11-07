@@ -37,6 +37,8 @@ class NotificationPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+
+		this.firstTime = true;
 		this.logger = new Logger("NotificationPanel");
 		this.handleNotificationPanelClickOutside = this.handleNotificationPanelClickOutside.bind(this);
 		this.closeNotificationPanel = this.closeNotificationPanel.bind(this);
@@ -156,11 +158,14 @@ class NotificationPanel extends React.Component {
 	render() {
 		this.logger.log("render");
 
-		if (!this.props.notificationConfig || !this.props.isNotificationOpen) {
+		if (!this.props.notificationConfig) {
 			return null;
 		}
 
-		const notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
+		let notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
+		notificationPanelClassName += this.firstTime ? "" : " panel-annimate";
+		this.firstTime = false;
+
 		const notificationHeader = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
 			? this.props.notificationConfig.notificationHeader
 			: DEFAULT_NOTIFICATION_HEADER;
