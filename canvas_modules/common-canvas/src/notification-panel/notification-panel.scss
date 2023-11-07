@@ -24,16 +24,18 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 // This section adds an ease-in ease-out effect for the notification-panel-container
 .notification-panel-container {
-	transition: 0.25s ease-in-out;
 	opacity: 1;
 	margin-top: 0;
 	z-index: 2; // Ensure panel appears on top of bottom panel.
 
 	&.panel-hidden {
-		transition: 0.25s ease-in-out;
 		display: block;
 		opacity: 0;
 		visibility: hidden;
+	}
+
+	&.panel-transition {
+		transition: 0.25s ease-in-out;
 	}
 }
 
