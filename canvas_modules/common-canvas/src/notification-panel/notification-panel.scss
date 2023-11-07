@@ -34,7 +34,7 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 		visibility: hidden;
 	}
 
-	&.panel-annimate {
+	&.panel-transition {
 		transition: 0.25s ease-in-out;
 	}
 }

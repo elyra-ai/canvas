@@ -163,7 +163,7 @@ class NotificationPanel extends React.Component {
 		}
 
 		let notificationPanelClassName = this.props.isNotificationOpen ? "" : "panel-hidden";
-		notificationPanelClassName += this.firstTime ? "" : " panel-annimate";
+		notificationPanelClassName += this.firstTime ? "" : " panel-transition";
 		this.firstTime = false;
 
 		const notificationHeader = this.props.notificationConfig && this.props.notificationConfig.notificationHeader
