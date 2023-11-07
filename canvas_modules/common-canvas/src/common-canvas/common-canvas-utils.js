@@ -863,9 +863,16 @@ export default class CanvasUtils {
 	}
 
 	// Returns an array of selected object IDs for nodes, comments and links
-	// that are within the region provided. Links are only included if
+	// that are within the region (inReg) provided. Links are only included if
 	// includeLinks is truthy.
-	static selectInRegion(region, pipeline, includeLinks, linkType, enableAssocLinkType) {
+	static selectInRegion(inReg, pipeline, includeLinks, linkType, enableAssocLinkType) {
+		const region = {
+			x1: inReg.x,
+			y1: inReg.y,
+			x2: inReg.x + inReg.width,
+			y2: inReg.y + inReg.height
+		};
+
 		var regionSelections = [];
 		for (const node of pipeline.nodes) {
 			if (!this.isSuperBindingNode(node) && // Don't include binding nodes in select

@@ -200,12 +200,16 @@ class CanvasContents extends React.Component {
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					!evt.shiftKey && evt.keyCode === Z_KEY && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("undo");
+				if (this.props.canvasController.canUndo()) {
+					this.props.canvasController.keyboardActionHandler("undo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					((evt.shiftKey && evt.keyCode === Z_KEY) || evt.keyCode === Y_KEY && actions.redo)) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("redo");
+				if (this.props.canvasController.canRedo()) {
+					this.props.canvasController.keyboardActionHandler("redo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
