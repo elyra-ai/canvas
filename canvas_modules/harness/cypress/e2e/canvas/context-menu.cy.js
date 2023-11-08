@@ -89,10 +89,6 @@ describe("Test of context menu", function() {
 	});
 
 	it("Test context menu position is moved correctly with bottom panl open", function() {
-		// This test is being skipped because the canvas area needs to be fixed. At the moment
-		// it stretches underneath the bottom panel to the bottom of the common canvas div.
-		// It needs to be fixed so that, when the bottom panel is open, the canvas area only
-		// extends down to where the bottom panel begins."
 		cy.setCanvasConfig({ "selectedShowBottomPanel": true });
 
 		// Test the context menu postion is moved correctly

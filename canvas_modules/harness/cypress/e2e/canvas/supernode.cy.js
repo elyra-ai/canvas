@@ -85,7 +85,7 @@ describe("Test supernode expanded to correct size", function() {
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it.skip("Test expanding supernode, rename supernode, create a nested supernode, " +
+	it("Test expanding supernode, rename supernode, create a nested supernode, " +
 	"expand and delete nested supernode, undo delete, verify number of nodes and links in all pipelines", function() {
 		// Expand supernode using context menu
 		cy.rightClickNode("Supernode");
@@ -102,7 +102,6 @@ describe("Test supernode expanded to correct size", function() {
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
 		// Select multiple nodes in supernode
-		// TODO: cy.ctrlOrCmdClickNodeInSupernode() works on localhost but fails on travis - Skipping this test
 		cy.getNodeWithLabelInSupernode("Partition", "First Supernode").click();
 		cy.ctrlOrCmdClickNodeInSupernode("Distribution", "First Supernode");
 		cy.verifyNumberOfSelectedObjects(2);
@@ -151,7 +150,7 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.openCanvasDefinition("supernodeCanvas.json");
 	});
 
-	it.skip("Add a node from palette to canvas, Cut node on canvas and paste it inside expanded supernode, " +
+	it("Add a node from palette to canvas, Cut node on canvas and paste it inside expanded supernode, " +
 	"Add a port to port link between nodes in supernode, Create a nested supernode, " +
 	"Delete supernode should remove nested subpipelines", function() {
 		// Double click Derive node on canvas
@@ -188,7 +187,6 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.get("#harness-action-bar-sidepanel-api > a").click();
 
 		// Select multiple nodes in supernode
-		// TODO: cy.ctrlOrCmdClickNodeInSupernode() works on localhost but fails on travis - Skipping this test
 		cy.getNodeWithLabelInSupernode("Distribution", "First Supernode").click();
 		cy.ctrlOrCmdClickNodeInSupernode("Derive", "First Supernode");
 		cy.verifyNumberOfSelectedObjects(2);
@@ -213,8 +211,8 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.verifyNumberOfLinksInPipeline(24);
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 8);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 7);
-		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 4);
-		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 3);
+		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 5);
+		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 4);
 
 		// Delete supernode should remove nested subpipelines
 		cy.deleteNodeUsingKeyboard("First Supernode");
@@ -233,8 +231,8 @@ describe("Test create supernode within a supernode with a new node from palette"
 		cy.verifyNumberOfLinksInPipeline(24);
 		cy.verifyNumberOfNodesInSupernode("First Supernode", 8);
 		cy.verifyNumberOfLinksInSupernode("First Supernode", 7);
-		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 4);
-		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 3);
+		cy.verifyNumberOfNodesInSupernodeNested("Second Supernode", "First Supernode", 5);
+		cy.verifyNumberOfLinksInSupernodeNested("Second Supernode", "First Supernode", 4);
 	});
 });
 
