@@ -974,22 +974,26 @@ Cypress.Commands.add("verifyNumberOfPortsOnNode", (nodeName, portType, noOfPorts
 });
 
 Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
-	cy.get("#toolbar-items")
-		.find("li")
-		.its("length")
-		.then((totalItemsLength) => {
-			// Find hidden items length
-			cy.get("#actions-container")
-				.find("#overflow-action")
-				.eq(0)
-				.find(".toolbar-popover-list-hide")
-				.eq(0)
-				.find("li")
-				.its("length")
-				.then((hiddenItemsLength) => {
-					// Get number of visible items
-					const itemsVisible = totalItemsLength - hiddenItemsLength;
-					expect(itemsVisible).to.equal(noOfItems);
+	cy.get(".toolbar-left-bar .toolbar-item")
+		.then((leftBarItems) => {
+			cy.get(".toolbar-right-bar .toolbar-item")
+				.then((rightBarItems) => {
+					cy.get(".toolbar-overflow-item")
+						.then((toolbarOverflowItems) => {
+							const leftBarTopItemsCount = getCountToolbarItemsOnTopRow(leftBarItems);
+							const overflowTopItemsCount = getCountToolbarItemsOnTopRow(toolbarOverflowItems);
+							const rightBarTopItemsCount = getCountToolbarItemsOnTopRow(rightBarItems);
+
+							let visibleItemsCount = leftBarTopItemsCount + rightBarTopItemsCount;
+
+							// If there is one more overflow item than the left bar items
+							// then an overflow item is visible.
+							if (overflowTopItemsCount > leftBarTopItemsCount) {
+								visibleItemsCount++;
+							}
+
+							expect(visibleItemsCount).to.equal(noOfItems);
+						});
 				});
 		});
 });
@@ -1374,6 +1378,19 @@ Cypress.Commands.add("verifyPixelValueInCompareRange", (value, cssValue) => {
 Cypress.Commands.add("verifyValueInCompareRange", (value, compareValue) => {
 	compareCloseTo(value, compareValue);
 });
+
+// Returns the count of toolbar items passed in that are on the top row of the
+// toolbar. That is, where their offset top is 0.
+function getCountToolbarItemsOnTopRow(items) {
+	let itemsVisible = 0;
+
+	for (let i = 0; i < items.length; i++) {
+		if (items[i].offsetTop === 0) {
+			itemsVisible++;
+		}
+	}
+	return itemsVisible;
+}
 
 function verifyPath(actualPath, expectedPath) {
 	const actualElements = actualPath.getAttribute("d").split(" ");
