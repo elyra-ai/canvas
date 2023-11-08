@@ -168,7 +168,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 	it("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
-		cy.getNodeWithLabel("Execution node").click();
+		cy.clickNode("Execution node");
 
 		// Verify only one node is selected
 		cy.verifyNodeIsSelected("Execution node");
@@ -190,11 +190,22 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.ctrlOrCmdClickComment("The 4 different node types");
 
 		// Verify 2 nodes and 1 comment is selected
+		console.log("cy.verifyNodeIsSelected(Execution node);");
 		cy.verifyNodeIsSelected("Execution node");
+
+		console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
 		cy.verifyNodeIsSelected("Binding (entry) node");
+
+		console.log("Super node");
 		cy.verifyNodeIsNotSelected("Super node");
+
+		console.log("Binding exit");
 		cy.verifyNodeIsNotSelected("Binding (exit) node");
+
+		console.log("Modal Node");
 		cy.verifyNodeIsNotSelected("Model Node");
+
+		console.log("comment");
 		cy.verifyCommentIsSelected("The 4 different node types");
 
 		// // Try dragging a couple of selected nodes and a selected comment

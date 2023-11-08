@@ -147,32 +147,26 @@ function findGrpForLabel(grpArray, nodeLabel) {
 	return null;
 }
 
-function isGrpNotForLabel(grpArray, nodeLabel) {
-	for (let idx = 0; idx < grpArray.length; idx++) {
-		expect(grpArray[idx].__data__.label).to.not.equal(nodeLabel);
-	}
-}
-
-// posX and posY parameters is optional
+// posX and posY parameters are optional
 Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 	cy.getNodeWithLabel(nodeName).click(posX, posY);
 });
 
 
-// posX and posY parameters is optional
-Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName, posX, posY) => {
+Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false })
-			.getNodeWithLabel(nodeName)
-			.click(posX, posY);
-		// Cancel the command/ctrl key press -- the documentation doesn't say
-		// this needs to be done but if it isn't the command key stays pressed down
-		// causing problems with subsequent selections.
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getNodeWithLabel(nodeName)
+				.click();
+			// Cancel the command/ctrl key press -- the documentation doesn't say
+			// this needs to be done but if it isn't the command key stays pressed down
+			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(selectedKey, { release: true });
+		});
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
