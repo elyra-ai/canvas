@@ -186,15 +186,17 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
+		cy.wait(500);
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
+		cy.wait(500);
 		cy.ctrlOrCmdClickComment("The 4 different node types");
 
 		// Verify 2 nodes and 1 comment is selected
 		console.log("cy.verifyNodeIsSelected(Execution node);");
 		cy.verifyNodeIsSelected("Execution node");
 
-		// console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
-		// cy.verifyNodeIsSelected("Binding (entry) node");
+		console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
+		cy.verifyNodeIsSelected("Binding (entry) node");
 
 		// console.log("Super node");
 		// cy.verifyNodeIsNotSelected("Super node");
