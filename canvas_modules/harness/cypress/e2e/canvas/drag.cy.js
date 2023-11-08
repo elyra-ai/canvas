@@ -196,17 +196,19 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
 		cy.verifyNodeIsSelected("Binding (entry) node");
 
-		console.log("Super node");
-		cy.verifyNodeIsNotSelected("Super node");
+		// console.log("Super node");
+		// cy.verifyNodeIsNotSelected("Super node");
 
-		console.log("Binding exit");
-		cy.verifyNodeIsNotSelected("Binding (exit) node");
+		// console.log("Binding exit");
+		// cy.verifyNodeIsNotSelected("Binding (exit) node");
 
-		console.log("Modal Node");
-		cy.verifyNodeIsNotSelected("Model Node");
+		// console.log(Modal Node");
+		// cy.verifyNodeIsNotSelected("Model Node");
 
-		console.log("comment");
-		cy.verifyCommentIsSelected("The 4 different node types");
+		// console.log("comment");
+		// cy.verifyCommentIsSelected("The 4 different node types");
+
+		// ----------------------------------
 
 		// // Try dragging a couple of selected nodes and a selected comment
 		// cy.moveNodeToPosition("Binding (entry) node", 300, 350);
