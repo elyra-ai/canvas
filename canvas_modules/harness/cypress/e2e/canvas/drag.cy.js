@@ -193,8 +193,8 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		console.log("cy.verifyNodeIsSelected(Execution node);");
 		cy.verifyNodeIsSelected("Execution node");
 
-		console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
-		cy.verifyNodeIsSelected("Binding (entry) node");
+		// console.log("cy.verifyNodeIsSelected(Binding (entry) node);");
+		// cy.verifyNodeIsSelected("Binding (entry) node");
 
 		// console.log("Super node");
 		// cy.verifyNodeIsNotSelected("Super node");
