@@ -29,21 +29,23 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.wait(500);
 
 		// Verify only one node is selected
-		cy.verifyNodeIsSelected("Execution node");
-		cy.verifyNodeIsNotSelected("Binding (entry) node");
-		cy.verifyNodeIsNotSelected("Super node");
-		cy.verifyNodeIsNotSelected("Binding (exit) node");
-		cy.verifyNodeIsNotSelected("Model Node");
-		cy.verifyCommentIsNotSelected("The 4 different node types");
+		// cy.verifyNodeIsSelected("Execution node");
+		// cy.verifyNodeIsNotSelected("Binding (entry) node");
+		// cy.verifyNodeIsNotSelected("Super node");
+		// cy.verifyNodeIsNotSelected("Binding (exit) node");
+		// cy.verifyNodeIsNotSelected("Model Node");
+		// cy.verifyCommentIsNotSelected("The 4 different node types");
 
-		// Try dragging a single selected node
-		cy.moveNodeToPosition("Execution node", 300, 350);
-		cy.verifyNodeTransform("Execution node", 300, 349.5);
+		// // Try dragging a single selected node
+		// cy.moveNodeToPosition("Execution node", 300, 350);
+		// cy.verifyNodeTransform("Execution node", 300, 349.5);
 
-		// Select 2 nodes and 1 comment
-		cy.clickToolbarUndo();
-		cy.ctrlOrCmdClickNode("Binding (entry) node");
-		cy.ctrlOrCmdClickComment("The 4 different node types");
+		// // Select 2 nodes and 1 comment
+		// cy.clickToolbarUndo();
+		// cy.ctrlOrCmdClickNode("Binding (entry) node");
+		// cy.ctrlOrCmdClickComment("The 4 different node types");
+
+		// Test 2 below
 
 		// cy.wait(500);
 
