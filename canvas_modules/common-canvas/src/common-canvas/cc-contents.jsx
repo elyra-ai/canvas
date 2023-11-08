@@ -275,7 +275,7 @@ class CanvasContents extends React.Component {
 	onClickReturnToPrevious(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
-		this.props.canvasController?.displayPreviousPipeline.bind(this.props.canvasController);
+		this.props.canvasController.displayPreviousPipeline();
 	}
 
 	setCanvasInfo() {

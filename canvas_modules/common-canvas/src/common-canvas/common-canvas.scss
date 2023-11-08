@@ -249,7 +249,8 @@ $panel-border-color: $ui-03;
 		background-color: $ui-background;
 		padding-right: 20px;
 	}
-	& button:hover {
+	& button:hover,
+	& button:focus {
 		background-color: $ui-03;
 		color: $interactive-01;
 	}
