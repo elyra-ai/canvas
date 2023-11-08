@@ -165,7 +165,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it.skip("Test dragging single and multiple selected nodes, " +
+	it("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
 		cy.getNodeWithLabel("Execution node").click();
@@ -183,8 +183,6 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
-		// TODO: Following code works on localhost but fails on travis - Skipping this test
-		// When selectedDragWithoutSelect: true, cy.ctrlOrCmdClickNode() and cy.ctrlOrCmdClickComment() are not working
 		cy.clickToolbarUndo();
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
