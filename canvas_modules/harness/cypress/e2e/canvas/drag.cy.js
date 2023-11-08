@@ -26,6 +26,8 @@ describe("Test to see if regular selection and drag behavior works " +
 		// Select one node
 		cy.getNodeWithLabel("Execution node").click();
 
+		cy.wait(500);
+
 		// Verify only one node is selected
 		cy.verifyNodeIsSelected("Execution node");
 		cy.verifyNodeIsNotSelected("Binding (entry) node");
@@ -42,6 +44,8 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.clickToolbarUndo();
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
+
+		cy.wait(500);
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");
