@@ -154,7 +154,6 @@ Cypress.Commands.add("clickNode", (nodeName, posX, posY) => {
 
 
 Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
-	// Get the os name to decide whether to click ctrl or cmd
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get("body")
@@ -170,17 +169,17 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 });
 
 Cypress.Commands.add("ctrlOrCmdClickNodeInSupernode", (nodeName, supernodeName) => {
-	// Get the os name to decide whether to click ctrl or cmd
-	cy.useCtrlOrCmdKey().then((selectedKey) => {
-		cy.get("body")
-			.type(selectedKey, { release: false })
-			.getNodeWithLabelInSupernode(nodeName, supernodeName)
-			.click();
+	cy.useCtrlOrCmdKey()
+		.then((selectedKey) => {
+			cy.get("body")
+				.type(selectedKey, { release: false })
+				.getNodeWithLabelInSupernode(nodeName, supernodeName)
+				.click();
 
-		// Cancel the command/ctrl key press
-		cy.get("body")
-			.type(selectedKey, { release: true });
-	});
+			// Cancel the command/ctrl key press
+			cy.get("body")
+				.type(selectedKey, { release: true });
+		});
 });
 
 // position parameter is optional
