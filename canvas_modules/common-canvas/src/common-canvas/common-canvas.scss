@@ -57,7 +57,6 @@ $panel-border-color: $ui-03;
 	cursor: default;
 	overflow: hidden;
 	position: relative; // This allows the State Tag to have positio: absolute
-
 }
 
 .right-flyout-panel {
@@ -74,7 +73,6 @@ $panel-border-color: $ui-03;
 	// Make sure the bottom panel appear above the empty canvas content
 	// (when displayed) in the flow editor div.
 	z-index: 1;
-
 }
 
 .bottom-panel-drag {
@@ -201,7 +199,6 @@ $panel-border-color: $ui-03;
 	grid-template-columns: 1fr;
 }
 
-
 /* Styles for empty canvas objects */
 
 .empty-canvas {
@@ -239,6 +236,36 @@ $panel-border-color: $ui-03;
 	color: $text-02;
 	display: block;
 	text-align: center;
+}
+
+/* Styles for 'Return to previous flow' button - shown for full-page sub-flows */
+
+.return-to-previous {
+	position: absolute;
+	left: 15px;
+	top: 15px;
+	background-color: $ui-background;
+	& button {
+		background-color: $ui-background;
+		padding-right: 20px;
+	}
+	& button:hover,
+	& button:focus {
+		background-color: $ui-03;
+		color: $interactive-01;
+	}
+	& .return-to-previous-content {
+		display: flex;
+		background-color: transparent;
+		& svg {
+			margin-top: 1px;
+			margin-left: 4px;
+			margin-right: 7px;
+		}
+		& span {
+			padding-bottom: 2px;
+		}
+	}
 }
 
 /* Styles for drop zone canvas objects */
