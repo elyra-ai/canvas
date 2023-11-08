@@ -1569,6 +1569,11 @@ export default class CanvasController {
 		return this.objectModel.isRightFlyoutOpen();
 	}
 
+	isDisplayingFullPageSubFlow() {
+		const breadcrumbs = this.objectModel.getBreadcrumbs();
+		return breadcrumbs.length > 1;
+	}
+
 	// Displays a pipeline (identified by the pipelineId passed in). This must be
 	// one of the pipelines referenced by the current set of breadcrumbs. It
 	// cannot be used to open a new pipeline outside the current set of breadcruumbs.

@@ -21,10 +21,6 @@ $canvas-background-color: $ui-background;
 $region-selector-stroke-color: $ui-05;
 $region-selector-fill-color: $ui-03;
 
-// 'Back to previous flow' control colors
-$back-to-previous-flow-box-color: $interactive-01;
-$back-to-previous-flow-box-fill-hover: $ui-03;
-
 // Node colors
 $node-body-stroke: $ui-05;
 $node-body-fill: $ui-01;
@@ -152,28 +148,6 @@ $link-highlight-color: $support-04;
 
 .d3-temp-cursor-overlay {
 	fill: transparent;
-}
-
-/* Back to Previous Flow control */
-
-.d3-back-to-previous-flow-box {
-	stroke: $back-to-previous-flow-box-color;
-	fill: $canvas-background-color;
-}
-
-.d3-back-to-previous-flow-box[data-pointer-hover="yes"] {
-	stroke: $back-to-previous-flow-box-color;
-	fill: $back-to-previous-flow-box-fill-hover;
-}
-
-.d3-back-to-previous-flow-text {
-	font-size: 14px;
-	font-weight: 400;
-	fill: $back-to-previous-flow-box-color;
-}
-
-.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
-	cursor: pointer;
 }
 
 /* Ghost div and node used when dragging a node from the palette */

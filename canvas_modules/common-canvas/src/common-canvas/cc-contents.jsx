@@ -27,9 +27,9 @@ import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
-import { FlowData16 } from "@carbon/icons-react";
+import { Button } from "carbon-components-react";
+import { FlowData16, ArrowLeft16 } from "@carbon/icons-react";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
-
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -92,6 +92,7 @@ class CanvasContents extends React.Component {
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -270,6 +271,13 @@ class CanvasContents extends React.Component {
 		}
 	}
 
+	// Handles the click on the "Return to previous flow" button.
+	onClickReturnToPrevious(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		this.props.canvasController?.displayPreviousPipeline.bind(this.props.canvasController);
+	}
+
 	setCanvasInfo() {
 		// TODO - Eventually move nodeLayout and canvasLayout into redux and then
 		// pass them into this.svgCanvasD3() as props.
@@ -335,6 +343,30 @@ class CanvasContents extends React.Component {
 			}
 		}
 		return emptyCanvas;
+	}
+
+	getReturnToPreviousBtn() {
+		let returnToPrevious = null;
+		if (!this.props.canvasController.isPrimaryPipelineEmpty() &&
+				(this.props.canvasController.isDisplayingFullPageSubFlow() ||
+					this.props.canvasConfig?.enableCanvasLayout?.alwaysDisplayBackToParentFlow)) {
+			const label = this.getLabel("canvas.returnToPrevious");
+			returnToPrevious = (
+				<div className={"return-to-previous"}>
+					<Button kind={"tertiary"}
+						onClick={this.onClickReturnToPrevious}
+						aria-label={label}
+						size={"md"}
+					>
+						<div className={"return-to-previous-content"}>
+							<ArrowLeft16 />
+							<span>{label}</span>
+						</div>
+					</Button>
+				</div>
+			);
+		}
+		return returnToPrevious;
 	}
 
 	getContextMenu() {
@@ -535,6 +567,7 @@ class CanvasContents extends React.Component {
 
 		const stateTag = this.getStateTag();
 		const emptyCanvas = this.getEmptyCanvas();
+		const returnToPreviousBtn = this.getReturnToPreviousBtn();
 		const contextMenu = this.getContextMenu();
 		const textToolbar = this.getTextToolbar();
 		const dropZoneCanvas = this.getDropZone();
@@ -553,6 +586,7 @@ class CanvasContents extends React.Component {
 					>
 						{svgCanvasDiv}
 						{emptyCanvas}
+						{returnToPreviousBtn}
 						{stateTag}
 						{contextMenu}
 						{textToolbar}
