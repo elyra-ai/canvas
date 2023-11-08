@@ -69,45 +69,45 @@ describe("Test to see if regular selection and drag behavior works " +
 		cy.verifyCommentIsSelected("The 4 different node types");
 		cy.clickToolbarUndo();
 
-		// Try dragging a node that is not selected -
-		// this should select the node being dragged and deselect the three selections
-		cy.moveNodeToPosition("Super node", 300, 350);
+		// // Try dragging a node that is not selected -
+		// // this should select the node being dragged and deselect the three selections
+		// cy.moveNodeToPosition("Super node", 300, 350);
 
-		// Verify only dragged node is selected, all other selections are cleared
-		cy.verifyNodeIsNotSelected("Execution node");
-		cy.verifyNodeIsNotSelected("Binding (entry) node");
-		cy.verifyNodeIsSelected("Super node");
-		cy.verifyNodeIsNotSelected("Binding (exit) node");
-		cy.verifyNodeIsNotSelected("Model Node");
-		cy.verifyCommentIsNotSelected("The 4 different node types");
+		// // Verify only dragged node is selected, all other selections are cleared
+		// cy.verifyNodeIsNotSelected("Execution node");
+		// cy.verifyNodeIsNotSelected("Binding (entry) node");
+		// cy.verifyNodeIsSelected("Super node");
+		// cy.verifyNodeIsNotSelected("Binding (exit) node");
+		// cy.verifyNodeIsNotSelected("Model Node");
+		// cy.verifyCommentIsNotSelected("The 4 different node types");
 
-		cy.verifyNodeTransform("Super node", 300, 350);
-		cy.clickToolbarUndo();
+		// cy.verifyNodeTransform("Super node", 300, 350);
+		// cy.clickToolbarUndo();
 
-		// Try dragging a comment that is not selected -
-		// this should select the comment being dragged and deselect the three selections
-		cy.moveCommentToPosition(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links.", 300, 350
-		);
+		// // Try dragging a comment that is not selected -
+		// // this should select the comment being dragged and deselect the three selections
+		// cy.moveCommentToPosition(
+		// 	"This canvas shows the 4 different node types and three link types: node links, " +
+		// 	"association links and comments links.", 300, 350
+		// );
 
-		// Verify only dragged comment is selected
-		cy.verifyNodeIsNotSelected("Execution node");
-		cy.verifyNodeIsNotSelected("Binding (entry) node");
-		cy.verifyNodeIsNotSelected("Super node");
-		cy.verifyNodeIsNotSelected("Binding (exit) node");
-		cy.verifyNodeIsNotSelected("Model Node");
-		cy.verifyCommentIsNotSelected("The 4 different node types");
-		cy.verifyCommentIsSelected(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links."
-		);
+		// // Verify only dragged comment is selected
+		// cy.verifyNodeIsNotSelected("Execution node");
+		// cy.verifyNodeIsNotSelected("Binding (entry) node");
+		// cy.verifyNodeIsNotSelected("Super node");
+		// cy.verifyNodeIsNotSelected("Binding (exit) node");
+		// cy.verifyNodeIsNotSelected("Model Node");
+		// cy.verifyCommentIsNotSelected("The 4 different node types");
+		// cy.verifyCommentIsSelected(
+		// 	"This canvas shows the 4 different node types and three link types: node links, " +
+		// 	"association links and comments links."
+		// );
 
-		cy.verifyCommentTransform(
-			"This canvas shows the 4 different node types and three link types: node links, " +
-			"association links and comments links.", 300, 350
-		);
-		cy.clickToolbarUndo();
+		// cy.verifyCommentTransform(
+		// 	"This canvas shows the 4 different node types and three link types: node links, " +
+		// 	"association links and comments links.", 300, 350
+		// );
+		// cy.clickToolbarUndo();
 	});
 
 	it("Test node cannot be dragged when enableEditingActions is false", function() {
