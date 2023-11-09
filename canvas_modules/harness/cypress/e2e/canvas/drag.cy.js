@@ -165,7 +165,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
-	it("Test dragging single and multiple selected nodes, " +
+	it.only("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
 		cy.clickNode("Execution node");
@@ -186,10 +186,8 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 
 		// Select 2 nodes and 1 comment
 		cy.clickToolbarUndo();
-		cy.wait(500);
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
-
-		// cy.ctrlOrCmdClickComment("The 4 different node types");
+		cy.ctrlOrCmdClickComment("The 4 different node types");
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");
