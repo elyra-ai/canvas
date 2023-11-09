@@ -158,7 +158,7 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 		.then((selectedKey) => {
 			cy.get("body")
 				.getNodeWithLabel(nodeName)
-				.click({ metaKey: true });
+				.click({ ctrlKey: true });
 		});
 });
 
