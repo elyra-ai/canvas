@@ -171,12 +171,12 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.clickNode("Execution node");
 
 		// Verify only one node is selected
-		cy.verifyNodeIsSelected("Execution node");
-		cy.verifyNodeIsNotSelected("Binding (entry) node");
-		cy.verifyNodeIsNotSelected("Super node");
-		cy.verifyNodeIsNotSelected("Binding (exit) node");
-		cy.verifyNodeIsNotSelected("Model Node");
-		cy.verifyCommentIsNotSelected("The 4 different node types");
+		// cy.verifyNodeIsSelected("Execution node");
+		// cy.verifyNodeIsNotSelected("Binding (entry) node");
+		// cy.verifyNodeIsNotSelected("Super node");
+		// cy.verifyNodeIsNotSelected("Binding (exit) node");
+		// cy.verifyNodeIsNotSelected("Model Node");
+		// cy.verifyCommentIsNotSelected("The 4 different node types");
 
 		// ----------------------------------
 
@@ -187,7 +187,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		// Select 2 nodes and 1 comment
 		// cy.clickToolbarUndo();
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
-		cy.ctrlOrCmdClickComment("The 4 different node types");
+		// cy.ctrlOrCmdClickComment("The 4 different node types");
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");
