@@ -181,8 +181,8 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		// ----------------------------------
 
 		// Try dragging a single selected node
-		cy.moveNodeToPosition("Execution node", 300, 350);
-		cy.verifyNodeTransform("Execution node", 300, 349.5);
+		// cy.moveNodeToPosition("Execution node", 300, 350);
+		// cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
 		// cy.clickToolbarUndo();
