@@ -157,8 +157,14 @@ Cypress.Commands.add("ctrlOrCmdClickNode", (nodeName) => {
 	cy.useCtrlOrCmdKey()
 		.then((selectedKey) => {
 			cy.get("body")
+				.type(selectedKey, { release: false })
 				.getNodeWithLabel(nodeName)
-				.click({ ctrlKey: true });
+				.click();
+			// Cancel the command/ctrl key press -- the documentation doesn't say
+			// this needs to be done but if it isn't the command key stays pressed down
+			// causing problems with subsequent selections.
+			cy.get("body")
+				.type(selectedKey, { release: true });
 		});
 });
 
