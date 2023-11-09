@@ -614,10 +614,10 @@ describe("Properties Controller property values", () => {
 			string_disabled: "testing",
 			string_condition_handling: "testing"
 		};
-		let actualAllPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true });
+		let actualAllPropertiesInActiveTab = controller.getPropertyValues({ activeTabValues: true });
 		expect(expectedAllPropertiesInActiveTab).to.eql(actualAllPropertiesInActiveTab);
 
-		// getActiveTabControls: return all properties under selected tab/category
+		// activeTabValues: return all properties under selected tab/category
 		// filterHiddenDisabled: filter controls having state "hidden" or "disabled"
 		const expectedFilteredHiddenDisabledPropertiesInActiveTab = {
 			string_error: "testing",
@@ -626,10 +626,10 @@ describe("Properties Controller property values", () => {
 			disable: true,
 			string_condition_handling: "testing"
 		};
-		const actualFilteredHiddenDisabledPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterHiddenDisabled: true });
+		const actualFilteredHiddenDisabledPropertiesInActiveTab = controller.getPropertyValues({ activeTabValues: true, filterHiddenDisabled: true });
 		expect(expectedFilteredHiddenDisabledPropertiesInActiveTab).to.eql(actualFilteredHiddenDisabledPropertiesInActiveTab);
 
-		// getActiveTabControls: return all properties under selected tab/category
+		// activeTabValues: return all properties under selected tab/category
 		// filterHidden: filter controls having state "hidden"
 		const expectedFilteredHiddenPropertiesInActiveTab = {
 			string_error: "testing",
@@ -639,10 +639,10 @@ describe("Properties Controller property values", () => {
 			string_disabled: "testing",
 			string_condition_handling: "testing"
 		};
-		const actualFilteredHiddenPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterHidden: true });
+		const actualFilteredHiddenPropertiesInActiveTab = controller.getPropertyValues({ activeTabValues: true, filterHidden: true });
 		expect(expectedFilteredHiddenPropertiesInActiveTab).to.eql(actualFilteredHiddenPropertiesInActiveTab);
 
-		// getActiveTabControls: return all properties under selected tab/category
+		// activeTabValues: return all properties under selected tab/category
 		// filterDisabled: filter controls having state "disabled"
 		const expectedFilteredDisabledPropertiesInActiveTab = {
 			string_error: "testing",
@@ -652,11 +652,11 @@ describe("Properties Controller property values", () => {
 			disable: true,
 			string_condition_handling: "testing"
 		};
-		const actualFilteredDisabledPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true, filterDisabled: true });
+		const actualFilteredDisabledPropertiesInActiveTab = controller.getPropertyValues({ activeTabValues: true, filterDisabled: true });
 		expect(expectedFilteredDisabledPropertiesInActiveTab).to.eql(actualFilteredDisabledPropertiesInActiveTab);
 
 
-		// Verify getActiveTabControls: true returns all properties in nested subtabs as well
+		// Verify activeTabValues: true returns all properties in nested subtabs as well
 		renderedObject = testUtils.flyoutEditorForm(tabParamDef);
 		controller = renderedObject.controller;
 		wrapper = renderedObject.wrapper;
@@ -684,7 +684,7 @@ describe("Properties Controller property values", () => {
 			other_summary: "lemon",
 			openTearsheet: undefined
 		};
-		actualAllPropertiesInActiveTab = controller.getPropertyValues({ getActiveTabControls: true });
+		actualAllPropertiesInActiveTab = controller.getPropertyValues({ activeTabValues: true });
 		expect(expectedAllPropertiesInActiveTab).to.eql(actualAllPropertiesInActiveTab);
 
 	});

@@ -1202,13 +1202,13 @@ export default class PropertiesController {
 	*   filterHidden: true - filter out values from controls having state "hidden"
 	*   filterDisabled: true - filter out values from controls having state "disabled"
 	*   filterHiddenControls: true - filter out values from controls having type "hidden"
-	*   getActiveTabControls: true - return all properties under selected tab/category
+	*   activeTabValues: true - return all properties under selected tab/category
 	*/
 	getPropertyValues(options) {
 		// All property values
 		let propertyValues = this.propertiesStore.getPropertyValues();
 
-		if (options && options.getActiveTabControls) {
+		if (options && options.activeTabValues) {
 			propertyValues = this.getActiveTabPropertyValues();
 		}
 		let returnValues = propertyValues;
