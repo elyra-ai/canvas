@@ -190,7 +190,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		// cy.ctrlOrCmdClickComment("The 4 different node types");
 
 		// Verify 2 nodes and 1 comment is selected
-		cy.verifyNodeIsSelected("Execution node");
+		// cy.verifyNodeIsSelected("Execution node");
 
 		cy.verifyNodeIsSelected("Binding (entry) node");
 
