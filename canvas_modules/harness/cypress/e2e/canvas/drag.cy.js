@@ -185,7 +185,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
-		cy.clickToolbarUndo();
+		// cy.clickToolbarUndo();
 		cy.ctrlOrCmdClickNode("Binding (entry) node");
 		cy.ctrlOrCmdClickComment("The 4 different node types");
 
