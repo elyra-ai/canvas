@@ -26,6 +26,9 @@ const CONTEXT_MENU_LINK_HEIGHT = 30; // See context-menu.scss
 const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // See context-menu.scss
 const EXTRA_OFFSET = 5; // Extra offset for vertical menu positioning
 
+const SPACE_KEY = 32;
+const UP_ARROW_KEY = 38;
+const DOWN_ARROW_KEY = 40;
 
 class CommonContextMenu extends React.Component {
 	constructor(props) {
@@ -33,12 +36,43 @@ class CommonContextMenu extends React.Component {
 		this.state = {
 			displaySubMenuAction: ""
 		};
+
+		this.focusIndex = 0;
+
 		this.itemSelected = this.itemSelected.bind(this);
 		this.colorClicked = this.colorClicked.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+	}
+
+	componentDidMount() {
+		document.addEventListener("click", this.handleClickOutside, true);
+		if (this.props.focusOnFirst) {
+			this.setFocusAt(0);
+		}
 	}
 
 	onContextMenu(e) {
 		e.preventDefault();
+	}
+
+	onKeyDown(evt) {
+		if (evt.keyCode === DOWN_ARROW_KEY) {
+			this.setFocusAt(this.focusIndex + 1);
+
+		} else if (evt.keyCode === UP_ARROW_KEY) {
+			this.setFocusAt(this.focusIndex - 1);
+
+		} else if (evt.keyCode === SPACE_KEY) {
+			this.props.contextHandler(this.props.menuDefinition[this.focusIndex].action);
+		}
+	}
+
+	setFocusAt(index) {
+		const elements = document.getElementsByClassName("context-menu-item");
+		if (elements && elements.length > 0 && index < elements.length) {
+			elements[index].focus();
+			this.focusIndex = index;
+		}
 	}
 
 	itemSelected(data, selectedEvent) {
@@ -172,7 +206,7 @@ class CommonContextMenu extends React.Component {
 					: this.itemSelected.bind(null, menuDefinition[i].action);
 
 				menuItems.push((
-					<div key={i + 1} className={className} onClick={onClickFunction} role="menuitem">
+					<div key={i + 1} tabIndex="0" className={className} onClick={onClickFunction} role="menuitem">
 						{menuDefinition[i].label}
 					</div>
 				));
@@ -270,7 +304,12 @@ class CommonContextMenu extends React.Component {
 		const menuItems = this.buildMenu(this.props.menuDefinition, menuSize, menuPos, this.props.canvasRect);
 
 		return (
-			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
+			<div id="context-menu-popover"
+				className="context-menu-popover"
+				style={posStyle}
+				onKeyDown={this.onKeyDown}
+				onContextMenu={this.onContextMenu}
+			>
 				{menuItems}
 			</div>
 		);
@@ -281,7 +320,8 @@ CommonContextMenu.propTypes = {
 	contextHandler: PropTypes.func.isRequired,
 	menuDefinition: PropTypes.array.isRequired,
 	canvasRect: PropTypes.object.isRequired,
-	mousePos: PropTypes.object.isRequired
+	mousePos: PropTypes.object.isRequired,
+	focusOnFirst: PropTypes.bool.isRequired
 };
 
 export default CommonContextMenu;

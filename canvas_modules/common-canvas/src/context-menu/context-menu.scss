@@ -56,13 +56,18 @@
 	align-items: center;
 	position: relative; // Needed to allow sub-menu, if there is one,  to be positioned correctly
 
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px $interactive-01;
+	}
+
 	&.disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
 	}
 
 	&:active,
-	&:focus,
+	// &:focus,
 	&:hover {
 		background: $hover-ui;
 		text-decoration: none;

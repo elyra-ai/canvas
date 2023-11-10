@@ -101,6 +101,7 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	contextMenuClicked(action, param) {
+		this.props.closeContextMenu();
 		this.props.contextMenuActionHandler(action, param);
 	}
 
@@ -111,6 +112,7 @@ export default class ContextMenuWrapper extends React.Component {
 				menuDefinition={this.props.contextMenuDef}
 				canvasRect={this.getCanvasRect()}
 				mousePos={this.props.contextMenuPos}
+				focusOnFirst={this.props.focusOnFirst}
 			/>
 		);
 	}
@@ -122,5 +124,6 @@ ContextMenuWrapper.propTypes = {
 	contextMenuPos: PropTypes.object.isRequired,
 	contextMenuActionHandler: PropTypes.func.isRequired,
 	closeContextMenu: PropTypes.func.isRequired,
-	stopPropagation: PropTypes.bool
+	stopPropagation: PropTypes.bool,
+	focusOnFirst: PropTypes.bool
 };

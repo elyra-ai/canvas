@@ -107,10 +107,12 @@ export default class CanvasController {
 		// common-canvas.jsx.
 		this.labelUtil = new LabelUtil();
 
-		// The following two functions must bind to this so that the correct canvas
+		// The following four functions must bind to this so that the correct canvas
 		// controller context can be accessed in context menu wrapper component.
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
+		this.closeLinkFocusMenu = this.closeLinkFocusMenu.bind(this);
+		this.linkFocusActionHandler = this.linkFocusActionHandler.bind(this);
 
 		this.isContextMenuForNonSelectedObj = this.isContextMenuForNonSelectedObj.bind(this);
 
@@ -1337,6 +1339,29 @@ export default class CanvasController {
 		}
 	}
 
+	openLinkFocusContextMenu(linkInfos, pos) {
+		const menuDef = [];
+		this.linkToFocusInfos = linkInfos;
+		linkInfos.forEach((linkInfo, index) => {
+			const label = (linkInfo.type === "comment" ? "comment" : linkInfo.obj.label);
+
+			menuDef.push({ action: index, label: this.labelUtil.getLabel("canvas.linkToObject", { linked_object: label }) });
+		});
+
+		this.objectModel.openLinkFocusMenu(menuDef, pos);
+	}
+
+	closeLinkFocusMenu() {
+		this.objectModel.closeLinkFocusMenu();
+	}
+
+	linkFocusActionHandler(linkIndex) {
+		const linkInfo = this.linkToFocusInfos[linkIndex];
+		this.getSVGCanvasD3().moveFocusTo({ type: "link", obj: linkInfo.link });
+	}
+
+
+
 	// ---------------------------------------------------------------------------
 	// Command stack methods
 	// ---------------------------------------------------------------------------
@@ -2110,7 +2135,7 @@ export default class CanvasController {
 				this.isContextMenuForNonSelectedObj(source)) {
 			this.setSelections([source.targetObject.id]);
 		}
-		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
+		// this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
 		const data = Object.assign({}, source, { "editType": action, "editParam": editParam, "editSource": "contextmenu" });
 		this.editActionHandler(data);
 	}

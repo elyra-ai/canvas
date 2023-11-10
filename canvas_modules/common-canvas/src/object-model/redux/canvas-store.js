@@ -30,6 +30,7 @@ import breadcrumbs from "./reducers/breadcrumbs.js";
 import canvasconfig from "./reducers/canvasconfig.js";
 import canvastoolbar from "./reducers/canvastoolbar.js";
 import texttoolbar from "./reducers/texttoolbar.js";
+import linkfocusmenu from "./reducers/linkfocusmenu.js";
 import notifications from "./reducers/notifications.js";
 import selectioninfo from "./reducers/selectioninfo.js";
 import notificationpanel from "./reducers/notificationpanel.js";
@@ -54,6 +55,7 @@ export default class CanavasStore {
 			canvastoolbar,
 			texttoolbar,
 			contextmenu,
+			linkfocusmenu,
 			rightflyout,
 			bottompanel,
 			toppanel
@@ -72,6 +74,7 @@ export default class CanavasStore {
 			canvastoolbar: {},
 			texttoolbar: { isOpen: false },
 			contextmenu: { isOpen: false, menuDef: [], source: {} },
+			linkfocusmenu: { menuDef: [], pos: { x: 0, y: 0 } },
 			rightflyout: {},
 			bottompanel: { panelHeight: 393 },
 			toppanel: { }

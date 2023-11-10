@@ -112,6 +112,16 @@
 				transition-delay: 0.125s;
 			}
 		}
+
+		&:focus {
+			outline-width: 0;
+
+			& .d3-node-selection-highlight[data-selected="yes"] {
+				stroke-width: 3;
+				stroke: $interactive-01;
+				stroke-dasharray: 5, 5;
+			}
+		}
 	}
 
 	// ----------------------------------------------------

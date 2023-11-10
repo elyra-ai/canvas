@@ -21,6 +21,7 @@
 	"canvas.stateTagReadOnly": "[Esperanto~Read-only~~~eo]",
 	"canvas.stateTagTipLocked": "[Esperanto~This flow is locked and cannot be edited.~~~~~~~~~eo]",
 	"canvas.stateTagTipReadOnly": "[Esperanto~This flow cannot be edited.~~~~~~~~~eo]",
+	"canvas.linkToObject": "[Esperanto~Link to {linked_object}.~~~~~~~~~eo]",
 	"canvas.returnToPrevious": "[Esperanto~Return to previous flow~~~~~~eo]",
 	"comment.colorBackground": "[Esperanto~Color background~~~~~~~~~eo]",
 	"comment.editComment": "[Esperanto~Edit comment~~~~~~~eo]",

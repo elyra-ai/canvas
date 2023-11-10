@@ -2011,6 +2011,14 @@ export default class ObjectModel {
 		return null;
 	}
 
+	openLinkFocusMenu(menuDef, pos) {
+		this.store.dispatch({ type: "SET_LINK_FOCUS_MENU_DEF", data: { menuDef: menuDef, pos: pos } });
+	}
+
+	closeLinkFocusMenu() {
+		this.store.dispatch({ type: "SET_LINK_FOCUS_MENU_DEF", data: { menuDef: [], pos: { x: 0, y: 0 } } });
+	}
+
 	// ---------------------------------------------------------------------------
 	// Add decorations in batch
 	// ---------------------------------------------------------------------------
