@@ -165,10 +165,22 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.openCanvasDefinition("allTypesCanvas.json");
 	});
 
+	// The test below is being skipped because it fails on the build machine
+	// but not on a local MacBook Pro. The basic cause is that these two lines
+	//     cy.ctrlOrCmdClickNode("Binding (entry) node");
+	//     cy.ctrlOrCmdClickComment("The 4 different node types");
+	// are failing to select the nodes in quesiton. However, after many
+	// attempts trying to diagnose the problem I cannot find the root cause.
+	// I suspect it is probably happening because this is testing with
+	// selectedDragWithoutSelect === true which causes the selections to be
+	// handled in different way to selects where that option is false. That
+	// is, the selects have to be handled in the zoom handler (zoomEnd method).
+	// but I have no idea why that would be OK on the Mac but not on the build
+	// machine.
 	it.skip("Test dragging single and multiple selected nodes, " +
   "test dragging a node and comment which is not selected", function() {
 		// Select one node
-		cy.getNodeWithLabel("Execution node").click();
+		cy.clickNode("Execution node");
 
 		// Verify only one node is selected
 		cy.verifyNodeIsSelected("Execution node");
@@ -183,11 +195,9 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 		cy.verifyNodeTransform("Execution node", 300, 349.5);
 
 		// Select 2 nodes and 1 comment
-		// TODO: Following code works on localhost but fails on travis - Skipping this test
-		// When selectedDragWithoutSelect: true, cy.ctrlOrCmdClickNode() and cy.ctrlOrCmdClickComment() are not working
 		cy.clickToolbarUndo();
-		cy.ctrlOrCmdClickNode("Binding (entry) node");
-		cy.ctrlOrCmdClickComment("The 4 different node types");
+		cy.ctrlOrCmdClickNode("Binding (entry) node"); // TDOD - fix these lines see comment above.
+		cy.ctrlOrCmdClickComment("The 4 different node types"); // TDOD - fix these lines see comment above.
 
 		// Verify 2 nodes and 1 comment is selected
 		cy.verifyNodeIsSelected("Execution node");

@@ -695,12 +695,12 @@ export default class SVGCanvasUtilsDragObjects {
 		clearTimeout(this.startNodeInsertingInLink);
 		clearTimeout(this.startNodeAttachingToDetachedLinks);
 
-		// If the pointer hasn't moved and enableDragWithoutSelect we interpret
+		// If the pointer hasn't moved and enableDragWithoutSelect is enabled we interpret
 		// that as a select on the object.
 		if (draggingObjectData.dragOffsetX === 0 &&
 				draggingObjectData.dragOffsetY === 0 &&
 				this.ren.config.enableDragWithoutSelect) {
-			this.selectObjectSourceEvent(d3Event, d);
+			this.ren.selectObjectSourceEvent(d3Event, d);
 
 		} else {
 			if (draggingObjectData.dragRunningX !== 0 ||
