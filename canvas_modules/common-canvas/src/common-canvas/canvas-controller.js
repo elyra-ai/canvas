@@ -1360,8 +1360,6 @@ export default class CanvasController {
 		this.getSVGCanvasD3().moveFocusTo({ type: "link", obj: linkInfo.link });
 	}
 
-
-
 	// ---------------------------------------------------------------------------
 	// Command stack methods
 	// ---------------------------------------------------------------------------
