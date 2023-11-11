@@ -168,7 +168,7 @@ describe("Test to see if selection works with dragWithoutSelect set to true", fu
 	// The test below is being skipped because it fails on the build machine
 	// but not on a local MacBook Pro. The basic cause is that these two lines
 	//     cy.ctrlOrCmdClickNode("Binding (entry) node");
-	// 	   cy.ctrlOrCmdClickComment("The 4 different node types");
+	//     cy.ctrlOrCmdClickComment("The 4 different node types");
 	// are failing to select the nodes in quesiton. However, after many
 	// attempts trying to diagnose the problem I cannot find the root cause.
 	// I suspect it is probably happening because this is testing with
