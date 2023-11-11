@@ -461,9 +461,11 @@ class CanvasContents extends React.Component {
 		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
 		// return (<div tabIndex="-1" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
 		//  	onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp} />);
-		return (<div tabIndex="0" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
-			onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
-	/>);
+		return (
+			<div tabIndex="0" className="d3-svg-canvas-div" id={this.svgCanvasDivId}
+				onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}
+			/>
+		);
 	}
 
 	setIsDropZoneDisplayed(isDropZoneDisplayed) {
