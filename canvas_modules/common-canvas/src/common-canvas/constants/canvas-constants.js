@@ -235,12 +235,6 @@ export const NODE_WARNING_ICON =
 	"<path style=\"stroke-width: 0; fill: #161616; opacity: 1;\" d=\"M7.5 4h1v5h-1V4zm.5 8.2c-.4 0-.8-.4-.8-.8s.3-.8.8-.8c.4 0 .8.4.8.8s-.4.8-.8.8z\"></path>" +
 	"</svg>";
 
-export const LEFT_ARROW_ICON =
-	"<svg focusable=\"false\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\" " +
-	"width=\"16\" height=\"16\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" style=\"will-change: transform;\">" +
-	"<path d=\"M13 26L14.41 24.59 6.83 17 29 17 29 15 6.83 15 14.41 7.41 13 6 3 16 13 26z\"></path>" +
-	"<title>Arrow left</title></svg>";
-
 // This image is stored in the format to be shown as an <img> in the JSX
 // created by palette-flyout-content-category render method.
 export const SAVED_NODES_FOLDER_ICON =

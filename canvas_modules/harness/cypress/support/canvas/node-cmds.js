@@ -452,7 +452,7 @@ Cypress.Commands.add("clickExpansionIconOfSupernodeInsideSupernode", (supernodeN
 
 Cypress.Commands.add("clickReturnToPreviousButton", () => {
 	cy.get("#canvas-div-0")
-		.find(".d3-back-to-previous-flow-text")
+		.find(".return-to-previous")
 		.eq(0)
 		.click();
 });

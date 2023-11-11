@@ -35,7 +35,7 @@ import { ASSOC_RIGHT_SIDE_CURVE, ASSOCIATION_LINK, NODE_LINK, COMMENT_LINK,
 	LINK_TYPE_CURVE, LINK_TYPE_ELBOW, LINK_TYPE_STRAIGHT,
 	LINK_DIR_LEFT_RIGHT, LINK_DIR_TOP_BOTTOM, LINK_DIR_BOTTOM_TOP,
 	LINK_SELECTION_NONE, LINK_SELECTION_HANDLES, LINK_SELECTION_DETACHABLE,
-	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, LEFT_ARROW_ICON, EDIT_ICON,
+	CONTEXT_MENU_BUTTON, DEC_LINK, DEC_NODE, EDIT_ICON,
 	NODE_MENU_ICON, SUPER_NODE_EXPAND_ICON, PORT_OBJECT_IMAGE,
 	TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_DEC, TIP_TYPE_LINK,
 	USE_DEFAULT_ICON, USE_DEFAULT_EXT_ICON,
@@ -154,15 +154,6 @@ export default class SVGCanvasRenderer {
 
 		if (this.dispUtils.isDisplayingFullPage()) {
 			this.zoomUtils.restoreZoom();
-		}
-
-		// Show the 'Back to Parent' control, if we are showing a sub-flow
-		// in full screen mode or, the alwaysDisplayBackToParentFlow option is
-		// switched on to always display it (used by apps that manage their own
-		// supernodes/sub-flows).
-		if (this.dispUtils.isDisplayingSubFlowFullPage() ||
-				this.canvasLayout.alwaysDisplayBackToParentFlow) {
-			this.addBackToParentFlowArrow(this.canvasSVG);
 		}
 
 		// If we are showing a sub-flow in full screen mode and there
@@ -1384,50 +1375,6 @@ export default class SVGCanvasRenderer {
 				.attr("width", canv.width + 100)
 				.attr("height", canv.height + 100);
 		}
-	}
-
-	addBackToParentFlowArrow(canvasSVG) {
-		const g = canvasSVG
-			.append("g")
-			.attr("transform", "translate(15, 15)")
-			.on("mouseenter", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-				d3.select(this).select("rect")
-					.attr("data-pointer-hover", "yes");
-			})
-			.on("mouseleave", function(d3Event, d) { // Use function keyword so 'this' pointer references the DOM text object
-				d3.select(this).select("rect")
-					.attr("data-pointer-hover", "no");
-			})
-			.on("mousedown mouseup", (d3Event) => {
-				// Prevent mouse events going through to the canvas. This prevents
-				// a drag gesture on the button activating the canvas drag action.
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-			})
-			.on("click", (d3Event) => {
-				CanvasUtils.stopPropagationAndPreventDefault(d3Event);
-				this.canvasController.displayPreviousPipeline();
-			});
-
-		g.append("rect")
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("width", 210)
-			.attr("height", 40)
-			.attr("class", "d3-back-to-previous-flow-box");
-
-		g.append("svg")
-			.attr("x", 16)
-			.attr("y", 11)
-			.attr("width", 16)
-			.attr("height", 16)
-			.html(LEFT_ARROW_ICON)
-			.attr("class", "d3-back-to-previous-flow-text");
-
-		g.append("text")
-			.attr("x", 40)
-			.attr("y", 24)
-			.attr("class", "d3-back-to-previous-flow-text")
-			.text("Return to previous flow");
 	}
 
 	createDropShadow(defs) {

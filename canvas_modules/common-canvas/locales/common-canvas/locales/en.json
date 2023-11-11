@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "Read-only",
   "canvas.stateTagTipLocked": "This flow is locked and cannot be edited.",
   "canvas.stateTagTipReadOnly": "This flow cannot be edited.",
+  "canvas.returnToPrevious": "Return to previous flow",
   "comment.colorBackground": "Color background",
   "comment.editComment": "Edit comment",
   "node.createSupernode": "Create supernode",
@@ -48,7 +49,6 @@
   "texttoolbar.bulletedListAction": "Bulleted List",
   "texttoolbar.numberedListAction": "Numbered List",
   "texttoolbar.titleAction": "Title",
-  "texttoolbar.headerAction": "Header",
   "texttoolbar.subheaderAction": "Subheader",
   "texttoolbar.bodyAction": "Body"
 }
