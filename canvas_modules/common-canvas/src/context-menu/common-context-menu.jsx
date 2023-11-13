@@ -321,7 +321,7 @@ CommonContextMenu.propTypes = {
 	menuDefinition: PropTypes.array.isRequired,
 	canvasRect: PropTypes.object.isRequired,
 	mousePos: PropTypes.object.isRequired,
-	focusOnFirst: PropTypes.bool.isRequired
+	focusOnFirst: PropTypes.bool
 };
 
 export default CommonContextMenu;

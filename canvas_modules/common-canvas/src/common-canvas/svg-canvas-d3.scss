@@ -623,6 +623,7 @@ $link-highlight-color: $support-04;
 
 	&:focus {
 		outline-width: 0;
+		outline-style: auto;
 
 		& .d3-comment-selection-highlight {
 			stroke-width: 3;

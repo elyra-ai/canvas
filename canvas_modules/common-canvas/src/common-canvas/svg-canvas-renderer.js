@@ -3666,16 +3666,6 @@ export default class SVGCanvasRenderer {
 	attachCommentGroupListeners(commentGrps) {
 		commentGrps
 			.on("keydown", (d3Event, d) => {
-				// if (d3Event.keyCode === RIGHT_ARROW_KEY) {
-				// 	d3Event.stopPropagation();
-				// 	if (this.spaceKeyPressed) {
-				// 		window.console.log("comment: tab with space");
-				// 	} else {
-				// 		window.console.log("comment: tab without space");
-				// 	}
-				// } else if (d3Event.keyCode === SPACE_KEY) {
-				// 	this.selectObjectD3Event(d3Event, d);
-				// }
 				if (d3Event.keyCode === RIGHT_ARROW_KEY ||
 					d3Event.keyCode === LEFT_ARROW_KEY) {
 					const linkInfos = this.activePipeline.getNextLinksFromComment(d);

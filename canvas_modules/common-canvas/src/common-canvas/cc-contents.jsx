@@ -153,30 +153,35 @@ class CanvasContents extends React.Component {
 		} else {
 			this.removeEventListeners();
 		}
+
+		this.focusOnCanvas();
 	}
 
 	componentWillUnmount() {
 		this.removeEventListeners();
 	}
 
+	// Handles cut event when user click Edit->Cut in browser menu.
 	onCut(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+		if (this.isFocusOnCanvas(evt) &&
 				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.cutToClipboard();
 		}
 	}
 
+	// Handles copy event when user click Edit->Copy in browser menu.
 	onCopy(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+		if (this.isFocusOnCanvas(evt) &&
 				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.copyToClipboard();
 		}
 	}
 
+	// Handles paste event when user click Edit->Paste in browser menu.
 	onPaste(evt) {
-		if (evt.currentTarget.activeElement.id === this.svgCanvasDivId &&
+		if (this.isFocusOnCanvas(evt) &&
 				this.props.canvasConfig.enableEditingActions) {
 			evt.preventDefault();
 			this.props.canvasController.pasteFromClipboard();
@@ -481,6 +486,16 @@ class CanvasContents extends React.Component {
 	isDataTypeBeingDraggedFile(event) {
 		if (event.dataTransfer && Array.isArray(event.dataTransfer.types)) {
 			return event.dataTransfer.types.includes("Files");
+		}
+		return false;
+	}
+
+	// Returns true if the focus is either on an element in the canvas or on the
+	// canvas <div> itself.
+	isFocusOnCanvas(evt) {
+		if (evt.currentTarget?.activeElement) {
+			return evt.currentTarget.activeElement.closest(this.svgCanvasDivSelector) ||
+				evt.currentTarget.activeElement.id === this.svgCanvasDivId;
 		}
 		return false;
 	}
