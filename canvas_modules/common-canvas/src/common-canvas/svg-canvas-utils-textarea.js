@@ -401,6 +401,9 @@ export default class SvgCanvasTextArea {
 				if (data.keyboardInputCallback) {
 					data.keyboardInputCallback(d3Event);
 				}
+				// Prevent events propagating to the link which might alter
+				// the focus to the link.
+				d3Event.stopPropagation();
 			})
 			.on("keyup", (d3Event) => {
 				data.autoSizeCallback(d3Event.target, data);
