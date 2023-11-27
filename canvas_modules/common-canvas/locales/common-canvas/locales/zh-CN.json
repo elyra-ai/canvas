@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "只读",
   "canvas.stateTagTipLocked": "此流已锁定，无法编辑。",
   "canvas.stateTagTipReadOnly": "无法编辑此流。",
+  "canvas.returnToPrevious": "返回到上一个流",
   "comment.colorBackground": "设置背景色",
   "comment.editComment": "编辑注释",
   "node.createSupernode": "创建超节点",

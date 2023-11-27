@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "Skrivskyddad",
   "canvas.stateTagTipLocked": "Det här flödet är låst och kan inte redigeras.",
   "canvas.stateTagTipReadOnly": "Det här flödet kan inte redigeras.",
+  "canvas.returnToPrevious": "Återgå till föregående flöde",
   "comment.colorBackground": "Färgbakgrund",
   "comment.editComment": "Redigera kommentar",
   "node.createSupernode": "Skapa supernod",

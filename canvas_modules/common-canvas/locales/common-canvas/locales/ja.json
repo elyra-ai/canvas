@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "読み取り専用",
   "canvas.stateTagTipLocked": "このフローはロックされており、編集できません。",
   "canvas.stateTagTipReadOnly": "このフローは編集できません。",
+  "canvas.returnToPrevious": "前のフローに戻る",
   "comment.colorBackground": "色付きの背景",
   "comment.editComment": "コメントの編集",
   "node.createSupernode": "スーパーノードの作成",
