@@ -131,6 +131,11 @@ export default class PropertiesController {
 		return get(this.propertiesConfig, "locale", DEFAULT_LOCALE);
 	}
 
+	// Return the id of top-level active tab or accordion
+	getTopLevelActiveGroupId() {
+		return this.propertiesStore.getActiveTab();
+	}
+
 	isTearsheetContainer() {
 		return this.propertiesConfig.containerType === "Tearsheet";
 	}

@@ -2294,3 +2294,21 @@ describe("Properties Controller setWideFlyoutPrimaryButtonDisabled", () => {
 		expect(controller.getWideFlyoutPrimaryButtonDisabled(summaryPanelId)).to.be.false;
 	});
 });
+
+describe("Properties Controller getTopLevelActiveGroupId", () => {
+	it("should get the top level active group id in properties controller", () => {
+		reset();
+		const renderedObject = testUtils.flyoutEditorForm(checkboxsetParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+		let topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("checkboxset-values");
+
+		// Select Conditions accordion
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(1);
+		conditionsCategory.find("button.properties-category-title").simulate("click");
+		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
+
+	});
+});
