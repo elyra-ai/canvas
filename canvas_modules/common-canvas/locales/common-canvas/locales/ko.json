@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "읽기 전용",
   "canvas.stateTagTipLocked": "이 플로우는 잠겨서 편집할 수 없습니다.",
   "canvas.stateTagTipReadOnly": "이 플로우는 편집할 수 없습니다.",
+  "canvas.returnToPrevious": "이전 플로우로 돌아가기",
   "comment.colorBackground": "색상 배경",
   "comment.editComment": "주석 편집",
   "node.createSupernode": "수퍼노드 작성",

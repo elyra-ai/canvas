@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "Sola lettura",
   "canvas.stateTagTipLocked": "Questo flusso è bloccato e non può essere modificato.",
   "canvas.stateTagTipReadOnly": "Questo flusso non può essere modificato.",
+  "canvas.returnToPrevious": "Torna al flusso precedente",
   "comment.colorBackground": "Colora sfondo",
   "comment.editComment": "Modifica commento",
   "node.createSupernode": "Crea supernodo",
