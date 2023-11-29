@@ -22,7 +22,7 @@ import Icon from "./../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import { Close16 } from "@carbon/icons-react";
 import Logger from "../logging/canvas-logger.js";
-import { DEFAULT_NOTIFICATION_HEADER, NOTIFICATION_ICON_CLASS } from "./../common-canvas/constants/canvas-constants.js";
+import { DEFAULT_NOTIFICATION_HEADER } from "./../common-canvas/constants/canvas-constants.js";
 import defaultMessages from "../../locales/notification-panel/locales/en.json";
 
 
@@ -120,18 +120,15 @@ class NotificationPanel extends React.Component {
 	handleNotificationPanelClickOutside(e) {
 		if (this.props.isNotificationOpen &&
 				this.props.notificationConfig &&
-				!this.props.notificationConfig.keepOpen) {
-			const notificationIcon = document.getElementsByClassName(NOTIFICATION_ICON_CLASS)[0];
-			const notificationHeader = document.getElementsByClassName("notification-panel-header")[0];
-			const notificationMessages = document.getElementsByClassName("notification-panel-messages-container")[0];
-
-			if (notificationIcon && !notificationIcon.contains(e.target) &&
-					notificationHeader && !notificationHeader.contains(e.target) &&
-					notificationMessages && !notificationMessages.contains(e.target)) {
-				this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
-				e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
-			}
+				!this.props.notificationConfig.keepOpen &&
+				this.isClickOutsideNotificationPanel(e)) {
+			this.props.canvasController.toolbarActionHandler("closeNotificationPanel");
+			e.stopPropagation(); // Prevent D3 canvas code from clearing the selections.
 		}
+	}
+
+	isClickOutsideNotificationPanel(e) {
+		return !e.target.closest(".notification-panel");
 	}
 
 	notificationCallback(id, messageCallback) {
@@ -236,14 +233,12 @@ class NotificationPanel extends React.Component {
 					</div>
 					{notificationSubtitle}
 				</div>
-				<div className="notification-panel-messages-container">
-					<div className="notification-panel-messages">
-						{notificationPanelMessages}
-					</div>
-					<div className="notification-panel-button-container">
-						{clearAll}
-						{secondaryButton}
-					</div>
+				<div className="notification-panel-messages">
+					{notificationPanelMessages}
+				</div>
+				<div className="notification-panel-button-container">
+					{clearAll}
+					{secondaryButton}
 				</div>
 			</div>
 		</div>);
