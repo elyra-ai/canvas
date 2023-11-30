@@ -15,11 +15,9 @@
  */
 
 $notification-panel-header-height: 33px;
-$notification-panel-subtitle-height: 20px;
 $notification-message-height: 48px;
 $notification-left-border-color-width: 4px;
 $notification-panel-button-container-height: 49px;
-$notification-panel-header-container-height: $notification-panel-header-height + $notification-panel-subtitle-height + 32px;
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 // This section adds an ease-in ease-out effect for the notification-panel-container
@@ -41,15 +39,22 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 
 .notification-panel {
 	position: absolute;
-	width: 320px;
-	height: 100%;
-	max-height: 635px;
-	right: 0;
 	top: $toolbar-button-height;
+	right: 0;
+
+	width: 320px;
+	height: fit-content;
+	min-height: calc(#{$notification-panel-header-height} + #{$notification-panel-button-container-height} + #{$notification-message-height});
+	max-height: calc(100% - 53px);
+
+	display: grid;
+	flex-direction: column;
+	grid-template-rows: auto 1fr auto;
 }
 
 .notification-panel-header-container {
 	min-height: $notification-panel-header-height;
+	height: fit-content;
 	width: inherit;
 	background-color: $ui-01;
 	display: flex;
@@ -86,18 +91,12 @@ $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 	font-weight: 400;
 }
 
-.notification-panel-messages-container {
-	width: inherit;
-	max-height: calc(100% - #{$notification-panel-header-height} - #{$notification-panel-subtitle-height});
-	height: 100%;
-}
 .notification-panel-messages {
-	max-height: calc(100% - #{$notification-panel-header-container-height} - #{$notification-panel-button-container-height});
-	height: fit-content;
 	overflow-y: auto;
 	line-height: normal;
 	background-color: $ui-01;
 	border: 1px solid $ui-03;
+	max-height: 448px;
 	.notifications-button-container {
 		border-bottom: 1px solid $ui-03;
 		min-height: $notification-message-height;

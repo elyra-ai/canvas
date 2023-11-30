@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "Lesezugriff",
   "canvas.stateTagTipLocked": "Dieser Ablauf ist gesperrt und kann nicht bearbeitet werden.",
   "canvas.stateTagTipReadOnly": "Dieser Ablauf kann nicht bearbeitet werden.",
+  "canvas.returnToPrevious": "Zum vorherigen Ablauf zurückkehren",
   "comment.colorBackground": "Farbhintergrund",
   "comment.editComment": "Kommentar bearbeiten",
   "node.createSupernode": "Superknoten erstellen",

@@ -21,6 +21,7 @@
   "canvas.stateTagReadOnly": "En lecture seule",
   "canvas.stateTagTipLocked": "Ce flux est verrouillé et ne peut pas être modifié.",
   "canvas.stateTagTipReadOnly": "Ce flux ne peut pas être modifié.",
+  "canvas.returnToPrevious": "Revenir au flux précédent",
   "comment.colorBackground": "Couleur d'arrière-plan",
   "comment.editComment": "Modifier le commentaire",
   "node.createSupernode": "Créer un super noeud",
