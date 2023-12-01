@@ -29,6 +29,9 @@ import { hot } from "react-hot-loader/root";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 
+import { jsPDF } from "jspdf";
+import * as htmlToImage from "html-to-image";
+
 import { getMessages } from "../intl/intl-utils";
 import * as HarnessBundles from "../intl/locales";
 import CommandActionsBundles from "@elyra/canvas/locales/command-actions/locales";
@@ -356,6 +359,7 @@ class App extends React.Component {
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
+		this.saveToPdf = this.saveToPdf.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
@@ -1012,6 +1016,42 @@ class App extends React.Component {
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
 		this.canvasController2.clearSavedZoomValues();
+	}
+
+	// Saves the canvas objects into and image and then places that image into
+	// a PDF file. Creating the image takes quite a while to execute so it would
+	// probably need a progress indicator if it was implemented in an application.
+	saveToPdf() {
+		const svgAreaElements = document
+			.getElementById("d3-svg-canvas-div-0")
+			.getElementsByClassName("svg-area");
+
+		const dims = this.canvasController.getCanvasDimensionsWithPadding();
+		const heightToWidthRatio = dims.height / dims.width;
+
+		htmlToImage.toPng(svgAreaElements[0], {
+			filter: (node) => this.shouldIncludeInImage(node),
+			height: dims.height,
+			width: dims.width
+		})
+			.then(function(dataUrl) {
+				const img = document.createElement("img"); // new Image();
+				img.src = dataUrl;
+
+				const doc = new jsPDF();
+				doc.addImage(img, "PNG", 10, 10, 190, 190 * heightToWidthRatio);
+				doc.save("common-canvas.pdf");
+			})
+			.catch(function(error) {
+				console.error("An error occurred create the PNG image.", error);
+			});
+	}
+
+	// Returns true if the node passed in should be included in a saved image of the canvas.
+	// The only node that is excluded is the canvas background rectangle which has the
+	// same dimensions as the viewport which is often smaller than the canvas itself.
+	shouldIncludeInImage(node) {
+		return node?.classList ? !(node.classList.contains("d3-svg-background")) : true;
 	}
 
 	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
@@ -2634,7 +2674,8 @@ class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValues
+			clearSavedZoomValues: this.clearSavedZoomValues,
+			saveToPdf: this.saveToPdf
 		};
 
 		const sidePanelPropertiesConfig = {
