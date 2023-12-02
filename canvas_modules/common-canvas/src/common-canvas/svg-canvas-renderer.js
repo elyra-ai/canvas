@@ -233,6 +233,10 @@ export default class SVGCanvasRenderer {
 		return this.zoomUtils.getTransformedViewportDimensions();
 	}
 
+	getCanvasDimensionsWithPadding() {
+		return this.zoomUtils.getCanvasDimensionsWithPadding();
+	}
+
 	// Returns the data object for the parent supernode that references the
 	// active pipeline (managed by this renderer). We get the supernode by
 	// looking through the overall canvas info object.

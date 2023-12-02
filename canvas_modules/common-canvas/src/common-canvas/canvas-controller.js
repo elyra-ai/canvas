@@ -1758,6 +1758,20 @@ export default class CanvasController {
 		this.objectModel.clearSavedZoomValues();
 	}
 
+	getViewPortDimensions() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getTransformedViewportDimensions();
+		}
+		return null;
+	}
+
+	getCanvasDimensionsWithPadding() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getCanvasDimensionsWithPadding();
+		}
+		return null;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Utility/helper methods
 	// ---------------------------------------------------------------------------
