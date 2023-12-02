@@ -196,6 +196,10 @@ export default class SVGCanvasD3 {
 		return this.renderer.getTransformedViewportDimensions();
 	}
 
+	getCanvasDimensionsWithPadding() {
+		return this.renderer.getCanvasDimensionsWithPadding();
+	}
+
 	getGhostNode(nodeTemplate) {
 		return this.renderer.getGhostNode(nodeTemplate);
 	}
