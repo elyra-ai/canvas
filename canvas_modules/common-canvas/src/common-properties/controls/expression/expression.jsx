@@ -19,7 +19,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { UnControlled as CodeMirror } from "react-codemirror2";
+// import { UnControlled as CodeMirror } from "react-codemirror2";
+import { Editor } from "./codemirror/editor";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import classNames from "classnames";
@@ -35,26 +36,26 @@ import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
 
-import { register as registerPython } from "./languages/python-hint";
-import { register as registerR } from "./languages/r-hint";
-import { register as registerClem } from "./languages/CLEM-hint";
+// import { register as registerPython } from "./languages/python-hint";
+// import { register as registerR } from "./languages/r-hint";
+// import { register as registerClem } from "./languages/CLEM-hint";
 
 // required for server side rendering.
-let cm = null;
+const cm = null;
 if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-	cm = require("codemirror");
-	require("codemirror/addon/hint/show-hint");
-	require("codemirror/addon/display/placeholder");
-	require("codemirror/addon/display/autorefresh");
-	require("codemirror/mode/javascript/javascript");
-	require("codemirror/addon/hint/javascript-hint");
-	require("codemirror/addon/hint/sql-hint");
-	require("codemirror/mode/sql/sql");
-	require("codemirror/mode/python/python");
-	require("codemirror/mode/r/r");
-	registerPython(cm);
-	registerR(cm);
-	registerClem(cm);
+	// cm = require("codemirror");
+	// require("codemirror/addon/hint/show-hint");
+	// require("codemirror/addon/display/placeholder");
+	// require("codemirror/addon/display/autorefresh");
+	// require("codemirror/mode/javascript/javascript");
+	// require("codemirror/addon/hint/javascript-hint");
+	// require("codemirror/addon/hint/sql-hint");
+	// require("codemirror/mode/sql/sql");
+	// require("codemirror/mode/python/python");
+	// require("codemirror/mode/r/r");
+	// registerPython(cm);
+	// registerR(cm);
+	// registerClem(cm);
 }
 
 
@@ -276,7 +277,7 @@ class ExpressionControl extends React.Component {
 			messageInfo = null;
 		}
 
-		const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
+		// const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
 
 		const button = this._showBuilderButton() ? (
@@ -309,15 +310,15 @@ class ExpressionControl extends React.Component {
 				{validateIcon}
 			</div>)
 			: null;
-		const mirrorOptions = {
-			mode: this.props.control.language,
-			placeholder: this.props.control.additionalText,
-			theme: theme + " custom",
-			readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
-			extraKeys: { "Ctrl-Space": "autocomplete" },
-			autoRefresh: true,
-			lineNumbers: true
-		};
+		// const mirrorOptions = {
+		// 	mode: this.props.control.language,
+		// 	placeholder: this.props.control.additionalText,
+		// 	theme: theme + " custom",
+		// 	readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
+		// 	extraKeys: { "Ctrl-Space": "autocomplete" },
+		// 	autoRefresh: true,
+		// 	lineNumbers: true
+		// };
 		const applyLabel = formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const expressonTitle = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
@@ -377,15 +378,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<CodeMirror
-							ref= { (ref) => (this.codeMirror = ref)}
-							options={mirrorOptions}
-							onChange={this.handleChange}
-							onKeyDown={this.handleKeyDown}
-							onBlur={this.handleBlur}
-							editorDidMount={this.editorDidMount}
-							value={this.props.value}
-						/>
+						<Editor />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
