@@ -136,6 +136,7 @@ class EditorForm extends React.Component {
 		const tabContent = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
+		let hiddenTabs = 0;
 		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
 		const tearsheetTabs = tabs.filter((t) => t.content.itemType === ItemType.TEARSHEET);
 		const totalTabs = tearsheetTabs.concat(nonTearsheetTabs);
@@ -144,6 +145,7 @@ class EditorForm extends React.Component {
 			const tab = totalTabs[i];
 			const tabState = this.props.controller.getPanelState({ name: tab.group });
 			if (tabState === STATES.HIDDEN) {
+				hiddenTabs++;
 				continue;
 			}
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
@@ -198,7 +200,7 @@ class EditorForm extends React.Component {
 				}
 			} else {
 				if (this.props.activeTab === tab.group) {
-					modalSelected = i;
+					modalSelected = i - hiddenTabs; // Adjust the Carbon Tabs index to accomodate hidden tabs
 				}
 				tabContent.push(
 					<Tab
