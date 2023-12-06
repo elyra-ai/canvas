@@ -20,7 +20,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 // import { UnControlled as CodeMirror } from "react-codemirror2";
-import { Editor } from "./codemirror/editor";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import classNames from "classnames";
@@ -35,6 +34,15 @@ import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
+
+import { keymap, placeholder } from "@codemirror/view";
+import { defaultKeymap, indentWithTab } from "@codemirror/commands";
+import { basicSetup, EditorView } from "codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { python } from "@codemirror/lang-python";
+import { sql } from "@codemirror/lang-sql";
+import { StreamLanguage } from "@codemirror/language";
+import { r } from "@codemirror/legacy-modes/mode/r";
 
 // import { register as registerPython } from "./languages/python-hint";
 // import { register as registerR } from "./languages/r-hint";
@@ -73,6 +81,7 @@ class ExpressionControl extends React.Component {
 			validationInProgress: false
 		};
 
+		this.editorRef = React.createRef();
 		this.origHint = "";
 		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.handleValidate = this.handleValidate.bind(this);
@@ -85,6 +94,7 @@ class ExpressionControl extends React.Component {
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
+		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
 
 		this.handleChange = (editor, data, newValue) => {
 			// this is needed when characters are added into the expression builder because
@@ -102,6 +112,10 @@ class ExpressionControl extends React.Component {
 				this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
 			}
 		};
+	}
+
+	componentDidMount() {
+		this.createCodeMirrorEditor();
 	}
 
 	// this is needed to ensure expression builder selection works.
@@ -134,6 +148,46 @@ class ExpressionControl extends React.Component {
 			results.push(field.name);
 		}
 		return results;
+	}
+
+	createCodeMirrorEditor() {
+		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
+			console.log("Update listener called!");
+			console.log(viewUpdate.state.doc.toString());
+		});
+
+		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
+		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
+		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
+		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
+		// Same has been done for Python and R
+		let language = this.props.control.language;
+		switch (this.props.control.language) {
+		case "text/x-hive":
+			language = sql();
+			break;
+		case "text/x-python":
+			language = python();
+			break;
+		case "text/x-rsrc":
+			language = StreamLanguage.define(r);
+			break;
+		default:
+			language = javascript();
+		}
+
+		this.view = new EditorView({
+			// state: startState,
+			doc: this.props.value,
+			extensions: [
+				basicSetup,
+				language,
+				keymap.of([defaultKeymap, indentWithTab]),
+				placeholder(this.props.control.additionalText),
+				onUpdate
+			],
+			parent: this.editorRef.current
+		});
 	}
 
 	// Add the dataset field names to the autocomplete list
@@ -378,7 +432,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<Editor />
+						<div ref={this.editorRef} />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
