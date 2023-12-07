@@ -19,42 +19,42 @@
 
 .react-codemirror2 {
 	.CodeMirror {
-		width: 100%;
-		background: $field-02;
-		color: $text-01;
+		// width: 100%;
+		// background: $field-02;
+		// color: $text-01;
 
-		.CodeMirror-gutters {
-			border-right: none;
-			background-color: inherit;
-		}
+		// .CodeMirror-gutters {
+		// 	border-right: none;
+		// 	background-color: inherit;
+		// }
 
-		.CodeMirror-lines {
-			padding-top: $spacing-05;
-			.CodeMirror-line-like {
-				padding-left: $spacing-03;
-			}
-			.CodeMirror-placeholder {
-				opacity: 0.5;
-				@include carbon--type-style("code-02");
-			}
-			.CodeMirror-cursor {
-				border-left: 1px solid $text-01;
-			}
-			.CodeMirror-code {
+		// .CodeMirror-lines {
+		// 	padding-top: $spacing-05;
+		// 	.CodeMirror-line-like {
+		// 		padding-left: $spacing-03;
+		// 	}
+		// 	.CodeMirror-placeholder {
+		// 		opacity: 0.5;
+		// 		@include carbon--type-style("code-02");
+		// 	}
+		// 	.CodeMirror-cursor {
+		// 		border-left: 1px solid $text-01;
+		// 	}
+		// 	.CodeMirror-code {
 
-				.CodeMirror-linenumber {
-					@include carbon--type-style("body-short-01");
-				}
+		// 		.CodeMirror-linenumber {
+		// 			@include carbon--type-style("body-short-01");
+		// 		}
 
-				.CodeMirror-line {
-					padding-left: $spacing-03;
+		// 		.CodeMirror-line {
+		// 			padding-left: $spacing-03;
 
-					span {
-						@include carbon--type-style("code-02");
-					}
-				}
-			}
-		}
+		// 			span {
+		// 				@include carbon--type-style("code-02");
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	.cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
@@ -87,6 +87,33 @@
 
 	.cm-s-custom .cm-meta { color: $ui-01; }
 }
+
+.cm-editor {
+	height: 104px;
+	overflow: auto;
+	width: 100%;
+	background: $field-02;
+	color: $text-01;
+
+	.cm-gutters {
+		// border-right: none;
+		background-color: inherit;
+	}
+	.cm-line {
+		padding-left: $spacing-03;
+		@include carbon--type-style("code-02");
+	}
+	.cm-lineNumbers .cm-gutterElement {
+		@include carbon--type-style("body-short-01");
+	}
+	.cm-placeholder {
+		@include carbon--type-style("code-02");
+	}
+	.cm-cursor {
+		border-left: 1px solid $text-01;
+	}
+}
+
 
 /* Override so Codemirror autocomplete shows up on top */
 .CodeMirror-hints {

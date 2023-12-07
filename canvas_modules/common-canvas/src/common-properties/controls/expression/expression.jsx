@@ -38,6 +38,7 @@ import ExpressionToggle from "./expression-toggle/expression-toggle";
 import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
+import { autocompletion } from "@codemirror/autocomplete";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
@@ -145,7 +146,7 @@ class ExpressionControl extends React.Component {
 		const results = [];
 		const fields = this.props.controller.getDatasetMetadataFields();
 		for (const field of fields) {
-			results.push(field.name);
+			results.push({ label: field.name, type: "variable" });
 		}
 		return results;
 	}
@@ -155,6 +156,10 @@ class ExpressionControl extends React.Component {
 			console.log("Update listener called!");
 			console.log(viewUpdate.state.doc.toString());
 		});
+
+		// TODO: Add height calculations from editorDidMount()
+		// TODO: Rename this.view to this.editor
+
 
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
@@ -184,35 +189,56 @@ class ExpressionControl extends React.Component {
 				language,
 				keymap.of([defaultKeymap, indentWithTab]),
 				placeholder(this.props.control.additionalText),
-				onUpdate
+				onUpdate,
+				autocompletion({ override: [this.addonHints] }) // TODO: don't override, add to autocompletions
 			],
 			parent: this.editorRef.current
 		});
+
+		if (this.props.editorDidMount) {
+			this.props.editorDidMount(this.view);
+		}
 	}
 
 	// Add the dataset field names to the autocomplete list
-	addonHints(editor, options) {
-		var results = {};
-		var cur = editor.getCursor();
-		var token = editor.getTokenAt(cur);
-		if (this.origHint) {
-			// get the list of autocomplete names from the language autocomplete handler
-			results = this.origHint(editor, options);
+	addonHints(context) {
+		const completions = this.getDatasetFields();
 
-			// add to the start of the autocomplete list the set of dataset field names that complete the
-			// string that has been entered.
-			var parameters = this.getDatasetFields();
-			for (var i = 0; i < parameters.length; ++i) {
-				const parameter = parameters[i];
-				if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
-					results.list.unshift(parameter);
-				} else if (token.string === " " && token.type === null) {
-					results.list.unshift(parameter);
-				}
-			}
+		const before = context.matchBefore(/\w+/);
+		// If completion wasn't explicitly started and there
+		// is no word before the cursor, don't open completions.
+		if (!context.explicit && !before) {
+			return null;
 		}
-		return results;
+
+		return {
+			from: before ? before.from : context.pos,
+			options: completions,
+			validFor: /^\w*$/
+		};
 	}
+	// addonHints(editor, options) {
+	// 	var results = {};
+	// 	var cur = editor.getCursor();
+	// 	var token = editor.getTokenAt(cur);
+	// 	if (this.origHint) {
+	// 		// get the list of autocomplete names from the language autocomplete handler
+	// 		results = this.origHint(editor, options);
+
+	// 		// add to the start of the autocomplete list the set of dataset field names that complete the
+	// 		// string that has been entered.
+	// 		var parameters = this.getDatasetFields();
+	// 		for (var i = 0; i < parameters.length; ++i) {
+	// 			const parameter = parameters[i];
+	// 			if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
+	// 				results.list.unshift(parameter);
+	// 			} else if (token.string === " " && token.type === null) {
+	// 				results.list.unshift(parameter);
+	// 			}
+	// 		}
+	// 	}
+	// 	return results;
+	// }
 
 	// Save original autocomplete handler and then register our custom handler
 	// that will add data set filed names to autocomplete list.

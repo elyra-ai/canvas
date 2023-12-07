@@ -78,7 +78,7 @@ export default class ExpressionBuilder extends React.Component {
 		}
 	}
 
-	editorDidMount(editor, next) {
+	editorDidMount(editor) {
 		this.editor = editor;
 	}
 
