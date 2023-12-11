@@ -39,6 +39,7 @@ import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
 import { autocompletion } from "@codemirror/autocomplete";
+import { EditorState } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
@@ -79,7 +80,8 @@ class ExpressionControl extends React.Component {
 		super(props);
 		this.state = {
 			showExpressionBuilder: false,
-			validationInProgress: false
+			validationInProgress: false,
+			expressionEditorHeight: 0
 		};
 
 		this.editorRef = React.createRef();
@@ -157,7 +159,17 @@ class ExpressionControl extends React.Component {
 			console.log(viewUpdate.state.doc.toString());
 		});
 
-		// TODO: Add height calculations from editorDidMount()
+		// set the default height, should be between 4 and 20 lines
+		const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
+		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
+		// charlimit in the control sets the height within a min and max
+		let height = (this.props.control.charLimit)
+			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
+		// let an explicit prop override the calculated height
+		height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
+		height = this.props.height ? this.props.height : height;
+		this.setState({ expressionEditorHeight: Math.max(Math.floor(height), minLineHeight) });
+
 		// TODO: Rename this.view to this.editor
 
 
@@ -458,7 +470,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div ref={this.editorRef} />
+						<div ref={this.editorRef} style={{ height: this.state.expressionEditorHeight }} />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
