@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Accordion, AccordionItem } from "carbon-components-react";
 import { setActiveTab } from "./../../actions";
 import { Tab, Tabs, Link } from "carbon-components-react";
 import * as PropertyUtil from "./../../util/property-utils";
@@ -49,7 +50,8 @@ class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showFieldPicker: false
+			showFieldPicker: false,
+			accordionSelected: null
 		};
 
 		this.genPanel = this.genPanel.bind(this);
@@ -134,6 +136,7 @@ class EditorForm extends React.Component {
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
+		const tabContentAcc = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
 		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
@@ -180,20 +183,33 @@ class EditorForm extends React.Component {
 					);
 				} else {
 					tabContent.push(
-						<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
+						// <div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
+						// 	className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
+						// >
+						// 	<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
+						// 		className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
+						// 	>
+						// 		{tab.text}{this._getMessageCountForCategory(tab)}
+						// 		{panelArrow}
+						// 	</button>
+						// 	<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
+						// 		{panelItems}
+						// 		{additionalComponent}
+						// 	</div>
+						// </div>
+					);
+					tabContentAcc.push(
+						<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
+							open={this.state.accordionSelected !== null ? this.state.accordionSelected === i : categoryOpen}
+							onHeadingClick={() => {
+								this.setState({ accordionSelected: i })
+								console.log(i)
+							}}
+							className={`bx--accordion__item-${i}`}
 						>
-							<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
-								className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
-							>
-								{tab.text}{this._getMessageCountForCategory(tab)}
-								{panelArrow}
-							</button>
-							<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
-								{panelItems}
-								{additionalComponent}
-							</div>
-						</div>
+							{panelItems}
+							{additionalComponent}
+						</AccordionItem>
 					);
 				}
 			} else {
@@ -219,9 +235,16 @@ class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
-				<div key={"cat." + key} className="properties-categories">
-					{tabContent}
-				</div>
+				<>
+					<div key={"cat." + key} className="properties-categories">
+						{tabContent}
+					</div>
+					<div className="properties-rightpanel-accordion">
+						<Accordion open count={1}>
+							{tabContentAcc}
+						</Accordion>
+					</div>
+				</>
 			);
 		}
 		return (
