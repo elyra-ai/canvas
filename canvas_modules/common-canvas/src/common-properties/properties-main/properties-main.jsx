@@ -102,6 +102,9 @@ class PropertiesMain extends React.Component {
 	}
 
 	UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase, react/sort-comp
+		if (this.props.light !== newProps.light) { // set the new light prop in controller
+			this.propertiesController.setLight(newProps.light);
+		}
 		if (newProps.propertiesInfo) {
 			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.props.propertiesInfo)) ||
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.props.propertiesInfo.formData)) ||
