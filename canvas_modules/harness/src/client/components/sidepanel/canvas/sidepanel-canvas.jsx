@@ -570,6 +570,18 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
+		var saveToPdf = (<div>
+			<div className="harness-sidepanel-spacer" />
+			<div style={pad}className="harness-sidepanel-save-to-pdf">
+				<Button size="small"
+					onClick={this.props.canvasConfig.saveToPdf}
+				>
+				Save to PDF
+				</Button>
+			</div>
+		</div>
+		);
+
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
 		var snapToGrid = (<div className="harness-sidepanel-children" id="harness-sidepanel-snap-to-grid-type">
@@ -1575,6 +1587,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Canvas Content</div>
 					{divider}
+					{saveToPdf}
+					{divider}
 					{interactionType}
 					{divider}
 					{snapToGrid}
@@ -1657,6 +1671,7 @@ SidePanelForms.propTypes = {
 		selectedPaletteDropdownFile2: PropTypes.string,
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
-		clearSavedZoomValues: PropTypes.func
+		clearSavedZoomValues: PropTypes.func,
+		saveToPdf: PropTypes.func
 	})
 };

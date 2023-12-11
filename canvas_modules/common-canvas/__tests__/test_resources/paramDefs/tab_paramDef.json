@@ -31,7 +31,9 @@
     ],
     "readonly_double_subtabs": "If multiple subtabs are defined in a tearsheet, additional padding is required to avoid overlay.",
     "readonly_nested_panel": "Tearsheet: Display subtabs in panel within group will result in additional padding.",
-    "readonly_primary_panel": "Tearsheet: Display subtabs in primary group will flush the leftnav to the footer buttons."
+    "readonly_primary_panel": "Tearsheet: Display subtabs in primary group will flush the leftnav to the footer buttons.",
+    "hideTab1": false,
+    "hideTab4": false
   },
   "parameters": [
     {
@@ -143,6 +145,14 @@
     {
       "id": "readonly_primary_panel",
       "type": "string"
+    },
+    {
+      "id": "hideTab1",
+      "type": "boolean"
+    },
+    {
+      "id": "hideTab4",
+      "type": "boolean"
     }
   ],
   "uihints": {
@@ -577,6 +587,17 @@
         "type": "subTabs",
         "group_info": [
           {
+            "id": "tab-condition",
+            "type": "controls",
+            "label": {
+              "default": "Tab Conditions"
+            },
+            "parameter_refs": [
+              "hideTab1",
+              "hideTab4"
+            ]
+          },
+          {
             "id": "range-fields-subtab3",
             "type": "controls",
             "label": {
@@ -691,6 +712,25 @@
         ]
       },
       {
+        "id": "Primary4",
+        "label": {
+          "default": "Tab Test4"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "tab-hidden-condition",
+            "type": "textPanel",
+            "label": {
+              "default": "Tab Hidden Condition Test"
+            },
+            "description": {
+              "default": "This tab will be visible when the hideTab4 checkbox is selected from Tab Test3."
+            }
+          }
+        ]
+      },
+      {
         "id": "tearsheetHidden",
         "label": {
           "default": "Tearsheet"
@@ -799,6 +839,34 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "Primary"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTab1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "Primary4"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTab4",
             "op": "equals",
             "value": false
           }
