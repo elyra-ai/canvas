@@ -989,6 +989,8 @@
             "default": "Globals"
           },
           "field_columns": {
+            "add_column_info": {
+            },
             "field_column_info": {
             },
             "value_column_info": {
@@ -1007,6 +1009,11 @@
             "default": "Multi Response Set"
           },
           "field_columns": {
+            "add_column_info": {
+              "label": {
+                "default": "Add"
+              }
+            },
             "field_column_info": {
               "label": {
                 "default": "Group"
@@ -1033,6 +1040,11 @@
             "default": "Parameters"
           },
           "field_columns": {
+            "add_column_info": {
+              "label": {
+                "default": "Add"
+              }
+            },
             "field_column_info": {
               "label": {
                 "default": "Parameter"

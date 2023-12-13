@@ -107,12 +107,6 @@ class VirtualizedTable extends React.Component {
 		}
 	}
 
-	onRowDoubleClick(evt, rowKey, index) {
-		if (this.props.onRowDoubleClick) {
-			this.props.onRowDoubleClick(evt, rowKey, index);
-		}
-	}
-
 	getCheckboxLabelColumnIndex(columns) {
 		// If 1st column is Index, use the next column for labeling
 		for (let i = 0; i < columns.length; i++) {
@@ -434,7 +428,7 @@ class VirtualizedTable extends React.Component {
 		const newStyle = Object.assign({}, style, { width: width });
 
 		// Empty style required on cell for react-virtualized. This div wrapper is required to apply the onDoubleClick handler.
-		return (<div style={{}} key={key} className="properties-vt-double-click" onDoubleClick={(evt) => this.onRowDoubleClick(evt, rowData.rowKey, index)}>
+		return (<div style={{}} key={key} className="properties-vt-double-click">
 			<div
 				className={classNames(className,
 					{ "properties-vt-row-selected": selectedRow },
@@ -537,7 +531,6 @@ VirtualizedTable.propTypes = {
 		PropTypes.func.isRequired,
 		PropTypes.number.isRequired
 	]),
-	onRowDoubleClick: PropTypes.func,
 	rowsSelected: PropTypes.array, // Required if selectable is true
 	checkedAll: PropTypes.bool, // Required if selectable is true
 	setRowsSelected: PropTypes.func, // Required if selectable is true
