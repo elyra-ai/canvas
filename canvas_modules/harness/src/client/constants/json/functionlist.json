@@ -6338,6 +6338,8 @@
 			{
 				"id": "globals",
 				"field_columns": {
+					"add_column_info": {
+					},
 					"field_column_info": {
 					},
 					"value_column_info": {
@@ -6356,6 +6358,11 @@
 					"default": "Multi Response Set"
 				},
 				"field_columns": {
+					"add_column_info": {
+						"label": {
+							"default": "Add"
+						}
+					},
 					"field_column_info": {
 						"label": {
 							"default": "Group"
@@ -6382,6 +6389,11 @@
 					"default": "Parameters"
 				},
 				"field_columns": {
+					"add_column_info": {
+						"label": {
+						  "default": "Add"
+						}
+					  },
 					"field_column_info": {
 						"label": {
 							"default": "Parameter"
@@ -6510,6 +6522,7 @@
 	},
 	"resources": {
 		"globals.field_column_info.label": "Field",
+		"globals.add_column_info.label": "Add",
 		"globals.label": "Globals",
 		"expression.no.functions": "There are no functions",
 		"expression.fields.empty.table.label": "There are no fields",
