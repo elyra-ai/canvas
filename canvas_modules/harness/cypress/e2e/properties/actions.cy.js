@@ -55,9 +55,10 @@ describe("Test of action image tooltip direction", function() {
 		// Test: "When tooltip_direction is not specified, default direction is bottom
 		// ---------------------------------------------------------------------------
 
-		// Click "Conditions" catgeory
-		cy.get(".common-canvas-right-side-items .properties-category-title").eq(2)
-			.click();
+
+		// Click "Conditions" category for the accordion
+		cy.get(".common-canvas-right-side-items .bx--accordion__heading").eq(2).
+			click();
 		// For "image_cond_hide" image, tooltip_direction is not specified
 		cy.hoverOverActionImage("image_cond_hide");
 		cy.verifyTip(null, "visible", "Test visible image conditions.", "bottom");

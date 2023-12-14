@@ -422,13 +422,13 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 		// Verify there are 2 alerts
 		// get alerts tabs
 		let alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertButton = alertCategory.find("button.properties-category-title");
+		const alertButton = alertCategory.find("button.bx--accordion__heading");
 		expect(alertButton.text()).to.equal("Alerts (2)");
 		alertButton.simulate("click");
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("div.properties-category-content.show"); // Alerts div
+		const alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		const alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
@@ -452,7 +452,8 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 		// Verify alerts are cleared by checking first tab is not the alert tab
 		const firstCategory = wrapper.find("div.properties-category-container").at(0);
-		const firstTab = firstCategory.find("button.properties-category-title");
+		// const firstTab = firstCategory.find("button.properties-category-title");
+		const firstTab = firstCategory.find("button.bx--accordion__heading");
 		expect(firstTab.text()).to.equal("Values");
 	});
 });

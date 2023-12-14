@@ -50,8 +50,7 @@ class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showFieldPicker: false,
-			accordionSelected: null
+			showFieldPicker: false
 		};
 
 		this.genPanel = this.genPanel.bind(this);
@@ -184,34 +183,21 @@ class EditorForm extends React.Component {
 						</div>
 					);
 				} else {
-					tabContent.push(
-						// <div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
-						// 	className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
-						// >
-						// 	<button type="button" onClick={this._showCategoryPanel.bind(this, tab.group)}
-						// 		className={classNames("properties-category-title", { "properties-light-enabled": this.props.controller.getLight() }) }
-						// 	>
-						// 		{tab.text}{this._getMessageCountForCategory(tab)}
-						// 		{panelArrow}
-						// 	</button>
-						// 	<div className={classNames("properties-category-content", { "show": categoryOpen }) }>
-						// 		{panelItems}
-						// 		{additionalComponent}
-						// 	</div>
-						// </div>
-					);
 					tabContentAcc.push(
-						<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
-							open={this.state.accordionSelected !== null ? this.state.accordionSelected === i : categoryOpen}
-							onHeadingClick={() => {
-								this.setState({ accordionSelected: i })
-								console.log(i)
-							}}
-							className={`bx--accordion__item-${i}`}
+						<div
+							key={this._getContainerIndex(hasAlertsTab, i) + "-" + key}
+							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						>
-							{panelItems}
-							{additionalComponent}
-						</AccordionItem>
+							<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
+								open={this.props.activeTab === tab.group}
+								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
+								className={`bx--accordion__item-${i} ${classNames("properties-category-content-accordion",
+									{ "show": categoryOpen })}`}
+							>
+								{panelItems}
+								{additionalComponent}
+							</AccordionItem>
+						</div>
 					);
 				}
 			} else {
@@ -241,11 +227,11 @@ class EditorForm extends React.Component {
 					<div key={"cat." + key} className="properties-categories">
 						{tabContent}
 					</div>
-					<div className="properties-rightpanel-accordion">
-						<Accordion open count={1}>
+					<Accordion>
+						<div key={"cat." + key} className="properties-rightpanel-accordion">
 							{tabContentAcc}
-						</Accordion>
-					</div>
+						</div>
+					</Accordion>
 				</>
 			);
 		}
