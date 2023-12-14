@@ -169,10 +169,8 @@ class EditorForm extends React.Component {
 				);
 			}
 			if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
-				let panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.DOWN} className="properties-category-caret-down" />;
 				let categoryOpen = false;
 				if (this.props.activeTab === tab.group) {
-					panelArrow = <Icon type={CARBON_ICONS.CHEVRONARROWS.UP} className="properties-category-caret-up" />;
 					categoryOpen = true;
 				}
 				if (tab.content.itemType !== ItemType.TEARSHEET && nonTearsheetTabs.length === 1) {
