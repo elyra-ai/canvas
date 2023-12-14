@@ -273,7 +273,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	createAddButtonContent(field, index) {
 		const addButtonContent = (
 			<Button
-				className="expression-add-field-button"
+				className="expression-add-field-button properties-expr-table-cell"
 				onClick={() => (this.state.selectedIndex === 0 ? this.onAddFieldClick(index) : this.onAddFunctionClick(index))}
 				kind="ghost"
 				size="small"
@@ -287,7 +287,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 	createValueAddButtonContent(index) {
 		const addValueButtonContent = (
 			<Button
-				className="expression-add-field-button"
+				className="expression-add-field-button properties-expr-table-cell"
 				onClick={this.onAddValueClick.bind(this, index)}
 				kind="ghost"
 				size="small"
