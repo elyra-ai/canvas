@@ -48,7 +48,7 @@ describe("additional components are rendered correctly", () => {
 		const customPanel = wrapper.find(".properties-custom-container");
 		expect(customPanel).to.have.length(1);
 		const togglePanelContainer = customPanel.find(".properties-category-container").at(0);
-		const togglePanelContent = togglePanelContainer.find(".properties-category-content");
+		const togglePanelContent = togglePanelContainer.find(".bx--accordion__content");
 		expect(togglePanelContent.children()).to.have.length(2); // Default Component & Additional Component
 
 	});

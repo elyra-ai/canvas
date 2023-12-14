@@ -191,7 +191,7 @@ Cypress.Commands.add("verifyControlIsDisplayed", (propertyId) => {
 Cypress.Commands.add("verifyValueInSummaryPanelForCategory", (value, summaryName, rowNumber, categoryName) => {
 	cy.get(".right-flyout-panel")
 		.find(".properties-category-container")
-		.find(".properties-category-title")
+		.find(".bx--accordion__title")
 		.contains(categoryName)
 		.should("exist");
 
