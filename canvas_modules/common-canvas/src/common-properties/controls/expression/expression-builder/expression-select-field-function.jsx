@@ -270,34 +270,37 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		return contentObject;
 	}
 
-	createAddButtonContent(field, index) {
-		const addButtonContent = (
-			<Button
-				className="expression-add-field-button properties-expr-table-cell"
-				onClick={() => (this.state.selectedIndex === 0 ? this.onAddFieldClick(index) : this.onAddFunctionClick(index))}
-				kind="ghost"
-				size="small"
-			>
-				<Add16 aria-label="Add" />
-			</Button>
-		);
-		return addButtonContent;
-	}
-
-	createValueAddButtonContent(index) {
+	createAddButtonContent(index, tableType) {
 		const addValueButtonContent = (
 			<Button
 				className="expression-add-field-button properties-expr-table-cell"
-				onClick={this.onAddValueClick.bind(this, index)}
+				onClick={this.handleAddButtonClick.bind(this, index, tableType)}
 				kind="ghost"
 				size="small"
 			>
-				<Add16 aria-label="Add" />
+				<Add16 aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
 			</Button>
 		);
 		return addValueButtonContent;
 	}
 
+	handleAddButtonClick(index, tableType) {
+		switch (tableType) {
+		case "value": {
+			this.onAddValueClick(index);
+			break;
+		}
+		case "field": {
+			this.onAddFieldClick(index);
+			break;
+		}
+		case "function": {
+			this.onAddFunctionClick(index);
+			break;
+		}
+		default:
+		}
+	}
 
 	_makeDatasetFields(dataset, fieldDataset) {
 		const addNewColumn = formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN);
@@ -418,7 +421,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			fieldHeaders.push(
 				{
 					key: "addColumn",
-					label: categoryInfo.field_columns.add_column_info.locLabel,
+					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
 					width: 12,
 				},
 				{
@@ -431,7 +434,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			valueHeader.push(
 				{
 					key: "addColumn",
-					label: categoryInfo.field_columns.add_column_info.locLabel,
+					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
 					width: 15,
 				},
 				{
@@ -457,7 +460,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				const fieldColumns = [];
 				if (!this.state.fieldFilterText || this.state.fieldFilterText.length === 0 ||
 					(field.id.toLowerCase().indexOf(this.state.fieldFilterText.toLowerCase()) > -1)) {
-					fieldColumns.push({ column: "addColumn", content: this.createAddButtonContent(field, index), value: field.id },
+					fieldColumns.push({ column: "addColumn", content: this.createAddButtonContent(index, "field"), value: field.id },
 						{ column: "fieldName", content: this.createContentObject(field.id), value: field.id });
 					if (field.additional_column_entries) {
 						this._makeAdditionalColumnsContent(field, fieldColumns);
@@ -558,7 +561,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 			(String(content).toLowerCase()
 				.indexOf(this.state.valueFilterText.toLowerCase()) > -1)) {
 			const valueColumns = [
-				{ column: "addColumn", content: this.createValueAddButtonContent(index), value: content },
+				{ column: "addColumn", content: this.createAddButtonContent(index, "value"), value: content },
 				{ column: "values", content: this.createContentObject(content), value: content }];
 			valuesTableData.push({ columns: valueColumns, rowKey: index });
 		}
@@ -704,7 +707,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				if (!this.state.functionFilterText || this.state.functionFilterText.length === 0 ||
 					(catFunction.locLabel.toLowerCase().indexOf(this.state.functionFilterText.toLowerCase()) > -1)) {
 					const returnType = catFunction.locReturnType ? catFunction.locReturnType : catFunction.return_type;
-					columns.push({ column: "addColumn", content: this.createAddButtonContent(catFunction, index), value: catFunction.id });
+					columns.push({ column: "addColumn", content: this.createAddButtonContent(index, "function"), value: catFunction.id });
 					columns.push({ column: "function", content: this.createContentObject(catFunction.locLabel), value: catFunction.locLabel });
 					columns.push({ column: "return", content: this.createContentObject(returnType), value: returnType });
 					table.rows.push({ columns: columns, rowKey: index });
