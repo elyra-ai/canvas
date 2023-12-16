@@ -128,7 +128,7 @@ function getCopy(value) {
 }
 
 function getAddButtonsList(rows) {
-	return rows.find(".ReactVirtualized__Table__rowColumn").find("Button.expression-add-field-button");
+	return rows.find("Button.expression-add-field-button");
 }
 
 var controller = new Controller();
