@@ -179,7 +179,7 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, false, true); // needs to be after setDatasetMetadata to run conditions
 			this.differentProperties = [];
 			if (sameParameterDefRendered) {
 				// When a parameterDef is dynamically updated, set difference between old and new controls
@@ -1207,7 +1207,7 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values, isInitProps) {
+	setPropertyValues(values, setDefaultValues, isInitProps) {
 		let inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1263,6 +1263,10 @@ export default class PropertiesController {
 					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
+		}
+
+		if (setDefaultValues) {
+			this._addToControlValues(true);
 		}
 	}
 

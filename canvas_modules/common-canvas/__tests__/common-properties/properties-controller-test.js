@@ -25,6 +25,7 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import checkboxParamDef from "../test_resources/paramDefs/checkbox_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
@@ -1192,6 +1193,24 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener).to.have.property("callCount", 4);
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
+	});
+	it("should set default values when setPropertyValues() is called with setDefaultValues = true", () => {
+		const renderedObject = testUtils.flyoutEditorForm(checkboxParamDef);
+		controller = renderedObject.controller;
+
+		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
+		// We filtered hidden and disabled properties, so "checkbox_hidden" property doesn't exist in filteredValues
+		expect(filteredValues).not.to.have.property("checkbox_hidden");
+
+		// setDefaultValues is not set
+		controller.setPropertyValues(filteredValues);
+		// Verify value is not set for checkbox_hidden
+		expect(controller.getPropertyValues()).not.to.have.property("checkbox_hidden");
+
+		// setDefaultValues is set to true
+		controller.setPropertyValues(filteredValues, true);
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
 	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);
