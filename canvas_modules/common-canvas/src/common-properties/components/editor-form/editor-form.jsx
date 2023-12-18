@@ -221,14 +221,14 @@ class EditorForm extends React.Component {
 		if (this.props.rightFlyout && this.props.categoryView !== CATEGORY_VIEW.TABS) {
 			return (
 				<>
-					<div key={"cat." + key} className="properties-categories">
+					{tabContent.length ? (<div key={"cat." + key} className="properties-categories">
 						{tabContent}
-					</div>
-					<Accordion>
+					</div>) : null}
+					{tabContentAcc.length ? (<Accordion>
 						<div key={"cat." + key} className="properties-rightpanel-accordion">
 							{tabContentAcc}
 						</div>
-					</Accordion>
+					</Accordion>) : null}
 				</>
 			);
 		}
