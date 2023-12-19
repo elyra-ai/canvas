@@ -1194,7 +1194,7 @@ describe("Properties Controller handlers", () => {
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
 	});
-	it("should set default values when setPropertyValues() is called with setDefaultValues = true", () => {
+	it("should set default values when setPropertyValues() is called with option { setDefaultValues: true }", () => {
 		const renderedObject = testUtils.flyoutEditorForm(checkboxParamDef);
 		controller = renderedObject.controller;
 
@@ -1208,7 +1208,7 @@ describe("Properties Controller handlers", () => {
 		expect(controller.getPropertyValues()).not.to.have.property("checkbox_hidden");
 
 		// setDefaultValues is set to true
-		controller.setPropertyValues(filteredValues, true);
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
 		// Verify a value is set for checkbox_hidden
 		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
 	});
