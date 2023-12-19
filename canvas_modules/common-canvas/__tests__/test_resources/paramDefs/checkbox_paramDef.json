@@ -16,8 +16,7 @@
     "checkbox_error": false,
     "checkbox_warning": false,
     "disable": true,
-    "hide": true,
-    "checkbox_hidden": false
+    "hide": true
   },
   "parameters": [
     {
@@ -69,7 +68,8 @@
     {
       "id": "checkbox_hidden",
       "type": "boolean",
-      "required": true
+      "required": true,
+      "default": true
     }
   ],
   "complex_types": [
