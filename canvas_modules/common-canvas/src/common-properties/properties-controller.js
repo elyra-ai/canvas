@@ -179,7 +179,7 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, { isInitProps: true }); // needs to be after setDatasetMetadata to run conditions
 			this.differentProperties = [];
 			if (sameParameterDefRendered) {
 				// When a parameterDef is dynamically updated, set difference between old and new controls
@@ -1207,7 +1207,12 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values, isInitProps) {
+	/*
+	* options - optional object of config options where
+	*   setDefaultValues: true - set default values from parameter definition
+	*   isInitProps: true - Function is called during initial load. This is only used internally in setForm().
+	*/
+	setPropertyValues(values, options) {
 		let inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1229,7 +1234,7 @@ export default class PropertiesController {
 
 		this.propertiesStore.setPropertyValues(inValues);
 
-		if (isInitProps) {
+		if (options && options.isInitProps) {
 			// Evaluate conditional defaults based on current_parameters upon loading of view
 			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
 			const conditionalDefaultValues = {};
@@ -1263,6 +1268,10 @@ export default class PropertiesController {
 					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
+		}
+
+		if (options && options.setDefaultValues) {
+			this._addToControlValues(true);
 		}
 	}
 
