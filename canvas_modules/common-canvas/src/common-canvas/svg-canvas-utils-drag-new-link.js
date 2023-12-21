@@ -457,7 +457,7 @@ export default class SVGCanvasUtilsDragNewLink {
 
 		// Switch 'new link over node' highlighting off
 		if (this.ren.config.enableHighlightNodeOnNewLinkDrag) {
-			this.ren.setLinkOverNodeß();
+			this.ren.setLinkOverNodeCancel();
 		}
 
 		const endPoint = this.ren.getTransformedMousePos(d3Event);
