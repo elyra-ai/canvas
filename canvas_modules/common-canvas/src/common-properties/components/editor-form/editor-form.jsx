@@ -77,6 +77,7 @@ class EditorForm extends React.Component {
 
 	}
 
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (!this.props.controller.isSummaryPanelShowing() && !this.props.controller.isSubPanelsShowing()) {
 			// only update list of error messages when no summary panel or sub-panel is shown,
@@ -186,9 +187,9 @@ class EditorForm extends React.Component {
 							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						>
 							<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
-								open={this.props.activeTab === tab.group}
+								open={categoryOpen}
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
-								className={`bx--accordion__item-${i} ${classNames("properties-category-content-accordion",
+								className={`bx--accordion__item-${i} ${classNames("properties-category-content",
 									{ "show": categoryOpen })}`}
 							>
 								{panelItems}
@@ -225,7 +226,7 @@ class EditorForm extends React.Component {
 						{tabContent}
 					</div>) : null}
 					{tabContentAcc.length ? (<Accordion>
-						<div key={"cat." + key} className="properties-rightpanel-accordion">
+						<div key={"cat." + key} className="properties-categories">
 							{tabContentAcc}
 						</div>
 					</Accordion>) : null}

@@ -130,7 +130,7 @@ describe("summary panel renders error/warning status correctly", () => {
 
 		// click on the link should open up structure list table category
 		warningMsg.simulate("click");
-		expect(wrapper.find("li.properties-category-content-accordion.show")).to.have.length(1);
+		expect(wrapper.find("li.properties-category-content.show")).to.have.length(1);
 
 		// check that warning icon is shown in summary
 		let tableCategory = wrapper.find("div[data-id='properties-Derive-Node']");

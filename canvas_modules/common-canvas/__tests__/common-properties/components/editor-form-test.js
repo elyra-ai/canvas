@@ -103,18 +103,18 @@ describe("controls should be rendered correctly when no uihints are provided", (
 	});
 
 	it("validate no tabs are present", () => {
-		expect(wrapper.find(".properties-rightpanel-accordion")).to.have.length(0);
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
 		expect(wrapper.find(".properties-single-category")).to.have.length(1);
 	});
 
 	it("validate alerts tab isn't created", () => {
-		expect(wrapper.find(".properties-rightpanel-accordion")).to.have.length(0);
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
 		controller.updatePropertyValue({ name: "textfield" }, null);
 		wrapper.update();
 		// validate message is created
 		expect(wrapper.find(".bx--form-requirement")).to.have.length(1);
 		// valide no catagories(tabs) are created
-		expect(wrapper.find(".properties-rightpanel-accordion")).to.have.length(0);
+		expect(wrapper.find(".properties-categories")).to.have.length(0);
 	});
 });
 
@@ -148,7 +148,7 @@ describe("Right flyout category views", () => {
 		const editorForm = wrapper.find(".properties-editor-form");
 		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(false);
 
-		const propertiesCategories = editorForm.find(".properties-rightpanel-accordion");
+		const propertiesCategories = editorForm.find(".properties-categories");
 		expect(propertiesCategories).to.have.length(1);
 
 		const categoryContainers = propertiesCategories.find(".properties-category-container");
@@ -165,7 +165,7 @@ describe("Right flyout category views", () => {
 		const editorForm = wrapper.find(".properties-editor-form");
 		expect(editorForm.prop("className").includes("right-flyout-tabs-view")).to.equal(false);
 
-		const propertiesCategories = editorForm.find(".properties-rightpanel-accordion");
+		const propertiesCategories = editorForm.find(".properties-categories");
 		expect(propertiesCategories).to.have.length(1);
 
 		const categoryContainers = propertiesCategories.find(".properties-category-container");

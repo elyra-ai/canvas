@@ -47,7 +47,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		const alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
@@ -61,7 +61,7 @@ describe("condition messages should add alerts tab", () => {
 		expect(valuesCategory.find("button.bx--accordion__heading").text()).to.equal("Values (2)");
 
 		// regenerate random number should decrease alert list
-		let valuesDiv = valuesCategory.find("li.properties-category-content-accordion.show"); // Values div
+		let valuesDiv = valuesCategory.find("li.properties-category-content.show"); // Values div
 		expect(valuesDiv).to.have.length(1);
 		const generator = valuesDiv.find("button.properties-number-generator");
 		expect(generator).to.have.length(2);
@@ -82,7 +82,7 @@ describe("condition messages should add alerts tab", () => {
 		valuesCategory = wrapper.find("div.properties-category-container").at(1); // Values category
 		expect(valuesCategory.find("button.bx--accordion__heading").text()).to.equal("Values (1)");
 
-		valuesDiv = valuesCategory.find("li.properties-category-content-accordion.show"); // Values category
+		valuesDiv = valuesCategory.find("li.properties-category-content.show"); // Values category
 		expect(valuesDiv).to.have.length(1);
 		integerInput = valuesDiv.find("div[data-id='properties-number_int'] input");
 		expect(integerInput).to.have.length(1);
@@ -118,7 +118,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -130,7 +130,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// there should be no alerts for the hidden field
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(0);
 	});
@@ -155,7 +155,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
@@ -188,7 +188,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// validate the Alerts tab has only 1 warning
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(1);
@@ -238,7 +238,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		let alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		let alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		let alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(3);
@@ -265,7 +265,7 @@ describe("condition messages should add alerts tab for tables", () => {
 
 		// Verify the Error is cleared from Alerts tab
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);
 		expect(alertList.at(0).text()).to.not.equal("The field cannot contain 'number'");

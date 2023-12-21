@@ -233,12 +233,12 @@ describe("numberfield control works correctly", () => {
 		expect(controller.getPropertyValue(numPropertyId)).to.be.undefined;
 	});
 	it("should have displayed random generator button", () => {
-		const category = wrapper.find(".properties-category-content-accordion").at(0); // values category
+		const category = wrapper.find(".properties-category-content").at(0); // values category
 		const generator = category.find("button.properties-number-generator");
 		expect(generator).to.have.length(2);
 	});
 	it("should click on generator to create a new number", () => {
-		const category = wrapper.find(".properties-category-content-accordion").at(0); // values category
+		const category = wrapper.find(".properties-category-content").at(0); // values category
 		const generator = category.find("button.properties-number-generator").at(0); // NumberGenerator default
 		const numPropertyId = { name: "number_random" };
 		const oldValue = controller.getPropertyValue(numPropertyId);
@@ -247,12 +247,12 @@ describe("numberfield control works correctly", () => {
 		expect(oldValue).not.equal(newValue);
 	});
 	it("should have displayed random generator with default label", () => {
-		const category = wrapper.find(".properties-category-content-accordion").at(0); // values category
+		const category = wrapper.find(".properties-category-content").at(0); // values category
 		const generator = category.find("div[data-id='properties-ctrl-number_random']").find("button.properties-number-generator");
 		expect(generator.text()).to.equal("NumberGenerator default");
 	});
 	it("should have displayed random generator with resource_key label", () => {
-		const category = wrapper.find(".properties-category-content-accordion").at(0); // values category
+		const category = wrapper.find(".properties-category-content").at(0); // values category
 		const generator = category.find("div[data-id='properties-ctrl-number_random_resource_key']").find("button.properties-number-generator");
 		expect(generator.text()).to.equal("NumberGenerator resource_key");
 	});

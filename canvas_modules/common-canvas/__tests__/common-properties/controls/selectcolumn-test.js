@@ -428,7 +428,7 @@ describe("selectcolumn control renders correctly with paramDef", () => {
 
 		// ensure that alert tab is open
 		alertCategory = wrapper.find("div.properties-category-container").at(0); // alert category
-		const alertDiv = alertCategory.find("li.properties-category-content-accordion.show"); // Alerts div
+		const alertDiv = alertCategory.find("li.properties-category-content.show"); // Alerts div
 		expect(alertDiv).to.have.length(1);
 		const alertList = alertDiv.find("a.properties-link-text");
 		expect(alertList).to.have.length(2);

@@ -52,7 +52,7 @@ $primary-tab-height: $spacing-08;
 	}
 }
 
-.properties-rightpanel-accordion{
+.properties-categories {  
 	.bx--accordion__item {
 
 		margin: 3 -1rem; // Remove 16px outer padding for accordion title and content
@@ -60,6 +60,27 @@ $primary-tab-height: $spacing-08;
 	.bx--accordion__item--active .bx--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;
+		
+		
+		.bx--accordion__item {
+			.bx--accordion__content {
+				display: none;
+			}
+
+			.bx--accordion__arrow {
+				transform: rotate(90deg);
+			}
+		}
+
+		.bx--accordion__item.bx--accordion__item--active { 
+			.bx--accordion__content {
+				display: block;
+			}
+			.bx--accordion__arrow {
+				transform: rotate(270deg);
+			}
+		}
+		
 	}
 
 	// Remove Default borders for Accordions
@@ -70,11 +91,6 @@ $primary-tab-height: $spacing-08;
 
 .properties-category-container {
 	position: relative;
-	&:last-of-type {
-		.properties-category-content.show {
-			border-bottom: 0;
-		}
-	}
 }
 
 .properties-category-title {
@@ -101,16 +117,6 @@ $primary-tab-height: $spacing-08;
 		height: 20px;
 		width: 20px;
 		fill: $icon-01;
-	}
-}
-
-.properties-category-content {
-	height: 100%;
-	padding: $spacing-05;
-	border-bottom: 1px solid $ui-03;
-	display: none;
-	&.show {
-		display: inherit;
 	}
 }
 
