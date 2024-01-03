@@ -61,6 +61,7 @@ class FlexibleTable extends React.Component {
 		this.onSort = this.onSort.bind(this);
 		this.sortHeaderClick = this.sortHeaderClick.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
+		this._updateRows = this._updateRows.bind(this);
 		this._adjustTableHeight = this._adjustTableHeight.bind(this);
 		this.handleCheckedRow = this.handleCheckedRow.bind(this);
 		this.handleCheckedAllRows = this.handleCheckedAllRows.bind(this);
@@ -74,8 +75,11 @@ class FlexibleTable extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.rows !== this.props.rows ||
-			prevProps.columns !== this.props.columns ||
+		if (prevProps.rows !== this.props.rows) {
+			this._updateRows();
+		}
+
+		if (prevProps.columns !== this.props.columns ||
 			prevProps.noAutoSize !== this.props.noAutoSize) {
 			this._adjustTableHeight();
 		}
@@ -243,10 +247,19 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
+	_updateRows() {
+		if (this.props.rows && this.props.rows !== this.state.rows) {
+			this.setState({ rows: this.props.rows }, () => {
+				this._adjustTableHeight();
+			});
+		}
+	}
+
 	_adjustTableHeight() {
 		if (this.props.noAutoSize) {
 			return;
 		}
+
 		let newHeight = this.state.tableHeight;
 		let dynamicH = this.state.dynamicHeight;
 		const multiSelectTableHeight = REM_ROW_HEIGHT + REM_HEADER_HEIGHT;
