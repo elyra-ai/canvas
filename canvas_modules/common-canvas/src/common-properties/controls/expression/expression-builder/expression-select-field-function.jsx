@@ -423,6 +423,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					key: "addColumn",
 					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
 					width: "50px",
+					staticWidth: true
 				},
 				{
 					key: "fieldName",
@@ -435,11 +436,12 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 					key: "addColumn",
 					label: formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN),
 					width: "50px",
+					staticWidth: true
 				},
 				{
 					key: "values",
 					label: categoryInfo.field_columns.value_column_info.locLabel,
-					description: categoryInfo.field_columns.value_column_info.descLabel,
+					description: categoryInfo.field_columns.value_column_info.descLabel
 				});
 			if (categoryInfo.field_columns.additional_column_info) {
 				for (let i = 0; i < categoryInfo.field_columns.additional_column_info.length; i++) {
@@ -654,7 +656,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 		const addNewColumn = formatMessage(this.reactIntl,
 			MESSAGE_KEYS.EXPRESSION_ADD_COLUMN);
 
-		headers.push({ key: "addColumn", label: addNewColumn, width: "50px", resizable: true });
+		headers.push({ key: "addColumn", label: addNewColumn, width: "50px", staticWidth: true });
 		headers.push({ key: "function", label: functionColumn, width: 50, resizable: true });
 		headers.push({ key: "return", label: returnColumn, width: 30 });
 		const table = this._buildFunctionTable(this.state.functionCategory);
