@@ -53,9 +53,6 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-categories {  
-	.bx--accordion__item {
-		margin: 3 -1rem; // Remove 16px outer padding for accordion title and content
-	}
 	.bx--accordion__item--active .bx--accordion__content {
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;

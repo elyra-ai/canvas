@@ -74,6 +74,8 @@ class EditorForm extends React.Component {
 		this.FIRST_TEARSHEET_ID = null;
 		this.TEARSHEETS = {};
 		this.visibleTearsheet = null;
+		this.defaultOpenTab = props.activeTab;
+		this.alertOpenTab = null;
 
 	}
 
@@ -122,11 +124,21 @@ class EditorForm extends React.Component {
 		if (this.props.activeTab === panelId) {
 			activeTab = "";
 		}
+		if (this.alertOpenTab === panelId) {
+			this.alertOpenTab = null;
+		}
+		if (this.defaultOpenTab === panelId) {
+			this.defaultOpenTab = null;
+		}
 		this.props.setActiveTab(activeTab);
 	}
 
 	_handleMessageClick(controlId, ev) {
 		const control = this.props.controller.getControl(controlId);
+		this.alertOpenTab = control.parentCategoryId;
+		if (this.defaultOpenTab === this.alertOpenTab) {
+			this.defaultOpenTab = null;
+		}
 		this.props.setActiveTab(control.parentCategoryId);
 	}
 
@@ -187,7 +199,8 @@ class EditorForm extends React.Component {
 							className={classNames("properties-category-container", { "properties-hidden-container": tab.content.itemType === ItemType.TEARSHEET })}
 						>
 							<AccordionItem title={`${tab.text}${this._getMessageCountForCategory(tab) ? this._getMessageCountForCategory(tab) : ""}`}
-								open={categoryOpen}
+								// Open Tab with Alert Message when from Alerts Tab or a open Default Tab
+								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
 								className={`bx--accordion__item-${i} ${classNames("properties-category-content",
 									{ "show": categoryOpen })}`}
