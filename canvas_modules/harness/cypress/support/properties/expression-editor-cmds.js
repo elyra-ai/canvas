@@ -70,9 +70,9 @@ Cypress.Commands.add("selectFieldFromPropertyInSubPanel", (fieldName, propertyId
 		.find("div[data-role='properties-data-row']")
 		.find(".properties-expr-table-cell")
 		.then((tableCells) => {
-			const cell = getCellMatch(tableCells, fieldName);
+			const cell = getAddCellMatch(tableCells, fieldName);
 			expect(cell).to.not.equal(null);
-			cy.wrap(cell).dblclick({ force: true });
+			cy.wrap(cell).click({ force: true }); // Single click on Add button
 		});
 });
 
@@ -87,10 +87,10 @@ Cypress.Commands.add("triggerBlurInExpressionBuilder", () => {
 		.click({ force: true });
 });
 
-function getCellMatch(tableCells, fieldName) {
+function getAddCellMatch(tableCells, fieldName) {
 	for (let idx = 0; idx < tableCells.length; idx++) {
 		if (tableCells[idx].textContent === fieldName) {
-			return (tableCells[idx]);
+			return (tableCells[idx - 1]); // Add column will be at First index, before the field col
 		}
 	}
 	return null;
