@@ -202,7 +202,7 @@ class EditorForm extends React.Component {
 								// Open Tab with Alert Message when from Alerts Tab or a open Default Tab
 								open={ this.defaultOpenTab === tab.group || this.alertOpenTab === tab.group }
 								onHeadingClick={this._showCategoryPanel.bind(this, tab.group)}
-								className={`bx--accordion__item-${i} ${classNames("properties-category-content",
+								className={`${classNames("properties-category-content",
 									{ "show": categoryOpen })}`}
 							>
 								{panelItems}

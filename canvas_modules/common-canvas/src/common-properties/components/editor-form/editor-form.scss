@@ -57,7 +57,12 @@ $primary-tab-height: $spacing-08;
 		// 24px padding between accordion title and content (issue #3106)
 		padding: $spacing-06 $spacing-05 $spacing-05;
 		
-		
+		/*  
+			Accordion Carbon Component currently doesn't support Accordions inside an Accordion
+			By default inner Accordions will be in open state and won't close on click
+		*/
+
+		// Handle Initial state where Accordion is closed to hide the content and rotate arrow to indicate the same.
 		.bx--accordion__item {
 			.bx--accordion__content {
 				display: none;
@@ -68,6 +73,7 @@ $primary-tab-height: $spacing-08;
 			}
 		}
 
+		// Handle Open state where Accordion is opened to show the content and rotate arrow.
 		.bx--accordion__item.bx--accordion__item--active { 
 			.bx--accordion__content {
 				display: block;
