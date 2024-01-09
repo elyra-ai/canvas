@@ -437,6 +437,50 @@ export default class PropertiesController {
 		}
 	}
 
+	setDefaultControlValues() {
+		const defaultControlValues = {};
+		for (const keyName in this.controls) {
+			if (!has(this.controls, keyName)) {
+				continue;
+			}
+			const control = this.controls[keyName];
+			const propertyId = { name: control.name };
+			let controlValue = this.getPropertyValue(propertyId);
+
+			if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
+				controlValue = this._populateFieldData(controlValue, control);
+			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
+				(typeof controlValue === "undefined")) {
+				controlValue = control.valueDef.defaultValue;
+
+				// convert values of type:object to the internal format array values
+				if (PropertyUtils.isSubControlStructureObjectType(control)) {
+					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
+				}
+			} else if (control.controlType === "structureeditor") {
+				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
+					if (Array.isArray(control.defaultRow)) {
+						controlValue = control.defaultRow;
+					}
+				}
+			}
+
+			defaultControlValues[control.name] = controlValue;
+		}
+
+		// Update all default values
+		this.propertiesStore.setPropertyValues(defaultControlValues);
+
+		// Single call to the propertyListener
+		if (this.handlers.propertyListener) {
+			this.handlers.propertyListener(
+				{
+					action: ACTIONS.SET_PROPERTIES // Setting the default control values
+				}
+			);
+		}
+	}
+
 	_populateFieldData(controlValue, control) {
 		const fields = this.getDatasetMetadataFields();
 		const multiSchema = this._isMultiSchemaControl(control);
@@ -1271,7 +1315,7 @@ export default class PropertiesController {
 		}
 
 		if (options && options.setDefaultValues) {
-			this._addToControlValues(true);
+			this.setDefaultControlValues();
 		}
 	}
 
