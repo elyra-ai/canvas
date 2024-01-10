@@ -1197,6 +1197,9 @@ describe("Properties Controller handlers", () => {
 	it("should set default values when setPropertyValues() is called with option { setDefaultValues: true }", () => {
 		const renderedObject = testUtils.flyoutEditorForm(checkboxParamDef);
 		controller = renderedObject.controller;
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
 
 		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
 		// We filtered hidden and disabled properties, so "checkbox_hidden" property doesn't exist in filteredValues
@@ -1211,6 +1214,11 @@ describe("Properties Controller handlers", () => {
 		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
 		// Verify a value is set for checkbox_hidden
 		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+
+		// Verify there's a single call to the propertyListener()
+		expect(propertyListener.calledWith({
+			action: "SET_PROPERTIES"
+		})).to.be.true;
 	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);

@@ -395,7 +395,8 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(sameParameterDefRendered, resolveParameterRefs) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs, setDefaultValues) {
+		const defaultControlValues = {};
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
 				continue;
@@ -421,8 +422,11 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
-				if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+				if (setDefaultValues) {
+					// When setDefaultValues is set, update all default values in a single call
+					defaultControlValues[control.name] = controlValue;
+				} else if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+					// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
 					this.updatePropertyValue(propertyId, controlValue, true);
 				} else {
 					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
@@ -435,39 +439,13 @@ export default class PropertiesController {
 				}
 			}
 		}
+
+		if (setDefaultValues) {
+			this.setDefaultControlValues(defaultControlValues);
+		}
 	}
 
-	setDefaultControlValues() {
-		const defaultControlValues = {};
-		for (const keyName in this.controls) {
-			if (!has(this.controls, keyName)) {
-				continue;
-			}
-			const control = this.controls[keyName];
-			const propertyId = { name: control.name };
-			let controlValue = this.getPropertyValue(propertyId);
-
-			if (control.controlType === "structuretable" && control.addRemoveRows === false && control.includeAllFields === true) {
-				controlValue = this._populateFieldData(controlValue, control);
-			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
-				(typeof controlValue === "undefined")) {
-				controlValue = control.valueDef.defaultValue;
-
-				// convert values of type:object to the internal format array values
-				if (PropertyUtils.isSubControlStructureObjectType(control)) {
-					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
-				}
-			} else if (control.controlType === "structureeditor") {
-				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
-					if (Array.isArray(control.defaultRow)) {
-						controlValue = control.defaultRow;
-					}
-				}
-			}
-
-			defaultControlValues[control.name] = controlValue;
-		}
-
+	setDefaultControlValues(defaultControlValues) {
 		// Update all default values
 		this.propertiesStore.setPropertyValues(defaultControlValues);
 
@@ -1315,7 +1293,7 @@ export default class PropertiesController {
 		}
 
 		if (options && options.setDefaultValues) {
-			this.setDefaultControlValues();
+			this._addToControlValues(false, false, true);
 		}
 	}
 
