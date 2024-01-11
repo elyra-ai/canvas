@@ -251,6 +251,22 @@ export default (state = [], action) => {
 			return link;
 		});
 
+	case "SET_LINKS_BRANCH_HIGHLIGHT":
+		return state.map((link) => {
+			if (action.data.objIds.indexOf(link.id) > -1) {
+				return Object.assign({}, link, { branchHighlight: true });
+			}
+			return link;
+		});
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((link) => {
+			if (link.branchHighlight) {
+				return Object.assign({}, link, { branchHighlight: false });
+			}
+			return link;
+		});
+
 	case "SET_LINK_DECORATIONS":
 		return state.map((link, index) => {
 			if (action.data.linkId === link.id) {

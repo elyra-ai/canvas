@@ -261,7 +261,7 @@ $link-highlight-color: $support-04;
 	}
 }
 
-/* Node highlight when end of new link line is over, or approaching, the node */
+/* Node selection highlight when end of new link line is over, or approaching, the node */
 
 .d3-node-group[data-new-link-over="yes"] {
 	.d3-node-selection-highlight {
@@ -270,6 +270,28 @@ $link-highlight-color: $support-04;
 		stroke-width: 2;
 		fill: $ui-01;
 		pointer-events: none;
+	}
+}
+
+/* Node branch highlight styles */
+
+.d3-node-group.d3-branch-highlight {
+	.d3-node-body-outline {
+		stroke: $ui-05;
+		stroke-width: 2px;
+		fill: $highlight;
+	}
+
+	.d3-node-label {
+		color: $text-01;
+	}
+}
+
+.d3-node-group.d3-branch-highlight:hover {
+	.d3-node-body-outline {
+		stroke: $ui-05;
+		stroke-width: 2px;
+		fill: $hover-primary;
 	}
 }
 
@@ -865,7 +887,20 @@ g.bkg-col-cyan-50 {
 	}
 }
 
-/* Link styles */
+/* Link styles for branch highlighting */
+
+.d3-link-group.d3-branch-highlight {
+	.d3-link-line {
+		stroke: $inverse-02;
+	}
+}
+
+.d3-link-group.d3-branch-highlight:hover {
+	.d3-link-line {
+		stroke: $inverse-02;
+		stroke-width: 3px;
+	}
+}
 
 // Common styles for all links
 .d3-link-line,

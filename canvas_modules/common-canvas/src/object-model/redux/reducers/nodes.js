@@ -287,6 +287,22 @@ export default (state = [], action) => {
 			return node;
 		});
 
+	case "SET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((node) => {
+			if (action.data.objIds.indexOf(node.id) > -1) {
+				return Object.assign({}, node, { branchHighlight: true });
+			}
+			return node;
+		});
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((node) => {
+			if (node.branchHighlight) {
+				return Object.assign({}, node, { branchHighlight: false });
+			}
+			return node;
+		});
+
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_INPUT_PORT_SUBFLOW_NODE_REF":
 		return state.map((node, index) => {

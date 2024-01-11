@@ -132,11 +132,6 @@ export const HIGHLIGHT_BRANCH = "branch";
 export const HIGHLIGHT_UPSTREAM = "upstream";
 export const HIGHLIGHT_DOWNSTREAM = "downstream";
 
-export const HIGHLIGHT_FILL = "#bad8ff";
-export const HIGHLIGHT_HOVER_FILL = "#a0c8fe";
-export const HIGHLIGHT_STROKE = "#152935";
-export const HIGHLIGHT_STROKE_WIDTH = "3px";
-
 export const BINDING = "binding";
 export const SUPER_NODE = "super_node";
 export const MODEL_NODE = "model_node";

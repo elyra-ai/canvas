@@ -4204,7 +4204,12 @@ export default class SVGCanvasRenderer {
 
 	// Returns the class string to be appled to the link group object.
 	getLinkGroupClass(d) {
-		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkCustomClass(d);
+		return "d3-link-group " + this.getLinkTypeClass(d) + " " + this.getLinkBranchHighlightCLass(d) + " " + this.getLinkCustomClass(d);
+	}
+
+	// Returns the class to be used for branch highlighting if the branchHighlight flag id set for the link.
+	getLinkBranchHighlightCLass(d) {
+		return (d.branchHighlight ? "d3-branch-highlight" : "");
 	}
 
 	// Returns the custom class string for the link object passed in.
@@ -4282,7 +4287,9 @@ export default class SVGCanvasRenderer {
 			? " d3-resized"
 			: "";
 
-		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + customClass;
+		const branchHighlightClass = d.branchHighlight ? " d3-branch-highlight" : "";
+
+		return "d3-node-group" + supernodeClass + resizeClass + draggableClass + branchHighlightClass + customClass;
 	}
 
 	// Pushes the links to be below nodes within the nodesLinksGrp group.
