@@ -60,6 +60,14 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: $blue;
 	}
 
+	.d3-node-group.d3-branch-highlight:hover {
+		.d3-node-body-outline {
+			stroke: #152935;
+			stroke-width: 2px;
+			fill: #a0c8fe;
+		}
+	}
+
 	.d3-node-selection-highlight {
 		stroke-width: 0;
 		fill: transparent;
@@ -83,6 +91,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-label {
 		font-size: 13px;
+		color: $text-01;
 	}
 
 	.d3-node-label-entry {

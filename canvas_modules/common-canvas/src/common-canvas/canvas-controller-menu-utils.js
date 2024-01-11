@@ -280,7 +280,7 @@ const createDefaultContextMenu = (source) => {
 	}
 	if (source.type === "canvas") {
 		menuDefinition = menuDefinition.concat(
-			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isHighlighted() }
+			{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 		);
 	}
 	if (source.type === "node" &&
@@ -319,7 +319,7 @@ const createHighlightSubMenu = (source) => {
 // This should only appear in menu if highlight is true.
 const createUnhighlightMenu = (source) => {
 	const unhighlightSubMenu = [
-		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isHighlighted() }
+		{ action: "unhighlight", label: getLabel("menu.unhighlight"), enable: cc.isBranchHighlighted() }
 	];
 	return unhighlightSubMenu;
 };

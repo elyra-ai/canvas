@@ -118,7 +118,7 @@ export default class CanvasController {
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
 
-		this.highlight = false;
+		this.branchHighlighted = false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -314,6 +314,11 @@ export default class CanvasController {
 		this.objectModel.setSubdueStyle(newStyle);
 	}
 
+	// Unsets all branch highlight flags from all nodes and links in the pipeline flow.
+	unsetAllBranchHighlight() {
+		this.objectModel.unsetAllBranchHighlight();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Pipeline methods
 	// ---------------------------------------------------------------------------
@@ -486,7 +491,7 @@ export default class CanvasController {
 		this.objectModel.setIsOpenCategory(categoryId, true);
 	}
 
-	// Closes the palette category idetified by the category ID passed in.
+	// Closes the palette category identified by the category ID passed in.
 	closePaletteCategory(categoryId) {
 		this.objectModel.setIsOpenCategory(categoryId, false);
 	}
@@ -707,6 +712,12 @@ export default class CanvasController {
 	//             getPipelineFlow() method is called or not.
 	setObjectsMultiStyle(pipelineObjStyles, temporary) {
 		this.objectModel.setObjectsMultiStyle(pipelineObjStyles, temporary);
+	}
+
+	// Sets the branch highlighting flag on all nodes identified in
+	// the pipelineObjectIds parameter.
+	setObjectsBranchHighlight(pipelineObjectIds) {
+		this.objectModel.setObjectsBranchHighlight(pipelineObjectIds);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1299,6 +1310,12 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId, temporary);
 	}
 
+	// Sets the branch highlighting flag on all links idetified in
+	// the pipelineLinkIds parameter.
+	setLinksBranchHighlight(pipelineLinkIds) {
+		this.objectModel.setLinksBranchHighlight(pipelineLinkIds);
+	}
+
 	// Sets the decorations on a link. The decorations array passed in
 	// will replace any decorations currently applied to the link.
 	// linkId - The ID of the link
@@ -1412,24 +1429,14 @@ export default class CanvasController {
 	// Highlight methods
 	// ---------------------------------------------------------------------------
 
-	//
-	setHighlightStyle(highlightObjectIds, pipelineId) {
-		this.removeAllStyles(true);
-		const objectStyle = {
-			body: {
-				default: `fill: ${constants.HIGHLIGHT_FILL} ;stroke: ${constants.HIGHLIGHT_STROKE};`,
-				hover: `fill: ${constants.HIGHLIGHT_HOVER_FILL};`
-			}
-		};
-		const linkStyle = {
-			line: {
-				default: `stroke: ${constants.HIGHLIGHT_STROKE};`,
-				hover: `stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
-			}
-		};
-		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, true, false);
-		this.setLinksStyle(highlightObjectIds.links, linkStyle, true, false);
-		this.highlight = true;
+	// Sets the branch highlight flag on the nodes and links passed in
+	// the highlightObjectIds parameter
+	setBranchHighlight(highlightObjectIds) {
+		this.unsetAllBranchHighlight();
+		this.setObjectsBranchHighlight(highlightObjectIds.nodes);
+		this.setLinksBranchHighlight(highlightObjectIds.links);
+
+		this.branchHighlighted = true;
 	}
 
 	// Highlights the branch(s) (both upstream and downstream) from the node
@@ -1438,7 +1445,7 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightBranch(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
@@ -1447,7 +1454,7 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightUpstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
@@ -1456,12 +1463,12 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightDownstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
-	isHighlighted() {
-		return this.highlight;
+	isBranchHighlighted() {
+		return this.branchHighlighted;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2530,9 +2537,8 @@ export default class CanvasController {
 				data.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;
 			case "unhighlight":
-				// this.setSubdueStyle(null);
-				this.removeAllStyles(true);
-				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
+				this.unsetAllBranchHighlight();
+				this.branchHighlighted = false;
 				break;
 			case "openNotificationPanel":
 				this.openNotificationPanel();
