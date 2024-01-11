@@ -395,7 +395,8 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(sameParameterDefRendered, resolveParameterRefs) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs, setDefaultValues) {
+		const defaultControlValues = {};
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
 				continue;
@@ -421,8 +422,11 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
-				if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+				if (setDefaultValues) {
+					// When setDefaultValues is set, update all default values in a single call
+					defaultControlValues[control.name] = controlValue;
+				} else if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+					// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
 					this.updatePropertyValue(propertyId, controlValue, true);
 				} else {
 					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
@@ -434,6 +438,24 @@ export default class PropertiesController {
 					}
 				}
 			}
+		}
+
+		if (setDefaultValues) {
+			this.setDefaultControlValues(defaultControlValues);
+		}
+	}
+
+	setDefaultControlValues(defaultControlValues) {
+		// Update all default values
+		this.propertiesStore.setPropertyValues(defaultControlValues);
+
+		// Single call to the propertyListener
+		if (this.handlers.propertyListener) {
+			this.handlers.propertyListener(
+				{
+					action: ACTIONS.SET_PROPERTIES // Setting the default control values
+				}
+			);
 		}
 	}
 
@@ -1271,7 +1293,7 @@ export default class PropertiesController {
 		}
 
 		if (options && options.setDefaultValues) {
-			this._addToControlValues(true);
+			this._addToControlValues(false, false, true);
 		}
 	}
 
