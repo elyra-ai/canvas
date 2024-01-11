@@ -277,21 +277,21 @@ $link-highlight-color: $support-04;
 
 .d3-node-group.d3-branch-highlight {
 	.d3-node-body-outline {
-		stroke: #152935;
+		stroke: $ui-05;
 		stroke-width: 2px;
-		fill: #bad8ff;
+		fill: $highlight;
 	}
 
 	.d3-node-label {
-		color: $interactive-02;
+		color: $text-01;
 	}
 }
 
 .d3-node-group.d3-branch-highlight:hover {
 	.d3-node-body-outline {
-		stroke: #152935;
+		stroke: $ui-05;
 		stroke-width: 2px;
-		fill: #a0c8fe;
+		fill: $hover-primary;
 	}
 }
 
