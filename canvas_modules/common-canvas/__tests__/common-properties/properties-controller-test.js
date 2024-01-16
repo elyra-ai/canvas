@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
+import { merge } from "lodash";
 import propertyUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
@@ -1209,11 +1210,16 @@ describe("Properties Controller handlers", () => {
 		controller.setPropertyValues(filteredValues);
 		// Verify value is not set for checkbox_hidden
 		expect(controller.getPropertyValues()).not.to.have.property("checkbox_hidden");
+		// Verify filteredValues are set
+		expect(controller.getPropertyValues()).to.eql(filteredValues);
 
 		// setDefaultValues is set to true
 		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
 		// Verify a value is set for checkbox_hidden
 		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		const allProperties = merge(merge({ "checkbox_hidden": true }, filteredValues));
+		expect(controller.getPropertyValues()).to.eql(allProperties);
 
 		// Verify there's a single call to the propertyListener()
 		expect(propertyListener.calledWith({
