@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference, merge } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 import { DEFAULT_LOCALE } from "./constants/constants";
@@ -441,22 +441,10 @@ export default class PropertiesController {
 		}
 
 		if (setDefaultValues) {
-			this.setDefaultControlValues(defaultControlValues);
+			return defaultControlValues;
 		}
-	}
 
-	setDefaultControlValues(defaultControlValues) {
-		// Update all default values
-		this.propertiesStore.setPropertyValues(defaultControlValues);
-
-		// Single call to the propertyListener
-		if (this.handlers.propertyListener) {
-			this.handlers.propertyListener(
-				{
-					action: ACTIONS.SET_PROPERTIES // Setting the default control values
-				}
-			);
-		}
+		return null;
 	}
 
 	_populateFieldData(controlValue, control) {
@@ -1254,6 +1242,11 @@ export default class PropertiesController {
 			}
 		}
 
+		if (options && options.setDefaultValues) {
+			const defaultValues = this._addToControlValues(false, false, true);
+			inValues = merge(defaultValues, inValues);
+		}
+
 		this.propertiesStore.setPropertyValues(inValues);
 
 		if (options && options.isInitProps) {
@@ -1290,10 +1283,6 @@ export default class PropertiesController {
 					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
-		}
-
-		if (options && options.setDefaultValues) {
-			this._addToControlValues(false, false, true);
 		}
 	}
 
