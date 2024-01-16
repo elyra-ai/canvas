@@ -1218,7 +1218,7 @@ describe("Properties Controller handlers", () => {
 		// Verify a value is set for checkbox_hidden
 		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
 		// Verify filteredValues and default values are set
-		const allProperties = merge(merge({ "checkbox_hidden": true }, filteredValues));
+		const allProperties = merge({ "checkbox_hidden": true }, filteredValues);
 		expect(controller.getPropertyValues()).to.eql(allProperties);
 
 		// Verify there's a single call to the propertyListener()
