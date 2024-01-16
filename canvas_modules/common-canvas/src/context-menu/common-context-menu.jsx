@@ -258,6 +258,19 @@ class CommonContextMenu extends React.Component {
 		return subMenuPosStyle;
 	}
 
+	// Returns the menu definition array passed in making sure any
+	// submenu items have an action. Note: some applications forget
+	// to do provide an action because for the submenu it is only
+	// used by the context menu code.
+	ensureAllSubMenuItemsHaveAction(menuDef) {
+		return menuDef.map((item, index) => {
+			if (item.submenu && typeof item.action === "undefined") {
+				return { ...item, action: "submenu_" + index };
+			}
+			return item;
+		});
+	}
+
 	render() {
 		// Reposition contextMenu so that it does not show off the screen
 		const menuSize = this.calculateMenuSize(this.props.menuDefinition);
@@ -267,7 +280,8 @@ class CommonContextMenu extends React.Component {
 			top: menuPos.y + "px"
 		};
 
-		const menuItems = this.buildMenu(this.props.menuDefinition, menuSize, menuPos, this.props.canvasRect);
+		const menuDefinition = this.ensureAllSubMenuItemsHaveAction(this.props.menuDefinition);
+		const menuItems = this.buildMenu(menuDefinition, menuSize, menuPos, this.props.canvasRect);
 
 		return (
 			<div id="context-menu-popover" className="context-menu-popover" style={posStyle} onContextMenu={this.onContextMenu}>
