@@ -127,6 +127,10 @@ function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
 
+function getAddButtonsList(rows) {
+	return rows.find("Button.expression-add-field-button");
+}
+
 var controller = new Controller();
 const buttonHandler = sinon.spy();
 function reset() {
@@ -414,7 +418,7 @@ describe("expression-builder renders correctly", () => {
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
 			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
-				.at(1)
+				.at(2) // consider Add column
 				.text();
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
@@ -435,7 +439,7 @@ describe("expression-builder renders correctly", () => {
 			// Verify values in "Return" column match with "return_type_label". Default to "return_type".
 			const expectedReturnType = functionInfo.locReturnType ? functionInfo.locReturnType : functionInfo.return_type;
 			const actualReturnType = row.find(".ReactVirtualized__Table__rowColumn")
-				.at(1)
+				.at(2)
 				.text();
 			expect(expectedReturnType).to.eql(actualReturnType);
 		});
@@ -455,8 +459,8 @@ describe("expression-builder renders correctly", () => {
 		// Verify custom header label
 		const header = valuesTable.find("div[data-role='properties-header-row']");
 		const headerLabel = header.find(".properties-vt-label-tip-icon");
-		expect(headerLabel).to.have.length(1);
-		expect(header.text()).to.equal(harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
+		expect(headerLabel).to.have.length(2); // include Add column
+		expect(header.text()).to.equal("Add" +	harnessMessages[MESSAGE_KEYS.EXPRESSION_VALUE_COLUMN]);
 
 		// Verify info icon
 		const headerInfoIcon = header.find(".properties-vt-info-icon-tip");
@@ -501,7 +505,8 @@ describe("expression-builder select from tables correctly", () => {
 			</Provider>
 		);
 		const fieldTable = wrapper.find("div.properties-field-table-container");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(fieldTable));
+		addButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" Age");
 	});
 
@@ -517,7 +522,8 @@ describe("expression-builder select from tables correctly", () => {
 			</Provider>
 		);
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(valueTable, [0]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" 21");
 	});
 
@@ -537,7 +543,8 @@ describe("expression-builder select from tables correctly", () => {
 		tableUtils.clickTableRows(fieldTable, [1]);
 		// select a string value from value table.
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(valueTable, [1]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addButtons.at(1).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" \"female\"");
 	});
 
@@ -554,7 +561,8 @@ describe("expression-builder select from tables correctly", () => {
 		);
 		wrapper.find("button.expresson-builder-function-tab").simulate("click");
 		const functionTable = wrapper.find("div.properties-functions-table-container");
-		tableUtils.dblClickTableRows(functionTable, [0]);
+		const addButtons = getAddButtonsList(tableUtils.getTableRows(functionTable));
+		addButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" to_integer(?)");
 	});
 
@@ -747,11 +755,13 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Globals");
 		const fieldTable = wrapper.find("div.properties-field-table-container");
 		const valueTable = wrapper.find("div.properties-value-table-container");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
+		const addFieldButtons = getAddButtonsList(tableUtils.getTableRows(fieldTable));
+		addFieldButtons.at(0).simulate("click");
 		// expect selecting a field enters the correct value
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE')");
 		tableUtils.clickTableRows(fieldTable, [1]);
-		tableUtils.dblClickTableRows(valueTable, [0]);
+		const addValueButtons = getAddButtonsList(tableUtils.getTableRows(valueTable));
+		addValueButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863");
 		// test mrs
 		dropDown = wrapper.find("div.properties-expression-field-select button");
@@ -759,10 +769,10 @@ describe("expression builder generates and accesses field dropdown correctly", (
 		dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		dropDownList.at(3).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Multi Response Set");
-		tableUtils.dblClickTableRows(fieldTable, [0]);
+		addFieldButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet");
 		tableUtils.clickTableRows(fieldTable, [1]);
-		tableUtils.dblClickTableRows(valueTable, [0]);
+		addValueButtons.at(0).simulate("click");
 		expect(controller.getPropertyValue(propertyId)).to.equal(" @GLOBAL_MEAN('AGE') 8863 numberSet 1");
 	});
 });
@@ -946,7 +956,10 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		var dropDownList = wrapper.find("div.bx--list-box__menu .bx--list-box__menu-item");
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-field-select span").text()).to.equal("Recently Used");
-		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").text()).to.equal("Item");
+		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").at(0)
+			.text()).to.equal("Add");
+		expect(wrapper.find("div.properties-field-table-container .properties-vt-column").at(1)
+			.text()).to.equal("Item");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		expect(fieldRows).to.have.length(0);
 		// back to Fields
@@ -956,8 +969,9 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add two rows to Recently Used
-		fieldRows.at(0).simulate("dblclick");
-		fieldRows.at(1).simulate("dblclick");
+		const addButtons = getAddButtonsList(fieldRows);
+		addButtons.at(0).simulate("click");
+		addButtons.at(1).simulate("click");
 		// back to Recently used
 		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
 		dropDown.simulate("click");
@@ -979,7 +993,7 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		dropDownList.at(0).simulate("click");
 		fieldRows = tableUtils.getTableRows(wrapper.find("div.properties-field-table-container"));
 		// add Age again, moving it to the top of Recently Used
-		fieldRows.at(0).simulate("dblclick");
+		addButtons.at(0).simulate("click");
 		// back to Recently Used
 		dropDown = wrapper.find("div.properties-expression-field-select .bx--list-box__field");
 		dropDown.simulate("click");
@@ -1016,6 +1030,8 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		dropDownList.at(1).simulate("click");
 		expect(wrapper.find("div.properties-expression-function-select span").text()).to.equal("Recently Used");
 		expect(wrapper.find("div.properties-functions-table-container .properties-vt-column").at(0)
+			.text()).to.equal("Add");
+		expect(wrapper.find("div.properties-functions-table-container .properties-vt-column").at(1)
 			.text()).to.equal("Function");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		expect(funcRows).to.have.length(0);
@@ -1026,8 +1042,9 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add two rows to Recently Used
-		funcRows.at(0).simulate("dblclick");
-		funcRows.at(1).simulate("dblclick");
+		const addFuncButtons = getAddButtonsList(funcRows);
+		addFuncButtons.at(0).simulate("click");
+		addFuncButtons.at(1).simulate("click");
 		// back to Recently used
 		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
 		dropDown.simulate("click");
@@ -1045,7 +1062,8 @@ describe("expression builder correctly runs Recently Used dropdown options", () 
 		dropDownList.at(0).simulate("click");
 		funcRows = tableUtils.getTableRows(wrapper.find("div.properties-functions-table-container"));
 		// add to_integer again, moving it to the top of Recently Used
-		funcRows.at(0).simulate("dblclick");
+		const addButtons = getAddButtonsList(funcRows);
+		addButtons.at(0).simulate("click");
 		// back to Recently Used
 		dropDown = wrapper.find("div.properties-expression-function-select .bx--list-box__field");
 		dropDown.simulate("click");

@@ -41,7 +41,7 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(tabParamDef, { categoryView: "tabs" });
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});
@@ -67,6 +67,33 @@ describe("subtabs visible and enabled conditions work correctly", () => {
 		wrapper.update();
 		subTab = wrapper.find("li[data-id='properties-table-subtab']");
 		expect(subTab).to.have.length(0);
+	});
+
+	it("hidden and non hidden tabs display correctly", () => {
+		let primaryTabs = wrapper.find(".properties-primaryTabs");
+		let tab1 = primaryTabs.find("li[title='Tab Test']");
+		let tab2 = primaryTabs.find("li[title='Tab Test2']");
+		let tab3 = primaryTabs.find("li[title='Tab Test3']");
+		let tab4 = primaryTabs.find("li[title='Tab Test4']");
+		expect(tab1).to.have.length(1);
+		expect(tab2).to.have.length(1);
+		expect(tab3).to.have.length(1);
+		expect(tab4).to.have.length(1);
+
+		controller.updatePropertyValue({ name: "hideTab1" }, true);
+		controller.updatePropertyValue({ name: "hideTab4" }, true);
+		wrapper.update();
+
+		primaryTabs = wrapper.find(".properties-primaryTabs");
+		tab1 = primaryTabs.find("li[title='Tab Test']");
+		tab2 = primaryTabs.find("li[title='Tab Test2']");
+		tab3 = primaryTabs.find("li[title='Tab Test3']");
+		tab4 = primaryTabs.find("li[title='Tab Test4']");
+
+		expect(tab1).to.have.length(0);
+		expect(tab2).to.have.length(1);
+		expect(tab3).to.have.length(1);
+		expect(tab4).to.have.length(0);
 	});
 });
 
@@ -107,7 +134,7 @@ describe("subtabs renders correctly in a Tearsheet container", () => {
 
 	it("should have rendered subtabs with leftnav classnames", () => {
 		const primaryTabs = wrapper.find("div.properties-primary-tab-panel.tearsheet-container");
-		expect(primaryTabs).to.have.length(4);
+		expect(primaryTabs).to.have.length(5);
 
 		const primaryTab = primaryTabs.at(2); // Tab Test2
 		expect(primaryTab.find("div.properties-sub-tab-container.vertical.properties-leftnav-container")).to.have.length(1);

@@ -46,9 +46,11 @@ class MappingContainerNode extends React.Component {
 		this.onMouseMoveOnDragContainerIcon = this.onMouseMoveOnDragContainerIcon.bind(this);
 		this.onMouseUpOnDragContainerIcon = this.onMouseUpOnDragContainerIcon.bind(this);
 		this.adjustContainerPositions = this.adjustContainerPositions.bind(this);
-		this.onInputFieldDragStart = this.onInputFieldDragStart.bind(this);
+		this.onMouseDownOnFieldIcon = this.onMouseDownOnFieldIcon.bind(this);
+		this.onDragStartOnFieldIcon = this.onDragStartOnFieldIcon.bind(this);
 		this.onFieldMoveDragStart = this.onFieldMoveDragStart.bind(this);
 		this.onFieldDrop = this.onFieldDrop.bind(this);
+		this.onMouseDownOnContainerDataIcon = this.onMouseDownOnContainerDataIcon.bind(this);
 		this.onDragStartOnContainerDataIcon = this.onDragStartOnContainerDataIcon.bind(this);
 		this.setContainerPortPositions = this.setContainerPortPositions.bind(this);
 		this.getFieldElementId = this.getFieldElementId.bind(this);
@@ -128,6 +130,17 @@ class MappingContainerNode extends React.Component {
 		this.setContainerPortPositions();
 	}
 
+	onMouseDownOnContainerDataIcon(evt) {
+		window.console.log("onMouseDownOnContainerDataIcon");
+		evt.stopPropagation();
+
+		// Create the image here in mouse down, before onDrag occurs to give
+		// a chance for it to be created.
+		this.dragImgage = document.createElement("img");
+		this.dragImgage.src = "/images/custom-canvases/react-nodes-mapping/stacked-move.svg";
+	}
+
+
 	onDragStartOnContainerDataIcon(evt) {
 		window.console.log("onDragStartOnContainerDataIcon");
 		evt.stopPropagation();
@@ -138,6 +151,7 @@ class MappingContainerNode extends React.Component {
 			srcFields: this.props.nodeData.app_data.table_data.fields
 		});
 		evt.dataTransfer.setData("text/plain", data);
+		evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
 	}
 
 	// Called when the field is moved up and down in an output link.
@@ -145,13 +159,24 @@ class MappingContainerNode extends React.Component {
 		//
 	}
 
-	onInputFieldDragStart(evt, field) {
+	onMouseDownOnFieldIcon(evt) {
+		window.console.log("onMouseDownOnFieldIcon");
+		evt.stopPropagation();
+
+		// Create the image here in mouse down, before onDrag occurs to give
+		// a chance for it to be created.
+		this.dragImgage = document.createElement("img");
+		this.dragImgage.src = "/images/custom-canvases/react-nodes-mapping/link.svg";
+	}
+
+	onDragStartOnFieldIcon(evt, field) {
 		evt.dataTransfer.clearData();
 		const data = JSON.stringify({
 			srcNodeId: this.props.nodeData.id,
 			srcFields: [field]
 		});
 		evt.dataTransfer.setData("text/plain", data);
+		evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
 	}
 
 	onFieldDrop(evt) {
@@ -559,7 +584,11 @@ class MappingContainerNode extends React.Component {
 
 		} else if (this.props.nodeData.op === "input_link") {
 			return (
-				<div className="node-header-drag-icon" draggable onDragStart={this.onDragStartOnContainerDataIcon} onMouseDown={(evt) => evt.stopPropagation()}>
+				<div className="node-header-drag-icon"
+					draggable
+					onDragStart={this.onDragStartOnContainerDataIcon}
+					onMouseDown={this.onMouseDownOnContainerDataIcon}
+				>
 					<Draggable16 />
 				</div>
 			);
@@ -617,7 +646,11 @@ class MappingContainerNode extends React.Component {
 			// Input link
 			} else {
 				beforeLabel = (
-					<div draggable onDragStart={(evt) => this.onInputFieldDragStart(evt, field)}>
+					<div
+						draggable
+						onMouseDown={this.onMouseDownOnFieldIcon}
+						onDragStart={(evt) => this.onDragStartOnFieldIcon(evt, field)}
+					>
 						<Draggable16 />
 					</div>
 				);

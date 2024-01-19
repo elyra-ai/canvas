@@ -445,7 +445,9 @@ export default (state = {}, action) => {
 	}
 
 	case "SET_OBJECTS_STYLE":
-	case "SET_LINKS_STYLE": {
+	case "SET_LINKS_STYLE":
+	case "SET_OBJECTS_BRANCH_HIGHLIGHT":
+	case "SET_LINKS_BRANCH_HIGHLIGHT": {
 		const pipelineIds = Object.keys(action.data.pipelineObjIds);
 		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
 			if (pipelineIds.indexOf(pipeline.id) > -1) {
@@ -457,6 +459,16 @@ export default (state = {}, action) => {
 					links: links(pipeline.links, action) });
 			}
 			return pipeline;
+		});
+		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
+	}
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT": {
+		const canvasInfoPipelines = state.pipelines.map((pipeline) => {
+			return Object.assign({}, pipeline, {
+				nodes: nodes(pipeline.nodes, action),
+				comments: comments(pipeline.comments, action),
+				links: links(pipeline.links, action) });
 		});
 		return Object.assign({}, state, { pipelines: canvasInfoPipelines });
 	}

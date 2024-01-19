@@ -17,6 +17,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import deepFreeze from "deep-freeze";
+import { merge } from "lodash";
 import propertyUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 import Form from "../../src/common-properties/form/Form";
@@ -25,8 +26,10 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import checkboxParamDef from "../test_resources/paramDefs/checkbox_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
+import oneofselectParamDef from "../test_resources/paramDefs/oneofselect_paramDef.json";
 import structuretablePropertyValues from "../test_resources/json/structuretable_propertyValues.json";
 import ExpressionInfo from "../test_resources/json/expression-function-list.json";
 import readonlyTableParamDef from "../test_resources/paramDefs/readonlyTable_paramDef.json";
@@ -1192,6 +1195,98 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener).to.have.property("callCount", 4);
 		const actual = controller.getPropertyValues();
 		expect(actual).to.eql(values);
+	});
+	it("should set default values when setPropertyValues() is called with option { setDefaultValues: true }", () => {
+		const renderedObject = testUtils.flyoutEditorForm(checkboxParamDef);
+		controller = renderedObject.controller;
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
+
+		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
+		// We filtered hidden and disabled properties, so "checkbox_hidden" property doesn't exist in filteredValues
+		expect(filteredValues).not.to.have.property("checkbox_hidden");
+
+		// setDefaultValues is not set
+		controller.setPropertyValues(filteredValues);
+		// Verify value is not set for checkbox_hidden
+		expect(controller.getPropertyValues()).not.to.have.property("checkbox_hidden");
+		// Verify filteredValues are set
+		expect(controller.getPropertyValues()).to.eql(filteredValues);
+
+		// setDefaultValues is set to true
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		const allProperties = merge({ "checkbox_hidden": true }, filteredValues);
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 2nd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 3rd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a value is set for checkbox_hidden
+		expect(controller.getPropertyValues()).to.have.property("checkbox_hidden", true);
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// Verify there's a single call to the propertyListener()
+		expect(propertyListener.calledWith({
+			action: "SET_PROPERTIES"
+		})).to.be.true;
+	});
+	it("should set default values having 0 or ' ' when setPropertyValues() is called with option { setDefaultValues: true }", () => {
+		const renderedObject = testUtils.flyoutEditorForm(oneofselectParamDef);
+		controller = renderedObject.controller;
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
+
+		const filteredValues = controller.getPropertyValues({ filterHiddenDisabled: true });
+		// We filtered hidden and disabled properties, some hidden properties don't exist in filteredValues
+		expect(filteredValues).not.to.have.property("oneofselect_hidden");
+		expect(filteredValues).not.to.have.property("fill");
+		expect(filteredValues).not.to.have.property("viewonly");
+
+		// setDefaultValues is not set
+		controller.setPropertyValues(filteredValues);
+		// Verify value is not set for hidden properties
+		expect(controller.getPropertyValues()).not.to.have.property("oneofselect_hidden");
+		expect(controller.getPropertyValues()).not.to.have.property("fill");
+		expect(controller.getPropertyValues()).not.to.have.property("viewonly");
+		// Verify filteredValues are set
+		expect(controller.getPropertyValues()).to.eql(filteredValues);
+
+		// setDefaultValues is set to true - 1st time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		const allProperties = merge({ "fill": 0, "viewonly": " " }, filteredValues);
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 2nd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
+
+		// setDefaultValues is set to true - 3rd time
+		controller.setPropertyValues(filteredValues, { setDefaultValues: true });
+		// Verify a default value is set for hidden properties
+		expect(controller.getPropertyValues()).to.have.property("fill", 0);
+		expect(controller.getPropertyValues()).to.have.property("viewonly", " ");
+		// Verify filteredValues and default values are set
+		expect(controller.getPropertyValues()).to.eql(allProperties);
 	});
 	it("should fire event on updatePropertyValue", () => {
 		controller.updatePropertyValue({ name: "param_int" }, 10);

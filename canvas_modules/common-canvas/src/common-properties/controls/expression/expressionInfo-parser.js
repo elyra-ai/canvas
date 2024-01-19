@@ -57,7 +57,6 @@ function setExpressionInfo(inExpressionInfo) {
 				if (inExpressionInfo.fields.field_categories) {
 					inExpressionInfo.fields.field_categories.forEach((fieldCat) => {
 						fieldCat.locLabel = l10nProvider.l10nLabel(fieldCat, fieldCat.id);
-
 						fieldCat.field_columns.field_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.field_column_info, fieldCat.id + ".field_column_info");
 						fieldCat.field_columns.value_column_info.locLabel = l10nProvider.l10nLabel(fieldCat.field_columns.value_column_info, fieldCat.id + ".value_column_info");
 
