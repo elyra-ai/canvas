@@ -151,7 +151,10 @@ class MappingContainerNode extends React.Component {
 			srcFields: this.props.nodeData.app_data.table_data.fields
 		});
 		evt.dataTransfer.setData("text/plain", data);
-		evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+		// TODO Setting drag image this way only seems to work on Chrome - fix for FF and Safari.
+		if (navigator.userAgent.includes("Chrome")) {
+			evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+		}
 	}
 
 	// Called when the field is moved up and down in an output link.
@@ -176,7 +179,10 @@ class MappingContainerNode extends React.Component {
 			srcFields: [field]
 		});
 		evt.dataTransfer.setData("text/plain", data);
-		evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+		// TODO Setting drag image this way only seems to work on Chrome - fix for FF and Safari.
+		if (navigator.userAgent.includes("Chrome")) {
+			evt.dataTransfer.setDragImage(this.dragImgage, 15, 15);
+		}
 	}
 
 	onFieldDrop(evt) {
