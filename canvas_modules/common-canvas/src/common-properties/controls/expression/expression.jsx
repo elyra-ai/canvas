@@ -39,7 +39,7 @@ import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
 import { autocompletion } from "@codemirror/autocomplete";
-import { EditorState } from "@codemirror/state";
+// import { EditorState } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
