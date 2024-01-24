@@ -484,6 +484,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 		case Type.DOUBLE:
 			if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;
+			} else if (parameter.control === ControlType.SLIDER) {
+				controlType = ControlType.SLIDER;
 			} else {
 				controlType = ControlType.NUMBERFIELD;
 			}
