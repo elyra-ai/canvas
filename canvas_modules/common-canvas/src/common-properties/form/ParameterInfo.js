@@ -65,11 +65,11 @@ export class ParameterDef {
 		if (settings.charLimit) {
 			this.charLimit = settings.charLimit;
 		}
-		if (settings.min) {
-			this.min = settings.min;
+		if (settings.min_value) {
+			this.min_value = settings.min_value;
 		}
-		if (settings.max) {
-			this.max = settings.max;
+		if (settings.max_value) {
+			this.max_value = settings.max_value;
 		}
 		if (settings.placeHolderText) {
 			this.placeHolderText = ResourceDef.make(settings.placeHolderText);
@@ -336,8 +336,8 @@ export class ParameterDef {
 				"orientation": propertyOf(uihint)("orientation"),
 				"width": propertyOf(uihint)("width"),
 				"charLimit": propertyOf(uihint)("char_limit"),
-				"min": propertyOf(uihint)("min"),
-				"max": propertyOf(uihint)("max"),
+				"min_value": propertyOf(uihint)("min_value"),
+				"max_value": propertyOf(uihint)("max_value"),
 				"placeHolderText": propertyOf(uihint)("place_holder_text"),
 				"separator": propertyOf(uihint)("separator"),
 				"resource_key": propertyOf(uihint)("resource_key"),

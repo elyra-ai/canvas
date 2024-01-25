@@ -54,8 +54,8 @@
             "default": "Slider Testing"
           },
           "control": "slider",
-          "min": 10,
-          "max": 100,
+          "min_value": 10,
+          "max_value": 100,
           "increment": 10,
           "test": "test",
           "class_name": "slider-control-class"
@@ -66,8 +66,8 @@
             "default": "Error"
           },
           "control": "slider",
-          "min": 10,
-          "max": 100,
+          "min_value": 10,
+          "max_value": 100,
           "increment": 10,
           "description": {
             "default": "Slider error with range more than Max'"

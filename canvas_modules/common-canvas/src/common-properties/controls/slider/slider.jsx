@@ -34,8 +34,8 @@ class SliderControl extends React.Component {
 		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
 		this.state = {
 			value: props.value,
-			min: props.control.min,
-			max: props.control.max,
+			min: props.control.min_value,
+			max: props.control.max_value,
 			step: props.control.increment
 		};
 	}
