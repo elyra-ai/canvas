@@ -3,22 +3,8 @@
     "title": "Slider with Min Max"
   },
   "current_parameters": {
-    "slider": {
-      "value": 50,
-      "min": 10,
-      "max": 100,
-      "minLabel": "",
-      "maxLabel": "",
-      "step": 10
-    },
-    "slider_error":{
-      "value": 50,
-      "min": 10,
-      "max": 100,
-      "minLabel": "",
-      "maxLabel": "",
-      "step": 10
-    },
+    "slider": 50,
+    "slider_error": 50,
     "hide": true,
     "slider-disable": false
   },
@@ -30,19 +16,12 @@
     {
       "id": "slider",
       "type": "integer"
-	  },
+    },
     {
       "id": "slider_error",
       "type": "object",
       "required": true,
-      "default": {
-        "value": 50,
-        "min": 10,
-        "max": 100,
-        "minLabel": "",
-        "maxLabel": "",
-        "step": 10
-      }
+      "default": 20
     }
   ],
   "complex_types": [
@@ -75,6 +54,10 @@
             "default": "Slider Testing"
           },
           "control": "slider",
+          "min": 10,
+          "max": 100,
+          "increment": 10,
+          "test": "test",
           "class_name": "slider-control-class"
         },
         {
@@ -83,42 +66,15 @@
             "default": "Error"
           },
           "control": "slider",
+          "min": 10,
+          "max": 100,
+          "increment": 10,
           "description": {
             "default": "Slider error with range more than Max'"
           }
         }
     ],
     "complex_type_info": [
-      {
-        "complex_type_ref": "slider_error",
-        "parameters": [
-          {
-            "parameter_ref": "slider",
-            "width": 10,
-            "label": {
-              "default": "Standard"
-            },
-            "control": "slider",
-            "class_name": "slider",
-            "slider": {
-              "value": 50,
-              "min": 10,
-              "max": 100,
-              "minLabel": "",
-              "maxLabel": "",
-              "step": 10
-            },
-            "slider_error": {
-              "value": 50,
-              "min": 10,
-              "max": 100,
-              "minLabel": "",
-              "maxLabel": "",
-              "step": 10
-            }
-          }
-        ]
-      }
     ],
     "group_info": [
       {
@@ -168,7 +124,7 @@
           "condition": {
             "parameter_ref": "slider_error",
             "op": "greaterThan",
-            "value": 10
+            "value": 9
           }
         }
       }
@@ -186,7 +142,7 @@
           "condition": {
             "parameter_ref": "slider_error",
             "op": "lessThan",
-            "value": 100
+            "value": 101
           }
         }
       }
@@ -205,5 +161,9 @@
         }
       }
     }
-  ]
+  ],
+  "resources": {
+		"slider.min.label": "Min",
+		"slider.max.label": "Max"
+	}
 }

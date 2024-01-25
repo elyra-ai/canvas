@@ -33,9 +33,10 @@ class SliderControl extends React.Component {
 		this.uuid = uuid4();
 		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
 		this.state = {
-			value: props.value.value,
-			min: props.value.min,
-			max: props.value.max,
+			value: props.value,
+			min: props.control.min,
+			max: props.control.max,
+			step: props.control.increment
 		};
 	}
 
@@ -44,6 +45,8 @@ class SliderControl extends React.Component {
 	}
 
 	render() {
+		const minLabel = this.props.controller.getResource(`${this.props.control.name}.min.label`, null);
+		const maxLabel = this.props.controller.getResource(`${this.props.control.name}.max.label`, null);
 		return (
 			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
@@ -53,20 +56,20 @@ class SliderControl extends React.Component {
 					value={this.state.value}
 					min={this.state.min}
 					max={this.state.max}
-					step={this.props.value.step}
+					step={this.state.step}
 					labelText={this.props.controlItem}
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
 					formatLabel={
 						(val, label) => {
-							if (val === this.state.min && label) {
-								return label;
-							} else if (val === this.state.min && !label) {
+							if (val === this.state.min && minLabel) {
+								return minLabel;
+							} else if (val === this.state.min && !minLabel) {
 								return this.state.min;
 							}
-							if (val === this.state.max && label) {
-								return label;
-							} else if (val === this.state.max && !label) {
+							if (val === this.state.max && maxLabel) {
+								return maxLabel;
+							} else if (val === this.state.max && !maxLabel) {
 								return this.state.max;
 							}
 							return "";
