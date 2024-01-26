@@ -98,7 +98,9 @@ class ExpressionControl extends React.Component {
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
+		this.events = this.events.bind(this);
 
+		// TODO: is this still needed?? - updateListener is the equivalent in Codemirror 6
 		this.handleChange = (editor, data, newValue) => {
 			// this is needed when characters are added into the expression builder because
 			// entering chars does not go through onChange() in expression builder.
@@ -123,16 +125,21 @@ class ExpressionControl extends React.Component {
 
 	// this is needed to ensure expression builder selection works.
 	componentDidUpdate(prevProps) {
+		// When code is edited in expression builder, reflect changes in expression flyout
+		if (!isEqual(this.view.viewState.state.doc.toString(), this.props.value)) {
+			this.view.dispatch({changes: { from: 0, to: this.view.viewState.state.doc.length, insert: this.props.value }});
+		}
+		// TODO: Test this!!
 		if (
 			this.props.selectionRange &&
 			this.props.selectionRange.length > 0 &&
 			!isEqual(prevProps.selectionRange, this.props.selectionRange) &&
-			this.editor
+			this.view
 		) {
 			this.props.selectionRange.forEach((selected) => {
-				this.editor.setSelection(selected.anchor, selected.head);
+				this.view.dispatch({selection: selected});
 			});
-			this.editor.focus();
+			this.view.focus();
 		}
 	}
 
@@ -155,8 +162,11 @@ class ExpressionControl extends React.Component {
 
 	createCodeMirrorEditor() {
 		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
-			console.log("Update listener called!");
-			console.log(viewUpdate.state.doc.toString());
+			// TODO: Following code may not be needed once handleBlur, handleKeydown starts working
+			// const exprValue = viewUpdate.state.doc.toString();
+			// if (!isEqual(exprValue, this.props.value)) {
+			// 	this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
+			// }
 		});
 
 		// set the default height, should be between 4 and 20 lines
@@ -202,6 +212,7 @@ class ExpressionControl extends React.Component {
 				keymap.of([defaultKeymap, indentWithTab]),
 				placeholder(this.props.control.additionalText),
 				onUpdate,
+				this.events(),
 				autocompletion({ override: [this.addonHints] }) // TODO: don't override, add to autocompletions
 			],
 			parent: this.editorRef.current
@@ -333,6 +344,7 @@ class ExpressionControl extends React.Component {
 		return typeof this.props.controller.getHandlers().validationHandler === "function";
 	}
 
+	// TODO: Call this from EditorView.domEventHandlers() once this is answered - https://discuss.codemirror.net/t/how-to-pass-this-to-editorview-domeventhandlers/7752
 	handleKeyDown(editor, evt) {
 		// this is needed to move the cursor to the new line if selection is being used in the expression builder.
 		if (evt.code === "Enter") {
@@ -343,6 +355,7 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
+	// TODO: Call this from EditorView.domEventHandlers() once this is answered - https://discuss.codemirror.net/t/how-to-pass-this-to-editorview-domeventhandlers/7752
 	handleBlur(editor, evt) {
 		if (this.props.onBlur) {
 			// this will ensure the expression builder can save values onBlur
@@ -353,6 +366,24 @@ class ExpressionControl extends React.Component {
 			const skipValidate = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-expression-button");
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
+	}
+
+	events() {
+		console.log(this); // returns correct object
+		const eventHandlers = EditorView.domEventHandlers({
+			blur(event, view) {
+				console.log(this); // returns {}
+				console.log("codeMirror :: blur ::", event);
+			},
+			keydown(event, view) {
+				console.log("codeMirror :: keydown ::", event);
+			},
+			change(event, view) {
+				console.log("codeMirror :: change ::", event);
+			}
+		});
+
+		return eventHandlers;
 	}
 
 	_showBuilderButton() {

@@ -31,7 +31,6 @@ export default class ExpressionBuilder extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onSelectionChange = this.onSelectionChange.bind(this);
-		this.lastCursorPos = null;
 
 	}
 
@@ -41,14 +40,14 @@ export default class ExpressionBuilder extends React.Component {
 		let cursor = this.editor.viewState.state.selection.main.head;
 		if (cursor === 0 && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
 			// When nothing selected, set cursor at the end of the line to keep same behavior as Codemirror 5
-			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length } }); // TODO: Scroll to last line doesn't work. Ask in Codemirror discuss forum
+			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length }});
 			cursor = this.editor.viewState.state.selection.main.head;
 			this.editor.focus();
 		}
 		let selectionOffset = 1;
 		if (somethingSelected) {
 			selectionOffset = 0;
-			this.editor.dispatch(this.editor.viewState.state.replaceSelection(value));
+			this.editor.dispatch(this.editor.viewState.state.replaceSelection(value), { scrollIntoView: true });
 			this.editor.focus();
 		} else {
 			let buffer = " ";
@@ -59,23 +58,20 @@ export default class ExpressionBuilder extends React.Component {
 			if (["(", "[", "{"].indexOf(charBefore) !== -1) {
 				buffer = "";
 			}
-			this.editor.dispatch(this.editor.viewState.state.replaceSelection(buffer + value));
+			this.editor.dispatch(this.editor.viewState.state.replaceSelection(buffer + value), { scrollIntoView: true });
 			this.editor.focus();
 		}
 		this._setSelection(value, cursor, selectionOffset);
 		// This is needed to generate a render so that the selection will appear.
 		const exprValue = this.editor.viewState.state.doc.toString();
 		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
-		this.lastCursorPos = this.editor.viewState.state.selection.main.head;
 	}
 
 	onSelectionChange(selection) {
-		// TODO: Verify this is correct in different scenarios
 		this.selection = selection;
 	}
 
 	onBlur(editor, evt) {
-		this.lastCursorPos = editor.viewState.state.selection.main.head;
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newValue = this.editor.viewState.state.doc.toString();
 		const skipValidate = this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget);
