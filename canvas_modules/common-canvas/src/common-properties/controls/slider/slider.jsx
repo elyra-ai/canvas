@@ -46,9 +46,10 @@ class SliderControl extends React.Component {
 		const step = this.props.control.increment || 1;
 
 		return (
-			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}>
+			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}
+				data-id={ControlUtils.getDataId(this.props.propertyId)}
+			>
 				<Slider
-					id={this.id}
 					value={this.props.value}
 					min={minValue}
 					max={maxValue}
