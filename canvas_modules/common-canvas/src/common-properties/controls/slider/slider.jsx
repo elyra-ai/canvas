@@ -32,12 +32,6 @@ class SliderControl extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.uuid = uuid4();
 		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
-		this.state = {
-			value: props.value,
-			min: props.control.min_value,
-			max: props.control.max_value,
-			step: props.control.increment
-		};
 	}
 
 	handleChange(e) {
@@ -47,30 +41,32 @@ class SliderControl extends React.Component {
 	render() {
 		const minLabel = this.props.controller.getResource(`${this.props.control.name}.min.label`, null);
 		const maxLabel = this.props.controller.getResource(`${this.props.control.name}.max.label`, null);
+		const minValue = this.props.control.minValue || 0;
+		const maxValue = this.props.control.maxValue || 10;
+		const step = this.props.control.increment || 1;
+
 		return (
-			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}
-				data-id={ControlUtils.getDataId(this.props.propertyId)}
-			>
+			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}>
 				<Slider
 					id={this.id}
-					value={this.state.value}
-					min={this.state.min}
-					max={this.state.max}
-					step={this.state.step}
+					value={this.props.value}
+					min={minValue}
+					max={maxValue}
+					step={step}
 					labelText={this.props.controlItem}
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
 					formatLabel={
-						(val, label) => {
-							if (val === this.state.min && minLabel) {
+						(val) => {
+							if (val === minValue && minLabel) {
 								return minLabel;
-							} else if (val === this.state.min && !minLabel) {
-								return this.state.min;
+							} else if (val === minValue && !minLabel) {
+								return minValue;
 							}
-							if (val === this.state.max && maxLabel) {
+							if (val === maxValue && maxLabel) {
 								return maxLabel;
-							} else if (val === this.state.max && !maxLabel) {
-								return this.state.max;
+							} else if (val === maxValue && !maxLabel) {
+								return maxValue;
 							}
 							return "";
 						}

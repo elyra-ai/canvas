@@ -4,6 +4,7 @@
   },
   "current_parameters": {
     "slider": 50,
+    "slider_double": 0.5,
     "slider_error": 50,
     "hide": true,
     "slider-disable": false
@@ -12,14 +13,18 @@
     {
       "id": "slider-disable",
       "type": "boolean"
-	  },
+    },
     {
       "id": "slider",
       "type": "integer"
     },
     {
+      "id": "slider_double",
+      "type": "double"
+    },
+    {
       "id": "slider_error",
-      "type": "object",
+      "type": "integer",
       "required": true,
       "default": 20
     }
@@ -27,9 +32,7 @@
   "complex_types": [
     {
       "id": "sliders",
-      "parameters": [
-        
-      ]
+      "parameters": []
     }
   ],
   "uihints": {
@@ -39,43 +42,57 @@
       "default": "Slider Values"
     },
     "parameter_info": [
-        {
-          "parameter_ref": "slider-disable",
-          "label": {
-            "default": "Disable 'Slider'"
-          }
-        },
-        {
-          "parameter_ref": "slider",
-          "label": {
-            "default": "Slider Testing"
-          },
-          "description": {
-            "default": "Slider Testing"
-          },
-          "control": "slider",
-          "min_value": 10,
-          "max_value": 100,
-          "increment": 10,
-          "test": "test",
-          "class_name": "slider-control-class"
-        },
-        {
-          "parameter_ref": "slider_error",
-          "label": {
-            "default": "Error"
-          },
-          "control": "slider",
-          "min_value": 10,
-          "max_value": 100,
-          "increment": 10,
-          "description": {
-            "default": "Slider error with range more than Max'"
-          }
+      {
+        "parameter_ref": "slider-disable",
+        "label": {
+          "default": "Disable 'Slider'"
         }
+      },
+      {
+        "parameter_ref": "slider",
+        "label": {
+          "default": "Slider Testing"
+        },
+        "description": {
+          "default": "Slider Testing"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "test": "test",
+        "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_double",
+        "label": {
+          "default": "Slider Double Testing"
+        },
+        "description": {
+          "default": "Slider Double Testing"
+        },
+        "control": "slider",
+        "min_value": 0.1,
+        "max_value": 1,
+        "increment": 0.1,
+        "test": "test",
+        "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_error",
+        "label": {
+          "default": "Error"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "description": {
+          "default": "Slider error with range more than Max'"
+        }
+      }
     ],
-    "complex_type_info": [
-    ],
+    "complex_type_info": [],
     "group_info": [
       {
         "id": "slider-values",
@@ -84,7 +101,8 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "slider"
+          "slider",
+          "slider_double"
         ]
       },
       {
@@ -163,7 +181,7 @@
     }
   ],
   "resources": {
-		"slider.min.label": "Min",
-		"slider.max.label": "Max"
-	}
+    "slider.min.label": "Min",
+    "slider.max.label": "Max"
+  }
 }
