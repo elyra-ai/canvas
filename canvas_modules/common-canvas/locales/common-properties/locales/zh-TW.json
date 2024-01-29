@@ -56,6 +56,7 @@
   "expression.values.empty.table.label": "沒有找到數值",
   "expression.functions.table.label": "功能表格",
   "expression.fields.dropdown": "欄位",
+  "expression.add.column": "新增",
   "expression.fields.title": "欄位",
   "expression.values.title": "值",
   "expression.field.column": "欄位",
