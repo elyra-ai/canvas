@@ -32,6 +32,7 @@ class ToolTip extends React.Component {
 		this.uuid = uuid4();
 		this.pendingTooltip = null;
 		this.hideTooltipOnScrollAndResize = this.hideTooltipOnScrollAndResize.bind(this);
+		this.tabKeyPressed = false;
 	}
 
 	componentDidMount() {
@@ -79,6 +80,12 @@ class ToolTip extends React.Component {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
 			}
+		}
+	}
+
+	setKeyPressed(evt) {
+		if (evt.key === "Tab") {
+			this.tabKeyPressed = true;
 		}
 	}
 
@@ -337,10 +344,14 @@ class ToolTip extends React.Component {
 			const mousedown = () => this.setTooltipVisible(false);
 			// `focus` event occurs before `click`. Adding timeout in onFocus function to ensure click is executed first.
 			// Ref - https://stackoverflow.com/a/49512400
+			const onKeyDown = (evt) => this.setKeyPressed(evt);
 			const onFocus = () => this.showTooltipWithDelay();
 			const onBlur = (evt) => {
-				// Keep tooltip visible when clicked on a link.
-				if (evt.relatedTarget === null) {
+				// Close the tooltip if tab is click
+				if (this.tabKeyPressed) {
+					this.setTooltipVisible(false);
+					this.tabKeyPressed = false;
+				} else if (evt.relatedTarget === null) { // Keep tooltip visible when clicked on a link.
 					this.setTooltipVisible(false);
 				}
 			};
@@ -355,6 +366,7 @@ class ToolTip extends React.Component {
 				onClick={this.props.showToolTipOnClick ? click : null}
 				onFocus={this.props.showToolTipOnClick ? onFocus : null} // When focused using keyboard
 				onBlur={this.props.showToolTipOnClick ? onBlur : null}
+				onKeyDown={this.props.showToolTipOnClick ? onKeyDown : null}
 				tabIndex={this.props.showToolTipOnClick ? 0 : null}
 				role={this.props.showToolTipOnClick ? "button" : null}
 				aria-labelledby={this.props.showToolTipOnClick ? `${this.uuid}-${this.props.id}` : null}
