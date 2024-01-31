@@ -98,7 +98,7 @@ describe("SliderControl renders correctly", () => {
 		handleChangeSpy.restore();
 	});
 
-	it("handles formatLabel function correctly with minLabel and maxLabel", () => {
+	it("handles formatLabel function correctly without minValue and maxValue", () => {
 		const controlWithLabels = {
 			name: "test-slider",
 			minValue: null,

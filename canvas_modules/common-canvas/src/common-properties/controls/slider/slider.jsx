@@ -31,7 +31,6 @@ class SliderControl extends React.Component {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
 		this.uuid = uuid4();
-		this.id = ControlUtils.getControlId(props.propertyId, this.uuid);
 	}
 
 	handleChange(e) {
@@ -44,12 +43,14 @@ class SliderControl extends React.Component {
 		const minValue = this.props.control.minValue ? this.props.control.minValue : 0;
 		const maxValue = this.props.control.maxValue ? this.props.control.maxValue : 10;
 		const step = this.props.control.increment ? this.props.control.increment : 1;
+		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (
 			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
 				<Slider
+					{...validationProps}
 					value={this.props.value}
 					min={minValue}
 					max={maxValue}
@@ -57,6 +58,7 @@ class SliderControl extends React.Component {
 					labelText={this.props.controlItem}
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
+					light={this.props.controller.getLight() && this.props.control.light}
 					formatLabel={
 						(val) => {
 							if (val === minValue && minLabel) {

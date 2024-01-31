@@ -5,8 +5,11 @@
   "current_parameters": {
     "slider": 50,
     "slider_double": 0.5,
+    "slider_null": null,
     "slider_error": 50,
+    "slider_warning": 0,
     "hide": true,
+    "slider_hidden": 0,
     "slider-disable": false
   },
   "parameters": [
@@ -21,6 +24,32 @@
     {
       "id": "slider_double",
       "type": "double"
+    },
+    {
+      "id": "slider_empty",
+      "type": "integer"
+    },
+    {
+      "id": "slider_undefined",
+      "type": "integer"
+    },
+    {
+      "id": "slider_null",
+      "type": "integer"
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "slider_hidden",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "slider_warning",
+      "type": "integer",
+      "required": true
     },
     {
       "id": "slider_error",
@@ -60,7 +89,6 @@
         "min_value": 10,
         "max_value": 100,
         "increment": 10,
-        "test": "test",
         "class_name": "slider-control-class"
       },
       {
@@ -75,8 +103,69 @@
         "min_value": 0.1,
         "max_value": 1,
         "increment": 0.1,
-        "test": "test",
         "class_name": "slider-control-class"
+      },
+      {
+        "parameter_ref": "slider_empty",
+        "label": {
+          "default": "Empty"
+        },
+        "description": {
+          "default": "slider with parameter value set to '\"\"'"
+        },
+        "control": "slider"
+      },
+      {
+        "parameter_ref": "slider_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "slider with parameter value set to 'null'"
+        },
+        "control": "slider",
+        "min_value": null,
+        "max_value": null,
+        "increment": null
+      },
+      {
+        "parameter_ref": "slider_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "slider with parameter value set to 'undefined'"
+        },
+        "control": "slider"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Slider Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "slider_hidden",
+        "label": {
+          "default": "slider Hidden"
+        },
+        "control": "slider",
+        "min_value": 0,
+        "max_value": 10,
+        "increment": 1
+      },
+      {
+        "parameter_ref": "slider_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "Slider with warning when set more than 8"
+        },
+        "control": "slider",
+        "min_value": 0,
+        "max_value": 10,
+        "increment": 1
       },
       {
         "parameter_ref": "slider_error",
@@ -102,7 +191,10 @@
         "type": "controls",
         "parameter_refs": [
           "slider",
-          "slider_double"
+          "slider_double",
+          "slider_empty",
+          "slider_null",
+          "slider_undefined"
         ]
       },
       {
@@ -112,6 +204,8 @@
         },
         "type": "controls",
         "parameter_refs": [
+          "hide",
+          "slider_hidden",
           "slider-disable",
           "slider"
         ]
@@ -123,12 +217,31 @@
         },
         "type": "controls",
         "parameter_refs": [
-          "slider_error"
+          "slider_error",
+          "slider_warning"
         ]
       }
     ]
   },
   "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "slider_warning",
+          "message": {
+            "default": "Slider value to be less than 8"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "slider_warning",
+            "op": "lessThan",
+            "value": 8
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
@@ -161,6 +274,20 @@
             "parameter_ref": "slider_error",
             "op": "lessThan",
             "value": 101
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "slider_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
           }
         }
       }
