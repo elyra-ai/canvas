@@ -36,7 +36,7 @@ import { get } from "lodash";
 import ExpressionToggle from "./expression-toggle/expression-toggle";
 
 import { keymap, placeholder } from "@codemirror/view";
-import { defaultKeymap, indentWithTab } from "@codemirror/commands";
+import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
 import { autocompletion } from "@codemirror/autocomplete";
 // import { EditorState } from "@codemirror/state";
@@ -96,27 +96,9 @@ class ExpressionControl extends React.Component {
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
-		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
 		this.events = this.events.bind(this);
-
-		// TODO: is this still needed?? - updateListener is the equivalent in Codemirror 6
-		this.handleChange = (editor, data, newValue) => {
-			// this is needed when characters are added into the expression builder because
-			// entering chars does not go through onChange() in expression builder.
-			// This is needed to adjust the selection position in code mirror.
-			if (Array.isArray(data.text) && data.text.length === 1 && data.text[0].length === 1 && this.props.onSelectionChange) {
-				// if a string was replaced, need to calc newPos from the 'data.from' otherwise use 'data.to'
-				const newPos = (data.removed[0].length > 0) ? { line: data.from.line, ch: data.from.ch + 1 } : { line: data.to.line, ch: data.to.ch + 1 };
-				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
-			}
-			if (this.state.validateIcon) {
-				this.setState({
-					validateIcon: null
-				});
-				this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
-			}
-		};
+		this.handleUpdate = this.handleUpdate.bind(this);
 	}
 
 	componentDidMount() {
@@ -127,9 +109,8 @@ class ExpressionControl extends React.Component {
 	componentDidUpdate(prevProps) {
 		// When code is edited in expression builder, reflect changes in expression flyout
 		if (!isEqual(this.view.viewState.state.doc.toString(), this.props.value)) {
-			this.view.dispatch({changes: { from: 0, to: this.view.viewState.state.doc.length, insert: this.props.value }});
+			this.view.dispatch({ changes: { from: 0, to: this.view.viewState.state.doc.length, insert: this.props.value } });
 		}
-		// TODO: Test this!!
 		if (
 			this.props.selectionRange &&
 			this.props.selectionRange.length > 0 &&
@@ -137,7 +118,7 @@ class ExpressionControl extends React.Component {
 			this.view
 		) {
 			this.props.selectionRange.forEach((selected) => {
-				this.view.dispatch({selection: selected});
+				this.view.dispatch({ selection: selected });
 			});
 			this.view.focus();
 		}
@@ -160,15 +141,38 @@ class ExpressionControl extends React.Component {
 		return results;
 	}
 
-	createCodeMirrorEditor() {
+	handleUpdate() {
 		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
+			if (viewUpdate.docChanged) {
+				// this is needed when a single character is added into the expression builder because
+				// entering chars does not go through onChange() in expression builder.
+				// This is needed to adjust the selection position in code mirror.
+				if (
+					Array.isArray(viewUpdate.changedRanges) &&
+					viewUpdate.changedRanges.length === 1 &&
+					Math.abs(viewUpdate.changes.newLength - viewUpdate.changes.length) === 1 &&
+					this.props.onSelectionChange
+				) {
+					const newPos = viewUpdate.changedRanges[0].toB;
+					this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
+				}
+				if (this.state.validateIcon) {
+					this.setState({
+						validateIcon: null
+					});
+					this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
+				}
+			}
 			// TODO: Following code may not be needed once handleBlur, handleKeydown starts working
 			// const exprValue = viewUpdate.state.doc.toString();
 			// if (!isEqual(exprValue, this.props.value)) {
 			// 	this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
 			// }
 		});
+		return onUpdate;
+	}
 
+	createCodeMirrorEditor() {
 		// set the default height, should be between 4 and 20 lines
 		const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
 		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
@@ -207,12 +211,12 @@ class ExpressionControl extends React.Component {
 			// state: startState,
 			doc: this.props.value,
 			extensions: [
+				this.events(), // This should be before basicSetup to recognize "Enter" keydown event
 				basicSetup,
 				language,
-				keymap.of([defaultKeymap, indentWithTab]),
+				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // TODO: there's an indent on new line
 				placeholder(this.props.control.additionalText),
-				onUpdate,
-				this.events(),
+				this.handleUpdate(),
 				autocompletion({ override: [this.addonHints] }) // TODO: don't override, add to autocompletions
 			],
 			parent: this.editorRef.current
@@ -344,24 +348,13 @@ class ExpressionControl extends React.Component {
 		return typeof this.props.controller.getHandlers().validationHandler === "function";
 	}
 
-	// TODO: Call this from EditorView.domEventHandlers() once this is answered - https://discuss.codemirror.net/t/how-to-pass-this-to-editorview-domeventhandlers/7752
-	handleKeyDown(editor, evt) {
-		// this is needed to move the cursor to the new line if selection is being used in the expression builder.
-		if (evt.code === "Enter") {
-			if (this.props.selectionRange && this.props.selectionRange.length > 0 && this.props.onSelectionChange) {
-				const newPos = { line: this.props.selectionRange[0].anchor.line + 1, ch: 0 };
-				this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
-			}
-		}
-	}
-
-	// TODO: Call this from EditorView.domEventHandlers() once this is answered - https://discuss.codemirror.net/t/how-to-pass-this-to-editorview-domeventhandlers/7752
 	handleBlur(editor, evt) {
-		if (this.props.onBlur) {
+		const cancelButtonClicked = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-cancel-button");
+		if (this.props.onBlur && !cancelButtonClicked) {
 			// this will ensure the expression builder can save values onBlur
 			this.props.onBlur(editor, evt);
 		} else {
-			const newValue = this.editor.getValue();
+			const newValue = editor.viewState.state.doc.toString();
 			// don't validate when opening the expression builder
 			const skipValidate = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-expression-button");
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
@@ -369,17 +362,10 @@ class ExpressionControl extends React.Component {
 	}
 
 	events() {
-		console.log(this); // returns correct object
+		const that = this;
 		const eventHandlers = EditorView.domEventHandlers({
-			blur(event, view) {
-				console.log(this); // returns {}
-				console.log("codeMirror :: blur ::", event);
-			},
-			keydown(event, view) {
-				console.log("codeMirror :: keydown ::", event);
-			},
-			change(event, view) {
-				console.log("codeMirror :: change ::", event);
+			blur(evt, view) {
+				that.handleBlur(view, evt);
 			}
 		});
 

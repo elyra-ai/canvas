@@ -40,7 +40,7 @@ export default class ExpressionBuilder extends React.Component {
 		let cursor = this.editor.viewState.state.selection.main.head;
 		if (cursor === 0 && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
 			// When nothing selected, set cursor at the end of the line to keep same behavior as Codemirror 5
-			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length }});
+			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length } });
 			cursor = this.editor.viewState.state.selection.main.head;
 			this.editor.focus();
 		}
@@ -73,7 +73,7 @@ export default class ExpressionBuilder extends React.Component {
 
 	onBlur(editor, evt) {
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const newValue = this.editor.viewState.state.doc.toString();
+		const newValue = editor.viewState.state.doc.toString();
 		const skipValidate = this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget);
 		// update property value when value is updated OR value is to be validated
 		if (!isEqual(currentValue, newValue) || !skipValidate) {
