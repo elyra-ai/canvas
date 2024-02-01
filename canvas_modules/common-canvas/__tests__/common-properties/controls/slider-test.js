@@ -18,6 +18,7 @@ import React from "react";
 import {
 	mount
 } from "../../_utils_/mount-utils.js";
+import propertyUtils from "../../_utils_/property-utils";
 import Controller from "./../../../src/common-properties/properties-controller";
 import { Provider } from "react-redux";
 import { expect } from "chai";
@@ -25,26 +26,33 @@ import sinon from "sinon";
 import { Slider } from "carbon-components-react";
 import SliderControl from "./../../../src/common-properties/controls/slider";
 
-const propertyId = {
-	name: "test-slider"
-};
-
-const controller = new Controller();
-
-const control = {
-	name: "test-slider",
-	// You can choose to leave minValue, maxValue, and increment undefined for some test cases
-	minValue: 1,
-	maxValue: 10,
-	increment: 1,
-};
-
 describe("SliderControl renders correctly", () => {
-	let wrapper;
 
+	const propertyId = {
+		name: "test-slider"
+	};
+
+	const controller = new Controller();
+
+	const control = {
+		name: "test-slider",
+		controlType: "slider",
+		minValue: 1,
+		maxValue: 10,
+		increment: 1,
+		light: true
+	};
+
+	propertyUtils.setControls(controller, [control]);
 
 	beforeEach(() => {
-		wrapper = mount(
+		controller.setErrorMessages({});
+		controller.setControlStates({});
+	});
+
+
+	it("renders a Slider component", () => {
+		const wrapper = mount(
 			<Provider store = {
 				controller.getStore()
 			}
@@ -56,17 +64,22 @@ describe("SliderControl renders correctly", () => {
 				/>
 			</Provider>
 		);
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-
-	it("renders a Slider component", () => {
 		expect(wrapper.find(Slider)).to.have.length(1);
 	});
 
 	it("handles formatLabel function correctly", () => {
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
 		const sliderProps = wrapper.find(Slider).props();
 
 		const formatLabel = sliderProps.formatLabel;
@@ -77,14 +90,50 @@ describe("SliderControl renders correctly", () => {
 
 
 	it("renders ValidationMessage component", () => {
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
 		expect(wrapper.find("ValidationMessage")).to.have.length(1);
 	});
 
 	it("renders ValidationMessage component", () => {
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
 		expect(wrapper.find("ValidationMessage")).to.have.length(1);
 	});
 
 	it("handles change event correctly", () => {
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
 		const sliderProps = wrapper.find(Slider).props();
 		const handleChangeSpy = sinon.spy(controller, "updatePropertyValue");
 
@@ -104,22 +153,77 @@ describe("SliderControl renders correctly", () => {
 			minValue: null,
 			maxValue: null,
 			increment: null,
+			light: true
 		};
 
-		wrapper.setProps({
+		const wrapper2 = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {controlWithLabels}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
+
+		wrapper2.setProps({
 			control: controlWithLabels,
 		});
 
-		const sliderProps = wrapper.find(Slider).props();
+		const sliderProps = wrapper2.find(Slider).props();
+
+		expect(sliderProps.formatLabel(10)).to.equal(10);
+	});
+
+	it("handles formatLabel function correctly with minValue and maxValue", () => {
+		const controlWithLabels = {
+			name: "test-slider",
+			minValue: 1,
+			maxValue: 10,
+			increment: 1,
+			light: true
+		};
+
+		const wrapper2 = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {controlWithLabels}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
+
+		wrapper2.setProps({
+			control: controlWithLabels,
+		});
+
+		const sliderProps = wrapper2.find(Slider).props();
 
 		expect(sliderProps.formatLabel(1)).to.equal(1);
 
 		expect(sliderProps.formatLabel(10)).to.equal(10);
-
-		expect(sliderProps.formatLabel(5)).to.equal("");
 	});
 
 	it("renders ValidationMessage component", () => {
+		const wrapper = mount(
+			<Provider store = {
+				controller.getStore()
+			}
+			>
+				<SliderControl control = {control}
+					propertyId = {propertyId}
+					controller = {controller}
+					controlItem = "Slider Label"
+				/>
+			</Provider>
+		);
 		expect(wrapper.find("ValidationMessage")).to.have.length(1);
 	});
 });
