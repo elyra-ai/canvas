@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- .properties-slider {
+ .properties-slider  {
     // Reduce Slider size to contain inside right flyout dropdown container 
     // bx-slider by default has a fixed min-width of 12.5 rem which prevents from being responsive
-    .bx--slider {
-        min-width: 8.6rem;
+    &.slider-small {
+        .bx--slider {
+            min-width: 75%;
+        }
     }
  }
