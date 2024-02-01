@@ -46,7 +46,7 @@ class SliderControl extends React.Component {
 		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (
-			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN }, { "slider-small": this.props.controller.editorSize === "small" })}
+			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN })}
 				data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
 				<Slider
