@@ -15,11 +15,11 @@
  */
 
 .properties-slider {
-	.bx--slider-container { // Reduce Slider size to contain inside right flyout dropdown container 
+	.bx--slider-container { 
 		min-width: 100%;
 		
 		.bx--slider { 
-			min-width: unset;
+			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
 		}
 	}
 }
