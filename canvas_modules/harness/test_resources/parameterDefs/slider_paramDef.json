@@ -10,11 +10,12 @@
     "slider_warning": 0,
     "hide": true,
     "slider_hidden": 0,
-    "slider-disable": false
+    "disable": true,
+    "slider_disable": 50
   },
   "parameters": [
     {
-      "id": "slider-disable",
+      "id": "disable",
       "type": "boolean"
     },
     {
@@ -47,6 +48,11 @@
       "required": true
     },
     {
+      "id": "slider_disable",
+      "type": "integer",
+      "required": true
+    },
+    {
       "id": "slider_warning",
       "type": "integer",
       "required": true
@@ -71,12 +77,6 @@
       "default": "Slider Values"
     },
     "parameter_info": [
-      {
-        "parameter_ref": "slider-disable",
-        "label": {
-          "default": "Disable 'Slider'"
-        }
-      },
       {
         "parameter_ref": "slider",
         "label": {
@@ -179,6 +179,26 @@
         "description": {
           "default": "Slider error with range more than Max'"
         }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Slider'"
+        }
+      },
+      {
+        "parameter_ref": "slider_disable",
+        "label": {
+          "default": "Slider Disable Testing"
+        },
+        "description": {
+          "default": "Slider Disable Testing"
+        },
+        "control": "slider",
+        "min_value": 10,
+        "max_value": 100,
+        "increment": 10,
+        "class_name": "slider-control-class"
       }
     ],
     "complex_type_info": [],
@@ -206,8 +226,8 @@
         "parameter_refs": [
           "hide",
           "slider_hidden",
-          "slider-disable",
-          "slider"
+          "disable",
+          "slider_disable"
         ]
       },
       {
@@ -295,11 +315,11 @@
     {
       "enabled": {
         "parameter_refs": [
-          "slider"
+          "slider_disable"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "slider-disable",
+            "parameter_ref": "disable",
             "op": "equals",
             "value": false
           }
