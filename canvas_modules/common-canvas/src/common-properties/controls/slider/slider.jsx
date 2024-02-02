@@ -43,14 +43,12 @@ class SliderControl extends React.Component {
 		const minValue = this.props.control.minValue ? this.props.control.minValue : 0;
 		const maxValue = this.props.control.maxValue ? this.props.control.maxValue : 10;
 		const step = this.props.control.increment ? this.props.control.increment : 1;
-		const validationProps = ControlUtils.getValidationProps(this.props.messageInfo, this.props.tableControl);
 
 		return (
 			<div className={classNames("properties-slider ", { "hide": this.props.state === STATES.HIDDEN },
 				this.props.messageInfo ? this.props.messageInfo.type : null)} data-id={ControlUtils.getDataId(this.props.propertyId)}
 			>
 				<Slider
-					{...validationProps}
 					value={this.props.value !== null && typeof this.props.value !== "undefined" ? this.props.value : minValue}
 					min={minValue}
 					max={maxValue}
