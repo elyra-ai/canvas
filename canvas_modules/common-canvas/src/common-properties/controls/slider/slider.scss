@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 .properties-slider {
 	.bx--slider-container { 
 		min-width: 100%;
@@ -21,5 +21,25 @@
 		.bx--slider { 
 			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
 		}
+	}
+	.bx--number[data-invalid] { // carbon override to not display error
+		.bx--form-requirement { // carbon override to not display error
+			display: none;
+		}
+	}
+	&.error {
+		input {
+			border: 2px solid $support-01;
+		}
+	}
+	&.warning {
+		input:not([disabled]) {
+			border: 2px solid $support-03;
+		}
+	}
+	.bx--text-input--invalid, .bx--text-input {
+		outline: unset;
+		outline-offset: unset;
+		border: unset;
 	}
 }
