@@ -123,10 +123,7 @@
         "description": {
           "default": "slider with parameter value set to 'null'"
         },
-        "control": "slider",
-        "min_value": null,
-        "max_value": null,
-        "increment": null
+        "control": "slider"
       },
       {
         "parameter_ref": "slider_undefined",
