@@ -81,6 +81,7 @@ const ControlType = {
 	DATEFIELD: "datefield",
 	DATEPICKER: "datepicker",
 	DATEPICKERRANGE: "datepickerRange",
+	SLIDER: "slider",
 	TIMEFIELD: "timefield",
 	TIMESTAMP: "timestampfield",
 	CHECKBOX: "checkbox",

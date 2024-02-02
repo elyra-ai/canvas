@@ -484,6 +484,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 		case Type.DOUBLE:
 			if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;
+			} else if (parameter.control === ControlType.SLIDER) {
+				controlType = ControlType.SLIDER;
 			} else {
 				controlType = ControlType.NUMBERFIELD;
 			}
@@ -636,6 +638,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.enableMaximize = parameter.enableMaximize;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;
+	settings.minValue = parameter.minValue;
+	settings.maxValue = parameter.maxValue;
 	settings.rowSelection = rowSelection;
 	settings.generatedValues = parameter.generatedValues;
 	settings.addRemoveRows = addRemoveRows;
