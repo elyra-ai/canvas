@@ -27,7 +27,7 @@
 			outline: unset;
 			outline-offset: unset;
 		}
-		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
+		input[type="number"]:not([disabled]) {
 			border: 2px solid $support-01;
 		}
 	}
@@ -36,7 +36,7 @@
 			outline: unset;
 			outline-offset: unset;
 		}
-		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
+		input[type="number"]:not([disabled]) {
 			border: 2px solid $support-03;
 		}
 	}
