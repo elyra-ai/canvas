@@ -86,7 +86,7 @@ describe("SliderControl renders correctly", () => {
 		const formatLabel = sliderProps.formatLabel;
 		expect(formatLabel(1)).to.equal(1);
 		expect(formatLabel(10)).to.equal(10);
-		expect(formatLabel(5)).to.equal("");
+		expect(formatLabel(5)).to.equal(5);
 	});
 
 
