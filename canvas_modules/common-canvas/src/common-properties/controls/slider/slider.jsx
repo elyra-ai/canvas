@@ -61,17 +61,22 @@ class SliderControl extends React.Component {
 					light={this.props.controller.getLight() && this.props.control.light}
 					formatLabel={
 						(val) => {
+							let label = "";
 							if (val === minValue && minLabel) {
-								return minLabel;
+								label = minLabel;
 							} else if (val === minValue && !minLabel) {
-								return minValue;
+								label = minValue;
 							}
 							if (val === maxValue && maxLabel) {
-								return maxLabel;
+								label = maxLabel;
 							} else if (val === maxValue && !maxLabel) {
-								return maxValue;
+								label = maxValue;
 							}
-							return "";
+							// Truncate Label if its too long to fit if the editor is small
+							if (label.length > 8) {
+								return label.slice(0, 5) + "...";
+							}
+							return label;
 						}
 					}
 				/>

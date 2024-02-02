@@ -25,6 +25,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 import { Slider } from "carbon-components-react";
 import SliderControl from "./../../../src/common-properties/controls/slider";
+import sliderParamDef from "../../test_resources/paramDefs/slider_paramDef.json";
 
 describe("SliderControl renders correctly", () => {
 
@@ -225,5 +226,21 @@ describe("SliderControl renders correctly", () => {
 			</Provider>
 		);
 		expect(wrapper.find("ValidationMessage")).to.have.length(1);
+	});
+});
+
+describe("error messages renders correctly for slider controls", () => {
+	let wrapper;
+
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(sliderParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("slider component should have correct classnames", () => {
+		expect(wrapper.find("div.properties-slider")).to.have.length(8);
 	});
 });

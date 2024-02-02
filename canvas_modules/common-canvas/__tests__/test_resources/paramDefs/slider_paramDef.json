@@ -331,7 +331,7 @@
     }
   ],
   "resources": {
-    "slider.min.label": "Min",
+    "slider.min.label": "MinLabelWIthLongText",
     "slider.max.label": "Max"
   }
 }
