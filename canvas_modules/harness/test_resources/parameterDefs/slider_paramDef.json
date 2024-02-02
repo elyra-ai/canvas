@@ -178,7 +178,7 @@
         "control": "slider",
         "min_value": 10,
         "max_value": 100,
-        "increment": 10,
+        "increment": 1,
         "description": {
           "default": "Slider error with range more than Max'"
         }

@@ -22,24 +22,23 @@
 			min-width: unset; // Default Carbon Component Slider has a fixed min-width of 12.5rem so unset it to make it responsive
 		}
 	}
-	.bx--number[data-invalid] { // carbon override to not display error
-		.bx--form-requirement { // carbon override to not display error
-			display: none;
-		}
-	}
 	&.error {
-		input {
+		.bx--text-input--invalid, .bx--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
 			border: 2px solid $support-01;
 		}
 	}
 	&.warning {
-		input:not([disabled]) {
+		.bx--text-input--invalid, .bx--text-input {
+			outline: unset;
+			outline-offset: unset;
+		}
+		input[type="number"]:not([disabled]), input[type="number"]:focus:not([disabled]) {
 			border: 2px solid $support-03;
 		}
 	}
-	.bx--text-input--invalid, .bx--text-input {
-		outline: unset;
-		outline-offset: unset;
-		border: unset;
-	}
+	
 }
