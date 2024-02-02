@@ -54,30 +54,15 @@ class SliderControl extends React.Component {
 					value={this.props.value}
 					min={minValue}
 					max={maxValue}
+					minLabel={minLabel}
+					maxLabel={maxLabel}
 					step={step}
 					labelText={this.props.controlItem}
 					onChange={this.handleChange}
 					disabled={this.props.state === STATES.DISABLED}
 					light={this.props.controller.getLight() && this.props.control.light}
 					formatLabel={
-						(val) => {
-							let label = "";
-							if (val === minValue && minLabel) {
-								label = minLabel;
-							} else if (val === minValue && !minLabel) {
-								label = minValue;
-							}
-							if (val === maxValue && maxLabel) {
-								label = maxLabel;
-							} else if (val === maxValue && !maxLabel) {
-								label = maxValue;
-							}
-							// Truncate Label if its too long to fit if the editor is small
-							if (label.length > 8) {
-								return label.slice(0, 5) + "...";
-							}
-							return label;
-						}
+						(val, label) => label || val
 					}
 				/>
 				<ValidationMessage state={this.props.state} messageInfo={this.props.messageInfo} inTable={this.props.tableControl} />
