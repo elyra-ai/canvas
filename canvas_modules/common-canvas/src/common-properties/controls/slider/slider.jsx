@@ -51,7 +51,7 @@ class SliderControl extends React.Component {
 			>
 				<Slider
 					{...validationProps}
-					value={this.props.value || 0}
+					value={this.props.value ? this.props.value : minValue}
 					min={minValue}
 					max={maxValue}
 					minLabel={minLabel}
