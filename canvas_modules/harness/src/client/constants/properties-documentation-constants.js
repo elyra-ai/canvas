@@ -2280,13 +2280,13 @@ _defineConstant("SLIDER_PROPS_INFO", {
 			"editable": false
 		},
 		"current_parameters": {
-			"sliderControlname": 1
+			"sliderControlName": 10
 		},
 		"parameters": [
 			{
-				"id": "sliderControlname",
+				"id": "sliderControlName",
 				"type": "slider",
-				"default": 1
+				"default": 10
 			}
 		],
 		"uihints": {
@@ -2301,8 +2301,8 @@ _defineConstant("SLIDER_PROPS_INFO", {
 						"default": "Slider test"
 					},
 					"control": "slider",
-					"min_value": 0,
-					"max_value": 10,
+					"min_value": 1,
+					"max_value": 100,
 					"increment": 1
 				}
 			],
@@ -2311,14 +2311,14 @@ _defineConstant("SLIDER_PROPS_INFO", {
 					"id": "sliderControlName",
 					"type": "controls",
 					"parameter_refs": [
-						"sliderControlname"
+						"sliderControlName"
 					]
 				}
 			]
 		},
 		"resources": {
-			"sliderControlName.min.label": "Min",
-			"sliderControlName.max.label": "Max"
+			"sliderControlName.min.label": "1",
+			"sliderControlName.max.label": "100"
 		}
 	}
 });
