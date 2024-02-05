@@ -23,7 +23,7 @@ import { connect } from "react-redux";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import classNames from "classnames";
-import { isEqual } from "lodash";
+import { isEqual, concat } from "lodash";
 import ValidationMessage from "./../../components/validation-message";
 import WideFlyout from "./../../components/wide-flyout";
 import { formatMessage } from "./../../util/property-utils";
@@ -38,17 +38,17 @@ import ExpressionToggle from "./expression-toggle/expression-toggle";
 import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
-import { autocompletion } from "@codemirror/autocomplete";
+// import { autocompletion, completeFromList } from "@codemirror/autocomplete";
 // import { EditorState } from "@codemirror/state";
-import { javascript } from "@codemirror/lang-javascript";
+// import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
+import { r } from "codemirror-lang-r";
 import { sql } from "@codemirror/lang-sql";
-import { StreamLanguage } from "@codemirror/language";
-import { r } from "@codemirror/legacy-modes/mode/r";
+// import { StreamLanguage, syntaxTree } from "@codemirror/language";
 
-// import { register as registerPython } from "./languages/python-hint";
-// import { register as registerR } from "./languages/r-hint";
-// import { register as registerClem } from "./languages/CLEM-hint";
+import { getPythonHints } from "./languages/python-hint";
+import { getRHints } from "./languages/r-hint";
+import { clem } from "./languages/CLEM-hint";
 
 // required for server side rendering.
 const cm = null;
@@ -85,7 +85,7 @@ class ExpressionControl extends React.Component {
 		};
 
 		this.editorRef = React.createRef();
-		this.origHint = "";
+		this.origHint = [];
 		this.expressionInfo = this.props.controller.getExpressionInfo();
 		this.handleValidate = this.handleValidate.bind(this);
 		this.hasValidate = this.hasValidate.bind(this);
@@ -99,6 +99,7 @@ class ExpressionControl extends React.Component {
 		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
 		this.events = this.events.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
+		this.myCompletions = this.myCompletions.bind(this);
 	}
 
 	componentDidMount() {
@@ -124,12 +125,12 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
-	// reset to the original autocomplete handler
-	componentWillUnmount() {
-		if (this.origHint && cm) {
-			cm.registerHelper("hint", this.props.control.language, this.origHint);
-		}
-	}
+	// TODO: reset to the original autocomplete handler
+	// componentWillUnmount() {
+	// 	if (this.origHint && cm) {
+	// 		cm.registerHelper("hint", this.props.control.language, this.origHint);
+	// 	}
+	// }
 
 	// get the set of dataset field names
 	getDatasetFields() {
@@ -199,25 +200,31 @@ class ExpressionControl extends React.Component {
 			break;
 		case "text/x-python":
 			language = python();
+			this.origHint = getPythonHints();
 			break;
 		case "text/x-rsrc":
-			language = StreamLanguage.define(r);
+			language = r();
+			this.origHint = getRHints();
 			break;
 		default:
-			language = javascript();
+			language = clem();
 		}
+
+		const myNewCompletions = language.language.data.of({
+			autocomplete: this.myCompletions
+		});
 
 		this.view = new EditorView({
 			// state: startState,
 			doc: this.props.value,
 			extensions: [
-				this.events(), // This should be before basicSetup to recognize "Enter" keydown event
+				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
+				myNewCompletions,
 				basicSetup,
+				this.events(),
 				language,
-				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // TODO: there's an indent on new line
 				placeholder(this.props.control.additionalText),
-				this.handleUpdate(),
-				autocompletion({ override: [this.addonHints] }) // TODO: don't override, add to autocompletions
+				this.handleUpdate()
 			],
 			parent: this.editorRef.current
 		});
@@ -227,60 +234,56 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
-	// Add the dataset field names to the autocomplete list
-	addonHints(context) {
-		const completions = this.getDatasetFields();
-
-		const before = context.matchBefore(/\w+/);
-		// If completion wasn't explicitly started and there
-		// is no word before the cursor, don't open completions.
-		if (!context.explicit && !before) {
+	myCompletions(context) {
+		// console.log(syntaxTree(this.view.viewState.state).resolve(this.view.viewState.state.selection.main.head));
+		const word = context.matchBefore(/\w*/);
+		if (word.from === word.to && !context.explicit) {
 			return null;
 		}
-
 		return {
-			from: before ? before.from : context.pos,
-			options: completions,
-			validFor: /^\w*$/
+			from: word.from,
+			options: concat(this.origHint, this.getDatasetFields())
 		};
 	}
-	// addonHints(editor, options) {
-	// 	var results = {};
-	// 	var cur = editor.getCursor();
-	// 	var token = editor.getTokenAt(cur);
-	// 	if (this.origHint) {
-	// 		// get the list of autocomplete names from the language autocomplete handler
-	// 		results = this.origHint(editor, options);
 
-	// 		// add to the start of the autocomplete list the set of dataset field names that complete the
-	// 		// string that has been entered.
-	// 		var parameters = this.getDatasetFields();
-	// 		for (var i = 0; i < parameters.length; ++i) {
-	// 			const parameter = parameters[i];
-	// 			if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
-	// 				results.list.unshift(parameter);
-	// 			} else if (token.string === " " && token.type === null) {
-	// 				results.list.unshift(parameter);
-	// 			}
-	// 		}
-	// 	}
-	// 	return results;
-	// }
+	// Add the dataset field names to the autocomplete list
+	addonHints(editor, options) {
+		var results = {};
+		var cur = editor.getCursor();
+		var token = editor.getTokenAt(cur);
+		if (this.origHint) {
+			// get the list of autocomplete names from the language autocomplete handler
+			results = this.origHint(editor, options);
+
+			// add to the start of the autocomplete list the set of dataset field names that complete the
+			// string that has been entered.
+			var parameters = this.getDatasetFields();
+			for (var i = 0; i < parameters.length; ++i) {
+				const parameter = parameters[i];
+				if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
+					results.list.unshift(parameter);
+				} else if (token.string === " " && token.type === null) {
+					results.list.unshift(parameter);
+				}
+			}
+		}
+		return results;
+	}
 
 	// Save original autocomplete handler and then register our custom handler
 	// that will add data set filed names to autocomplete list.
 	editorDidMount(editor, next) {
 		this.editor = editor;
 		// set the default height, should be between 4 and 20 lines
-		const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
-		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
-		// charlimit in the control sets the height within a min and max
-		let height = (this.props.control.charLimit)
-			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
-		// let an explicit prop override the calculated height
-		height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
-		height = this.props.height ? this.props.height : height;
-		this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
+		// const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
+		// const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
+		// // charlimit in the control sets the height within a min and max
+		// let height = (this.props.control.charLimit)
+		// 	? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
+		// // let an explicit prop override the calculated height
+		// height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
+		// height = this.props.height ? this.props.height : height;
+		// this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
 
 		this.origHint = editor.getHelper({ line: 0, ch: 0 }, "hint");
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
