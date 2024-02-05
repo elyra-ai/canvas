@@ -24,12 +24,12 @@ $properties-modal-buttons-height: 64px;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: $text-01;
+	background-color: $overlay;
 	z-index: 1000;
 	cursor: default;
 	&.show {
 		display: block;
-		opacity: 0.5;
+		opacity: 1; // Opacity handled by $overlay token
 	}
 }
 
