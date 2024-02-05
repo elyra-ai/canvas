@@ -32,23 +32,27 @@ class ColorPicker extends React.Component {
 		this.props.clickActionHandler(color);
 	}
 
+	onFocus() {
+
+	}
+
 	render() {
 		this.logger.log("render");
 		return (
-			<div className="color-picker" onClick={this.onClick}>
-				<div tabIndex="0" data-color={"bkg-col-white-0"} className="color-picker-item white-0" />
-				<div tabIndex="0" data-color={"bkg-col-yellow-20"} className="color-picker-item yellow-20" />
-				<div tabIndex="0" data-color={"bkg-col-gray-20"} className="color-picker-item gray-20" />
-				<div tabIndex="0" data-color={"bkg-col-green-20"} className="color-picker-item green-20" />
-				<div tabIndex="0" data-color={"bkg-col-teal-20"} className="color-picker-item teal-20" />
-				<div tabIndex="0" data-color={"bkg-col-cyan-20"} className="color-picker-item cyan-20" />
+			<div className="color-picker" onClick={this.onClick} onFocus={this.onFocus}>
+				<div tabIndex={"0"} data-color={"bkg-col-white-0"} className="color-picker-item white-0" />
+				<div tabIndex={"0"} data-color={"bkg-col-yellow-20"} className="color-picker-item yellow-20" />
+				<div tabIndex={"0"} data-color={"bkg-col-gray-20"} className="color-picker-item gray-20" />
+				<div tabIndex={"0"} data-color={"bkg-col-green-20"} className="color-picker-item green-20" />
+				<div tabIndex={"0"} data-color={"bkg-col-teal-20"} className="color-picker-item teal-20" />
+				<div tabIndex={"0"} data-color={"bkg-col-cyan-20"} className="color-picker-item cyan-20" />
 
-				<div tabIndex="0" data-color={"bkg-col-red-50"} className="color-picker-item red-50" />
-				<div tabIndex="0" data-color={"bkg-col-orange-40"} className="color-picker-item orange-40" />
-				<div tabIndex="0" data-color={"bkg-col-gray-50"} className="color-picker-item gray-50" />
-				<div tabIndex="0" data-color={"bkg-col-green-50"} className="color-picker-item green-50" />
-				<div tabIndex="0" data-color={"bkg-col-teal-50"} className="color-picker-item teal-50" />
-				<div tabIndex="0" data-color={"bkg-col-cyan-50"} className="color-picker-item cyan-50" />
+				<div tabIndex={"0"} data-color={"bkg-col-red-50"} className="color-picker-item red-50" />
+				<div tabIndex={"0"} data-color={"bkg-col-orange-40"} className="color-picker-item orange-40" />
+				<div tabIndex={"0"} data-color={"bkg-col-gray-50"} className="color-picker-item gray-50" />
+				<div tabIndex={"0"} data-color={"bkg-col-green-50"} className="color-picker-item green-50" />
+				<div tabIndex={"0"} data-color={"bkg-col-teal-50"} className="color-picker-item teal-50" />
+				<div tabIndex={"0"} data-color={"bkg-col-cyan-50"} className="color-picker-item cyan-50" />
 			</div>);
 	}
 }

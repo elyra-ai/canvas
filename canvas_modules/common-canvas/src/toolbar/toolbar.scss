@@ -37,6 +37,11 @@ $toolbar-divider-width: 1px;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
+	&:focus {
+		border-color: $interactive-01;
+		box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
+	}
+
 	/* Small size toolbar  */
 	&.toolbar-size-small {
 		height: $toolbar-button-sm-height;
@@ -287,6 +292,10 @@ $toolbar-divider-width: 1px;
 			border-color: transparent;
 			box-shadow: none;
 			border-bottom: 2px solid $interactive-01;
+		}
+		& button:focus {
+			border-color: $interactive-01;
+			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
 		}
 	}
 }

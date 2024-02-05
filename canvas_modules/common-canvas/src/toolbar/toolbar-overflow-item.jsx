@@ -20,18 +20,29 @@ import PropTypes from "prop-types";
 import { v4 as uuid4 } from "uuid";
 import { Button } from "carbon-components-react";
 import { OverflowMenuVertical16 } from "@carbon/icons-react";
-import ToolbarOverflowMenu from "./toolbar-overflow-menu.jsx";
+import ToolbarActionSubMenu from "./toolbar-sub-menu.jsx";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			showExtendedMenu: false
+			showExtendedMenu: false,
+			subMenu: null
 		};
+
+		this.buttonRef = React.createRef();
+
 		this.uuid = uuid4();
 		this.toggleExtendedMenu = this.toggleExtendedMenu.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
+		this.closeSubMenu = this.closeSubMenu.bind(this);
+	}
+
+	componentDidUpdate() {
+		if (this.props.toolbarFocusAction === this.props.action && this.props.isFocusInToolbar) {
+			this.buttonRef.current.focus();
+		}
 	}
 
 	// We must remove the eventListener in case this class is unmounted due
@@ -40,8 +51,25 @@ class ToolbarOverflowItem extends React.Component {
 		document.removeEventListener("click", this.clickOutside, false);
 	}
 
-	genOverflowButtonClass() {
-		return "toolbar-spacer toolbar-index-" + this.props.index + " toolbar-uuid-" + this.uuid;
+	// Called by toolbar.jsx
+	getAction() {
+		return this.props.action;
+	}
+
+	closeSubMenu() {
+		this.setState({ showExtendedMenu: false });
+	}
+
+	genOverflowButtonClassName() {
+		return "toolbar-spacer " + this.genIndexClassName() + " " + this.genUuidClassName();
+	}
+
+	genIndexClassName() {
+		return "toolbar-index-" + this.props.index;
+	}
+
+	genUuidClassName() {
+		return "toolbar-uuid-" + this.uuid;
 	}
 
 	toggleExtendedMenu() {
@@ -61,13 +89,18 @@ class ToolbarOverflowItem extends React.Component {
 			}
 		}
 
-		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
+		const newSubMenu = this.state.showExtendedMenu
+			? null
+			: this.props.generateOverflowMenuActions(this.props.index);
+
+		this.setState({ showExtendedMenu: !this.state.showExtendedMenu, subMenu: newSubMenu });
+		this.props.setFocusAction(this.props.action);
 	}
 
 	clickOutside(evt) {
 		if (this.state.showExtendedMenu) {
-			const items = document.getElementsByClassName("toolbar-uuid-" + this.uuid);
-			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
+			const item = document.querySelector("." + this.genUuidClassName());
+			const isOver = item ? item.contains(evt.target) : false;
 
 			if (!isOver) {
 				this.setState({ showExtendedMenu: false });
@@ -76,29 +109,34 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	render() {
-		if (this.props.setResizeHandler && !this.state.showExtendedMenu) {
-			this.props.setResizeHandler(null);
-		}
-
 		let overflowMenu = null;
 		if (this.state.showExtendedMenu) {
-			const menuItems = this.props.generateExtensionMenuItems(this.props.index);
+			const actionItemRect = this.buttonRef.current.getBoundingClientRect();
+
 			overflowMenu = (
-				<ToolbarOverflowMenu
-					menuItems={menuItems}
+				<ToolbarActionSubMenu
+					subMenu={this.state.subMenu}
+					generateSubMenuItems={this.props.generateSubMenuItems}
+					closeSubArea={this.closeSubMenu}
+					closeSubAreaOnClick={false}
+					actionItemRect={actionItemRect}
+					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
-					buttonClass={"toolbar-uuid-" + this.uuid}
+					parentSelector={".toolbar-spacer"}
 				/>
 			);
 		}
 
+		const tabIndex = this.props.toolbarFocusAction === this.props.action ? 0 : -1;
+
 		return (
-			<div className={this.genOverflowButtonClass()} >
+			<div className={this.genOverflowButtonClassName()} data-toolbar-action={this.props.action} onKeyDown={this.props.onKeyDown}>
 				<div className={"toolbar-overflow-item"}>
-					<Button kind="ghost"
-						tabIndex={-1}
+					<Button
+						ref={this.buttonRef}
+						kind="ghost"
+						tabIndex={tabIndex}
 						onClick={this.toggleExtendedMenu}
-						onFocus={this.props.onFocus}
 						aria-label={this.props.label}
 						size={this.props.size}
 					>
@@ -117,12 +155,17 @@ class ToolbarOverflowItem extends React.Component {
 
 ToolbarOverflowItem.propTypes = {
 	index: PropTypes.number.isRequired,
-	generateExtensionMenuItems: PropTypes.func,
+	action: PropTypes.string,
+	label: PropTypes.string,
+	size: PropTypes.oneOf(["md", "sm"]),
+	generateOverflowMenuActions: PropTypes.func,
+	generateSubMenuItems: PropTypes.func,
 	setResizeHandler: PropTypes.func,
 	containingDivId: PropTypes.string,
-	onFocus: PropTypes.func,
-	label: PropTypes.string,
-	size: PropTypes.oneOf(["md", "sm"])
+	onKeyDown: PropTypes.func,
+	toolbarFocusAction: PropTypes.string,
+	setFocusAction: PropTypes.func,
+	isFocusInToolbar: PropTypes.bool
 };
 
 export default ToolbarOverflowItem;

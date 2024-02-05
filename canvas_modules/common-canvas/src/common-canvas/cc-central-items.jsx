@@ -70,7 +70,7 @@ class CommonCanvasCentralItems extends React.Component {
 		const tip = (<CommonCanvasTooltip canvasController={this.props.canvasController} />);
 		const palette = (<Palette canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
 		const rightFlyout = (<CommonCanvasRightFlyout />);
-		const canvasToolbar = (<CommonCanvasToolbar canvasController={this.props.canvasController} />);
+		const canvasToolbar = (<CommonCanvasToolbar canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
 		const canvasContents = (<CanvasContents canvasController={this.props.canvasController} />);
 		const bottomPanel = (<CanvasBottomPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
 		const topPanel = (<CanvasTopPanel canvasController={this.props.canvasController} containingDivId={this.props.containingDivId} />);
