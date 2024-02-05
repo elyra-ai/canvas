@@ -91,7 +91,8 @@ import {
 	STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO,
 	STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO,
 	ACTION_PROPS_INFO,
-	ACTION_IMAGE_PROPS_INFO
+	ACTION_IMAGE_PROPS_INFO,
+	SLIDER_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
 
@@ -309,6 +310,25 @@ class CommonPropertiesComponents extends React.Component {
 				"datepickerControlName.range.end.helper"
 			];
 			break;
+		case "slider":
+			jsonReplacer = [
+				"current_parameters",
+				"sliderControlname",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"control",
+				"min_value",
+				"max_value",
+				"increment",
+				"resources",
+				"sliderControlName.min.label",
+				"sliderControlName.max.label",
+			];
+			break;
 		case "timefield":
 			jsonReplacer = [
 				"current_parameters",
@@ -414,6 +434,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--selectschema",
 					"--selectcolumn",
 					"--selectcolumns",
+					"--slider",
 					"--toggle",
 					"--toggletext",
 					"Complex",
@@ -1646,6 +1667,38 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="harness-properties-documentation-panels-controls-component">
+					<h3 id="--slider" className="harness-section-subtitle">slider</h3>
+					<p>A slider control is rendered for a parameter of <span className="harness-highlight">control=slider</span>.
+						This control contains adjustable content where the value can be increased or decreased by moving the handle along horizontal track.
+						The <span className="harness-highlight">slider</span> accepts additional uihints for the
+						min <span className="harness-highlight">max</span> and increment.
+					</p>
+					<p>
+						The 'Step' is defined using the 'increment' parameter in UI hints. It determines how many increments the input value and slider handle will jump when the handle is moved.
+						Additionally, an input box can be used to enter values within the min_value and max_value range.
+					</p>
+					<p>
+						Helper text is available by providing a resource key in the parameterDef.
+						Similarly, the minimum value and maximum value labels are also available to customize through resource labels.
+						Look at the example json to see the format.
+					</p>
+					<div className="harness-section-row">
+						<div className="harness-section-column">
+							<CommonProperties
+								propertiesInfo={SLIDER_PROPS_INFO}
+								propertiesConfig={this.propertiesConfig}
+								light={this.state.light}
+							/>
+							{this.renderRightFlyoutButton(SLIDER_PROPS_INFO)}
+						</div>
+						<div className="harness-section-column harness-section-column-code">
+							<pre className="harness-json-block">
+								{this.jsonReplacer(SLIDER_PROPS_INFO.parameterDef, "slider")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="harness-properties-documentation-panels-controls-component">
 					<h3 id="--toggle" className="harness-section-subtitle">toggle</h3>
 					<p>A two-state control, They are commonly used for “on/off” switches.
 					The <span className="harness-highlight">control</span> must be set to <span className="harness-highlight">toggle</span>.</p>
@@ -1734,6 +1787,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
 					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
+					<li><a className="harness-properties-documentation-page-intro-link" href="#/properties#--slider">slider</a></li>
 				</ul>
 			</div>
 			<div className="harness-properties-documentation-section-content">
