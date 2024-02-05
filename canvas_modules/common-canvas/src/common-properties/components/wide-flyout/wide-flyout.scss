@@ -29,7 +29,6 @@ $properties-modal-buttons-height: 64px;
 	cursor: default;
 	&.show {
 		display: block;
-		opacity: 1; // Opacity handled by $overlay token
 	}
 }
 
