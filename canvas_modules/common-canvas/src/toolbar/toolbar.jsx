@@ -83,7 +83,6 @@ class Toolbar extends React.Component {
 	// will be set to the default of "toolbar". In that case we set the
 	// focus on the first focusable toolbar item.
 	onFocus(evt) {
-		console.log("On focus in toolbar");
 		this.isFocusInToolbar = true;
 
 		if (this.state.focusAction === "toolbar") {
@@ -92,7 +91,6 @@ class Toolbar extends React.Component {
 	}
 
 	onBlur() {
-		console.log("On blur in toolbar");
 		this.isFocusInToolbar = false;
 	}
 
@@ -140,7 +138,6 @@ class Toolbar extends React.Component {
 	}
 
 	setFocusOnFirstItem() {
-		console.log("setFocusOnFirstItem");
 		const focusableItemRefs = this.getFocusableItemRefs();
 		if (focusableItemRefs.length > 0) {
 			const firstFocusAction = this.getRefAction(focusableItemRefs[0]);
@@ -149,7 +146,6 @@ class Toolbar extends React.Component {
 	}
 
 	setFocusOnPreviousItem() {
-		console.log("setFocusOnPreviousItem");
 		const focusableItemRefs = this.getFocusableItemRefs();
 		const previousRef = this.getPreviousItemRef(focusableItemRefs);
 		if (previousRef) {
@@ -159,7 +155,6 @@ class Toolbar extends React.Component {
 	}
 
 	setFocusOnNextItem() {
-		console.log("setFocusOnNextItem");
 		const focusableItemRefs = this.getFocusableItemRefs();
 		const nextRef = this.getNextItemRef(focusableItemRefs);
 		if (nextRef) {
