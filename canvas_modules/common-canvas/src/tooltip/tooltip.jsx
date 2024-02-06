@@ -351,8 +351,15 @@ class ToolTip extends React.Component {
 				if (this.tabKeyPressed) {
 					this.setTooltipVisible(false);
 					this.tabKeyPressed = false;
-				} else if (evt.relatedTarget === null) { // Keep tooltip visible when clicked on a link.
-					this.setTooltipVisible(false);
+				} else {
+					// Check if evt.relatedTarget is a child of .common-canvas-tooltip to set tooltip visible when clicked on link
+					const el = evt?.relatedTarget?.closest(".common-canvas-tooltip");
+					if (el?.tagName?.toLowerCase() === "div") {
+						this.setTooltipVisible(true);
+					} else {
+						// Close the tooltip if evt.relatedTarget is not a child of .common-canvas-tooltip
+						this.setTooltipVisible(false);
+					}
 				}
 			};
 			const click = (evt) => this.toggleTooltipOnClick(evt);
