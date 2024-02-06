@@ -25,7 +25,7 @@ const UP_ARROW_KEY = 38;
 const RIGHT_ARROW_KEY = 39;
 const DOWN_ARROW_KEY = 40;
 
-class ToolbarActionSubArea extends React.Component {
+class ToolbarSubMenu extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -108,7 +108,7 @@ class ToolbarActionSubArea extends React.Component {
 
 	getFocusableItems() {
 		const focusableItems = [];
-		const subMenuSelector = `${this.props.parentSelector} > .toolbar-popover-list.submenu`;
+		const subMenuSelector = `${this.props.parentSelector} > .toolbar-popover-list`;
 		const submenu = document.querySelector(subMenuSelector);
 		const items = submenu.querySelectorAll(".toolbar-overflow-menu-item") || [];
 
@@ -143,9 +143,11 @@ class ToolbarActionSubArea extends React.Component {
 	}
 
 	render() {
-		const style = generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect);
+		if (this.props.subMenu.length > 0) {
+			const style = this.props.isCascadeMenu
+				? generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect)
+				: null;
 
-		if (this.props.subMenu) {
 			this.subMenuItems = this.props.generateSubMenuItems(this.props.subMenu, this.state.focusAction, this.onKeyDown);
 
 			return (
@@ -158,15 +160,16 @@ class ToolbarActionSubArea extends React.Component {
 	}
 }
 
-ToolbarActionSubArea.propTypes = {
-	subMenu: PropTypes.array,
+ToolbarSubMenu.propTypes = {
+	subMenu: PropTypes.array.isRequired,
 	generateSubMenuItems: PropTypes.func.isRequired,
 	closeSubArea: PropTypes.func,
 	closeSubAreaOnClick: PropTypes.bool.isRequired,
 	actionItemRect: PropTypes.object.isRequired,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string,
-	parentSelector: PropTypes.string
+	parentSelector: PropTypes.string,
+	isCascadeMenu: PropTypes.bool
 };
 
-export default ToolbarActionSubArea;
+export default ToolbarSubMenu;

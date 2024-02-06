@@ -71,10 +71,6 @@ $toolbar-divider-width: 1px;
 			padding: 0;
 		}
 
-		.toolbar-popover-list {
-			top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width} - 1px);
-		}
-
 		.toolbar-jsx-item {
 			height: $toolbar-button-sm-height;
 		}
@@ -149,7 +145,7 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-spacer {
+.toolbar-overflow-container {
 	width: 0;
 	display: inline-block;
 }
@@ -316,7 +312,6 @@ $toolbar-divider-width: 1px;
 .toolbar-popover-list {
 	width: 200px;
 	z-index: 1;
-	top: calc(#{$toolbar-button-height} + #{$toolbar-divider-width});
 	display: block;
 	position: absolute;
 	list-style-type: none;

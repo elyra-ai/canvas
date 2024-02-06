@@ -45,7 +45,7 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find(".toolbar-right-bar")).to.have.length(1);
 		expect(canvasToolbar.find(".toolbar-item")).to.have.length(10);
 		expect(canvasToolbar.find(".toolbar-divider")).to.have.length(2);
-		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(10);
+		expect(canvasToolbar.find(".toolbar-overflow-container")).to.have.length(10);
 	});
 
 	it("should render a Toolbar with just a right bar defined", () => {
@@ -65,8 +65,8 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find(".toolbar-right-bar")).to.have.length(1);
 		expect(canvasToolbar.find(".toolbar-item")).to.have.length(4);
 		expect(canvasToolbar.find(".toolbar-divider")).to.have.length(1);
-		// No spacers created for the right bar
-		expect(canvasToolbar.find(".toolbar-spacer")).to.have.length(0);
+		// No toolbar-overflow-container created for the right bar
+		expect(canvasToolbar.find(".toolbar-overflow-container")).to.have.length(0);
 	});
 
 	it("should register a click when clicked on an enabled toolbar item", () => {

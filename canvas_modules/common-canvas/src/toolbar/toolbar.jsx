@@ -68,8 +68,8 @@ class Toolbar extends React.Component {
 	// is for an item that is NOT focusable, then set the focus on the first focusable
 	// item. This might happen when an item with focus is activated and the action it
 	// performs causes itself to become disabled. For example, if the delete item is
-	// activated when the last remaining object on the canvas is selected the delete
-	// item (which has focus) will become disabled.
+	// activated the selected objects are deleted and since no objects are now selected
+	// the delete item (which has focus) will become disabled.
 	componentDidUpdate() {
 		if (this.isFocusInToolbar) {
 			const index = this.getFocusableItemRefs().findIndex((item) => this.getRefAction(item) === this.state.focusAction);
@@ -373,12 +373,15 @@ class Toolbar extends React.Component {
 	// right side DOM items that are hidden. That is, they are not displayed
 	// on the top row of the toolbar.
 	generateRightOverflowItems() {
+		const containingDiv = document.querySelector("#" + this.props.containingDivId);
+		const rightBar = containingDiv.querySelector(".toolbar-right-bar");
+
 		const rightOverflowItems = [];
-		// const items = this.getRightBarElements();
 		let topRow = 0;
 
 		for (let i = 0; i < this.rightItemRefs.length; i++) {
-			const rect = this.rightItemRefs[i].current.getBoundingRect();
+			const itemElement = rightBar.querySelector(".toolbar-item");
+			const rect = itemElement.getBoundingClientRect();
 
 			if (i === 0) {
 				topRow = rect.top;

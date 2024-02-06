@@ -138,9 +138,8 @@ class ToolbarActionItem extends React.Component {
 			return;
 		}
 
-		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		this.props.setFocusAction(this.props.actionObj.action);
-
+		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 	}
 
 	generateActionName() {
@@ -152,8 +151,7 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const elements = document.getElementsByClassName(this.generateActionName());
-		const actionItemRect = elements && elements.length > 0 ? elements[0].getBoundingClientRect() : { top: 0, left: 0, width: 120 };
+		const actionItemRect = this.divRef.current.getBoundingClientRect();
 
 		if (this.props.actionObj.subPanel) {
 			return (
@@ -165,7 +163,6 @@ class ToolbarActionItem extends React.Component {
 					actionItemRect={actionItemRect}
 					expandDirection={this.props.isOverflowItem ? "horizontal" : "vertical" }
 					containingDivId={this.props.containingDivId}
-					parentSelector={this.generateSelector(this.props.actionObj)}
 				/>
 			);
 		}
@@ -179,6 +176,7 @@ class ToolbarActionItem extends React.Component {
 				expandDirection={this.props.isOverflowItem ? "horizontal" : "vertical" }
 				containingDivId={this.props.containingDivId}
 				parentSelector={this.generateSelector(this.props.actionObj)}
+				isCascadeMenu
 			/>
 		);
 	}

@@ -32,10 +32,6 @@ class ColorPicker extends React.Component {
 		this.props.clickActionHandler(color);
 	}
 
-	onFocus() {
-
-	}
-
 	render() {
 		this.logger.log("render");
 		return (

@@ -21,7 +21,7 @@ import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils
 
 const ESC_KEY = 27;
 
-class ToolbarActionSubArea extends React.Component {
+class ToolbarSubPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -60,7 +60,7 @@ class ToolbarActionSubArea extends React.Component {
 		if (this.props.subPanel) {
 			const subPanel = typeof this.props.subPanel === "object"
 				? this.props.subPanel
-				: (<this.props.subPanel ref={this.areaRef} closeSubPanel={this.props.closeSubArea} subPanelData={this.props.subPanelData} />)
+				: (<this.props.subPanel ref={this.areaRef} closeSubPanel={this.props.closeSubArea} subPanelData={this.props.subPanelData} />);
 
 			return (
 				<div ref={this.areaRef} style={style} className={"toolbar-popover-list subpanel"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
@@ -73,15 +73,14 @@ class ToolbarActionSubArea extends React.Component {
 	}
 }
 
-ToolbarActionSubArea.propTypes = {
+ToolbarSubPanel.propTypes = {
 	subPanel: PropTypes.any,
 	subPanelData: PropTypes.object,
 	closeSubArea: PropTypes.func,
 	closeSubAreaOnClick: PropTypes.bool.isRequired,
 	actionItemRect: PropTypes.object.isRequired,
 	expandDirection: PropTypes.string.isRequired,
-	containingDivId: PropTypes.string,
-	parentSelector: PropTypes.string
+	containingDivId: PropTypes.string
 };
 
-export default ToolbarActionSubArea;
+export default ToolbarSubPanel;

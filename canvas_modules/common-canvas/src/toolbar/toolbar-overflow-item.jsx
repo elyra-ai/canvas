@@ -20,15 +20,14 @@ import PropTypes from "prop-types";
 import { v4 as uuid4 } from "uuid";
 import { Button } from "carbon-components-react";
 import { OverflowMenuVertical16 } from "@carbon/icons-react";
-import ToolbarActionSubMenu from "./toolbar-sub-menu.jsx";
+import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 
 class ToolbarOverflowItem extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			showExtendedMenu: false,
-			subMenu: null
+			showExtendedMenu: false
 		};
 
 		this.buttonRef = React.createRef();
@@ -61,7 +60,7 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	genOverflowButtonClassName() {
-		return "toolbar-spacer " + this.genIndexClassName() + " " + this.genUuidClassName();
+		return "toolbar-overflow-container " + this.genIndexClassName() + " " + this.genUuidClassName();
 	}
 
 	genIndexClassName() {
@@ -89,20 +88,17 @@ class ToolbarOverflowItem extends React.Component {
 			}
 		}
 
-		const newSubMenu = this.state.showExtendedMenu
-			? null
-			: this.props.generateOverflowMenuActions(this.props.index);
-
-		this.setState({ showExtendedMenu: !this.state.showExtendedMenu, subMenu: newSubMenu });
 		this.props.setFocusAction(this.props.action);
+		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
 	}
 
 	clickOutside(evt) {
 		if (this.state.showExtendedMenu) {
-			const item = document.querySelector("." + this.genUuidClassName());
-			const isOver = item ? item.contains(evt.target) : false;
-
-			if (!isOver) {
+			// Selector for the overflow-container that contains the overflow icon
+			// and submenu (if submenu is open).
+			const selector = "#" + this.props.containingDivId + " ." + this.genIndexClassName();
+			const isClickInOverflowContainer = evt.target.closest(selector);
+			if (!isClickInOverflowContainer) {
 				this.setState({ showExtendedMenu: false });
 			}
 		}
@@ -112,17 +108,19 @@ class ToolbarOverflowItem extends React.Component {
 		let overflowMenu = null;
 		if (this.state.showExtendedMenu) {
 			const actionItemRect = this.buttonRef.current.getBoundingClientRect();
-
+			const subMenu = this.props.generateOverflowMenuActions(this.props.index);
 			overflowMenu = (
-				<ToolbarActionSubMenu
-					subMenu={this.state.subMenu}
+				<ToolbarSubMenu
+					ref={this.subMenuRef}
+					subMenu={subMenu}
 					generateSubMenuItems={this.props.generateSubMenuItems}
 					closeSubArea={this.closeSubMenu}
 					closeSubAreaOnClick={false}
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
-					parentSelector={".toolbar-spacer"}
+					parentSelector={".toolbar-overflow-container"}
+					isCascadeMenu={false}
 				/>
 			);
 		}
