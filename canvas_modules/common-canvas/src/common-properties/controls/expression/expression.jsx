@@ -39,7 +39,7 @@ import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
 // import { autocompletion, completeFromList } from "@codemirror/autocomplete";
-// import { EditorState } from "@codemirror/state";
+import { Compartment } from "@codemirror/state";
 // import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { r } from "codemirror-lang-r";
@@ -75,6 +75,7 @@ const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
 
+const editable = new Compartment; //  eslint-disable-line
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
@@ -100,6 +101,7 @@ class ExpressionControl extends React.Component {
 		this.events = this.events.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
 		this.myCompletions = this.myCompletions.bind(this);
+		this.setCodeMirrorEditable = this.setCodeMirrorEditable.bind(this);
 	}
 
 	componentDidMount() {
@@ -111,6 +113,10 @@ class ExpressionControl extends React.Component {
 		// When code is edited in expression builder, reflect changes in expression flyout
 		if (!isEqual(this.view.viewState.state.doc.toString(), this.props.value)) {
 			this.view.dispatch({ changes: { from: 0, to: this.view.viewState.state.doc.length, insert: this.props.value } });
+		}
+		// Toggle editable mode in Codemirror editor
+		if (!isEqual(prevProps.state, this.props.state)) {
+			this.setCodeMirrorEditable(!(this.props.state === STATES.DISABLED));
 		}
 		if (
 			this.props.selectionRange &&
@@ -131,6 +137,13 @@ class ExpressionControl extends React.Component {
 	// 		cm.registerHelper("hint", this.props.control.language, this.origHint);
 	// 	}
 	// }
+
+	// Set codemirror editor non-editable when disabled
+	setCodeMirrorEditable(value) {
+		this.view.dispatch({
+			effects: editable.reconfigure(EditorView.editable.of(value))
+		});
+	}
 
 	// get the set of dataset field names
 	getDatasetFields() {
@@ -224,7 +237,9 @@ class ExpressionControl extends React.Component {
 				this.events(),
 				language,
 				placeholder(this.props.control.additionalText),
-				this.handleUpdate()
+				this.handleUpdate(),
+				editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
+				// autocompletion({tooltipClass: () => "blah"})
 			],
 			parent: this.editorRef.current
 		});
@@ -235,7 +250,6 @@ class ExpressionControl extends React.Component {
 	}
 
 	myCompletions(context) {
-		// console.log(syntaxTree(this.view.viewState.state).resolve(this.view.viewState.state.selection.main.head));
 		const word = context.matchBefore(/\w*/);
 		if (word.from === word.to && !context.explicit) {
 			return null;
@@ -480,6 +494,8 @@ class ExpressionControl extends React.Component {
 			/>);
 		}
 
+		const codemirrorClassName = classNames(`elyra-CodeMirror ${messageType} ${this.props.state}`);
+
 		return (
 			<div className="properties-expression-editor-wrapper" >
 				{this.props.controlItem}
@@ -490,7 +506,7 @@ class ExpressionControl extends React.Component {
 					<div ref={ (ref) => (this.expressionEditorDiv = ref) } data-id={ControlUtils.getDataId(this.props.propertyId)}
 						className={className}
 					>
-						<div ref={this.editorRef} style={{ height: this.state.expressionEditorHeight }} />
+						<div className={codemirrorClassName} ref={this.editorRef} style={{ height: this.state.expressionEditorHeight }} />
 						<ValidationMessage state={this.props.state} messageInfo={messageInfo} inTable={this.props.tableControl} />
 					</div>
 				</div>
