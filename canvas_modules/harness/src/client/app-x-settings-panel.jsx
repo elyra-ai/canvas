@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { Checkbox } from "carbon-components-react";
 
 
-class AppTestPanel extends React.Component {
+class AppSettingsPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -61,9 +61,9 @@ class AppTestPanel extends React.Component {
 	}
 }
 
-AppTestPanel.propTypes = {
+AppSettingsPanel.propTypes = {
 	closeSubPanel: PropTypes.func,
 	subPanelData: PropTypes.object
 };
 
-export default AppTestPanel;
+export default AppSettingsPanel;

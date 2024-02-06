@@ -82,7 +82,9 @@ import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColu
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
-import AppTestPanel from "./app-x-test-panel.jsx";
+import AppSettingsPanel from "./app-x-settings-panel.jsx";
+import AppColorPicker from "./app-x-color-picker.jsx";
+
 
 import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
 	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
@@ -189,7 +191,7 @@ class App extends React.Component {
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
-			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
+			selectedToolbarType: TOOLBAR_TYPE_SUB_AREAS,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
@@ -2150,28 +2152,6 @@ class App extends React.Component {
 				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract32 />) }
 			];
 
-			const subPanelColor = (
-				<div className="harness-color-picker"
-					tabIndex={"-1"}
-					onFocus={(evt) => {
-						evt.stopPropagation();
-						const el = document.querySelector(".harness-color-picker-item.yellow-20");
-						el.focus();
-					}}
-					onClick={(e) => window.alert("Color selected = " + e.target.dataset.color)}
-				>
-					<div tabIndex={"-1"} data-color={"col-yellow-20"} className="harness-color-picker-item yellow-20" />
-					<div tabIndex={"-1"} data-color={"col-green-20"} className="harness-color-picker-item green-20" />
-					<div tabIndex={"-1"} data-color={"col-teal-20"} className="harness-color-picker-item teal-20" />
-					<div tabIndex={"-1"} data-color={"col-cyan-20"} className="harness-color-picker-item cyan-20" />
-					<div tabIndex={"-1"} data-color={"col-red-50"} className="harness-color-picker-item red-50" />
-					<div tabIndex={"-1"} data-color={"col-orange-40"} className="harness-color-picker-item orange-40" />
-					<div tabIndex={"-1"} data-color={"col-green-50"} className="harness-color-picker-item green-50" />
-					<div tabIndex={"-1"} data-color={"col-teal-50"} className="harness-color-picker-item teal-50" />
-					<div tabIndex={"-1"} data-color={"col-cyan-50"} className="harness-color-picker-item cyan-50" />
-				</div>
-			);
-
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2185,13 +2165,15 @@ class App extends React.Component {
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: AppTestPanel, subPanelData: { saveData: () => window.alert("Panel data saved!") } },
+					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
+						subPanel: AppSettingsPanel, subPanelData: { saveData: () => window.alert("Panel data saved!") } },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },
 					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
 					{ divider: true },
-					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true, subPanel: subPanelColor, closeSubAreaOnClick: true },
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true,
+						subPanel: AppColorPicker, subPanelData: { colorSelected: (color) => window.alert("Color selected = " + color) } },
 					{ divider: true },
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },

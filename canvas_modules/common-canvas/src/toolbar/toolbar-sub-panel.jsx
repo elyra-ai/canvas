@@ -25,10 +25,6 @@ class ToolbarSubPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			focusAction: "subarea"
-		};
-
 		this.areaRef = React.createRef();
 
 		this.onClick = this.onClick.bind(this);
@@ -60,7 +56,7 @@ class ToolbarSubPanel extends React.Component {
 		if (this.props.subPanel) {
 			const subPanel = typeof this.props.subPanel === "object"
 				? this.props.subPanel
-				: (<this.props.subPanel ref={this.areaRef} closeSubPanel={this.props.closeSubArea} subPanelData={this.props.subPanelData} />);
+				: (<this.props.subPanel closeSubPanel={this.props.closeSubArea} subPanelData={this.props.subPanelData} />);
 
 			return (
 				<div ref={this.areaRef} style={style} className={"toolbar-popover-list subpanel"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
