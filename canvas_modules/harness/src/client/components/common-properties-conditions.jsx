@@ -347,6 +347,8 @@ class CommonPropertiesComponents extends React.Component {
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "yes", dmTypeNotEquals: "yes",
 				dmMeasurementEquals: "yes", dmMeasurementNotEquals: "yes", dmRoleEquals: "yes", dmRoleNotEquals: "yes", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
+			{ Control: "slider (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
+				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "no", lengthGreaterThan: "no", lengthLessThan: "no" },
 			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",
 				dmMeasurementEquals: "no", dmMeasurementNotEquals: "no", dmRoleEquals: "no", dmRoleNotEquals: "no", lengthEquals: "yes", lengthGreaterThan: "yes", lengthLessThan: "yes" },
 			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", matches: "no", colNotExists: "no", isDateTime: "no", dmTypeEquals: "no", dmTypeNotEquals: "no",

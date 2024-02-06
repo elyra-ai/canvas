@@ -2272,6 +2272,56 @@ _defineConstant("DATEPICKER_RANGE_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("SLIDER_PROPS_INFO", {
+	"title": "Slider Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: slider",
+			"editable": false
+		},
+		"current_parameters": {
+			"sliderControlName": 10
+		},
+		"parameters": [
+			{
+				"id": "sliderControlName",
+				"type": "slider",
+				"default": 10
+			}
+		],
+		"uihints": {
+			"id": "sliderControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "sliderControlName",
+					"label": {
+						"default": "Slider Control Name"
+					},
+					"description": {
+						"default": "Slider test"
+					},
+					"control": "slider",
+					"min_value": 1,
+					"max_value": 100,
+					"increment": 1
+				}
+			],
+			"group_info": [
+				{
+					"id": "sliderControlName",
+					"type": "controls",
+					"parameter_refs": [
+						"sliderControlName"
+					]
+				}
+			]
+		},
+		"resources": {
+			"sliderControlName.min.label": "1",
+			"sliderControlName.max.label": "100"
+		}
+	}
+});
 _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {
