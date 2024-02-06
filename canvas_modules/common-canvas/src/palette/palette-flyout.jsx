@@ -40,7 +40,7 @@ class PaletteFlyout extends React.Component {
 
 		return (
 			<nav aria-label={this.props.intl.formatMessage({ id: "palette.flyout.label", defaultMessage: defaultMessages["palette.flyout.label"] })} role="navigation">
-				<div className={className}>
+				<div className={className} tabIndex="0">
 					<PaletteFlyoutContent
 						paletteJSON={this.props.paletteJSON}
 						canvasController={this.props.canvasController}

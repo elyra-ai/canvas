@@ -96,7 +96,6 @@ class ToolbarOverflowItem extends React.Component {
 			<div className={this.genOverflowButtonClass()} >
 				<div className={"toolbar-overflow-item"}>
 					<Button kind="ghost"
-						tabIndex={-1}
 						onClick={this.toggleExtendedMenu}
 						onFocus={this.props.onFocus}
 						aria-label={this.props.label}

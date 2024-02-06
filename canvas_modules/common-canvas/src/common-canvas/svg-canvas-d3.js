@@ -211,4 +211,20 @@ export default class SVGCanvasD3 {
 	isSpaceKeyPressed() {
 		return this.renderer.isSpaceKeyPressed();
 	}
+
+	focusNextTabGroup(evt) {
+		return this.renderer.focusNextTabGroup(evt);
+	}
+
+	focusPreviousTabGroup(evt) {
+		return this.renderer.focusPreviousTabGroup(evt);
+	}
+
+	focusSetOutsideCanvas() {
+		this.renderer.focusSetOutsideCanvas();
+	}
+
+	moveFocusTo(target) {
+		this.renderer.moveFocusTo(target);
+	}
 }
