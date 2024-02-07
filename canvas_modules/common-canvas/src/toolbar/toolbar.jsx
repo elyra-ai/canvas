@@ -88,7 +88,7 @@ class Toolbar extends React.Component {
 		// If focus occurs because of a click on the toolbar body
 		// (not on a button) and no button has focus move focus to
 		// the first item otherwise just keep focus the same.
-		if (evt.target?.type !== "button") {
+		if (evt.target?.classList?.contains("toolbar-div")) {
 			if (this.state.focusAction === "toolbar") {
 				this.setFocusOnFirstItem();
 

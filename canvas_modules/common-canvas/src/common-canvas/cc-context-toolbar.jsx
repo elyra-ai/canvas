@@ -60,23 +60,25 @@ class CommonCanvasContextToolbar extends React.Component {
 		if (menuItem.divider) {
 			return { divider: true };
 		}
-		const subPanel = this.getSubPanel(menuItem);
-		const subMenu = !subPanel && menuItem.menu ? this.getSubMenu(menuItem) : null;
+		const subPanelInfo = this.getSubPanelInfo(menuItem);
+		const subMenu = !subPanelInfo.subPanel && menuItem.menu ? this.getSubMenu(menuItem) : null;
+
 		return {
 			action: menuItem.action,
 			label: menuItem.label,
 			subMenu: subMenu,
-			subPanel: subPanel,
+			subPanel: subPanelInfo.subPanel,
+			subPanelData: subPanelInfo.subPanelData,
 			enable: this.getEnable(menuItem),
 			iconEnabled: menuItem.icon
 		};
 	}
 
-	getSubPanel(menuItem) {
+	getSubPanelInfo(menuItem) {
 		if (menuItem.action === "colorBackground") {
-			return this.buildColorPicker();
+			return { subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => this.colorClicked(color) } };
 		}
-		return null;
+		return {};
 	}
 
 	getSubMenu(menuItem) {
@@ -148,12 +150,6 @@ class CommonCanvasContextToolbar extends React.Component {
 
 	colorClicked(color) {
 		this.toolbarActionHandler("colorSelectedObjects", { color });
-	}
-
-	buildColorPicker() {
-		return (
-			<ColorPicker clickActionHandler={this.colorClicked} />
-		);
 	}
 
 	shouldCenterJustifyToolbar() {

@@ -17,8 +17,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+const SPACE_KEY = 32;
 const LEFT_ARROW_KEY = 37;
 const RIGHT_ARROW_KEY = 39;
+
 
 class AppTestColorPicker extends React.Component {
 	constructor(props) {
@@ -39,9 +41,7 @@ class AppTestColorPicker extends React.Component {
 
 	onClick(evt) {
 		evt.stopPropagation();
-		const color = evt.target.getAttribute("data-color");
-		this.props.subPanelData.colorSelected(color);
-		this.props.closeSubPanel();
+		this.selectColor(evt);
 	}
 
 	onKeyDown(evt) {
@@ -58,14 +58,22 @@ class AppTestColorPicker extends React.Component {
 			if (this.colorIndex < 0) {
 				this.colorIndex = 8;
 			}
+		} else if (evt.keyCode === SPACE_KEY) {
+			this.selectColor(evt);
 		}
 		this.refss[this.colorIndex].current.focus();
+	}
+
+	selectColor(evt) {
+		const color = evt.target.getAttribute("data-color");
+		this.props.subPanelData.colorSelected(color);
+		this.props.closeSubPanel();
 	}
 
 	render() {
 		return (
 			<div className="harness-color-picker"
-				tabIndex={"-1"}
+				tabIndex={"0"}
 				onClick={this.onClick}
 				onKeyDown={this.onKeyDown}
 			>
