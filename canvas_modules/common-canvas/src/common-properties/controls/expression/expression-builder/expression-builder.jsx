@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ export default class ExpressionBuilder extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onSelectionChange = this.onSelectionChange.bind(this);
-
 	}
 
 	onChange(newValue) {
@@ -39,7 +38,7 @@ export default class ExpressionBuilder extends React.Component {
 		const somethingSelected = this.editor.viewState.state.selection.ranges.some((r) => !r.empty);
 		let cursor = this.editor.viewState.state.selection.main.head;
 		if (cursor === 0 && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
-			// When nothing selected, set cursor at the end of the line to keep same behavior as Codemirror 5
+			// When nothing selected, set cursor at the end of the line
 			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length } });
 			cursor = this.editor.viewState.state.selection.main.head;
 			this.editor.focus();
@@ -84,7 +83,6 @@ export default class ExpressionBuilder extends React.Component {
 	editorDidMount(editor) {
 		this.editor = editor;
 	}
-
 
 	_setSelection(value, cursor, selectionOffset) {
 		// first set the selection to the first param holder of new value

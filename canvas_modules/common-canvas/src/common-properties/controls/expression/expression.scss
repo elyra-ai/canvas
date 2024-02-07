@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@
 		}
 	}
 
-	// TODO: Line 57-79 Correct way to set colors for tags given in "Highlighting" section here - https://codemirror.net/examples/styling/
-	// However we need a way to access color tokens in expression.jsx file for the same. This is just a temporary workaround.
+	// TODO: Change following code when fixing issue https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3663
 	.cm-line .ͼb { color: $link-01; } // Keywords
 
 	.cm-line .ͼd { color: $text-02; } // Numbers
@@ -63,21 +62,7 @@
 
 	.cm-line .ͼm { color: $support-02; } // Comment
 
-	// .cm-s-custom .cm-variable,
-	// .cm-s-custom .cm-punctuation,
-	// .cm-s-custom .cm-property,
-	// .cm-s-custom .cm-operator {
-	// 	color: $text-01;
-	// }
-	// .cm-s-custom .cm-variable-2 { color: $text-01; }
-
-	// .cm-s-custom .cm-variable-3, .cm-s-custom .cm-type { color: $text-01; }
-
 	.cm-line .ͼe { color: $text-error; } // String
-
-	// .cm-s-custom .cm-string-2 { color: $text-error; }
-
-	// .cm-s-custom .cm-meta { color: $ui-01; }
 }
 
 .elyra-CodeMirror.disabled {

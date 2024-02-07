@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-// import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
 import { Button } from "carbon-components-react";
 import classNames from "classnames";
@@ -38,36 +37,14 @@ import ExpressionToggle from "./expression-toggle/expression-toggle";
 import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
-// import { autocompletion, completeFromList } from "@codemirror/autocomplete";
 import { Compartment } from "@codemirror/state";
-// import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import { r } from "codemirror-lang-r";
 import { sql } from "@codemirror/lang-sql";
-// import { StreamLanguage, syntaxTree } from "@codemirror/language";
 
 import { getPythonHints } from "./languages/python-hint";
 import { getRHints } from "./languages/r-hint";
 import { clem } from "./languages/CLEM-hint";
-
-// required for server side rendering.
-const cm = null;
-if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
-	// cm = require("codemirror");
-	// require("codemirror/addon/hint/show-hint");
-	// require("codemirror/addon/display/placeholder");
-	// require("codemirror/addon/display/autorefresh");
-	// require("codemirror/mode/javascript/javascript");
-	// require("codemirror/addon/hint/javascript-hint");
-	// require("codemirror/addon/hint/sql-hint");
-	// require("codemirror/mode/sql/sql");
-	// require("codemirror/mode/python/python");
-	// require("codemirror/mode/r/r");
-	// registerPython(cm);
-	// registerR(cm);
-	// registerClem(cm);
-}
-
 
 const pxPerChar = 8.5;
 const pxPerLine = 26;
@@ -93,14 +70,12 @@ class ExpressionControl extends React.Component {
 		this.cancelExpressionBuilder = this.cancelExpressionBuilder.bind(this);
 		this.hideExpressionBuilder = this.hideExpressionBuilder.bind(this);
 		this.showExpressionBuilder = this.showExpressionBuilder.bind(this);
-		this.editorDidMount = this.editorDidMount.bind(this);
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.createCodeMirrorEditor = this.createCodeMirrorEditor.bind(this);
 		this.events = this.events.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
-		this.myCompletions = this.myCompletions.bind(this);
 		this.setCodeMirrorEditable = this.setCodeMirrorEditable.bind(this);
 	}
 
@@ -111,8 +86,8 @@ class ExpressionControl extends React.Component {
 	// this is needed to ensure expression builder selection works.
 	componentDidUpdate(prevProps) {
 		// When code is edited in expression builder, reflect changes in expression flyout
-		if (!isEqual(this.view.viewState.state.doc.toString(), this.props.value)) {
-			this.view.dispatch({ changes: { from: 0, to: this.view.viewState.state.doc.length, insert: this.props.value } });
+		if (!isEqual(this.editor.viewState.state.doc.toString(), this.props.value)) {
+			this.editor.dispatch({ changes: { from: 0, to: this.editor.viewState.state.doc.length, insert: this.props.value } });
 		}
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
@@ -122,25 +97,18 @@ class ExpressionControl extends React.Component {
 			this.props.selectionRange &&
 			this.props.selectionRange.length > 0 &&
 			!isEqual(prevProps.selectionRange, this.props.selectionRange) &&
-			this.view
+			this.editor
 		) {
 			this.props.selectionRange.forEach((selected) => {
-				this.view.dispatch({ selection: selected });
+				this.editor.dispatch({ selection: selected });
 			});
-			this.view.focus();
+			this.editor.focus();
 		}
 	}
 
-	// TODO: reset to the original autocomplete handler
-	// componentWillUnmount() {
-	// 	if (this.origHint && cm) {
-	// 		cm.registerHelper("hint", this.props.control.language, this.origHint);
-	// 	}
-	// }
-
 	// Set codemirror editor non-editable when disabled
 	setCodeMirrorEditable(value) {
-		this.view.dispatch({
+		this.editor.dispatch({
 			effects: editable.reconfigure(EditorView.editable.of(value))
 		});
 	}
@@ -155,35 +123,16 @@ class ExpressionControl extends React.Component {
 		return results;
 	}
 
-	handleUpdate() {
-		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
-			if (viewUpdate.docChanged) {
-				// this is needed when a single character is added into the expression builder because
-				// entering chars does not go through onChange() in expression builder.
-				// This is needed to adjust the selection position in code mirror.
-				if (
-					Array.isArray(viewUpdate.changedRanges) &&
-					viewUpdate.changedRanges.length === 1 &&
-					Math.abs(viewUpdate.changes.newLength - viewUpdate.changes.length) === 1 &&
-					this.props.onSelectionChange
-				) {
-					const newPos = viewUpdate.changedRanges[0].toB;
-					this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
-				}
-				if (this.state.validateIcon) {
-					this.setState({
-						validateIcon: null
-					});
-					this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
-				}
-			}
-			// TODO: Following code may not be needed once handleBlur, handleKeydown starts working
-			// const exprValue = viewUpdate.state.doc.toString();
-			// if (!isEqual(exprValue, this.props.value)) {
-			// 	this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
-			// }
-		});
-		return onUpdate;
+	// Add the dataset field names to the autocomplete list
+	addonHints(context) {
+		const word = context.matchBefore(/\w*/);
+		if (word.from === word.to && !context.explicit) {
+			return null;
+		}
+		return {
+			from: word.from,
+			options: concat(this.origHint, this.getDatasetFields())
+		};
 	}
 
 	createCodeMirrorEditor() {
@@ -197,9 +146,6 @@ class ExpressionControl extends React.Component {
 		height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
 		height = this.props.height ? this.props.height : height;
 		this.setState({ expressionEditorHeight: Math.max(Math.floor(height), minLineHeight) });
-
-		// TODO: Rename this.view to this.editor
-
 
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
@@ -223,107 +169,29 @@ class ExpressionControl extends React.Component {
 			language = clem();
 		}
 
-		const myNewCompletions = language.language.data.of({
-			autocomplete: this.myCompletions
+		// Custom completions add to the language completions
+		const customCompletions = language.language.data.of({
+			autocomplete: this.addonHints
 		});
 
-		this.view = new EditorView({
-			// state: startState,
+		this.editor = new EditorView({
 			doc: this.props.value,
 			extensions: [
 				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
-				myNewCompletions,
+				customCompletions,
 				basicSetup,
 				this.events(),
 				language,
 				placeholder(this.props.control.additionalText),
 				this.handleUpdate(),
 				editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
-				// autocompletion({tooltipClass: () => "blah"})
 			],
 			parent: this.editorRef.current
 		});
 
+		// Set editor in the expression-builder
 		if (this.props.editorDidMount) {
-			this.props.editorDidMount(this.view);
-		}
-	}
-
-	myCompletions(context) {
-		const word = context.matchBefore(/\w*/);
-		if (word.from === word.to && !context.explicit) {
-			return null;
-		}
-		return {
-			from: word.from,
-			options: concat(this.origHint, this.getDatasetFields())
-		};
-	}
-
-	// Add the dataset field names to the autocomplete list
-	addonHints(editor, options) {
-		var results = {};
-		var cur = editor.getCursor();
-		var token = editor.getTokenAt(cur);
-		if (this.origHint) {
-			// get the list of autocomplete names from the language autocomplete handler
-			results = this.origHint(editor, options);
-
-			// add to the start of the autocomplete list the set of dataset field names that complete the
-			// string that has been entered.
-			var parameters = this.getDatasetFields();
-			for (var i = 0; i < parameters.length; ++i) {
-				const parameter = parameters[i];
-				if (parameter.lastIndexOf(token.string, 0) === 0 && results.list.indexOf(parameter) === -1) {
-					results.list.unshift(parameter);
-				} else if (token.string === " " && token.type === null) {
-					results.list.unshift(parameter);
-				}
-			}
-		}
-		return results;
-	}
-
-	// Save original autocomplete handler and then register our custom handler
-	// that will add data set filed names to autocomplete list.
-	editorDidMount(editor, next) {
-		this.editor = editor;
-		// set the default height, should be between 4 and 20 lines
-		// const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
-		// const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
-		// // charlimit in the control sets the height within a min and max
-		// let height = (this.props.control.charLimit)
-		// 	? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
-		// // let an explicit prop override the calculated height
-		// height = this.props.control.rows ? pxPerLine * this.props.control.rows : height;
-		// height = this.props.height ? this.props.height : height;
-		// this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
-
-		this.origHint = editor.getHelper({ line: 0, ch: 0 }, "hint");
-		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
-		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
-		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
-		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
-		// Same has been done for Python and R
-		let language = this.props.control.language;
-		switch (this.props.control.language) {
-		case "text/x-hive":
-			language = "sql";
-			break;
-		case "text/x-python":
-			language = "python";
-			break;
-		case "text/x-rsrc":
-			language = "r";
-			break;
-		default:
-		}
-		if (cm) {
-			cm.registerHelper("hint", language, this.addonHints);
-		}
-
-		if (this.props.editorDidMount) {
-			this.props.editorDidMount(editor, next);
+			this.props.editorDidMount(this.editor);
 		}
 	}
 
@@ -357,12 +225,22 @@ class ExpressionControl extends React.Component {
 				validateIcon: response.type,
 				validationInProgress: false
 			});
-			this.editor.display.input.blur();
 		});
 	}
 
 	hasValidate() {
 		return typeof this.props.controller.getHandlers().validationHandler === "function";
+	}
+
+	// Event handlers for CM6
+	events() {
+		const that = this;
+		const eventHandlers = EditorView.domEventHandlers({
+			blur(evt, view) {
+				that.handleBlur(view, evt);
+			}
+		});
+		return eventHandlers;
 	}
 
 	handleBlur(editor, evt) {
@@ -378,15 +256,30 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
-	events() {
-		const that = this;
-		const eventHandlers = EditorView.domEventHandlers({
-			blur(evt, view) {
-				that.handleBlur(view, evt);
+	handleUpdate() {
+		const onUpdate = EditorView.updateListener.of((viewUpdate) => {
+			if (viewUpdate.docChanged) {
+				// this is needed when a single character is added into the expression builder because
+				// entering chars does not go through onChange() in expression builder.
+				// This is needed to adjust the selection position in code mirror.
+				if (
+					Array.isArray(viewUpdate.changedRanges) &&
+					viewUpdate.changedRanges.length === 1 &&
+					Math.abs(viewUpdate.changes.newLength - viewUpdate.changes.length) === 1 &&
+					this.props.onSelectionChange
+				) {
+					const newPos = viewUpdate.changedRanges[0].toB;
+					this.props.onSelectionChange([{ anchor: newPos, head: newPos }]);
+				}
+				if (this.state.validateIcon) {
+					this.setState({
+						validateIcon: null
+					});
+					this.props.controller.updateErrorMessage(this.props.propertyId, DEFAULT_VALIDATION_MESSAGE);
+				}
 			}
 		});
-
-		return eventHandlers;
+		return onUpdate;
 	}
 
 	_showBuilderButton() {
@@ -403,7 +296,6 @@ class ExpressionControl extends React.Component {
 			messageInfo = null;
 		}
 
-		// const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
 
 		const button = this._showBuilderButton() ? (
@@ -436,15 +328,7 @@ class ExpressionControl extends React.Component {
 				{validateIcon}
 			</div>)
 			: null;
-		// const mirrorOptions = {
-		// 	mode: this.props.control.language,
-		// 	placeholder: this.props.control.additionalText,
-		// 	theme: theme + " custom",
-		// 	readOnly: (this.props.state === STATES.DISABLED) ? "nocursor" : false,
-		// 	extraKeys: { "Ctrl-Space": "autocomplete" },
-		// 	autoRefresh: true,
-		// 	lineNumbers: true
-		// };
+
 		const applyLabel = formatMessage(reactIntl, MESSAGE_KEYS.APPLYBUTTON_LABEL);
 		const rejectLabel = formatMessage(reactIntl, MESSAGE_KEYS.REJECTBUTTON_LABEL);
 		const expressonTitle = formatMessage(reactIntl, MESSAGE_KEYS.EXPRESSION_BUILDER_TITLE);
