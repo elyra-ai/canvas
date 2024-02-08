@@ -52,12 +52,12 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY && !this.props.isOverflowItem) {
+		if (evt.keyCode === ESC_KEY && !this.props.isInMenu) {
 			this.closeSubArea();
 			return;
 
 		} else if (evt.keyCode === RIGHT_ARROW_KEY &&
-			((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isOverflowItem)) {
+			((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isInMenu)) {
 			evt.stopPropagation();
 			this.openSubArea();
 
@@ -69,13 +69,13 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	onMouseEnter(evt) {
-		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isOverflowItem) {
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isInMenu) {
 			this.openSubArea();
 		}
 	}
 
 	onMouseLeave(evt) {
-		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isOverflowItem) {
+		if ((this.props.actionObj.subMenu || this.props.actionObj.subPanel) && this.props.isInMenu) {
 			this.closeSubArea();
 		}
 	}
@@ -116,7 +116,7 @@ class ToolbarActionItem extends React.Component {
 
 	actionClickHandler(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			if (this.state.showExtendedMenu) {
+			if (this.state.subAreaDisplayed) {
 				document.removeEventListener("click", this.clickOutside, false);
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
@@ -130,16 +130,16 @@ class ToolbarActionItem extends React.Component {
 				}
 			}
 
-			if (!this.props.isOverflowItem) {
+			if (!this.props.isInMenu) {
 				this.closeSubArea();
 			}
 
 			this.setState({ subAreaDisplayed: !this.state.subAreaDisplayed });
-			return;
-		}
 
-		this.props.setFocusAction(this.props.actionObj.action);
-		this.props.toolbarActionHandler(this.props.actionObj.action, evt);
+		} else {
+			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
+			this.props.setFocusAction(this.props.actionObj.action);
+		}
 	}
 
 	generateActionName() {
@@ -161,7 +161,7 @@ class ToolbarActionItem extends React.Component {
 					closeSubArea={this.closeSubArea}
 					closeSubAreaOnClick={!(typeof this.props.actionObj.closeSubAreaOnClick === "undefined")}
 					actionItemRect={actionItemRect}
-					expandDirection={this.props.isOverflowItem ? "horizontal" : "vertical" }
+					expandDirection={this.props.isInMenu ? "horizontal" : "vertical" }
 					containingDivId={this.props.containingDivId}
 				/>
 			);
@@ -173,7 +173,7 @@ class ToolbarActionItem extends React.Component {
 				closeSubArea={this.closeSubArea}
 				closeSubAreaOnClick={!(typeof this.props.actionObj.closeSubAreaOnClick === "undefined")}
 				actionItemRect={actionItemRect}
-				expandDirection={this.props.isOverflowItem ? "horizontal" : "vertical" }
+				expandDirection={this.props.isInMenu ? "horizontal" : "vertical" }
 				containingDivId={this.props.containingDivId}
 				parentSelector={this.generateSelector(this.props.actionObj)}
 				isCascadeMenu
@@ -182,7 +182,7 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	generateSelector(actionObj) {
-		if (this.props.isOverflowItem) {
+		if (this.props.isInMenu) {
 			return ".toolbar-overflow-menu-item";
 		} else if (actionObj.jsx) {
 			return ".toolbar-jsx-item";
@@ -195,14 +195,14 @@ class ToolbarActionItem extends React.Component {
 		const actionName = this.generateActionName();
 
 
-		const isToolbarItem = this.props.isOverflowItem ? null : true; // null wil make data-toolbar-item be removed
+		const isToolbarItem = this.props.isInMenu ? null : true; // null wil make data-toolbar-item be removed
 		const kindAsClass = actionObj.kind ? actionObj.kind : "default";
 
 		const itemClassName = classNames(
-			{ "toolbar-overflow-menu-item": this.props.isOverflowItem,
-				"toolbar-item": !this.props.isOverflowItem && !actionObj.jsx,
-				"toolbar-jsx-item": !this.props.isOverflowItem && actionObj.jsx,
-				"toolbar-overflow-jsx-item": this.props.isOverflowItem && actionObj.jsx,
+			{ "toolbar-overflow-menu-item": this.props.isInMenu,
+				"toolbar-item": !this.props.isInMenu && !actionObj.jsx,
+				"toolbar-jsx-item": !this.props.isInMenu && actionObj.jsx,
+				"toolbar-overflow-jsx-item": this.props.isInMenu && actionObj.jsx,
 				"toolbar-item-selected": actionObj.isSelected },
 			kindAsClass,
 			actionName);
@@ -219,8 +219,7 @@ class ToolbarActionItem extends React.Component {
 						actionName={this.generateActionName()}
 						tooltipDirection={this.props.tooltipDirection}
 						instanceId={this.props.instanceId}
-						containingDivId={this.props.containingDivId}
-						isOverflowItem={this.props.isOverflowItem}
+						isInMenu={this.props.isInMenu}
 						subAreaDisplayed={this.state.subAreaDisplayed}
 						actionClickHandler={this.actionClickHandler}
 						toolbarFocusAction={this.props.toolbarFocusAction}
@@ -272,7 +271,7 @@ ToolbarActionItem.propTypes = {
 	setResizeHandler: PropTypes.func,
 	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
-	isOverflowItem: PropTypes.bool,
+	isInMenu: PropTypes.bool,
 	onKeyDown: PropTypes.func,
 	toolbarFocusAction: PropTypes.string,
 	setFocusAction: PropTypes.func,

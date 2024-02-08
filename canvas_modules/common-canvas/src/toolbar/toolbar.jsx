@@ -51,13 +51,14 @@ class Toolbar extends React.Component {
 		this.leftItemRefs = [];
 		this.rightItemRefs = [];
 		this.overflowItemRefs = [];
+		this.toolbarRef = React.createRef();
 
 		this.resizeHandler = null;
 		this.onFocus = this.onFocus.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onToolbarResize = this.onToolbarResize.bind(this);
-		this.generateOverflowMenuActions = this.generateOverflowMenuActions.bind(this);
+		this.setOverflowIndex = this.setOverflowIndex.bind(this);
 		this.generateSubMenuItems = this.generateSubMenuItems.bind(this);
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
@@ -175,10 +176,17 @@ class Toolbar extends React.Component {
 		this.setState({ focusAction });
 	}
 
+	// Returns an array of references to focusable (that is enabled)
+	// toolbar items that are on the top (visible) row of the toolbar.
 	getFocusableItemRefs() {
 		return this.getLeftBarFocusableItemRefs().concat(this.getRightBarFocusableItemRefs());
 	}
 
+	// Returns an array of references to left bar items that are
+	// on the top (visible) row of the toolbar and are focusable.
+	// That is, not disabled. In addition, there may also be a
+	// reference to an overflow item if one is visible on the
+	// top (visible) row of the toolbar.
 	getLeftBarFocusableItemRefs() {
 		const focusableItemRefs = [];
 
@@ -186,15 +194,13 @@ class Toolbar extends React.Component {
 			return focusableItemRefs;
 		}
 
-		const rect = this.leftItemRefs[0].current.getBoundingRect();
-		const topRow = rect.top;
-
+		const topRowY = this.findToolbarTopYCoordinate();
 		let overflowItemRef = null;
 
 		for (let i = 0; i < this.leftItemRefs.length; i++) {
 			const itemRect = this.leftItemRefs[i].current.getBoundingRect();
 
-			if (itemRect.top === topRow) {
+			if (itemRect.top === topRowY) {
 				if (this.leftItemRefs[i].current.isEnabled()) {
 					focusableItemRefs.push(this.leftItemRefs[i]);
 				}
@@ -212,6 +218,9 @@ class Toolbar extends React.Component {
 		return focusableItemRefs;
 	}
 
+	// Returns an array of references to right bar items that are
+	// on the top (visible) row of the toolbar and are focusable.
+	// That is, not disabled.
 	getRightBarFocusableItemRefs() {
 		const focusableItemRefs = [];
 
@@ -219,17 +228,13 @@ class Toolbar extends React.Component {
 			return focusableItemRefs;
 		}
 
-		let topRow = 0;
+		const topRowY = this.findToolbarTopYCoordinate();
 
 		for (let i = 0; i < this.rightItemRefs.length; i++) {
 			if (this.rightItemRefs[i].current.isEnabled()) {
 				const refRect = this.rightItemRefs[i].current.getBoundingRect();
 
-				if (i === 0) {
-					topRow = refRect.top;
-				}
-
-				if (refRect.top === topRow) {
+				if (refRect.top === topRowY) {
 					focusableItemRefs.push(this.rightItemRefs[i]);
 				}
 			}
@@ -264,15 +269,54 @@ class Toolbar extends React.Component {
 		return "overflow_" + action;
 	}
 
-	// Generates an array of action definition elements that correspond to the
-	// hidden DOM items on the left and right of the toolbar. For any left bar
-	// items we can use the leftIndex passed in to split the leftBar defintion
-	// array, however for the right side we need to loop through the DOM items
-	// and discover which are hidden and which are displayed.
-	generateOverflowMenuActions(leftIndex) {
-		const rightItems = this.generateRightOverflowItems();
-		const overflowMenuActions = this.leftBar.slice(leftIndex).concat(rightItems);
-		return overflowMenuActions;
+	// Sets two index values: one for the left bar and one for the right that
+	// indicate which elements in each array should be put in the overflow menu.
+	// That is, those elements that do not appear on the top (visible) row of the
+	// toolbar.
+	setOverflowIndex(leftIndex) {
+		if (leftIndex === null) {
+			this.leftOverflowIndex = null;
+			this.rightOverflowIndex = null;
+		} else {
+			this.leftOverflowIndex = leftIndex;
+			this.rightOverflowIndex = this.getRightOverflowIndex();
+		}
+	}
+
+	// Returns the index of the first item in the right bar that is
+	// not on the top (visible) row of the toolbar.
+	getRightOverflowIndex() {
+		const ref = this.findFirstRightItemRefNotOnTopRow();
+
+		const index = ref === null
+			? this.rightBar.length - 1
+			: this.rightBar.findIndex((ri) => ri.action === this.getRefAction(ref));
+
+		return index;
+	}
+
+	// Returns a reference to the first item that is not on the
+	// top (visible) row of the toolbar.
+	findFirstRightItemRefNotOnTopRow() {
+		const topRowY = this.findToolbarTopYCoordinate();
+
+		let rightItemRef = null;
+
+		for (let i = 0; i < this.rightItemRefs.length; i++) {
+			const itemRect = this.rightItemRefs[i].current.getBoundingRect();
+			if (itemRect.top !== topRowY && rightItemRef === null) {
+				rightItemRef = this.rightItemRefs[i];
+			}
+		}
+		return rightItemRef;
+	}
+
+	// Returns the Y coordinate of the top of the toolbar. This is
+	// used to detecg which toolbar items are on the top (visible)
+	// row and which are wrapped onto other rows.
+	findToolbarTopYCoordinate() {
+		const rect = this.toolbarRef.current.getBoundingClientRect();
+		return rect.top;
 	}
 
 	// Generates an array of JSX objects for a sub-menu defined by the menuActions
@@ -289,28 +333,28 @@ class Toolbar extends React.Component {
 		return newItems;
 	}
 
-	// Generates an array of toolbar actions from the toolbarActions array passed in. When
-	// withOverflowIcon is true, which it is for the left bar, we also add an overflow icon
-	// for each left toolbar action. As the canvas is made narrower the items wrap onto a
-	// second (hidden) row of the toolbar and the overflow icon, associated with the last
-	// wrapped action icon, is revealed.
-	generateToolbarItems(toolbarActions, withOverflowIcon, refs) {
+	// Generates an array of toolbar items from the toolbarActions array passed in. When
+	// withOverflowItem is true, which it is for the left bar, we also add an overflow item,
+	// inside an overflow item container, for each left toolbar action. As the canvas is made
+	// narrower the regular action items wrap onto a second (hidden) row of the toolbar and
+	// the overflow item, associated with the last wrapped action item, is revealed.
+	generateToolbarItems(toolbarActions, withOverflowItem, refs) {
 		const newItems = [];
-		const isOverflowItem = false;
+		const isInMenu = false;
 
 		for (let i = 0; i < toolbarActions.length; i++) {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
-				if (!actionObj.divider && withOverflowIcon) {
-					newItems.push(this.generateOverflowIcon(i, actionObj.action, this.state.focusAction));
+				if (!actionObj.divider && withOverflowItem) {
+					newItems.push(this.generateOverflowItem(i, actionObj.action, this.state.focusAction));
 				}
-				newItems.push(this.generateToolbarItem(actionObj, i, isOverflowItem, this.state.focusAction, this.onKeyDown, refs));
+				newItems.push(this.generateToolbarItem(actionObj, i, isInMenu, this.state.focusAction, this.onKeyDown, refs));
 			}
 		}
 		return newItems;
 	}
 
-	generateToolbarItem(actionObj, i, isOverflowItem, focusAction, onKeyDown, refs) {
+	generateToolbarItem(actionObj, i, isInMenu, focusAction, onKeyDown, refs) {
 		let jsx = null;
 
 		if (actionObj) {
@@ -318,7 +362,7 @@ class Toolbar extends React.Component {
 				jsx = (
 					<ToolbarDividerItem
 						key={"toolbar-item-key-" + i}
-						isOverflowItem={isOverflowItem}
+						isInMenu={isInMenu}
 					/>
 				);
 			} else {
@@ -334,7 +378,7 @@ class Toolbar extends React.Component {
 						tooltipDirection={this.props.tooltipDirection}
 						toolbarActionHandler={this.props.toolbarActionHandler}
 						generateSubMenuItems={this.generateSubMenuItems}
-						isOverflowItem={isOverflowItem}
+						isInMenu={isInMenu}
 						instanceId={this.props.instanceId}
 						setResizeHandler={this.setResizeHandler}
 						containingDivId={this.props.containingDivId}
@@ -350,11 +394,19 @@ class Toolbar extends React.Component {
 		return jsx;
 	}
 
-	generateOverflowIcon(index, action, focusAction) {
+	generateOverflowItem(index, action, focusAction) {
 		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const overflowAction = this.getOverflowAction(action);
 		const ref = React.createRef();
 		this.overflowItemRefs.push(ref);
+
+		let subMenuActions = null;
+		if (index === this.leftOverflowIndex) {
+			const l = this.leftBar.slice(this.leftOverflowIndex);
+			const r = this.rightBar.slice(this.rightOverflowIndex).reverse();
+			subMenuActions = l.concat(r);
+		}
+
 		const jsx = (
 			<ToolbarOverflowItem
 				ref={ref}
@@ -363,7 +415,8 @@ class Toolbar extends React.Component {
 				action={overflowAction}
 				label={label}
 				size={this.props.size}
-				generateOverflowMenuActions={this.generateOverflowMenuActions}
+				subMenuActions={subMenuActions}
+				setOverflowIndex={this.setOverflowIndex}
 				generateSubMenuItems={this.generateSubMenuItems}
 				setResizeHandler={this.setResizeHandler}
 				containingDivId={this.props.containingDivId}
@@ -375,31 +428,6 @@ class Toolbar extends React.Component {
 		);
 
 		return jsx;
-	}
-
-	// Generates an array of right side overflow items that correspond to
-	// right side DOM items that are hidden. That is, they are not displayed
-	// on the top row of the toolbar.
-	generateRightOverflowItems() {
-		const containingDiv = document.querySelector("#" + this.props.containingDivId);
-		const rightBar = containingDiv.querySelector(".toolbar-right-bar");
-
-		const rightOverflowItems = [];
-		let topRow = 0;
-
-		for (let i = 0; i < this.rightItemRefs.length; i++) {
-			const itemElement = rightBar.querySelector(".toolbar-item");
-			const rect = itemElement.getBoundingClientRect();
-
-			if (i === 0) {
-				topRow = rect.top;
-			}
-
-			if (rect.top !== topRow) {
-				rightOverflowItems.push(this.rightBar[i]);
-			}
-		}
-		return rightOverflowItems;
 	}
 
 	render() {
@@ -420,7 +448,7 @@ class Toolbar extends React.Component {
 
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
-				<div className={toolbarSizeClass} instanceid={this.props.instanceId}
+				<div ref={this.toolbarRef} className={toolbarSizeClass} instanceid={this.props.instanceId}
 					tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur}
 				>
 					<div className="toolbar-left-bar" onScroll={this.onScroll}>

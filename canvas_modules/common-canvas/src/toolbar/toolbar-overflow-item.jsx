@@ -88,6 +88,17 @@ class ToolbarOverflowItem extends React.Component {
 			}
 		}
 
+		// When the overflow item is clicked to open the overflow menu we must set the
+		// index of the overflow items so the overflow menu can be correctly constructed.
+		// The overflow index values are used to split out the overflow menu action items
+		// from the left bar and right bar.
+		// When the overflow menu is closed we set the overflow index values to null.
+		if (!this.state.showExtendedMenu) {
+			this.subMenu = this.props.setOverflowIndex(this.props.index);
+		} else {
+			this.subMenu = this.props.setOverflowIndex(null); // Clear the indexes
+		}
+
 		this.props.setFocusAction(this.props.action);
 		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
 	}
@@ -96,7 +107,7 @@ class ToolbarOverflowItem extends React.Component {
 		if (this.state.showExtendedMenu) {
 			// Selector for the overflow-container that contains the overflow icon
 			// and submenu (if submenu is open).
-			const selector = "#" + this.props.containingDivId + " ." + this.genIndexClassName();
+			const selector = "." + this.genIndexClassName();
 			const isClickInOverflowContainer = evt.target.closest(selector);
 			if (!isClickInOverflowContainer) {
 				this.setState({ showExtendedMenu: false });
@@ -108,11 +119,10 @@ class ToolbarOverflowItem extends React.Component {
 		let overflowMenu = null;
 		if (this.state.showExtendedMenu) {
 			const actionItemRect = this.buttonRef.current.getBoundingClientRect();
-			const subMenu = this.props.generateOverflowMenuActions(this.props.index);
 			overflowMenu = (
 				<ToolbarSubMenu
 					ref={this.subMenuRef}
-					subMenu={subMenu}
+					subMenu={this.props.subMenuActions}
 					generateSubMenuItems={this.props.generateSubMenuItems}
 					closeSubArea={this.closeSubMenu}
 					closeSubAreaOnClick={false}
@@ -156,7 +166,8 @@ ToolbarOverflowItem.propTypes = {
 	action: PropTypes.string,
 	label: PropTypes.string,
 	size: PropTypes.oneOf(["md", "sm"]),
-	generateOverflowMenuActions: PropTypes.func,
+	subMenuActions: PropTypes.array,
+	setOverflowIndex: PropTypes.func,
 	generateSubMenuItems: PropTypes.func,
 	setResizeHandler: PropTypes.func,
 	containingDivId: PropTypes.string,

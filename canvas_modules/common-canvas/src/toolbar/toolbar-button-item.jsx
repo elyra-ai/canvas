@@ -124,15 +124,15 @@ class ToolbarButtonItem extends React.Component {
 		}
 	}
 
-	generateLabel(label, disable, isOverflowItem, incLabelWithIcon) {
+	generateLabel(label, disable, isInMenu, incLabelWithIcon) {
 		let className = "toolbar-icon-label";
-		className += this.generateLabelType(isOverflowItem, incLabelWithIcon);
+		className += this.generateLabelType(isInMenu, incLabelWithIcon);
 		className += disable ? " disabled" : "";
 		return (<div className={className}>{label}</div>);
 	}
 
-	generateLabelType(isOverflowItem, inLabelWithIcon) {
-		if (isOverflowItem) {
+	generateLabelType(isInMenu, inLabelWithIcon) {
+		if (isInMenu) {
 			return " overflow";
 		} else if (inLabelWithIcon === "before") {
 			return " before";
@@ -173,7 +173,7 @@ class ToolbarButtonItem extends React.Component {
 		let labelBefore = null;
 		let labelAfter = null;
 
-		if (this.props.isOverflowItem) {
+		if (this.props.isInMenu) {
 			labelAfter = this.generateLabel(actionObj.label, !actionObj.enable, true);
 
 		} else if (actionObj.incLabelWithIcon === "before") {
@@ -189,7 +189,7 @@ class ToolbarButtonItem extends React.Component {
 		const itemContentClassName = classNames(
 			"toolbar-item-content",
 			actionObj.className ? actionObj.className : null,
-			{ "overflow": this.props.isOverflowItem, "disabled": !actionObj.enable, "default": !actionObj.kind });
+			{ "overflow": this.props.isInMenu, "disabled": !actionObj.enable, "default": !actionObj.kind });
 
 		// If no 'kind' is set, use ghost and then override colors using the "default" class in innerDivClassName.
 		const kind = actionObj.kind || "ghost";
@@ -240,7 +240,7 @@ class ToolbarButtonItem extends React.Component {
 	//    action item isn't displayed with text.
 	generateChevronIcon(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
-			if (this.props.isOverflowItem) {
+			if (this.props.isInMenu) {
 				return (<ChevronRight16 />);
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
@@ -265,7 +265,7 @@ class ToolbarButtonItem extends React.Component {
 	}
 
 	wrapInTooltip(content) {
-		if (!this.props.isOverflowItem && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
+		if (!this.props.isInMenu && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
 			const tooltipId = this.props.actionName + "-" + this.props.instanceId + "-tooltip";
 			const enableTooltip = this.props.actionObj.enable || this.props.actionObj.jsx; // JSX 'tools' don't have enable attr so always display a tooltip for them.
@@ -343,8 +343,7 @@ ToolbarButtonItem.propTypes = {
 	actionName: PropTypes.string.isRequired,
 	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	instanceId: PropTypes.number.isRequired,
-	containingDivId: PropTypes.string,
-	isOverflowItem: PropTypes.bool,
+	isInMenu: PropTypes.bool,
 	subAreaDisplayed: PropTypes.bool,
 	actionClickHandler: PropTypes.func,
 	toolbarFocusAction: PropTypes.string,
