@@ -39,7 +39,7 @@ class Toolbar extends React.Component {
 		// Keeps track of whether the focus is on the toolbar or not. We should
 		// not call focus() on any item in the toolbar if this.isFocusInToolbar
 		// is false, otherwise focus will be moved incorrectly to the toolbar
-		// away from its current location.
+		// and away from its current location.
 		this.isFocusInToolbar = false;
 
 		// Arrays to hold the left and right bar configurations
@@ -51,7 +51,14 @@ class Toolbar extends React.Component {
 		this.leftItemRefs = [];
 		this.rightItemRefs = [];
 		this.overflowItemRefs = [];
+
+		// Reference for the toolbar <div>
 		this.toolbarRef = React.createRef();
+
+		// Index values to keep track of how the left and right bar arrays
+		// should be split to be able to create the overflow menu.
+		this.leftOverflowIndex = null;
+		this.rightOverflowIndex = null;
 
 		this.resizeHandler = null;
 		this.onFocus = this.onFocus.bind(this);
@@ -99,6 +106,9 @@ class Toolbar extends React.Component {
 		}
 	}
 
+	// When focus leaves the toolbar make sure we record it so we don't
+	// accidentally set focus on a toolbar item when re-rendering with
+	// the focus elsewhere.
 	onBlur() {
 		this.isFocusInToolbar = false;
 	}
@@ -176,6 +186,26 @@ class Toolbar extends React.Component {
 		this.setState({ focusAction });
 	}
 
+	getPreviousItemRef(focusableItemRefs) {
+		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		if (index > 0) {
+			return focusableItemRefs[index - 1];
+		}
+		return null;
+	}
+
+	getNextItemRef(focusableItemRefs) {
+		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
+		if (index < focusableItemRefs.length - 1) {
+			return focusableItemRefs[index + 1];
+		}
+		return null;
+	}
+
+	getRefAction(ref) {
+		return ref.current.getAction();
+	}
+
 	// Returns an array of references to focusable (that is enabled)
 	// toolbar items that are on the top (visible) row of the toolbar.
 	getFocusableItemRefs() {
@@ -240,26 +270,6 @@ class Toolbar extends React.Component {
 			}
 		}
 		return focusableItemRefs.reverse();
-	}
-
-	getPreviousItemRef(focusableItemRefs) {
-		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index > 0) {
-			return focusableItemRefs[index - 1];
-		}
-		return null;
-	}
-
-	getNextItemRef(focusableItemRefs) {
-		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index < focusableItemRefs.length - 1) {
-			return focusableItemRefs[index + 1];
-		}
-		return null;
-	}
-
-	getRefAction(ref) {
-		return ref.current.getAction();
 	}
 
 	// Items that appear in the overflow menu need unique action names because
@@ -354,6 +364,7 @@ class Toolbar extends React.Component {
 		return newItems;
 	}
 
+	// Returns JSX for a toolbar item based on the actionObj passed in.
 	generateToolbarItem(actionObj, i, isInMenu, focusAction, onKeyDown, refs) {
 		let jsx = null;
 
@@ -394,18 +405,16 @@ class Toolbar extends React.Component {
 		return jsx;
 	}
 
+	// Returns JSX for an overflow toolbar item based on the index and action passed in.
 	generateOverflowItem(index, action, focusAction) {
 		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const overflowAction = this.getOverflowAction(action);
+		const subMenuActions = this.createSubMenuActions(index);
+
+		// Create a ref for the overflow item to add to array of references to
+		// all overflow items.
 		const ref = React.createRef();
 		this.overflowItemRefs.push(ref);
-
-		let subMenuActions = null;
-		if (index === this.leftOverflowIndex) {
-			const l = this.leftBar.slice(this.leftOverflowIndex);
-			const r = this.rightBar.slice(this.rightOverflowIndex).reverse();
-			subMenuActions = l.concat(r);
-		}
 
 		const jsx = (
 			<ToolbarOverflowItem
@@ -429,6 +438,21 @@ class Toolbar extends React.Component {
 
 		return jsx;
 	}
+
+	// Returns an array of overflow menu actions that should be displayed in
+	// the overflow menu for the overflow item indicated by the index passed in.
+	// This uses this.leftOverflowIndex and this.rightOverflowIndex which are
+	// set when the user clicks on a particular overflow item in the toolbar.
+	createSubMenuActions(index) {
+		let subMenuActions = null;
+		if (index === this.leftOverflowIndex) {
+			const l = this.leftBar.slice(this.leftOverflowIndex);
+			const r = this.rightBar.slice(this.rightOverflowIndex).reverse();
+			subMenuActions = l.concat(r);
+		}
+		return subMenuActions;
+	}
+
 
 	render() {
 		this.leftBar = this.props.config.leftBar || [];
