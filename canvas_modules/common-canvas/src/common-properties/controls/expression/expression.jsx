@@ -38,6 +38,8 @@ import { keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab, insertNewline } from "@codemirror/commands";
 import { basicSetup, EditorView } from "codemirror";
 import { Compartment } from "@codemirror/state";
+import { tags } from "@lezer/highlight";
+import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { python } from "@codemirror/lang-python";
 import { r } from "codemirror-lang-r";
 import { sql } from "@codemirror/lang-sql";
@@ -178,11 +180,26 @@ class ExpressionControl extends React.Component {
 			autocomplete: this.addonHints
 		});
 
+		// Syntax highlighting
+		const myHighlightStyle = HighlightStyle.define([
+			{ tag: tags.keyword, class: "cm-keyword" },
+			{ tag: tags.number, class: "cm-number" },
+			{ tag: tags.definition(tags.name), class: "cm-def" },
+			{ tag: tags.comment, class: "cm-comment" },
+			{ tag: tags.variableName, class: "cm-variable" },
+			{ tag: tags.punctuation, class: "cm-punctuation" },
+			{ tag: tags.propertyName, class: "cm-property" },
+			{ tag: tags.operator, class: "cm-operator" },
+			{ tag: tags.string, class: "cm-string" },
+			{ tag: tags.meta, class: "cm-meta" }
+		]);
+
 		this.editor = new EditorView({
 			doc: this.props.value,
 			extensions: [
 				keymap.of([{ key: "Enter", run: insertNewline }, indentWithTab, defaultKeymap]), // This should be before basicSetup to insertNewLine on "Enter"
 				customCompletions,
+				syntaxHighlighting(myHighlightStyle),
 				basicSetup,
 				this.events(),
 				language,

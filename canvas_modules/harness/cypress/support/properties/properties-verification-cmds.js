@@ -121,8 +121,8 @@ Cypress.Commands.add("verifyTip", (container, visible, text, direction) => {
 // Expression control verification commands
 Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, propertyId) => {
 	// Verify "is_real" is a "keyword" in ExpressionEditor
-	const searchClass = type;
-	const testWord = (type === ".ͼe") ? "\"" + word + "\"" : word;
+	const searchClass = ".cm-" + type;
+	const testWord = (type === "string") ? "\"" + word + "\"" : word;
 	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-editor")
 		.find(".cm-line")
@@ -132,23 +132,8 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 					cy.wrap(codeMirrorLine[idx])
 						.find(searchClass)
 						.eq(0)
+						.should("have.class", "cm-" + type)
 						.should("have.text", testWord);
-					break;
-				}
-			}
-		});
-});
-
-Cypress.Commands.add("verifyVariablesAndOperatorsInExpressionEditor", (word, propertyId) => {
-	// Verify "salbegin" is a "variable" in ExpressionEditor
-	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
-		.find(".properties-expression-editor")
-		.find(".cm-line")
-		.then((codeMirrorLine) => {
-			for (let idx = 0; idx < codeMirrorLine.length; idx++) {
-				if (codeMirrorLine[idx].textContent.includes(word)) {
-					cy.wrap(codeMirrorLine[idx])
-						.contains(word);
 					break;
 				}
 			}
@@ -164,33 +149,25 @@ Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 });
 
 Cypress.Commands.add("verifyTypeOfSelectedAutoComplete", (selectedText, type) => {
-	const searchClass = type;
+	const searchClass = ".cm-" + type;
 	cy.get(".properties-expression-editor")
 		.find(".cm-line")
 		.find(searchClass)
+		.should("have.class", "cm-" + type)
 		.should("have.text", selectedText);
 });
 
 Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, type, propertyId) => {
 	// Enter "and" in ExpressionEditor and verify it is a "keyword"
-	const setText = (type === ".ͼe") ? "\"" + enteredText + "\"" : enteredText;
+	const setText = (type === "string") ? "\"" + enteredText + "\"" : enteredText;
 	cy.enterTextInExpressionEditor(setText, propertyId)
 		.then((text) => {
-			const searchClass = type;
+			const searchClass = ".cm-" + type;
 			cy.get(".properties-expression-editor")
 				.find(".cm-line")
 				.find(searchClass)
+				.should("have.class", "cm-" + type)
 				.should("have.text", setText);
-		});
-});
-
-Cypress.Commands.add("verifyEnteringVariablesAndOperatorsInExpressionEditor", (enteredText, propertyId) => {
-	// Enter "age" in ExpressionEditor and verify it is a "variable"
-	cy.enterTextInExpressionEditor(enteredText, propertyId)
-		.then((text) => {
-			cy.get(".properties-expression-editor")
-				.find(".cm-line")
-				.should("have.text", enteredText);
 		});
 });
 

@@ -48,21 +48,32 @@
 			}
 		}
 
-		.cm-tooltip-autocomplete { // TODO: In right flyout, autocompletions are cut-off
+		.cm-tooltip-autocomplete {
 			z-index: 1110;
+			ul {
+				white-space: normal; // Wraps the long autocompletion text on multiple lines
+			}
 		}
 	}
 
-	// TODO: Change lines 57-65 when fixing issue https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/3663
-	.cm-line .ͼb { color: $link-01; } // Keywords
+	.cm-line .cm-keyword { color: $link-01; }
 
-	.cm-line .ͼd { color: $text-02; } // Numbers
+	.cm-line .cm-number { color: $text-02; }
 
-	.cm-line .ͼj { color: $support-01; } // Definition
+	.cm-line .cm-def { color: $support-01; }
 
-	.cm-line .ͼm { color: $support-02; } // Comment
+	.cm-line .cm-comment { color: $support-02; }
 
-	.cm-line .ͼe { color: $text-error; } // String
+	.cm-line .cm-variable,
+	.cm-line .cm-punctuation,
+	.cm-line .cm-property,
+	.cm-line .cm-operator {
+		color: $text-01;
+	}
+
+	.cm-line .cm-string { color: $text-error; }
+
+	.cm-line .cm-meta { color: $ui-01; }
 }
 
 .elyra-CodeMirror.disabled {
