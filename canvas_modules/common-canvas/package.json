@@ -24,6 +24,7 @@
   "dependencies": {
     "@babel/runtime": "^7.16.3",
     "@codemirror/commands": "6.3.3",
+    "@codemirror/lang-javascript": "6.2.1",
     "@codemirror/lang-python": "6.1.4",
     "@codemirror/lang-sql": "6.5.5",
     "codemirror-lang-r": "0.1.0-2",

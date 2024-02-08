@@ -41,6 +41,7 @@ import { Compartment } from "@codemirror/state";
 import { python } from "@codemirror/lang-python";
 import { r } from "codemirror-lang-r";
 import { sql } from "@codemirror/lang-sql";
+import { javascript } from "@codemirror/lang-javascript";
 
 import { getPythonHints } from "./languages/python-hint";
 import { getRHints } from "./languages/r-hint";
@@ -164,6 +165,9 @@ class ExpressionControl extends React.Component {
 		case "text/x-rsrc":
 			language = r();
 			this.origHint = getRHints();
+			break;
+		case "javascript":
+			language = javascript();
 			break;
 		default:
 			language = clem();
