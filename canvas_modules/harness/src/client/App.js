@@ -191,7 +191,7 @@ class App extends React.Component {
 			selectedInteractionType: INTERACTION_MOUSE,
 			selectedNodeFormatType: VERTICAL_FORMAT,
 			selectedToolbarLayout: TOOLBAR_LAYOUT_TOP,
-			selectedToolbarType: TOOLBAR_TYPE_SUB_AREAS,
+			selectedToolbarType: TOOLBAR_TYPE_DEFAULT,
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
