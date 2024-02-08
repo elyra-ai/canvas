@@ -136,6 +136,11 @@ export default class PropertiesController {
 		return this.propertiesStore.getActiveTab();
 	}
 
+	// Set the top-level active tab using tabId
+	setTopLevelActiveGroupId(tabId) {
+		this.propertiesStore.setActiveTab(tabId);
+	}
+
 	isTearsheetContainer() {
 		return this.propertiesConfig.containerType === "Tearsheet";
 	}

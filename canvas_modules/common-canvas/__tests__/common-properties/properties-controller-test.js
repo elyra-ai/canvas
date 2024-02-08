@@ -26,6 +26,7 @@ import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import structureListEditorParamDef from "../test_resources/paramDefs/structurelisteditor_paramDef.json";
 import structureTableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
 import checkboxsetParamDef from "../test_resources/paramDefs/checkboxset_paramDef.json";
+import tabParamDef from "../test_resources/paramDefs/tab_paramDef.json";
 import checkboxParamDef from "../test_resources/paramDefs/checkbox_paramDef.json";
 import actionParamDef from "../test_resources/paramDefs/action_paramDef.json";
 import numberfieldParamDef from "../test_resources/paramDefs/numberfield_paramDef.json";
@@ -2405,5 +2406,24 @@ describe("Properties Controller getTopLevelActiveGroupId", () => {
 		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
 		expect(topLevelActiveGroupId).to.equal("checkboxset-conditions");
 
+	});
+});
+
+describe("Properties Controller setTopLevelActiveGroup", () => {
+	it("should set the top level active group id in properties controller", () => {
+		reset();
+		const renderedObject = testUtils.flyoutEditorForm(tabParamDef);
+		controller = renderedObject.controller;
+		const wrapper = renderedObject.wrapper;
+
+		controller.setTopLevelActiveGroupId("Primary3");
+		let topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("Primary3");
+
+		// Select Condition in accordion
+		const conditionsCategory = wrapper.find("div.properties-category-container").at(2);
+		conditionsCategory.find("button.properties-category-title").simulate("click");
+		topLevelActiveGroupId = controller.getTopLevelActiveGroupId();
+		expect(topLevelActiveGroupId).to.equal("Primary2");
 	});
 });
