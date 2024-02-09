@@ -280,6 +280,7 @@ class App extends React.Component {
 			tableButtonEnabled: true,
 			staticRowsPropertyId: "{ \"name\": \"parameterName\"}",
 			staticRowsIndexes: "",
+			setActiveTab: "",
 			disableWideFlyoutPrimaryButtonForPanelId: "{ \"name\": \"panelName\"}",
 			wideFlyoutPrimaryButtonDisabled: false,
 
@@ -356,6 +357,7 @@ class App extends React.Component {
 		this.setHideEditButton = this.setHideEditButton.bind(this);
 		this.setTableButtonEnabled = this.setTableButtonEnabled.bind(this);
 		this.setStaticRows = this.setStaticRows.bind(this);
+		this.setActiveTabTopLevel = this.setActiveTabTopLevel.bind(this);
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
@@ -949,6 +951,18 @@ class App extends React.Component {
 				const staticRowsPropertyId = JSON.parse(this.state.staticRowsPropertyId);
 				const staticRows = JSON.parse(this.state.staticRowsIndexes);
 				this.propertiesController.updateStaticRows(staticRowsPropertyId, staticRows);
+			} catch (ex) {
+				console.error(ex);
+			}
+		}
+	}
+
+	// Button to call propertiesController to set active top level tab
+	setActiveTabTopLevel() {
+		if (this.propertiesController) {
+			try {
+				const activeTab = this.state.setActiveTab;
+				this.propertiesController.setTopLevelActiveGroupId(activeTab);
 			} catch (ex) {
 				console.error(ex);
 			}
@@ -2715,6 +2729,8 @@ class App extends React.Component {
 			staticRowsPropertyId: this.state.staticRowsPropertyId,
 			staticRowsIndexes: this.state.staticRowsIndexes,
 			setStaticRows: this.setStaticRows,
+			setActiveTab: this.state.setActiveTab,
+			setActiveTabTopLevel: this.setActiveTabTopLevel,
 			maxLengthForMultiLineControls: this.state.maxLengthForMultiLineControls,
 			maxLengthForSingleLineControls: this.state.maxLengthForSingleLineControls,
 			selectedPropertiesDropdownFile: this.state.selectedPropertiesDropdownFile,
