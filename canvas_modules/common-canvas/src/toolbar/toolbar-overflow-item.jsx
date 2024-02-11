@@ -39,7 +39,7 @@ class ToolbarOverflowItem extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if (this.props.toolbarFocusAction === this.props.action && this.props.isFocusInToolbar) {
+		if (this.props.toolbarFocusAction === this.props.action && this.props.isFocusInToolbar && !this.state.showExtendedMenu) {
 			this.buttonRef.current.focus();
 		}
 	}
@@ -59,6 +59,10 @@ class ToolbarOverflowItem extends React.Component {
 		this.setState({ showExtendedMenu: false });
 	}
 
+	openSubMenu() {
+		this.setState({ showExtendedMenu: true });
+	}
+
 	genOverflowButtonClassName() {
 		return "toolbar-overflow-container " + this.genIndexClassName() + " " + this.genUuidClassName();
 	}
@@ -71,36 +75,23 @@ class ToolbarOverflowItem extends React.Component {
 		return "toolbar-uuid-" + this.uuid;
 	}
 
+	// When the overflow item is clicked to open the overflow menu we must set the
+	// index of the overflow items so the overflow menu can be correctly constructed.
+	// The overflow index values are used to split out the overflow menu action items
+	// from the left bar and right bar.
+	// When the overflow menu is closed we set the overflow index values to null.
 	toggleExtendedMenu() {
 		if (this.state.showExtendedMenu) {
 			document.removeEventListener("click", this.clickOutside, false);
+			this.props.setOverflowIndex(null); // Clear the indexes
+			this.closeSubMenu();
+			this.props.setToolbarFocus();
+
 		} else {
 			document.addEventListener("click", this.clickOutside, false);
+			this.props.setOverflowIndex(this.props.index);
+			this.openSubMenu();
 		}
-
-		if (this.props.setResizeHandler) {
-			if (this.state.showExtendedMenu) {
-				this.props.setResizeHandler(null);
-			} else {
-				this.props.setResizeHandler(() => {
-					this.setState({ showExtendedMenu: false });
-				});
-			}
-		}
-
-		// When the overflow item is clicked to open the overflow menu we must set the
-		// index of the overflow items so the overflow menu can be correctly constructed.
-		// The overflow index values are used to split out the overflow menu action items
-		// from the left bar and right bar.
-		// When the overflow menu is closed we set the overflow index values to null.
-		if (!this.state.showExtendedMenu) {
-			this.subMenu = this.props.setOverflowIndex(this.props.index);
-		} else {
-			this.subMenu = this.props.setOverflowIndex(null); // Clear the indexes
-		}
-
-		this.props.setFocusAction(this.props.action);
-		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
 	}
 
 	clickOutside(evt) {
@@ -122,15 +113,17 @@ class ToolbarOverflowItem extends React.Component {
 			overflowMenu = (
 				<ToolbarSubMenu
 					ref={this.subMenuRef}
-					subMenu={this.props.subMenuActions}
-					generateSubMenuItems={this.props.generateSubMenuItems}
+					subMenuActions={this.props.subMenuActions}
+					instanceId={this.props.instanceId}
+					toolbarActionHandler={this.props.toolbarActionHandler}
 					closeSubArea={this.closeSubMenu}
-					closeSubAreaOnClick={false}
+					setToolbarFocus={this.props.setToolbarFocus}
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
 					parentSelector={".toolbar-overflow-container"}
 					isCascadeMenu={false}
+					size={this.props.size}
 				/>
 			);
 		}
@@ -138,7 +131,7 @@ class ToolbarOverflowItem extends React.Component {
 		const tabIndex = this.props.toolbarFocusAction === this.props.action ? 0 : -1;
 
 		return (
-			<div className={this.genOverflowButtonClassName()} data-toolbar-action={this.props.action} onKeyDown={this.props.onKeyDown}>
+			<div className={this.genOverflowButtonClassName()} data-toolbar-action={this.props.action}>
 				<div className={"toolbar-overflow-item"}>
 					<Button
 						ref={this.buttonRef}
@@ -168,12 +161,11 @@ ToolbarOverflowItem.propTypes = {
 	size: PropTypes.oneOf(["md", "sm"]),
 	subMenuActions: PropTypes.array,
 	setOverflowIndex: PropTypes.func,
-	generateSubMenuItems: PropTypes.func,
-	setResizeHandler: PropTypes.func,
+	toolbarActionHandler: PropTypes.func,
+	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
-	onKeyDown: PropTypes.func,
 	toolbarFocusAction: PropTypes.string,
-	setFocusAction: PropTypes.func,
+	setToolbarFocus: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool
 };
 

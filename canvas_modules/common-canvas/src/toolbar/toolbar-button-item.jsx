@@ -53,7 +53,7 @@ class ToolbarButtonItem extends React.Component {
 
 	componentDidUpdate() {
 		if (this.props.isFocusInToolbar &&
-				this.props.toolbarFocusAction === this.props.actionObj.action) {
+				this.props.buttonFocusAction === this.props.actionObj.action) {
 			this.buttonRef.current.focus();
 		}
 	}
@@ -211,7 +211,7 @@ class ToolbarButtonItem extends React.Component {
 		// Only specify an aria label for the button if a label is not displayed
 		// with the button icon.
 		const ariaLabel = actionObj.incLabelWithIcon ? null : actionObj.label;
-		const tabIndex = this.props.toolbarFocusAction === actionObj.action ? 0 : -1;
+		const tabIndex = this.props.buttonFocusAction === actionObj.action ? 0 : -1;
 
 		const button = (
 			<Button kind={kind}
@@ -346,7 +346,7 @@ ToolbarButtonItem.propTypes = {
 	isInMenu: PropTypes.bool,
 	subAreaDisplayed: PropTypes.bool,
 	actionClickHandler: PropTypes.func,
-	toolbarFocusAction: PropTypes.string,
+	buttonFocusAction: PropTypes.string,
 	isFocusInToolbar: PropTypes.bool,
 	size: PropTypes.oneOf(["md", "sm"])
 };

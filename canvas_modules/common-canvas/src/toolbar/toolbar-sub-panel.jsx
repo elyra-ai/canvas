@@ -39,14 +39,13 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	onClick() {
-		if (this.props.closeSubArea && this.props.closeSubAreaOnClick) {
-			this.props.closeSubArea();
-		}
+		this.props.closeSubArea();
 	}
 
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.props.closeSubArea();
+			evt.stopPropagation();
 		}
 	}
 
@@ -73,7 +72,7 @@ ToolbarSubPanel.propTypes = {
 	subPanel: PropTypes.any,
 	subPanelData: PropTypes.object,
 	closeSubArea: PropTypes.func,
-	closeSubAreaOnClick: PropTypes.bool.isRequired,
+	setToolbarFocus: PropTypes.func,
 	actionItemRect: PropTypes.object.isRequired,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string

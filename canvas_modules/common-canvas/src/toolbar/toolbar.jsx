@@ -22,6 +22,7 @@ import ToolbarActionItem from "./toolbar-action-item.jsx";
 import ToolbarOverflowItem from "./toolbar-overflow-item.jsx";
 import ToolbarDividerItem from "./toolbar-divider-item.jsx";
 
+const ESC_KEY = 27;
 const LEFT_ARROW_KEY = 37;
 const RIGHT_ARROW_KEY = 39;
 
@@ -32,8 +33,13 @@ class Toolbar extends React.Component {
 		// this.state.focusAction keeps track of which item has focus.
 		// This is used to ensure the focus goes to the same item that was
 		// previously focused when focus was lost (blurred) from the toolbar
+		// Index values (leftOverflowIndex and rightOverflowIndex) are used
+		// to keep track of how the left and right bar arrays
+		// should be split to be able to create the overflow menu.
 		this.state = {
-			focusAction: "toolbar"
+			focusAction: "toolbar",
+			leftOverflowIndex: null,
+			rightOverflowIndex: null,
 		};
 
 		// Keeps track of whether the focus is on the toolbar or not. We should
@@ -55,21 +61,14 @@ class Toolbar extends React.Component {
 		// Reference for the toolbar <div>
 		this.toolbarRef = React.createRef();
 
-		// Index values to keep track of how the left and right bar arrays
-		// should be split to be able to create the overflow menu.
-		this.leftOverflowIndex = null;
-		this.rightOverflowIndex = null;
-
-		this.resizeHandler = null;
 		this.onFocus = this.onFocus.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onToolbarResize = this.onToolbarResize.bind(this);
 		this.setOverflowIndex = this.setOverflowIndex.bind(this);
-		this.generateSubMenuItems = this.generateSubMenuItems.bind(this);
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
-		this.setResizeHandler = this.setResizeHandler.bind(this);
+		this.setCurrentFocus = this.setCurrentFocus.bind(this);
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -100,8 +99,9 @@ class Toolbar extends React.Component {
 			if (this.state.focusAction === "toolbar") {
 				this.setFocusOnFirstItem();
 
+
 			} else {
-				this.setFocusAction(this.state.focusAction);
+				this.setCurrentFocus();
 			}
 		}
 	}
@@ -117,7 +117,10 @@ class Toolbar extends React.Component {
 	// toolbar items. We set the focusAction appropriately based on if
 	// the left or right arrow key is pressed.
 	onKeyDown(evt) {
-		if (evt.keyCode === LEFT_ARROW_KEY) {
+		if (evt.keyCode === ESC_KEY) {
+			this.setCurrentFocus();
+
+		} else if (evt.keyCode === LEFT_ARROW_KEY) {
 			this.setFocusOnPreviousItem();
 
 		} else if (evt.keyCode === RIGHT_ARROW_KEY) {
@@ -132,28 +135,16 @@ class Toolbar extends React.Component {
 		evt.preventDefault();
 	}
 
-	// When the toolbar is resized we call any resizeHandler we currently have
-	// This will be used to close either the overflow menu or any other
-	// 'sub-area' that has been opened as a result of clicking a toolbar item.
-	// (We close the menu or sub-area because it is easier than trying to move
-	// it based on the new toolbar width). In additon, we move the focusAction
-	// to be on the first toolbar item, because reducing the width of the toolbar
-	// might make the currently focused toolbar item move into the overflow menu.
+	// When the toolbar resizes, check each toolbar item to see if it has
+	// a sub-menu open and, if it does, close it.
 	onToolbarResize() {
-		if (this.resizeHandler) {
-			this.resizeHandler();
-		}
+		this.leftItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
+		this.rightItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
+		this.overflowItemRefs.forEach((ref) => this.closeOverflowMenuOnRef(ref));
 
-		if (this.state.focusAction !== "toolbar") {
+		if (this.isFocusInToolbar) {
 			this.setFocusOnFirstItem();
 		}
-	}
-
-	// Allows the overflow item or action item to set a function that will be
-	// called when the toolbar is resized. This function causes the menu that
-	// is currently open to be closed.
-	setResizeHandler(resizeHandler) {
-		this.resizeHandler = resizeHandler;
 	}
 
 	setFocusOnFirstItem() {
@@ -161,6 +152,17 @@ class Toolbar extends React.Component {
 		if (focusableItemRefs.length > 0) {
 			const firstFocusAction = this.getRefAction(focusableItemRefs[0]);
 			this.setFocusAction(firstFocusAction);
+		}
+	}
+
+	// Returns focus back to the current focus toolbar item after focus has
+	// been moved elsewhere.
+	setCurrentFocus() {
+		const focusableItemRefs = this.getFocusableItemRefs();
+		if (focusableItemRefs.length > 0) {
+			// TODO - look to see if action is disabled or not and setto one nearby.
+			// const firstFocusAction = this.getRefAction(this.state.focusAction);
+			this.setFocusAction(this.state.focusAction);
 		}
 	}
 
@@ -285,11 +287,15 @@ class Toolbar extends React.Component {
 	// toolbar.
 	setOverflowIndex(leftIndex) {
 		if (leftIndex === null) {
-			this.leftOverflowIndex = null;
-			this.rightOverflowIndex = null;
+			this.setState({
+				leftOverflowIndex: null,
+				rightOverflowIndex: null
+			});
 		} else {
-			this.leftOverflowIndex = leftIndex;
-			this.rightOverflowIndex = this.getRightOverflowIndex();
+			this.setState({
+				leftOverflowIndex: leftIndex,
+				rightOverflowIndex: this.getRightOverflowIndex()
+			});
 		}
 	}
 
@@ -329,20 +335,6 @@ class Toolbar extends React.Component {
 		return rect.top;
 	}
 
-	// Generates an array of JSX objects for a sub-menu defined by the menuActions
-	// parameter array.
-	generateSubMenuItems(menuActions, focusAction, onKeyDown) {
-		const newItems = [];
-
-		for (let i = 0; i < menuActions.length; i++) {
-			const actionObj = menuActions[i];
-			if (actionObj) {
-				newItems.push(this.generateToolbarItem(actionObj, i, true, focusAction, onKeyDown));
-			}
-		}
-		return newItems;
-	}
-
 	// Generates an array of toolbar items from the toolbarActions array passed in. When
 	// withOverflowItem is true, which it is for the left bar, we also add an overflow item,
 	// inside an overflow item container, for each left toolbar action. As the canvas is made
@@ -350,22 +342,21 @@ class Toolbar extends React.Component {
 	// the overflow item, associated with the last wrapped action item, is revealed.
 	generateToolbarItems(toolbarActions, withOverflowItem, refs) {
 		const newItems = [];
-		const isInMenu = false;
 
 		for (let i = 0; i < toolbarActions.length; i++) {
 			const actionObj = toolbarActions[i];
 			if (actionObj) {
 				if (!actionObj.divider && withOverflowItem) {
-					newItems.push(this.generateOverflowItem(i, actionObj.action, this.state.focusAction));
+					newItems.push(this.generateOverflowItem(i, actionObj.action));
 				}
-				newItems.push(this.generateToolbarItem(actionObj, i, isInMenu, this.state.focusAction, this.onKeyDown, refs));
+				newItems.push(this.generateToolbarItem(actionObj, i, refs));
 			}
 		}
 		return newItems;
 	}
 
 	// Returns JSX for a toolbar item based on the actionObj passed in.
-	generateToolbarItem(actionObj, i, isInMenu, focusAction, onKeyDown, refs) {
+	generateToolbarItem(actionObj, i, refs) {
 		let jsx = null;
 
 		if (actionObj) {
@@ -373,7 +364,7 @@ class Toolbar extends React.Component {
 				jsx = (
 					<ToolbarDividerItem
 						key={"toolbar-item-key-" + i}
-						isInMenu={isInMenu}
+						isInMenu={false}
 					/>
 				);
 			} else {
@@ -388,14 +379,10 @@ class Toolbar extends React.Component {
 						actionObj={actionObj}
 						tooltipDirection={this.props.tooltipDirection}
 						toolbarActionHandler={this.props.toolbarActionHandler}
-						generateSubMenuItems={this.generateSubMenuItems}
-						isInMenu={isInMenu}
 						instanceId={this.props.instanceId}
-						setResizeHandler={this.setResizeHandler}
 						containingDivId={this.props.containingDivId}
-						onKeyDown={onKeyDown}
-						toolbarFocusAction={focusAction}
-						setFocusAction={this.setFocusAction}
+						toolbarFocusAction={this.state.focusAction}
+						setToolbarFocus={this.setCurrentFocus}
 						isFocusInToolbar={this.isFocusInToolbar}
 						size={this.props.size}
 					/>
@@ -406,10 +393,10 @@ class Toolbar extends React.Component {
 	}
 
 	// Returns JSX for an overflow toolbar item based on the index and action passed in.
-	generateOverflowItem(index, action, focusAction) {
+	generateOverflowItem(index, action) {
 		const label = this.props.additionalText ? this.props.additionalText.overflowMenuLabel : "";
 		const overflowAction = this.getOverflowAction(action);
-		const subMenuActions = this.createSubMenuActions(index);
+		const subMenuActions = index === this.state.leftOverflowIndex ? this.createSubMenuActions() : [];
 
 		// Create a ref for the overflow item to add to array of references to
 		// all overflow items.
@@ -426,12 +413,11 @@ class Toolbar extends React.Component {
 				size={this.props.size}
 				subMenuActions={subMenuActions}
 				setOverflowIndex={this.setOverflowIndex}
-				generateSubMenuItems={this.generateSubMenuItems}
-				setResizeHandler={this.setResizeHandler}
+				toolbarActionHandler={this.props.toolbarActionHandler}
+				instanceId={this.props.instanceId}
 				containingDivId={this.props.containingDivId}
-				onKeyDown={this.onKeyDown}
-				toolbarFocusAction={focusAction}
-				setFocusAction={this.setFocusAction}
+				toolbarFocusAction={this.state.focusAction}
+				setToolbarFocus={this.setCurrentFocus}
 				isFocusInToolbar={this.isFocusInToolbar}
 			/>
 		);
@@ -441,18 +427,28 @@ class Toolbar extends React.Component {
 
 	// Returns an array of overflow menu actions that should be displayed in
 	// the overflow menu for the overflow item indicated by the index passed in.
-	// This uses this.leftOverflowIndex and this.rightOverflowIndex which are
+	// This uses this.state.leftOverflowIndex and this.state.rightOverflowIndex which are
 	// set when the user clicks on a particular overflow item in the toolbar.
-	createSubMenuActions(index) {
-		let subMenuActions = null;
-		if (index === this.leftOverflowIndex) {
-			const l = this.leftBar.slice(this.leftOverflowIndex);
-			const r = this.rightBar.slice(this.rightOverflowIndex).reverse();
-			subMenuActions = l.concat(r);
-		}
+	createSubMenuActions() {
+		let subMenuActions = [];
+		const l = this.leftBar.slice(this.state.leftOverflowIndex);
+		const r = this.rightBar.slice(this.state.rightOverflowIndex).reverse();
+		subMenuActions = l.concat(r);
+
 		return subMenuActions;
 	}
 
+	closeSubMenuOnRef(ref) {
+		if (ref.current.state.subAreaDisplayed) {
+			ref.current.closeSubArea();
+		}
+	}
+
+	closeOverflowMenuOnRef(ref) {
+		if (ref.current.state.showExtendedMenu) {
+			ref.current.closeSubMenu();
+		}
+	}
 
 	render() {
 		this.leftBar = this.props.config.leftBar || [];
@@ -473,7 +469,7 @@ class Toolbar extends React.Component {
 		const canvasToolbar = (
 			<ReactResizeDetector handleWidth onResize={this.onToolbarResize}>
 				<div ref={this.toolbarRef} className={toolbarSizeClass} instanceid={this.props.instanceId}
-					tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur}
+					tabIndex={tabIndex} onFocus={this.onFocus} onBlur={this.onBlur} onKeyDown={this.onKeyDown}
 				>
 					<div className="toolbar-left-bar" onScroll={this.onScroll}>
 						{leftItems}

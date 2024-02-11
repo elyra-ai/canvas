@@ -56,7 +56,7 @@ $toolbar-divider-width: 1px;
 			height: $toolbar-button-sm-height;
 		}
 
-		.toolbar-overflow-menu-item {
+		.toolbar-sub-menu-item {
 			height: fit-content;
 		}
 
@@ -172,7 +172,7 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-overflow-menu-item {
+.toolbar-sub-menu-item {
 	& button {
 		width: 100%;
 		padding-top: 0;
@@ -270,7 +270,7 @@ $toolbar-divider-width: 1px;
 	padding: 0;
 }
 
-.toolbar-overflow-jsx-item {
+.toolbar-sub-menu-jsx-item {
 	width: 100%;
 	height: 38px;
 	display: inline-flex;
