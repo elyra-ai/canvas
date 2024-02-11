@@ -169,7 +169,7 @@ class ToolbarSubMenu extends React.Component {
 						instanceId={this.props.instanceId}
 						containingDivId={this.props.containingDivId}
 						subMenuFocusAction={this.state.focusAction}
-						setToolbarFocus={this.props.setToolbarFocus}
+						setToolbarFocusAction={this.props.setToolbarFocusAction}
 						setSubMenuFocus={this.props.setSubMenuFocus ? this.props.setSubMenuFocus : this.setSubMenuFocus}
 						size={this.props.size}
 						isInCascadeMenu
@@ -205,7 +205,7 @@ ToolbarSubMenu.propTypes = {
 	instanceId: PropTypes.number.isRequired,
 	toolbarActionHandler: PropTypes.func,
 	closeSubArea: PropTypes.func,
-	setToolbarFocus: PropTypes.func,
+	setToolbarFocusAction: PropTypes.func,
 	setSubMenuFocus: PropTypes.func,
 	actionItemRect: PropTypes.object.isRequired,
 	expandDirection: PropTypes.string.isRequired,

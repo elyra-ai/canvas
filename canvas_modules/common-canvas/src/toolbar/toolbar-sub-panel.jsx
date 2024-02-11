@@ -72,7 +72,7 @@ ToolbarSubPanel.propTypes = {
 	subPanel: PropTypes.any,
 	subPanelData: PropTypes.object,
 	closeSubArea: PropTypes.func,
-	setToolbarFocus: PropTypes.func,
+	setToolbarFocusAction: PropTypes.func,
 	actionItemRect: PropTypes.object.isRequired,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string

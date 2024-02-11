@@ -85,12 +85,13 @@ class ToolbarOverflowItem extends React.Component {
 			document.removeEventListener("click", this.clickOutside, false);
 			this.props.setOverflowIndex(null); // Clear the indexes
 			this.closeSubMenu();
-			this.props.setToolbarFocus();
+			this.props.setToolbarFocusAction(this.props.action); // This will not set focus on this item
 
 		} else {
 			document.addEventListener("click", this.clickOutside, false);
 			this.props.setOverflowIndex(this.props.index);
 			this.openSubMenu();
+			this.props.setToolbarFocusAction(this.props.action);
 		}
 	}
 
@@ -117,7 +118,7 @@ class ToolbarOverflowItem extends React.Component {
 					instanceId={this.props.instanceId}
 					toolbarActionHandler={this.props.toolbarActionHandler}
 					closeSubArea={this.closeSubMenu}
-					setToolbarFocus={this.props.setToolbarFocus}
+					setToolbarFocusAction={this.props.setToolbarFocusAction}
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
@@ -165,7 +166,7 @@ ToolbarOverflowItem.propTypes = {
 	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
 	toolbarFocusAction: PropTypes.string,
-	setToolbarFocus: PropTypes.func,
+	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool
 };
 

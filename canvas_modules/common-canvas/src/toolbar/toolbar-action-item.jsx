@@ -96,7 +96,7 @@ class ToolbarActionItem extends React.Component {
 			if (this.state.subAreaDisplayed) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
-				this.props.setToolbarFocus();
+				this.props.setToolbarFocusAction(this.props.actionObj.action);
 
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
@@ -105,7 +105,7 @@ class ToolbarActionItem extends React.Component {
 
 		} else {
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
-			this.props.setToolbarFocus();
+			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
 	}
 
@@ -126,7 +126,7 @@ class ToolbarActionItem extends React.Component {
 					subPanel={this.props.actionObj.subPanel}
 					subPanelData={this.props.actionObj.subPanelData}
 					closeSubArea={this.closeSubArea}
-					setToolbarFocus={this.props.setToolbarFocus}
+					setToolbarFocusAction={this.props.setToolbarFocusAction}
 					actionItemRect={actionItemRect}
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
@@ -139,7 +139,7 @@ class ToolbarActionItem extends React.Component {
 				instanceId={this.props.instanceId}
 				toolbarActionHandler={this.props.toolbarActionHandler}
 				closeSubArea={this.closeSubArea}
-				setToolbarFocus={this.props.setToolbarFocus}
+				setToolbarFocusAction={this.props.setToolbarFocusAction}
 				actionItemRect={actionItemRect}
 				expandDirection={"vertical"}
 				containingDivId={this.props.containingDivId}
@@ -235,7 +235,7 @@ ToolbarActionItem.propTypes = {
 	containingDivId: PropTypes.string,
 	closeParentSubArea: PropTypes.func,
 	toolbarFocusAction: PropTypes.string,
-	setToolbarFocus: PropTypes.func,
+	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool,
 	size: PropTypes.oneOf(["md", "sm"])
 };

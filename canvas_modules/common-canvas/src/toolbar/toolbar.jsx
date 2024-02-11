@@ -68,7 +68,7 @@ class Toolbar extends React.Component {
 		this.setOverflowIndex = this.setOverflowIndex.bind(this);
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
-		this.setCurrentFocus = this.setCurrentFocus.bind(this);
+		this.setFocusOnItem = this.setFocusOnItem.bind(this);
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -101,7 +101,7 @@ class Toolbar extends React.Component {
 
 
 			} else {
-				this.setCurrentFocus();
+				this.setFocusOnItem(); // Reset focus on current focusAction.
 			}
 		}
 	}
@@ -114,11 +114,11 @@ class Toolbar extends React.Component {
 	}
 
 	// This is called when the user presses a key with focus on one of the
-	// toolbar items. We set the focusAction appropriately based on if
-	// the left or right arrow key is pressed.
+	// toolbar items. We set the focusAction appropriately based on which
+	// key is pressed.
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
-			this.setCurrentFocus();
+			this.setFocusOnItem(); // Reset focus on current focusAction.
 
 		} else if (evt.keyCode === LEFT_ARROW_KEY) {
 			this.setFocusOnPreviousItem();
@@ -147,22 +147,24 @@ class Toolbar extends React.Component {
 		}
 	}
 
+	// Either sets the focus on the item for the action passed in or, if
+	// no action is passed in, set the focus on the current focusAction.
+	// Setting the current focusAction is used to return focus back to an
+	// item after focus has been moved elsewhere, such as onto a sub-menu
+	// or out of the toolbar completely.
+	setFocusOnItem(action) {
+		const actionToSet = action || this.state.focusAction;
+		const focusableItemRefs = this.getFocusableItemRefs();
+		if (focusableItemRefs.length > 0) {
+			this.setFocusAction(actionToSet);
+		}
+	}
+
 	setFocusOnFirstItem() {
 		const focusableItemRefs = this.getFocusableItemRefs();
 		if (focusableItemRefs.length > 0) {
 			const firstFocusAction = this.getRefAction(focusableItemRefs[0]);
 			this.setFocusAction(firstFocusAction);
-		}
-	}
-
-	// Returns focus back to the current focus toolbar item after focus has
-	// been moved elsewhere.
-	setCurrentFocus() {
-		const focusableItemRefs = this.getFocusableItemRefs();
-		if (focusableItemRefs.length > 0) {
-			// TODO - look to see if action is disabled or not and setto one nearby.
-			// const firstFocusAction = this.getRefAction(this.state.focusAction);
-			this.setFocusAction(this.state.focusAction);
 		}
 	}
 
@@ -382,7 +384,7 @@ class Toolbar extends React.Component {
 						instanceId={this.props.instanceId}
 						containingDivId={this.props.containingDivId}
 						toolbarFocusAction={this.state.focusAction}
-						setToolbarFocus={this.setCurrentFocus}
+						setToolbarFocusAction={this.setFocusOnItem}
 						isFocusInToolbar={this.isFocusInToolbar}
 						size={this.props.size}
 					/>
@@ -417,7 +419,7 @@ class Toolbar extends React.Component {
 				instanceId={this.props.instanceId}
 				containingDivId={this.props.containingDivId}
 				toolbarFocusAction={this.state.focusAction}
-				setToolbarFocus={this.setCurrentFocus}
+				setToolbarFocusAction={this.setFocusOnItem}
 				isFocusInToolbar={this.isFocusInToolbar}
 			/>
 		);
