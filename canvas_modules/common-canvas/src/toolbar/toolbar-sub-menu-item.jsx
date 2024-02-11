@@ -154,7 +154,7 @@ class ToolbarSubMenuItem extends React.Component {
 
 		const itemClassName = classNames(
 			{ "toolbar-sub-menu-item": true,
-				"toolbar-overflow-jsx-item": actionObj.jsx,
+				"toolbar-sub-menu-jsx-item": actionObj.jsx,
 				"toolbar-item-selected": actionObj.isSelected },
 			kindAsClass,
 			actionName);
