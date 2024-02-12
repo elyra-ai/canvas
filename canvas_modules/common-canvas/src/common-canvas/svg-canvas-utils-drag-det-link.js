@@ -168,12 +168,19 @@ export default class SVGCanvasUtilsDragDetLink {
 			// If editSubType is set the user did a gesture that requires a change
 			// to the object model.
 			if (editSubType) {
-				this.ren.canvasController.editActionHandler({
+				const success = this.ren.canvasController.editActionHandler({
 					editType: "updateLink",
 					editSubType: editSubType,
 					editSource: "canvas",
 					newLink: newLink,
 					pipelineId: this.ren.activePipeline.id });
+
+				// The call to editActionHandler might "fail" if the host app
+				// uses beforeEditActionHandler to cancel the edit action. In
+				//  this case, we snap the link back to its old position.
+				if (!success) {
+					this.snapBackOldLink(draggingLinkData.oldLink);
+				}
 			// If editSubType is null, the user performed a gesture which should
 			// not be executed as an action so draw the link back in its old position.
 			} else {

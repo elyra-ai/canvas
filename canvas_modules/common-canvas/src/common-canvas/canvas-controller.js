@@ -2168,6 +2168,11 @@ export default class CanvasController {
 		}
 	}
 
+	// Performs edit actions, based on the cmndData passed in, to the object
+	// model which result in changes to the displayed canvas. Returns true if
+	// the action completes successfully and false if it does not complete,
+	// for example, if the host application cancels the action by returning
+	// false from the beforeEditActionHanlder.
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
@@ -2203,17 +2208,17 @@ export default class CanvasController {
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
 			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
-				return;
+				return false;
 			}
 			// If an external pipeline flow was requested, we need to make sure it
 			// was provided by the host app. We can't proceed if it was not.
 			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
-				return;
+				return false;
 			}
 		}
 
 		// Now preprocessing is complete, execuete the action itself.
-		this.editAction(data);
+		return this.editAction(data);
 	}
 
 	// Performs the edit action using the 'data' parameter, which contains the
@@ -2232,7 +2237,7 @@ export default class CanvasController {
 		// 'delete' is pressed on the keyboard.
 		if (data.editType === "deleteSelectedObjects" &&
 				data.selectedObjectIds.length === 0) {
-			return;
+			return false;
 		}
 
 		// These commands are supported for the external AND internal object models.
@@ -2561,6 +2566,8 @@ export default class CanvasController {
 		// pipeline visible they will be loaded one by one when this check is
 		// encountered.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+
+		return true;
 	}
 
 	// Sets the appropriate values when handling an external pipleine flow
