@@ -53,6 +53,18 @@ class ToolbarSubMenu extends React.Component {
 		}
 	}
 
+	componentDidUpdate() {
+		if (this.state.focusAction !== "subarea") {
+			const actionObj = this.props.subMenuActions.find((sma) => sma.action === this.state.focusAction);
+			if (!actionObj.enable) {
+				const actionToSet = this.getClosestEnabledAction(this.state.focusAction);
+				if (actionToSet !== "") {
+					this.setFocusAction(actionToSet);
+				}
+			}
+		}
+	}
+
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.props.closeSubArea();
@@ -101,8 +113,30 @@ class ToolbarSubMenu extends React.Component {
 		this.setState({ focusAction });
 	}
 
-	setSubMenuFocus() {
-		this.setFocusAction(this.state.focusAction);
+	setSubMenuFocus(action) {
+		const actionToSet = action || this.state.focusAction;
+		this.setFocusAction(actionToSet);
+	}
+
+	getClosestEnabledAction(action) {
+		const index = this.props.subMenuActions.findIndex((sma) => sma.action === action);
+		let newAction = null;
+		let indexUp = index + 1;
+		let indexDown = index - 1;
+
+		while ((indexDown > -1 || indexUp < this.props.subMenuActions.length) && newAction === null) {
+			if (indexDown > -1 && this.props.subMenuActions[indexDown].enable) {
+				newAction = this.props.subMenuActions[indexDown].action;
+			} else {
+				indexDown--;
+			}
+			if (indexUp < this.props.subMenuActions.length && this.props.subMenuActions[indexUp].enable) {
+				newAction = this.props.subMenuActions[indexUp].action;
+			} else {
+				indexUp++;
+			}
+		}
+		return newAction;
 	}
 
 	getFocusableActions() {
@@ -172,7 +206,8 @@ class ToolbarSubMenu extends React.Component {
 						setToolbarFocusAction={this.props.setToolbarFocusAction}
 						setSubMenuFocus={this.props.setSubMenuFocus ? this.props.setSubMenuFocus : this.setSubMenuFocus}
 						size={this.props.size}
-						isInCascadeMenu
+						isInOverflowMenu={this.props.isOverflowMenu}
+						isInCascadeMenu={this.props.isCascadeMenu}
 					/>
 				);
 			}
@@ -190,7 +225,7 @@ class ToolbarSubMenu extends React.Component {
 
 			return (
 				<div ref={this.areaRef} style={style} className={"toolbar-popover-list submenu"}
-					onClick={this.onClick} tabIndex={-1} onFocus={this.onFocus} onKeyDown={this.onKeyDown}
+					tabIndex={-1} onKeyDown={this.onKeyDown}
 				>
 					{this.subMenuItems}
 				</div>
@@ -211,6 +246,7 @@ ToolbarSubMenu.propTypes = {
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string,
 	parentSelector: PropTypes.string,
+	isOverflowMenu: PropTypes.bool,
 	isCascadeMenu: PropTypes.bool,
 	size: PropTypes.oneOf(["md", "sm"])
 };

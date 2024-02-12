@@ -123,6 +123,7 @@ class ToolbarOverflowItem extends React.Component {
 					expandDirection={"vertical"}
 					containingDivId={this.props.containingDivId}
 					parentSelector={".toolbar-overflow-container"}
+					isOverflowMenu
 					isCascadeMenu={false}
 					size={this.props.size}
 				/>

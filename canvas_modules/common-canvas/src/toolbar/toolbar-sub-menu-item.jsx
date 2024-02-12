@@ -92,12 +92,16 @@ class ToolbarSubMenuItem extends React.Component {
 
 		} else {
 			evt.stopPropagation();
-			this.props.closeParentSubArea();
 			if (this.props.isInCascadeMenu) {
+				this.props.closeParentSubArea();
 				this.props.setSubMenuFocus();
-				evt.stopPropagation();
+
+			} else if (this.props.isInOverflowMenu) {
+				this.props.setSubMenuFocus(this.props.actionObj.action);
+
 			} else {
-				this.props.setToolbarFocusAction(); // Resets the focus action
+				this.props.closeParentSubArea();
+				this.props.setToolbarFocusAction(); // Resets the toolbar focus action
 			}
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 		}
@@ -223,6 +227,7 @@ ToolbarSubMenuItem.propTypes = {
 	subMenuFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
 	setSubMenuFocus: PropTypes.func,
+	isInOverflowMenu: PropTypes.bool,
 	isInCascadeMenu: PropTypes.bool,
 	size: PropTypes.oneOf(["md", "sm"])
 };
