@@ -20,7 +20,14 @@ import Logger from "../logging/canvas-logger.js";
 
 const SPACE_KEY = 32;
 const LEFT_ARROW_KEY = 37;
+const UP_ARROW_KEY = 38;
 const RIGHT_ARROW_KEY = 39;
+const DOWN_ARROW_KEY = 40;
+
+// These values must reflect the layout of the color picker panel
+// decribed by the SCSS/CSS.
+const COLORS_IN_ROW = 6;
+const TOTAL_COLORS = 12;
 
 class ColorPicker extends React.Component {
 	constructor(props) {
@@ -30,7 +37,7 @@ class ColorPicker extends React.Component {
 		this.colorIndex = 0;
 
 		this.refss = [];
-		for (let i = 0; i < 12; i++) {
+		for (let i = 0; i < TOTAL_COLORS; i++) {
 			this.refss.push(React.createRef());
 		}
 		this.onClick = this.onClick.bind(this);
@@ -50,7 +57,7 @@ class ColorPicker extends React.Component {
 		if (evt.keyCode === RIGHT_ARROW_KEY) {
 			evt.stopPropagation();
 			this.colorIndex++;
-			if (this.colorIndex > 11) {
+			if (this.colorIndex > TOTAL_COLORS - 1) {
 				this.colorIndex = 0;
 			}
 
@@ -58,7 +65,21 @@ class ColorPicker extends React.Component {
 			evt.stopPropagation();
 			this.colorIndex--;
 			if (this.colorIndex < 0) {
-				this.colorIndex = 11;
+				this.colorIndex = TOTAL_COLORS - 1;
+			}
+
+		} else if (evt.keyCode === UP_ARROW_KEY) {
+			evt.stopPropagation();
+			this.colorIndex -= COLORS_IN_ROW;
+			if (this.colorIndex < 0) {
+				this.colorIndex += COLORS_IN_ROW;
+			}
+
+		} else if (evt.keyCode === DOWN_ARROW_KEY) {
+			evt.stopPropagation();
+			this.colorIndex += COLORS_IN_ROW;
+			if (this.colorIndex > 11) {
+				this.colorIndex -= COLORS_IN_ROW;
 			}
 
 		} else if (evt.keyCode === SPACE_KEY) {
