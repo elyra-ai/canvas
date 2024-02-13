@@ -83,7 +83,7 @@ import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColu
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import AppSettingsPanel from "./app-x-settings-panel.jsx";
-import AppColorPicker from "./app-x-color-picker.jsx";
+import ColorPicker from "../../../common-canvas/src/color-picker";
 
 
 import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
@@ -2173,7 +2173,7 @@ class App extends React.Component {
 					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
 					{ divider: true },
 					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true,
-						subPanel: AppColorPicker, subPanelData: { colorSelected: (color) => window.alert("Color selected = " + color) } },
+						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
 					{ divider: true },
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
