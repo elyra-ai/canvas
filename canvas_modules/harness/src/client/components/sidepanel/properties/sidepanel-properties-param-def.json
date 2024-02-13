@@ -32,6 +32,7 @@
 		"tableButtonEnabled": true,
 		"staticRowsPropertyId": "{ \"name\": \"parameterName\"}",
 		"staticRowsIndexes": "",
+		"setActiveTab": "",
 		"disableWideFlyoutPrimaryButtonForPanelId": "{ \"name\": \"panelId\"}",
 		"wideFlyoutPrimaryButtonDisabled": false
 	},
@@ -202,6 +203,10 @@
 		},
 		{
 			"id": "staticRowsIndexes",
+			"type": "string"
+		},
+		{
+			"id": "setActiveTab",
 			"type": "string"
 		},
 		{
@@ -533,6 +538,18 @@
 				}
 			},
 			{
+				"parameter_ref": "setActiveTab",
+				"label": {
+					"default": "Set the active tab in top level"
+				},
+				"description": {
+					"default": "Active tab in string format"
+				},
+				"place_holder_text": {
+					"default": ""
+				}
+			},
+			{
 				"parameter_ref": "disableWideFlyoutPrimaryButtonForPanelId",
 				"label": {
 					"default": "setWideFlyoutPrimaryButtonDisabled"
@@ -632,6 +649,21 @@
 					"parameter_ref_id": "staticRowsPropertyId",
 					"parameter_ref_data": "staticRowsIndexes",
 					"actionCallback": "setStaticRows"
+				}
+			},
+			{
+				"id": "submit-active-tabs",
+				"label": {
+					"resource_key": "Submit"
+				},
+				"control": "button",
+				"button": {
+					"kind": "primary",
+					"size": "sm"
+				},
+				"data": {
+					"parameter_ref_data": "setActiveTab",
+					"actionCallback": "setActiveTabTopLevel"
 				}
 			},
 			{
@@ -769,12 +801,26 @@
 							"staticRowsPropertyId",
 							"staticRowsIndexes"
 						]
-					},
+					},		
 					{
 						"id": "static-rows-panel",
 						"type": "actionPanel",
 						"action_refs": [
 							"submit-static-rows"
+						]
+					},
+					{
+						"id": "active-tab-controls",
+						"type": "controls",
+						"parameter_refs": [
+							"setActiveTab"
+						]
+					},
+					{
+						"id": "static-rows-panel",
+						"type": "actionPanel",
+						"action_refs": [
+							"submit-active-tabs"
 						]
 					},
 					{
