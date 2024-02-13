@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { IntlProvider } from "react-intl";
-import { mount } from "enzyme";
+import { mount } from "./mount-utils.js";
 import sinon from "sinon";
 
 

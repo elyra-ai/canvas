@@ -87,7 +87,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (this.props.canvasController.createAutoNode) {
+		if (this.props.canvasController.createAutoNode && !this.isItemDisabled()) {
 			const nodeTemplate = this.props.canvasController.convertNodeTemplate(this.props.nodeTypeInfo.nodeType);
 			this.props.canvasController.createAutoNode(nodeTemplate);
 		}
@@ -233,6 +233,21 @@ class PaletteContentListItem extends React.Component {
 		return highlightedElements;
 	}
 
+	// Returns the class to be applied to the main div for this palette
+	// item depending on whether we are displaying search results (or not)
+	// and if there is a special palette class specified (or not).
+	getMainDivClass() {
+		const paletteClass = this.props.nodeTypeInfo?.nodeType?.app_data?.ui_data?.palette_class_name;
+
+		let mainDivClass = this.props.isDisplaySearchResult
+			? "palette-list-item search-result"
+			: "palette-list-item";
+
+		mainDivClass += (paletteClass ? " " + paletteClass : "");
+
+		return mainDivClass;
+	}
+
 	showFullDescription() {
 		this.setState({ showFullDescription: true });
 	}
@@ -241,14 +256,17 @@ class PaletteContentListItem extends React.Component {
 		this.setState({ showFullDescription: false });
 	}
 
-	imageDrag() {
-		return false;
+	// Returns true if this item is disabled and should not be draggable or double-clicked
+	// from the palette.
+	isItemDisabled() {
+		const disabled = this.props.nodeTypeInfo.nodeType?.app_data?.ui_data?.palette_disabled;
+		return !this.props.isEditingEnabled || disabled;
 	}
 
 	render() {
 		let itemText = null;
 		let labelText = get(this.props, "nodeTypeInfo.nodeType.app_data.ui_data.label", "");
-		let draggable = this.props.isEditingEnabled ? "true" : "false";
+		let draggable = this.isItemDisabled() ? "false" : "true";
 		let icon = null;
 
 		if (has(this.props.nodeTypeInfo.nodeType, "app_data.ui_data.image")) {
@@ -287,9 +305,7 @@ class PaletteContentListItem extends React.Component {
 			icon = (<Icon type={CANVAS_CARBON_ICONS.WARNING_UNFILLED} className="palette-list-item-icon-warning" draggable="false" />);
 		}
 
-		const mainDivClass = this.props.isDisplaySearchResult
-			? "palette-list-item search-result"
-			: "palette-list-item";
+		const mainDivClass = this.getMainDivClass();
 
 		const categoryLabel = this.props.isDisplaySearchResult
 			? (<div className={"palette-list-item-category-label"}>{this.getHighlightedCategoryLabel()}</div>)

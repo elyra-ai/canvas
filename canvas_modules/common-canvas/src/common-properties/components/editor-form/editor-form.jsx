@@ -87,6 +87,9 @@ class EditorForm extends React.Component {
 	}
 
 	_getMessageCountForCategory(tab) {
+		if (!this.props.showAlertsTab) {
+			return null;
+		}
 		if (tab.group === ALERT_TAB_GROUP) {
 			return " (" + this.messages.length + ")";
 		}
@@ -133,6 +136,7 @@ class EditorForm extends React.Component {
 		const tabContent = [];
 		let hasAlertsTab = false;
 		let modalSelected = 0;
+		let hiddenTabs = 0;
 		const nonTearsheetTabs = tabs.filter((t) => t.content.itemType !== ItemType.TEARSHEET);
 		const tearsheetTabs = tabs.filter((t) => t.content.itemType === ItemType.TEARSHEET);
 		const totalTabs = tearsheetTabs.concat(nonTearsheetTabs);
@@ -141,6 +145,7 @@ class EditorForm extends React.Component {
 			const tab = totalTabs[i];
 			const tabState = this.props.controller.getPanelState({ name: tab.group });
 			if (tabState === STATES.HIDDEN) {
+				hiddenTabs++;
 				continue;
 			}
 			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
@@ -195,7 +200,7 @@ class EditorForm extends React.Component {
 				}
 			} else {
 				if (this.props.activeTab === tab.group) {
-					modalSelected = i;
+					modalSelected = i - hiddenTabs; // Adjust the Carbon Tabs index to accomodate hidden tabs
 				}
 				tabContent.push(
 					<Tab
@@ -609,7 +614,7 @@ class EditorForm extends React.Component {
 
 	render() {
 		let uiItems = this.props.controller.getUiItems();
-		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
+		if (this.props.showAlertsTab && !isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs" && uiItems[0].tabs && uiItems[0].tabs.length > 1) {
 			// create a new copy for uiItems object so that alerts are not added multiple times
 			uiItems = cloneDeep(uiItems);
 			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array
@@ -668,6 +673,7 @@ EditorForm.propTypes = {
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
 	categoryView: PropTypes.oneOf([CATEGORY_VIEW.ACCORDIONS, CATEGORY_VIEW.TABS]),
+	showAlertsTab: PropTypes.bool,
 	activeTab: PropTypes.string, // set by redux
 	setActiveTab: PropTypes.func, // set by redux
 	messages: PropTypes.array // set by redux

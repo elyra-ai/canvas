@@ -21,10 +21,6 @@ $canvas-background-color: $ui-background;
 $region-selector-stroke-color: $ui-05;
 $region-selector-fill-color: $ui-03;
 
-// 'Back to previous flow' control colors
-$back-to-previous-flow-box-color: $interactive-01;
-$back-to-previous-flow-box-fill-hover: $ui-03;
-
 // Node colors
 $node-body-stroke: $ui-05;
 $node-body-fill: $ui-01;
@@ -81,8 +77,8 @@ $node-port-input-arrow-connected-fill-color: transparent;
 // Comment colors
 $comment-outline-color: $active-light-ui;
 $comment-outline-hover-color: $inverse-hover-ui;
-$comment-fill-color: $white-0;
-$comment-text-color: $gray-100;
+$comment-fill-color: $ui-01;
+$comment-text-color: $text-01;
 
 // Comment properties
 $comment-text-font-size: 12px;
@@ -152,28 +148,6 @@ $link-highlight-color: $support-04;
 
 .d3-temp-cursor-overlay {
 	fill: transparent;
-}
-
-/* Back to Previous Flow control */
-
-.d3-back-to-previous-flow-box {
-	stroke: $back-to-previous-flow-box-color;
-	fill: $canvas-background-color;
-}
-
-.d3-back-to-previous-flow-box[data-pointer-hover="yes"] {
-	stroke: $back-to-previous-flow-box-color;
-	fill: $back-to-previous-flow-box-fill-hover;
-}
-
-.d3-back-to-previous-flow-text {
-	font-size: 14px;
-	font-weight: 400;
-	fill: $back-to-previous-flow-box-color;
-}
-
-.d3-back-to-previous-flow-box, .d3-back-to-previous-flow-text {
-	cursor: pointer;
 }
 
 /* Ghost div and node used when dragging a node from the palette */
@@ -287,7 +261,7 @@ $link-highlight-color: $support-04;
 	}
 }
 
-/* Node highlight when end of new link line is over, or approaching, the node */
+/* Node selection highlight when end of new link line is over, or approaching, the node */
 
 .d3-node-group[data-new-link-over="yes"] {
 	.d3-node-selection-highlight {
@@ -296,6 +270,28 @@ $link-highlight-color: $support-04;
 		stroke-width: 2;
 		fill: $ui-01;
 		pointer-events: none;
+	}
+}
+
+/* Node branch highlight styles */
+
+.d3-node-group.d3-branch-highlight {
+	.d3-node-body-outline {
+		stroke: $ui-05;
+		stroke-width: 2px;
+		fill: $highlight;
+	}
+
+	.d3-node-label {
+		color: $text-01;
+	}
+}
+
+.d3-node-group.d3-branch-highlight:hover {
+	.d3-node-body-outline {
+		stroke: $ui-05;
+		stroke-width: 2px;
+		fill: $hover-primary;
 	}
 }
 
@@ -635,13 +631,16 @@ $link-highlight-color: $support-04;
 	user-select: none;
 }
 
-@mixin d3-comment-color-overrides($background-color) {
+@mixin d3-comment-color-overrides($background-color, $text-color) {
 	.d3-comment-rect {
 		fill: $background-color;
 	}
+	.d3-comment-text {
+		color: $text-color;
+	}
 	.d3-comment-entry {
 		background-color: $background-color;
-		color: $gray-100;
+		color: $text-color;
 	}
 }
 
@@ -651,40 +650,41 @@ $link-highlight-color: $support-04;
 // assumption is, the user would prefer the color they set in the UI to
 // override any color provided by the host app.
 g.bkg-col-white-0 {
-	@include d3-comment-color-overrides($white-0);
+	// In dark-mode, white-0 will be interpreted as black background with white text.
+	@include d3-comment-color-overrides($ui-01, $text-01);
 }
 g.bkg-col-yellow-20 {
-	@include d3-comment-color-overrides($yellow-20);
+	@include d3-comment-color-overrides($yellow-20, $gray-100);
 }
 g.bkg-col-gray-20 {
-	@include d3-comment-color-overrides($gray-20);
+	@include d3-comment-color-overrides($gray-20, $gray-100);
 }
 g.bkg-col-green-20 {
-	@include d3-comment-color-overrides($green-20);
+	@include d3-comment-color-overrides($green-20, $gray-100);
 }
 g.bkg-col-teal-20 {
-	@include d3-comment-color-overrides($teal-20);
+	@include d3-comment-color-overrides($teal-20, $gray-100);
 }
 g.bkg-col-cyan-20 {
-	@include d3-comment-color-overrides($cyan-20);
+	@include d3-comment-color-overrides($cyan-20, $gray-100);
 }
 g.bkg-col-red-50 {
-	@include d3-comment-color-overrides($red-50);
+	@include d3-comment-color-overrides($red-50, $gray-100);
 }
 g.bkg-col-orange-40 {
-	@include d3-comment-color-overrides($orange-40);
+	@include d3-comment-color-overrides($orange-40, $gray-100);
 }
 g.bkg-col-gray-50 {
-	@include d3-comment-color-overrides($gray-50);
+	@include d3-comment-color-overrides($gray-50, $gray-100);
 }
 g.bkg-col-green-50 {
-	@include d3-comment-color-overrides($green-50);
+	@include d3-comment-color-overrides($green-50, $gray-100);
 }
 g.bkg-col-teal-50 {
-	@include d3-comment-color-overrides($teal-50);
+	@include d3-comment-color-overrides($teal-50, $gray-100);
 }
 g.bkg-col-cyan-50 {
-	@include d3-comment-color-overrides($cyan-50);
+	@include d3-comment-color-overrides($cyan-50, $gray-100);
 }
 
 .d3-comment-selection-highlight {
@@ -891,7 +891,20 @@ g.bkg-col-cyan-50 {
 	}
 }
 
-/* Link styles */
+/* Link styles for branch highlighting */
+
+.d3-link-group.d3-branch-highlight {
+	.d3-link-line {
+		stroke: $inverse-02;
+	}
+}
+
+.d3-link-group.d3-branch-highlight:hover {
+	.d3-link-line {
+		stroke: $inverse-02;
+		stroke-width: 3px;
+	}
+}
 
 // Common styles for all links
 .d3-link-line,

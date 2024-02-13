@@ -18,7 +18,7 @@ import React from "react";
 import OneofselectControl from "../../../src/common-properties/controls/dropdown";
 import propertyUtils from "../../_utils_/property-utils";
 import controlUtils from "../../_utils_/control-utils";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 

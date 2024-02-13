@@ -42,6 +42,9 @@ import {
 	DIRECTION_LEFT_RIGHT,
 	DIRECTION_TOP_BOTTOM,
 	DIRECTION_BOTTOM_TOP,
+	IMAGE_DISPLAY_SVG_INLINE,
+	IMAGE_DISPLAY_LOAD_SVG_TO_DEFS,
+	IMAGE_DISPLAY_SVG_AS_IMAGE,
 	LINK_SELECTION_NONE,
 	LINK_SELECTION_LINK_ONLY,
 	LINK_SELECTION_HANDLES,
@@ -61,7 +64,8 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
-	EXAMPLE_APP_REACT_NODES,
+	EXAMPLE_APP_REACT_NODES_CARBON,
+	EXAMPLE_APP_REACT_NODES_MAPPING,
 	PALETTE_FLYOUT,
 	PALETTE_MODAL,
 	PALETTE_NONE,
@@ -566,6 +570,18 @@ export default class SidePanelForms extends React.Component {
 		</div>
 		);
 
+		var saveToPdf = (<div>
+			<div className="harness-sidepanel-spacer" />
+			<div style={pad}className="harness-sidepanel-save-to-pdf">
+				<Button size="small"
+					onClick={this.props.canvasConfig.saveToPdf}
+				>
+				Save to PDF
+				</Button>
+			</div>
+		</div>
+		);
+
 		var entrySize = { "width": "80px", "minWidth": "80px" };
 
 		var snapToGrid = (<div className="harness-sidepanel-children" id="harness-sidepanel-snap-to-grid-type">
@@ -731,6 +747,32 @@ export default class SidePanelForms extends React.Component {
 				toggled={this.props.getStateValue("selectedAssocLinkCreation")}
 				onToggle={this.setStateValue}
 			/>
+		</div>);
+
+		var enableImageDisplay = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
+			<FormGroup
+				legendText="Enable Image Display"
+			>
+				<RadioButtonGroup
+					className="harness-sidepanel-radio-group"
+					name="selectedImageDisplay" // Set name to corresponding field name in App.js
+					onChange={this.setStateValue}
+					defaultSelected={this.props.getStateValue("selectedImageDisplay")}
+				>
+					<RadioButton
+						value={IMAGE_DISPLAY_SVG_INLINE}
+						labelText={IMAGE_DISPLAY_SVG_INLINE}
+					/>
+					<RadioButton
+						value={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
+						labelText={IMAGE_DISPLAY_LOAD_SVG_TO_DEFS}
+					/>
+					<RadioButton
+						value={IMAGE_DISPLAY_SVG_AS_IMAGE}
+						labelText={IMAGE_DISPLAY_SVG_AS_IMAGE}
+					/>
+				</RadioButtonGroup>
+			</FormGroup>
 		</div>);
 
 		var enableLinkSelection = (<div className="harness-sidepanel-children" id="harness-sidepanel-link-selection">
@@ -1103,8 +1145,12 @@ export default class SidePanelForms extends React.Component {
 						labelText={EXAMPLE_APP_TABLES}
 					/>
 					<RadioButton
-						value={EXAMPLE_APP_REACT_NODES}
-						labelText={EXAMPLE_APP_REACT_NODES}
+						value={EXAMPLE_APP_REACT_NODES_CARBON}
+						labelText={EXAMPLE_APP_REACT_NODES_CARBON}
+					/>
+					<RadioButton
+						value={EXAMPLE_APP_REACT_NODES_MAPPING}
+						labelText={EXAMPLE_APP_REACT_NODES_MAPPING}
 					/>
 					<RadioButton
 						value={EXAMPLE_APP_NONE}
@@ -1541,6 +1587,8 @@ export default class SidePanelForms extends React.Component {
 					{divider}
 					<div className="harness-side-panel-header">Canvas Content</div>
 					{divider}
+					{saveToPdf}
+					{divider}
 					{interactionType}
 					{divider}
 					{snapToGrid}
@@ -1558,6 +1606,8 @@ export default class SidePanelForms extends React.Component {
 					{enableCanvasUnderlay}
 					{divider}
 					<div className="harness-side-panel-header">Operational</div>
+					{divider}
+					{enableImageDisplay}
 					{divider}
 					{enableContextToolbar}
 					{divider}
@@ -1621,6 +1671,7 @@ SidePanelForms.propTypes = {
 		selectedPaletteDropdownFile2: PropTypes.string,
 		setPaletteDropdownSelect: PropTypes.func,
 		setPaletteDropdownSelect2: PropTypes.func,
-		clearSavedZoomValues: PropTypes.func
+		clearSavedZoomValues: PropTypes.func,
+		saveToPdf: PropTypes.func
 	})
 };

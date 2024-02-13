@@ -28,7 +28,7 @@ import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT, CONDITION_MESSAGE_TYP
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { Type, ParamRole, ControlType, ItemType } from "./constants/form-constants";
-import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get } from "lodash";
+import { has, cloneDeep, assign, isEmpty, isEqual, isUndefined, get, difference, merge } from "lodash";
 import Form from "./form/Form";
 import { getConditionOps } from "./ui-conditions/condition-ops/condition-ops";
 import { DEFAULT_LOCALE } from "./constants/constants";
@@ -55,6 +55,7 @@ export default class PropertiesController {
 		this.allowChangeDefinitions = {};
 		this.conditionalDefaultDefinitions = {};
 		this.panelTree = {};
+		this.prevControls = {};
 		this.controls = {};
 		this.actions = {};
 		this.customControls = [];
@@ -130,6 +131,11 @@ export default class PropertiesController {
 		return get(this.propertiesConfig, "locale", DEFAULT_LOCALE);
 	}
 
+	// Return the id of top-level active tab or accordion
+	getTopLevelActiveGroupId() {
+		return this.propertiesStore.getActiveTab();
+	}
+
 	isTearsheetContainer() {
 		return this.propertiesConfig.containerType === "Tearsheet";
 	}
@@ -144,12 +150,13 @@ export default class PropertiesController {
 	//
 	// Form and parsing Methods
 	//
-	setForm(form, intl) {
+	setForm(form, intl, sameParameterDefRendered) {
 		this.form = form;
 		// console.log(JSON.stringify(form, null, 2));
 		this.reactIntl = intl;
 		// set initial property values
 		if (this.form) {
+			this.prevControls = this.controls;
 			this.controls = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
@@ -172,15 +179,20 @@ export default class PropertiesController {
 			}
 			// Set the opening dataset(s), during which multiples are flattened and compound names generated if necessary
 			this.setDatasetMetadata(datasetMetadata);
-			this.setPropertyValues(propertyValues, true); // needs to be after setDatasetMetadata to run conditions
+			this.setPropertyValues(propertyValues, { isInitProps: true }); // needs to be after setDatasetMetadata to run conditions
+			this.differentProperties = [];
+			if (sameParameterDefRendered) {
+				// When a parameterDef is dynamically updated, set difference between old and new controls
+				this.differentProperties = difference(Object.keys(this.controls), Object.keys(this.prevControls));
+			}
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
-			this._addToControlValues();
+			this._addToControlValues(sameParameterDefRendered);
 			// we need to take another pass through to resolve any default values that are parameterRefs.
 			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
 			// default value set in the above loop.
-			this._addToControlValues(true);
+			this._addToControlValues(sameParameterDefRendered, true);
 
 			// set initial values for addRemoveRows, tableButtons in redux
 			this.setInitialAddRemoveRows();
@@ -383,14 +395,20 @@ export default class PropertiesController {
 		parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
-	_addToControlValues(resolveParameterRefs) {
+	_addToControlValues(sameParameterDefRendered, resolveParameterRefs, setDefaults) {
+		const defaultControlValues = {};
 		for (const keyName in this.controls) {
 			if (!has(this.controls, keyName)) {
 				continue;
 			}
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
-			let controlValue = this.getPropertyValue(propertyId);
+			let controlValue;
+			if (setDefaults?.values) {
+				controlValue = setDefaults.values[control.name];
+			} else {
+				controlValue = this.getPropertyValue(propertyId);
+			}
 
 			if (resolveParameterRefs) {
 				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
@@ -409,7 +427,15 @@ export default class PropertiesController {
 					controlValue = PropertyUtils.convertObjectStructureToArray(control.valueDef.isList, control.subControls, controlValue);
 				}
 
-				this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
+				if (setDefaults?.setDefaultValues) {
+					// When setDefaultValues is set, update all default values in a single call
+					defaultControlValues[control.name] = controlValue;
+				} else if (sameParameterDefRendered && !this.differentProperties.includes(control.name)) {
+					// When parameterDef is dynamically updated, don't set INITIAL_LOAD on pre-existing properties
+					this.updatePropertyValue(propertyId, controlValue, true);
+				} else {
+					this.updatePropertyValue(propertyId, controlValue, true, UPDATE_TYPE.INITIAL_LOAD);
+				}
 			} else if (control.controlType === "structureeditor") {
 				if (!controlValue || (Array.isArray(controlValue) && controlValue.length === 0)) {
 					if (Array.isArray(control.defaultRow)) {
@@ -418,6 +444,12 @@ export default class PropertiesController {
 				}
 			}
 		}
+
+		if (setDefaults?.setDefaultValues) {
+			return defaultControlValues;
+		}
+
+		return null;
 	}
 
 	_populateFieldData(controlValue, control) {
@@ -1190,7 +1222,12 @@ export default class PropertiesController {
 		return returnValues;
 	}
 
-	setPropertyValues(values, isInitProps) {
+	/*
+	* options - optional object of config options where
+	*   setDefaultValues: true - set default values from parameter definition
+	*   isInitProps: true - Function is called during initial load. This is only used internally in setForm().
+	*/
+	setPropertyValues(values, options) {
 		let inValues = cloneDeep(values);
 
 		// convert currentParameters of type:object to array values
@@ -1210,9 +1247,15 @@ export default class PropertiesController {
 			}
 		}
 
+		if (options && options.setDefaultValues) {
+			const setDefaults = { values: inValues, setDefaultValues: true };
+			const defaultValues = this._addToControlValues(false, false, setDefaults);
+			inValues = merge(defaultValues, inValues);
+		}
+
 		this.propertiesStore.setPropertyValues(inValues);
 
-		if (isInitProps) {
+		if (options && options.isInitProps) {
 			// Evaluate conditional defaults based on current_parameters upon loading of view
 			// For a given parameter_ref, if multiple conditions evaluate to true only the first one is used.
 			const conditionalDefaultValues = {};
@@ -1243,7 +1286,7 @@ export default class PropertiesController {
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
-					action: ACTIONS.SET_PROPERTIES
+					action: ACTIONS.SET_PROPERTIES // Setting the properties in current_parameters
 				}
 			);
 		}

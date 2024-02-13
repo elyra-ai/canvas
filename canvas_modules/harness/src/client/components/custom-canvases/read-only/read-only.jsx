@@ -76,7 +76,7 @@ export default class ReadOnlyCanvas extends React.Component {
 
 	getConfig() {
 		const config = Object.assign({}, this.props.config, {
-			enableParentClass: "writable",
+			enableParentClass: "read-only",
 			enableNodeFormatType: "Vertical",
 			enableLinkType: "Straight",
 			enableLinkDirection: "LeftRight",
@@ -184,7 +184,7 @@ export default class ReadOnlyCanvas extends React.Component {
 	decorationActionHandler() {
 		this.canvasController.displaySubPipeline({
 			pipelineId: "75ed071a-ba8d-4212-a2ad-41a54198dd6b",
-			pipelineFlowId: "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159"
+			pipelineFlowId: "45634789c3d2-4da7-ab5a-2b9573e5e159"
 		});
 	}
 

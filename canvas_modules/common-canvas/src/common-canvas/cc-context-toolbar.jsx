@@ -17,6 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { findLastIndex } from "lodash";
 import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
@@ -119,7 +120,7 @@ class CommonCanvasContextToolbar extends React.Component {
 	// in the overflowItems array.
 	removeUnnecessaryDividers(items) {
 		const start = items.findIndex((item) => !item.divider);
-		const end = items.findLastIndex((item) => !item.divider);
+		const end = findLastIndex(items, (item) => !item.divider);
 		const trimmedItems = items.slice(start, end + 1);
 
 		const outItems = [];

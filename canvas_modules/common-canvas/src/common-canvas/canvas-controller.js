@@ -118,7 +118,7 @@ export default class CanvasController {
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
 
-		this.highlight = false;
+		this.branchHighlighted = false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -250,11 +250,13 @@ export default class CanvasController {
 	// elyra-ai pipeline-schemas repo. Documents conforming to older versions may be
 	// provided but they will be upgraded to the most recent version.
 	setPipelineFlow(flow) {
+		this.logger.logStartTimer("setPipelineFlow");
 		this.objectModel.setPipelineFlow(flow);
 		// When a pipeline flow is loaded it may have expanded supernodes which
 		// refer to external pipelines and these need to be loaded for the
 		// pipeline to display correctly.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+		this.logger.logEndTimer("setPipelineFlow");
 	}
 
 	// Clears the pipleine flow and displays an empty canvas.
@@ -310,6 +312,11 @@ export default class CanvasController {
 	// newStyle - is a style specification object. See wiki for details.
 	setSubdueStyle(newStyle) {
 		this.objectModel.setSubdueStyle(newStyle);
+	}
+
+	// Unsets all branch highlight flags from all nodes and links in the pipeline flow.
+	unsetAllBranchHighlight() {
+		this.objectModel.unsetAllBranchHighlight();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -484,7 +491,7 @@ export default class CanvasController {
 		this.objectModel.setIsOpenCategory(categoryId, true);
 	}
 
-	// Closes the palette category idetified by the category ID passed in.
+	// Closes the palette category identified by the category ID passed in.
 	closePaletteCategory(categoryId) {
 		this.objectModel.setIsOpenCategory(categoryId, false);
 	}
@@ -705,6 +712,12 @@ export default class CanvasController {
 	//             getPipelineFlow() method is called or not.
 	setObjectsMultiStyle(pipelineObjStyles, temporary) {
 		this.objectModel.setObjectsMultiStyle(pipelineObjStyles, temporary);
+	}
+
+	// Sets the branch highlighting flag on all nodes identified in
+	// the pipelineObjectIds parameter.
+	setObjectsBranchHighlight(pipelineObjectIds) {
+		this.objectModel.setObjectsBranchHighlight(pipelineObjectIds);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1205,11 +1218,18 @@ export default class CanvasController {
 		return this.objectModel.getAPIPipeline(pipelineId).getNodeAssocLinkFromInfo(id1, id2);
 	}
 
-	// Adds links to a pipeline
+	// Adds links to the current links array for a pipeline.
 	// linkList - An array of links
 	// pipelineId - The ID of the pipeline
 	addLinks(linkList, pipelineId) {
 		this.objectModel.getAPIPipeline(pipelineId).addLinks(linkList);
+	}
+
+	// Sets the current links array for a pipeline to the list passed in.
+	// linkList - An array of links to replace the current array.
+	// pipelineId - The ID of the pipeline
+	setLinks(linkList, pipelineId) {
+		this.objectModel.getAPIPipeline(pipelineId).setLinks(linkList);
 	}
 
 	// Deletes a link
@@ -1288,6 +1308,12 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	getLinkStyle(linkId, temporary, pipelineId) {
 		return this.objectModel.getAPIPipeline(pipelineId).getLinkStyle(linkId, temporary);
+	}
+
+	// Sets the branch highlighting flag on all links idetified in
+	// the pipelineLinkIds parameter.
+	setLinksBranchHighlight(pipelineLinkIds) {
+		this.objectModel.setLinksBranchHighlight(pipelineLinkIds);
 	}
 
 	// Sets the decorations on a link. The decorations array passed in
@@ -1403,24 +1429,14 @@ export default class CanvasController {
 	// Highlight methods
 	// ---------------------------------------------------------------------------
 
-	//
-	setHighlightStyle(highlightObjectIds, pipelineId) {
-		this.removeAllStyles(true);
-		const objectStyle = {
-			body: {
-				default: `fill: ${constants.HIGHLIGHT_FILL} ;stroke: ${constants.HIGHLIGHT_STROKE};`,
-				hover: `fill: ${constants.HIGHLIGHT_HOVER_FILL};`
-			}
-		};
-		const linkStyle = {
-			line: {
-				default: `stroke: ${constants.HIGHLIGHT_STROKE};`,
-				hover: `stroke-width: ${constants.HIGHLIGHT_STROKE_WIDTH}`
-			}
-		};
-		this.setObjectsStyle(highlightObjectIds.nodes, objectStyle, true, false);
-		this.setLinksStyle(highlightObjectIds.links, linkStyle, true, false);
-		this.highlight = true;
+	// Sets the branch highlight flag on the nodes and links passed in
+	// the highlightObjectIds parameter
+	setBranchHighlight(highlightObjectIds) {
+		this.unsetAllBranchHighlight();
+		this.setObjectsBranchHighlight(highlightObjectIds.nodes);
+		this.setLinksBranchHighlight(highlightObjectIds.links);
+
+		this.branchHighlighted = true;
 	}
 
 	// Highlights the branch(s) (both upstream and downstream) from the node
@@ -1429,7 +1445,7 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightBranch(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_BRANCH);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
@@ -1438,7 +1454,7 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightUpstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_UPSTREAM);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
@@ -1447,12 +1463,12 @@ export default class CanvasController {
 	// pipelineId - The ID of the pipeline
 	highlightDownstream(nodeIds, pipelineId) {
 		const highlightObjectIds = this.objectModel.getHighlightObjectIds(pipelineId, nodeIds, constants.HIGHLIGHT_DOWNSTREAM);
-		this.setHighlightStyle(highlightObjectIds, pipelineId);
+		this.setBranchHighlight(highlightObjectIds);
 		return highlightObjectIds;
 	}
 
-	isHighlighted() {
-		return this.highlight;
+	isBranchHighlighted() {
+		return this.branchHighlighted;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1558,6 +1574,11 @@ export default class CanvasController {
 
 	isRightFlyoutOpen() {
 		return this.objectModel.isRightFlyoutOpen();
+	}
+
+	isDisplayingFullPageSubFlow() {
+		const breadcrumbs = this.objectModel.getBreadcrumbs();
+		return breadcrumbs.length > 1;
 	}
 
 	// Displays a pipeline (identified by the pipelineId passed in). This must be
@@ -1719,6 +1740,20 @@ export default class CanvasController {
 	// set to "LocalStorage".
 	clearSavedZoomValues() {
 		this.objectModel.clearSavedZoomValues();
+	}
+
+	getViewPortDimensions() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getTransformedViewportDimensions();
+		}
+		return null;
+	}
+
+	getCanvasDimensionsWithPadding() {
+		if (this.canvasContents) {
+			return this.getSVGCanvasD3().getCanvasDimensionsWithPadding();
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2038,13 +2073,15 @@ export default class CanvasController {
 	// the host app from editActionHandler. The editActionHandler method
 	// does not intercept this action.
 	createNodeFromDataAt(x, y, dropData, pipelineId) {
-		const data = dropData.data;
-		data.offsetX = x;
-		data.offsetY = y;
-		data.pipelineId = pipelineId;
-		data.editSource = "canvas";
+		if (dropData?.data) {
+			const data = dropData.data;
+			data.offsetX = x;
+			data.offsetY = y;
+			data.pipelineId = pipelineId;
+			data.editSource = "canvas";
 
-		this.editActionHandler(data);
+			this.editActionHandler(data);
+		}
 	}
 
 	canNewNodeBeDroppedOnLink(nodeType) {
@@ -2131,6 +2168,11 @@ export default class CanvasController {
 		}
 	}
 
+	// Performs edit actions, based on the cmndData passed in, to the object
+	// model which result in changes to the displayed canvas. Returns true if
+	// the action completes successfully and false if it does not complete,
+	// for example, if the host application cancels the action by returning
+	// false from the beforeEditActionHanlder.
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
@@ -2166,17 +2208,17 @@ export default class CanvasController {
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
 			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
-				return;
+				return false;
 			}
 			// If an external pipeline flow was requested, we need to make sure it
 			// was provided by the host app. We can't proceed if it was not.
 			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
-				return;
+				return false;
 			}
 		}
 
 		// Now preprocessing is complete, execuete the action itself.
-		this.editAction(data);
+		return this.editAction(data);
 	}
 
 	// Performs the edit action using the 'data' parameter, which contains the
@@ -2195,7 +2237,7 @@ export default class CanvasController {
 		// 'delete' is pressed on the keyboard.
 		if (data.editType === "deleteSelectedObjects" &&
 				data.selectedObjectIds.length === 0) {
-			return;
+			return false;
 		}
 
 		// These commands are supported for the external AND internal object models.
@@ -2500,9 +2542,8 @@ export default class CanvasController {
 				data.highlightedObjectIds = this.highlightUpstream(this.objectModel.getSelectedNodesIds(), data.pipelineId);
 				break;
 			case "unhighlight":
-				// this.setSubdueStyle(null);
-				this.removeAllStyles(true);
-				this.highlight = false; // TODO: use this for context menu when to show unhighlight option.
+				this.unsetAllBranchHighlight();
+				this.branchHighlighted = false;
 				break;
 			case "openNotificationPanel":
 				this.openNotificationPanel();
@@ -2525,6 +2566,8 @@ export default class CanvasController {
 		// pipeline visible they will be loaded one by one when this check is
 		// encountered.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+
+		return true;
 	}
 
 	// Sets the appropriate values when handling an external pipleine flow

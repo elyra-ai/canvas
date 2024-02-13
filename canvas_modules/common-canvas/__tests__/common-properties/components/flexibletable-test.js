@@ -376,4 +376,19 @@ describe("FlexibleTable renders correctly", () => {
 		expect(emptyTableDiv1).to.have.text(glmmParamDef.resources["covariance_list.placeholder.label"]);
 	});
 
+	it("should readjust height when row changes", () => {
+		const wrapper = mountWithIntl(
+			<FlexibleTable
+				columns={headers}
+				data={rows}
+				rows={5}
+			/>
+		);
+		const orgTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
+		expect(orgTableHeight).to.equal(192);
+
+		wrapper.setProps({ rows: 2 });
+		const newTableHeight = wrapper.find("FlexibleTable").state("tableHeight");
+		expect(newTableHeight).to.equal(96);
+	});
 });

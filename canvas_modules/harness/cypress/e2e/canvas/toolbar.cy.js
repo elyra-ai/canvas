@@ -111,20 +111,21 @@ describe("Test for toolbar resize", function() {
 		cy.openCanvasDefinition("commentColorCanvas.json");
 	});
 
-	it.skip("Test number of items in toolbar for different window sizes", function() {
-		// TODO: For given viewport size, number of items in toolbar doesn't match with chimp tests
-		// Skipping this test - travis shows different numbers for cy.verifyNumberOfItemsInToolbar()
+	it("Test number of items in toolbar for different window sizes", function() {
+		cy.viewport(400, 600);
+		cy.verifyNumberOfItemsInToolbar(8);
+
 		cy.viewport(500, 600);
-		cy.verifyNumberOfItemsInToolbar(8); // 10 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(10);
 
 		cy.viewport(540, 600);
-		cy.verifyNumberOfItemsInToolbar(9); // 11 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(11);
 
 		cy.viewport(580, 600);
-		cy.verifyNumberOfItemsInToolbar(9); // 12 items in chimp test
+		cy.verifyNumberOfItemsInToolbar(12);
 
 		cy.viewport(620, 600);
-		cy.verifyNumberOfItemsInToolbar(13);
+		cy.verifyNumberOfItemsInToolbar(12);
 
 		cy.viewport(660, 600);
 	});

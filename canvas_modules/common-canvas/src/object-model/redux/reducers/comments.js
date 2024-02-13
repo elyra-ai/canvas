@@ -206,7 +206,6 @@ export default (state = [], action) => {
 			return comment;
 		});
 
-
 	default:
 		return state;
 	}

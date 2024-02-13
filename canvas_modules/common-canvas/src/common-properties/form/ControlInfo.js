@@ -82,6 +82,12 @@ export class Control {
 		if (settings.increment) {
 			this.increment = settings.increment;
 		}
+		if (settings.minValue) {
+			this.minValue = settings.minValue;
+		}
+		if (settings.maxValue) {
+			this.maxValue = settings.maxValue;
+		}
 		if (settings.generatedValues) {
 			this.generatedValues = {};
 			if (settings.generatedValues.operation) {

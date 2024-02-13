@@ -16,7 +16,7 @@
 
 import React from "react";
 import ValidationMessage from "../../../src/common-properties/components/validation-message";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 
 const warningMessage = {

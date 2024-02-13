@@ -5,6 +5,7 @@
   "current_parameters": {
     "oneofselect": "blue",
     "oneofselect_custom_value": "custom",
+    "oneofselect_custom_value_null": null,
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_placeholder": "",
@@ -48,6 +49,30 @@
     },
     {
       "id": "oneofselect_custom_value",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value_null",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
+      "id": "oneofselect_custom_value_undefined",
       "enum": [
         "red",
         "orange",
@@ -172,6 +197,24 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "fill",
+      "enum": [
+        -1,
+        0,
+        32
+      ],
+      "default": 0,
+      "required": false
+    },
+    {
+      "id": "viewonly",
+      "enum": [
+        " ",
+        "admin viewonly"
+      ],
+      "default": " "
     },
     {
       "id": "disable",
@@ -358,6 +401,26 @@
         "custom_value_allowed": true
       },
       {
+        "parameter_ref": "oneofselect_custom_value_null",
+        "label": {
+          "default": "oneofselect custom value allowed with parameter value set to 'null'"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true
+      },
+      {
+        "parameter_ref": "oneofselect_custom_value_undefined",
+        "label": {
+          "default": "oneofselect custom value allowed with parameter value not set"
+        },
+        "description": {
+          "default": "oneofselect with option to enter a custom value"
+        },
+        "custom_value_allowed": true
+      },
+      {
         "parameter_ref": "oneofselect_null",
         "label": {
           "default": "oneofselect null"
@@ -446,6 +509,28 @@
         "parameter_ref": "oneofselect_hidden",
         "label": {
           "default": "oneofselect Hidden"
+        }
+      },
+      {
+        "parameter_ref": "fill",
+        "resource_key": "fillRKey",
+        "control": "oneofselect",
+        "label": {
+          "resource_key": "fillRKey.label"
+        },
+        "description": {
+          "resource_key": "fillRKey.description"
+        }
+      },
+      {
+        "parameter_ref": "viewonly",
+        "resource_key": "viewonlyRKey",
+        "control": "oneofselect",
+        "label": {
+          "resource_key": "viewonlyRkey.label"
+        },
+        "description": {
+          "resource_key": "viewonly.description"
         }
       },
       {
@@ -618,6 +703,8 @@
         "parameter_refs": [
           "oneofselect",
           "oneofselect_custom_value",
+          "oneofselect_custom_value_null",
+          "oneofselect_custom_value_undefined",
           "oneofselect_null",
           "oneofselect_empty_string",
           "oneofselect_undefined",
@@ -637,6 +724,8 @@
           "oneofselect_warning",
           "hide",
           "oneofselect_hidden",
+          "fill",
+          "viewonly",
           "disable",
           "oneofselect_disabled"
         ]
@@ -726,6 +815,34 @@
       "visible": {
         "parameter_refs": [
           "oneofselect_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "fill"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "viewonly"
         ],
         "evaluate": {
           "condition": {
@@ -957,6 +1074,15 @@
     "oneofselect_filtered.blue.label": "Blue",
     "animal.cat.label": "Cat",
     "animal.dog.label": "Dog",
-    "animal.pig.label": "Pig"
+    "animal.pig.label": "Pig",
+    "fillRKey.label": "Fill char",
+    "fillRKey.description": "Byte value to fill in any gaps in an exported record caused by field positioning properties. Valid only for export. By default, the fill value is the null byte (0); it may be an integer between 0 and 255, or a single-character value.",
+    "fillRKey.-1.label": "Custom fill char character",
+    "fillRKey.0.label": "null",
+    "fillRKey.32.label": "space",
+    "viewonlyRkey.label": "View state file",
+    "viewonly.description": "Select whether or not to view details of the state file.",
+    "viewonlyRKey.admin viewonly.label": "Yes",
+    "viewonlyRKey. .label": "No"
   }
 }

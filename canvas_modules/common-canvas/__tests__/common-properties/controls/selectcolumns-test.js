@@ -405,7 +405,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const columnSelect = wrapper.find("div[data-id='properties-ft-columnSelect']");
 		const heightDiv = columnSelect.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.at(0).prop("style");
-		expect(heightStyle).to.eql({ "height": "8rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 128 }); // includes header
 	});
 
 	it("should display 5 rows in select columns in subpanel", () => {
@@ -424,7 +424,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		const heightDiv = selectColumnsWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
-		expect(heightStyle).to.eql({ "height": "6rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 96 }); // includes header
 	});
 
 	it("should display 5.5 rows by default in select columns in onpanel", () => {
@@ -454,9 +454,9 @@ describe("selectcolumns control displays the proper number of rows", () => {
 
 		const heightDiv = tableWrapper.find("div.properties-ft-container-wrapper");
 		const heightStyle = heightDiv.prop("style");
-		// header height = 2rem, each row height = 2 rem. Total height = 2 + 5.5*(2) = 13rem
+		// header height = 2rem, each row height = 2 rem. Total height = 2 + 5.5*(2) = 13rem * 16 = 208px
 		// This means only 5.5 rows are visible
-		expect(heightStyle).to.eql({ "height": "13rem" }); // includes header
+		expect(heightStyle).to.eql({ "height": 208 }); // includes header
 	});
 });
 

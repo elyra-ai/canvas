@@ -16,19 +16,85 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-export const addNodeExternalObject = (node, i, foreignObjects) => {
-	ReactDOM.render(
-		<node.layout.nodeExternalObject
-			nodeData={node}
-		/>,
-		foreignObjects[i]
-	);
-};
+import Logger from "../logging/canvas-logger.js";
 
-export const addDecExternalObject = (dec, i, foreignObjects) => {
-	ReactDOM.render(dec.jsx, foreignObjects[i]);
-};
+export default class SvgCanvasExternal {
+	constructor(renderer) {
+		this.logger = new Logger("SVGCanvasExternal");
+		this.ren = renderer;
+	}
 
-export const removeExternalObject = (obj, i, foreignObjects) => {
-	ReactDOM.unmountComponentAtNode(foreignObjects[i]);
-};
+	addNodeExternalObject(node, i, foreignObjects) {
+		ReactDOM.render(
+			<node.layout.nodeExternalObject
+				nodeData={node}
+				canvasController={this.ren.canvasController}
+				externalUtils={this}
+			/>,
+			foreignObjects[i]
+		);
+	}
+
+	addDecExternalObject(dec, i, foreignObjects) {
+		ReactDOM.render(dec.jsx, foreignObjects[i]);
+	}
+
+	removeExternalObject(obj, i, foreignObjects) {
+		ReactDOM.unmountComponentAtNode(foreignObjects[i]);
+	}
+
+	getActiveNodes() {
+		return this.ren.activePipeline.getNodes();
+	}
+
+	getActiveNode(nodeId) {
+		return this.ren.activePipeline.getNode(nodeId);
+	}
+
+	setPortPositions(info) {
+		const node = this.ren.activePipeline.getNode(info.nodeId);
+		const k = this.ren.zoomUtils.getZoomScale();
+
+		if (info.inputPositions) {
+			info.inputPositions.forEach((inputPos) => {
+				const inp = node.inputs.find((input) => input.id === inputPos.id);
+				inp.cx = inputPos.cx / k;
+				inp.cy = inputPos.cy / k;
+			});
+		}
+		if (info.outputPositions) {
+			info.outputPositions.forEach((outputPos) => {
+				const out = node.outputs.find((output) => output.id === outputPos.id);
+				out.cx = outputPos.cx / k;
+				out.cy = outputPos.cy / k;
+			});
+		}
+		this.ren.displayLinks();
+	}
+
+	setNodesProperties(newProps) {
+		if (newProps) {
+			newProps.forEach((np) => {
+				const node = this.ren.activePipeline.getNode(np.id);
+				if (np.height) {
+					node.height = np.height;
+				}
+				if (np.width) {
+					node.width = np.width;
+				}
+				if (np.x_pos) {
+					node.x_pos = np.x_pos;
+				}
+				if (np.y_pos) {
+					node.y_pos = np.y_pos;
+				}
+			});
+
+			this.ren.displayNodes();
+		}
+	}
+
+	raiseNodeToTopById(nodeId) {
+		this.ren.raiseNodeToTopById(nodeId);
+	}
+}

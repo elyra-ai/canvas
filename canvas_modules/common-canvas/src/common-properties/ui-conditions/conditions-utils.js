@@ -709,6 +709,15 @@ function _validateInput(propertyId, controller, control, showErrors) {
 				if (!controller.getErrorMessage(msgPropertyId, true, true, false)) {
 					errorSet = false;
 				}
+				// Before setting an error message for table cell, clear the error message for table (if any)
+				if (typeof msgPropertyId.row !== "undefined" || typeof msgPropertyId.col !== "undefined") {
+					const tablePropertyId = controller.convertPropertyId(msgPropertyId.name);
+					const tableErrorMessage = controller.getErrorMessage(tablePropertyId);
+					if (tableErrorMessage !== null) {
+						controller.updateErrorMessage(tablePropertyId, null);
+					}
+				}
+
 				if (isError && !errorSet) {
 					controller.updateErrorMessage(msgPropertyId, errorMessage);
 					if (isError) {

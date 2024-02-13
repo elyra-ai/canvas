@@ -636,6 +636,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDefinition, 
 	settings.enableMaximize = parameter.enableMaximize;
 	settings.summary = parameter.summary;
 	settings.increment = parameter.increment;
+	settings.minValue = parameter.minValue;
+	settings.maxValue = parameter.maxValue;
 	settings.rowSelection = rowSelection;
 	settings.generatedValues = parameter.generatedValues;
 	settings.addRemoveRows = addRemoveRows;

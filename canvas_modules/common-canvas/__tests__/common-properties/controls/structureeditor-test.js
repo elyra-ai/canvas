@@ -16,7 +16,7 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { shallowWithIntl } from "../../_utils_/intl-utils";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

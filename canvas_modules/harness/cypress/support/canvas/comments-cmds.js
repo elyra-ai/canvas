@@ -213,18 +213,21 @@ Cypress.Commands.add("linkCommentToNode", (commentText, nodeLabel) => {
 				const canvasX = nodeDimensions.x_pos + (nodeDimensions.width / 2);
 				const canvasY = nodeDimensions.y_pos + (nodeDimensions.height / 2);
 
-				cy.dragAndDrop(srcSelector, 0, 0, ".svg-area", canvasX, canvasY);
+				// Use 5 px in x and y direction to move mouse position over the port
+				cy.dragAndDrop(srcSelector, 5, 5, ".svg-area", canvasX, canvasY);
 			});
 		});
 	});
 });
 
 Cypress.Commands.add("dragAndDrop", (srcSelector, srcXPos, srcYPos, trgSelector, trgXPos, trgYPos) => {
-	cy.get(srcSelector)
-		.trigger("mousedown", srcXPos, srcYPos, { force: true });
-	cy.get(trgSelector)
-		.trigger("mousemove", trgXPos, trgYPos)
-		.trigger("mouseup", trgXPos, trgYPos);
+	cy.window().then((win) => {
+		cy.get(srcSelector)
+			.trigger("mousedown", srcXPos, srcYPos, { which: 1, view: win });
+		cy.get(trgSelector)
+			.trigger("mousemove", trgXPos, trgYPos, { view: win })
+			.trigger("mouseup", trgXPos, trgYPos, { which: 1, view: win });
+	});
 });
 
 Cypress.Commands.add("resizeComment", (commentText, corner, newWidth, newHeight) => {

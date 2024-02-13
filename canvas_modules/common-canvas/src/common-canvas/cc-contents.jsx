@@ -27,9 +27,9 @@ import CommonCanvasContextToolbar from "./cc-context-toolbar.jsx";
 import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
-import { FlowData16 } from "@carbon/icons-react";
+import { Button } from "carbon-components-react";
+import { FlowData16, ArrowLeft16 } from "@carbon/icons-react";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
-
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
 
@@ -92,6 +92,7 @@ class CanvasContents extends React.Component {
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onClickReturnToPrevious = this.onClickReturnToPrevious.bind(this);
 
 		// Variables to handle strange HTML drag and drop behaviors. That is, pairs
 		// of dragEnter/dragLeave events are fired as an external object is
@@ -200,12 +201,16 @@ class CanvasContents extends React.Component {
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					!evt.shiftKey && evt.keyCode === Z_KEY && actions.undo) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("undo");
+				if (this.props.canvasController.canUndo()) {
+					this.props.canvasController.keyboardActionHandler("undo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) &&
 					((evt.shiftKey && evt.keyCode === Z_KEY) || evt.keyCode === Y_KEY && actions.redo)) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
-				this.props.canvasController.keyboardActionHandler("redo");
+				if (this.props.canvasController.canRedo()) {
+					this.props.canvasController.keyboardActionHandler("redo");
+				}
 
 			} else if (CanvasUtils.isCmndCtrlPressed(evt) && evt.keyCode === C_KEY && actions.copyToClipboard) {
 				CanvasUtils.stopPropagationAndPreventDefault(evt);
@@ -264,6 +269,13 @@ class CanvasContents extends React.Component {
 		} else {
 			this.mousePos = null;
 		}
+	}
+
+	// Handles the click on the "Return to previous flow" button.
+	onClickReturnToPrevious(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		this.props.canvasController.displayPreviousPipeline();
 	}
 
 	setCanvasInfo() {
@@ -331,6 +343,30 @@ class CanvasContents extends React.Component {
 			}
 		}
 		return emptyCanvas;
+	}
+
+	getReturnToPreviousBtn() {
+		let returnToPrevious = null;
+		if (!this.props.canvasController.isPrimaryPipelineEmpty() &&
+				(this.props.canvasController.isDisplayingFullPageSubFlow() ||
+					this.props.canvasConfig?.enableCanvasLayout?.alwaysDisplayBackToParentFlow)) {
+			const label = this.getLabel("canvas.returnToPrevious");
+			returnToPrevious = (
+				<div className={"return-to-previous"}>
+					<Button kind={"tertiary"}
+						onClick={this.onClickReturnToPrevious}
+						aria-label={label}
+						size={"md"}
+					>
+						<div className={"return-to-previous-content"}>
+							<ArrowLeft16 />
+							<span>{label}</span>
+						</div>
+					</Button>
+				</div>
+			);
+		}
+		return returnToPrevious;
 	}
 
 	getContextMenu() {
@@ -531,44 +567,30 @@ class CanvasContents extends React.Component {
 
 		const stateTag = this.getStateTag();
 		const emptyCanvas = this.getEmptyCanvas();
+		const returnToPreviousBtn = this.getReturnToPreviousBtn();
 		const contextMenu = this.getContextMenu();
 		const textToolbar = this.getTextToolbar();
 		const dropZoneCanvas = this.getDropZone();
 		const svgCanvasDiv = this.getSVGCanvasDiv();
 
-		const mainClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-main"
-			: null;
-
-		let dropDivClassName = this.props.canvasConfig.enableRightFlyoutUnderToolbar
-			? "common-canvas-drop-div-under-toolbar"
-			: "common-canvas-drop-div";
-
-		dropDivClassName = this.props.canvasConfig.enableToolbarLayout === "None"
-			? dropDivClassName + " common-canvas-toolbar-none"
-			: dropDivClassName;
-
-		dropDivClassName = this.props.bottomPanelIsOpen
-			? dropDivClassName + " common-canvas-bottom-panel-is-open"
-			: dropDivClassName;
-
 		return (
-			<main aria-label={this.getLabel("canvas.label")} role="main" className={mainClassName}>
+			<main aria-label={this.getLabel("canvas.label")} role="main">
 				<ReactResizeDetector handleWidth handleHeight onResize={this.refreshOnSizeChange}>
 					<div
 						id={this.mainCanvasDivId}
-						className={dropDivClassName}
+						className="common-canvas-drop-div"
 						onDrop={this.drop}
 						onDragOver={this.dragOver}
 						onDragEnter={this.dragEnter}
 						onDragLeave={this.dragLeave}
 					>
-						{emptyCanvas}
 						{svgCanvasDiv}
+						{emptyCanvas}
+						{returnToPreviousBtn}
+						{stateTag}
 						{contextMenu}
 						{textToolbar}
 						{dropZoneCanvas}
-						{stateTag}
 					</div>
 				</ReactResizeDetector>
 			</main>

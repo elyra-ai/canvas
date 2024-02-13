@@ -54,10 +54,20 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 		fill: $node-body-fill;
 	}
 
-	.d3-node-group:hover > .d3-node-body-outline {
-		stroke: $node-body-stroke;
-		stroke-width: 2;
-		fill: $blue;
+	.d3-node-group:hover {
+		.d3-node-body-outline {
+			stroke: $node-body-stroke;
+			stroke-width: 2;
+			fill: $blue;
+		}
+	}
+
+	.d3-node-group.d3-branch-highlight:hover {
+		.d3-node-body-outline {
+			stroke: $ui-04;
+			stroke-width: 2px;
+			fill: $hover-tertiary;
+		}
 	}
 
 	.d3-node-selection-highlight {
@@ -83,6 +93,7 @@ $node-port-input-connected-super-binding-fill-color: $light-blue;
 
 	.d3-node-label {
 		font-size: 13px;
+		color: $text-01;
 	}
 
 	.d3-node-label-entry {

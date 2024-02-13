@@ -17,7 +17,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import ActionImage from ".../../../src/common-properties/actions/image";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";

@@ -2,7 +2,7 @@
   "doc_type": "pipeline",
   "version": "3.0",
   "json_schema": "https://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
-  "id": "ac3d3e04-c3d2-4da7-ab5a-2b9573e5e159",
+  "id": "45634789c3d2-4da7-ab5a-2b9573e5e159",
   "primary_pipeline": "3ae0efae-9a3c-4a1a-9fd9-185f442a81aa",
   "pipelines": [
     {
@@ -262,9 +262,9 @@
               "x_pos": 18,
               "y_pos": 14.4,
               "width": 175,
-              "height": 76,
+              "height": 80,
               "class_name": "d3-comment-rect",
-              "content": "This canvas shows a flow of data processing nodes where enableDetachableLinks is switched on.",
+              "content": "This canvas allows the user to switch between edit, read-only and locked mode. Click the icons the toolbar.",
               "associated_id_refs": []
             }
           ]

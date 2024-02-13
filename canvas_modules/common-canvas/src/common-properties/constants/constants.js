@@ -73,6 +73,7 @@ export const MESSAGE_KEYS = {
 	EXPRESSION_FIELDS_TITLE: "expression.fields.title",
 	EXPRESSION_VALUES_TITLE: "expression.values.title",
 	EXPRESSION_FIELD_COLUMN: "expression.field.column",
+	EXPRESSION_ADD_COLUMN: "expression.add.column",
 	EXPRESSION_FIELD_COLUMN_DESCRIPTION: "expression.field.column.description",
 	EXPRESSION_STORAGE_COLUMN: "expression.storage.column",
 	EXPRESSION_VALUE_COLUMN: "expression.value.column",
@@ -162,7 +163,7 @@ export const DATEPICKER_TYPE = {
 
 export const DEFAULT_DATEPICKER_FORMAT = "Y-m-d"; // ISO format
 
-export const DEFAULT_DATE_FORMAT = "yyyy-mm-dd";
+export const DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 export const DEFAULT_TIME_FORMAT = "H:m:s";
 

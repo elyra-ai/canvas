@@ -67,12 +67,16 @@ export default (state = [], action) => {
 		];
 	}
 
-	case "ADD_LINKS": {
+	case "ADD_LINKS":
 		return [
 			...state,
 			...action.data.linksToAdd
 		];
-	}
+
+	case "SET_LINKS":
+		return [
+			...action.data,
+		];
 
 	case "MOVE_OBJECTS":
 		return state.map((link) => {
@@ -243,6 +247,22 @@ export default (state = [], action) => {
 					newLink.style = style;
 				}
 				return newLink;
+			}
+			return link;
+		});
+
+	case "SET_LINKS_BRANCH_HIGHLIGHT":
+		return state.map((link) => {
+			if (action.data.objIds.indexOf(link.id) > -1) {
+				return Object.assign({}, link, { branchHighlight: true });
+			}
+			return link;
+		});
+
+	case "UNSET_OBJECTS_BRANCH_HIGHLIGHT":
+		return state.map((link) => {
+			if (link.branchHighlight) {
+				return Object.assign({}, link, { branchHighlight: false });
 			}
 			return link;
 		});

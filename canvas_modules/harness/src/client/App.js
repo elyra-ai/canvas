@@ -27,6 +27,10 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { forIn, get, has, isEmpty, isEqual } from "lodash";
 import { hot } from "react-hot-loader/root";
 import classNames from "classnames";
+import { v4 as uuid4 } from "uuid";
+
+import { jsPDF } from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 import { getMessages } from "../intl/intl-utils";
 import * as HarnessBundles from "../intl/locales";
@@ -49,7 +53,8 @@ import ProgressCanvas from "./components/custom-canvases/progress/progress";
 import ExplainCanvas from "./components/custom-canvases/explain/explain-canvas";
 import Explain2Canvas from "./components/custom-canvases/explain2/explain2-canvas";
 import StreamsCanvas from "./components/custom-canvases/streams/streams-canvas";
-import ReactNodesCanvas from "./components/custom-canvases/react-nodes/react-nodes";
+import ReactNodesCarbonCanvas from "./components/custom-canvases/react-nodes-carbon/react-nodes-carbon";
+import ReactNodesMappingCanvas from "./components/custom-canvases/react-nodes-mapping/react-nodes-mapping";
 
 import Breadcrumbs from "./components/breadcrumbs.jsx";
 import Console from "./components/console/console.jsx";
@@ -73,6 +78,7 @@ import * as CustomNonEmptyListLessThan from "./custom/condition-ops/customNonEmp
 import * as CustomOpSyntaxCheck from "./custom/condition-ops/customSyntaxCheck";
 import * as CustomOpFilterKeys from "./custom/condition-ops/customFilterKeys";
 import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDuplicates";
+import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColumn";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
@@ -91,6 +97,7 @@ import {
 	NONE_SAVE_ZOOM,
 	CURVE_LINKS,
 	DIRECTION_LEFT_RIGHT,
+	IMAGE_DISPLAY_SVG_INLINE,
 	LINK_SELECTION_NONE,
 	ASSOC_STRAIGHT,
 	UNDERLAY_NONE,
@@ -105,7 +112,8 @@ import {
 	EXAMPLE_APP_LOGIC,
 	EXAMPLE_APP_READ_ONLY,
 	EXAMPLE_APP_PROGRESS,
-	EXAMPLE_APP_REACT_NODES,
+	EXAMPLE_APP_REACT_NODES_CARBON,
+	EXAMPLE_APP_REACT_NODES_MAPPING,
 	CUSTOM,
 	PALETTE_FLYOUT,
 	PROPERTIES_FLYOUT,
@@ -183,6 +191,7 @@ class App extends React.Component {
 			selectedSaveZoom: NONE_SAVE_ZOOM,
 			selectedZoomIntoSubFlows: false,
 			selectedSingleOutputPortDisplay: false,
+			selectedImageDisplay: IMAGE_DISPLAY_SVG_INLINE,
 			selectedLinkType: CURVE_LINKS,
 			selectedLinkDirection: DIRECTION_LEFT_RIGHT,
 			selectedLinkSelection: LINK_SELECTION_NONE,
@@ -220,6 +229,7 @@ class App extends React.Component {
 			selectedExternalPipelineFlows: true,
 			selectedEditingActions: true,
 			selectedMoveNodesOnSupernodeResize: true,
+			selectedRaiseNodesToTopOnHover: true,
 			selectedResizableNodes: false,
 			selectedDisplayFullLabelOnHover: false,
 			selectedPositionNodeOnRightFlyoutOpen: false,
@@ -252,6 +262,7 @@ class App extends React.Component {
 			heading: false,
 			light: true,
 			showRequiredIndicator: true,
+			showAlertsTab: true,
 			enableResize: true,
 			initialEditorSize: "small",
 			conditionHiddenPropertyHandling: "null",
@@ -348,6 +359,7 @@ class App extends React.Component {
 		this.disableWideFlyoutPrimaryButton = this.disableWideFlyoutPrimaryButton.bind(this);
 
 		this.clearSavedZoomValues = this.clearSavedZoomValues.bind(this);
+		this.saveToPdf = this.saveToPdf.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
@@ -371,6 +383,7 @@ class App extends React.Component {
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.selectionChangeHandler2 = this.selectionChangeHandler2.bind(this);
+		this.layoutHandler = this.layoutHandler.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 		this.actionLabelHandler = this.actionLabelHandler.bind(this);
 		this.propertiesActionLabelHandler = this.propertiesActionLabelHandler.bind(this);
@@ -1003,6 +1016,42 @@ class App extends React.Component {
 	clearSavedZoomValues() {
 		this.canvasController.clearSavedZoomValues();
 		this.canvasController2.clearSavedZoomValues();
+	}
+
+	// Saves the canvas objects into and image and then places that image into
+	// a PDF file. Creating the image takes quite a while to execute so it would
+	// probably need a progress indicator if it was implemented in an application.
+	saveToPdf() {
+		const svgAreaElements = document
+			.getElementById("d3-svg-canvas-div-0")
+			.getElementsByClassName("svg-area");
+
+		const dims = this.canvasController.getCanvasDimensionsWithPadding();
+		const heightToWidthRatio = dims.height / dims.width;
+
+		htmlToImage.toPng(svgAreaElements[0], {
+			filter: (node) => this.shouldIncludeInImage(node),
+			height: dims.height,
+			width: dims.width
+		})
+			.then(function(dataUrl) {
+				const img = document.createElement("img"); // new Image();
+				img.src = dataUrl;
+
+				const doc = new jsPDF();
+				doc.addImage(img, "PNG", 10, 10, 190, 190 * heightToWidthRatio);
+				doc.save("common-canvas.pdf");
+			})
+			.catch(function(error) {
+				console.error("An error occurred create the PNG image.", error);
+			});
+	}
+
+	// Returns true if the node passed in should be included in a saved image of the canvas.
+	// The only node that is excluded is the canvas background rectangle which has the
+	// same dimensions as the viewport which is often smaller than the canvas itself.
+	shouldIncludeInImage(node) {
+		return node?.classList ? !(node.classList.contains("d3-svg-background")) : true;
 	}
 
 	generateNodeNotificationMessages(nodeMessages, currentPipelineId) {
@@ -1667,6 +1716,12 @@ class App extends React.Component {
 		}
 	}
 
+	// The layout handler can be modified to provide node layout overrides
+	// while testing and debugging.
+	layoutHandler() {
+		return {};
+	}
+
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
 			let sourceString = "";
@@ -1683,7 +1738,7 @@ class App extends React.Component {
 				sourceString = "detached source";
 				if (data.link.srcObj && data.link.srcObj.outputs) {
 					const srcPort = !data.link.srcObj.outputs ? null : data.link.srcObj.outputs.find(function(port) {
-						return port.id === data.link.srcPortId;
+						return port.id === data.link.srcNodePortId;
 					});
 					sourceString = `'${data.link.srcObj.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 				}
@@ -1691,7 +1746,7 @@ class App extends React.Component {
 				targetString = "detached target";
 				if (data.link.trgNode && data.link.trgNode.inputs) {
 					const trgPort = data.link.trgNode.inputs.find(function(port) {
-						return port.id === data.link.trgPortId;
+						return port.id === data.link.trgNodePortId;
 					});
 					targetString = `'${data.link.trgNode.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
 				}
@@ -1735,7 +1790,8 @@ class App extends React.Component {
 			parameterDef: properties,
 			additionalComponents: additionalComponents,
 			expressionInfo: expressionInfo,
-			initialEditorSize: this.state.initialEditorSize
+			initialEditorSize: this.state.initialEditorSize,
+			id: uuid4()
 		};
 
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -1923,7 +1979,7 @@ class App extends React.Component {
 					RandomEffectsPanel, CustomSubjectsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl, CustomEmmeansDroplist]}
-				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates]}
+				customConditionOps={[CustomOpMax, CustomNonEmptyListLessThan, CustomOpSyntaxCheck, CustomOpFilterKeys, CustomOpFilterDuplicates, CustomRequiredColumn]}
 				light={this.state.light}
 			/>);
 
@@ -1984,6 +2040,7 @@ class App extends React.Component {
 			trimSpaces: this.state.trimSpaces,
 			heading: this.state.heading,
 			showRequiredIndicator: this.state.showRequiredIndicator,
+			showAlertsTab: this.state.showAlertsTab,
 			enableResize: this.state.enableResize,
 			conditionHiddenPropertyHandling: this.state.conditionHiddenPropertyHandling,
 			conditionDisabledPropertyHandling: this.state.conditionDisabledPropertyHandling,
@@ -2001,6 +2058,7 @@ class App extends React.Component {
 			enableSnapToGridX: this.state.enteredSnapToGridX,
 			enableSnapToGridY: this.state.enteredSnapToGridY,
 			enableNodeFormatType: this.state.selectedNodeFormatType,
+			enableImageDisplay: this.state.selectedImageDisplay,
 			enableLinkType: this.state.selectedLinkType,
 			enableLinkDirection: this.state.selectedLinkDirection,
 			enableAssocLinkType: this.state.selectedAssocLinkType,
@@ -2022,6 +2080,7 @@ class App extends React.Component {
 			enableResizableNodes: this.state.selectedResizableNodes,
 			enableInsertNodeDroppedOnLink: this.state.selectedInsertNodeDroppedOnLink,
 			enableMoveNodesOnSupernodeResize: this.state.selectedMoveNodesOnSupernodeResize,
+			enableRaiseNodesToTopOnHover: this.state.selectedRaiseNodesToTopOnHover,
 			enablePositionNodeOnRightFlyoutOpen: this.state.selectedPositionNodeOnRightFlyoutOpen,
 			enableAutoLinkOnlyFromSelNodes: this.state.selectedAutoLinkOnlyFromSelNodes,
 			enableBrowserEditMenu: this.state.selectedBrowserEditMenu,
@@ -2553,9 +2612,16 @@ class App extends React.Component {
 					config={commonCanvasConfig}
 				/>
 			);
-		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES) {
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_CARBON) {
 			firstCanvas = (
-				<ReactNodesCanvas
+				<ReactNodesCarbonCanvas
+					ref={this.canvasRef}
+					config={commonCanvasConfig}
+				/>
+			);
+		} else if (this.state.selectedExampleApp === EXAMPLE_APP_REACT_NODES_MAPPING) {
+			firstCanvas = (
+				<ReactNodesMappingCanvas
 					ref={this.canvasRef}
 					config={commonCanvasConfig}
 				/>
@@ -2608,7 +2674,8 @@ class App extends React.Component {
 			setPaletteDropdownSelect2: this.setPaletteDropdownSelect2,
 			selectedPaletteDropdownFile: this.state.selectedPaletteDropdownFile,
 			selectedPaletteDropdownFile2: this.state.selectedPaletteDropdownFile2,
-			clearSavedZoomValues: this.clearSavedZoomValues
+			clearSavedZoomValues: this.clearSavedZoomValues,
+			saveToPdf: this.saveToPdf
 		};
 
 		const sidePanelPropertiesConfig = {
@@ -2629,6 +2696,7 @@ class App extends React.Component {
 			heading: this.state.heading,
 			light: this.state.light,
 			showRequiredIndicator: this.state.showRequiredIndicator,
+			showAlertsTab: this.state.showAlertsTab,
 			enableResize: this.state.enableResize,
 			returnValueFiltering: this.state.returnValueFiltering,
 			initialEditorSize: this.state.initialEditorSize,

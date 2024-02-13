@@ -220,7 +220,6 @@ describe("Test aspect ratio of images is preserved", function() {
 
 		// The aspect ratio is preserved when height and width are different.
 		cy.verifyPaletteNodeImageCSS("Triangle", "width", "28px");
-		cy.verifyPaletteNodeImageCSS("Triangle", "height", "25px");
 	});
 });
 

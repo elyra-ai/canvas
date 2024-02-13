@@ -14,6 +14,7 @@
 		"heading": false,
 		"light": true,
 		"showRequiredIndicator": true,
+		"showAlertsTab": true,
 		"enableResize": true,
 		"initialEditorSize": "small",
 		"conditionHiddenPropertyHandling": "null",
@@ -109,6 +110,11 @@
 		},
 		{
 			"id": "showRequiredIndicator",
+			"default": true,
+			"type": "boolean"
+		},
+		{
+			"id": "showAlertsTab",
 			"default": true,
 			"type": "boolean"
 		},
@@ -340,6 +346,16 @@
 				},
 				"description": {
 					"default": "Show required label indicator"
+				},
+				"control": "toggle"
+			},
+			{
+				"parameter_ref": "showAlertsTab",
+				"label": {
+					"default": "showAlertsTab"
+				},
+				"description": {
+					"default": "Show 'Alerts' tab"
 				},
 				"control": "toggle"
 			},
@@ -650,6 +666,7 @@
 					"trimSpaces",
 					"heading",
 					"showRequiredIndicator",
+					"showAlertsTab",
 					"enableResize",
 					"conditionHiddenPropertyHandling",
 					"conditionDisabledPropertyHandling",
@@ -803,6 +820,8 @@
 		"tableButtonEnabled.toggle.on.label": "enable",
 		"tableButtonEnabled.toggle.off.label": "disable",
 		"showRequiredIndicator.toggle.on.label": "required",
-		"showRequiredIndicator.toggle.off.label": "optional"
+		"showRequiredIndicator.toggle.off.label": "optional",
+		"showAlertsTab.toggle.on.label": "show",
+		"showAlertsTab.toggle.off.label": "hide"
 	}
 }

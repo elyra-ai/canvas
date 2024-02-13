@@ -17,7 +17,7 @@
 import React from "react";
 import Readonly from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
-import { mount } from "enzyme";
+import { mount } from "../../_utils_/mount-utils.js";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 import readonlyParamDef from "../../test_resources/paramDefs/readonly_paramDef.json";

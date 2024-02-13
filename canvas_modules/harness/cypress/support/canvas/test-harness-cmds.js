@@ -60,22 +60,9 @@ Cypress.Commands.add("openCanvasDefinitionForExtraCanvas", (canvasFileName) => {
 	});
 });
 
-Cypress.Commands.add("openCanvasPalette", (paletteName) => {
-	cy.toggleCommonCanvasSidePanel();
-	cy.get("#harness-sidepanel-palette-dropdown").select(paletteName);
-	// Wait until we can get a palette flyout category from the canvas before proceeding. This
-	// allows the canvas to load and display before any more test case steps
-	// are executed. Note: this won't work if the testcase selects a second
-	// canvas while an existing canvas with nodes is displayed.
+Cypress.Commands.add("openCanvasPalette", (paletteFileName) => {
 	cy.document().then((doc) => {
-		if (doc.canvasController.getCanvasConfig().enablePaletteLayout === "Modal") {
-			// Palette Layout - Modal
-			cy.get(".palette-dialog-categories");
-		} else {
-			// Palette Layout - Flyout
-			cy.get(".palette-flyout-category");
-		}
-		cy.toggleCommonCanvasSidePanel();
+		doc.setPaletteDropdownSelect(paletteFileName);
 	});
 });
 
