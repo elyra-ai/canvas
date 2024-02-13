@@ -2166,7 +2166,7 @@ class App extends React.Component {
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
 					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
-						subPanel: AppSettingsPanel, subPanelData: { saveData: () => window.alert("Panel data received by application!") } },
+						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },
