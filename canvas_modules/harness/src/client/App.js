@@ -832,10 +832,9 @@ class App extends React.Component {
 		this.log("API Operation Selected");
 	}
 
-	getPipelineFlow(canvController) {
-		let canvasController = canvController ? canvController : this.canvasController;
+	getPipelineFlow() {
 		// If we're displaying a sample app, get its canvas controller.
-		canvasController = this.canvasRef ? this.canvasRef.current.canvasController : this.canvasController;
+		const canvasController = this.canvasRef?.current ? this.canvasRef.current.canvasController : this.canvasController;
 
 		try {
 			return canvasController.getPipelineFlow();
