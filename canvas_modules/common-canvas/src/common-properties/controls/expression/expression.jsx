@@ -54,8 +54,6 @@ const pxPerLine = 26;
 const defaultCharPerLine = 30;
 const maxLineHeight = 15 * pxPerLine; // 20 lines
 const minLineHeight = 4 * pxPerLine; // 4 lines
-
-const editable = new Compartment; //  eslint-disable-line
 class ExpressionControl extends React.Component {
 	constructor(props) {
 		super(props);
@@ -64,7 +62,7 @@ class ExpressionControl extends React.Component {
 			validationInProgress: false,
 			expressionEditorHeight: 0
 		};
-
+		this.editable = new Compartment; // eslint-disable-line new-parens
 		this.editorRef = React.createRef();
 		this.origHint = [];
 		this.expressionInfo = this.props.controller.getExpressionInfo();
@@ -80,6 +78,7 @@ class ExpressionControl extends React.Component {
 		this.events = this.events.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
 		this.setCodeMirrorEditable = this.setCodeMirrorEditable.bind(this);
+		this.getCodemirrorState = this.getCodemirrorState.bind(this);
 	}
 
 	componentDidMount() {
@@ -89,8 +88,8 @@ class ExpressionControl extends React.Component {
 	// this is needed to ensure expression builder selection works.
 	componentDidUpdate(prevProps) {
 		// When code is edited in expression builder, reflect changes in expression flyout
-		if (!isEqual(this.editor.viewState.state.doc.toString(), this.props.value)) {
-			this.editor.dispatch({ changes: { from: 0, to: this.editor.viewState.state.doc.length, insert: this.props.value } });
+		if (!isEqual(this.getCodemirrorState()?.doc.toString(), this.props.value)) {
+			this.editor.dispatch({ changes: { from: 0, to: this.getCodemirrorState()?.doc.length, insert: this.props.value } });
 		}
 		// Toggle editable mode in Codemirror editor
 		if (!isEqual(prevProps.state, this.props.state)) {
@@ -109,10 +108,14 @@ class ExpressionControl extends React.Component {
 		}
 	}
 
+	getCodemirrorState() {
+		return this.editor?.viewState?.state;
+	}
+
 	// Set codemirror editor non-editable when disabled
 	setCodeMirrorEditable(value) {
 		this.editor.dispatch({
-			effects: editable.reconfigure(EditorView.editable.of(value))
+			effects: this.editable.reconfigure(EditorView.editable.of(value))
 		});
 	}
 
@@ -205,7 +208,7 @@ class ExpressionControl extends React.Component {
 				language,
 				placeholder(this.props.control.additionalText),
 				this.handleUpdate(),
-				editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
+				this.editable.of(EditorView.editable.of(!(this.props.state === STATES.DISABLED)))
 			],
 			parent: this.editorRef.current
 		});
@@ -270,7 +273,7 @@ class ExpressionControl extends React.Component {
 			// this will ensure the expression builder can save values onBlur
 			this.props.onBlur(editor, evt);
 		} else {
-			const newValue = editor.viewState.state.doc.toString();
+			const newValue = editor?.viewState?.state?.doc.toString();
 			// don't validate when opening the expression builder
 			const skipValidate = evt && evt.relatedTarget && evt.relatedTarget.classList.contains("properties-expression-button");
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);

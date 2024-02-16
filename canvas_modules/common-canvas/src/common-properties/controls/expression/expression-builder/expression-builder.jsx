@@ -31,38 +31,39 @@ export default class ExpressionBuilder extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onSelectionChange = this.onSelectionChange.bind(this);
+		this.getCodemirrorState = this.getCodemirrorState.bind(this);
 	}
 
 	onChange(newValue) {
 		const value = (typeof newValue === "string") ? newValue : newValue.toString();
-		const somethingSelected = this.editor.viewState.state.selection.ranges.some((r) => !r.empty);
-		let cursor = this.editor.viewState.state.selection.main.head;
+		const somethingSelected = this.getCodemirrorState()?.selection.ranges.some((r) => !r.empty);
+		let cursor = this.getCodemirrorState()?.selection.main.head;
 		if (cursor === 0 && !somethingSelected) { // TODO: Doesn't work when I explicitly set the cursor to 0
 			// When nothing selected, set cursor at the end of the line
-			this.editor.dispatch({ selection: { anchor: this.editor.viewState.state.doc.length } });
-			cursor = this.editor.viewState.state.selection.main.head;
+			this.editor.dispatch({ selection: { anchor: this.getCodemirrorState()?.doc.length } });
+			cursor = this.getCodemirrorState()?.selection.main.head;
 			this.editor.focus();
 		}
 		let selectionOffset = 1;
 		if (somethingSelected) {
 			selectionOffset = 0;
-			this.editor.dispatch(this.editor.viewState.state.replaceSelection(value), { scrollIntoView: true });
+			this.editor.dispatch(this.getCodemirrorState()?.replaceSelection(value), { scrollIntoView: true });
 			this.editor.focus();
 		} else {
 			let buffer = " ";
 			// if adding to a parenth/bracket/brace expression, no need for space
-			const currentLineNumber = this.editor.viewState.state.doc.lineAt(this.editor.viewState.state.selection.main.head).number;
-			const charBefore = this.editor.viewState.state.doc.line(currentLineNumber).text[cursor - 1];
+			const currentLineNumber = this.getCodemirrorState()?.doc.lineAt(this.getCodemirrorState()?.selection.main.head).number;
+			const charBefore = this.getCodemirrorState()?.doc.line(currentLineNumber).text[cursor - 1];
 			// edge case of cursor being at line 0, char 0 is still handled here
 			if (["(", "[", "{"].indexOf(charBefore) !== -1) {
 				buffer = "";
 			}
-			this.editor.dispatch(this.editor.viewState.state.replaceSelection(buffer + value), { scrollIntoView: true });
+			this.editor.dispatch(this.getCodemirrorState()?.replaceSelection(buffer + value), { scrollIntoView: true });
 			this.editor.focus();
 		}
 		this._setSelection(value, cursor, selectionOffset);
 		// This is needed to generate a render so that the selection will appear.
-		const exprValue = this.editor.viewState.state.doc.toString();
+		const exprValue = this.getCodemirrorState()?.doc.toString();
 		this.props.controller.updatePropertyValue(this.props.propertyId, exprValue, true);
 	}
 
@@ -72,12 +73,16 @@ export default class ExpressionBuilder extends React.Component {
 
 	onBlur(editor, evt) {
 		const currentValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const newValue = editor.viewState.state.doc.toString();
+		const newValue = editor?.viewState?.state?.doc.toString();
 		const skipValidate = this.expressionSelectionPanel && evt && this.expressionSelectionPanel.contains(evt.relatedTarget);
 		// update property value when value is updated OR value is to be validated
 		if (!isEqual(currentValue, newValue) || !skipValidate) {
 			this.props.controller.updatePropertyValue(this.props.propertyId, newValue, skipValidate);
 		}
+	}
+
+	getCodemirrorState() {
+		return this.editor?.viewState?.state;
 	}
 
 	editorDidMount(editor) {
@@ -97,9 +102,9 @@ export default class ExpressionBuilder extends React.Component {
 		}
 		// if the newValue doesn't have a param holder
 		// set it to the first param holder found in the expression
-		const lineCount = this.editor.viewState.state.doc.lines;
+		const lineCount = this.getCodemirrorState()?.doc.lines;
 		for (let index = 0; index < lineCount; index++) {
-			const line = this.editor.viewState.state.doc.line(index + 1).text;
+			const line = this.getCodemirrorState()?.doc.line(index + 1).text;
 			const paramOffset = line.indexOf("?");
 			if (paramOffset !== -1) {
 				const selection = { anchor: paramOffset + 1, head: paramOffset };
@@ -109,8 +114,8 @@ export default class ExpressionBuilder extends React.Component {
 			}
 		}
 		// if no parameter holders found then set it to end of insert string
-		const insertSelection = { anchor: this.editor.viewState.state.selection.main.anchor,
-			head: this.editor.viewState.state.selection.main.head };
+		const insertSelection = { anchor: this.getCodemirrorState()?.selection.main.anchor,
+			head: this.getCodemirrorState()?.selection.main.head };
 		this.onSelectionChange([insertSelection]);
 		return;
 	}

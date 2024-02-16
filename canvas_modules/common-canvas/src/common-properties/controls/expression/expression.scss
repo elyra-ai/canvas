@@ -20,7 +20,6 @@
 .elyra-CodeMirror {
 	.cm-editor {
 		height: inherit;
-		// overflow: auto;
 		width: 100%;
 		background: $field-02;
 		color: $text-01;
@@ -31,13 +30,11 @@
 		}
 
 		.cm-content {
-			// padding-top: $spacing-05;
 			.cm-line {
 				padding-left: $spacing-03;
 				@include carbon--type-style("code-02");
 			}
 			.cm-placeholder {
-				// opacity: 0.5;
 				@include carbon--type-style("code-02");
 			}
 			.cm-cursor {
