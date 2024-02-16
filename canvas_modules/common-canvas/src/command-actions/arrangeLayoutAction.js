@@ -16,13 +16,14 @@
 import Action from "../command-stack/action.js";
 
 export default class ArrangeLayoutAction extends Action {
-	constructor(data, canvasController, layoutDirection) {
-		super(layoutDirection);
+	constructor(data, canvasController) {
+		super();
 		this.data = data;
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
-		this.layoutDirection = layoutDirection;
+		this.layoutDirection = data.layoutDirection; // "horizontal" or "vertical"
 		this.apiPipeline = this.objectModel.getAPIPipeline();
+
 		// Copy the nodes to remember their original positions.
 		this.existingNodes = this.apiPipeline.getNodes().map((n) => Object.assign({}, n));
 	}
