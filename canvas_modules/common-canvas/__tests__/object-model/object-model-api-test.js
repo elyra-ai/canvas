@@ -39,7 +39,6 @@ import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CL
 import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import CanvasUtils from "../../src/common-canvas/common-canvas-utils.js";
 import PasteAction from "../../src/command-actions/pasteAction.js";
-import LabelUtil from "../../src/common-canvas/label-util.js";
 
 const canvasController = new CanvasController();
 const objectModel = canvasController.getObjectModel();
@@ -802,10 +801,8 @@ describe("ObjectModel API handle model OK", () => {
 
 		// Simulate the objects copying from the clipboard by making a copy of them.
 		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
-
-		const labelUtil = new LabelUtil();
 		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
-		const cloneAction = new PasteAction(copyCloneData, objectModel, labelUtil, dummyViewportDimensions, false);
+		const cloneAction = new PasteAction(copyCloneData, canvasController, dummyViewportDimensions);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();

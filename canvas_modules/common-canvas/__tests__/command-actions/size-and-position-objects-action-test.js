@@ -38,7 +38,7 @@ for (let i = 0; i < nodeIds.length; i++) {
 
 describe("SizeAndPositionObjectsAction handles calls correctly", () => {
 	it("should handle calls, undo, and redo", () => {
-		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, objectModel);
+		const sizeAndPositionObjects = new SizeAndPositionObjectsAction(newObjectInfo, canvasController);
 		const previousObjectsInfo = sizeAndPositionObjects.previousObjectsInfo;
 		equalsObjectInfo(previousObjectsInfo, getNodesInfo(nodeIds));
 

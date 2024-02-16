@@ -22,7 +22,6 @@ import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 import difference from "lodash/difference";
 
 const canvasController = new CanvasController();
-const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const startingLinks = canvasController.getLinks();
@@ -51,7 +50,7 @@ const trgNode = canvasController.getNode(startingLinks[0].trgNodeId);
 describe("DisplaySubPipeline action handles calls correctly", () => {
 
 	it("should handle calls, undo, and redo to multiple actions", () => {
-		const createNodeLink = new CreateNodeOnLinkAction(data, objectModel);
+		const createNodeLink = new CreateNodeOnLinkAction(data, canvasController);
 		expect(canvasController.getLinks()).to.have.length(9);
 		expect(canvasController.getNodes()).to.have.length(5);
 		expect(canvasController.getNodeDataLinkFromInfo(srcNode.id, srcNode.outputs[0].id, trgNode.id, trgNode.inputs[0].id)).to.exist;
@@ -61,7 +60,7 @@ describe("DisplaySubPipeline action handles calls correctly", () => {
 		const getData = createNodeLink.getData();
 		const newLinkIds = difference(canvasController.getLinks(), startingLinks).map((newLink) => newLink.id);
 
-		// Get the node that was added to teh canvas
+		// Get the node that was added to the canvas
 		const addedNode = nodeDifference(startingNodes)[0];
 
 		// Check two new links were added with corrct IDs

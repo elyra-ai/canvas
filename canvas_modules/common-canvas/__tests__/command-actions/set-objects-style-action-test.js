@@ -23,7 +23,6 @@ import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 
 
 const canvasController = new CanvasController();
-const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const nodes = canvasController.getNodes();
@@ -42,7 +41,7 @@ describe("SetObjectsStyleAction handles calls correctly", () => {
 			temporary: false
 		};
 		data.pipelineObjectIds[originalPipelineId] = [nodes[0].id];
-		const setObjectsStyle = new SetObjectsStyleAction(data, objectModel);
+		const setObjectsStyle = new SetObjectsStyleAction(data, canvasController);
 		setObjectsStyle.do();
 
 		const savedStyle = canvasController.getNodeStyle(nodes[0].id, false, originalPipelineId);

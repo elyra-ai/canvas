@@ -32,7 +32,7 @@ describe("DisplayPreviousPipeline action handles calls correctly", () => {
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
 
-		const displayPreviousPipeline = new DisplayPreviousPipeline({}, objectModel);
+		const displayPreviousPipeline = new DisplayPreviousPipeline({}, canvasController);
 		displayPreviousPipeline.do();
 
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");

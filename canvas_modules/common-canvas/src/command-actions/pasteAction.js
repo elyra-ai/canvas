@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@ import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class PasteAction extends Action {
-	constructor(data, objectModel, labelUtil, viewportDimensions, areDetachableLinksInUse, isSnapToGridInUse) {
+	constructor(data, canvasController, vpDims) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
-		this.viewportDimensions = viewportDimensions;
-		this.areDetachableLinksInUse = areDetachableLinksInUse;
-		this.isSnapToGridInUse = isSnapToGridInUse;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
+		this.viewportDimensions = vpDims ? vpDims : canvasController.getViewPortDimensions();
+		this.areDetachableLinksInUse = canvasController.areDetachableLinksInUse();
+		this.isSnapToGridInUse = canvasController.isSnapToGridInUse();
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
+
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.

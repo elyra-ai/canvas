@@ -23,7 +23,6 @@ import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 
 
 const canvasController = new CanvasController();
-const objectModel = canvasController.getObjectModel();
 deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 const links = canvasController.getLinks();
@@ -42,7 +41,7 @@ describe("SetLinksStyleAction handles calls correctly", () => {
 			temporary: false
 		};
 		data.pipelineLinkIds[originalPipelineId] = [links[0].id];
-		const setLinksStyleAction1 = new SetLinksStyleAction(data, objectModel);
+		const setLinksStyleAction1 = new SetLinksStyleAction(data, canvasController);
 
 		setLinksStyleAction1.do();
 		let actualStyle = canvasController.getLinkStyle(links[0].id, false, originalPipelineId);
