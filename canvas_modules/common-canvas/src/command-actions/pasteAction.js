@@ -13,20 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/***************************************************************************/
+/* WARNING:                                                                */
+/* This class is exported from Common Canvas. This means host apps can     */
+/* extend the class and add to, or alter, this class's member variables.   */
+/* So, if the names of any internal this.xxxx variables are changed that   */
+/* needs to be communicated clearly through the release notes, Slack, etc. */
+/***************************************************************************/
+
 import Action from "../command-stack/action.js";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 
 export default class PasteAction extends Action {
-	constructor(data, canvasController, vpDims) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
-		this.viewportDimensions = vpDims ? vpDims : canvasController.getViewPortDimensions();
+		this.viewportDimensions = canvasController.getViewPortDimensions();
 		this.areDetachableLinksInUse = canvasController.areDetachableLinksInUse();
 		this.isSnapToGridInUse = canvasController.isSnapToGridInUse();
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-
 
 		// Make sure objects to be pasted are in an appropriate position for them
 		// to appear within the viewport.

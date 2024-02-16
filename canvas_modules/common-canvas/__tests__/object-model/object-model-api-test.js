@@ -799,10 +799,13 @@ describe("ObjectModel API handle model OK", () => {
 			objectModel.getAPIPipeline().getLink("7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55"),
 			objectModel.getAPIPipeline().getLink(uniqueCommentLinkId)];
 
+		// Hack the canvas controller's getViewPortDimensions() method to return some
+		// dummy viewport dimensions.
+		canvasController.getViewPortDimensions = () => ({ x: 0, y: 0, width: 1100, height: 640 });
+
 		// Simulate the objects copying from the clipboard by making a copy of them.
 		const copyCloneData = JSON.parse(JSON.stringify(cloneData));
-		const dummyViewportDimensions = { x: 0, y: 0, width: 1100, height: 640 };
-		const cloneAction = new PasteAction(copyCloneData, canvasController, dummyViewportDimensions);
+		const cloneAction = new PasteAction(copyCloneData, canvasController);
 		cloneAction.do();
 
 		const actualCanvas = objectModel.getCanvasInfoPipeline();

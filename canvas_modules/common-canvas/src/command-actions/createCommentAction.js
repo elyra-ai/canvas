@@ -16,18 +16,12 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateCommentAction extends Action {
-	constructor(data, canvasController, comPos) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
 		this.labelUtil = canvasController.labelUtil;
 		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-
-		// If we are provided with a comment position then use it in preference
-		// to the actual mouse position when creating the comment.
-		if (comPos) {
-			this.data.mousePos = comPos;
-		}
 
 		this.comment = this.apiPipeline.createComment(data);
 	}

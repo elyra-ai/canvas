@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/***************************************************************************/
+/* WARNING:                                                                */
+/* This class is exported from Common Canvas. This means host apps can     */
+/* extend the class and add to, or alter, this class's member variables.   */
+/* So, if the names of any internal this.xxxx variables are changed that   */
+/* needs to be communicated clearly through the release notes, Slack, etc. */
+/***************************************************************************/
+
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Action from "../command-stack/action.js";
 

@@ -2345,8 +2345,8 @@ export default class CanvasController {
 				break;
 			}
 			case "createAutoComment": {
-				const comPos = this.getNewCommentPosition(data.pipelineId);
-				command = new CreateCommentAction(data, this, comPos);
+				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
