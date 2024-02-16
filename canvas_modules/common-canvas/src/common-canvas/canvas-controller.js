@@ -2445,12 +2445,14 @@ export default class CanvasController {
 				break;
 			}
 			case "arrangeHorizontally": {
-				command = new ArrangeLayoutAction(data, this, constants.HORIZONTAL);
+				data.layoutDirection = constants.HORIZONTAL;
+				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeVertically": {
-				command = new ArrangeLayoutAction(data, this, constants.VERTICAL);
+				data.layoutDirection = constants.VERTICAL;
+				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
