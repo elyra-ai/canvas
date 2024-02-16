@@ -25,9 +25,9 @@ deepFreeze(startPipelineFlow);
 canvasController.setPipelineFlow(startPipelineFlow);
 
 
-describe("DisplaySubPipeline action handles calls correctly", () => {
+describe("CreateAutoNodeAction action handles calls correctly", () => {
 
-	it("should handle calls, undo, and redo to multiple actions", () => {
+	it("should handle do, undo, and redo to add/remove node and a link", () => {
 		// Check the initial contents of the pipeline
 		expect(canvasController.getLinks()).to.have.length(9);
 		expect(canvasController.getNodes()).to.have.length(5);
