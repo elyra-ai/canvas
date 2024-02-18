@@ -1552,12 +1552,23 @@ export default class CanvasController {
 		}
 	}
 
+	// Manages the flag that indicates whether the mouse cursor is over
+	// the context toolbar or not. This flag is used for controlling the
+	// display of the context toolbar.
 	setMouseInContextToolbar(state) {
 		this.mouseInContextToolbar = state;
 	}
 
-	setMouseInObject(state) {
-		this.mouseInObject = state;
+	// Manages the flag that indicates whether the mouse cursor is over
+	// an object (node, comment or link) or not. This flag is used for
+	// controlling the display of the context toolbar. 'id' is either the id
+	// of the object the cursor is over, or null, if it is not over an object.
+	setMouseInObject(id) {
+		// Close the context toolbat immediately if the object id changes.
+		if (id && id !== this.mouseInObject) {
+			this.closeContextMenu();
+		}
+		this.mouseInObject = id;
 	}
 
 	openNotificationPanel() {
