@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 import Action from "../command-stack/action.js";
 
 export default class ArrangeLayoutAction extends Action {
-	constructor(data, objectModel, labelUtil, layoutDirection) {
-		super(layoutDirection);
+	constructor(data, canvasController) {
+		super();
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
-		this.layoutDirection = layoutDirection;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
+		this.layoutDirection = data.layoutDirection; // "horizontal" or "vertical"
 		this.apiPipeline = this.objectModel.getAPIPipeline();
+
 		// Copy the nodes to remember their original positions.
 		this.existingNodes = this.apiPipeline.getNodes().map((n) => Object.assign({}, n));
 	}

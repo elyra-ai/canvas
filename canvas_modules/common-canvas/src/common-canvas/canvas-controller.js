@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ export default class CanvasController {
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 
-		this.isContextMenuForNonSelectedObj = this.isContextMenuForNonSelectedObj.bind(this);
+		this.isContextToolbarForNonSelectedObj = this.isContextToolbarForNonSelectedObj.bind(this);
 
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
@@ -454,7 +454,7 @@ export default class CanvasController {
 	// Removes nodetypes from a palette category
 	// selObjectIds - an array of object IDs to identify the nodetypes to be
 	// removed
-	// categoryId - the ID of teh category from which the nodes will be removed
+	// categoryId - the ID of the category from which the nodes will be removed
 	removeNodesFromPalette(selObjectIds, categoryId) {
 		this.objectModel.addNodeTypesToPalette(selObjectIds, categoryId);
 	}
@@ -1552,12 +1552,24 @@ export default class CanvasController {
 		}
 	}
 
+	// Manages the flag that indicates whether the mouse cursor is over
+	// the context toolbar or not. This flag is used for controlling the
+	// display of the context toolbar.
 	setMouseInContextToolbar(state) {
 		this.mouseInContextToolbar = state;
 	}
 
-	setMouseInObject(state) {
-		this.mouseInObject = state;
+	// Manages the flag that indicates whether the mouse cursor is over
+	// an object (node, comment or link) or not. This flag is used for
+	// controlling the display of the context toolbar. 'id' is either the id
+	// of the object the cursor is over, or null, if it is not over an object.
+	setMouseInObject(id) {
+		// Close the context toolbar immediately if the mouse cursor moves
+		// from one object to another.
+		if (id && id !== this.mouseInObject) {
+			this.closeContextToolbar();
+		}
+		this.mouseInObject = id;
 	}
 
 	openNotificationPanel() {
@@ -2102,7 +2114,7 @@ export default class CanvasController {
 
 	// Returns true if the context toolbar is switched on and the node over which
 	// the mouse cursor is hovering is NOT in the list of selected objects.
-	isContextMenuForNonSelectedObj(source) {
+	isContextToolbarForNonSelectedObj(source) {
 		if (this.getCanvasConfig().enableContextToolbar) {
 			if (source.targetObject) {
 				return !source.selectedObjectIds.includes(source.targetObject.id);
@@ -2128,7 +2140,7 @@ export default class CanvasController {
 
 		this.closeContextMenu();
 		if (this.getCanvasConfig().enableContextToolbar &&
-				this.isContextMenuForNonSelectedObj(source)) {
+				this.isContextToolbarForNonSelectedObj(source)) {
 			this.setSelections([source.targetObject.id]);
 		}
 		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
@@ -2168,6 +2180,11 @@ export default class CanvasController {
 		}
 	}
 
+	// Performs edit actions, based on the cmndData passed in, to the object
+	// model which result in changes to the displayed canvas. Returns true if
+	// the action completes successfully and false if it does not complete,
+	// for example, if the host application cancels the action by returning
+	// false from the beforeEditActionHanlder.
 	editActionHandler(cmndData) {
 		this.logger.log("editActionHandler - " + cmndData.editType);
 		this.logger.log(cmndData);
@@ -2203,17 +2220,17 @@ export default class CanvasController {
 			data = this.handlers.beforeEditActionHandler(data, cmnd);
 			// If the host app returns null, it doesn't want the action to proceed.
 			if (!data) {
-				return;
+				return false;
 			}
 			// If an external pipeline flow was requested, we need to make sure it
 			// was provided by the host app. We can't proceed if it was not.
 			if (!this.wasExtPipelineFlowLoadSuccessful(data)) {
-				return;
+				return false;
 			}
 		}
 
 		// Now preprocessing is complete, execuete the action itself.
-		this.editAction(data);
+		return this.editAction(data);
 	}
 
 	// Performs the edit action using the 'data' parameter, which contains the
@@ -2232,7 +2249,7 @@ export default class CanvasController {
 		// 'delete' is pressed on the keyboard.
 		if (data.editType === "deleteSelectedObjects" &&
 				data.selectedObjectIds.length === 0) {
-			return;
+			return false;
 		}
 
 		// These commands are supported for the external AND internal object models.
@@ -2289,6 +2306,14 @@ export default class CanvasController {
 			this.toggleNotificationPanel();
 			break;
 		}
+		case "openNotificationPanel": {
+			this.openNotificationPanel();
+			break;
+		}
+		case "closeNotificationPanel": {
+			this.closeNotificationPanel();
+			break;
+		}
 		case "loadPipelineFlow": {
 			this.objectModel.ensurePipelineIsLoaded(data);
 			break;
@@ -2302,200 +2327,197 @@ export default class CanvasController {
 		if (this.getCanvasConfig().enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
-				command = new CreateNodeAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createNodeOnLink": {
-				command = new CreateNodeOnLinkAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeOnLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createNodeAttachLinks": {
-				command = new CreateNodeAttachLinksAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeAttachLinksAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createAutoNode": {
-				const autoLinkSelNodes = this.getCanvasConfig().enableAutoLinkOnlyFromSelNodes;
-				command = new CreateAutoNodeAction(data, this.objectModel, this.labelUtil, autoLinkSelNodes);
+				command = new CreateAutoNodeAction(data, this);
 				this.commandStack.do(command);
 				this.panToReveal(data);
 				data = command.getData();
 				break;
 			}
 			case "createComment": {
-				command = new CreateCommentAction(data, this.objectModel, this.labelUtil);
+				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "createAutoComment": {
-				const comPos = this.getNewCommentPosition(data.pipelineId);
-				command = new CreateCommentAction(data, this.objectModel, this.labelUtil, comPos);
+				data.mousePos = this.getNewCommentPosition(data.pipelineId);
+				command = new CreateCommentAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "insertNodeIntoLink": {
-				command = new InsertNodeIntoLinkAction(data, this.objectModel, this.labelUtil);
+				command = new InsertNodeIntoLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "attachNodeToLinks": {
-				command = new AttachNodeToLinksAction(data, this.objectModel, this.labelUtil);
+				command = new AttachNodeToLinksAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "moveObjects": {
-				command = new MoveObjectsAction(data, this.objectModel, this.labelUtil);
+				command = new MoveObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "resizeObjects": {
-				command = new SizeAndPositionObjectsAction(data, this.objectModel, this.labelUtil);
+				command = new SizeAndPositionObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "setObjectsStyle": {
-				command = new SetObjectsStyleAction(data, this.objectModel, this.labelUtil);
+				command = new SetObjectsStyleAction(data);
 				this.commandStack.do(command);
 				break;
 			}
 			case "setLinksStyle": {
-				command = new SetLinksStyleAction(data, this.objectModel, this.labelUtil);
+				command = new SetLinksStyleAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "updateLink": {
-				command = new UpdateLinkAction(data, this.objectModel, this.labelUtil);
+				command = new UpdateLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "setNodeLabel": {
-				command = new SetNodeLabelAction(data, this.objectModel, this.labelUtil);
+				command = new SetNodeLabelAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "editComment": {
-				command = new EditCommentAction(data, this.objectModel, this.labelUtil);
+				command = new EditCommentAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "editDecorationLabel": {
-				command = new EditDecorationLabelAction(data, this.objectModel, this.labelUtil);
+				command = new EditDecorationLabelAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "linkNodes": {
-				command = new CreateNodeLinkAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "linkNodesAndReplace": {
-				command = new CreateNodeLinkAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "linkComment": {
-				command = new CreateCommentLinkAction(data, this.objectModel, this.labelUtil);
+				command = new CreateCommentLinkAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "createDetachedLink": {
-				command = new CreateNodeLinkDetachedAction(data, this.objectModel, this.labelUtil);
+				command = new CreateNodeLinkDetachedAction(data, this);
 				this.commandStack.do(command);
 				data = command.getData();
 				break;
 			}
 			case "colorSelectedObjects": {
-				command = new ColorSelectedObjectsAction(data, this.objectModel, this.labelUtil);
+				command = new ColorSelectedObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "deleteSelectedObjects": {
-				command = new DeleteObjectsAction(data, this.objectModel, this.labelUtil, this.areDetachableLinksInUse());
+				command = new DeleteObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "displaySubPipeline": {
-				command = new DisplaySubPipelineAction(data, this.objectModel, this.labelUtil);
+				command = new DisplaySubPipelineAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "displayPreviousPipeline": {
-				command = new DisplayPreviousPipelineAction(data, this.objectModel, this.labelUtil);
+				command = new DisplayPreviousPipelineAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeHorizontally": {
-				command = new ArrangeLayoutAction(data, this.objectModel, this.labelUtil, constants.HORIZONTAL);
+				data.layoutDirection = constants.HORIZONTAL;
+				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "arrangeVertically": {
-				command = new ArrangeLayoutAction(data, this.objectModel, this.labelUtil, constants.VERTICAL);
+				data.layoutDirection = constants.VERTICAL;
+				command = new ArrangeLayoutAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "createSuperNode":
 			case "createSuperNodeExternal": {
-				command = new CreateSuperNodeAction(data, this.objectModel, this.labelUtil, this.getCanvasConfig().enableUseCardFromOriginalPorts);
+				command = new CreateSuperNodeAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "deconstructSuperNode": {
-				command = new DeconstructSuperNodeAction(data, this.objectModel, this.labelUtil,
-					this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				command = new DeconstructSuperNodeAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 
 			case "expandSuperNodeInPlace": {
-				command = new ExpandSuperNodeInPlaceAction(data, this.objectModel, this.labelUtil,
-					this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				command = new ExpandSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "collapseSuperNodeInPlace": {
-				command = new CollapseSuperNodeInPlaceAction(data, this.objectModel, this.labelUtil,
-					this.getCanvasConfig().enableMoveNodesOnSupernodeResize);
+				command = new CollapseSuperNodeInPlaceAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "convertSuperNodeExternalToLocal": {
-				command = new ConvertSuperNodeExternalToLocal(data, this.objectModel, this.labelUtil);
+				command = new ConvertSuperNodeExternalToLocal(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "convertSuperNodeLocalToExternal": {
-				command = new ConvertSuperNodeLocalToExternal(data, this.objectModel, this.labelUtil);
+				command = new ConvertSuperNodeLocalToExternal(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "deleteLink": {
-				command = new DeleteLinkAction(data, this.objectModel, this.labelUtil);
+				command = new DeleteLinkAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "disconnectNode": {
-				command = new DisconnectObjectsAction(data, this.objectModel, this.labelUtil);
+				command = new DisconnectObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "saveToPalette": {
-				command = new SaveToPaletteAction(data, this.objectModel, this.labelUtil, this.labelUtil);
+				command = new SaveToPaletteAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
 			case "cut": {
 				this.objectModel.copyToClipboard(this.areDetachableLinksInUse());
-				command = new DeleteObjectsAction(data, this.objectModel, this.labelUtil,
-					this.areDetachableLinksInUse());
+				command = new DeleteObjectsAction(data, this);
 				this.commandStack.do(command);
 				break;
 			}
@@ -2507,9 +2529,7 @@ export default class CanvasController {
 				const pasteObjects = this.objectModel.getObjectsToPaste();
 				if (pasteObjects) {
 					data.objects = pasteObjects;
-					const vpDims = this.getSVGCanvasD3().getTransformedViewportDimensions();
-					command = new PasteAction(data, this.objectModel, this.labelUtil,
-						vpDims, this.areDetachableLinksInUse(), this.isSnapToGridInUse());
+					command = new PasteAction(data, this);
 					this.commandStack.do(command);
 					data = command.getData();
 				}
@@ -2540,12 +2560,6 @@ export default class CanvasController {
 				this.unsetAllBranchHighlight();
 				this.branchHighlighted = false;
 				break;
-			case "openNotificationPanel":
-				this.openNotificationPanel();
-				break;
-			case "closeNotificationPanel":
-				this.closeNotificationPanel();
-				break;
 			default:
 			}
 		}
@@ -2561,6 +2575,8 @@ export default class CanvasController {
 		// pipeline visible they will be loaded one by one when this check is
 		// encountered.
 		this.ensureVisibleExpandedPipelinesAreLoaded();
+
+		return true;
 	}
 
 	// Sets the appropriate values when handling an external pipleine flow

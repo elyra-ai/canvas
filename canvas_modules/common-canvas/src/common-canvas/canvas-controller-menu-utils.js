@@ -123,7 +123,7 @@ const isEditingAction = (action) =>
 // controller passed in.
 const createDefaultContextMenu = (source) => {
 	let menuDefinition = [];
-	const menuForNonSelectedObj = cc.isContextMenuForNonSelectedObj(source);
+	const menuForNonSelectedObj = cc.isContextToolbarForNonSelectedObj(source);
 
 	// Select all & add comment: canvas only
 	if (source.type === "canvas") {

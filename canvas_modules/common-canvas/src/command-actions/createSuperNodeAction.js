@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import { ASSOCIATION_LINK, COMMENT_LINK, NODE_LINK,
 const BOUNDING_RECT_PADDING = 80;
 
 export default class CreateSuperNodeAction extends Action {
-	constructor(data, objectModel, labelUtil, useCardFromOriginalPorts) {
+	constructor(data, canvasController) {
 		super(data);
-		this.labelUtil = labelUtil;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
 		this.data = data;
-		this.useCardFromOriginalPorts = useCardFromOriginalPorts;
-		this.objectModel = objectModel;
+		this.useCardFromOriginalPorts = canvasController.getCanvasConfig().enableUseCardFromOriginalPorts;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
 
 		this.subflowNodes = this.objectModel.getSelectedNodes();
@@ -317,7 +317,7 @@ export default class CreateSuperNodeAction extends Action {
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
-	// Returns an array of data objects that for binding the input links. That,
+	// Returns an array of data objects used for binding the input links. That,
 	// is for each input link a binding input data object is created that contains
 	// the link and a new port that can be added to the supernode. The port will
 	// have a unique ID within the scope of the input ports for the supernode.
@@ -357,7 +357,7 @@ export default class CreateSuperNodeAction extends Action {
 		return bindingInputData;
 	}
 
-	// Returns an array of data objects that for binding the output links. That,
+	// Returns an array of data objects used for binding the output links. That,
 	// is for each output link a binding input data object is created that contains
 	// the link and a new port that can be added to the supernode. The port will
 	// have a unique ID within the scope of the output ports for the supernode.
