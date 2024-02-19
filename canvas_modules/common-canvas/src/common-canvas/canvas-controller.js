@@ -1564,7 +1564,8 @@ export default class CanvasController {
 	// controlling the display of the context toolbar. 'id' is either the id
 	// of the object the cursor is over, or null, if it is not over an object.
 	setMouseInObject(id) {
-		// Close the context toolbat immediately if the object id changes.
+		// Close the context toolbar immediately if the mouse cursor moves
+		// from one object to another.
 		if (id && id !== this.mouseInObject) {
 			this.closeContextMenu();
 		}
