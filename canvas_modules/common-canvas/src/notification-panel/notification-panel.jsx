@@ -187,7 +187,7 @@ class NotificationPanel extends React.Component {
 					className="notification-panel-clear-all"
 					onClick={this.clearNotificationMessages.bind(this)}
 					kind="ghost"
-					size="small"
+					size="sm"
 					disabled={this.props.messages.length === 0}
 				>
 					{this.props.notificationConfig.clearAllMessage}
@@ -203,7 +203,7 @@ class NotificationPanel extends React.Component {
 					className="notification-panel-secondary-button"
 					onClick={this.props.notificationConfig.secondaryButtonCallback.bind(this)}
 					kind="ghost"
-					size="small"
+					size="sm"
 					disabled={this.props.secondaryButtonDisabled}
 				>
 					{this.props.notificationConfig.secondaryButtonLabel}

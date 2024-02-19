@@ -505,7 +505,7 @@ export default class AbstractTable extends React.Component {
 					className="properties-remove-fields-button"
 					disabled={removeDisabled}
 					onClick={removeOnClick}
-					size="small"
+					size="sm"
 					kind="ghost"
 					renderIcon={TrashCan16}
 				>
@@ -515,7 +515,7 @@ export default class AbstractTable extends React.Component {
 					className="properties-add-fields-button"
 					disabled={addButtonDisabled}
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
 					renderIcon={Add16}
 				>
@@ -534,7 +534,7 @@ export default class AbstractTable extends React.Component {
 				<Button
 					className="properties-edit-button"
 					onClick={this.editOnClick.bind(this, this.props.propertyId)}
-					size="small"
+					size="sm"
 					kind="ghost"
 					renderIcon={Edit16}
 				>

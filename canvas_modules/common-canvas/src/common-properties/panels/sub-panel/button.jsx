@@ -47,7 +47,7 @@ export default class SubPanelButton extends React.Component {
 		const button = (<Button
 			className="properties-subpanel-button"
 			type="button"
-			small
+			size="sm"
 			kind="secondary"
 			onClick={this.showSubPanel}
 		>

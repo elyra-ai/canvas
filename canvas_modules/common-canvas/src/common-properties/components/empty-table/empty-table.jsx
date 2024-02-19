@@ -54,7 +54,7 @@ export default class EmptyTable extends React.Component {
 				<Button
 					className="properties-empty-table-button"
 					kind="tertiary"
-					size="small"
+					size="sm"
 					renderIcon={this.isReadonlyTable() ? Edit16 : Add16}
 					onClick={this.props.emptyTableButtonClickHandler}
 					disabled={this.props.disabled}

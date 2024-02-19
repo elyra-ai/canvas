@@ -112,7 +112,7 @@ class TitleEditor extends Component {
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
 				renderIcon={Edit16}
-				size="small"
+				size="sm"
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
 			/>);
@@ -125,7 +125,7 @@ class TitleEditor extends Component {
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
 				renderIcon={Help16}
-				size="small"
+				size="sm"
 				iconDescription={helpButtonLabel}
 				hasIconOnly
 			/>)
@@ -135,7 +135,7 @@ class TitleEditor extends Component {
 			? (<div className="properties-close-button">
 				<Button
 					kind="ghost"
-					size="small"
+					size="sm"
 					data-id="close"
 					onClick={this.props.closeHandler}
 					tooltipPosition="left"

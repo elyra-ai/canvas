@@ -50,7 +50,7 @@ export default class ExpressionSelectOperator extends React.Component {
 							<Button
 								className={classNames("properties-operator-button", { "first": (index % 2 === 0),
 									"second": !(index % 2 === 0) })}
-								size="small"
+								size="sm"
 								kind="tertiary"
 								onClick={this.onOperatorClick.bind(this, operator.value)}
 							>

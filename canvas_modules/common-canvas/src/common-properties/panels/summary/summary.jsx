@@ -281,7 +281,7 @@ class SummaryPanel extends React.Component {
 			<Button
 				className="properties-summary-link-button"
 				onClick={this.handleLinkClicked}
-				size="small"
+				size="sm"
 				kind="ghost"
 				renderIcon={Add16}
 			>

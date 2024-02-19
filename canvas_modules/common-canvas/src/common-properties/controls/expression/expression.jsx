@@ -280,7 +280,7 @@ class ExpressionControl extends React.Component {
 		const reactIntl = this.props.controller.getReactIntl();
 
 		const button = this._showBuilderButton() ? (
-			<Button kind="ghost" size="small"
+			<Button kind="ghost" size="sm"
 				className="properties-expression-button"
 				disabled={this.props.state === STATES.DISABLED}
 				onClick={this.showExpressionBuilder}

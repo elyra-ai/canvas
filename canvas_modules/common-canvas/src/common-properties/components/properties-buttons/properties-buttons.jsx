@@ -39,7 +39,7 @@ class PropertiesButtons extends Component {
 					data-id="properties-cancel-button"
 					className="properties-cancel-button"
 					type="button"
-					size="small"
+					size="sm"
 					kind="secondary"
 					onClick={this.props.cancelHandler}
 				>
@@ -54,7 +54,7 @@ class PropertiesButtons extends Component {
 					data-id="properties-apply-button"
 					className="properties-apply-button"
 					type="button"
-					size="small"
+					size="sm"
 					onClick={this.props.okHandler}
 					disabled={!this.props.applyButtonEnabled}
 				>

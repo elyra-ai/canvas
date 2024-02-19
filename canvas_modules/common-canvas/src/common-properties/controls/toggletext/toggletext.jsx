@@ -75,7 +75,7 @@ class ToggletextControl extends React.Component {
 			button = (
 				<Button
 					kind={buttonType}
-					size="small"
+					size="sm"
 					onClick={this.onClick.bind(this)}
 					renderIcon={this.renderIcon.bind(this)}
 					iconDescription={formatMessage(this.reactIntl, MESSAGE_KEYS.TOGGLETEXT_ICON_DESCRIPTION, { toggletext_label: this.props.value })}

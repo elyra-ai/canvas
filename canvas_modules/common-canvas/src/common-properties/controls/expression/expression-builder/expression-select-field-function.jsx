@@ -276,7 +276,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				className="expression-add-field-button properties-expr-table-cell"
 				onClick={this.handleAddButtonClick.bind(this, index, tableType)}
 				kind="ghost"
-				size="small"
+				size="sm"
 			>
 				<Add16 aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
 			</Button>

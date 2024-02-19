@@ -321,7 +321,7 @@ export default class FieldPicker extends React.Component {
 				onClick={this.handleReset}
 				renderIcon={Reset24}
 				iconDescription={resetLabel}
-				size="small"
+				size="sm"
 				kind="ghost"
 			>
 				<span>{resetLabel}</span>
