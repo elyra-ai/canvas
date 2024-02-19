@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Slider } from "carbon-components-react";
+import { Slider } from "@carbon/react";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";

@@ -25,7 +25,7 @@ import PaletteClose from "./../../assets/images/palette/palette_close.svg";
 import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
 import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
 import ToolbarActionSubArea from "./toolbar-action-sub-area.jsx";

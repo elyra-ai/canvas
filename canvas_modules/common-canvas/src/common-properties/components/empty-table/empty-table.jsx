@@ -20,7 +20,7 @@ import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 import { ControlType } from "./../../constants/form-constants";
 import { Add16, Edit16 } from "@carbon/icons-react";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 
 export default class EmptyTable extends React.Component {
 	constructor(props) {

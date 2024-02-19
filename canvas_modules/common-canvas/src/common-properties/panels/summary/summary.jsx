@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { Add16 } from "@carbon/icons-react";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";

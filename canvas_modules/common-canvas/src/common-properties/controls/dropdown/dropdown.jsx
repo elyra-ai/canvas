@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { SelectItem, Select, Dropdown, ComboBox } from "carbon-components-react";
+import { SelectItem, Select, Dropdown, ComboBox } from "@carbon/react";
 import { isEqual, isEmpty } from "lodash";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";

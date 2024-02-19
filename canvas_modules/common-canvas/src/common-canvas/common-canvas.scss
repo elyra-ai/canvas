@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-@import "carbon-components/scss/globals/scss/_vars";
+// @import "carbon-components/scss/globals/scss/_vars";
+@use "../carbon.scss";
 $toolbar-button-height: 41px; // Allow one extra pixel for the toolbar border
 $panel-border-width: 1px;
 $panel-border-color: $ui-03;

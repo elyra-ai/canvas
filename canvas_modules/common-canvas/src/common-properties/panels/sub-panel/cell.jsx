@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { Settings16 } from "@carbon/icons-react";
 import { formatMessage } from "./../../util/property-utils";
 import Tooltip from "./../../../tooltip/tooltip.jsx";

@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { setActiveTab } from "./../../actions";
-import { Tab, Tabs, Link } from "carbon-components-react";
+import { Tab, Tabs, Link } from "@carbon/react";
 import * as PropertyUtil from "./../../util/property-utils";
 import { MESSAGE_KEYS, CARBON_ICONS, CONDITION_MESSAGE_TYPE, STATES, CATEGORY_VIEW } from "./../../constants/constants";
 import { cloneDeep, isEmpty, sortBy, get, filter } from "lodash";

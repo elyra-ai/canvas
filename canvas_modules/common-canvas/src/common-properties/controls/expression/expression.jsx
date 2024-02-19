@@ -21,7 +21,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import Icon from "./../../../icons/icon.jsx";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import classNames from "classnames";
 import { isEqual } from "lodash";
 import ValidationMessage from "./../../components/validation-message";

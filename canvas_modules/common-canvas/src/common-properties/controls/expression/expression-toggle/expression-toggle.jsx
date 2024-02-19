@@ -18,7 +18,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { injectIntl } from "react-intl";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { Maximize16, Minimize16 } from "@carbon/icons-react";
 import { formatMessage } from "../../../util/property-utils";
 import { MESSAGE_KEYS } from "../../../constants/constants";

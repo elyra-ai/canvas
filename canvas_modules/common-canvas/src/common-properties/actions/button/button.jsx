@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { STATES, CARBON_BUTTON_KIND, CARBON_BUTTON_SIZE } from "./../../constants/constants.js";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import classNames from "classnames";

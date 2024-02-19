@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { MultiSelect, FilterableMultiSelect } from "carbon-components-react";
+import { MultiSelect, FilterableMultiSelect } from "@carbon/react";
 import * as ControlUtils from "./../../util/control-utils";
 import ValidationMessage from "./../../components/validation-message";
 import classNames from "classnames";

@@ -16,11 +16,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { InlineLoading } from "carbon-components-react";
+import { InlineLoading } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 import { get } from "lodash";
-import { AccordionItem } from "carbon-components-react";
+import { AccordionItem } from "@carbon/react";
 import PaletteContentList from "./palette-content-list.jsx";
 
 

@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { isEmpty } from "lodash";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, CARBON_ICONS } from "./../../constants/constants.js";

@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { v4 as uuid4 } from "uuid";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { OverflowMenuVertical16 } from "@carbon/icons-react";
 import ToolbarOverflowMenu from "./toolbar-overflow-menu.jsx";
 

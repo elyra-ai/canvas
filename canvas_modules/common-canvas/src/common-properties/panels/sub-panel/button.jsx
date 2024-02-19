@@ -17,7 +17,7 @@
 import logger from "./../../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import { formatMessage } from "./../../util/property-utils";
 import { MESSAGE_KEYS } from "./../../constants/constants";
 

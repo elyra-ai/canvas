@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-@import "carbon-components/scss/globals/scss/vars";
+// @import "carbon-components/scss/globals/scss/vars";
+@use "../carbon.scss";
 
 $toolbar-icon-label-margin: 8px;
 $toolbar-icon-size: 16px;

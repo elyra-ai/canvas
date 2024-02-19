@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Portal } from "react-portal";
-import { Link } from "carbon-components-react";
+import { Link } from "@carbon/react";
 import { v4 as uuid4 } from "uuid";
 
 class ToolTip extends React.Component {

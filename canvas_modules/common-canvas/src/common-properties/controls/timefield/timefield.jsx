@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
+import { TextInput } from "@carbon/react";
 import { parse, format, isValid } from "date-fns";
 import classNames from "classnames";
 

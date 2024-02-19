@@ -20,7 +20,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { Search } from "carbon-components-react";
+import { Search } from "@carbon/react";
 import VirtualizedTable from "./../virtualized-table/virtualized-table.jsx";
 import { REM_ROW_HEIGHT, REM_HEADER_HEIGHT, ONE_REM_HEIGHT, SORT_DIRECTION, STATES, ROW_HEIGHT, ROW_SELECTION } from "./../../constants/constants";
 import ReactResizeDetector from "react-resize-detector";

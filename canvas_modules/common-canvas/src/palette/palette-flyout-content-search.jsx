@@ -18,7 +18,7 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import PropTypes from "prop-types";
 import defaultMessages from "../../locales/palette/locales/en.json";
-import { Search } from "carbon-components-react";
+import { Search } from "@carbon/react";
 
 class PaletteFlyoutContentSearch extends React.Component {
 

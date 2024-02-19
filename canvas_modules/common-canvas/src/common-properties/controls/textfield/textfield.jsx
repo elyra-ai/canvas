@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { TextInput } from "carbon-components-react";
+import { TextInput } from "@carbon/react";
 import ReadonlyControl from "./../readonly";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";

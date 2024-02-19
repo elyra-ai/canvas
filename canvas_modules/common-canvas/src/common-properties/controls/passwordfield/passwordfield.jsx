@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { PasswordInput } from "carbon-components-react";
+import { PasswordInput } from "@carbon/react";
 import ValidationMessage from "./../../components/validation-message";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";

@@ -17,8 +17,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Add16 } from "@carbon/icons-react";
-import { Button } from "carbon-components-react";
-import { Switch, ContentSwitcher, Dropdown } from "carbon-components-react";
+import { Button } from "@carbon/react";
+import { Switch, ContentSwitcher, Dropdown } from "@carbon/react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
 import TruncatedContentTooltip from "./../../../components/truncated-content-tooltip";
 import { MESSAGE_KEYS, EXPRESSION_TABLE_ROWS, SORT_DIRECTION, ROW_SELECTION } from "./../../../constants/constants";

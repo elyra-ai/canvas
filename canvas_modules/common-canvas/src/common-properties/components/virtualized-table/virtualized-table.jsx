@@ -16,7 +16,7 @@
 
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
-import { Checkbox, Loading } from "carbon-components-react";
+import { Checkbox, Loading } from "@carbon/react";
 import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";

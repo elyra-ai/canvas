@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { setTitle } from "./../../actions";
 import Isvg from "react-inlinesvg";
 import { get } from "lodash";
-import { TextInput, Button } from "carbon-components-react";
+import { TextInput, Button } from "@carbon/react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";

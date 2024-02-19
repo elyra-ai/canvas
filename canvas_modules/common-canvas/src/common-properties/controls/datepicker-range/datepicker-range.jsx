@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { DatePicker, DatePickerInput } from "carbon-components-react";
+import { DatePicker, DatePickerInput } from "@carbon/react";
 import classNames from "classnames";
 import { v4 as uuid4 } from "uuid";
 

@@ -17,7 +17,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { Tabs, Tab } from "carbon-components-react";
+import { Tabs, Tab } from "@carbon/react";
 import { getDataId } from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants.js";
 import { v4 as uuid4 } from "uuid";

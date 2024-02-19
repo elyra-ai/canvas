@@ -23,7 +23,7 @@ import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import PropertiesButtons from "./../properties-buttons";
 import * as PropertyUtils from "./../../util/property-utils";
 
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
