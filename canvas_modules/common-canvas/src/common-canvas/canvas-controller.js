@@ -112,7 +112,7 @@ export default class CanvasController {
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 
-		this.isContextMenuForNonSelectedObj = this.isContextMenuForNonSelectedObj.bind(this);
+		this.isContextToolbarForNonSelectedObj = this.isContextToolbarForNonSelectedObj.bind(this);
 
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
@@ -2114,7 +2114,7 @@ export default class CanvasController {
 
 	// Returns true if the context toolbar is switched on and the node over which
 	// the mouse cursor is hovering is NOT in the list of selected objects.
-	isContextMenuForNonSelectedObj(source) {
+	isContextToolbarForNonSelectedObj(source) {
 		if (this.getCanvasConfig().enableContextToolbar) {
 			if (source.targetObject) {
 				return !source.selectedObjectIds.includes(source.targetObject.id);
@@ -2140,7 +2140,7 @@ export default class CanvasController {
 
 		this.closeContextMenu();
 		if (this.getCanvasConfig().enableContextToolbar &&
-				this.isContextMenuForNonSelectedObj(source)) {
+				this.isContextToolbarForNonSelectedObj(source)) {
 			this.setSelections([source.targetObject.id]);
 		}
 		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.
