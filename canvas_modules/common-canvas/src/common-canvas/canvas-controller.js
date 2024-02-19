@@ -1567,7 +1567,7 @@ export default class CanvasController {
 		// Close the context toolbar immediately if the mouse cursor moves
 		// from one object to another.
 		if (id && id !== this.mouseInObject) {
-			this.closeContextMenu();
+			this.closeContextToolbar();
 		}
 		this.mouseInObject = id;
 	}
