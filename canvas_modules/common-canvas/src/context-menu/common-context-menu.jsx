@@ -183,8 +183,11 @@ class CommonContextMenu extends React.Component {
 	}
 
 	buildColorPickerPanel() {
+		const subPanelData = {
+			clickActionHandler: (c) => this.colorClicked(c)
+		};
 		return (
-			<ColorPicker clickActionHandler={this.colorClicked} />
+			<ColorPicker subPanelData={subPanelData} closeSubPanel={() => null} />
 		);
 	}
 
