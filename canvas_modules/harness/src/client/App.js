@@ -1455,7 +1455,7 @@ class App extends React.Component {
 		// Add custom menu items at proper positions: open, preview & execute
 		if (source.type === "node" &&
 				(source.selectedObjectIds.length === 1 ||
-					this.canvasController.isContextMenuForNonSelectedObj(source))) {
+					this.canvasController.isContextToolbarForNonSelectedObj(source))) {
 			defMenu.unshift({ action: "editNode", label: this.getLabel("node_editNode", "CMI: Open") });
 			defMenu.splice(2, 0, { action: "previewNode", label: this.getLabel("node_previewNode", "CMI: Preview") });
 			defMenu.splice(8, 0, { action: "executeNode", label: this.getLabel("node_executeNode", "CMI: Execute") });
