@@ -22,7 +22,7 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import Logger from "../logging/canvas-logger.js";
 import ColorPicker from "../color-picker";
 
-const CM_TOOLBAR_GAP = 4;
+const CM_TOOLBAR_GAP = 2;
 const CM_ICON_SIZE = 32;
 const CM_ICON_PAD = 2;
 
