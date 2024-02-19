@@ -30,6 +30,8 @@ nav:
   - Home: index.md
   - Common Canvas Documentation: 2.0-Common-Canvas-Documentation.md
   - Canvas Editor: 2.0.1-Canvas-Editor.md
+  - Nodes: 2.0.1.1-Nodes.md
+  - Links: 2.0.1.2-Links.md
   - Palette: 2.0.2-Palette.md
   - Context Menu: 2.0.3-Context-Menu.md
   - Context Toolbar: 2.0.4-Context-Toolbar.md
