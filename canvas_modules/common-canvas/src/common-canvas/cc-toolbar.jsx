@@ -276,6 +276,7 @@ class CommonCanvasToolbar extends React.Component {
 				<div aria-label={this.getLabel("toolbar.label")} role="navigation" className={"common-canvas-toolbar"} >
 					<Toolbar
 						config={toolbarConfig}
+						containingDivId={this.props.containingDivId}
 						instanceId={this.props.canvasController.getInstanceId()}
 						toolbarActionHandler={this.toolbarActionHandler}
 						additionalText={{ overflowMenuLabel: this.getLabel("toolbar.overflowMenu") }}
@@ -291,6 +292,7 @@ CommonCanvasToolbar.propTypes = {
 	// Provided by CommonCanvas
 	intl: PropTypes.object.isRequired,
 	canvasController: PropTypes.object.isRequired,
+	containingDivId: PropTypes.string.isRequired,
 
 	// Provided by redux
 	enableToolbarLayout: PropTypes.string.isRequired,

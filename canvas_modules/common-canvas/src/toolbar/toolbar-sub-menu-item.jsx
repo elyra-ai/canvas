@@ -23,9 +23,7 @@ import classNames from "classnames";
 import ToolbarSubMenu from "./toolbar-sub-menu.jsx";
 import ToolbarSubPanel from "./toolbar-sub-panel.jsx";
 
-const ESC_KEY = 27;
-
-class ToolbarActionItem extends React.Component {
+class ToolbarSubMenuItem extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -36,7 +34,8 @@ class ToolbarActionItem extends React.Component {
 		this.divRef = React.createRef();
 
 		this.actionClickHandler = this.actionClickHandler.bind(this);
-		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onMouseEnter = this.onMouseEnter.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.openSubArea = this.openSubArea.bind(this);
 		this.closeSubArea = this.closeSubArea.bind(this);
 		this.clickOutside = this.clickOutside.bind(this);
@@ -48,26 +47,16 @@ class ToolbarActionItem extends React.Component {
 		document.removeEventListener("click", this.clickOutside, false);
 	}
 
-	onKeyDown(evt) {
-		if (evt.keyCode === ESC_KEY) {
-			this.closeSubArea();
-			return;
+	onMouseEnter(evt) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			this.openSubArea();
 		}
 	}
 
-	// Called by toolbar.jsx
-	getBoundingRect() {
-		return this.divRef.current.getBoundingClientRect();
-	}
-
-	// Called by toolbar.jsx
-	getAction() {
-		return this.props.actionObj.action;
-	}
-
-	// Called by toolbar.jsx
-	isEnabled() {
-		return this.props.actionObj.enable;
+	onMouseLeave(evt) {
+		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
+			this.closeSubArea();
+		}
 	}
 
 	clickOutside(evt) {
@@ -96,16 +85,25 @@ class ToolbarActionItem extends React.Component {
 			if (this.state.subAreaDisplayed) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
-				this.props.setToolbarFocusAction(this.props.actionObj.action);
-
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
 				this.openSubArea();
 			}
 
 		} else {
+			evt.stopPropagation();
+			if (this.props.isInCascadeMenu) {
+				this.props.closeParentSubArea();
+				this.props.setSubMenuFocus();
+
+			} else if (this.props.isInOverflowMenu) {
+				this.props.setSubMenuFocus(this.props.actionObj.action);
+
+			} else {
+				this.props.closeParentSubArea();
+				this.props.setToolbarFocusAction(); // Resets the toolbar focus action
+			}
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
-			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
 	}
 
@@ -126,9 +124,8 @@ class ToolbarActionItem extends React.Component {
 					subPanel={this.props.actionObj.subPanel}
 					subPanelData={this.props.actionObj.subPanelData}
 					closeSubArea={this.closeSubArea}
-					setToolbarFocusAction={this.props.setToolbarFocusAction}
 					actionItemRect={actionItemRect}
-					expandDirection={"vertical"}
+					expandDirection={"horizontal"}
 					containingDivId={this.props.containingDivId}
 				/>
 			);
@@ -138,23 +135,20 @@ class ToolbarActionItem extends React.Component {
 				subMenuActions={this.props.actionObj.subMenu}
 				instanceId={this.props.instanceId}
 				toolbarActionHandler={this.props.toolbarActionHandler}
+				setSubMenuFocus={this.props.setSubMenuFocus}
 				closeSubArea={this.closeSubArea}
-				setToolbarFocusAction={this.props.setToolbarFocusAction}
 				actionItemRect={actionItemRect}
-				expandDirection={"vertical"}
+				expandDirection={"horizontal"}
 				containingDivId={this.props.containingDivId}
-				parentSelector={this.generateSelector(this.props.actionObj)}
-				isCascadeMenu={false}
+				parentSelector={this.generateSelector()}
+				isCascadeMenu
 				size={this.props.size}
 			/>
 		);
 	}
 
-	generateSelector(actionObj) {
-		if (actionObj.jsx) {
-			return ".toolbar-jsx-item";
-		}
-		return ".toolbar-item";
+	generateSelector() {
+		return ".toolbar-sub-menu-item";
 	}
 
 	render() {
@@ -163,31 +157,28 @@ class ToolbarActionItem extends React.Component {
 		const kindAsClass = actionObj.kind ? actionObj.kind : "default";
 
 		const itemClassName = classNames(
-			{
-				"toolbar-item": !actionObj.jsx,
-				"toolbar-jsx-item": actionObj.jsx,
-				"toolbar-item-selected": actionObj.isSelected
-			},
+			{ "toolbar-sub-menu-item": true,
+				"toolbar-sub-menu-jsx-item": actionObj.jsx,
+				"toolbar-item-selected": actionObj.isSelected },
 			kindAsClass,
 			actionName);
 
 		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
 
 		return (
-			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
+			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action}
 				onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onKeyDown={this.onKeyDown}
 			>
 				<div>
 					<ToolbarButtonItem
 						actionObj={actionObj}
 						actionName={this.generateActionName()}
-						tooltipDirection={this.props.tooltipDirection}
 						instanceId={this.props.instanceId}
-						isInMenu={false}
+						isInMenu
 						subAreaDisplayed={this.state.subAreaDisplayed}
 						actionClickHandler={this.actionClickHandler}
-						buttonFocusAction={this.state.subAreaDisplayed ? null : this.props.toolbarFocusAction}
-						isFocusInToolbar={this.props.isFocusInToolbar}
+						buttonFocusAction={this.props.subMenuFocusAction}
+						isFocusInToolbar // Focus must be in toolbar for this sub-menu item to appear
 						size={this.props.size}
 					/>
 				</div>
@@ -197,7 +188,7 @@ class ToolbarActionItem extends React.Component {
 	}
 }
 
-ToolbarActionItem.propTypes = {
+ToolbarSubMenuItem.propTypes = {
 	actionObj: PropTypes.shape({
 		action: PropTypes.string.isRequired,
 		label: PropTypes.oneOfType([
@@ -229,15 +220,16 @@ ToolbarActionItem.propTypes = {
 			PropTypes.func
 		])
 	}),
-	tooltipDirection: PropTypes.oneOf(["top", "bottom"]),
 	toolbarActionHandler: PropTypes.func.isRequired,
 	instanceId: PropTypes.number.isRequired,
 	containingDivId: PropTypes.string,
 	closeParentSubArea: PropTypes.func,
-	toolbarFocusAction: PropTypes.string,
+	subMenuFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
-	isFocusInToolbar: PropTypes.bool,
+	setSubMenuFocus: PropTypes.func,
+	isInOverflowMenu: PropTypes.bool,
+	isInCascadeMenu: PropTypes.bool,
 	size: PropTypes.oneOf(["md", "sm"])
 };
 
-export default ToolbarActionItem;
+export default ToolbarSubMenuItem;

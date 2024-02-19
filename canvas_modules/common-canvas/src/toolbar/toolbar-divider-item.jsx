@@ -18,21 +18,20 @@ import React from "react";
 import PropTypes from "prop-types";
 
 class ToolbarDividerItem extends React.Component {
-
 	render() {
-		const dividerClassName = this.props.overflow ? "toolbar-divider-overflow" : "toolbar-divider";
+		const dividerClassName = this.props.isInMenu ? "toolbar-divider-overflow" : "toolbar-divider";
 
 		// Add a space as content. When using display: inline-block the div needs
 		// some content so it is displayed inline with the other elements of the
 		// toolbar. With no content it is displayed above (!) the other elements.
 		return (
-			<div className={dividerClassName} data-toolbar-item tabIndex={-1} aria-hidden >&nbsp;</div>
+			<div className={dividerClassName} tabIndex={-1} aria-hidden >&nbsp;</div>
 		);
 	}
 }
 
 ToolbarDividerItem.propTypes = {
-	overflow: PropTypes.bool
+	isInMenu: PropTypes.bool
 };
 
 export default ToolbarDividerItem;

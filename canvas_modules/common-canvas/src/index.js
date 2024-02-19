@@ -20,6 +20,7 @@ import CommandStack from "./command-stack/command-stack";
 import * as FlowValidation from "./flow-validation/validate-flow";
 import ContextMenuWrapper from "./context-menu/context-menu-wrapper";
 import ToolTip from "./tooltip/tooltip";
+import ColorPicker from "./color-picker";
 
 import CreateAutoNodeAction from "../src/command-actions/createAutoNodeAction";
 import CreateNodeAction from "../src/command-actions/createNodeAction";
@@ -30,5 +31,5 @@ import PasteAction from "../src/command-actions/pasteAction";
 
 
 export { CommonCanvas, CanvasController, CommonProperties, PropertiesController, FieldPicker, FlexibleTable,
-	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip,
+	CommandStack, FlowValidation, ContextMenuWrapper, ToolTip, ColorPicker,
 	CreateAutoNodeAction, CreateNodeAction, CreateNodeLinkAction, DeleteObjectsAction, DisconnectObjectsAction, PasteAction };

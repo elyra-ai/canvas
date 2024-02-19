@@ -40,7 +40,7 @@ import CommonPropsBundles from "@elyra/canvas/locales/common-properties/locales"
 import PaletteBundles from "@elyra/canvas/locales/palette/locales";
 import ToolbarBundles from "@elyra/canvas/locales/toolbar/locales";
 
-import { CommonCanvas, CanvasController, CommonProperties } from "common-canvas"; // eslint-disable-line import/no-unresolved
+import { CommonCanvas, CanvasController, CommonProperties, ColorPicker } from "common-canvas"; // eslint-disable-line import/no-unresolved
 import CommonCanvasPackage from "@elyra/canvas/package.json";
 
 import FlowsCanvas from "./components/custom-canvases/flows/flows-canvas";
@@ -81,6 +81,8 @@ import * as CustomOpFilterDuplicates from "./custom/condition-ops/customFilterDu
 import * as CustomRequiredColumn from "./custom/condition-ops/customRequiredColumn";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
+
+import AppSettingsPanel from "./app-x-settings-panel.jsx";
 
 import { Add32, ColorPalette32, Edit32, Play32, Scale32, Settings32, SelectWindow32,
 	StopFilledAlt32, Subtract32, TextScale32, TouchInteraction32 } from "@carbon/icons-react";
@@ -413,8 +415,6 @@ class App extends React.Component {
 
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.tooltipLinkHandler = this.tooltipLinkHandler.bind(this);
-
-		this.closeSubPanel = this.closeSubPanel.bind(this);
 
 		// Array to handle external flows. It is initialized to contain sub-flows
 		// used by the test flow: externalMainCanvas.json
@@ -2145,12 +2145,6 @@ class App extends React.Component {
 		return parentClass;
 	}
 
-	// This is a dummy function that is overwritten by the getSubPanelCloseFn
-	// provided to toolbar items.
-	closeSubPanel() {
-		// Dummy functions.
-	}
-
 	getToolbarConfig() {
 		let toolbarConfig = null;
 		if (this.state.selectedToolbarType === TOOLBAR_TYPE_DEFAULT) {
@@ -2169,34 +2163,6 @@ class App extends React.Component {
 				{ action: "decrease", label: "Decrease", enable: true, iconEnabled: (<Subtract32 />) }
 			];
 
-			const subPanelCheck = (
-				<div style={{ padding: 10 }}>
-					<div style={{ display: "flex", paddingTop: 10, paddingBottom: 15, justifyContent: "space-between" }}>
-						Small panel:
-						<button style={{ display: "inline-flex", cursor: "pointer", minHeight: "20px", border: 0, padding: "0 10px" }}
-							onClick={this.closeSubPanel}
-						>X</button>
-					</div>
-					<Checkbox id={"chkItOut"} defaultChecked labelText={"Check it out"} />
-					<Checkbox id={"chkSomeMore"} labelText={"Check some more"} />
-					<Checkbox id={"chkToEnd"} labelText={"Check to the end"} />
-				</div>
-			);
-
-			const subPanelColor = (
-				<div className="harness-color-picker" onClick={(e) => window.alert("Color selected = " + e.target.dataset.color)}>
-					<div tabIndex="0" data-color={"col-yellow-20"} className="harness-color-picker-item yellow-20" />
-					<div tabIndex="0" data-color={"col-green-20"} className="harness-color-picker-item green-20" />
-					<div tabIndex="0" data-color={"col-teal-20"} className="harness-color-picker-item teal-20" />
-					<div tabIndex="0" data-color={"col-cyan-20"} className="harness-color-picker-item cyan-20" />
-					<div tabIndex="0" data-color={"col-red-50"} className="harness-color-picker-item red-50" />
-					<div tabIndex="0" data-color={"col-orange-40"} className="harness-color-picker-item orange-40" />
-					<div tabIndex="0" data-color={"col-green-50"} className="harness-color-picker-item green-50" />
-					<div tabIndex="0" data-color={"col-teal-50"} className="harness-color-picker-item teal-50" />
-					<div tabIndex="0" data-color={"col-cyan-50"} className="harness-color-picker-item cyan-50" />
-				</div>
-			);
-
 			toolbarConfig = {
 				leftBar: [
 					{ action: "palette", label: "Palette", enable: true },
@@ -2210,13 +2176,15 @@ class App extends React.Component {
 					{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
 					{ action: "arrangeVertically", label: "Arrange Vertically", enable: true },
 					{ divider: true },
-					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true, subPanel: subPanelCheck, getSubPanelCloseFn: (fn) => (this.closeSubPanel = fn) },
+					{ action: "subpanel", iconEnabled: (<Settings32 />), label: "Settings", enable: true,
+						subPanel: AppSettingsPanel, subPanelData: { saveData: (settings) => window.alert("Panel data received by application.\n" + settings) } },
 					{ divider: true },
 					{ action: "text-size-submenu", incLabelWithIcon: "after", iconEnabled: (<TextScale32 />), label: "Text Size", enable: true, subMenu: subMenuTextSize, closeSubAreaOnClick: true },
 					{ divider: true },
 					{ action: "size-submenu", iconEnabled: (<Scale32 />), label: "Size", enable: true, subMenu: subMenuSize },
 					{ divider: true },
-					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true, subPanel: subPanelColor, closeSubAreaOnClick: true },
+					{ action: "color-subpanel", iconEnabled: (<ColorPalette32 />), label: "Color picker", enable: true,
+						subPanel: ColorPicker, subPanelData: { clickActionHandler: (color) => window.alert("Color selected = " + color) } },
 					{ divider: true },
 					{ action: "undo", label: "Undo", enable: true },
 					{ action: "redo", label: "Redo", enable: true },
@@ -2224,9 +2192,6 @@ class App extends React.Component {
 				],
 				rightBar: [
 					{ divider: true },
-					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
-					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
-					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true },
 					{ action: "zoomIn", label: this.getLabel("toolbar.zoomIn"), enable: true },
 					{ action: "zoomOut", label: this.getLabel("toolbar.zoomOut"), enable: true },
 					{ action: "zoomToFit", label: this.getLabel("toolbar.zoomToFit"), enable: true }
