@@ -559,7 +559,7 @@ export default class SVGCanvasUtilsDragNewLink {
 	}
 
 	// Switches on or off node highlighting depending on whether a node is
-	// close to teh new link being dragged.
+	// close to the new link being dragged.
 	setNewLinkOverNode(d3Event) {
 		const nodeNearMouse = this.ren.getNodeNearMousePos(d3Event, this.ren.canvasLayout.nodeProximity);
 		const highlightState = nodeNearMouse && this.isNewLinkAllowedToNode(nodeNearMouse);

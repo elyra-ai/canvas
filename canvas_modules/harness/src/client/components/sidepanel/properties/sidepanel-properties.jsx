@@ -363,6 +363,7 @@ SidePanelProperties.propTypes = {
 		staticRowsPropertyId: PropTypes.string,
 		staticRowsIndexes: PropTypes.string,
 		setStaticRows: PropTypes.func, // action
+		setActiveTabTopLevel: PropTypes.func,
 		maxLengthForMultiLineControls: PropTypes.number,
 		maxLengthForSingleLineControls: PropTypes.number,
 		selectedPropertiesDropdownFile: PropTypes.string,

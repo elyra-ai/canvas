@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ describe("DisplayPreviousPipeline action handles calls correctly", () => {
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 2");
 		expect(objectModel.getBreadcrumbs()).to.have.length(3);
 
-		const displayPreviousPipeline = new DisplayPreviousPipeline({}, objectModel);
+		const displayPreviousPipeline = new DisplayPreviousPipeline({}, canvasController);
 		displayPreviousPipeline.do();
 
 		expect(objectModel.getCurrentBreadcrumb().pipelineId).to.equal("test 1");

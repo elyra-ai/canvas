@@ -77,12 +77,13 @@ export default class CanavasStore {
 			toppanel: { }
 		};
 
-		let enableDevTools = false;
 		if (typeof window !== "undefined") {
-			enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+			const enableDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+			this.store = createStore(combinedReducer, initialState, enableDevTools);
+		} else {
+			this.store = createStore(combinedReducer, initialState);
 		}
 
-		this.store = createStore(combinedReducer, initialState, enableDevTools);
 		this.dispatch = this.dispatch.bind(this);
 	}
 
