@@ -79,6 +79,13 @@ class ToolTip extends React.Component {
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
+
+				const linkElement = this.targetRef.querySelector("a");
+
+				// Focus on link when tooltip with link is opened
+				if (linkElement) {
+					linkElement.focus();
+				}
 			}
 		}
 	}
@@ -435,6 +442,7 @@ class ToolTip extends React.Component {
 						className={tipClass}
 						aria-hidden={!this.state.isTooltipVisible}
 						direction={this.props.direction}
+						ref={(ref) => (this.targetRef = ref)}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
