@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
 import Action from "../command-stack/action.js";
 
 export default class CreateCommentAction extends Action {
-	constructor(data, objectModel, labelUtil, comPos) {
+	constructor(data, canvasController) {
 		super(data);
 		this.data = data;
-		this.objectModel = objectModel;
-		this.labelUtil = labelUtil;
+		this.labelUtil = canvasController.labelUtil;
+		this.objectModel = canvasController.objectModel;
 		this.apiPipeline = this.objectModel.getAPIPipeline(data.pipelineId);
-
-		// If we are provided with a comment position then use it in preference
-		// to the actual mouse position when creating the comment.
-		if (comPos) {
-			this.data.mousePos = comPos;
-		}
 
 		this.comment = this.apiPipeline.createComment(data);
 	}

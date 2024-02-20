@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation } from "@elyra/canvas";
+import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation, ColorPicker } from "@elyra/canvas";
 
-export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };
+export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation, ColorPicker };

@@ -37,6 +37,11 @@ $toolbar-divider-width: 1px;
 	/* Prevent elements from being dragged onto canvas */
 	-webkit-user-drag: none;
 
+	&:focus {
+		border-color: $interactive-01;
+		box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
+	}
+
 	/* Small size toolbar  */
 	&.toolbar-size-small {
 		height: $toolbar-button-sm-height;
@@ -51,7 +56,7 @@ $toolbar-divider-width: 1px;
 			height: $toolbar-button-sm-height;
 		}
 
-		.toolbar-overflow-menu-item {
+		.toolbar-sub-menu-item {
 			height: fit-content;
 		}
 
@@ -64,10 +69,6 @@ $toolbar-divider-width: 1px;
 
 		.toolbar-popover-list button {
 			padding: 0;
-		}
-
-		.toolbar-popover-list {
-			top: calc(#{$toolbar-button-sm-height} + #{$toolbar-divider-width} - 1px);
 		}
 
 		.toolbar-jsx-item {
@@ -144,7 +145,7 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-spacer {
+.toolbar-overflow-container {
 	width: 0;
 	display: inline-block;
 }
@@ -171,7 +172,7 @@ $toolbar-divider-width: 1px;
 	}
 }
 
-.toolbar-overflow-menu-item {
+.toolbar-sub-menu-item {
 	& button {
 		width: 100%;
 		padding-top: 0;
@@ -269,7 +270,7 @@ $toolbar-divider-width: 1px;
 	padding: 0;
 }
 
-.toolbar-overflow-jsx-item {
+.toolbar-sub-menu-jsx-item {
 	width: 100%;
 	height: 38px;
 	display: inline-flex;
@@ -287,6 +288,10 @@ $toolbar-divider-width: 1px;
 			border-color: transparent;
 			box-shadow: none;
 			border-bottom: 2px solid $interactive-01;
+		}
+		& button:focus {
+			border-color: $interactive-01;
+			box-shadow: inset 0 0 0 1px $interactive-01, inset 0 0 0 2px $ui-background;
 		}
 	}
 }
@@ -307,7 +312,6 @@ $toolbar-divider-width: 1px;
 .toolbar-popover-list {
 	width: 200px;
 	z-index: 1;
-	top: calc(#{$toolbar-button-height} + #{$toolbar-divider-width});
 	display: block;
 	position: absolute;
 	list-style-type: none;
