@@ -311,23 +311,26 @@ $toolbar-divider-width: 1px;
 
 .toolbar-popover-list {
 	width: 200px;
-	z-index: 1;
+	z-index: 2; // Make sure sub-area appears above bottom panel
 	display: block;
-	position: absolute;
+	position: fixed; // Actual position will be calculated in the code
 	list-style-type: none;
 	padding: 0;
 	border: $toolbar-divider-width solid $ui-03;
 	background-color: $ui-01;
+	opacity: 0;
+	animation: tovisible 0.25s ease-in-out forwards; // Use keyframe to animate panel visibility
 
 	&.submenu {
-		// Position will be calculated in the code
-		position: fixed;
 		min-width: 100px;
 	}
 
 	&.subpanel {
-		// Position will be calculated in the code
-		position: fixed;
 		width: fit-content;
 	}
 }
+
+@keyframes tovisible {
+	100% { opacity: 1; }
+}
+
