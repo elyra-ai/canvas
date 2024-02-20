@@ -19,7 +19,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "@carbon/react";
-import { Add16 } from "@carbon/icons-react";
+import { Add } from "@carbon/react/icons";
 import WideFlyout from "./../../components/wide-flyout";
 import Icon from "./../../../icons/icon.jsx";
 
@@ -283,7 +283,7 @@ class SummaryPanel extends React.Component {
 				onClick={this.handleLinkClicked}
 				size="sm"
 				kind="ghost"
-				renderIcon={Add16}
+				renderIcon={Add}
 			>
 				{this.props.panel.label}
 			</Button>

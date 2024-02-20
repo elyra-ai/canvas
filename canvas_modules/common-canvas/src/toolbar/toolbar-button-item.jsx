@@ -25,13 +25,13 @@ import PaletteClose from "./../../assets/images/palette/palette_close.svg";
 import PaletteOpen from "./../../assets/images/palette/palette_open.svg";
 import ZoomToFit from "./../../assets/images/zoom_to_fit.svg";
 
-import { Button } from "carbon-components-react";
+import { Button } from "@carbon/react";
 import SVG from "react-inlinesvg";
 import classNames from "classnames";
-import { StopFilledAlt16, Play16, Undo16, Redo16, Chat16, ChatOff16, Result16,
-	Cut16, Copy16, Paste16, Edit16,	ColorPalette16, Maximize16, Minimize16,
-	Launch16, AddComment16, TrashCan16, ZoomIn16, ZoomOut16,
-	ChevronRight16, ChevronDown16, ChevronUp16 } from "@carbon/icons-react";
+import { StopFilledAlt, Play, Undo, Redo, Chat, ChatOff, Result,
+	Cut, Copy, Paste, Edit,	ColorPalette, Maximize, Minimize,
+	Launch, AddComment, TrashCan, ZoomIn, ZoomOut,
+	ChevronRight, ChevronDown, ChevronUp } from "@carbon/react/icons";
 import { TOOLBAR_STOP, TOOLBAR_RUN, TOOLBAR_UNDO, TOOLBAR_REDO,
 	TOOLBAR_CUT, TOOLBAR_COPY, TOOLBAR_PASTE, TOOLBAR_CLIPBOARD,
 	TOOLBAR_CREATE_COMMENT, TOOLBAR_CREATE_AUTO_COMMENT, TOOLBAR_COLOR_BACKGROUND,
@@ -65,46 +65,46 @@ class ToolbarButtonItem extends React.Component {
 
 		switch (actionObj.action) {
 		case (TOOLBAR_STOP):
-			return <StopFilledAlt16 disabled={disabled} />;
+			return <StopFilledAlt disabled={disabled} />;
 		case (TOOLBAR_RUN):
-			return <Play16 disabled={disabled} />;
+			return <Play disabled={disabled} />;
 		case (TOOLBAR_EXPAND_SUPERNODE_IN_PLACE):
-			return <Maximize16 disabled={disabled} />;
+			return <Maximize disabled={disabled} />;
 		case (TOOLBAR_COLLAPSE_SUPERNODE_IN_PLACE):
-			return <Minimize16 disabled={disabled} />;
+			return <Minimize disabled={disabled} />;
 		case (TOOLBAR_EXPAND_SUPERNODE_FULL_PAGE):
-			return <Launch16 disabled={disabled} />;
+			return <Launch disabled={disabled} />;
 		case (TOOLBAR_UNDO):
-			return <Undo16 disabled={disabled} />;
+			return <Undo disabled={disabled} />;
 		case (TOOLBAR_REDO):
-			return <Redo16 disabled={disabled} />;
+			return <Redo disabled={disabled} />;
 		case (TOOLBAR_CLIPBOARD):
-			return <Result16 disabled={disabled} />;
+			return <Result disabled={disabled} />;
 		case (TOOLBAR_CUT):
-			return <Cut16 disabled={disabled} />;
+			return <Cut disabled={disabled} />;
 		case (TOOLBAR_COPY):
-			return <Copy16 disabled={disabled} />;
+			return <Copy disabled={disabled} />;
 		case (TOOLBAR_PASTE):
-			return <Paste16 disabled={disabled} />;
+			return <Paste disabled={disabled} />;
 		case (TOOLBAR_CREATE_COMMENT):
 		case (TOOLBAR_CREATE_AUTO_COMMENT):
-			return <AddComment16 disabled={disabled} />;
+			return <AddComment disabled={disabled} />;
 		case (TOOLBAR_SHOW_COMMENTS):
-			return <Chat16 disabled={disabled} />;
+			return <Chat disabled={disabled} />;
 		case (TOOLBAR_HIDE_COMMENTS):
-			return <ChatOff16 disabled={disabled} />;
+			return <ChatOff disabled={disabled} />;
 		case (TOOLBAR_COLOR_BACKGROUND):
-			return <ColorPalette16 disabled={disabled} />;
+			return <ColorPalette disabled={disabled} />;
 		case (TOOLBAR_DELETE_LINK):
 		case (TOOLBAR_DELETE_SELECTED_OBJECTS):
-			return <TrashCan16 disabled={disabled} />;
+			return <TrashCan disabled={disabled} />;
 		case (TOOLBAR_SET_COMMENT_EDIT_MODE):
 		case (TOOLBAR_SET_NODE_LABEL_EDIT):
-			return <Edit16 disabled={disabled} />;
+			return <Edit disabled={disabled} />;
 		case (TOOLBAR_ZOOM_IN):
-			return <ZoomIn16 disabled={disabled} />;
+			return <ZoomIn disabled={disabled} />;
 		case (TOOLBAR_ZOOM_OUT):
-			return <ZoomOut16 disabled={disabled} />;
+			return <ZoomOut disabled={disabled} />;
 
 		case (TOOLBAR_ZOOM_FIT):
 			return <SVG src={ZoomToFit} disabled={disabled} />;
@@ -241,11 +241,11 @@ class ToolbarButtonItem extends React.Component {
 	generateChevronIcon(actionObj) {
 		if (actionObj.subMenu || actionObj.subPanel) {
 			if (this.props.isInMenu) {
-				return (<ChevronRight16 />);
+				return <ChevronRight />;
 			}
 			if (actionObj.incLabelWithIcon === "before" ||
 					actionObj.incLabelWithIcon === "after") {
-				const chev = this.props.subAreaDisplayed ? (<ChevronUp16 />) : (<ChevronDown16 />);
+				const chev = this.props.subAreaDisplayed ? (<ChevronUp />) : (<ChevronDown />);
 				return (<div className={"toolbar-up-down-chevron"}>{chev}</div>);
 			}
 			return this.generateChevronMini();

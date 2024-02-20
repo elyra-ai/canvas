@@ -28,7 +28,7 @@ import CommonCanvasTextToolbar from "./cc-text-toolbar.jsx";
 import CommonCanvasStateTag from "./cc-state-tag.jsx";
 import CanvasUtils from "./common-canvas-utils.js";
 import { Button } from "@carbon/react";
-import { FlowData16, ArrowLeft16 } from "@carbon/icons-react";
+import { FlowData, ArrowLeft } from "@carbon/react/icons";
 import { DND_DATA_TEXT, STATE_TAG_LOCKED, STATE_TAG_READ_ONLY } from "./constants/canvas-constants";
 import Logger from "../logging/canvas-logger.js";
 import SVGCanvasD3 from "./svg-canvas-d3.js";
@@ -336,7 +336,7 @@ class CanvasContents extends React.Component {
 			} else {
 				emptyCanvas = (
 					<div className="empty-canvas">
-						<div className="empty-canvas-image"><FlowData16 /></div>
+						<div className="empty-canvas-image"><FlowData /></div>
 						<span className="empty-canvas-text1">{this.getLabel("canvas.flowIsEmpty")}</span>
 						<span className="empty-canvas-text2">{this.getLabel("canvas.addNodeToStart")}</span>
 					</div>);
@@ -359,7 +359,7 @@ class CanvasContents extends React.Component {
 						size={"md"}
 					>
 						<div className={"return-to-previous-content"}>
-							<ArrowLeft16 />
+							<ArrowLeft />
 							<span>{label}</span>
 						</div>
 					</Button>

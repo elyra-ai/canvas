@@ -24,7 +24,7 @@ import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import ReadonlyControl from "./readonly";
 import * as PropertyUtils from "./../util/property-utils";
 import classNames from "classnames";
-import { Add16, TrashCan16, Edit16 } from "@carbon/icons-react";
+import { Add, TrashCan, Edit } from "@carbon/react/icons";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import { v4 as uuid4 } from "uuid";
 
@@ -507,7 +507,7 @@ export default class AbstractTable extends React.Component {
 					onClick={removeOnClick}
 					size="sm"
 					kind="ghost"
-					renderIcon={TrashCan16}
+					renderIcon={TrashCan}
 				>
 					{removeButtonLabel}
 				</Button>
@@ -517,7 +517,7 @@ export default class AbstractTable extends React.Component {
 					onClick={this.addOnClick.bind(this, this.props.propertyId)}
 					size="sm"
 					kind="ghost"
-					renderIcon={Add16}
+					renderIcon={Add}
 				>
 					{addButtonLabel}
 				</Button>
@@ -536,7 +536,7 @@ export default class AbstractTable extends React.Component {
 					onClick={this.editOnClick.bind(this, this.props.propertyId)}
 					size="sm"
 					kind="ghost"
-					renderIcon={Edit16}
+					renderIcon={Edit}
 				>
 					{tableButtonConfig.label}
 				</Button>

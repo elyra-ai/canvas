@@ -17,7 +17,7 @@
 import { Column, Table, AutoSizer } from "react-virtualized";
 import Draggable from "react-draggable";
 import { Checkbox, Loading } from "@carbon/react";
-import { ArrowUp16, ArrowDown16, ArrowsVertical16, Information16 } from "@carbon/icons-react";
+import { ArrowUp, ArrowDown, ArrowsVertical, Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import TruncatedContentTooltip from "./../truncated-content-tooltip";
 import { SORT_DIRECTION, STATES, ROW_SELECTION, MINIMUM_COLUMN_WIDTH, MINIMUM_COLUMN_WIDTH_WITHOUT_LABEL } from "./../../constants/constants";
@@ -230,13 +230,13 @@ class VirtualizedTable extends React.Component {
 			let type = null;
 			switch (this.props.sortColumns[dataKey]) {
 			case SORT_DIRECTION.ASC:
-				type = <ArrowUp16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowUp disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			case SORT_DIRECTION.DESC:
-				type = <ArrowDown16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowDown disabled={this.props.tableState === STATES.DISABLED} />;
 				break;
 			default:
-				type = <ArrowsVertical16 disabled={this.props.tableState === STATES.DISABLED} />;
+				type = <ArrowsVertical disabled={this.props.tableState === STATES.DISABLED} />;
 			}
 			sortIcon = (<span className="properties-ft-column-sort-icon">
 				{type}
@@ -253,7 +253,7 @@ class VirtualizedTable extends React.Component {
 					className="properties-tooltips"
 					showToolTipOnClick
 				>
-					<Information16 className="properties-vt-info-icon" />
+					<Information className="properties-vt-info-icon" />
 				</Tooltip>
 			</div>);
 

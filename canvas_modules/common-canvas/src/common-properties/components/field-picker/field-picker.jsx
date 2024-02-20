@@ -27,7 +27,7 @@ import { Button } from "@carbon/react";
 
 import { MESSAGE_KEYS, DATA_TYPE, SORT_DIRECTION, ROW_SELECTION } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
-import { Reset24 } from "@carbon/icons-react";
+import { Reset } from "@carbon/react/icons";
 
 import { has, isEmpty, sortBy, isEqual } from "lodash";
 
@@ -315,6 +315,10 @@ export default class FieldPicker extends React.Component {
 	_genResetButton() {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
+
+		const Reset24 = React.forwardRef((props, ref) => {
+			return <Reset ref={ref} size={24} {...props} />;
+		});
 		return (
 			<Button
 				className="properties-fp-reset-button-container"

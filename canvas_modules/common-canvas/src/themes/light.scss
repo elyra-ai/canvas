@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-// @import "@carbon/themes/scss/themes";
 @use "@carbon/react/scss/themes";
 
 // Switch the themes below to get light or dark.
+@use "@carbon/react/scss/theme" as * with (
+	$theme: themes.$g10 // The light (gray 10) theme
+	// $theme: themes.$g90 // The dark theme
+);
 
-$carbon--theme: $carbon--theme--g10; // The light (gray 10) theme
-// $carbon--theme: $carbon--theme--g90; // The dark theme
+:root {
+	@include theme();
+}
 
 @import "../index.scss";

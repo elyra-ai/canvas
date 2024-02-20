@@ -24,7 +24,7 @@ import { formatMessage } from "./../../util/property-utils";
 import { STATES, MESSAGE_KEYS } from "./../../constants/constants.js";
 import classNames from "classnames";
 import { ControlType } from "./../../constants/form-constants";
-import { Shuffle16 } from "@carbon/icons-react";
+import { Shuffle } from "@carbon/react/icons";
 import { has } from "lodash";
 
 class NumberfieldControl extends React.Component {
@@ -139,7 +139,7 @@ class NumberfieldControl extends React.Component {
 				onClick={this.generateNumber}
 				disabled={disabled}
 				kind="tertiary"
-				renderIcon={Shuffle16}
+				renderIcon={Shuffle}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
 				iconDescription={this.props.control.label.numberGenerator.text}

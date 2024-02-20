@@ -23,7 +23,7 @@ import classNames from "classnames";
 import ValidationMessage from "./../../components/validation-message";
 import { v4 as uuid4 } from "uuid";
 import { intersection, isEqual } from "lodash";
-import { Information16 } from "@carbon/icons-react";
+import { Information } from "@carbon/react/icons";
 import Tooltip from "./../../../tooltip/tooltip.jsx";
 import { STATES } from "./../../constants/constants.js";
 import { isEmpty } from "lodash";
@@ -101,7 +101,7 @@ class CheckboxsetControl extends React.Component {
 					showToolTipOnClick
 					disable={hidden || disabled}
 				>
-					<Information16 disabled={disabled} className="properties-control-description-icon-info" />
+					<Information disabled={disabled} className="properties-control-description-icon-info" />
 				</Tooltip>);
 			}
 			const id = {

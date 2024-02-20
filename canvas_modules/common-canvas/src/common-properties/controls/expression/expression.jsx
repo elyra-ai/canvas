@@ -29,7 +29,7 @@ import WideFlyout from "./../../components/wide-flyout";
 import { formatMessage } from "./../../util/property-utils";
 import ExpressionBuilder from "./expression-builder/expression-builder";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE, DEFAULT_VALIDATION_MESSAGE } from "./../../constants/constants";
-import { Calculator24 } from "@carbon/icons-react";
+import { Calculator } from "@carbon/react/icons";
 import * as ControlUtils from "./../../util/control-utils";
 import { STATES } from "./../../constants/constants";
 import { get } from "lodash";
@@ -278,6 +278,9 @@ class ExpressionControl extends React.Component {
 
 		const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
+		const Calculator24 = React.forwardRef((props, ref) => {
+			return <Calculator ref={ref} size={24} {...props} />;
+		});
 
 		const button = this._showBuilderButton() ? (
 			<Button kind="ghost" size="sm"

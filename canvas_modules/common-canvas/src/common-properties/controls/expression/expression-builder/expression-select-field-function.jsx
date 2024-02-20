@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Add16 } from "@carbon/icons-react";
+import { Add } from "@carbon/react/icons";
 import { Button } from "@carbon/react";
 import { Switch, ContentSwitcher, Dropdown } from "@carbon/react";
 import FlexibleTable from "./../../../components/flexible-table/flexible-table";
@@ -278,7 +278,7 @@ export default class ExpressionSelectFieldOrFunction extends React.Component {
 				kind="ghost"
 				size="sm"
 			>
-				<Add16 aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
+				<Add aria-label={formatMessage(this.reactIntl, MESSAGE_KEYS.EXPRESSION_ADD_COLUMN)} />
 			</Button>
 		);
 		return addValueButtonContent;

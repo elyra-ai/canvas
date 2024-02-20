@@ -24,7 +24,7 @@ import { TextInput, Button } from "@carbon/react";
 import { MESSAGE_KEYS, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import * as PropertyUtils from "./../../util/property-utils";
 import classNames from "classnames";
-import { Help16, Edit16, Close16 } from "@carbon/icons-react";
+import { Help, Edit, Close } from "@carbon/react/icons";
 
 
 class TitleEditor extends Component {
@@ -111,7 +111,7 @@ class TitleEditor extends Component {
 				onClick={this.editTitleClickHandler}
 				tooltipPosition="bottom"
 				tooltipAlignment="end"
-				renderIcon={Edit16}
+				renderIcon={Edit}
 				size="sm"
 				iconDescription={propertiesTitleEditButtonLabel}
 				hasIconOnly
@@ -124,7 +124,7 @@ class TitleEditor extends Component {
 				data-id="help"
 				onClick={this.helpClickHandler}
 				tooltipPosition="bottom"
-				renderIcon={Help16}
+				renderIcon={Help}
 				size="sm"
 				iconDescription={helpButtonLabel}
 				hasIconOnly
@@ -139,7 +139,7 @@ class TitleEditor extends Component {
 					data-id="close"
 					onClick={this.props.closeHandler}
 					tooltipPosition="left"
-					renderIcon={Close16}
+					renderIcon={Close}
 					iconDescription={closeButtonLabel}
 					hasIconOnly
 				/>

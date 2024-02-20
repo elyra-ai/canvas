@@ -23,8 +23,8 @@ import defaultToolbarMessages from "../../locales/toolbar/locales/en.json";
 import Toolbar from "../toolbar/toolbar.jsx";
 import CanvasUtils from "../common-canvas/common-canvas-utils.js";
 import Logger from "../logging/canvas-logger.js";
-import { Code32, Link32, ListBulleted32, ListNumbered32, TextIndentMore32,
-	TextBold32, TextItalic32, TextScale32, TextStrikethrough32 } from "@carbon/icons-react";
+import { Code, Link, ListBulleted, ListNumbered, TextIndentMore,
+	TextBold, TextItalic, TextScale, TextStrikethrough } from "@carbon/react/icons";
 
 class CommonCanvasTextToolbar extends React.Component {
 	constructor(props) {
@@ -70,20 +70,20 @@ class CommonCanvasTextToolbar extends React.Component {
 
 		return {
 			leftBar: [
-				{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale32 />) },
+				{ action: "headerStyle", tooltip: headerLabel, enable: true, subMenu: headerOptions, closeSubAreaOnClick: true, iconEnabled: (<TextScale size={32} />) },
 				{ divider: true },
-				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold32 />) },
-				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic32 />) },
-				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough32 />) },
+				{ action: "bold", label: boldLabel, enable: true, iconEnabled: (<TextBold size={32} />) },
+				{ action: "italics", label: italicsLabel, enable: true, iconEnabled: (<TextItalic size={32} />) },
+				{ action: "strikethrough", label: strikethroughLabel, enable: true, iconEnabled: (<TextStrikethrough size={32} />) },
 				{ divider: true },
-				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code32 />) },
+				{ action: "code", label: codeLabel, enable: true, iconEnabled: (<Code size={32} />) },
 				{ divider: true },
-				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link32 />) },
+				{ action: "link", label: linkLabel, enable: true, iconEnabled: (<Link size={32} />) },
 				{ divider: true },
-				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore32 />) },
+				{ action: "quote", label: quoteLabel, enable: true, iconEnabled: (<TextIndentMore size={32} />) },
 				{ divider: true },
-				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered32 />) },
-				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted32 />) }
+				{ action: "numberedList", label: numberedListLabel, enable: true, iconEnabled: (<ListNumbered size={32} />) },
+				{ action: "bulletedList", label: bulletedListLabel, enable: true, iconEnabled: (<ListBulleted size={32} />) }
 			]
 		};
 	}
