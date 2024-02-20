@@ -35,7 +35,11 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 
 	if (expandDirection === "vertical") {
 		if (outsideBottom > 0) {
-			const newTop = actionItemRect.top - thisAreaRect.height;
+			const topGap = actionItemRect.top - containingDivRect.top;
+			const newTop = (topGap > thisAreaRect.height)
+				? actionItemRect.top - thisAreaRect.height
+				: actionItemRect.bottom - outsideBottom;
+
 			areaRef.current.style.top = newTop + "px";
 		}
 
