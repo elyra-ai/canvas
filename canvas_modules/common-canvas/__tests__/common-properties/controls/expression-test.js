@@ -176,7 +176,7 @@ describe("expression-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".react-codemirror2");
+		const input = wrapper.find(".elyra-CodeMirror");
 		expect(input).to.have.length(1);
 	});
 
