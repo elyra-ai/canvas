@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@use "../carbon.scss";
+@use "../carbon.scss" as *;
 
 .color-picker {
 	width: 156px;

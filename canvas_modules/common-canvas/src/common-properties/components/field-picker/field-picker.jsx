@@ -316,9 +316,7 @@ export default class FieldPicker extends React.Component {
 		const resetLabel = PropertyUtils.formatMessage(this.props.controller.getReactIntl(),
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL);
 
-		const Reset24 = React.forwardRef((props, ref) => {
-			return <Reset ref={ref} size={24} {...props} />;
-		});
+		const Reset24 = React.forwardRef((props, ref) => <Reset ref={ref} size={24} {...props} />);
 		return (
 			<Button
 				className="properties-fp-reset-button-container"

@@ -105,12 +105,8 @@ class MoveableTableRows extends React.Component {
 
 		const topLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_TOP_DESCRIPTION);
 		const upLabel = formatMessage(this.props.controller.getReactIntl(), MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_UP_DESCRIPTION);
-		const UpToTop24 = React.forwardRef((props, ref) => {
-			return <UpToTop ref={ref} size={24} {...props} />;
-		});
-		const ArrowUp24 = React.forwardRef((props, ref) => {
-			return <ArrowUp ref={ref} size={24} {...props} />;
-		});
+		const UpToTop24 = React.forwardRef((props, ref) => <UpToTop ref={ref} size={24} {...props} />);
+		const ArrowUp24 = React.forwardRef((props, ref) => <ArrowUp ref={ref} size={24} {...props} />);
 		const topImages = (
 			<div key="topImages">
 				<Button
@@ -137,12 +133,8 @@ class MoveableTableRows extends React.Component {
 		);
 		const bottomLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_DOWN_DESCRIPTION);
 		const downLabel = formatMessage(this.props.controller.getReactIntl(),	MESSAGE_KEYS.MOVEABLE_TABLE_BUTTON_BOTTOM_DESCRIPTION);
-		const ArrowDown24 = React.forwardRef((props, ref) => {
-			return <ArrowDown ref={ref} size={24} {...props} />;
-		});
-		const DownToBottom24 = React.forwardRef((props, ref) => {
-			return <DownToBottom ref={ref} size={24} {...props} />;
-		});
+		const ArrowDown24 = React.forwardRef((props, ref) => <ArrowDown ref={ref} size={24} {...props} />);
+		const DownToBottom24 = React.forwardRef((props, ref) => <DownToBottom ref={ref} size={24} {...props} />);
 		const bottomImages = (
 			<div key="bottomImages">
 				<Button

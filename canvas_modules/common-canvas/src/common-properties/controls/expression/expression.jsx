@@ -278,9 +278,7 @@ class ExpressionControl extends React.Component {
 
 		const theme = (this.props.state === STATES.DISABLED) ? "disabled" : messageType;
 		const reactIntl = this.props.controller.getReactIntl();
-		const Calculator24 = React.forwardRef((props, ref) => {
-			return <Calculator ref={ref} size={24} {...props} />;
-		});
+		const Calculator24 = React.forwardRef((props, ref) => <Calculator ref={ref} size={24} {...props} />);
 
 		const button = this._showBuilderButton() ? (
 			<Button kind="ghost" size="sm"
