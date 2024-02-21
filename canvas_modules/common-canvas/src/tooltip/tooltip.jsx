@@ -94,6 +94,10 @@ class ToolTip extends React.Component {
 		if (evt.key === "Tab") {
 			this.tabKeyPressed = true;
 		}
+		if (evt.key === "Escape") {
+			this.triggerRef.focus();
+			this.setTooltipVisible(false);
+		}
 	}
 
 	getStyleValue(value) {
@@ -412,22 +416,45 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
-
+		let linkClicked = false;
 		let link = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
 			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
-				link = (<Link
-					className="tooltip-link"
-					id={this.props.link.id}
-					href={linkInformation.url}
-					target="_blank"
-					rel="noopener"
-					visited={false}
+				link = (<div
+					onKeyDown={(evt) => {
+						evt.stopPropagation();
+						evt.preventDefault();
+						if (evt.key === "Escape") {
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						}
+					}}
+					onBlur={() => {
+						if (linkClicked) {
+							this.setTooltipVisible(true);
+						} else {
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						}
+					}
+					}
+					onClick={(evt) => {
+						linkClicked = true;
+					}}
 				>
-					{linkInformation.label}
-				</Link>);
+					<Link
+						className="tooltip-link"
+						id={this.props.link.id}
+						href={linkInformation.url}
+						target="_blank"
+						rel="noopener"
+						visited={false}
+					>
+						{linkInformation.label}
+					</Link>
+				</div>);
 			}
 		}
 
