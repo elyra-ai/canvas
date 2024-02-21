@@ -1000,7 +1000,7 @@ Cypress.Commands.add("verifyNumberOfItemsInToolbar", (noOfItems) => {
 
 Cypress.Commands.add("verifyToolbarButtonEnabled", (action, state) => {
 	cy.get(".toolbar-div")
-		.find("." + action + "-action > button")
+		.find("." + action + "-action > div > button")
 		.then((buttons) => {
 			const classList = Array.from(buttons[0].classList);
 			const enabled = !classList.includes("bx--btn--disabled");

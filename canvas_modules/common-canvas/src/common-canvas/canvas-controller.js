@@ -112,7 +112,7 @@ export default class CanvasController {
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 
-		this.isContextMenuForNonSelectedObj = this.isContextMenuForNonSelectedObj.bind(this);
+		this.isContextToolbarForNonSelectedObj = this.isContextToolbarForNonSelectedObj.bind(this);
 
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
@@ -1552,12 +1552,24 @@ export default class CanvasController {
 		}
 	}
 
+	// Manages the flag that indicates whether the mouse cursor is over
+	// the context toolbar or not. This flag is used for controlling the
+	// display of the context toolbar.
 	setMouseInContextToolbar(state) {
 		this.mouseInContextToolbar = state;
 	}
 
-	setMouseInObject(state) {
-		this.mouseInObject = state;
+	// Manages the flag that indicates whether the mouse cursor is over
+	// an object (node, comment or link) or not. This flag is used for
+	// controlling the display of the context toolbar. 'id' is either the id
+	// of the object the cursor is over, or null, if it is not over an object.
+	setMouseInObject(id) {
+		// Close the context toolbar immediately if the mouse cursor moves
+		// from one object to another.
+		if (id && id !== this.mouseInObject) {
+			this.closeContextToolbar();
+		}
+		this.mouseInObject = id;
 	}
 
 	openNotificationPanel() {
@@ -2102,7 +2114,7 @@ export default class CanvasController {
 
 	// Returns true if the context toolbar is switched on and the node over which
 	// the mouse cursor is hovering is NOT in the list of selected objects.
-	isContextMenuForNonSelectedObj(source) {
+	isContextToolbarForNonSelectedObj(source) {
 		if (this.getCanvasConfig().enableContextToolbar) {
 			if (source.targetObject) {
 				return !source.selectedObjectIds.includes(source.targetObject.id);
@@ -2128,7 +2140,7 @@ export default class CanvasController {
 
 		this.closeContextMenu();
 		if (this.getCanvasConfig().enableContextToolbar &&
-				this.isContextMenuForNonSelectedObj(source)) {
+				this.isContextToolbarForNonSelectedObj(source)) {
 			this.setSelections([source.targetObject.id]);
 		}
 		this.canvasContents.focusOnCanvas(); // Set focus on canvas so keybord events go there.

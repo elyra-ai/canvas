@@ -2773,7 +2773,7 @@ export default class SVGCanvasRenderer {
 	addContextToolbar(d3Event, d, objType) {
 		if (!this.isSizing() && !this.isDragging() &&
 				!this.svgCanvasTextArea.isEditingText() && !CanvasUtils.isSuperBindingNode(d)) {
-			this.canvasController.setMouseInObject(true);
+			this.canvasController.setMouseInObject(d.id);
 			let pos = this.getContextToolbarPos(objType, d);
 			pos = this.zoomUtils.unTransformPos(pos);
 			this.openContextMenu(d3Event, objType, d, null, pos);
@@ -2781,7 +2781,7 @@ export default class SVGCanvasRenderer {
 	}
 
 	removeContextToolbar() {
-		this.canvasController.setMouseInObject(false);
+		this.canvasController.setMouseInObject(null);
 		if (this.canvasController.isContextMenuDisplayed()) {
 			setTimeout(() => this.canvasController.closeContextToolbar(), 200);
 		}
@@ -2974,6 +2974,8 @@ export default class SVGCanvasRenderer {
 
 	}
 
+	// Opens either the context menu or the context toolbar depending on which is
+	// currently enabled.
 	openContextMenu(d3Event, type, d, port, pos) {
 		CanvasUtils.stopPropagationAndPreventDefault(d3Event); // Stop the browser context menu appearing
 		this.canvasController.contextMenuHandler({
@@ -2991,6 +2993,8 @@ export default class SVGCanvasRenderer {
 			zoom: this.zoomUtils.getZoomScale() });
 	}
 
+	// Closes the conetext menu if open. Called by various drag utility
+	// classes.
 	closeContextMenuIfOpen() {
 		if (this.canvasController.isContextMenuDisplayed()) {
 			this.canvasController.closeContextMenu();
