@@ -46,11 +46,11 @@ $properties-buttons-height: $spacing-10;
 		border-bottom: 1px solid $ui-03;
 		margin-bottom: 0;
 		h3 {
-			@include carbon--type-style("productive-heading-04");
+			@include type-style("productive-heading-04");
 		}
 		p {
 			margin-top: $spacing-03;
-			@include carbon--type-style("body-short-01");
+			@include type-style("body-short-01");
 		}
 		background-color: $ui-01;
 	}

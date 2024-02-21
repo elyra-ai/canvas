@@ -62,7 +62,7 @@ $primary-tab-height: $spacing-08;
 }
 
 .properties-category-title {
-	@include carbon--type-style("body-long-01");
+	@include type-style("body-long-01");
 	text-decoration-color: $text-01;
 	color: $text-01;
 
@@ -109,10 +109,10 @@ $primary-tab-height: $spacing-08;
 	align-items: center;
 	padding: $spacing-02 0;
 	.properties-static-text {
-		@include carbon--type-style("body-short-01");
+		@include type-style("body-short-01");
 		color: $text-01;
 		&.info {
-			@include carbon--type-style("label-01");
+			@include type-style("label-01");
 			color: $text-02;
 		}
 	}

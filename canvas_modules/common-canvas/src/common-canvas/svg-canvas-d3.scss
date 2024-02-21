@@ -776,7 +776,7 @@ g.bkg-col-cyan-50 {
 		text-indent: initial;
 		color: $text-01;
 		thead {
-			@include carbon--type-style("productive-heading-01");
+			@include type-style("productive-heading-01");
 			font-size: 12px;
 			display: table-header-group;
 			vertical-align: middle;
@@ -789,7 +789,7 @@ g.bkg-col-cyan-50 {
 			}
 		}
 		tbody {
-			@include carbon--type-style("body-short-01");
+			@include type-style("body-short-01");
 			font-size: 12px;
 			tr {
 				border-bottom: 2px solid $ui-03;

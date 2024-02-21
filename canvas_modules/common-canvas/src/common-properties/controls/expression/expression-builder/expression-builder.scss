@@ -123,7 +123,7 @@ $operator-margin: 50%;
 	padding-bottom: $spacing-06;
 }
 .properties-expression-table-dropdown-header {
-	@include carbon--type-style("label-01");
+	@include type-style("label-01");
 	padding-bottom: $spacing-02;
 }
 

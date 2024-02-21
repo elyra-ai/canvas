@@ -223,7 +223,7 @@ $panel-border-color: $ui-03;
 }
 
 .empty-canvas-text1 {
-	@include carbon--type-style("productive-heading-03");
+	@include type-style("productive-heading-03");
 	padding-top: $spacing-02;
 	color: $text-02;
 	display: block;
@@ -231,7 +231,7 @@ $panel-border-color: $ui-03;
 }
 
 .empty-canvas-text2 {
-	@include carbon--type-style("body-short-02");
+	@include type-style("body-short-02");
 	padding-top: $spacing-03;
 	color: $text-02;
 	display: block;
@@ -311,7 +311,7 @@ $panel-border-color: $ui-03;
 }
 
 .state-tag {
-	@include carbon--type-style("productive-heading-01");
+	@include type-style("productive-heading-01");
 	color: $inverse-01;
 	background-color: $background-inverse;
 	width: fit-content;

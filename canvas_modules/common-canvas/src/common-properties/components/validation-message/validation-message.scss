@@ -37,7 +37,7 @@
 		}
 	}
 	span {
-		@include carbon--type-style("caption-01");
+		@include type-style("caption-01");
 		color: $text-01;
 	}
 	&.error {

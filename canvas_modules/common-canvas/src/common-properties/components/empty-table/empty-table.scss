@@ -15,7 +15,7 @@
  */
 
 .properties-empty-table {
-	@include carbon--type-style("body-short-01");
+	@include type-style("body-short-01");
 	&[disabled] {
 		opacity: 0.5;
 		pointer-events: none;

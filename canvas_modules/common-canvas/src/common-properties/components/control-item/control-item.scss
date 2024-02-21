@@ -41,7 +41,7 @@
 	align-items: center;
 	padding-bottom: $spacing-03;
 	label, .properties-indicator {
-		@include carbon--type-style("label-01");
+		@include type-style("label-01");
 		color: $text-02;
 	}
 	.properties-indicator {
@@ -49,7 +49,7 @@
 	}
 	&.table-control {
 		label, .properties-indicator {
-			@include carbon--type-style("productive-heading-01");
+			@include type-style("productive-heading-01");
 			color: $text-01;
 		}
 	}
@@ -66,7 +66,7 @@
 }
 
 .properties-control-description {
-	@include carbon--type-style("helper-text-01");
+	@include type-style("helper-text-01");
 	color: $text-02;
 	padding-bottom: $spacing-03;
 	white-space: pre-wrap; // Add a line break for \n

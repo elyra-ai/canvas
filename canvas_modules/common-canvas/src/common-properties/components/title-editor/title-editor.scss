@@ -34,7 +34,7 @@
 		margin-right: $spacing-03;
 	}
 	.properties-title-heading-label {
-		@include carbon--type-style("label-01");
+		@include type-style("label-01");
 	}
 	.properties-title-editor-btn.help {
 		&.help {
@@ -57,7 +57,7 @@
 		width: 100%;
 
 		input { //override styling from carbon
-			@include carbon--type-style("productive-heading-02");
+			@include type-style("productive-heading-02");
 			color: $text-01;
 			min-width: unset;
 			background: unset;

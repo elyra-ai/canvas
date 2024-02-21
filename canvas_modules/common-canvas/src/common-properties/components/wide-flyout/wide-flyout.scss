@@ -46,7 +46,7 @@ $properties-modal-buttons-height: 64px;
 		transition: margin-right 0.3s;
 	}
 	.properties-wf-title {
-		@include carbon--type-style("productive-heading-01");
+		@include type-style("productive-heading-01");
 		padding-left: $spacing-06;
 		display: flex;
 		align-items: center;

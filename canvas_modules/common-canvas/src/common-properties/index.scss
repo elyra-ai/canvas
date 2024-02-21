@@ -39,7 +39,7 @@
 }
 
 .properties-error-content {
-	@include carbon--type-style("label-02");
+	@include type-style("label-02");
 	padding: 0 $spacing-06;
 }
 
