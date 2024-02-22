@@ -1,4 +1,4 @@
-site_name: Elyra Guide
+site_name: Elyra Canvas Guide
 repo_url: https://github.com/elyra-ai/canvas
 docs_dir: guide
 
@@ -24,7 +24,7 @@ extra_javascript:
 edit_uri: edit/main/guide/
 
 # Documentation and theme
-copyright: 'Copyright &copy; 2023 IBM Watson Team, an open source project and all are welcome to contribute!<br> Maintained by the SPSS Modeler Team'
+copyright: 'Copyright &copy; 2024. Maintained by the Elyra Canvas Team., an open source project and all are welcome to contribute!<br> Maintained by the SPSS Modeler Team'
 
 nav:
   - Home: index.md
