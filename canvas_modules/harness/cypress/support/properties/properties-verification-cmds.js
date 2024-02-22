@@ -125,7 +125,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 	const testWord = (type === "string") ? "\"" + word + "\"" : word;
 	cy.get(`div[data-id='properties-ctrl-${propertyId}']`)
 		.find(".properties-expression-editor")
-		.find(".CodeMirror-line")
+		.find(".cm-line")
 		.then((codeMirrorLine) => {
 			for (let idx = 0; idx < codeMirrorLine.length; idx++) {
 				if (codeMirrorLine[idx].textContent.includes(testWord)) {
@@ -142,7 +142,7 @@ Cypress.Commands.add("verifyTypeOfWordInExpressionEditor", (word, type, property
 
 Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 	// Enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
-	cy.get(".CodeMirror-hints")
+	cy.get(".cm-tooltip-autocomplete")
 		.eq(0)
 		.find("li")
 		.should("have.length", hintCount);
@@ -151,7 +151,7 @@ Cypress.Commands.add("verifyNumberOfHintsInExpressionEditor", (hintCount) => {
 Cypress.Commands.add("verifyTypeOfSelectedAutoComplete", (selectedText, type) => {
 	const searchClass = ".cm-" + type;
 	cy.get(".properties-expression-editor")
-		.find(".CodeMirror-line")
+		.find(".cm-line")
 		.find(searchClass)
 		.should("have.class", "cm-" + type)
 		.should("have.text", selectedText);
@@ -164,7 +164,7 @@ Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, 
 		.then((text) => {
 			const searchClass = ".cm-" + type;
 			cy.get(".properties-expression-editor")
-				.find(".CodeMirror-line")
+				.find(".cm-line")
 				.find(searchClass)
 				.should("have.class", "cm-" + type)
 				.should("have.text", setText);
@@ -173,7 +173,7 @@ Cypress.Commands.add("verifyTypeOfEnteredTextInExpressionEditor", (enteredText, 
 
 Cypress.Commands.add("verifyPlaceholderTextInExpressionEditor", (text) => {
 	cy.get(".properties-expression-editor")
-		.find(".CodeMirror-placeholder")
+		.find(".cm-placeholder")
 		.should("have.text", text);
 });
 

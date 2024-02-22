@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,80 +17,78 @@
 @import "./expression-builder/expression-builder";
 @import "./expression-toggle/expression-toggle";
 
-.react-codemirror2 {
-	.CodeMirror {
+.elyra-CodeMirror {
+	.cm-editor {
+		height: inherit;
 		width: 100%;
 		background: $field-02;
 		color: $text-01;
 
-		.CodeMirror-gutters {
+		.cm-gutters {
 			border-right: none;
 			background-color: inherit;
 		}
 
-		.CodeMirror-lines {
-			padding-top: $spacing-05;
-			.CodeMirror-line-like {
+		.cm-content {
+			.cm-line {
 				padding-left: $spacing-03;
-			}
-			.CodeMirror-placeholder {
-				opacity: 0.5;
 				@include type-style("code-02");
 			}
-			.CodeMirror-cursor {
+			.cm-placeholder {
+				@include type-style("code-02");
+			}
+			.cm-cursor {
 				border-left: 1px solid $text-01;
 			}
-			.CodeMirror-code {
+			.cm-lineNumbers .cm-gutterElement {
+				@include type-style("body-short-01");
+			}
+		}
 
-				.CodeMirror-linenumber {
-					@include type-style("body-short-01");
-				}
-
-				.CodeMirror-line {
-					padding-left: $spacing-03;
-
-					span {
-						@include type-style("code-02");
-					}
-				}
+		.cm-tooltip-autocomplete {
+			z-index: 1110;
+			ul {
+				white-space: normal; // Wraps the long autocompletion text on multiple lines
 			}
 		}
 	}
 
-	.cm-s-error.CodeMirror { border: $spacing-01 solid $support-01; }
+	.cm-line .cm-keyword { color: $link-01; }
 
-	.cm-s-warning.CodeMirror { border: $spacing-01 solid $support-03; }
+	.cm-line .cm-number { color: $text-02; }
 
-	.cm-s-disabled.CodeMirror { opacity: 0.5}
+	.cm-line .cm-def { color: $support-01; }
 
-	.cm-s-custom .cm-keyword { color: $link-01; }
+	.cm-line .cm-comment { color: $support-02; }
 
-	.cm-s-custom .cm-number { color: $text-02; }
-
-	.cm-s-custom .cm-def { color: $support-01; }
-
-	.cm-s-custom .cm-comment { color: $support-02; }
-
-	.cm-s-custom .cm-variable,
-	.cm-s-custom .cm-punctuation,
-	.cm-s-custom .cm-property,
-	.cm-s-custom .cm-operator {
+	.cm-line .cm-variable,
+	.cm-line .cm-punctuation,
+	.cm-line .cm-property,
+	.cm-line .cm-operator {
 		color: $text-01;
 	}
-	.cm-s-custom .cm-variable-2 { color: $text-01; }
 
-	.cm-s-custom .cm-variable-3, .cm-s-custom .cm-type { color: $text-01; }
+	.cm-line .cm-string { color: $text-error; }
 
-	.cm-s-custom .cm-string { color: $text-error; }
-
-	.cm-s-custom .cm-string-2 { color: $text-error; }
-
-	.cm-s-custom .cm-meta { color: $ui-01; }
+	.cm-line .cm-meta { color: $ui-01; }
 }
 
-/* Override so Codemirror autocomplete shows up on top */
-.CodeMirror-hints {
-	z-index: 1110;
+.elyra-CodeMirror.disabled {
+	.cm-editor {
+		opacity: 0.5;
+	}
+}
+
+.elyra-CodeMirror.warning {
+	.cm-editor {
+		border: $spacing-01 solid $support-03;
+	}
+}
+
+.elyra-CodeMirror.error {
+	.cm-editor {
+		border: $spacing-01 solid $support-01;
+	}
 }
 
 .properties-expression-editor {
@@ -104,7 +102,7 @@
 }
 
 .properties-light-disabled {
-	.CodeMirror {
+	.elyra-CodeMirror .cm-editor {
 		background: $field-01;
 	}
 }
