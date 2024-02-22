@@ -331,6 +331,9 @@ class ToolTip extends React.Component {
 		// To prevent this default behavior, stopPropagation and preventDefault is used.
 		evt.stopPropagation();
 		evt.preventDefault();
+
+		// when tooltip with link is closed and another tooltip is opened newly opened tooltip should have focus
+		this.triggerRef.focus();
 		if (this.state.isTooltipVisible) {
 			// Tooltip is visible and user clicks on trigger element again, hide tooltip
 			this.setTooltipVisible(false);
@@ -423,24 +426,31 @@ class ToolTip extends React.Component {
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
 				link = (<div
+					ref={(ref) => (this.linkRef = ref)}
 					onKeyDown={(evt) => {
 						evt.stopPropagation();
 						evt.preventDefault();
-						if (evt.key === "Escape") {
+
+						if (evt.key === "Escape") { // When Esc is pressed shift the focus to tooltip icon so that user can navigate following elements.
 							this.triggerRef.focus();
 							this.setTooltipVisible(false);
+						} else if (evt.key === "Enter") { // Open active/highlighted link when Enter or Return is clicked.
+							const focusedElement = this.linkRef.children[0];
+							if (focusedElement) {
+								window.open(focusedElement, "_blank");
+							}
 						}
 					}}
 					onBlur={() => {
-						if (linkClicked) {
+						if (linkClicked) { // keep tooltip open when link is clicked
 							this.setTooltipVisible(true);
-						} else {
+						} else { // Close the tooltip and shift focus to tooltip icon
 							this.triggerRef.focus();
 							this.setTooltipVisible(false);
 						}
 					}
 					}
-					onClick={(evt) => {
+					onClick={() => {
 						linkClicked = true;
 					}}
 				>
