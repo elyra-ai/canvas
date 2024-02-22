@@ -184,18 +184,18 @@
 	}
 
 	.canvas-ui-empty-text-placeholder {
-		@include carbon--type-style("productive-heading-03");
+		@include type-style("productive-heading-03");
 		color: $text-01;
 	}
 
 	.canvas-ui-empty-subtext-placeholder {
-		@include carbon--type-style("body-long-02");
+		@include type-style("body-long-02");
 		color: $text-02;
 		margin-top: 8px;
 	}
 
 	.canvas-ui-empty-node-text {
-		@include carbon--type-style("productive-heading-02");
+		@include type-style("productive-heading-02");
 		color: $text-02;
 	}
 

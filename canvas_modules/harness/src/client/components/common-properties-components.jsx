@@ -19,7 +19,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { hot } from "react-hot-loader/root";
-import { Button, Dropdown } from "carbon-components-react";
+import { Button, Dropdown } from "@carbon/react";
 import FunctionList from "../constants/json/functionlist.json";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
@@ -379,7 +379,7 @@ class CommonPropertiesComponents extends React.Component {
 		const openFlyoutButton = (<Button
 			className="harness-properties-documentation-show-flyout-button"
 			type="button"
-			size="small"
+			size="sm"
 			kind="secondary"
 			onClick={() => this.setRightFlyoutState(content)}
 		>
@@ -789,7 +789,7 @@ class CommonPropertiesComponents extends React.Component {
 								<Button
 									className="harness-properties-documentation-show-flyout-button"
 									type="button"
-									size="small"
+									size="sm"
 									kind="secondary"
 									onClick={() => this.tearsheetPropertiesController.setActiveTearsheet("tearsheet0")}
 								>

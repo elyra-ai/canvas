@@ -18,7 +18,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { CommonCanvas, CanvasController } from "common-canvas"; // eslint-disable-line import/no-unresolved
-import { CharacterSentenceCase32, CharacterWholeNumber32 } from "@carbon/icons-react";
+import { CharacterSentenceCase, CharacterWholeNumber } from "@carbon/react/icons";
 
 import StreamsCanvasFlow from "./streams.json";
 
@@ -99,8 +99,8 @@ export default class StreamsCanvas extends React.Component {
 				{ action: "8", label: "Eight" },
 				{ action: "9", label: "Niners 9" }
 			];
-			defMenu.push({ action: "letters", label: "Letters", submenu: true, menu: lettersSubMenu, icon: (<CharacterSentenceCase32 />), toolbarItem: true });
-			defMenu.push({ action: "numbers", label: "Numbers", submenu: true, menu: numbersSubMenu, icon: (<CharacterWholeNumber32 />) });
+			defMenu.push({ action: "letters", label: "Letters", submenu: true, menu: lettersSubMenu, icon: (<CharacterSentenceCase size={32} />), toolbarItem: true });
+			defMenu.push({ action: "numbers", label: "Numbers", submenu: true, menu: numbersSubMenu, icon: (<CharacterWholeNumber size={32} />) });
 		}
 		return defMenu;
 	}

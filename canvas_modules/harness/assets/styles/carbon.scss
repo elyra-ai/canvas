@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$font-prefix: "/fonts";
-@import "@ibm/plex/scss/ibm-plex.scss";
 
-@use "@carbon/react/scss/themes";
-
-// Switch the themes below to get light or dark.
-@use "@carbon/react/scss/theme" as * with (
-	$theme: themes.$g10 // The light (gray 10) theme
-	// $theme: themes.$g90 // The dark theme
-);
-
-@include theme();
-
-@import "carbon-components/scss/globals/scss/styles";
+ @forward "@carbon/react/scss/colors";
+ @forward "@carbon/react/scss/type";
+ @forward "@carbon/react/scss/spacing";
+ @forward "@carbon/react/scss/theme";
+ @forward "@carbon/react/scss/motion";
+ 

@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { isEmpty } from "lodash";
-import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, FormGroup } from "carbon-components-react";
+import { Toggle, Button, Dropdown, TextArea, TextInput, RadioButtonGroup, RadioButton, FormGroup } from "@carbon/react";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
@@ -546,7 +546,7 @@ export default class SidePanelAPI extends React.Component {
 
 		const submit =
 			(<div className="harness-sidepanel-children" id="harness-sidepanel-api-submit">
-				<Button size="small"
+				<Button size="sm"
 					disabled={!this.isReadyToSubmit()}
 					onClick={this.callAPI.bind(this)}
 				>
@@ -565,7 +565,7 @@ export default class SidePanelAPI extends React.Component {
 					onChange={this.onFieldChange.bind(this, "pipelineFlow")}
 					value={this.state.pipelineFlow}
 				/>
-				<Button size="small"
+				<Button size="sm"
 					onClick={this.refreshPipeline.bind(this)}
 				>
 					Refresh
@@ -714,7 +714,7 @@ export default class SidePanelAPI extends React.Component {
 				id="harness-sidepanel-api-notificationMessages"
 			>
 				<div className="harness-sidepanel-headers">Clear Notification Messages</div>
-				<Button size="small"
+				<Button size="sm"
 					id="harness-clearNotificationMessagesubmit"
 					onClick={this.clearNotificationMessages.bind(this)}
 				>

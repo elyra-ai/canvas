@@ -16,7 +16,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "carbon-components-react";
+import { Checkbox } from "@carbon/react";
 
 const TAB_KEY = 9;
 const LEFT_ARROW_KEY = 37;

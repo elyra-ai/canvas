@@ -20,7 +20,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { TextInput, FileUploader, Button, Select, SelectItemGroup, SelectItem, Checkbox, RadioButtonGroup, RadioButton, Toggle, FormGroup }
-	from "carbon-components-react";
+	from "@carbon/react";
 import { get, set } from "lodash";
 import {
 	NONE_SAVE_ZOOM,
@@ -401,7 +401,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="small"
+					<Button size="sm"
 						disabled={!this.isReadyToSubmitCanvasData()}
 						onClick={this.submitCanvas.bind(this)}
 					>
@@ -422,7 +422,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="small"
+					<Button size="sm"
 						disabled={!this.isReadyToSubmitPaletteData()}
 						onClick={this.submitPalette.bind(this)}
 					>
@@ -471,7 +471,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="small"
+					<Button size="sm"
 						disabled={!this.isReadyToSubmitCanvasData2()}
 						onClick={this.submitCanvas2.bind(this)}
 					>
@@ -493,7 +493,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<div className="harness-sidepanel-file-upload-submit">
-					<Button size="small"
+					<Button size="sm"
 						disabled={!this.isReadyToSubmitPaletteData2()}
 						onClick={this.submitPalette2.bind(this)}
 					>
@@ -561,7 +561,7 @@ export default class SidePanelForms extends React.Component {
 			</div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-clear-saved-storage">
-				<Button size="small"
+				<Button size="sm"
 					onClick={this.props.canvasConfig.clearSavedZoomValues}
 				>
 				Clear local storage zoom values
@@ -573,7 +573,7 @@ export default class SidePanelForms extends React.Component {
 		var saveToPdf = (<div>
 			<div className="harness-sidepanel-spacer" />
 			<div style={pad}className="harness-sidepanel-save-to-pdf">
-				<Button size="small"
+				<Button size="sm"
 					onClick={this.props.canvasConfig.saveToPdf}
 				>
 				Save to PDF

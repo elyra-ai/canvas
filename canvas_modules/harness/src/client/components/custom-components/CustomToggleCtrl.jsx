@@ -16,8 +16,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { WarningFilled16, ErrorFilled16 } from "@carbon/icons-react";
-import { Toggle } from "carbon-components-react";
+import { WarningFilled, ErrorFilled } from "@carbon/react/icons";
+import { Toggle } from "@carbon/react";
 import { connect } from "react-redux";
 
 class CustomToggleCtrl extends React.Component {
@@ -42,9 +42,9 @@ class CustomToggleCtrl extends React.Component {
 		if (this.props.messageInfo && this.props.messageInfo.text && !this.props.table) {
 			messageText = this.props.messageInfo.text;
 			if (this.props.messageInfo.type === "warning") {
-				icon = (<WarningFilled16 className="warning" />);
+				icon = (<WarningFilled className="warning" />);
 			} else if (this.props.messageInfo.type === "error") {
-				icon = (<ErrorFilled16 className="error" />);
+				icon = (<ErrorFilled className="error" />);
 			}
 		}
 		let visibility;

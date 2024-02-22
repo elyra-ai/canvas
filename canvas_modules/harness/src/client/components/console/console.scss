@@ -15,7 +15,7 @@
  */
 
 .harness-app-console {
-	@include carbon--type-style("code-01");
+	@include type-style("code-01");
 	background-color: $ui-01;
 	border-top: 1px solid $ui-03;
 	overflow-y: auto;

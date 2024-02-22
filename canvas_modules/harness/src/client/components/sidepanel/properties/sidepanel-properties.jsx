@@ -32,7 +32,7 @@ import {
 	Select,
 	SelectItemGroup,
 	SelectItem,
-} from "carbon-components-react";
+} from "@carbon/react";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -292,7 +292,7 @@ export default class SidePanelProperties extends React.Component {
 					{this.dropdownOptions()}
 				</Select>
 				{fileChooser}
-				<Button size="small"
+				<Button size="sm"
 					disabled={!this.isReadyToSubmitProperties()}
 					onClick={this.submitProperties.bind(this)}
 				>
@@ -303,7 +303,7 @@ export default class SidePanelProperties extends React.Component {
 
 		const validateProperties = (
 			<div className="harness-sidepanel-children">
-				<Button size="small"
+				<Button size="sm"
 					onClick={this.props.propertiesConfig.validateProperties}
 				>
 					Validate Properties
