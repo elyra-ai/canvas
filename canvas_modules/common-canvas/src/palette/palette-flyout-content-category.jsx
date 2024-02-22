@@ -98,7 +98,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} open={this.props.category.is_open}>
+			<AccordionItem title={titleObj} open={this.props.category.is_open} onClick={this.categoryClicked}>
 				{content}
 			</AccordionItem>
 		);
