@@ -75,7 +75,7 @@ class ToolbarActionItem extends React.Component {
 			const items = document.getElementsByClassName(this.generateActionName());
 			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
 
-			if (!isOver) {
+			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
 				this.closeSubArea();
 			}
 		}
@@ -100,6 +100,7 @@ class ToolbarActionItem extends React.Component {
 
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
+				this.props.closeAnyOpenSubArea();
 				this.openSubArea();
 			}
 
@@ -219,6 +220,7 @@ ToolbarActionItem.propTypes = {
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		closeSubAreaOnClick: PropTypes.bool,
+		leaveSubAreaOpenOnClickOutside: PropTypes.bool,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
@@ -237,6 +239,7 @@ ToolbarActionItem.propTypes = {
 	toolbarFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
 	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func,
 	size: PropTypes.oneOf(["md", "sm"])
 };
 

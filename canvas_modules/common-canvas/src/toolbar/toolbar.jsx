@@ -69,6 +69,7 @@ class Toolbar extends React.Component {
 		this.generateToolbarItems = this.generateToolbarItems.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setFocusOnItem = this.setFocusOnItem.bind(this);
+		this.closeAnyOpenSubArea = this.closeAnyOpenSubArea.bind(this);
 	}
 
 	// If, after updating, we are left in a situation where this.state.focusAction
@@ -138,9 +139,7 @@ class Toolbar extends React.Component {
 	// When the toolbar resizes, check each toolbar item to see if it has
 	// a sub-menu open and, if it does, close it.
 	onToolbarResize() {
-		this.leftItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
-		this.rightItemRefs.forEach((ref) => this.closeSubMenuOnRef(ref));
-		this.overflowItemRefs.forEach((ref) => this.closeOverflowMenuOnRef(ref));
+		this.closeAnyOpenSubArea();
 
 		if (this.isFocusInToolbar) {
 			this.setFocusOnFirstItem();
@@ -386,6 +385,7 @@ class Toolbar extends React.Component {
 						toolbarFocusAction={this.state.focusAction}
 						setToolbarFocusAction={this.setFocusOnItem}
 						isFocusInToolbar={this.isFocusInToolbar}
+						closeAnyOpenSubArea={this.closeAnyOpenSubArea}
 						size={this.props.size}
 					/>
 				);
@@ -421,6 +421,7 @@ class Toolbar extends React.Component {
 				toolbarFocusAction={this.state.focusAction}
 				setToolbarFocusAction={this.setFocusOnItem}
 				isFocusInToolbar={this.isFocusInToolbar}
+				closeAnyOpenSubArea={this.closeAnyOpenSubArea}
 			/>
 		);
 
@@ -440,7 +441,13 @@ class Toolbar extends React.Component {
 		return subMenuActions;
 	}
 
-	closeSubMenuOnRef(ref) {
+	closeAnyOpenSubArea() {
+		this.leftItemRefs.forEach((ref) => this.closeSubAreaOnRef(ref));
+		this.rightItemRefs.forEach((ref) => this.closeSubAreaOnRef(ref));
+		this.overflowItemRefs.forEach((ref) => this.closeOverflowMenuOnRef(ref));
+	}
+
+	closeSubAreaOnRef(ref) {
 		if (ref.current.state.subAreaDisplayed) {
 			ref.current.closeSubArea();
 		}

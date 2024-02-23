@@ -89,6 +89,7 @@ class ToolbarOverflowItem extends React.Component {
 
 		} else {
 			document.addEventListener("click", this.clickOutside, false);
+			this.props.closeAnyOpenSubArea();
 			this.props.setOverflowIndex(this.props.index);
 			this.openSubMenu();
 			this.props.setToolbarFocusAction(this.props.action);
@@ -168,7 +169,8 @@ ToolbarOverflowItem.propTypes = {
 	containingDivId: PropTypes.string,
 	toolbarFocusAction: PropTypes.string,
 	setToolbarFocusAction: PropTypes.func,
-	isFocusInToolbar: PropTypes.bool
+	isFocusInToolbar: PropTypes.bool,
+	closeAnyOpenSubArea: PropTypes.func
 };
 
 export default ToolbarOverflowItem;

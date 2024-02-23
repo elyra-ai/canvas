@@ -35,8 +35,6 @@ class ToolbarSubMenu extends React.Component {
 			focusAction: "subarea"
 		};
 
-		this.areaRef = React.createRef();
-
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.setFocusAction = this.setFocusAction.bind(this);
 		this.setSubMenuFocus = this.setSubMenuFocus.bind(this);
@@ -224,7 +222,7 @@ class ToolbarSubMenu extends React.Component {
 			this.subMenuItems = this.generateSubMenuItems();
 
 			return (
-				<div ref={this.areaRef} style={style} className={"toolbar-popover-list submenu"}
+				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list submenu"}
 					tabIndex={-1} onKeyDown={this.onKeyDown}
 				>
 					{this.subMenuItems}

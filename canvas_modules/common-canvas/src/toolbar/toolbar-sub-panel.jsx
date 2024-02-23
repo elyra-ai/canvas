@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Elyra Authors
+ * Copyright 2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,8 @@ class ToolbarSubPanel extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.areaRef = React.createRef();
-
-		this.onClick = this.onClick.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.closeSubPanel = this.closeSubPanel.bind(this);
 	}
 
 	componentDidMount() {
@@ -38,10 +36,6 @@ class ToolbarSubPanel extends React.Component {
 		}
 	}
 
-	onClick() {
-		this.props.closeSubArea();
-	}
-
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.props.closeSubArea();
@@ -49,17 +43,27 @@ class ToolbarSubPanel extends React.Component {
 		}
 	}
 
+	// If the user clicks the panel background, by default focus would go
+	// through to the toolbar and focus would be lost from this sub-panel.
+	// This method prevents any focus event going through to the toolbar.
+	onFocus(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+	}
+
+	closeSubPanel(evt) {
+		this.props.closeSubArea(); // Don't pass a paremeter otherwise it will check closeSubAreaOnClick.
+	}
+
 	render() {
 		const style = generateSubAreaStyle(this.props.expandDirection, this.props.actionItemRect);
 
 		if (this.props.subPanel) {
-			const subPanel = typeof this.props.subPanel === "object"
-				? this.props.subPanel
-				: (<this.props.subPanel closeSubPanel={this.props.closeSubArea} subPanelData={this.props.subPanelData} />);
-
 			return (
-				<div ref={this.areaRef} style={style} className={"toolbar-popover-list subpanel"} onClick={this.onClick} onKeyDown={this.onKeyDown}>
-					{subPanel}
+				<div ref={(ref) => (this.areaRef = ref)} style={style} className={"toolbar-popover-list subpanel"} tabIndex={-1}
+					onKeyDown={this.onKeyDown} onFocus={this.onFocus}
+				>
+					<this.props.subPanel closeSubPanel={this.closeSubPanel} subPanelData={this.props.subPanelData} />
 				</div>
 			);
 		}

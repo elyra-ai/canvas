@@ -28,7 +28,7 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 	const containingDiv = document.getElementById(containingDivId);
 	const containingDivRect = containingDiv.getBoundingClientRect();
 
-	const thisAreaRect = areaRef.current.getBoundingClientRect();
+	const thisAreaRect = areaRef.getBoundingClientRect();
 
 	const outsideBottom = thisAreaRect.bottom - containingDivRect.bottom;
 	const outsideRight = thisAreaRect.right - containingDivRect.right;
@@ -40,23 +40,23 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 				? actionItemRect.top - thisAreaRect.height
 				: actionItemRect.bottom - outsideBottom;
 
-			areaRef.current.style.top = newTop + "px";
+			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
-			const newLeft = actionItemRect.left - outsideRight - 2;
-			areaRef.current.style.left = newLeft + "px";
+			const newLeft = actionItemRect.left - outsideRight;
+			areaRef.style.left = newLeft + "px";
 		}
 
 	} else {
 		if (outsideBottom > 0) {
 			const newTop = thisAreaRect.top - outsideBottom - 2;
-			areaRef.current.style.top = newTop + "px";
+			areaRef.style.top = newTop + "px";
 		}
 
 		if (outsideRight > 0) {
 			const newLeft = actionItemRect.left - thisAreaRect.width;
-			areaRef.current.style.left = newLeft + "px";
+			areaRef.style.left = newLeft + "px";
 		}
 	}
 }
