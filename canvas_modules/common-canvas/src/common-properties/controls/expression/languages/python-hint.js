@@ -14,48 +14,36 @@
  * limitations under the License.
  */
 
+// Ref: https://docs.python.org/3.12/reference/lexical_analysis.html#keywords
 const pythonKeywords = [
-	"and",
-	"del",
-	"not",
-	"as",
-	"elif",
-	"global",
-	"or",
-	"with",
-	"assert",
+	"await",
 	"else",
 	"pass",
-	"yield",
 	"break",
 	"except",
-	"print",
 	"in",
 	"raise",
-	"continue",
 	"finally",
 	"is",
 	"return",
-	"lambda"
+	"and",
+	"continue",
+	"lambda",
+	"as",
+	"nonlocal",
+	"assert",
+	"del",
+	"global",
+	"not",
+	"with",
+	"async",
+	"elif",
+	"or",
+	"yield"
 ];
 
-const pythonFunctions = [
-	"basestring()",
-	"execfile()",
-	"file()",
-	"raw_input()",
-	"unichr()",
-	"reduce()",
-	"unicode()",
-	"long()",
-	"reload()",
-	"xrange()",
-	"cmp()",
-	"apply()",
-	"buffer()",
-	"coerce()",
-	"intern()",
-];
+// Ref: https://docs.python.org/3/library/functions.html
+const pythonFunctions = [];
 
 function getPythonHints() {
 	const pythonHints = [];
