@@ -1,15 +1,9 @@
 site_name: Elyra Canvas Documentation
 repo_url: https://github.com/elyra-ai/canvas
-docs_dir: guide
+docs_dir: docs
 
-theme: 
-    name: material
-    highlightjs: true
-    palette:
-        scheme: default
-    features:
-      - content.code.copy
-      - content.action.edit
+theme: readthedocs
+
 
 plugins:
     - search
@@ -21,7 +15,7 @@ extra_css:
 extra_javascript:
   - js/links-in-new-tabs.js
 
-edit_uri: edit/main/guide/
+edit_uri: edit/main/docs/
 
 # Documentation and theme
 copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
