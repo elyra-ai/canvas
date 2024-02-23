@@ -1,4 +1,4 @@
-site_name: Elyra Canvas Guide
+site_name: Elyra Canvas Documentation
 repo_url: https://github.com/elyra-ai/canvas
 docs_dir: guide
 
@@ -24,7 +24,7 @@ extra_javascript:
 edit_uri: edit/main/guide/
 
 # Documentation and theme
-copyright: 'Copyright &copy; 2024. Maintained by the Elyra Canvas Team., an open source project and all are welcome to contribute!<br> Maintained by the SPSS Modeler Team'
+copyright: 'Copyright  &copy; 2024 Elyra Authors, an open source project and all are welcome to contribute! Maintained by the Elyra Authors Team'
 
 nav:
   - Home: index.md
@@ -58,9 +58,8 @@ nav:
   - Common Properties Conditions: 3.4-Common-Properties-Conditions.md
   - Common Properties Custom Components: 3.5-Common-Properties-Custom-Components.md
   - Common Properties Controller: 3.6-Common-Properties-Controller.md
-  - Accessibility: 4.0-Accessibility.md
-  - Styling: 5.0-Styling.md
-  - Testing Guidelines for Development: 6.0-Testing-Guidelines-for-Development.md
+  - Styling: 4.0-Styling.md
+  - Testing Guidelines for Development: 5.0-Testing-Guidelines-for-Development.md
 
 markdown_extensions:
   - admonition:

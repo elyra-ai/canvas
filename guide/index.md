@@ -1,4 +1,4 @@
-# Welcome to the Elyra Canvas Wiki
+# Welcome to the Elyra Canvas Documentation
 
 The elyra-ai/canvas repo contains three main components:
 
@@ -10,9 +10,9 @@ The elyra-ai/canvas repo contains three main components:
 
 ## Installation
 
-You'll need to build your application with common canvas. 
+You'll need to build your application with Elyra Canvas.
 
-* common-canvas requires react, react-dom, react-intl, and react-redux libraries to be installed.  See peerDependencies in package.json for versions requirements.
+* Elyra Canvas requires react, react-dom, react-intl, and react-redux libraries to be installed. See peerDependencies in package.json for versions requirements.
 
 Use the command:
 ```sh
@@ -74,7 +74,7 @@ render() {
 
 ## Notes
 When building your application you will need to load fonts and override styles can be found here:
-/5.0-Styling
+[Styling](./4.0-Styling)
 
 ## Testing
 When testing your application with Jest, this error might show up: `crypto.getRandomValues() not supported`. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported for details. 
