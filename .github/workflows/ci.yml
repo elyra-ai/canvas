@@ -2,8 +2,7 @@ name: ci
 on:
   push:
     branches:
-      - master 
-      - main
+      - new-guide 
 permissions:
   contents: write
 jobs:
