@@ -2,8 +2,14 @@ site_name: Elyra Canvas Documentation
 repo_url: https://github.com/elyra-ai/canvas
 docs_dir: docs
 
-theme: readthedocs
-
+theme: 
+    name: material
+    highlightjs: true
+    palette:
+        scheme: default
+    features:
+      - content.code.copy
+      - content.action.edit
 
 plugins:
     - search
