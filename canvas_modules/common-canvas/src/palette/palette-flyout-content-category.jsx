@@ -28,10 +28,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			et: {}
-		};
-
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.categoryClicked = this.categoryClicked.bind(this);
