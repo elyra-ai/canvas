@@ -28,9 +28,14 @@ class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.state = {
+			et: {}
+		};
+
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.categoryClicked = this.categoryClicked.bind(this);
+		this.accRef = React.createRef();
 	}
 
 	onMouseOver(ev) {
@@ -98,7 +103,13 @@ class PaletteFlyoutContentCategory extends React.Component {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
-			<AccordionItem title={titleObj} open={this.props.category.is_open} onClick={this.categoryClicked}>
+			<AccordionItem title={titleObj} open={this.props.category.is_open}
+				onHeadingClick={() => {
+					if (this.accRef?.current) {
+						this.accRef.current.click();
+					}
+				}}
+			>
 				{content}
 			</AccordionItem>
 		);
@@ -115,6 +126,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				ref={this.accRef}
 			>
 				<div className="palette-flyout-category-item">
 					{itemImage}
