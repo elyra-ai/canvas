@@ -305,7 +305,6 @@ NotificationPanel.propTypes = {
 		secondaryButtonDisabled: PropTypes.bool
 	}),
 	secondaryButtonDisabled: PropTypes.bool,
-	isNotificationOpen: PropTypes.bool,
 	messages: PropTypes.array,
 	intl: PropTypes.object.isRequired
 };
@@ -313,7 +312,6 @@ NotificationPanel.propTypes = {
 const mapStateToProps = (state, ownProps) => ({
 	notificationConfig: state.notificationpanel.config,
 	secondaryButtonDisabled: state.notificationpanel.config ? state.notificationpanel.config.secondaryButtonDisabled : false,
-	isNotificationOpen: state.notificationpanel.isOpen,
 	messages: state.notifications
 });
 

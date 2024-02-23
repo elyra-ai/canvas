@@ -71,7 +71,7 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	clickOutside(evt) {
-		if (this.state.subAreaDisplayed) {
+		if (this.isSubAreaDisplayed()) {
 			const items = document.getElementsByClassName(this.generateActionName());
 			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
 
@@ -82,18 +82,24 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	openSubArea() {
+		if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+			this.props.actionObj.setExtIsSubAreaDisplayed(true);
+		}
 		this.setState({ subAreaDisplayed: true });
 	}
 
 	closeSubArea(checkCloseSubAreaOnClick) {
 		if (!checkCloseSubAreaOnClick || this.props.actionObj.closeSubAreaOnClick) {
+			if (this.props.actionObj.setExtIsSubAreaDisplayed) {
+				this.props.actionObj.setExtIsSubAreaDisplayed(false);
+			}
 			this.setState({ subAreaDisplayed: false });
 		}
 	}
 
 	actionClickHandler(evt) {
 		if (this.props.actionObj.subMenu || this.props.actionObj.subPanel) {
-			if (this.state.subAreaDisplayed) {
+			if (this.isSubAreaDisplayed()) {
 				document.removeEventListener("click", this.clickOutside, false);
 				this.closeSubArea();
 				this.props.setToolbarFocusAction(this.props.actionObj.action);
@@ -110,6 +116,14 @@ class ToolbarActionItem extends React.Component {
 		}
 	}
 
+	isSubAreaDisplayed() {
+		if (this.props.actionObj.setExtIsSubAreaDisplayed &&
+			typeof this.props.actionObj.extIsSubAreaDisplayed !== "undefined") {
+			return this.props.actionObj.extIsSubAreaDisplayed;
+		}
+		return this.state.subAreaDisplayed;
+	}
+
 	generateActionName() {
 		return this.props.actionObj.action + "-action";
 	}
@@ -119,7 +133,7 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const actionItemRect = this.divRef.current.getBoundingClientRect();
+		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : {};
 
 		if (this.props.actionObj.subPanel) {
 			return (
@@ -172,7 +186,7 @@ class ToolbarActionItem extends React.Component {
 			kindAsClass,
 			actionName);
 
-		const subArea = this.state.subAreaDisplayed ? this.generateSubArea() : null;
+		const subArea = this.isSubAreaDisplayed() ? this.generateSubArea() : null;
 
 		return (
 			<div ref={this.divRef} className={itemClassName} data-toolbar-action={actionObj.action} data-toolbar-item
@@ -185,9 +199,9 @@ class ToolbarActionItem extends React.Component {
 						tooltipDirection={this.props.tooltipDirection}
 						instanceId={this.props.instanceId}
 						isInMenu={false}
-						subAreaDisplayed={this.state.subAreaDisplayed}
+						subAreaDisplayed={this.isSubAreaDisplayed()}
 						actionClickHandler={this.actionClickHandler}
-						buttonFocusAction={this.state.subAreaDisplayed ? null : this.props.toolbarFocusAction}
+						buttonFocusAction={this.isSubAreaDisplayed() ? null : this.props.toolbarFocusAction}
 						isFocusInToolbar={this.props.isFocusInToolbar}
 						size={this.props.size}
 					/>
@@ -218,6 +232,8 @@ ToolbarActionItem.propTypes = {
 		className: PropTypes.string,
 		textContent: PropTypes.string,
 		isSelected: PropTypes.bool,
+		setExtIsSubAreaDisplayed: PropTypes.func,
+		extIsSubAreaDisplayed: PropTypes.bool,
 		kind: PropTypes.string,
 		closeSubAreaOnClick: PropTypes.bool,
 		leaveSubAreaOpenOnClickOutside: PropTypes.bool,

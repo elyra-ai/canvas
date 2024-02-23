@@ -185,7 +185,8 @@ class CommonCanvasToolbar extends React.Component {
 				{ action: TOOLBAR_TOGGLE_NOTIFICATION_PANEL,
 					label: this.props.notificationConfigLabel,
 					enable: this.props.notificationConfigEnable,
-					isSelected: this.props.isNotificationOpen,
+					extIsSubAreaDisplayed: this.props.isNotificationOpen,
+					setExtIsSubAreaDisplayed: this.callExtIsSubAreaDisplayed.bind(this),
 					className: this.getNotificationClassName(),
 					textContent: (notificationCount > 9) ? "9+" : notificationCount.toString(),
 					subPanel: NotificationPanel,
@@ -196,6 +197,14 @@ class CommonCanvasToolbar extends React.Component {
 			return rightBar.concat(notificationTools);
 		}
 		return rightBar;
+	}
+
+	callExtIsSubAreaDisplayed(state) {
+		if (state) {
+			this.props.canvasController.openNotificationPanel();
+		} else {
+			this.props.canvasController.closeNotificationPanel();
+		}
 	}
 
 	configureToolbarButtonsState(toolbarConfig) {
@@ -306,7 +315,7 @@ CommonCanvasToolbar.propTypes = {
 	isPaletteOpen: PropTypes.bool,
 	isNotificationOpen: PropTypes.bool,
 	notificationMessages: PropTypes.array,
-	notificationConfigExists: PropTypes.Object,
+	notificationConfigExists: PropTypes.object,
 	notificationConfigEnable: PropTypes.bool,
 	notificationConfigLabel: PropTypes.string,
 	notificationConfigKeepOpen: PropTypes.bool,

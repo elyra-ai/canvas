@@ -307,7 +307,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 
 	// When notification panel is open, toolbar button should have class toolbar-item-selected
 	// this class shows blue bottom border for the button
-	it("Notifications button in rightBar should have class toolbar-item-selected when notification panel is open", () => {
+	it("Notifications button in rightBar should have class notification-panel when notification panel is open", () => {
 		const toolbarConfig = {
 			leftBar: [
 				{ action: "undo", label: "Undo", enable: true },
@@ -325,7 +325,7 @@ describe("Common Canvas Toolbar renders correctly with config as OBJECT", () => 
 			isPaletteEnabled: true, isPaletteOpen: true,
 			notificationConfig, isNotificationOpen: true }, canvasController);
 
-		expect(wrapper.find(".toggleNotificationPanel-action.toolbar-item-selected")).to.have.length(1);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 	});
 
 	// When notification panel is closed, toolbar button should NOT have class toolbar-item-selected

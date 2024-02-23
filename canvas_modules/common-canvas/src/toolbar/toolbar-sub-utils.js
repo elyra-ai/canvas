@@ -15,18 +15,24 @@
 */
 
 // These utility functions are used by both toolbar-sub-menu.jsx AND
-// toolbar-sub-panel.jsx to position the areaEf (menu or panel) relative
-// to the parent actionItemRect, passed in, in the direction indicated by
-// the expandDirection parameter and constrained within the <div>
-// specified by the containingDivId parameter.
+// toolbar-sub-panel.jsx to position the sub-area (sub-menu or sub-panel)
+// relative to the parent actionItemRect, passed in, in the direction
+// indicated by the expandDirection parameter and constrained within
+// the <div> specified by the containingDivId parameter.
 
+import { isEmpty } from "lodash";
 
 // Adjust the position of the sub-area to make sure it doesn't extend
 // outside the containing divs boundary. We need to do this after the subarea
 // has been mounted so we can query its size and position.
 export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection, actionItemRect) {
+	if (!areaRef || isEmpty(actionItemRect) || !containingDivId) {
+		return;
+	}
 	const containingDiv = document.getElementById(containingDivId);
-	const containingDivRect = containingDiv.getBoundingClientRect();
+	const containingDivRect = containingDiv
+		? containingDiv.getBoundingClientRect()
+		: { top: -1000, bottom: 1000, left: -1000, right: 1000 }; // To enable Jest tests.
 
 	const thisAreaRect = areaRef.getBoundingClientRect();
 
@@ -62,6 +68,10 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 }
 
 export function generateSubAreaStyle(expandDirection, actionItemRect) {
+	if (isEmpty(actionItemRect)) {
+		return null;
+	}
+
 	if (expandDirection === "vertical") {
 		return {
 			top: actionItemRect.bottom + 1,
