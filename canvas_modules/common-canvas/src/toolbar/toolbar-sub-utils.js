@@ -20,13 +20,12 @@
 // indicated by the expandDirection parameter and constrained within
 // the <div> specified by the containingDivId parameter.
 
-import { isEmpty } from "lodash";
 
 // Adjust the position of the sub-area to make sure it doesn't extend
 // outside the containing divs boundary. We need to do this after the subarea
 // has been mounted so we can query its size and position.
 export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection, actionItemRect) {
-	if (!areaRef || isEmpty(actionItemRect) || !containingDivId) {
+	if (!areaRef || !actionItemRect || !containingDivId) {
 		return;
 	}
 	const containingDiv = document.getElementById(containingDivId);
@@ -68,7 +67,7 @@ export function adjustSubAreaPosition(areaRef, containingDivId, expandDirection,
 }
 
 export function generateSubAreaStyle(expandDirection, actionItemRect) {
-	if (isEmpty(actionItemRect)) {
+	if (!actionItemRect) {
 		return null;
 	}
 

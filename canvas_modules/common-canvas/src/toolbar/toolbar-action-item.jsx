@@ -133,7 +133,7 @@ class ToolbarActionItem extends React.Component {
 	// supPanel field  OR a sub-menu which is a list of options which is created
 	// from the array of items the caller passes in the subMenu field.
 	generateSubArea() {
-		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : {};
+		const actionItemRect = this.divRef.current ? this.divRef.current.getBoundingClientRect() : null;
 
 		if (this.props.actionObj.subPanel) {
 			return (

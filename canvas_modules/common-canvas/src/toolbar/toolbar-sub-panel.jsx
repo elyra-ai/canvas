@@ -73,11 +73,11 @@ class ToolbarSubPanel extends React.Component {
 }
 
 ToolbarSubPanel.propTypes = {
-	subPanel: PropTypes.any,
+	subPanel: PropTypes.any.isRequired,
 	subPanelData: PropTypes.object,
 	closeSubArea: PropTypes.func,
 	setToolbarFocusAction: PropTypes.func,
-	actionItemRect: PropTypes.object.isRequired,
+	actionItemRect: PropTypes.object,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string
 };

@@ -240,7 +240,7 @@ ToolbarSubMenu.propTypes = {
 	closeSubArea: PropTypes.func,
 	setToolbarFocusAction: PropTypes.func,
 	setSubMenuFocus: PropTypes.func,
-	actionItemRect: PropTypes.object.isRequired,
+	actionItemRect: PropTypes.object,
 	expandDirection: PropTypes.string.isRequired,
 	containingDivId: PropTypes.string,
 	parentSelector: PropTypes.string,
