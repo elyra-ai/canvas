@@ -191,18 +191,18 @@ class Toolbar extends React.Component {
 
 	getPreviousItemRef(focusableItemRefs) {
 		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index > 0) {
-			return focusableItemRefs[index - 1];
+		if (index === 0) {
+			return focusableItemRefs[focusableItemRefs.length - 1];
 		}
-		return null;
+		return focusableItemRefs[index - 1];
 	}
 
 	getNextItemRef(focusableItemRefs) {
 		const index = focusableItemRefs.findIndex((item) => this.getRefAction(item) === this.state.focusAction);
-		if (index < focusableItemRefs.length - 1) {
-			return focusableItemRefs[index + 1];
+		if (index === focusableItemRefs.length - 1) {
+			return focusableItemRefs[0];
 		}
-		return null;
+		return focusableItemRefs[index + 1];
 	}
 
 	getRefAction(ref) {
