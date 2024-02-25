@@ -141,7 +141,7 @@ class ToolbarSubMenu extends React.Component {
 		const focusableActions = [];
 
 		for (let i = 0; i < this.props.subMenuActions.length; i++) {
-			if (this.props.subMenuActions[i].enable) {
+			if (this.props.subMenuActions[i].enable || this.props.subMenuActions[i].jsx) {
 				focusableActions.push(this.props.subMenuActions[i]);
 			}
 		}

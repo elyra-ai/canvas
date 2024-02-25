@@ -82,16 +82,22 @@ class ToolbarActionItem extends React.Component {
 	}
 
 	openSubArea() {
+		// If host app is controlling display of the sub-area call it to say
+		// sub-area is closing.
 		if (this.props.actionObj.setExtIsSubAreaDisplayed) {
 			this.props.actionObj.setExtIsSubAreaDisplayed(true);
+			return;
 		}
 		this.setState({ subAreaDisplayed: true });
 	}
 
 	closeSubArea(checkCloseSubAreaOnClick) {
 		if (!checkCloseSubAreaOnClick || this.props.actionObj.closeSubAreaOnClick) {
+			// If host app is controlling display of the sub-area call it to say
+			// sub-area is closing.
 			if (this.props.actionObj.setExtIsSubAreaDisplayed) {
 				this.props.actionObj.setExtIsSubAreaDisplayed(false);
+				return;
 			}
 			this.setState({ subAreaDisplayed: false });
 		}

@@ -20,6 +20,9 @@ import PropTypes from "prop-types";
 import { adjustSubAreaPosition, generateSubAreaStyle } from "./toolbar-sub-utils.js";
 
 const ESC_KEY = 27;
+const LEFT_ARROW_KEY = 37;
+const RIGHT_ARROW_KEY = 39;
+
 
 class ToolbarSubPanel extends React.Component {
 	constructor(props) {
@@ -39,6 +42,9 @@ class ToolbarSubPanel extends React.Component {
 	onKeyDown(evt) {
 		if (evt.keyCode === ESC_KEY) {
 			this.props.closeSubArea();
+			evt.stopPropagation();
+
+		} else if (evt.keyCode === LEFT_ARROW_KEY || evt.keyCode === RIGHT_ARROW_KEY) {
 			evt.stopPropagation();
 		}
 	}

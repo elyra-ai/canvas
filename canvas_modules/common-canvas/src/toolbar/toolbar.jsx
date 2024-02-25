@@ -107,11 +107,15 @@ class Toolbar extends React.Component {
 		}
 	}
 
-	// When focus leaves the toolbar make sure we record it so we don't
-	// accidentally set focus on a toolbar item when re-rendering with
-	// the focus elsewhere.
-	onBlur() {
-		this.isFocusInToolbar = false;
+	// When focus leaves the toolbar make sure we record it. This prevents
+	// us accidentally setting focus on a toolbar item when the toolbar
+	// re-renders with the focus elsewhere.
+	onBlur(evt) {
+		// If the focus is being moved to an object outside the toolbar div
+		// we set isFocusInToolbar to false.
+		if (!evt.relatedTarget?.closest(".toolbar-div")) {
+			this.isFocusInToolbar = false;
+		}
 	}
 
 	// This is called when the user presses a key with focus on one of the
