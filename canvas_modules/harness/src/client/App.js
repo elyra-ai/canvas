@@ -2297,9 +2297,12 @@ class App extends React.Component {
 					{
 						action: "custom-loading",
 						tooltip: "A custom loading!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "4px 11px" }}>
-								<InlineLoading status="active" description="Loading..." />
+								<InlineLoading status="active" description="Loading..."
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
@@ -2307,9 +2310,13 @@ class App extends React.Component {
 					{
 						action: "custom-checkbox",
 						tooltip: "A custom checkbox!",
-						jsx: (
+						jsx: (tabIndex) => (
 							<div style={{ padding: "5px 11px" }}>
-								<Checkbox id={"chk1"} defaultChecked labelText={"Check it out"} />
+								<Checkbox id={"custom-checkbox"} defaultChecked labelText={"Check it out"}
+									onClick={(e) => window.alert("Checkbox clicked!")}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
+								/>
 							</div>
 						)
 					},
@@ -2317,24 +2324,35 @@ class App extends React.Component {
 					{
 						action: "custom-button",
 						tooltip: "A custom button of type primary!",
-						jsx: (
-							<div className="toolbar-custom-button">
-								<Button id={"btn1"} size="field" kind="primary">Custom button </Button>
-							</div>
+						jsx: (tabIndex) => (
+							<Button id={"custom-button"} size="field" kind="primary"
+								onClick={(e) => window.alert("Button clicked!")}
+								className={"toolbar-jsx-obj"}
+								tabIndex={tabIndex}
+							>
+								Custom button
+							</Button>
 						)
 					},
 					{ divider: true },
 					{
 						action: "custom-dropdown",
 						tooltip: () => (this.suppressTooltip ? null : "A drop down using the overflow menu!"),
-						jsx: (
+						jsx: (tabIndex) => (
 							<div className="toolbar-custom-button">
 								<OverflowMenu
 									id={"ovf1"}
 									renderIcon={TextScale32}
 									iconDescription={""}
-									onOpen={() => (this.suppressTooltip = true)}
-									onClose={() => (this.suppressTooltip = false)}
+									onOpen={() => (
+										this.suppressTooltip = true)
+									}
+									onClose={() => {
+										this.suppressTooltip = false;
+										window.alert("Option selected");
+									}}
+									className={"toolbar-jsx-obj"}
+									tabIndex={tabIndex}
 								>
 									<OverflowMenuItem itemText="Big" />
 									<OverflowMenuItem itemText="Medium" />

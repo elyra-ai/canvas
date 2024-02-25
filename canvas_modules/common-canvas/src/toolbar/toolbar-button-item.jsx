@@ -54,6 +54,14 @@ class ToolbarButtonItem extends React.Component {
 	componentDidUpdate() {
 		if (this.props.isFocusInToolbar &&
 				this.props.buttonFocusAction === this.props.actionObj.action) {
+			// If a Jsx object was provided, the class of the component should have
+			// been set to toolbar-jsx-obj.
+			const jsxItem = this.buttonRef.current.querySelector(".toolbar-jsx-obj");
+			if (jsxItem) {
+				jsxItem.focus();
+				return;
+			}
+
 			this.buttonRef.current.focus();
 		}
 	}
@@ -169,7 +177,7 @@ class ToolbarButtonItem extends React.Component {
 		return null;
 	}
 
-	generateButton(actionObj) {
+	generateRegularItem(actionObj) {
 		let labelBefore = null;
 		let labelAfter = null;
 
@@ -264,6 +272,26 @@ class ToolbarButtonItem extends React.Component {
 		);
 	}
 
+	// Creates a <div> containing the JSX in the actionObj.jsx field, wrapped in a tooltip
+	// <div>, for display as an action item in the toolbar. The jsx field can be just
+	// regular JSX OR a function that returns JSX. If the application has provided a
+	// function we call it, passing in the tabIndex that the component in the JSX should
+	// use, based on whether it is focused or not.
+	generateJsxItem(actionObj) {
+		let content = null;
+		if (typeof actionObj.jsx === "function") {
+			const tabIndex = this.props.buttonFocusAction === actionObj.action ? 0 : -1;
+			content = actionObj.jsx(tabIndex);
+		} else {
+			content = actionObj.jsx;
+		}
+		const jsx = this.wrapInTooltip(content);
+		const div = (<div ref={this.buttonRef}>{jsx}</div>);
+
+		return div;
+	}
+
+
 	wrapInTooltip(content) {
 		if (!this.props.isInMenu && (this.showLabelAsTip(this.props.actionObj) || this.props.actionObj.tooltip)) {
 			const tip = this.props.actionObj.tooltip ? this.props.actionObj.tooltip : this.props.actionObj.label;
@@ -296,13 +324,10 @@ class ToolbarButtonItem extends React.Component {
 
 	render() {
 		const actionObj = this.props.actionObj;
-		let divContent = null;
 
-		if (actionObj.jsx) {
-			divContent = this.wrapInTooltip(actionObj.jsx);
-		} else {
-			divContent = this.generateButton(actionObj);
-		}
+		const divContent = actionObj.jsx
+			? this.generateJsxItem(actionObj)
+			: this.generateRegularItem(actionObj);
 
 		return divContent;
 	}
@@ -333,7 +358,10 @@ ToolbarButtonItem.propTypes = {
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
-		jsx: PropTypes.object,
+		jsx: PropTypes.oneOfType([
+			PropTypes.object,
+			PropTypes.func
+		]),
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object,

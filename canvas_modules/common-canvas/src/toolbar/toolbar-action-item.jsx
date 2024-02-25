@@ -67,7 +67,7 @@ class ToolbarActionItem extends React.Component {
 
 	// Called by toolbar.jsx
 	isEnabled() {
-		return this.props.actionObj.enable;
+		return this.props.actionObj.enable || this.props.actionObj.jsx;
 	}
 
 	clickOutside(evt) {
@@ -240,7 +240,10 @@ ToolbarActionItem.propTypes = {
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
-		jsx: PropTypes.object,
+		jsx: PropTypes.oneOfType([
+			PropTypes.object,
+			PropTypes.func
+		]),
 		tooltip: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object,
