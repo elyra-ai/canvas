@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,5 +18,7 @@ import CommonProperties from "./common-properties";
 import PropertiesController from "./properties-controller";
 import FlexibleTable from "./components/flexible-table";
 import FieldPicker from "./components/field-picker";
+import { clem } from "./controls/expression/languages/CLEM-hint";
+import { getPythonHints } from "./controls/expression/languages/python-hint";
 
-export { CommonProperties, PropertiesController, FlexibleTable, FieldPicker };
+export { CommonProperties, PropertiesController, FlexibleTable, FieldPicker, clem, getPythonHints };
