@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,15 @@ class ToolbarActionItem extends React.Component {
 		return this.props.actionObj.enable || this.props.actionObj.jsx;
 	}
 
+	// Called by toolbar.jsx and internally
+	isSubAreaDisplayed() {
+		if (this.props.actionObj.setExtIsSubAreaDisplayed &&
+			typeof this.props.actionObj.extIsSubAreaDisplayed !== "undefined") {
+			return this.props.actionObj.extIsSubAreaDisplayed;
+		}
+		return this.state.subAreaDisplayed;
+	}
+
 	clickOutside(evt) {
 		if (this.isSubAreaDisplayed()) {
 			const items = document.getElementsByClassName(this.generateActionName());
@@ -113,6 +122,7 @@ class ToolbarActionItem extends React.Component {
 			} else {
 				document.addEventListener("click", this.clickOutside, false);
 				this.props.closeAnyOpenSubArea();
+				this.props.setToolbarFocusAction(this.props.actionObj.action);
 				this.openSubArea();
 			}
 
@@ -120,14 +130,6 @@ class ToolbarActionItem extends React.Component {
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
 			this.props.setToolbarFocusAction(this.props.actionObj.action);
 		}
-	}
-
-	isSubAreaDisplayed() {
-		if (this.props.actionObj.setExtIsSubAreaDisplayed &&
-			typeof this.props.actionObj.extIsSubAreaDisplayed !== "undefined") {
-			return this.props.actionObj.extIsSubAreaDisplayed;
-		}
-		return this.state.subAreaDisplayed;
 	}
 
 	generateActionName() {

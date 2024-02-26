@@ -33,10 +33,13 @@ class ToolbarSubPanel extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.containingDivId) {
-			adjustSubAreaPosition(this.areaRef,
-				this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
-		}
+		adjustSubAreaPosition(this.areaRef,
+			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
+	}
+
+	componentDidUpdate() {
+		adjustSubAreaPosition(this.areaRef,
+			this.props.containingDivId, this.props.expandDirection, this.props.actionItemRect);
 	}
 
 	onKeyDown(evt) {
