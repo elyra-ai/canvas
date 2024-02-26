@@ -79,6 +79,13 @@ class ToolTip extends React.Component {
 				if (tooltipTrigger && tooltip) {
 					this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
 				}
+
+				const linkElement = this.targetRef.querySelector("a");
+
+				// Focus on link when tooltip with link is opened
+				if (linkElement) {
+					linkElement.focus();
+				}
 			}
 		}
 	}
@@ -86,6 +93,10 @@ class ToolTip extends React.Component {
 	setKeyPressed(evt) {
 		if (evt.key === "Tab") {
 			this.tabKeyPressed = true;
+		}
+		if (evt.key === "Escape") {
+			this.triggerRef.focus();
+			this.setTooltipVisible(false);
 		}
 	}
 
@@ -320,6 +331,9 @@ class ToolTip extends React.Component {
 		// To prevent this default behavior, stopPropagation and preventDefault is used.
 		evt.stopPropagation();
 		evt.preventDefault();
+
+		// When tooltip with link is closed and another tooltip is opened newly opened tooltip should have focus.
+		this.triggerRef.focus();
 		if (this.state.isTooltipVisible) {
 			// Tooltip is visible and user clicks on trigger element again, hide tooltip
 			this.setTooltipVisible(false);
@@ -405,22 +419,53 @@ class ToolTip extends React.Component {
 		if (this.props.className) {
 			tipClass += " " + this.props.className;
 		}
-
+		let linkClicked = false;
 		let link = null;
 		if (this.state.isTooltipVisible && this.props.tooltipLinkHandler && this.props.link) {
 			const linkInformation = this.props.tooltipLinkHandler(this.props.link);
 			// Verify tooltipLinkHandler returns object in correct format
 			if (typeof linkInformation === "object" && linkInformation.label && linkInformation.url) {
-				link = (<Link
-					className="tooltip-link"
-					id={this.props.link.id}
-					href={linkInformation.url}
-					target="_blank"
-					rel="noopener"
-					visited={false}
+				link = (<div
+					ref={(ref) => (this.linkRef = ref)}
+					onKeyDown={(evt) => {
+						evt.stopPropagation();
+						evt.preventDefault();
+
+						// When 'Esc' is pressed shift the focus to tooltip icon so that user can navigate following elements.
+						if (evt.key === "Escape") {
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						} else if (evt.key === "Enter") { // Open active/highlighted link when Enter or Return is clicked.
+							const focusedElement = this.linkRef.children[0];
+							if (focusedElement) {
+								window.open(focusedElement, "_blank");
+							}
+						}
+					}}
+					onBlur={() => {
+						if (linkClicked) { // Keep tooltip open when link is clicked
+							this.setTooltipVisible(true);
+						} else { // Close the tooltip and shift focus to tooltip icon
+							this.triggerRef.focus();
+							this.setTooltipVisible(false);
+						}
+					}
+					}
+					onClick={() => {
+						linkClicked = true;
+					}}
 				>
-					{linkInformation.label}
-				</Link>);
+					<Link
+						className="tooltip-link"
+						id={this.props.link.id}
+						href={linkInformation.url}
+						target="_blank"
+						rel="noopener"
+						visited={false}
+					>
+						{linkInformation.label}
+					</Link>
+				</div>);
 			}
 		}
 
@@ -435,6 +480,7 @@ class ToolTip extends React.Component {
 						className={tipClass}
 						aria-hidden={!this.state.isTooltipVisible}
 						direction={this.props.direction}
+						ref={(ref) => (this.targetRef = ref)}
 					>
 						<svg className="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 							<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
