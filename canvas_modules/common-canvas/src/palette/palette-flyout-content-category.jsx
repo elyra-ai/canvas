@@ -31,7 +31,8 @@ class PaletteFlyoutContentCategory extends React.Component {
 		this.onMouseOver = this.onMouseOver.bind(this);
 		this.onMouseLeave = this.onMouseLeave.bind(this);
 		this.categoryClicked = this.categoryClicked.bind(this);
-		this.accRef = React.createRef();
+		this.categoryKeyPressed = this.categoryKeyPressed.bind(this);
+		this.setPaletteCategory = this.setPaletteCategory.bind(this);
 	}
 
 	onMouseOver(ev) {
@@ -94,17 +95,21 @@ class PaletteFlyoutContentCategory extends React.Component {
 		return content;
 	}
 
+	setPaletteCategory(isOpen) {
+		if (isOpen) {
+			this.props.canvasController.closePaletteCategory(this.props.category.id);
+		} else {
+			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		}
+	}
+
 	// Returns the category object for a regular category.
 	getRenderCategory() {
 		const titleObj = this.getTitleObj();
 		const content = this.getContent();
 		return (
 			<AccordionItem title={titleObj} open={this.props.category.is_open}
-				onHeadingClick={() => {
-					if (this.accRef?.current) {
-						this.accRef.current.click();
-					}
-				}}
+				onKeyDown={this.categoryKeyPressed}
 			>
 				{content}
 			</AccordionItem>
@@ -122,7 +127,6 @@ class PaletteFlyoutContentCategory extends React.Component {
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
-				ref={this.accRef}
 			>
 				<div className="palette-flyout-category-item">
 					{itemImage}
@@ -204,10 +208,17 @@ class PaletteFlyoutContentCategory extends React.Component {
 		// a category is opened.
 		evt.stopPropagation();
 
-		if (this.props.category.is_open) {
-			this.props.canvasController.closePaletteCategory(this.props.category.id);
-		} else {
-			this.props.canvasController.openPaletteCategory(this.props.category.id);
+		this.setPaletteCategory(this.props.category.is_open);
+	}
+
+	categoryKeyPressed(evt) {
+		if (evt.target.className === "bx--accordion__heading") {
+			if (evt.code === "Enter" || evt.code === "Space") {
+				evt.preventDefault();
+				evt.stopPropagation();
+
+				this.setPaletteCategory(this.props.category.is_open);
+			}
 		}
 	}
 
