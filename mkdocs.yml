@@ -13,7 +13,6 @@ theme:
 
 plugins:
     - search
-    - awesome-pages
 
 extra_css:
   - css/styles.css
