@@ -105,6 +105,9 @@ const notificationMessages = [
 
 describe("notification panel renders correctly", () => {
 	let wrapper;
+	beforeEach(() => {
+		canvasController = new CanvasController();
+	});
 	afterEach(() => {
 		wrapper.unmount();
 	});
@@ -113,38 +116,23 @@ describe("notification panel renders correctly", () => {
 		canvasController.setNotificationPanelConfig(notificationConfigDefault);
 		canvasController.setNotificationMessages(notificationMessages);
 		canvasController.openNotificationPanel();
+		const subPanelData = { canvasController };
+		const closePanelFn = () => null;
 
 		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
-					canvasController={canvasController}
+					closeSubPanel={ closePanelFn }
+					subPanelData={ subPanelData }
 				/>
 			</Provider>
 		);
-
 
 		const notificationPanel = wrapper.find("NotificationPanel");
 		expect(JSON.stringify(notificationPanel.prop("notificationConfig"))).to.equal(JSON.stringify(notificationConfigDefault));
-		expect(notificationPanel.prop("isNotificationOpen")).to.equal(true);
 		expect(JSON.stringify(notificationPanel.prop("messages"))).to.equal(JSON.stringify(notificationMessages));
-		expect(notificationPanel.prop("canvasController")).to.equal(canvasController);
-	});
-
-	it("notification panel should be hidden if isNotificationOpen is false", () => {
-		canvasController.setNotificationPanelConfig(notificationConfigDefault);
-		canvasController.setNotificationMessages(notificationMessages);
-		canvasController.closeNotificationPanel();
-
-		wrapper = mountWithIntl(
-			<Provider store={canvasController.getStore()}>
-				<NotificationPanel
-					canvasController={canvasController}
-				/>
-			</Provider>
-		);
-
-		const notificationPanel = wrapper.find("NotificationPanel");
-		expect(notificationPanel.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		expect(notificationPanel.prop("subPanelData")).to.equal(subPanelData);
+		expect(notificationPanel.prop("closeSubPanel")).to.equal(closePanelFn);
 	});
 
 	it("notification panel should have 4 types of messages", () => {
@@ -160,18 +148,21 @@ describe("notification panel renders correctly", () => {
 
 		canvasController.setNotificationPanelConfig(notificationConfig);
 		canvasController.setNotificationMessages(notificationMessages);
-		canvasController.closeNotificationPanel();
+
+		const subPanelData = { canvasController };
+		const closePanelFn = () => null;
 
 		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
-					canvasController={canvasController}
+					closeSubPanel={ closePanelFn }
+					subPanelData={ subPanelData }
 				/>
 			</Provider>
 		);
 
 		const notificationPanel = wrapper.find("NotificationPanel");
-		expect(notificationPanel.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		expect(notificationPanel.find(".notification-panel")).to.have.length(1);
 		const messages = notificationPanel.find(".notifications-button-container");
 		expect(messages).to.have.length(4);
 
@@ -211,25 +202,28 @@ describe("notification panel renders correctly", () => {
 
 		canvasController.setNotificationPanelConfig(notificationConfig);
 		canvasController.setNotificationMessages([]);
-		canvasController.closeNotificationPanel();
+
+		const subPanelData = { canvasController };
+		const closePanelFn = () => null;
 
 		wrapper = mountWithIntl(
 			<Provider store={canvasController.getStore()}>
 				<NotificationPanel
-					canvasController={canvasController}
+					closeSubPanel={ closePanelFn }
+					subPanelData={ subPanelData }
 				/>
 			</Provider>
 		);
 
-		const subtitle = wrapper.find(".notification-panel-container .notification-panel-subtitle");
+		const subtitle = wrapper.find(".notification-panel .notification-panel-subtitle");
 		expect(subtitle).to.have.length(1);
 		expect(subtitle.text()).to.eql("Custom subtitle");
 
-		const emptyMessage = wrapper.find(".notification-panel-container .notification-panel-empty-message");
+		const emptyMessage = wrapper.find(".notification-panel .notification-panel-empty-message");
 		expect(emptyMessage).to.have.length(1);
 		expect(emptyMessage.text()).to.eql("Custom empty message");
 
-		const clearAll = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		const clearAll = wrapper.find(".notification-panel button.notification-panel-clear-all");
 		expect(clearAll).to.have.length(1);
 		expect(clearAll.text()).to.eql("Clear all");
 	});
@@ -320,6 +314,7 @@ describe("toolbar notification icon state renders correctly", () => {
 
 	it("notification icon should be empty in toolbar if no messages", () => {
 		const notificationConfig = { action: "notification", label: "Notifications Panel", enable: true, notificationHeader: "Custom" };
+		canvasController.openNotificationPanel();
 		wrapper = createIntlCommonCanvas(
 			canvasConfig,
 			contextMenuHandler,
@@ -337,7 +332,7 @@ describe("toolbar notification icon state renders correctly", () => {
 			canvasController
 		);
 
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
 		expect(wrapper.find(".notification-panel-empty-message-container")).to.have.length(1);
 
@@ -545,15 +540,16 @@ describe("notification center buttons work properly", () => {
 			contextMenuConfig,
 			canvasController
 		);
-		// open the notification center
+		expect(wrapper.find(".notification-panel")).to.have.length(0);
+
+		// Open the notification center
 		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		notificationButton.simulate("click");
 		wrapper.update();
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 
-		// check that there is no clear all button
-		expect(wrapper.find(".notification-panel-container button.notification-panel-clear-all")).to.have.length(0);
+		// Check that there is no clear all button
+		expect(wrapper.find(".notification-panel button.notification-panel-clear-all")).to.have.length(0);
 	});
 
 	it("notification clear all button renders and works when enabled", () => {
@@ -574,37 +570,39 @@ describe("notification center buttons work properly", () => {
 			contextMenuConfig,
 			canvasController
 		);
+
+		expect(wrapper.find(".notification-panel")).to.have.length(0);
+
 		// open the notification center
 		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		notificationButton.simulate("click");
 		wrapper.update();
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 
 		// check that there are no messages and the clear all button is disabled
-		let clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		let clearAllButton = wrapper.find(".notification-panel button.notification-panel-clear-all");
 		expect(clearAllButton.prop("disabled")).to.equal(true);
-		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(1);
-		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(0);
+		expect(wrapper.find(".notification-panel .notification-panel-empty-message").length).to.equal(1);
+		expect(wrapper.find(".notification-panel .notifications").length).to.equal(0);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
 
 		// add a message and check if the clear all button is enabled
 		canvasController.setNotificationMessages([notificationMessage0]);
 		wrapper.update();
-		clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		clearAllButton = wrapper.find(".notification-panel button.notification-panel-clear-all");
 		expect(clearAllButton.prop("disabled")).to.equal(false);
-		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(0);
-		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(1);
+		expect(wrapper.find(".notification-panel .notification-panel-empty-message").length).to.equal(0);
+		expect(wrapper.find(".notification-panel .notifications").length).to.equal(1);
 		expect(canvasController.getNotificationMessages().length).to.equal(1);
 
 		// after clicking the clear all button, messages should be removed and button disabled again
 		clearAllButton.simulate("click");
 		wrapper.update();
 
-		clearAllButton = wrapper.find(".notification-panel-container button.notification-panel-clear-all");
+		clearAllButton = wrapper.find(".notification-panel button.notification-panel-clear-all");
 		expect(clearAllButton.prop("disabled")).to.equal(true);
-		expect(wrapper.find(".notification-panel-container .notification-panel-empty-message").length).to.equal(1);
-		expect(wrapper.find(".notification-panel-container .notifications").length).to.equal(0);
+		expect(wrapper.find(".notification-panel .notification-panel-empty-message").length).to.equal(1);
+		expect(wrapper.find(".notification-panel .notifications").length).to.equal(0);
 		expect(canvasController.getNotificationMessages().length).to.equal(0);
 	});
 
@@ -626,11 +624,12 @@ describe("notification center buttons work properly", () => {
 			contextMenuConfig,
 			canvasController
 		);
+		expect(wrapper.find(".notification-panel")).to.have.length(0);
+
 		// open the notification center
 		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		notificationButton.simulate("click");
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 		wrapper.update();
 
 		// click the close button
@@ -638,7 +637,7 @@ describe("notification center buttons work properly", () => {
 
 		// check that notification panel is closed
 		wrapper.update();
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
+		expect(wrapper.find(".notification-panel")).to.have.length(0);
 
 	});
 
@@ -670,15 +669,16 @@ describe("notification center buttons work properly", () => {
 			contextMenuConfig,
 			canvasController
 		);
+		expect(wrapper.find(".notification-panel")).to.have.length(0);
+
 		// open the notification center
 		const notificationButton = wrapper.find(".toggleNotificationPanel-action button");
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(1);
 		notificationButton.simulate("click");
 		wrapper.update();
-		expect(wrapper.find(".notification-panel-container.panel-hidden")).to.have.length(0);
+		expect(wrapper.find(".notification-panel")).to.have.length(1);
 
 		// check that secondary button is enabled and callback works
-		let secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		let secondaryButton = wrapper.find(".notification-panel button.notification-panel-secondary-button");
 		expect(secondaryButton.prop("disabled")).to.equal(false);
 		expect(secondaryButton.text()).to.equal(notificationConfig.secondaryButtonLabel);
 		secondaryButton.simulate("click");
@@ -690,7 +690,7 @@ describe("notification center buttons work properly", () => {
 		wrapper.update();
 
 		// verify secondary button is disabled
-		secondaryButton = wrapper.find(".notification-panel-container button.notification-panel-secondary-button");
+		secondaryButton = wrapper.find(".notification-panel button.notification-panel-secondary-button");
 		expect(secondaryButton.prop("disabled")).to.equal(true);
 	});
 });

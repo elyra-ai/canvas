@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2023 Elyra Authors
+ * Copyright 2017-2024 Elyra Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,9 +62,9 @@ class ToolbarSubMenuItem extends React.Component {
 	clickOutside(evt) {
 		if (this.state.subAreaDisplayed) {
 			const items = document.getElementsByClassName(this.generateActionName());
-			const isOver = items && items.length > 0 ? items[0].contains(evt.target) : false;
+			const isOver = items?.length > 0 ? items[0].contains(evt.target) : false;
 
-			if (!isOver) {
+			if (!isOver && !this.props.actionObj.leaveSubAreaOpenOnClickOutside) {
 				this.closeSubArea();
 			}
 		}
@@ -93,14 +93,14 @@ class ToolbarSubMenuItem extends React.Component {
 		} else {
 			evt.stopPropagation();
 			if (this.props.isInCascadeMenu) {
-				this.props.closeParentSubArea();
+				this.props.closeParentSubArea(true); // true = close only if closeSubAreaOnClick is checked
 				this.props.setSubMenuFocus();
 
 			} else if (this.props.isInOverflowMenu) {
 				this.props.setSubMenuFocus(this.props.actionObj.action);
 
 			} else {
-				this.props.closeParentSubArea();
+				this.props.closeParentSubArea(true); // true = close only if closeSubAreaOnClick is checked
 				this.props.setToolbarFocusAction(); // Resets the toolbar focus action
 			}
 			this.props.toolbarActionHandler(this.props.actionObj.action, evt);
@@ -210,6 +210,7 @@ ToolbarSubMenuItem.propTypes = {
 		isSelected: PropTypes.bool,
 		kind: PropTypes.string,
 		closeSubAreaOnClick: PropTypes.bool,
+		leaveSubAreaOpenOnClickOutside: PropTypes.bool,
 		subMenu: PropTypes.array,
 		subPanel: PropTypes.any,
 		subPanelData: PropTypes.object,
