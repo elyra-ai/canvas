@@ -127,8 +127,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 				value={this.props.category.label}
 				onMouseOver={this.onMouseOver}
 				onMouseLeave={this.onMouseLeave}
+				tabIndex={1}
 			>
-				<div className="palette-flyout-category-item">
+				<div className="palette-flyout-category-item" tabIndex={-1}>
 					{itemImage}
 					{itemText}
 				</div></div>
